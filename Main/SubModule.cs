@@ -115,6 +115,11 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // #1071: the [Check] and [Session] facade for static patches, and the exit summary on ProcessExit.
+        try { Core.Logging.Outcomes.Initialize(IoC.Resolve<Core.Logging.IOutcomeLog>()); }
+        catch { /* outcome logging must never stop the mod loading */ }
+        Core.Logging.Outcomes.SummariseOnProcessExit();
+
         // First, because the engine starts compiling its shaders about six seconds after TAOM loads
         // (docs/features/shader-compile-notice.md); stopped at the first main menu.
         try
@@ -143,6 +148,38 @@ public class SubModule : MBSubModuleBase
                 Core.Diagnostics.BuildStampReport.BuildReport(
                     typeof(SubModule).Assembly,
                     typeof(TAOM.Dependencies.Foundation.PatchShield).Assembly));
+        }
+        catch { /* a version report must never be the thing that stops the mod loading */ }
+
+        // Engine identity, recorded HERE and not only in MissionDiagnosticService.
+        //
+        // A 2026-08-19 player report was unattributable because of where this used to live. The
+        // Bannerlord version was logged only by LogSessionSnapshot, which runs from OnGameStart, and
+        // that player's session never started a game: it sat at the main menu for 28 minutes and
+        // ended. Their log named the TAOM build exactly (v2.0.20, pinned Native v1.4.7.*) and the
+        // engine build not at all, so "did Steam move their game under a pinned build?" could not be
+        // answered from the artifact they sent. Emitting it beside [BuildStamp] makes every log
+        // self-identifying from its first lines, including logs from sessions that never load a save.
+        //
+        // MissionDiagnosticService still logs the fuller per-module breakdown at OnGameStart; this is
+        // the one-line floor that is always present. Its own [Engine] tag keeps [BuildStamp] greps
+        // about module pairing (#371).
+        try
+        {
+            var descriptors = new System.Collections.Generic.List<string>();
+            var activeModules = TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules();
+            if (activeModules != null)
+            {
+                foreach (var mod in activeModules)
+                {
+                    if (mod != null) descriptors.Add($"{mod.Id} v{mod.Version}");
+                }
+            }
+
+            IoC.Resolve<IModLogger>().LogInfo(
+                Core.Diagnostics.BuildStampReport.EngineReport(
+                    TaleWorlds.ModuleManager.ModuleHelper.GetModuleInfo("Native")?.Version.ToString(),
+                    descriptors));
         }
         catch { /* a version report must never be the thing that stops the mod loading */ }
 
@@ -574,7 +611,6 @@ public class SubModule : MBSubModuleBase
         PartyVM_RefreshCurrentCharacterInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         HeroViewModel_FillFrom_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
-        ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
@@ -585,15 +621,13 @@ public class SubModule : MBSubModuleBase
 
         Mission_Initialize_Patch.Initialize(logger);
 
-        // Patch42_CastleRecruitment — castle notable recruitment. Targets RecruitmentCampaignBehavior
-        // + AiVisitSettlementBehavior (both in TaleWorlds.CampaignSystem, no View/Mission.cctor
-        // dependency, safe in OnSubModuleLoad). The transpilers swap the AI IsCastle gate to a runtime
-        // toggle; the postfix invokes the private CheckRecruiting for castles. All fail-safe.
+        // Patch42_CastleRecruitment — castle notable recruitment. Targets AiVisitSettlementBehavior
+        // (TaleWorlds.CampaignSystem, no View/Mission.cctor dependency, safe in OnSubModuleLoad). The
+        // transpiler swaps the AI IsCastle gate to a runtime toggle; fail-safe. The in-castle recruit
+        // is an event listener in CastleRecruitmentBehavior, not a patch.
         var castleRecruitmentSettings = IoC.Resolve<ICastleRecruitmentSettingsProvider>();
         CastleAiToggle.Initialize(castleRecruitmentSettings);
         Patch42_AiHourlyTick_Transpiler.Initialize(logger);
-        Patch42_FillSettlements_Transpiler.Initialize(logger);
-        Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
         TryPatchCategory("Patch42_CastleRecruitment");
         FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);
         // Load-time stamps (docs/features/load-time-stamps.md): phase total now, per-category lines at game init.
@@ -822,6 +856,9 @@ public class SubModule : MBSubModuleBase
         }
         catch { /* diagnostic is best-effort, never break OnGameStart */ }
         hookStamp?.Mark("session_snapshot");
+
+        // Custom Battle and the editor's test battle hand a BasicGameStarter here; a campaign returns at once.
+        RegisterCustomBattleModels(gameStarterObject);
 
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
@@ -1069,7 +1106,7 @@ public class SubModule : MBSubModuleBase
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
-        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment, IoC.Resolve<ICastleRecruitmentService>()));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
         // faction or alignment side (Isengard taking on Mordor/Gundabad/Dunland troops). Vanilla
@@ -1097,7 +1134,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
-        campaignStarter.AddModel(new TaomHeroCreationModel());
 
         // TaomMarriageModel is the mod's ONLY MarriageModel and carries two rules, because the
         // engine resolves exactly one model per type — a second AddModel would silently shadow one
@@ -1199,7 +1235,7 @@ public class SubModule : MBSubModuleBase
         var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
         campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
-        campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>()));
+        campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>()));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 
@@ -1262,7 +1298,7 @@ public class SubModule : MBSubModuleBase
         var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
-        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
+        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService, IoC.Resolve<IModLogger>()));
         // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
         // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
@@ -1274,8 +1310,9 @@ public class SubModule : MBSubModuleBase
         // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
         // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
         // race gate, an unarmed-bearer backstop). Resolved through MissionGameModels, which
-        // takes the LAST registered model, so ours wins over SandBox's. Campaign-only: Custom
-        // Battle builds CustomBattleBannerBearersModel off a BasicGameStarter and is unaffected.
+        // takes the LAST registered model, so ours wins over SandBox's. Custom Battle builds
+        // CustomBattleBannerBearersModel off a BasicGameStarter; RegisterCustomBattleModels adds the
+        // race gate there (TaomCustomBattleBannerBearersModel), so no troll carries a standard.
         campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
         // Enlistment (#576): the #443 army join makes MapEvent.IsPlayerSergeant() true, which is
@@ -1285,6 +1322,26 @@ public class SubModule : MBSubModuleBase
         // above; the override returns base for every battle that is not enlisted service.
         campaignStarter.AddModel<BattleInitializationModel>(new TaomBattleInitializationModel(
             IoC.Resolve<Features.Enlistment.IEnlistmentDeploymentService>()));
+    }
+
+    /// <summary>
+    /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game type has added its own
+    /// models (v1.4.8 CustomGame.OnInitialize: InitializeGameModels, then GameManager.OnGameStart), so a model added now
+    /// is the one MissionGameModels resolves (GameModelsManager.GetGameModel returns the last one added). Mirrored: the
+    /// banner bearers' race gate and the Combat Mechanics damage rules (TaomCustomBattleDamageModel). Every other TAOM model stays campaign-only. The feature-module step
+    /// (FeatureModuleHooks.AddGameStartContent) runs after this one, so no module may add a model for a slot filled here.
+    /// </summary>
+    private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
+    {
+        if (gameStarterObject is CampaignGameStarter || !(gameStarterObject is BasicGameStarter basicStarter))
+            return;
+        // BannerBearers: trolls never carry or fetch a standard, in Custom Battle too (race gate only).
+        basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(
+            IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
+        // CombatMechanics (#788): the damage rules run in Custom Battle too, through the facade the campaign model calls.
+        // The twin extends the engine's Custom Battle base, never SandBox's (a mounted hit would throw outside a campaign).
+        basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(
+            IoC.Resolve<Features.CombatMechanics.Hooks.CombatMechanicsHooks>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
@@ -1922,7 +1979,8 @@ public class SubModule : MBSubModuleBase
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
-        // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
+        // ManualPatchApplicator (ADR-002); apply order unchanged. Each one is contained on its own: a missing
+        // target logs a warning, a throw logs a [PatchApply] error (ManualPatchApplicator.TryPatch).
         ManualPatchApplicator.ApplyAll(_harmony);
         onceStamp?.Mark("manual_patches");
 
@@ -2064,7 +2122,9 @@ public class SubModule : MBSubModuleBase
         // removal callbacks may run in either order (#595, Codex review 109).
         AddTaomBehavior(new BehaviorTreeMissionLogic());
         AddTaomBehavior(new AdvancedCombatBehavior());
-        AddTaomBehavior(new AutonomousMovementPlayerController());
+        // The warg rage controller and the battle action bar are [DefaultView]s the engine builds with the
+        // mission. Never add a MissionView here: this runs in Mission.AfterStart, after MissionScreen
+        // registered its views, so it would never tick or finalize (#970, SubModuleMissionViewWiringTests).
         AddTaomBehavior(new WargMissionBehavior());
         AddTaomBehavior(new SpiderMissionBehavior());
         AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
@@ -2121,7 +2181,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
-        AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
         // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).
@@ -2151,7 +2210,7 @@ public class SubModule : MBSubModuleBase
                 careerAbilityService,
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
-                IoC.Resolve<Features.CareerSystem.ICareerPassiveService>(),
+                IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>(),
                 IoC.Resolve<Features.CareerSystem.ICareerConfigProvider>(),
                 IoC.Resolve<IModLogger>()));
         }
@@ -2161,6 +2220,7 @@ public class SubModule : MBSubModuleBase
 
     protected override void OnApplicationTick(float dt)
     {
+        Core.Logging.Outcomes.Tick(); // the 10-minute [Session] heartbeat: one clock compare per tick
         // Once per managed frame: Module.OnApplicationTick reaches it from both native tick entries.
         Features.BattleLoadDiagnostics.MainThreadHeartbeat.Instance.Beat();
 
@@ -2185,6 +2245,21 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+
+        // Clean-shutdown marker. Written FIRST, while IoC and the logger are both still alive, and
+        // on the durable path so it is flushed synchronously before the process can go away.
+        //
+        // The point is entirely in its ABSENCE. Until this existed, a deliberate quit and a silent
+        // native CTD produced byte-identical log tails: the file simply stopped. That ambiguity is
+        // what made the 2026-08-19 player report unanswerable, because a log that ends after 28
+        // minutes at the main menu could equally have been someone closing the game. A log ending
+        // without this line now means the process died, and one ending with it means it did not.
+        //
+        // Note the limit: this fires on module unload, so it covers quit-to-desktop, not a power cut.
+        Core.Logging.Outcomes.WriteSummary("exit"); // #1071: the session summary, just before the marker; never throws
+        try { IoC.Resolve<IModLogger>().LogInfo("[Shutdown] clean module unload"); }
+        catch { /* shutdown diagnostics must never be the thing that breaks shutdown */ }
+
         // Detach the AppDomain.UnhandledException subscription BEFORE IoC disposal so
         // the hook doesn't hold a stale reference to a disposed CrashReportService
         // across game-restart-in-same-process. Deep-review INC 3 (2026-05-25).

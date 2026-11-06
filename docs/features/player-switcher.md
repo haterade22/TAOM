@@ -471,8 +471,8 @@ All four are simulation-relevant for co-op under the include-by-default rule, an
 ## Verification
 
 ```
-dotnet test TAOM.Tests --filter FullyQualifiedName~PlayerSwitcher
-dotnet test TAOM.Tests
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~PlayerSwitcher
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ./build.ps1 -RunTests                                                  # game closed
 dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=   # game running
 ```

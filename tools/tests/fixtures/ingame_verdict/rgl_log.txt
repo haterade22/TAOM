@@ -1,0 +1,3 @@
+Starting new log file...
+[20:25:12.164] Build Version: 125053
+[20:25:12.280] Loading xml file: $BASE/Modules/CustomBattle/SubModule.xml.

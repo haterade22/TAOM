@@ -12,7 +12,7 @@ Evaluate whether the following proposed change aligns with the current work cont
 
 ## Assessment Steps
 
-1. **Read recent CHANGELOG entries** — Check `CHANGELOG.md` for the last 2-3 dated sections to understand recent work themes and feature areas.
+1. **Read recent commit bodies**: run `git log -5 --format='%h %s%n%n%b'` to understand recent work themes and feature areas (the commit body is the changelog entry; `CHANGELOG.md` changes only at a release).
 
 2. **Review recent commit history** — Run `git log --oneline -15` to see the pattern of recent work. Note which feature areas, file paths, and types of changes dominate.
 

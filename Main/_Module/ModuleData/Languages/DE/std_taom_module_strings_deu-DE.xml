@@ -293,26 +293,18 @@
     <string id="taom_force_vol_peace" text="Als Ihr versucht, die Notabeln zu zwingen, Euch Rekruten zu geben, versammeln sich einige Bewohner, um Euch Widerstand zu leisten. Sie zu bekämpfen wird einen Krieg mit {KINGDOM} auslösen." />
     <string id="taom_raid_noresist_peace" text="Ihr seid in {SETTLEMENT} angekommen, um es zu plündern. Ihr trefft auf keinen Widerstand. Die Plünderung dieses Dorfes wird einen Krieg mit {KINGDOM} auslösen." />
     <string id="taom_encounter_peace" text="Ihr seid auf {PARTY} getroffen. Sie zu bekämpfen wird einen Krieg mit {KINGDOM} auslösen." />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK} hat ein Bündnis mit {KINGDOM2_LINK} geschlossen." />
-    <string id="1rbg3Hz2" text="{FACTION_1} und {FACTION_2} sind nicht länger Feinde." />
     <string id="2BVDp7Tg" text="{KINGDOM} wird {POLICY_DESCRIPTION} beenden ({POLICY}). {POLICY_SUPPORT}" />
     <string id="Lbs2bNlg" text="{KINGDOM} wird {POLICY_DESCRIPTION} beginnen ({POLICY}). {POLICY_SUPPORT}" />
     <string id="jnYwiCAz" text="{KINGDOM} wird {POLICY_DESCRIPTION} fortsetzen ({POLICY}). {POLICY_SUPPORT}" />
     <string id="faUooB7V" text="{KINGDOM} wird nicht {POLICY_DESCRIPTION} sein ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="TauRjAud" text="{NAME} von {FACTION}" />
-    <string id="2mVZORaE" text="ein Diener von {FACTION_NAME}" />
     <string id="6d4ZTvGv" text="{LORD.NAME} ist {TITLE} von {FACTION_NAME} und Oberhaupt von {CLAN_NAME}, {CLAN_DESCRIPTION} des Reiches. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
     <string id="o5AUljbW" text="{LORD.NAME} ist ein Mitglied von {CLAN_NAME}, {CLAN_DESCRIPTION} von {FACTION_NAME}. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} ist ein Mitglied von {CLAN_NAME}, {CLAN_DESCRIPTION} aus den Landen von {FACTION_NAME}. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} ist Oberhaupt von {CLAN_NAME}, {CLAN_DESCRIPTION} aus den Landen von {FACTION_NAME}. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
     <string id="0bPb5btR" text="{LORD.NAME} ist ein Mitglied von {CLAN_NAME}, {CLAN_DESCRIPTION} von {FACTION_NAME}, das {RULER} im Bürgerkrieg unterstützt. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
     <string id="JuPUG5wX" text="{LORD.NAME} ist {TITLE} von {FACTION_NAME} und Oberhaupt von {CLAN_NAME}, {CLAN_DESCRIPTION}, das {RULER} im Bürgerkrieg unterstützt. {?LORD.GENDER}Sie hat{?}Er hat{\?} den Ruf, {REPUTATION} zu sein." />
     <string id="4pmvrnmN" text="Die Burg von {SETTLEMENT_LINK} gehört {LORD.LINK}, {FACTION_OFFICIAL} von {FACTION_TERM}. {KEEP_INFO}" />
     <string id="q3wD0rbq" text="{SETTLEMENT_LINK} wird von {LORD.LINK}, {FACTION_OFFICIAL} von {FACTION_TERM}, regiert. {KEEP_INFO}" />
     <string id="RVDojUOM" text="Die Ländereien um {SETTLEMENT_LINK} gehören größtenteils {LORD.LINK}, {FACTION_OFFICIAL} von {FACTION_TERM}. {PROSPERITY_INFO}" />
     <string id="UWzQsHA2" text="{SETTLEMENT_LINK} wird von {LORD.LINK}, {FACTION_OFFICIAL} von {FACTION_TERM}, regiert. {PROSPERITY_INFO} {MORALE_INFO}" />
-    <string id="yAOQnMVw" text="Ihr seid von {FACTION}, nicht wahr? Das bedeutet, Ihr seid mein Gefangener." />
-    <string id="YT4OvaAG" text="Sehr gut. Ihr könnt Euch als unter dem Schutz von {FACTION_NAME} stehend betrachten. Ihr habt bis morgen um diese Zeit, um Eure Reise abzuschließen, oder wir müssen Euch um eine weitere Zahlung bitten." />
     <string id="taom_str_faction_official.erebor" text="ein edler Zwerg" />
     <string id="taom_str_faction_official.erebor_f" text="eine edle Zwergin" />
     <string id="taom_str_faction_ruler.erebor" text="König unter dem Berg" />
@@ -359,165 +351,42 @@
     <string id="taom_str_adjective_for_culture.shaghana" text="Shaghâni" />
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
-    <string id="0aXG8dvJ" text="Frieden mit {KINGDOM_NAME} schließen. Es wird kein Tribut gezahlt." />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufrufen" />
     <string id="0nhqJewP" text="{RULER.NAME} von {KINGDOM} gewährt {SETTLEMENT} an {LEADER.NAME} mit der Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat beschlossen, Frieden mit {KINGDOM} zu schließen, mit der Unterstützung {?PEACEMAKER_RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} mag stark sein, aber ihre Ländereien sind reich und reif für die Eroberung." />
-    <string id="1o8vgwTf" text="{RULER.NAME} von {KINGDOM} hat beschlossen, ein Handelsabkommen mit {OTHER_KINGDOM} zu unterzeichnen, trotz der Ablehnung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="1V8f9vRM" text="Ein Kurier mit einem Bündnisangebot von {PROPOSER_KINGDOM} ist am Hof Eures Reiches eingetroffen." />
-    <string id="21yUheIy" text="{KINGDOM_NAME} wurde im Jahr {CREATION_YEAR} von {RULER.NAME}, einem aufstrebenden {CULTURE_ADJECTIVE} Kriegsherrn, gegründet." />
-    <string id="22LCyCoA" text="Ich kann Eurem Reich {GOLD}{GOLD_ICON} anbieten, um {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg zu erklären." />
-    <string id="2b1xZGaQ" text="Frieden schließen mit {KINGDOM_NAME}. Unser Königreich zahlt {TRIBUTE_AMOUNT} Tribut täglich für {TRIBUTE_DURATION} Tage." />
-    <string id="2KaXj3Qa" text="Die Plünderungen von {NEARBY_ENEMY_FACTION} haben viele Bauern aus ihren Häusern vertrieben. Jene, die Land besitzen, kehren meist zurück, aber viele der Ärmeren suchen einen neuen Ort zum Leben. Ihr sprecht mit einigen, die am Rand Eures Dorfes lagern. Es gibt kein Land für sie. Sie scheinen bereit, als Pächter zu arbeiten, aber es besteht immer die Möglichkeit von Spannungen mit den etablierten Dorffamilien." />
-    <string id="4fXpOe4N" text="Ein Kurier trifft ein von {CLAN_NAME}. Sie halten {CAPTIVE_HERO.NAME} gefangen und fordern {GOLD_AMOUNT}{GOLD_ICON} als Lösegeld." />
-    <string id="4GgfFDWG" text="Frieden schließen mit {KINGDOM_NAME}" />
-    <string id="4JSzHkpt" text="Als {?IS_FEMALE}Königin{?}König{\?} müsst Ihr entscheiden, ob {KINGDOM_NAME} der Krieg erklärt wird" />
-    <string id="4z1t75be" text="{FIRSTNAME} von {CLAN_NAME}" />
-    <string id="5bBAOHmC" text="{RULER.NAME} von {KINGDOM} nimmt {SETTLEMENT} als {?RULER.GENDER}ihr{?}sein{\?} Lehen, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat unentschieden ist." />
-    <string id="5bza9sDs" text="Es tut mir sehr leid, das zu hören. Ihr werdet keine besseren Arbeitgeber als {FACTION_NAME} finden, dessen seid gewiss." />
-    <string id="5DdbkWLu" text="{RULER.NAME} von {KINGDOM} hat beschlossen, ein Handelsabkommen mit {OTHER_KINGDOM} zu unterzeichnen, mit der Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} entschied sich, nicht in den Krieg mit {KINGDOM} zu ziehen, wobei {?AGGRESSOR_RULER.GENDER}ihr{?}sein{\?} Rat unentschieden war." />
     <string id="5pOKmHsf" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen. Die Entscheidung hatte die Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} haben unsere angestammten Ländereien besetzt und unterdrücken unsere Verwandten." />
     <string id="7ouzFASf" text="Ein Kurier trifft ein und überbringt eine Botschaft von {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Sie{?}Er{\?} erwähnt Euren wachsenden Ruf und fragt, ob Ihr in Erwägung ziehen würdet, Euch als Vasall von {OFFERED_KINGDOM_NAME} zu verpflichten. Ihr solltet persönlich sprechen, wenn Ihr interessiert seid." />
-    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} entschied sich, nicht in den Krieg mit {KINGDOM} zu ziehen, mit der Unterstützung {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="940TwBPs" text="{RULER.NAME} entschied sich, den Klan {CLAN} nicht aus {KINGDOM} zu vertreiben, trotz der Einwände {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} entschied sich, nicht in den Krieg mit {KINGDOM} zu ziehen." />
-    <string id="aE7OQDMS" text="Bündnis schließen mit {KINGDOM_NAME}." />
     <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat beschlossen, Frieden mit {KINGDOM} zu schließen, wobei {?PEACEMAKER_RULER.GENDER}ihr{?}sein{\?} Rat in dieser Angelegenheit unentschieden war." />
     <string id="AGdmoIUc" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen. Die Entscheidung ging gegen den Rat {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="amdgO9Hr" text="Ich bin {CONVERSATION_HERO.FIRSTNAME}. Ich bin ein bescheidener Anhänger der Gemeinschaft, die als {FACTION_NAME} bekannt ist, die {DIVINITY} erwählt haben, ihre Botschaft in diesem gegenwärtigen Zeitalter zu tragen." />
-    <string id="aQAI99d4" text="Kriegserklärung an {KINGDOM_NAME}" />
-    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat sich gegen einen Frieden mit {KINGDOM} entschieden, wobei {?PEACEMAKER_RULER.GENDER}ihr{?}sein{\?} Rat in dieser Angelegenheit unentschieden war." />
-    <string id="AwCnrOan" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_COST}{GOLD_ICON} aufgerufen wird." />
     <string id="AWm7Kb9Y" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} nicht zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen. Die Entscheidung hatte die Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="awoeb3br" text="{FACTION_LEADER} wird entscheiden, ob {KINGDOM_CONSIDERING_PEACE_NAME} Frieden mit {KINGDOM_NAME} schließt. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} hat Frieden mit {ENEMYFACTION_INFORMALNAME} geschlossen. Eure Vereinbarung mit {QUEST_GIVER.LINK} wurde aufgehoben." />
-    <string id="az3K3j4C" text="Momentan sind wir stärker als {ENEMY_KINGDOM_INFORMAL_NAME}. Wir sollten zuschlagen, solange wir können." />
-    <string id="B818zx3W" text="Euer Klan befindet sich im Krieg mit Fraktionen, mit denen {KINGDOM} Frieden hat." />
-    <string id="bjEN2OzZ" text="Als Folge Eurer feindseligen Absicht gegenüber einem neutralen Dorf erklärt Euch {KINGDOM} den Krieg." />
-    <string id="Bk3Wqy5j" text="{RULER.NAME} hat beschlossen, dem Ruf von {CALLING_KINGDOM} nicht zu folgen und wird {KINGDOM_TO_CALL_TO_WAR_AGAINST} nicht bekriegen." />
-    <string id="BlVjIlZF" text="{FACTION_LEADER} wird entscheiden, ob {KINGDOM_CONSIDERING_PEACE_NAME} Frieden mit {KINGDOM_NAME} schließt, indem {TRIBUTE_AMOUNT} als Tribut für {TRIBUTE_DURATION} Tage gezahlt wird. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
     <string id="bMCZ5rWQ" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} nicht zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen. Die Entscheidung hatte die Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="bR7MIkFi" text="{RULER.NAME} hat sich mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates gegen ein Bündnis mit {KINGDOM_NAME} entschieden." />
-    <string id="bXN2fbcv" text="Eure Männer behandeln die Bewohner von {SETTLEMENT_NAME} eher als verirrte Untertanen von {SETTLEMENT_CULTURE_NAME} denn als Feinde und gehen relativ gut mit ihnen um." />
-    <string id="bYmc9fi3" text="{RULER.NAME} hat sich trotz des Widerstands {?RULER.GENDER}ihres{?}seines{\?} Rates für ein Bündnis mit {KINGDOM_NAME} entschieden." />
-    <string id="Cf0amFBD" text="Annahme des Kriegsrufs von {CALLING_KINGDOM} gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
     <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} hat {KINGDOM} mit Unterstützung {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates den Krieg erklärt." />
-    <string id="CrzFdo2H" text="Ja. Es geht um den Krieg mit {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Wir müssen einige ihrer Streitkräfte binden. Eine relativ kleine Truppe, die sich schnell durch ihr Land bewegt und erfolgreich ihre Dörfer plündert, sollte eine gute Ablenkung sein. Ihre Herren werden die Plünderer verfolgen müssen und werden uns anderswo nicht bedrohen können. Ihr scheint {?PLAYER.GENDER}die richtige Kriegerin{?}der richtige Mann{\?} für diese Aufgabe zu sein. Was sagt Ihr? Ihr werdet meine Dankbarkeit haben und gut belohnt werden, wenn Ihr Erfolg habt." />
     <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat beschlossen, Frieden mit {KINGDOM} zu schließen." />
-    <string id="d6KbdIWg" text=" Aufgrund Eurer feindlichen Absichten gegenüber einem neutralen Dorf beendet {MERCENARY_KINGDOM} seinen Vertrag mit Euch, und {KINGDOM} erklärt Euch den Krieg." />
-    <string id="dCDBqYsh" text="{RULER.NAME} von {KINGDOM} hat sich mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates gegen ein Handelsabkommen mit {OTHER_KINGDOM} entschieden." />
     <string id="dDsJyerw" text="{CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} rufen." />
-    <string id="dEsIQDo3" text="Es ist an der Zeit, unseren Verbündeten {CALLED_KINGDOM} zum Krieg zu rufen!" />
-    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} von {ENEMY_KINGDOM_INFORMAL_NAME} ist niederträchtig und gefährlich. Wir müssen uns {?ENEMY_RULER.GENDER}ihrer{?}seiner{\?} annehmen, bevor es zu spät ist." />
-    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} hat {KINGDOM} trotz des Widerstands {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates den Krieg erklärt." />
-    <string id="dPOOmYGQ" text="Glaubt Ihr, die Herren und Krieger von {KINGDOM} werden einfach tatenlos zusehen, wenn ihr Volk entführt wird? Lasst uns besser gehen!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} wurde im Jahre {CREATION_YEAR} von {RULER.NAME}, Anführer einer Gruppe {CULTURE_ADJECTIVE} Rebellen, gegründet." />
-    <string id="eAhgrwkZ" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob ein Bündnis mit {KINGDOM_NAME} geschlossen wird." />
     <string id="eEmFbQet" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} zu rufen. Die Entscheidung hatte die Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="efTah9rk" text="Ich habe nicht die Befugnis, im Namen von {ENEMY_INFORMAL_NAME} Frieden zu schließen. Unser Rat sollte entscheiden, ob wir Frieden anbieten und zu welchen Bedingungen." />
-    <string id="eiGl6XBr" text="Abstimmung darüber, ob dem Kriegsruf von {CALLING_KINGDOM} gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_PAYMENT}{GOLD_ICON} gefolgt werden soll." />
-    <string id="EqevKYZD" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_COST}{GOLD_ICON} gerufen wird." />
-    <string id="eTylgLCc" text="Ein Kurier von {KINGDOM_NAME} ist eingetroffen. Sie bieten Euch ein Bündnis an. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM} befindet sich nicht mehr im Krieg mit {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} hat sich trotz des Widerstands {?RULER.GENDER}ihres{?}seines{\?} Rates gegen ein Bündnis mit {KINGDOM_NAME} entschieden." />
-    <string id="fcuUcjYV" text="{RULER.NAME} hat beschlossen, dem Ruf von {CALLING_KINGDOM} nicht zu folgen und wird {KINGDOM_TO_CALL_TO_WAR_AGAINST} nicht bekriegen. Die Entscheidung hatte die Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="FNCq25P1" text="{RULER.NAME} hat sich mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates für ein Bündnis mit {KINGDOM_NAME} entschieden." />
-    <string id="FuNbouTu" text="Ein Kurier von {KINGDOM_NAME} ist eingetroffen. Sie rufen Euer Königreich zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
-    <string id="G3qGLAeQ" text="{RULER.NAME} hat den Klan {CLAN} gegen den Willen {?RULER.GENDER}ihres{?}seines{\?} Rates aus {KINGDOM} ausgestoßen." />
     <string id="gf2Lje7o" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} nicht zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} zu rufen." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, Befehlshaber eines Heeres von {QUEST_GIVER_FACTION}, hat dir mitgeteilt, dass Nachschub an Nahrung für den bevorstehenden Feldzug benötigt wird. {?QUEST_GIVER.GENDER}Sie{?}Er{\?} möchte, dass du {GRAIN_AMOUNT} Säcke Getreide lieferst, und obwohl es nicht notwendig ist, würde {?QUEST_GIVER.GENDER}sie{?}er{\?} es zu schätzen wissen, wenn du auch {LIVESTOCK_AMOUNT} Stück Vieh und {WINE_AMOUNT} Fässer Wein beschaffst." />
-    <string id="Gj5d9y2g" text="{RULER.NAME} von {KINGDOM} hat beschlossen, ein Handelsabkommen mit {OTHER_KINGDOM} zu unterzeichnen." />
     <string id="gNf0ALKw" text="Ein Kurier von {MAP_FACTION_NAME} ist eingetroffen. Sie bieten Euch einen weißen Frieden an. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
-    <string id="h5eTEYON" text="{RULER.NAME} hat den Klan {CLAN} aus {KINGDOM} ausgestoßen." />
-    <string id="h9bWTLgK" text="Es ist an der Zeit, unseren Verbündeten {KINGDOM_NAME} in ihrem Krieg beizustehen." />
     <string id="IB1xsVEr" text="Ein Kurier von {MAP_FACTION_NAME} ist eingetroffen. Sie bieten Euch einen weißen Frieden an. Eure Vasallen haben Euch die Entscheidung überlassen." />
-    <string id="INfHUqxT" text="{RULER.NAME} hat beschlossen, ein Bündnis mit {KINGDOM_NAME} zu schließen." />
     <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat sich trotz der Einwände {?PEACEMAKER_RULER.GENDER}ihres{?}seines{\?} Rates gegen einen Frieden mit {KINGDOM} entschieden." />
-    <string id="iOmgCFDI" text="Abstimmung über ein Bündnis mit {KINGDOM_NAME}." />
-    <string id="ItueKmqd" text="Euer Klan befindet sich nun im Krieg mit {QUEST_GIVER_SETTLEMENT_FACTION}. Euer Vertrag mit {QUEST_GIVER.LINK} wird aufgehoben." />
-    <string id="izwKmH2I" text="{RULER.NAME} hat sich mit Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates für ein Bündnis mit {KINGDOM_NAME} entschieden." />
-    <string id="jaioXYDc" text="{RULER.NAME} hat sich mit Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates gegen ein Bündnis mit {KINGDOM_NAME} entschieden." />
     <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat beschlossen, Frieden mit {KINGDOM} zu schließen, trotz des Widerstands {?PEACEMAKER_RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="JJQ0Hp4m" text="Ein Kurier aus {MAP_FACTION_NAME} ist eingetroffen. {MAP_FACTION_NAME} wird täglich {GOLD_AMOUNT} {GOLD_ICON} als Tribut zahlen, um den Krieg zwischen Euren Reichen zu beenden. Eure Vasallen haben die Entscheidung Euch überlassen." />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} ist derzeit mächtiger als wir. Wir brauchen Zeit, um unsere Stärke aufzubauen." />
-    <string id="JQligd8z" text="Der Rat von {KINGDOM} hat {KING.NAME} zum neuen Herrscher gewählt." />
-    <string id="JY717hPW" text="Ich habe nicht die Befugnis, im Namen von {ENEMY_INFORMAL_NAME} Frieden zu schließen. {ENEMY_RULER.NAME} und {?ENEMY_RULER.GENDER}ihr{?}sein{\?} Rat sollten entscheiden, ob Frieden angeboten wird und zu welchen Bedingungen." />
-    <string id="K5w135N9" text="{RULER.NAME} hat beschlossen, dem Ruf von {CALLING_KINGDOM} nicht zu folgen und wird nicht gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} in den Krieg ziehen. Die Entscheidung wurde gegen den Rat {?RULER.GENDER}ihres{?}seines{\?} Rates getroffen." />
-    <string id="KFHj7ckm" text="Als Herrscher müsst Ihr entscheiden, ob Frieden mit {KINGDOM_NAME} geschlossen wird" />
-    <string id="KlATZEbb" text="Bildung eines Bündnisses mit {KINGDOM_NAME}." />
-    <string id="KSrNutEO" text="{FACTION_LEADER} wird entscheiden, ob {KINGDOM_NAME} der Krieg erklärt wird. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
-    <string id="Ktpia7Pa" text="{RULER.NAME} von {KINGDOM} übergibt {SETTLEMENT} an {LEADER.NAME}, trotz des Widerstands {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="l5H9x7Lo" text="{RULER.NAME} von {KINGDOM} übergibt {SETTLEMENT} an {LEADER.NAME}, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat gleichmäßig gespalten war." />
     <string id="L802I9W2" text="Ja, ich werde {FACTION_NAME} beitreten." />
-    <string id="L81DPSom" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob Euer Reich dem Ruf von {CALLING_KINGDOM} folgen und {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_COST}{GOLD_ICON} den Krieg erklären wird." />
-    <string id="Lalj0T1i" text="{RULER.NAME} hat dem Ruf von {CALLING_KINGDOM} gefolgt und {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg erklärt, trotz des Widerstands {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="lseJ70y0" text="Euer Reich befindet sich im Krieg mit {KINGDOM_NAME}." />
-    <string id="LVX2x6Jf" text="Ich möchte meinen Vertrag mit {SERVED_FACTION} beenden." />
     <string id="m69pvful" text="{KINGDOM_LEADER} wird entscheiden, ob Euer Reich dem Ruf von {CALLING_KINGDOM} folgen und {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_PAYMENT}{GOLD_ICON} den Krieg erklären wird. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} hat den Clan {CLAN} aus {KINGDOM} verstoßen, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat in dieser Angelegenheit gleichmäßig gespalten war." />
     <string id="mfYzCeGR" text="{CHARACTER.NAME} war {TITLE} von {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
     <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat beschlossen, keinen Frieden mit {KINGDOM} zu schließen, mit Unterstützung {?PEACEMAKER_RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}eine Dame{?}ein Herr{\?} von {CLAN}, möchte, dass ein junges Mitglied des Clans in der Kriegskunst ausgebildet wird." />
-    <string id="mvkKP6OE" text="{RULER.NAME} hat beschlossen, den Clan {CLAN} nicht aus {KINGDOM} zu verstoßen." />
     <string id="MYIgSsfk" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} nicht zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen. Die Entscheidung ging gegen den Rat {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="n4I3pWOn" text="Als Herrscher müsst Ihr entscheiden, ob Frieden mit {KINGDOM_NAME} geschlossen wird, indem Ihr {TRIBUTE_AMOUNT} als Tribut für {TRIBUTE_DURATION} Tage zahlt." />
     <string id="Nd0Vhkxn" text="Ein Kurier aus {MAP_FACTION_NAME} ist eingetroffen. Sie bieten Euch Frieden an, wenn Ihr zustimmt, täglich {GOLD_AMOUNT} {GOLD_ICON} als Tribut zu zahlen. Eure Vasallen haben die Entscheidung Euch überlassen." />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM} befindet sich bereits im Krieg mit {KINGDOM_NAME}." />
-    <string id="NjPMRWbW" text="Frieden mit {KINGDOM_NAME} schließen. Unser Königreich wird täglich {TRIBUTE_AMOUNT} Tribut für {TRIBUTE_DURATION} Tage erhalten." />
-    <string id="nkvT88r2" text="Ihr habt nicht genug Geld, um {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen." />
-    <string id="NuYzgBZB" text="Ihr geht zu weit. {KINGDOM} wird die Zerstörung seiner Karawanen nicht dulden." />
-    <string id="o4IxXHnB" text="{RULER.NAME} hat beschlossen, kein Bündnis mit {KINGDOM_NAME} zu bilden." />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK} ist nicht länger das Oberhaupt von {CLAN_NAME}. {NEW_LEADER.LINK} hat die Führung des Clans übernommen." />
     <string id="O9XpB5Ah" text="Als Herrscher müsst Ihr entscheiden, ob ein Handelsabkommen mit {KINGDOM} geschlossen wird" />
     <string id="oAw74q3r" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob Euer Reich dem Ruf von {CALLING_KINGDOM} folgen und {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_PAYMENT}{GOLD_ICON} den Krieg erklären wird." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} hat beschlossen, den Clan {CLAN} nicht aus {KINGDOM} zu verstoßen, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat in dieser Angelegenheit gleichmäßig gespalten war." />
-    <string id="Oi20UrO2" text="Unser Krieg mit {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} läuft gut genug. Aber es gibt einige, die sagen, dass wir nicht genug vorzuweisen haben für all das Blut und Silber, das wir ausgegeben haben. Ein klarer Sieg in diesem Stadium würde viel Gutes bewirken. Ich denke, ich würde gerne unser Banner von den Türmen von {TARGET_SETTLEMENT} wehen sehen.[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="Ja. Es geht um den Krieg mit {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Wir müssen einige ihrer Truppen binden, und der einfachste Weg wäre, ihre Dörfer zu plündern. Es ist ein grausames Geschäft und wird hart für das gemeine Volk sein, aber ihre Herren werden die Plünderer verfolgen müssen, und das wird sie davon abhalten, uns dasselbe anzutun. Wenn Ihr das übernehmt, werde ich Euch belohnen, wenn Ihr Erfolg habt." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} hat beschlossen, dem Ruf von {CALLING_KINGDOM} nicht zu folgen und wird nicht gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} in den Krieg ziehen. Die Entscheidung hatte die Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="PneX4Ayw" text="Ein Kurier mit einem Kriegsaufruf von {KINGDOM_NAME} gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} ist am Hof Eures Reiches eingetroffen." />
-    <string id="PP7KD7OC" text="{RULER.NAME} von {KINGDOM} hat beschlossen, ein Handelsabkommen mit {OTHER_KINGDOM} zu unterzeichnen, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat in dieser Angelegenheit gleichmäßig gespalten war." />
-    <string id="PutoRsWp" text="Ein Kurier aus {CLAN_NAME} trifft ein. Sie bieten Euch {GOLD_AMOUNT}{GOLD_ICON} als Lösegeld an, wenn Ihr {CAPTIVE_HERO.NAME} freilasst." />
-    <string id="q9DnHVcZ" text="Es liegt nicht in unserem Interesse, {KINGDOM_NAME} in ihren Krieg zu folgen." />
-    <string id="qa4FlTWS" text="{RULER.NAME} von {KINGDOM} nimmt {SETTLEMENT} als {?RULER.GENDER}ihr{?}sein{\?} Lehen, trotz des Widerstands {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="qgN9o2ip" text="Es ist an der Zeit, unseren Verbündeten {KINGDOM_NAME} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen! Euer Königreich wird darüber abstimmen, ob ein Kriegsaufruf an sie gerichtet werden soll." />
-    <string id="qN3x2usk" text="Stimmt ab, ob {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_COST}{GOLD_ICON} aufgerufen werden soll." />
     <string id="R0bJS0pn" text="Frieden schließen mit {OTHER_FACTION}" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER} wird entscheiden, ob {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} für {CALL_TO_WAR_COST}{GOLD_ICON} aufgerufen wird. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
-    <string id="rd229FYG" text="{RULER.NAME} hat den Clan {CLAN} aus {KINGDOM} verbannt, mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} hat {KINGDOM} den Krieg erklärt, mit Unterstützung der Hälfte {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="rJIuQ0hc" text="{RULER.NAME} von {KINGDOM} hat sich gegen ein Handelsabkommen mit {OTHER_KINGDOM} entschieden, trotz der Einwände {?RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="rtfoywJl" text="{KINGDOM_NAME} den Krieg erklären" />
     <string id="sbFboHmV" text="Ein Kurier ist von {MAP_FACTION_NAME} eingetroffen. Sie bieten Euch Frieden an, wenn Ihr bereit seid, einen täglichen Tribut von {GOLD_AMOUNT} {GOLD_ICON} zu zahlen. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
-    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} hat {KINGDOM} den Krieg erklärt." />
     <string id="SR9FC5jH" text="Ein Kurier ist von {MAP_FACTION_NAME} mit einem Friedensangebot eingetroffen. {MAP_FACTION_NAME} wird täglich {GOLD_AMOUNT} {GOLD_ICON} als Tribut zahlen, um den Krieg zwischen Euren Reichen zu beenden. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
-    <string id="syGyjjKE" text="Dem Ruf von {CALLING_KINGDOM} folgen und {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg erklären." />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} bietet Euch Arbeit als Söldner und zahlt {GOLD_AMOUNT}{GOLD_ICON} pro Einflusspunkt, den Ihr durch den Kampf für sie gewinnen würdet. Akzeptiert Ihr?" />
-    <string id="uc4M4bhG" text="Nun, es gibt da etwas, das ich mir wünsche. Es gibt eine {?TARGET_HERO.GENDER}Herrin{?}Herrn{\?} von {TARGET_FACTION}, mit dem mich eine lange, lange Geschichte verbindet. Und keine freundliche. Nun, da wir im Krieg stehen, weiß ich: Solange {?TARGET_HERO.GENDER}sie{?}er{\?} frei ist, sind mein Leben und meine Lande nicht sicher. Wie gesagt, es wird alles andere als einfach sein. Doch wer es schafft, {?TARGET_HERO.GENDER}sie{?}ihn{\?} mir lebend zu bringen, dem sei nicht nur meine Dankbarkeit gewiss — er wird auch ein sehr reicher Mann sein.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME} hat dem Ruf von {CALLING_KINGDOM} gefolgt und {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg erklärt, mit Unterstützung der Hälfte {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="UQq4ekeu" text="{RULER.NAME} von {KINGDOM} hat sich gegen ein Handelsabkommen mit {OTHER_KINGDOM} entschieden." />
-    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} hat {CALLED_KINGDOM_LINK} aufgerufen, {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK} den Krieg zu erklären." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME} war ein Mitglied von {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME} ist das Oberhaupt von {CLAN_NAME}, einem aufstrebenden neuen Clan. {?LORD.GENDER}Sie{?}Er{\?} baut {?LORD.GENDER}ihren{?}seinen{\?} Ruf noch auf." />
-    <string id="vf2pb7Ts" text="{RULER.NAME} hat dem Ruf von {CALLING_KINGDOM} gefolgt und {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg erklärt." />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER} wird entscheiden, ob {KINGDOM} ein Handelsabkommen mit {OTHER_KINGDOM} unterzeichnet. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
-    <string id="VWoHoUin" text="Es wird keinen Frieden zwischen uns und {ENEMY_INFORMAL_NAME} geben, genauso wenig wie der Wolf Frieden mit dem Schaf schließt." />
-    <string id="wijL0mTy" text="{FACTION_LEADER} wird entscheiden, ob ein Bündnis mit {KINGDOM_NAME} geschlossen wird. Ihr könnt Eure Haltung zu dieser Entscheidung wählen." />
     <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} von {KINGDOM_CONSIDERING_PEACE} hat sich gegen Frieden mit {KINGDOM} entschieden." />
-    <string id="xAuejv91" text="{RULER.NAME} von {KINGDOM} hat sich gegen Frieden mit {OTHER_KINGDOM} entschieden, wobei {?RULER.GENDER}ihr{?}sein{\?} Rat gleichmäßig geteilt war." />
-    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} entschied sich, nicht in den Krieg mit {KINGDOM} zu ziehen, trotz der Wünsche {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="XbYCVCbR" text="Wir sind dagegen, unseren Verbündeten {CALLED_KINGDOM} zum Krieg aufzurufen." />
     <string id="xhK4zMec" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} aufzurufen." />
-    <string id="xKev8i5B" text="Der Aufruf, den {CALLING_KINGDOM_LINK} an {CALLED_KINGDOM_LINK} gerichtet hat, in den Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK} zu ziehen, ist beendet." />
-    <string id="xM97H0oR" text="Stimmt ab für eine Kriegserklärung an {KINGDOM_NAME}." />
-    <string id="yBL3TzXw" text="{RULER.NAME} entschied sich, den Clan {CLAN} nicht aus {KINGDOM} zu verbannen, mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="yUYNlQhU" text="Gut, ich lasse meine Männer einen einfachen Vertrag aufsetzen. Im Namen von {KINGDOM_FORMAL_NAME} heiße ich Euch willkommen. Möget Ihr Euer Schwert gut gegen unsere Feinde einsetzen." />
     <string id="Zckbdm4Z" text="{RULER.NAME} von {KINGDOM} nimmt {SETTLEMENT} als {?RULER.GENDER}ihr{?}sein{\?} Lehen, mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
-    <string id="zd9sawl9" text="Ihr seid bereits mit {KINGDOM_NAME} verbündet." />
-    <string id="zXuo0Wbj" text="Unterzeichnung eines Handelsabkommens mit {KINGDOM}" />
-    <string id="ZZ1oLfEq" text="{RULER.NAME} hat dem Ruf von {CALLING_KINGDOM} gefolgt und {KINGDOM_TO_CALL_TO_WAR_AGAINST} den Krieg erklärt, mit Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="taom_shaghana_name" text="Shaghâna" />
     <string id="taom_shaghana_short_name" text="Shaghâna" />
     <string id="taom_shaghana_title" text="Taskralan von Shaghâna" />
@@ -682,6 +551,7 @@
     <string id="taom_career_tier2" text="Stufe 2" />
     <string id="taom_career_tier3" text="Stufe 3" />
     <string id="taom_career_free_points" text="Freie Punkte: {COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="Benötigt Stufe {LEVEL}" />
     <string id="taom_career_choice_while_active" text="Derzeit aktiv" />
     <string id="taom_career_active_effects" text="Aktive Effekte" />
@@ -1376,7 +1246,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Einzelne Siedlung als Engpass" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Umgeben von Rohan und Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% Einflusskosten für Armeen (Der Wille des Dunklen Herrschers)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% Gruppengröße (Saurons Horden)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% Gruppengröße (Saurons Horden)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% Schmiedeeffizienz (Dunkle Schmiedekunst)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% Getreideproduktion in Nurn (Ackerland von Nurn)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% Plünderungsschaden (Saurons Zorn)" />
@@ -2041,23 +1911,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Goblin" />
     <string id="taom_str_player_father_name.goblin" text="Narzuk" />
     <string id="taom_str_player_mother_name.goblin" text="Borlia" />
-    <string id="taom_bandit_goblin_name" text="Goblin-Räuber" />
-    <string id="taom_bandit_goblin_m1" text="Bolg" />
-    <string id="taom_bandit_goblin_m2" text="Yazneg" />
-    <string id="taom_bandit_goblin_m3" text="Fimbul" />
-    <string id="taom_bandit_goblin_m4" text="Narzug" />
-    <string id="taom_bandit_goblin_m5" text="Gorbag" />
-    <string id="taom_bandit_goblin_m6" text="Mauhûr" />
-    <string id="taom_bandit_goblin_m7" text="Snaga" />
-    <string id="taom_bandit_goblin_m8" text="Ufthak" />
-    <string id="taom_bandit_goblin_m9" text="Radbug" />
-    <string id="taom_bandit_goblin_m10" text="Lugdush" />
-    <string id="taom_bandit_goblin_f1" text="Skarra" />
-    <string id="taom_bandit_goblin_f2" text="Vorga" />
-    <string id="taom_bandit_goblin_f3" text="Mazra" />
-    <string id="taom_bandit_goblin_f4" text="Grishta" />
-    <string id="taom_bandit_goblin_f5" text="Narzga" />
-    <string id="taom_hideout_desc_goblin" text="Unter den Klippen des Hohen Passes findet Ihr einen stinkenden Bau von Kobolden, tief in den nackten Fels gegraben." />
     <string id="taom_str_faction_official.mistymountainorcs" text="ein Häuptling des Nebelgebirges" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="eine Häuptlingin des Nebelgebirges" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Kriegsherr" />
@@ -2075,30 +1928,11 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Ork" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Narzuk" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Borlia" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Ork-Räuber" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Bolg" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Yazneg" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Fimbul" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Narzug" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Gorbag" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Mauhûr" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Snaga" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Ufthak" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Radbug" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Lugdush" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Skarra" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Vorga" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Mazra" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Grishta" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Narzga" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Unter den Klippen des Nebelgebirges findet Ihr einen üblen Bau von Orks, in den nackten Fels gegraben." />
     <string id="taom_bld_stall_title" text="TAOM: Letztes Schlachtladen möglicherweise nicht abgeschlossen" />
     <string id="taom_bld_stall_dismiss" text="Verwerfen" />
     <string id="taom_bld_stall_openfolder" text="Protokollordner öffnen" />
     <string id="taom_settlement_food_adjustment" text="Siedlungsnahrung (TAOM)" />
     <string id="taom_recruit_needs_resource" text="Benötigt {AMOUNT} {RESOURCE}" />
-    <string id="LjUhEJxz" text="Karawane von {OWNER.NAME}" />
-    <string id="l4pRw7pO" text="Bewaffnete Karawane von {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} Truppen sind desertiert – sie weigern sich, einem Herrn der gegnerischen Gesinnung zu dienen." />
     <string id="taom_troop_weight_size" text="Schwere Truppen" />
     <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
@@ -2668,9 +2502,46 @@
     <string id="taom_bc_advice_keep" text="Keep mine" />
     <string id="taom_bc_advice_done" text="Battle settings saved." />
     <string id="taom_bc_advice_failed" text="Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
+    <string id="taom_bc_apply_failed" text="[TAOM] Battle settings could not be applied: {ERROR}" />
     <string id="taom_cheat_screen_guard_notice" text="TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
     <string id="taom_texture_advice_title" text="TAOM: memory advice" />
     <string id="taom_texture_advice_body" text="This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />
     <string id="taom_texture_advice_ok" text="Understood" />
+    <string id="taom_enlist_not_by_messenger" text="Swear service in person, not through a messenger." />
+    <string id="taom_tavern_drink_default" text="a mug of ale" />
+    <string id="taom_tavern_food_default" text="a bowl of stew" />
+    <string id="taom_str_liege_title.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title_female.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title_female.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title.dolguldur" text="Dread-Lord of Dol Guldur" />
+    <string id="taom_str_liege_title_female.dolguldur" text="Dread-Lady of Dol Guldur" />
+    <string id="taom_str_liege_title.erebor" text="King under the Mountain" />
+    <string id="taom_str_liege_title_female.erebor" text="Queen under the Mountain" />
+    <string id="taom_str_liege_title.gondor" text="Lord of Gondor" />
+    <string id="taom_str_liege_title_female.gondor" text="Lady of Gondor" />
+    <string id="taom_str_liege_title.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title_female.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title_female.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title.isengard" text="Lord of Isengard" />
+    <string id="taom_str_liege_title_female.isengard" text="Lady of Isengard" />
+    <string id="taom_str_liege_title.lindon" text="Lord of the Havens" />
+    <string id="taom_str_liege_title_female.lindon" text="Lady of the Havens" />
+    <string id="taom_str_liege_title.lothlorien" text="Lord of the Galadhrim" />
+    <string id="taom_str_liege_title_female.lothlorien" text="Lady of the Galadhrim" />
+    <string id="taom_str_liege_title.mirkwood" text="Elvenking of Mirkwood" />
+    <string id="taom_str_liege_title_female.mirkwood" text="Elvenqueen of Mirkwood" />
+    <string id="taom_str_liege_title.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title_female.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title.mordor" text="Dark Lord of Mordor" />
+    <string id="taom_str_liege_title_female.mordor" text="Dark Lady of Mordor" />
+    <string id="taom_str_liege_title.rivendell" text="Lord of Imladris" />
+    <string id="taom_str_liege_title_female.rivendell" text="Lady of Imladris" />
+    <string id="taom_str_liege_title.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title_female.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title.umbar" text="Corsair King of Umbar" />
+    <string id="taom_str_liege_title_female.umbar" text="Corsair Queen of Umbar" />
+    <string id="taom_str_become_king_empire" text="On {DAY_OF_YEAR}, {YEAR}, {KING_NAME} was hailed as {?IS_KING_MALE}Brenin{?}Brenhines{\?} of Dunland." />
   </strings>
 </base>

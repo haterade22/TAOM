@@ -20,7 +20,7 @@ Three constraints:
 
 1. **Position calculation must run inside vanilla's `GetOrderPositionOfUnit`** — that's the single point in the engine where each unit's intended position is queried. Patch the method, prefix-skip vanilla when our layout produces a position, return `true` otherwise.
 2. **Apply only during `Hold` movement state** — during charge, the engine's free-form combat positioning dominates; trying to override would fight the engine. The original developer's `(int)GetMovementState() != 1` check is preserved (`MovementStateEnum.Hold = 1`).
-3. **Cache assignments per formation** — recomputing the slot grid for every unit on every position query would be O(N²) per formation per tick. Build the assignment once when the layout is set or the formation appears, then look up by `Agent.Index`.
+3. **Cache assignments per formation**: recomputing the slot grid for every unit on every position query would be O(N²) per formation per tick. Build the assignment once, lazily: setting or cycling a layout only drops the formation's cached assignment, and the next position query builds it, on whichever thread asks (Patch30 runs on the engine's worker threads). Then look up by `Agent.Index`.
 
 ### Solution Approach
 
@@ -81,7 +81,7 @@ The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002). The 
 | `Enable Mixed Formations` | bool | `true` | Master toggle. When off, formations use vanilla positioning. |
 | `Default Layout` | int 0–3 | `0` (InfFront) | Auto-applied to mixed formations during the per-second tick. 0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard |
 | `Cycle Layout Hotkey` | string | `"L"` | Bannerlord `InputKey` name. Pressing while a formation is selected cycles its layout; pressing while no formation is selected cycles all formations. |
-| `Mixed Formations Debug Mode` | bool | `false` | Show `[MixedFormations]` diagnostic messages on the in-game HUD. Off = file log only. |
+| `Mixed Formations Debug Mode` | bool | `false` | Gates two `LogDebug` lines (the auto-assigned default layout and the cycled layout), written to `Logs/taom_debug_*.log`. It prints nothing on the HUD; the cycle hotkey's yellow `[MixedFormations] Layout (...)` HUD message shows whatever this is set to. |
 
 ### Layout Modes
 
@@ -148,7 +148,7 @@ The adapter's behaviour (`FormationAdapter`) is tested only via integration sinc
 ## Performance + Thread Safety
 
 - Service state is per-mission, cleared on `OnEndMission`. Two maps: the layouts (`ConcurrentDictionary<object, (IFormationAdapter, FormationLayoutType)>`, ~4 entries) + `Dictionary<object, SlotAssignment>` (~4 entries), both keyed by reference (`ReferenceIdentity`). Negligible.
-- Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey. No allocations in the hot path.
+- Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey and parses its setting string with `Enum.TryParse`, which this line does not cache and which allocates (about 112 bytes per call, measured on the .NET Framework 2026-11-05, so about 7 KB a second at 60 FPS). The once-per-second pass allocates a list and a `FormationAdapter` per player formation; when a default layout is set, each formation with no layout also walks `FormationAdapter.Units`, a LINQ query that ends in `ToList`.
 - Per-position-query work: a formation with no layout costs one lock-free lookup and nothing else; a laid-out formation takes the lock for the dictionary lookup and 1 conditional `BuildInitialAssignment` on a cache miss, then does the `Vec2` math (lock-free). The laid-out path still reads engine query state on the worker, as it did before this change: its cavalry gate reads the evaluating `IsCavalryFormation`, and the pitch (`Math.Max(1, formation.Interval + 1)`) reads `Formation.Interval`, which reads the evaluating `CavalryUnitRatio` (2.5 s lifetime; v1.4.8 `Formation.cs:512-534`, `FormationQuerySystem.cs:431`). A read of an expired member refreshes the formation's whole class-ratio sync group (`FormationQuerySystem.cs:440`) on whichever thread asks first, and while the group is fresh the gate is a clock check. The gate keeps the evaluating read on purpose: a mass transfer or split only expires the group (`QuerySystem.Expire()` in `Formation.OnMassUnitTransferEnd`, `TransferUnits` and `Split`), so a cached flag would answer from the old composition and the pitch's `Interval` read would then refresh it after the call had already returned a position (1.5.x Codex review of plan 032, finding 1). Vanilla reads `Interval` on these workers too: `HumanAIComponent.ParallelUpdateFormationMovement` calls `Formation.GetCurrentGlobalPositionOfUnit` (v1.4.8 `HumanAIComponent.cs:685`), which reads it (`Formation.cs:1284`). The `BuildInitialAssignment` is the only ω(N) operation and runs once per layout change per formation.
 - `Patch30` caches the `IFormationLayoutService` resolve via static `??=` field — fires once per process, then the dict lookup is bypassed on every subsequent per-unit Prefix call. Per `harmony-patches.md` hot-path-reflection-caching pattern. Caught by deep-review Agent 3.
 - **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.MovementOrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so every layout write, the slot cache and `SlotAssignment.ByAgentIndex` in `FormationLayoutService` are protected by a `private readonly object _lock`. The slot lookup for a laid-out formation locks briefly and re-reads the layout under the lock; a formation with no layout is answered with no lock from the layouts' `ConcurrentDictionary`; the pitch read and the plane transform run outside the critical section, and the pitch read reaches the engine's query system, which this lock cannot protect (see the previous bullets). Caught by Codex review #36; codified in memory entry `feedback_detect_engine_threading_via_mt_suffix`.
@@ -188,14 +188,14 @@ In-game golden path:
 Disable round-trip:
 
 1. MCM → set `Enable Mixed Formations = false` → reload campaign / re-enter battle.
-2. Confirm one `[MixedFormations] disabled via MCM — patches inert` line in `rgl_log.txt`.
+2. Confirm one `[MixedFormations] disabled via MCM — patches inert` line in the newest `Logs/taom_debug_*.log`.
 3. Order a mixed formation to hold — should use vanilla positioning (units intermixed by Index order).
 
 Debug-mode round-trip:
 
 1. MCM → set `Mixed Formations Debug Mode = true`.
 2. Trigger an auto-default-apply or a hotkey cycle.
-3. Confirm `[MixedFormations] auto-assigned default layout ...` and `[MixedFormations] cycled N formation(s) → ...` lines appear both in `rgl_log.txt` and on the in-game HUD with the `[MixedFormations]` prefix.
+3. Confirm `[MixedFormations] auto-assigned default layout ...` and `[MixedFormations] cycled N formation(s) → ...` lines appear in the newest `Logs/taom_debug_*.log` (they are `LogDebug` lines, so they never reach the HUD or `rgl_log.txt`). With the toggle off they are absent, while a hotkey cycle still prints its HUD message.
 
 ## Changelog
 
@@ -224,7 +224,7 @@ Debug-mode round-trip:
 ## GitHub Issue
 
 - **Issue:** #714 (perf: make the worker-thread formation patch lock-free for formations without a layout)
-- **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
+- **Status:** The port (2026-05-06) and the lock-free lookup for formations with no layout (`FindLaidOutFormation`, plan 032) are in the code. This file does not record whether #714 is closed or the in-game check done: run `gh issue view 714`.
 
 ---
 

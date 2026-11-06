@@ -27,7 +27,7 @@
 # Concept (recalibrated) from mattpocock/skills git-guardrails, whose version
 # hard-blocked ALL pushes with no override — wrong for TAOM.
 #
-# Returns: {} to allow, {"permissionDecision":"ask","message":"..."} to confirm.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"..."}} to confirm.
 
 set -uo pipefail
 
@@ -63,7 +63,11 @@ REASON=""
 # actual command of a segment, never as text inside a quoted arg or a pipe target.
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
 
-while IFS= read -r seg; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
+for seg in "${SEG_LIST[@]}"; do
   [[ -n "$REASON" ]] && break
   seg="${seg#"${seg%%[![:space:]]*}"}"                       # ltrim
   # strip leading env-var assignments: VAR=value ...
@@ -100,15 +104,26 @@ while IFS= read -r seg; do
       REASON="git restore discards working-tree changes for the named paths"
     fi
   fi
-done <<< "$SEGMENTS"
+done
 
 # Not a guarded op → allow.
 [[ -z "$REASON" ]] && { echo '{}'; exit 0; }
 
-# Escape the command for JSON embedding (backslashes + quotes; Windows paths).
-CMD_ESC=$(printf '%s' "$COMMAND" | sed 's/\\/\\\\/g; s/"/\\"/g')
+MSG="CONFIRM destructive git op: ${REASON}. Command: \"${COMMAND}\". This can permanently lose uncommitted/unpushed work and TAOM has no undo for it. Approve ONLY if you intend to discard those changes — otherwise commit or stash first. (Pushes are guarded separately by validate-push.sh.)"
 
-MSG="CONFIRM destructive git op: ${REASON}. Command: \\\"${CMD_ESC}\\\". This can permanently lose uncommitted/unpushed work and TAOM has no undo for it. Approve ONLY if you intend to discard those changes — otherwise commit or stash first. (Pushes are guarded separately by validate-push.sh.)"
+# JSON-encode the reason as a whole. Escaping only backslashes and quotes by hand left the raw
+# newline of a multi-line Bash call inside the JSON string: invalid JSON, which the harness
+# reads as allow, so no confirm appeared (#647 convergence review).
+if [[ -n "${PYBIN:-}" ]]; then
+  REASON_JSON=$(printf '%s' "$MSG" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps(sys.stdin.read()))' 2>/dev/null)
+else
+  REASON_JSON=$(printf '%s' "$MSG" | jq -Rs . 2>/dev/null)
+fi
+if [[ -z "$REASON_JSON" ]]; then
+  echo "[block-dangerous-git] could not encode the confirm message; this destructive op was NOT confirmed" >&2
+  echo '{}'
+  exit 0
+fi
 
-printf '{"permissionDecision":"ask","message":"%s"}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":%s}}\n' "$REASON_JSON"
 exit 0

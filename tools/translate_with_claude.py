@@ -8,13 +8,13 @@ fallback chain (override -> cache -> LLM -> keep English).
 
 Usage:
     # Preview cost and counts (no API calls):
-    python tools/translate_with_claude.py --lang RU --dry-run
+    python tools/translate_with_claude.py --lang RU --module TAOM --dry-run
 
     # Pilot a small batch (50 entries):
     python tools/translate_with_claude.py --lang RU --module TAOM --max-entries 50 --apply
 
-    # Full run for a language (all 26 files):
-    python tools/translate_with_claude.py --lang RU --apply
+    # Full run for a language (all 26 files; `all` also writes the live Armory):
+    python tools/translate_with_claude.py --lang RU --module all --apply
 
     # Override files: tools/translation_overrides/<lang>.json (hand-curated, git-tracked)
     # Cache files:    tools/translation_cache/<lang>.json     (auto-written, git-tracked)
@@ -30,6 +30,7 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+from collections import Counter
 
 # Force UTF-8 stdout/stderr so we can print translated Russian/Japanese/Chinese error messages
 # without crashing on Windows cp1252 console encoding.
@@ -53,6 +54,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from _gamedir import ensure_exists, game_modules
+from _loc_sources import OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: F401
 
 
 # ── Configuration ──────────────────────────────────────────────────────────────
@@ -239,22 +241,8 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
     """
     pairs = []
     if module in ("TAOM", "all"):
-        # TAOM source XMLs at ModuleData root
-        for src_name, tgt_template in [
-            ("taom_module_strings.xml",                       "std_taom_module_strings_{locale}.xml"),
-            ("global_strings.xml",                            "std_taom_keybind_strings_{locale}.xml"),
-            ("taom_wanderer_strings.xml",                     "std_taom_wanderer_strings_{locale}.xml"),
-            ("named_companions/named_companion_strings.xml",  "std_taom_named_companion_strings_{locale}.xml"),
-            ("taom_cc_strings.xml",                           "std_taom_cc_strings_{locale}.xml"),
-            ("taom_career_strings.xml",                       "std_taom_career_strings_{locale}.xml"),
-            ("taom_messenger_strings.xml",                    "std_taom_messenger_strings_{locale}.xml"),
-            ("taom_xslt_strings.xml",                         "std_taom_xslt_strings_{locale}.xml"),
-            ("taom_wotr_strings.xml",                         "std_taom_wotr_strings_{locale}.xml"),
-            ("taom_lotr_issue_strings.xml",                   "std_taom_lotr_issue_strings_{locale}.xml"),
-            ("taom_emissary_strings.xml",                     "std_taom_emissary_strings_{locale}.xml"),
-            ("taom_enlistment_strings.xml",                   "std_taom_enlistment_strings_{locale}.xml"),
-            ("taom_player_switcher_strings.xml",              "std_taom_player_switcher_strings_{locale}.xml"),
-        ]:
+        # The ordered table lives in tools/_loc_sources.py (order decides key_owners).
+        for src_name, tgt_template in TAOM_SOURCES:
             src = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_name
             if src.exists():
                 pairs.append(("TAOM", src, tgt_template))
@@ -266,12 +254,16 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
     locale, _ = LANGUAGES[lang]
     entries: list[Entry] = []
 
-    # TAOM module
+    # TAOM module. A key two English sources declare is translated only into the first one's
+    # language file (key_owners): a second copy loads later and silently replaces the first.
     if module_filter in ("TAOM", "all"):
         taom_lang_dir = TAOM_LANG_DIR / lang
-        for _, source_xml, tgt_template in english_source_files("TAOM"):
+        sources = english_source_files("TAOM")
+        owners = key_owners([src for _, src, _ in sources])
+        for _, source_xml, tgt_template in sources:
             target_file = taom_lang_dir / tgt_template.format(locale=locale)
-            entries.extend(_diff_files(source_xml, target_file))
+            elsewhere = skip_ids_for(source_xml, target_file, owners, taom_lang_dir)
+            entries.extend(_diff_files(source_xml, target_file, skip_ids=elsewhere))
 
     # Only these two read the install. The TAOM module above is repo-only, so
     # asking for it alone must not require a game at all.
@@ -307,13 +299,82 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
     return entries
 
 
-def _diff_files(source: Path, target: Path) -> list[Entry]:
-    """Return entries where target text still matches source text (not translated)."""
+def key_owners(sources: list[Path]) -> dict[str, Path]:
+    """Map each {=KEY} to the first source in `sources` that declares it.
+
+    Each language loads its files in language_data.xml order and the engine keeps the LAST row it
+    loads for an id (LocalizedTextManager.DeserializeStrings assigns by indexer). So a new row for a
+    key two English sources share goes into the owner's language file only: a seeded second copy
+    of a shared key would replace the curated row in every language that loads it later. On this
+    line global_strings.xml (8 keys) shares none with taom_module_strings.xml, so this is a guard.
+    """
+    owners: dict[str, Path] = {}
+    for src in sources:
+        for sid in _parse_string_xml(src, strip_keys=True):
+            owners.setdefault(sid, src)
+    return owners
+
+
+
+
+def english_only_override_ids(source: Path) -> set:
+    """Vanilla keys TAOM rewords in English only: a `{=KEY}` row of taom_module_strings.xml whose key is
+    an 8-character vanilla id (`taom_*`, `TAOM_*` and `aom_*` keys are TAOM's own and are translated).
+
+    LocalizationOverrideLoader applies these rows in English alone (Patch25_LocalizationOverride); every
+    other language keeps vanilla's curated row. A TAOM language row for such a key replaces that row and
+    drops its grammar tokens (VanillaKeyOverrideTests), so --sync-ids must not seed one and the
+    translator must not fill one, except the pairs in kept-vanilla-key-rows.txt, which keep TAOM's
+    row and are still filled. VanillaKeyOverrideTests checks exact membership against the install;
+    this shape check needs no game, and LanguageFileCoverageTests applies the same rule."""
+    if source.name != OVERRIDE_SOURCE:
+        return set()
+    return {k for k in _parse_string_xml(source, strip_keys=True) if VANILLA_ID_SHAPE.fullmatch(k)}
+
+
+def override_ids_to_skip(source: Path, target: Path) -> set:
+    """The English-only override ids a writer must leave out of `target`: every override id of `source`
+    except a row the target already holds (such a row is kept, as in skip_ids_for). Every writer of TAOM
+    language rows uses this one definition: skip_ids_for, rebuild_translation_files and
+    generate_translation_template."""
+    return english_only_override_ids(source) - set(_parse_string_xml(target, strip_keys=False))
+
+
+def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> set:
+    """Keys the TAOM pass must neither seed into nor translate for `target`: those another English
+    source owns, English-only vanilla overrides (override_ids_to_skip), and those another file of
+    the same language already carries, EXCEPT any row the target itself holds.
+
+    The engine reads a language as the union of its files (so do LanguageFileCoverageTests), so a
+    second row is never missing coverage, only a later-loading copy that can drift; but a row the
+    target already has is always diffed, or keys declared by two sources (42 module/xslt pairs)
+    would be skipped by both passes and never translated again.
+
+    A sibling file that exists but does not parse raises: read as empty, its keys would look absent
+    and --sync-ids would seed duplicates of them."""
+    elsewhere = {k for k, owner in owners.items() if owner != source}
+    for other in lang_dir.glob("std_taom_*.xml"):
+        if other != target:
+            try:
+                tree = ET.parse(other)
+            except ET.ParseError as exc:
+                raise SystemExit(f"{other} does not parse ({exc}); fix it before a translator run")
+            elsewhere.update(el.get("id", "") for el in tree.iter("string") if el.get("id", ""))
+    return (elsewhere - set(_parse_string_xml(target, strip_keys=False))) | override_ids_to_skip(source, target)
+
+
+def _diff_files(source: Path, target: Path, skip_ids=frozenset()) -> list[Entry]:
+    """Return entries where target text still matches source text (not translated).
+
+    skip_ids: keys another source owns (key_owners); they belong in that source's language file.
+    """
     src_map = _parse_string_xml(source, strip_keys=True)  # for TAOM source XMLs with {=KEY}prefix
     tgt_map = _parse_string_xml(target, strip_keys=False) if target.exists() else {}
 
     entries = []
     for sid, eng_text in src_map.items():
+        if sid in skip_ids:
+            continue
         cur_text = tgt_map.get(sid, eng_text)
         if cur_text == eng_text:  # not yet translated
             entries.append(Entry(file_path=target, string_id=sid, english_text=eng_text, current_text=cur_text))
@@ -388,12 +449,17 @@ def save_cache(lang: str, cache: dict[str, str]) -> None:
 
 # ── Placeholder validation ─────────────────────────────────────────────────────
 
-# Variable placeholders: {ANYTHING_UPPER_DOTS}
-VAR_PATTERN = re.compile(r"\{[A-Z_][A-Z0-9_.]*\}")
+# Variable placeholders: {FIRSTNAME}, {RULER.NAME}, and the lowercase or mixed-case
+# engine tokens ({newline}, {InvasionScenarioFactionId}). `{=key}` ids and `{?...}`
+# conditionals do not match: `=` and `?` are outside the identifier class.
+VAR_PATTERN = re.compile(r"\{[A-Za-z_][A-Za-z0-9_.]*\}")
 # Conditional structures: {?VAR}...{?}...{\?} OR {?VAR}...{\?}
-CONDITIONAL_OPEN = re.compile(r"\{\?[A-Z_][A-Z0-9_.]*\}")
+# A head may be a name ({?PLURAL}) or an expression ({?DAYS>1}); {?} (the else) has no head and is not counted.
+CONDITIONAL_OPEN = re.compile(r"\{\?[^{}?]+\}")
 CONDITIONAL_MID = re.compile(r"\{\?\}")
 CONDITIONAL_CLOSE = re.compile(r"\{\\\?\}")
+# Conversation animation tags ([ib:closed] body pose, [if:convo_angry] face; rb/rf the reactions), counted per exact tag.
+EXPRESSION_TAG = re.compile(r"\[(?:ib|if|rb|rf):[^\]]*\]")
 
 
 def extract_placeholders(text: str) -> dict[str, int]:
@@ -404,11 +470,13 @@ def extract_placeholders(text: str) -> dict[str, int]:
     counts["__cond_open__"] = len(CONDITIONAL_OPEN.findall(text))
     counts["__cond_mid__"] = len(CONDITIONAL_MID.findall(text))
     counts["__cond_close__"] = len(CONDITIONAL_CLOSE.findall(text))
+    for m in EXPRESSION_TAG.findall(text):
+        counts[m] = counts.get(m, 0) + 1
     return counts
 
 
 def placeholders_match(english: str, translated: str) -> tuple[bool, str]:
-    """Return (ok, reason) — checks variable + conditional preservation."""
+    """Return (ok, reason): checks variable, conditional and animation-tag preservation."""
     e = extract_placeholders(english)
     t = extract_placeholders(translated)
     if e != t:
@@ -432,7 +500,7 @@ CRITICAL RULES — VIOLATIONS BREAK THE GAME:
 
 2. Gender/conditional structures like {{?RULER.GENDER}}Lady{{?}}Lord{{\\?}} MUST be preserved structurally. Translate only the inner words ("Lady"/"Lord"), keeping the {{?VAR}}, {{?}}, and {{\\?}} tokens EXACTLY as in the input.
 
-3. Bracket prefixes like [Gondor], [Mordor] in equipment names are culture tags — keep the brackets and either keep the inner word or transliterate it appropriately for your language's conventions.
+3. Bracket prefixes like [Gondor], [Mordor] in equipment names are culture tags: keep the brackets and either keep the inner word or transliterate it appropriately for your language's conventions. Exception: expression tags in square brackets, such as [ib:closed] or [rf:convo_bemused], are copied exactly, untranslated and in place.
 
 4. Tolkien proper nouns (place names, character names, faction names) should follow established translations in your language's published Tolkien editions. If unsure, transliterate phonetically rather than invent.
 
@@ -440,7 +508,7 @@ CRITICAL RULES — VIOLATIONS BREAK THE GAME:
 
 6. Never add commentary, never translate to a different language, never refuse — if a string can't be translated cleanly, transliterate or copy English as a last resort.
 
-7. Do not include internal or system XML tags in your response.
+7. Do not include internal or system XML tags in your response. Exception: expression tags in square brackets, such as [ib:closed], are part of the text: copy them exactly, untranslated and in place.
 
 OUTPUT FORMAT:
 You MUST respond with ONLY a JSON object, no other text. Schema:
@@ -722,7 +790,8 @@ def absorb_translations(batch: list[Entry], translated_map: dict[str, str],
 
 # ── Id sync ────────────────────────────────────────────────────────────────────
 
-def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False) -> list[str]:
+def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False,
+                     skip_ids=frozenset()) -> list[str]:
     """Seed the per-language file with any {=KEY} the English source declares but it lacks.
 
     write_back substitutes by id, so a key with no <string id="KEY"> element has nowhere to
@@ -732,30 +801,48 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     dry_run reports what WOULD be seeded without touching the file. Until 2026-08-28 this
     function wrote unconditionally, so `--sync-ids --dry-run` mutated every language file
     while the same run printed "no files written". A dry run that writes is worse than none.
+
+    skip_ids: keys another English source owns or another file of the language carries
+    (skip_ids_for). Seeding them here would put a second row for the id in the same language,
+    and the file that loads later wins. The result is parsed before it is written.
+
+    Every line keeps its own terminator. 156 of the 204 TAOM language files end every line in
+    \\r\\r\\n and the other 48 mix it with \\r\\n; splitting on one fixed terminator left a stray \\r on
+    each existing line and gave every seeded row a bare \\r\\n (2026-09-25, plan 022 before it).
     """
     if not target_path.exists():
         return []
     src_map = _parse_string_xml(source_path, strip_keys=True)
     tgt_map = _parse_string_xml(target_path, strip_keys=False)
-    missing = [sid for sid in src_map if sid not in tgt_map]
+    missing = [sid for sid in src_map if sid not in tgt_map and sid not in skip_ids]
     if not missing:
         return []
 
-    raw = target_path.read_text(encoding="utf-8", newline="")
-    nl = "\r\n" if "\r\n" in raw else "\n"
-    lines = raw.split(nl)
+    # open(), not Path.read_text(newline=...): that keyword is Python 3.13+, and CI runs older.
+    with open(target_path, encoding="utf-8", newline="") as fh:
+        raw = fh.read()
+    parts = re.findall(r"[^\r\n]*(?:\r*\n|$)", raw)
+    if parts and parts[-1] == "":
+        parts.pop()
+    lines = [(p.rstrip("\r\n"), p[len(p.rstrip("\r\n")):]) for p in parts]
+    if "".join(c + term for c, term in lines) != raw:
+        raise ValueError(f"{target_path}: a line ending the parser does not model (a lone \\r); nothing written")
+    terminators = Counter(term for _, term in lines if term)
+    default_nl = terminators.most_common(1)[0][0] if terminators else "\n"
 
-    string_lines = [i for i, l in enumerate(lines) if l.lstrip().startswith("<string ")]
-    close = next((i for i, l in enumerate(lines) if "</strings>" in l), None)
+    close = next((i for i, (c, _) in enumerate(lines) if "</strings>" in c), None)
     if close is None:
         return []
+    string_lines = [i for i, (c, _) in enumerate(lines[:close]) if c.lstrip().startswith("<string ")]
     if string_lines:
         anchor = string_lines[-1]
-        indent = re.match(r"\s*", lines[anchor]).group(0)
-        blank_separated = anchor + 1 < len(lines) and lines[anchor + 1].strip() == ""
+        indent = re.match(r"\s*", lines[anchor][0]).group(0)
+        nl = lines[anchor][1] or default_nl
+        blank_separated = anchor + 1 < close and lines[anchor + 1][0].strip() == ""
         insert_at = anchor + (2 if blank_separated else 1)
     else:  # empty stub — indent one level past </strings>
-        indent = re.match(r"\s*", lines[close]).group(0) + "  "
+        indent = re.match(r"\s*", lines[close][0]).group(0) + "  "
+        nl = default_nl
         blank_separated = False
         insert_at = close
 
@@ -763,14 +850,19 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     for sid in missing:
         text = (src_map[sid].replace("&", "&amp;").replace('"', "&quot;")
                             .replace("<", "&lt;").replace(">", "&gt;"))
-        block.append(f'{indent}<string id="{sid}" text="{text}" />')
+        block.append((f'{indent}<string id="{sid}" text="{text}" />', nl))
         if blank_separated:
-            block.append("")
+            block.append(("", nl))
 
     if dry_run:
         return missing
     lines[insert_at:insert_at] = block
-    target_path.write_text(nl.join(lines), encoding="utf-8", newline="")
+    new_text = "".join(c + term for c, term in lines)
+    try:
+        ET.fromstring(new_text.lstrip("﻿").encode("utf-8"))
+    except ET.ParseError as exc:
+        raise ValueError(f"{target_path}: seeding would leave a document that does not parse ({exc}); nothing written")
+    target_path.write_text(new_text, encoding="utf-8", newline="")
     return missing
 
 
@@ -838,17 +930,19 @@ def estimate_cost(entry_count: int, provider: dict = None) -> float:
             + out_tokens / 1_000_000 * provider["price_out"])
 
 
-def main():
+def main(argv=None):
     p = argparse.ArgumentParser(description="TAOM AI Translation Tool")
     p.add_argument("--lang", required=True, choices=list(LANGUAGES.keys()),
                    help="Target language code")
-    p.add_argument("--module", default="all", choices=["TAOM", "TAOM_Map", "Armory", "all"])
+    p.add_argument("--module", required=True, choices=["TAOM", "TAOM_Map", "Armory", "all"],
+                   help="Which module to translate; `all` also writes the live Armory (#1056)")
     p.add_argument("--dry-run", action="store_true", help="Preview without writing")
     p.add_argument("--apply", action="store_true", help="Write translations and call API")
-    p.add_argument("--max-entries", type=int, default=None, help="Cap API entries for testing")
+    p.add_argument("--max-entries", type=int, default=None, help="Cap API entries for testing; 0 is a cap of zero (no provider call)")
     p.add_argument("--sync-ids", action="store_true",
                    help="Seed per-language TAOM files with any {=KEY} the English source declares "
                         "but they lack, so translations for those keys have somewhere to land")
+    p.add_argument("--seed-only", action="store_true", help="With --sync-ids: seed the missing ids and stop, before discovering or translating anything (free; translation is a separate paid run)")
     p.add_argument("--batch", action="store_true",
                    help="Submit via the Batches API at 50%% price (async, up to 24h; "
                         "worth it for bulk runs, not for a handful of entries)")
@@ -861,10 +955,20 @@ def main():
                    help="Override input price per Mtok, for the printed estimate only")
     p.add_argument("--price-out", type=float, default=None,
                    help="Override output price per Mtok, for the printed estimate only")
-    args = p.parse_args()
+    args = p.parse_args(argv)
 
     if not args.dry_run and not args.apply:
         p.error("Specify either --dry-run or --apply")
+    if args.seed_only and not args.sync_ids:
+        p.error("--seed-only is only valid with --sync-ids")
+    if args.seed_only and args.module == "TAOM_Map":
+        p.error("--seed-only has no TAOM_Map pass; use --module TAOM, Armory or all")
+    if args.sync_ids and args.module in ("Armory", "all"):
+        # Before the TAOM rows are written: a sync that reaches the Armory needs the install, and failing later
+        # would leave the TAOM files seeded by a run that reported an error.
+        ensure_exists(game_modules_root(), "the Bannerlord Modules folder")
+    if args.max_entries is not None and args.max_entries < 0:
+        p.error("--max-entries must be 0 or more")  # a negative slice would send all but one entry to the provider
 
     provider = resolve_provider(args.provider, args.model, args.price_in, args.price_out)
     if args.batch and not provider["batch"]:
@@ -885,9 +989,12 @@ def main():
     if args.sync_ids:
         seeded = 0
         if args.module in ("TAOM", "all"):
-            for _, src, tpl in english_source_files("TAOM"):
+            taom_sources = english_source_files("TAOM")
+            owners = key_owners([s for _, s, _ in taom_sources])
+            for _, src, tpl in taom_sources:
                 target = TAOM_LANG_DIR / lang / tpl.format(locale=locale)
-                added = sync_missing_ids(src, target, dry_run=args.dry_run)
+                elsewhere = skip_ids_for(src, target, owners, TAOM_LANG_DIR / lang)
+                added = sync_missing_ids(src, target, dry_run=args.dry_run, skip_ids=elsewhere)
                 if added:
                     print(f"  +{len(added):>4} ids {'to seed' if args.dry_run else 'seeded'} into {target.name}")
                     seeded += len(added)
@@ -909,6 +1016,8 @@ def main():
             else:
                 print(f"  WARNING: Armory sync skipped, not found: {target_dir}", file=sys.stderr)
         print(f"  Ids {chr(0x77)}ould-be-seeded: {seeded}" if args.dry_run else f"  Ids seeded: {seeded}")
+        if args.seed_only:
+            return 0
 
     entries = discover_entries(lang, args.module)
     print(f"\n  Untranslated entries discovered: {len(entries)}")
@@ -927,7 +1036,7 @@ def main():
     print(f"    from cache:     {len(via_cache)}")
     print(f"    needs LLM:      {len(need_llm)}")
 
-    if args.max_entries and len(need_llm) > args.max_entries:
+    if args.max_entries is not None and len(need_llm) > args.max_entries:
         print(f"  --max-entries cap applied: {args.max_entries}/{len(need_llm)} LLM entries")
         need_llm = need_llm[:args.max_entries]
 

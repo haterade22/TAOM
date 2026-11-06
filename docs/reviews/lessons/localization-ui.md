@@ -127,6 +127,14 @@ parent wiring said Pelendur.
   of them by hand.
 - **Source:** 2026-08-28, `a00086da`.
 
+### Gauntlet reads `#RRGGBBAA`, and `DoNotAcceptEvents` stops at a modal panel's root (Long Defeat, 2026-11-04)
+
+On the 1.5.x line two prefabs wrote `#FFE9B84A`, ARGB order, for a gold text. The engine parses red first and alpha last (v1.4.8 taom-src `Color.cs:180-191`), so the text read as a pale cream at alpha 0x4A. Later, a fix for the rule "every non-button widget sets `DoNotAcceptEvents`" put the flag on the shop panel's root. `EventManager.AnyWidgetsAt` (v1.4.8 `EventManager.cs:857-877`, through `GauntletLayer.HitTest`, `GauntletLayer.cs:232`) then found no widget over the dim background, `GauntletLayer.HitTest` returned false, and `ScreenManager` would pass the click on to lower layers.
+
+- **Why missed:** no test read a colour's alpha, and a small strip in a screenshot shows no tint. The rule was written for HUD layers, which must not take clicks, and I passed it to a builder without that scope. Native's `EscapeMenu.xml` sets no such flag.
+- **Prevent:** a prefab test reads every 8-digit colour and fails on a low alpha. A display-only layer flags every widget. A modal focus panel keeps its root accepting, so a click cannot reach the mission.
+- **Source:** 1.5.x `docs/reviews/rca-long-defeat-phase1-2026-11-04.md`, rows 2 and 19 (not on this line); plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

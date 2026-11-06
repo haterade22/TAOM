@@ -297,10 +297,14 @@ public static class PatchShield
     }
 
     /// <summary>
-    /// Finalizer for return-value methods. Same swallow behavior; the patched method
-    /// returns its zero/default value when we swallow because we don't have access
-    /// to <c>__result</c> in a Finalizer (Harmony quirk). Acceptable trade-off:
-    /// the caller gets a "stub" return value, which is far better than a crash.
+    /// Finalizer for return-value methods. Same swallow behavior; when we swallow, the patched
+    /// method returns its result local as it stood at the fault. It takes no <c>__result</c>:
+    /// one finalizer serves every return type and has no better value to write, and binding
+    /// <c>object __result</c> would box a value-type result on every call. In Harmony 2.4.2 the
+    /// local holds the zero/default value for a fault in a prefix or the original body, and the
+    /// original's own value for a fault in a postfix (stored before any postfix runs), unless a
+    /// prefix skipped the original or a patch had already written <c>__result</c>. Acceptable
+    /// trade-off: the caller gets a "stub" or vanilla return value, far better than a crash.
     /// It takes no <c>__originalMethod</c>, for the reason given on <see cref="ShieldFinalizerVoid"/>.
     /// </summary>
     private static Exception? ShieldFinalizerWithResult(Exception __exception)

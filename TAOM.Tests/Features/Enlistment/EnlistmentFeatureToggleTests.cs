@@ -21,6 +21,7 @@ public class EnlistmentFeatureToggleTests
     private IDischargeService _discharge;
     private ICommanderLordAdapter _commander;
     private IServiceAttachmentService _attachment;
+    private IEncounterAdapter _encounter;
     private EnlistmentReconciler _reconciler;
 
     [TestInitialize]
@@ -33,6 +34,7 @@ public class EnlistmentFeatureToggleTests
         var store = new EnlistmentStore(logger);
         _store = store;
         _discharge = Substitute.For<IDischargeService>();
+        _encounter = Substitute.For<IEncounterAdapter>();
         _commander = Substitute.For<ICommanderLordAdapter>();
         _attachment = Substitute.For<IServiceAttachmentService>();
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
@@ -48,7 +50,7 @@ public class EnlistmentFeatureToggleTests
 
         _reconciler = new EnlistmentReconciler(
             _store, new EnlistmentStateMachine(store, logger), _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(logger), Substitute.For<IEncounterAdapter>(),
+            new EnlistmentConfigProvider(), _encounter,
             new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             _feature, Substitute.For<IInquiryAdapter>(),
             Substitute.For<IArmyMembershipAdapter>(), logger);
@@ -111,6 +113,23 @@ public class EnlistmentFeatureToggleTests
         _feature.IsEnabled.Returns(false);
 
         _reconciler.ReconcileHourly(200.0);
+
+        _discharge.Received(1).Execute(DischargeReason.PlayerRequest);
+    }
+
+    [TestMethod]
+    public void ReconcileHourly_FeatureDisabledMidBattle_WaitsForTheBattleThenReleases()
+    {
+        // The discharge's step 6 would pull a merged defender out of his battle (#1021).
+        _feature.IsEnabled.Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _reconciler.ReconcileHourly(200.0);
+
+        _discharge.DidNotReceive().Execute(Arg.Any<DischargeReason>());
+
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+        _reconciler.ReconcileHourly(201.0);
 
         _discharge.Received(1).Execute(DischargeReason.PlayerRequest);
     }

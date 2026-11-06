@@ -45,9 +45,9 @@ TAOM adds three files (all registered in [`Main/_Module/SubModule.xml`](../../Ma
 | [`Main/_Module/ModuleData/characters/lords.xml`](../../Main/_Module/ModuleData/characters/lords.xml) | Adds TAOM-NET-NEW NPCs (Ciriel, Dorwen, the entire EW_/WE8_/WE9_/E*/M*/G*/D* ranges) | `<XmlName id="NPCCharacters" path="characters/lords"/>` |
 | [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | 120 TAOM-owned SkillSets — 35 archetype + 85 canonical-character | `<XmlName id="SkillSets" path="taom_lord_skill_sets"/>` |
 
-**Load order matters.** SubModule.xml line ~60 loads `lords.xslt`-transformed vanilla NPCs FIRST. Line ~120 loads `characters/lords.xml` SECOND. Among additive XML sources with the same ID, **last-loaded wins** — so if `lord_1_40_1` exists in both, the lords.xml version is what the engine uses. The XSLT-transformed version is dead code for that ID.
+**Load order matters.** SubModule.xml line ~60 loads `lords.xslt`-transformed vanilla NPCs FIRST. Line ~120 loads `characters/lords.xml` SECOND. An id in both files is **two definitions merged, not an override**: `MBObjectManager.MergeElements` (v1.4.8 `MBObjectManager.cs:820`) merges attribute by attribute and child by child (a `<skill id>` matches by id), so `characters/lords.xml` wins whatever it redeclares and the XSLT copy still supplies the rest ([lord skills](../features/lord-skills.md)). `<Equipments>` unions: a set with a different id is added, and the hero picks one at random per campaign ([lesson #644](../reviews/lessons/xslt-moduledata.md)). Before editing a lord, grep BOTH files for its id.
 
-This is why the Gondor noblewomen rename fix (Catella → Lindariel) lives in `lords.xml`, not in `lords.xslt` — lords.xml is what the player actually sees.
+This is why the Gondor noblewomen rename fix (Catella → Lindariel) lives in `lords.xml`, not in `lords.xslt`: the `name` that `lords.xml` redeclares is the one the player sees.
 
 ### Layer 3: Engine consumption
 
@@ -179,7 +179,7 @@ Use the `/commit-split` skill. Default split:
 
 | Commit | Files | Type |
 |---|---|---|
-| 1 | `taom_lord_skill_sets.xml` + `lords.xml` + `lords.xslt` + `SubModule.xml` + `CHANGELOG.md` | `feat(lords-skills): ...` or `fix(lords-skills): ...` |
+| 1 | `taom_lord_skill_sets.xml` + `lords.xml` + `lords.xslt` + `SubModule.xml` | `feat(lords-skills): ...` or `fix(lords-skills): ...` |
 | 2 (if changed) | `tools/apply_culture_skills_traits.py` + `tools/generate_culture_issue_drafts.py` | `docs(issues): ...` or `chore(tools): ...` |
 
 For brand-new culture work, also create a GitHub issue:
@@ -481,8 +481,8 @@ Before declaring done:
 - [ ] In-game Encyclopedia spot-check on at least one canonical hero per touched culture.
 - [ ] If touched a Leadership-285+ character, confirm the +1 party-size perk shows in-game (Encyclopedia → Perks).
 - [ ] Children (age <14) still using `spc_*_skills_rookie` vanilla SkillSets unless they're canonical overrides (Nazgûl with placeholder age 9/11 are the exception — they bypass the child skip).
-- [ ] `git status` shows expected files only: `lords.xml`, `lords.xslt`, `taom_lord_skill_sets.xml`, `CHANGELOG.md`, possibly `SubModule.xml` if registering new files, possibly the script itself.
-- [ ] CHANGELOG.md updated.
+- [ ] `git status` shows expected files only: `lords.xml`, `lords.xslt`, `taom_lord_skill_sets.xml`, possibly `SubModule.xml` if registering new files, possibly the script itself.
+- [ ] The commit body describes the change (`/release` turns it into the CHANGELOG entry).
 - [ ] If new culture or major refactor, a GitHub issue exists.
 
 ---
@@ -496,10 +496,10 @@ Real failure modes from past sessions. Read these before you ship.
 | `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref) — corrupted 24 BodyProperties lines in one apply | `feedback_re_sub_backref_followed_by_digit.md` | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
 | Renaming an NPC and forgetting `settlements.xml` lore-text references — "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | `feedback_rename_grep_all_moduledata.md` | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/` — audit every hit, not just `characters/` |
 | **Explicit `<skills>` block on hero NPCs is ignored by the engine** — only `skill_template` matters; this is the bug that led to the SkillSet rewrite | NEW: `feedback_skill_template_overrides_explicit_skills.md` | Always swap `skill_template` to a TAOM SkillSet, never hand-edit `<skills>` blocks for heroes |
-| Same-ID NPCs in both `lords.xslt` (vanilla transform) and `characters/lords.xml` (TAOM additions) → last-loaded wins, which is `lords.xml` per SubModule.xml load order | `harness-facts.md` | If a fix isn't taking effect, check whether lords.xml has the same ID and edit there instead of (or in addition to) lords.xslt |
+| Same-ID NPCs in both `lords.xslt` (vanilla transform) and `characters/lords.xml` (TAOM additions) merge: `lords.xml` loads second and wins each attribute and `<skill id>` it redeclares, the XSLT copy supplies the rest, and differing `<Equipments>` sets union into a random per-campaign pick (#644) | `Main/_Module/SubModule.xml` load order; `MBObjectManager.MergeElements` | Grep BOTH files for the id before editing. If a fix isn't taking effect, the other file may redeclare that attribute or carry a second equipment set; #648 tracks the ids still in both |
 | Children (age <14) skipped by the script — appropriate for toddlers, but breaks for Nazgûl with placeholder ages 9/11 | Script's `process_file` | Canonical entries auto-bypass the age skip. Always add Nazgûl / immortals to `CULTURES[*]['canonical']` even if just `dict(archetype='nazgul')` |
 | `0Harmony.dll` lock when Bannerlord is running → `./build.ps1` fails | `.claude/rules/environment-failures.md` | Close Bannerlord OR skip the build — XML data changes don't need it. Use the Python XML parse smoke test instead |
-| Save-compat: hero skills bake at hero CREATION | n/a (engine behavior) | Existing campaigns keep old stats. New campaigns + un-spawned heroes use the new SkillSets. Flag this in PR descriptions and CHANGELOG |
+| Save-compat: hero skills bake at hero CREATION | n/a (engine behavior) | Existing campaigns keep old stats. New campaigns + un-spawned heroes use the new SkillSets. Flag this in PR descriptions and the commit body |
 | Forgetting to register a new XML file in SubModule.xml → engine doesn't load it → fix has no effect | n/a | If you create a new ModuleData XML file, add an `<XmlNode>` entry to `Main/_Module/SubModule.xml` with the appropriate `id=` (SkillSets / NPCCharacters / etc.) and `path=` (file basename without `.xml`) |
 | **Generated XML hand-edited downstream** — 1f7a7a9a hand-tuned `taom_lord_skill_sets.xml`; a later blind regen would have reverted 14 canonical sets and DELETED Sauron's | commit 874e7574 (sync) | Before any `--apply`: regen on a clean tree, require empty `git diff`. Drift found → sync the generator's canonical entries to the live XML FIRST (acceptance: regen == committed semantically) |
 | **`--culture X --apply` clobbers hand-tuned assignments** — per-NPC re-resolution can't reproduce the live 149-lord drift (unified Nazgûl etc.) | #322 design | Narrow swaps/parity go through `tools/repoint_evil_lord_skillsets.py` (template swap maps + full inline sync from the sets XML), never through `process_file` on a drifted culture |

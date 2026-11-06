@@ -6,9 +6,10 @@ Three independently-toggleable battle-tactics features bundled in one TAOM modul
 
 1. **CompanionRoles** — equipment-based combat-role detector (11 roles); appends a role badge to companion tooltips on the party screen and OOB hero items.
 2. **FormationPresets** — saveable named OOB hero-to-formation assignments; injects Save / Load / Auto-Assign buttons into the Order of Battle screen.
-3. **BattleActionBar** — context-sensitive on-screen action bar that appears in field battles. 1–9 hotkeys toggle stance buttons (Hold Fire, Brace, Shield Wall, etc.). **Stances are display-only — they record state but do NOT change formation behavior** (the original developer's mod was UI-only here; the engine doesn't expose the firing-order / tighten-spacing APIs the original referenced).
+3. **BattleActionBar**: context-sensitive on-screen action bar that appears in field battles. It is parked: click-only (no hotkeys), **off by default** (`ShowBattleActionBar`), and clickable only while a menu shows the cursor (see the #970 section); the buttons are Hold Fire, Brace, Shield Wall, etc. **Stances are display-only: they record state but do NOT change formation behavior** (the original developer's mod was UI-only here; the engine doesn't expose the firing-order / tighten-spacing APIs the original referenced).
 
 Ported from `Downloads/Features_fixed/CompanionTactics/` (Bannerlord 1.3 mod template) for TAOM v1.3.15. Patch35 reserves the Harmony category. SaveableTypeDefiner BaseId 726900601 (matches the original mod for save-import compat).
+The drop is yotthani's Heir of Numenor (HoN) code, MIT by the maintainer's statement of 2026-10-09; its notice is the HoN section of `Main/_Module/THIRD-PARTY-LICENSES.txt` ([provenance-register.md](../reference/provenance-register.md)).
 
 ## Why This Exists
 
@@ -110,7 +111,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `MaxFormationPresets` | 10 (1–20) | Save attempts beyond this are refused with a warning ("Preset limit reached. Delete one before saving."). |
 | `FormationPresetsDebug` | false | HUD diagnostics. |
 | **Battle Action Bar (Group 29)** | | |
-| `EnableBattleActionBar` | true | Show contextual action bar in field battles only (NOT siege). |
+| `ShowBattleActionBar` | **false** | Show the click-only stance bar in field battles only (NOT siege). Renamed from `EnableBattleActionBar` (default true) in #970: MCM keeps a saved value per property name, so only a new name moves every install to off. Turning it off mid-battle removes the layer; turning it on again re-attaches it. |
 | `CancelStanceOnMove` | true | Clear stance state when formation receives a movement order (postfix on `Formation.SetMovementOrder`). |
 | `EnableVolleyFire` | true | Include Volley Fire as a ranged-action button. |
 | `BattleActionBarDebug` | false | HUD diagnostics — logs composition flags per refresh. |
@@ -129,7 +130,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `Main/Features/CompanionTactics/FormationPresets/Models/FormationPresetSaveableTypeDefiner.cs` | BaseId 726900601, class 101 |
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
-| `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
+| `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | `[DefaultView]` MissionView the engine builds in every mission with a screen (a view added through `AddTaomBehavior` never ticks, #970). A field battle is `Mission.IsFieldBattle`; the layer attaches on the first screen tick whose mode is Battle (the mode is Deployment at screen init), then a 0.5s refresh. The layer takes mouse buttons only, so the cursor stays hidden and attack, block and the camera keep working |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
 | `Main/Adapters/{I,}HeroCombatAdapter.cs` | Campaign-time `Hero` wrapper |
@@ -148,7 +149,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Tests
 
-84 tests across 8 files in `TAOM.Tests/Features/CompanionTactics/`:
+103 tests in `TAOM.Tests/Features/CompanionTactics/`, plus the two infrastructure gates:
 
 - `Roles/CompanionRoleServiceTests.cs` — 25 tests; one per role + edge cases (no equipment; mounted+ranged → HorseArcher; mounted+melee → Cavalry; cache hit/miss; null hero / null equipment).
 - `BattleActionBar/FormationCompositionAnalyzerTests.cs` — 10 tests; HasRanged / HasPolearm / HasShield / HasCavalry positive + negative; ratio thresholds.
@@ -158,6 +159,9 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `FormationPresets/HeroAutoAssignerTests.cs` — 7 tests; each role → expected formation slot scoring; ScoreHeroForFormation null safety.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
 - `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
+- `BattleActionBar/BattleActionBarInputTests.cs`: 9 tests; mouse-buttons-only input, no hotkeys or badge, non-button widgets pass clicks, the renamed setting is off, a click after turning it off records nothing, a click re-syncs the highlight.
+- `BattleActionBar/BattleActionBarMissionViewGateTests.cs`: 5 rows; attach only enabled, in a field battle, in Battle mode.
+- `TAOM.Tests/Infrastructure/MissionViewRegistrationGateTests.cs` and `TAOM.Tests/Composition/SubModuleMissionViewWiringTests.cs`: every TAOM MissionView is a `[DefaultView]` with a public parameterless constructor, and no file under `Main` constructs one.
 
 ## How to add a new combat role
 
@@ -175,13 +179,13 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `RoleTooltipDecorator` caches `PropertyInfo` / `FieldInfo` in readonly fields at construction; no reflection in postfix bodies.
 - `CompanionRoleService._cache` keyed by Hero StringId + 64-bit equipment signature; cache miss recomputes role and updates entry. **Note: cache is never explicitly cleared on hero death/removal** — see "Known limitations" below.
 - `FormationAdapter` polearm/shield count scan is TTL-cached at 500ms (per-formation key). The action bar refreshes at most twice per second.
-- `BattleActionBarMissionView.OnMissionScreenTick` uses a 0.5s accumulator gate so the formation-change check + button rebuild runs at most twice per second; per-frame work is just a 9-key hotkey poll.
+- `BattleActionBarMissionView.OnMissionScreenTick` uses a 0.5s accumulator gate so the formation-change check + button rebuild runs at most twice per second; with the setting off (the default) its per-frame work is one settings read.
 
 ## Known limitations
 
 - **FormationPresets is WIP and ships off by default (`EnableOobFormationPresets = false`).** Saving a preset works, but loading one back is not yet wired (the Load path is a stub). The toggle was flipped to off after a save-corruption CTD (see below); opt in via MCM "Battle Tactics/Formation Presets" to try the save side.
 - **History — DateTime save-corruption CTD (fixed 2026-06-21).** `HoNFormationPreset` used to carry a `[SaveableField(3)] DateTime _createdAt`. `System.DateTime` is not a TaleWorlds-serializable type, so once a preset was persisted, **every** campaign save crashed: the engine left a null serialized buffer that NRE'd in `GameData.Write` on the async save thread → `AggregateException` CTD (crash bundle `taom_crash_20260621_200427_8754f009`). The field was vestigial; it was removed (id 3 retired) and pinned by `HoNFormationPresetSerializationTests`. **Player recovery:** because the save *write* failed, no post-preset save file ever completed, so a player's last valid save predates the preset — loading any existing save and continuing works (self-healing, no migration). The `try/catch` in `SyncData` did **not** and **cannot** catch this class of bug: byte serialization runs later on the `AsyncFileSaveDriver` background thread, outside that block. The fix belongs in the saveable model (keep every `[SaveableField]` serializable), not in a behavior-level catch.
-- **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed by the engine and is deferred to a follow-up feature.
+- **Stances are display-only, and the bar is click-only and off by default.** Clicking a bar button updates the stance dict and highlights the button, but the formation behavior is unchanged. Number-key hotkeys were removed (#970): they collided with the vanilla formation-select keys and the badges did not match button positions. Real stance enforcement requires APIs the engine does not expose and is deferred to a follow-up feature.
 - **`CompanionRoleService._cache` does not evict dead heroes.** Cache is keyed by Hero.StringId. When a hero dies or is removed mid-campaign, the cache entry leaks for the rest of the session. The leak is bounded (one entry per Hero ever inspected) and small — a pathological 1000-hero campaign leaks ~50KB. A follow-up could subscribe to `OnHeroKilled` to evict, but it's not blocking.
 - **Hot-path role detection uses `Agent.SpawnEquipment`, not current battle equipment.** `FormationAdapter.EnsurePolearmShieldCounts` reads each agent's spawn-time equipment to compute polearm + shield counts. If a hero swaps weapons mid-battle, the action bar composition does not update until next mission. Tooltip role detection (campaign-time) uses `Hero.BattleEquipment` and is current.
 - **Integration was previously in a `// TEMP-SMARTCAVALRY-EXCLUDE` state** during the 2026-05-06 parallel-port session. **Restored in commit `0cc457f` (2026-05-07).** The feature is now fully wired (`Main/SubModule.cs` + `Main/IoC.cs`) and built into the mod. See `docs/reviews/rca-companiontactics-2026-05-06.md` for the historical RCA on the build-watcher cascade that caused the temporary exclusion.
@@ -195,6 +199,24 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - SyncData key: `"TAOM_FormationPresets"`.
 - Failure modes: `FormationPresetCampaignBehavior.SyncData` wraps the call in try/catch, which guards the **LOAD/ref-population** path — on a deserialization error it logs a warning and resets `_savedPresets` to empty rather than crashing the load. It does **not** guard the **SAVE byte-write**, which the engine performs later on the `AsyncFileSaveDriver` background thread; an unserializable field there crashes regardless of this catch (the DateTime bug). Keep the model's fields serializable.
 
+## Battle action bar: parked, and the in-game check (#970)
+
+- **Parked** (the 1.5.x maintainer's decision of 2026-10-23, ported 2026-11). The bar registers and ticks, and it no
+  longer blocks attack, block or mouse-look. It stays off by default because its stances change nothing in battle, and
+  because with the cursor hidden it can be clicked only while another view shows a cursor, such as the Esc menu (the
+  1.5.x review read the cursor pinning in the native input update; not re-checked on v1.4.8).
+- **In-game check owed** (turn `Show Battle Action Bar` on first): in a field battle press Begin battle, select a
+  formation with polearms, shields or cavalry, press Esc and click Brace for Cavalry, Pike Wall, Testudo, Line Charge
+  or Skirmish; then `python tools/ingame_verdict.py --issue 970` reads the session log (#1072). The view writes
+  `[Check] id=taom.battle-action-bar.attach`, at most one line per result per mission: `result=pass` when the layer is added and its movie
+  loaded; `result=fail` with `reason=exception`, `reason=movie-not-loaded`, or at mission end `reason=never-attached`
+  (Battle mode reached with the setting on, and no attach); `result=skip reason=setting-off` when the battle was
+  fought with the setting off. A view the engine did not register (the original #970 bug) never ticks or finalizes,
+  so it writes no `[Check]` line; the reader fails it on `[BattleActionBar] screen init: MissionScreen=NULL`. A stance click writes `[Check] id=taom.battle-action-bar.stance result=pass`, once per
+  stance per game session. Still for a person: after Begin battle the cursor is hidden, left-click attacks, right-click
+  blocks and the camera follows the mouse; a ground click with the order menu open gives a move order; the clicked
+  button highlights; turning the setting off mid-battle removes the bar and turning it on again shows it once.
+
 ## Reviews
 
 - `/deep-review CompanionTactics` (5 parallel agents): 2 confirmed bugs found and fixed (`GetRoleColor` missing OneHanded + Slinger cases; `BattleActionBarDebug` setting was unused). 1 false positive disposed of (`MultiSelectionInquiryData` parameter order — call site uses named args). See `docs/reviews/rca-companiontactics-2026-05-06.md`.
@@ -202,6 +224,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Changelog
 
+- 2026-11-05 (#970, ported from the 1.5.x line): the view is a `[DefaultView]` the engine registers, attaches on the first Battle tick, takes mouse buttons only, has no hotkeys, and is parked behind `ShowBattleActionBar` (off); `SubModule` no longer adds it or a second warg rage controller.
 - 2026-09-13 (#595): `TroopStanceManager` takes a lock. Patch35 clears a stance from `Formation.SetMovementOrder`,
   which the engine calls on its asynchronous agent tick for the PLAYER's team whenever its formations are
   AI-controlled (`Team.Tick`'s retreat branch, `Formation.Tick`'s substitute orders), so the existing team filter

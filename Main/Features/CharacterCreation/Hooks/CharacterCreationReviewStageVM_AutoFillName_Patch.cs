@@ -38,7 +38,7 @@ public static class CharacterCreationReviewStageVM_AutoFillName_Patch
         }
         catch (Exception ex)
         {
-            try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch44-CCNameAutofill] failed: {ex.Message}"); } catch { }
+            try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch44-CCNameAutofill] failed: {ex.Message}"); } catch { /* swallow-ok: the logger itself threw */ }
         }
     }
 }

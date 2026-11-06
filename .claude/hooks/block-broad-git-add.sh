@@ -37,7 +37,7 @@
 #
 # Calibrated to TAOM: confirm-not-block; fail-open (any parse error → allow).
 #
-# Returns: {} to allow, {"permissionDecision":"ask","message":"..."} to confirm.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"..."}} to confirm.
 
 set -uo pipefail
 
@@ -72,7 +72,11 @@ REASON=""
 # own git invocation, never as text inside a quoted arg or a pipe target.
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
 
-while IFS= read -r seg; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
+for seg in "${SEG_LIST[@]}"; do
   [[ -n "$REASON" ]] && break
   seg="${seg#"${seg%%[![:space:]]*}"}"                       # ltrim
   # strip leading env-var assignments: VAR=value ...
@@ -96,6 +100,7 @@ while IFS= read -r seg; do
   rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
 
   if [[ "$rest" =~ ^add([[:space:]]|$) ]]; then
+    SUBCMD=add
     after="${rest#add}"
     # -A / --all / -u / --update anywhere in the args, or a bare `.` / `./` pathspec.
     if [[ "$after" =~ (^|[[:space:]])(-[a-zA-Z]*A[a-zA-Z]*|--all)([[:space:]]|$) ]]; then
@@ -106,23 +111,31 @@ while IFS= read -r seg; do
       REASON="git add . stages every change under the current directory"
     fi
   elif [[ "$rest" =~ ^commit([[:space:]]|$) ]]; then
+    SUBCMD=commit
     after="${rest#commit}"
     # -a / --all, including bundled short flags like -am. Exclude --amend, which is a
-    # different thing entirely and is gated by check-changelog-changed.sh.
+    # different thing entirely.
     if [[ "$after" =~ (^|[[:space:]])--all([[:space:]]|$) ]]; then
       REASON="git commit --all stages every tracked modification before committing"
     elif [[ "$after" =~ (^|[[:space:]])-[a-zA-Z]*a[a-zA-Z]*([[:space:]]|$) ]]; then
       REASON="git commit -a stages every tracked modification before committing"
     fi
   fi
-done <<< "$SEGMENTS"
+done
 
 # Not a broad-staging form → allow.
 [[ -z "$REASON" ]] && { echo '{}'; exit 0; }
 
 # Show what the sweep would actually take. The decision is "is every one of these mine",
 # which the caller cannot make from the flag alone.
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# Listed from the top level of the repository the call runs in (_pybin.sh taom_git_repo_dir).
+MULTI_NOTE=""
+if ! ADD_REPO=$(taom_git_repo_dir "${SUBCMD:-add}"); then
+  # The calls reach more than one work tree: list the project root's, and say the list is incomplete.
+  ADD_REPO="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+  MULTI_NOTE=" The command runs git ${SUBCMD:-add} in more than one repository, so this list covers the project root only: split it, one repository per command."
+fi
+cd "$ADD_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 DIRTY=$(git status --porcelain 2>/dev/null | sed 's/^...//' | head -20)
 DIRTY_COUNT=$(git status --porcelain 2>/dev/null | grep -c . || true)
 STASH_COUNT=$(git stash list 2>/dev/null | grep -c . || true)
@@ -136,11 +149,21 @@ fi
 STASH_NOTE=""
 [[ "${STASH_COUNT:-0}" -gt 0 ]] && STASH_NOTE=" There ${STASH_COUNT} stash(es) present — an unrestored auto-stash is how this went wrong on 2026-08-07."
 
-# Escape for JSON embedding (backslashes + quotes; Windows paths).
-CMD_ESC=$(printf '%s' "$COMMAND" | sed 's/\\/\\\\/g; s/"/\\"/g')
-FILES_ESC=$(printf '%s' "$FILE_LIST" | sed 's/\\/\\\\/g; s/"/\\"/g')
+MSG="CONFIRM broad staging: ${REASON}. Command: \"${COMMAND}\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILE_LIST}.${MULTI_NOTE}${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
 
-MSG="CONFIRM broad staging: ${REASON}. Command: \\\"${CMD_ESC}\\\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILES_ESC}.${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
+# JSON-encode the reason as a whole. Escaping only backslashes and quotes by hand left the raw
+# newline of a multi-line Bash call inside the JSON string: invalid JSON, which the harness
+# reads as allow, so no confirm appeared (#647 convergence review).
+if [[ -n "${PYBIN:-}" ]]; then
+  REASON_JSON=$(printf '%s' "$MSG" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps(sys.stdin.read()))' 2>/dev/null)
+else
+  REASON_JSON=$(printf '%s' "$MSG" | jq -Rs . 2>/dev/null)
+fi
+if [[ -z "$REASON_JSON" ]]; then
+  echo "[block-broad-git-add] could not encode the confirm message; this broad staging was NOT confirmed" >&2
+  echo '{}'
+  exit 0
+fi
 
-printf '{"permissionDecision":"ask","message":"%s"}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":%s}}\n' "$REASON_JSON"
 exit 0

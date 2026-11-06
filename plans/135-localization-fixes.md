@@ -1251,7 +1251,7 @@ status, commit hashes and measured counts.
    "<Name>'s Party"; a German or Turkish line with a lord's name keeps its article or suffix. With TAOM_Map loaded
    after TAOM the seven languages lose it again until the live files are fixed (step M2).
 3. Names (after Part C): in German, the party screen troop names, encyclopedia lord names, clan and kingdom names
-   are German; in a NEW campaign the six Umbar clans show six names (an existing campaign keeps its saved one).
+   are German; in a NEW campaign the six Umbar clans show six names. An existing campaign shows each clan's own English name: the integration fixes retired the key old saves share, because a row under it showed one clan's name on all six.
 4. Vanilla rewordings (B2): German "Call ... to war" decisions read the game's own German; a kept BR row (for
    example `0cdXddA9`) still shows TAOM's row.
 5. Custom Battle: no "Text with id" error for a TAOM culture text (A3).

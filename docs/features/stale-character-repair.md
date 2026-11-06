@@ -218,6 +218,7 @@ until the next scan.
 | `StaleCharacterParentRepairTests` | the census and the birth repair: healthy silence, each outcome, a throwing adapter, a throwing `DescribeState`, the state from before the write, the birth line |
 | `HeroCharacterStateAdapterTests` | the gate, each repair branch, the census facts and the engine's real copy, on objects built with no constructor, as a save builds them |
 | `Patch83HooksHarmonyTests` | the Prefix and Finalizer pair through real Harmony on the real target, a finished birth, a thrown birth, and the load postfix's order |
+| `HollowParent1076Tests` (`tools/tests/test_ingame_verdict.py`) | the real manifest against fixture logs: a finished birth, a throw, a throw on a second birth, a killed process, a healthy game |
 | `Patch83StaleCharacterRepairBindingTests` | the birth target and its parameter names, `_originCharacter`, the target and its arity, all four reflected members and their types, `MBCharacterSkills`/`MBBodyProperty` construction, `RegisterPresumedObject`, the category string, and the presence of `ResetForUnload` |
 
 The binding suite matters more than usual because **every** binding here fails quietly. A renamed
@@ -238,7 +239,7 @@ whose raw `BasicCharacterObject._culture` is null. Nothing shows it while the ch
 | # | Where | What it does |
 |---|---|---|
 | 1 | `PregnancyCampaignBehavior.CheckOffspringToDeliver` | calls `HeroCreator.DeliverOffSpring` |
-| 2 | `HeroCreator.cs:265` and `:288` | `CreateHero` clones the template, which `TaomHeroCreationModel` makes the same-sex parent's character, through `CharacterObject.CreateFrom` |
+| 2 | `HeroCreator.cs:265` and `:288` | `CreateHero` clones the template, which vanilla's `DefaultHeroCreationModel` makes the same-sex parent's character, through `CharacterObject.CreateFrom` |
 | 3 | `BasicCharacterObject.cs:193-195` | `FillFrom` copies the raw `_culture` onto the clone |
 | 4 | `Hero.cs:1238-1239`, `:2256` | `SetInitialValuesFromCharacter` reads `StealthEquipments` before `HeroObject` is set |
 | 5 | `CharacterObject.cs:144` | `Culture.DefaultBattleEquipmentRoster` on a null culture throws |
@@ -264,15 +265,16 @@ the field, step 5 is an inference from the frames, and what first made this save
     character that is already broken, and pulls the twin into the save, as any XML template used as an origin is. The
     hero reads as generated for `IsOriginalCharacter` and the load copy. It stays unregistered, so `Hero.FindFirst`,
     `Hero.FindAll` and `CharacterObject.All` still do not see it. **Race:** a registered generated hero keeps its race,
-    because `RacePersistenceService` reaches it and restored that race at session launch. An unregistered hollow
-    character takes the twin's, because its own is the unsaved default.
+    because `RacePersistenceService` reaches it and restored that race at session launch. So does an unregistered
+    hollow character with a non-zero race: the service reaches its hero through the hero lists. Race 0 on an
+    unregistered character is the unsaved default, so it takes the twin's.
   - **With no twin:** it takes the saved `Hero.Culture`, then the hero's clan, and fills the other null fields inert as
     above. This does not break the rule that `_culture` is not invented: a hero's own saved culture is the true value,
     and a hero with neither source is left alone and reported. The child's race is then the hollow parent's default.
 
   The repair runs at the point of use because what first made the character hollow is unverified, so the repair must
   not depend on it, and this saved-field write runs only where the game would crash. Both parents are repaired because either can be the template
-  (`TaomHeroCreationModel.GetCharacterTemplateForOffspring` returns the mother's character for a
+  (vanilla's `DefaultHeroCreationModel.GetCharacterTemplateForOffspring` returns the mother's character for a
   girl and the father's for a boy). Once proof
   exists that hollow characters occur only at load, a repair in the census walk could replace the Prefix and heal every
   read (#1076).
@@ -280,14 +282,15 @@ the field, step 5 is an inference from the frames, and what first made this save
 The check `taom.stale-character.parent-repair` writes `pass` or `fail`, with the state from before the write. The
 repair runs before the birth, so its line proves nothing about the birth: the Finalizer writes
 `taom.stale-character.parent-birth` as `pass` or `fail` by how the birth ended, and a fail wins over another birth's pass
-in the `[Check]` lines in `taom_debug_*.log` (`tools/ingame_checks/1076.toml` arrives with WP139). A repair with neither line means the process died inside the birth, which is a FAIL.
+in the `[Check]` lines in `taom_debug_*.log` (`tools/ingame_checks/1076.toml`, read by
+`python tools/ingame_verdict.py --issue 1076`; see [in-game verdicts](ingame-verdicts.md)). A repair with neither line means the process died inside the birth, which is a FAIL.
 
 ## Verification not yet done
 
 **The parent-repair repair (bundle `3fbdc0c5`, #1076)** has unit and binding tests only. The player's save is not
 available (Mike, 2026-11-02). The proof needs an affected game, or the state built by hand from the RCA's steps: expect
 no crash at the birth, the census line, and the `parent-repair` and `parent-birth` lines: the `[Check]` lines in
-`taom_debug_*.log` (`tools/ingame_checks/1076.toml` arrives with WP139). A healthy game writes none of them.
+`taom_debug_*.log` (`tools/ingame_checks/1076.toml`). A healthy game writes none of them.
 
 **The original repair (bundle `065939b6`):**
 

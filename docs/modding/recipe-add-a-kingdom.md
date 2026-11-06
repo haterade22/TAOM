@@ -124,7 +124,7 @@ singleton provider, so each needs a full application restart rather than a save 
 | [`diplomacy/diplomacy.json`](../../Main/_Module/ModuleData/diplomacy/diplomacy.json) | pairs of kingdom ids | the realm has no alliances and no enemies past day one | nothing |
 | [`diplomacy/war_of_the_ring.json`](../../Main/_Module/ModuleData/diplomacy/war_of_the_ring.json) | kingdom ids inside `phase1` / `phase2` wars | the realm sits out the scripted escalation | nothing |
 | [`configs/army_targeting.json`](../../Main/_Module/ModuleData/configs/army_targeting.json) | kingdom id, under `KingdomTheaters` | the realm is invisible to army-target weighting | `WarTheaterConfigInvariantsTests`, and it fails the build |
-| [`factionmap/factions.json`](../../Main/_Module/ModuleData/factionmap/factions.json) and [`regions.json`](../../Main/_Module/ModuleData/factionmap/regions.json) | its own faction key, with `game_faction` naming a culture | the realm cannot be picked on the faction-select map | `dotnet test TAOM.Tests --filter FactionMap` |
+| [`factionmap/factions.json`](../../Main/_Module/ModuleData/factionmap/factions.json) and [`regions.json`](../../Main/_Module/ModuleData/factionmap/regions.json) | its own faction key, with `game_faction` naming a culture | the realm cannot be picked on the faction-select map | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FactionMap` |
 | [`special_resources/special_resources_config.xml`](../../Main/_Module/ModuleData/special_resources/special_resources_config.xml) | `<Kingdom id>` and `<Culture id>` children | the realm earns no special resource | nothing |
 | [`startup_resources/startup_resources_config.xml`](../../Main/_Module/ModuleData/startup_resources/startup_resources_config.xml) | culture id | its lords open the campaign with 0 gold and its clans with 0 influence | nothing |
 
@@ -196,8 +196,10 @@ mean the new realms open at peace with everyone who was there first. The mechani
 [kingdoms](kingdoms.md).
 
 Every insertion is wrapped in a marker pair by the script's `upsert` helper
-(`generate_new_faction_kingdoms.py:97-102`), so a re-run strips its own previous block instead of
-duplicating it. If you open `characters/clans.xml` and find `<!-- TAOM-NEWFACTIONS:goblin:BEGIN -->`
+(`generate_new_faction_kingdoms.py`), so a re-run replaces its own previous block where it stands instead
+of duplicating it, and refuses a file that holds two of its marker regions or a lone BEGIN or END (a copy
+of the rows without the exact markers is not caught: `validate_moduledata.py` `DUPLICATE_NPC_ID` catches a
+repeated lord, and nothing yet catches a repeated clan, hero or kingdom). If you open `characters/clans.xml` and find `<!-- TAOM-NEWFACTIONS:goblin:BEGIN -->`
 above a run of clans, that run is generated. Edit the script, not the block, or the next run throws
 your edit away.
 
@@ -260,7 +262,7 @@ instead.
    from `spkingdoms.xslt`. That does not remove a kingdom, it restores the vanilla one under its
    vanilla name and colours.
 
-Check: `dotnet test TAOM.Tests --filter WarTheaterConfigInvariants`
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter WarTheaterConfigInvariants`
 Takes effect: new campaign only
 Code: No code changes needed
 

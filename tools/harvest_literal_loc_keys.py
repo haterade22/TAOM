@@ -11,7 +11,7 @@ rows. See #434.
 This harvests only keys whose default text can be read straight out of the source
 literal (`"{=taom_key}Default text"`, or the interpolated `$"{{=taom_key}}..."` form).
 Keys COMPOSED at runtime from data ids cannot be seen here at all and are generated
-per-family instead -- tools/generate_enlistment_duty_strings.py is the model.
+per-family instead -- tools/harvest_duty_strings.py is the model.
 
 Idempotent: a key already present in any ModuleData XML is skipped, so re-running
 after hand-tuning a row leaves the tuned text alone.
@@ -156,11 +156,12 @@ def insert_rows(path: Path, rows: list) -> None:
             f'{indent}<string id="{key}" text="{{={key}}}{escape_xml_attr(default)}" />')
     block.append("")
 
-    # Drop a trailing blank line the file already has, so the block does not double it.
+    # Replace the blank lines the file already has before </strings>: the block ends in
+    # its own blank line, so keeping them would add one more blank line on every run.
     at = close
     while at > 0 and lines[at - 1].strip() == "":
         at -= 1
-    lines[at:at] = block
+    lines[at:close] = block
     write_text(path, nl.join(lines))
 
 

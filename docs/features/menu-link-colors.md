@@ -61,9 +61,10 @@ calling `MBObjectManager.GetObject(elementName, stringId)` mirrors vanilla's own
 `GameMenuManager.GetMenuText` and `GameMenu.GetText()` return the **same cached `TextObject`
 reference** on every call, and `GameMenuVM.IsMenuTextChanged()` compares by reference **every
 frame**. A postfix there returning a new object would rebuild the menu text at frame rate forever;
-mutating the returned object would corrupt the menu's stored template. `set_ContextText` is
-reached only when `_requireContextTextUpdate` is set — once per menu open or refresh — and the
-prefix runs before vanilla's `if (value != _contextText)` guard, so the field and the comparison
+mutating the returned object would corrupt the menu's stored template. `GameMenuVM.OnFrameTick`
+calls the setter whenever `_requireContextTextUpdate` is set, and `IsMenuTextChanged` sets it every
+frame while the menu's `TextObject` has no attributes, so the prefix runs per frame; link-free text
+exits at the `IndexOf` probe. The prefix runs before vanilla's `if (value != _contextText)` guard, so the field and the comparison
 both see the rewritten string and no extra property-change notification fires.
 
 Patching `HyperlinkTexts` directly would have been simpler and is the wrong answer: it is
@@ -168,9 +169,9 @@ before and after a culture conversion, or across a load of a different save wher
 settlement has a different owner. The memo could therefore return a stale faction colour with
 nothing to indicate it was wrong.
 
-It was removed rather than invalidated. The setter runs once per menu open, so recomputing costs
-one regex pass over a few hundred characters plus a handful of object lookups — the cache was
-guarding a cost that does not exist. `Rewrite_SameTextAfterCultureChanged_ReflectsTheNewCulture`
+It was removed rather than invalidated, and it stays removed because of that culture staleness: the
+setter now runs per frame, but link-free text exits at the `IndexOf` probe and linked text costs one
+regex pass over a few hundred characters plus a handful of object lookups. `Rewrite_SameTextAfterCultureChanged_ReflectsTheNewCulture`
 and `Rewrite_SameTextAfterBrushBecameAvailable_StopsFallingBackToVanilla` pin the behaviour.
 
 ### The load-order hazard
@@ -183,7 +184,7 @@ from invisible-black-text into one log line naming the cause. **TAOM must load a
 
 ## Testing
 
-`dotnet test TAOM.Tests --filter MenuLinkColors` — 30 tests covering the rewrite for all four link
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter MenuLinkColors`: 30 tests covering the rewrite for all four link
 types, mixed cultures in one string, the `Faction-` clan prefix, every fallback path (unsupported
 culture, unresolvable object, malformed markup, lookup throwing, brush missing the style),
 idempotency, warn-once behaviour, staleness after a culture change, and the XML↔C# coverage,

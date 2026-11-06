@@ -173,12 +173,13 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
                         $"[CharacterCreation] skipped spawning narrative mount '{character?.StringId}': its spawn point, " +
                         $"item ids, horse action set or mount key is missing (item1='{character?.Item1Id}').");
                 }
-                catch { /* logger unavailable: the skip stands */ }
+                catch { /* swallow-ok: logger unavailable; the skip stands */ }
             }
             return canSpawn;
         }
-        catch
+        catch (Exception ex)
         {
+            TAOM.Core.Logging.Outcomes.Swallowed("CharacterCreation", "CharacterCreationNarrativeStageView_SpawnNonHuman_Patch.Prefix", ex);
             return true; // could not read the state: vanilla decides, as without this patch
         }
     }
@@ -228,7 +229,7 @@ public static class CharacterCreationNarrativeStageView_RefreshAgentVisuals_Patc
         }
         catch (Exception ex)
         {
-            try { IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning($"[Patch20-RaceSync] failed: {ex.Message}"); } catch { }
+            try { IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning($"[Patch20-RaceSync] failed: {ex.Message}"); } catch { /* swallow-ok: the logger itself threw */ }
         }
     }
 }

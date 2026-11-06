@@ -54,14 +54,12 @@ RCA: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
 
 ## Skills (Slash Commands)
 
-41 of the 43 skill **descriptions load eagerly** into every conversation (that is the
-skill-listing you see; 2 are `disable-model-invocation: true`) — so a table of them here is a
-second, drifting copy. Invoke a skill with `/name`; the routing table below ("Skill Routing")
-says *when*. Full per-skill workflow lives in each `SKILL.md`.
+Skill **descriptions load eagerly** (that is the skill listing you see), so they are not tabled here.
+Invoke a skill with `/name`; "Skill Routing" below says *when*; each `SKILL.md` holds its workflow.
 
 ### Workflow → Skill convention
 
-**Every recurring, multi-step workflow becomes a skill** when it is (a) repeatable, (b) multi-step or chains skills, and (c) carries TAOM-specific gotchas. The skill is a thin entry point pointing at the authoritative doc. **Do NOT skill-ify** one-offs, pure reference, or single commands — descriptions load eagerly into every conversation, a permanent context tax. New skills: description <=30 words, follow `.claude/rules/external-skill-ports.md`, register in the routing table below, update CHANGELOG.
+**Every recurring, multi-step workflow becomes a skill** when it is (a) repeatable, (b) multi-step or chains skills, and (c) carries TAOM-specific gotchas. The skill is a thin entry point pointing at the authoritative doc. **Do NOT skill-ify** one-offs, pure reference, or single commands: descriptions load eagerly into every conversation, a permanent context tax. New skills: description <=30 words, follow `.claude/rules/external-skill-ports.md`, register in the routing table below.
 
 ## Skill Routing (when to invoke what)
 
@@ -103,7 +101,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 
 - **`/freeze`** on "only fix this" / "don't touch X" / "stay in this folder" / a many-file refactor or focused one-feature fix; **`/unfreeze`** when they're done and the boundary is still set.
 - **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
-- **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG.
+- **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue.
 - **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
 - **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `output-style.md` Part 2 already governs new prose as you write.
 
@@ -118,8 +116,6 @@ on request, or `/context-budget` after a major harness change).
 Treat the SKILL.md as executable instructions, not reference. Follow the phases in order. Don't shortcut. The phases exist because shortcuts caused the bugs that motivated the skill.
 
 ## Scoped Rules (auto-loaded by file path)
-
-> **Convention:** A rule with a `paths:` array loads **conditionally** when a matching file is opened. A rule **without** `paths:` (omit the field entirely) loads **at conversation start** for every session. `paths: ["**/*"]` is NOT the same as omitting `paths:` — the former is still conditional under the rule loader.
 
 Full catalog (rule → scope → content, 16 path-scoped + 7 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
@@ -151,12 +147,10 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 | Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
 | Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
 
-> **Haiku 3 deprecation:** April 19, 2026. The `haiku` alias already maps to `claude-haiku-4-5` — no action needed.
-
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 83 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 85 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
@@ -211,7 +205,7 @@ instructions `AGENTS.md`.
 | **Player Switcher priority** | The character-creation handover MUST register at handler priority 1100, above TAOM's own 1050. Lower and `ApplyFinalEffects` plus `SetPlayerRace` hit the real lord: Erebor at renown zero, Sauron's race overwritten and then persisted. Reassign the player clan BEFORE removing the created hero or the orphan clan survives. `docs/features/player-switcher.md`. |
 | **Armory asset trees** | No cooked tree: 0 `AssetPackages/*.tpac`, the engine loads loose `Assets/**` and loose WINS where both exist (TAOM/TAOM_Map ship both; `rgl_log` names `Assets` for each). The old stale-pack trap is unreachable here. Current inventory is GENERATED, never counted by hand: `docs/reference/armory-catalogue/`. |
 | **Settlement menus need an encounter** | Inside a settlement with no `PlayerEncounter`, every vanilla settlement menu CTDs: `game_menu_settlement_wait_on_init` derefs `EncounterSettlement`, the rest deref `LocationEncounter`. Only `IEncounterAdapter.EnsureSettlementEncounter` may place the player there; an IL ban test enforces it (#510). |
-| **Horse-skeleton reskins** | A reskin shares its action vocabulary with the ENGINE, so "our code never fires this" stops meaning "nothing fires this". The vanilla horse rig has NO attack clip (`monster_usage_strikes` is a hit-REACTION table); its only attack is `act_horse_kick`. `act_horse_rear` blocks `Agent.Mount`; `act_horse_strike_*` reads as being-struck. `docs/features/war-ram.md` |
+| **Horse-skeleton reskins** | A reskin shares its action vocabulary with the ENGINE, so "our code never fires this" stops meaning "nothing fires this". The vanilla horse rig has NO attack clip (`monster_usage_strikes` is a hit-REACTION table); its only attack is `act_horse_kick`. `act_horse_rear` blocks `Agent.Mount`; `act_horse_strike_*` are hit reactions. `docs/features/war-ram.md` |
 | **A HorseHarness is REQUIRED beside every Horse slot** | Not always armour: on the ram it is the SEAT (`sk_eb_goat_a/_b` are bare pelts), so an empty slot renders a rider on bare hide. No XML says which mounts carry their own saddle, so the rule is universal; exemptions go in `_HARNESSLESS_BY_DESIGN` with a reason. Gate: `MOUNT_WITHOUT_HARNESS`. `docs/features/war-ram.md` |
 | **Animation must be authored on the ENGINE skeleton** | Skinning is roll-independent, so a mesh FBX can carry wrong bone orientations and still deform correctly in game; rotations are not. A clip authored on a mesh rig looks perfect in Blender and twisted in game. Dump the real rig first: `pwsh tools/dump_engine_skeleton.ps1 -Skeleton <name>`. `docs/reference/bannerlord-skeleton-authoring.md` |
 | **Renaming a Kit animation clip corrupts it** | The Kit keeps resolving the old name: `Size in KB = 0`, Save refused, scrambled model viewer, and the renamed file can vanish. Only a full Kit restart clears it, every time. Leave the clip on `new_animation_clip`, close the Kit, then `python tools/rename_anim_clip_tpac.py <file> <name> --apply` |
@@ -219,6 +213,8 @@ instructions `AGENTS.md`.
 | **Troop bows are generated `ladder_*` items** | Reach is the bow's `missile_speed`; skill is accuracy, never range. 130 `ladder_<line>_<bow|xbow>_<band>` items live in the unversioned Armory from `tools/ranged_ladders.json`; a reinstall drops them and archers spawn bowless, no error. `generate_ranged_ladder_items.py --verify`; gate `RANGED_LADDER_INVERSION`. `docs/features/ranged-ladders.md` |
 | **A Stop order never forms a line** | `MovementOrderStop` is `StandGround`: `GetOrderPositionOfUnit` returns each rider's OWN position (`Formation.cs:1262`), so a `SetPositioning` line applied under it is ignored and riders freeze in place. Shape a formation with a Move (Hold: arrangement slots). SmartCavalryAI ran 4 months on Stop, 44 tests green (#586). `docs/features/smart-cavalry-ai.md` |
 | **Agent slots recycle; Agent.Tick is off-thread** | A deleted agent's index goes to the next agent built and its dead `Agent` still reads that slot (`IsActive` says yes): never key mission state on `Agent.Index` (#592). In SP `Agent.Tick` runs on the async AI thread: no blows or mission collections from an `AgentComponent` tick; trees tick from `BehaviorTreeMissionLogic.OnMissionTick`. |
+| **An `AfterStart` throw reloads the mission forever** | v1.4.8 `FinishMissionLoading` clears `_missionInitializing` before `Mission.AfterStart` (`MissionState.cs:333-352`), so a throw makes every later tick reload the mission and SaveShield swallows it: an endless loading screen. Patch103 cuts the throwing call short. `docs/features/mission-start-guard.md` |
+| **Event listeners run newest first** | `MbEvent.AddNonSerializedListener` prepends (v1.4.8 `MbEvent.cs:24-30`), so a listener added after the engine's runs BEFORE it on the same event. `docs/reference/engine/campaign-tick-time-and-party-ai.md` |
 
 ## Architecture (One-liner)
 
@@ -271,10 +267,10 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## Documentation Requirements (MANDATORY)
 
-- **CHANGELOG.md every session.** ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
+- **The commit body is the changelog entry** (`/release` writes `CHANGELOG.md`). ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
 - **CLAUDE.md:** new features add their row to `docs/reference/feature-map.md`, NOT here — here only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget).
 - **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md) — detailed enough that a future session needs ZERO re-decompilation.
-- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc + CHANGELOG. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
+- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
 
 ## Commits
 
@@ -285,7 +281,10 @@ subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). Why: a cra
 `TaomVersion` from that file and between releases every pushed commit reads as the same version;
 `git log --grep 'v2.0.28 - '` now lists exactly the commits a v2.0.28 build can contain.
 Enforced by `.claude/hooks/check-commit-subject-version.sh` (refuses a subject without the label or
-with the wrong version; amend/fixup/squash forms that bring no new subject pass).
+with the wrong version, and any AI attribution line; amend/fixup/squash forms that bring no new
+subject pass) and, for every committer, by `.githooks/commit-msg` once a clone runs
+`git config core.hooksPath .githooks`. That hook also judges merges, so give a merge a labelled
+message: `git merge --no-ff -m "chore: vX.Y.Z - merge <branch>" <branch>`.
 Subject at most 72 characters (the label costs about 20, so the old 50 no longer fits), body
 wrapped at 72, no AI attribution. Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
@@ -305,9 +304,8 @@ wrapped at 72, no AI attribution. Example: `feat(recruitment): v2.0.28 - Glanhir
 changes **only** in a release commit — which is then tagged `vX.Y.Z` (annotated, `git tag -a`) and
 pushed. `git push` does NOT push tags; the tag needs its own refspec. Never move a pushed tag.
 
-Five versions players actually ran (`v2.0.11/.12/.14/.16/.17`) appear in no commit on any branch and
-are permanently unresolvable — two crash reports cite `v2.0.12`. `/release` runs the full sequence
-including the #371 Dependencies pairing check; contract + backfill record + the phantom-version list:
+`/release` runs the full sequence, including the #371 Dependencies pairing check. The contract, the
+backfill record and the five phantom versions players ran (in no commit on any branch):
 [`docs/reference/release-process.md`](docs/reference/release-process.md).
 
 ### Multi-session git safety (MANDATORY — a rebase can destroy another session's work)
@@ -327,6 +325,7 @@ original bug over its own fix, with a message describing a fix that was no longe
 | **`git stash apply`, never `pop`, when recovering** | Keeps the stash as a safety net until the recovery is verified green |
 | **Verify your own markers survived before committing** | Re-read them from disk before any completion claim, not only after a rebase/stash: another session restoring a path reverts your uncommitted edits with no error and leaves `git status` clean. The tree compiling is NOT proof your change is still in it |
 | **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks. Enforced since 2026-08-09 by `.claude/hooks/block-broad-git-add.sh`, which confirms before `git add -A/-u/.` and `git commit -a/-am` and lists what the sweep would take |
+| **In a shared checkout, commit with a pathspec: `git commit -F <msg> -- <paths>`** | A bare `git commit` takes the whole index, so files another session staged go in too (2026-10-14: a 12-path commit took 10 of them). A pathspec commit takes each named file whole from the working tree |
 | **`git status --porcelain` BEFORE editing a shared file** | An unpopped auto-stash can leave a path `UU` with everything already staged. 2026-08-08: a session appended a CHANGELOG entry into a file carrying live `<<<<<<<` markers and never saw them; a plain `git commit` would have swept both sessions into one commit |
 | **Prove a stash is redundant before trusting the tree — normalise line endings** | `git show stash@{0}:<f>` emits LF against a CRLF worktree, so a raw `diff` calls every line changed and looks like total divergence. Use `diff --strip-trailing-cr`. Doing so turned "35 files diverged" into "the stash is a strict subset, nothing lost" |
 | **Re-read `HEAD` immediately before `--amend`, not before the edit** | If another session commits in between, your amend rewrites THEIR commit. 2026-08-08 a CHANGELOG fix landed inside another session's docs commit. Recovery: `git reset --mixed <their-sha>`, confirm `git diff <their-sha> HEAD` is empty, re-commit yours separately |
@@ -337,7 +336,7 @@ original bug over its own fix, with a message describing a fix that was no longe
 If the working tree contains another session's edits, leave them unstaged and say so — do not
 commit, revert, or "tidy" them. **If the user explicitly asks for both sessions' work to land**,
 commit theirs as its OWN commit, attributed in the message and verified green first — never folded
-into yours. Watch for the inverse tell: a CHANGELOG entry in `HEAD` whose code is absent means the
+into yours. Watch for the inverse tell: a feature doc or commit body in `HEAD` whose code is absent means the
 documentation half of a change committed and the code half did not.
 
 ## MCP Servers
@@ -361,13 +360,12 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 
 **Always use `taom-src` first** — authoritative signatures from the installed DLLs. The order:
 **0.** [engine process docs](./docs/reference/engine/) for "how does X work" → **1.** `pwsh tools/taom-src.ps1 path <Type>`
-for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` (shipping-client decompile — editor-only
-types are stripped, "absent" != "doesn't exist") → **3.** ILSpy MCP as fallback.
+for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` → **3.** ILSpy MCP as fallback.
 Full detail (compose examples, dual-build layout, DLL paths, configuration): [`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md).
 
 ## Hooks
 
-33 hook registrations: 28 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 29 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted 2026-09-13 after `check-commit-subject-version.sh`). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
+Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Each names its script as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh` (a relative path stopped every gate after a `cd`, #690). Gate them with `bash tools/test_hooks.sh`. Full catalog, with the current counts (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -384,28 +382,15 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
-| `check-verification-evidence.sh` | Run the build/test it names (`./build.ps1 -RunTests`) and read the output before claiming the work is done — don't dismiss the reminder. If the build genuinely can't run (env failure), say so explicitly per `environment-failures.md`; don't silently ignore it. |
+| `check-verification-evidence.sh` | Run `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` and `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
 | `check-version-tagged.sh` | Tag the release commit (`git tag -a <version>`) and push the tag. Don't dismiss it — an untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
-
-## Status Line
-
-`.claude/statusline.sh` renders `ctx: N% | model | branch | Ns/Nu/Nt` (staged/unstaged/untracked counts, omitted when clean). Registered in `settings.json → statusLine`.
 
 ## Notes
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.4.8 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.8 as of 2026-08-10 — `ilspycmd` on the installed 1.4.8 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` — v1.4.8 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved — note `_editor_build_v1.4.5`: the Modding Kit sat three versions behind until 1.4.8 brought it level). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
-- Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
-
-## PowerShell Tool (Windows)
-
-Opt-in preview (v2.1.78+): runs PowerShell natively instead of via Git Bash. Enable with
-`"CLAUDE_CODE_USE_POWERSHELL_TOOL": "1"` in the settings.json env block. Details + the
-`defaultShell` / hook `shell:` / skill `shell:` knobs + limitations:
-[`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md).
+- Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 
 ## Equipment & Armory
 

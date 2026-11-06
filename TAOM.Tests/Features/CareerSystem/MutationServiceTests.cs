@@ -86,6 +86,31 @@ public class MutationServiceTests
     }
 
     [TestMethod]
+    public void MutateAbility_ResultOverflowsToInfinity_KeepsTheValueAndWarns()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+
+        _registry.GetCareer("warboss").Returns(new CareerDefinition(
+            "warboss", "", "", "", "rally_horde", 0, "wb_root",
+            new List<string>(), new List<string>()));
+
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            "wb_root", "", ChoiceType.Passive, "", "", null,
+            new List<MutationDefinition>
+            {
+                new MutationDefinition("rally_horde", "Radius", "flat", OperationType.Add,
+                    new Dictionary<string, string> { ["value"] = "3" })
+            }));
+        var calculators = Substitute.For<IMutationCalculatorRegistry>();
+        calculators.Calculate("flat", 10f, _hero, Arg.Any<MutationParams>()).Returns(float.PositiveInfinity);
+
+        var result = new MutationService(calculators, _logger).MutateAbility(TestTemplate, _hero, _dataService, _registry);
+
+        Assert.AreEqual(10f, result.Radius, 0.001f);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("Radius")));
+    }
+
+    [TestMethod]
     public void MutateAbility_SkillScaling_ScalesByHeroSkill()
     {
         _dataService.SetCareer("hero1", "warboss");

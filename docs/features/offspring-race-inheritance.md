@@ -10,12 +10,12 @@ Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.Si
 
 ## Architecture
 
-**TaomHeroCreationModel** (GameModel override) overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic.
+Vanilla's `DefaultHeroCreationModel.GetCharacterTemplateForOffspring` (v1.4.8 `:346-353`) already provides the rule: a son gets his father's `CharacterObject` as his template and a daughter gets her mother's. TAOM overrides nothing for it. `Patch13_RaceAge` (`DeliverOffSpring_RaceAssert_Patch`) still does the race work, by silencing the cross-race assert.
 
 ### Component Diagram
 
 ```
-TaomHeroCreationModel (GameModel)
+DefaultHeroCreationModel (vanilla GameModel)
   └─ GetCharacterTemplateForOffspring
         ├─ male child  → father.CharacterObject (father's race)
         └─ female child → mother.CharacterObject (mother's race)
@@ -35,11 +35,11 @@ HeroCreator.DeliverOffSpring (vanilla, static)
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/RaceAge/Models/TaomHeroCreationModel.cs` | GameModel — same-sex parent CharacterObject used as offspring template |
+| `Main/Features/RaceAge/Hooks/DeliverOffSpring_RaceAssert_Patch.cs` | Transpiler that silences vanilla's cross-race `SilentAssert` in `HeroCreator.DeliverOffSpring` |
 
 ## Integration
 
-- `TaomHeroCreationModel` registered in `SubModule.OnGameStart` via `campaignStarter.AddModel()`
+- `DeliverOffSpring_RaceAssert_Patch` is applied by `Patch13_RaceAge` in `SubModule`; the offspring template itself comes from vanilla's model
 
 ## Dependencies
 

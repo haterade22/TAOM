@@ -1,0 +1,12 @@
+{
+  "enlist_duty": {
+    "regex": "taom_enlist_duty_(?P<stem>.+)_(title|body|opta|optb|success|failure)",
+    "reason": "Built at run time as \"taom_enlist_duty_\" + id + \"_\" + suffix. The duty JSON names the title, body and option keys as literals; the success and failure keys are never written out, only composed for the result toast.",
+    "site": "Main/Features/Enlistment/Content/Domain/DutyText.cs"
+  },
+  "character_creation_narrative": {
+    "regex": "taom_cc_(?P<stem>taom_.+)_(text|desc)",
+    "reason": "Built as $\"{{=taom_cc_{StringId}_text}}\" and \"_desc\" for each option in the charactercreation JSON files, whose StringId values start with taom_ (taom_parent_gondor_1 and so on); the ids appear in the JSON without the taom_cc_ prefix.",
+    "site": "Main/Features/CharacterCreation/NarrativeMenuBuilder.cs"
+  }
+}

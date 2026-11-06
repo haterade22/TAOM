@@ -31,6 +31,14 @@ public static class IncompatibleModDetector
 
     private static int _earlyPhaseRan;
 
+    /// <summary>True when the assembly at <paramref name="assemblyPath"/> sits in the Modding Kit's bin folder.</summary>
+    internal static bool IsEditorBin(string assemblyPath)
+    {
+        if (string.IsNullOrEmpty(assemblyPath)) return false;
+        var binDir = Path.GetFileName(Path.GetDirectoryName(assemblyPath) ?? string.Empty);
+        return string.Equals(binDir, "Win64_Shipping_wEditor", StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>
     /// Run at SubModule construction time (idempotent across stub ctors).
     /// Checks whether the previous session's launch marker still exists; if so,
@@ -48,6 +56,14 @@ public static class IncompatibleModDetector
 
         try
         {
+            // The Modding Kit never reaches MarkSessionLaunchSuccessful, so a marker it wrote would make
+            // the next game report a crash loop that never happened.
+            if (IsEditorBin(typeof(IncompatibleModDetector).Assembly.Location))
+            {
+                DiagLog.Log(Tag, "RunEarlyPhase: loaded by the Modding Kit; skipping crash-loop detection");
+                return;
+            }
+
             var moduleDir = RuntimeLog.ModuleDir;
             DiagLog.Log(Tag, $"RunEarlyPhase: moduleDir='{moduleDir}'");
             if (string.IsNullOrEmpty(moduleDir))

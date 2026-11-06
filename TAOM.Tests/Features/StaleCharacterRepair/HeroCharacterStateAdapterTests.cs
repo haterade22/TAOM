@@ -156,6 +156,20 @@ public class HeroCharacterStateAdapterTests
         Assert.AreEqual(4, child.Race);
     }
 
+    // The roster reaches a living hollow hero through the hero lists, so an unregistered character can hold a saved
+    // race by the time a birth repairs it. 0 is the unsaved default, and only then is the twin's race the better answer.
+    [TestMethod]
+    public void TryRepairCharacter_UnregisteredHollowWithARestoredRace_KeepsThatRace()
+    {
+        RegisterTwin(TwinCulture);
+        var hollow = Hollow();
+        hollow.Race = 7;
+
+        Assert.IsTrue(new HeroCharacterStateAdapter(HeroOf(hollow, HeroCulture)).TryRepairCharacter());
+
+        Assert.AreEqual(7, hollow.Race);
+    }
+
     [TestMethod]
     public void TryRepairCharacter_RegisteredHeroWithARestoredRace_KeepsThatRaceAndTakesTheRest()
     {

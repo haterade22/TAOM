@@ -175,6 +175,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - `base.Method()` in GameModels accepting sealed params — adapter conversion happens inside the method body before calling the service
 - `SubModule.cs` and `IoC.cs` accessing TaleWorlds types directly — these ARE the boundary layer
 - GameModel constructors receiving services via `IoC.Resolve<>()` — registration pattern in `SubModule.cs`
+- `IoC.Resolve<T>()` in a UIExtenderEx `[ViewModelMixin]` constructor: the library builds the mixin with `Activator.CreateInstance(type, viewModel)` (UIExtenderEx 2.13.2 `ViewModelComponent`), so it cannot take constructor injection. A resolve in the mixin's `OnRefresh`, tick or command handlers is still a violation
 - `/investigate` SKILL.md re-declaring `/freeze`'s PreToolUse hook in its own frontmatter — intentional hook reuse so debugging auto-engages scope-lock; copying the inline hook block to other skills must be a deliberate choice, not a casual paste
 - `PlayerPossessionService.TryConsumePossession` gating on `ICoopPresenceProvider.IsCoopActive` and then mutating the hero — presence is the wrong predicate for a world-mutating path everywhere else (`ShouldDeferToHost` / `IsAuthority` own that), but here it is the **heir-succession discriminator**: `Hero.MainHero` also changes in solo play when the player continues as an heir, and this gate keeps a solo heir out of the re-grant path. One of three independent guards, any one sufficient — presence, single consumption, and the `SyncData` per-hero marker `_taom_possessionReconciledHeroes`. Named as the sanctioned exception in `docs/features/coop-interop.md` ("One consumer breaks that shape and is not a violation")
 - `DedicatedServerProvider` deriving server-ness from `Assembly.GetExecutingAssembly().Location` containing `Win64_Shipping_Server` rather than from co-op role — deliberate. A CLIENT-HOSTED session's host also reports `IsServer` while being a real player who must keep earning, so role cannot answer this question; the binaries folder Bannerlord loaded the module from is a fact about the process and cannot change mid-run. It fails to "not a server" because every gate built on it only ever suppresses behaviour
@@ -411,7 +412,6 @@ public class TaomFooModel : DefaultFooModel
 | `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + prize pools |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults |
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision rules |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | LOTR faction relationships |
@@ -650,6 +650,7 @@ Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 | 0. **[Engine process docs](../docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does this process work" questions — lifecycle, formation/team AI, mount/rider, campaign-mission seam, campaign heartbeat, agent spawn pipeline, usable machines, GauntletUI, save/object system, GameModel, campaign behaviors, items. Saves raw decompile time. |
 | 1. **Read decompiled source** | Read or search files in `E:\Decompiled_Bannerlord\` | Signature and behavior verification once you know which class/method to check |
 | 2. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+| 3. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C (Ghidra, desktop only) | When the managed trail ends at an `[EngineMethod]` or in natively parsed data. A native claim with no decompile behind it is UNVERIFIED |
 
 > ⚠️ **The decompiled source at `E:\Decompiled_Bannerlord\` is the SHIPPING-CLIENT build — it strips editor-only code.** Editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX-import / animation authoring) exist ONLY in `Win64_Shipping_wEditor` DLLs. "Absent from the dump" ≠ "doesn't exist." If a class is missing, check the editor build at `E:\Decompiled_Bannerlord\_editor_build\` before concluding it's native. See [bannerlord-engine-and-toolchain.md](../docs/reference/bannerlord-engine-and-toolchain.md).
 

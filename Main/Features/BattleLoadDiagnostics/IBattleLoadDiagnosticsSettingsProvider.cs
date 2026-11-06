@@ -10,8 +10,8 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     bool StallWatchdogBundleEnabled { get; }
     double StallWatchdogSeconds { get; }
 
-    /// <summary>Independent gate for the exit-stall stack sampler (#331 round 2) — the only
-    /// diagnostics component that suspends the main thread; disableable on its own.</summary>
+    /// <summary>Independent gate for the exit-stall stack sampler (#331 round 2). It suspends the
+    /// main thread, as the two freeze samplers do under their own switches.</summary>
     bool ExitStallSamplerEnabled { get; }
 
     /// <summary>Independent gate for the battle-freeze stack sampler (#634): photographs a mission

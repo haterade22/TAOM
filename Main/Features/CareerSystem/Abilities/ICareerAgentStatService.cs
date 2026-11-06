@@ -41,6 +41,34 @@ public interface ICareerAgentStatService
     float ApplyMountHealthPassives(string? mountRiderHeroId, float baseHealth);
 
     /// <summary>
+    /// Applies the rider's mount-side career bonuses to a MOUNT's driven properties (#611): the
+    /// rider hero's <c>MountChargeDamage</c> passive, and the Cavalry ability's
+    /// <c>MountSpeedBonus</c> / <c>ChargeDamageBonus</c> from the rider's self buff and the ally buff
+    /// keyed by the rider's agent index. Mutates <paramref name="mountProps"/> in place. Both ids
+    /// null (a riderless horse, or a human agent) is a no-op.
+    /// <para>
+    /// Why the mount and not the rider: the base models write <c>MountChargeDamage</c> and
+    /// <c>MountSpeed</c> only in their horse branch, and the engine reads them off the horse
+    /// (<c>AttackInformation</c> takes the charge property from the attacker, and the charge
+    /// callback's attacker is the mount). A rider-side multiply scales the default 0 and is never
+    /// read. Call AFTER <c>base.UpdateAgentStats</c> on the mount, which rewrites both.
+    /// </para>
+    /// </summary>
+    void ApplyMountStatModifiers(string? riderHeroId, int? riderAgentIndex, AgentDrivenProperties mountProps);
+
+    /// <summary>The hero's <c>Ammo</c> passive as a fraction (0.10 for +10%), 0 for no hero, no
+    /// passive or a negative value. The model hands it to <c>CareerAmmoApplier</c> from
+    /// <c>InitializeMissionEquipment</c> (#613).</summary>
+    float AmmoBonus(string? heroId);
+
+    /// <summary>Clears the <c>[CareerPerks]</c> dedupe state (the stat and mount lines and the
+    /// per-hit lines) so the next mission logs again. Called from the mission behavior's OnEndMission and
+    /// again from its OnRemoveBehavior, so it runs on every way a mission can end (#613). Before clearing, writes
+    /// the mission's per-hit summary at INFO: one line per hit combination with its hit count, multiplier range and
+    /// damage totals. The second call after a normal end finds nothing to write.</summary>
+    void ResetDiagnostics();
+
+    /// <summary>
     /// Returns the post-amplification damage value. Applies the attacker's ArmorPenetration
     /// career passive and the attacker's <c>Damage</c> passive for the hit's delivery type
     /// (<paramref name="hitMask"/> — a melee or ranged Damage pip only fires on the matching hit),

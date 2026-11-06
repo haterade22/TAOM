@@ -30,6 +30,7 @@ public sealed class CrashReportService : ICrashReportService
     private readonly CrashBundleWriter _bundleWriter;
     private readonly IButterLibExceptionHandlerAdapter _butterLib;
     private readonly CrashBundleThrottle _throttle;
+    private readonly IOutcomeLog _outcomes;
 
     [ThreadStatic] private static bool _handling;
 
@@ -53,7 +54,8 @@ public sealed class CrashReportService : ICrashReportService
         JsonCrashReportRenderer jsonRenderer,
         CrashBundleWriter bundleWriter,
         IButterLibExceptionHandlerAdapter butterLib,
-        CrashBundleThrottle throttle)
+        CrashBundleThrottle throttle,
+        IOutcomeLog outcomes)
     {
         _logger = logger;
         _identity = identity;
@@ -73,6 +75,7 @@ public sealed class CrashReportService : ICrashReportService
         _bundleWriter = bundleWriter;
         _butterLib = butterLib;
         _throttle = throttle;
+        _outcomes = outcomes;
     }
 
     public string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false)
@@ -116,6 +119,11 @@ public sealed class CrashReportService : ICrashReportService
                 }
                 return null;
             }
+
+            // #1071: the session summary, before ComposeContext collects the log tail, so both the TAOM tail in
+            // report.txt and the bundle's taom_debug.log contain the totals. Only for an admitted crash: a crash
+            // every frame would otherwise write one per frame.
+            _outcomes.WriteSummary("crash");
 
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).
             // AppDomainExceptionHook and Native2ManagedBridge pass offMainThread when the throw
@@ -170,7 +178,7 @@ public sealed class CrashReportService : ICrashReportService
             stack);
 
         var identity = Safe(() => _identity.Collect(originatingPatchTarget), failures, "Identity")
-                       ?? new IdentitySnapshot("?", "?", "?", "?", originatingPatchTarget, "?");
+                       ?? new IdentitySnapshot("?", "?", "?", "?", originatingPatchTarget, "?", "?");
         var modules = Safe(() => _modules.Collect(), failures, "Modules") ?? new ModuleInventorySnapshot(Array.Empty<ModuleSnapshot>());
         var assemblies = Safe(() => _assemblies.Collect(), failures, "Assemblies") ?? new AssemblyInventorySnapshot(Array.Empty<AssemblySnapshot>());
         var harmony = Safe(() => _harmony.CollectFromException(exception, stack), failures, "Harmony") ?? new HarmonyCorrelationSnapshot(Array.Empty<StackFramePatchInfo>(), Array.Empty<HarmonyOwnerSummary>(), 0);
@@ -204,7 +212,7 @@ public sealed class CrashReportService : ICrashReportService
         var appdomain = Safe(() => _process.CollectAppDomain(), failures, "AppDomain") ?? new AppDomainSnapshot("?", "?", null, false);
         var envvars = Safe(() => _process.CollectEnvVars(), failures, "EnvVars") ?? Array.Empty<EnvVarEntry>();
         var perf = Safe(() => _frameTiming.Snapshot(), failures, "Performance") ?? new FrameTimingSnapshot(Array.Empty<float>(), 0d, 0d, 0);
-        var logs = Safe(() => _logTail.Collect(), failures, "Logs") ?? new LogTailSnapshot(_logger.LogFilePath, Array.Empty<string>(), null, Array.Empty<string>());
+        var logs = Safe(() => _logTail.Collect(), failures, "Logs") ?? new LogTailSnapshot(_logger.LogFilePath, Array.Empty<string>(), null, Array.Empty<string>(), null, Array.Empty<string>());
 
         return new ExceptionContext(
             CapturedAtUtc: DateTime.UtcNow,

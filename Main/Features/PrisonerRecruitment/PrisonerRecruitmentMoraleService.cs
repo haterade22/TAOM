@@ -23,7 +23,7 @@ public class PrisonerRecruitmentMoraleService : IPrisonerRecruitmentMoraleServic
     }
 
     public bool ShouldWaiveMoralePenalty(
-        string recruiterKingdomId, string recruiterCultureId, string prisonerCultureId, bool isPlayerRecruiter)
+        SideIds recruiterSide, string recruiterCultureId, string prisonerCultureId, bool isPlayerRecruiter)
     {
         if (!_settings.IsEnabled) return false;
 
@@ -42,25 +42,15 @@ public class PrisonerRecruitmentMoraleService : IPrisonerRecruitmentMoraleServic
             && string.Equals(recruiterCultureId, prisonerCultureId, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        // Rule 2 -- own side. Neutral never waives: unaffiliated is not allied.
-        var recruiterSide = ResolveRecruiterSide(recruiterKingdomId, recruiterCultureId);
-        if (recruiterSide == FactionSide.Neutral) return false;
+        // Rule 2 -- own side. Neutral never waives: unaffiliated is not allied. The recruiter's pair is the
+        // clan map faction with that faction's culture (FactionSides.OfHero, #957), resolved faction-first with
+        // the culture fallback; the fallback is load-bearing, not defensive: a kingdomless Isengard player's
+        // faction is the player clan itself and a player-founded kingdom is "new_kingdom", both unclassified.
+        // The hero's own culture only feeds rule 1. Deliberately NOT IAlignmentService.AreEnemyAlignments,
+        // whose Neutral semantics are inverted (it treats Neutral as enemy-of-everyone).
+        var side = _alignment.ResolveSide(recruiterSide);
+        if (side == FactionSide.Neutral) return false;
 
-        return _alignment.GetCultureSide(prisonerCultureId) == recruiterSide;
-    }
-
-    /// <summary>
-    /// Kingdom-first, culture-fallback. The fallback is load-bearing, not defensive: a kingdomless
-    /// Isengard player has Clan.Kingdom == null, and a player-founded kingdom is "new_kingdom" --
-    /// both unclassified, so without the fallback the feature would never fire for its primary user.
-    /// Deliberately NOT IAlignmentService.AreEnemyAlignments, whose Neutral semantics are inverted
-    /// (it treats Neutral as enemy-of-everyone); three other consumers route around it too.
-    /// </summary>
-    private FactionSide ResolveRecruiterSide(string kingdomId, string cultureId)
-    {
-        var side = _alignment.GetKingdomSide(kingdomId);
-        if (side != FactionSide.Neutral) return side;
-
-        return string.IsNullOrEmpty(cultureId) ? FactionSide.Neutral : _alignment.GetCultureSide(cultureId);
+        return _alignment.GetCultureSide(prisonerCultureId) == side;
     }
 }

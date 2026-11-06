@@ -70,7 +70,7 @@ public class ItemPoolAdapter : IItemPoolAdapter
             foreach (var item in all)
             {
                 if (item == null) continue;
-                if (string.IsNullOrEmpty(item.StringId)) continue;
+                if (!IsMarketCandidate(item.StringId, item.NotMerchandise)) continue;
 
                 var attribCulture = item.Culture?.StringId;
                 var prefixCulture = ResolveByPrefix(item.StringId);
@@ -101,6 +101,13 @@ public class ItemPoolAdapter : IItemPoolAdapter
             return false;
         }
     }
+
+    // An item the XML marks is_merchandise="false" (v1.4.8 ItemObject.NotMerchandise, ItemObject.cs:154, set
+    // at :428-432 and :498-502) is hero-only or troop-only kit; vanilla's own inflows skip it, and so does
+    // the culture-market pool (the 1.5.x line does this through its armour acquisition gate, bc39f6e4d). The
+    // routed guaranteed-stock pass adds items by id and does not ask this.
+    internal static bool IsMarketCandidate(string? stringId, bool notMerchandise) =>
+        !string.IsNullOrEmpty(stringId) && !notMerchandise;
 
     private static string ResolveByPrefix(string itemId)
     {

@@ -14,6 +14,8 @@
 # state rather than rewriting anything. No churn.
 *.sh    text eol=lf
 *.bash  text eol=lf
+# Git hooks have no extension, and bash refuses a CRLF shebang line.
+.githooks/* text eol=lf
 
 # NOT *.py, deliberately. 72 tracked .py files are CRLF in the worktree; normalising them
 # would rewrite all 72 on the next checkout for no benefit, since Python is CRLF-tolerant
@@ -22,3 +24,5 @@
 
 # A generated, tracked page: the generator writes LF and the file must diff clean on every machine.
 docs/reference/ranged-troops.html text eol=lf
+# The snapshot's project.mbproj is a byte copy of the live file (LF, UTF-8 BOM) for the same reason.
+docs/reference/lotrlome-armory-snapshot/project.mbproj text eol=lf

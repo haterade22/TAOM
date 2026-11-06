@@ -20,6 +20,7 @@ After CrashReport, every crash produces a structured `Logs/taom_debug_*.log` ent
 - `report.json` — machine-parseable equivalent
 - `taom_debug.log` — current session's TAOM log
 - `rgl_log.txt` — current session's TaleWorlds RGL log
+- `diag.log`: TAOM.Dependencies' log, carrying PatchShield's swallowed `MissingMethod` / `MissingField` / `TypeLoad` exceptions (the engine-mismatch signature) when the path resolves
 - `manifest.txt` — file inventory + size + SHA1
 
 Players upload one ZIP, we reproduce locally without playing twenty questions.
@@ -88,6 +89,10 @@ Three session-scoped layers (reset only on a fresh game launch; constants in `Cr
 
 The very first bundle is never cooldown-gated (`_bundlesWritten > 0` guard), so the real crash is always captured. Net effect: a recurring crash produces **exactly one** zip; a degenerate "different exception every tick" burst is bounded by cap + cooldown. Unit-tested in [`CrashBundleThrottleTests`](../../TAOM.Tests/Features/CrashReport/CrashBundleThrottleTests.cs).
 
+**Session summary (#1071).** An admitted capture (a crash, or a battle-load stall the watchdog reports) then writes the `[Session] summary reason=crash` lines through `IOutcomeLog.WriteSummary` before `ComposeContext` collects the log tail, so both the TAOM log tail in `report.txt` and the bundle's `taom_debug.log` contain the session's check, counter and swallowed-exception totals. They are not the last lines of that log: the report itself is written back into it as `[CrashReport]` lines afterwards, tail included, so the copied log holds the summary twice. A suppressed repeat writes no summary, which keeps a crash that recurs every frame from writing one per frame.
+
+**Swallowed exceptions and the silent catch ratchet (#1073).** A catch that keeps the game running by dropping an exception reports it with `Outcomes.Swallowed("<feature folder>", "<Class.Method>", ex)`: one `[Swallowed]` WARNING per site for the process, then a count in the `[Session]` summary, with the catch's fallback unchanged. A catch where silence is right (the log call itself threw, for example) carries a `// swallow-ok: <reason>` comment instead. [`SilentCatchRatchetTests`](../../TAOM.Tests/Infrastructure/SilentCatchRatchetTests.cs) scans every Hooks folder and Harmony patch file of `Main` and fails when a file holds more silent catches (no log call, no rethrow, no `Swallowed`, no `swallow-ok:`) than `SilentCatchBaseline.txt` allows, and also when it holds fewer, so a fix lowers its baseline line in the same commit.
+
 ### BUTR coexistence
 
 TAOM ships ButterLib 2.11.0 via `TAOM.Dependencies`, which contains its own `ExceptionHandlerSubSystem`. By default we suspend it on the first capture via reflection — `ButterLibExceptionHandlerAdapter.TrySuspend()` calls `ExceptionHandlerSubSystem.Instance.Disable()`. This avoids both BUTR's window and ours firing for the same crash. The user can disable our suspension via MCM (`TAOM — Crash Report → Master → Suspend BUTR Exception Handler`).
@@ -115,7 +120,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 
 | Section | Source |
 |---|---|
-| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, language code |
+| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, TAOM build stamp (`InformationalVersion`: build time, commit SHA, `.dirty` or `nogit` flag; also in `manifest.txt`), language code |
 | Exception | Type, message, source, HResult, target site, stack trace, `Exception.Data` dictionary, full inner chain (≤10 deep) |
 | Stack Frames | Per-frame method, declaring type/assembly, file/line (when PDB present), IL offset |
 | Harmony Correlation | Patches affecting **every** frame in the stack, plus full inventory (every patched method grouped by owner). Harmony replacement frames (`Foo_PatchN`) are resolved back to their original method via `Harmony.GetOriginalMethodFromStackframe` before the patch lookup — without this every patched frame printed `(no patches)`, exactly the frames that matter (#339, fixed 2026-07-13) |
@@ -132,7 +137,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | OS | Description, version, 64-bit flag, CPU count, architecture, locale, CLR version |
 | AppDomain & Environment | Friendly name, base dir, trust flag, env vars matching `BANNERLORD_* / TAOM_* / DOTNET_* / STEAM_*` |
 | Performance | Last N frame deltas (ms), avg, FPS — currently empty ring buffer (v1 doesn't wire the frame-time hook; reserved for v2) |
-| Logs | TAOM debug log path + tail, RGL log path + tail (best-effort from `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\rgl_log_*.txt`) |
+| Logs | TAOM debug log path + tail, RGL log path + tail (newest across `%ProgramData%\Mount and Blade II Bannerlord\logs\` and the `Documents` equivalent, probed in that order), TAOM.Dependencies `diag.log` path + tail |
 | Collector failures | Per-section reason if any collector threw |
 
 ### The memory verdict (#385 follow-up)
@@ -327,6 +332,9 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
 ## Changelog
 
+- 2026-11-05: **Swallowed exceptions reported, silent catch ratchet** (#1073, port). The behaviour tree wrapper, the enlistment lord-conversation gate, character creation, hero race, order of battle and army targeting catches report through `Outcomes.Swallowed`. The enlistment menu and detach hooks already logged their failures, so only the guards around their log calls gained a `swallow-ok:` comment. `SilentCatchRatchetTests` holds every other silent catch in a patch file to its baseline.
+- 2026-11-05: **Session summary in the bundle** (#1071, port). An admitted crash writes the `[Session] summary reason=crash` lines before the log tail is collected.
+- 2026-11-05: **Added the TAOM build stamp to the Identity section** (port of plan 017, #658). `report.txt` prints a `Build:` line, `manifest.txt` a `TAOM build:` line and `report.json` gains `TaomBuild`: the assembly's `InformationalVersion`, which names the commit and carries `.dirty` or `nogit` when the build could not prove a clean tree. `TaomVersion` alone is shared by every commit since the last version bump.
 - 2026-11-05: TAOM's settings appear in bundles (the four classes declare their own `Instance`); third-party settings classes are not read (#982); dropdowns show their selected value. `McmSettingsCollector.Collect` enumerates only TAOM's own assembly, and `ResolveInstance` looks up only an `Instance` the class declares itself (`DeclaredOnly`) as a second guard. The `DiscoveryType` row is removed from the listing. Ported by WP123.
 - 2026-11-04: **Ported to the 1.4.x line** (Bannerlord v1.4.8, port148 WP107): plan 006 and the shield rethrow fix. The 2026-09-24 entries below describe the 1.5.x change set this port carries.
 - 2026-11-04: **Ported plans 007 and 034 to the 1.4.x line**: PatchShield skips the `ManagedCallbacks` shims, and its finalizer finds the shielded method only after a throw.

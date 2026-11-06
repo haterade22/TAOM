@@ -178,7 +178,7 @@ The predicate is evaluated **per-lookup**, not at registration time — kingdom 
 3. **Wire it into the static constructor** — add `InitializeMyCultureSettlements()` after the existing inits.
 4. **Verify every troop ID exists** — grep `Main/_Module/ModuleData/troops/troops_*.xml` for each `("troop_id", weight)` entry. **Sibling-naming-symmetry is a false-positive signal** (`feedback_verify_troop_ids_against_canonical_xml.md`). A typo like `wain_cavalry` (doesn't exist — real ID is `wainrider_cavalry`) silently produces null at runtime; `MBObjectManager.GetObject<CharacterObject>` returns null, dropping the volunteer slot.
 5. **Write tests first (TDD).** Cover at minimum: roll-0 returns first entry, roll-N returns last entry, boundary rolls between entries land in expected buckets. See the Khundol / Urushban / Sart test cluster for the canonical pattern.
-6. **Run `dotnet test TAOM.Tests --filter FullyQualifiedName~VolunteerRecruitmentService`** — must be green.
+6. **Run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~VolunteerRecruitmentService`**: must be green.
 
 ## How to add a conditional pool
 

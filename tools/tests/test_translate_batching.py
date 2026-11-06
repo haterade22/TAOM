@@ -257,6 +257,202 @@ class SyncMissingIdsTests(unittest.TestCase):
             self.assertEqual(raw.count(b"\n"), raw.count(b"\r\n"),
                              "every newline should stay CRLF")
 
+    def test_preserves_doubled_cr_line_endings(self):
+        # Most TAOM language files (156 of the 204 on 2026-09-25, 48 more mixed) end every line in
+        # \r\r\n. Splitting on "\r\n" left a stray \r on each existing line and gave every seeded row
+        # a bare \r\n (2026-09-25: 156 repo rows and 228 live Armory rows).
+        import re
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt = Path(d) / "src.xml", Path(d) / "tgt.xml"
+            src.write_bytes(self.SRC.encode("utf-8"))
+            original = self.TGT.replace("\n", "\r\r\n").encode("utf-8")
+            tgt.write_bytes(original)
+            self.assertEqual(t.sync_missing_ids(src, tgt), ["key_b"])
+            raw = tgt.read_bytes()
+            # byte-exact: the old lines untouched, and the one seeded line ends in exactly \r\r\n (a count
+            # of \r\r\n would also pass \r\r\r\n)
+            seeded = re.search(rb'[^\n]*id="key_b"[^\n]*\n', raw)
+            self.assertIsNotNone(seeded)
+            self.assertEqual(raw[:seeded.start()] + raw[seeded.end():], original)
+            self.assertTrue(seeded.group(0).endswith(b"\r\r\n"))
+            self.assertFalse(seeded.group(0).endswith(b"\r\r\r\n"),
+                             "the seeded line keeps the file's \\r\\r\\n, no more")
+            body = raw.decode("utf-8")
+            self.assertLess(body.index('id="key_b"'), body.index("</strings>"),
+                            "the seeded row must land inside <strings>")
+
+    def test_skips_ids_another_source_owns(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt = self._pair(Path(d))
+            before = tgt.read_bytes()
+            self.assertEqual(t.sync_missing_ids(src, tgt, skip_ids={"key_b"}), [])
+            self.assertEqual(tgt.read_bytes(), before, "a key owned elsewhere is not seeded")
+
+
+class KeyOwnershipTests(unittest.TestCase):
+    """Two English sources can declare one key (global_strings.xml declares 26 taom_aso_* keys, 23 of them also
+    of taom_module_strings.xml). Each language loads its files in order and the LAST row loaded
+    wins, so a second translated copy silently replaces the first (Italian "Dale" became "Valle",
+    2026-09-25). The first source in english_source_files order owns the key; the others skip it."""
+
+    def test_a_row_in_another_file_of_the_language_counts_as_present(self):
+        # The engine and LanguageFileCoverageTests both see a language as the union of its files:
+        # three taom_aso_* keys global_strings.xml owns have their rows in the module file, and
+        # seeding them into the keybind file too would make a second, later-loading copy.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            src = d / "global_strings.xml"
+            src.write_text('<strings><string id="s" text="{=k_moved}Moved" />'
+                           '<string id="t" text="{=k_new}New" /></strings>', encoding="utf-8")
+            lang = d / "IT"
+            lang.mkdir()
+            (lang / "std_taom_module_strings_ita-IT.xml").write_text(
+                '<base><strings><string id="k_moved" text="Spostato" /></strings></base>', encoding="utf-8")
+            target = lang / "std_taom_keybind_strings_ita-IT.xml"
+            target.write_text('<base><strings>\n</strings></base>', encoding="utf-8")
+
+            skip = t.skip_ids_for(src, target, t.key_owners([src]), lang)
+
+            self.assertIn("k_moved", skip)
+            self.assertNotIn("k_new", skip)
+
+    def test_a_key_the_target_itself_carries_is_still_examined(self):
+        # 42 keys are declared by both taom_module_strings.xml and taom_xslt_strings.xml and have a row in
+        # both language files. Skipping a key whenever another file carries it hid all 42 from every pass
+        # (review, 2026-09-25): a row the target already holds must always be diffed.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            module_src, xslt_src = d / "taom_module_strings.xml", d / "taom_xslt_strings.xml"
+            for src in (module_src, xslt_src):
+                src.write_text('<strings><string id="s" text="{=k_shared}Woses" /></strings>', encoding="utf-8")
+            lang = d / "BR"
+            lang.mkdir()
+            module_tgt = lang / "std_taom_module_strings_por-BR.xml"
+            xslt_tgt = lang / "std_taom_xslt_strings_por-BR.xml"
+            for tgt in (module_tgt, xslt_tgt):
+                tgt.write_text('<base><strings><string id="k_shared" text="Woses" /></strings></base>', encoding="utf-8")
+            owners = t.key_owners([module_src, xslt_src])
+
+            for src, tgt in ((module_src, module_tgt), (xslt_src, xslt_tgt)):
+                entries = t._diff_files(src, tgt, skip_ids=t.skip_ids_for(src, tgt, owners, lang))
+                self.assertEqual([e.string_id for e in entries], ["k_shared"], tgt.name)
+
+    def test_first_source_declaring_a_key_owns_it(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            first, second = Path(d) / "a.xml", Path(d) / "b.xml"
+            first.write_text('<strings><string id="x" text="{=shared}Dale" /></strings>', encoding="utf-8")
+            second.write_text('<strings><string id="y" text="{=shared}Dale" />'
+                              '<string id="z" text="{=own}Only here" /></strings>', encoding="utf-8")
+            owners = t.key_owners([first, second])
+            self.assertEqual(owners["shared"], first)
+            self.assertEqual(owners["own"], second)
+
+
+class EnglishOnlyOverrideTests(unittest.TestCase):
+    """A vanilla key TAOM rewords is an English-only override (LocalizationOverrideLoader reads the non-taom_ rows
+    of taom_module_strings.xml, Patch25 applies them in English). A language row would replace vanilla's curated
+    translation, so --sync-ids must not seed one and the translator must not fill one."""
+
+    SRC = ('<strings>'
+           '<string id="s1" text="{=0CsbbwtN}Call {KINGDOM} to War" />'
+           '<string id="s2" text="{=taom_own_key}Own" />'
+           '<string id="s3" text="{=TAOM_beni_zilal_name}Beni" />'
+           '<string id="s4" text="{=aom_ab_notable_0}Notable" />'
+           '<string id="s5" text="{=LjUhEJxz}Caravan of {OWNER.NAME}" />'
+           '</strings>')
+
+    def _setup(self, d, name="taom_module_strings.xml", target_rows=""):
+        d = Path(d)
+        src = d / name
+        src.write_text(self.SRC, encoding="utf-8")
+        lang = d / "DE"
+        lang.mkdir()
+        tgt = lang / "std_taom_module_strings_deu-DE.xml"
+        tgt.write_text("<base><strings>\n" + target_rows + "</strings></base>", encoding="utf-8")
+        return src, tgt, lang
+
+    def test_only_vanilla_shaped_ids_of_the_module_file_are_overrides(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, _, _ = self._setup(d)
+            self.assertEqual(t.english_only_override_ids(src), {"0CsbbwtN", "LjUhEJxz"})
+
+    def test_other_english_sources_have_no_overrides(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, _, _ = self._setup(d, name="taom_xslt_strings.xml")
+            self.assertEqual(t.english_only_override_ids(src), set())
+
+    def test_sync_ids_seeds_taom_keys_and_not_the_override(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d, target_rows='<string id="LjUhEJxz" text="Karawane" />\n')
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            added = t.sync_missing_ids(src, tgt, skip_ids=skip)
+            self.assertEqual(sorted(added), ["TAOM_beni_zilal_name", "aom_ab_notable_0", "taom_own_key"])
+            self.assertNotIn("0CsbbwtN", t._parse_string_xml(tgt, strip_keys=False))
+
+    def test_translator_does_not_discover_the_override(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d)
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            ids = {e.string_id for e in t._diff_files(src, tgt, skip_ids=skip)}
+            self.assertNotIn("0CsbbwtN", ids)
+            self.assertIn("taom_own_key", ids)
+
+    def test_a_longer_or_newline_padded_id_is_not_an_override(self):
+        # The shape is an exact match: nine characters, or eight plus a newline, are TAOM keys.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src = Path(d) / "taom_module_strings.xml"
+            src.write_text('<strings><string id="a" text="{=0CsbbwtNx}Nine" />'
+                           '<string id="b" text="{=0CsbbwtN&#10;}Newline" /></strings>', encoding="utf-8")
+            self.assertEqual(t.english_only_override_ids(src), set())
+
+    def test_a_sibling_file_that_does_not_parse_stops_the_run(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d)
+            (lang / "std_taom_xslt_strings_deu-DE.xml").write_text("<base><strings>", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+
+    def test_a_row_the_language_file_already_holds_is_still_examined(self):
+        # A row the language file already holds is diffed, as for any other key.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d, target_rows='<string id="LjUhEJxz" text="Caravan of {OWNER.NAME}" />\n')
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            self.assertNotIn("LjUhEJxz", skip)
+
+
+class ShippedKeyCoverageTests(unittest.TestCase):
+    """Over the shipped tree: every key a TAOM English source declares is examined by at least one discovery pass
+    in every language. A key its owner's pass skips (another file carries it) and no other source declares is
+    never re-translated: the three global-only taom_aso keys sat in the module file that way (2026-09-25)."""
+
+    def test_every_declared_key_is_examined_by_some_pass_in_every_language(self):
+        sources = t.english_source_files("TAOM")
+        owners = t.key_owners([s for _, s, _ in sources])
+        self.assertGreater(len(owners), 1000, "the English sources were not found")
+        problems = []
+        for lang, (locale, _) in t.LANGUAGES.items():
+            lang_dir = t.TAOM_LANG_DIR / lang
+            hidden = set(owners)
+            for _, src, template in sources:
+                hidden -= t.english_only_override_ids(src)   # English-only overrides carry no language row on purpose
+                skip = t.skip_ids_for(src, lang_dir / template.format(locale=locale), owners, lang_dir)
+                hidden -= set(t._parse_string_xml(src, strip_keys=True)) - skip
+            if hidden:
+                problems.append("%s: %s" % (lang, ", ".join(sorted(hidden)[:5])))
+        self.assertEqual(problems, [], "move each key's rows into its owner's language file (key_owners)")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

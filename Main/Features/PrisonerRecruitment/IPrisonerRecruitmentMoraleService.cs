@@ -1,3 +1,5 @@
+using TAOM.Features.Execution;
+
 namespace TAOM.Features.PrisonerRecruitment;
 
 public interface IPrisonerRecruitmentMoraleService
@@ -9,6 +11,14 @@ public interface IPrisonerRecruitmentMoraleService
     /// falls the caller through to vanilla, including the Presence/TwoFaced perk waivers and the -2
     /// bandit cost. Null/unknown ids resolve Neutral and never waive.
     /// </summary>
+    /// <param name="recruiterSide">
+    /// The recruiter's id and culture pair for the side rule (<c>FactionSides.OfHero</c>): the clan's map faction
+    /// with that faction's culture, or a clanless hero's own culture (#957).
+    /// </param>
+    /// <param name="recruiterCultureId">
+    /// The recruiter hero's OWN culture, for the same-culture rule: it can differ from the side pair's culture
+    /// (a Gondor-cultured lord of a Neutral realm).
+    /// </param>
     bool ShouldWaiveMoralePenalty(
-        string recruiterKingdomId, string recruiterCultureId, string prisonerCultureId, bool isPlayerRecruiter);
+        SideIds recruiterSide, string recruiterCultureId, string prisonerCultureId, bool isPlayerRecruiter);
 }

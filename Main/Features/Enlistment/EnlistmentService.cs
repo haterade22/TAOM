@@ -1,4 +1,3 @@
-using System;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Domain;
@@ -42,8 +41,6 @@ public class EnlistmentService : IEnlistmentService
         _logger = logger;
     }
 
-    public event Action<string> EnlistmentStarted;
-
     public PetitionResult SubmitPetition(string commanderHeroId)
     {
         if (_store.Record.IsEnlisted)
@@ -60,16 +57,6 @@ public class EnlistmentService : IEnlistmentService
 
         _logger?.LogInfo($"[Enlistment] petition submitted to {commanderHeroId}");
         return PetitionResult.Accepted;
-    }
-
-    public bool WithdrawPetition()
-    {
-        if (_store.Record.State != EnlistmentState.PetitionPending)
-            return false;
-
-        _machine.TryTransition(EnlistmentState.NotEnlisted);
-        _store.Record.PetitionCommanderId = null;
-        return true;
     }
 
     public OathResult CompleteOath(string commanderHeroId, string enlistedHeroId, double nowDays)
@@ -118,18 +105,8 @@ public class EnlistmentService : IEnlistmentService
         if (!_attachment.ParkNear(commanderHeroId))
             _logger?.LogWarning($"[Enlistment] ParkNear failed right after the oath with {commanderHeroId} — reconciler will re-park");
 
-        // Mirror the commander's wars BEFORE announcing the oath, so any subscriber that reads
-        // diplomatic state sees the finished picture rather than a half-applied one.
+        // Mirror the commander's wars once the oath is final.
         _diplomacy.ApplyServiceWars(commanderHeroId);
-
-        try
-        {
-            EnlistmentStarted?.Invoke(commanderHeroId);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment] EnlistmentStarted subscriber threw: {ex.Message}");
-        }
 
         _logger?.LogInfo($"[Enlistment] oath sworn to {commanderHeroId}, contract ends day {_store.Record.ContractEndDay:F1}");
         return OathResult.Sworn;
@@ -140,7 +117,6 @@ public class EnlistmentService : IEnlistmentService
     private bool IsCommanderFit(string commanderHeroId)
     {
         var snapshot = _commander.GetSnapshot(commanderHeroId);
-        return snapshot.Exists && snapshot.IsAlive && !snapshot.IsPrisoner
-            && snapshot.HasParty && snapshot.PartyIsActive;
+        return snapshot.IsFit;
     }
 }

@@ -4,12 +4,9 @@ Paint a road, river, or strip mesh along a path you've drawn in the scene editor
 
 ## Before you start
 
-Open your launcher and switch to the editor profile. **All five of these mods must be enabled**, or the editor will crash on TAOM load:
+Open your launcher and switch to the editor profile. **Both of these mods must be enabled**, or the editor will stop on TAOM load:
 
-- Bannerlord.Harmony
-- Bannerlord.UIExtenderEx
-- Bannerlord.MBOptionScreen
-- Bannerlord.ButterLib
+- TAOM.Dependencies
 - TAOM (and TAOM_Map if you want the main map auto-opened)
 
 You can use either of two editors:

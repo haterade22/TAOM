@@ -24,7 +24,7 @@ public class CompanionTacticsSettingsProviderTests
         Assert.IsFalse(sut.EnableOobFormationPresets, nameof(sut.EnableOobFormationPresets));
         Assert.AreEqual(10, sut.MaxFormationPresets, nameof(sut.MaxFormationPresets));
         Assert.IsFalse(sut.FormationPresetsDebug, nameof(sut.FormationPresetsDebug));
-        Assert.IsTrue(sut.EnableBattleActionBar, nameof(sut.EnableBattleActionBar));
+        Assert.IsFalse(sut.ShowBattleActionBar, nameof(sut.ShowBattleActionBar));
         Assert.IsTrue(sut.CancelStanceOnMove, nameof(sut.CancelStanceOnMove));
         Assert.IsTrue(sut.EnableVolleyFire, nameof(sut.EnableVolleyFire));
         Assert.IsFalse(sut.BattleActionBarDebug, nameof(sut.BattleActionBarDebug));

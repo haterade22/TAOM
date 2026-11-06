@@ -13,6 +13,7 @@ public class ServiceBattleService : IServiceBattleService
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IArmyMembershipAdapter _army;
+    private readonly IServiceDiplomacyService _diplomacy;
     private readonly IModLogger _logger;
 
     public ServiceBattleService(
@@ -23,6 +24,7 @@ public class ServiceBattleService : IServiceBattleService
         IGameMenuAdapter gameMenu,
         IEncounterOwnershipPolicy ownership,
         IArmyMembershipAdapter army,
+        IServiceDiplomacyService diplomacy,
         IModLogger logger)
     {
         _store = store;
@@ -32,6 +34,7 @@ public class ServiceBattleService : IServiceBattleService
         _gameMenu = gameMenu;
         _ownership = ownership;
         _army = army;
+        _diplomacy = diplomacy;
         _logger = logger;
     }
 
@@ -68,6 +71,35 @@ public class ServiceBattleService : IServiceBattleService
 
         if (!_encounter.IsCommanderBattleJoinable(commanderPartyId, side.Value))
             return;
+
+        // FLOOR for #831, beneath Assess and the pump: a raid, forced supplies or forced volunteers
+        // the commander runs is not a battle to join. No transition, no join and no rollback (nothing
+        // was started), and no failure log. A player already in a map event (any event, which covers
+        // the propagation edge into the commander's own) falls through to the existing join path, which
+        // must not be stranded half-way.
+        if (!_encounter.IsMainPartyInMapEvent && _encounter.IsPartyRaiding(commanderPartyId))
+        {
+            _logger?.LogInfo($"[Enlistment] commander raiding: not a battle to join ({trigger})");
+            return;
+        }
+
+        var foe = _encounter.GetOpposingLeaderFactionId(commanderPartyId);
+
+        // A VASSAL SITS OUT a battle his kingdom is not at war in (#960): choosing Attack there would
+        // declare a kingdom-wide war on the commander's behalf (BeHostileAction), which discharge never
+        // unwinds. No transition, no join. Same carve-out as the other floors, and it fails open.
+        if (!_encounter.IsMainPartyInMapEvent && !string.IsNullOrEmpty(foe) && _diplomacy.ShouldSitOutAsVassal(foe))
+        {
+            _logger?.LogInfo($"[Enlistment] the player's kingdom is not at war with '{foe}': sitting this battle out ({trigger})");
+            return;
+        }
+
+        // TOP UP A MISSING WAR before joining (#832), under the oath rules (own-clan identity only).
+        // The encounter menu would otherwise declare it as an untracked war discharge never unwinds.
+        // A refusal is logged and the join goes ahead anyway: a war check never refuses a join, and
+        // CanPartyJoinBattle stays unused (see IEncounterAdapter).
+        if (!string.IsNullOrEmpty(foe) && !_diplomacy.MirrorWarAtJoin(foe))
+            _logger?.LogInfo($"[Enlistment] war top-up refused for '{foe}' (commander party '{commanderPartyId}'); joining anyway");
 
         // Ordering is load-bearing and mirrors the donor's proven sequence:
         //   state (redirect-exempt) -> presence -> position -> encounter -> join -> menu.
@@ -120,6 +152,12 @@ public class ServiceBattleService : IServiceBattleService
 
         if (encounterReady)
         {
+            // A reused encounter (a defender's repulsed assault keeps it) still carries that battle's result
+            // (EnemyRetreated). For a defender, PlayerEncounter's continue check (v1.4.8 PlayerEncounter.cs:1860-1866)
+            // reads it as a battle to continue, and ContinueBattle (:1287-1295) finishes the new assault and opens
+            // menu_siege_strategies. A NULL result makes that check return false, so forget it first (#1021).
+            _encounter.ForgetEndedBattleResult();
+
             // Attacker only. MapEvent.AddInvolvedPartyInternal converts a siege ASSAULT to
             // SiegeOutside when a defender joins with CurrentSettlement == null — so leaving the
             // settlement before a defender join would rewrite the battle type for every
@@ -129,18 +167,18 @@ public class ServiceBattleService : IServiceBattleService
 
             if (_encounter.JoinBattle(side.Value))
             {
-                // The menu is not cosmetic: the engine ticks every map event EXCEPT the player's,
-                // which advances only through PlayerEncounter.Update, driven from this menu. A
-                // verified join with no menu freezes the event permanently — and the hourly
-                // recovery cannot rescue it, because the player IS in a map event by then, so
-                // Assess reports Attached rather than BattleJoinRequired. Roll back instead.
                 if (_gameMenu.EnsureMenuOpen("encounter"))
                 {
                     _logger?.LogInfo($"[Enlistment] joined commander battle on side {side.Value} ({trigger})");
                     return;
                 }
 
-                _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu — rolling back to avoid freezing the map event");
+                // The join landed, so the player is in his map event and a rollback could only freeze it or
+                // pull him out. The engine opens `encounter` itself when no menu is up (#1021).
+                _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu; staying in it and leaving the menu to the game");
+                if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+                    _gameMenu.ExitToLast();
+                return;
             }
         }
 
@@ -232,9 +270,10 @@ public class ServiceBattleService : IServiceBattleService
         if (_store.Record.State != EnlistmentState.EnlistedBattle)
             return;
 
-        // Loot/aftermath menus run inside the still-open encounter; flipping to Attached
-        // now would let the menu guard eat them. The reconciler and wait-menu init close
-        // the loop once the encounter is gone.
+        // The encounter is still open here. For the player's own event MapEventEnded runs inside
+        // PlayerEncounter.Finish, after the loot screens close and before the encounter is cleared,
+        // so flipping to Attached now would re-park the party in the middle of Finish. The
+        // reconciler and wait-menu init close the loop once the encounter is gone.
         if (_encounter.HasCurrent)
             return;
 

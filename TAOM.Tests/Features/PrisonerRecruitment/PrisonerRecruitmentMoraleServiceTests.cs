@@ -36,12 +36,12 @@ public class PrisonerRecruitmentMoraleServiceTests
 
     /// <summary>
     /// NSubstitute returns default(FactionSide) == Free for unconfigured calls, so configure every
-    /// id the service may touch -- including the recruiter culture used by the kingdom fallback.
+    /// call the service makes: the recruiter's pair resolves through <c>ResolveSide</c> (the faction-first,
+    /// culture-fallback rule itself is covered in AlignmentServiceTests), the prisoner by culture.
     /// </summary>
     private void SetSides(FactionSide recruiter, FactionSide prisoner)
     {
-        _alignment.GetKingdomSide(RecruiterKingdomId).Returns(recruiter);
-        _alignment.GetCultureSide(RecruiterCultureId).Returns(recruiter);
+        _alignment.ResolveSide(RecruiterKingdomId, RecruiterCultureId).Returns(recruiter);
         _alignment.GetCultureSide(PrisonerCultureId).Returns(prisoner);
     }
 
@@ -63,7 +63,7 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(recruiter, prisoner);
 
         var result = _sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true);
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true);
 
         Assert.AreEqual(expected, result);
     }
@@ -78,23 +78,21 @@ public class PrisonerRecruitmentMoraleServiceTests
     [DataRow("aserai")]     // Harad
     public void ShouldWaiveMoralePenalty_IsengardRecruitingEvilPrisoner_Waives(string prisonerCultureId)
     {
-        _alignment.GetKingdomSide("isengard").Returns(FactionSide.Evil);
-        _alignment.GetCultureSide("isengard").Returns(FactionSide.Evil);
+        _alignment.ResolveSide("isengard", "isengard").Returns(FactionSide.Evil);
         _alignment.GetCultureSide(prisonerCultureId).Returns(FactionSide.Evil);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            "isengard", "isengard", prisonerCultureId, isPlayerRecruiter: true));
+            new SideIds("isengard", "isengard"), "isengard", prisonerCultureId, isPlayerRecruiter: true));
     }
 
     [TestMethod]
     public void ShouldWaiveMoralePenalty_IsengardRecruitingGondorPrisoner_DoesNotWaive()
     {
-        _alignment.GetKingdomSide("isengard").Returns(FactionSide.Evil);
-        _alignment.GetCultureSide("isengard").Returns(FactionSide.Evil);
+        _alignment.ResolveSide("isengard", "isengard").Returns(FactionSide.Evil);
         _alignment.GetCultureSide("gondor").Returns(FactionSide.Free);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            "isengard", "isengard", "gondor", isPlayerRecruiter: true));
+            new SideIds("isengard", "isengard"), "isengard", "gondor", isPlayerRecruiter: true));
     }
 
     // --- Rule 1: own faction (same culture) -- the only waiver Neutral factions ever get ---
@@ -106,81 +104,68 @@ public class PrisonerRecruitmentMoraleServiceTests
     [TestMethod]
     public void ShouldWaiveMoralePenalty_NeutralFactionRecruitingOwnCulture_Waives()
     {
-        _alignment.GetKingdomSide("battania").Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("battania").Returns(FactionSide.Neutral);
+        _alignment.ResolveSide("battania", "battania").Returns(FactionSide.Neutral);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            "battania", "battania", "battania", isPlayerRecruiter: true));
+            new SideIds("battania", "battania"), "battania", "battania", isPlayerRecruiter: true));
     }
 
     [TestMethod]
     public void ShouldWaiveMoralePenalty_NeutralFactionRecruitingOtherNeutralCulture_DoesNotWaive()
     {
-        _alignment.GetKingdomSide("battania").Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("battania").Returns(FactionSide.Neutral);
+        _alignment.ResolveSide("battania", "battania").Returns(FactionSide.Neutral);
         _alignment.GetCultureSide("umbar").Returns(FactionSide.Neutral);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            "battania", "battania", "umbar", isPlayerRecruiter: true));
+            new SideIds("battania", "battania"), "battania", "umbar", isPlayerRecruiter: true));
     }
 
     [TestMethod]
     public void ShouldWaiveMoralePenalty_SameCultureDifferentCasing_Waives()
     {
-        _alignment.GetKingdomSide(Arg.Any<string>()).Returns(FactionSide.Neutral);
+        _alignment.ResolveSide(Arg.Any<string>(), Arg.Any<string>()).Returns(FactionSide.Neutral);
         _alignment.GetCultureSide(Arg.Any<string>()).Returns(FactionSide.Neutral);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            "battania", "Battania", "battania", isPlayerRecruiter: true));
+            new SideIds("battania", "Battania"), "Battania", "battania", isPlayerRecruiter: true));
     }
 
     /// <summary>Kingdomless Neutral-culture hero still waives their own culture via rule 1.</summary>
     [TestMethod]
     public void ShouldWaiveMoralePenalty_SameCultureNoKingdom_Waives()
     {
-        _alignment.GetKingdomSide(null).Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("umbar").Returns(FactionSide.Neutral);
+        _alignment.ResolveSide(string.Empty, "umbar").Returns(FactionSide.Neutral);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            null, "umbar", "umbar", isPlayerRecruiter: true));
+            new SideIds(string.Empty, "umbar"), "umbar", "umbar", isPlayerRecruiter: true));
     }
 
-    // --- Recruiter side resolution: kingdom first, culture fallback ---
-
-    /// <summary>Kingdomless Isengard player: without the culture fallback this feature never fires for them.</summary>
-    [TestMethod]
-    public void ShouldWaiveMoralePenalty_NullKingdomEvilCulture_UsesCultureFallback_Waives()
-    {
-        _alignment.GetKingdomSide(null).Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("isengard").Returns(FactionSide.Evil);
-        _alignment.GetCultureSide("mordor").Returns(FactionSide.Evil);
-
-        Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(null, "isengard", "mordor", isPlayerRecruiter: true));
-    }
-
-    /// <summary>A player-founded kingdom is "new_kingdom" -- unclassified, so the culture must carry it.</summary>
-    [TestMethod]
-    public void ShouldWaiveMoralePenalty_UnknownKingdomIdEvilCulture_UsesCultureFallback_Waives()
-    {
-        _alignment.GetKingdomSide("new_kingdom").Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("isengard").Returns(FactionSide.Evil);
-        _alignment.GetCultureSide("mordor").Returns(FactionSide.Evil);
-
-        Assert.IsTrue(_sut.ShouldWaiveMoralePenalty("new_kingdom", "isengard", "mordor", isPlayerRecruiter: true));
-    }
+    // --- #957: the side pair is the recruiter's clan map faction with that faction's culture ---
 
     /// <summary>
-    /// A classified kingdom outranks the hero's own culture: a Gondor-cultured hero serving Mordor
-    /// (kingdom empire_s) waives a Mordor prisoner.
+    /// A Gondor-cultured lord of Khand (a Neutral realm) is Neutral on the side rule: the pair is the realm's
+    /// own, not the realm id with the lord's Free culture. The prisoner is another Free culture, so neither rule waives.
     /// </summary>
     [TestMethod]
-    public void ShouldWaiveMoralePenalty_ClassifiedKingdomOverridesCulture_Waives()
+    public void ShouldWaiveMoralePenalty_FreeCultureLordOfNeutralRealm_DoesNotWaiveOtherFreeCulture()
     {
-        _alignment.GetKingdomSide("empire_s").Returns(FactionSide.Evil);
+        _alignment.ResolveSide("battania", "battania").Returns(FactionSide.Neutral);
         _alignment.GetCultureSide("gondor").Returns(FactionSide.Free);
-        _alignment.GetCultureSide("mordor").Returns(FactionSide.Evil);
+        _alignment.GetCultureSide("vlandia").Returns(FactionSide.Free);
 
-        Assert.IsTrue(_sut.ShouldWaiveMoralePenalty("empire_s", "gondor", "mordor", isPlayerRecruiter: true));
+        Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
+            new SideIds("battania", "battania"), "gondor", "vlandia", isPlayerRecruiter: true));
+    }
+
+    /// <summary>The same-culture rule keys on the hero's own culture, whatever the realm's side.</summary>
+    [TestMethod]
+    public void ShouldWaiveMoralePenalty_SameCulture_StillWaives_WhateverTheRealm()
+    {
+        _alignment.ResolveSide("battania", "battania").Returns(FactionSide.Neutral);
+        _alignment.GetCultureSide("gondor").Returns(FactionSide.Free);
+
+        Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
+            new SideIds("battania", "battania"), "gondor", "gondor", isPlayerRecruiter: true));
     }
 
     // --- Settings gates ---
@@ -192,7 +177,7 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
     }
 
     /// <summary>The master toggle must beat rule 1 too, not just the side rule.</summary>
@@ -200,11 +185,10 @@ public class PrisonerRecruitmentMoraleServiceTests
     public void ShouldWaiveMoralePenalty_DisabledWithSameCulture_NeverWaives()
     {
         _settings.IsEnabled.Returns(false);
-        _alignment.GetKingdomSide("battania").Returns(FactionSide.Neutral);
-        _alignment.GetCultureSide("battania").Returns(FactionSide.Neutral);
+        _alignment.ResolveSide("battania", "battania").Returns(FactionSide.Neutral);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            "battania", "battania", "battania", isPlayerRecruiter: true));
+            new SideIds("battania", "battania"), "battania", "battania", isPlayerRecruiter: true));
     }
 
     [TestMethod]
@@ -214,7 +198,7 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
     }
 
     [TestMethod]
@@ -225,7 +209,7 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: false));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: false));
     }
 
     [TestMethod]
@@ -235,7 +219,7 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: false));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: false));
     }
 
     [TestMethod]
@@ -246,18 +230,18 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsTrue(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, PrisonerCultureId, isPlayerRecruiter: true));
     }
 
     // --- Null / empty contract: garrisons, militia and caravans have no LeaderHero ---
 
     [TestMethod]
-    public void ShouldWaiveMoralePenalty_NullLeaderHero_NullKingdomAndCulture_DoesNotWaive()
+    public void ShouldWaiveMoralePenalty_NoLeaderHero_EmptyPairAndNullCulture_DoesNotWaive()
     {
-        _alignment.GetKingdomSide(null).Returns(FactionSide.Neutral);
+        _alignment.ResolveSide(string.Empty, string.Empty).Returns(FactionSide.Neutral);
         _alignment.GetCultureSide("mordor").Returns(FactionSide.Evil);
 
-        Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(null, null, "mordor", isPlayerRecruiter: false));
+        Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(new SideIds(string.Empty, string.Empty), null, "mordor", isPlayerRecruiter: false));
     }
 
     [TestMethod]
@@ -266,16 +250,16 @@ public class PrisonerRecruitmentMoraleServiceTests
         SetSides(FactionSide.Evil, FactionSide.Evil);
 
         Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(
-            RecruiterKingdomId, RecruiterCultureId, null, isPlayerRecruiter: true));
+            new SideIds(RecruiterKingdomId, RecruiterCultureId), RecruiterCultureId, null, isPlayerRecruiter: true));
     }
 
     /// <summary>Two empty culture ids must not read as "same culture" and waive.</summary>
     [TestMethod]
     public void ShouldWaiveMoralePenalty_EmptyStringIds_DoesNotWaive()
     {
-        _alignment.GetKingdomSide("").Returns(FactionSide.Neutral);
+        _alignment.ResolveSide("", "").Returns(FactionSide.Neutral);
         _alignment.GetCultureSide("").Returns(FactionSide.Neutral);
 
-        Assert.IsFalse(_sut.ShouldWaiveMoralePenalty("", "", "", isPlayerRecruiter: true));
+        Assert.IsFalse(_sut.ShouldWaiveMoralePenalty(new SideIds("", ""), "", "", isPlayerRecruiter: true));
     }
 }

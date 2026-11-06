@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -38,6 +39,8 @@ public class PartyFastOpenPatchShapeTests
         if (_throw) throw new InvalidOperationException("ctor failed");
     }
 
+    // Harmony patches this stand-in; a Release JIT would inline it past the patch (the managed-tests gate).
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static CharacterCode Code(CharacterObject character, PartyScreenLogic.TroopType type,
         PartyScreenLogic.PartyRosterSide side)
     {

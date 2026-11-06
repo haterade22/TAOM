@@ -13,7 +13,8 @@ Any AI provider may take this role when the user asks for implementation.
    A test which derives its expected set from the artifact under test is not an
    independent oracle. Test omissions and positive requirements too.
 4. Self-review cross-feature interactions, configuration completeness, save
-   compatibility and the test oracle. Update relevant docs and the changelog.
+   compatibility and the test oracle. Update relevant docs; the commit body is
+   the changelog entry.
 5. When a candidate commit is authorized and available, prepare a packet with
    `tools/reviewctl.py`. Never commit or stash another person's work to do this.
    Hand off the task and scope without priming blind reviewers with your theory.

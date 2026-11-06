@@ -13,7 +13,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// <summary>
 /// The route path query calls native map code that a managed catch cannot recover from, and PR #1064
 /// reported a 1.4.8 crash in it on a remote supply order. These tests drive <c>AddLandPath</c> with a fake
-/// <see cref="IMapScene"/>. The IL pins for its caller and for the route arrows come with WP118.
+/// <see cref="IMapScene"/>. The IL pins for its caller and for the route arrows are the last two tests here.
 /// </summary>
 [TestClass]
 public class SupplyNativeQueryTests

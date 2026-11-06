@@ -122,7 +122,7 @@ weight-1 entry, so they take their pool's minimum.
 | `mirkwood` | `mirkwood_recruit` | 1 (pool's only entry) |
 | `dolguldur` | `dg_orc_scout` | 1 |
 | `goblin` | `goblin_fighter` | 1 |
-| `mistymountainorcs` | `mistymountainorcs_fighter` | 1 |
+| `mistymountainorcs` | `goblin_fighter` (the goblin tree's copy; `troops_mistymountainorcs.xml` was removed in `f577bd547`) | 1 |
 | `lothlorien` | `imladris_bowman` | 2 |
 | `umbar` | `umbar_elite` | 3 |
 | `shaghana`, `abanissa` | `harad_noble` (shared Harad pool; one copy, two references) | 3 |
@@ -159,8 +159,8 @@ verbatim, so a hired troop is mechanically identical to its source.
 
 None in C#. The feature depends on data already owned by `TroopProgression` (recruitment-pool weights)
 and on vanilla `RecruitmentCampaignBehavior` / `RecruitmentAgentSpawnBehavior` being unpatched by TAOM
-— `Patch42` postfixes `HourlyTickParty` in the same class for castle recruitment but does not touch the
-mercenary path.
+(CastleRecruitment's `HourlyTickPartyEvent` listener calls vanilla `CheckRecruiting` for AI lords in a castle
+but does not touch the mercenary path).
 
 ## Tests
 
@@ -180,7 +180,10 @@ mercenary path.
 2. Drop creature mounts and level-50+ legendaries from the candidates.
 3. Add a row to `PICKS` in `tools/oneoff/generate_tavern_mercenaries.py`:
    `"<culture>": [("<source_id>", "<troop file stem>", "[Culture] Hired <Role>")]`.
-4. Run `python tools/oneoff/generate_tavern_mercenaries.py` (idempotent — existing copies are skipped).
+4. Run `python tools/oneoff/generate_tavern_mercenaries.py` for a dry run that reports the copies it
+   would add, then `python tools/oneoff/generate_tavern_mercenaries.py --apply` to write. It parses
+   every new file before writing any, writes only files whose bytes changed, and is idempotent
+   (existing copies are skipped).
 5. `python tools/validate_moduledata.py` then `./build.ps1 -RunTests`; `TavernMercenaryDataTests`
    enforces all four invariants.
 

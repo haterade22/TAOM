@@ -87,11 +87,6 @@ public class DischargeConsequenceService : IDischargeConsequenceService
     /// onto a character, sold or lost is out of reach BY DESIGN and stays theirs. Report the sum
     /// the adapter actually returned; reporting the ledger count would claim takings that never
     /// happened.</para>
-    ///
-    /// <para><b>Confiscation only, no gold payoff.</b> Paying the kit out in coin needs a
-    /// per-item value surface that does not exist — <c>IItemPoolAdapter</c>'s item snapshot
-    /// exposes no Value — so <c>EquipmentPayoffCalculator</c> stays unused until one does.
-    /// Deferred deliberately, not forgotten.</para>
     /// </summary>
     private void ReclaimIssuedKit(DischargeReason reason)
     {

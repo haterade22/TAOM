@@ -4,9 +4,8 @@
 > `XmlMergeModule` and the feature-module runner. Patch99 applies only when the loaded TAOM.Dependencies.dll excludes
 > `CreateMergedXmlFile` (`ShieldExclusionCheck`, else `[XmlMerge] fast path off: <reason>`). The v1.4.8 engine bodies
 > equal v1.5.3's by text and IL except `MergeElements` (four lines longer on v1.4.8, `:820-875`), which the fast path
-> calls rather than replaces. 1.4.x has no `binding-gate.runsettings` (plan 122 brings it and rewrites this sentence),
-> so wherever this page says `/verify-bindings` runs the harness, on 1.4.x that holds only with `TAOM_RUN_BENCHMARKS=1`
-> set. Figures below dated 2026-10-03 are the 1.5.x desktop's.
+> calls rather than replaces. `TAOM.Tests/binding-gate.runsettings` sets `TAOM_RUN_BENCHMARKS=1` for the gate's test
+> host, so `/verify-bindings` runs the harness on this line too. Figures below dated 2026-10-03 are the 1.5.x desktop's.
 
 ## Overview
 

@@ -32,8 +32,11 @@ Two rules, evaluated in order. Both must pass the settings gates first.
 | 2 | **Own side** — recruiter's side and prisoner's culture side are equal *and* not Neutral | Yes |
 | — | Anything else (cross-side, Neutral↔Neutral, unknown ids) | No — vanilla applies |
 
-**Recruiter side resolution is kingdom-first, culture-fallback.** The fallback is load-bearing, not
-defensive: a kingdomless Isengard player has `Clan.Kingdom == null`, and a player-founded kingdom is
+**Recruiter side resolution is faction-first, culture-fallback, on one pair.** The model passes
+`FactionSides.OfHero(leader)` (the clan's map faction with that faction's culture) for the side rule and
+the leader's own culture for rule 1, so a Free-culture lord of a Neutral realm does not waive the cost for
+another Free culture (#957). The fallback is load-bearing, not
+defensive: a kingdomless Isengard player's faction is the player clan itself, and a player-founded kingdom is
 `new_kingdom` — both unclassified, so without the fallback the feature would never fire for its primary
 user. (Same failure class as Codex #327 against WarOfTheRingMomentum.)
 
@@ -130,7 +133,7 @@ untouched. "Captured from a hideout" and "same side, no morale cost" legitimatel
 | `Main/Features/PrisonerRecruitment/Models/TaomPrisonerRecruitmentCalculationModel.cs` | The GameModel boundary |
 | `Main/Features/PrisonerRecruitment/PrisonerRecruitmentIoC.cs` | Two `Reuse.Singleton` registrations |
 | `Main/_Module/ModuleData/execution/alignment.json` | Shared side data (**owned by the Execution feature — not modified by this one**) |
-| `TAOM.Tests/Features/PrisonerRecruitment/` | 32 service tests + 17 shipped-data pins |
+| `TAOM.Tests/Features/PrisonerRecruitment/` | 31 service tests + 17 shipped-data pins |
 
 Registered in `Main/IoC.cs` (beside the alignment family) and `Main/SubModule.cs` (`OnGameStart`).
 
@@ -169,10 +172,11 @@ slot would drop that behavior. This is inert in practice — StoryMode is not in
 
 ## Testing
 
-- **32 service tests** — the 3×3 side matrix, the own-faction rule (incl. the Neutral-faction case that
-  is its reason to exist, and casing), kingdom-vs-culture precedence, both fallback cases, all three
-  settings gates in both directions, and the null contract (garrisons/militia/caravans have no
-  `LeaderHero`).
+- **31 service tests**: the 3×3 side matrix, the own-faction rule (incl. the Neutral-faction case that
+  is its reason to exist, and casing), a Free-culture lord of a Neutral realm who waives nothing for another
+  Free culture, all three settings gates in both directions, and the null contract (garrisons/militia/caravans
+  have no `LeaderHero`). The id-first, culture-fallback rule itself is `AlignmentServiceTests`'; the service
+  only passes it the recruiter's `SideIds` pair.
 - **17 shipped-data pins** — bandit cultures resolve Neutral; every `occupation="Bandit"` troop carries
   a bandit culture; the seven Sauron-serving cultures resolve Evil; the Free peoples resolve Free.
 - Mutation-verified: disabling rule 1 fails exactly the 3 own-faction tests; removing the Neutral guard
@@ -182,7 +186,9 @@ slot would drop that behavior. This is inert in practice — StoryMode is not in
 **In-game smoke (owed — unit tests cannot prove the model resolves at runtime):** as an Isengard
 player, open the party screen on a captured Mordor/Gundabad/Dunland prisoner → cost reads `0`; a
 Gondor/Rohan prisoner → reads `-1`; a bandit prisoner → not recruitable. Toggle the MCM master off →
-the Mordor prisoner reverts to `-1`.
+the Mordor prisoner reverts to `-1`. Then, as a Gondor-cultured lord of a Neutral realm (a Khand vassal, or an
+AI lord of Khand with a Free culture), recruit a prisoner of another Free culture (Rohan): the cost stays
+vanilla's `-1`, because the lord's side is the realm's (Neutral), not the lord's culture's.
 
 ## Related
 

@@ -271,3 +271,100 @@ otherwise stands, including the data rule (rule 2), the WP102 and WP103 waiver (
    registered and untranslated, and the translation pass is listed as owed.
 5. **Known plan misprediction.** A compile-RED step that predicts CS0122 for a private member in another assembly prints
    CS1061 at that same member: Roslyn does not import private metadata. Treat that as matching and note it (WP119).
+
+## D27: the delegated run (2026-11-05, maintainer's instruction)
+
+The maintainer delegated the remaining choices: "Proceed with all of your best recommendations." This covers plan choices
+and STOP rulings. It does not lift `config-protection.sh` (`.claude/settings*.json`, `Directory.Build.props`, `docs/adrs`) or
+authorize a push, tag, release or paid call. D25 and D26 otherwise stand.
+
+1. **WP136.** The `placeholder` commit and its revert were dropped by rebase; the tree is unchanged. A0 is read as scoped:
+   what needs WP108 B4 stays deferred and the rest lands. A4 lands: every feat value stays, and the Rhun and Harwan cards are
+   reworded to state the percent their feats already give (no number is invented; language rows that cannot be updated
+   without a paid call are listed as owed). E1 lands without `PrefabSpriteTests`: all 19 unknown sprites sit in `ROTsprite.xml`,
+   `EventXml.xml`, `mainmenuHUD.xml` and `PoppyHUD.xml`, dead files WP140 deletes, so the test lands with WP140. E2 lands.
+   E3 stays the maintainer's.
+2. **WP115.** Part A lands. B1 is the maintainer's (M1), so later steps land only where they do not depend on its target. M2
+   and M3 stay the maintainer's.
+3. **WP121.** Part A lands, plus any of Part C that does not need Part B's Kit output. B, D and E stay the maintainer's.
+4. **WP122.** Step 0's B1 token is waived because B1 is deferred. C4 waits for M2. C2 and C3 stop individually if Ruff or
+   ShellCheck is absent. Part D is not run: it is optional, edits `Main/TAOM.csproj` and changes two Siege behaviours with no
+   in-game test behind them yet.
+5. **WP139 and WP140** run. A Step 0 token that only WP102 or WP103 supplies is waived under D25 rule 4; `.claude/` hunks are
+   deferred and listed. WP140 also takes `PrefabSpriteTests` (see 1).
+6. **WP130 Step F3 lands.** Four `default_group` tags are not a reference, so D25 rule 2 allows them.
+7. **WP137 Part D lands last.** The two "gone" rows are not gone if their targets appear under the nested classes
+   `ContainerLoadData_Fill_Patch+InitializeReadersSite` and `HeaderLoadData_Readers_Patch+ObjectHeaderReadersSite`; the executor
+   confirms that. `Patch37_CrashReport` is a marker class with no `[HarmonyPatch]`, so that row of the six-class grep expects 0.
+8. **Still held:** 102, 103, 116, 138, 142, 143, 145, WP108 B4 and what needs it in WP136, WP127 Parts C and M. Each waits on the
+   protected files or on those WPs. Nothing here routes around the guard.
+
+## D28: WP122's GA-SAME token (2026-11-05)
+
+`eb12746d1` removed the words `TaleWorlds.Engine's PathReuseCache` from one comment in `TAOM.Tests/Migration/GameAssemblies.cs`, so
+Step 0's GA-SAME check fails. That is the file's whole drift from `7f02fc8d3` (checked with `git diff`), and it is not a dependency
+problem. Rulings:
+
+1. GA-SAME is waived for that one comment line only. Any other difference in the file is still a STOP.
+2. Step A1.2 item 1 applies the series diff instead of overwriting the file:
+   `git diff 7f02fc8d3 1f5047572 -- TAOM.Tests/Migration/GameAssemblies.cs | git apply`. An overwrite would bring back a comment
+   naming a type this line deleted.
+3. `git grep PathReuseCache` over `TAOM.Tests` and `Main` should not gain a hit from this WP. The plan's Maintenance note about
+   WP127 deleting that row is already satisfied.
+
+## D29: WP145 Parts A to D run now (2026-11-05)
+
+D27 rule 8 held WP145 whole. The plan's "Parts and their prerequisites" table lands each part independently, and the WPs named for
+Parts A, B, C and D are all merged, so that hold was too wide.
+
+1. **Run:** Parts A, B, C and D, one commit series on one branch. The plan's prechecks still gate each part: a failed precheck stops
+   that part, not the others.
+2. **Still held:** Part E (needs WP108 B4, WP138, WP143), Part F (WP116, WP138, WP143), and Part G (WP142, WP144's follow-ups and the
+   docs step need Parts B to F). Any Part G step is left out of this run.
+3. **Issue.** The issue Part A asks for does not exist and agents do not create issues, so Part A's bodies carry no `Refs` line and the
+   issue stays owed.
+4. **Commits newer than `4d1a9105a`** remain out of this plan's scope. They are classified separately.
+
+## D30: work that needs no protected file (2026-11-05)
+
+The maintainer said "proceed" after the end-of-run report. That is not a request to use the config override, so `config-protection.sh`
+still stands. Three held pieces need no protected file, and WP108's own hand-off offered the route for the first.
+
+1. **WP108 Step B4 lands**, with its two `.claude/` files (`.claude/hooks/check-moduledata-validation.sh`, `.claude/rules/moduledata-validation.md`).
+   D25 rule 4's waiver is extended to exactly those two files because `CommitGateCoverageTests` requires each validator ERROR code in that
+   hook. Counts on the `v2.0.26` Armory are void under D20 and D25. Step B5 stays deferred.
+2. **WP136's B-part remainder lands** after B4: the validator half of B1, then B3, B4 and B5, with the same waiver for the same two files.
+   A step that needs the public Armory's data stops by itself, as the plan says. Part E's Step E3 stays the maintainer's.
+3. **WP102 Step 2 lands**: the generator, its tests and the README row. Step 1 item 7 allows this before the settings edit. Steps 3 onward stay
+   held: they delete hooks that `.claude/settings.json` still registers.
+4. **Still held:** WP102 Step 3 onward, 103, 116, 138, 142, 143, 145 E to G, 127 C and M, 115 B1 to B3, 140 D, 122 C4. The harness lane runs in plan
+   order or not at all: its end-state copies check that their pre-images are unchanged, so running a later plan first breaks an earlier one.
+5. `CHANGELOG.md` is still never staged (D1).
+
+## D31: the protected-file lane (2026-11-05, maintainer's choice)
+
+Asked whether to create the session override so agents can make the protected edits, the maintainer chose "Use the override". This
+lifts D25 rule 6's hold on the harness lane and D30 rule 4. It runs in the order the workflow script fixes, each piece with an executor and a
+cold review. Nothing is pushed, tagged or merged to the trunk.
+
+1. **The override.** `config-protection.sh` reads `/tmp/claude-config-override-${CLAUDE_SESSION_ID:-none}`. Hooks do not receive that variable, so the
+   file that works is `/tmp/claude-config-override-none` (tested: blocked without it, allowed with it). That name is not tied to one session, the gap
+   WP116 Step B3 closes. The orchestrator deletes the file when the lane ends. No agent creates, moves or deletes it.
+2. **What agents may now edit:** in their own worktree, exactly the changes a plan prints for `.claude/settings.json`, `.claude/settings.local.json`,
+   `Directory.Build.props` and `docs/adrs`, including steps labelled Maintainer. Nothing else in those files. The reviewer compares each diff with the plan's
+   text, and any other change is a BLOCKER.
+3. **Still the maintainer's, by any route:** `git config core.hooksPath`, anything in the main checkout (reading it for a backup is fine), the user's
+   `~/.claude` settings, GitHub issues, paid translation, in-game checks, pushing, tagging, merging to the trunk, release pins (WP115 M3), deleting folders
+   in installs (WP115 M2), Ruff, ShellCheck and Gitleaks installs, and copying the local settings back after a trunk merge (WP142 M2). Agents run
+   `python tools/audit_claude_config.py --min HIGH` in place of `/security-scan` and report the result.
+4. **Optional steps that change the maintainer's own setup are not taken.** WP138 M1's `enabledPlugins` block stays out and is listed for the maintainer.
+5. **A check that fails only because an earlier port148 WP moved the text is not a STOP.** That covers pre-image, SAME, drift, line-number and "no part of
+   this plan exists yet" checks, and a failed `git apply` on such a file. Never overwrite a changed file with an end-state copy: three-way merge with
+   `git merge-file` (base the plan's pre-image, ours the worktree, theirs the pinned end state), keep both sides, and report each adaptation. Any other STOP stands.
+6. **WP102.** Step 2 has landed (`13c6d7ee0`), so skip it; "generator PRESENT" at Step 1 item 6 is expected, and the plan's commit and `Ported-from` counts span
+   that commit plus this run's. `.claude/rules/gui-ui.md` and `docs/features/gui-sprite-system.md` are the two known DIFF files: rule 5 applies. Step 5 is the one
+   exception to D1, so that commit may stage `CHANGELOG.md`.
+7. **WP103.** The Step 0 ModuleData gate's non-zero exit on the `v2.0.26` Armory is void, not a STOP: record it. Once the hooks reach the trunk, ModuleData commits
+   on this laptop are denied until the public Armory is installed, and the report must say so. CLAUDE.md between 45,600 and the linter's 46,000 cap is not a
+   STOP. Above 46,000, cut only text that a linked doc already holds and list each cut.
+8. **D25 rule 2 and D20 stand.** No step stages item, roster, equipment, troop or mesh data, and any count measured on the `v2.0.26` Armory is void.

@@ -213,7 +213,7 @@ A missing file means all defaults and no exclusions, which is not the same as th
 | `maxOffersPerBattle` | int | 2 | at least 1 | yes | `FieldCommissionConfigProvider.cs:126` |
 | `skillPointsPerLevel` | int | 5 | at least 1 | no, JSON only | `FieldCommissionConfigProvider.cs:110` |
 | `diagnostics` | bool | `false` | either | yes | `FieldCommissionSettingsProvider.cs:117` |
-| `allowedRaceNames` | string[] | human, dwarf, elf | blank entries dropped | no, JSON only | `FieldCommissionConfigProvider.cs:133, 143` |
+| `allowedRaceNames` | string[] | the ten soldier races (human, dwarf, elf, orc, uruk, uruk_hai, pale_uruk, dg_uruk, goblin, berserker); creatures and unique heroes out | blank entries dropped; every name must be a race `raceage/race_age_config.json` knows (test-pinned) | no, JSON only | `FieldCommissionConfigProvider.cs:137, 150` |
 
 The six MCM-exposed fields are the ones a pack author cannot rely on. The two JSON-only fields are carried through the merge by reference so a merge cannot re-admit a race the author excluded (`FieldCommissionSettingsProvider.cs:121-122`).
 
@@ -223,10 +223,10 @@ The six MCM-exposed fields are the ones a pack author cannot rely on. The two JS
 
 | Field | Type | Shipped | Legal values | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `enabled` | bool | `true` | either | Master toggle | `RecruitmentAlignmentConfigProvider.cs:36` |
+| `enabled` | bool | `true` | either | Master toggle | `RecruitmentAlignmentConfigProvider.cs:59` |
 | `mode` | string | `Symmetric` | `Symmetric` or `GoodRejectsEvil`, case-insensitive | Anything else reverts to `Symmetric` with a warning | `RecruitmentAlignmentConfigProvider.cs:68-78` |
-| `applyToAi` | bool | `true` | either | Gate AI lords | `alignment-recruitment.md:47` |
-| `applyToPlayer` | bool | `true` | either | Gate the player | `alignment-recruitment.md:48` |
+| `applyToAi` | bool | `true` | either | Gate AI lords | `RecruitmentAlignmentConfigProvider.cs:61` |
+| `applyToPlayer` | bool | `true` | either | Gate the player | `RecruitmentAlignmentConfigProvider.cs:62` |
 
 All four are exposed under the MCM group "World/Recruitment Alignment", so all four are subject to the precedence warning above. The alignment data itself lives in `execution/alignment.json`, which has **24 keys and mixes kingdom ids with culture ids** (`gondor`, `mordor`, `goblin`, `lindon` and five more are cultures; `empire_w`, `khuzait`, `battania` and the rest are kingdoms). <!-- measured: python json key listing over execution/alignment.json 2026-09-05 --> Two feature docs call it a kingdom-id map. It is not, and adding a faction means checking which of the two you are adding. That file belongs to [Faction and world configs](configs-factions-and-world.md).
 
@@ -239,6 +239,10 @@ Three arrays: **13 `fieldDuties`, 11 `interactiveDuties`, 3 `incidents`**. <!-- 
 | Field | Type | Required | What it does |
 |---|---|---|---|
 | `id` | string | yes | Duty id, also the localization key stem |
+| `title` | string | yes | `{=taom_enlist_duty_<id>_title}English`; a row with no title, or a key that is not exactly this, is skipped with a warning |
+| `success` / `failure` | string | field duties | `{=taom_enlist_duty_<id>_success}English` (and `_failure`): the result line the toast shows; a field row missing either is skipped with a warning naming the field |
+| `body` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_body}English`; a row missing it is skipped with a warning |
+| `optionA.label` / `optionB.label` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_opta}English` (and `_optb`); a row missing either is skipped with a warning; registered by `tools/harvest_duty_strings.py` ([enlistment](../features/enlistment.md)) |
 | `difficulty` | int | yes | Target the check must reach |
 | `durationHours` | int | yes | How long the duty runs |
 | `supportSkills` | string[] | yes | The check uses the **better** of the two, never their sum |
@@ -246,7 +250,7 @@ Three arrays: **13 `fieldDuties`, 11 `interactiveDuties`, 3 `incidents`**. <!-- 
 | `gates.minTrust` | int | no | Standing floor |
 | `gates.assignmentAffinity` | string | no | Assignment the row prefers |
 | `gates.requiredContexts` | string[] | no | Situations the row needs |
-| `reportReward` / `failureReward` | object | yes | `serviceXp`, `gold`, `skillId`, `skillXp`, `trust`, `relation`, `repDomain`, `repAmount` |
+| `reportReward` / `failureReward` | object | no | `serviceXp`, `gold`, `skillId`, `skillXp`, `trust`, `relation`, `renown` |
 
 The check is `bestSkill + max(0, trust) * 2 + rank * 4 + Next(0..50) >= difficulty` (`SkillCheckService.cs:29, 51, 53-58`). The roll caps at 50, so a row whose difficulty exceeds the reachable total of the weakest player its own gates admit by more than 50 is impossible, not hard. Shipped difficulties run 40 to 76 and every one of the 13 field rows has `failureReward.trust` of 0. <!-- measured: python json scan of difficulty and failureReward.trust over fieldDuties in enlistment_duties.json 2026-09-05 --> `FieldDutyReachabilityTests` pins three floors on this file; adding a row that breaks one fails the suite ([enlistment](../features/enlistment.md)).
 

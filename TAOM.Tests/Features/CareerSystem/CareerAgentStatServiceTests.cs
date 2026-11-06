@@ -1,6 +1,9 @@
+using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
@@ -19,12 +22,14 @@ public class CareerAgentStatServiceTests
 {
     private CareerAgentStatService _sut = null!;
     private ICareerPassiveService _passives = null!;
+    private IModLogger _logger = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _passives = Substitute.For<ICareerPassiveService>();
-        _sut = new CareerAgentStatService(_passives);
+        _logger = Substitute.For<IModLogger>();
+        _sut = new CareerAgentStatService(_passives, _logger);
         // Static state — pre-reset so prior tests don't leak buffs into ours.
         CareerAbilityBuffTracker.ClearAll();
     }
@@ -99,29 +104,23 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithMountChargeDamagePassive_ScalesMountChargeDamage()
+    public void ApplyAgentStatModifiers_Human_NeverTouchesTheMountProperties()
     {
+        // #611: MountChargeDamage and MountSpeed live on the MOUNT agent's properties (the base
+        // writes them only in UpdateHorseStats and the engine reads them off the horse). A rider-side
+        // multiply scales a value nobody wrote and nobody reads; it moved to ApplyMountStatModifiers.
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = 0.25f, ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(1, new ActiveBuffs { MountSpeedBonus = 0.15f, ChargeDamageBonus = 0.20f });
 
         var props = new AgentDrivenProperties();
+        props.MountSpeed = 1f;
         props.MountChargeDamage = 100f;
 
         _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
 
-        Assert.AreEqual(115f, props.MountChargeDamage, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithZeroMountChargeDamage_DoesNotMutateMountChargeDamage()
-    {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0f);
-
-        var props = new AgentDrivenProperties();
-        props.MountChargeDamage = 80f;
-
-        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
-
-        Assert.AreEqual(80f, props.MountChargeDamage, 0.01f);
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -154,28 +153,9 @@ public class CareerAgentStatServiceTests
         Assert.AreEqual(0.15f, props.DamageMultiplierBonus, 0.001f);
         Assert.AreEqual(0.8f, props.ArmorEncumbrance, 0.001f);
         Assert.AreEqual(1.08f, props.ThrustOrRangedReadySpeedMultiplier, 0.001f);
-        Assert.AreEqual(1.25f, props.MountSpeed, 0.001f);
-        Assert.AreEqual(130f, props.MountChargeDamage, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithZeroMountSpeedBonus_DoesNotMutateMountSpeed()
-    {
-        // Mount stats only mutate when buff value is non-zero — preserve vanilla 0f.
-        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs
-        {
-            MountSpeedBonus = 0f,
-            ChargeDamageBonus = 0f,
-        });
-
-        var props = new AgentDrivenProperties();
-        props.MountSpeed = 7f;
-        props.MountChargeDamage = 50f;
-
-        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
-
-        Assert.AreEqual(7f, props.MountSpeed);
-        Assert.AreEqual(50f, props.MountChargeDamage);
+        // The two mount fields of the same buff apply on the MOUNT (#611), not here.
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -206,8 +186,9 @@ public class CareerAgentStatServiceTests
         Assert.AreEqual(1.05f, props.MaxSpeedMultiplier, 0.001f);
         Assert.AreEqual(1.04f, props.CombatMaxSpeedMultiplier, 0.001f);
         Assert.AreEqual(1.02f, props.ThrustOrRangedReadySpeedMultiplier, 0.001f);
-        Assert.AreEqual(1.15f, props.MountSpeed, 0.001f);
-        Assert.AreEqual(120f, props.MountChargeDamage, 0.01f);
+        // The two mount fields of the same buff apply on the MOUNT (#611), not here.
+        Assert.AreEqual(1f, props.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -240,6 +221,546 @@ public class CareerAgentStatServiceTests
 
         Assert.AreEqual(0.25f, props.DamageMultiplierBonus, 0.001f);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // [CareerPerks] logging (#613): the hero's own stat application logs once per distinct set of
+    // applied values, the per-hit paths log at DEBUG when a passive moved the number.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithPassives_LogsOncePerDistinctSetOfValues()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+
+        var props = new AgentDrivenProperties();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("SwingSpeed +5%")));
+    }
+
+    // Careers are player-only, but this path runs for every hero agent in a campaign mission: a lord
+    // with no career must not write a durable line per mission that says "none".
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithNothingApplied_WritesNoLine()
+    {
+        _sut.ApplyAgentStatModifiers("lord1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderWithNothingApplied_WritesNoLine()
+    {
+        _sut.ApplyMountStatModifiers("lord1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    // The "none" text still has a job: it is how the log says a buff ended.
+    [TestMethod]
+    public void ApplyAgentStatModifiers_BuffEnds_LogsNone()
+    {
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageBonus = 0.15f });
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        CareerAbilityBuffTracker.ClearAll();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("agent stats for 'hero1'")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.EndsWith("agent stats for 'hero1': none")));
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_ValuesChange_LogsAgain()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageBonus = 0.15f });
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("self buff") && s.Contains("dmg +15%")));
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_ClearsTheDedupe_SoTheNextSpawnLogsAgain()
+    {
+        // The service is a singleton; without a reset a second battle with the same values would
+        // log nothing at spawn, which is the re-test loop the feature doc recommends.
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _sut.ResetDiagnostics();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("agent stats for 'hero1'")));
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("mount stats for rider 'hero1'")));
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_NonHeroSoldier_NeverLogs()
+    {
+        // Every soldier recomputes stats on spawn and on formation orders; only the career hero's
+        // own agent is worth a line.
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageBonus = 0.10f });
+
+        _sut.ApplyAgentStatModifiers(heroId: null, agentIndex: 42, isHuman: true, isHero: false, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_HeroRider_LogsOncePerDistinctSetOfValues()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties { MountChargeDamage = 1f });
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties { MountChargeDamage = 1f });
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("mount") && s.Contains("MountChargeDamage +15%")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_PassiveMovedTheNumber_LogsDebugWithBaseAndResult()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        Assert.AreEqual(55f, result, 0.01f);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("50.0") && s.Contains("55.0") && s.Contains("ArmorPenetration")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_PassiveMovedTheNumber_LogsDebug()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+
+        var result = _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+
+        Assert.AreEqual(36f, result, 0.01f);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("Resistance") && s.Contains("Blunt")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_NothingApplied_DoesNotLog()
+    {
+        _sut.CalculateDamageAmplification(null, null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_SameHeroAndTerms_LogsOncePerMission()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopDamageOnManyHits_ScalesEveryHitButLogsOnce()
+    {
+        // The case #613 made hot: every blow by a non-hero troop whose party leader holds a TroopDamage pip.
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+
+        for (int i = 0; i < 50; i++)
+            Assert.AreEqual(55f, _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("lord1") && s.Contains("TroopDamage")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_SameHeroAndTerms_LogsOncePerMission()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 30f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_AllyBuffOnTwoAgents_LogsOnce_NeverKeyedOnTheAgentIndex()
+    {
+        // Agent.Index recycles, so the ally-buff-only subject shares one key; the line names the first agent.
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
+
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("'42'") && s.Contains("ally buff reduction")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_NewMaskOrSubject_LogsAgain()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _passives.GetPassiveMagnitude("lord2", PassiveEffectType.TroopDamage).Returns(0.10f);
+
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+        _sut.CalculateDamageAmplification(null, "lord2", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _logger.Received(3).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_ClearsTheHitDedupe_SoTheNextBattleLogsAgain()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _sut.ResetDiagnostics();
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _logger.Received(2).LogDebug(Arg.Any<string>());
+    }
+
+    // Plan 030 amendment (DECISIONS D6): the hit lines after the first are not written, so the mission-end teardown writes
+    // an INFO aggregate per combination (every hit counted, the multiplier's min, average and max, the damage totals).
+    [TestMethod]
+    public void ResetDiagnostics_AfterManyHits_WritesOneSummaryPerCombination()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 1 combination(s), 3 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 damage 100.0 -> 110.0");
+        });
+        _logger.Received(2).LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_BuffChangedMidBattle_SummaryShowsTheMultiplierRange()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.50f });
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for 'hero1' [Melee, Blunt] (Resistance, self buff reduction): hits=2 multiplier min=0.450 avg=0.585 max=0.720 damage 200.0 -> 117.0");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_AllyBuffOnlyHits_SummaryNamesTheSharedSubject()
+    {
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for '(ally-buffed agents)' [Melee, Cut] (ally buff reduction): hits=2 multiplier min=0.800 avg=0.800 max=0.800 damage 100.0 -> 80.0");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_NonFiniteMagnitude_CountsTheHitWithoutPoisoningTheRange()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Ranged, Pierce] (TroopDamage): hits=1 multiplier n/a nonFinite=1 damage n/a");
+    }
+
+    // A hit whose base or result is not finite is counted in nonFinite and kept out of every number, so one bad hit
+    // cannot turn the combination's damage totals into NaN for the rest of the mission (D6 rule 4).
+    [TestMethod]
+    public void ResetDiagnostics_NonFiniteDamage_CountsTheHitWithoutPoisoningTheTotals()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 nonFinite=1 damage 60.0 -> 66.0");
+    }
+
+    // The first hit of each combination is the one line written in full; its text is the pre-plan-030 format.
+    [TestMethod]
+    public void CalculateDamageAmplification_FirstHit_WritesTheUnchangedDebugLine()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee | AttackTypeMask.Cut).Returns(0.20f);
+
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 66.0 (ArmorPenetration +10% Damage +20%)");
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_FirstHit_WritesTheUnchangedDebugLine()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopResistance).Returns(0.10f);
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.50f });
+
+        _sut.CalculateDamageReduction(null, 42, "lord1", AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Melee, Blunt]: 40.0 -> 18.0 (TroopResistance +10% ally buff reduction +50%)");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_NoHitsSinceTheLastReset_WritesNoSummary()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.ResetDiagnostics();
+        _logger.ClearReceivedCalls();
+
+        _sut.ResetDiagnostics();
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_TwoCombinations_AmpLinesBeforeReductionLines()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.10f);
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee, 10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 10f);
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 2 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee] (ArmorPenetration): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 10.0 -> 11.0");
+            _logger.LogInfo("[CareerPerks] hit reduction summary for 'hero1' [Melee] (Resistance): hits=1 multiplier min=0.900 avg=0.900 max=0.900 damage 10.0 -> 9.0");
+        });
+    }
+
+    // Codex review of plan 030 (2026-10-03): the set of terms that fired is part of a combination's key, so a hit that
+    // gains a term for the same subject and mask is a new combination, with its own first-hit line and summary row.
+    [TestMethod]
+    public void CalculateDamageAmplification_NewTermSetForTheSameSubjectAndMask_LogsAgainAndSummarizesApart()
+    {
+        var mask = AttackTypeMask.Melee | AttackTypeMask.Cut;
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, mask).Returns(0.20f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+
+        _logger.Received(2).LogDebug(Arg.Any<string>());
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 55.0 (ArmorPenetration +10%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 66.0 (ArmorPenetration +10% Damage +20%)");
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 3 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee, Cut] (ArmorPenetration): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 50.0 -> 55.0");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee, Cut] (ArmorPenetration, Damage): hits=2 multiplier min=1.320 avg=1.320 max=1.320 damage 100.0 -> 132.0");
+        });
+    }
+
+    // Codex review of plan 030 (2026-10-03): the damage path runs on whichever thread native raises the hit, so the tally
+    // is guarded by _logGate. Ally-buff-only hits keep the per-hit work to the tally itself, so a missing lock would lose
+    // counts or log the first hit twice. Every hit must be counted and the first-hit line written exactly once.
+    [TestMethod]
+    public void CalculateDamageReduction_HitsFromManyThreads_CountsEveryHitAndLogsTheFirstOnce()
+    {
+        const int threads = 8, hitsPerThread = 5000;
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        using var go = new ManualResetEventSlim(false);
+        var workers = Enumerable.Range(0, threads).Select(_ => new Thread(() =>
+        {
+            go.Wait();
+            for (int i = 0; i < hitsPerThread; i++)
+                _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 100f);
+        })).ToList();
+        workers.ForEach(t => t.Start());
+        go.Set();
+        workers.ForEach(t => t.Join());
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit summary for this mission: 1 combination(s), 40000 hit(s)");
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for '(ally-buffed agents)' [Melee, Cut] (ally buff reduction): hits=40000 multiplier min=0.800 avg=0.800 max=0.800 damage 4000000.0 -> 3200000.0");
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ApplyMountStatModifiers (#611): the rider's MountChargeDamage passive and the Cavalry
+    // ability's two mount fields, applied on the MOUNT's properties via the rider's ids.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderHeroWithMountChargeDamagePassive_ScalesTheMountsChargeDamage()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+        mount.MountSpeed = 1f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(115f, mount.MountChargeDamage, 0.01f);
+        Assert.AreEqual(1f, mount.MountSpeed, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderHeroWithZeroPassiveAndNoBuff_LeavesTheMountUntouched()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0f);
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 80f;
+        mount.MountSpeed = 7f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(80f, mount.MountChargeDamage, 0.01f);
+        Assert.AreEqual(7f, mount.MountSpeed, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderSelfBuff_ScalesMountSpeedAndChargeMultiplicatively()
+    {
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = 0.25f, ChargeDamageBonus = 0.30f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 1f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(1.25f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(130f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NonHeroRiderWithAllyBuff_AppliesTheAllyFieldsByRiderIndex()
+    {
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { MountSpeedBonus = 0.15f, ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 1f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: null, riderAgentIndex: 42, mount);
+
+        Assert.AreEqual(1.15f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(120f, mount.MountChargeDamage, 0.01f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_PassiveSelfBuffAndAllyBuff_StackMultiplicatively()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 7, mount);
+
+        // 100 x 1.10 x 1.30 x 1.20
+        Assert.AreEqual(171.6f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_HeroRiderWithoutIndex_AppliesPassiveAndSelfBuffOnly()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: null, mount);
+
+        // 100 x 1.10 x 1.30; the ally entry under index 7 is never consulted without an index.
+        Assert.AreEqual(143f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NegativeBonus_ScalesDown()
+    {
+        // A malus is a legal tuning value: 1 + (-0.25) = 0.75.
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { MountSpeedBonus = -0.25f, ChargeDamageBonus = -0.5f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 4f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: null, mount);
+
+        Assert.AreEqual(3f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(50f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NoRider_IsNoOpAndDoesNotQuery()
+    {
+        // A riderless horse, or a human agent (the model passes null for both ids off a non-mount).
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+
+        var mount = new AgentDrivenProperties();
+        mount.MountSpeed = 3f;
+        mount.MountChargeDamage = 100f;
+
+        _sut.ApplyMountStatModifiers(riderHeroId: null, riderAgentIndex: null, mount);
+
+        Assert.AreEqual(3f, mount.MountSpeed, 0.001f);
+        Assert.AreEqual(100f, mount.MountChargeDamage, 0.01f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // AmmoBonus (#613): the magnitude the model hands CareerAmmoApplier at InitializeMissionEquipment.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void AmmoBonus_HeroWithPassive_ReturnsTheMagnitude()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Ammo).Returns(0.15f);
+
+        Assert.AreEqual(0.15f, _sut.AmmoBonus("hero1"), 0.0001f);
+    }
+
+    [TestMethod]
+    public void AmmoBonus_NullHeroOrNegativeMagnitude_ReturnsZeroAndNeverQueriesForNull()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Ammo).Returns(-0.2f);
+
+        Assert.AreEqual(0f, _sut.AmmoBonus("hero1"), 0.0001f);
+        Assert.AreEqual(0f, _sut.AmmoBonus(null), 0.0001f);
+        _passives.DidNotReceive().GetPassiveMagnitude(null!, PassiveEffectType.Ammo);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

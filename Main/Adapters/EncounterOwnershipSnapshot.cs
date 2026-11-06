@@ -37,17 +37,6 @@ public readonly struct EncounterOwnershipSnapshot
     public bool PlayerInsideSettlement { get; }
 
     /// <summary>
-    /// This encounter belongs to a battle: the player joined one, or the encounter still carries a
-    /// map event. NOT the same question as <see cref="PlayerInMapEvent"/>, and that difference is
-    /// the whole point. `MapEventSide.Clear()` nulls `MainParty.MapEvent` BEFORE the encounter
-    /// closes, so between those two moments the loot and aftermath menus run inside a still-open
-    /// encounter that reads as "no battle anywhere". Finishing there tears the player's own loot
-    /// screen down and forces `TimeControlMode.Stop` + `GameMenu.ExitToLast()`.
-    /// </summary>
-    public bool IsBattleEncounter { get; }
-
-    /// <summary>A field could not be read. The policy treats this conservatively rather than guessing.</summary>
-    /// <summary>
     /// At least one field could not be read; the adapter has already logged which. DIAGNOSTIC ONLY:
     /// <see cref="TAOM.Features.Enlistment.EncounterOwnershipPolicy"/> deliberately does not branch
     /// on it, because deferring on a read failure would leave the encounter live, which is the
@@ -63,7 +52,6 @@ public readonly struct EncounterOwnershipSnapshot
         bool encounteredPartyIsCommanderRelated = false,
         bool playerInMapEvent = false,
         bool playerInsideSettlement = false,
-        bool isBattleEncounter = false,
         bool readFailed = false)
     {
         HasEncounter = hasEncounter;
@@ -73,7 +61,6 @@ public readonly struct EncounterOwnershipSnapshot
         EncounteredPartyIsCommanderRelated = encounteredPartyIsCommanderRelated;
         PlayerInMapEvent = playerInMapEvent;
         PlayerInsideSettlement = playerInsideSettlement;
-        IsBattleEncounter = isBattleEncounter;
         ReadFailed = readFailed;
     }
 

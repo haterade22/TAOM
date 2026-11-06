@@ -5,8 +5,7 @@
 so the per-frame lower trace never shipped here. Not yet run in game on v1.4.8.
 **Code:** [`Main/Features/MapLoadDiagnostics/`](../../Main/Features/MapLoadDiagnostics/)
 **Category:** `Patch89_MapLoadDiagnostics` (+ `_Lifecycle`, `_MapScreen`, `_SceneReady`)
-**Related:** [load-time-stamps.md](load-time-stamps.md) for the [Lifecycle] dispatch lines inside the same window
-(once plan 118 Part A is merged).
+**Related:** [load-time-stamps.md](load-time-stamps.md) for the [Lifecycle] dispatch lines inside the same window.
 
 ## Why it exists
 

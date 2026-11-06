@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.Execution;
 using TAOM.Features.Execution.Hooks;
 
 namespace TAOM.Tests.Features.Execution;
@@ -21,6 +22,9 @@ public class ExecutionContextTests
     private const string VictimCulture = "mordor";
     private const string ExecutorKingdom = "empire_w";
     private const string ExecutorCulture = "gondor";
+    private static readonly SideIds Victim = new(VictimKingdom, VictimCulture);
+    private static readonly SideIds Executor = new(ExecutorKingdom, ExecutorCulture);
+    private static readonly SideIds Live = new("live_kingdom", "live_culture");
 
     [TestInitialize]
     [TestCleanup]
@@ -29,41 +33,41 @@ public class ExecutionContextTests
     [TestMethod]
     public void TrySet_OnAFreshContext_TakesOwnership()
     {
-        Assert.IsTrue(ExecutionContext.TrySet(VictimKingdom, VictimCulture, ExecutorKingdom, ExecutorCulture));
+        Assert.IsTrue(ExecutionContext.TrySet(Victim, Executor));
         Assert.IsTrue(ExecutionContext.HasContext);
     }
 
     [TestMethod]
     public void NestedKill_DoesNotTakeOwnership_AndDoesNotClearTheOuterSnapshot()
     {
-        ExecutionContext.TrySet(VictimKingdom, VictimCulture, ExecutorKingdom, ExecutorCulture);
+        ExecutionContext.TrySet(Victim, Executor);
 
         // The nested ApplyInternal is a non-execution removal, so its prefix never calls TrySet and
         // its finalizer must not clear. Before the ownership gate this wiped the outer snapshot.
         ExecutionContext.ClearIfOwned(owned: false);
 
         Assert.IsTrue(ExecutionContext.HasContext, "A nested kill must not end the outer execution's snapshot");
-        var victim = ExecutionContext.ResolveVictim("live_kingdom", "live_culture");
-        Assert.AreEqual(VictimKingdom, victim.KingdomId);
+        var victim = ExecutionContext.ResolveVictim(Live);
+        Assert.AreEqual(VictimKingdom, victim.FactionId);
         Assert.AreEqual(VictimCulture, victim.CultureId);
     }
 
     [TestMethod]
     public void NestedTrySet_DoesNotOverwriteTheOuterSnapshot()
     {
-        ExecutionContext.TrySet(VictimKingdom, VictimCulture, ExecutorKingdom, ExecutorCulture);
+        ExecutionContext.TrySet(Victim, Executor);
 
-        Assert.IsFalse(ExecutionContext.TrySet("isengard", "isengard", "vlandia", "vlandia"),
+        Assert.IsFalse(ExecutionContext.TrySet(new SideIds("isengard", "isengard"), new SideIds("vlandia", "vlandia")),
             "A nested execution must not claim ownership from the outer one");
 
-        var victim = ExecutionContext.ResolveVictim(null, null);
-        Assert.AreEqual(VictimKingdom, victim.KingdomId, "The outer snapshot must survive a nested TrySet");
+        var victim = ExecutionContext.ResolveVictim(SideIds.None);
+        Assert.AreEqual(VictimKingdom, victim.FactionId, "The outer snapshot must survive a nested TrySet");
     }
 
     [TestMethod]
     public void ClearIfOwned_ByTheOwningFrame_EndsTheSnapshot()
     {
-        var owned = ExecutionContext.TrySet(VictimKingdom, VictimCulture, ExecutorKingdom, ExecutorCulture);
+        var owned = ExecutionContext.TrySet(Victim, Executor);
 
         ExecutionContext.ClearIfOwned(owned);
 
@@ -74,20 +78,20 @@ public class ExecutionContextTests
     public void ResolveVictim_WithNoContext_UsesTheLiveValues()
     {
         // The pre-confirm preview path: no kill in flight, nothing destroyed yet.
-        var victim = ExecutionContext.ResolveVictim("live_kingdom", "live_culture");
+        var victim = ExecutionContext.ResolveVictim(Live);
 
-        Assert.AreEqual("live_kingdom", victim.KingdomId);
+        Assert.AreEqual("live_kingdom", victim.FactionId);
         Assert.AreEqual("live_culture", victim.CultureId);
     }
 
     [TestMethod]
     public void ResolveExecutor_WithContext_PrefersTheSnapshot()
     {
-        ExecutionContext.TrySet(VictimKingdom, VictimCulture, ExecutorKingdom, ExecutorCulture);
+        ExecutionContext.TrySet(Victim, Executor);
 
-        var executor = ExecutionContext.ResolveExecutor("live_kingdom", "live_culture");
+        var executor = ExecutionContext.ResolveExecutor(Live);
 
-        Assert.AreEqual(ExecutorKingdom, executor.KingdomId);
+        Assert.AreEqual(ExecutorKingdom, executor.FactionId);
         Assert.AreEqual(ExecutorCulture, executor.CultureId);
     }
 
@@ -96,11 +100,18 @@ public class ExecutionContextTests
     {
         // A victim from a minor clan has no kingdom. The snapshot is still authoritative, which is
         // why the active flag is tracked separately instead of being inferred from a null id.
-        ExecutionContext.TrySet(null, VictimCulture, ExecutorKingdom, ExecutorCulture);
+        ExecutionContext.TrySet(new SideIds(string.Empty, VictimCulture), Executor);
 
-        var victim = ExecutionContext.ResolveVictim("live_kingdom", "live_culture");
+        var victim = ExecutionContext.ResolveVictim(Live);
 
-        Assert.IsNull(victim.KingdomId);
+        Assert.AreEqual(string.Empty, victim.FactionId);
         Assert.AreEqual(VictimCulture, victim.CultureId);
+    }
+
+    [TestMethod]
+    public void GetVictimAndGetExecutor_WithNoContext_AreNone()
+    {
+        Assert.AreSame(SideIds.None, ExecutionContext.GetVictim());
+        Assert.AreSame(SideIds.None, ExecutionContext.GetExecutor());
     }
 }

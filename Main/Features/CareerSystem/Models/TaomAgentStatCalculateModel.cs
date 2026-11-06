@@ -1,6 +1,7 @@
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.Elephant;
 using TAOM.Features.Mumakil;
@@ -19,19 +20,37 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
 // chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
 // 2026-06-29: same lock extended to the ridden Mûmakil (IMumakilAttackService.IsMumakilMonster) — scaled-up elephant.
+// 2026-09-17 (#611): the career mount bonuses (the MountChargeDamage passive, the Cavalry ability's
+// mount speed and charge) apply on the MOUNT's properties, where the engine reads them, keyed on the
+// rider: a mount agent's own Character is null.
+// Same day, #613: the Ammo passive rides InitializeMissionEquipment, the seam vanilla's own extra-ammo perks use.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
     private readonly IElephantAttackService _elephant;
     private readonly ISpiderAttackService _spider;
     private readonly IMumakilAttackService _mumakil;
+    private readonly IModLogger? _logger;
 
-    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil)
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil, IModLogger? logger = null)
     {
         _agentStatService = agentStatService;
         _elephant = elephant;
         _spider = spider;
         _mumakil = mumakil;
+        _logger = logger;
+    }
+
+    // The Ammo passive (#613) rides the seam vanilla's own extra-ammo perks use: before the agent is
+    // built, raising the stack's max with the amount. Heroes only; CareerAmmoApplier has the evidence.
+    public override void InitializeMissionEquipment(Agent agent)
+    {
+        base.InitializeMissionEquipment(agent);
+        if (agent != null && agent.IsHero)
+        {
+            var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
+            CareerAmmoApplier.Apply(agent, heroId, _agentStatService.AmmoBonus(heroId), _logger);
+        }
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
@@ -73,5 +92,14 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
                 : _mumakil.IsCreatureMonster(agent?.Monster?.StringId)
                     ? MumakilConfig.MountDifficulty
                     : agentDrivenProperties.MountDifficulty;
+
+        // Mount-side career bonuses (#611) ride the MOUNT's properties, after base rewrote them; the
+        // rider is the identity (a mount's own Character is null). Non-mounts pass two nulls and the
+        // service returns at once.
+        var mountRider = agent.IsMount ? agent.RiderAgent : null;
+        _agentStatService.ApplyMountStatModifiers(
+            riderHeroId: (mountRider != null && mountRider.IsHero) ? (mountRider.Character as CharacterObject)?.HeroObject?.StringId : null,
+            riderAgentIndex: mountRider?.Index,
+            agentDrivenProperties);
     }
 }

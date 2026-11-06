@@ -6,7 +6,7 @@ namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
 /// Small reflection helpers used by the defensive shields (PatchShield, SaveShield,
-/// VersionProbe, SubModuleConstructionGuard). All methods are exception-safe — they
+/// VersionProbe). All methods are exception-safe: they
 /// return null/empty/false on any failure rather than throwing.
 ///
 /// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.FieldCommission;
 using TAOM.Features.FieldCommission.Domain;
+using static TAOM.Tests.Infrastructure.RepoPaths;
 
 namespace TAOM.Tests.Features.FieldCommission;
 
@@ -37,7 +36,8 @@ public class FieldCommissionSettingsProviderTests
         MaxOffersPerBattle = 2,
         Diagnostics = false,
         SkillPointsPerLevel = 5,
-        AllowedRaceNames = new List<string> { "human", "dwarf", "elf" },
+        AllowedRaceNames = new List<string>
+            { "human", "dwarf", "elf", "orc", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "goblin", "berserker" },
     };
 
     private static FieldCommissionMcmSnapshot Empty() => default;
@@ -363,13 +363,4 @@ public class FieldCommissionSettingsProviderTests
             $"field_commission_config.json no longer contains `{jsonLiteral}`, which must match the " +
             $"MCM default `{mcmLiteral}`.");
     }
-
-    private static string RepoPath(params string[] parts)
-    {
-        // THREE levels: <repo>/TAOM.Tests/Features/FieldCommission -> Features -> TAOM.Tests -> <repo>.
-        var repoRoot = Path.GetFullPath(Path.Combine(ThisFile(), "..", "..", ".."));
-        return Path.Combine(new[] { repoRoot }.Concat(parts).ToArray());
-    }
-
-    private static string ThisFile([CallerFilePath] string path = "") => Path.GetDirectoryName(path)!;
 }

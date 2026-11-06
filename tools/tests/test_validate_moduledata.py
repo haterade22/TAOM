@@ -16,18 +16,23 @@ Each test maps to one recurring TAOM bug class the validator must catch:
   - DUPLICATE_NPC_ID       -> same NPCCharacter id defined twice in TAOM
   - MISSING_CIVILIAN_TYPE  -> civilian roster missing equipmentType="Civilian"
 """
+import io
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import taom_schema as ts  # noqa: E402
 import validate_moduledata as vm  # noqa: E402
+import validate_xml_schemas as vx  # noqa: E402
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 
@@ -35,6 +40,17 @@ SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 def _write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def _run_main(*args) -> tuple:
+    """(exit code, stdout, stderr) of validate_moduledata.main() under these CLI args.
+    Mocks are the caller's business: baking one in here would let a future test of a pass
+    through main() silently exercise a stub."""
+    out, err = io.StringIO(), io.StringIO()
+    with mock.patch.object(sys, "argv", ["validate_moduledata.py", *args]), \
+         redirect_stdout(out), redirect_stderr(err):
+        code = vm.main()
+    return code, out.getvalue(), err.getvalue()
 
 
 class ValidatorContractTests(unittest.TestCase):
@@ -577,6 +593,39 @@ class ValidatorContractTests(unittest.TestCase):
 """)
         self.assertEqual([i for i in self._run() if i.code == "BROKEN_BODY_PROPERTY_REF"], [])
 
+    # ----------------------------------------------------------------- #
+    # Faction refs (#949). A settlement owner= or Hero faction= naming a clan
+    # nothing defines leaves the settlement or hero ownerless at load.
+    # ----------------------------------------------------------------- #
+    _FACTION_HERO = """<?xml version="1.0" encoding="utf-8"?>
+<Heroes>
+  <Hero id="lord_a" faction="Faction.%s" />
+</Heroes>
+"""
+
+    def test_broken_faction_ref_is_reported(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "clan_gondor_99")
+        issues = [i for i in self._run() if i.code == "BROKEN_FACTION_REF"]
+        self.assertEqual(len(issues), 1, f"expected exactly one, got {self._codes(self._run())}")
+        self.assertIn("clan_gondor_99", issues[0].message)
+        self.assertIs(issues[0].severity, ts.Severity.ERROR)
+
+    def test_resolving_faction_ref_is_clean(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "clan_gondor_1")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
+    def test_faction_neutral_is_allowed(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "neutral")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
+    def test_faction_check_skipped_when_registry_unavailable(self):
+        self.registries.factions = set()
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "anything")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
     def test_extra_ref_roots_are_swept_and_reported_with_module_prefix(self):
         armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
         _write(armory / "LOTRLOME_items" / "rhun" / "head_armors.xml",
@@ -606,7 +655,7 @@ class ValidatorContractTests(unittest.TestCase):
         gone = Path(self._tmp.name) / "NoSuchModule" / "ModuleData"
         v = ts.Validator(self.md, self.schemas, self.registries, extra_ref_roots=[gone])
         v.run()
-        self.assertEqual([Path(p) for p in v.missing_ref_roots], [gone])
+        self.assertEqual(v.missing_ref_roots, [gone])   # Paths, like extra_ref_roots beside it
 
     def test_present_extra_ref_root_is_not_reported_missing(self):
         armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
@@ -765,6 +814,91 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertIn("fighter_haradrim", regs.body_properties)
         self.assertIn("fighter_empire", regs.body_properties)
         self.assertNotIn("fighter_umbar", regs.body_properties)
+
+    def test_item_registry_counts_only_items_documents(self):
+        # A config that quotes item ids in <Item id> rows must not define them, or no gate can fail on them.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "w.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <CraftedItem id="real_sword" crafting_template="OneHandedSword" />\n</Items>\n')
+        _write(self.md / "taom_spcultures.xml",
+               '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n</SPCultures>\n')
+        _write(self.md / "culture_marketplace" / "culture_marketplace_config.xml",
+               '<?xml version="1.0"?>\n<CultureMarketplaceConfig>\n  <Blacklist><Item id="retired_helm" /></Blacklist>\n</CultureMarketplaceConfig>\n')
+        _write(self.md / "own_items.xml",
+               '<?xml version="1.0"?>\n<!-- TAOM\'s own items -->\n<Items>\n  <Item id="taom_own" Type="Goods" />\n</Items>\n')
+
+        regs = ts.build_registries(self.md, modules)
+
+        self.assertIn("real_sword", regs.items)
+        self.assertIn("taom_own", regs.items, "TAOM's own <Items> file still defines its items")
+        self.assertNotIn("retired_helm", regs.items, "a config row quoting an id is not a definition")
+
+    _CLANS_XML = ('<?xml version="1.0"?>\n<Factions>\n%s</Factions>\n')
+
+    def test_factions_registry_built_from_repo_and_vanilla_clans(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % '  <Faction\n\t\tid="clan_vanilla_1" name="x" />\n')
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n'
+                                 '  <!-- <Faction id="clan_ghost" /> -->\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("clan_vanilla_1", regs.factions)
+        self.assertIn("clan_taom_1", regs.factions)
+        self.assertNotIn("clan_ghost", regs.factions)
+
+    def test_factions_registry_empty_without_game_install(self):
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n')
+        regs = ts.build_registries(self.md, None)
+        self.assertEqual(regs.factions, set())
+
+    def test_shrunken_factions_registry_warns(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("factions", " ".join(regs.suspect_registries))
+
+    def test_healthy_factions_registry_is_not_flagged_suspect(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="v{i}" name="x" />\n' for i in range(60)))
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="c{i}" name="y" />\n' for i in range(120)))
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual([s for s in regs.suspect_registries if "factions" in s], [])
+
+    def test_missing_vanilla_spclans_is_flagged_even_when_repo_clans_fill_the_total(self):
+        # The repo's own clans can reach the total floor alone, so a vanished spclans.xml needs
+        # its own floor: every Faction ref to a vanilla clan would otherwise read as broken.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="c{i}" name="y" />\n' for i in range(120)))
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("vanilla_factions", " ".join(regs.suspect_registries))
+
+    def test_faction_stripped_by_spclans_xslt_is_not_registered(self):
+        # spclans.xslt deletes the five bandit clans from vanilla's file, so a ref to one
+        # leaves the settlement or hero ownerless at runtime and must be reported.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % '  <Faction id="clan_vanilla_1" />\n  <Faction id="sea_raiders" />\n'
+                                 '  <Faction id="steppe_bandits" />\n')
+        _write(self.md / "spclans.xslt", """<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:template match="Faction[@id='sea_raiders']"/>
+  <!-- <xsl:template match="Faction[@id='clan_vanilla_1']"/> -->
+  <xsl:template match="Faction[@id='steppe_bandits']"></xsl:template>
+  <xsl:template match="Faction[@id='clan_vanilla_2']">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+</xsl:stylesheet>
+""")
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("clan_vanilla_1", regs.factions)
+        self.assertNotIn("sea_raiders", regs.factions)
+        self.assertNotIn("steppe_bandits", regs.factions)
 
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",
@@ -1706,6 +1840,35 @@ class ExtraRefRootTests(unittest.TestCase):
                             for i in issues),
                         f"expected UNKNOWN_CULTURE for the TAOM_Map ref, got {[i.code for i in issues]}")
 
+    def test_vintage_line_names_version_and_newest_file_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "LOTRLOME_Armory"
+            _write(mod / "SubModule.xml", '<Module><Version value="v9.9.9" /></Module>')
+            _write(mod / "ModuleData" / "a.xml", "<x />")
+            os.utime(mod / "ModuleData" / "a.xml", (1767225600, 1767225600))
+            line = vm.module_vintage(mod / "ModuleData")
+        self.assertIn("LOTRLOME_Armory", line)
+        self.assertIn("v9.9.9", line)
+        self.assertIn("2026-01-01", line)
+
+    def test_vintage_line_says_unknown_when_the_version_cannot_be_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "M" / "ModuleData"
+            mod.mkdir(parents=True)
+            self.assertIn("version unknown", vm.module_vintage(mod))
+
+    def test_main_warns_about_a_missing_root_instead_of_crashing(self):
+        """A Modules folder missing one of the live modules must print the warning that says
+        its sweep was skipped. Validator.missing_ref_roots once held strings while main()
+        called `.parent` on them, so this crashed with AttributeError instead."""
+        md = Path(self._tmp.name) / "ModuleData"
+        md.mkdir(parents=True)
+        (self.modules / "TAOM_Map" / "ModuleData").rmdir()
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+            _, _, err = _run_main("--moduledata", str(md), "--game-modules", str(self.modules),
+                                  "--code", "UNKNOWN_CULTURE")
+        self.assertIn("extra ref root NOT FOUND, sweep SKIPPED for TAOM_Map", err)
+
 
 class ArmoryStructuralAssumptionTests(unittest.TestCase):
     """The Armory's schema checks silently do not run, and that is only safe today.
@@ -1809,8 +1972,8 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
     def test_bodyless_by_design_troops_are_allowlisted(self):
-        """The three bare-chested troops that ship deliberately. Removing an id
-        from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
+        """Every troop on _BODYLESS_BY_DESIGN is bare-chested on purpose. Removing
+        an id from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
         self._write_troop("urukhai_berserker",
                           '<EquipmentRoster><equipment slot="Leg" id="Item.good_mail" />'
                           "</EquipmentRoster>")
@@ -1926,6 +2089,265 @@ class ArmourSlotCoverageTests(unittest.TestCase):
                "</EquipmentRoster></Equipments>\n"
                "  </NPCCharacter>\n</NPCCharacters>\n")
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+
+class WeaponSlotCoverageTests(unittest.TestCase):
+    """INCONSISTENT_WEAPON_SLOT. The weapon half of the cross-set rule in
+    `.claude/rules/troops.md`: slots 0-3 draw independently from the battle sets, so a
+    launcher present in some sets only ships a half-kit (#529), and with no weapon slot
+    filled in every set a draw can leave the troop unarmed."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(
+            items=set(), item_def_files={}, npccharacters=set(), cultures={"umbar"},
+            party_templates=set(),
+            launchers={"good_bow": object()})
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    @staticmethod
+    def _set(**slots):
+        rows = "".join(f'<equipment slot="{k}" id="Item.{v}" />' for k, v in slots.items())
+        return f"<EquipmentRoster>{rows}</EquipmentRoster>"
+
+    def _issues(self, equipments, attrs="", registries=None):
+        _write(self.md / "troops" / "troops_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="umbar_x" default_group="Ranged" culture="Culture.umbar"{attrs}>\n'
+               f"    <Equipments>{equipments}</Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        validator = ts.Validator(self.md, self.schemas, registries or self.registries)
+        return [i for i in validator.run() if i.code == "INCONSISTENT_WEAPON_SLOT"]
+
+    def test_launcher_in_one_set_and_a_sword_in_the_same_slot_of_another_warns(self):
+        found = self._issues(self._set(Item0="good_bow", Item1="good_arrows")
+                             + self._set(Item0="sword", Item1="good_arrows"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("Item0", found[0].message)
+        self.assertIs(found[0].severity, ts.Severity.WARNING)
+
+    def test_consistent_archer_sets_are_clean(self):
+        kit = self._set(Item0="good_bow", Item1="good_arrows", Item2="sword")
+        self.assertEqual(self._issues(kit + kit), [])
+
+    def test_no_weapon_slot_filled_in_every_set_warns(self):
+        found = self._issues(self._set(Item0="sword") + self._set(Item1="sword"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("every battle set", found[0].message)
+
+    def test_a_hero_is_exempt(self):
+        self.assertEqual(
+            self._issues(self._set(Item0="sword") + self._set(Item1="sword"), attrs=' is_hero="true"'), [])
+
+    def test_a_single_battle_set_is_clean(self):
+        self.assertEqual(self._issues(self._set(Item0="sword")), [])
+
+    def test_a_civilian_set_does_not_count(self):
+        civ = '<EquipmentRoster civilian="true"><equipment slot="Item3" id="Item.sword" /></EquipmentRoster>'
+        self.assertEqual(self._issues(self._set(Item0="sword") + self._set(Item0="sword") + civ), [])
+
+    def test_a_troop_level_equipment_fills_the_slot_in_every_set(self):
+        """Troop-level <equipment> lies over every set (data-scripts.md), so Item0 is filled
+        in both sets even though the second roster leaves it empty."""
+        found = self._issues('<equipment slot="Item0" id="Item.sword" />'
+                             + self._set(Item1="sword") + self._set(Item2="sword"))
+        self.assertEqual(found, [])
+
+    def test_a_troop_level_equipment_with_an_empty_id_clears_the_slot_in_every_set(self):
+        """An empty id clears the slot (data-scripts.md): Item0 is gone from both sets, so no slot
+        index is filled in both."""
+        found = self._issues('<equipment slot="Item0" id="" />'
+                             + self._set(Item0="sword") + self._set(Item0="sword", Item1="sword"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("every battle set", found[0].message)
+
+    def test_without_launcher_data_only_the_slot_rule_runs(self):
+        bare = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures={"umbar"}, party_templates=set())
+        sets = self._set(Item0="good_bow") + self._set(Item0="sword")
+        self.assertEqual(self._issues(sets, registries=bare), [])
+        self.assertEqual(len(self._issues(self._set(Item0="a") + self._set(Item1="a"), registries=bare)), 1)
+
+    def test_a_troop_with_no_weapon_in_any_set_is_not_flagged(self):
+        self.assertEqual(self._issues(self._set(Body="mail") + self._set(Body="mail")), [])
+
+
+class TownsfolkBattleRosterTests(unittest.TestCase):
+    """TOWNSFOLK_WITHOUT_BATTLE_ROSTER. A character whose inline Equipments hold civilian
+    rosters only has no battle set, so GetRandomEquipmentElements returns an empty kit and it
+    stands naked in the arena (#295)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                        cultures={"umbar"}, party_templates=set())
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, folder, inner):
+        _write(self.md / folder / "npcs_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="townsman_umbar" culture="Culture.umbar">\n'
+               f"    <Equipments>{inner}</Equipments>\n  </NPCCharacter>\n</NPCCharacters>\n")
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        return [i for i in issues if i.code == "TOWNSFOLK_WITHOUT_BATTLE_ROSTER"]
+
+    CIV = '<EquipmentRoster civilian="true"><equipment slot="Body" id="Item.rags" /></EquipmentRoster>'
+    BATTLE = '<EquipmentRoster><equipment slot="Body" id="Item.rags" /></EquipmentRoster>'
+
+    def test_civilian_only_is_a_warning(self):
+        found = self._found("characters", self.CIV)
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "townsman_umbar")
+        self.assertIs(found[0].severity, ts.Severity.WARNING)
+
+    def test_a_plain_twin_is_clean(self):
+        self.assertEqual(self._found("characters", self.CIV + self.BATTLE), [])
+
+    def test_no_equipment_block_is_clean(self):
+        self.assertEqual(self._found("characters", ""), [])
+
+    def test_troop_files_are_not_scanned(self):
+        self.assertEqual(self._found("troops", self.CIV), [])
+
+
+class TroopIdRemovedTests(unittest.TestCase):
+    """TROOP_ID_REMOVED. A shipped troop id that leaves the troops files leaves a hollow
+    CharacterObject in every save that held it (#670)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self.md = self.root / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                        cultures={"umbar"}, party_templates=set())
+        _write(self.md / "troops" / "troops_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="umbar_kept" culture="Culture.umbar"/>\n'
+               "  <!-- <NPCCharacter id=\"umbar_commented\" culture=\"Culture.umbar\"/> -->\n"
+               "</NPCCharacters>\n")
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, baseline):
+        path = self.root / "ids.txt"
+        if baseline is not None:
+            path.write_text(baseline, encoding="utf-8")
+        validator = ts.Validator(self.md, self.schemas, self.registries, shipped_troop_ids_file=path)
+        return [i for i in validator.run() if i.code == "TROOP_ID_REMOVED"]
+
+    def test_a_missing_baseline_id_is_an_error(self):
+        found = self._found("# tag: v1\numbar_kept\numbar_gone\n")
+        self.assertEqual([i.entry_id for i in found], ["umbar_gone"])
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+
+    def test_a_commented_out_definition_does_not_count(self):
+        self.assertEqual([i.entry_id for i in self._found("umbar_commented\n")], ["umbar_commented"])
+
+    def test_an_exception_with_a_reason_passes(self):
+        self.assertEqual(self._found("umbar_gone\n[exceptions]\numbar_gone | accepted by Mike\n"), [])
+
+    def test_an_exception_without_a_reason_does_not_pass(self):
+        self.assertEqual(len(self._found("umbar_gone\n[exceptions]\numbar_gone\n")), 1)
+
+    def test_no_baseline_file_is_one_error_not_a_silent_pass(self):
+        found = self._found(None)
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "(baseline)")
+
+    def test_a_baseline_holding_no_id_is_one_error_not_a_silent_pass(self):
+        for text in ("# tag: v1\n[exceptions]\n", "", "[exceptions]\numbar_gone | accepted\numbar_kept\n"):
+            found = self._found(text)
+            self.assertEqual([i.entry_id for i in found], ["(baseline)"], repr(text))
+            self.assertIs(found[0].severity, ts.Severity.ERROR)
+            self.assertIn("ids.txt", found[0].message)
+
+    def test_the_baseline_survives_a_write_and_read_with_its_exceptions(self):
+        path = self.root / "roundtrip.txt"
+        path.write_bytes(b"\xef\xbb\xbf# tag: v1\r\numbar_old\r\n[exceptions]\r\numbar_old | retired on purpose\r\n")
+        ids, exceptions = ts.read_shipped_troop_ids(path)
+        self.assertEqual((ids, exceptions), (["umbar_old"], {"umbar_old": "retired on purpose"}))
+        ts.write_shipped_troop_ids(path, "v2", ["umbar_b", "umbar_a", "umbar_b"], exceptions)
+        raw = path.read_bytes()
+        self.assertFalse(raw.startswith(b"\xef\xbb\xbf"))
+        self.assertNotIn(b"\r", raw)
+        ids, exceptions = ts.read_shipped_troop_ids(path)
+        self.assertEqual(ids, ["umbar_a", "umbar_b"])
+        self.assertEqual(exceptions, {"umbar_old": "retired on purpose"})
+        self.assertIn("# tag: v2", raw.decode("utf-8"))
+
+    def test_regenerating_keeps_the_exceptions_and_reads_the_tag_not_the_tree(self):
+        target = self.root / "regen.txt"
+        ts.write_shipped_troop_ids(target, "v1", ["umbar_old"], {"umbar_old": "retired on purpose"})
+        xml = ('<NPCCharacters><NPCCharacter id="umbar_new" culture="Culture.umbar"/>'
+               '<!-- <NPCCharacter id="umbar_commented"/> --></NPCCharacters>')
+
+        def fake_git(cmd, **kwargs):
+            args = cmd[3:]
+            out = {"describe": "v9\n", "ls-tree": "Main/_Module/ModuleData/troops/troops_x.xml\n",
+                   "show": xml}[args[0]]
+            return subprocess.CompletedProcess(cmd, 0, stdout=out.encode("utf-8"), stderr=b"")
+
+        with mock.patch.object(vm, "SHIPPED_TROOP_IDS", target), \
+                mock.patch.object(subprocess, "run", side_effect=fake_git), redirect_stdout(io.StringIO()):
+            self.assertEqual(vm.regenerate_shipped_troop_ids(), 0)
+        ids, exceptions = ts.read_shipped_troop_ids(target)
+        self.assertEqual(ids, ["umbar_new"])
+        self.assertEqual(exceptions, {"umbar_old": "retired on purpose"})
+        self.assertIn("# tag: v9", target.read_text(encoding="utf-8"))
+
+    def test_the_pass_is_off_without_a_baseline_argument(self):
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        self.assertEqual([i for i in issues if i.code == "TROOP_ID_REMOVED"], [])
+
+    def test_the_shipped_baseline_parses_and_names_only_defined_or_excepted_ids(self):
+        """The real file against the real tree: this is the gate, run as a test."""
+        repo = Path(__file__).resolve().parents[2]
+        baseline = repo / "tools" / "shipped_troop_ids.txt"
+        troops = repo / "Main" / "_Module" / "ModuleData"
+        if not baseline.is_file() or not troops.is_dir():
+            self.skipTest("baseline or troop data not present")
+        ids, exceptions = ts.read_shipped_troop_ids(baseline)
+        self.assertGreater(len(ids), 500)
+        validator = ts.Validator(troops, self.schemas, self.registries, shipped_troop_ids_file=baseline)
+        missing = [i.entry_id for i in validator._troop_ids_removed()]
+        self.assertEqual(missing, [], f"shipped troop ids gone from the troops files: {missing}")
+        self.assertTrue(all(reason.strip() for reason in exceptions.values()))
+
+
+class AppliesToCoverageTests(unittest.TestCase):
+    """Every file that defines an <NPCCharacter> must match an `applies_to` glob of
+    taom_npccharacter.json, or its duplicate-id and enum checks silently skip it."""
+
+    def test_every_npccharacter_file_is_covered(self):
+        md = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
+        if not md.is_dir():
+            self.skipTest("ModuleData not present")
+        schema = next(s for s in ts.load_schemas(SCHEMA_DIR) if s.name == "taom_npccharacter")
+        import fnmatch
+        comment = re.compile(r"<!--.*?-->", re.S)
+        defines = re.compile(r"<NPCCharacter\b")
+        files = []
+        for path in sorted(md.rglob("*.xml")):
+            text = comment.sub("", path.read_text(encoding="utf-8-sig", errors="ignore"))
+            if defines.search(text):
+                files.append(path.relative_to(md).as_posix())
+        self.assertGreater(len(files), 30, "the scan found almost no NPCCharacter files")
+        uncovered = [f for f in files if not any(fnmatch.fnmatch(f, g) for g in schema.applies_to)]
+        self.assertEqual(uncovered, [], "these files define <NPCCharacter> outside every applies_to "
+                         f"glob of tools/schemas/taom_npccharacter.json: {uncovered}")
 
 
 class MountWithoutHarnessTests(unittest.TestCase):
@@ -2068,6 +2490,420 @@ class MountWithoutHarnessTests(unittest.TestCase):
         self.assertEqual(len(self._found(registries=degraded)), 1)
 
 
+class MissingCollisionBodyTests(unittest.TestCase):
+    """The #352 / #599 hang class as a validator ERROR: an item or crafting
+    piece whose `body_name` (or holster / collision body) names a PhysicsShape
+    no loaded tpac ships. `validate_mesh_refs.py` Tier C is the engine; this
+    pass only turns its MISSING_BODY findings into ERROR issues (and its
+    MISSING_MESH into WARNINGs) so the commit hook sees them without anyone
+    remembering a second command (the MCP tool and /verify do not yet, #623)."""
+
+    def test_loaded_tpacs_keeps_the_modules_path_it_was_given(self):
+        # rebuilding "<parent>/Modules" from another spelling of the folder ("mods", a lowercase "modules") would
+        # list packages under a path the caller never gave
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            mods = Path(d) / "mods"
+            (mods / "LOTRLOME_Armory" / "Assets").mkdir(parents=True)
+            (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")
+            got = vm._loaded_tpacs(mods)
+            self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
+
+    def _fake_tier_c(self, codes):
+        import validate_mesh_refs as vmr
+        issues = []
+        for code, item, name in codes:
+            sev = vmr.Severity.ERROR if code in ("MISSING_BODY", "MISSING_MESH") else vmr.Severity.WARNING
+            issues.append(vmr.Issue(severity=sev, code=code, file="LOTRLOME_items/x.xml", line=7,
+                                    entry_id=item, message=f"{code}: {name} not in any tpac"))
+        return issues
+
+    def test_missing_body_becomes_error_and_missing_mesh_a_warning(self):
+        from unittest import mock
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1"),
+                                  ("MISSING_MESH", "starter_highelf_longbow", "wm_elven_bow_v1"),
+                                  ("KNOWN_DEAD_MESH", "old_item", "old_mesh")])
+        with mock.patch.object(vmr, "extract_refs", return_value=[]),              mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])),              mock.patch.object(vmr, "classify", return_value=fake),              mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        by_code = {i.code: i for i in issues}
+        self.assertEqual(by_code[vm.BODY_CODE].severity, ts.Severity.ERROR)
+        self.assertIn("bo_wm_elven_bow_v1", by_code[vm.BODY_CODE].message)
+        self.assertIn("#352", by_code[vm.BODY_CODE].message)
+        self.assertEqual(by_code[vm.BODY_CODE].entry_id, "starter_highelf_longbow")
+        self.assertEqual(by_code[vm.MESH_CODE].severity, ts.Severity.WARNING)
+        self.assertNotIn("KNOWN_DEAD_MESH", by_code)          # allowlist noise stays in the sibling tool
+
+    def test_no_tpacs_is_a_finding_not_a_pass(self):
+        """A present-set built from zero packs would report every body missing
+        (or, filtered, nothing at all); either way it is not evidence."""
+        from unittest import mock
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([i.code for i in issues], [vm.BODY_CODE])
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_fallback_scans_only_the_packs_that_failed_to_parse(self):
+        """A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        parse can hide one. Byte-scanning every pack instead took 110-119 s over 4,611 packs
+        (22.6 GiB), past the commit hook's 45 s bound, in exactly the #599 case."""
+        import validate_mesh_refs as vmr
+        present = vmr.PresentSet(physicsshapes={"bo_a"}, tpac_paths=["good.tpac", "bad.tpac"],
+                                 unparsed=[("bad.tpac", "suspicious udep_count")])
+        ref = vmr.MeshRef(name="bo_missing", attr="body_name", kind="collision_body",
+                          file="LOTRLOME_items/x.xml", line=7, item_id="it", culture="")
+        with mock.patch.object(vmr, "extract_refs", return_value=[ref]), \
+             mock.patch.object(vmr, "build_present_set", return_value=present), \
+             mock.patch.object(vmr, "bodies_present_in_tpacs", return_value=set()) as scan, \
+             mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("good.tpac"), Path("bad.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        scan.assert_called_once()
+        self.assertEqual(list(scan.call_args.args[1]), [Path("bad.tpac")])
+        self.assertEqual([(i.code, i.entry_id) for i in issues], [(vm.BODY_CODE, "it")])
+
+    def test_a_crash_inside_the_pass_is_a_not_verified_error(self):
+        """A scan that raises must say the bodies went unverified, as the generator pass does,
+        not escape as a traceback the hook turns into a blocked commit with no findings."""
+        import validate_mesh_refs as vmr
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+             mock.patch.object(vmr, "extract_refs", side_effect=MemoryError("corrupt sized string")):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.BODY_CODE, ts.Severity.ERROR)])
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("MemoryError", issues[0].message)
+
+    def test_main_runs_the_pass(self):
+        """#622: main() never called this pass, so MISSING_COLLISION_BODY never fired and the
+        commit hook's --code line for it blocked nothing, while this class stayed green.
+        Drive main(), not the function; exit 1 is the code the hook blocks on."""
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1")])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            (root / "Game" / "Modules").mkdir(parents=True)
+            with mock.patch.object(vmr, "extract_refs", return_value=[]), \
+                 mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])), \
+                 mock.patch.object(vmr, "classify", return_value=fake), \
+                 mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+                 mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+                code, out, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                           "--game-modules", str(root / "Game" / "Modules"),
+                                           "--code", vm.BODY_CODE)
+        self.assertIn(vm.BODY_CODE, out, out + err)
+        self.assertIn("bo_wm_elven_bow_v1", out)
+        self.assertEqual(code, 1)
+
+    def test_main_without_install_says_the_pass_was_skipped(self):
+        """Without the install there are no tpacs to scan: the run must say this gate did not
+        run, never print nothing about it; exit 2 is the degraded-sweep code."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            code, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                     "--game-modules", str(root / "nowhere"), "--code", vm.BODY_CODE)
+        self.assertIn(f"{vm.BODY_CODE} SKIPPED", err)
+        self.assertEqual(code, 2)
+
+    def test_main_without_install_names_the_skipped_ref_checks(self):
+        """The no-install warning lists what it skips; the faction and body-property checks
+        were skipped without being named, which reads like a clean sweep."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            _, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                  "--game-modules", str(root / "nowhere"))
+        self.assertIn("faction", err)
+        self.assertIn("body-property", err)
+
+    def test_registry_line_counts_the_clans(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            _write(root / "ModuleData" / "characters" / "clans.xml",
+                   '<?xml version="1.0"?>\n<Factions>\n  <Faction id="c1" />\n</Factions>\n')
+            (root / "Modules").mkdir()
+            _, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                  "--game-modules", str(root / "Modules"), "--code", "NO_SUCH_CODE")
+        self.assertRegex(err, r"Registry: .*\d+ clans")
+
+
+class EntryPointCrashTests(unittest.TestCase):
+    """An unexpected exception out of main() must exit 3 with the traceback on stderr. Python's own
+    exit for an uncaught exception is 1, the code that means "ERROR findings", so the commit hook
+    would block a commit over a validator bug and show the author a bare exit status."""
+
+    def test_unexpected_exception_exits_3_with_the_traceback(self):
+        err = io.StringIO()
+        with mock.patch.object(vm, "main", side_effect=RuntimeError("registry exploded")), \
+             redirect_stderr(err):
+            code = vm.entry()
+        self.assertEqual(code, 3)
+        self.assertIn("Traceback", err.getvalue())
+        self.assertIn("registry exploded", err.getvalue())
+
+    def test_a_normal_exit_code_passes_through(self):
+        for rc in (0, 1, 2):
+            with self.subTest(rc=rc), mock.patch.object(vm, "main", return_value=rc):
+                self.assertEqual(vm.entry(), rc)
+
+    def test_argparse_exit_is_not_turned_into_a_crash(self):
+        with mock.patch.object(vm, "main", side_effect=SystemExit(2)):
+            with self.assertRaises(SystemExit) as cm:
+                vm.entry()
+        self.assertEqual(cm.exception.code, 2)
+
+    def test_a_crash_while_loading_the_module_also_exits_3(self):
+        # A broken taom_schema.py fails at import time, before entry() runs (the convergence
+        # review of #949-#952 reproduced exit 1 this way).
+        script = Path(vm.__file__).resolve()
+        code = ("import sys, runpy; sys.modules['taom_schema'] = None; "
+                f"sys.argv = [{str(script)!r}]; runpy.run_path({str(script)!r}, run_name='__main__')")
+        run = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=120)
+        self.assertEqual(run.returncode, 3, run.stderr[-2000:])
+        self.assertIn("Traceback", run.stderr)
+
+
+_FACTIONS_XSD = """<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Factions">
+    <xs:complexType><xs:sequence>
+      <xs:element name="Faction" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="id" type="xs:string" use="required"/>
+          <xs:attribute name="initial_home_settlement" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+</xs:schema>
+"""
+_GOOD_CLANS = """<?xml version="1.0" encoding="utf-8"?>
+<Factions>
+  <Faction id="clan_a" initial_home_settlement="Settlement.town_A1"/>
+</Factions>
+"""
+_REGISTRATION = """<?xml version="1.0" encoding="utf-8"?>
+<Module><Xmls><XmlNode><XmlName id="Factions" path="characters/clans"/></XmlNode></Xmls></Module>
+"""
+
+
+class SchemaInvalidPassTests(unittest.TestCase):
+    """The engine-XSD layer (validate_xml_schemas.py) as a validator pass, so the commit hook
+    gates it: a file the repo module registers that breaks its engine schema is an ERROR at
+    the offending line, a registration that loads nothing is an ERROR against SubModule.xml,
+    and a run that could not check the layer says so once instead of passing silently."""
+
+    def setUp(self):
+        vx._schema.cache_clear()
+        self._tmp = tempfile.TemporaryDirectory()
+        root = Path(self._tmp.name)
+        self.module = root / "Mod"
+        self.schemas = root / "Game" / "XmlSchemas"
+        _write(self.schemas / "Factions.xsd", _FACTIONS_XSD)
+        _write(self.module / "SubModule.xml", _REGISTRATION)
+        self.clans = self.module / "ModuleData" / "characters" / "clans.xml"
+        _write(self.clans, _GOOD_CLANS)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _issues(self, schemas=None):
+        return vm.schema_invalid_issues(self.module, schemas or self.schemas)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_schema_invalid_file_is_an_error_at_its_line(self):
+        _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file, i.line, i.entry_id) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "characters/clans.xml", 3, "Factions")])
+        self.assertIn("initial_home_settlement", issues[0].message)
+        self.assertEqual(vm.SCHEMA_CODE, "SCHEMA_INVALID")
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_rerun_hint_is_the_repo_relative_path(self):
+        _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
+        with mock.patch.object(vm, "REPO_ROOT", Path(self._tmp.name)):
+            issues = self._issues()
+        self.assertTrue(issues[0].message.endswith(
+            "python tools/validate_xml_schemas.py Mod/ModuleData/characters/clans.xml"), issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_clean_module_has_no_issues(self):
+        self.assertEqual(self._issues(), [])
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_registration_that_loads_nothing_is_an_error_against_submodule(self):
+        _write(self.module / "SubModule.xml", _REGISTRATION.replace("characters/clans", "typo_clans"))
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "SubModule.xml")])
+        self.assertIn("typo_clans", issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_malformed_submodule_is_an_error_not_a_traceback(self):
+        _write(self.module / "SubModule.xml", "<Module>\n<Xmls>")
+        issues = self._issues()
+        self.assertEqual([(i.code, i.severity, i.file) for i in issues],
+                         [(vm.SCHEMA_CODE, ts.Severity.ERROR, "SubModule.xml")])
+        self.assertIn("not well-formed", issues[0].message)
+
+    def test_absent_schema_folder_is_one_not_verified_warning(self):
+        issues = self._issues(self.schemas.parent / "nowhere")
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.SCHEMA_CODE, ts.Severity.WARNING)])
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_missing_lxml_is_one_not_verified_warning(self):
+        with mock.patch.object(vx, "HAVE_LXML", False):
+            issues = self._issues()
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.SCHEMA_CODE, ts.Severity.WARNING)])
+        self.assertIn("lxml", issues[0].message)
+        self.assertIn("NOT verified", issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_main_runs_the_pass(self):
+        """A pass main() never calls is a dead gate however well its unit tests pass.
+        The schemas folder is found beside --game-modules, as in a real install."""
+        _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
+        code, out, _ = _run_main("--moduledata", str(self.module / "ModuleData"),
+                                 "--game-modules", str(self.schemas.parent / "Modules"),
+                                 "--code", vm.SCHEMA_CODE)
+        self.assertEqual(code, 1, out)
+        self.assertIn(vm.SCHEMA_CODE, out)
+        self.assertIn("characters/clans.xml:3", out)
+
+
+class ItemSlotRejectedTests(unittest.TestCase):
+    """#729: `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes and
+    otherwise asserts and leaves the slot empty. Two Uruk troops shipped BodyArmor in the Cape slot
+    and nothing noticed. The slot rule is audit_battle_equipment_memory's; this pass only turns its
+    refusals into ERRORs."""
+
+    ITEMS = ('<Items>\n'
+             '  <Item id="body_a" Type="BodyArmor" />\n'
+             '  <Item id="cape_a" Type="Cape" />\n'
+             '</Items>\n')
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        root = Path(self._tmp.name)
+        self.modules = root / "Modules"
+        self.taom = self.modules / "TAOM"
+        self.moduledata = self.taom / "ModuleData"
+        for name in ("Native", "SandBoxCore", "SandBox"):
+            self._module(self.modules / name, "")
+        self._module(self.modules / "LOTRLOME_Armory",
+                     '<XmlNode><XmlName id="Items" path="items" /></XmlNode>')
+        _write(self.modules / "LOTRLOME_Armory" / "ModuleData" / "items.xml", self.ITEMS)
+        self._module(self.taom,
+                     '<XmlNode><XmlName id="NPCCharacters" path="troops" /></XmlNode>'
+                     '<XmlNode><XmlName id="EquipmentRosters" path="rosters" /></XmlNode>')
+
+    @staticmethod
+    def _module(folder: Path, nodes: str) -> None:
+        _write(folder / "SubModule.xml", f'<Module><Xmls>{nodes}</Xmls></Module>')
+        (folder / "ModuleData").mkdir(parents=True, exist_ok=True)
+
+    def _troops(self, body: str) -> None:
+        _write(self.moduledata / "troops.xml", f"<NPCCharacters>\n{body}\n</NPCCharacters>\n")
+
+    @staticmethod
+    def _troop(troop_id: str, rows: str, extra: str = "") -> str:
+        return (f'<NPCCharacter id="{troop_id}" culture="Culture.empire">'
+                f'<Equipments>{extra}<EquipmentRoster>{rows}</EquipmentRoster></Equipments>'
+                f'</NPCCharacter>')
+
+    def _run(self) -> list:
+        return vm.slot_rejection_issues(self.modules, self.moduledata)
+
+    def test_a_refused_row_is_one_error_naming_troop_slot_and_item(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([(i.code, i.severity, i.entry_id) for i in issues],
+                         [(vm.SLOT_CODE, ts.Severity.ERROR, "bad_troop")])
+        self.assertIn("Cape", issues[0].message)
+        self.assertIn("body_a", issues[0].message)
+        self.assertIn("BodyArmor", issues[0].message)
+        self.assertIn("Body", issues[0].message.split("move it to the")[1])
+
+    def test_the_issue_names_the_repo_file(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        self.assertEqual(self._run()[0].file, "Main/_Module/ModuleData/troops.xml")
+
+    def test_a_fitting_row_gives_nothing(self):
+        self._troops(self._troop("good_troop", '<equipment slot="Body" id="Item.body_a" />'
+                                                '<equipment slot="Cape" id="Item.cape_a" />'))
+        self.assertEqual(self._run(), [])
+
+    def test_an_unknown_item_id_is_left_to_broken_item_ref(self):
+        self._troops(self._troop("t", '<equipment slot="Cape" id="Item.no_such_item" />'))
+        self.assertEqual(self._run(), [])
+
+    def test_a_refusal_in_a_civilian_set_is_reported(self):
+        self._troops('<NPCCharacter id="civ"><Equipments><EquipmentRoster civilian="true">'
+                     '<equipment slot="Cape" id="Item.body_a" /></EquipmentRoster></Equipments>'
+                     '</NPCCharacter>')
+        self.assertEqual([i.entry_id for i in self._run()], ["civ"])
+
+    def test_a_refusal_through_a_standalone_roster_is_reported(self):
+        _write(self.moduledata / "rosters.xml",
+               '<EquipmentRosters><EquipmentRoster id="r1"><EquipmentSet>'
+               '<equipment slot="Cape" id="Item.body_a" /></EquipmentSet></EquipmentRoster>'
+               '</EquipmentRosters>')
+        self._troops('<NPCCharacter id="via_roster"><Equipments><EquipmentSet id="r1" />'
+                     '</Equipments></NPCCharacter>')
+        self.assertEqual([i.entry_id for i in self._run()], ["via_roster"])
+
+    def test_a_refusal_through_a_troop_level_override_is_reported(self):
+        self._troops(self._troop("overridden", '<equipment slot="Body" id="Item.body_a" />',
+                                 extra='<equipment slot="Cape" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([i.entry_id for i in issues], ["overridden"])
+        self.assertIn("Cape", issues[0].message)
+
+    def test_a_refusal_in_another_module_is_reported_too(self):
+        self._module(self.modules / "LOTRLOME_Armory",
+                     '<XmlNode><XmlName id="Items" path="items" /></XmlNode>'
+                     '<XmlNode><XmlName id="NPCCharacters" path="chars" /></XmlNode>')
+        _write(self.modules / "LOTRLOME_Armory" / "ModuleData" / "chars.xml",
+               "<NPCCharacters>" + self._troop("armory_troop",
+                                               '<equipment slot="Cape" id="Item.body_a" />')
+               + "</NPCCharacters>")
+        self._troops("")
+        issues = self._run()
+        self.assertEqual([i.entry_id for i in issues], ["armory_troop"])
+        self.assertEqual(issues[0].file, "LOTRLOME_Armory/chars.xml")
+
+    def test_a_missing_module_is_a_warning_not_a_pass(self):
+        import shutil
+        shutil.rmtree(self.modules / "SandBox")
+        self._troops(self._troop("good_troop", '<equipment slot="Body" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([(i.code, i.severity) for i in issues],
+                         [(vm.SLOT_CODE, ts.Severity.WARNING)])
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("SandBox", issues[0].message)
+
+    def test_main_runs_the_pass_and_exits_1_on_a_refusal(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]), \
+             mock.patch.object(vm, "missing_collision_body_issues", return_value=[]), \
+             mock.patch.object(vm, "borrowed_body_issues", return_value=[]):
+            code, out, _err = _run_main("--moduledata", str(self.moduledata),
+                                        "--game-modules", str(self.modules),
+                                        "--code", vm.SLOT_CODE)
+        self.assertIn("bad_troop", out)
+        self.assertEqual(code, 1)
+
+    def test_main_without_install_says_the_pass_was_skipped(self):
+        code, _out, err = _run_main("--moduledata", str(self.moduledata),
+                                    "--game-modules", str(self.modules / "nowhere"),
+                                    "--code", vm.SLOT_CODE)
+        self.assertIn(f"{vm.SLOT_CODE} SKIPPED", err)
+        self.assertEqual(code, 2)
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced
@@ -2082,15 +2918,45 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     HOOK = Path(__file__).resolve().parents[2] / ".claude" / "hooks" / "check-moduledata-validation.sh"
     SCHEMA = Path(ts.__file__)
+    VALIDATOR = Path(vm.__file__)
+
+    @staticmethod
+    def _named_codes(src, severity):
+        """Codes emitted through a module constant: `code=BODY_CODE` where
+        `BODY_CODE = "MISSING_COLLISION_BODY"` is defined at module level."""
+        consts = dict(re.findall(r'^([A-Z_]+_CODE)\s*=\s*"([A-Z_]+)"', src, flags=re.M))
+        used = re.findall(r'severity=(?:ts\.)?Severity\.' + severity + r',\s*code=([A-Z_]+_CODE)\b', src)
+        return {consts[c] for c in used if c in consts}
+
+    @staticmethod
+    def _unreached_passes(src):
+        """Every module-level `def <x>_issues(` whose call does not appear in main()'s body."""
+        passes = re.findall(r"^def (\w+_issues)\(", src, flags=re.M)
+        main_body = re.search(r"^def main\(\).*?(?=^\S)", src, flags=re.M | re.S).group(0)
+        return passes, [p for p in passes if f"{p}(" not in main_body]
+
+    def test_every_issue_pass_is_reached_from_main(self):
+        """#622: missing_collision_body_issues was defined, documented, in the hook's --code
+        list and unit-tested, and main() never called it for three days. The code-string
+        checks in this class prove presence in source, not reachability; this checks the call."""
+        passes, unreached = self._unreached_passes(self.VALIDATOR.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(passes), 3, "the pass scan found nothing")
+        self.assertEqual(unreached, [], f"main() never calls: {unreached}")
 
     def _error_codes(self):
         """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and
         the ref-sweep table, whose rows are `(..., Severity.ERROR, "CODE", ...)`.
         Scanning only the inline form is how the first version of this test read
         7 live codes as non-existent."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
-        return (set(re.findall(r'severity=Severity\.ERROR,\s*code="([A-Z_]+)"', src))
-                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src)))
+        # Both files emit codes: taom_schema.py owns the ref sweep, and
+        # validate_moduledata.py adds the passes that call sibling tools
+        # (generators, collision bodies). Scanning one of them is how a code
+        # could be emitted and never enforced (#599 added the first ERROR to the
+        # second file).
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
+        return (set(re.findall(r'severity=(?:ts\.)?Severity\.ERROR,\s*code="([A-Z_]+)"', src))
+                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src))
+                | self._named_codes(src, "ERROR"))
 
     def _hook_codes(self):
         return set(re.findall(r"--code\s+([A-Z_]+)", self.HOOK.read_text(encoding="utf-8")))
@@ -2112,9 +2978,10 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     def test_the_hook_names_no_code_the_validator_cannot_emit(self):
         """A typo'd or retired code in the hook is a silently dead gate line."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
         emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
                    | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   | self._named_codes(src, "ERROR") | self._named_codes(src, "WARNING")
                    # the duplicate-id family is built as f"DUPLICATE_{kind}_ID"
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)

@@ -81,6 +81,7 @@ class Registries:
     item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
     launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
     mount_barred_usages: set = None                           # item_usage ids flagged requires_no_mount (None = unavailable)
+    factions: set = field(default_factory=set)                # defined clan <Faction> ids (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -174,6 +175,11 @@ REF_KINDS = [
     # silently loses its authored face. Nothing else cross-checked these.
     RefKind("body_property", re.compile(r'="BodyProperty\.([A-Za-z0-9_.\-]+)"'),
             "body_properties", Severity.ERROR, "BROKEN_BODY_PROPERTY_REF", "body property", "BodyProperty."),
+    # Faction.X is a clan: a settlement owner= or Hero faction= naming an undefined one leaves the
+    # object ownerless at load. `neutral` is the engine's clanless value (named companions,
+    # docs/modding/wanderers-and-named-companions.md).
+    RefKind("faction", re.compile(r'="Faction\.([A-Za-z0-9_.\-]+)"'),
+            "factions", Severity.ERROR, "BROKEN_FACTION_REF", "clan", "Faction.", {"neutral"}),
 ]
 
 
@@ -205,8 +211,12 @@ class Validator:
     # schema contracts (duplicate ids, civilian equipmentType, enums) describe
     # TAOM's own files, and applying them to a foreign module would report
     # defects against a repo this validator does not own.
-    def __init__(self, moduledata, schemas: list, registries: Registries, extra_ref_roots=None):
+    def __init__(self, moduledata, schemas: list, registries: Registries, extra_ref_roots=None,
+                 shipped_troop_ids_file=None):
         self.moduledata = Path(moduledata)
+        # TROOP_ID_REMOVED runs only when the caller names the baseline file; a scratch
+        # ModuleData in a test has no shipped ids to lose.
+        self.shipped_troop_ids_file = shipped_troop_ids_file
         self.schemas = schemas
         self.reg = registries
         requested = [Path(r) for r in (extra_ref_roots or [])]
@@ -215,7 +225,7 @@ class Validator:
         # shrinks back to TAOM-only and the run still prints PASS, which is exactly
         # the under-coverage state this sweep was added to end. Record it so the
         # caller can say so out loud -- never drop it on the floor.
-        self.missing_ref_roots = [str(r) for r in requested if not r.exists()]
+        self.missing_ref_roots = [r for r in requested if not r.exists()]
 
     # -- public ----------------------------------------------------------- #
     def run(self) -> list:
@@ -230,6 +240,9 @@ class Validator:
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
         issues += self._armour_slot_coverage()
+        issues += self._weapon_slot_coverage()
+        issues += self._townsfolk_without_battle_roster()
+        issues += self._troop_ids_removed()
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
@@ -916,9 +929,12 @@ class Validator:
     #
     # Two questions, deliberately at different severities:
     #
-    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Measured
-    #   repo-wide at exactly 3 troops, all three intentional, so the allowlist
-    #   below is the whole of the known debt and a new one is a real regression.
+    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Every troop that
+    #   does so on purpose is in the allowlist below (dg_goblin_slave), so it is the
+    #   whole of the known debt and a new one is a real regression. The Uruk-hai
+    #   champion and berserker stay listed although their Body item is now the
+    #   berserker skirt: it leaves the torso bare (covers_body=false), and the armour
+    #   comparisons below leave out their Body and Cape.
     #
     #   INCONSISTENT_ARMOUR_SLOT (warning) -- a slot filled in some battle sets
     #   and empty in others. `.claude/rules/troops.md`: the engine draws each
@@ -1035,6 +1051,154 @@ class Validator:
                                 f"every battle set or in none"
                             ),
                         ))
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # INCONSISTENT_WEAPON_SLOT                                            #
+    # ----------------------------------------------------------------- #
+    # The weapon half of the cross-set rule (`.claude/rules/troops.md`). Slots Item0 to Item3
+    # draw from independently chosen battle sets, so two things ship a half-kit: a launcher in
+    # a slot of some sets only (#529: a working archer 5% of the time), and no slot that holds a
+    # weapon in every set (a draw can leave the troop unarmed). Troop-level <equipment> lies over
+    # every set, as the deserializer does (data-scripts.md). Heroes are exempt: the engine hands
+    # them one fixed kit. The launcher half needs the install's item index and is skipped without it.
+    _WEAPON_SLOTS = ("Item0", "Item1", "Item2", "Item3")
+    _EQUIP_TAG_RE = re.compile(r"<equipment\b([^>]*?)/?>", re.S)
+    _EQUIP_ID_RE = re.compile(r"""\bid=["'](?:Item\.)?([^"']*)["']""")
+
+    def _battle_kits(self, body: str) -> list:
+        """Each battle roster of an NPC body as slot -> item id, troop-level rows laid over."""
+        def rows(text):
+            out = {}
+            for tag in self._EQUIP_TAG_RE.finditer(text):
+                slot = self._SLOT_ANY_QUOTE_RE.search(tag.group(1))
+                item = self._EQUIP_ID_RE.search(tag.group(1))
+                if slot and item:
+                    out[slot.group(1)] = item.group(1)
+            return out
+
+        loose = rows(self._INLINE_ROSTER_RE.sub("", body))
+        kits = []
+        for r in self._INLINE_ROSTER_RE.finditer(body):
+            if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+                continue
+            kit = rows(r.group(2) or "")
+            kit.update(loose)
+            kits.append({slot: item for slot, item in kit.items() if item})   # an empty id clears the slot
+        return kits
+
+    def _weapon_slot_coverage(self) -> list:
+        launchers = getattr(self.reg, "launchers", None) or {}
+        issues = []
+        for path in self._xml_files():
+            if not path.name.startswith("troops_"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                if re.search(r"""\bis_hero\s*=\s*["']true["']""", attrs, re.I):
+                    continue
+                kits = [{s: v for s, v in k.items() if s in self._WEAPON_SLOTS}
+                        for k in self._battle_kits(body)]
+                if len(kits) < 2 or not any(kits):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                line = _lineno(text, m.start())
+
+                def warn(message):
+                    issues.append(Issue(severity=Severity.WARNING, code="INCONSISTENT_WEAPON_SLOT",
+                                        file=rel, line=line, entry_id=entry_id, message=message))
+
+                if not set.intersection(*[set(k) for k in kits]):
+                    warn(f"no weapon slot index is filled in every battle set ({len(kits)} sets), so a "
+                         f"slot-by-slot draw can leave this troop with no weapon. Put a weapon in one "
+                         f"slot index of every set")
+                if launchers:
+                    for slot in self._WEAPON_SLOTS:
+                        has = [k.get(slot) in launchers for k in kits]
+                        if any(has) and not all(has):
+                            warn(f'slot "{slot}" holds a launcher in {sum(has)} of {len(has)} battle sets. '
+                                 f"Slots draw independently, so the troop can spawn with a bow it never "
+                                 f"draws or ammo and no bow. Put the launcher in that slot of every set")
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TOWNSFOLK_WITHOUT_BATTLE_ROSTER                                     #
+    # ----------------------------------------------------------------- #
+    # Arena spectators are the settlement culture's townsfolk and notables, spawned with BATTLE
+    # equipment according to #295's in-game log; the spawner was not found in managed code. A
+    # character whose inline Equipments hold civilian rosters only has no battle set, so
+    # GetRandomEquipmentElements returns an empty kit (naked); a fixed-equipment spawn would throw.
+    # It stands naked in the stands while the town walk looks fine. Repair:
+    # tools/add_townsfolk_battle_rosters.py --apply.
+    def _townsfolk_without_battle_roster(self) -> list:
+        issues = []
+        for path in self._xml_files():
+            rel = self._rel(path)
+            if not fnmatch.fnmatch(rel, "characters/npcs_*.xml"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                rosters = list(self._INLINE_ROSTER_RE.finditer(body))
+                if not rosters or any(not self._CIVILIAN_ATTR_RE.search(r.group(1) or "")
+                                      for r in rosters):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="TOWNSFOLK_WITHOUT_BATTLE_ROSTER",
+                    file=rel, line=_lineno(text, m.start()),
+                    entry_id=idm.group(1) if idm else "(unnamed)",
+                    message=("only civilian equipment rosters, so the arena stands spawn this character "
+                             "with an empty battle kit and naked. Add a plain <EquipmentRoster> beside "
+                             "the civilian one: python tools/add_townsfolk_battle_rosters.py --apply")))
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TROOP_ID_REMOVED                                                    #
+    # ----------------------------------------------------------------- #
+    # A save holding a troop that no longer exists keeps a hollow CharacterObject whose null
+    # UpgradeTargets the engine's daily ticks read unguarded (#670). Twice a tree replacement broke
+    # it with no gate to say so. tools/shipped_troop_ids.txt is the shipped line's troop ids (reseed
+    # it from the new tag after a release); an id absent from the troops files fails unless the
+    # file's [exceptions] section names it with a reason. Off unless the caller names the file.
+    _TROOP_ID_RE = re.compile(r'<NPCCharacter\b[^>]*?\bid="([A-Za-z0-9_.\-]+)"', re.S)
+
+    def _troop_ids_removed(self) -> list:
+        path = self.shipped_troop_ids_file
+        if path is None:
+            return []
+        path = Path(path)
+        if not path.is_file():
+            return [Issue(severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0,
+                          entry_id="(baseline)",
+                          message=f"{path} is missing, so no shipped troop id was checked. Restore it "
+                                  f"or regenerate: python tools/validate_moduledata.py "
+                                  f"--regenerate-shipped-troop-ids")]
+        shipped, exceptions = read_shipped_troop_ids(path)
+        if not shipped:
+            return [Issue(severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0,
+                          entry_id="(baseline)",
+                          message=f"{path} lists no shipped troop id (emptied, or [exceptions] sits above "
+                                  f"the ids), so none was checked. Restore it or regenerate: "
+                                  f"python tools/validate_moduledata.py --regenerate-shipped-troop-ids")]
+        present = set()
+        for xml in self._xml_files():
+            if fnmatch.fnmatch(self._rel(xml), "troops/troops_*.xml"):
+                present |= set(self._TROOP_ID_RE.findall(
+                    _COMMENT_RE.sub("", self._read(xml))))
+        issues = []
+        for tid in shipped:
+            if tid in present or exceptions.get(tid, "").strip():
+                continue
+            issues.append(Issue(
+                severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0, entry_id=tid,
+                message=(f'shipped troop id "{tid}" is gone from the troops files, so a save holding it '
+                         f"keeps a hollow CharacterObject (#670). Restore the id and retire the troop "
+                         f"by removing it from every upgrade_targets, or record a deliberate break "
+                         f"under [exceptions] in {path.name} as `id | reason`")))
         return issues
 
     def _mounted_rosters(self) -> dict:
@@ -1343,7 +1507,9 @@ class Validator:
     #
     # Item values come from the install (Armory + vanilla), so the check is skipped, never
     # faked, when the registry could not be built. Bare-chested-by-design troops are compared
-    # without Body and Cape (their skirt sits in the Cape slot as the chest stand-in), and
+    # without Body and Cape (the Uruk-hai champion and berserker wear a skirt in Body and no Cape,
+    # so neither a parent's pauldron nor a child's plate below the skirt's 89 armour reads as a
+    # regression), and
     # militia-to-militia edges are exempt exactly as they are for skills.
     _EQUIPMENT_ELEM_RE = re.compile(r"<equipment\b[^>]*?/>")
 
@@ -1647,6 +1813,12 @@ _PARTYTEMPLATE_DEF_RE = re.compile(r'<(?:MB)?PartyTemplate\b[^>]*?\bid="([^"]+)"
 # this must span newlines (re.S + \b[^>]*?) exactly like the others — an
 # id-on-the-same-line pattern registers nothing and turns every lord broken.
 _BODYPROP_DEF_RE = re.compile(r'<BodyProperty\b[^>]*?\bid="([^"]+)"', re.S)
+# A clan is a <Faction id="...">; the container is <Factions>, which \b keeps out.
+_CLAN_DEF_RE = re.compile(r'<Faction\b[^>]*?\bid="([^"]+)"', re.S)
+# spclans.xslt deletes vanilla's bandit clans with an empty `<xsl:template match="Faction[@id='X']"/>`;
+# the engine never loads those rows, so a ref to one is as broken as a ref to a typo.
+_CLAN_STRIP_RE = re.compile(
+    r"""<xsl:template\s+match="Faction\[@id='([^']+)'\]"\s*(?:/>|>\s*</xsl:template>)""", re.S)
 _SETTLEMENT_CULTURE_RE = re.compile(r'<Settlement\b[^>]*?\bculture="Culture\.([^"]+)"', re.S)
 # An XSLT template with an empty body and an unqualified `match="Settlement"`
 # deletes EVERY settlement contributed by earlier modules (TAOM_Map does exactly
@@ -1690,7 +1862,15 @@ def _read_stripped(xml: Path) -> str:
     return _COMMENT_RE.sub("", text)
 
 
-def _scan(roots, pattern, want_files=False):
+# The first element of a document (after the declaration and comments): the kind of file it is.
+_DOC_ROOT_RE = re.compile(r"<(?![?!])([A-Za-z_][\w.\-]*)")
+# Item definitions come only from documents the engine loads as items. A feature config that quotes
+# ids in <Item id="..."> rows (the culture marketplace blacklist) would otherwise define its own ids,
+# and no gate could ever fail on them.
+_ITEM_DOC_ROOTS = frozenset({"Items"})
+
+
+def _scan(roots, pattern, want_files=False, doc_roots=None):
     found = set()
     files = defaultdict(list)
     for root in roots:
@@ -1699,6 +1879,10 @@ def _scan(roots, pattern, want_files=False):
             continue
         for xml in root.rglob("*.xml"):
             text = _read_stripped(xml)
+            if doc_roots is not None:
+                first = _DOC_ROOT_RE.search(text)
+                if first is None or first.group(1) not in doc_roots:
+                    continue
             for m in pattern.finditer(text):
                 found.add(m.group(1))
                 if want_files:
@@ -2137,6 +2321,41 @@ def build_mount_barred_usages(game_modules):
     return rl.mount_barred_usages(game_modules) if game_modules else None
 
 
+def read_shipped_troop_ids(path) -> tuple:
+    """(baseline ids in file order, {id: reason}) from tools/shipped_troop_ids.txt. One id per
+    line; `#` starts a comment; after a line `[exceptions]` each row is `id | reason`. A row with
+    no reason is read as an empty reason, which the gate does not honour."""
+    ids, exceptions, in_exceptions = [], {}, False
+    for raw in Path(path).read_text(encoding="utf-8-sig").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line == "[exceptions]":
+            in_exceptions = True
+        elif in_exceptions:
+            tid, _, reason = line.partition("|")
+            exceptions[tid.strip()] = reason.strip()
+        else:
+            ids.append(line)
+    return ids, exceptions
+
+
+def write_shipped_troop_ids(path, tag: str, ids, exceptions: dict) -> None:
+    """Rewrite the baseline from `ids` (the troop ids at `tag`, a release tag or a branch). Every exception is kept: it
+    records a decision, and one whose id left the baseline is inert, not wrong. LF endings, no BOM."""
+    ids = sorted(set(ids))
+    lines = [
+        f"# Troop ids shipped in {tag}: the baseline of the TROOP_ID_REMOVED gate.",
+        "# Regenerate after a release: python tools/validate_moduledata.py --regenerate-shipped-troop-ids",
+        "# One id per line. [exceptions] rows are `id | reason` for a break the maintainer accepted.",
+        f"# tag: {tag}",
+        *ids,
+        "[exceptions]",
+        *[f"{tid} | {why}" for tid, why in sorted(exceptions.items())],
+    ]
+    Path(path).write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
+
+
 def build_launchers(item_roots) -> dict:
     """bow/crossbow id -> ranged_ladder.Launcher over the same item roots the armour index
     reads, for RANGED_LADDER_INVERSION. Unavailable (empty) without the install."""
@@ -2185,7 +2404,16 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
                             ("NavalDLC", "naval_bodyproperties.xml")):
             bodyprop_files.append(game_modules / name / "ModuleData" / fname)
 
-    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True)
+    # Clans come from the explicit clan files only: the repo's characters/clans.xml and vanilla
+    # spclans.xml. spclans.xslt defines none, but it strips vanilla's bandit clans, and a stripped
+    # row is not a clan the engine loads, so it leaves the registry.
+    vanilla_factions = set()
+    if game_modules:
+        vanilla_factions = _scan_files([game_modules / "SandBox" / "ModuleData" / "spclans.xml"], _CLAN_DEF_RE)
+        vanilla_factions -= set(_CLAN_STRIP_RE.findall(_read_stripped(moduledata / "spclans.xslt")))
+    factions = _scan_files([moduledata / "characters" / "clans.xml"], _CLAN_DEF_RE) | vanilla_factions
+
+    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)
@@ -2229,6 +2457,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
+        # The same for clans: TAOM's are only part of the set (vanilla spclans.xml is the rest).
+        factions = set()
 
     # Size floors. A registry built from an explicit file list shrinks silently when
     # a source file is renamed (a game patch, a typo'd --game-modules that still
@@ -2240,8 +2470,12 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     # "the file list broke", not "the data changed a bit".
     suspect = []
     if game_modules:
+        # vanilla_factions has its own floor: the repo's clans alone can reach the total's, and a
+        # missing spclans.xml would then pass while every ref to a vanilla clan read as broken.
         for label, value, floor in (("launchers", launchers, 30),
                                     ("body_properties", body_properties, 50),
+                                    ("factions", factions, 100),
+                                    ("vanilla_factions", vanilla_factions, 50),
                                     ("cultures", cultures, 20),
                                     ("settled_cultures", settled_cultures, 15),
                                     ("settlement_economy", settlement_economy, 400)):
@@ -2256,6 +2490,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         harness_family_types=harness_family_types,
         mount_family_types=mount_family_types,
         body_properties=body_properties,
+        factions=factions,
         settled_cultures=settled_cultures,
         settlement_economy=settlement_economy,
         suspect_registries=suspect,

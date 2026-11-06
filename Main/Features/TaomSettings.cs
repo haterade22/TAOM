@@ -462,11 +462,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // the enlisted player is parked hidden and inactive next to their commander, and the code that
     // un-hides them is the same code this switch disables — so a plain "stop running" would strand
     // them invisible on the map with no menu and no way out. The reconciler therefore performs one
-    // honourable discharge on the next tick and hands the player back properly.
+    // honourable discharge and hands the player back properly: on the next hourly tick, or, when the
+    // player is in a battle, once that battle has ended (#1021).
 
     [SettingPropertyGroup("Enlistment", GroupOrder = 41)]
     [SettingPropertyBool("Enable Enlistment", Order = 0, RequireRestart = false,
-        HintText = "Serve as a soldier in a lord's party — enlist, take a rank, draw wages, follow the column into battle. Turn OFF to remove the feature: the option to enlist disappears, and if you are already serving you are released honourably (you keep your pay and your gear) rather than being left parked on the map. Takes effect immediately; no restart. Default ON.")]
+        HintText = "Serve as a soldier in a lord's party — enlist, take a rank, draw wages, follow the column into battle. Turn OFF to remove the feature: the option to enlist disappears, and if you are already serving you are released honourably (you keep your pay and your gear) rather than being left parked on the map. Takes effect within three in-game hours (in a battle, once it ends); no restart. Default ON.")]
     public bool EnableEnlistment { get; set; } = true;
 
     // --- Enlistment / Diagnostics ---
@@ -604,7 +605,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
     [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3, RequireRestart = false,
-        HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
+        HintText = "Writes two diagnostic lines, the auto-assigned default layout and the cycled layout, to the TAOM log file. Nothing is shown on the HUD.")]
     public bool MixedFormationsDebug { get; set; } = false;
 
     // --- Fief Management ---
@@ -652,10 +653,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool UseCustomThreshold { get; set; } = false;
 
     [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
-    [SettingPropertyBool("Sell Damaged Equipped", Order = 3, RequireRestart = false, HintText = "Include items currently equipped on heroes.")]
-    public bool SellDamagedEquipped { get; set; } = false;
-
-    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
     [SettingPropertyBool("Exclude Damaged Horses", Order = 4, RequireRestart = false, HintText = "Skip horses/mounts when selling damaged. Default: true.")]
     public bool ExcludeDamagedHorses { get; set; } = true;
 
@@ -663,10 +660,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Low Value Threshold (denars)", 1, 10000, Order = 0, RequireRestart = false,
         HintText = "Items at or below this denars value are sold. Default: 100.")]
     public int LowValueThreshold { get; set; } = 100;
-
-    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
-    [SettingPropertyBool("Sell Low Value Equipped", Order = 1, RequireRestart = false, HintText = "Include items currently equipped. Default: false.")]
-    public bool SellLowValueEquipped { get; set; } = false;
 
     [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
     [SettingPropertyBool("Exclude Low Value Food", Order = 2, RequireRestart = false, HintText = "Skip food items. Default: true.")]
@@ -800,7 +793,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         catch (System.Exception ex)
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[TAOM] Battle settings could not be applied: {ex.GetType().Name}: {ex.Message}", Colors.Red));
+                new TaleWorlds.Localization.TextObject("{=taom_bc_apply_failed}[TAOM] Battle settings could not be applied: {ERROR}")
+                    .SetTextVariable("ERROR", $"{ex.GetType().Name}: {ex.Message}").ToString(), Colors.Red));
         }
     };
 
@@ -844,10 +838,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Battle Tactics / Battle Action Bar ---
 
+    // Renamed from EnableBattleActionBar (default on) in #970. MCM keeps a saved value per property, so flipping that
+    // default would have reached fresh installs only; a new property name reaches every install. The old key in
+    // TAOM.json is ignored.
     [SettingPropertyGroup("Battle Tactics/Battle Action Bar", GroupOrder = 29)]
-    [SettingPropertyBool("Enable Battle Action Bar", Order = 0, RequireRestart = false,
-        HintText = "Show contextual action bar during field battles (1-9 hotkeys for stance toggles). Stances are display-only — they record state but do not change formation behavior.")]
-    public bool EnableBattleActionBar { get; set; } = true;
+    [SettingPropertyBool("Show Battle Action Bar", Order = 0, RequireRestart = false,
+        HintText = "Parked: show a bar of stance buttons during field battles. The buttons record a stance but do not change formation behavior yet, and they can be clicked only while a menu shows the cursor (for example Esc). Default: off.")]
+    public bool ShowBattleActionBar { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Battle Action Bar")]
     [SettingPropertyBool("Cancel Stance On Move", Order = 1, RequireRestart = false,
@@ -938,7 +935,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Marriage Alignment", GroupOrder = 50)]
     [SettingPropertyBool("Enable Marriage Alignment Block", Order = 0, RequireRestart = false,
-        HintText = "When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Umbar, Shaghana, Abanissa, Dunland) marry anyone. When off, marriage is vanilla.")]
+        HintText = "When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland is Evil. When off, marriage is vanilla.")]
     public bool EnableMarriageAlignment { get; set; } = true;
 
     [SettingPropertyGroup("World/Marriage Alignment")]
@@ -1087,31 +1084,37 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Ceiling for the skill-based crush-through chance, reached at a huge skill gap with a full-momentum swing. Default 50%.")]
     public float CrushThroughMaxChance { get; set; } = 0.5f;
 
+    // Renamed from ChargeAutoKnockdownWeightRatio when the knockdown parity port (#610) moved its default from 8 to
+    // 6: MCM loads the saved value by name, so under the old name every TAOM.json saved before kept 8. Never rename
+    // it back; files not yet re-saved still hold ChargeAutoKnockdownWeightRatio = 8.
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyInteger("Auto-Knockdown Weight Ratio", 2, 30, Order = 10, RequireRestart = false,
-        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
-    public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
+        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down, from any angle, regardless of resistance (mumakil vs man is ~125, horse + man vs man exactly 6). Default 6, so a full-speed horse contact floors a man; raise it to 7 or 8 to keep that for heavier chargers only. Values below the neutral weight ratio (6) are treated as the neutral ratio. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int ChargeAutoKnockdownRatio { get; set; } = 6;
 
     // --- Aura of Dread ---
 
     [SettingPropertyGroup("Aura of Dread", GroupOrder = 34)]
     [SettingPropertyBool("Enable Aura of Dread", Order = 0, RequireRestart = false,
-        HintText = "Nazgul and Sauron drain the morale of nearby enemy troops, breaking formations that stand too close for too long. Takes effect immediately, but morale already drained is not restored when you switch it off.")]
+        HintText = "Nazgul and Sauron drain the morale of enemy troops right beside them. The aura weakens them so they break sooner in the fighting, but it never routs anyone by itself. Takes effect immediately, but morale already drained is not restored when you switch it off.")]
     public bool EnableDreadAura { get; set; } = true;
 
+    // Renamed from DreadAuraRadius on 2026-10-15, when the default dropped from 12 to 5: MCM keeps a
+    // saved value per property name, so the old name would have kept every existing 12. Never rename
+    // it back, because settings files not yet re-saved still hold DreadAuraRadius = 12.
     [SettingPropertyGroup("Aura of Dread")]
-    [SettingPropertyFloatingInteger("Dread Radius", 4f, 30f, "#0", Order = 1, RequireRestart = false,
-        HintText = "Metres over which a wraith projects dread. Full strength within the inner radius from dread_aura_config.json (default 4m), falling to nothing at this distance. Default 12. Values above 30 are refused because the engine's proximity search degrades to a full agent scan.")]
-    public float DreadAuraRadius { get; set; } = 12f;
+    [SettingPropertyFloatingInteger("Dread Radius", 4f, 15f, "#0", Order = 1, RequireRestart = false,
+        HintText = "Metres over which a wraith projects dread. Full strength within the inner radius from dread_aura_config.json (default 2m), falling to nothing at this distance. Default 5. The ceiling is 15: beyond 15 m the engine's proximity search stops using its grid and checks every agent on the field, on every pulse.")]
+    public float DreadAuraCloseRadius { get; set; } = 5f;
 
     [SettingPropertyGroup("Aura of Dread")]
     [SettingPropertyFloatingInteger("Morale Drained Per Second", 0f, 20f, "#0.0", Order = 2, RequireRestart = false,
-        HintText = "Morale per second drained at full strength, before the target's tier/hero resistance and its racial resistance. At the default 5.0 a tier-3 human breaks after about 28 seconds of contact, a tier-6 elite about 49, and an elven hero never. Below about 1.0 the engine's own morale recovery outpaces the drain and nothing ever routs.")]
+        HintText = "Morale per second drained at full strength, before the target's tier/hero resistance and its racial resistance. The aura stops at a morale floor of 10 (dread_aura_config.json), so it never routs anyone by itself. At the default 5.0, in an even fight, a tier-3 human reaches the floor after about 22 seconds of contact, a tier-6 elite about 37, and an elven hero of level 16 or more never. Below about 1.0 the engine's own morale recovery outpaces the drain.")]
     public float DreadAuraMoralePerSecond { get; set; } = 5f;
 
     [SettingPropertyGroup("Aura of Dread")]
     [SettingPropertyBool("Affects Your Own Troops", Order = 3, RequireRestart = false,
-        HintText = "When off, troops on your team are immune and dread only touches the AI. Leave it on and an enemy wraith can rout your soldiers, and routed troops are LOST from your party, not merely shaken. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
+        HintText = "When off, your team is immune and dread only touches the AI. Left on, an enemy wraith weakens your soldiers so they rout sooner in combat, and routed troops are LOST from your party. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
     public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
 
     // --- World / Uncapturable Heroes ---

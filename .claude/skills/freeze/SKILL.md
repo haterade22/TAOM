@@ -80,7 +80,7 @@ The PreToolUse hooks declared in this skill's frontmatter activate the moment th
 1. Reads the freeze-dir state file (`.claude/tmp/freeze/freeze-dir.txt`)
 2. Extracts `file_path` from the tool call's JSON input
 3. Resolves both paths to absolute, normalizes slashes (Windows + Git Bash compatible)
-4. If the file is outside the freeze boundary → returns `{"permissionDecision":"deny",...}` to block
+4. If the file is outside the freeze boundary → returns a `deny` under `hookSpecificOutput` to block (`harness-facts.md` "PreToolUse output contract")
 5. Otherwise → returns `{}` to allow
 
 The hook is silent on success and verbose only when blocking, so freeze adds zero noise to normal work.
@@ -94,7 +94,7 @@ The hook is silent on success and verbose only when blocking, so freeze adds zer
 | NotebookEdit | Blocked outside boundary |
 | Read, Glob, Grep | Always allowed (read-only) |
 | Bash | Always allowed — `sed`, `tee`, `>` etc. can still bypass freeze. **This is not a security boundary.** |
-| MCP server tools (Serena's `replace_content`, etc.) | Not blocked — these are separate tools. Use Edit/Write for changes you want freeze-protected. |
+| MCP server tools | Not checked by freeze; the git, filesystem and Serena editing tools are denied outright (`docs/reference/mcp-servers.md`), Serena's memory tools excepted. Use Edit/Write for changes you want freeze-protected. |
 
 ## Example session
 

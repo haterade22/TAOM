@@ -1,9 +1,11 @@
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Core;
 
 namespace TAOM.Features.SpecialResources;
 
 /// <summary>
-/// The two pure decisions behind special-resource earning, extracted so they can be tested without
+/// The pure decisions behind special-resource earning (who won, whether this process may credit
+/// the hero, whether an event type pays the battle credit), extracted so they can be tested without
 /// a running campaign (<c>MapEvent</c> is sealed and unconstructible in a unit test). The behavior
 /// keeps the plumbing; this keeps the policy — same split as <c>PatchShieldPolicy</c>.
 /// </summary>
@@ -46,4 +48,24 @@ public static class SpecialResourceEarnPolicy
     /// is a real player and must keep earning normally.
     /// </summary>
     public static bool MayCreditMainHero(bool isDedicatedServer) => !isDedicatedServer;
+
+    /// <summary>
+    /// Does a won map event pay the generic battle credit? A raid and forced supplies or volunteers
+    /// (#770) are village-hostile events: the engine ends them as an attacker victory, and a raid pays
+    /// <c>per_raid</c> through <c>RaidCompleted</c>, so the militia fight and the loot pay nothing here.
+    /// The engine also fights real battles against lord or other field parties inside those events
+    /// (a defending player when an AI lord raids their village, a lord party inside a village the
+    /// player raids or extorts, an army raid), and a won real fight pays. Every other event type
+    /// always pays, hideout clears included.
+    /// </summary>
+    /// <param name="type">The map event's type.</param>
+    /// <param name="beatAFieldParty">
+    /// True when the enemy side held a party that is neither militia nor villagers and started with
+    /// healthy troops.
+    /// </param>
+    public static bool PaysBattleCredit(MapEvent.BattleTypes type, bool beatAFieldParty) =>
+        beatAFieldParty
+        || (type != MapEvent.BattleTypes.Raid
+            && type != MapEvent.BattleTypes.IsForcingSupplies
+            && type != MapEvent.BattleTypes.IsForcingVolunteers);
 }

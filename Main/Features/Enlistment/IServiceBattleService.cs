@@ -20,7 +20,8 @@ public interface IServiceBattleService
 
     /// <summary>
     /// A map event involving the commander OR the player ended. Returns to parked-attached unless
-    /// the loot/aftermath encounter is still open.
+    /// the encounter is still open (for the player's own event it is: the event ends inside
+    /// <c>PlayerEncounter.Finish</c>, before the encounter is cleared).
     ///
     /// <paramref name="mainPartyWasInEndingEvent"/> is the boundary's answer to "is the event that
     /// just ended the one the player is in?", and it gates the army detach. It cannot be inferred

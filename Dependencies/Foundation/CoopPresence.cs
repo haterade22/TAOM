@@ -120,17 +120,12 @@ public static class CoopPresence
         EnsureProbed();
     }
 
-    // KNOWN GAP, deliberately not papered over: detection is based on the launcher's ACTIVE-module
-    // list, which reflects what the player enabled, not what successfully constructed. If a co-op
-    // module's SubModule constructor throws, SubModuleConstructionGuard swallows it (crashing the
-    // launcher helps nobody) and this probe still reports the module as active — so TAOM runs the
-    // session in co-op mode for a co-op layer that is dead: PatchShield withholds its rescue and
-    // SaveShield rethrows save-load faults. An earlier draft carried a MarkConstructionFailed()
-    // method for this, but nothing called it and Refresh() would have re-added the id from the
-    // launcher list anyway, so it was a documented guarantee the code did not provide. Closing this
-    // properly needs the construction guard to map a failing assembly back to its module id AND a
-    // suppression set that survives re-probing; until then the honest statement is that this gap
-    // exists. See docs/features/bannerlord-together-compat.md "Known limitations".
+    // Detection reads the launcher's ACTIVE-module list. On Bannerlord v1.4.8 Module.AddSubModule does
+    // not catch a SubModule constructor exception (Module.cs:141-153), so it leaves Module.LoadSubModules
+    // before any OnSubModuleLoad runs (:1026-1103, InitializeSubModuleBases :201-208); nothing in TAOM can
+    // swallow it. An active co-op module can still be unconstructed: LoadSubModules only shows a message
+    // box for a missing SubModule DLL (:1082) and skips a SubModule its tags exclude (:1040).
+    // See docs/features/bannerlord-together-compat.md "Known limitations".
 
     private static void EnsureProbed()
     {

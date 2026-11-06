@@ -73,9 +73,14 @@ See `.claude/rules/gamemodels.md` for full GameModel rules.
 
 TAOM uses manual `List<CodeInstruction>` iteration. Harmony 2.4.2 (Bannerlord 1.3) has an expanded `CodeMatcher` API — evaluate it for new transpilers before defaulting to manual iteration.
 
+## Conversation tags
+
+A `ConversationTag` subclass anywhere in TAOM.dll must be concrete, non-generic, public-parameterless and carry a unique `StringId`: the `ConversationManager` constructor instantiates every one at each campaign start and load (v1.4.8 `ConversationManager.cs:239`, `Activator.CreateInstance` then `Dictionary.Add` on the id), so one bad tag breaks every campaign. No shared base class. The gate is `EveryTaomConversationTag_IsInstantiableAndUnique` (`TAOM.Tests/Infrastructure/Localization/LiegeTitleOverrideTests.cs`).
+
 ## Anti-Patterns
 
 - Business logic in Harmony patches (must delegate)
 - Sealed types crossing service boundaries (use adapters)
 - Regular null checks on computed TaleWorlds properties (use `?.` — see adapters.md)
 - Multiple responsibilities in one service (split it)
+- A local fear effect that drains morale below 0.01 with nothing said: each rout spreads a morale loss to up to 10 allies, from the whole formation when fewer stand within 4 m. Floor the morale, or say in the feature doc that its routs spread ([lesson](../../docs/reviews/lessons/adapters-taleworlds-api.md))

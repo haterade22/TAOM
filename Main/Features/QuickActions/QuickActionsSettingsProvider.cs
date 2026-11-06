@@ -25,11 +25,9 @@ public sealed class QuickActionsSettingsProvider : IQuickActionsSettingsProvider
 
     public float CustomDamagedThreshold => Settings?.DamagedThreshold ?? -0.20f;
     public bool UseCustomThreshold => Settings?.UseCustomThreshold ?? false;
-    public bool SellDamagedEquipped => Settings?.SellDamagedEquipped ?? false;
     public bool ExcludeDamagedHorses => Settings?.ExcludeDamagedHorses ?? true;
 
     public int LowValueThreshold => Settings?.LowValueThreshold ?? 100;
-    public bool SellLowValueEquipped => Settings?.SellLowValueEquipped ?? false;
     public bool ExcludeLowValueFood => Settings?.ExcludeLowValueFood ?? true;
     public bool ExcludeLowValueHorses => Settings?.ExcludeLowValueHorses ?? true;
     public bool ExcludeLowValueTradeGoods => Settings?.ExcludeLowValueTradeGoods ?? false;

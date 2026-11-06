@@ -19,35 +19,35 @@ public class PersistedEquipmentIssueLedger : IEquipmentIssueLedger
         _contentStore = contentStore;
     }
 
-    public EnlistmentRank? HighestIssuedRank
+    public EnlistmentKitTier? HighestIssuedTier
     {
         get
         {
-            var raw = _contentStore.Record.HighestIssuedEquipmentRank;
+            var raw = _contentStore.Record.HighestIssuedKitTier;
             if (!raw.HasValue)
                 return null;
             // Defensive: a hand-edited save could carry a rank ordinal we don't define.
-            return System.Enum.IsDefined(typeof(EnlistmentRank), raw.Value)
-                ? (EnlistmentRank?)raw.Value
+            return System.Enum.IsDefined(typeof(EnlistmentKitTier), raw.Value)
+                ? (EnlistmentKitTier?)raw.Value
                 : null;
         }
     }
 
     public IReadOnlyList<string> IssuedItemIds => _contentStore.Record.IssuedEquipmentItemIds;
 
-    public bool HasIssuedForRank(EnlistmentRank rank)
+    public bool HasIssuedForTier(EnlistmentKitTier rank)
     {
-        var highest = HighestIssuedRank;
+        var highest = HighestIssuedTier;
         // Monotonic: covering a rank covers everything below it, so a demotion never re-issues.
         return highest.HasValue && (int)highest.Value >= (int)rank;
     }
 
-    public void RecordIssue(EnlistmentRank rank, IReadOnlyList<string> itemIds)
+    public void RecordIssue(EnlistmentKitTier rank, IReadOnlyList<string> itemIds)
     {
         var record = _contentStore.Record;
-        var highest = HighestIssuedRank;
+        var highest = HighestIssuedTier;
         if (!highest.HasValue || (int)rank > (int)highest.Value)
-            record.HighestIssuedEquipmentRank = (int)rank;
+            record.HighestIssuedKitTier = (int)rank;
 
         if (itemIds != null && itemIds.Count > 0)
             record.IssuedEquipmentItemIds.AddRange(itemIds.Where(id => !string.IsNullOrEmpty(id)));
@@ -56,7 +56,7 @@ public class PersistedEquipmentIssueLedger : IEquipmentIssueLedger
     public void Reset()
     {
         var record = _contentStore.Record;
-        record.HighestIssuedEquipmentRank = null;
+        record.HighestIssuedKitTier = null;
         record.IssuedEquipmentItemIds.Clear();
     }
 }

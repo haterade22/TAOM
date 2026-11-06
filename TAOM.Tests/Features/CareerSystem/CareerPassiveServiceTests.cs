@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
+using AiPartySizeService = TAOM.Features.AiPartySize.AiPartySizeService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -14,6 +17,9 @@ public class CareerPassiveServiceTests
     private CareerPassiveService _service;
     private ICareerDataService _dataService;
     private ICareerRegistry _registry;
+    private IModLogger _logger;
+    private IPartySizeCacheInvalidator _invalidator;
+    private List<List<string>> _invalidatedIds;
 
     private static readonly CareerDefinition WarbossCareer = new CareerDefinition(
         id: "warboss", displayName: "Warboss", description: "", portraitSprite: "",
@@ -25,11 +31,79 @@ public class CareerPassiveServiceTests
     [TestInitialize]
     public void Setup()
     {
-        _service = new CareerPassiveService(Substitute.For<IModLogger>());
+        _logger = Substitute.For<IModLogger>();
+        _invalidator = Substitute.For<IPartySizeCacheInvalidator>();
+        _invalidatedIds = new List<List<string>>();
+        _invalidator.When(i => i.InvalidateLedBy(Arg.Any<ICollection<string>>()))
+            .Do(call => _invalidatedIds.Add(call.Arg<ICollection<string>>().OrderBy(id => id).ToList()));
+        _service = new CareerPassiveService(_logger, _invalidator);
         _dataService = new CareerDataService();
         _registry = Substitute.For<ICareerRegistry>();
 
         _registry.GetCareer("warboss").Returns(WarbossCareer);
+    }
+
+    // #768: PartyBase.PartySizeLimit caches on MemberRoster.VersionNo, so a pick that moves the
+    // PartySize passive is invisible to the engine until the cache is busted.
+    [TestMethod]
+    public void RefreshCache_InvalidatesOnlyTheHeroesWithPassives_AndNeverSweepsEveryParty()
+    {
+        GivenPartySizePassive(4f);
+
+        Assert.AreEqual(1, _invalidatedIds.Count);
+        CollectionAssert.AreEqual(new[] { "hero1" }, _invalidatedIds[0]);
+        _invalidator.DidNotReceive().InvalidateAll();
+    }
+
+    [TestMethod]
+    public void RefreshCache_HeroWhosePassivesWentAway_IsStillInvalidated()
+    {
+        // hero1 loses every passive, hero2 gains one: both parties' cached limits are stale.
+        GivenPartySizePassive(4f);
+        _invalidatedIds.Clear();
+        _dataService.SetCareer("hero2", "warboss");
+        _dataService.TryAddChoice("hero2", "wb_party_size", 10);
+        var onlyHero2 = Substitute.For<ICareerDataService>();
+        onlyHero2.GetAllData().Returns(new Dictionary<string, HeroCareerData>
+        {
+            ["hero2"] = _dataService.GetAllData()["hero2"],
+        });
+
+        _service.RefreshCache(onlyHero2, _registry);
+
+        Assert.AreEqual(1, _invalidatedIds.Count);
+        CollectionAssert.AreEqual(new[] { "hero1", "hero2" }, _invalidatedIds[0]);
+    }
+
+    [TestMethod]
+    public void RefreshCache_NothingBeforeOrAfter_PassesAnEmptySet()
+    {
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(1, _invalidatedIds.Count);
+        Assert.AreEqual(0, _invalidatedIds[0].Count);
+    }
+
+    [TestMethod]
+    public void RefreshCache_ThrowingInvalidator_KeepsNewCacheAndWarnsOnce()
+    {
+        _invalidator.When(i => i.InvalidateLedBy(Arg.Any<ICollection<string>>()))
+            .Do(_ => throw new System.InvalidOperationException("sweep failed"));
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_brut_p1", 10);
+        _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
+            id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
+            description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.PartySize, 5f),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive,
+            description: "", iconSprite: "", passive: null, mutations: null));
+
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(5f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.PartySize), 0.001f);
+        _logger.Received(1).LogWarning(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -276,6 +350,21 @@ public class CareerPassiveServiceTests
     }
 
     [TestMethod]
+    public void ApplyFlat_AfterTheAiScaling_IsWorthItsLiteralCount()
+    {
+        // 100 * (1 + 0.025 + 2) = 302.5; +4 divided by the 3.025 frame lands as exactly 4 bodies.
+        // The order the model uses: every AddFactor first, ApplyFlat last (#768).
+        GivenPartySizePassive(4f);
+        var result = new ExplainedNumber(100f);
+        result.AddFactor(0.025f);
+        AiPartySizeService.ApplyPartySizeScaling(ref result, 3f, 0f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.PartySize);
+
+        Assert.AreEqual(306.5f, result.ResultNumber, 0.01f, "302.5 + 4 literal bodies");
+    }
+
+    [TestMethod]
     public void ApplyFlat_NoFactors_IsUnchangedByTheResultFrameConversion()
     {
         // The Health call site (TaomCharacterStatsModel) runs on a factor-free ExplainedNumber:
@@ -300,6 +389,69 @@ public class CareerPassiveServiceTests
 
         Assert.AreEqual(0f, result.ResultNumber, 0.01f);
         Assert.IsFalse(float.IsNaN(result.ResultNumber), "a cancelled frame must not poison the number");
+    }
+
+    private void GivenHeroHealingPassive(float magnitude)
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_heal_p1", 10);
+        _registry.GetChoice("wb_heal_p1").Returns(new CareerChoiceDefinition(
+            id: "wb_heal_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
+            description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.HeroHealing, magnitude),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive,
+            description: "", iconSprite: "", passive: null, mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+    }
+
+    private int CareerPerkLines() => _logger.ReceivedCalls()
+        .Count(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo)
+            && ((string)c.GetArguments()[0]).StartsWith("[CareerPerks]"));
+
+    // HeroHealing runs twice per in-game hour for the main party and each upgrade row asks for
+    // TroopUpgradeCost as it builds: the event-scoped line is written once per distinct set of numbers.
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_SameNumbersWriteOneLine()
+    {
+        GivenHeroHealingPassive(0.10f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            var result = new ExplainedNumber(100f);
+            _service.ApplyFactor("hero1", ref result, PassiveEffectType.HeroHealing);
+            Assert.AreEqual(110f, result.ResultNumber, 0.01f, "the dedupe silences the line, never the factor");
+        }
+
+        Assert.AreEqual(1, CareerPerkLines());
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_DifferentNumbersWriteAnotherLine()
+    {
+        GivenHeroHealingPassive(0.10f);
+
+        var first = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref first, PassiveEffectType.HeroHealing);
+        var second = new ExplainedNumber(200f);
+        _service.ApplyFactor("hero1", ref second, PassiveEffectType.HeroHealing);
+
+        Assert.AreEqual(2, CareerPerkLines());
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_RefreshLogsAgain()
+    {
+        GivenHeroHealingPassive(0.10f);
+        var first = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref first, PassiveEffectType.HeroHealing);
+
+        _service.RefreshCache(_dataService, _registry);
+        var second = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref second, PassiveEffectType.HeroHealing);
+
+        Assert.AreEqual(2, CareerPerkLines());
     }
 
     [TestMethod]
@@ -380,6 +532,26 @@ public class CareerPassiveServiceTests
 
         Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
         Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_BluntPip_AppliesToBluntHitsOfEitherDeliveryOnly()
+    {
+        // #613: a kind-masked pip matches on the kind axis whatever the delivery, and stays out of
+        // a hit of another kind.
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_blunt", 10);
+        _registry.GetChoice("wb_blunt").Returns(new CareerChoiceDefinition(
+            id: "wb_blunt", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.06f, attackTypeMask: AttackTypeMask.Blunt),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.06f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt), 0.001f);
+        Assert.AreEqual(0.06f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Ranged | AttackTypeMask.Blunt), 0.001f);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Cut), 0.001f);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee), 0.001f);
     }
 
     [TestMethod]

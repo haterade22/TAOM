@@ -12,8 +12,8 @@
     <string id="taom_career_captain_of_osgiliath_desc" text="Закалённый в боях пехотный офицер, командующий передовой обороной Гондора на руинах Осгилиата, создающий порядок из хаоса в жестоких городских боях. Капитан держит рубеж там, где другие бы отступили, вдохновляя солдат чистой силой воли." />
     <string id="taom_career_knight_of_belfalas" text="Рыцарь Белфаласа" />
     <string id="taom_career_knight_of_belfalas_desc" text="Закованный в броню воин прибрежного удела Белфалас, чей громоподобный натиск разбивал бесчисленные вражеские строи. Рыцарь Белфаласа сочетает гондорскую дисциплину с гордыми кавалерийскими традициями Дол Амрота, становясь несокрушимой стеной из стали." />
-    <string id="taom_career_black_uruk_captain" text="Капитан чёрных uruков" />
-    <string id="taom_career_black_uruk_captain_desc" text="Железномускулистый воин Мордора, ведущий военные отряды чёрных uruков в прорыв, принимающий удары, что свалили бы меньших воинов, и переламывающий ход битвы грубой жестокой мощью." />
+    <string id="taom_career_black_uruk_captain" text="Black Uruk Captain" />
+    <string id="taom_career_black_uruk_captain_desc" text="An iron-muscled champion of Mordor who leads Black Uruk warbands into the breach, absorbing punishment that would fell lesser warriors and turning the tide through sheer brutish dominance." />
     <string id="taom_career_mulkerhili_cultist" text="Культист Мулкерхили" />
     <string id="taom_career_mulkerhili_cultist_desc" text="Фанатичный приверженец нашёптываний Единого Кольца, направляющий ужас голоса Саурона на разрушение вражеской решимости, сочетающий проклятую стрельбу из лука с безумным присутствием, разрушающим волю к сопротивлению." />
     <string id="taom_career_snaga_rider" text="Всадник Снага" />
@@ -89,7 +89,7 @@
     <string id="taom_career_warg_scout" text="Варговый разведчик" />
     <string id="taom_career_warg_scout_desc" text="Хитрый урук-всадник на быстром варге, разведывающий путь для армий Изенгарда и настигающий бегущую добычу." />
     <string id="taom_career_cave_troll_master" text="Повелитель пещерных троллей" />
-    <string id="taom_career_cave_troll_master_desc" text="Жестокий вождь орков, командующий пещерными троллями в бою, погоняя их кнутом и хитростью." />
+    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning." />
     <string id="taom_career_goblin_sniper" text="Гоблин-снайпер" />
     <string id="taom_career_goblin_sniper_desc" text="Злобный гоблин-стрелок, скрывающийся в горных расселинах и сражающий цели отравленными дротиками и грубыми луками." />
     <string id="taom_career_warg_pack_leader" text="Вожак варговой стаи" />
@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+9 к максимальному здоровью." />
     <string id="taom_kob_t3b_p3" text="+20% к урону конной атаки." />
     <string id="taom_kob_t3b_p4" text="+12% к сопротивлению войск." />
-    <string id="taom_buc_root_desc" text="Тёмная Стойкость даёт +6 к здоровью и усиливает боевую ярость Чёрных Uruков." />
+    <string id="taom_buc_root_desc" text="Dark Fortitude grants +6 health and emboldens Black Uruk battle-rage." />
     <string id="taom_buc_t1_a_key" text="Железная Шкура" />
     <string id="taom_buc_t1_a_key_desc" text="Закалённая в кузне и войне, твоя шкура отражает клинки. Радиус Кровавой Ярости +3." />
     <string id="taom_buc_t1_a_p1" text="Безжалостная Атака" />
@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Бессмертная Стража" />
     <string id="taom_ws_t3_a_p2_desc" text="Дозор никогда не кончается. +9 здоровья." />
     <string id="taom_ws_t3_a_p3" text="Командир Гарнизона" />
-    <string id="taom_ws_t3_a_p3_desc" text="Ваш гарнизон пополняется добровольцами. +4 размер отряда." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Слава Защитника" />
     <string id="taom_ws_t3_a_p4_desc" text="Победа в обороне приносит великую честь. +12% получение славы в бою." />
     <string id="taom_ws_t3_b_key" text="Вечно Бдительный" />

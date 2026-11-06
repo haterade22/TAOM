@@ -25,6 +25,7 @@ public class ServiceStatusServiceTests
     private ICommanderLordAdapter _commander;
     private IServiceStatusTextWriter _writer;
     private IEnlistmentContentConfigProvider _config;
+    private IEnlistmentWagePreview _wagePreview;
     private IHeroSkillXpAdapter _skillXp;
     private PromotionService _promotion;
     private ServiceStatusService _sut;
@@ -39,6 +40,11 @@ public class ServiceStatusServiceTests
         _writer = Substitute.For<IServiceStatusTextWriter>();
         _config = Substitute.For<IEnlistmentContentConfigProvider>();
         _config.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
+        // What service pays today: the rank's table wage, as ServiceRewardService.GetDailyWage answers it.
+        _wagePreview = Substitute.For<IEnlistmentWagePreview>();
+        _wagePreview.GetDailyWage().Returns(_ => WagePolicy.DailyWageForRank(
+            (int)_content.Record.Rank, EnlistmentContentConfigProvider.BuildDefaults().Progression.DailyWageByRank));
+        _config.GetDuties().Returns(new EnlistmentDutiesConfig());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
 
         // A REAL PromotionService on purpose. Substituting it here would stub out the exact seam
@@ -51,16 +57,18 @@ public class ServiceStatusServiceTests
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1";
 
-        _sut = new ServiceStatusService(_store, _content, _commander, _writer, _promotion, _config);
+        _sut = new ServiceStatusService(_store, _content, _commander, _writer, _promotion, _config, _wagePreview);
     }
 
     private void Commander(
         bool inMapEvent = false, bool besieging = false,
-        string settlementId = null, string settlementName = null, bool alive = true)
+        string settlementId = null, string settlementName = null, bool alive = true,
+        bool raiding = false)
     {
         _commander.GetSnapshot("lord_1").Returns(new CommanderSnapshot(
             exists: true, isAlive: alive, partyId: "lord_party", partyIsActive: true,
             partyIsInMapEvent: inMapEvent, partyIsBesieging: besieging,
+            partyIsRaiding: raiding,
             partyIsInSettlement: !string.IsNullOrEmpty(settlementId),
             settlementId: settlementId, settlementName: settlementName,
             name: "Boromir"));
@@ -112,6 +120,16 @@ public class ServiceStatusServiceTests
         Assert.AreEqual(CommanderActivity.InBattle, _sut.Build().Activity);
     }
 
+    [DataTestMethod]
+    [DataRow(true, CommanderActivity.Raiding, DisplayName = "raiding -> Raiding")]
+    [DataRow(false, CommanderActivity.InBattle, DisplayName = "in a battle, not raiding -> InBattle")]
+    public void Build_RaidingOutranksBattle(bool raiding, CommanderActivity expected)
+    {
+        // #831: a column raiding a village is not "engaged"; a commander in any other battle still is.
+        Commander(inMapEvent: true, raiding: raiding);
+        Assert.AreEqual(expected, _sut.Build().Activity);
+    }
+
     [TestMethod]
     public void Build_SiegeOutranksSettlement()
     {
@@ -154,6 +172,15 @@ public class ServiceStatusServiceTests
         _content.Record.Rank = ServiceRank.Veteran;
 
         Assert.AreEqual(14, _sut.Build().DailyWage);
+    }
+
+    [TestMethod]
+    public void Build_DailyWage_IsWhatServicePaysToday_NotTheRanksTableWage()
+    {
+        _content.Record.Rank = ServiceRank.Sergeant;
+        _wagePreview.GetDailyWage().Returns(0);
+
+        Assert.AreEqual(0, _sut.Build().DailyWage, "while the column is lost nothing is paid, and the board must not promise it");
     }
 
     [TestMethod]
@@ -345,6 +372,32 @@ public class ServiceStatusServiceTests
         Assert.IsTrue(_sut.RefreshIfChanged());
         _writer.ReceivedWithAnyArgs(1).Write(default);
     }
+
+    [TestMethod]
+    public void Build_ActiveFieldDuty_CarriesTheLoadedRowsOwnTitle()
+    {
+        _config.GetDuties().Returns(new EnlistmentDutiesConfig
+        {
+            FieldDuties = { new DutyDefinition { Id = "recon_sweep", Title = "{=taom_enlist_duty_recon_sweep_title}a reconnaissance sweep" } },
+        });
+        _content.Record.ActiveDutyId = "recon_sweep";
+
+        var model = _sut.Build();
+
+        Assert.AreEqual("recon_sweep", model.ActiveDutyId);
+        Assert.AreEqual("{=taom_enlist_duty_recon_sweep_title}a reconnaissance sweep", model.ActiveDutyTitle);
+    }
+
+    [TestMethod]
+    public void Build_ActiveDutyWhoseRowIsGone_CarriesTheComposedFallback_AndNoDutyHasNone()
+    {
+        _content.Record.ActiveDutyId = "removed_duty";
+        Assert.AreEqual("{=taom_enlist_duty_removed_duty_title}a task for the company", _sut.Build().ActiveDutyTitle);
+
+        _content.Record.ActiveDutyId = null;
+        Assert.IsNull(_sut.Build().ActiveDutyTitle);
+    }
+
 }
 
 /// <summary>
@@ -382,6 +435,7 @@ public class ServiceStatusModelEqualityTests
     [DataRow("nextRank")]
     [DataRow("nextRequirementKey")]
     [DataRow("nextRequirementTarget")]
+    [DataRow("activeDutyTitle")]
     public void Equals_IsFalse_WhenAnySingleFieldDiffers(string field)
     {
         var other = new ServiceStatusModel(
@@ -398,7 +452,8 @@ public class ServiceStatusModelEqualityTests
             dailyWage: field == "dailyWage" ? 14 : 8,
             nextRank: field == "nextRank" ? ServiceRank.Sergeant : ServiceRank.Veteran,
             nextRequirementKey: field == "nextRequirementKey" ? "leadership" : "xp",
-            nextRequirementTarget: field == "nextRequirementTarget" ? 800 : 350);
+            nextRequirementTarget: field == "nextRequirementTarget" ? 800 : 350,
+            activeDutyTitle: field == "activeDutyTitle" ? "{=taom_enlist_duty_recon_sweep_title}a reconnaissance sweep" : null);
 
         Assert.IsFalse(Base().Equals(other), $"'{field}' is missing from Equals — its changes would never reach the screen");
     }
@@ -413,6 +468,7 @@ public class ServiceStatusModelEqualityTests
     [DataRow("nextRank")]
     [DataRow("nextRequirementKey")]
     [DataRow("nextRequirementTarget")]
+    [DataRow("activeDutyTitle")]
     public void GetHashCode_Differs_WhenANewFieldDiffers(string field)
     {
         var other = new ServiceStatusModel(
@@ -423,7 +479,8 @@ public class ServiceStatusModelEqualityTests
             dailyWage: field == "dailyWage" ? 14 : 8,
             nextRank: field == "nextRank" ? ServiceRank.Sergeant : ServiceRank.Veteran,
             nextRequirementKey: field == "nextRequirementKey" ? "leadership" : "xp",
-            nextRequirementTarget: field == "nextRequirementTarget" ? 800 : 350);
+            nextRequirementTarget: field == "nextRequirementTarget" ? 800 : 350,
+            activeDutyTitle: field == "activeDutyTitle" ? "{=taom_enlist_duty_recon_sweep_title}a reconnaissance sweep" : null);
 
         Assert.AreNotEqual(Base().GetHashCode(), other.GetHashCode(), $"'{field}' is missing from GetHashCode");
     }

@@ -10,11 +10,9 @@ public interface IQuickActionsSettingsProvider
     DamagedQualityPreset DamagedPreset { get; }
     float CustomDamagedThreshold { get; }
     bool UseCustomThreshold { get; }
-    bool SellDamagedEquipped { get; }
     bool ExcludeDamagedHorses { get; }
 
     int LowValueThreshold { get; }
-    bool SellLowValueEquipped { get; }
     bool ExcludeLowValueFood { get; }
     bool ExcludeLowValueHorses { get; }
     bool ExcludeLowValueTradeGoods { get; }

@@ -18,7 +18,8 @@ public interface ITroopWeightService
     /// member COUNT (which polluted every count display), heavy troops now SHRINK the party-size limit by
     /// their weight surplus, so counts read raw everywhere while the recruit cap still fills at the troop
     /// weight. Subtracts <c>ceil(weightedCount) − rawCount</c> from <paramref name="limit"/> (clamped so
-    /// the limit stays ≥ 1). No-op when <c>EnableTroopWeight</c> is off or the party is light. Gated +
+    /// the limit stays ≥ 1). No-op when <c>EnableTroopWeight</c> is off, the party is light, or it is a
+    /// garrison or a patrol (<see cref="TroopWeightPenaltyScope"/>, 2026-10-16). Gated +
     /// engine-touching (mirrors <see cref="CalculateWeightedMemberCount"/>); the clamp math is the pure,
     /// unit-tested <see cref="TroopWeightService.ComputeSizePenalty"/>.
     /// </summary>

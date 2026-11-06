@@ -38,7 +38,7 @@ public class CareerPerkOffThreadTests
             Substitute.For<ICareerAbilityService>(),
             Substitute.For<IAbilityActivationController>(),
             Substitute.For<IAbilityEffectExecutor>(),
-            Substitute.For<ICareerPassiveService>(),
+            Substitute.For<ICareerAgentStatService>(),
             Substitute.For<ICareerConfigProvider>(),
             Substitute.For<IModLogger>());
         _sut.OnMissionTick(0.01f); // the behavior marks the main thread itself

@@ -88,7 +88,7 @@ Substance. The path (`tools/oneoff/blender_prep_tripo_prop.py` — named
    staging dir catches seam garbage before any editor time.
 4. `convert_tripo_prop_textures.py` packs the plain maps into the `t_<stem>_{d,n,s}` triple —
    and is the **Substance round-trip**: paint on the prepped FBX, export plain PBR PNGs, re-run
-   with `--src <export dir>`. Normal-map relief direction stays smoke-test-arbitrated
+   with `--src <export dir> --dst <textures dir>` (both required; an existing output is replaced only with `--force`). Normal-map relief direction stays smoke-test-arbitrated
    (`--flip-green`).
 
 **Multi-million-tri variant (Gondor harbor ships, 2026-07-28):** Tripo "detailed" exports run

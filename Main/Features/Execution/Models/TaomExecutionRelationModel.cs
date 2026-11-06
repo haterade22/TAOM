@@ -18,22 +18,18 @@ public class TaomExecutionRelationModel : DefaultExecutionRelationModel
 
     public override int GetRelationChangeForExecutingHero(Hero victim, Hero hero, out bool showQuickNotification)
     {
-        // Boundary: convert sealed TaleWorlds heroes to participants + compute the vanilla baseline.
-        // Executor and victim prefer the snapshot taken before the kill mutated them; the evaluator
-        // is untouched by the kill, so it is always read live.
+        // Boundary: one id-and-culture pair per entity (FactionSides: the clan's map faction with that
+        // faction's own culture) + the vanilla baseline. Executor and victim prefer the snapshot taken
+        // before the kill mutated them; the evaluator is untouched by the kill, so it is always read live.
         int baseDelta = base.GetRelationChangeForExecutingHero(victim, hero, out bool baseShowNotification);
-        var executor = ExecutionContext.ResolveExecutor(
-            _playerContext.GetPlayerKingdomId(),
-            _playerContext.GetPlayerCultureId());
-        var victimParticipant = ExecutionContext.ResolveVictim(
-            victim?.Clan?.Kingdom?.StringId,
-            victim?.Culture?.StringId);
-        var evaluator = new ExecutionParticipant(hero?.Clan?.Kingdom?.StringId, hero?.Culture?.StringId);
+        var executor = ExecutionContext.ResolveExecutor(_playerContext.GetPlayerSideIds());
+        var victimSide = ExecutionContext.ResolveVictim(FactionSides.OfHero(victim));
+        var evaluator = FactionSides.OfHero(hero);
 
         // Delegate: all decisions live in IExecutionRelationService.
         var result = _service.GetRelationModifier(
             executor,
-            victimParticipant,
+            victimSide,
             evaluator,
             baseDelta,
             baseShowNotification);

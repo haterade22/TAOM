@@ -27,6 +27,10 @@ letter into new code.
 | `BANNERLORD_GAME_DIR` | Windows user env var (`setup-dev-env.ps1` writes it) | `tools/_gamedir.py`, so every validator and data tool; `Directory.Build.props`, so the build |
 | `TAOM_DECOMPILE_ROOT` | Windows user env var | `tools/check_handbook_attributes.py`. Point it at the **category tree**, e.g. `C:\Decompiled_Bannerlord\_categories_v1.4.8` |
 | `TAOM_PYBIN` | `.claude/settings.json` env block | `.claude/hooks/_pybin.sh`. The same value works on both machines because Python lives at `C:\Python314` on each; a stale pin degrades to discovery rather than failing |
+| `GHIDRA_INSTALL_DIR` | Windows user env var, desktop only | `tools/native_decompile.py` and PyGhidra (see "Ghidra" below) |
+| `TAOM_GHIDRA_PYTHON` | optional; unset on the desktop | `tools/native_decompile.py`: the interpreter that has PyGhidra, default `E:\Tools\ghidra-venv\Scripts\python.exe` |
+| `TAOM_GHIDRA_PROJECTS` | Windows user env var on the laptop; the desktop uses the default | `tools/native_decompile.py`, `native_build_match.py` and `native_archive.py`: the folder for Ghidra projects, engine-method maps and matcher indexes, default `E:\ghidra\TAOM` |
+| `TAOM_NATIVE_ARCHIVE` | Windows user env var on the laptop (for example `C:\Decompiled_Bannerlord\_native`) | `tools/native_archive.py`: the native DLL archive, default `E:\Decompiled_Bannerlord\_native` |
 
 **Three things ignore all of that** and need the path passed by hand:
 
@@ -60,6 +64,10 @@ public Armory not yet installed, and `TAOM_Map` at `v2.0.27`: on the merged `ban
 programme; per-code counts in `plans/README.md`): the data half is owed until the public Armory is
 installed, and no item verdict rests on it. A laptop result above it still deserves a look.
 
+WP108 Step B4 (2026-11-05) adds the collision-body passes, which read 3 `COLLISION_BODY_BORROWED` on
+this Armory, so the same run now prints 3771 errors: 3768 `BROKEN_ITEM_REF` plus those 3, void under
+D20, with warnings unchanged at 120. Compare later runs with 3771, not 3768.
+
 Before believing a content failure, check that the module it points into is actually populated. The
 cheap version is a file count under `Modules\<name>\ModuleData`; a handful of files where there
 should be hundreds is the answer. `validate_moduledata.py` prints which extra roots it swept, so
@@ -86,6 +94,30 @@ Known gaps on the laptop, both deliberate:
   import fails, so `/security-scan` still runs, minus that one pass.
 - **Blender** is absent, so creature-animation work (`/refine-creature-anim`, the Blender MCP,
   `tools/dump_engine_skeleton.ps1` round trips) has to happen on the desktop.
+
+## Ghidra, desktop only (installed 2026-09-26, #688)
+
+`tools/native_decompile.py` needs all of this; the procedure it serves is `/native-crash-triage`, once the plan 137 skill edits land.
+
+| Piece | Where | Why it is set up this way |
+|---|---|---|
+| Ghidra 12.1.4 | `E:\Tools\ghidra_12.1.4_PUBLIC` (zip, SHA-256 checked); user env `GHIDRA_INSTALL_DIR` points here | 12.1.4 patches the three advisories an analyst can reach ([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md)) |
+| Temurin JDK 25.0.4.1 | `E:\Tools\jdk-25.0.4.1+1` (zip) | Ghidra needs 25. Selected by `JAVA_HOME_OVERRIDE` in `support\launch.properties`; the machine's Java 8 stays first on PATH, and `JAVA_HOME` is untouched |
+| PyGhidra 3.1.0 with JPype 1.5.2, and capstone 5.0.9 | venv `E:\Tools\ghidra-venv`, made with `py -3.13 -m venv`, installed offline with `pip install --no-index -f <ghidra>\Ghidra\Features\PyGhidra\pypkg\dist pyghidra`; capstone from its `py3-none-win_amd64` wheel | PyGhidra pins JPype 1.5.2, which has no wheel for the system Python 3.14. The tool re-runs itself under this venv, so the command stays `python tools/native_decompile.py`; the engine-method map needs capstone there too |
+| Ghidra's settings, cache and temp directories | `E:\ghidra\user\{settings,cache,temp}`, set by three `VMARGS` lines in `support\launch.properties` | The 3.13 is the Microsoft Store build, which redirects `AppData` writes into its package folder; the JVM runs inside that process, and Ghidra's OSGi bundle host fails on the redirected paths |
+| Analysed projects | `E:\ghidra\TAOM\<build folder>-<sha256[:16]>`, with `<key>.engine-methods.json` beside each | One per distinct binary. The v1.5.3 client DLL (14 MB): 213 s to analyse once, a 212 MB project, then 3 to 5 s per run |
+
+A reinstall of Ghidra has to repeat the four `launch.properties` edits (`JAVA_HOME_OVERRIDE` and the
+three directory lines).
+
+On the laptop none of this is installed (checked 2026-11-04: `GHIDRA_INSTALL_DIR` unset, and neither
+procdump nor WinDbgX on PATH), so `tools/native_decompile.py` exits 2 there naming this page and
+`/native-crash-triage` falls back to hand-decoding the disassembly. The engine-method map and
+`tools/native_build_match.py` need only capstone and `ilspycmd`, which the laptop has, so they run there
+with `TAOM_GHIDRA_PROJECTS` set (verified 2026-11-04 on v1.4.8: 2,261 engine methods mapped with no
+one-sided id, and a client-to-wEditor oracle with 0 wrong).
+
+**TpacTool** (the PowerShell tpac tools) is set up on the desktop; the laptop has not been checked. They load ShortJake's TpacTool v0.5.1 (MIT, .NET Framework 4.6.2) from `E:\Release_v0.5.1\bin` by default (`-TpacToolBin`), since the old `E:\Bannerlord_Art\TpacTool_0.4.0` was found gone (2026-10-14, 1.5.x line). Unblock the folder once after a fresh download: the zip's Internet zone mark makes .NET Framework refuse the DLLs (`0x80131515` in Windows PowerShell 5.1; pwsh ignores it).
 
 ## Writing docs and tools on either machine
 

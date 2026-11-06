@@ -6,7 +6,8 @@ namespace TAOM.Features.CoopInterop;
 /// Split out from <see cref="CoopSessionProvider"/> for the same reason
 /// <c>PatchShieldPolicy</c> / <c>SaveShieldPolicy</c> are split from their installers: the provider
 /// binds to BannerlordCoop's assemblies by reflection and cannot run in a test host, but the
-/// decision itself is three booleans and must be pinned exactly.
+/// decision itself is three booleans and must be pinned exactly. Every member is pure over its arguments; the one
+/// exception, <see cref="IsSinglePlayerAuthority"/>, reads the two providers it is handed, live on each call.
 ///
 /// WHY THIS EXISTS — BannerlordCoop does NOT stop a client ticking the campaign. Its
 /// <c>PartyTickPatch</c> blocks only the per-entity tickers (<c>TickPeriodicEvents</c>,
@@ -102,4 +103,14 @@ public static class CoopSessionPolicy
     /// reward mutated the host's event record (Codex review 2026-08-01, HIGH).
     /// </summary>
     public static bool MayWriteSaveBackedState(bool isCoopClient) => !isCoopClient;
+
+    /// <summary>
+    /// The single-player predicate of TAOM's world-writing features: no live co-op session, no co-op mod TAOM cannot probe,
+    /// no dedicated server, and a peer that may write the world. The authority term is defense in depth: with the real provider
+    /// <c>!IsSessionActive</c> already implies <c>IsAuthority</c>. Three-term forms (without it) exist in other features and
+    /// are equivalent in practice. Read the providers live on every call
+    /// (<see cref="ICoopSessionProvider"/>'s contract), so call this at each use and never cache the result.
+    /// </summary>
+    public static bool IsSinglePlayerAuthority(ICoopSessionProvider coop, IDedicatedServerProvider dedicated) =>
+        !coop.IsSessionActive && !coop.ShouldDeferToHost && !dedicated.IsDedicatedServer && coop.IsAuthority;
 }

@@ -63,6 +63,8 @@ own `0Harmony`.
 | `SaveDefinerCollisionDetector` / `Guard` / `SaveDefinerRecord` | Base-id preflight and crash attribution. **Heuristic** — the engine keys on `_saveBaseId + saveId`, so a shared base is legal; engine-only groups are dropped and the rest warn rather than assert. [RCA](../reviews/rca-savedefiner-false-positive-2026-08-01.md). |
 | `Diagnostics/HarmonyCensus*` | Runtime patch-overlap report — the sanctioned substitute for reading another mod's binary. |
 
+`GameNetwork.IsSessionActive` is none of these and reads false in a co-op battle: it answers from `MBCommon.CurrentGameType` (v1.4.8 `GameNetwork.cs:381-391`), and BannerlordCoop never sets a multiplayer game type (no `CurrentGameType` in its source, read at `4ad976c8c`). For online play ask `ICoopSessionProvider.IsSessionActive` as well.
+
 Other half in `Dependencies/Foundation/`: `CoopPresence`, `CoopModuleList`, and the `PatchShield` /
 `SaveShield` co-op inversions.
 
@@ -308,13 +310,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **271** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **269** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 233 in `TaomSettings`, 27 in `BattleLoadDiagnosticsSettings`, 10 in
+  the split is 231 in `TaomSettings`, 27 in `BattleLoadDiagnosticsSettings`, 10 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **183 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 183 are in
-  `TaomSettings`. The 88 excluded (total minus relevant) are instrumentation, player-local inventory convenience,
+  `TaomSettings`. The 86 excluded (total minus relevant) are instrumentation, player-local inventory convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.

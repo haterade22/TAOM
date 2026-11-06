@@ -94,7 +94,7 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
         _sampleClock = 0f;
 
         var main = Mission.MainAgent;
-        if (main == null || !main.IsActive())
+        if (main == null || !main.IsActive() || main.Character != CharacterObject.PlayerCharacter)
         {
             if (_downSince < 0f)
             {
@@ -109,7 +109,7 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
-        if (!_active || affectorAgent == null || !affectorAgent.IsMainAgent)
+        if (!_active || affectorAgent == null || affectorAgent.Character != CharacterObject.PlayerCharacter)
             return;
         // OnAgentRemoved is native's to place and was caught off the main thread (#634): two removals at
         // once must not lose a kill.

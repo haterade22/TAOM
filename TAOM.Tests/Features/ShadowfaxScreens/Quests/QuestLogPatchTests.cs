@@ -312,6 +312,8 @@ public class QuestLogPatchTests
 
     public JournalLog? StandInResult;
 
+    // Harmony patches this stand-in; a Release JIT would inline it past the patch (the managed-tests gate).
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public JournalLog? GetJournalLogAt(QuestItemVM questItem, StandInIndex logIndex) => StandInResult;
 
     private void PatchSortPostfix()

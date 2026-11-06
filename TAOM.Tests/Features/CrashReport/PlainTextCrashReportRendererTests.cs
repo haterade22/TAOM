@@ -8,6 +8,9 @@ namespace TAOM.Tests.Features.CrashReport;
 [TestClass]
 public class PlainTextCrashReportRendererTests
 {
+    private const string TestBuildStamp =
+        "v2.0.0.0 build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty";
+
     [TestMethod]
     public void Render_MinimalContext_ProducesAllSections()
     {
@@ -35,6 +38,15 @@ public class PlainTextCrashReportRendererTests
         Assert.IsTrue(text.Contains("--- Performance ---"));
         Assert.IsTrue(text.Contains("--- Logs ---"));
         Assert.IsTrue(text.Contains("--- Collector failures ---"));
+    }
+
+    [TestMethod]
+    public void Render_Identity_PrintsTheTaomBuildStamp()
+    {
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext());
+
+        StringAssert.Contains(text, "Build:      " + TestBuildStamp,
+            "the build stamp names the exact commit and whether the tree was dirty");
     }
 
     [TestMethod]
@@ -165,12 +177,36 @@ public class PlainTextCrashReportRendererTests
         SysCommitUsedMb: 29847, SysCommitLimitMb: 31646,
         AvailPhysMb: 310, TotalPhysMb: 16296, MemLoadPercent: 97);
 
+    // The bundle carries diag.log as a file, but report.txt is what a triager actually reads first,
+    // and the whole reason diag.log was added is that PatchShield's swallowed-exception lines are the
+    // signature of a build running against the wrong Bannerlord. Rendering the file into the report
+    // is the part that makes it findable; MakeMinimalContext leaves the diag fields empty, so without
+    // this test the populated branch was never exercised.
+    [TestMethod]
+    public void Render_WithDiagLogContent_SurfacesThePathAndTheSwallowedExceptions()
+    {
+        var ctx = MakeMinimalContext() with
+        {
+            Logs = new LogTailSnapshot(
+                null, System.Array.Empty<string>(),
+                null, System.Array.Empty<string>(),
+                @"C:\Modules\TAOM.Dependencies\diag.log",
+                new[] { "PatchShield swallowed MissingMethodException from a patch on Foo.Bar" }),
+        };
+
+        var text = new PlainTextCrashReportRenderer().Render(ctx);
+
+        StringAssert.Contains(text, "diag.log", "the diag log path belongs in the report a triager reads");
+        StringAssert.Contains(text, "MissingMethodException",
+            "the swallowed-exception tail is the engine-mismatch evidence and must not be dropped");
+    }
+
     private static ExceptionContext MakeMinimalContext()
     {
         return new ExceptionContext(
             CapturedAtUtc: DateTime.UtcNow,
             CrashSignature: "deadbeef",
-            Identity: new IdentitySnapshot("v1.4.5", "1.4.5.x", "v2.0.0", "sha1", "Some.Origin", "en-US"),
+            Identity: new IdentitySnapshot("v1.4.5", "1.4.5.x", "v2.0.0", "sha1", "Some.Origin", "en-US", TestBuildStamp),
             Exception: null,
             StackFrames: System.Array.Empty<StackFrameSnapshot>(),
             Harmony: new HarmonyCorrelationSnapshot(System.Array.Empty<StackFramePatchInfo>(), System.Array.Empty<HarmonyOwnerSummary>(), 0),
@@ -190,7 +226,7 @@ public class PlainTextCrashReportRendererTests
             AppDomain: new AppDomainSnapshot("Test", "C:\\test", null, true),
             EnvVars: System.Array.Empty<EnvVarEntry>(),
             Performance: new FrameTimingSnapshot(System.Array.Empty<float>(), 0d, 0d, 0),
-            Logs: new LogTailSnapshot(null, System.Array.Empty<string>(), null, System.Array.Empty<string>()),
+            Logs: new LogTailSnapshot(null, System.Array.Empty<string>(), null, System.Array.Empty<string>(), null, System.Array.Empty<string>()),
             CollectorFailures: System.Array.Empty<CollectorFailure>());
     }
 }

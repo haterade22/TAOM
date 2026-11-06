@@ -10,13 +10,11 @@ namespace TAOM.Features.Enlistment.Content;
 /// </summary>
 public interface IServiceRewardService
 {
-    /// <summary>Apply a reward spec: service XP + skill XP + minted gold + trust/relation/reputation.</summary>
+    /// <summary>Apply a reward spec: service XP + skill XP + minted gold + trust/relation/renown.</summary>
     void Grant(RewardSpec reward, string sourceLabel);
 
     /// <summary>Commander-funded daily wage per WagePolicy; mutates arrears in the content record.</summary>
     WageDecision PayDailyWage();
 
     void AdjustTrust(int delta);
-
-    void ApplyReputation(ReputationDomain domain, int amount);
 }

@@ -116,9 +116,9 @@ The mission behavior's apply-on-change needs a live `Mission` and is covered by 
 
 1. Custom Battle at the largest size with Unlimited ragdolls and corpses: the log shows `[BattleSettings] ... taomOverride=on fadeSeconds=60 corpseCap=25`, and bodies fade about 60 s after they settle.
 2. Toggle cleanup off mid-battle: a second `[BattleSettings]` line with `taomOverride=off`.
-3. **Does removing a corpse delete its agent?** Unverified from the native code. Watch `[MissionPerf]` `agents` against `active` as bodies fade. If `agents` falls with each fade, corpses held agent slots, reinforcements now arrive sooner (as MountDespawn records for mounts), and the MCM hint must say so. (needs `[MissionPerf]`, which arrives with WP117)
+3. **Does removing a corpse delete its agent?** Unverified from the native code. Watch `[MissionPerf]` `agents` against `active` as bodies fade. If `agents` falls with each fade, corpses held agent slots, reinforcements now arrive sooner (as MountDespawn records for mounts), and the MCM hint must say so.
 4. A town fight and a hideout keep their bodies (no `[BattleSettings]` line).
-5. Burst: cap 250, fade 300, wait for about 250 bodies, drop the fade to 10, then toggle cleanup off and on. Read `[MissionStall]` (and `[MissionPerf]` after WP117) around each change.
+5. Burst: cap 250, fade 300, wait for about 250 bodies, drop the fade to 10, then toggle cleanup off and on. Read `[MissionStall]` and `[MissionPerf]` around each change.
 6. With high options, the main menu offers the change once; Apply rewrites `number_of_ragdolls` in `engine_config.txt` and `NumberOfCorpses` in `BannerlordConfig.txt` (back both up first), and Options, Performance shows 5 and Low (25). Whether the ragdoll limit takes effect before a restart is unverified.
 7. Ragdolls 1 and corpses High: Apply keeps ragdolls at 1. Turn "Recommend Battle Settings" off and restart: no inquiry.
 8. After the translation run, one non-English language: the inquiry names the options as that language's Options screen does.

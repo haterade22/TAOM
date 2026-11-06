@@ -31,5 +31,8 @@ internal static class FeatureModules
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
         new Features.LostFooting.LostFootingModule(),
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
+        new Features.AlignmentRecruitment.AlignmentRecruitmentModule(),
+        new Features.Messengers.MessengerSessionRulesModule(),
+        new Features.TavernSpecialities.TavernSpecialitiesModule(),
     };
 }

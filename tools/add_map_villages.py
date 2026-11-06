@@ -12,11 +12,14 @@ small per-parent offset is written and the row is printed as PLACEHOLDER. That i
 the editor overwrites posX/posY from the entity on the next scene save; DO NOT start a campaign
 while a PLACEHOLDER row has no scene entity, SettlementVisual.OnStartup NREs at map load (#269).
 `--check` is the gate for that: it fails on any table id whose master row, loc row or scene entity
-is missing, or whose master position drifted from the scene transform.
+is missing, or whose master position drifted from the scene transform, or whose
+culture or bound differs from the table.
 
 Rows are inserted right after the row's own `after` anchor (default INSERT_AFTER) so a region's
-block stays contiguous; loc rows go after that anchor's last row in each language, same display
-name in all 12 (Tolkien proper nouns do not translate). `hearth` is per row too (default HEARTH):
+block stays contiguous; loc rows go after that anchor's last row in each language, with the English
+display name in all 12 (a later `translate_with_claude.py --module TAOM_Map` run translates or
+transliterates it). A name another settlement already carries is refused, and named by `--check`
+(name_collisions). `hearth` is per row too (default HEARTH):
 the #597 Gondor rows sit at 350 like their EW10/EW11 castle-village neighbours; the Isengard and
 Gundabad rows at those cultures' 500 floor. Idempotent per id: an id already in the master is skipped. Byte discipline per
 .claude/rules/moduledata-validation.md: binary read, each file's own BOM and newline preserved
@@ -28,10 +31,11 @@ Precedent: tools/add_bluecraig_castles.py (#270). Next batch: append rows to VIL
 Usage:
   python tools/add_map_villages.py            # dry run: prints the plan and each position's source
   python tools/add_map_villages.py --apply    # writes the live master + 12 loc files (+ backups)
-  python tools/add_map_villages.py --check    # exit 1 on any missing row / entity / drifted position
+  python tools/add_map_villages.py --check    # exit 1 on any missing row / entity / drifted position / culture or bound mismatch
 """
 import argparse
 import datetime
+import json
 import os
 import re
 import sys
@@ -49,6 +53,7 @@ MAP = GAME + r"/Modules/TAOM_Map"
 LIVE = MAP + r"/ModuleData/settlements.xml"
 SCENE = MAP + r"/SceneObj/Main_map/scene.xscene"
 LANGS = ["BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR"]
+CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "translation_cache")
 
 # Every VillageType id in the live file (21) plus the ones DefaultVillageTypes registers that TAOM
 # does not use yet. add_bluecraig_castles.py's copy omitted the five horse ranches.
@@ -173,6 +178,18 @@ def settlement_position(master_text, sid):
     return (m.group(1), m.group(2)) if m else None
 
 
+def master_attr(master_text, sid, attr):
+    """The value of `attr` on the <Settlement id="sid"> open tag, or None (absent row or absent attribute)."""
+    m = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'[^>]*?\s' + re.escape(attr) + r'="([^"]*)"', master_text)
+    return m.group(1) if m else None
+
+
+def master_village_bound(master_text, sid):
+    """The `bound` of the <Village> component inside <Settlement id="sid">, or None."""
+    m = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'(?:(?!</Settlement>).)*?<Village [^>]*?\sbound="([^"]*)"', master_text, re.S)
+    return m.group(1) if m else None
+
+
 def resolve_position(v, scene_text, master_text, k):
     """(posX, posY, source). source is 'scene' or 'PLACEHOLDER' (parent + offset for the k-th one)."""
     pos = scene_position(scene_text, v.id)
@@ -232,6 +249,58 @@ def insert_after_settlement(master_text, anchor_id, blocks):
     return master_text[:at] + "".join(blocks) + master_text[at:]
 
 
+def master_names(master_text):
+    """{settlement id: name} from each row's name= fallback, the English text every language starts from."""
+    return dict(re.findall(r'<Settlement id="([^"]+)"[^>]*?\sname="\{=[^}]*\}([^"]*)"', master_text))
+
+
+def name_collisions(rows, master_text):
+    """Findings for each (id, name) whose name a DIFFERENT settlement already carries in settlements.xml.
+
+    The tables check their names only against each other, so Harlond, Forlond and Edhellond each
+    named two settlements before #1039 (#1042). Case is ignored; a row is never its own collision.
+    """
+    taken = {}
+    for sid, name in master_names(master_text).items():
+        taken.setdefault(name.casefold(), []).append(sid)
+    findings = []
+    for sid, name in rows:
+        others = sorted(o for o in taken.get(name.casefold(), []) if o != sid)
+        if others:
+            findings.append(f"{sid}: the name {name!r} is already on the map ({', '.join(others)})")
+    return findings
+
+
+def evict_cached_names(ids_by_lang, cache_dir=CACHE_DIR, field="name"):
+    """Remove each settlement's `field` row (name, or text for a description) from tools/translation_cache/<lang>.json; returns {lang: removed}.
+
+    The cache keys on the string id alone (TRANSLATOR_GUIDE.md), so a name whose English changed keeps
+    its old translation there and the next translator run writes it back. A file is rewritten only when
+    a key goes, in its own shape: translate_with_claude.save_cache's dump options, its own newline and
+    its own final newline.
+    """
+    removed = {}
+    for lang, ids in ids_by_lang.items():
+        path = os.path.join(cache_dir, f"{lang.lower()}.json")
+        if not os.path.isfile(path):  # translate_with_claude.load_cache reads a missing file as an empty cache
+            removed[lang] = 0
+            continue
+        raw = open(path, "rb").read().decode("utf-8")
+        cache = json.loads(raw)
+        keys = [k for k in (f"Settlements.Settlement.{field}.{sid}" for sid in ids) if k in cache]
+        removed[lang] = len(keys)
+        if not keys:
+            continue
+        for k in keys:
+            del cache[k]
+        nl = "\r\n" if "\r\n" in raw else "\n"
+        text = json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True).replace("\n", nl)
+        if raw.endswith(nl):
+            text += nl
+        open(path, "wb").write(text.encode("utf-8"))
+    return removed
+
+
 def loc_row(sid, name):
     return f'    <string id="Settlements.Settlement.name.{sid}" text={quoteattr(name)} />'
 
@@ -255,12 +324,19 @@ def insert_loc_rows(loc_text, anchor_id, rows):
 
 
 def check(villages, master_text, scene_text, loc_texts, tolerance=0.01):
-    """Findings (strings) for any table id whose data is missing or whose position drifted."""
-    findings = []
+    """Findings (strings) for any table id whose data is missing, whose position drifted or whose name is taken,
+    or whose master culture or bound settlement differs from the table's."""
+    findings = name_collisions([(v.id, v.name) for v in villages], master_text)
     for v in villages:
         pos = settlement_position(master_text, v.id)
         if not pos:
             findings.append(f"{v.id}: no <Settlement> row in settlements.xml")
+        culture = master_attr(master_text, v.id, "culture")
+        if culture is not None and culture != f"Culture.{v.culture}":
+            findings.append(f"{v.id}: settlements.xml has culture={culture} but the table says Culture.{v.culture}")
+        bound = master_village_bound(master_text, v.id)
+        if bound is not None and bound != f"Settlement.{v.bound}" and settlement_position(master_text, v.bound):
+            findings.append(f"{v.id}: settlements.xml binds it to {bound} but the table says Settlement.{v.bound}")
         for lang, text in loc_texts.items():
             if f'id="Settlements.Settlement.name.{v.id}"' not in text:
                 findings.append(f"{v.id}: no loc row in Languages/{lang}/loc_settlements.xml")
@@ -294,7 +370,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # the names carry accents
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the live files (default: dry run)")
-    ap.add_argument("--check", action="store_true", help="verify every VILLAGES id is fully present and positioned; exit 1 otherwise")
+    ap.add_argument("--check", action="store_true", help="verify every VILLAGES id is fully present, positioned, and on its table culture and bound; exit 1 otherwise")
     args = ap.parse_args()
 
     for p in (LIVE, SCENE):
@@ -315,7 +391,7 @@ def main():
         if findings:
             print(f"\n{len(findings)} finding(s) across {len(VILLAGES)} table id(s).")
             return 1
-        print(f"OK: all {len(VILLAGES)} villages present in settlements.xml, all {len(locs)} loc files and scene.xscene; positions match.")
+        print(f"OK: all {len(VILLAGES)} villages present in settlements.xml, all {len(locs)} loc files and scene.xscene; positions, culture and bound match; no other settlement carries their names.")
         return 0
 
     loc_texts = {lang: text for lang, (_, text) in locs.items()}
@@ -326,6 +402,10 @@ def main():
     loc_plan = plan_loc_rows(VILLAGES, loc_texts)
 
     nl = detect_newline(master)
+    clashes = name_collisions([(v.id, v.name) for v in todo], master)
+    if clashes:
+        print("REFUSING: rename the row in VILLAGES first:\n  " + "\n  ".join(clashes), file=sys.stderr)
+        return 1
     blocks, placeholders, per_parent = {}, 0, {}
     print(f"Plan: +{len(todo)} village(s) ({len(VILLAGES) - len(todo)} already present)")
     for v in todo:

@@ -32,7 +32,9 @@ namespace TAOM.Features.TroopWeight.Hooks;
 /// <c>IsMainTroopsLimitWarningEnabled</c> / <c>IsOtherTroopsLimitWarningEnabled</c>. So those prompts now
 /// fire in the weighted frame. That is intended — a warning should key off the same cap the player is
 /// looking at — and the booleans are equivalent to vanilla's for every weight the mod ships, because
-/// <c>raw &gt; deflated ⟺ weighted &gt; base</c>. `WeightedFrameIdentityTests` pins that equivalence so a
+/// <c>raw &gt; deflated ⟺ weighted &gt; base</c> for a party that pays the penalty; a garrison or a patrol
+/// pays none (<see cref="TroopWeightPenaltyScope"/>), so its frames keep vanilla's raw text.
+/// `WeightedFrameIdentityTests` pins that equivalence so a
 /// future weight-table or clamp change cannot silently move a confirmation threshold. Nothing here
 /// changes an actual cap, a roster, or an AI decision.
 /// </para>
@@ -71,7 +73,8 @@ public class TroopWeightDisplayHook :
     /// </summary>
     private (int Used, int Limit)? Frame(PartyBase party)
     {
-        if (party?.MemberRoster == null)
+        // A party that pays no penalty (a garrison, a patrol) has an unweighted limit: vanilla's raw count is its truth.
+        if (party?.MemberRoster == null || !TroopWeightPenaltyScope.PaysSizePenalty(party))
             return null;
 
         int deflated = party.PartySizeLimit;
@@ -140,7 +143,7 @@ public class TroopWeightDisplayHook :
     private (string Label, bool IsOverCapacity)? BuildLabel(
         PartyBase party, MBBindingList<PartyCharacterVM> list, int screenLimit)
     {
-        if (party?.MemberRoster == null || list == null)
+        if (party?.MemberRoster == null || list == null || !TroopWeightPenaltyScope.PaysSizePenalty(party))
             return null;
 
         // A quest or custom party screen can pass a limit that is not the party's own. Restating it against

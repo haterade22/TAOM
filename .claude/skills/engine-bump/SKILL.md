@@ -88,7 +88,7 @@ NATIVE-internal; 1.4.8 moved 8 of 56 base-bin assemblies, 3 of those by build nu
 
 ## Phase 4 — Re-verify TAOM against the new engine
 
-1. **`/verify-bindings`** — every Harmony patch / GameModel / reflection site. Two things about the
+1. **`/verify-bindings`**: every Harmony patch / GameModel / reflection site / transpiler site (`TranspilerSiteBindingTests`) / `[ViewModelMixin]` refresh method (`ViewModelMixinBindingTests`). Two things about the
    snapshot half (`pwsh tools/snapshot_api_surface.ps1`): it reads `TAOM.dll` out of
    `TAOM.Tests/bin/{Debug,Release}/net472` and **throws if TAOM.Tests has not been built**, so build
    first; and `-Check` reports **DRIFT against the committed files by design** — the generator emits
@@ -134,9 +134,9 @@ NATIVE-internal; 1.4.8 moved 8 of 56 base-bin assemblies, 3 of those by build nu
    `ClipBudgetSignatureInstalledBinaryTests` and `SkeletonBufferInstalledBinaryTests`, pin the
    `TaleWorlds.Native.dll` addresses of the clip-budget pattern and of the skeleton buffer guard's
    patterns (the game finds them by pattern; only the tests pin). On a build with no row both read
-   Inconclusive: a skip in the default suite and, on 1.4.x, in the `TestCategory=BindingVerification`
-   gate too until plan 008's `TAOM.Tests/binding-gate.runsettings` (WP122) maps Inconclusive to
-   Failed, so read the skip count. `NativePinGateTests` keeps both classes tagged
+   Inconclusive: a skip in the default suite and a failure in the `TestCategory=BindingVerification`
+   gate, whose `TAOM.Tests/binding-gate.runsettings` maps Inconclusive to
+   Failed. `NativePinGateTests` keeps both classes tagged
    `BindingVerification` and named here. Add a row per build from a read-only scan of the installed
    DLL (its file length, then the RVAs the tests resolve), and check the first start's guard lines
    (Phase 5).

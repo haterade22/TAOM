@@ -53,7 +53,7 @@ public class WandererAllegianceServiceTests
     }
 
     private WandererHireVerdict Evaluate(string? heroId = GenericWanderer) =>
-        _sut.Evaluate(heroId, WandererCulture, PlayerKingdom, PlayerCulture);
+        _sut.Evaluate(heroId, WandererCulture, new SideIds(PlayerKingdom, PlayerCulture));
 
     // ---- the side matrix -----------------------------------------------------------------
 
@@ -146,6 +146,18 @@ public class WandererAllegianceServiceTests
     }
 
     [TestMethod]
+    public void Evaluate_PlayerWithNoSide_IsNeutralAndAllowedByAnEvilWanderer()
+    {
+        // FactionSides.OfPlayer() is SideIds.None outside a campaign; the real service reads the empty pair as Neutral.
+        var config = Substitute.For<IAlignmentConfigProvider>();
+        config.LoadAlignments().Returns(new Dictionary<string, string> { [WandererCulture] = "evil" });
+        var sut = new WandererAllegianceService(
+            new AlignmentService(config, Substitute.For<TAOM.Core.Logging.IModLogger>()), _settings, _named);
+
+        Assert.AreEqual(WandererHireVerdict.Allowed, sut.Evaluate(GenericWanderer, WandererCulture, SideIds.None));
+    }
+
+    [TestMethod]
     public void Evaluate_NeverCallsAreEnemyAlignments()
     {
         // AreEnemyAlignments treats Neutral as everyone's enemy, the opposite of what a pairing
@@ -164,7 +176,7 @@ public class WandererAllegianceServiceTests
         // A hero with no culture is nobody's enemy: fail open to vanilla rather than guess a side.
         _alignment.ResolveSide(PlayerKingdom, PlayerCulture).Returns(FactionSide.Evil);
 
-        var verdict = _sut.Evaluate(GenericWanderer, null, PlayerKingdom, PlayerCulture);
+        var verdict = _sut.Evaluate(GenericWanderer, null, new SideIds(PlayerKingdom, PlayerCulture));
 
         Assert.AreEqual(WandererHireVerdict.Allowed, verdict);
     }

@@ -3,7 +3,6 @@ using Bannerlord.UIExtenderEx.ViewModels;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade.View;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.CareerSystem.UI;
@@ -96,21 +95,5 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
                 OnPropertyChanged(nameof(UnspentPointsText));
             }
         }
-    }
-
-    public void ExecuteOpenCareerScreen()
-    {
-        _logger?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");
-
-        // Issue #378 — audible click. Same idiom as GauntletFiefManagementScreen:111;
-        // UISoundsHelper lives in TaleWorlds.MountAndBlade.View (Native module DLL).
-        UISoundsHelper.PlayUISound("event:/ui/default");
-
-        // Close CharacterDeveloper first — prevents
-        // GauntletMapBarGlobalLayer from ticking with invalid input context
-        if (ViewModel is CharacterDeveloperVM charDevVM)
-            charDevVM.ExecuteDone();
-
-        GauntletCareerScreen.OpenCareerScreen();
     }
 }

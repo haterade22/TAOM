@@ -33,7 +33,7 @@ public static class MapStateEnterMenuModePatch
             {
                 _faultLogged = true;
                 try { IoC.Resolve<IModLogger>().LogError($"[Enlistment] EnterMenuMode postfix failed (failing open): {ex.Message}"); }
-                catch { /* fail open */ }
+                catch { /* swallow-ok: the logger itself threw; the postfix still fails open */ }
             }
         }
     }

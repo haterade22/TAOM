@@ -66,11 +66,13 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
 
     private readonly IStaleCharacterAdapter _adapter;
     private readonly IModLogger _logger;
+    private readonly IOutcomeLog _outcomes;
 
-    public StaleCharacterRepairService(IStaleCharacterAdapter adapter, IModLogger logger)
+    public StaleCharacterRepairService(IStaleCharacterAdapter adapter, IModLogger logger, IOutcomeLog outcomes)
     {
         _adapter = adapter;
         _logger = logger;
+        _outcomes = outcomes;
     }
 
     public void ReportHollowHeroCharacters()
@@ -87,7 +89,7 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
         }
         catch (Exception ex)
         {
-            Swallowed(nameof(ReportHollowHeroCharacters), ex);
+            _outcomes.Swallowed("StaleCharacterRepair", nameof(ReportHollowHeroCharacters), ex);
         }
     }
 
@@ -100,17 +102,17 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
             var state = DescribeOrFallback(parent);
             if (!parent.TryRepairCharacter())
             {
-                Check(ParentRepairCheckId, "fail", state);
+                _outcomes.Fail(ParentRepairCheckId, parent.HeroId, state);
                 return false;
             }
 
-            Check(ParentRepairCheckId, "pass", state);
+            _outcomes.Pass(ParentRepairCheckId, parent.HeroId, state);
             return true;
         }
         catch (Exception ex)
         {
-            Swallowed(nameof(RepairOffspringParent), ex);
-            Check(ParentRepairCheckId, "fail", $"hero={parent.HeroId} threw={ex.GetType().Name}");
+            _outcomes.Swallowed("StaleCharacterRepair", nameof(RepairOffspringParent), ex);
+            _outcomes.Fail(ParentRepairCheckId, parent.HeroId, $"hero={parent.HeroId} threw={ex.GetType().Name}");
             return false;
         }
     }
@@ -118,9 +120,9 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     public void ReportBirthAfterRepair(string childId, Exception failure)
     {
         if (failure == null && !string.IsNullOrEmpty(childId))
-            Check(BirthCompletedCheckId, "pass", $"child={childId}");
+            _outcomes.Pass(BirthCompletedCheckId, childId, $"child={childId}");
         else
-            Check(BirthCompletedCheckId, "fail", $"threw={failure?.GetType().Name ?? "none"}");
+            _outcomes.Fail(BirthCompletedCheckId, string.Empty, $"threw={failure?.GetType().Name ?? "none"}");
     }
 
     private string DescribeOrFallback(IHeroCharacterStateAdapter hero)
@@ -128,7 +130,7 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
         try { return hero.DescribeState(); }
         catch (Exception ex)
         {
-            Swallowed("DescribeState", ex);
+            _outcomes.Swallowed("StaleCharacterRepair", "DescribeState", ex);
             return $"hero={hero.HeroId} state=unavailable";
         }
     }
@@ -239,34 +241,5 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     {
         try { _logger?.LogWarning($"[StaleCharacterRepair] {message}"); }
         catch { /* a load-path repair must never fail over its own logging */ }
-    }
-
-    // The [Check] and [Swallowed] line formats of the 1.5.x outcome log, written through IModLogger
-    // until that service reaches this line (WP139), so the in-game verdict reader can already read them.
-    private void Check(string id, string result, string detail)
-    {
-        try
-        {
-            var line = $"[Check] id={id} result={result}" + (string.IsNullOrEmpty(detail) ? string.Empty : " " + detail);
-            if (result == "fail") _logger?.LogWarning(line);
-            else _logger?.LogInfo(line);
-        }
-        catch
-        {
-            // A failed log line must never block a birth or a save load.
-        }
-    }
-
-    private void Swallowed(string site, Exception ex)
-    {
-        try
-        {
-            _logger?.LogWarning(
-                $"[Swallowed] feature=StaleCharacterRepair site={site} first={ex?.GetType().Name ?? "(none)"}. Root cause: {ex}");
-        }
-        catch
-        {
-            // Logging is already the fallback path.
-        }
     }
 }

@@ -27,7 +27,7 @@
     <string id="taom_career_watchman_of_stangard" text="Stangard Nöbetçisi" />
     <string id="taom_career_watchman_of_stangard_desc" text="Anduin geçitlerini sal ve yaya devriye gezen, Rohan'ın doğu kanadını dayanıklılık, yerel bilgi ve tartışmalı arazide bir tayfa reisinin inatçı tutuşuyla koruyan kır saçlı bir Stangard nehir bekçisi." />
     <string id="taom_career_avanc_luth_raider" text="Avanc-lúth Akıncısı" />
-    <string id="taom_career_avanc_luth_raider_desc" text="Pervasız bir saldırganlıkla yakın dövüşe돌진 eden, cerrahi hassasiyeti ham vahşi güçle değiştiren ve rakipleri acımasız baskıyla bunaltan, kan boyalı bir Avanc-lúth klanı çatışmacısı." />
+    <string id="taom_career_avanc_luth_raider_desc" text="A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure." />
     <string id="taom_career_wolfskin_hunter" text="Kurt Derili Avcı" />
     <string id="taom_career_wolfskin_hunter_desc" text="Kurt postlarına bürünen ve Sisli Dağlar eteklerinde hayalet gibi hareket eden sabırlı bir iz sürücü; avını gizlendiği yerden işaretledikten sonra kurbanın hiç duymayacağı bir ok fırlatıyor." />
     <string id="taom_career_clanguard_rider" text="Klan Muhafızı Atlısı" />
@@ -83,13 +83,13 @@
     <string id="taom_career_elk_rider" text="Geyik Binicisi" />
     <string id="taom_career_elk_rider_desc" text="Büyük orman geyiklerine binerek savaşa giden, çalılıkları ve düşmanları aynı anda delen Thranduil'in muhafızlarından atlı savaşçı." />
     <string id="taom_career_uruk_berserker" text="Uruk Çılgın Savaşçısı" />
-    <string id="taom_career_uruk_berserker_desc" text="Savaşa baş aşağı돌진 eden, yaralar durdurulamaz bir öfkeyi körükledikçe güçlenen çılgın Uruk-hai." />
+    <string id="taom_career_uruk_berserker_desc" text="A frenzied Uruk-hai who charges headlong into battle, growing stronger as wounds fuel an unstoppable rage." />
     <string id="taom_career_uruk_crossbow" text="Uruk Tatarcısı" />
     <string id="taom_career_uruk_crossbow_desc" text="Saruman'ın demir tatarlarını kullanan, Orthanc'ın demirhanelerinden yıkıcı salvolar ateşleyen disiplinli Uruk nişancısı." />
     <string id="taom_career_warg_scout" text="Warg İzcisi" />
     <string id="taom_career_warg_scout_desc" text="Hızlı bir warg'a binmiş, Isengard ordularının önünde keşif yapan ve kaçan avı kovalayan kurnaz Uruk binicisi." />
     <string id="taom_career_cave_troll_master" text="Mağara Trolu Efendisi" />
-    <string id="taom_career_cave_troll_master_desc" text="Savaşta mağara trollerini kumanda eden, onları kırbaç ve kurnazlıkla ileriye süren acımasız ork reisi." />
+    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning." />
     <string id="taom_career_goblin_sniper" text="Goblin Keskin Nişancısı" />
     <string id="taom_career_goblin_sniper_desc" text="Dağ kayalıklarında pusuya yatan, hedeflerini zehirli oklar ve kaba yaylarla vuran kindar goblin nişancısı." />
     <string id="taom_career_warg_pack_leader" text="Warg Sürüsü Lideri" />
@@ -126,24 +126,24 @@
     <string id="taom_ability_eotheod_windrider_tt" text="Genç Eorl'un kadim savaş çığlığını yükseltin, kısa bir süre için binitin hızını, hücum hasarını ve yakın dövüş hasarını artırın." />
     <string id="taom_ability_watchman_of_stangard" text="Sağlam Dur" />
     <string id="taom_ability_watchman_of_stangard_tt" text="Demir bir kararlılıkla yerleşin, kısa bir süre için yakındaki tüm müttefikler için yakın dövüş hasarını 20 artırın." />
-    <string id="taom_ability_avanc_luth_raider" text="Vahşi돌진" />
-    <string id="taom_ability_avanc_luth_raider_tt" text="Uluyarak savaş돌진iyle çatışmanın içine atıl, ölçülü savunma pahasına yakın dövüş hasarını ve hareket hızını büyük ölçüde artır." />
+    <string id="taom_ability_avanc_luth_raider" text="Savage Rush" />
+    <string id="taom_ability_avanc_luth_raider_tt" text="Howl a Dunlending war-cry into the fray — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
     <string id="taom_ability_wolfskin_hunter" text="İşaretli Av" />
     <string id="taom_ability_wolfskin_hunter_tt" text="Sisler arasından bir hedefi işaretle, ona karşı menzilli hasarı artır ve grubuna gelişmiş iz sürme farkındalığı sağla." />
-    <string id="taom_ability_clanguard_rider" text="Savaş Sürüsü돌진i" />
-    <string id="taom_ability_clanguard_rider_tt" text="Savaş sürünü koordineli hızlı bir돌진de yönet, düşmanın kanatlarını taciz ederken atlı hasarı ve grup hareket hızını artır." />
+    <string id="taom_ability_clanguard_rider" text="Warpack Charge" />
+    <string id="taom_ability_clanguard_rider_tt" text="Lead your warpack in a coordinated charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_blademaster_of_ren" text="İkiz Darbe" />
     <string id="taom_ability_blademaster_of_ren_tt" text="Hassas bir çift kılıç dizisi uygula, sallanma hızını ve zırh delme gücünü büyük ölçüde artır." />
     <string id="taom_ability_steppe_bowmaster" text="Ok Fırtınası" />
     <string id="taom_ability_steppe_bowmaster_tt" text="Hızla geri çekilirken sürekli bir ok fırtınası sal, geniş bir alanı yaylım ateşiyle doyur." />
-    <string id="taom_ability_chariot_warlord" text="Tırpanlı돌진" />
-    <string id="taom_ability_chariot_warlord_tt" text="Tırpanlı savaş arabalarını düşman hattından geçir, geniş bir yay içinde büyük alan etkili돌진 hasarı ver." />
+    <string id="taom_ability_chariot_warlord" text="Scything Charge" />
+    <string id="taom_ability_chariot_warlord_tt" text="Drive scythe-bladed chariots through the enemy line — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_tribesman_of_jelut" text="Zehirli Kılıçlar" />
     <string id="taom_ability_tribesman_of_jelut_tt" text="Silahlarını çöl toksinleriyle kapla, yakın dövüş hasarını artır ve zayıflatıcı bir yıpratma etkisi uygula." />
     <string id="taom_ability_pezarsani_javelineer" text="Güneş Ateşi Yaylımı" />
     <string id="taom_ability_pezarsani_javelineer_tt" text="Alevli bir cirit yağmuru sal, menzilli hasarı ve perdeleme hareket hızını artır." />
     <string id="taom_ability_mahud_beast_rider" text="Mûmakan'ın Yankıları" />
-    <string id="taom_ability_mahud_beast_rider_tt" text="Mûmakan'ın kadim korkusunu yönlendir, canavar돌진 hasarını artır ve düşman saflarına korku sal." />
+    <string id="taom_ability_mahud_beast_rider_tt" text="Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_far_harad_halftroll" text="Aşağılık Vahşilik" />
     <string id="taom_ability_far_harad_halftroll_tt" text="Vahşi bir vahşilik haline gir, yakındaki düşmanları korkuturken sağlığı ve direnci büyük ölçüde artır." />
     <string id="taom_ability_codyan_legionaire" text="Kalkan Duvarı" />
@@ -151,7 +151,7 @@
     <string id="taom_ability_lokhas_drus_marksman" text="Delici Yaylım" />
     <string id="taom_ability_lokhas_drus_marksman_tt" text="Özel sertleştirilmiş oklar sal, kısa bir süre için menzilli hasarını, çekme hızını ve hareket hızını artır." />
     <string id="taom_ability_balchoth_kan" text="Boyun Eğmez" />
-    <string id="taom_ability_balchoth_kan_tt" text="Balchoth'un demir disiplinini çağır, kısa bir süre için binek hızını,돌진 hasarını ve yakın dövüş hasarını artır." />
+    <string id="taom_ability_balchoth_kan_tt" text="Invoke the iron discipline of the Balchoth — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_dale_guardsman" text="Kapı Savunması" />
     <string id="taom_ability_dale_guardsman_tt" text="Ayaklarını dik ve kapıyı tut, hareketsizken sağlığı ve direnci büyük ölçüde artır." />
     <string id="taom_ability_dale_marksman" text="Kara Ok" />
@@ -162,8 +162,8 @@
     <string id="taom_ability_ironguard_tt" text="Cüce işçiliğinin gücünü çağır, kısa bir süre için yakındaki tüm müttefiklerin yakın dövüş hasarını 20 artır." />
     <string id="taom_ability_crossbow_master" text="Hassas Yaylım" />
     <string id="taom_ability_crossbow_master_tt" text="Usta işi cıvatalar yükle, kısa bir süre için menzilli hasarını, çekme hızını ve hareket hızını artır." />
-    <string id="taom_ability_ram_rider" text="Dağ돌진i" />
-    <string id="taom_ability_ram_rider_tt" text="Savaş koçunu ileri sür, kısa bir süre için binek hızını,돌진 hasarını ve yakın dövüş hasarını artır." />
+    <string id="taom_ability_ram_rider" text="Mountain Charge" />
+    <string id="taom_ability_ram_rider_tt" text="Drive your war-ram forward — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_blade_dancer" text="Yıldız Işığı Dokuması" />
     <string id="taom_ability_blade_dancer_tt" text="Zarif bir savaş transına gir, saldırılardan kaçınırken elf hassasiyetiyle vur." />
     <string id="taom_ability_elven_archer" text="Elf Görüşü" />
@@ -181,9 +181,9 @@
     <string id="taom_ability_silvan_archer" text="Taç Saldırısı" />
     <string id="taom_ability_silvan_archer_tt" text="Yüksek bir noktadan ateş et, kısa bir süre için menzilli hasarını, ok çekme hızını ve hareket hızını artır." />
     <string id="taom_ability_elk_rider" text="Boynuz Çarpışması" />
-    <string id="taom_ability_elk_rider_tt" text="Büyük boynuzları indir ve hücum et, kısa bir süre için bineğinin hızını,돌진 hasarını ve yakın dövüş hasarını artır." />
+    <string id="taom_ability_elk_rider_tt" text="Lower the great antlers and charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_uruk_berserker" text="Kan Öfkesi" />
-    <string id="taom_ability_uruk_berserker_tt" text="Çılgın bir광란e gir, hasarı ve sağlığı büyük ölçüde artırırken acıyı görmezden gel." />
+    <string id="taom_ability_uruk_berserker_tt" text="Enter an Uruk-hai berserk frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
     <string id="taom_ability_uruk_crossbow" text="Demir Yağmur" />
     <string id="taom_ability_uruk_crossbow_tt" text="Yıkıcı nüfuz ve atış hızıyla Orthanc dövmesi cıvatalar yağdır." />
     <string id="taom_ability_warg_scout" text="Sürü Uluması" />
@@ -198,8 +198,8 @@
     <string id="taom_ability_shadow_warrior_tt" text="Yakındaki düşmanların yaşam gücünü em, kendini iyileştir ve onların saldırılarını zayıflat." />
     <string id="taom_ability_necromancer_acolyte" text="Karanlık Şimşek" />
     <string id="taom_ability_necromancer_acolyte_tt" text="Ölümcül enerjiyi saldırılarına kanalize et, menzilli hasarı ve zırh delme gücünü büyük ölçüde artır." />
-    <string id="taom_ability_fell_rider" text="Dehşet돌진u" />
-    <string id="taom_ability_fell_rider_tt" text="Gölgeye bürünmüş halde돌진 et, düşmanların dehşet içinde kaçmasına neden olurken yıkıcı hasar ver." />
+    <string id="taom_ability_fell_rider" text="Dread Charge" />
+    <string id="taom_ability_fell_rider_tt" text="Charge wreathed in shadow — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
     <string id="taom_ability_corsair_boarder" text="Baskın Harekâtı" />
     <string id="taom_ability_corsair_boarder_tt" text="Acımasız bir baskın başlat, yakın çatışmalarda yakın dövüş hasarını ve direnci artır." />
     <string id="taom_ability_corsair_crossbow" text="Yelken Atışı" />
@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Ölümsüz Muhafız" />
     <string id="taom_ws_t3_a_p2_desc" text="Nöbet asla bitmez. +9 sağlık." />
     <string id="taom_ws_t3_a_p3" text="Garnizon Komutanı" />
-    <string id="taom_ws_t3_a_p3_desc" text="Garnizonun gönüllülerle dolup taşar. +4 birlik boyutu." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Savunucunun Şerefi" />
     <string id="taom_ws_t3_a_p4_desc" text="Savunmada kazanılan zafer büyük onur getirir. +12% savaş şöhreti kazanımı." />
     <string id="taom_ws_t3_b_key" text="Her Zaman Tetikte" />
@@ -726,9 +726,9 @@
     <string id="taom_ws_t3_b_p3_desc" text="Mark'ın en seçkin savunucusu. +12% savaş şöhreti kazanımı." />
     <string id="taom_ws_t3_b_p4" text="Stangard Ordusu" />
     <string id="taom_ws_t3_b_p4_desc" text="Stangard'ın tüm gücü arkanda sürüyor. +5 grup büyüklüğü." />
-    <string id="taom_alr_root_desc" text="Vahşi돌진, +%5 yakın dövüş hasarı sağlar ve Dunlending klanlarının öfkesini kanalize eder." />
+    <string id="taom_alr_root_desc" text="Savage Rush grants +5% melee damage and channels the fury of the Dunlending clans." />
     <string id="taom_alr_t1_a_key" text="Klan Savaş Öfkesi" />
-    <string id="taom_alr_t1_a_key_desc" text="Atalarının öfkesi içinden akıyor. Vahşi돌진yarıçapı +3." />
+    <string id="taom_alr_t1_a_key_desc" text="The rage of your ancestors flows through you. Savage Rush radius +3." />
     <string id="taom_alr_t1_a_p1" text="Yabanıl Öfke" />
     <string id="taom_alr_t1_a_p1_desc" text="Evcilleştirilmemiş bir vahşetle savaşıyorsun. +%6 yakın dövüş hasarı." />
     <string id="taom_alr_t1_a_p2" text="Tepe Sertliği" />
@@ -738,7 +738,7 @@
     <string id="taom_alr_t1_a_p4" text="Akıncı Canlılığı" />
     <string id="taom_alr_t1_a_p4_desc" text="Alacakaranlıktan şafağa kadar yorulmadan akın yapıyorsun. +5 sağlık." />
     <string id="taom_alr_t1_b_key" text="Sürekli Öfke" />
-    <string id="taom_alr_t1_b_key_desc" text="Öfke göğsünde daha uzun süre yanıyor. Vahşi돌진süresi +4sn." />
+    <string id="taom_alr_t1_b_key_desc" text="The rage burns longer in your breast. Savage Rush duration +4s." />
     <string id="taom_alr_t1_b_p1" text="Balta Fırlatıcı" />
     <string id="taom_alr_t1_b_p1_desc" text="Baltanı ölümcül bir isabetle fırlatıyorsun. +%5 menzilli hasar." />
     <string id="taom_alr_t1_b_p2" text="Dunlending Yapısı" />
@@ -748,7 +748,7 @@
     <string id="taom_alr_t1_b_p4" text="Klan Sadakati" />
     <string id="taom_alr_t1_b_p4_desc" text="Klanın altın için değil, kan için savaşır. -%4 birlik maaşları." />
     <string id="taom_alr_t2_a_key" text="Kan Borcu" />
-    <string id="taom_alr_t2_a_key_desc" text="Klanların hesaplaşacak eski hesapları var. Vahşi돌진şarj maliyeti -20." />
+    <string id="taom_alr_t2_a_key_desc" text="The clans have old scores to settle. Savage Rush charge cost -20." />
     <string id="taom_alr_t2_a_p1" text="Çığlık Hücumu" />
     <string id="taom_alr_t2_a_p1_desc" text="Savaş hücumun piyadeleri korkutuyor. +%8 yakın dövüş hasarı." />
     <string id="taom_alr_t2_a_p2" text="Klan Yemini" />
@@ -758,7 +758,7 @@
     <string id="taom_alr_t2_a_p4" text="Savaş Pişkinliği" />
     <string id="taom_alr_t2_a_p4_desc" text="Yüzlerce akından sağ çıktın. +7 sağlık." />
     <string id="taom_alr_t2_b_key" text="Uzatılmış Şiddet" />
-    <string id="taom_alr_t2_b_key_desc" text="Öfke azalmıyor. Vahşi돌진süresi +2sn." />
+    <string id="taom_alr_t2_b_key_desc" text="The fury does not abate. Savage Rush duration +2s." />
     <string id="taom_alr_t2_b_p1" text="Tepelerin Savaş İlahisi" />
     <string id="taom_alr_t2_b_p1_desc" text="Tepe şarkıları savaşçılarının ruhunu yükseltiyor. +%8 birlik morali." />
     <string id="taom_alr_t2_b_p2" text="Kalın Kafalı" />
@@ -768,7 +768,7 @@
     <string id="taom_alr_t2_b_p4" text="Yaralar ve Gurur" />
     <string id="taom_alr_t2_b_p4_desc" text="Her yara, atlatılan bir zaferin hikayesini anlatır. +7 sağlık." />
     <string id="taom_alr_t3_a_key" text="Avanc-luth'un Kanı" />
-    <string id="taom_alr_t3_a_key_desc" text="Kadim klanın öfkesi tüm savaş alanını sarar. Vahşi돌진 yarıçapı +5." />
+    <string id="taom_alr_t3_a_key_desc" text="The ancient clan's fury envelops the entire battlefield. Savage Rush radius +5." />
     <string id="taom_alr_t3_a_p1" text="Klan Savaş Öfkesi" />
     <string id="taom_alr_t3_a_p1_desc" text="Her Dunlending senin adına bir berserker gibi savaşır. +12% yakın dövüş hasarı." />
     <string id="taom_alr_t3_a_p2" text="Yılmaz Yaban Adamı" />
@@ -778,7 +778,7 @@
     <string id="taom_alr_t3_a_p4" text="Akıncının Şöhreti" />
     <string id="taom_alr_t3_a_p4_desc" text="Adın Isen'den Sisli Dağlar'a kadar korkulur. +12% savaş şöhret kazancı." />
     <string id="taom_alr_t3_b_key" text="Sonsuz Öfke" />
-    <string id="taom_alr_t3_b_key_desc" text="Öfke kışkırtılmaya pek ihtiyaç duymaz. Vahşi돌진 hücum maliyeti -30." />
+    <string id="taom_alr_t3_b_key_desc" text="The rage needs little provocation. Savage Rush charge cost -30." />
     <string id="taom_alr_t3_b_p1" text="Dunlending Savaş Ordusu" />
     <string id="taom_alr_t3_b_p1_desc" text="Birleşmiş klanlar durdurulamaz. +6% asker hasarı." />
     <string id="taom_alr_t3_b_p2" text="Hızlı Ayaklı Klan" />
@@ -1086,7 +1086,7 @@
     <string id="taom_mbr_t2b_p3" text="+%10 grup hareket hızı." />
     <string id="taom_mbr_t2b_p4" text="+3 grup boyutu." />
     <string id="taom_mbr_t3a_key" text="Mûmakan'ın Yankıları yarıçapı büyük ölçüde genişletildi, yeryüzünün kendisi sarsılır." />
-    <string id="taom_mbr_t3a_p1" text="+%18 at돌격 hasarı." />
+    <string id="taom_mbr_t3a_p1" text="+15% horse charge damage." />
     <string id="taom_mbr_t3a_p2" text="+%15 yakın dövüş hasarı." />
     <string id="taom_mbr_t3a_p3" text="+%20 birlik morali." />
     <string id="taom_mbr_t3a_p4" text="+%15 savaş şöhreti kazanımı." />
@@ -1095,7 +1095,7 @@
     <string id="taom_mbr_t3b_p2" text="+%15 grup hareket hızı." />
     <string id="taom_mbr_t3b_p3" text="+%7 birlik hasarı." />
     <string id="taom_mbr_t3b_p4" text="+9 maksimum sağlık." />
-    <string id="taom_far_harad_halftroll_root_desc" text="Alçak Vahşet devasa sağlık bonusu verir ve korku salар." />
+    <string id="taom_far_harad_halftroll_root_desc" text="Vile Brutality grants massive health bonus and instills terror." />
     <string id="taom_fhh_t1a_key" text="Alçak Vahşet yarıçapı artırıldı, korku daha geniş yayılıyor." />
     <string id="taom_fhh_t1a_p1" text="+6 maksimum sağlık." />
     <string id="taom_fhh_t1a_p2" text="+%8 direnç." />
@@ -1284,7 +1284,7 @@
     <string id="taom_dale_outrider_root_desc" text="Ticaret Yolu Koşusu +5% yakın dövüş hasarı sağlar ve atınız hızlanır." />
     <string id="taom_dor_t1_a_key" text="Ticaret Yolu Koşusu yarıçapı genişletildi, daha geniş oluşumları süpürüyor." />
     <string id="taom_dor_t1_a_p1" text="+8% yakın dövüş hasarı." />
-    <string id="taom_dor_t1_a_p2" text="+7% at돌진 hasarı." />
+    <string id="taom_dor_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_dor_t1_a_p3" text="+7% savurma hızı." />
     <string id="taom_dor_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_dor_t1_b_key" text="Ticaret Yolu Atılımı süresi uzatıldı, ivme korunuyor." />
@@ -1299,12 +1299,12 @@
     <string id="taom_dor_t2_a_p4" text="+%10 savaş şöhret kazanımı." />
     <string id="taom_dor_t2_b_key" text="Ticaret Yolu Atılımı aktifken binek dayanıklılığını artırır." />
     <string id="taom_dor_t2_b_p1" text="+%12 yakın dövüş hasarı." />
-    <string id="taom_dor_t2_b_p2" text="+%12 at돌진 hasarı." />
+    <string id="taom_dor_t2_b_p2" text="+13% horse charge damage." />
     <string id="taom_dor_t2_b_p3" text="+60 at sağlığı." />
     <string id="taom_dor_t2_b_p4" text="+%10 savurma hızı." />
     <string id="taom_dor_t3_a_key" text="Ticaret Yolu Atılımı yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
     <string id="taom_dor_t3_a_p1" text="+%18 yakın dövüş hasarı." />
-    <string id="taom_dor_t3_a_p2" text="+%18 at돌진 hasarı." />
+    <string id="taom_dor_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_dor_t3_a_p3" text="+%15 savurma hızı." />
     <string id="taom_dor_t3_a_p4" text="+%7 asker hasarı." />
     <string id="taom_dor_t3_b_key" text="Ticaret Yolu Atılımı dolum süresi büyük ölçüde azaltıldı, dinmeden sür." />
@@ -1563,7 +1563,7 @@
     <string id="taom_sentinel_root_desc" text="Elanor Çevikliği +%5 yakın dövüş hasarı ve elf zarafeti verir." />
     <string id="taom_snt_t1_a_key" text="Elanor Çevikliği yarıçapı genişletildi, daha geniş düzenleri kapsıyor." />
     <string id="taom_snt_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_snt_t1_a_p2" text="+%7 at돌진 hasarı." />
+    <string id="taom_snt_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_snt_t1_a_p3" text="+%7 savurma hızı." />
     <string id="taom_snt_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_snt_t1_b_key" text="Elanor Çevikliği süresi uzatıldı, momentum korunuyor." />
@@ -1653,10 +1653,10 @@
     <string id="taom_sva_t3_b_p2" text="+%15 hareket hızı." />
     <string id="taom_sva_t3_b_p3" text="+9 maksimum can." />
     <string id="taom_sva_t3_b_p4" text="+%15 parti keşif menzili." />
-    <string id="taom_elk_rider_root_desc" text="Boynuz Çarpışması +%5 yakın dövüş hasarı verir, büyük geyik돌진eder." />
+    <string id="taom_elk_rider_root_desc" text="Antler Crash grants +5% melee damage, the great elk charges." />
     <string id="taom_elk_t1_a_key" text="Boynuz Çarpışması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
     <string id="taom_elk_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_elk_t1_a_p2" text="+%7 at돌진 hasarı." />
+    <string id="taom_elk_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_elk_t1_a_p3" text="+%7 savurma hızı." />
     <string id="taom_elk_t1_a_p4" text="+%5 parti hareket hızı." />
     <string id="taom_elk_t1_b_key" text="Boynuz Çarpışması süresi uzatıldı, ivmeyi koruyor." />
@@ -1671,12 +1671,12 @@
     <string id="taom_elk_t2_a_p4" text="+%10 savaş şöhret kazancı." />
     <string id="taom_elk_t2_b_key" text="Boynuz Çarpışması aktifken binek dayanıklılığını artırır." />
     <string id="taom_elk_t2_b_p1" text="+%12 yakın dövüş hasarı." />
-    <string id="taom_elk_t2_b_p2" text="+%12 at돌진 hasarı." />
+    <string id="taom_elk_t2_b_p2" text="+13% horse charge damage." />
     <string id="taom_elk_t2_b_p3" text="+60 at canı." />
     <string id="taom_elk_t2_b_p4" text="+%10 savurma hızı." />
     <string id="taom_elk_t3_a_key" text="Boynuz Çarpışması yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
     <string id="taom_elk_t3_a_p1" text="+%18 yakın dövüş hasarı." />
-    <string id="taom_elk_t3_a_p2" text="+%18 at돌진 hasarı." />
+    <string id="taom_elk_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_elk_t3_a_p3" text="+%15 savurma hızı." />
     <string id="taom_elk_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_elk_t3_b_key" text="Boynuz Çarpışması şarjı büyük ölçüde azaldı, durmaksızın süvari." />
@@ -1749,7 +1749,7 @@
     <string id="taom_warg_scout_root_desc" text="Sürü Uluması +%5 yakın dövüş hasarı verir ve yakındaki düşmanları dehşete düşürür." />
     <string id="taom_wsc_t1_a_key" text="Sürü Uluması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
     <string id="taom_wsc_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_wsc_t1_a_p2" text="+%7 at돌격 hasarı." />
+    <string id="taom_wsc_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_wsc_t1_a_p3" text="+%7 vuruş hızı." />
     <string id="taom_wsc_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_wsc_t1_b_key" text="Sürü Uluması süresi uzatıldı, momentum korunuyor." />
@@ -1764,12 +1764,12 @@
     <string id="taom_wsc_t2_a_p4" text="+%10 savaş şöhret kazancı." />
     <string id="taom_wsc_t2_b_key" text="Sürü Uluması aktifken binek dayanıklılığını artırır." />
     <string id="taom_wsc_t2_b_p1" text="+%12 yakın dövüş hasarı." />
-    <string id="taom_wsc_t2_b_p2" text="+%12 at돌격 hasarı." />
+    <string id="taom_wsc_t2_b_p2" text="+13% horse charge damage." />
     <string id="taom_wsc_t2_b_p3" text="+60 at canı." />
     <string id="taom_wsc_t2_b_p4" text="+%10 sallanma hızı." />
     <string id="taom_wsc_t3_a_key" text="Sürü Uluması yarıçapı büyük ölçüde genişletildi, durdurulamaz çarpma." />
     <string id="taom_wsc_t3_a_p1" text="+%18 yakın dövüş hasarı." />
-    <string id="taom_wsc_t3_a_p2" text="+%18 at돌진 hasarı." />
+    <string id="taom_wsc_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_wsc_t3_a_p3" text="+%15 sallanma hızı." />
     <string id="taom_wsc_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_wsc_t3_b_key" text="Sürü Uluması dolumu büyük ölçüde azaltıldı, durmaksızın sür." />
@@ -1842,7 +1842,7 @@
     <string id="taom_warg_pack_leader_root_desc" text="Alfa Uluması +5% yakın dövüş hasarı sağlar ve sürü avlanır." />
     <string id="taom_wpl_t1_a_key" text="Alfa Uluması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
     <string id="taom_wpl_t1_a_p1" text="+8% yakın dövüş hasarı." />
-    <string id="taom_wpl_t1_a_p2" text="+7% at돌진 hasarı." />
+    <string id="taom_wpl_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_wpl_t1_a_p3" text="+7% savurma hızı." />
     <string id="taom_wpl_t1_a_p4" text="+5% müfreze hareket hızı." />
     <string id="taom_wpl_t1_b_key" text="Alfa Uluması süresi uzatıldı, ivme korunuyor." />
@@ -1857,12 +1857,12 @@
     <string id="taom_wpl_t2_a_p4" text="+10% savaş şöhreti kazancı." />
     <string id="taom_wpl_t2_b_key" text="Alfa Uluması aktifken binek dayanıklılığını artırır." />
     <string id="taom_wpl_t2_b_p1" text="+12% yakın dövüş hasarı." />
-    <string id="taom_wpl_t2_b_p2" text="+12% atlı돌격 hasarı." />
+    <string id="taom_wpl_t2_b_p2" text="+13% horse charge damage." />
     <string id="taom_wpl_t2_b_p3" text="+60 at sağlığı." />
     <string id="taom_wpl_t2_b_p4" text="+10% sallanma hızı." />
     <string id="taom_wpl_t3_a_key" text="Alfa Uluması yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
     <string id="taom_wpl_t3_a_p1" text="+18% yakın dövüş hasarı." />
-    <string id="taom_wpl_t3_a_p2" text="+18% atlı돌격 hasarı." />
+    <string id="taom_wpl_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_wpl_t3_a_p3" text="+15% sallanma hızı." />
     <string id="taom_wpl_t3_a_p4" text="+7% asker hasarı." />
     <string id="taom_wpl_t3_b_key" text="Alfa Uluması dolum süresi büyük ölçüde azaltıldı, durmaksızın süvari saldırısı." />
@@ -1935,7 +1935,7 @@
     <string id="taom_fell_rider_root_desc" text="Korku Hücumu, bineğinizi gölgeyle sararak +%5 yakın dövüş hasarı verir." />
     <string id="taom_flr_t1_a_key" text="Korku Hücumu yarıçapı genişletildi, daha geniş düzenleri kapsıyor." />
     <string id="taom_flr_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_flr_t1_a_p2" text="+%7 at돌격 hasarı." />
+    <string id="taom_flr_t1_a_p2" text="+10% horse charge damage." />
     <string id="taom_flr_t1_a_p3" text="+%7 sallanma hızı." />
     <string id="taom_flr_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_flr_t1_b_key" text="Korku Hücumu süresi uzatıldı, momentumu koruyor." />
@@ -1950,12 +1950,12 @@
     <string id="taom_flr_t2_a_p4" text="+%10 savaş şöhret kazanımı." />
     <string id="taom_flr_t2_b_key" text="Korku Hücumu aktifken bineğin dayanıklılığını artırır." />
     <string id="taom_flr_t2_b_p1" text="+%12 yakın dövüş hasarı." />
-    <string id="taom_flr_t2_b_p2" text="+%12 at돌격 hasarı." />
+    <string id="taom_flr_t2_b_p2" text="+13% horse charge damage." />
     <string id="taom_flr_t2_b_p3" text="+60 at sağlığı." />
     <string id="taom_flr_t2_b_p4" text="+%10 sallanma hızı." />
     <string id="taom_flr_t3_a_key" text="Korku Hücumu yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
     <string id="taom_flr_t3_a_p1" text="+%18 yakın dövüş hasarı." />
-    <string id="taom_flr_t3_a_p2" text="+%18 at돌격 hasarı." />
+    <string id="taom_flr_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_flr_t3_a_p3" text="+%15 sallanma hızı." />
     <string id="taom_flr_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_flr_t3_b_key" text="Korku Hücumu dolumu büyük ölçüde azaltıldı, durmaksızın sür." />
@@ -2048,7 +2048,7 @@
     <string id="taom_crca_t2_b_p4" text="+10% savurma hızı." />
     <string id="taom_crca_t3_a_key" text="Yağma yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
     <string id="taom_crca_t3_a_p1" text="+%18 yakın dövüş hasarı." />
-    <string id="taom_crca_t3_a_p2" text="+%18 at돌격 hasarı." />
+    <string id="taom_crca_t3_a_p2" text="+15% horse charge damage." />
     <string id="taom_crca_t3_a_p3" text="+%15 savurma hızı." />
     <string id="taom_crca_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_crca_t3_b_key" text="Yağma şarjı büyük ölçüde azaltıldı, durmaksızın sür." />

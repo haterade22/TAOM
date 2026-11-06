@@ -5,7 +5,7 @@ Scope: this file covers everything redistributed inside the TAOM module that is
 NOT TAOM's own work. That is three things: the compiled binaries under
 _Module/bin/, the audio under _Module/ModuleSounds/, and the fonts under
 _Module/GUI/Fonts/. Each is listed below.
-It also covers the parts of TAOM.dll adapted from yotthani's VanillaTuning (MIT).
+It also covers the parts of TAOM.dll adapted from yotthani's VanillaTuning and from his Heir of Numenor (HoN) mods (MIT).
 
 TAOM's own art, 3D and 2D assets, world map, and game data are NOT covered here.
 They are original TAOM work licensed under CC BY-NC-SA 4.0; see LICENSE-CONTENT.md
@@ -48,6 +48,45 @@ Source: https://github.com/TsudaKageyu/minhook
   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+----
+
+RUNTIME LIBRARIES  --  _Module/bin/<platform>/
+
+DryIoc.dll  --  DryIoc 4.8.8
+Copyright (c) 2013-2021 Maksim Volkau
+Licensed under the MIT License.
+Source: https://github.com/dadhi/DryIoc
+
+Newtonsoft.Json.dll  --  Json.NET 13.0.3
+Copyright (c) 2007 James Newton-King
+Licensed under the MIT License.
+Source: https://www.newtonsoft.com/json
+
+System.Runtime.CompilerServices.Unsafe.dll
+Copyright (c) .NET Foundation and Contributors
+Licensed under the MIT License.
+Source: https://github.com/dotnet/runtime
+
+The MIT License (MIT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 ----
 
@@ -121,31 +160,25 @@ machine code block is his), the settlement nameplate cull and the map-view relea
 MapViewRelease/, and their adapters in Main/Adapters/, in the TAOM repository).
 
 Copyright (c) 2026 yotthani
-Licensed under the MIT License:
-
-The MIT License (MIT)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+Licensed under the MIT License (full text above, under RUNTIME LIBRARIES).
 
 ----
 
-TAOM.dll, apart from the VanillaTuning portions named above,
+HEIR OF NUMENOR (HoN) PORTIONS  --  inside TAOM.dll
+
+TAOM.dll contains code ported from yotthani's Heir of Numenor (HoN) mods, with
+TAOM's changes: siege dismount, mixed formations, smart cavalry AI, fief management,
+quick actions (his TransferbuttonMenu), equipment presets and companion tactics
+(sources: Main/Features/SiegeDismount/, MixedFormations/, SmartCavalryAI/,
+FiefManagement/, QuickActions/, EquipPresets/ and CompanionTactics/ in the TAOM
+repository).
+
+Copyright (c) 2026 yotthani
+Licensed under the MIT License (full text above, under RUNTIME LIBRARIES).
+
+----
+
+TAOM.dll, apart from the VanillaTuning and HoN portions named above,
 and the remaining binaries built by this project are original TAOM work, licensed under the MIT License.
 
 Copyright (c) 2026 TAOM project contributors.

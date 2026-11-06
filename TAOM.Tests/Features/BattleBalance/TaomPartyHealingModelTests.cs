@@ -7,6 +7,26 @@ namespace TAOM.Tests.Features.BattleBalance;
 [TestClass]
 public class TaomPartyHealingModelTests
 {
+    // An enlisted player rolls survival with his own party, as a freelancer does: vanilla reads Medicine
+    // and Cheat Death off that party's effective surgeon, his assigned surgeon or else himself (v1.4.8
+    // DefaultPartyHealingModel.cs:328-338, MobileParty.cs:834-844). The redirect to the commander's party
+    // is gone (1.5.x 5d70714c4), so the model takes no Enlistment state.
+    [TestMethod]
+    public void SurvivalRoll_TakesNoEnlistmentState()
+    {
+        foreach (var ctor in typeof(TaomPartyHealingModel).GetConstructors())
+            foreach (var p in ctor.GetParameters())
+                Assert.AreNotEqual(typeof(TAOM.Features.Enlistment.IEnlistmentStateQuery), p.ParameterType, p.Name);
+    }
+
+    [TestMethod]
+    public void SurvivalRoll_NeverReadsTheCommander()
+    {
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource(
+            "Main/Features/BattleBalance/Models/TaomPartyHealingModel.cs", stripComments: true);
+        Assert.IsFalse(src.Contains("CommanderHeroId"), "the survival roll must not look up the commander");
+    }
+
     [TestMethod]
     public void ApplyCulturalSurvivalBonus_ZeroBonus_ReturnsVanillaUnchanged()
     {
@@ -146,6 +166,7 @@ public class BattleBalanceConfigCasualtyRatiosTests
     [DataRow("lothlorien", 0.5f)]
     [DataRow("erebor", 0.3f)]
     [DataRow("rivendell", 0.4f)]
+    [DataRow("lindon", 0.4f)]
     [DataRow("mordor", -0.2f)]
     [DataRow("gundabad", -0.1f)]
     [DataRow("dolguldur", -0.1f)]

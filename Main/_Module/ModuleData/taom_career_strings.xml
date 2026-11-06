@@ -85,7 +85,7 @@
 	<string id="taom_career_warg_scout" text="{=taom_career_warg_scout}Warg Rider" />
 	<string id="taom_career_warg_scout_desc" text="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey." />
 	<string id="taom_career_cave_troll_master" text="{=taom_career_cave_troll_master}Gundabad Berserker" />
-	<string id="taom_career_cave_troll_master_desc" text="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />
+	<string id="taom_career_cave_troll_master_desc" text="{=taom_career_cave_troll_master_desc}A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning." />
 	<string id="taom_career_goblin_sniper" text="{=taom_career_goblin_sniper}Gundabad Orc Hunter" />
 	<string id="taom_career_goblin_sniper_desc" text="{=taom_career_goblin_sniper_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
 	<string id="taom_career_warg_pack_leader" text="{=taom_career_warg_pack_leader}Gundabad Fell Warg Pack Leader" />
@@ -715,7 +715,7 @@
 	<string id="taom_ws_t3_a_p2" text="{=taom_ws_t3_a_p2}Immortal Guard" />
 	<string id="taom_ws_t3_a_p2_desc" text="{=taom_ws_t3_a_p2_desc}The watch never ends. +9 health." />
 	<string id="taom_ws_t3_a_p3" text="{=taom_ws_t3_a_p3}Garrison Commander" />
-	<string id="taom_ws_t3_a_p3_desc" text="{=taom_ws_t3_a_p3_desc}Your garrison swells with volunteers. +4 party size." />
+	<string id="taom_ws_t3_a_p3_desc" text="{=taom_ws_t3_a_p3_desc}Your company swells with volunteers. +4 party size." />
 	<string id="taom_ws_t3_a_p4" text="{=taom_ws_t3_a_p4}Defender's Glory" />
 	<string id="taom_ws_t3_a_p4_desc" text="{=taom_ws_t3_a_p4_desc}Victory in defence brings great honour. +12% battle renown gain." />
 	<string id="taom_ws_t3_b_key" text="{=taom_ws_t3_b_key}Ever Vigilant" />

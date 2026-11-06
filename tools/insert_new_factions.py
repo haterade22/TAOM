@@ -2,7 +2,9 @@
 """PART 2: insert the two orc cultures' shared-file content (cloned from gundabad).
 
 Idempotent: each inserted region is wrapped in <!-- TAOM-NEWFACTIONS:<id>:BEGIN/END -->
-markers and stripped before re-insert, so re-running is safe.
+markers and replaced where it stands, or refused when the file is damaged (tools/_marker_region.py,
+#976). Every output is parsed before anything is written (#979). Its older regions have drifted
+from what a run would produce, so do not run it without reading the diff first.
 
 Targets:
   taom_wanderers.xml                       <- 10 wanderers per culture
@@ -18,6 +20,7 @@ import os, re, json, sys
 import xml.etree.ElementTree as ET
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mordor_armor_remap import remap_orc_armor, remap_orc_weapons, strip_cavalry_stacks
+from _marker_region import replace_region
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MD = os.path.join(ROOT, "Main", "_Module", "ModuleData")
@@ -149,12 +152,21 @@ def extract_rosters_with_id_substr(text, substr):
 
 
 def upsert_before(text, close_tag, payload, marker):
-    """Strip prior marker block, then insert payload before the LAST close_tag."""
-    text = re.sub(r'[ \t]*<!-- ' + re.escape(marker) + r':BEGIN -->.*?<!-- ' + re.escape(marker) + r':END -->\n',
-                  '', text, flags=re.DOTALL)
-    block = f"  <!-- {marker}:BEGIN -->\n{payload}\n  <!-- {marker}:END -->\n"
-    idx = text.rfind(close_tag)
-    return text[:idx] + block + text[idx:]
+    """Replace the marker block in place, or insert it before the LAST close_tag; refused when damaged (#976)."""
+    return replace_region(text, marker, f"  <!-- {marker}:BEGIN -->\n{payload}\n  <!-- {marker}:END -->\n", close_tag)
+
+
+def refuse_unparsable(outputs):
+    """Exit before any write when an output does not parse (#979): writing first, then parsing, left a broken file
+    on disk and the files after it unwritten."""
+    bad = []
+    for path, content in outputs:
+        try:
+            ET.fromstring(content.encode("utf-8"))
+        except ET.ParseError as ex:
+            bad.append(f"{path}: {ex}")
+    if bad:
+        raise SystemExit("REFUSING: these outputs do not parse, so nothing was written:\n  " + "\n  ".join(bad))
 
 
 def main():
@@ -231,17 +243,14 @@ def main():
         out_edu = upsert_before(out_edu, "</EquipmentRosters>", transform(gund_edu, culture, cfg),
                                 f"TAOM-NEWFACTIONS:{culture}")
 
-    for path, content in [(os.path.join(MD, "taom_spcultures.xml"), out_cult),
-                          (os.path.join(MD, "taom_wanderers.xml"), out_wand),
-                          (os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), out_wequip),
-                          (os.path.join(MD, "taom_partyTemplates.xml"), out_party),
-                          (os.path.join(MD, "taom_module_strings.xml"), out_strings),
-                          (os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), out_child),
-                          (os.path.join(MD, "equipmentsets", "taom_lord_template_equipment.xml"), out_lord),
-                          (os.path.join(MD, "equipmentsets", "taom_education_equipment_templates.xml"), out_edu)]:
-        open(path, "w", encoding="utf-8").write(content)
-        ET.parse(path)
-        print(f"  inserted + well-formed: {os.path.relpath(path, ROOT)}")
+    outputs = [(os.path.join(MD, "taom_spcultures.xml"), out_cult),
+               (os.path.join(MD, "taom_wanderers.xml"), out_wand),
+               (os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), out_wequip),
+               (os.path.join(MD, "taom_partyTemplates.xml"), out_party),
+               (os.path.join(MD, "taom_module_strings.xml"), out_strings),
+               (os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), out_child),
+               (os.path.join(MD, "equipmentsets", "taom_lord_template_equipment.xml"), out_lord),
+               (os.path.join(MD, "equipmentsets", "taom_education_equipment_templates.xml"), out_edu)]
 
     # --- SubModule.xml: 3 XmlNode per culture after the gundabad equipment trio ---
     sm = open(SUBMODULE, encoding="utf-8").read()
@@ -269,9 +278,14 @@ def main():
     if not anchor:
         raise RuntimeError("SubModule anchor not found")
     sm = sm[:anchor.end()] + reg + sm[anchor.end():]
-    open(SUBMODULE, "w", encoding="utf-8").write(sm)
-    ET.parse(SUBMODULE)
-    print(f"  inserted + well-formed: Main/_Module/SubModule.xml (6 XmlNode regs)")
+
+    # Every output, SubModule.xml included, is built and parsed before the first write (#979).
+    outputs.append((SUBMODULE, sm))
+    refuse_unparsable(outputs)
+    for path, content in outputs:
+        open(path, "w", encoding="utf-8").write(content)
+        ET.parse(path)
+        print(f"  inserted + well-formed: {os.path.relpath(path, ROOT)}")
     print("\nPART 2 done.")
 
 

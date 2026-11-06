@@ -68,6 +68,12 @@ def template_id_for(clan):
     return clan.get("template_id") or ("kingdom_hero_party_%s_template" % clan["id"])
 
 
+def dominant_eol(text):
+    """The file's own line terminator, by majority, not presence (tools/README.md, "XML I/O convention")."""
+    crlf = text.count("\r\n")
+    return "\r\n" if crlf > text.count("\n") - crlf else "\n"
+
+
 # ---------- A. clans.xml ----------
 def set_clansxml_attrs(text, clan_id, color, color2, dpt):
     """Set color/color2/default_party_template on the <Faction id=..> start tag
@@ -79,7 +85,7 @@ def set_clansxml_attrs(text, clan_id, color, color2, dpt):
     block = m.group(1)
     # detect indentation from the id= line
     im = re.search(r'(\r?\n)([ \t]*)id="', block)
-    nl, indent = (im.group(1), im.group(2)) if im else ("\n", TAB + TAB)
+    nl, indent = (im.group(1), im.group(2)) if im else (dominant_eol(text), TAB + TAB)
 
     def upsert(b, name, value):
         ap = re.compile(r'%s="[^"]*"' % re.escape(name))
@@ -112,13 +118,16 @@ def upsert_xslt_override(text, clan_id, color, color2, dpt):
     if dpt:
         over.append(("default_party_template", "PartyTemplate." + dpt))
     names = [n for n, _ in over]
+    # The stylesheet's own terminator, by majority: git stores it LF, but a core.autocrlf=true checkout writes it
+    # CRLF, and hard-coded "\n" lines left that copy mixed (#930).
+    eol = dominant_eol(text)
     tpat = re.compile(
         r'(<xsl:template\s+match="Faction\[@id=\'%s\'\]"\s*>)(.*?)(</xsl:template>)' % re.escape(clan_id),
         re.S)
     m = tpat.search(text)
 
     def attr_lines(indent):
-        return "".join('%s<xsl:attribute name="%s">%s</xsl:attribute>\n' % (indent, n, v) for n, v in over)
+        return "".join('%s<xsl:attribute name="%s">%s</xsl:attribute>%s' % (indent, n, v, eol) for n, v in over)
 
     if m:
         body = m.group(2)
@@ -148,19 +157,19 @@ def upsert_xslt_override(text, clan_id, color, color2, dpt):
         if nm:
             body2 = body2[:nm.start()] + newattrs + body2[nm.start():]
         else:
-            body2 = body2.rstrip() + "\n" + newattrs
+            # Attributes after </xsl:copy> are rejected by libxslt, so do not guess a position.
+            raise SystemExit("ERROR: spclans.xslt template for %s has no node() apply; add the attributes by hand" % clan_id)
         return text[:m.start()] + m.group(1) + body2 + m.group(3) + text[m.end():]
 
     # No existing template -> create one before </xsl:stylesheet>
-    block = (
-        '  <xsl:template match="Faction[@id=\'%(id)s\']">\n'
-        '    <xsl:copy>\n'
-        '      <xsl:apply-templates select="@*[%(ex)s]"/>\n'
-        '%(attrs)s'
-        '      <xsl:apply-templates select="node()"/>\n'
-        '    </xsl:copy>\n'
-        '  </xsl:template>\n'
-    ) % {"id": clan_id, "ex": _excludes(names), "attrs": attr_lines("      ")}
+    block = eol.join([
+        '  <xsl:template match="Faction[@id=\'%s\']">' % clan_id,
+        '    <xsl:copy>',
+        '      <xsl:apply-templates select="@*[%s]"/>' % _excludes(names),
+        attr_lines("      ") + '      <xsl:apply-templates select="node()"/>',
+        '    </xsl:copy>',
+        '  </xsl:template>',
+    ]) + eol
     return text.replace("</xsl:stylesheet>", block + "</xsl:stylesheet>", 1)
 
 
@@ -207,7 +216,7 @@ def upsert_party_template(text, template_id, roster):
     and only the two house clans still tripped the guard. So a spec whose
     max_value sum is below the live template's is refused on the same terms.
     """
-    eol = "\r\n" if text.count("\r\n") > text.count("\n") - text.count("\r\n") else "\n"
+    eol = dominant_eol(text)
     rendered = render_template(template_id, roster, eol)
     existing = re.compile(r'\t?<MBPartyTemplate id="%s">.*?</MBPartyTemplate>' % re.escape(template_id), re.S)
     match = existing.search(text)

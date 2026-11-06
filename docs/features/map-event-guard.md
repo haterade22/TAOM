@@ -269,7 +269,9 @@ finalizes the event inside the engine.
 
 **The enlisted commander's battle** is left alone because `EnlistmentBehavior`'s hourly tick runs after
 this one and would join the player into a decided, unfinished event. Known limitation: a commander stuck
-in such a battle stays stuck while the player is enlisted.
+in such a battle stays stuck while the player is enlisted. This includes a battle the soldier
+deliberately sits out (#960 vassal sit-out), where his join would otherwise have been
+the event that finished it.
 
 **Co-op** is not supported yet. BannerlordCoop's `MapEvent.Update` prefix stops vanilla finishing a
 battle that holds a remote player's party, and the player-battle test sees only the local player, so an

@@ -24,27 +24,36 @@ Re-verify that TAOM's engine touchpoints still bind against the **installed** Ba
 
 ## Pre-flight
 
-`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) must point at the install — the gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If unset, the gate self-reports `Assert.Inconclusive` (it does not falsely pass). This is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
+`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) points the gate at the install; when neither names a usable folder in the test process (the override needs `bin\Win64_Shipping_Client\Bannerlord.exe`, the game dir only needs to exist), it falls back to the game folder the test DLL was built against. The gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If no install resolves, or the resolved folder holds no `Bannerlord.exe`, every gate test that needs the module DLLs calls `Assert.Inconclusive` (tests that bind only against the `TaleWorlds.*.dll` copies in the test bin still run and pass), and the Step 1 command's `binding-gate.runsettings` turns each one into a failure, so the run is red. Without that file MSTest reports them as Skipped and exits 0: never quote such a run, or any run with a non-zero `Skipped:` count, as a green gate. A missing install is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
 
 ## Step 1 — Run the binding gate
 
 ```bash
-dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true --filter "TestCategory=BindingVerification"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
-Three test classes under `TAOM.Tests/Migration/`:
-- `HarmonyPatchBindingTests` — every `[HarmonyPatch]` / `TargetMethod` target resolves as Harmony resolves it.
+The test classes under `TAOM.Tests/Migration/`:
+- `HarmonyPatchBindingTests`: every patch class resolved and bound the way Lib.Harmony 2.4.2 applies it (`HarmonyTargetResolver`: the attribute target on the declared type, or `TargetMethod`/`TargetMethods`; each prefix, postfix and finalizer parameter; a body to patch), plus the patches `ManualPatchApplicator` applies by hand.
 - `GameModelOverrideBindingTests` — every `Taom*Model` is registered in `SubModule.cs`, overrides ≥1 base virtual, and doesn't shadow a base virtual without `override`.
 - `ReflectionSiteBindingTests` — each catalogued auxiliary reflection member resolves.
+- `TranspilerSiteBindingTests`: the transpilers it lists, run over the installed engine's IL, still find their sites.
+- `ViewModelMixinBindingTests`: every `[ViewModelMixin("Method")]` refresh name resolves to one non-abstract method on its target view model.
 
 ## Step 2 — Interpret a failure (do NOT just rerun)
 
-A red gate is a real finding — one of three classes. Fix at the source, do not silence the test:
+A red gate is an environment gap or a real finding. `Assert.Inconclusive failed. Game assemblies not loaded` (or `unavailable`, or `Game dir unresolved`) means no install resolved: report it (Pre-flight) and change no code. `Source file not found` is the same kind of precondition: RepoPaths resolves files from the path the test DLL was compiled at, so the tree moved after the build; rebuild and rerun, never edit code for it. `No test matches the given testcase filter` with a non-zero exit means no test ran under the filter (the runsettings' `TreatNoTestsAsError`). On the Step 1 command as written it is a finding, not a command to edit: an MSTest discovery warning above it means `/investigate` (`Unable to load types from the test source`: some of the DLL's types did not load; `Failed to discover tests from assembly`: the DLL itself did not load), and with neither warning the gate tests have most likely lost their `BindingVerification` category. On a command you wrote yourself, fix its category or filter. Never edit the settings. The common finding classes are below; a failure that matches none of them is still a finding, so read its message and the test that raised it. Fix at the source, do not silence the test:
 
 | Failure message | Root cause | Fix |
 |---|---|---|
-| `AmbiguousMatchException` on a patch | name-only `[HarmonyPatch]` on a method overloaded anywhere in the type hierarchy | pin argument types: `[HarmonyPatch(typeof(X), "M", new[] { typeof(...) })]` (the documented HarmonyLib way) |
+| `Only N [HarmonyPatch] types discovered` / `Only N GameModel subclasses discovered` | the game loaded but TAOM's types failed to load against it: a stale build, or a test-time variable naming a different install than the build used | rebuild (no `--no-build`), check the variables against the build's install, then `/investigate` with the loader exceptions |
+| `AmbiguousMatchException` on a patch | a name-only [HarmonyPatch] on a method with two overloads declared on the named type | pin argument types: `[HarmonyPatch(typeof(X), "M", new[] { typeof(...) })]` (the documented HarmonyLib way) |
+| `Undefined target method` | the target is declared only on a base type, or the engine removed it (Harmony looks up the declared type only) | name the declaring type in `[HarmonyPatch]`, or `/research` the member and retarget |
+| `has no body` | the target became abstract or extern; the work moved into overrides | patch the concrete overrides (`TargetMethods`) |
+| `Parameter "x" not found` / `injects field` / `Cannot get result from void method` / `no parameter at index` / `cannot assign` | a patch parameter no longer binds: the engine renamed a parameter or field, or changed the return type | read the original with `pwsh tools/taom-src.ps1 path <Type>` and fix the patch parameter |
+| `ManualPatchApplicator applies patch classes this gate never checks` | a new hand-applied patch | give the class a `TargetMethod()` or add a `ManualPatches` row in `HarmonyPatchBindingTests` |
 | target/member `did not resolve` / `not found` | engine renamed/moved/removed the member in this version | `/research` the new signature, update the patch / adapter / GameModel; if a reflection site, update both `reflection-sites.md` and the `[DataRow]` |
+| a `TranspilerSiteBindingTests` count is off | the engine IL moved under a fail-safe transpiler, so the feature silently stopped | read the new IL, re-anchor the transpiler, then set the count from the new site (cite its line) |
+| a `[ViewModelMixin]` refresh method `is not declared` | UIExtenderEx 2.13.2 throws a NullReferenceException at `UIExtender.Register` for a name that no longer resolves | look up the renamed method with `pwsh tools/taom-src.ps1 path <Type>` and update the attribute |
 | GameModel `never AddModel'd` | a `Taom*Model` compiles but isn't registered | add `campaignStarter.AddModel(new TaomXModel(...))` in `Main/SubModule.cs` |
 
 If the fix needs an unknown TaleWorlds signature, hand off to `/research` first. If it's a deeper "why did this break" question, use `/investigate`.
@@ -71,4 +80,4 @@ The gate is offline-only. Patch *application*, prefab visual order, ruler equipm
 
 ## Output
 
-Report: gate result (pass/fail with the per-finding class for any failure), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` and `CHANGELOG.md` if bindings were fixed.
+Report: gate result (pass/fail with the per-finding class for any failure), the run's `Skipped:` count (it must be 0), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` if bindings were fixed, and say what changed in the commit body.

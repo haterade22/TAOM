@@ -23,12 +23,19 @@ _PREFIXES = {
     "troop": "NPCCharacter.",
     "culture": "Culture.",
     "party_template": "PartyTemplate.",
+    "body_property": "BodyProperty.",
+    "faction": "Faction.",
 }
 
 # The engine (taom_schema.REF_KINDS) names the troop kind "npccharacter"; the
 # query kind is "troop". Accept either so a caller using the REF_KINDS name
 # doesn't silently fall back to an all-prefix search (deep-review 2026-05-31).
 _KIND_ALIASES = {"npccharacter": "troop"}
+
+# The shipped-troop-id baseline describes the repo's own troops (validate_moduledata.py applies it
+# only to the repo's ModuleData), so validate() passes it for that tree alone.
+_REPO_MODULEDATA = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData"
+_SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
 
 
 class ModuleDataQuery:
@@ -90,8 +97,8 @@ class ModuleDataQuery:
 
     def find_references(self, target_id: str, kind: str | None = None, limit: int = 200) -> dict:
         """Find every reference to an id across ModuleData. `target_id` may be
-        prefixed (Item.x / NPCCharacter.x / Culture.x / PartyTemplate.x) or bare
-        with `kind` set; with neither, all four prefixes are searched."""
+        prefixed (Item.x / NPCCharacter.x / Culture.x / PartyTemplate.x / BodyProperty.x /
+        Faction.x) or bare with `kind` set; with neither, all six prefixes are searched."""
         bare, inferred = target_id, _KIND_ALIASES.get(kind, kind)
         for k, p in _PREFIXES.items():
             if target_id.startswith(p):
@@ -115,7 +122,8 @@ class ModuleDataQuery:
 
     # -- validation ------------------------------------------------------- #
     def validate(self, codes=None) -> dict:
-        issues = ts.Validator(self.moduledata, self.schemas, self.reg).run()
+        baseline = _SHIPPED_TROOP_IDS if self.moduledata.resolve() == _REPO_MODULEDATA.resolve() else None
+        issues = ts.Validator(self.moduledata, self.schemas, self.reg, shipped_troop_ids_file=baseline).run()
         if codes:
             wanted = set(codes)
             issues = [i for i in issues if i.code in wanted]

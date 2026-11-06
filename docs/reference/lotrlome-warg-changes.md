@@ -526,8 +526,15 @@ with the warg. Folder semantics:
 Fixing this outside the Kit would mean inserting a material reference, not substituting one. The
 metadata lengths differ between the two versions of the same mesh (1,317 bytes against 1,349 on the
 dark variant), so there is no slot to overwrite. That runs into the same wall as the Owner Skeleton
-in section 11: adding content invalidates the item's 8-byte checksum, whose algorithm is not known
-here, and the Kit then discards the edit silently. The assignments were made in the Modding Kit.
+in section 11: adding content invalidates the item's 8-byte checksum, whose algorithm was not known
+here at the time, and the Kit then discards the edit silently. The assignments were made in the Modding Kit.
+
+> **Known since 2026-09-17 (#616):** the item checksum is xxHash64 (seed 0) over the int64 metadata
+> length plus the metadata bytes, and each segment entry carries xxHash64 of its decompressed
+> payload; both were measured on every item and segment of the live spider bundle on the 1.5.x
+> line, whose `tools/tpac_clone_metamesh.py` recomputes them (plan 144 ports that tool to this
+> line, without its tests). A metadata insert from files is therefore possible now. The Owner Skeleton
+> case in section 11 has not been retried.
 
 ### Residual
 
@@ -730,7 +737,7 @@ wargs so a heavier mount does not reach level 21 scouts.
 | `python tools/validate_mesh_refs.py` | 10 errors, the same 10 that were there before the change (8 `taom_ram_barding_*`, 2 `sk_rh_khml_barding_*`, none yet cooked). Zero warg entries |
 | `python tools/audit_mount_parity.py` | Reads the new LOTRLOME locations; "warg: every usage-set action is bound in its action_set" passes |
 | Animation-target sweep | All **75** warg-side `animation=` targets, including the spider's 12 borrowed `rider_warg_*` clips, resolve against LOTRLOME's packs plus vanilla `animation_clips.tpac`. **Zero** require `Alliance.Wargs` |
-| `dotnet test TAOM.Tests` | 7,716 passed, 0 failed, 2 skipped |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | 7,716 passed, 0 failed, 2 skipped |
 | XML parse of every edited and new file | PASS |
 
 **Still owed: the in-game ladder.** Nothing here has been run in the game yet. In order: main menu

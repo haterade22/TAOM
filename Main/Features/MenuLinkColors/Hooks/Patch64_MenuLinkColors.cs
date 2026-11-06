@@ -11,8 +11,9 @@ namespace TAOM.Features.MenuLinkColors.Hooks;
 /// <c>GameMenu.GetText()</c> both return the SAME cached <c>TextObject</c> reference every call,
 /// and <c>GameMenuVM.IsMenuTextChanged()</c> compares by reference every frame. A postfix there
 /// returning a new object would rebuild the menu text at 60 Hz forever; mutating the returned
-/// object would corrupt the menu's stored template. The setter is reached only when
-/// <c>_requireContextTextUpdate</c> is set — once per menu open or refresh.
+/// object would corrupt the menu's stored template. The setter itself runs every frame:
+/// <c>GameMenuVM.OnFrameTick</c> sets <c>ContextText</c> each frame while the menu text carries no
+/// attributes, so the rewrite is a per-frame cost, not a once-per-menu-open one.
 ///
 /// The prefix runs BEFORE vanilla's <c>if (value != _contextText)</c> guard, so the field and the
 /// comparison both see the rewritten string and no extra property-change notification fires.

@@ -34,7 +34,7 @@ param(
   [string]$Skeleton = "",
   [switch]$List,
   [string]$OutFile = "",
-  [string]$TpacToolBin = "E:\Bannerlord_Art\TpacTool_0.4.0\TpacTool\bin",
+  [string]$TpacToolBin = "E:\Release_v0.5.1\bin",
   [string]$NativeDir   = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\Native"
 )
 $ErrorActionPreference = "Stop"

@@ -131,6 +131,120 @@ public class CareerLifecycleServiceTests
     }
 
     [TestMethod]
+    public void RepairForeignChoices_RealProviderAndRegistry_DropsOtherCareersGroupChoiceKeepsUnowned()
+    {
+        // #766 end to end: the real XML parser feeds the real registry, so a group choice resolves
+        // to its career only if the provider stamped the group id on it. Hand-built definitions
+        // (every other test here) cannot see that link.
+        var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "taom_test_" + System.IO.Path.GetRandomFileName());
+        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(dir, "career_system"));
+        try
+        {
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_careers.xml"), @"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""ranger"" display_name=""Ranger"" description="""" portrait_sprite="""" ability_template_id=""ambush""
+          min_clan_tier=""0"" root_choice_id=""ranger_root"">
+    <EligibleCultures><Culture id=""gondor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""ranger_g1"" /></ChoiceGroups>
+  </Career>
+  <Career id=""warboss"" display_name=""Warboss"" description="""" portrait_sprite="""" ability_template_id=""rally""
+          min_clan_tier=""0"" root_choice_id=""wb_root"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""wb_g1"" /></ChoiceGroups>
+  </Career>
+</Careers>");
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_career_choices.xml"), @"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""ranger_root"" type=""Passive"" description=""r"" icon_sprite=""i"" />
+  <Choice id=""wb_root"" type=""Passive"" description=""r"" icon_sprite=""i"" />
+  <ChoiceGroup id=""ranger_g1"" career_id=""ranger"" tier=""1"">
+    <Choice id=""ranger_key"" type=""Keystone"" description=""k"" icon_sprite=""i"" />
+  </ChoiceGroup>
+  <ChoiceGroup id=""wb_g1"" career_id=""warboss"" tier=""1"">
+    <Choice id=""wb_key"" type=""Keystone"" description=""k"" icon_sprite=""i"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+            var pathService = Substitute.For<TAOM.Core.Infrastructure.IPathService>();
+            pathService.ModuleDataPath.Returns(dir);
+            var provider = new CareerConfigProvider(pathService, _logger);
+            var registry = new CareerRegistry(provider, _logger);
+            var sut = new CareerLifecycleService(_dataService, registry, _creationHandler, _logger);
+
+            Assert.AreEqual("ranger", registry.GetOwningCareerId("ranger_key"));
+            Assert.AreEqual("warboss", registry.GetOwningCareerId("wb_key"));
+
+            _dataService.SetCareer(Hero, "ranger");
+            _dataService.TryAddChoice(Hero, "ranger_key", 10);
+            _dataService.TryAddChoice(Hero, "wb_key", 10);
+            _dataService.TryAddChoice(Hero, "retired_choice_with_no_owner", 10);
+
+            Assert.AreEqual(1, sut.RepairForeignChoices(Hero));
+            CollectionAssert.AreEquivalent(
+                new List<string> { "ranger_key", "retired_choice_with_no_owner" },
+                new List<string>(_dataService.GetChoiceIds(Hero)));
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
+    [TestMethod]
+    public void RepairForeignChoices_RealProvider_GroupListedByTwoCareers_KeepsTheLaterCareersPick()
+    {
+        // W1-02: both careers list shared_g, so it has no owner. The old first-writer-wins index
+        // made it the ranger's, and the warboss's legitimately taken pick was deleted as foreign.
+        var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "taom_test_" + System.IO.Path.GetRandomFileName());
+        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(dir, "career_system"));
+        try
+        {
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_careers.xml"), @"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""ranger"" display_name=""Ranger"" description="""" portrait_sprite="""" ability_template_id=""ambush""
+          min_clan_tier=""0"" root_choice_id=""ranger_root"">
+    <EligibleCultures><Culture id=""gondor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""shared_g"" /></ChoiceGroups>
+  </Career>
+  <Career id=""warboss"" display_name=""Warboss"" description="""" portrait_sprite="""" ability_template_id=""rally""
+          min_clan_tier=""0"" root_choice_id=""wb_root"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""shared_g"" /></ChoiceGroups>
+  </Career>
+</Careers>");
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_career_choices.xml"), @"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""ranger_root"" type=""Passive"" description=""r"" icon_sprite=""i"" />
+  <Choice id=""wb_root"" type=""Passive"" description=""r"" icon_sprite=""i"" />
+  <ChoiceGroup id=""shared_g"" career_id=""ranger"" tier=""1"">
+    <Choice id=""shared_key"" type=""Keystone"" description=""k"" icon_sprite=""i"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+            var pathService = Substitute.For<TAOM.Core.Infrastructure.IPathService>();
+            pathService.ModuleDataPath.Returns(dir);
+            var provider = new CareerConfigProvider(pathService, _logger);
+            var registry = new CareerRegistry(provider, _logger);
+            var sut = new CareerLifecycleService(_dataService, registry, _creationHandler, _logger);
+
+            Assert.IsNull(registry.GetOwningCareerId("shared_key"));
+
+            _dataService.SetCareer(Hero, "warboss");
+            _dataService.TryAddChoice(Hero, "wb_root", 10);
+            _dataService.TryAddChoice(Hero, "shared_key", 10);
+
+            Assert.AreEqual(0, sut.RepairForeignChoices(Hero));
+            CollectionAssert.AreEquivalent(
+                new List<string> { "wb_root", "shared_key" },
+                new List<string>(_dataService.GetChoiceIds(Hero)));
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
+    [TestMethod]
     public void RepairForeignChoices_CleanSave_IsNoOp()
     {
         _dataService.SetCareer(Hero, "ranger");

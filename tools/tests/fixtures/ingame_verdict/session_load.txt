@@ -1,0 +1,4 @@
+[2026-10-22 14:20:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-22 14:27:16] [INFO] [SaveLoad] seq=1 t=+0ms phase=LoadRequested name='save007'
+[2026-10-22 14:27:47] [INFO] [SaveLoad] seq=6 t=+30500ms phase=GameLoaded gc=1395/365/35 heapMB=460 privMB=8754 wsMB=5489
+[2026-10-22 14:40:00] [INFO] [Shutdown] clean module unload

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -155,6 +156,72 @@ public class CareerConfigProviderTests
         Assert.AreEqual(2, groups[0].ChoiceIds.Count);
     }
 
+    // -- #766: a choice inside a <ChoiceGroup> takes the group's id as its GroupId --
+
+    [TestMethod]
+    public void LoadChoices_ChoicesInsideGroupWithoutGroupIdAttribute_TakeTheGroupsId()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""g1"" career_id=""warboss"" tier=""1"">
+    <Choice id=""g1_key"" type=""Keystone"" description=""Keystone"" icon_sprite=""icon"" />
+    <Choice id=""g1_p1"" type=""Passive"" description=""Passive 1"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual(2, choices.Count);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_key").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_p1").GroupId);
+    }
+
+    [TestMethod]
+    public void LoadChoices_NestedChoiceWithGroupIdAttribute_UsesParentIdAndWarns()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""g1"" career_id=""warboss"" tier=""1"">
+    <Choice id=""g1_odd"" group_id=""other"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+    <Choice id=""g1_same"" group_id=""g1"" type=""Passive"" description=""y"" icon_sprite=""icon"" />
+    <Choice id=""g1_empty"" group_id="""" type=""Passive"" description=""z"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_odd").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_same").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_empty").GroupId);
+        _logger.Received(1).LogWarning(Arg.Is<string>(
+            s => s.Contains("g1_odd") && s.Contains("other") && s.Contains("ignored; membership is the enclosing ChoiceGroup")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("g1_same")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("g1_empty")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_RootChoiceWithGroupIdAttribute_HasEmptyGroupIdAndWarns()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""root_empty"" group_id="""" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+  <Choice id=""root_absent"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+  <Choice id=""root_set"" group_id=""declared"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual("", choices.First(c => c.Id == "root_empty").GroupId);
+        Assert.AreEqual("", choices.First(c => c.Id == "root_absent").GroupId);
+        Assert.AreEqual("", choices.First(c => c.Id == "root_set").GroupId);
+        _logger.Received(1).LogWarning(Arg.Is<string>(
+            s => s.Contains("root_set") && s.Contains("declared") && s.Contains("ignored; membership is the enclosing ChoiceGroup")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("root_empty") || s.Contains("root_absent")));
+    }
+
     [TestMethod]
     public void LoadChoices_GroupWithDisplayName_ParsesDisplayName()
     {
@@ -203,12 +270,10 @@ public class CareerConfigProviderTests
     }
 
     [TestMethod]
-    public void LoadChoices_UnrepresentableAttackTypeMask_DegradesToAll()
+    public void LoadChoices_KindMasks_ParseToTheirKind()
     {
-        // Blunt/Cut are NOT AttackTypeMask members (enum is None/Melee/Ranged/All). Five shipped
-        // Resistance pips author them and rely on ParseEnum's unknown-name fallback to All (apply
-        // to every hit). Pin that intentional coarsening so a future stricter parser can't silently
-        // zero those pips.
+        // #613: Blunt / Cut / Pierce are real mask members now (the damage-kind axis). Until then the
+        // five shipped kind pips fell back to All and resisted every hit.
         WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
         WriteChoicesXml(@"<?xml version='1.0'?>
 <CareerChoices>
@@ -218,11 +283,44 @@ public class CareerConfigProviderTests
   <Choice id=""ccut"" type=""Passive"" description=""test"" icon_sprite=""icon"">
     <PassiveEffect type=""Resistance"" magnitude=""0.08"" attack_type_mask=""Cut"" />
   </Choice>
+  <Choice id=""cboth"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.08"" attack_type_mask=""Melee, Pierce"" />
+  </Choice>
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(AttackTypeMask.All, choices[0].Passive.AttackTypeMask, "Blunt must degrade to All");
-        Assert.AreEqual(AttackTypeMask.All, choices[1].Passive.AttackTypeMask, "Cut must degrade to All");
+        Assert.AreEqual(AttackTypeMask.Blunt, choices[0].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Cut, choices[1].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Melee | AttackTypeMask.Pierce, choices[2].Passive.AttackTypeMask);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("attack_type_mask")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_UnknownAttackTypeMask_WarnsAndLeavesThePipInert()
+    {
+        // The consumer branches on this string; an unknown value must not silently take the widest
+        // reading (csharp-architecture.md "Config Providers MUST Validate"). None never matches a hit,
+        // and the shipped-XML gate refuses a None mask, so a typo fails a test instead of shipping.
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""cfire"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" attack_type_mask=""Fire"" />
+  </Choice>
+  <Choice id=""cdigit"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" attack_type_mask=""1"" />
+  </Choice>
+  <Choice id=""cnone"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(AttackTypeMask.None, choices[0].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.None, choices[1].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.All, choices[2].Passive.AttackTypeMask, "no attribute keeps the All default");
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cfire") && s.Contains("Fire")));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cdigit")));
     }
 
     [TestMethod]

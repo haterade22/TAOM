@@ -30,7 +30,8 @@ rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | engine XSD required attributes; whether an id points at the *right* thing |
+| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | whether an id points at the *right* thing; the engine XSD layer of the live modules (`--live` below) |
+| `python tools/validate_xml_schemas.py [FILE ...]` | every engine-loaded ModuleData file against the XSD the engine itself picks (a missing required attribute, an undeclared one, a DOCTYPE, a registration that loads nothing); a file passed by name is classed LANGUAGE FILE, STYLESHEET, NATIVE or NOT REGISTERED | what a file means, a registration with no XSD (NO SCHEMA, such as the Armory's `ModuleSounds`), any file no `<XmlName>` loads, and a run without lxml (exit 2) |
 | `python tools/validate_all_troop_refs.py` | armour ids in ten troop files resolve against the Armory | six troop files, and weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
 | `python tools/validate_gondor_refs.py` | the Gondor-only ancestor of the above | superseded; prefer `validate_moduledata.py` |
 | `python tools/audit_item_refs.py` | every `Item.X` reference in TAOM ModuleData against the multi-module item registry | armour-only scope is gone here, but rosters applied at runtime are still invisible |
@@ -82,7 +83,7 @@ hand edits, so land a repo-side validator gate with any fix.
 | `python tools/audit_scene_names.py` | every settlement and hideout `scene_name` resolves to a SceneObj folder | whether the scene is playable |
 | `python tools/audit_battle_scenes.py` | every Scene id in `sp_battle_scenes.xml` still exists on disk | which scene a given fight will pick |
 | `python tools/audit_siege_props.py` | per town and castle, how many siege resupply props are genuinely usable | siege AI behaviour |
-| `python tools/check_prefab_budget.py` | `TAOM_Map/Prefabs` against the engine's 131,072 load-queue cap | every other module's prefabs, which share that one global queue |
+| `python tools/check_prefab_budget.py` | the sum of every installed module's `Prefabs` folder against the Modding Kit's 131,072 load-queue cap | a machine without NavalDLC sums lower, so its margin is not the one a machine with NavalDLC has |
 | `python tools/analyze_settlement_prosperity.py` | starting prosperity, live map against vanilla, with flat-cluster flags | the economy after day one |
 | `python tools/dump_settlement_buildings.py` | per-fief starting building levels from the live map | levels players reach later |
 | `python tools/analyze_war_theaters.py` | which kingdoms have no enemy inside their march radius | real pathing distance; its numbers are straight-line estimates |
@@ -158,7 +159,7 @@ A green exit is not the same claim in every tool.
 | `validate_moduledata.py` | 1 on any ERROR, 0 when clean, 2 on bad input. Warnings do not change the code |
 | `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md:56`) |
 | `audit_polearm_shield_parity.py` | 1 on a polearm violation, WARN on two-handers, and SKIP at exit 0 when there is no game install |
-| `check_prefab_budget.py` | prints `OK` while the real cross-module total sits near the cap, because it counts `TAOM_Map/Prefabs` alone |
+| `check_prefab_budget.py` | sums every module: 0 under 120,000, 1 above that (a WARN, and the honest result on a machine near the cap), 2 at or over the cap or on a bad path. `--dir` counts one folder only. `--gate`, which `data_gates.py` uses: 1 only at or over the cap, 2 only on a bad path |
 | `audit_action_set_parity.py` | non-zero on either failure class, so it is safe to chain |
 | `triage_battle_load.py` | 1 for any diagnosed hang, 0 for COMPLETED or UNKNOWN, 2 for a bad path. UNKNOWN means diagnostics were off, not that the load was fine |
 | `Settlement-Breakdown.ps1` | exits 2 when the file is missing |
@@ -349,11 +350,11 @@ These cannot be checked with the tools above and are not a data modder's job to 
 
 | Situation | Why it needs a developer |
 |---|---|
-| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | the TAOM validator does not model it, and `characters/clans.xml` has no schema at all. Only the Bannerlord editor or an engine load will say. This is how `clan_umbar_3` shipped with no home settlement |
+| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | `python tools/validate_xml_schemas.py` has modelled it since 2026-09-18 (the `SCHEMA_INVALID` pass in `validate_moduledata.py` runs it, and `characters/clans.xml` is checked against the engine's `Factions` schema), so a missing required attribute or an undeclared one is caught for every registered file the engine ships an XSD for. What stays here is a registration with no XSD (the Armory's `ModuleSounds` prints NO SCHEMA), a file no `<XmlName>` loads, and an XSD that lags the deserializer. This is how `clan_umbar_3` shipped with no home settlement |
 | Anything a stylesheet does | no gate interprets XSLT. `spcultures.xslt` rewriting a vanilla culture in place is invisible to every check here; `CulturePartyTemplateTests` is the only detector and it is a C# test |
 | A culture fielding another faction's troops | the ref sweep proves an id resolves, never that it points at the right faction. That gap hid nine cultures' worth of Calradian troops for months |
 | A lord with the wrong name or sex for his body | free text behind a localization key; `LordNameAndSexConsistencyTests` owns it |
-| The C# suite | `dotnet test TAOM.Tests` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
+| The C# suite | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
 | Harmony patches, GameModels, MissionLogics, CampaignBehaviors | cannot be unit tested at all; they need a running game (`testing-guide.md` "What Cannot Be Unit Tested") |
 | Deploying your repo edit into the install | the copy happens during a build, not on save |
 
@@ -365,7 +366,7 @@ Run these in order. Each one is cheap; the expensive step is the campaign at the
 2. The category tables above, for the thing you actually touched.
 3. `python tools/check_external_xslt.py` if any `.xslt` changed.
 4. `python tools/audit_mbproj_registration.py` if you added a file.
-5. Ask a developer for `dotnet test TAOM.Tests` if you touched cultures, party templates or lords.
+5. Ask a developer for `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` if you touched cultures, party templates or lords.
 6. Full game restart, new campaign, the in-game smoke above.
 
 For a targeted question mid-edit rather than a full run, the `taom-moduledata` MCP server exposes the

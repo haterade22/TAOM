@@ -320,6 +320,18 @@ than paying for a pass that would produce twelve slightly different renderings o
 
 ---
 
+### Key ownership
+
+A key two English sources declare belongs to the first one in `tools/_loc_sources.py`: the translator seeds and translates it only in that source's language file, and it does not seed a key another file of the language already carries. A row the target file already holds is still diffed.
+
+### English-only overrides
+
+An 8-character vanilla id in `taom_module_strings.xml` is a rewording for English players (181 today). Give it no language row: the game's own translation shows. The 369 rows that stay are listed in `kept-vanilla-key-rows.txt`, each with its reason; 1,803 rows were removed on the 1.4.x line. The tools skip these keys. To change the meaning in every language, give the text a TAOM key instead.
+
+### Rows that nothing reads
+
+`python tools/check_orphan_loc_rows.py` lists registered `taom_*` rows that no code, data, composed family (`tools/loc_composed_families.json`) or reasoned allowlist entry (`tools/loc_orphan_allowlist.json`) reads. It looks only inside this repo, so before retiring a row, grep the live `TAOM_Map` and `LOTRLOME_Armory` `ModuleData` for its id; a row they read goes on the allowlist with that reason. An `UNREAD` row leaves the English file, the 12 language files and the caches. A `SHADOWED` row (a later row registers the same vanilla key) leaves the English file only.
+
 ## Adding Canonical Translations to Overrides
 
 If you want certain key terms translated consistently (e.g., always render "Strider" as "Бродяжник" in Russian), add them to `tools/translation_overrides/<lang>.json`:
@@ -460,7 +472,8 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
-- **Troop names are outside the pipeline.** Every `{=aom_*_name}` in `Main/_Module/ModuleData/troops/*.xml` is an inline default with no row in any strings source, language file or cache, so every language shows the English troop name (found 2026-09-13 while investigating #572, which assumed stale translations that never existed). Localizing them is a Case B pipeline extension: a generated troop-name strings file, registration in `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list and the language-file count test, then a translator run.
+- **Troop, lord, clan and kingdom names enter the pipeline through a generator.** Their `{=KEY}default` attributes live in `troops/troops_*.xml`, `characters/lords.xml`, `characters/clans.xml` and `taom_spkingdoms.xml`. `tools/generate_name_localization_strings.py` writes the four English masters (`taom_{troop,lord,clan,kingdom}_name_strings.xml`). Re-run it with `--apply` after adding a named troop, lord, clan or kingdom; its `--check` fails otherwise. A clan's name is saved, so an existing campaign keeps the key it saved.
+- **Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Before the fix those keys showed English in every language.
 - **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping.
 
 ---
@@ -493,8 +506,9 @@ Registering a key in a source XML is only half the job — a key that is not wir
 pipeline ships as its English fallback in all 12 languages, silently, with no error anywhere.
 
 1. **Register every key in the source XML**, including any generated at build time. Keys built at
-   RUNTIME from data ids (`"taom_enlist_duty_" + id + "_title"`) are invisible to a literal
-   `{=key}` grep, so they need a generator — see `tools/generate_enlistment_duty_strings.py`.
+   RUNTIME from data ids (`DutyText.KeyFor`, `"taom_enlist_duty_" + id + "_title"`) are invisible to a
+   literal `{=key}` grep, so the English is written once in the data file and a harvester registers
+   it: see `tools/harvest_duty_strings.py`.
 2. Add the file to `SOURCES` in `tools/generate_translation_template.py`.
 3. Add it to the TAOM tuple list in `tools/translate_with_claude.py`.
 4. Run `generate_translation_template.py --all --apply`.

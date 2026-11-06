@@ -1,6 +1,6 @@
 # Overnight run report, 2026-11-05
 
-All 19 work packages this run was allowed to take are merged on the local branch `port148/overnight`. The trunk `bannerlord-1.4.5` did not move and nothing was pushed. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
+This report grew with the run. The first 19 work packages are in the sections up to "In-game checks owed"; every later merge, the second integrated review, the verification at the tip and the symptom map are under "After the first report" and the sections that follow it. All of it is on the local branch `port148/overnight`. The trunk `bannerlord-1.4.5` did not move and nothing was pushed. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
 
 ## Work packages
 
@@ -40,7 +40,7 @@ Five reviewers read the whole merged range through different lenses (merge resol
 - **MINOR** (`plans/README.md:290 and plans/README.md:320`): The baseline's 2251 warnings does not reproduce from a clean export of the same commit. As a result the WP104 record `2358 warnings (was 2251)` reads as a rise of 107, while clean exports show WP104 lowered the count by 7. No gate is affected, because plans/101-baseline-sync.md:555 says the count is 'not a gate'. The cost is a misleading record, so MINOR stands.
 - **MINOR** (`docs/features/map-perf-profiler.md:28; docs/features/map-perf-profiler.md:367; docs/features/load-time-stamps.`): Narrowed from the original finding. Only these three added citations name an in-repo path that is absent on this line and carry no 1.5.x qualifier: `docs/migration/v1.5.2-impact.md`, `docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md` and `plans/040-load-time-stamps.md`. A reader looks here, finds nothing and is not told where the file lives. The plans' own convention is to label such paths `on the 1.5.x line`.
 
-The doc-only ones were corrected in the commit that adds this report (old plan 003 row, the coop-interop excluded count, and the three 1.5.x citations). The WP125 registry wording was corrected there too. Still open: the stale warning baseline note, the Exit Stall Sampler hint, the hollow-hero race regression and the literal English failure text.
+The doc-only ones were corrected in the commit that adds this report (old plan 003 row, the coop-interop excluded count, and the three 1.5.x citations). The WP125 registry wording was corrected there too. Still open at this report: the stale warning baseline note, the Exit Stall Sampler hint, the hollow-hero race regression and the literal English failure text. All four are fixed on `port148/integration-fixes`.
 
 ## Deferred, per work package
 
@@ -400,3 +400,506 @@ The doc-only ones were corrected in the commit that adds this report (old plan 0
 - Dwarf portraits: open a settlement with dwarf notables, the party screen with a dwarf hero, and a battle showing dwarf portraits. The face should be framed (eyes, nose, beard), not just hair and eyes at the bottom edge. `taom.print_race_offsets image` should list dwarf as Horizontal 0, Vertical 0.3, Zoom -0.2. Any `[TableauDiag]` 'Spawner frame: race='dwarf'' line in taom_debug should read z=-0.2 v=0.3.
 - Dead heroes keep their race: on a save holding a dead runtime-created hero whose race differs from its origin character (most likely a dead child of a non-human player), save with this build, quit to main menu, load, and check the race in the encyclopedia. taom_debug prints `RacePersistenceService: Restored race for N heroes.` on each load. A hero who died before this build keeps the reverted race; that is expected. Where possible also check that a child born after its parent's death takes that parent's race.
 - Save time: on one long-campaign save, compare rgl_log timings (`SaveContext::CollectSaveDataForObject::Containers` and the total) for the same save with a build before and after this WP. Expected: no measurable change. A clear increase goes to WP114 with both numbers.
+
+## After the first report: later waves
+
+D26, D27, D28 and D29 released most of the holds, so these merged after the sections above were written. Executor status PARTIAL means the deferred list below names what did not land. `plans/README.md` stays the record of status.
+
+| WP | Executor | Final review | Fix round | Merge | Tests after merge | Conflicts resolved |
+|---|---|---|---|---|---|---|
+| 127 | DONE | PASS | no | `af3691490` | 12251 | 0 |
+| 128 | DONE | PASS | no | `67f9b9aaf` | 12616 | 0 |
+| 129 | DONE | PASS | no | `37a478c67` | 12484 | 0 |
+| 130 | PARTIAL | PASS | no | `4f99e2743` | 12821 | 2 |
+| 131 | DONE | PASS | no | `f938ef85d` | 12324 | 0 |
+| 132 | DONE | PASS | no | `1266ab72d` | 12976 | 1 |
+| 133 | PARTIAL | PASS | no | `4b07389c7` | 12719 | 5 |
+| 134 | PARTIAL | PASS | no | `cf1bc73c3` | 12647 | 1 |
+| 135 | PARTIAL | PASS | no | `d2c2fdcf2` | 13047 | 6 |
+| 137 | PARTIAL | PASS | no | `b4d2d9477` | 12721 | 1 |
+| 141 | PARTIAL | PASS | no | `8b5a21e93` | 12976 | 0 |
+| 144 | DONE | PASS | no | `67cf44bd8` | 13047 | 0 |
+| 136 | DONE | PASS | no | `1a8153919` | 13099 | 0 |
+| 130 F3 | DONE | PASS | no | `48b610da0` | 13047 | 0 |
+| 115 | PARTIAL | PASS | no | `ecddc3c72` | 13132 | 0 |
+| 121 | DONE | PASS | no | `21800aa91` | 13055 | 0 |
+| 140 | PARTIAL | PASS | no | `eb5aadd9e` | 13172 | 0 |
+| 139 | DONE | PASS | no | `9c278e95c` | 13355 | 0 |
+| 137 D | DONE | PASS | no | `c7c3b3c59` | 13355 | 0 |
+| 122 | PARTIAL | PASS | no | `d0b279254` | 13411 | 0 |
+| 145 A-D | PARTIAL | PASS | no | `b84c3011a` | 13461 | 0 |
+
+## Integrated review 2 (whole branch, 1ab48c21d to d3a60dfb1)
+
+Seven lenses read the merged branch: merges, patches, threads, state, gates, symptoms, scope. Skeptics tried to refute each finding. Result: 22 survivors, all MINOR after refutation (one MAJOR, the Umbar clan names on old non-English saves, was lowered to MINOR by its skeptic), and 0 lost hunks. One fix branch, `port148/integration-fixes`, took them plus the known minors, passed a cold review with mutation checks, and merged as `6ac230b05` (record `30868fc76`).
+
+Survivors, as the skeptics worded them:
+
+- **MINOR** (`docs/features/mission-tick-guard.md:17 and :104`): The doc still treats WP107 as pending. Line 17 says the `Managed_ApplicationTick` shim's Native2Managed bridge swallows 'everything, until WP107's allowlist'. Line 104 gives an until-WP107 and an after-WP107 behaviour. At tip only the after-WP107 case exists. No runtime effect.
+- **MINOR** (`docs/features/map-load-diagnostics.md:9; docs/features/battle-corpses.md:119 and :121; docs/reference/engine/m`): Five notes describe a merged work package as future. No runtime effect. Two corrections to the claim. It is not true that each note was written by an earlier WP: the map-load note came from WP118 itself, which plans/118 line 1116 onward dictates verbatim, and Part A's a0c64e6e2 was already an ancestor of that doc commit 5f5cfdaec. battle-corpses also has a second instance at :119 ('which arrives w
+- **MINOR** (`docs/features/gui-sprite-system.md:42, :300 and :352`): The doc lists `CareerSystem/AbilityHUD.xml` as the live battle ability HUD in its file tree and key-file table, and line 300 describes it as displayed via `CareerPerkMissionBehavior` on a `GauntletLayer("CareerAbilityHUD", 50)` with `CareerAbilityHudVM`. The file is gone at tip. One correction: WP140 only made the path rows dangle. The descriptions were already false before WP140, because #382 ret
+- **MINOR** (`docs/features/custom-battles.md:56`): The doc says a Custom Battle Sauron fights without TAOM's race combat rules, because they live in the 'campaign-only' TaomCombatMechanicsModel and Custom Battle's damage model is TaomCustomBattleCreatureDamageModel. The behaviour half is false since 76ac53447 (#788, WP130 Part D) and the class name is false on this line. The reviewer's provenance is corrected: the two commits did not land together
+- **MINOR** (`C:/Users/mikew/source/repos/taom-port/overnight/Main/Features/CareerSystem/Abilities/CareerAgentStatService.cs`): The #613 stat line is meant for the career hero, but it is written for every hero agent in every campaign mission. Careers are player-only (career-system.md:256, plus companions via CareerSwitchService), so a lord or notable with no career still writes one synchronous INFO line per mission reading 'agent stats for ...: none', plus a 'mount stats' line if mounted. The comment saying the dictionarie
+- **MINOR** (`C:/Users/mikew/source/repos/taom-port/overnight/Main/Features/CareerSystem/CareerPassiveService.cs:197-198 wit`): The 'event-scoped' [CareerPerks] lines have no dedupe, and two of the four types fire far more often than the policy states. HeroHealing runs twice per in-game hour for the main party, not on a daily tick. It also runs twice per quarter day for each other party whose owner holds it, a path the finding missed. TroopUpgradeCost runs once per upgrade target per upgradable party-screen row when rows b
+- **MINOR** (`Main/_Module/ModuleData/Languages/DE/std_taom_clan_name_strings_deu-DE.xml:112 (same row and line in all 12 la`): Confirmed by reading only, severity lowered from MAJOR to MINOR. In a campaign saved before WP135 and played in any non-English language, clan_umbar_2 to clan_umbar_6 all display clan_umbar_1's name. Today that is 'House of Casîmirionî' (English row); after the owed translation run it becomes that language's Casîmirionî name, for example 'Haus Casîmirionî' from the DE cache. At base each clan show
+- **MINOR** (`TAOM.Tests/Features/ShadowfaxScreens/Party/PartyFastOpenPatchShapeTests.cs:41; TAOM.Tests/Features/ShadowfaxSc`): The documented `managed-tests` gate (.ai/verification.md, -c Release) is red at the tip. Two WP125 tests patch stand-in methods with no NoInlining attribute, so the Release JIT inlines them and the Harmony patch never fires. This is a test defect, not a product defect. No integrator record ran -c Release, because the programme's baseline command is Debug. QuestLogPatchTests.cs:308 already puts NoI
+- **MINOR** (`plans/README.md:336; docs/reference/taleworlds-api-snapshot/patch-targets.md:35; docs/reference/taleworlds-api`): Narrowed. The `api-snapshot` gate exits 1 at the tip and no record says so; the last recorded result is rc 0 at WP137 Part D (README:334). The drift itself is authorised: D29 rule 2 leaves every Part G step out, and plan 145 Step G6 (:541) names both rows to remove. The README:336 deferral covers all of Parts E, F and G and only gives gamemodel-bases as an example ('including'), so the patch-targe
+- **MINOR** (`plans/README.md:297-316; plans/README.md:348; plans/_audit/2026-11-04-port148/OVERNIGHT-REPORT.md:40`): Corrected: the warning series mixes two counting modes, and the cause is now identified. The gap is not a clean export against the worktree. It is whether a build emitted MSB3270 processor-architecture warnings from TAOM.csproj and TAOM.Dependencies.csproj, which adds about 112 to 114 to the count. Both 2251 and 2365 are real results for the base commit, so OVERNIGHT-REPORT.md:40 was right about i
+- **MINOR** (`plans/README.md:82; plans/_audit/2026-11-04-port148/PROGRESS.md:53-54`): Programme state text is stale against the rows and git. README:82 says WPs 102, 103, 115, 116, 121, 122 and 127 onward are held, though rows from 115 and 127 onward are merged or PARTIAL under D26, D27 and D29. PROGRESS.md, the file README:84 points to for details, stops at 'Nineteen WPs merged' and 'D25's holds still apply'. No later commit or note corrects either. Documentation only; the rows ar
+- **MINOR** (`CLAUDE.md:159`): Narrowed to one count. 'all 83 rows' for doc-lookup is now 85, because 8af702734 and 3205dd766 each added a row and neither updated CLAUDE.md. No plan carries this count, so nothing will correct it, and WP142 Step E2 will add more rows.
+- **MINOR** (`tools/data_gates.py:117-118; tools/data_gates.py:192-200; tools/audit_action_set_parity.py:29-36,47`): `data_gates` reports a gate that never ran as FAIL, against its own docstring rule that no install is NOT RUN (exit 1 'is a finding'). audit_action_set_parity hardcodes the desktop's E: paths, the gate passes no --native or --live, and an unreadable file exits 1 through sys.exit(string). Attribution corrected: data_gates.py comes from WP136 Step B7 (5499889a3), not WP141, and the audit tool itself
+- **MINOR** (`Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs:44; Main/Features/BattleLoadDiagnostics/T`): The Enable Exit Stall Sampler hint says that turning it off keeps the other diagnostics 'without any thread suspension'. That is false at tip d3a60dfb1. The Battle Freeze Sampler and the Main Thread Freeze Sampler default on, answer to their own switches and both reach Thread.Suspend through ThreadStackCapture.Capture. A player who turns the exit sampler off to remove the suspension risk still has
+- **MINOR** (`docs/features/armory-ref-audit.md:74-82, :100, :116-118, :133-135; docs/features/preload-body-guard.md:33, :47`): The docs present WP108 B4's validator gates as live on this line. They name MISSING_COLLISION_BODY, COLLISION_BODY_BORROWED, missing_collision_body_issues, borrowed_body_issues, _loaded_tpacs, MissingCollisionBodyTests, tools/tests/test_collision_body_borrowed and the hook's --code lines. B4 is held (D27 rule 8), so a reader believes a hang-class gate runs when it does not. Plans/README.md:300 rec
+- **MINOR** (`tools/perf_runs.py:99-100; docs/features/mission-perf-heartbeat.md:1121-1122`): Both say the Patch89 map-load trace first shipped in v2.0.29 'and the 1.4.5 branch has none'. WP118 ported the trace to this line, so a reader of a v1.4.x log is told to expect no game boundary lines that a build of this branch does write. WP117 landed the sentence before WP118 merged. e1ae44d4f removed the other 'until WP118' notes and left these two.
+- **MINOR** (`docs/features/mission-tick-guard.md:87`): The doc says Patch35_Mission_OnTick shares the Mission.OnTick target. WP123 deleted that patch, so the guard's doc describes a neighbour that no longer exists. This is a cross-plan interaction: WP106 was planned while the patch still existed.
+- **MINOR** (`commit 0fb873f67 (Ported-from: e45f6df2c2c8cbb52099d6d2ffb7defa136f7766)`): The commit's only Ported-from trailer names the planning pin, a Fords of War commit that touches neither changed file. The rows were added by f1675c058, so the trailer breaks the one-trailer-per-included-commit rule (plans/README.md:113) and points provenance at an excluded feature. The correct trailer is f1675c058. It is unpushed, so it can still be reworded before the maintainer takes the branch
+- **MINOR** (`tools/data_gates.py:93`): The moduledata gate's note tells the reader 'settlement pins live in tools/settlement_assignments.json'. That file exists only on 1.5.x. The note came over with the table and points at nothing here.
+- **MINOR** (`tools/audit_mbproj_registration.py:113`): A comment cites docs/ai-includes/orientation.md, 'Three modules'. That doc exists only on 1.5.x, and several plans record it as absent here. The local equivalent is the 'Three-module data surface' row in CLAUDE.md Traps.
+- **MINOR** (`TAOM.Tests/Features/MapPerf/MapFrameProfilerBindingTests.cs:301; TAOM.Tests/Features/MissionPerf/HitchProbeBin`): Three test comments name CreatureBanditsWiringTests.TargetOf as the shape they copy. That class is on 1.5.x only and this line has no CreatureBandits feature. The first comment also names MissionTickProfilerBindingTests.TargetOf, which does exist, so only its parenthetical is dead.
+- **MINOR** (`docs/features/composition-root.md:161`): The kernel-anchor example is `new AgentColorStoreCleanupBehavior(colorStore)`, a line WP123 deleted. WP123 moved the test's anchor as this same doc instructs, but left the doc's example. The kernel tests now anchor elsewhere, so the example names a line that is not in the tree and is not an anchor.
+
+Fixer refuted: mount-parity gate gives no real verdict because of an E: path default: does not hold. tools/audit_mount_parity.py already uses _gamedir. It exits 0 on the laptop and prints 'F4 target-resolution and quad_movement checks SKIPPED', because the installed Armory v2.0.26 has no Assets folder, so data_gates' NOT RUN is honest. No change. A prefab-budget FAIL is real against the cap: does not hold. Measured total is 130,468 of 131,072, exit 1 is only the WARN band above 120,000. The row was misleading and is fixed (see applied).
+
+Owed after the fix branch:
+
+- 0fb873f67 Ported-from trailer: reword e45f6df2c2c8cbb52099d6d2ffb7defa136f7766 to f1675c058's full sha. Not done: it rewrites every later commit and invalidates every 'overnight, <sha>' status in plans/README.md. Maintainer's choice before taking the branch; recorded in the README ledger line.
+- Paid translation pass for taom_bc_apply_failed (English placeholder rows) and the renamed aom_clan_umbar_casimirioni_name row (language files still hold English; caches keep the translations under the new key), with the other owed passes.
+- VanillaTuning: maintainer re-reads HoN/VanillaTuning at or after 1b9ce3ba and decides whether row 70 of provenance-register.md (shader-compile-notice, uncleared) can be cleared.
+- Skill and hook edits the new qualifiers point at: plan 137 and plan 139 .claude hunks, WP108 Step B4, CLAUDE.md:187 and :225 with WP143. Reword or remove the 'once ... land' qualifiers then.
+- CHANGELOG.md entry for this branch (never staged, per the rules).
+- In game, nothing is run: an old German save showing six Umbar names, a real hollow hero across save and load, a real harmony.Patch failure. /deep-review was not run (cannot invoke skills); recommend /deep-review on efe9c6bfd, e84268475 and 95acf768c before merge.
+- Known limits left as they are: a restored human race on an unregistered hollow character still takes the twin's race (nothing tells it from the unsaved default); a manual patch failure is logged but not added to the patch failure report; the Exit Stall Sampler hint stays an unregistered MCM literal.
+- Not acted on, noted in delta-974e60bb2.md: DreadMissionGate.cs:38 and MountDespawnMissionGate.cs:33 read only GameNetwork.IsSessionActive (possible co-op gap, unverified, out of scope under D7); the 1.5.x Spacing Repair in Marshal's Word is a possible future work package.
+- What switches MSB3270 warnings on is not established.
+
+## Verification at the tip (`30868fc76`), run by the session that wrote this
+
+| Check | Result |
+|---|---|
+| `dotnet build TAOM.sln --no-incremental` | exit 0, 0 errors, 2505 warnings |
+| `dotnet test TAOM.Tests` Debug | Failed 0, Passed 13466, Skipped 8, Total 13474 |
+| `dotnet test TAOM.Tests -c Release` | Failed 0, Passed 13466, Skipped 8, Total 13474 |
+| `tools/snapshot_api_surface.ps1 -Check` | both files reproduce, exit 0 |
+| `python -m unittest discover -s tools/tests -t .` | Ran 3130, failures=3, errors=1, skipped=25, exit 1. The four are `test_no_generator_writes_a_retired_id`, `test_missing_id_becomes_a_warning_under_the_code`, `test_every_culture_on_disk_carries_the_step` and the `test_audit_map_scene_memory` load error, recorded before this programme's later waves (README baseline table) |
+| `bash tools/test_hooks.sh` | 207 passed, 0 failed |
+| `python tools/lint_docs.py --summary` | total_findings 1 (`claude_budget`, owed with WP143) |
+| `python tools/validate_moduledata.py` | exit 1, void as an item verdict until the public Armory is installed (D25) |
+
+Trunk `bannerlord-1.4.5` and `origin/bannerlord-1.4.5` are both `1ab48c21d`; this run did not move them. Nothing here was run in the game.
+
+## Your symptoms, traced through live code (symptoms lens, read at d3a60dfb1)
+
+- SYMPTOM infinite loading, addressed: (1) Patch90 PreloadHelper.WaitForMeshesToBeLoaded prefix, applied in OnSubModuleLoad (SubModule.cs:449-451), service registered (IoC.cs:169), no setting; the v1.4.8 loop at Native__TaleWorlds.MountAndBlade.View.cs:3355-3372 reads the field it drains. (2) Patch103 mission-start guard, GameInit, six swaps in Mission.AfterStart, SurviveMissionStartFailures default true and fail-open. (3) Loading-window closer registered in a finally (SubModule.cs:2059-2068). (4) Cold shader cache: ShaderCompileNotice at OnSubModuleLoad, RenderWaitNotice from MainThreadFreezeWatchdog started at the main menu; the rgl_log path and compile_shader lines are present on this laptop. (5) Patch99 XML merge at ProcessLoad, gated on TAOM.Dependencies excluding it from PatchShield; ButterLib Distance Matrix off at MainMenu, the type is in the 1.4.8 implementation DLL. Remains: WP108 B4 desk gates (deferred); the _uniqueMetaMeshes branch of the same wait is not guarded and its behaviour on a bad mesh is unverified.
+- SYMPTOM combat freeze with sound, addressed: (1) Skeleton buffer guard and watch, MainMenu phase, both settings default true, no patch category. I scanned the installed TaleWorlds.Native.dll: watch, pool 2 load, pool 1 guard and pool 2 guard patterns each match exactly once. (2) Patch91b tick recovery, armed after Patch91 at SubModule.cs:1933-1934; it also covers the inline fast-forward TickAgentsAndTeamsImp route, because that route never sets the launch mark. (3) Off-thread parking through DeferredCallbackQueue, with drains at BehaviorTreeMissionLogic.cs:174, MountDespawnMissionBehavior.cs:107 and :121, CareerPerkMissionBehavior.cs:65, WargMissionBehavior.cs:81; FieldCommission RegisterKill takes a lock. (4) Corpse caps, below. (5) Instruments: Patch91 [MissionStall], [Freeze], Patch98 hitch probe default on. Remains: a throw on the job thread from TickAgentsAndTeamsImp now reaches native with no TAOM shim (Native2ManagedTargets, WP107), and what native does then is UNVERIFIED, the same state PatchShieldPolicy.cs:138-153 records. Freeze cause stays unproven per D21. Not a provable defect at this tip.
+- SYMPTOM long saves: instruments only, plus one growth brake. Patch61 SaveGraph, LoadCounts and BehaviorSize categories apply in OnSubModuleLoad with no setting; the census runs on the first save after a reload. #628 orc overbreeding fix (863cfbd98) survives WP145's move into RaceAgeService (RaceAgeService.cs:104 keeps the cap rule; diff of ed0929d69 read). Remains: docs/investigations/save-growth-2026-11.md states 'No fix exists yet'; the 71,500-containers-per-reload carrier is unnamed and the repro matrix is owed in game.
+- SYMPTOM 15.7 GB memory, addressed: CheatScreenGuard at GameInit, setting default false so lists are hidden; swaps the single CheatMode read in each opener (dump InventoryScreenHelper.cs:177, PartyScreenHelper.cs:187). TextureAdvice at MainMenu, option 2 is High per global_strings.xml:883, marker file only, advice only. MapViewRelease at GameInit via ScreenLayer.OnLayerActiveStateChanged, default on, every 20th cover. NameplateCull Patch104 default on, frame cost rather than memory. Cross-campaign resets from WP119 on load, new game and game end. Remains: WP121 B to E Kit work deferred, and 9e1b03790's sheet drop reaches players only with the next Kit publish; docs/investigations/second-game-retention-2026-11.md names candidates such as _lastSessionStarter on three container singletons (still present at EnlistmentBehavior.cs:29, EnlistmentContentBehavior.cs:28) and CommanderLordAdapter._lastSeenMapEvent:76, with no fix until a heap snapshot names the holder. No plan promises a private-memory number (D23).
+- SYMPTOM Harad first-battle freeze, addressed: diagnostics and notices, not a cure. MissionState_OnTick_RenderWait_Patch in Patch43 publishes the count; RenderWaitNoticeDecider claims compiling only while rgl compile lines arrive; BattleLoadStallWatchdog defers while the queue moves; pre-compile menu option stays active per D4 (EnableShaderPrecompilation default true, SubModule.cs:769-793). Remains: V02 says E3 is undecidable from logs and E4's second stall is unexplained; D11 and D12 keep ShaderCacheKeeper and bow shaders out, so every module-list change pays a rebuild. The notice appears only when the main thread is silent for 5 s and needs the Battle Load master toggle (default on) and the Freeze Sampler toggle (default on).
+- SYMPTOM ragdoll and corpse load, addressed: BattleCorpsesModule adds BattleCorpseMissionBehavior to every mission; it gates on MountDespawnMissionGate (Battle mode, field, siege or sally-out) and applies fade 60 s and cap 25 from OnMissionTick once a second. Cleanup default true on a new property, so existing installs get it. Cap is the lower of TAOM's and the player's option; the option table matches global_strings.xml:1103-1118. Dead mount despawn stays default on. Advisor inquiry at MainMenu lowers Ragdolls to 5 and Corpses to Low only on Apply, and repeats each launch until accepted or turned off in MCM. Remains: ragdoll count has no per-battle override, so it depends on the player's click; whether removing a corpse frees an agent slot is an owed in-game check in battle-corpses.md.
+- SYMPTOM wrong XML data and mesh ids, addressed: runtime Patch90 logs each unresolvable body name at ERROR and names tools/audit_armory_refs.py, which exists; desk tools audit_armory_refs.py and data_gates.py (--help read, the table not run); data fixes that touch no item, roster, equipment, troop or mesh reference (Dunland default_group, seven clan banners, policies, Lindon, backstories per commit subjects). Strings used by the symptom features resolve in taom_module_strings.xml by my key scan, except FreezeDumpWriter.cs's taom_freeze_ prefix, which is a dump file name rather than a string key. Remains: all item, roster, equipment, troop and mesh verdicts are void on the v2.0.26 Armory and owed per D25; WP108 B4 and WP136's dependent gates are deferred.
+
+Not verified: any native behaviour beyond what the docs cite from RVA reads, and any in-game outcome. No symptom can be called cured from this tree; the ones with a mechanism fix are the mission-start reload loop, the missing-body wait, the handshake and skeleton pool overflow, each still owing its in-game check.
+
+## Deferred, later waves
+
+### WP127
+
+- Part M (maintainer, docs/adrs is protected): M1 ADR-002, ADR-007, ADR-008 and M2 ADR-003 and README. Commands are in the plan's Part M; specs m1 and m2 were not run. The executor's messages are at C:/Users/mikew/source/repos/taom-port/wp127-scripts/msg-m1.txt and msg-m2.txt, and wp127_edit.py is beside them. The branch must not merge until both commits are on it, because the rules now cite ADR sections only Part M adds.
+- CLAUDE.md one-liner edit, dropped by the plan's C1 fallback; carry to WP143. Change line 225 to: **Mod**: `[HarmonyPatch/GameModel/CampaignBehavior]` -> `Service` -> `IAdapter` (sealed types); `IOnXxx` hook optional (4 bytes longer).
+- /deep-review skipped as instructed; an independent reviewer runs next.
+- Lessons and records not carried, per the plan: lessons to WP142; deep-review lens wording to WP138.
+
+### WP128
+
+- /deep-review: skipped as instructed; the independent reviewer runs next. Plan's review focus: guard order in ServiceBattleService.TryJoin; MirroredWars entries added at join are exactly what discharge unwinds; the widened BreakStaleBattleLatch predicate and the R1b-inert assumption; DutyText fallbacks; C3 save compatibility. Plan also recommends /verify-bindings after Part A (new Harmony target).
+- Translations: paid pass not run (D26). Three keys carry English placeholder rows in all 12 language files until /localize or WP135: taom_enlist_menu_discharged_leave, taom_enlist_wait_discharged, taom_enlist_act_raid.
+- Issue references: the plan uses only ported 1.5.x numbers (#827, #828, #831, #954, #832, #960, #834, #835, #1021, #842, #843, #844, #845). No Refs line was added and no issue was created.
+- WP142 docs sync, per the plan: tools/README.md still lists generate_enlistment_duty_strings.py; doc-lookup.md and the lessons entries of these commits were not synced; WP142 must not copy the 1.5.x feature-map wording that claims the hourly war follow.
+- P128-1 leaves out the hourly war follow and the crown-war release; a later port needs what the plan's Maintenance notes list.
+- The docs ModuleData data verdicts stay provisional on the v2.0.26 Armory (D25). Validator summary unchanged at 3768 errors, 120 warnings; no item, roster, equipment, troop or mesh data was staged.
+
+### WP129
+
+- /deep-review after each Part: skipped per the task, an independent reviewer runs next.
+- /verify-bindings after Part A (new InitializeMissionEquipment override, new IL pins): recommended by the plan, not run because it is a skill.
+- Translation of taom_career_repair_refund (B1) and the corrected taom_ws_t3_a_p3_desc (B3): strings stay English in the 12 language files and the stale cache entries are removed; WP135 runs the paid pass (D26 rule 4).
+- Lessons deferred to WP142: 7ede923be (adapters, testing-qa), 35007dbb8 (data-content-cultures), c96a02a4b (state-lifecycle-save), 86ef5c7af (campaign-mechanics, gamemodels-services, testing-qa), 4f5b412d7 (campaign-mechanics), 0761c01b7 (adapters), 180696430 (state-lifecycle-save).
+- REVIEW-LOG row, Codex prompt files and docs/INDEX.md and feature-map syncs: not taken, per the plan's Out of scope (WP142 to WP144).
+- No plan step was skipped under D25 or D26. The ModuleData changes are strings, one description text, two XML comments and one config list, with no item, roster, equipment, troop or mesh reference.
+
+### WP130
+
+- Step F3 (four Dunland default_group retags, D13, commit 'fix(dunland): v2.0.28 - Hunter and Falcon troops fight as archers'): deferred under D25 rule 2 and D26 rule 3. Nothing in troops_dunland.xml changed on this branch. The plan's script, verify steps and message are ready to run once the public Armory baseline is in, or sooner if the maintainer rules that a default_group tag is not a troop reference. It adds no tests, so the test total stays the same.
+- Step G /deep-review: skipped per the task; an independent reviewer runs next. Plan probes: the twin's call order against the campaign model; PassesRaceGate folding the toggle; the E3 kernel anchor move; ShouldAttach and detach-on-disable; no MissionView constructed in Main; the dread doc's v1.4.8 citations.
+- Follow-ups the plan routes elsewhere: refresh docs/reference/taleworlds-api-snapshot for the two new models (/verify-bindings, maintainer); regenerate docs/reference/ranged-troops.html at the next ranged-ladder report run; the Hebog-luth horse gap (content, maintainer); lessons from d96f349f1, 40385aa5b, efa32184b, 0103a8271, f4f12a737, 726975a52, 30abf550b, 3f75217dc, 1641fb985 (WP142); gamemodels.md, gui-ui.md and csharp-patterns.md reconciliation (WP143).
+- Not ported, by the plan's disposition table: per-culture charge damage, the three extra charge sliders, the TAOM.Client split.
+
+### WP131
+
+- Nothing in the plan's steps was deferred by D25 or D26. B5 stages only strings (taom_enlist_not_by_messenger, base plus 12 languages), which the D25 data rule allows.
+- Translating taom_enlist_not_by_messenger: paid, WP135. The 12 language rows stay English.
+- Stale after this WP, left for WP143 and WP144 by the plan: .ai/review-reference.md:575 still lists the two deleted Patch42 targets; CLAUDE.md patch-category notes and docs/reference/feature-map.md do not mention Patch114 or Patch117; backlinks footers not regenerated.
+- Lessons hunks dropped from every pick (WP142). .claude/rules/moduledata-validation.md gate line goes to WP140.
+- The 1.4.x EnableMessengers row still claims the behavior is not registered when off; a messenger docs pass owns it (the plan's own deferral).
+- #920 co-op stand-down not ported (D7), so under a co-op session castles still recruit hourly.
+
+### WP132
+
+- Translation of the ten new keys (WP135; D26 rule 4, no paid call). They are registered with English placeholder rows in all 12 language files: taom_enlist_qm_refused_host, taom_enlist_qm_refused_load, taom_enlist_qm_refused_stores, taom_enlist_sitout_wounded_tip, taom_enlist_sitout_odds_tip, taom_enlist_sitout_refused_tip, taom_enlist_sitout_siege_tip, taom_enlist_sat_out_line, taom_enlist_sat_out_wounded_line, taom_enlist_sat_out_forced_line.
+- /deep-review skipped as instructed; the independent reviewer runs next. Plan's review focus: the payout's sat-out condition and ledger consumption on every path; that the menu postfix only narrows and fails open; the raid-join deferral (_inMenuFrame, the menu id check, the reset in ResetSessionCaches and Pump); RunDailyTick keeping nowDays; R1b's removal resting on R1.
+- Docs sync left to WP142 to WP144: the lessons entries of 1d9cc42f1, 069962aa4, 5d70714c4 and 3b848c411, and b0625f0d1's tools/README.md line.
+- P132-8 follow-up: the board line for a battle the oath keeps the soldier out of (OathSitOutRule, a SittingOut activity, taom_enlist_act_sitout in 13 files, ServiceStatusService taking IEncounterAdapter and IServiceDiplomacyService).
+- No plan step was skipped under D25 or D26. A0.5 (installed Armory must not be v2.0.26) printed v2.0.26 and was waived by D25 rule 3, because A3 and B1 stage only strings and enlistment_config.json under ModuleData (D25 rule 2). The data half stays provisional until the public Armory is installed.
+
+### WP133
+
+- Step B2 (210943076, #932, Lindon and Blue Craig banner rows): not applied, deferred under D25 rule 2 and rule 3. Run it when the public Armory is installed. Its test-count effect is 0 (the plan's +72 lists no row for it, and the total reached T0 + 72 without it). Its data compare was not run.
+- Translation of the new strings (D26 rule 4, WP135): taom_tavern_drink_default, taom_tavern_food_default, taom_str_liege_title.<16 cultures>, taom_str_liege_title_female.<16 cultures>, taom_str_become_king_empire stay English in the 12 language files.
+- /deep-review skipped per the task (independent reviewer runs next); /verify-bindings recommended by the plan after Parts A and B, not run (a skill).
+- docs/reference/taleworlds-api-snapshot/patch-targets.md rows for Patch111, RefugeClanRowRefreshPatch and the Patch23 retarget: WP137.
+- Dropped lessons, feature-map and INDEX rows: WP142. Reconciling the .claude/rules edits (gui-ui.md in C2, csharp-patterns.md in D2): WP143.
+- Plan-level deferrals kept as written: Fiefs map-bar button, troll-gear Armory policy and validator, CustomAttacksUtils comment corrections, the 1.5.x RCAs the plan skips.
+- GitHub issue for the review 130 config-list fixes (B1) and the culture-market NotMerchandise skip (C7): none exists, orchestrator or maintainer creates them. The plan's messages carry no Refs line, so none was left out.
+
+### WP134
+
+- Step A2, troop half (D25 rule 2): the 22 lindon_ rows in TroopWeights/troop_weights.xml, EveryLindonTroop_WeighsTheSameAsItsRivendellTwin and its summary edit in TroopWeightLevelBandTests.cs, and every docs/features/troop-weight-system.md edit. My reading: a TroopWeight row is a troop reference, even though the ids live in this repo. Only the survival-bonus half landed, so the plan's A2 subject and body were rewritten to match. The later commit needs its own Ported-from: 0e75ec50a34e33fd7f4a6b4c61a3cd15e1330c3d.
+- Step C3 whole (D25 rule 2): lord_template_rosters.xslt, its SubModule.xml node, the 70 Dale rows in taom_lord_template_equipment.xml, LordTemplateRosterTests and the equipment-rosters.md paragraph. It touches rosters and items.
+- Step C4 whole (D25 rule 2): lord_1_48_1/2/3 in lords.xslt and characters/lords.xml, the custom_battle_lords.xml stubs, LesserNazgulDefinitionTests, and the nazgul-family, custom-battles and uncapturable-heroes docs plus the UncapturableRegistryTests comment. It changes equipment kits and troop definitions, so lords.xslt is untouched.
+- On Armory refresh, re-run those three deferred pieces and re-check all data verdicts (D25 rules 3 and 7). validate_moduledata.py results here are measured on v2.0.26 and are provisional.
+- Translation pass (D26 rule 4, no paid calls): Part C's 320 wanderer rows sit in each of the 12 language files in English, owed to WP135.
+- /deep-review skipped as instructed; an independent reviewer runs next. Maintainer-only files needed no change.
+
+### WP135
+
+- C1 step 3, free fill: `for L in BR CNs CNt DE FR IT JP KO PL RU SP TR; do python tools/translate_with_claude.py --lang $L --module TAOM --apply --max-entries 0 || break; done`. Not run under D26 rule 4. The rows stay English, so names and wave-4 rows do not show translated yet. The commit landed caches only, with the subject changed from the plan's 'fill wave-4 and name rows from cache' to say so.
+- C2 as written: the translator's --dry-run was not run. I computed the same counts through its read-only functions, listed under handoff.
+- C3, paid translation (maintainer only, M1), about 94 rows per language.
+- C4, validate and commit the paid rows, including `python tools/loc_length_report.py --since e3a34b651` (commit message msg-135-15).
+- Part D, Italian name grammar tags: optional and the maintainer's decision (M4). Not run.
+- D25 rule 3: B3's check of the 35 UNREAD ids against the live modules ran on Armory v2.0.26 and TAOM_Map v2.0.27 (480 files scanned, 0 ids found). Re-run it when the public Armory is installed.
+- A0's Armory check printed v2.0.26, which the plan treats as a STOP. It is waived under D25 rule 3 because every staged ModuleData change is strings: name keys in clans.xml, one name text in lords.xslt, text rows, manifests and generated name masters. The validator is unchanged at BROKEN_ITEM_REF 3768 (provisional).
+
+### WP137
+
+- Part D, all of it, stopped by the STOP above: D1 (-Check fix, regenerated snapshot, README counts, impact-doc line), D2 (ManualPatchApplicator header; item 2 would be skipped anyway because the PathReuseCache count is 0), D3 (.ai/verification.md api-snapshot row, /verify Step 2d). tools/snapshot_api_surface.ps1 -Check still prints DRIFT, rc=1, on this branch. The snapshot regeneration WP117 and WP118 left for this WP is still owed.
+- Deferred under D25 rule 4 (.claude/ work; Step 0's WP103 marker check printed WP103-MISSING and is not waived for .claude/): B4 entire (native-crash-triage hang procedure Phase 2b, engine-bump items 2 and 4).
+- Same rule, .claude/ hunks: A1 (.claude/skills/taom-src/SKILL.md, engine-bump item 3), B3 (.claude/agents/{taleworlds-researcher,debugger,error-detective}.md, .claude/skills/{research,investigate,new-creature-mount,deep-review}/SKILL.md), C1 (engine-bump item 5 and the Phase 3 body-diff paragraph), D1 (engine-bump Phase 4 item 1), D3 (/verify Step 2d).
+- Same rule, docs WP102 or WP103 name as their own targets: docs/ai-includes/codex-operating-guide.md (A1), docs/ai-includes/agent-operating-manual.md (A1, B3), docs/reference/mcp-servers.md (A1, B3), docs/ai-includes/external-repo-adoption.md (E1 packageSourceCredentials line; grep count on the branch is 0).
+- Translations: none needed. In-game checks are owed at the end (D26).
+- Ghidra PINS row for v1.4.8 (maintainer step 5); archive session-start wiring (plan's deferred-by-decision list).
+
+### WP141
+
+- Step 0 preconditions for WP102 (changelog_from_commits.py absent, check-changelog-changed.sh present) and WP103 (no Bash|PowerShell matcher) failed. Both are waived by D25 rule 4 for work outside .claude/, tools/test_hooks.sh and the docs those plans rewrite. The WP137 precondition held.
+- D1 step 3: .claude/hooks/check-graphify-usage.sh (git show e45f6df2c:.claude/hooks/check-graphify-usage.sh) and its smoke test. Not landed because it is .claude/ work.
+- D1 step 4: the tools/test_hooks.sh section '7-graphify', the prefilter rows and the starved-environment payload change. Not landed, since WP103 and WP116 rewrite that file. The plan's verify of 10 check-graphify-usage rows is therefore also deferred.
+- D2: registering the gate in .claude/settings.json (maintainer-only, needs WP103's Bash|PowerShell group and the hook file). Exact change, after the last hook of the PreToolUse Bash|PowerShell group holding validate-push.sh: add {"type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-graphify-usage.sh", "timeout": 10}. Script written, not run: C:/Users/mikew/source/repos/taom-port/141-scratch/settings_graphify.py. After it runs, land the settings.json commit 'chore(hooks): v2.0.28 - register the graphify gate for both shell tools' (Ported-from b8833474e).
+- After D1 steps 3 and 4 land, revert the 'not on this line yet' wording that replaced the plan's text in docs/features/graphify-code-graph.md (Overview paragraph and the three Key Files rows, which are now plain text instead of links) and docs/reference/provenance-register.md.
+- A5's check of the 24 fallback kit ids against the installed modules: it printed no generate_enlistment_rosters.py line, but it was measured on the v2.0.26 Armory, so the verdict is void under D25 rule 3. Re-run the plan's findings command when the public Armory is installed.
+- GitHub issue for the plan's new work (renamer test file, RDC gate test, civilian-set filter in its 1.4.x form, enlistment fallback-table spec): orchestrator or maintainer. No commit carries a Refs line for it.
+- Plan's optional /deep-review was skipped as instructed. No paid call and no translate_with_claude.py run was made.
+
+### WP144
+
+- A5 Armory measurements were taken on the installed v2.0.26 Armory, not the public build (D25 rule 3). The hair and beard distribution table and the dwarf and Saruman race sentence are labelled v2.0.26 in the doc; a re-measure on the public Armory is owed.
+- B4 sub-edit 9 (skeleton fact 4 and the troubleshooting row) skipped: `VERBATIM` is absent from bannerlord-skeleton-authoring.md (grep count 0), as the plan expected. `4520af802` is left out of B4's Ported-from.
+- C3 sub-step 3 (the Kit-facts row) skipped for the same reason. `2a9e8bc49` is left out of C3's Ported-from.
+- Plan's Maintenance notes deferrals stand: the v1.4.8 rewrite of `8dd76ddb3`'s fief-granting and economy readings; the 1.5.x clip-flags handoff sections; later 1.5.x extensions of race-face-and-hand-morphs.md and tpac-static-prop-authoring.md; the `2ac85fbe7` gauntlet and siege-relief sections; deriving the v1.4.8 static face morph offset; WP136's hand-off of `09f3126a7`'s 'native reads a row's type' docs; a v1.4.8 Kit re-measure; WP121's modules-overview.md bin counts.
+- /deep-review not run, as the task says; an independent reviewer runs next.
+- No paid calls and no translation: this plan adds no player-facing strings.
+
+### WP136
+
+- Everything that needs WP108 B4 (D27 rule 1). tools/validate_moduledata.py has no SCHEMA_INVALID, BROKEN_FACTION_REF, ITEM_SLOT_REJECTED or TROOP_ID_REMOVED code (a grep found none), and tools/shipped_troop_ids.txt does not exist. So Steps B3, B4 and B5, and the validator half of B1, stay undone, and the whole-plan done criterion that lists shipped_troop_ids.txt is unmet. The hook --code list and test_hooks wiring that go with them are deferred too.
+- PrefabSpriteTests moves to WP140 (D27 rule 1). The prepared file is C:/Users/mikew/source/repos/taom-port/136-notes/e1-wip/PrefabSpriteTests.cs and the 19 unknown sprites are listed in C:/Users/mikew/source/repos/taom-port/136-notes/e1-unknown-sprites.txt.
+- .claude and docs/adrs hunks of 8caac7da5: .claude/rules/csharp-architecture.md, gui-ui.md and adapters.md, the release skill and AGENTS.md (WP143), plus Step E3 (ADR-002 and ADR-007), which stays the maintainer's. Exact edit is in plans/136-data-integrity-gates.md Step E3.
+- Other stale prefab-budget lines, not edited: CLAUDE.md:187, docs/modding/module-map.md:356, docs/modding/settlements.md:398 and tools/README.md:66 still say the tool counts TAOM_Map/Prefabs only. docs/features/startup-resources.md:168 quotes the old 93,407 reading and also needs a look.
+- Translation owed (no paid call was run): 24 language rows, 12 each of taom_faction_golden_realm_of_rhun_desc and taom_faction_taskralan_of_harwan_desc. Their party-size clause has no numeric token to swap, so no mechanical substitution was safe; the rows stay true but omit +5%. The 24 matching tools/translation_cache rows were left in place too. The translator reuses a cached row by string id, so those rows must be dropped when the pass runs or it will keep the old text.
+
+### WP130 F3
+
+- `/verify-bindings` snapshot refresh for the two new Custom Battle models (maintainer)
+- Regenerating `docs/reference/ranged-troops.html` at the next ranged-ladder report run
+- The Hebog-lûth horse gap: content, maintainer (D13); no Horse item was added
+- Lessons, including `1641fb985`'s (WP142); reconciling `gamemodels.md`, `gui-ui.md` and `csharp-patterns.md` (WP143)
+- Skill restat, RCA, lesson and generated HTML from `1641fb985`: not taken, as the plan's port table says
+- Step G `/deep-review` skipped per the assignment: an independent reviewer runs next
+- GitHub issue for the plan's issue-less fixes: not created; the F3 message as written in the plan has no Refs line, so none was left out
+
+### WP115
+
+- B1 (maintainer, M1): in the worktree run `git checkout 9ca99437fc3879c9a981d8430ff8d44873c209a0 Directory.Build.props`. It adds one target, TaomStampWorkingTreeState. Then the executor verifies and commits as the plan says, including the dirty-probe check.
+- B2: --require-build transplant. Reads the B1 target. Its real-DLL check also needs B1.
+- B3: scene sack, module sack and JIT reports. Its pick needs B2's copies as base. The module-sack and JIT parts do not read the target, but they cannot be cleanly separated from B2 by the step as written.
+- B6 remainder, which arrives with B2: drop Gaming.Desktop from the folder tuple in TestRequireBuildCli.test_accepts_every_copy_when_all_are_clean, and drop 'Game Pass' from the SHIPPED_DLLS comment.
+- B7 remainder: tag_on_another_line and TestTagOnAnotherLine (use B2's _git), and the commit-manifest read, the installed SubModule.xml comparison, TestInstalledManifest, REPO_MANIFESTS and _git_bytes (all inside require_build). Landed from B7: FIVE_X_RELEASES, release_number_problem and TestReleaseNumber.
+- C5: release skill and release-process.md. Needs WP102's output plus B1, B2 and B3.
+- Part B done criteria that cannot hold yet: the B1 log check, and the grep for require_build, is_module_sack and jit_optimization (retired_binaries, game_pass_bins, test_troop_files, missing_armory_shaders and release_number_problem are present).
+- Part C done criterion '16 commits': 12 landed.
+- M2, M3, M5 stay the maintainer's. M4: the issue for the new work (A3, A4, B7, C4) does not exist, so those commits carry no issue reference.
+- /deep-review skipped as instructed; the independent reviewer runs next.
+
+### WP121
+
+- Part B (maintainer, Modding Kit). First step: B1, the PowerShell backup of Modules\TAOM's Assets, AssetSources and AssetPackages\pack0.tpac into C:\taom-kit-backup-<date>\TAOM. Then B2: ./build.ps1 from C:\Users\mikew\source\repos\taom-port\121. No deploying build from any tree from B6 until Part C's commits are on this branch, and until WP121 merges, deploy only from this worktree.
+- Part C (ordinary session, same day as Part B), deferred whole under D27 rule 3. First step: C0, write C:\Users\mikew\source\repos\taom-port\oracle121.py from the plan and run its compare. C1 and C2 follow straight after B10, and C3 waits for the maintainer's B11 loading-screen result. C2 adds BannerAtlasFormatTests; the plan's expected counts then become Ran 7 tests, OK (skipped=4).
+- Part D (maintainer, at the next 1.4.x release, D8 v2.4.0). First step: publish TAOM from the laptop install into an empty folder outside the game install, after WP121 is merged and deployed from the trunk. Then run the TAOM_PACK0 texture gate on the published pack.
+- Part E (conditional, maintainer first). First step: E0, confirm one machine has a v1.4.8 Modding Kit and TAOM_Map's loose sources for the package the next 1.4.x release pins. The laptop's TAOM_Map is cooked and cannot be republished. If either is missing, record 'Part E BLOCKED: no pinned 1.4.x TAOM_Map source in a v1.4.8 Kit'.
+- A4.3 /deep-review skipped per the assignment; an independent reviewer runs next. /review-codex and /codex-verify not run (paid, maintainer only).
+- GitHub issue for the new work (D24 loading sheets, texture-format gate, Part E) not created: outward-facing, so it stays with the maintainer. The plan's commit messages carry no Refs line, so none was left out.
+
+### WP140
+
+- Part D, all of it: stale_module_files, the require_build hook, the CLI messages, tools/tests/test_package_release.py and the docs/reference/release-process.md sentence. It needs WP115's require_build, REPO_ROOT and _git. Run plan Step D1 once they exist.
+- .claude/rules/gui-ui.md (D27 rule 5), Step A2 sub-step 5: the PrefabInsertPositionTests sentence after the paragraph that starts '**Why:** the four checks above are the general rule'.
+- .claude/rules/gui-ui.md, Step A3 sub-step 4: the '**Hover targets:**' paragraph directly after the A2 line.
+- .claude/rules/gui-ui.md, Step C3 sub-step 5: the Brush paragraph replacement and the '**Gate:**' line, exact text in the plan.
+- .claude/rules/vanilla-data-comparison.md, Step B3: drop the stale '~32 of TAOM's 48 prefabs are clones' clause and replace steps 1 and 2 of 'How to fix a stale clone', exact text in the plan.
+- .claude/rules/tests.md, Step C4 sub-step 4: the '## Gates that key on repo paths' section before '## Test Organization'.
+- .claude/rules/moduledata-validation.md, Step C4 sub-step 5: the '## GUI prefab gates' section and table before '## Discipline'. Suggested addition, not in the plan: a row for PrefabSpriteTests.
+- Because of those deferrals, A2 staged three files where the plan says four, A3 staged one where it says two, B3 has 11 D and 2 A with no M, C3 has no rule file, and C4 staged one file where it says three.
+- No maintainer-only file was edited. .claude/settings*.json, Directory.Build.props and docs/adrs need no change for this WP.
+- Refs lines: none written. The only reference is #371 in plan 136, and no new issue was needed.
+
+### WP139
+
+- Part D, Step D1 (all three files are .claude, deferred under D27 rule 5; nothing edited). Exact change when the harness WPs land: plan 139 Step D1 items 1 to 3. (1) .claude/skills/verify/SKILL.md: insert '## Step 6: Owed in-game verdicts (information only)' directly above '## Output Format', and add the 'In-game:' line after the report line that starts 'CHANGELOG:'. (2) .claude/skills/release/SKILL.md: insert the 'First, before writing a line of either note...' paragraph above the first line that starts 'Source the content from', using the ledger-yes text, and add the testers' checklist clause. (3) .claude/rules/csharp-architecture.md: add the '| Outcome lines |' and '| Outcome cost |' rows from lines 37-38 of 95647d13b, after the row for the ?. computed-properties rule. Precheck on this branch printed 0 0 0, so none of them is synced yet.
+- Step 0 token '## Step 5: CHANGELOG.md untouched' printed 0 (WP102 output); waived under D25 rule 4 and D27 rule 5. D1's verify anchor depends on WP102.
+- /deep-review on each Part's diff was not run: skills are unavailable to this session and the brief says an independent reviewer runs next. Probe list from the plan: the SubModule seams and their order, the CrashReportService insertion point, the C3 and C4 conflict resolutions, the baseline.
+- Bookkeeping rows for WP142 (not added here, by the per-port procedure): tools/README.md row for ingame_verdict.py (1.5.x text at e45f6df2c minus its Coop and --ds-* clauses), docs/reference/feature-map.md row for docs/features/ingame-verdicts.md, and its docs/INDEX.md entry.
+- Tracking issue: the 1.4.x issue the plan asks for does not exist (maintainer or orchestrator creates it). The plan's commit messages carry no Refs line, so none was left out.
+- CHANGELOG.md not staged (D1). No translation or paid call was made, and this WP adds no player-facing strings.
+
+### WP137 D
+
+- D3 /verify hunk in .claude/skills/verify/SKILL.md: '## Step 2d: API snapshot reproduces' (from 6ae924638) and the output line 'API snapshot: [REPRODUCES/DRIFT/NOT RUN]'. Deferred by this run's scope. D3's greps for those two tokens were therefore not satisfied, and WP138's K7 reads the Step 2d token, so K7 stays false until it lands. The 'dotnet test ... --no-build' grep was not run: it only guards Step 2d's wording, which did not land.
+- D1 hunk in .claude/skills/engine-bump/SKILL.md, Phase 4 item 1 ('-Check reports DRIFT ... by design' becomes 'exits 1 with DRIFT, printing up to 20 differing lines ...'). My call: the task text is silent on this hunk, but the plans/README.md integrator record lists D1's .claude hunk among those landing as a set after WP103. Until then the skill's sentence is stale. The plan's D1 regex for it was not run.
+- D2 item 2 (PathReuseCache catalogue move): skipped as the plan directs, because the count in ReflectionSiteBindingTests.cs is 0 and WP127 already removed the row. Test Total stays 13355.
+
+### WP122
+
+- C2 (Ruff gate and Claude config lint): STOP. Failed preconditions: `python -m ruff --version` prints `No module named ruff` (M1); `grep -c CLAUDE_PROJECT_DIR .claude/settings.json` prints 0, needs 20 or more (WP103, a second blocker besides M1). The third precondition holds: the harness-facts row count is 1.
+- C3 (ShellCheck gate): STOP. `shellcheck: command not found` and TAOM_SHELLCHECK is unset (M1).
+- C4 (NuGet audit): waits for M2. `grep -c NuGetAuditMode Directory.Build.props` prints 0. Exact change for the maintainer: the M2 block in plans/122-test-infrastructure-gates.md, 'Maintainer steps' (NuGetAuditMode all, WarningsAsErrors NU1903 and NU1904), inserted after `<Nullable>enable</Nullable>` and its blank line. Directory.Build.props was not touched. WP115 B1's build-identity comment is still absent from that file, so M2's 'before the Build identity comment' anchor applies only once B1 lands; until then insert it after the Nullable line. The executor then runs C4 steps 2 and 3.
+- C5 (Gitleaks history scan): maintainer only (M3).
+- Part D (nullable ratchet): not started, per D27 rule 4.
+- Step 0 tokens waived: WP115 (TaomStampWorkingTreeState, B1 deferred) and GA-SAME (D28). The GameAssemblies diff from 7f02fc8d3 was confirmed as the one comment line, and A1.2 applied the series diff. `git grep PathReuseCache` over TAOM.Tests and Main prints nothing.
+
+### WP145 A-D
+
+- .claude/rules/gamemodels.md (NOT config-protected, but .claude hunks are deferred for this run; plan C2 did not name this file). Delete line 103: `| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | `RaceAge` |`. Change line 9 from `TAOM has 50 GameModel overrides (49 registered + 1 abstract base).` to `TAOM has 49 GameModel overrides (48 registered + 1 abstract base).` This should clear the new test_the_real_catalogues_are_in_sync failure and both model_registry lint findings (not run here, because the edit is deferred). It should land with or straight after this branch.
+- Part E (needs WP108 B4, WP138, WP143): untouched, per D29.
+- Part F (needs WP116, WP138, WP143): untouched, per D29.
+- Part G (needs WP142, WP144 follow-ups, Parts B to F): untouched, per D29. This includes G6: patch-targets.md and gamemodel-bases.md still list the two deleted classes until the snapshot is regenerated, and G7's career, banner and offspring doc follow-ups.
+- GitHub issue for Part A: it does not exist, so no Refs line was written (D29 rule 3). The issue stays owed.
+- Conflicted doc hunks dropped from docs/features/mixed-formations.md, as C5 allows: the hotkey table row (35044f583) and the per-frame bullet (35aa37439 and 35044f583). They describe CachedEnumParse and CycleHotkeyParser, which grep shows are absent on this line. The 'No allocations in the hot path' sentence therefore stays uncorrected. The Debug Mode row in the same conflict was written by hand so it matches the new hint.
+- Maintainer steps: push, merge and any tag; `/deep-review` and `/verify` recommended to the integrator (an independent reviewer runs next). `/security-scan` is only asked for after Part F, so it is not owed yet.
+
+## In-game checks owed, later waves
+
+### WP127
+
+- Damage model (Part B): start or load a campaign, then fight a field battle with cavalry charges and a creature. Charges still knock infantry down; a cave or hill troll still crushes through a non-shield block; no exception in taom_debug_*.log names CombatMechanicsHooks, RefugeDamageHooks or TaomCombatMechanicsModel; no [CrashReport] capture. If a refuge is available, defend it: defenders still take visibly less damage.
+- Supply Lines (A2): place one order paid to a lord and one paid to a settlement, and fail or cancel one to trigger the refund. Gold and refunded troops move as before; no `[SupplyLines] charge: ... unreachable` or `[SupplyLines] refund: ... unreachable` warning for a reachable payee.
+- Refuge and warden (A2): make peace with a held lord's faction and he is released. Promote a warden and the companion appears, with no `[Refuge] promoted-warden rename failed` or `[Refuge] promotion unwind failed` line. A hostile party near a refuge is raided nearest-first as before.
+- Keep-outs (A2): making camp, and founding a refuge, next to a town or castle are both refused as before.
+
+### WP128
+
+- Battle exits (#827): join a commander's battle through his army; the encounter menu shows neither 'Abandon army' nor 'Leave'. Kingdomless commander (merge fails): no 'Leave'. Safe-passage truce with the enemy faction and no army: 'Leave' shows again, and after it the state returns to EnlistedAttached once the commander's battle ends.
+- Discharge during load (#828): switch Enable Enlistment off in MCM, save on the map with the service menu open, load. Body reads 'Your service has ended.' with one option 'Go on your way', landing on the map. Repeat once in German (English seed text shows).
+- Raids (#831, #954): serve a lord who raids a village; taom.service_status stays EnlistedAttached, the board says 'The column is raiding.', release can be asked. A raid on the lord's own village he defends is joined. A lord with troops relieving the raided village: the soldier joins, then returns to normal service.
+- Wars (#832, #960): as an independent clan, enlist, let the lord's realm declare a new war, join a battle against that faction; log shows 'topped up the war with '<id>' before a join', and after discharge 'service war with '<id>' ended'. As a vassal of another kingdom, lord fighting a faction your kingdom is at peace with: 'sitting this battle out', no new war.
+- Merit (#834): fall early in an enlisted field battle, take over a soldier, kill a few enemies; log line 'battle merit ... (kills=N, won=...)' counts only the hero's own kills.
+- Encounter exits (#1021): defend the lord's town until the attackers retreat; within three in-game hours the log shows 'releasing a stale EnlistedBattle latch inside a settlement', the next assault logs 'cleared the last battle's result from the reused encounter (#1021)' then 'joined commander battle on side Defender', and that assault is fought. Save at an assault's encounter menu as a defender, switch Enlistment off, load: 'feature disabled: waiting for the battle to end before releasing', then the release after the battle.
+- Duty text (#845): in English, ask for work until a field duty is assigned; the order toast and the board name the duty ('a reconnaissance sweep') and its result toast is the duty's own line. Night patrol, an incident and their choices read as before. Repeat in Deutsch. The log has no 'duty '...' skipped' line.
+- Cleanups (#842 to #844): an existing save with an enlisted soldier loads; duties are still offered by the column's state; battle pay, trust and promotion work as before.
+- Logs: Logs/taom_debug_*.log, lines tagged [Enlistment] and [EnlistDiag]; console commands taom.service_status and taom.rescue_service.
+
+### WP129
+
+- Log: newest Logs\taom_debug_<timestamp>.log beside the game executable (bin\Win64_Shipping_Client). Use a campaign with a career hero; taom.career_perks needs cheats on.
+- Mount bonuses (#611): Cavalry career with a MountChargeDamage pick. In battle taom.career_perks shows the mount's MountChargeDamage above base and '[CareerPerks] mount stats for rider' appears once. Fire the Cavalry ability: mount speed and charge rise in the report, then fall back when the buff ends.
+- Typed resistance (#613): black_uruk_captain with black_uruk_captain_t1_a_p2 (Blunt). 'hit reduction' lines appear for mace and horse-charge hits, not for sword cuts.
+- Ammo (#613): a javelin career with an Ammo pick spawns with more javelins than the printed maximum; '[CareerPerks] Ammo +N%' lines show amount and max before and after.
+- Hit summary (A3): a hero with a TroopDamage pick fights a battle. One 'hit amp' DEBUG line per combination, then at mission end '[CareerPerks] hit summary for this mission: ...' with a hit count.
+- Groups (#766): at level 1 the career screen refuses a tier 3 choice; a save with a foreign choice shows one 'Career choices that belonged to another career were refunded' message on load.
+- Earnings (#767, #770, #790): with captain_of_osgiliath_t3_a_p4 (+10% gain), a battle, raid and hideout each log a [SpecRes] earning 10% above base; a militia-only raid pays the raid credit once and no battle credit; a send-troops hideout clear writes one '[SpecRes] HIDEOUT:' line, also after saving in the success menu and loading.
+- Party size (#768): take a PartySize pick. The party limit in the party screen rises at once; an owned caravan's limit does not. taom.career_perks prints the tooltip value, the enforcement value and the engine cache, all equal.
+- Promotions (#612): an Isengard or Mordor campaign with Field Commission on gets a promotion offer after a won fair battle; no '[FieldCommission] allowedRaceNames entry' warning at start.
+- Archetypes: a goblin, Lindon or Abanissa career's ability applies its buff (damage, speed or mount line in taom.career_perks while it runs).
+- Career button (#971): one click sound, and the career screen opens.
+- Heir quest: let the hero die with a career quest running and continue as the heir. The old quest shows cancelled with vanilla's clan-leader text, 'CareerQuest: cancelled ...' is in the log, and the heir is offered their own career's quest.
+- Career screen (#769 fixes): the header shows the root perk line under the description; a MountHealth pick shows '+10% mount health'; a keystone with a passive adds its value to the Active Effects total.
+
+### WP130
+
+- Campaign battle with a cave troll unit and banners: no troll carries a banner; kill a bearer next to a troll and watch the dropped banner fetched by a non-troll or left lying.
+- Custom Battle with Mordor (trolls): no troll raises or fetches a banner.
+- One shader pre-compile batch (it runs hidden Custom Battles): no exception naming TaomCustomBattleBannerBearersModel or TaomCustomBattleDamageModel.
+- Dread: a campaign battle against a Nazgul: only troops in contact weaken; no formation-wide rout from the aura alone; MCM 'Dread Radius' shows 5 on an install with an old TAOM.json.
+- Knockdown: Rohan cavalry into Mordor orcs and uruks floors them head-on and floors men from any angle at full speed; cave trolls and dwarves mostly stay up; MCM 'Auto-Knockdown Weight Ratio' shows 6 on an old TAOM.json.
+- Custom Battle combat (Part D): troll cleave and stagger immunity, crush-through and charge knockdown work; a mounted hit causes no crash.
+- Battle action bar: the #970 checklist in docs/features/companion-tactics.md; with the setting off (default) no bar and no input change; the [BattleLoad] TAOM-behaviour count is two lower.
+- Warg: a player on a warg still loses and regains control in a rage; warg reinforcements return to their formation after a rage or after their warg dies.
+- taom.spawn_troops <id> 5 enemy in a Custom Battle (cheat mode) spawns troops.
+- Dunland (owed only once F3 lands): the Hunter fights with the archers and the Hebog-luth with the horse archers; check whether the Hebog-luth are mounted, since their battle rosters have no Horse item (report it, do not add one).
+
+### WP131
+
+- Startup: no main-menu inquiry about failed patch categories; the debug log has no '[Module] AlignmentRecruitment failed', no '[Module] MessengerSessionRules failed', no '[CastleRecruitment] AiHourlyTick:' warning, no '[CastleRecruitment] ... not found' and no 'CheckRecruiting bind failed' after loading a campaign.
+- Troop weight: an elven (Rivendell or Mirkwood) castle garrison over about a month: no daily desertion of elite troops; party and clan screens show raw count against the real limit; an elite patrol is not slowed by an over-limit penalty.
+- Castle recruitment: AI lords ride to castles only when castle notables hold volunteers; an AI lord parked in a castle tops up hourly; with 'AI Recruits From Castles' OFF an AI lord entering a castle takes no castle volunteers while garrisons still recruit daily; ON regresses nothing; kingdom lords far from home no longer target friendly foreign castles.
+- Alignment scoring: with 'Apply To AI Lords' on, a Free lord near an Evil town at peace does not plan a recruiting trip there (food and trade visits still happen); no '[AlignmentRecruitment] Patch114 postfix failed' line.
+- Messenger button: on a hero's encyclopedia page Send Messenger has the popup button look, its label dims when greyed, and hovering a greyed button shows the reason.
+- Messenger session rules: run the eight-item 'In-game Checklist (#898)' in docs/features/messengers.md.
+
+### WP132
+
+- Survival (A1): enlist with a hero who has good Medicine and fall in a few of the commander's battles. Expect no error from TaomPartyHealingModel and deaths no likelier than when freelancing.
+- Quartermaster (#829): ask the commander for kit twice at one rank. Expect the issued line, then 'You have drawn your due for your rank already'. In German the three new lines read in English until WP135.
+- Sit-out (#830), not-lopsided field battle: 'Leave it to the others' is greyed with 'You serve in your commander's line...' while Attack is enabled.
+- Sit-out (#830), wounded: the option is enabled with the wounded tooltip; after the battle 'You were wounded and stayed back...' shows and no renown is paid.
+- Sit-out (#830), about 85 percent strength or more on his side: the option is enabled with the odds tooltip; afterwards the log shows '[Enlistment] sat out a simulated battle (OverwhelmingCost, ...)', half base XP and one trust lost.
+- Sit-out (#830), siege assault: the option is greyed with the siege tooltip.
+- Board pay (#839): while the commander is lost (grace state), 'Daily pay' reads 0.
+- Pump clock (#841): on the service menu the board updates with time running, while paused and right after loading onto the menu. A commander relieving a raided village, joined from the running service menu, opens the battle on the next frame with no casualties taken first (trace on: 'join into a raid deferred to the wait-menu frame'); a field battle joins at once.
+- Siege duty (#1014): with the commander defending a besieged town, ask for work. The siege duty (walking the works) can be offered and the quiet night watch is no longer the only kind.
+- Battle rule (#796): after a battle's loot screens, service returns to normal with no stuck state; taom.service_status reads EnlistedAttached.
+- Logs: <game>/bin/Win64_Shipping_Client/Logs/taom_debug_*.log, lines tagged [Enlistment]; [EnlistDiag] lines need the enlistment trace on in MCM.
+
+### WP133
+
+- Inventory, Quick Actions, Unequip All: slots empty, items in list, doll, armour, weight, capacity update; Reset then Cancel restore gear; no '[QuickActions] inventory panel refresh failed' line.
+- Load a preset with the inventory open: doll and stats update at once; a preset equipping the last of a stack removes the row; no '[EquipPresets] inventory panel refresh failed' line.
+- Sell Low Value on a whole stack: row disappears at once. MCM: 'Sell Damaged Equipped' and 'Sell Low Value Equipped' gone.
+- Banner Color Persistence on, custom clan colours: inventory doll shows clan colours on open, outfit toggle, Reset and preset load; a stealth set keeps the vanilla stealth colour.
+- Portraits show clan colours on the party screen, clan screen, hero panels and the Order of Battle hero pool, AI lords included.
+- Clan screen with a refuge being raised: row keeps '(being raised)' after the screen opens, wage slider hidden, wage line reads 0.
+- Field battle, Lindon and Blue Craig formations with no lord: bearers raise the archers' flag and the orcs' standard. Owed only after B2 lands; it will fail on this branch by design.
+- Load a campaign: special resource counter appears with the map bar at once; switch to or become a hero with no resource: the counter leaves.
+- F6 with the escape menu open and while a prisoner: nothing opens; normal F6 opens the fief hub; Make camp disabled while a menu is open.
+- Watch several towns' markets over days: no troll gear or other not-for-sale item in new stock. Only meaningful for items the installed Armory marks; re-check on the public Armory.
+- Tavern maid in a Gondor town: 'a mug of ale with a bowl of stew'; in a Rohan town: vanilla's dishes.
+- Coronation in a TAOM-only realm shows its title (no 'ERROR: Text with id' in the popup or rgl_log); Dunland's says 'Brenin of Dunland'; first talk with a Gondor lord names 'Lord of Gondor'.
+
+### WP134
+
+- Gondor's policies: in a new campaign, Kingdom > Policies for Gondor shows Land Grants for Veterans active beside Senate. No log line is expected.
+- Alignment sides, as a Gondor-cultured vassal of Umbar or Khand: (a) a Mordor-culture wanderer's hire goes ahead; (b) on the party screen a Rohan prisoner reads -1 and a Gondor prisoner 0; (c) optional, an execution's pre-confirm relation preview agrees with the applied changes. The newest taom_debug log must have no '[WandererAllegiance] could not evaluate the hire verdict' error.
+- Wanderers: a goblin, Misty Mountain orc, Blue Craig or Lindon wanderer in a tavern gives an introduction and backstory, with no 'ERROR: Text with id backstory_c doesn't exist!'.
+- Owed only once the deferred steps land: Lindon party-screen weights (plan check 2), generated lords' kits (check 5), lesser Nazgul kit and Custom Battle (check 6).
+
+### WP135
+
+- #706, German: an aom_ notable or a TAOM_ minor faction shows its German row. Switching to English logs '[LocalizationOverride] Text language is English again: the English string overrides apply'; back to German logs "Text language 'Deutsch' is not English". A session that starts in English logs neither. Read Logs/taom_debug_<timestamp>.log under bin/Win64_Shipping_Client.
+- #1026, with TAOM loaded after TAOM_Map and the Armory: English party names read "<Name>'s Party", and a German or Turkish line with a lord's name keeps its article or suffix. With TAOM_Map loaded after TAOM, seven languages lose this until M2 is done.
+- Names, after the fill and C3: in German, party screen troop names, encyclopedia lord names, clan and kingdom names are German. A NEW campaign shows six Umbar clan names; an existing campaign keeps its saved one.
+- Vanilla rewordings (B2): German 'Call ... to war' decisions read the game's own German; a kept BR row such as 0cdXddA9 still shows TAOM's row.
+- Custom Battle: no 'Text with id' error for a TAOM culture text (A3).
+- A translated conversation line with an animation tag animates and shows no [ib:...] text (A9).
+- Keys flagged by loc_length_report.py in fixed-width widgets fit in that language (C4). Run on A10 with --since e3a34b651: 23 of 139 keys flagged, for example taom_wsc_t1_a_p2 at FR ratio 1.40.
+- A German Combat issue without its own texts reads the 'a foe' fallback text (A8).
+
+### WP137
+
+- C2: after a build with this branch runs the game, <game>\Modules\TAOM.Dependencies\diag.log shows the OnSubModuleLoad shield sequence with CollectAssemblyTypesShim.Install followed by PatchShield.Install (pass 1) and no SubModuleConstructionGuard line. The main menu opens and a save loads.
+- E2: press Play in Visual Studio with the Bannerlord profile; only the managed debugger attaches. Compare the PatchShield pass 2 duration in diag.log with an earlier mixed-mode run (the speed-up is UNVERIFIED).
+- E4 (desktop): pwsh tools/dump_engine_skeleton.ps1 -List and one extract_human_anims_tpac.ps1 run with TpacTool v0.5.1 (skeleton body positions are Vector4; the extractor needs win-x64\native\assimp.dll in that folder, UNVERIFIED).
+- Next freeze or hang report: follow /native-crash-triage Phase 2b on the desktop once B4 lands, and record whether the frames named the stuck loop.
+
+### WP141
+
+- No gameplay in-game check is owed: no ModuleData or player-loaded file changed (git diff against the base for Main/_Module and CHANGELOG.md is empty).
+- First real use on the desktop, reading the dry run first: Apply-MapVillageNames.py --apply after a rename. A DE client then shows the new English name until a translator run; switch language to see it refresh.
+- First real use on the desktop: the starter kit and ranged ladder generators without --asset-repo, confirming the lotraom-assets mirror stays untouched.
+- First real use on the desktop: check_rdc_entries.py against the loose Armory. This laptop's installs are cooked, so it reports no RuntimeDataCache folder here.
+- After D1 steps 3 and 4 and D2: a raw 'graphify update' from both shell tools must be denied in a live session.
+
+### WP144
+
+- Camp prefabs (B5): start a Field camp on the 1.4.8 build; in taom_debug_*.log look for `[FieldCamp] placed 1 Field camp entities` (prefab) or a larger count (fallback); same for a refuge (`[Refuge] placed N`). Record which in tpac-static-prop-authoring.md.
+- Elephant skeleton package (A7): on the desktop's loose Armory, confirm adod_elephant_geo.tpac carries elephant_skeleton and elephant_harad_armor_01_geo.tpac is a 416-byte stub.
+- Hidden inner gates (C1): one campaign siege at taom_rohan_castle_helms_deep_forceatmo or taom_gondor_castle_001_forceatmo: does the middle lane ever open, or do attackers stand at the gate?
+- Female dwarf meshes (A8): for the Armory a 1.4.x release pairs with, read skins.xml's dwarf woman face_meta_mesh. The installed v2.0.26 reads sm_dwarf_basemesh_a1_head (the stopgap). If a paired build reads sk_dwarf_bm_f1_head, look at a female dwarf lord close up for the #385 crash and the eye gap.
+- Map-view GPU memory (B4): on the map, open and close the inventory 20 times; watch dedicated GPU memory with Release Map View Memory on and off.
+- Being-struck band (A1): optional; a war ram head-butt shows no flinch.
+- Tournament armour (A4): in a tournament match fighters wear their culture's practice kit; in an arena practice fight each fighter wears his own culture's kit too.
+
+### WP136
+
+- Mordor's card: character creation culture stage and the faction screen show +20% party size limit, in English and one other language.
+- Rhun and Harwan cards: the English description now reads +5% party size; no other language changed.
+- Seven banners in the encyclopedia: Nos Alenwe, Nos Iminye, Zorian, the Rivendell and Lothlorien houses, Torabai, Khorvash. No new banner line in rgl_log.
+- Three removed hero templates: start a campaign; no new Null object reference lines in rgl_log_errors compared with a build before this WP.
+- python tools/validate_xml_schemas.py --live on the public Armory after the WP101 refresh. Today, on the laptop's Armory v2.0.26, it prints FAIL: 215 file(s) validated, 1 failed (LOTRAOM_horses.xml, family_type). That is the old Armory, not a verdict.
+- Decide the taom_canonical_lord_I1_0_skills drift between generator and file before any --apply. Today apply_culture_skills_traits.py --check prints OK: 145 SkillSets match the generator.
+
+### WP130 F3
+
+- Check 10 (the one F3 owes): in a battle, the Dunland Hunter fights with the archers and the Hebog-lûth with the horse archers. Also check whether the Hebog-lûth are mounted: the plan says their battle rosters have no Horse item, so they may fight on foot in the horse archer formation. A horse is content (D13): report it, do not add one.
+- Plan 130's checks 1 to 9 stay owed from the earlier parts (D26).
+
+### WP115
+
+- Engine line: Logs/taom_debug_*.log top lines show `[Engine] Bannerlord=v1.4.8... modules(N)=[...]` beside [BuildStamp], naming TAOM_Map and LOTRLOME_Armory with versions.
+- BuildStamp tokens: `config=Debug jitOpt=OFF` after each stamp, and `(pair OK: both built from <sha8>)` for a paired build.
+- Shutdown line: end of the log shows `[Shutdown] clean module unload` after quit to desktop, and it is absent after killing the process.
+- Crash bundle: trigger with the QA dev trigger in MCM. The zip holds diag.log, report.txt Identity has `Build:`, manifest.txt has `TAOM build:`.
+- Log retention: Logs/ after more than 10 launches keeps up to 30 taom_debug_*.log.
+- Game Pass target: ./build.ps1 in a checkout still holding the staging folder fails with the Game Pass message, then succeeds after M2, and no Gaming.Desktop folder reappears under <game>/Modules/TAOM/bin.
+- Release gate (owed once B1 to B3 and C5 land): Phase 8 dry runs on the install and on the channel folder exit 0 with `build stamp OK`, and the pairing check exits 0.
+
+### WP121
+
+- B5: the Kit opens TAOM with no 'Cannot find' or dependency-conflict box. diag.log has 'RunEarlyPhase: loaded by the Modding Kit; skipping crash-loop detection'. No session-launching.marker after the Kit closes. The next game's diag.log reads previousCrashLoop=False.
+- B2: the deploying build logs 'TAOM.Dependencies: mirrored N files Win64_Shipping_Client -> Win64_Shipping_wEditor' and the two bin folders hold equal file counts.
+- B7: Abanissa kingdom and clan banners show solid sigils in the Encyclopedia and on the map.
+- B11: banners on the map, in the Encyclopedia and in one battle, covering Gundabad, Harad, Rhun, Mordor and Rohan clans. Goblin and Misty Mountain Orc icons in the banner editor preview. The banner editor icon list unchanged.
+- B11 (if B9 was done): three or four loading screens without banding or blockiness.
+- B4 and B11: [MemStation] enter screen='MapScreen' and the next [MemSample] in taom_debug_*.log, plus Dedicated GPU memory, before and after. This is a record, not a gate (D23).
+- Part D: the TAOM_PACK0 run passes with no skip; banners and loading screens checked on the packaged build.
+- Part E: the map horizon after the vista change; check_map_vista.py exits 0 on the pinned TAOM_Map.
+
+### WP140
+
+- Deploy with this branch merged, and first remove the 19 deleted files from <game>/Modules/TAOM/GUI/Prefabs/ (or reinstall the module). Watch rgl_log_*.txt for 'Couldn't find Custom Widget type', 'builtin widget type not found', 'This prefab has already been added' and 'Failed to apply extension' lines naming a TAOM screen.
+- Party screen, troop upgrade and recruit pop-up: hovering the horse count shows the used-horses tooltip; header columns line up with the rows; the single centred Done button and the top-right close button work; with a gamepad, key hints appear beside the hovered row's buttons.
+- Party screen sort bar, composition panel and troop rows; custom battle army sliders, dropdown and troop type pop-up; campaign party and settlement nameplates: all unchanged (they now load the identical vanilla files).
+- Battle: the career energy bar sits above the health cluster as before.
+- Battle action bar (if enabled): the formation name and button labels use the tooltip text style.
+- Career screen: switch-mode subtitle, no-targets message, career names, descriptions and ability names use the career screen styles instead of the default font.
+- Custom battle: the army size slider shows vanilla's track, fill, frame and knob, and the number box has its frame.
+- Inventory: the Presets button label uses the popup button text style.
+- Character creation narrative stage, custom battle screen panels, order-of-battle overlay buttons and party screen header buttons look and behave as before.
+
+### WP139
+
+- Session summary: play 12 minutes, save, quit to desktop. In <game>\bin\Win64_Shipping_Client\Logs\taom_debug_*.log expect [Session] summary reason=heartbeat after about 10 minutes, reason=save just before the save's lines, reason=exit just before [Shutdown] clean module unload, with shield_swallowed= present.
+- Crash summary: any captured crash or the dev crash trigger. The bundle's report.txt and taom_debug.log show [Session] summary reason=crash before the log tail.
+- #970: Show Battle Action Bar on, field battle, Begin battle, Esc, click a stance. python tools/ingame_verdict.py --issue 970 gives PASS for attach and stance.
+- #971: Character screen, career button. --issue 971 gives PASS for open and init.
+- #1011: save a campaign, load it in the next session. --issue 1011 --sessions 2 gives PASS for capture (dead= above 0) and restore.
+- #918: Castle Recruitment on, AI Recruits From Castles off; fresh launch, one load, three days. --issue 918 gives PASS (three days with blocked= 1 or more).
+- #1076: only on a game with a hollow parent. --issue 1076; NOT REACHED is normal in a healthy game.
+- Swallowed sites: normal play. At most one [Swallowed] WARNING per site in the log, repeats counted in [Session] swallowed lines, no behaviour change.
+- /verify Step 6: run /verify after a session once Part D lands. Expect an In-game: line and nothing blocking.
+- All of these need a build deployed with ./build.ps1 from a clean tree that contains these commits. Never pass --post without the maintainer's word.
+
+### WP137 D
+
+- Plan 137's in-game checks are unchanged by Part D and remain owed: (1) diag.log shield sequence after a C2 build, (2) E2 Visual Studio Play with the Bannerlord profile, (3) E4 on the desktop with TpacTool v0.5.1, (4) /native-crash-triage Phase 2b at the next freeze report. Part D itself adds none (tool, docs and one comment).
+
+### WP122
+
+- None for Parts A to C: no game code changed (`git diff --name-only port148/overnight..HEAD -- Main` is empty). The plan's two Siege checks belong to Part D, which was not run.
+
+### WP145 A-D
+
+- Warg battle (Part A): field battle with wargs under AI riders, long enough for rages. Newest taom_debug_*.log must have no `Exception running the behavior tree` line. Riders return to formation after a rage (watch one, or a rider who dismounts mid-rage). A rider who chases out of reach is released about 6 s after the last attack. Rages now end sooner, always after 2 attacks with no roll: say if that feels wrong.
+- Career screen (B1, B2): a `goblin_troll_driver` or `falathrim_mariner` career shows an icon. Hover a diamond: the tooltip text is readable, with the frame under the canvas.
+- Clan screen (C3): with clan colours on, a party row's hero portrait keeps clan colours.
+- Lords' children (C2): a child born in a campaign takes the same-sex parent's race and look.
+- Nameplates (C4): change a fade slider in MCM on the map; the fade follows it, after a clean launch too.
+- Game menu and party screen (D3): both open and draw as before, the party screen's formation area in particular.
+- Mixed Formations (C5): the new `[MixedFormations] layout suspended` log line appears once per formation when a formation turns cavalry, and the Debug Mode hint text reads correctly in MCM.

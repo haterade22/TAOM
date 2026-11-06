@@ -38,8 +38,7 @@ GUI/
 ├── Fonts/                            ← Custom fonts
 ├── Prefabs/                          ← Gauntlet XML UI layouts
 │   └── CareerSystem/
-│       ├── CareerScreen.xml          ← Main career screen prefab
-│       └── AbilityHUD.xml            ← Battle HUD for active ability
+│       └── CareerScreen.xml          ← Main career screen prefab
 ├── SpriteData/                       ← Compiled sprite sheets (auto-generated)
 │   └── FactionMap/                   ← ⚠ NOT sprites — loose PNGs, see the trap below
 ├── SpriteParts/                      ← Source PNGs (organized by category)
@@ -159,7 +158,7 @@ A sprite has two independent failure modes. Check both; they are diagnosed diffe
 - A sprite-capable widget — `Widget`, `ImageWidget`, and `ButtonWidget` all render `Sprite=`.
 - Prefab `Sprite="..."` name exactly matches the registered `<Name>` (case + backslashes, no module prefix) — see `.claude/rules/gui-ui.md`.
 
-Static review (including `/deep-review` + Codex) can confirm bake *shape* but **cannot confirm a sprite renders**. Always flag new-sprite rendering as in-game-only in the CHANGELOG `Not-tested:` line; never let a CLEAN review imply a sprite will display.
+Static review (including `/deep-review` + Codex) can confirm bake *shape* but **cannot confirm a sprite renders**. Always flag new-sprite rendering as in-game-only in the commit's `Not-tested:` trailer; never let a CLEAN review imply a sprite will display.
 
 ### Deploying a prefab/sprite change for in-game testing
 
@@ -267,7 +266,7 @@ Expandable choice panels.
 
 ```
 CareerScreenVM
-├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription
+├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription, @RootPerkDescription (shown when @HasRootPerk)
 ├── @CareerPortraitSprite (career portrait image)
 ├── @AbilityName, @AbilitySpriteName, @AbilityLabel
 ├── @FreeCareerPointsText ("Free Points: 5")
@@ -289,15 +288,15 @@ CareerScreenVM
 
 **Status:** Verified in-game (2026-04-14). Dark steel banner sprite with "Career" text overlay.
 
-Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Sprite="CareerSystem\career_button_placeholder"` (233x75). Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
+Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Brush="CareerSystem.CareerButton"` (220x93) since #378. Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
 
-**Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` → calls `charDevVM.ExecuteDone()` to close Character Developer first → then `Game.Current.GameStateManager.PushState<CareerScreenGameState>()`. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
+**Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` (the button's only handler: the mixin has none, #971) → calls `charDevVM.ExecuteDone()` to close Character Developer first, and vanilla's close callback plays the click sound `event:/ui/default` → then `GauntletCareerScreen.OpenCareerScreen()` creates the `CareerScreenGameState` and pushes it. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
 
 **Critical:** Must close CharacterDeveloper BEFORE pushing career state. Without `ExecuteDone()`, the map bar global layer continues ticking input with invalid context → `IndexOutOfRangeException`.
 
 ### Ability HUD in Battle
 
-`AbilityHUD.xml` displayed via `CareerPerkMissionBehavior` on a `GauntletLayer("CareerAbilityHUD", 50)`. Shows charge percentage and ready state via `CareerAbilityHudVM`.
+The old standalone panel is gone (#382). The battle ability display is `CareerEnergyBarPrefab`, injected into Native's `AgentStatus` prefab: see [career-system.md](career-system.md), "#382 energy bar".
 
 ## Special Resource Map Bar
 
@@ -310,8 +309,9 @@ Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects. A `SpecialR
 ```
 SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM, hooks "Refresh")
 ├── Creates MapInfoItemVM("special_resource", GetTooltipProperties)
-├── Adds to SecondaryInfoItems once (_baseInitialized guard)
-├── Updates Value, IntValue, HasWarning per frame
+├── Adds to SecondaryInfoItems on the first refresh, guarded by Contains (#958)
+├── Removes it while the hero has no resource (#977)
+├── Updates Value, IntValue, HasWarning on every refresh (every 0.2 s)
 └── GetTooltipProperties() → rich tooltip with tier, daily change, earning rates
 
 SpecialResourceIconPrefab (PrefabExtension on MapBar)
@@ -319,7 +319,7 @@ SpecialResourceIconPrefab (PrefabExtension on MapBar)
     with SpecialResourceSpriteWidget (dynamic icon loading)
 ```
 
-**Critical:** The mixin MUST hook `"Refresh"` (per-frame), NOT `"RefreshValues"` (one-time init).
+**Critical:** The mixin MUST hook `"Refresh"` (the map bar's timed refresh), NOT `"RefreshValues"` (one-time init).
 
 ### Tooltip Content
 
@@ -348,7 +348,6 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 | File | Purpose |
 |------|---------|
 | `Main/_Module/GUI/PreFabs/CareerSystem/CareerScreen.xml` | Career screen layout |
-| `Main/_Module/GUI/PreFabs/CareerSystem/AbilityHUD.xml` | Battle ability HUD |
 | `Main/_Module/GUI/TAOMSpriteData.xml` | Sprite category declaration |
 | `Main/Features/CareerSystem/UI/GauntletCareerScreen.cs` | Screen creation + lifecycle |
 | `Main/Features/CareerSystem/UI/CareerScreenVM.cs` | Career screen ViewModel (root) |
@@ -382,7 +381,7 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 1. Create a `PrefabExtensionInsertPatch` class with `[PrefabExtension("TargetPrefab", "xpath")]`
 2. Return XML from `GetDocument()` with `@PropertyName` bindings
 3. Create a `BaseViewModelMixin<TargetVM>` with `[DataSourceProperty]` for each binding
-4. **Do NOT add to collection properties** (SecondaryInfoItems, etc.) — use bound properties + prefab injection
+4. **Prefer bound properties plus prefab injection** to adding items to a vanilla collection property (`SecondaryInfoItems` and others), which `.claude/rules/gui-ui.md` discourages on ownership grounds. If an item must go into such a list, add it on every refresh behind a `Contains` check, never skip the first refresh, and remove it when it no longer applies, as `SpecialResourceMapBarMixin` does (#958, #977)
 
 ### Debug UI bindings
 1. Check Bannerlord's `rgl_log.txt` for Gauntlet binding errors

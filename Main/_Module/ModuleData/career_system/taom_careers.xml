@@ -1129,6 +1129,7 @@
           description="{=taom_career_goblin_troll_driver_desc}A brutal orc chieftain of Goblin-town who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="goblin_troll_driver_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="goblin_troll_driver_root"
           keystone_icon="22000">
@@ -1150,6 +1151,7 @@
           description="{=taom_career_goblin_tunnel_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="goblin_tunnel_stalker_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="goblin_tunnel_stalker_root"
           keystone_icon="22001">
@@ -1171,6 +1173,7 @@
           description="{=taom_career_goblin_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="goblin_warg_master_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="goblin_warg_master_root"
           keystone_icon="22002">
@@ -1192,6 +1195,7 @@
           description="{=taom_career_misty_troll_goad_desc}A brutal orc chieftain of Moria who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="misty_troll_goad_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="misty_troll_goad_root"
           keystone_icon="22000">
@@ -1213,6 +1217,7 @@
           description="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="misty_deep_marksman_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="misty_deep_marksman_root"
           keystone_icon="22001">
@@ -1234,6 +1239,7 @@
           description="{=taom_career_misty_warg_chieftain_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="misty_warg_chieftain_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="misty_warg_chieftain_root"
           keystone_icon="22002">
@@ -1255,6 +1261,7 @@
           description="{=taom_career_craig_pit_driver_desc}A brutal orc chieftain of Blue Craig who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="craig_pit_driver_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="craig_pit_driver_root"
           keystone_icon="22000">
@@ -1276,6 +1283,7 @@
           description="{=taom_career_craig_crag_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="craig_crag_stalker_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="craig_crag_stalker_root"
           keystone_icon="22001">
@@ -1297,6 +1305,7 @@
           description="{=taom_career_craig_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Ered Luin."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="craig_warg_master_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="craig_warg_master_root"
           keystone_icon="22002">
@@ -1318,6 +1327,7 @@
           description="{=taom_career_falathrim_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
           portrait_sprite="career_blade_dancer_portrait"
           ability_template_id="falathrim_blade_dancer_ability"
+          ability_sprite="blade_dancer_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_blade_dancer_root"
           keystone_icon="15000">
@@ -1339,6 +1349,7 @@
           description="{=taom_career_falathrim_sentinel_desc}A peerless marksman of Mithlond whose arrows fly true across vast distances, guided by centuries of practice."
           portrait_sprite="career_elven_archer_portrait"
           ability_template_id="falathrim_sentinel_ability"
+          ability_sprite="elven_archer_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_sentinel_root"
           keystone_icon="15001">
@@ -1360,6 +1371,7 @@
           description="{=taom_career_falathrim_mariner_desc}A mounted warrior of Cirdan's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
           portrait_sprite="career_rivendell_knight_portrait"
           ability_template_id="falathrim_mariner_ability"
+          ability_sprite="rivendell_knight_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_mariner_root"
           keystone_icon="15002">
@@ -1381,6 +1393,7 @@
           description="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="shaghana_zajana_tribesman_ability"
+          ability_sprite="tribesman_of_jelut_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_zajana_tribesman_root"
           keystone_icon="13000">
@@ -1402,6 +1415,7 @@
           description="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="shaghana_chatak_javelineer_ability"
+          ability_sprite="pezarsani_javelineer_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_chatak_javelineer_root"
           keystone_icon="13001">
@@ -1423,6 +1437,7 @@
           description="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="shaghana_beast_rider_ability"
+          ability_sprite="mahud_beast_rider_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_beast_rider_root"
           keystone_icon="25015">
@@ -1444,6 +1459,7 @@
           description="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="abanissa_house_guard_ability"
+          ability_sprite="tribesman_of_jelut_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_house_guard_root"
           keystone_icon="13000">
@@ -1465,6 +1481,7 @@
           description="{=taom_career_abanissa_jiret_javelineer_desc}A fast-moving skirmisher of Jîret who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="abanissa_jiret_javelineer_ability"
+          ability_sprite="pezarsani_javelineer_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_jiret_javelineer_root"
           keystone_icon="13001">
@@ -1486,6 +1503,7 @@
           description="{=taom_career_abanissa_ivory_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="abanissa_ivory_rider_ability"
+          ability_sprite="mahud_beast_rider_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_ivory_rider_root"
           keystone_icon="25015">

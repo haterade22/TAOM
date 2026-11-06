@@ -32,6 +32,7 @@ public class BundledDependencyManifestTests
     private static string MainSubModule => Path.Combine(RepoRoot, @"Main\_Module\SubModule.xml");
     private static string VendoredBin => Path.Combine(RepoRoot, @"Dependencies\_Module\bin\Win64_Shipping_Client");
     private static string LicensesFile => Path.Combine(RepoRoot, @"Dependencies\_Module\THIRD-PARTY-LICENSES.txt");
+    private static string MainLicensesFile => Path.Combine(RepoRoot, @"Main\_Module\THIRD-PARTY-LICENSES.txt");
     private static string PinnedGameVersionFile => Path.Combine(RepoRoot, @".claude\pinned-game-version.txt");
 
     private static string StubSubModule(string moduleId) =>
@@ -226,6 +227,19 @@ public class BundledDependencyManifestTests
     // ── Redistribution attribution ────────────────────────────────────────────────────────────
 
     [TestMethod]
+    public void MainThirdPartyLicenses_NameTheShippedRuntimeLibraries()
+    {
+        // The build writes these three NuGet DLLs into every TAOM bin folder, so a release
+        // redistributes them, and the MIT notice obligation comes with that.
+        Assert.IsTrue(File.Exists(MainLicensesFile), $"Licenses file not found: {MainLicensesFile}");
+        var text = File.ReadAllText(MainLicensesFile);
+
+        StringAssert.Contains(text, $"DryIoc {GetPackageVersion(MainCsproj, "DryIoc.dll")}");
+        StringAssert.Contains(text, $"Json.NET {GetPackageVersion(MainCsproj, "Newtonsoft.Json")}");
+        StringAssert.Contains(text, "System.Runtime.CompilerServices.Unsafe.dll");
+    }
+
+    [TestMethod]
     public void ThirdPartyLicenses_NameTheActuallyShippedVersions()
     {
         // THIRD-PARTY-LICENSES.txt makes a redistribution claim about binaries that get physically
@@ -298,6 +312,32 @@ public class BundledDependencyManifestTests
                     "<DependedModuleMetadatas>, so metadata alone does not establish the ordering.");
             }
         }
+    }
+
+    /// <summary>
+    /// The #371 pairing: Main's <c>DependedModuleMetadata</c> for TAOM.Dependencies must carry the exact version of the
+    /// Dependencies module. BUTR and BLSE launchers read that metadata; a mismatch lets a new TAOM load against an old
+    /// Dependencies, the Harmony and UIExtenderEx types fail at the member level, and every character renders in bind
+    /// pose. The release skill runs this test by name after it bumps both files.
+    /// </summary>
+    [TestMethod]
+    public void DependenciesPairing_MainMetadataEqualsDependenciesVersion()
+    {
+        var metadata = XDocument.Load(MainSubModule).Descendants("DependedModuleMetadata")
+            .Where(e => (string?)e.Attribute("id") == "TAOM.Dependencies").ToList();
+        Assert.AreEqual(1, metadata.Count, "Expected exactly one <DependedModuleMetadata id=\"TAOM.Dependencies\"> in " + MainSubModule);
+
+        var dependenciesManifest = Path.Combine(RepoRoot, @"Dependencies\_Module\SubModule.xml");
+        var version = XDocument.Load(dependenciesManifest).Root!.Element("Version");
+        Assert.IsNotNull(version, "Dependencies/_Module/SubModule.xml has no <Version>.");
+
+        var pinned = (string?)metadata[0].Attribute("version");
+        var actual = (string?)version!.Attribute("value");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(pinned) || string.IsNullOrWhiteSpace(actual),
+            "Both versions must be set: Main metadata '" + pinned + "', Dependencies <Version> '" + actual + "'.");
+        Assert.AreEqual(actual, pinned,
+            "Main/_Module/SubModule.xml pins TAOM.Dependencies at '" + pinned + "' but Dependencies/_Module/SubModule.xml is '"
+            + actual + "' (#371). Set both to the release version.");
     }
 
     /// <summary>Minimal reader for the `[modules]` section — mirrors CoopModuleList's format.</summary>

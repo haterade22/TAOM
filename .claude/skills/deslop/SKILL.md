@@ -13,7 +13,7 @@ Regression-safe cleanup of AI-generated bloat. Targets dead code, duplicate logi
 ## Precondition: Tests Must Be Green
 
 ```bash
-dotnet test TAOM.Tests --no-build 2>&1 | tail -5
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build 2>&1 | tail -5
 ```
 
 If tests are failing: **STOP**. Do not clean up broken code — you'll mask real bugs. Report the failures and exit.
@@ -64,7 +64,7 @@ Apply changes in this order — safest first:
 ## Phase 3: Re-Run Tests
 
 ```bash
-dotnet test TAOM.Tests --no-build 2>&1 | tail -10
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build 2>&1 | tail -10
 ```
 
 If any test fails: **revert the last change** (`git diff` to identify it), report which deletion broke which test, and mark that item `RISKY` in the report. Do not delete it.

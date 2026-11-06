@@ -1,0 +1,9 @@
+# Fixture: an rgl engine log, joined by its mtime.
+issue = 9004
+fixed_in = "40385aa5b"
+logs = ["taom", "rgl"]
+
+[[check]]
+id = "engine.fixture.rgl"
+needs = "start the game"
+pass = ['\] Build Version: \d+']

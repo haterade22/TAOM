@@ -86,7 +86,7 @@ The house rules make violations crisp — cite the ADR/rule in the finding:
 
 ## 7. DX & Tooling
 
-- Broken or missing: a one-command build+test entry point exists (`./build.ps1 -RunTests` is the documented one — do NOT run it; verify green via `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` + `dotnet test TAOM.Tests -p:DisableModuleCopy=true`), pre-commit hooks misfiring, CI gaps vs local gates.
+- Broken or missing: a one-command build+test entry point exists (`./build.ps1 -RunTests` is the documented one: do NOT run it; verify green via `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` + `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`), pre-commit hooks misfiring, CI gaps vs local gates.
 - Slow feedback loops: build times, test startup, `taom-src` cache misses, hooks that re-prompt needlessly.
 - Onboarding friction: README/CLAUDE.md setup steps that are wrong, undocumented required env vars (`BANNERLORD_GAME_DIR`), paths that assume one machine.
 - Harness health: `/skill-stocktake` and `/context-budget` own skills/agents/rules audits — run-or-cite them; flag only what they structurally can't see.

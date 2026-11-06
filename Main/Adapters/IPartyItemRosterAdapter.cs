@@ -4,7 +4,7 @@ namespace TAOM.Adapters;
 /// ADR-007 boundary over PartyBase.MainParty.ItemRoster for the enlistment
 /// equipment pipeline: add issued gear to the player's INVENTORY (never equip),
 /// count it, and reclaim it at discharge. Producers:
-/// <c>EnlistmentEquipmentService.IssueForRank</c> (add) and
+/// <c>EnlistmentEquipmentService.IssueForTier</c> (add) and
 /// <c>DischargeConsequenceService.ReclaimIssuedKit</c> (remove, honourable exits only).
 ///
 /// <para><b>Deliberate (ItemObject, int) overload choice</b> — the adapters.md

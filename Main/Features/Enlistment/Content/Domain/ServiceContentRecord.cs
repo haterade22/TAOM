@@ -6,12 +6,11 @@ using System.Linq;
 namespace TAOM.Features.Enlistment.Content.Domain;
 
 /// <summary>
-/// The content-layer service record: rank/assignment progression, trust, the four
-/// reputation domains, wage arrears, duty state and scheduler bookkeeping. Persisted as
-/// its own SyncData section (key <c>_taom_enlistment_content</c>) in the same
-/// <c>key=value;</c> shape as the core record — unknown keys ignored, non-finite day
-/// values dropped field-level, malformed record resets clean (content loss is
-/// progression loss, never a softlock).
+/// The content-layer service record: rank/assignment progression, trust, wage arrears,
+/// duty state and scheduler bookkeeping. Persisted as its own SyncData section (key
+/// <c>_taom_enlistment_content</c>) in the same <c>key=value;</c> shape as the core record.
+/// Unknown keys are ignored, non-finite day values are dropped field-level, and a
+/// malformed record resets clean (content loss is progression loss, never a softlock).
 /// </summary>
 public sealed class ServiceContentRecord
 {
@@ -20,16 +19,8 @@ public sealed class ServiceContentRecord
     public int ServiceXp { get; set; }
     public int DaysServed { get; set; }
     public int DutySuccesses { get; set; }
-    public int DutyFailures { get; set; }
     public int Trust { get; set; }
-    public int FieldRep { get; set; }
-    public int LogisticsRep { get; set; }
-    public int CommandRep { get; set; }
-    public int SiegeRep { get; set; }
     public int DeferredWages { get; set; }
-    public int BattleVictories { get; set; }
-    public int BattleDefeats { get; set; }
-    public int TournamentWins { get; set; }
     public double? LastAssignmentSwapDay { get; set; }
 
     // Active field duty (one at a time)
@@ -37,7 +28,6 @@ public sealed class ServiceContentRecord
     public string ActiveDutyTargetPartyId { get; set; }
     public string ActiveDutySettlementId { get; set; }
     public double? ActiveDutyDeadlineDay { get; set; }
-    public int ActiveDutyFoodRequired { get; set; }
     public double? ShiftEndDay { get; set; }
 
     // Scheduler bookkeeping
@@ -45,10 +35,10 @@ public sealed class ServiceContentRecord
     public double? LastIncidentDay { get; set; }
     public List<string> RecentDutyIds { get; set; } = new List<string>();
 
-    /// <summary>Highest equipment rank already drawn (monotonic), or null. -1 sentinel on the wire.</summary>
-    public int? HighestIssuedEquipmentRank { get; set; }
+    /// <summary>Highest kit tier already drawn (monotonic; an <c>EnlistmentKitTier</c> ordinal, not a career rank), or null. Omitted from the serialized form when null; TryParse rejects negatives.</summary>
+    public int? HighestIssuedKitTier { get; set; }
 
-    /// <summary>One entry per issued item INSTANCE (duplicates preserved for the payoff sum).</summary>
+    /// <summary>One entry per issued item INSTANCE (duplicates preserved for the per-item reclaim at discharge).</summary>
     public List<string> IssuedEquipmentItemIds { get; set; } = new List<string>();
 
     public bool HasActiveDuty => !string.IsNullOrEmpty(ActiveDutyId);
@@ -60,22 +50,14 @@ public sealed class ServiceContentRecord
         ServiceXp = 0;
         DaysServed = 0;
         DutySuccesses = 0;
-        DutyFailures = 0;
         Trust = 0;
-        FieldRep = 0;
-        LogisticsRep = 0;
-        CommandRep = 0;
-        SiegeRep = 0;
         DeferredWages = 0;
-        BattleVictories = 0;
-        BattleDefeats = 0;
-        TournamentWins = 0;
         LastAssignmentSwapDay = null;
         ClearActiveDuty();
         LastOfferDay = null;
         LastIncidentDay = null;
         RecentDutyIds.Clear();
-        HighestIssuedEquipmentRank = null;
+        HighestIssuedKitTier = null;
         IssuedEquipmentItemIds.Clear();
     }
 
@@ -85,7 +67,6 @@ public sealed class ServiceContentRecord
         ActiveDutyTargetPartyId = null;
         ActiveDutySettlementId = null;
         ActiveDutyDeadlineDay = null;
-        ActiveDutyFoodRequired = 0;
         ShiftEndDay = null;
     }
 
@@ -99,7 +80,6 @@ public sealed class ServiceContentRecord
             ServiceXp = ServiceXp,
             LeadershipSkill = leadershipSkill,
             DutySuccesses = DutySuccesses,
-            DutyFailures = DutyFailures,
             Trust = Trust,
             DeferredWages = DeferredWages,
         };
@@ -115,16 +95,8 @@ public sealed class ServiceContentRecord
             "xp=" + ServiceXp.ToString(inv),
             "days=" + DaysServed.ToString(inv),
             "dutyWins=" + DutySuccesses.ToString(inv),
-            "dutyFails=" + DutyFailures.ToString(inv),
             "trust=" + Trust.ToString(inv),
-            "repF=" + FieldRep.ToString(inv),
-            "repL=" + LogisticsRep.ToString(inv),
-            "repC=" + CommandRep.ToString(inv),
-            "repS=" + SiegeRep.ToString(inv),
             "arrears=" + DeferredWages.ToString(inv),
-            "wins=" + BattleVictories.ToString(inv),
-            "losses=" + BattleDefeats.ToString(inv),
-            "tourneys=" + TournamentWins.ToString(inv),
         };
         AddDay(parts, "swapDay", LastAssignmentSwapDay);
         if (!string.IsNullOrEmpty(ActiveDutyId))
@@ -134,15 +106,14 @@ public sealed class ServiceContentRecord
         if (!string.IsNullOrEmpty(ActiveDutySettlementId))
             parts.Add("dutyTown=" + ActiveDutySettlementId);
         AddDay(parts, "dutyDeadline", ActiveDutyDeadlineDay);
-        if (ActiveDutyFoodRequired > 0)
-            parts.Add("dutyFood=" + ActiveDutyFoodRequired.ToString(inv));
         AddDay(parts, "shiftEnd", ShiftEndDay);
         AddDay(parts, "offerDay", LastOfferDay);
         AddDay(parts, "incidentDay", LastIncidentDay);
         if (RecentDutyIds.Count > 0)
             parts.Add("recent=" + string.Join(",", RecentDutyIds));
-        if (HighestIssuedEquipmentRank.HasValue)
-            parts.Add("kitRank=" + HighestIssuedEquipmentRank.Value.ToString(inv));
+        // The key stays "kitRank" for save compatibility.
+        if (HighestIssuedKitTier.HasValue)
+            parts.Add("kitRank=" + HighestIssuedKitTier.Value.ToString(inv));
         if (IssuedEquipmentItemIds.Count > 0)
             parts.Add("kitItems=" + string.Join(",", IssuedEquipmentItemIds));
         return string.Join(";", parts);
@@ -176,22 +147,13 @@ public sealed class ServiceContentRecord
             ServiceXp = ParseInt(map, "xp"),
             DaysServed = ParseInt(map, "days"),
             DutySuccesses = ParseInt(map, "dutyWins"),
-            DutyFailures = ParseInt(map, "dutyFails"),
             Trust = ParseInt(map, "trust"),
-            FieldRep = ParseInt(map, "repF"),
-            LogisticsRep = ParseInt(map, "repL"),
-            CommandRep = ParseInt(map, "repC"),
-            SiegeRep = ParseInt(map, "repS"),
             DeferredWages = ParseInt(map, "arrears"),
-            BattleVictories = ParseInt(map, "wins"),
-            BattleDefeats = ParseInt(map, "losses"),
-            TournamentWins = ParseInt(map, "tourneys"),
             LastAssignmentSwapDay = ParseDay(map, "swapDay"),
             ActiveDutyId = ParseString(map, "dutyId"),
             ActiveDutyTargetPartyId = ParseString(map, "dutyParty"),
             ActiveDutySettlementId = ParseString(map, "dutyTown"),
             ActiveDutyDeadlineDay = ParseDay(map, "dutyDeadline"),
-            ActiveDutyFoodRequired = ParseInt(map, "dutyFood"),
             ShiftEndDay = ParseDay(map, "shiftEnd"),
             LastOfferDay = ParseDay(map, "offerDay"),
             LastIncidentDay = ParseDay(map, "incidentDay"),
@@ -200,11 +162,12 @@ public sealed class ServiceContentRecord
         if (map.TryGetValue("recent", out var recent) && !string.IsNullOrEmpty(recent))
             parsed.RecentDutyIds = recent.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList();
 
+        // The key stays "kitRank" for save compatibility.
         if (map.TryGetValue("kitRank", out var kitRank)
             && int.TryParse(kitRank, NumberStyles.Integer, CultureInfo.InvariantCulture, out var kitRankValue)
             && kitRankValue >= 0)
         {
-            parsed.HighestIssuedEquipmentRank = kitRankValue;
+            parsed.HighestIssuedKitTier = kitRankValue;
         }
 
         if (map.TryGetValue("kitItems", out var kitItems) && !string.IsNullOrEmpty(kitItems))
@@ -223,27 +186,18 @@ public sealed class ServiceContentRecord
         ServiceXp = other.ServiceXp;
         DaysServed = other.DaysServed;
         DutySuccesses = other.DutySuccesses;
-        DutyFailures = other.DutyFailures;
         Trust = other.Trust;
-        FieldRep = other.FieldRep;
-        LogisticsRep = other.LogisticsRep;
-        CommandRep = other.CommandRep;
-        SiegeRep = other.SiegeRep;
         DeferredWages = other.DeferredWages;
-        BattleVictories = other.BattleVictories;
-        BattleDefeats = other.BattleDefeats;
-        TournamentWins = other.TournamentWins;
         LastAssignmentSwapDay = other.LastAssignmentSwapDay;
         ActiveDutyId = other.ActiveDutyId;
         ActiveDutyTargetPartyId = other.ActiveDutyTargetPartyId;
         ActiveDutySettlementId = other.ActiveDutySettlementId;
         ActiveDutyDeadlineDay = other.ActiveDutyDeadlineDay;
-        ActiveDutyFoodRequired = other.ActiveDutyFoodRequired;
         ShiftEndDay = other.ShiftEndDay;
         LastOfferDay = other.LastOfferDay;
         LastIncidentDay = other.LastIncidentDay;
         RecentDutyIds = new List<string>(other.RecentDutyIds ?? new List<string>());
-        HighestIssuedEquipmentRank = other.HighestIssuedEquipmentRank;
+        HighestIssuedKitTier = other.HighestIssuedKitTier;
         IssuedEquipmentItemIds = new List<string>(other.IssuedEquipmentItemIds ?? new List<string>());
     }
 

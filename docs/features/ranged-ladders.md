@@ -111,6 +111,14 @@ validator's `RANGED_MOUNT_USAGE` warning names any such troop that exists; both 
 so, when no such file can be read. The second flag is not gated: Native itself ships twelve
 Wolfskins sets (`default_group="Ranged"`) with a `long_bow` bow beside a shield.
 
+**A clone inherits the donor's art too, so fix the donor and regenerate.** `clone_launcher` is a
+`copy.deepcopy` of the donor, and `--verify` checks ids, speed, damage, accuracy, usage and the
+localization row but never `mesh` or `body_name`. In #633 three donors had no `bo_` twin of their
+own and carried the elven bow's; six ladder clones inherited it, and the borrow was invisible to
+every gate because the name resolves. Never hand-edit a `ranged_ladder.xml` to repair art: repoint
+the donor in `LOTRAOM_weapons.xml`, re-run the generator, and let `COLLISION_BODY_BORROWED` confirm
+it.
+
 Names are `{=<id>}<donor name, its own numeral and "- Starting" / "- Horse" suffix stripped>
 <band numeral I..V>`, and the generator registers each English row in the Armory's
 `Languages/loc_<folder>.xml` between `<!-- TAOM-RANGED-LADDER:START/END -->` markers so
@@ -136,7 +144,7 @@ tools/ranged_ladder.py     engine_tier, band_of, rank_of, grid_speed, ladder_id,
         |
         +--> tools/generate_ranged_ladder_items.py   LOTRLOME_items/<folder>/ranged_ladder.xml
         |                                             + Languages/loc_<folder>.xml marker block
-        |                                             (live Armory + lotraom-assets mirror)
+        |                                             (live Armory; the lotraom-assets mirror only with --asset-repo)
         +--> tools/rebalance_ranged_ladders.py       tools/reports/ranged-ladders/{REPORT.md,json}
         |                                             --apply: troops/troops_*.xml launcher slots
         +--> tools/taom_schema.py                    RANGED_LADDER_INVERSION, RANGED_MOUNT_USAGE (warnings)
@@ -204,7 +212,7 @@ easier for the same skill.
 |---|---|
 | `tools/ranged_ladders.json` | The spec |
 | `tools/ranged_ladder.py` | Library shared by the tools and the validator (no CLI) |
-| `tools/generate_ranged_ladder_items.py` | Items and English loc rows into the live Armory and the mirror (`--apply`, `--verify`, `--revert`) |
+| `tools/generate_ranged_ladder_items.py` | Items and English loc rows into the live Armory, the mirror only with `--asset-repo` (`--apply`, `--verify`, `--revert`) |
 | `tools/rebalance_ranged_ladders.py` | Report to `tools/reports/ranged-ladders/` (md, html, json); `--apply` rewrites the rosters |
 | `docs/reference/ranged-troops.html` | The tracked HTML: every ranged troop per kingdom, skills beside weapon speed, reach, accuracy, spread (bow factor 0.0009 per skill level, crossbow 0.0005), cadence, damage (launcher plus ammo, `Mission.OnAgentShootMissile`); a full document with its own charset, no clock in it so a regenerate is byte-identical (`.gitattributes` pins it LF); never hand-edited |
 | `tools/taom_schema.py` | `Registries.launchers` and `.mount_barred_usages`, `build_launchers`, `build_mount_barred_usages`, `Validator._ranged_ladder_inversions` (emits `RANGED_LADDER_INVERSION` and `RANGED_MOUNT_USAGE`), `_RANGED_LADDER_EXEMPT`; an install with no launchers is a suspect registry |
@@ -229,7 +237,7 @@ grouping, planned items and edits (the usage override, the mounted refusal), dra
 monotonicity, the higher troop judged by its slowest set; the mount-barred set read from a
 fixture `item_usage_sets.xml` and None without one; the roster tool end to end on a fake
 install (dry run touches nothing, apply refuses until the items exist, byte-faithful rewrite, ammo
-untouched, idempotent, missing install reported); the generator end to end (both trees, loc rows
+untouched, idempotent, missing install reported); the generator end to end (both trees when `--asset-repo` names the mirror, the mirror untouched without it, loc rows
 with sidecar, idempotent, `--verify` drift on a speed, a usage, an id and a missing mirror file,
 `--revert` exact, unregistered folder and missing donor refused); the validator gate on real-spec
 fixtures, including a troop file that does not parse (a `(file)` finding, never a clean pass) and

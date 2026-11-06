@@ -11,7 +11,7 @@ swung above the one-handed-sword median, the Rivendell and Harad starters sat ne
 the whole game, career bows ran 83 to 99 damage against vanilla's hunting bow at 40. Troops
 must keep the real items, so the fix is a duplicate per donor with much lower XML stats.
 
-WHAT IT WRITES (live Armory and, when present, the lotraom-assets mirror)
+WHAT IT WRITES (the live Armory; the lotraom-assets mirror too only with --asset-repo)
 -------------------------------------------------------------------------
   LOTRLOME_items/<folder>/starter_kit.xml   one generated file per donor culture folder
   LOTRLOME_crafting_pieces.xml              one marker block of starter blade pieces
@@ -43,7 +43,7 @@ start a new campaign before believing anything (docs/features/starting-equipment
 USAGE
 -----
     python tools/generate_starter_kit.py                 # dry run: the full report
-    python tools/generate_starter_kit.py --apply         # write to the Armory (+ asset repo)
+    python tools/generate_starter_kit.py --apply         # write to the live Armory
     python tools/generate_starter_kit.py --verify        # exit 1 if any registration drifted
     python tools/generate_starter_kit.py --revert        # remove every generated block and file
 """
@@ -429,6 +429,26 @@ def block_re() -> re.Pattern:
                       + r"[ \t]*(?:\r\n|\n)?", re.S)
 
 
+_ROW_ID_RE = re.compile(
+    r'<(?:Item|CraftedItem|CraftingPiece|AvailablePiece|UsablePiece)\b[^>]*?\b(?:id|piece_id)="([^"]*)"')
+
+
+def foreign_rows(block: str) -> list[str]:
+    """Row ids inside a marker block that are not the tool's own `starter_` rows: another
+    author's rows the wholesale replacement or revert of the block would delete. The id may
+    sit on a later line than the tag name."""
+    return [i for i in _ROW_ID_RE.findall(block) if not i.startswith(STARTER_PREFIX)]
+
+
+def _refuse_foreign(what: str, block: str) -> None:
+    foreign = foreign_rows(block)
+    if foreign:
+        raise StarterKitError(
+            f"{what}: the {MARKER_START} block holds rows this tool does not own ({', '.join(foreign)}); "
+            "replacing or reverting it would delete them. Fix: move the markers inside the list so they "
+            "fence only the starter rows")
+
+
 def blocks_for_piece(piece_id: str, xslt_text: str, native_root: ET.Element | None, kind: str) -> list[str]:
     """Every description (or template) id the donor blade is registered under: the Armory's
     override blocks first, in file order, then Native's base file. De-duplicated, because a
@@ -505,6 +525,7 @@ def apply_xslt(text: str, kind: str, targets: dict[str, list[str]]) -> tuple[str
         if match:
             # a stale created block for the same id (the Armory grew a template since) is removed
             if created:
+                _refuse_foreign(f"{kind}[{target_id}]", created.group(0))
                 text = text[:created.start()] + text[created.end():]
                 match = _template_re(kind, target_id).search(text)
             head, body, tail = match.group(1), match.group(3), match.group(4)
@@ -513,6 +534,7 @@ def apply_xslt(text: str, kind: str, targets: dict[str, list[str]]) -> tuple[str
             wanted = f"{indent}{MARKER_START}{eol}" + _rows(kind, ids, indent, eol) + f"{indent}{MARKER_END}{eol}"
             existing = block_re().search(body)
             if existing:
+                _refuse_foreign(f"{kind}[{target_id}]", existing.group(0))
                 if existing.group(0) == wanted:
                     actions[target_id] = "noop"
                     continue
@@ -532,6 +554,7 @@ def apply_xslt(text: str, kind: str, targets: dict[str, list[str]]) -> tuple[str
         wanted = _created_block(kind, target_id, ids, indent, eol)
         existing = _find_created_block(text, kind, target_id)
         if existing:
+            _refuse_foreign(f"{kind}[{target_id}]", existing.group(0))
             if existing.group(0) == wanted:
                 actions[target_id] = "noop"
                 continue
@@ -548,6 +571,8 @@ def apply_xslt(text: str, kind: str, targets: dict[str, list[str]]) -> tuple[str
 
 
 def revert_xslt(text: str) -> tuple[str, int]:
+    for block in block_re().finditer(text):
+        _refuse_foreign("revert", block.group(0))
     return block_re().subn("", text)
 
 
@@ -577,6 +602,7 @@ def apply_pieces(text: str, pieces: list[ET.Element]) -> tuple[str, str]:
     wanted = render_pieces_block(pieces, eol)
     existing = block_re().search(text)
     if existing:
+        _refuse_foreign(PIECES_FILE, existing.group(0))
         if existing.group(0) == wanted:
             return text, "noop"
         return text[:existing.start()] + wanted + text[existing.end():], "updated"
@@ -588,6 +614,8 @@ def apply_pieces(text: str, pieces: list[ET.Element]) -> tuple[str, str]:
 
 
 def revert_pieces(text: str) -> tuple[str, bool]:
+    for block in block_re().finditer(text):
+        _refuse_foreign(PIECES_FILE, block.group(0))
     new_text, count = block_re().subn("", text)
     return new_text, bool(count)
 
@@ -885,11 +913,8 @@ def _items_path(md: Path, folder: str) -> Path:
     return md / "LOTRLOME_items" / folder / ITEMS_FILE_NAME
 
 
-_ID_RE = re.compile(r'<(?:Item|CraftedItem|CraftingPiece|AvailablePiece|UsablePiece)\b[^>]*?\b(?:id|piece_id)="(starter_[^"]+)"')
-
-
 def _starter_ids_in(text: str) -> set[str]:
-    return set(_ID_RE.findall(text))
+    return {i for i in _ROW_ID_RE.findall(text) if i.startswith(STARTER_PREFIX)}
 
 
 def _refuse_shrink(what: str, on_disk: set[str], planned: set[str], allow: bool) -> None:
@@ -931,39 +956,59 @@ def apply_plan(plan: Plan, md: Path, write: bool, backups: bool = True, allow_sh
                 _refuse_shrink(f"{path} {kind}[{target}]", _starter_ids_in(match.group(3)),
                                set(plan.registrations[kind].get(target, [])), allow_shrink)
 
+    # compute every new text first: a refusal in any file (a foreign row in a block) must leave
+    # the whole tree untouched, never a half-applied one
+    pending: list[tuple[Path, str, bool, bool]] = []   # (path, text, had_bom, backup)
     for folder, clones in planned_by_folder.items():
         path = _items_path(md, folder)
         text = render_items_file(clones, folder)
         if path.exists() and path.read_bytes() == text.encode("utf-8"):
             log.append(f"noop     {path} ({len(clones)} items)")
             continue
-        if write:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            err = checked_write(path, text, False, BACKUP_TAG, backup=False)
-            if err:
-                raise StarterKitError(err)
+        pending.append((path, text, False, False))
         log.append(f"{'wrote' if write else 'would write':8s} {path} ({len(clones)} items)")
 
     pieces_path = md / PIECES_FILE
     text, had_bom = read_xml(pieces_path)
     new_text, action = apply_pieces(text, plan.pieces)
-    if action != "noop" and write:
-        err = checked_write(pieces_path, new_text, had_bom, BACKUP_TAG, backup=backups)
-        if err:
-            raise StarterKitError(err)
+    if action != "noop":
+        pending.append((pieces_path, new_text, had_bom, backups))
     log.append(f"{action:8s} {pieces_path} ({len(plan.pieces)} starter blades)")
 
     for kind, name in XSLT_FILES.items():
         path = md / name
         text, had_bom = read_xml(path)
         new_text, actions = apply_xslt(text, kind, plan.registrations[kind])
-        if any(a != "noop" for a in actions.values()) and write:
-            err = checked_write(path, new_text, had_bom, BACKUP_TAG, backup=backups)
-            if err:
-                raise StarterKitError(err)
+        if any(a != "noop" for a in actions.values()):
+            pending.append((path, new_text, had_bom, backups))
         for target, action in actions.items():
             log.append(f"{action:8s} {path.name} {kind}[{target}] ({len(plan.registrations[kind][target])} rows)")
+    if write:
+        _write_all(pending)
     return log
+
+
+def _write_all(pending: list[tuple[Path, str, bool, bool]]) -> None:
+    """Parse every pending text before writing any, so one malformed result writes nothing."""
+    for path, text, _, _ in pending:
+        try:
+            ET.fromstring(text.encode("utf-8"))
+        except ET.ParseError as exc:
+            raise StarterKitError(f"refusing to write {path}: transform produced malformed XML: {exc}")
+    for path, text, had_bom, backup in pending:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        err = checked_write(path, text, had_bom, BACKUP_TAG, backup=backup)
+        if err:
+            raise StarterKitError(err)
+
+
+def _report_foreign(drift: list[str], name: str, text: str) -> None:
+    for block in block_re().finditer(text):
+        foreign = foreign_rows(block.group(0))
+        if foreign:
+            drift.append(f"{name}: a {MARKER_START} block holds rows the tool does not own "
+                         f"({', '.join(foreign)}); the next apply or revert refuses it. Move the "
+                         "markers inside the list so they fence only the starter rows")
 
 
 def verify_plan(plan: Plan, md: Path) -> list[str]:
@@ -983,6 +1028,7 @@ def verify_plan(plan: Plan, md: Path) -> list[str]:
         drift.append(f"missing file {pieces_path}")
     else:
         text = read_xml(pieces_path)[0]
+        _report_foreign(drift, PIECES_FILE, text)
         for piece in plan.pieces:
             if f'id="{piece.get("id")}"' not in text:
                 drift.append(f"{PIECES_FILE}: piece {piece.get('id')} missing")
@@ -992,6 +1038,7 @@ def verify_plan(plan: Plan, md: Path) -> list[str]:
             drift.append(f"missing file {path}")
             continue
         text = read_xml(path)[0]
+        _report_foreign(drift, name, text)
         for target, rows in plan.registrations[kind].items():
             match = _template_re(kind, target).search(text)
             body = match.group(3) if match else ""
@@ -1003,20 +1050,13 @@ def verify_plan(plan: Plan, md: Path) -> list[str]:
 
 def revert_plan(plan: Plan, md: Path, write: bool, backups: bool = True) -> list[str]:
     log: list[str] = []
-    for folder in plan.by_folder():
-        path = _items_path(md, folder)
-        if path.exists():
-            if write:
-                path.unlink()
-            log.append(f"{'removed' if write else 'would remove':8s} {path}")
+    pending: list[tuple[Path, str, bool, bool]] = []
     pieces_path = md / PIECES_FILE
     if pieces_path.exists():
         text, had_bom = read_xml(pieces_path)
         new_text, removed = revert_pieces(text)
-        if removed and write:
-            err = checked_write(pieces_path, new_text, had_bom, BACKUP_TAG, backup=backups)
-            if err:
-                raise StarterKitError(err)
+        if removed:
+            pending.append((pieces_path, new_text, had_bom, backups))
         log.append(f"{'reverted' if removed else 'noop':8s} {pieces_path}")
     for name in XSLT_FILES.values():
         path = md / name
@@ -1024,11 +1064,18 @@ def revert_plan(plan: Plan, md: Path, write: bool, backups: bool = True) -> list
             continue
         text, had_bom = read_xml(path)
         new_text, count = revert_xslt(text)
-        if count and write:
-            err = checked_write(path, new_text, had_bom, BACKUP_TAG, backup=backups)
-            if err:
-                raise StarterKitError(err)
+        if count:
+            pending.append((path, new_text, had_bom, backups))
         log.append(f"{'reverted' if count else 'noop':8s} {path} ({count} blocks)")
+    # every refusal has fired by here; the item files go last, after the shared files are written
+    if write:
+        _write_all(pending)
+    for folder in plan.by_folder():
+        path = _items_path(md, folder)
+        if path.exists():
+            if write:
+                path.unlink()
+            log.insert(0, f"{'removed' if write else 'would remove':8s} {path}")
     return log
 
 
@@ -1082,8 +1129,9 @@ def main() -> int:
     ap.add_argument("--verify", action="store_true", help="exit 1 if the Armory has drifted from the plan")
     ap.add_argument("--revert", action="store_true", help="remove every generated block and file")
     ap.add_argument("--armory-path", default=str(DEFAULT_ARMORY))
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO), help="second Armory copy to keep in step")
-    ap.add_argument("--no-asset-repo", action="store_true")
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also update this second Armory copy (e.g. {DEFAULT_ASSET_REPO}); off by default")
+    ap.add_argument("--no-asset-repo", action="store_true", help="the default; kept so older commands still run")
     ap.add_argument("--game-modules", default=str(DEFAULT_MODULES))
     ap.add_argument("--rosters", nargs="+", default=[str(r) for r in DEFAULT_ROSTERS])
     ap.add_argument("--quiet", action="store_true", help="skip the per-clone report")
@@ -1096,10 +1144,11 @@ def main() -> int:
     sources = default_sources(args)
     if not Path(sources.armory).exists():
         print(f"SKIP: Armory not found at {sources.armory} (set BANNERLORD_GAME_DIR)")
-        return 0
+        # --verify with nothing to check is a gate that passed vacuously
+        return 2 if args.verify else 0
     try:
         plan = build_plan(sources)
-    except StarterKitError as exc:
+    except (StarterKitError, OSError, ET.ParseError) as exc:
         print(f"ERROR: {exc}")
         return 2
 
@@ -1108,10 +1157,11 @@ def main() -> int:
         print()
 
     targets = [Path(sources.armory) / "ModuleData"]
-    if not args.no_asset_repo and Path(args.asset_repo).exists():
-        targets.append(Path(args.asset_repo) / "ModuleData")
-    else:
-        print(f"(asset repo {args.asset_repo} not present; live Armory only)")
+    asset_repo = None if args.no_asset_repo else args.asset_repo
+    if asset_repo is not None and Path(asset_repo).exists():
+        targets.append(Path(asset_repo) / "ModuleData")
+    elif asset_repo is not None:
+        print(f"(asset repo {asset_repo} not present; live Armory only)")
 
     rc = 0
     for md in targets:
@@ -1130,7 +1180,8 @@ def main() -> int:
             else:
                 for line in apply_plan(plan, md, write=args.apply, backups=backups, allow_shrink=args.allow_shrink):
                     print(line)
-        except StarterKitError as exc:
+        except (StarterKitError, OSError, ET.ParseError) as exc:
+            # exit 1 means drift under --verify, so a crash never borrows it
             print(f"ERROR: {exc}")
             return 2
     if args.apply and not args.revert and not args.verify:

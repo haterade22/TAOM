@@ -65,6 +65,7 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         Section(sb, "Identity");
         sb.AppendLine($"Bannerlord: {id.BannerlordVersion} (exe {id.BannerlordExeFileVersion})");
         sb.AppendLine($"TAOM:       {id.TaomVersion} (dll sha1 {id.TaomDllSha1})");
+        sb.AppendLine($"Build:      {id.TaomBuild}");
         sb.AppendLine($"Origin:     {id.OriginatingPatchTarget}");
         sb.AppendLine($"Language:   {id.LanguageCode}");
     }
@@ -342,6 +343,12 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         {
             sb.AppendLine($"TAOM tail (last {l.TaomDebugLogTail.Count}):");
             foreach (var line in l.TaomDebugLogTail) sb.AppendLine($"  {line}");
+        }
+        sb.AppendLine($"Dependencies diag log: {l.DiagLogPath ?? "?"}");
+        if (l.DiagLogTail.Count > 0)
+        {
+            sb.AppendLine($"diag tail (last {l.DiagLogTail.Count}):");
+            foreach (var line in l.DiagLogTail) sb.AppendLine($"  {line}");
         }
         sb.AppendLine($"RGL log: {l.RglLogPath ?? "?"}");
         if (l.RglLogTail.Count > 0)

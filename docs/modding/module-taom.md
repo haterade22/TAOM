@@ -16,19 +16,19 @@
 
 The tree below is measured from the repo copy. Sizes are `du -sm`, rounded up to whole megabytes.
 
-<!-- measured: ls -la Main/_Module; for d in Main/_Module/*/; do find "$d" -type f | wc -l; du -sm "$d"; done; wc -l -c Main/_Module/SubModule.xml; rg -o "<XmlNode>" Main/_Module/SubModule.xml | wc -l; wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; git ls-files Main/_Module/bin 2026-09-05 -->
+<!-- measured: ls -la Main/_Module; for d in Main/_Module/*/; do find "$d" -type f | wc -l; du -sm "$d"; done; wc -l -c Main/_Module/SubModule.xml; rg -o "<XmlNode>" Main/_Module/SubModule.xml | wc -l; wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; git ls-files Main/_Module/bin 2026-11-05 -->
 ```
-Main/_Module/                      978 MB in total
-  SubModule.xml                    37,947 bytes, 971 lines, 100 <XmlNode> rows
+Main/_Module/                      901 MB in total
+  SubModule.xml                    39,580 bytes, 998 lines, 102 <XmlNode> rows
   THIRD-PARTY-LICENSES.txt         117 lines
   AssetPackages/                   4 files, 35 MB
-  AssetSources/                    86 files, 551 MB
-  Assets/                          121 files, 1 MB
-  GUI/                             1,319 files, 178 MB
-  ModuleData/                      367 files, 32 MB
-  ModuleSounds/                    436 files, 167 MB
+  AssetSources/                    47 files, 484 MB
+  Assets/                          81 files, 1 MB
+  GUI/                             1,299 files, 178 MB
+  ModuleData/                      414 files, 34 MB
+  ModuleSounds/                    436 files, 168 MB
   Prefabs/                         1 file
-  bin/                             7 files, 17 MB (2 of them git-tracked)
+  bin/                             4 files, 6 MB after a build (2 of them git-tracked)
 ```
 
 | Folder or file | What it holds | Who reads it, and where |
@@ -36,16 +36,16 @@ Main/_Module/                      978 MB in total
 | `SubModule.xml` | The manifest: identity, dependencies, the one `<SubModule>`, and 100 `<XmlNode>` data registrations across 12 `XmlName id` values <!-- measured: rg -o 'XmlName id="[^"]+"' Main/_Module/SubModule.xml \| sort -u \| wc -l 2026-09-05 --> | `ModuleInfo.LoadWithFullPath` opens `FolderPath + "/SubModule.xml"` (`ModuleInfo.cs:75-79`); `XmlResource.GetXmlListAndApply` opens the same file again to read `Module/Xmls/XmlNode` (`XmlResource.cs:144-149`) |
 | `THIRD-PARTY-LICENSES.txt` | Redistribution notices; MinHook 1.3.4 is at line 22 <!-- measured: rg -n "MinHook" Main/_Module/THIRD-PARTY-LICENSES.txt 2026-09-05 --> | Nothing at runtime. `tools/package_release.py:65-68` lists it in `KNOWN_TOP_FILES` so it ships |
 | `bin/Win64_Shipping_Client/` | `TAOM.dll` and `TAOM.pdb` (build output, ignored by git) plus the two vendored natives `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (tracked) and its `.pdb` | `Module.LoadSubModules` loads from `Path.Combine(FolderPath, "bin", Common.ConfigName)` (`Module.cs:1044`), where `Common.ConfigName` is the name of the process's current working directory (`Common.cs:37`). `SubModuleInfo.LoadFrom` separately probes the literal `bin\Win64_Shipping_Client` for its `DLLExists` flag (`SubModuleInfo.cs:54-57`) |
-| `bin/Gaming.Desktop.x64_Shipping_Client/` | A second copy of `TAOM.dll` and `TAOM.pdb` | Written only by `CopyBinariesToModuleFolder` (`Main/TAOM.csproj:148,152-153`); the whole folder is ignored (`.gitignore:82`) |
+| `bin/Gaming.Desktop.x64_Shipping_Client/` | Nothing: Game Pass is not supported (2026-10-22) | Nothing writes it. An older checkout may hold ignored output there (`.gitignore:82`), which `FailOnGamePassStagingInModule` in `Main/TAOM.csproj` refuses to deploy |
 | `ModuleData/` | 39 loose files at the root and 42 subfolders <!-- measured: find Main/_Module/ModuleData -maxdepth 1 -type f \| wc -l; find Main/_Module/ModuleData -mindepth 1 -maxdepth 1 -type d \| wc -l 2026-09-05 --> | A registered `path="X"` resolves to `<module>/ModuleData/X.xml` (`ModuleHelper.cs:232-235`); a stylesheet to `ModuleData/X.xsl`, then `.xslt` (`ModuleHelper.cs:237-240`, `MBObjectManager.cs:949-964`) |
 | `ModuleData/project.mbproj` | 5 `<file>` rows: 4 voice definitions and `module_sounds.xml` <!-- measured: rg -c "<file " Main/_Module/ModuleData/project.mbproj 2026-09-05 --> | `XmlResource.GetMbprojxmls` (`XmlResource.cs:107-140`), called at `Module.cs:1031`. See the second channel below |
 | `ModuleData/Languages/` | 169 files: the root `language_data.xml`, then 12 language folders each holding its own `language_data.xml` plus 13 `std_taom_*.xml` files <!-- measured: find Main/_Module/ModuleData/Languages -type f \| wc -l; for d in Main/_Module/ModuleData/Languages/*/; do ls $d \| wc -l; done 2026-09-05 --> | `LocalizedTextManager.LoadLocalizationXmls` searches `ModuleData/Languages` recursively for files named exactly `language_data.xml` (`LocalizedTextManager.cs:91-99`). No manifest row is involved |
 | `ModuleData/<feature>/` (36 folders) | JSON and a few XML configs read by TAOM's own C#, none of them named in `SubModule.xml` | See "Folders the engine never registers" below |
 | `GUI/` | `Brushes/` 11, `Fonts/` 6, `Prefabs/` 51, `SpriteData/` 227, `SpriteParts/` 1,023 files, and the generated manifest `TAOMSpriteData.xml` (428,445 bytes) <!-- measured: for d in Main/_Module/GUI/*/; do find "$d" -type f \| wc -l; done; wc -c Main/_Module/GUI/TAOMSpriteData.xml 2026-09-05 --> | Gauntlet. `SpriteParts/` is the source (`Config.xml` plus 1,022 PNGs in 5 categories), `TAOMSpriteData.xml` and `AssetSources/GauntletUI/` are what the sprite generator writes, `Assets/GauntletUI/` is the texture compile that follows (`docs/features/gui-sprite-system.md:110-116`) |
 | `GUI/SpriteData/FactionMap/` | 226 loose PNGs <!-- measured: find Main/_Module/GUI/SpriteData/FactionMap -type f \| wc -l 2026-09-05 --> | Not sprites. `FactionImageWidget` loads them by path from the install (`docs/features/gui-sprite-system.md:59-84`) |
-| `Assets/` | 121 compiled per-asset `.tpac` descriptors under `GauntletUI/`, `BannerIcons/`, `main_map_textures/`, plus one stray `taom_banners_dunland_alpha_01_tex.tpac.ptemp` <!-- measured: find Main/_Module/Assets -type f \| wc -l; ls Main/_Module/Assets/BannerIcons/*.ptemp 2026-09-05 --> | The editor and the game on a dev install (`docs/reference/bannerlord-engine-and-toolchain.md:266`) |
-| `AssetSources/` | 86 raw art files (PSD and PNG), 551 MB | Nobody at runtime. `tools/package_release.py:116-117` excludes the whole folder from a release; the dev build still deploys it (`Main/TAOM.csproj:13`) |
-| `AssetPackages/` | 4 cooked packs: `fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring` <!-- measured: ls Main/_Module/AssetPackages 2026-09-05 --> | Players; the runtime form in a release (`docs/reference/bannerlord-engine-and-toolchain.md:267`) |
+| `Assets/` | 81 compiled per-asset `.tpac` descriptors under `GauntletUI/`, `BannerIcons/`, `main_map_textures/` (121 files before plans/121 removed 39 dead sprite-sheet descriptors and a stray `taom_banners_dunland_alpha_01_tex.tpac.ptemp`) <!-- measured: find Main/_Module/Assets -type f \| wc -l 2026-11-05 --> | The editor and the game on a dev install (`docs/reference/bannerlord-engine-and-toolchain.md:288`) |
+| `AssetSources/` | 47 raw art files (PSD and PNG), 484 MB (86 before plans/121 removed 39 dead sprite-sheet PNGs) | Nobody at runtime. `tools/package_release.py` (`classify`) excludes the whole folder from a release; the dev build still deploys it (`Main/TAOM.csproj:13`) |
+| `AssetPackages/` | 4 cooked packs: `fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring` <!-- measured: ls Main/_Module/AssetPackages 2026-09-05 --> | Players; the runtime form in a release (`docs/reference/bannerlord-engine-and-toolchain.md:289`) |
 | `ModuleSounds/` | 342 `.wav`, 93 `.mp3`, 1 `.ogg` under `LOTR/` and `Native/` <!-- measured: find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c 2026-09-05 --> | `ModuleData/module_sounds.xml` names each file with a `path=` relative to this folder, for example `path="LOTR/Elves/Alert/elf_horn.wav"` (`Main/_Module/ModuleData/module_sounds.xml:5`) |
 | `Prefabs/` | `taom_howdah_agent.xml`, 8,647 bytes <!-- measured: wc -c Main/_Module/Prefabs/taom_howdah_agent.xml 2026-09-05 --> | The scene system, with no manifest row |
 
@@ -57,7 +57,7 @@ Three folders exist only in the install copy, never in the repo <!-- measured: l
 
 ## How build.ps1 deploys it, and why deploy never deletes
 
-[`build.ps1`](../../build.ps1) is 43 lines and copies nothing itself. <!-- measured: cat -n build.ps1 2026-09-05 --> It reads the user-scope environment variable `BANNERLORD_GAME_DIR` and exits 1 if it is unset (`build.ps1:11-15`), runs `dotnet restore TAOM.sln` (`build.ps1:20`), `dotnet build TAOM.sln -c $Configuration --no-restore` (`build.ps1:27`), and with `-RunTests` runs `dotnet test TAOM.Tests -c $Configuration --no-build` (`build.ps1:37`). Every copy into the game install is MSBuild, from the `Bannerlord.BuildResources` 1.1.0.129 package (`Main/TAOM.csproj:95`) and from four targets TAOM adds in its own csproj.
+[`build.ps1`](../../build.ps1) is 43 lines and copies nothing itself. <!-- measured: cat -n build.ps1 2026-09-05 --> It reads the user-scope environment variable `BANNERLORD_GAME_DIR` and exits 1 if it is unset (`build.ps1:11-15`), runs `dotnet restore TAOM.sln` (`build.ps1:20`), `dotnet build TAOM.sln -c $Configuration --no-restore` without -p:ModuleId= (`build.ps1:27`), and with `-RunTests` runs `dotnet test TAOM.Tests -c $Configuration --no-build`, also without -p:ModuleId= (`build.ps1:37`). Every copy into the game install is MSBuild, from the `Bannerlord.BuildResources` 1.1.0.129 package (`Main/TAOM.csproj:95`) and from four targets TAOM adds in its own csproj.
 
 **The package's three copy targets** (`Basic.targets` in the package's `build/` folder):
 
@@ -69,10 +69,10 @@ Three folders exist only in the install copy, never in the repo <!-- measured: l
 
 After the copy, `ReplaceFileText` rewrites the deployed `SubModule.xml`, substituting `$moduleid$`, `$version$` and the other tokens (`Basic.targets:114-118`). TAOM uses none of them (its `<Version>` is a literal at `Main/_Module/SubModule.xml:6`), so the repo and install copies of the manifest are byte-identical. <!-- measured: cmp Main/_Module/SubModule.xml "<game>/Modules/TAOM/SubModule.xml" 2026-09-05 -->
 
-**TAOM's own four targets** (`Main/TAOM.csproj`):
+**TAOM's own five targets** (`Main/TAOM.csproj`):
 
 - `FailOnIdeStateInModule` (`:137-144`) fails the build if a `.vs` folder sits anywhere under `_Module`, because with the package's exclusion list switched off `CopyModule` would ship it, absolute developer paths included (`:126-132`).
-- `CopyBinariesToModuleFolder` (`:146-158`) copies the freshly built `TAOM.dll` and `.pdb` back into the repo's `_Module/bin/Win64_Shipping_Client/` and `_Module/bin/Gaming.Desktop.x64_Shipping_Client/`. It is `BeforeTargets="PostBuildCopyToModules"`, and MSBuild runs such a dependency before it evaluates the host target's own condition (`:133-136`), so this one runs even when deployment is skipped.
+- `CopyBinariesToModuleFolder` copies the freshly built `TAOM.dll` and `.pdb` back into the repo's `_Module/bin/Win64_Shipping_Client/`; `FailOnGamePassStagingInModule` stops a deploying build while a stale `_Module/bin/Gaming.Desktop.x64_Shipping_Client/` exists. It is `BeforeTargets="PostBuildCopyToModules"`, and MSBuild runs such a dependency before it evaluates the host target's own condition (`:133-136`), so this one runs even when deployment is skipped.
 - `MirrorWin64ShippingClientToEditor` (`:166-175`) and `MirrorWin64ShippingClientToServer` (`:186-195`) copy the assembled install-side client folder into `bin/Win64_Shipping_wEditor/` and `bin/Win64_Shipping_Server/`. They mirror the assembled folder rather than the build output on purpose: that is where the vendored natives and the NuGet companions are (`:183-185`). Without the editor mirror the Modding Kit runs a stale DLL (`:160-164`); without the server mirror a dedicated server logs `Cannot find: ...\TAOM\bin\Win64_Shipping_Server\TAOM.dll` and runs a vanilla simulation over the TAOM map (`:177-181`).
 
 **`-p:DisableModuleCopy=true` does not stop deployment.** Only the wrapper at `Basic.targets:47` checks that flag; `CopyBinariesWindows` (`:53`) and `CopyModule` (`:64`) each carry their own `AfterTargets="PostBuildEvent"` with conditions that omit it. While the game is running the copy fails on the DLLs it holds open. The command that skips all three copies is `dotnet build Main -p:DisableModuleCopy=true -p:ModuleId=`, because `ModuleId` is in every condition (`docs/ai-includes/agent-operating-manual.md:49-51`).
@@ -225,7 +225,7 @@ Main/_Module/bin/Win64_Shipping_Client/*
 !Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll
 ```
 
-`git ls-files Main/_Module/bin` returns those two paths and nothing else. <!-- measured: git ls-files Main/_Module/bin 2026-09-05 --> `TAOM.dll` and `TAOM.pdb` stay ignored as build output; the Gaming.Desktop sibling is ignored whole (`.gitignore:82`); and the comment at `.gitignore:69-70` records that `MCMv5.dll` comes from TAOM.Dependencies and the `Bannerlord.MCM` NuGet and must not be vendored here. `TAOM.NativeSkinFixes.dll` is TAOM-owned C++ rebuilt outside this repo (`.gitignore:70-72`); MinHook's licence is at `Main/_Module/THIRD-PARTY-LICENSES.txt:22`. The install's client folder holds 10 files, because `CopyBinariesWindows` also copies the NuGet companions (`DryIoc.dll`, `Newtonsoft.Json.dll`, `System.Runtime.CompilerServices.Unsafe.dll`) that match its regex. <!-- measured: ls "<game>/Modules/TAOM/bin/Win64_Shipping_Client" | wc -l 2026-09-05 -->
+`git ls-files Main/_Module/bin` returns those two paths and nothing else. <!-- measured: git ls-files Main/_Module/bin 2026-09-05 --> `TAOM.dll` and `TAOM.pdb` stay ignored as build output; the Gaming.Desktop sibling is ignored whole (`.gitignore:82`) and nothing writes it any more; and the comment at `.gitignore:69-70` records that `MCMv5.dll` comes from TAOM.Dependencies and the `Bannerlord.MCM` NuGet and must not be vendored here. `TAOM.NativeSkinFixes.dll` is TAOM-owned C++ rebuilt outside this repo (`.gitignore:70-72`); MinHook's licence is at `Main/_Module/THIRD-PARTY-LICENSES.txt:22`. The install's client folder holds 10 files, because `CopyBinariesWindows` also copies the NuGet companions (`DryIoc.dll`, `Newtonsoft.Json.dll`, `System.Runtime.CompilerServices.Unsafe.dll`) that match its regex. <!-- measured: ls "<game>/Modules/TAOM/bin/Win64_Shipping_Client" | wc -l 2026-09-05 -->
 
 ## Versioning
 
@@ -349,7 +349,7 @@ The full sequence, the Discord note, and the `/release` skill are in [`docs/refe
 2. `./build.ps1 -RunTests` green (`:70`).
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files; if not, `-Apply`. Backup sidecars must not ship (`:71-73`). The repo's `Main/_Module` tree is one of the roots it sweeps, because `CopyModule` would redeploy a sidecar left there (`docs/reference/module-backup-sweep.md:43-56`).
 4. Edit `<Version value="vX.Y.Z" />` at `Main/_Module/SubModule.xml:6`. If the Dependencies assembly changed, bump `Dependencies/_Module/SubModule.xml` too (`docs/reference/release-process.md:49-50`).
-5. Commit as `chore(release): TAOM vX.Y.Z`, staging the release paths explicitly; `git tag -a vX.Y.Z -m "..."`; `git push origin <branch> vX.Y.Z`. A plain `git push` does not push the tag (`:77-78, 85`).
+5. Commit as `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging the release paths explicitly; tag that commit by its SHA, not `HEAD`, with `git tag -a vX.Y.Z <release commit sha> -m "..."` (`docs/reference/release-process.md` steps 7 and 8); `git push origin <branch> vX.Y.Z`. A plain `git push` does not push the tag.
 6. `python tools/package_release.py --source "<game>/Modules" --dest <out> --dry-run` to see what would ship. It excludes `RuntimeDataCache`, `AssetSources`, `*.xml.bak`, the native debug artifacts and any `.vs` path (`tools/package_release.py:104-143`) and keeps `project.mbproj` (`:126-135`).
 
 Check: `pwsh tools/sweep_module_backups.ps1` and `./build.ps1 -RunTests`
@@ -382,19 +382,19 @@ Code: No code changes needed
 - **`settlements.xml` in this module is a shadow.** Nothing registers it; `TAOM_Map` owns `Settlements` (`Main/_Module/SubModule.xml`, no match for `settlements`).
 - **`Languages/` paths are relative to `ModuleData/Languages`** (`LanguageData.cs:130`). A wrong path fails as `Could not parse: ...` in the log (`LocalizedTextManager.cs:216`) and the language simply stays English. English `<string>` rows are never deserialized (`LocalizedTextManager.cs:235`). The root `language_data.xml` with no rows is harmless but adds nothing: discovery is the recursive file search at `LocalizedTextManager.cs:92-99`.
 - **`GUI/SpriteData/FactionMap/` is not sprites.** Editing those PNGs in the repo changes nothing in game until they are copied to the install, and a baked sprite needs the generator plus a full relaunch (`docs/features/gui-sprite-system.md:59-84, 138`). Sync the bake back with `pwsh tools/sync_sprite_bake.ps1`; a wider install-to-repo copy reverts uncommitted work (`docs/features/gui-sprite-system.md:168-169`).
-- **`ExcludeSourceFilesFromModule=false` deploys 551 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:13`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:116-117`).
+- **`ExcludeSourceFilesFromModule=false` deploys 484 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:13`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:150`).
 - **MCM values live outside the module** (`Main/Features/TaomSettings.cs:15`); a reinstall does not reset them.
 - **`localization-map.md` says 11 language files per language and names an `...ElevenLanguageFiles` test** (`docs/reference/localization-map.md:12, 17`); the shipped count is 13 and the test is `AllLanguageDirs_HaveExactlyThirteenLanguageFiles` (`LanguageDataXmlTests.cs:142`). Trust the test file.
 
 ## Numbers in this chapter
 
-All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modules/TAOM/`.
+All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modules/TAOM/`, except the folder tree and the `SubModule.xml` size and row count, re-measured 2026-11-05 after plan 121 and the merged plans changed them.
 
 | Number | Command |
 |---|---|
-| 978 MB module tree; per-folder MB | `du -sm Main/_Module; for d in Main/_Module/*/; do du -sm "$d"; done` |
-| 4, 86, 121, 1,319, 367, 436, 1, 7 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
-| 37,947 bytes, 971 lines in `SubModule.xml` | `wc -l -c Main/_Module/SubModule.xml` |
+| 901 MB module tree; per-folder MB | `du -sm Main/_Module; for d in Main/_Module/*/; do du -sm "$d"; done` |
+| 4, 47, 81, 1,299, 414, 436, 1, 4 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
+| 39,580 bytes, 998 lines in `SubModule.xml` | `wc -l -c Main/_Module/SubModule.xml` |
 | 100 `<XmlNode>` rows, 12 distinct ids, 44/27/15/2/2/2/2/2/1/1/1/1 by id | `rg -o "<XmlNode>" Main/_Module/SubModule.xml \| wc -l; rg -o 'XmlName id="[^"]+"' Main/_Module/SubModule.xml \| sort \| uniq -c \| sort -rn` |
 | Sentinel lines 348, 394, 395, 441 | `rg -n "TAOM-NEW(FACTIONS\|CULTURE)-REG" Main/_Module/SubModule.xml` |
 | 117 lines in `THIRD-PARTY-LICENSES.txt`; MinHook at line 22 | `wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; rg -n MinHook Main/_Module/THIRD-PARTY-LICENSES.txt` |
@@ -409,7 +409,7 @@ All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modu
 | 1,023,041 and 51,752 bytes for the two unregistered settlement files; 2,589 bytes `global_strings.xml` | `wc -c Main/_Module/ModuleData/settlements.xml Main/_Module/ModuleData/custom_settlements.xml Main/_Module/ModuleData/global_strings.xml` |
 | 9 sidecars, 1 tracked | `find Main/_Module/ModuleData -name '*.bak*' \| wc -l; git ls-files Main/_Module/ModuleData \| grep -c bak` |
 | 371 install-side `ModuleData` files, 4 extras | `find "<game>/Modules/TAOM/ModuleData" -type f \| wc -l; diff <(cd Main/_Module/ModuleData && find . -type f \| sort) <(cd "<game>/Modules/TAOM/ModuleData" && find . -type f \| sort)` |
-| Install `bin/`: 10 client, 10 server, 12 wEditor, 4 Gaming.Desktop files | `for d in "<game>/Modules/TAOM"/bin/*/; do ls "$d" \| wc -l; done` |
+| Install `bin/`: 10 client, 10 server, 12 wEditor files (an install built before the 2026-10-22 Game Pass removal also keeps a stale Gaming.Desktop folder) | `for d in "<game>/Modules/TAOM"/bin/*/; do ls "$d" \| wc -l; done` |
 | 115 `RuntimeDataCache` entries, 5,141 MB | `ls "<game>/Modules/TAOM/RuntimeDataCache" \| wc -l; du -sm "<game>/Modules/TAOM/RuntimeDataCache"` |
 | Repo and install `SubModule.xml` identical | `cmp Main/_Module/SubModule.xml "<game>/Modules/TAOM/SubModule.xml"` |
 | 51 schemas; all 12 TAOM ids present; `soln_voice_definitions.xsd` present, `soln_module_sound.xsd` absent | `ls "<game>/XmlSchemas" \| wc -l; test -f "<game>/XmlSchemas/<id>.xsd"` per id |

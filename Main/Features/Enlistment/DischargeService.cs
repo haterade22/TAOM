@@ -75,14 +75,19 @@ public class DischargeService : IDischargeService
 
         // 5 — presence FIRST. SetAttachedToInternal only tears down the inherited MapEventSide
         // while the party is active, so step 6 has to follow this rather than precede it.
+        //
+        // RESIDUAL (#1021): this step pulls a merged soldier out of a live battle (RestorePresence's first
+        // call, ClearArmyAttachment, sets AttachedTo = null). The reconciler holds a feature-off discharge
+        // until the battle ends, but the heir-mismatch discharge at load still runs mid-battle (tracked in
+        // #1030). A guard on step 6 alone cannot hold him.
         if (!_attachment.RestorePresence())
             _logger?.LogError($"DischargeService: RestorePresence failed during discharge ({reason}) — continuing pipeline");
 
         // 6 — detach BEFORE the encounter work: PlayerEncounter.Finish branches on Army/AttachedTo.
         //
         // LeaveArmy FIRST, and it is not interchangeable with ClearArmyAttachment. Discharge can
-        // fire mid-battle — the MCM master switch flipping off, or CommanderDead raised from the
-        // reconciler while the state is EnlistedBattle — and at that moment the adapter may be
+        // fire mid-battle (the heir-mismatch discharge at load, #1030, or CommanderDead raised from the
+        // reconciler while the state is EnlistedBattle), and at that moment the adapter may be
         // holding an army IT raised for this fight. ClearArmyAttachment only detaches the player;
         // it has no idea the army exists, so the army would be left standing with the null
         // AiBehaviorObject that crashes Army.GetLongTermBehaviorTextForAILeadedParty from the map
@@ -145,7 +150,12 @@ public class DischargeService : IDischargeService
         _logger?.LogInfo($"[Enlistment] service ended: {reason}");
         _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) end | {after?.Describe() ?? "presence unavailable"}");
 
-        if (after != null && after.EncountersBlocked)
+        if (after != null && after.EncountersBlocked && after.IsInMapEvent)
+        {
+            // The player's own battle (#1021 item 3): the engine finishes it and opens its own menu.
+            _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) ended with the player in his own battle — {after.Describe()}. The battle owns the encounter.");
+        }
+        else if (after != null && after.EncountersBlocked)
         {
             // HasPlayerEncounter is REQUIRED here, not incidental. This check used to demand its
             // ABSENCE, which is exactly backwards: inside a settlement with no encounter is the
@@ -179,6 +189,17 @@ public class DischargeService : IDischargeService
     /// </summary>
     private void RestoreCampaignContext(DischargeReason reason, CommanderSnapshot commander)
     {
+        // #1021 item 3: the player is still in a map event (an unmerged soldier whose battle R1 deferred
+        // at step 7). The encounter is the battle's: grafting a town visit onto it, opening the town menu
+        // over a frozen battle or finishing it mid-battle are all wrong. Pop the service menu and let the
+        // engine open its own encounter menu.
+        if (_encounter.IsMainPartyInMapEvent)
+        {
+            _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) left the player in his own battle: no settlement visit, menu or encounter finish");
+            ExitServiceMenuIfOpen(reason);
+            return;
+        }
+
         // Load-path reasons never move the player — the SAVED position is authoritative, and moving
         // them during normalization would teleport them on every load.
         if (reason == DischargeReason.HeirSuccessionOrPossessionMismatch)
@@ -211,8 +232,9 @@ public class DischargeService : IDischargeService
 
             _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not open '{menuId}' for '{settlementId}' — leaving the settlement rather than stranding the player inside it");
 
-            // CLOSE WHAT WE JUST OPENED. Step 7 already cleared anything that was live before this,
-            // so an encounter here is the one EnsureSettlementEncounter created, and LeaveSettlement
+            // CLOSE WHAT WE JUST OPENED. Step 7 cleared anything it may, and the early return above covers
+            // the one live encounter it defers (the player's own battle), so an encounter here is the one
+            // EnsureSettlementEncounter created, and LeaveSettlement
             // below will not take it down — that is LeaveSettlementAction only, which never touches
             // PlayerEncounter.Current. Left live it is the save-breaker: EncounterManager refuses
             // every main-party encounter, and it survives a reload, because ExitServiceMenuIfOpen

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -9,6 +10,7 @@ namespace TAOM.Features.CareerSystem;
 public class CareerPassiveService : ICareerPassiveService
 {
     private readonly IModLogger _logger;
+    private readonly IPartySizeCacheInvalidator _partySizeCache;
 
     // Phase 9b #173 F2 — snapshot-swap pattern + lock-on-mutation to fix the data race the
     // sister service FormationLayoutService already locks for. RefreshCache builds a brand-new
@@ -25,6 +27,9 @@ public class CareerPassiveService : ICareerPassiveService
     private Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>> _maskedCache
         = new Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>>();
 
+    // Guarded by _lock. Cleared by RefreshCache.
+    private readonly HashSet<string> _eventScopedLinesWritten = new HashSet<string>();
+
     // Phase 9b #173 — cached localization string for the ApplyFactor/Flat methods. Was duplicated
     // in CareerPassiveHelper; consolidated here so deletion of the helper doesn't leak the text.
     private static TextObject? _careerText;
@@ -34,9 +39,10 @@ public class CareerPassiveService : ICareerPassiveService
     // converting a flat count into it is meaningless. Matches TroopWeightService.MinFactorScale.
     private const float MinFactorScale = 0.01f;
 
-    public CareerPassiveService(IModLogger logger)
+    public CareerPassiveService(IModLogger logger, IPartySizeCacheInvalidator partySizeCache)
     {
         _logger = logger;
+        _partySizeCache = partySizeCache;
     }
 
     public void RefreshCache(ICareerDataService dataService, ICareerRegistry registry)
@@ -81,12 +87,30 @@ public class CareerPassiveService : ICareerPassiveService
             }
         }
 
+        Dictionary<string, Dictionary<PassiveEffectType, float>> previousCache;
         lock (_lock)
         {
+            previousCache = _cache;
             _cache = nextCache;
             _maskedCache = nextMaskedCache;
+            _eventScopedLinesWritten.Clear();
         }
         _logger.LogInfo($"CareerSystem: Passive cache complete — {nextCache.Count} heroes with active passives");
+
+        // PartyBase.PartySizeLimit caches on MemberRoster.VersionNo, so a PartySize pick would not show
+        // until an unrelated roster event (#768). Only a party a career hero leads can change, and a hero
+        // whose passives disappeared must refresh too, hence the union of the old and new cache. The
+        // invalidation must never fail a refresh.
+        try
+        {
+            var affected = new HashSet<string>(previousCache.Keys);
+            affected.UnionWith(nextCache.Keys);
+            _partySizeCache.InvalidateLedBy(affected);
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogWarning($"CareerSystem: party-size cache invalidation failed after passive refresh: {ex.Message}");
+        }
     }
 
     // Accumulates one passive into both the mask-agnostic per-type total and the per-(type, mask)
@@ -146,7 +170,7 @@ public class CareerPassiveService : ICareerPassiveService
         // entries carry both bits, so they apply to any hit).
         var total = 0f;
         foreach (var entry in byMask)
-            if ((entry.Key & hitMask) != AttackTypeMask.None)
+            if (AttackTypeMaskMatch.Matches(entry.Key, hitMask))
                 total += entry.Value;
         return total;
     }
@@ -168,7 +192,27 @@ public class CareerPassiveService : ICareerPassiveService
         if (string.IsNullOrEmpty(heroStringId)) return;
         var magnitude = GetPassiveMagnitude(heroStringId, type);
         if (magnitude != 0f)
+        {
+            var before = result.ResultNumber;
             result.AddFactor(magnitude, CareerText);
+            // #613: the event-scoped types (a battle end, an upgrade, party healing) get a line; the
+            // per-tick ones (speed, morale, wages, range) are read off their ExplainedNumber by
+            // taom.career_perks instead, a line per tick would drown the log.
+            if (Diagnostics.CareerPerkLogPolicy.IsEventScoped(type))
+                LogEventScopedOnce($"[CareerPerks] {type} {(magnitude >= 0f ? "+" : "")}{magnitude * 100f:0.#}% for '{heroStringId}': {before:0.##} -> {result.ResultNumber:0.##}");
+        }
+    }
+
+    // HeroHealing runs twice per in-game hour for the main party, and TroopUpgradeCost once per upgrade
+    // target per party-screen row, each a durable write on the game thread. The same numbers write one
+    // line until the next RefreshCache, the point where the passives can change.
+    private void LogEventScopedOnce(string line)
+    {
+        lock (_lock)
+        {
+            if (!_eventScopedLinesWritten.Add(line)) return;
+        }
+        _logger.LogInfo(line);
     }
 
     public void ApplyFlat(string heroStringId, ref ExplainedNumber result, PassiveEffectType type)
@@ -184,6 +228,9 @@ public class CareerPassiveService : ICareerPassiveService
         // culture feat in play that was a rounding error; once AiPartySize started contributing a
         // large factor (garrisons run at 3x by default) the same +4 became +13, and the promise on
         // the career screen stopped being true. Divide the factor back out so the count is literal.
+        // The division cancels only the factors ALREADY on the number: a factor added after this call
+        // multiplies the count again. Callers must therefore call it after the last AddFactor
+        // (TaomPartySizeModel does, pinned by AiPartySizeOrderingTests).
         // Deep review 2026-08-18; same idiom as TroopWeightService.SubtractResultFramePenalty.
         float scale = 1f + result.SumOfFactors;
 

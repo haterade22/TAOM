@@ -1,4 +1,3 @@
-using System;
 using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment;
@@ -27,9 +26,6 @@ public interface IEnlistmentService
 {
     PetitionResult SubmitPetition(string commanderHeroId);
 
-    /// <summary>Withdraw a pending petition. False when no petition is pending.</summary>
-    bool WithdrawPetition();
-
     /// <summary>
     /// Swear the oath with the petitioned commander. Sets identities + contract timers,
     /// transitions to EnlistedAttached, and parks the party (park failures are logged and
@@ -38,7 +34,4 @@ public interface IEnlistmentService
     OathResult CompleteOath(string commanderHeroId, string enlistedHeroId, double nowDays);
 
     bool RequestDischarge(DischargeReason reason);
-
-    /// <summary>Raised after a successful oath with the commander hero id.</summary>
-    event Action<string> EnlistmentStarted;
 }

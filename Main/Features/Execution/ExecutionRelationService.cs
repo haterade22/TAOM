@@ -15,20 +15,20 @@ public class ExecutionRelationService : IExecutionRelationService
     }
 
     public ExecutionRelationResult GetRelationModifier(
-        ExecutionParticipant executor,
-        ExecutionParticipant victim,
-        ExecutionParticipant evaluator,
+        SideIds executor,
+        SideIds victim,
+        SideIds evaluator,
         int baseRelationDelta,
         bool baseShowNotification)
     {
-        // Every participant is placed on a side by kingdom id with a culture-id fallback. There is
+        // Every participant is placed on a side by faction id with a culture-id fallback. There is
         // deliberately no "unknown, defer to vanilla" escape: a single unresolved id used to hand the
         // whole calculation back to vanilla, and vanilla charges -10 to every honourable clan leader
         // in the world, which is exactly the Free Peoples. A participant that classifies on neither
         // id resolves Neutral, which is nobody's ally and everybody's enemy.
-        var executorSide = Resolve(executor);
-        var victimSide = Resolve(victim);
-        var evaluatorSide = Resolve(evaluator);
+        var executorSide = _alignmentService.ResolveSide(executor);
+        var victimSide = _alignmentService.ResolveSide(victim);
+        var evaluatorSide = _alignmentService.ResolveSide(evaluator);
 
         int modifiedDelta = CalculateModifiedDelta(executorSide, victimSide, evaluatorSide, baseRelationDelta);
 
@@ -38,9 +38,6 @@ public class ExecutionRelationService : IExecutionRelationService
 
         return new ExecutionRelationResult(modifiedDelta, showNotification);
     }
-
-    private FactionSide Resolve(ExecutionParticipant participant)
-        => _alignmentService.ResolveSide(participant.KingdomId, participant.CultureId);
 
     private int CalculateModifiedDelta(
         FactionSide executorSide,

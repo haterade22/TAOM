@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Enlistment;
@@ -88,4 +89,17 @@ public class ServiceWarPolicyTests
     [TestMethod]
     public void NullMirror_NothingToUnwind()
         => Assert.AreEqual(0, ServiceWarPolicy.FactionsToPeaceOnDischarge(null, L("empire")).Count);
+
+    // ---- who may be mirrored mid-term (#832) ----
+
+    [DataTestMethod]
+    [DataRow("clan_1", "clan_1", "clan_1", true, DisplayName = "own clan, nobody else: mirror")]
+    [DataRow("", "clan_1", "clan_1", false, DisplayName = "empty pin: no")]
+    [DataRow(null, "clan_1", "clan_1", false, DisplayName = "null pin: no")]
+    [DataRow("kingdom_1", "kingdom_1", "clan_1", false, DisplayName = "vassal: no")]
+    [DataRow("clan_1", "kingdom_1", "clan_1", false, DisplayName = "identity changed: no")]
+    [DataRow("clan_1", "", "clan_1", false, DisplayName = "no current faction: no")]
+    public void ShouldMirrorMidTerm_OnlyForThePlayersOwnClanUnderTheOathIdentity(
+        string pin, string current, string clan, bool expected)
+        => Assert.AreEqual(expected, ServiceWarPolicy.ShouldMirrorMidTerm(pin, current, clan));
 }

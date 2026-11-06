@@ -144,6 +144,18 @@ class RegistryContractTests(unittest.TestCase):
                     self.assertTrue(hasattr(module, table), f"{spec.path} lost {table}")
 
 
+class EnlistmentGeneratorSpecTests(unittest.TestCase):
+    def test_the_enlistment_fallback_table_is_registered_and_collects_only_item_ids(self):
+        specs = [s for s in cg.GENERATORS if s.path == "tools/generate_enlistment_rosters.py"]
+        self.assertEqual(1, len(specs))
+        self.assertEqual({"DEFAULT_ROSTER_ITEMS"}, set(specs[0].tables))
+        refs = cg.collect(specs[0])
+        self.assertIn("rohan_militia_tunic_a", refs)
+        self.assertIn("wm_rohan_ws_sword_a01", refs)
+        for label in ("Item0", "Body", "Head", "Leg", "recruit", "soldier", "infantry", "archer"):
+            self.assertNotIn(label, refs)
+
+
 class ValidatorWiringTests(unittest.TestCase):
     def test_missing_id_becomes_a_warning_under_the_code(self):
         # A registry holding every id but one that a real generator writes.

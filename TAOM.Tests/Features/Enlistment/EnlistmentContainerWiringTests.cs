@@ -45,8 +45,25 @@ public class EnlistmentContainerWiringTests
         container.RegisterInstance(Substitute.For<global::TAOM.Adapters.IPlayerContextAdapter>());
         container.RegisterInstance(Substitute.For<global::TAOM.Features.Enlistment.Duties.IDutyOrchestrationService>());
 
+        container.RegisterInstance(Substitute.For<global::TAOM.Features.Messengers.IMessengerConversationState>());
         EnlistmentIoC.RegisterEnlistmentFeature(container);
         return container;
+    }
+
+    [TestMethod]
+    public void DialogBehavior_Resolvable_WithTheMessengerConversationState()
+    {
+        // The oath line greys itself while a messenger conversation is open (#898), so the constructor reads
+        // IMessengerConversationState, which MessengerIoC registers.
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(EnlistmentDialogBehavior));
+
+        Assert.AreEqual(
+            0,
+            errors.Length,
+            "EnlistmentDialogBehavior is not resolvable: "
+                + string.Join("; ", errors.Select(e => e.Value.Message)));
     }
 
     [TestMethod]

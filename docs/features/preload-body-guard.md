@@ -9,7 +9,7 @@ and lets vanilla's loop run unchanged. Category `Patch90_PreloadBodyGuard`, issu
 
 ## Why This Exists
 
-Vanilla's wait (installed v1.4.8, `TaleWorlds.MountAndBlade.View.PreloadHelper.cs:58-75` in the
+Vanilla's wait (installed v1.4.8, `TaleWorlds.MountAndBlade.View.PreloadHelper.cs:57-70` in the
 taom-src cache; the 1.5.x line found the same shape on v1.5.3):
 
 ```

@@ -352,7 +352,7 @@ public void ProcessAgent_WhenInactive_SkipsProcessing()
 
 ```powershell
 # Run tests with coverage
-dotnet test --collect:"XPlat Code Coverage"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --collect:"XPlat Code Coverage"
 
 # Generate HTML report (requires ReportGenerator tool)
 reportgenerator -reports:coverage.cobertura.xml -targetdir:coveragereport

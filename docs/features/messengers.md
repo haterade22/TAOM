@@ -28,6 +28,7 @@ Layered TAOM architecture. The behavior is the TaleWorlds-bound boundary; the se
 
 - **`MessengerCampaignBehavior`** (entry point, ~370 lines) — registers events (`HourlyTickEvent`, `OnSessionLaunchedEvent`), implements `IMissionListener`, registers the dialog tree, orchestrates encounter routing (settlement vs field), and serialises state via `SyncData`. Touches sealed types directly because that's what the boundary is for.
 - **`MessengerService`** (Reuse.Singleton) — pure logic: `CanSendMessenger(HeroSnapshot, playerGold) → MessengerValidationResult`, `RollAccident()`, `AdvancePosition(current, target, speed) → PositionUpdate`, `CalculateMessengerSpeed(mapDiagonal, travelDays)`. Tested with 26 unit tests against NSubstitute mocks.
+- **`MessengerConversationState`** (Reuse.Singleton, `IMessengerConversationState`): one in-memory flag, `IsOpen`, set just before the encounter starts, cleared in `OnEndMission`, on the null-mission recovery, when opening throws (`AbortConversation`) and at session launch. The conversation looks like a real visit to the engine (a real `PlayerEncounter`, and the main party inside the target's settlement), so other features read this flag to tell them apart: Enlistment greys the oath and Patch117 hides six vanilla lines.
 - **`MessengerStateStore`** — owns the in-memory `Dictionary<heroId, PendingMessenger>`, exposes CRUD + `Serialize`/`Deserialize` for the behavior's `SyncData`.
 - **`MessengerConfigProvider`** — validates `messenger_config.json` per the "Config Providers MUST Validate" rule (range-check + revert + warn).
 - **`MessengerSettingsProvider`** — wraps `TaomSettings.Instance.*` so the service can be mocked in tests.
@@ -71,7 +72,7 @@ Group: **Messengers**
 
 | Setting | Type | Range | Default | Effect |
 |---------|------|-------|---------|--------|
-| `EnableMessengers` | bool | — | true | Master toggle. When off, the behavior is not registered and the encyclopedia button hides itself. **Requires restart to take effect** (Singleton lifetime). |
+| `EnableMessengers` | bool | n/a | true | Master toggle. When off, the behavior is not registered and the encyclopedia button is greyed out, and hovering it shows why. **Requires restart to take effect** (Singleton lifetime). |
 | `MessengerGoldCost` | int | 10–500 | 50 | Denar cost per dispatch. |
 | `MessengerTravelDays` | int | 1–10 | 3 | In-game days a messenger spends in transit. Speed scales to map size: `mapDiagonal / (24 * travelDays) * speedMultiplier`. |
 | `MessengerAccidents` | bool | — | true | Master toggle for the random ambush roll. |
@@ -109,18 +110,49 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 | [Main/Features/Messengers/MessengerSettingsProvider.cs](../../Main/Features/Messengers/MessengerSettingsProvider.cs) | Reads `TaomSettings.Instance.*` |
 | [Main/Features/Messengers/IMessengerRandomSource.cs](../../Main/Features/Messengers/IMessengerRandomSource.cs) | Random-float contract (for accident roll testability) |
 | [Main/Features/Messengers/MessengerRandomSource.cs](../../Main/Features/Messengers/MessengerRandomSource.cs) | `MBRandom.RandomFloat` wrapper |
-| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (10 hero properties) for validation |
+| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (9 hero properties) for validation |
 | [Main/Features/Messengers/Domain/MessengerValidationResult.cs](../../Main/Features/Messengers/Domain/MessengerValidationResult.cs) | 11-value rejection enum |
 | [Main/Features/Messengers/Domain/PendingMessenger.cs](../../Main/Features/Messengers/Domain/PendingMessenger.cs) | Saveable POCO + `Serialize`/`TryDeserialize` |
 | [Main/Features/Messengers/Domain/PositionUpdate.cs](../../Main/Features/Messengers/Domain/PositionUpdate.cs) | Service return struct (new position + arrived flag) |
 | [Main/Features/Messengers/Domain/MapCoord.cs](../../Main/Features/Messengers/Domain/MapCoord.cs) | TAOM-owned 2D map-coordinate struct — keeps the service/domain layers free of TaleWorlds types per ADR-007; the boundary (`MessengerCampaignBehavior`) converts to/from `Vec2` (NaN = invalid sentinel, `IsValid` matches `Vec2.IsValid` incl. ±Infinity rejection) |
 | [Main/Features/Messengers/MessengerCampaignBehavior.cs](../../Main/Features/Messengers/MessengerCampaignBehavior.cs) | Boundary: dialog tree, IMissionListener, encounter routing, `SyncData` |
+| [Main/Features/Messengers/IMessengerConversationState.cs](../../Main/Features/Messengers/IMessengerConversationState.cs) | Open-conversation flag contract |
+| [Main/Features/Messengers/MessengerConversationState.cs](../../Main/Features/Messengers/MessengerConversationState.cs) | The volatile flag behind it |
+| [Main/Features/Messengers/MessengerEntryPolicy.cs](../../Main/Features/Messengers/MessengerEntryPolicy.cs) | Pure rule: when entering the town would attach the player to an army (#898) |
+| [Main/Features/Messengers/MessengerSessionRulesModule.cs](../../Main/Features/Messengers/MessengerSessionRulesModule.cs) | Applies Patch117 at GameInit |
+| [Main/Features/Messengers/Hooks/MessengerSessionRulesPatch.cs](../../Main/Features/Messengers/Hooks/MessengerSessionRulesPatch.cs) | Patch117 postfix over six vanilla conditions |
 | [Main/Features/Messengers/MessengerIoC.cs](../../Main/Features/Messengers/MessengerIoC.cs) | DryIoc registrations |
 | [Main/Features/Messengers/UI/MessengerEncyclopediaPrefabExtension.cs](../../Main/Features/Messengers/UI/MessengerEncyclopediaPrefabExtension.cs) | UIExtenderEx prefab patch (button injection) |
 | [Main/Features/Messengers/UI/MessengerEncyclopediaMixin.cs](../../Main/Features/Messengers/UI/MessengerEncyclopediaMixin.cs) | UIExtenderEx VM mixin (data sources + click command) |
 | [Main/_Module/ModuleData/messengers/messenger_config.json](../../Main/_Module/ModuleData/messengers/messenger_config.json) | Advanced tuning |
 | [Main/_Module/ModuleData/taom_messenger_strings.xml](../../Main/_Module/ModuleData/taom_messenger_strings.xml) | EN base — 29 keys |
 | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_messenger_strings_*.xml` | 12 language variants (BR/CNs/CNt/DE/FR/IT/JP/KO/PL/RU/SP/TR) — English placeholder text where untranslated |
+
+## What a messenger conversation cannot do (#898)
+
+The conversation is a real `PlayerEncounter` with the messenger, and for a target inside a settlement the main party is moved there, so the engine cannot tell it from a visit. These things would break or be wrong if offered, and each is closed:
+
+- **"I want to join your army" and "I want you to join my army"** are hidden. Their consequences attach a party to an army (`Army.AddPartyToMergedParties` sets `AttachedTo`), which snaps it across the map. Patch117.
+- **Board games** are hidden: the game starts after the window closes, when the messenger has already ended the mission. Patch117.
+- **Enlisting** stays visible but greyed, with "Swear service in person, not through a messenger." Swearing finishes the encounter and parks the player at the commander, a teleport. `EnlistmentDialogBehavior.OfferIsTakeable(verdict, throughMessenger)`.
+- **Clan member troop and inventory exchange** (`clan_member_manage_troops`, `clan_member_manage_inventory`) are hidden: they open the party screens for a person who is not there. Patch117.
+- **Companion recall** (`companion_rejoin_after_emprisonment_role`) is hidden for the same reason. Patch117.
+- **A main party in an army it does not lead, with that army's leader in the target's town**: entering the town would make `EnterSettlementAction.ApplyForParty` attach the party, and `PlayerEncounter.Finish` never leaves the town for an attached party. That state opens the field conversation instead (`MessengerEntryPolicy.WouldAttachToArmy`).
+
+The flag is `IMessengerConversationState.IsOpen`: set when the arrived messenger's conversation starts, cleared when its mission ends, when the mission fails to open, when opening throws (`AbortConversation`, which also schedules the encounter cleanup), and at each session launch. Enlistment and Patch117 read it.
+
+Wanderer hiring and barter stay on purpose: remote hiring is intended, and a trade settles by gold. The army "gathering" answers are unreachable on v1.4.8 (no line outputs `lord_tell_gathering`). Registry: [Patch117_MessengerSessionRules](../reference/harmony-patch-registry.md).
+
+## In-game Checklist (#898)
+
+1. **Army join, both ways.** Talk to a lord through a messenger: neither "I want to join your army" nor "I want you to join my army" shows.
+2. **Enlist.** "I wish to enlist under your command." shows greyed with "Swear service in person, not through a messenger."
+3. **Board game.** No board game line in a lord's hall conversation through a messenger.
+4. **Clan member.** A clan member who leads a party: no "Let me inspect your troops." and no "Let me inspect your equipment."
+5. **Companion recall.** A companion in a town: no recall line.
+6. **In an army, not attached.** Join a lord's army, stay unattached, send a messenger to a lord in a town where the army's leader is: the field conversation opens and the party does not attach.
+7. **The lord's hall.** A lord in a town and a lady in her home castle: the conversation opens in the hall, ends cleanly, and the party is back where it was.
+8. **In person.** Every line above is still there when you talk to the same people face to face.
 
 ## Dependencies
 
@@ -134,13 +166,19 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 
 ## Tests
 
-55 unit tests across 3 files:
+Unit tests:
 
 - [TAOM.Tests/Features/Messengers/MessengerServiceTests.cs](../../TAOM.Tests/Features/Messengers/MessengerServiceTests.cs) — 26 tests covering all 11 `MessengerValidationResult` rejection paths, accident roll boundaries (p=0/1/disabled), position math edge cases (distance < / = / > speed; invalid target), speed calculation (zero/negative days clamping, multiplier).
 - [TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs](../../TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs) — 15 tests covering Add/Remove/Get/Contains/Clear, duplicate-id replacement, null/empty input, save roundtrip preserves all fields, malformed-on-load drops + warns.
 - [TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs](../../TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs) — 14 tests covering valid JSON, missing file, malformed JSON, every validation rule (negative chance, >1.0 chance, zero/negative speed mult, absurd speed mult), boundary values, partial JSON merge, caching, info-vs-warning logging.
+- [TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs](../../TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs): the button's shape (#944). The button sits in an always-enabled wrapper that holds the one hint, so the reason for a greyed button shows on hover.
+- [TAOM.Tests/Features/Messengers/MessengerConversationStateTests.cs](../../TAOM.Tests/Features/Messengers/MessengerConversationStateTests.cs): the flag opens and closes, the behavior opens it before the encounter starts and closes it on every end path, and `MessengerIoC` registers it.
+- [TAOM.Tests/Features/Messengers/MessengerSessionRulesPatchTests.cs](../../TAOM.Tests/Features/Messengers/MessengerSessionRulesPatchTests.cs): the postfix filter, the six targets and the JIT check against the installed DLLs (#898).
+- [TAOM.Tests/Features/Messengers/MessengerSessionRulesWiringTests.cs](../../TAOM.Tests/Features/Messengers/MessengerSessionRulesWiringTests.cs): one module line, Patch117 at GameInit, nothing registered by hand in `IoC.cs`.
+- [TAOM.Tests/Features/Messengers/MessengerCampaignBehaviorSourceTests.cs](../../TAOM.Tests/Features/Messengers/MessengerCampaignBehaviorSourceTests.cs): source pins on the recovery when opening throws or returns no mission, and on the cleanup `AbortConversation` schedules.
+- [TAOM.Tests/Features/Messengers/MessengerEntryPolicyTests.cs](../../TAOM.Tests/Features/Messengers/MessengerEntryPolicyTests.cs): the army-attach rule and the source pin on the settlement branch.
 
-The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSettingsProvider`, `MessengerRandomSource`, `MessengerIoC`) follow TAOM's "boundaries are not unit-tested" convention and are validated through manual game-testing (see GitHub issue #109 manual test plan).
+The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerSettingsProvider`, `MessengerRandomSource`, `MessengerIoC`) follow TAOM's "boundaries are not unit-tested" convention and are validated through manual game-testing (see GitHub issue #109 manual test plan).
 
 ## How to add a new validation rejection reason
 
@@ -168,10 +206,17 @@ The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSe
 
 ## Changelog
 
+- 2026-10-24: the Send Messenger button now uses the declared brushes `Popup.Button.Base` and `Popup.Button.Text` (its two old names resolved to nothing), and its label dims when the button is disabled (#989).
+- 2026-10-23: a messenger conversation no longer offers the join-army lines, the board game, the clan troop and inventory exchange or the companion recall (Patch117); the enlist oath is greyed there; a player in an army whose leader is in the target town gets the field conversation; a throw while opening recovers and rethrows (#898).
+- 2026-10-20: added `IMessengerConversationState`, the open-conversation flag (the messenger part of a 1.5.x change).
+- 2026-10-20: the Send Messenger hint for the disabled state now shows: the hint sits beside the button in an enabled wrapper, as vanilla's governor button does (#944).
 - 2026-05-13 — Wired Messengers into IoC + campaign starter (fixed encyclopedia hero-click NRE, #121) and added a wiring regression test (#191); fixed UI mixin notifications firing on self (#166) and per-campaign/arrival state-reset gaps (#123).
 - 2026-05-06 — Ported the LOTRAOM messenger system to TAOM (1.3.15): paid messenger dispatch from the encyclopedia/dialog, travel + arrival conversation routing, primitive-dict save, MCM + JSON tunables, 12-language localization (#109).
 
 ## GitHub Issue
+
+- **Issue:** [#898 (messenger refinements)](https://github.com/haterade22/TAOM/issues/898)
+- **Status:** Open
 
 - **Issue:** [#109 — feat(messengers): port LOTRAOM messenger system to TAOM (1.3.15)](https://github.com/haterade22/TAOM/issues/109)
 - **Status:** Closed

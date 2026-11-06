@@ -293,26 +293,6 @@
     <string id="taom_force_vol_peace" text="Когда вы пытаетесь заставить знать отдать вам рекрутов, некоторые жители собираются, чтобы дать вам отпор. Сражение с ними приведет к войне с {KINGDOM}." />
     <string id="taom_raid_noresist_peace" text="Вы прибыли в {SETTLEMENT}, чтобы разграбить его. Вы не встречаете сопротивления. Разграбление этой деревни приведет к войне с {KINGDOM}." />
     <string id="taom_encounter_peace" text="Вы встретили {PARTY}. Сражение с ними приведет к войне с {KINGDOM}." />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK} заключило союз с {KINGDOM2_LINK}." />
-    <string id="1rbg3Hz2" text="{FACTION_1} и {FACTION_2} больше не враги." />
-    <string id="2BVDp7Tg" text="{KINGDOM} прекратит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="Lbs2bNlg" text="{KINGDOM} начнет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="jnYwiCAz" text="{KINGDOM} продолжит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="faUooB7V" text="{KINGDOM} не будет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="TauRjAud" text="{NAME} из {FACTION}" />
-    <string id="2mVZORaE" text="слуга {FACTION_NAME}" />
-    <string id="6d4ZTvGv" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION} королевства. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="o5AUljbW" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="0bPb5btR" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="JuPUG5wX" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="4pmvrnmN" text="Замок {SETTLEMENT_LINK} принадлежит {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="RVDojUOM" text="Земли вокруг {SETTLEMENT_LINK} в основном принадлежат {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO}" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
-    <string id="yAOQnMVw" text="Вы из {FACTION}, верно? Это означает, что вы мой пленник." />
-    <string id="YT4OvaAG" text="Хорошо. Можете считать себя под защитой {FACTION_NAME}. У вас есть время до завтрашнего дня, чтобы завершить ваше путешествие, или нам придется попросить у вас еще одну плату." />
     <string id="taom_str_faction_official.erebor" text="благородный гном" />
     <string id="taom_str_faction_official.erebor_f" text="благородная гномка" />
     <string id="taom_str_faction_ruler.erebor" text="Король Под Горой" />
@@ -359,165 +339,10 @@
     <string id="taom_str_adjective_for_culture.shaghana" text="шаганский" />
     <string id="taom_str_player_father_name.shaghana" text="Заркан" />
     <string id="taom_str_player_mother_name.shaghana" text="Ханса" />
-    <string id="0aXG8dvJ" text="Заключить мир с {KINGDOM_NAME}. Дань выплачиваться не будет." />
-    <string id="0CsbbwtN" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="0nhqJewP" text="{RULER.NAME} из {KINGDOM} передает {SETTLEMENT} {LEADER.NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} могут быть сильны, но их земли богаты и созрели для захвата." />
-    <string id="1o8vgwTf" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="1V8f9vRM" text="Курьер с предложением о союзе от {PROPOSER_KINGDOM} прибыл ко двору вашего королевства." />
-    <string id="21yUheIy" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, восходящим {CULTURE_ADJECTIVE} военачальником." />
-    <string id="22LCyCoA" text="Я могу предложить вашему королевству {GOLD}{GOLD_ICON} за объявление войны {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="2b1xZGaQ" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет платить дань {TRIBUTE_AMOUNT} ежедневно в течение {TRIBUTE_DURATION} дней." />
-    <string id="2KaXj3Qa" text="Разорения от {NEARBY_ENEMY_FACTION} вынудили многих крестьян покинуть свои дома. Те, у кого есть земля, обычно возвращаются к ней, но многие из бедняков ищут новое место для жизни. Вы говорите с несколькими, расположившимися лагерем на окраине вашей деревни. Для них нет земли. Они кажутся готовыми работать арендаторами, но всегда есть возможность напряженности с более устоявшимися деревенскими семьями." />
-    <string id="4fXpOe4N" text="Прибывает курьер от {CLAN_NAME}. Они держат {CAPTIVE_HERO.NAME} и требуют {GOLD_AMOUNT}{GOLD_ICON} в качестве выкупа." />
-    <string id="4GgfFDWG" text="Заключение мира с {KINGDOM_NAME}" />
-    <string id="4JSzHkpt" text="Как {?IS_FEMALE}королева{?}король{\?}, вы должны решить, будет ли объявлена война {KINGDOM_NAME}" />
-    <string id="4z1t75be" text="{FIRSTNAME} из {CLAN_NAME}" />
-    <string id="5bBAOHmC" text="{RULER.NAME} из {KINGDOM} берет {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} феода, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="5bza9sDs" text="Мне очень жаль это слышать. Вы не найдете лучших нанимателей, чем {FACTION_NAME}, будьте в этом уверены." />
-    <string id="5DdbkWLu" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}, при том что {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="5pOKmHsf" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} оккупировали наши исконные земли и угнетают наших соплеменников." />
-    <string id="7ouzFASf" text="Прибывает курьер с посланием от {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Она{?}Он{\?} отмечает вашу растущую репутацию и спрашивает, не рассмотрите ли вы возможность присягнуть на верность {OFFERED_KINGDOM_NAME} в качестве вассала. Вам следует поговорить лично, если вы заинтересованы." />
-    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="940TwBPs" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}." />
-    <string id="aE7OQDMS" text="Заключить союз с {KINGDOM_NAME}." />
-    <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
-    <string id="AGdmoIUc" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="amdgO9Hr" text="Я — {CONVERSATION_HERO.FIRSTNAME}. Я скромный последователь братства, известного как {FACTION_NAME}, которое {DIVINITY} избрали нести их послание в эту Эпоху." />
-    <string id="aQAI99d4" text="Объявление войны {KINGDOM_NAME}" />
-    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
-    <string id="AwCnrOan" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призван к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="AWm7Kb9Y" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="awoeb3br" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} заключил мир с {ENEMYFACTION_INFORMALNAME}. Ваше соглашение с {QUEST_GIVER.LINK} было отменено." />
-    <string id="az3K3j4C" text="Сейчас мы сильнее, чем {ENEMY_KINGDOM_INFORMAL_NAME}. Мы должны нанести удар, пока можем." />
-    <string id="B818zx3W" text="Ваш клан находится в состоянии войны с фракциями, с которыми {KINGDOM} живет в мире." />
-    <string id="bjEN2OzZ" text="В результате ваших враждебных намерений по отношению к нейтральной деревне {KINGDOM} объявляет вам войну." />
-    <string id="Bk3Wqy5j" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="BlVjIlZF" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}, заплатив {TRIBUTE_AMOUNT} в качестве дани на {TRIBUTE_DURATION} дней. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="bMCZ5rWQ" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="bR7MIkFi" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="bXN2fbcv" text="Ваши люди обращаются с жителями {SETTLEMENT_NAME} как с заблудшими подданными {SETTLEMENT_CULTURE_NAME}, а не как с врагами, и относятся к ним довольно хорошо." />
-    <string id="bYmc9fi3" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="Cf0amFBD" text="Принять призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
-    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="CrzFdo2H" text="Да. Речь о войне с {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Нам нужно сковать часть их сил. Относительно небольшой отряд, быстро перемещающийся по их землям и успешно разоряющий их деревни, должен стать хорошей отвлекающей манёвром. Их лордам придётся преследовать налётчиков, и они не смогут угрожать нам в других местах. Вы кажетесь подходящ{?PLAYER.GENDER}ей воительницей{?}им воином{\?} для этой работы. Что скажете? Вы заслужите мою благодарность и будете щедро вознаграждены в случае успеха." />
-    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}." />
-    <string id="d6KbdIWg" text=" В результате ваших враждебных действий по отношению к нейтральной деревне {MERCENARY_KINGDOM} разрывает контракт с вами, а {KINGDOM} объявляет вам войну." />
-    <string id="dCDBqYsh" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="dDsJyerw" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="dEsIQDo3" text="Пришло время призвать нашего союзника {CALLED_KINGDOM} к войне!" />
-    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} из {ENEMY_KINGDOM_INFORMAL_NAME} подл и опасен. Мы должны разобраться с {?ENEMY_RULER.GENDER}ней{?}ним{\?}, пока не стало слишком поздно." />
-    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} вопреки возражениям {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="dPOOmYGQ" text="Вы думаете, лорды и воины {KINGDOM} просто будут стоять в стороне, когда их людей похищают? Вам лучше отпустить нас!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, лидером группы {CULTURE_ADJECTIVE} повстанцев." />
-    <string id="eAhgrwkZ" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли заключён союз с {KINGDOM_NAME}." />
-    <string id="eEmFbQet" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="efTah9rk" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. Наш совет должен решить, предлагать ли мир и каковы будут условия." />
-    <string id="eiGl6XBr" text="Голосование о том, отвечать ли на призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="EqevKYZD" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призвано к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}" />
-    <string id="eTylgLCc" text="Прибыл курьер из {KINGDOM_NAME}. Они предлагают вам союз. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM} больше не находится в состоянии войны с {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="fcuUcjYV" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="FNCq25P1" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="FuNbouTu" text="Прибыл курьер из {KINGDOM_NAME}. Они призывают ваше королевство к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="G3qGLAeQ" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} вопреки желаниям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="gf2Lje7o" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, командующий армией {QUEST_GIVER_FACTION}, сообщил вам, что им нужны запасы провианта для предстоящей военной кампании. {?QUEST_GIVER.GENDER}Она{?}Он{\?} попросил вас доставить {GRAIN_AMOUNT} мешков зерна, и хотя это не обязательно, предоставить {LIVESTOCK_AMOUNT} голов скота и {WINE_AMOUNT} бочек вина {?QUEST_GIVER.GENDER}она{?}он{\?} был бы признателен." />
-    <string id="Gj5d9y2g" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}." />
-    <string id="gNf0ALKw" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="h5eTEYON" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}." />
-    <string id="h9bWTLgK" text="Пришло время присоединиться к нашим союзникам, {KINGDOM_NAME}, в их войне." />
-    <string id="IB1xsVEr" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваши вассалы оставили решение за вами." />
-    <string id="INfHUqxT" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME}." />
-    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="iOmgCFDI" text="Голосование о заключении союза с {KINGDOM_NAME}." />
-    <string id="ItueKmqd" text="Ваш клан теперь в состоянии войны с {QUEST_GIVER_SETTLEMENT_FACTION}. Ваш контракт с {QUEST_GIVER.LINK} расторгнут." />
-    <string id="izwKmH2I" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="jaioXYDc" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="JJQ0Hp4m" text="Прибыл гонец из {MAP_FACTION_NAME}. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани ежедневно, чтобы прекратить войну между вашими королевствами. Ваши вассалы оставили решение за вами." />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} в настоящее время сильнее нас. Нам нужно время, чтобы укрепить свою мощь." />
-    <string id="JQligd8z" text="Совет {KINGDOM} избрал {KING.NAME} новым правителем." />
-    <string id="JY717hPW" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} и {?ENEMY_RULER.GENDER}её{?}его{\?} совет должны решить, предлагать ли мир и каковы будут условия." />
-    <string id="K5w135N9" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="KFHj7ckm" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME}" />
-    <string id="KlATZEbb" text="Заключение союза с {KINGDOM_NAME}." />
-    <string id="KSrNutEO" text="{FACTION_LEADER} решит, будет ли объявлена война {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="Ktpia7Pa" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME} вопреки противодействию {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="l5H9x7Lo" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="L802I9W2" text="Да, я присоединюсь к {FACTION_NAME}." />
-    <string id="L81DPSom" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="Lalj0T1i" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="lseJ70y0" text="Ваше королевство в состоянии войны с {KINGDOM_NAME}." />
-    <string id="LVX2x6Jf" text="Я хотел бы расторгнуть контракт с {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} решит, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="mfYzCeGR" text="{CHARACTER.NAME} был {TITLE} {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}госпожа{?}лорд{\?} из {CLAN}, желает, чтобы молодой член клана был обучен военному искусству." />
-    <string id="mvkKP6OE" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}." />
-    <string id="MYIgSsfk" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="n4I3pWOn" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME} путём выплаты {TRIBUTE_AMOUNT} дани в течение {TRIBUTE_DURATION} дней." />
-    <string id="Nd0Vhkxn" text="Прибыл гонец из {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить {GOLD_AMOUNT} {GOLD_ICON} ежедневной дани. Ваши вассалы оставили решение за вами." />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM} уже в состоянии войны с {KINGDOM_NAME}." />
-    <string id="NjPMRWbW" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет получать {TRIBUTE_AMOUNT} дани ежедневно в течение {TRIBUTE_DURATION} дней." />
-    <string id="nkvT88r2" text="У вас недостаточно денег, чтобы призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="NuYzgBZB" text="Вы заходите слишком далеко. {KINGDOM} не потерпит уничтожения своих караванов." />
-    <string id="o4IxXHnB" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME}." />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK} больше не является главой {CLAN_NAME}. {NEW_LEADER.LINK} стал новым правителем клана." />
-    <string id="O9XpB5Ah" text="Как правитель, вы должны решить, будет ли заключено торговое соглашение с {KINGDOM}" />
-    <string id="oAw74q3r" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="Oi20UrO2" text="Наша война с {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} идёт достаточно хорошо. Но некоторые говорят, что у нас недостаточно результатов за всю кровь и серебро, что мы потратили. Явная победа на этом этапе принесла бы много пользы. Я думаю, мне хотелось бы увидеть наше знамя над башнями {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="Да. Это касается войны с {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Нам нужно связать часть их войск, и самый простой способ — разорить их деревни. Это жестокое дело и тяжело отразится на простом народе, но их лорды будут вынуждены преследовать разорителей, и это не позволит им сделать то же самое с нами. Если вы возьмётесь за это, я награжу вас в случае успеха." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано половиной {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="PneX4Ayw" text="Курьер с призывом к войне от {KINGDOM_NAME} против {KINGDOM_TO_CALL_TO_WAR_AGAINST} прибыл ко двору вашего королевства." />
-    <string id="PP7KD7OC" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="PutoRsWp" text="Прибыл курьер от {CLAN_NAME}. Они предлагают вам {GOLD_AMOUNT}{GOLD_ICON} выкупа, если вы освободите {CAPTIVE_HERO.NAME}." />
-    <string id="q9DnHVcZ" text="Не в наших интересах присоединяться к {KINGDOM_NAME} в их войне." />
-    <string id="qa4FlTWS" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="qgN9o2ip" text="Пришло время призвать нашего союзника {KINGDOM_NAME} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Ваше королевство будет голосовать, предложить ли им соглашение о призыве к войне." />
-    <string id="qN3x2usk" text="Голосование о том, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="R0bJS0pn" text="Заключить мир с {OTHER_FACTION}" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER} будет решать, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="rd229FYG" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке половины {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="rJIuQ0hc" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="rtfoywJl" text="Объявить войну {KINGDOM_NAME}" />
-    <string id="sbFboHmV" text="Прибыл курьер от {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить дань в размере {GOLD_AMOUNT} {GOLD_ICON} ежедневно. Ваше королевство будет голосовать, принять ли это предложение." />
-    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM}." />
-    <string id="SR9FC5jH" text="Прибыл курьер от {MAP_FACTION_NAME} с мирным предложением. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани каждый день, чтобы прекратить войну между вашими королевствами. Ваше королевство будет голосовать, принять ли это предложение." />
-    <string id="syGyjjKE" text="Ответить на призыв {CALLING_KINGDOM} и объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} предлагает вам работу наёмника, выплачивая {GOLD_AMOUNT}{GOLD_ICON} за каждое очко влияния, которое вы получите, сражаясь от их имени. Вы принимаете?" />
-    <string id="uc4M4bhG" text="Что ж, есть кое-что, чего я хочу. Есть {?TARGET_HERO.GENDER}одна леди{?}один лорд{\?} из {TARGET_FACTION}, с которой у меня давние, очень давние отношения. И далеко не дружеские. Теперь, когда мы в состоянии войны, пока {?TARGET_HERO.GENDER}она свободна{?}он свободен{\?}, я знаю, что моя жизнь и земли в опасности. Как я уже сказал, это будет совсем не просто. Но тот, кто сумеет это сделать, доставить {?TARGET_HERO.GENDER}её{?}его{\?} ко мне живым, помимо моей благодарности, станет поистине богатым человеком.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="UQq4ekeu" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} призвало {CALLED_KINGDOM_LINK} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
-    <string id="uWdj1X2c" text="{CHARACTER.NAME} был членом {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, нового восходящего клана. {?LORD.GENDER}Она{?}Он{\?} всё ещё создаёт {?LORD.GENDER}свою{?}свою{\?} репутацию." />
-    <string id="vf2pb7Ts" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER} будет решать, подпишет ли {KINGDOM} торговое соглашение с {OTHER_KINGDOM}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="VWoHoUin" text="Не будет мира между нами и {ENEMY_INFORMAL_NAME}, как не может волк заключить мир с овцой." />
-    <string id="wijL0mTy" text="{FACTION_LEADER} будет решать, заключить ли союз с {KINGDOM_NAME}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}." />
-    <string id="xAuejv91" text="{RULER.NAME} из {KINGDOM} решил не заключать мир с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} вопреки желанию {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="XbYCVCbR" text="Мы против призыва нашего союзника {CALLED_KINGDOM} к войне." />
-    <string id="xhK4zMec" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="xKev8i5B" text="Призыв, который {CALLING_KINGDOM_LINK} направило {CALLED_KINGDOM_LINK} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, завершён." />
-    <string id="xM97H0oR" text="Голосовать за объявление войны {KINGDOM_NAME}." />
-    <string id="yBL3TzXw" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="yUYNlQhU" text="Отлично, я прикажу своим людям составить простой контракт. От имени {KINGDOM_FORMAL_NAME} приветствую вас. Пусть ваш меч послужит нам добрую службу против наших врагов." />
-    <string id="Zckbdm4Z" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="zd9sawl9" text="Вы уже в союзе с {KINGDOM_NAME}." />
-    <string id="zXuo0Wbj" text="Подписание торгового соглашения с {KINGDOM}" />
-    <string id="ZZ1oLfEq" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="taom_shaghana_name" text="Шагана" />
     <string id="taom_shaghana_short_name" text="Шагана" />
     <string id="taom_shaghana_title" text="Таскралан Шаганы" />
@@ -549,7 +374,7 @@
     <string id="aom_sh_notable_1b" text="Купец восточных степей" />
     <string id="aom_sh_notable_2" text="Торговец шёлком Шаганы" />
     <string id="aom_sh_notable_2b" text="Торговец степей Харада" />
-    <string id="aom_sh_notable_3" text="Менялa Шаганы" />
+    <string id="aom_sh_notable_3" text="Shaghâna money-changer" />
     <string id="aom_sh_notable_3b" text="Торговец восточными товарами" />
     <string id="aom_sh_notable_4" text="Хозяин базара Шаганы" />
     <string id="aom_sh_notable_4b" text="Хитрый купец Шаганы" />
@@ -656,7 +481,7 @@
     <string id="TAOM_karakhuzaits_text" text="Дикие истерлинги — непокорённые степные кланы Моря Рун, что противостояли власти каждого властителя, пытавшегося их усмирить — будь то вождь Руна, лейтенант Мордора или Король Дейла. Они кочуют по пастбищам к востоку от Келдуина, сгоняя коней, совершая набеги на стада и собирая дорожную дань с любого каравана, настолько глупого, чтобы пересечь их степь без вооружённой охраны." />
     <string id="TAOM_forest_people_name" text="Друэдайн" />
     <string id="TAOM_forest_people_short" text="Дикари" />
-    <string id="TAOM_forest_people_text" text="Друэдайн, известные людям как вóзы или Дикие Люди Леса — древний народ, обитающий в глубоких лесах Друадана и скрытых долинах Белых гор. Они выжигают землю огнём, выращивают всё необходимое на богатой золой почве и переходят дальше, когда земля истощается — образ жизни, который оседлые народы Средиземья никогда не понимали и не пытались понять. Друэдайн не хотят лорда, не платят податей и просят лишь одного — чтобы их оставили в лесной тишине." />
+    <string id="TAOM_forest_people_text" text="The Drúedain, known to Men as Woses or the Wild Men of the Woods, are an ancient people who dwell in the deep forest of Drúadan and the hidden valleys of the White Mountains. They clear ground with fire, grow what they need on the ash-rich soil, and move on when the land is spent — a way of life the settled peoples of Middle-earth have never understood and never bothered to. The Drúedain want no lord, pay no tax, and ask only to be left to the forest's silence." />
     <string id="TAOM_eleftheroi_name" text="Беорнинги" />
     <string id="TAOM_eleftheroi_short" text="Беорнинги" />
     <string id="TAOM_eleftheroi_text" text="Беорнинги — великие лесовики, обитающие в долине Андуина меж Мглистых гор и Лихолесьем, ведомые оборотнями рода Беорна. Они не пропускают ни одного орка через свои земли, взимают пошлину у Брода Каррок на содержание дозора и не отвечают ни перед одним королём Средиземья. Хотя они торгуют и говорят с эльфами и гномами, любое войско, что пройдёт через их лес без позволения, обнаружит, что у беорнингов очень большие зубы." />
@@ -682,6 +507,7 @@
     <string id="taom_career_tier2" text="Уровень 2" />
     <string id="taom_career_tier3" text="Уровень 3" />
     <string id="taom_career_free_points" text="Свободных очков: {COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="Требуется уровень {LEVEL}" />
     <string id="taom_career_choice_while_active" text="Активен" />
     <string id="taom_career_active_effects" text="Активные эффекты" />
@@ -712,7 +538,7 @@
     <string id="taom_career_rank1_black_uruk_captain" text="Урук-Воин" />
     <string id="taom_career_rank2_black_uruk_captain" text="Чёрный Урук" />
     <string id="taom_career_rank3_black_uruk_captain" text="Капитан Красного Ока" />
-    <string id="taom_career_rank1_blade_dancer" text="Ñолдорский Мечник" />
+    <string id="taom_career_rank1_blade_dancer" text="Ñoldor Bladesman" />
     <string id="taom_career_rank2_blade_dancer" text="Клинок Золотого Цветка" />
     <string id="taom_career_rank3_blade_dancer" text="Мастер Клинка Имладриса" />
     <string id="taom_career_rank1_blademaster_of_ren" text="Клинок Рена" />
@@ -778,24 +604,24 @@
     <string id="taom_career_rank1_knight_of_belfalas" text="Оруженосец Дол Амрота" />
     <string id="taom_career_rank2_knight_of_belfalas" text="Рыцарь-Лебедь" />
     <string id="taom_career_rank3_knight_of_belfalas" text="Рыцарь Серебряного Лебедя" />
-    <string id="taom_career_rank1_lokhas_drus_marksman" text="Лучник Лôкхас Дрûс" />
-    <string id="taom_career_rank2_lokhas_drus_marksman" text="Пробиватель Доспехов Лôкхас Дрûс" />
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="Lôkhas Drûs Bowman" />
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="Lôkhas Drûs Plate-Piercer" />
     <string id="taom_career_rank3_lokhas_drus_marksman" text="Солнечнооперённая Смерть Востока" />
-    <string id="taom_career_rank1_mahud_beast_rider" text="Укротитель Зверей Махûд" />
-    <string id="taom_career_rank2_mahud_beast_rider" text="Погонщик Мûмака" />
-    <string id="taom_career_rank3_mahud_beast_rider" text="Военачальник Мûмаков" />
+    <string id="taom_career_rank1_mahud_beast_rider" text="Mahûd Beast-Tamer" />
+    <string id="taom_career_rank2_mahud_beast_rider" text="Mûmak Driver" />
+    <string id="taom_career_rank3_mahud_beast_rider" text="Mûmak War-Leader" />
     <string id="taom_career_rank1_marksman_of_aldburg" text="Лучник Восточной Марки" />
     <string id="taom_career_rank2_marksman_of_aldburg" text="Стрелок Альдбурга" />
     <string id="taom_career_rank3_marksman_of_aldburg" text="Стражник Стрел Марки" />
     <string id="taom_career_rank1_mulkerhili_cultist" text="Поклявшийся Шёпоту" />
-    <string id="taom_career_rank2_mulkerhili_cultist" text="Голос Лугбûрза" />
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Voice of Lugbúrz" />
     <string id="taom_career_rank3_mulkerhili_cultist" text="Глашатай Недремлющего Ока" />
     <string id="taom_career_rank1_necromancer_acolyte" text="Послушник Колдовства" />
     <string id="taom_career_rank2_necromancer_acolyte" text="Ткач Чёрного Дыхания" />
     <string id="taom_career_rank3_necromancer_acolyte" text="Владыка Дол Гулдура" />
     <string id="taom_career_rank1_olog_hai_warchief" text="Боевой Тролль" />
     <string id="taom_career_rank2_olog_hai_warchief" text="Олог-хай" />
-    <string id="taom_career_rank3_olog_hai_warchief" text="Военачальник Лугбûрза" />
+    <string id="taom_career_rank3_olog_hai_warchief" text="Warchief of Lugbúrz" />
     <string id="taom_career_rank1_pezarsani_javelineer" text="Дротикометатель Пезарсани" />
     <string id="taom_career_rank2_pezarsani_javelineer" text="Застрельщик с Метательными Копьями" />
     <string id="taom_career_rank3_pezarsani_javelineer" text="Алый Мастер Копья" />
@@ -1376,7 +1202,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Единственное поселение в узком месте" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Окружен Роханом и Фангорном" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% к затратам влияния на армию (воля Темного Властелина)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% к лимиту размера отряда (Орды Саурона)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% к лимиту размера отряда (Орды Саурона)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% эффективность кузнечного дела (Темная Ковка)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% к производству зерна в Нурне (Нурнские фермы)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% к урону от набегов (Гнев Саурона)" />
@@ -1398,7 +1224,7 @@
     <string id="taom_faction_dominion_of_mordor_strength_1" text="Почти не требуется влияния для похода" />
     <string id="taom_faction_dominion_of_mordor_strength_2" text="Мастерство ночных боёв" />
     <string id="taom_faction_dominion_of_mordor_strength_3" text="Самообеспечение через набеги и Нурн" />
-    <string id="taom_faction_dominion_of_mordor_strength_4" text="Тролли и чёрные uruки" />
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="Trolls and Black Uruks" />
     <string id="taom_faction_dominion_of_mordor_su_0_desc" text="Элитная ударная пехота из Барад-дура." />
     <string id="taom_faction_dominion_of_mordor_su_0_name" text="Чёрный урук" />
     <string id="taom_faction_dominion_of_mordor_su_1_desc" text="Осадный зверь, выращенный в ямах." />
@@ -2041,23 +1867,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Гоблинский" />
     <string id="taom_str_player_father_name.goblin" text="Нарзук" />
     <string id="taom_str_player_mother_name.goblin" text="Борлия" />
-    <string id="taom_bandit_goblin_name" text="Гоблинские Налётчики" />
-    <string id="taom_bandit_goblin_m1" text="Больг" />
-    <string id="taom_bandit_goblin_m2" text="Язнег" />
-    <string id="taom_bandit_goblin_m3" text="Фимбул" />
-    <string id="taom_bandit_goblin_m4" text="Нарзуг" />
-    <string id="taom_bandit_goblin_m5" text="Горбаг" />
-    <string id="taom_bandit_goblin_m6" text="Маухур" />
-    <string id="taom_bandit_goblin_m7" text="Снага" />
-    <string id="taom_bandit_goblin_m8" text="Уфтак" />
-    <string id="taom_bandit_goblin_m9" text="Радбуг" />
-    <string id="taom_bandit_goblin_m10" text="Лугдуш" />
-    <string id="taom_bandit_goblin_f1" text="Скарра" />
-    <string id="taom_bandit_goblin_f2" text="Ворга" />
-    <string id="taom_bandit_goblin_f3" text="Мазра" />
-    <string id="taom_bandit_goblin_f4" text="Гришта" />
-    <string id="taom_bandit_goblin_f5" text="Нарзга" />
-    <string id="taom_hideout_desc_goblin" text="Под скалами Высокого Перевала вы находите зловонное логово гоблинов, вырытое глубоко в голой скале." />
     <string id="taom_str_faction_official.mistymountainorcs" text="вождь Мглистых гор" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="предводительница Мглистых гор" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Военачальник" />
@@ -2075,30 +1884,11 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Орочий" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Нарзук" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Борлия" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Орочьи налётчики" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Болг" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Язнег" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Фимбул" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Нарзуг" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Горбаг" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Маухур" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Снага" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Уфтак" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Радбуг" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Лугдуш" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Скарра" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Ворга" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Мазра" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Гришта" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Нарзга" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Под скалами Мглистых гор вы находите мерзкое логово орков, вырытое в голой скале." />
     <string id="taom_bld_stall_title" text="TAOM: загрузка последней битвы могла не завершиться" />
     <string id="taom_bld_stall_dismiss" text="Закрыть" />
     <string id="taom_bld_stall_openfolder" text="Открыть папку с логами" />
     <string id="taom_settlement_food_adjustment" text="Еда поселения (TAOM)" />
     <string id="taom_recruit_needs_resource" text="Требуется {AMOUNT} {RESOURCE}" />
-    <string id="LjUhEJxz" text="Караван {OWNER.NAME}" />
-    <string id="l4pRw7pO" text="Вооружённый караван {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} воинов дезертировало — они отказываются служить лорду противоположной стороны." />
     <string id="taom_troop_weight_size" text="Тяжёлые воины" />
     <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />
@@ -2266,7 +2056,7 @@
     <string id="taom_feat_dg_ncta" text="Тёмные кузницы" />
     <string id="taom_feat_dg_ncta_desc" text="+1 знатный ремесленник в городах." />
     <string id="taom_feat_dg_nctg" text="Капитаны тени" />
-    <string id="taom_feat_dg_nctg_desc" text="+13 знатных главарей банд в городах (центр тёмного command Дол Гулдура)." />
+    <string id="taom_feat_dg_nctg_desc" text="+13 gang-leader notables in towns (Dol Guldur's shadow command center)." />
     <string id="taom_feat_dg_ncv" text="Скрытые лачуги" />
     <string id="taom_feat_dg_ncv_desc" text="Количество знатных людей в деревнях увеличено на 10%." />
     <string id="taom_feat_gon_gw" text="Стража Башни" />
@@ -2668,9 +2458,46 @@
     <string id="taom_bc_advice_keep" text="Keep mine" />
     <string id="taom_bc_advice_done" text="Battle settings saved." />
     <string id="taom_bc_advice_failed" text="Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
+    <string id="taom_bc_apply_failed" text="[TAOM] Battle settings could not be applied: {ERROR}" />
     <string id="taom_cheat_screen_guard_notice" text="TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
     <string id="taom_texture_advice_title" text="TAOM: memory advice" />
     <string id="taom_texture_advice_body" text="This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />
     <string id="taom_texture_advice_ok" text="Understood" />
+    <string id="taom_enlist_not_by_messenger" text="Swear service in person, not through a messenger." />
+    <string id="taom_tavern_drink_default" text="a mug of ale" />
+    <string id="taom_tavern_food_default" text="a bowl of stew" />
+    <string id="taom_str_liege_title.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title_female.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title_female.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title.dolguldur" text="Dread-Lord of Dol Guldur" />
+    <string id="taom_str_liege_title_female.dolguldur" text="Dread-Lady of Dol Guldur" />
+    <string id="taom_str_liege_title.erebor" text="King under the Mountain" />
+    <string id="taom_str_liege_title_female.erebor" text="Queen under the Mountain" />
+    <string id="taom_str_liege_title.gondor" text="Lord of Gondor" />
+    <string id="taom_str_liege_title_female.gondor" text="Lady of Gondor" />
+    <string id="taom_str_liege_title.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title_female.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title_female.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title.isengard" text="Lord of Isengard" />
+    <string id="taom_str_liege_title_female.isengard" text="Lady of Isengard" />
+    <string id="taom_str_liege_title.lindon" text="Lord of the Havens" />
+    <string id="taom_str_liege_title_female.lindon" text="Lady of the Havens" />
+    <string id="taom_str_liege_title.lothlorien" text="Lord of the Galadhrim" />
+    <string id="taom_str_liege_title_female.lothlorien" text="Lady of the Galadhrim" />
+    <string id="taom_str_liege_title.mirkwood" text="Elvenking of Mirkwood" />
+    <string id="taom_str_liege_title_female.mirkwood" text="Elvenqueen of Mirkwood" />
+    <string id="taom_str_liege_title.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title_female.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title.mordor" text="Dark Lord of Mordor" />
+    <string id="taom_str_liege_title_female.mordor" text="Dark Lady of Mordor" />
+    <string id="taom_str_liege_title.rivendell" text="Lord of Imladris" />
+    <string id="taom_str_liege_title_female.rivendell" text="Lady of Imladris" />
+    <string id="taom_str_liege_title.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title_female.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title.umbar" text="Corsair King of Umbar" />
+    <string id="taom_str_liege_title_female.umbar" text="Corsair Queen of Umbar" />
+    <string id="taom_str_become_king_empire" text="On {DAY_OF_YEAR}, {YEAR}, {KING_NAME} was hailed as {?IS_KING_MALE}Brenin{?}Brenhines{\?} of Dunland." />
   </strings>
 </base>

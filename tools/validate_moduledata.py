@@ -23,6 +23,10 @@ Checks (each maps to a recurring TAOM bug class):
   INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
   BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
   BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
+  BROKEN_FACTION_REF         Faction.X (settlement owner=, Hero faction=) names a clan no
+                             <Faction id> defines -> the object loads ownerless (clans.xml plus
+                             vanilla spclans.xml, minus the rows spclans.xslt strips;
+                             Faction.neutral is allowed; needs the install)
   MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
   MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
@@ -31,35 +35,74 @@ Checks (each maps to a recurring TAOM bug class):
                              live install does not define (warning; needs the install;
                              the generator list and the walk live in
                              check_generator_item_refs.py)
+  MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
+                             collision body names a PhysicsShape no loaded tpac ships.
+                             PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
+                             the #352 / #599 infinite mission load (needs the install;
+                             the tpac scan lives in validate_mesh_refs.py)
+  MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
+  COLLISION_BODY_BORROWED    a weapon or crafting piece whose body_name is another kit's
+                             bo_<mesh> twin: it resolves, on art the item does not own
+                             (#633; needs the install; reuses validate_mesh_refs.py)
+  SCHEMA_INVALID             a file the repo module registers breaks the engine's own XSD
+                             for its id, or a SubModule.xml registration loads nothing. The
+                             engine only logs the former and loads the file anyway (repo
+                             module only; the XSD layer lives in validate_xml_schemas.py;
+                             one warning when lxml or <game>/XmlSchemas is absent)
+  ITEM_SLOT_REJECTED         an equipment row whose item type the engine will not put in that
+                             slot: Equipment.DeserializeNode asserts and leaves it empty, so
+                             the troop never wears the item (#729; needs the install)
+  TROOP_ID_REMOVED           a troop id in tools/shipped_troop_ids.txt that no troops/troops_*.xml
+                             defines: a save holding it keeps a hollow CharacterObject (#670)
+  INCONSISTENT_WEAPON_SLOT   a non-hero troop whose battle sets disagree: a launcher in a slot of
+                             some sets only, or no weapon slot filled in every set (warning)
+  TOWNSFOLK_WITHOUT_BATTLE_ROSTER  a characters/npcs_*.xml character with civilian rosters only:
+                             it stands naked in the arena stands (#295, warning)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
   python tools/validate_moduledata.py --game-modules "E:/.../Modules"
 
-Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
+Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), 2 for bad input (no
+install), 3 when the validator itself crashed (the traceback is on stderr), else 0.
 """
 import argparse
 import json
 import os
+import re
 import sys
+import traceback
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import taom_schema as ts
-# Aliased: main() binds a local `game_modules`, which would shadow the import.
-from _gamedir import game_modules as resolve_game_modules
+# A crash here happens before entry() can catch it, and Python would exit 1, the "ERROR findings"
+# code. Run as a script, it exits 3 like any other crash (see entry()); imported, it raises as usual.
+try:
+    import taom_schema as ts
+    # Aliased: main() binds a local `game_modules`, which would shadow the import.
+    from _gamedir import game_modules as resolve_game_modules
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
-SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    REPO_ROOT = Path(__file__).resolve().parent.parent
+    MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+    SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
 
-# The commit hook runs this with no --game-modules, so the default is what it
-# gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
-# while the hook still saw PASS (#404).
-DEFAULT_GAME_MODULES = resolve_game_modules(
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-)
+    # The commit hook runs this with no --game-modules, so the default is what it
+    # gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
+    # while the hook still saw PASS (#404).
+    DEFAULT_GAME_MODULES = resolve_game_modules(
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+    )
+except Exception:  # noqa: BLE001 - a crash is reported, never mistaken for a finding
+    if __name__ != "__main__":
+        raise
+    traceback.print_exc()
+    print("ERROR: tools/validate_moduledata.py crashed while loading (traceback above); no verdict was "
+          "reached, exit 3.", file=sys.stderr)
+    sys.exit(3)
 
 
 # TAOM's data lives in three modules and two of them are outside this repo and
@@ -132,6 +175,351 @@ def generator_item_ref_issues(items: set) -> list:
     return issues
 
 
+BODY_CODE = "MISSING_COLLISION_BODY"
+MESH_CODE = "MISSING_VISUAL_MESH"
+# Every module whose packs the client loads for item art; which tree of each the
+# engine reads is validate_mesh_refs.tpac_paths_for_modules's to decide.
+_ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
+
+
+def _loaded_tpacs(game_modules: Path) -> list:
+    import validate_mesh_refs as vmr
+    return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
+
+
+def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
+    """ERROR per collision-body ref no loaded tpac ships, WARNING per visual mesh.
+
+    A body the engine cannot resolve is not a warning class: `PreloadHelper.
+    WaitForMeshesToBeLoaded` (TaleWorlds.MountAndBlade.View) counts every
+    registered body name that `PhysicsShape.GetFromResource` returns null for,
+    on every pass of a do/while with no exit, so one bad `body_name` on any item
+    a mission preloads (every participant's kit, the player's first) spins the
+    game thread forever. Two body_name typos did it in #352; the 2026-09-11 art
+    drop that renamed the elven bows did it again in #599, and the elf start
+    hung for two days because the only gate for it was a separate command
+    nobody ran after the sync. This pass makes it part of the validator the
+    commit hook runs (wired into main() by #622; the MCP tool and /verify do not
+    run it yet, #623).
+
+    validate_mesh_refs.py owns the ref extraction and the tpac TOC scan (Tier B
+    visual meshes, Tier C PhysicsShapes); this only turns its findings into
+    issues, over the Armory's WHOLE ModuleData plus this repo's (the #352 scope
+    lesson: crafting pieces live one level above LOTRLOME_items/). Its
+    KNOWN_DEAD_MESH allowlist and UNVERIFIED downgrades stay in that tool.
+
+    Skipped, never faked, without the install; and a run that found no packs to
+    scan is reported as a finding, because "every body missing" filtered to
+    nothing would read exactly like a clean run."""
+    import validate_mesh_refs as vmr
+    tpacs = _loaded_tpacs(game_modules)
+    if not tpacs:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
+                    f"collision bodies were NOT verified this run")]
+    try:
+        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+        if moduledata.exists():
+            refs += vmr.extract_refs(moduledata)
+        present = vmr.build_present_set(tpacs)
+        # A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        # parse can hide one. Byte-scanning all of them took 110-119 s (4,611 packs, 22.6 GiB),
+        # past the commit hook's 45 s bound, in exactly the #599 case this gate exists for.
+        unparsed = [Path(p) for p, _ in present.unparsed]
+        findings = vmr.classify(refs, present, None, scan_bodies=True, body_tpac_paths=unparsed)
+    except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"collision bodies were NOT verified this run: the scan raised "
+                    f"{type(exc).__name__}: {exc}")]
+    issues = []
+    for i in findings:
+        if i.code == "MISSING_BODY":
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=BODY_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. Every mission that preloads a carrier of this item spins "
+                        f"forever in PreloadHelper.WaitForMeshesToBeLoaded (#352, #599). Repoint the "
+                        f"ref to the art that ships; python tools/audit_armory_refs.py names the troops"))
+        elif i.code == "MISSING_MESH":
+            issues.append(ts.Issue(
+                severity=ts.Severity.WARNING, code=MESH_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. The item renders invisible; repoint the mesh to the art that ships"))
+    return issues
+
+
+BORROWED_BODY_CODE = "COLLISION_BODY_BORROWED"
+_SHIELD_ATTRS = {"shield_body_name"}
+# Body sharing that is design, not a borrow. Each entry: (borrower kit regex, owner kit regex,
+# reason). A kit is the first two tokens of a name after its sm_/wm_/bo_/bo_cap_ prefix.
+_SHARED_BODY_BY_DESIGN = (
+    (re.compile(r"^(?:rh_drag|dg_khml|rh_loke)$"), re.compile(r"^(?:rh_drag|dg_khml|rh_loke)$"),
+     "Dragon and Khamul are re-textured Loke geometry; the three Rhun kits share bodies "
+     "(Mike, 2026-09-21)"),
+)
+_ART_PREFIX_RE = re.compile(r"^(?:bo_cap_|bo_)?(?:sm_|wm_)?")
+
+
+def _kit(name: str) -> str:
+    """The kit a mesh or body belongs to: its first two name tokens after the art prefixes.
+    `sm_rh_drag_sword_blade_a` -> `rh_drag`, `bo_wm_elven_bow_a03` -> `elven_bow`,
+    `wm_rivendell_sword_a01_silver_blade` -> `rivendell_sword`."""
+    return "_".join(_ART_PREFIX_RE.sub("", name).split("_")[:2])
+
+
+def _twin_owner(body: str, meshes: set):
+    """The mesh this body is the twin of, by the `bo_<mesh>` / `bo_cap_<mesh>` convention, or
+    None when no shipped mesh matches (a body under a variant name is nobody's twin)."""
+    for prefix in ("bo_cap_", "bo_"):
+        if body.startswith(prefix) and body[len(prefix):] in meshes:
+            return body[len(prefix):]
+    return None
+
+
+def borrowed_body_issues(game_modules: Path, moduledata: Path) -> list:
+    """ERROR per weapon or crafting piece whose collision body is another kit's twin (#633).
+
+    The convention (docs/ai-includes/weapon-creation-workflow.md, Step D) is that a weapon body
+    is `bo_` + the exact mesh id, authored in the mesh's own FBX. That doc also sanctions
+    borrowing a same-shaped body from elsewhere as a placeholder until the artist delivers.
+    Three Rhun longbow meshes shipped on that placeholder for good, all carrying the elven bow's
+    `bo_wm_elven_bow_a03`, and no gate noticed because the borrowed name resolves: every "does it
+    resolve" check answers yes for a name that ships anywhere. This asks the other question: is
+    the body this mesh's own?
+
+    A borrow is a body that is provably ANOTHER mesh's twin: `bo_<M2>` or `bo_cap_<M2>` for a
+    shipped mesh M2 that is not this item's mesh. A body under a variant name
+    (`bo_uruk_halberd_blade_a1` for `sm_uruk_halberd_blade_a1`) is nobody's twin and passes.
+    Sharing a body WITHIN a kit is design, not a borrow: the ruby and topaz Aranruth blades, the
+    silver and black Rivendell swords, the `_a2` Erebor axe on `_a`'s body, all share one
+    geometry, so a borrow from the same kit passes, and `_SHARED_BODY_BY_DESIGN` names the
+    cross-kit shares that are authorised (Dragon and Khamul are re-textured Loke). Vanilla bodies
+    are exempt (Native is always resident, and vanilla art is never a placeholder for ours);
+    shields are exempt (they carry `bo_cap_*` in `body_name` and share capsules by convention,
+    docs/modding/items-shields.md); a body no pack ships is left to MISSING_COLLISION_BODY.
+
+    Measured 2026-09-21 on the live install after the #633 repair: 0 items, 58 crafting pieces
+    borrow, 38 of them the Rhun family and 20 within one kit, so 0 findings. The nine #633 items
+    (three donors, six generated clones) fire under this rule. Why the player's build hung is a
+    separate, open question: the cooked release on this machine ships the borrowed body in its
+    pack0, so the borrow resolved there too, and the mechanism this gate was first written on (a
+    body cooked into a different AssetPackage than its mesh) is false: the cook puts every body in
+    pack0/pack1 and every mesh elsewhere, for the working items as much as the broken ones.
+
+    Skipped, never faked, without the install. Reuses validate_mesh_refs.py for the ref
+    extraction and the TOC scan, like missing_collision_body_issues."""
+    import validate_mesh_refs as vmr
+    tpacs = vmr.module_tpacs(Path(game_modules) / "LOTRLOME_Armory", "LOTRLOME_Armory")
+    if not tpacs:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",
+            message=f"no LOTRLOME_Armory *.tpac found under {game_modules}; collision-body "
+                    f"ownership was NOT verified this run")]
+    try:
+        present = vmr.build_present_set(tpacs)
+        meshes = {n.lower() for n in present.metameshes}
+        bodies = {n.lower() for n in present.physicsshapes}
+        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+        if moduledata.exists():
+            refs += vmr.extract_refs(moduledata)
+    except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",
+            message=f"collision-body ownership was NOT verified this run: the scan raised "
+                    f"{type(exc).__name__}: {exc}")]
+
+    primary: dict = {}
+    shields: set = set()
+    for r in refs:
+        key = (r.file, r.item_id)
+        if r.kind == "visual_mesh" and r.attr == "mesh":
+            primary[key] = r.name.lower()
+        if r.attr in _SHIELD_ATTRS:
+            shields.add(key)
+
+    issues = []
+    for r in refs:
+        # holster_body_name is a third body the engine polls; it is not paired with a mesh
+        # today (no ref of it borrows, measured 2026-09-21) and stays MISSING_COLLISION_BODY's.
+        if r.attr != "body_name":
+            continue
+        key = (r.file, r.item_id)
+        if key in shields:
+            continue
+        body = r.name.lower()
+        # Not an Armory body: vanilla (always resident, never our placeholder) or missing.
+        if body not in bodies:
+            continue
+        mesh = primary.get(key)
+        if not mesh or body in (f"bo_{mesh}", f"bo_cap_{mesh}"):
+            continue
+        owner = _twin_owner(body, meshes)
+        if owner is None or owner == mesh or _kit(owner) == _kit(mesh):
+            continue
+        if any(b.match(_kit(mesh)) and o.match(_kit(owner)) for b, o, _ in _SHARED_BODY_BY_DESIGN):
+            continue
+        issues.append(ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file=r.file, line=r.line,
+            entry_id=r.item_id,
+            message=f"collision body {r.name!r} is {owner!r}'s twin, borrowed onto mesh {mesh!r} "
+                    f"from another kit. It loads, as that other weapon's hull, and it is tied to "
+                    f"art that can be renamed or retired without this item (#599, #633). Author "
+                    f"bo_{mesh} into the mesh's own FBX (tools/blender/add_collision_body.py, "
+                    f"then a Modding Kit import), or add the pair to _SHARED_BODY_BY_DESIGN "
+                    f"with a reason"))
+    return issues
+
+
+def module_vintage(root) -> str:
+    """`<module>: <Version> (newest ModuleData file <date>)`. A stale copy reads exactly like a repo
+    defect (XML-DATA-02), so every sweep says what it swept. Never raises: this is a header."""
+    root = Path(root)
+    try:
+        version = ET.parse(root.parent / "SubModule.xml").getroot().find("Version").get("value")
+    except (OSError, ET.ParseError, ValueError, AttributeError):
+        version = "version unknown"
+    newest = max((p.stat().st_mtime for p in root.rglob("*.xml")), default=None)
+    stamp = datetime.fromtimestamp(newest, timezone.utc).date().isoformat() if newest else "no files"
+    return f"{root.parent.name}: {version} (newest ModuleData file {stamp})"
+
+
+SCHEMA_CODE = "SCHEMA_INVALID"
+
+
+def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
+    """ERROR per engine-XSD violation in a file the module registers, and per registration
+    that loads nothing; ONE warning when the layer could not be checked.
+
+    Every other pass here reads refs and TAOM's own JSON schemas, never the XSD the
+    engine loads a file with, so a clan with no `initial_home_settlement` passed them all
+    (`clan_umbar_3`, 2026-06-22). The engine validates, but only logs a failure and loads
+    the file anyway. validate_xml_schemas.py owns the engine's file resolution and schema
+    choice; this only turns its report into issues. Scope is the module given (the repo's
+    Main/_Module), like the other schema passes: the live modules are unversioned and
+    their known findings are not this repo's to fix.
+
+    Skipped, never faked: without lxml, the engine's XmlSchemas folder or a SubModule.xml
+    the pass reports that the layer was NOT verified, because silence here would read
+    exactly like a clean run."""
+    import validate_xml_schemas as vx
+    module_dir = Path(module_dir)
+    submodule = module_dir / "SubModule.xml"
+    if not vx.HAVE_LXML:
+        unverified = "lxml is not installed"
+    elif not Path(game_schemas).is_dir():
+        unverified = f"the engine schema folder {game_schemas} was not found"
+    elif not submodule.is_file():
+        unverified = f"there is no {submodule}"
+    else:
+        unverified = None
+    if unverified:
+        return [ts.Issue(
+            severity=ts.Severity.WARNING, code=SCHEMA_CODE, file="", line=0, entry_id="",
+            message=f"{unverified}, so the engine-XSD layer (tools/validate_xml_schemas.py) "
+                    f"was NOT verified this run")]
+    try:
+        report = vx.run([module_dir], Path(game_schemas))
+    except ET.ParseError as exc:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=exc.position[0],
+            entry_id="", message=f"SubModule.xml is not well-formed ({exc}); the engine throws on "
+                                 f"it at startup")]
+
+    moduledata = module_dir / "ModuleData"
+    issues = []
+    for rec in report["failed"]:
+        path = Path(rec["file"])
+        rel = path.relative_to(moduledata).as_posix() if moduledata in path.parents else str(path)
+        # The rerun hint must work from the repo root, where the hook and a person run it.
+        hint = path.relative_to(REPO_ROOT).as_posix() if REPO_ROOT in path.parents else path.as_posix()
+        for error in rec["errors"]:
+            m = re.match(r"L(\d+): (.*)", error, flags=re.S)
+            line, text = (int(m.group(1)), m.group(2)) if m else (0, error)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SCHEMA_CODE, file=rel, line=line, entry_id=rec["id"],
+                message=f"{text} (engine schema {Path(rec['schema']).name}; the engine only logs "
+                        f"this and loads the file anyway). python tools/validate_xml_schemas.py {hint}"))
+    for text in report["missing"]:
+        issues.append(ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=0, entry_id="",
+            message=text))
+    return issues
+
+
+SLOT_CODE = "ITEM_SLOT_REJECTED"
+_SLOT_MODULES = ("Native", "SandBoxCore", "SandBox", "LOTRLOME_Armory", "TAOM")
+
+
+def slot_rejection_issues(game_modules, moduledata) -> list:
+    """ERROR per troop equipment row whose item type the engine will not put in that slot (#729).
+
+    `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes; otherwise it
+    asserts and the slot stays empty, so a BodyArmor written to `slot="Cape"` never reaches the
+    troop. No XSD catches it (`slot` is a plain string) and no ref is broken. The rule, the load
+    order and the roster and troop-level override handling are audit_battle_equipment_memory's;
+    this only turns its refusals into issues. Civilian sets count: the engine refuses those rows too.
+
+    The modules load in the audit's order, with TAOM taken from the repo (`moduledata.parent`),
+    not the installed copy. A module that cannot be read is one WARNING, never a silent pass,
+    because an item no loaded module defines is skipped and would hide its refusals."""
+    import audit_battle_equipment_memory as abem
+    game_modules = Path(game_modules)
+    folders = [(name, moduledata.parent if name == "TAOM" else game_modules / name)
+               for name in _SLOT_MODULES]
+    defs = abem.load_definitions(folders)
+    issues = []
+    missing = [name for name, folder in folders if not Path(folder).is_dir()]
+    if missing:
+        issues.append(ts.Issue(
+            severity=ts.Severity.WARNING, code=SLOT_CODE, file="", line=0, entry_id="",
+            message=f"slot fit was NOT verified against {', '.join(missing)}: module folder not "
+                    f"found under {game_modules}; items only that module defines are skipped"))
+    for char in defs.characters.values():
+        for slot, item_id in abem.slot_rejections(char, defs, include_civilian=True):
+            kind = abem.item_type(defs.items[item_id])
+            fix = abem.ARMOUR_ITEM_SLOTS.get(kind)
+            if fix:
+                target = f"{fix} slot"
+            elif defs.items[item_id].extra_slot_only:
+                target = f"the {abem.EXTRA_SLOT} slot"
+            else:
+                target = f"a weapon slot ({abem.WEAPON_SLOTS[0]} to {abem.WEAPON_SLOTS[-1]})"
+            rel = char.file.split("/", 1)
+            path = (f"Main/_Module/ModuleData/{rel[1]}" if char.module == "TAOM" and len(rel) == 2
+                    else char.file)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SLOT_CODE, file=path, line=0, entry_id=char.id,
+                message=f"the engine refuses a {kind} item ({item_id}) in slot {slot} and leaves the "
+                        f"slot empty, so {char.id} never wears it; move it to the {target}"))
+    return issues
+
+
+def regenerate_shipped_troop_ids(tag: str = "") -> int:
+    """Rewrite tools/shipped_troop_ids.txt from a release tag's or a branch's troop files, read with
+    `git show` so today's tree never leaks in. No tag means the newest tag reachable from HEAD. The
+    [exceptions] section is kept as it stands."""
+    import subprocess
+
+    def git(*args):
+        return subprocess.run(["git", "-C", str(REPO_ROOT), *args], capture_output=True, check=True).stdout
+
+    tag = tag or git("describe", "--tags", "--abbrev=0").decode("utf-8").strip()
+    folder = "Main/_Module/ModuleData/troops/"
+    names = [n for n in git("ls-tree", "--name-only", tag, folder).decode("utf-8").split()
+             if re.search(r"/troops_[^/]*\.xml$", n)]
+    ids = set()
+    for name in names:
+        text = re.sub(r"<!--.*?-->", "", git("show", f"{tag}:{name}").decode("utf-8-sig", "ignore"), flags=re.S)
+        ids |= set(re.findall(r'<NPCCharacter\b[^>]*?\bid="([^"]+)"', text))
+    if not ids:
+        print(f"ERROR: no troop ids found in {tag}:{folder}", file=sys.stderr)
+        return 2
+    exceptions = ts.read_shipped_troop_ids(SHIPPED_TROOP_IDS)[1] if SHIPPED_TROOP_IDS.is_file() else {}
+    ts.write_shipped_troop_ids(SHIPPED_TROOP_IDS, tag, ids, exceptions)
+    print(f"Wrote {len(ids)} troop ids from {tag} ({len(names)} files) to {SHIPPED_TROOP_IDS}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -145,7 +533,14 @@ def main() -> int:
                     help="Exit non-zero if any WARNING is found, not just ERROR")
     ap.add_argument("--code", action="append", default=None,
                     help="Only report this issue code (repeatable)")
+    ap.add_argument("--regenerate-shipped-troop-ids", nargs="?", const="", metavar="TAG", default=None,
+                    help="Rewrite tools/shipped_troop_ids.txt (the TROOP_ID_REMOVED baseline) from a "
+                         "release tag's or branch's troop files (default: the newest tag reachable "
+                         "from HEAD), then exit")
     args = ap.parse_args()
+
+    if args.regenerate_shipped_troop_ids is not None:
+        return regenerate_shipped_troop_ids(args.regenerate_shipped_troop_ids)
 
     moduledata = Path(args.moduledata)
     game_modules = Path(args.game_modules)
@@ -157,7 +552,9 @@ def main() -> int:
         # Per environment-failures.md: report, don't guess. The item/culture
         # registry will be TAOM-only, so external refs will look broken.
         print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
-              f"         item / troop / party-template ref checks will be SKIPPED (need the\n"
+              f"         item / troop / party-template / body-property / faction ref checks\n"
+              f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
+              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF) will be SKIPPED (need the\n"
               f"         game install for a complete registry). Culture-validity, duplicate-id,\n"
               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
               f"         pass --game-modules <path> to enable the skipped checks.\n"
@@ -174,13 +571,17 @@ def main() -> int:
           f"{len(registries.npccharacters):,} NPCCharacters, "
           f"{len(registries.cultures)} cultures, "
           f"{len(registries.party_templates):,} party templates, "
-          f"{len(registries.body_properties)} body properties", file=sys.stderr)
+          f"{len(registries.body_properties)} body properties, "
+          f"{len(registries.factions)} clans", file=sys.stderr)
 
     extra_roots = build_extra_ref_roots(game_modules)
 
-    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
+    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
+    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
+    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
+                             shipped_troop_ids_file=shipped_ids)
     for root in validator.extra_ref_roots:
-        print(f"Also sweeping refs in: {root}", file=sys.stderr)
+        print(f"Also sweeping refs in: {root} [{module_vintage(root)}]", file=sys.stderr)
     # Never let a vanished root pass as a clean run. Silence here would revert the
     # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
     # 33 dangling refs the engine reported on 2026-08-02.
@@ -192,12 +593,23 @@ def main() -> int:
         print(f"WARNING: {warning}", file=sys.stderr)
 
     issues = validator.run()
+    # The engine's XmlSchemas folder sits beside Modules in the install root.
+    issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
-        issues.sort(key=lambda i: i.sort_key())
+        # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
+        # commit hook's --code line for it blocked nothing.
+        issues += missing_collision_body_issues(game_modules, moduledata)
+        issues += borrowed_body_issues(game_modules, moduledata)
+        issues += slot_rejection_issues(game_modules, moduledata)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
+        print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
+              f"         live install's tpacs.", file=sys.stderr)
+        print(f"WARNING: {SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
+              f"         only the live install has.", file=sys.stderr)
+    issues.sort(key=lambda i: i.sort_key())
 
     if args.code:
         wanted = set(args.code)
@@ -226,5 +638,19 @@ def main() -> int:
     return 0
 
 
+def entry() -> int:
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code
+    that means "ERROR findings", so the commit hook would block a commit over a validator bug and
+    show the author a bare status. 3 is its own code: the traceback goes to stderr and the hook
+    fails open on it. argparse's SystemExit passes through."""
+    try:
+        return main()
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for a finding
+        traceback.print_exc()
+        print("ERROR: tools/validate_moduledata.py crashed (traceback above); no verdict was reached, "
+              "exit 3.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(entry())

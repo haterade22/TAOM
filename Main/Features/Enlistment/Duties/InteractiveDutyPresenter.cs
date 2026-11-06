@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Content;
@@ -15,23 +14,9 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
     /// <summary>Incident pay-delay relief: release min(arrears, max(floor, arrears/2)).</summary>
     private const int DeferredReleaseFloor = 8;
 
-    private static readonly Dictionary<string, (string Title, string Body)> DutyCopy = new(StringComparer.Ordinal)
-    {
-        ["night_patrol"] = ("Night Watch", "The sergeant needs someone to walk the night rounds before the watch changes."),
-        ["treat_wounded"] = ("The Wounded Need Tending", "Several wounded need attention before the surgeon reaches them all."),
-        ["train_recruits"] = ("Drill the Recruits", "A knot of green recruits stands idle, waiting for someone to put them through their paces."),
-        ["equipment_check"] = ("Kit Inspection", "The quartermaster wants every soldier's kit checked before the muster."),
-        ["inspect_defenses"] = ("Walk the Works", "Someone needs to walk the defenses and report back on their condition."),
-        ["gate_watch"] = ("Gate Duty", "The gate needs a steady pair of eyes on who comes and goes."),
-        ["quartermaster_shortage"] = ("Short on Stores", "The quartermaster is short on supplies and needs a hand sorting it out."),
-        ["lead_patrol"] = ("Take the Patrol", "The next patrol needs someone to lead it out and bring it back whole."),
-        ["coordinate_supply"] = ("Supply Lines", "The wagons are backed up and someone needs to get them moving again."),
-        ["command_squad"] = ("Command a Squad", "A squad needs a steady hand to drill and ready them for the line."),
-        ["strategic_planning"] = ("Plan the Route", "The officers are arguing over the next march and want another voice at the table."),
-        ["pay_delay"] = ("Pay Delayed Again", "Word spreads that pay is late again, and the men are grumbling."),
-        ["short_rations"] = ("Short Rations", "The stores are thin tonight and there isn't enough to go around."),
-        ["camp_discipline"] = ("Trouble in Camp", "A shouting match is drawing a crowd before it turns into something worse."),
-    };
+    private const string GenericTitle = "A task for the company";
+    private const string GenericBody = "Something needs attention.";
+    private const string GenericOption = "Proceed";
 
     private readonly IInquiryAdapter _inquiry;
     private readonly ISkillCheckService _skillCheck;
@@ -64,12 +49,7 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         if (duty == null)
             return;
 
-        var (title, body) = CopyFor(duty.Id);
-        _inquiry.ShowTwoOptionInquiry(
-            KeyFor(duty.Id, "title"), title,
-            KeyFor(duty.Id, "body"), body,
-            KeyFor(duty.Id, "opta"), Humanize(duty.OptionA?.Key),
-            KeyFor(duty.Id, "optb"), Humanize(duty.OptionB?.Key),
+        ShowInquiry(duty.Id, duty.Title, duty.Body, duty.OptionA, duty.OptionB,
             () => ResolveOption(duty.Id, duty.OptionA, progress, trust),
             () => ResolveOption(duty.Id, duty.OptionB, progress, trust));
     }
@@ -79,12 +59,7 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         if (incident == null)
             return;
 
-        var (title, body) = CopyFor(incident.Id);
-        _inquiry.ShowTwoOptionInquiry(
-            KeyFor(incident.Id, "title"), title,
-            KeyFor(incident.Id, "body"), body,
-            KeyFor(incident.Id, "opta"), Humanize(incident.OptionA?.Key),
-            KeyFor(incident.Id, "optb"), Humanize(incident.OptionB?.Key),
+        ShowInquiry(incident.Id, incident.Title, incident.Body, incident.OptionA, incident.OptionB,
             () => ResolveIncidentOption(incident, incident.OptionA, progress, trust),
             () => ResolveIncidentOption(incident, incident.OptionB, progress, trust));
     }
@@ -148,39 +123,25 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         var record = _contentStore.Record;
         if (passed)
             record.DutySuccesses++;
-        else
-            record.DutyFailures++;
 
         return passed;
     }
 
     private void ShowResultToast(string sourceId, bool passed)
     {
-        var key = "taom_enlist_duty_" + sourceId + "_" + (passed ? "success" : "failure");
-        var fallback = passed
-            ? "It went well."
-            : "It didn't go as planned.";
-        _inquiry.ShowMessage(key, fallback, null, null);
+        var key = DutyText.KeyFor(sourceId, passed ? DutyText.SuccessSuffix : DutyText.FailureSuffix);
+        _inquiry.ShowMessage(key, passed ? DutyText.SharedSuccess : DutyText.SharedFailure, null, null);
     }
 
-    private static (string Title, string Body) CopyFor(string id)
+    private void ShowInquiry(
+        string id, string title, string body, DutyOptionSpec optionA, DutyOptionSpec optionB,
+        Action onOptionA, Action onOptionB)
     {
-        return DutyCopy.TryGetValue(id, out var copy) ? copy : ("Camp Business", "Something needs attention.");
-    }
-
-    private static string KeyFor(string id, string suffix) => "taom_enlist_duty_" + id + "_" + suffix;
-
-    private static string Humanize(string snakeCase)
-    {
-        if (string.IsNullOrEmpty(snakeCase))
-            return "Proceed";
-
-        var parts = snakeCase.Split('_');
-        for (var i = 0; i < parts.Length; i++)
-        {
-            if (parts[i].Length > 0)
-                parts[i] = char.ToUpperInvariant(parts[i][0]) + parts[i].Substring(1);
-        }
-        return string.Join(" ", parts);
+        _inquiry.ShowTwoOptionInquiry(
+            DutyText.KeyFor(id, DutyText.TitleSuffix), DutyText.English(title, id, DutyText.TitleSuffix, GenericTitle),
+            DutyText.KeyFor(id, DutyText.BodySuffix), DutyText.English(body, id, DutyText.BodySuffix, GenericBody),
+            DutyText.KeyFor(id, DutyText.OptionASuffix), DutyText.English(optionA?.Label, id, DutyText.OptionASuffix, GenericOption),
+            DutyText.KeyFor(id, DutyText.OptionBSuffix), DutyText.English(optionB?.Label, id, DutyText.OptionBSuffix, GenericOption),
+            onOptionA, onOptionB);
     }
 }

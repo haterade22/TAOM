@@ -455,7 +455,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                     && component.OrderId == order.OrderId)
                 {
                     _caravans[order.OrderId] = new CaravanTracker { Order = order, Party = survivor };
-                    PinAi(survivor); // AI pin does not survive a save round-trip
+                    PinAi(survivor); // the engine saves the pin (MobilePartyAi [SaveableProperty(11)]); idempotent belt
                     continue;
                 }
                 _logger.LogWarning(

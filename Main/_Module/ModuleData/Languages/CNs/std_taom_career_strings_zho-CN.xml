@@ -89,7 +89,7 @@
     <string id="taom_career_warg_scout" text="座狼斥候" />
     <string id="taom_career_warg_scout_desc" text="狡诈的强兽人骑手,骑乘迅捷座狼,在艾辛格大军前侦察并追杀逃亡的猎物。" />
     <string id="taom_career_cave_troll_master" text="洞穴巨魔大师" />
-    <string id="taom_career_cave_troll_master_desc" text="一位残暴的兽人酋长,在战斗中指挥洞穴巨魔,用鞭子和狡诈驱使它们前进。" />
+    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning." />
     <string id="taom_career_goblin_sniper" text="地精狙击手" />
     <string id="taom_career_goblin_sniper_desc" text="一名怀有恶意的地精射手,潜伏在山岩峭壁中,用毒镖和粗制弓箭狙杀目标。" />
     <string id="taom_career_warg_pack_leader" text="座狼群首领" />
@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="不朽守卫" />
     <string id="taom_ws_t3_a_p2_desc" text="守望永不终结。+9生命值。" />
     <string id="taom_ws_t3_a_p3" text="守备指挥官" />
-    <string id="taom_ws_t3_a_p3_desc" text="志愿者蜂拥加入你的守备队。+4队伍规模。" />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="守卫者的荣耀" />
     <string id="taom_ws_t3_a_p4_desc" text="防御战的胜利带来崇高荣誉。+12%战斗声望获取。" />
     <string id="taom_ws_t3_b_key" text="永远警惕" />

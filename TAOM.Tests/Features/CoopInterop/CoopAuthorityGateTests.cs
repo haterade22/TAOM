@@ -195,7 +195,8 @@ public class CoopAuthorityGateTests
         var settings = Substitute.For<IMessengerSettingsProvider>();
         var store = Substitute.For<IMessengerStateStore>();
         var sut = new MessengerCampaignBehavior(
-            Substitute.For<IMessengerService>(), store, settings, Substitute.For<IModLogger>(), Client());
+            Substitute.For<IMessengerService>(), store, settings, Substitute.For<IModLogger>(), Client(),
+            Substitute.For<IMessengerConversationState>());
 
         sut.OnHourlyTick();
 

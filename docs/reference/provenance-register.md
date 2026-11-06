@@ -58,24 +58,26 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
-| graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py` | cleared |
+| graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
 | BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll`; TAOM's own reflection calls `Disable()` on two ButterLib subsystems (interop-only): `Main/Features/CrashReport/Adapters/ButterLibExceptionHandlerAdapter.cs` `Main/Adapters/ButterLibDistanceMatrixAdapter.cs` | cleared |
-| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` | cleared |
+| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` and TAOM's own copy of `System.Runtime.CompilerServices.Unsafe.dll`, which the build writes into the install's `Modules/TAOM/bin/<platform>/` | cleared |
+| DryIoc (Maksim Volkau) | `DryIoc` `DryIoc.dll` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 4.8.8; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-11-05 | cleared |
+| Json.NET (James Newton-King) | `Newtonsoft.Json` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 13.0.3; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-11-05 | cleared |
 | Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
-| Yotthani VanillaTuning (shader-compile-notice) | `VanillaTuning` `HoN/VanillaTuning` `ShaderCompileNotice` | UNKNOWN (no licence file in `HoN/VanillaTuning`; shared with the maintainer by its author) | behavioural-port | `Main/Features/ShaderCompileNotice/**` | uncleared |
+| Yotthani VanillaTuning (shader-compile-notice) | `VanillaTuning` `HoN/VanillaTuning` `ShaderCompileNotice` | UNKNOWN when read (no licence file in `HoN/VanillaTuning` at `5bcffde3`, 2026-10-06; shared with the maintainer by its author). The row below records MIT from `1b9ce3ba`, one day later, so whether that clears this read is the maintainer's call; the upstream file is not on this machine to re-read | behavioural-port | `Main/Features/ShaderCompileNotice/**` | uncleared |
 | LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` `Main/Features/HeroRace/**` | cleared |
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/_Module/Prefabs/taom_howdah_agent.xml` | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
-| external developer drop | `Features_fixed` | UNKNOWN | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | uncleared |
+| Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
-| TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
+| Yotthani TransferbuttonMenu | `TransferbuttonMenu` `HoN/TransferbuttonMenu` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | behavioural-port | `Main/Features/QuickActions/**` | cleared |
 | ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
-| BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,SubModuleConstructionGuard,CollectAssemblyTypesShim}.cs` `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
+| BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,CollectAssemblyTypesShim}.cs` (`SubModuleConstructionGuard.cs` removed 2026-11, plan 137) `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
@@ -85,10 +87,15 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
-| Yotthani VanillaTuning | `VanillaTuning` `HoN/VanillaTuning` | MIT, (c) 2026 yotthani (`HoN/VanillaTuning/LICENSE`, since `1b9ce3ba`, 2026-10-07) | verbatim-port | `Main/Features/MissionStartGuard/**`; its adapter `Main/Adapters/{I,}MissionStartGuardAdapter.cs`; its tests `TAOM.Tests/Features/MissionStartGuard/**`; `Main/Features/SkeletonBuffer/**`, its adapters `Main/Adapters/{I,}SkeletonBufferMemoryAdapter.cs` `Main/Adapters/{I,}SkeletonBufferEngineAdapter.cs`, its tests `TAOM.Tests/Features/SkeletonBuffer/**`; `Main/Features/NameplateCull/**`, its adapter `Main/Adapters/{I,}NameplateCullAdapter.cs`, its tests `TAOM.Tests/Features/NameplateCull/**`; `Main/Features/MapViewRelease/**`, its adapter `Main/Adapters/{I,}MapViewReleaseAdapter.cs`, its tests `TAOM.Tests/Features/MapViewRelease/**` | cleared |
+| Yotthani VanillaTuning | `VanillaTuning` `HoN/VanillaTuning` | MIT, (c) 2026 yotthani (`HoN/VanillaTuning/LICENSE`, since `1b9ce3ba`, 2026-10-07, as recorded on the 1.5.x line; not re-read here, and the shader-compile-notice row above read the folder a day earlier, with no licence) | verbatim-port | `Main/Features/MissionStartGuard/**`; its adapter `Main/Adapters/{I,}MissionStartGuardAdapter.cs`; its tests `TAOM.Tests/Features/MissionStartGuard/**`; `Main/Features/SkeletonBuffer/**`, its adapters `Main/Adapters/{I,}SkeletonBufferMemoryAdapter.cs` `Main/Adapters/{I,}SkeletonBufferEngineAdapter.cs`, its tests `TAOM.Tests/Features/SkeletonBuffer/**`; `Main/Features/NameplateCull/**`, its adapter `Main/Adapters/{I,}NameplateCullAdapter.cs`, its tests `TAOM.Tests/Features/NameplateCull/**`; `Main/Features/MapViewRelease/**`, its adapter `Main/Adapters/{I,}MapViewReleaseAdapter.cs`, its tests `TAOM.Tests/Features/MapViewRelease/**` | cleared |
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
 
-| Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117) | cleared |
+| Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117; plan 144 adds tpac-static-prop-authoring.md and the engine/ save-system, agent-spawn, lifecycle, submodule, gauntletui, campaign-tick and formations pages; the measurement cited in docs/features/butter-lib-distance-matrix.md) | cleared |
+| Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
+| Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
+| TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
+| Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and, once the `/release` edits land, `/release` Phase 1 (owed in-game checks) and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -163,6 +170,8 @@ Upstream: https://github.com/szszss/TpacTool · MIT.
 The `.tpac` binary format was reverse-engineered from decompiling `TpacTool.Lib.dll`. MIT permits
 this; the attribution is at [`docs/tools/spider-skeleton-tpac-tools.md:378`](../tools/spider-skeleton-tpac-tools.md).
 
+Since 2026-10-14 the PowerShell tpac tools load `TpacTool.Lib.dll` from ShortJake's fork, https://github.com/ShortJake/TpacTool (MIT, a fork of hunharibo/TpacTool), release v0.5.1, through `-TpacToolBin`. That is `interop-only`: the library is loaded at run time on the desktop, never shipped, and no code is derived from it.
+
 ### NVIDIA SkillSpector
 
 Upstream: https://github.com/NVIDIA/SkillSpector · Apache-2.0.
@@ -195,17 +204,17 @@ isolated `uv` venv (pinned Python 3.12, because the `leiden` extra pulls in `gra
 measured against TAOM, including a full multimodal pass at 18.2M input tokens. Nothing was adopted,
 and no repo code or config changed.
 
-**It remains installed on the maintainer's machine and wired into nothing:** no hook, no CI job, no
-MCP registration, and no `graphify * install` subcommand was ever run (those write into CLAUDE.md,
-AGENTS.md and a PreToolUse hook in `.claude/settings.json`; note `config-protection.sh` guards only
-`Directory.Build.props` and the two settings files, and cannot intercept a CLI subprocess anyway, so
-not running them is the actual containment). It is a personal ad-hoc C# analysis aid,
-not a TAOM tool, which is why it appears in no `tools/` table. Remove with
-`uv tool uninstall graphifyy`.
+**On this line since plan 141 (#677):** `tools/graphify_taom.py` runs the installed CLI as a subprocess;
+the wrapper is `interop-only`: it copies no graphify code, and graphify's `cache.py` was read only to
+find where its stat-index cache is written. The gate that judges its raw write verbs
+(`.claude/hooks/check-graphify-usage.sh`) and the workflow wiring (ADR-012 on the 1.5.x line) are not
+here yet. Still no MCP registration, no CI job and no `graphify * install` subcommand. Nothing from
+graphify ships in a TAOM release, so the license position above is unchanged. Remove with
+`uv tool uninstall graphifyy`; graph builds then exit 3, and status and queries exit 2 while no
+graph exists.
 
-Nothing in this repo derives from it beyond the June concept port recorded above, so the derivation
-stays `behavioural-port` and the trial itself adds nothing. Usage guidance, the three verbs and one generated report worth
-running, the cases where it must not be used, and why it is deliberately absent from CLAUDE.md:
+The derivation of `tools/doc_graph.py` stays `behavioural-port`. Usage:
+[`docs/features/graphify-code-graph.md`](../features/graphify-code-graph.md); the trial's measurements:
 [`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### MinHook
@@ -251,6 +260,10 @@ same LOTRAOM feature (`TAOM_RacePortraits`, also maintainer-commissioned) was co
 this one; its decompiled source was read while wiring up Patch72, so that patch is a
 behavioural port rather than clean-room. The module itself was not adopted. Its `cave_troll`
 avatar offsets were imported as data.
+
+The four `AssetPackages/*.tpac` above are MithrilForge's output (its item layout, read on the 1.5.x line 2026-09-29); the tool is irrelevant to their terms, which remain the commissioned clearance above. MithrilForge's facts are restated, attributed, in [tpac-static-prop-authoring.md](tpac-static-prop-authoring.md) (plan 144); `tools/tests/test_prefab_asset_packages.py` is TAOM's own and ports no MithrilForge code.
+
+On 2026-10-06, on the 1.5.x line, yotthani's `docs/engine/*` and `docs/perf-audit/*` at commit `2e6fe97` were read in a local clone. The ButterLib Distance Matrix stall (#740) was measured there on v1.5.3 and not re-measured on v1.4.8 (`docs/engine/perf.md`; [butter-lib-distance-matrix.md](../features/butter-lib-distance-matrix.md)). TAOM's fix is its own (it switches ButterLib's subsystem off by reflection, from ButterLib's MIT code), and yotthani's patch code in the `yotthani/bannerlord` repository was not read. No code was copied. The switch was reviewed in 1.5.x `docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md` (not on this line).
 
 ### Yotthani VanillaTuning (shader-compile-notice)
 
@@ -303,14 +316,17 @@ than `n/a`. The reasoning recorded at the time was that BannerlordCoop is a publ
 shipping generated sources in plaintext and carries no policy forbidding it, unlike BT. That
 reasoning is worth confirming against the project's actual licence rather than left as an inference.
 
-### external developer drop, `Downloads/Features_fixed/` (UNCLEARED)
+### Yotthani HoN mods, the external developer drop `Downloads/Features_fixed/`
 
 Seven features were ported from a drop of decompiled C# supplied by an external developer:
 SiegeDismount, MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets,
 CompanionTactics. Planning record: [`docs/archive/feature-port-prompts/README.md`](../archive/feature-port-prompts/README.md).
 
-No license, grant, or terms are recorded anywhere in the repo. Several sites declare the derivation as
-verbatim rather than behavioural:
+Until 2026-10-09 no license, grant, or terms were recorded anywhere in the repo. On 2026-10-09 the maintainer
+stated: "Yotthani made everything MIT." That covers this code. `yotthani/bannerlord` has no root licence file yet
+(only `HoN/VanillaTuning`, since `1b9ce3ba` as recorded on the 1.5.x line, and `HoN/ShaderCacheKeeper` carry one), so yotthani is asked to add one. Several sites
+declare the derivation as verbatim rather than behavioural, which MIT allows with the notice now in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`:
 
 - `Main/Features/CompanionTactics/Roles/Models/CombatRole.cs:5` says "Ported verbatim from the original developer's drop"
 - `Main/Features/EquipPresets/Models/HoNEquipmentPreset.cs:7` says "Mirrors the decompiled-source shape verbatim"
@@ -320,8 +336,9 @@ Two artefacts carry the donor's identity into TAOM's own public surface: the `Ho
 (`HoNFormationPreset`, `HoNEquipmentPreset`, `HoNPresetItemReference`) and the deliberate reuse of the
 donor's TaleWorlds SaveSystem `BaseId 726900601` so its saves import.
 
-**To resolve:** check the drop folder itself for a LICENSE or README, then obtain written terms from
-the developer who supplied it.
+**Resolved 2026-10-09** by the maintainer's statement above; the MIT notice is in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`. **Still owed:** a root `LICENSE` in `yotthani/bannerlord`, asked of
+yotthani. The drop folder itself is gone.
 
 ### TAOM_Promoted / RF_Promoted (UNCLEARED)
 
@@ -330,10 +347,13 @@ as a "TAOM native rewrite of the `TAOM_Promoted` ('RF_Promoted') donor mod". `Do
 records "Ported from the donor mod's `FindUpgradedDescendantInParty`". No terms recorded. Distinct from
 the `Features_fixed` drop.
 
-### TransferbuttonMenu (UNCLEARED)
+### TransferbuttonMenu
 
 `Main/Features/QuickActions/**` is declared at [`docs/features/quick-actions.md:5`](../features/quick-actions.md)
-as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms recorded.
+as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms were recorded until 2026-10-09. The module is yotthani's:
+`yotthani/bannerlord` holds it as `HoN/TransferbuttonMenu`, with the same settings and actions (Sell Damaged, Sell
+Low Value, Unequip), compared on 2026-10-08. The maintainer's statement of 2026-10-09 in the section above (MIT)
+clears it too; its notice is the HoN section of `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 
 ### ServeAsSoldier (UNCLEARED)
 
@@ -479,6 +499,35 @@ hold (the module ends every stuck battle with no winner); an hourly in-game swee
 timer and on-screen warnings; the co-op stand-down, the quest-party exception and the enlisted-commander
 skip; and the service, adapters and tests. Nothing of the module ships. Clearing the row needs the
 author's terms.
+
+### Ghidra
+
+Upstream: https://github.com/NationalSecurityAgency/ghidra · Apache-2.0. Installed 2026-09-26 as
+12.1.4 at `E:\Tools\ghidra_12.1.4_PUBLIC`, with the PyGhidra 3.1.0 it bundles in a venv at
+`E:\Tools\ghidra-venv` (#688). `tools/native_decompile.py` drives the installed tool through
+PyGhidra's public API and copies no Ghidra code; PyGhidra's `api.py` and `core.py` were read only to
+choose the calls. Nothing from Ghidra ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry
+is owed. Remove with the two `E:\Tools` folders; the tool then exits 2 naming the setup doc. Adoption
+record: [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Hindsight
+
+Upstream: https://github.com/vectorize-io/hindsight · MIT. Evaluated on 2026-09-26 and rejected: it
+conflicts with ADR-011's rule that durable knowledge lives in the repository, and its Claude Code
+plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
+were read for the security pass; nothing was installed or ported. Record:
+[`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### rea
+
+Upstream: https://github.com/morluto/rea, `main` at `d361c53c5`, read on 2026-10-24 through the
+GitHub API only: nothing was cloned, installed or run. The cross-build function matching in
+`tools/native_build_match.py` follows the method rea's `docs/native-function-matching.md` describes
+(exact keys first, ambiguity kept, a missing counterpart reported as unknown, never as removed). Only
+that document was read, not rea's code, and the masking of x64 displacements is TAOM's own addition,
+so the derivation is a behavioural port of a documented method. The rule lines the 1.5.x line also took from it are not on this line. No rea text or
+code was copied, so no MIT notice is carried. Record:
+[`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md).
 
 ## Adding a row
 

@@ -145,7 +145,8 @@ public class CareerConfigProvider : ICareerConfigProvider
                         rank1Name: el.Attribute("rank1_name")?.Value ?? "",
                         rank2Name: el.Attribute("rank2_name")?.Value ?? "",
                         rank3Name: el.Attribute("rank3_name")?.Value ?? "",
-                        keystoneIcon: el.Attribute("keystone_icon")?.Value ?? "");
+                        keystoneIcon: el.Attribute("keystone_icon")?.Value ?? "",
+                        abilitySprite: el.Attribute("ability_sprite")?.Value ?? "");
 
                     // Issue #380 — no fallback glyph by design (the reference module's culture
                     // fallback regressed Rivendell to its clan-sigil ring). Missing attr =
@@ -199,10 +200,11 @@ public class CareerConfigProvider : ICareerConfigProvider
             {
                 try
                 {
+                    var groupId = groupEl.Attribute("id")?.Value ?? "";
                     var choiceIds = new List<string>();
                     foreach (var choiceEl in groupEl.Elements("Choice"))
                     {
-                        var choice = ParseChoice(choiceEl);
+                        var choice = ParseChoice(choiceEl, groupId);
                         if (choice != null)
                         {
                             _choices.Add(choice);
@@ -211,7 +213,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                     }
 
                     var group = new CareerChoiceGroupDefinition(
-                        id: groupEl.Attribute("id")?.Value ?? "",
+                        id: groupId,
                         careerId: groupEl.Attribute("career_id")?.Value ?? "",
                         tier: ParseInt(groupEl, "tier", 1),
                         choiceIds: choiceIds,
@@ -231,10 +233,19 @@ public class CareerConfigProvider : ICareerConfigProvider
         }
     }
 
-    private CareerChoiceDefinition ParseChoice(XElement el)
+    // Membership is the nesting only (#766): groupId is the enclosing <ChoiceGroup> id, and
+    // a root <Choice> passes "". A group_id attribute is never read for membership; a non-empty one
+    // is a stale authoring leftover, so it is logged and ignored.
+    private CareerChoiceDefinition ParseChoice(XElement el, string groupId = "")
     {
         try
         {
+            var declared = el.Attribute("group_id")?.Value ?? "";
+            if (declared.Length > 0)
+                _logger.LogWarning(
+                    $"CareerConfig: choice '{el.Attribute("id")?.Value}' carries group_id '{declared}'; " +
+                    "ignored; membership is the enclosing ChoiceGroup.");
+
             PassiveEffect passive = null;
             // Two authoring schemas exist: a direct singular child <PassiveEffect ... magnitude=.../>
             // and a plural wrapper <PassiveEffects><PassiveEffect ... value=.../></PassiveEffects>.
@@ -258,7 +269,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                     magnitude: ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f)),
                     // operation= / is_percentage= were parsed-but-never-read (the consumer chooses
                     // additive vs multiplicative per type); dropped. attack_type_mask IS consumed.
-                    attackTypeMask: ParseEnum<AttackTypeMask>(passiveEl, "attack_type_mask", AttackTypeMask.All));
+                    attackTypeMask: ParseAttackTypeMask(passiveEl, el.Attribute("id")?.Value));
             }
 
             var mutations = new List<MutationDefinition>();
@@ -286,7 +297,7 @@ public class CareerConfigProvider : ICareerConfigProvider
 
             return new CareerChoiceDefinition(
                 id: el.Attribute("id")?.Value ?? "",
-                groupId: el.Attribute("group_id")?.Value ?? "",
+                groupId: groupId,
                 type: ParseEnum<ChoiceType>(el, "type", ChoiceType.Passive),
                 description: el.Attribute("description")?.Value ?? "",
                 iconSprite: el.Attribute("icon_sprite")?.Value ?? "",
@@ -516,6 +527,20 @@ public class CareerConfigProvider : ICareerConfigProvider
         if (float.IsNaN(result) || float.IsInfinity(result))
             return defaultValue;
         return result;
+    }
+
+    // #613: the consumer branches on this string (Damage / Resistance masks), so an unknown value is
+    // never coerced to the widest reading. Absent keeps All; unparseable warns and lands on None,
+    // which matches no hit, and the shipped-XML gate refuses a None mask.
+    private AttackTypeMask ParseAttackTypeMask(XElement passiveEl, string? choiceId)
+    {
+        var raw = passiveEl.Attribute("attack_type_mask")?.Value;
+        if (raw == null) return AttackTypeMask.All;
+        if (AttackTypeMaskMatch.TryParse(raw, out var mask)) return mask;
+        _logger.LogWarning(
+            $"CareerConfig: choice '{choiceId}' has an unknown attack_type_mask '{raw}' " +
+            "(names: Melee, Ranged, All, Cut, Pierce, Blunt, comma-separated); the pip is inert.");
+        return AttackTypeMask.None;
     }
 
     private static T ParseEnum<T>(XElement el, string attrName, T defaultValue) where T : struct

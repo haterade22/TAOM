@@ -1118,8 +1118,8 @@ campaign, a saved game and a custom battle alike), a saved game's
 `[SaveLoad] ... phase=LoadRequested` line, which the Load Game click writes before the load reads
 anything, or a `[LoadPhase]`, `[LoadXml]` or `[XmlMerge]` line. The trace is
 `Patch89_MapLoadDiagnostics_Lifecycle` (`Main/Features/MapLoadDiagnostics`): a build that applies it
-writes both state lines, and no setting turns it off. It first shipped in v2.0.29, and the 1.4.5
-branch has none. The three load tags are written only while a game initializes, but each line
+writes both state lines, and no setting turns it off. It first shipped in v2.0.29 on the 1.5.x line,
+and plan 118 ported it here, so a 1.4.x build from before that merge has none. The three load tags are written only while a game initializes, but each line
 follows the step it times (a `[LoadXml]` line comes when its XML type has finished loading, seconds
 after the load began); the state lines and the request come earlier. A save's own phases
 (`SaveBegin`, `SaveCompleted`) and the later phases of a load do not start a game. That

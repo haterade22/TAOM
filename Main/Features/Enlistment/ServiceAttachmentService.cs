@@ -63,9 +63,10 @@ public class ServiceAttachmentService : IServiceAttachmentService
 
         // THE PRESENCE HOLD (#577). A live PlayerEncounter in EnlistedBattle is the battle itself,
         // its loot and aftermath window, or the join gap between EnsureEncounterAgainst and
-        // JoinBattle. The aftermath window is the trap: MapEventSide.Clear() nulls
-        // MainParty.MapEvent BEFORE the encounter closes, so it reads as "no battle anywhere" to
-        // every rule below and used to fall through to AttachRequired. A park clears AttachedTo,
+        // JoinBattle. The trap is any moment with the encounter open and the party in no map event
+        // yet or any more: the join gap, and the inside of `PlayerEncounter.Finish` after
+        // `FinalizeEvent` (where #577's reconcile ran, raised by our own army leave). That reads as
+        // "no battle anywhere" to every rule below and used to fall through to AttachRequired. A park clears AttachedTo,
         // which pulls an active party off its MapEventSide (MobileParty.SetAttachedToInternal),
         // and "Send troops" then indexes BattleSimulation.SelectedTroops[-1]. The engine owns the
         // party until the encounter closes, exactly as it does in captivity.
@@ -82,11 +83,7 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (state == EnlistmentState.EnlistedBattle && player.HasPlayerEncounter)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.BattleEncounterOpen);
 
-        // IsPrisoner is checked explicitly even though a captured hero's PartyBelongedTo
-        // goes null in practice — the engine correlation is not guaranteed by contract,
-        // and this keeps the fitness criteria identical to IsCommanderFit/ReconcileGrace.
-        if (commander == null || !commander.Exists || !commander.IsAlive || commander.IsPrisoner
-            || !commander.HasParty || !commander.PartyIsActive)
+        if (commander == null || !commander.IsFit)
         {
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing);
         }
@@ -120,7 +117,15 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (playerIsSomewhere && !sameSettlement && !onTownLeave)
             return new AttachmentAssessment(AttachmentStatus.SettlementExitRequired);
 
-        if (commander.PartyIsInMapEvent)
+        // #831: a raid, forced supplies or forced volunteers the commander is running is not a battle
+        // to join, so it falls through to the march rules (no BattleJoinRequired, no retry budget).
+        // "No pending flag" holds for Assess and the pump; OnPartyJoinedRunningMapEvent still arms
+        // PendingCommanderAttachment when the commander starts a raid, and that flag is inert because
+        // its only reader sits behind the joinable gate (ServiceMaintenanceService.TryRequestBattleJoin);
+        // that holds only while the raid stays uncontested, since a relief lord (#954) opens the gate.
+        // On the defender side a raid is a real fight and still joins.
+        if (VillageActionJoinPolicy.IsJoinableBattle(
+                commander.PartyIsInMapEvent, commander.PartyIsRaiding))
         {
             // Same-event verification is the battle service's job; here "player is in some
             // map event" while the commander fights means there is nothing to attach.
@@ -129,6 +134,8 @@ public class ServiceAttachmentService : IServiceAttachmentService
                 : new AttachmentAssessment(AttachmentStatus.BattleJoinRequired);
         }
 
+        // This verdict also covers the commander's own raid (#831) when the player is in some other map
+        // event; the reconciler takes no action on it (EnlistmentReconciler, PlayerInForeignMapEvent case).
         if (player.IsInMapEvent)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.PlayerInForeignMapEvent);
 

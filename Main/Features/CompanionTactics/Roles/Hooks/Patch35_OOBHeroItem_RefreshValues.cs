@@ -1,5 +1,7 @@
+using System;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CompanionTactics.Roles.Hooks;
 
@@ -23,6 +25,9 @@ public static class Patch35_OOBHeroItem_RefreshValues
             _decorator ??= IoC.Resolve<IRoleTooltipDecorator>();
             _decorator?.DecorateOOBHeroItem(__instance);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Outcomes.Swallowed("CompanionTactics", "Patch35_OOBHeroItem_RefreshValues.Postfix", ex);
+        }
     }
 }

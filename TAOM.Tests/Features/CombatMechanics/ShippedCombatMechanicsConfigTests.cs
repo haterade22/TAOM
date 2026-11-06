@@ -46,6 +46,29 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_ChargeKnockdown_IsVanillaParityWithAnyAngleAutoFloor()
+    {
+        var c = _sut.GetConfig().ChargeKnockdown;
+
+        Assert.AreEqual(6f, c.NeutralWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(1f, c.MinPenetrationFactor, 0.0001f);
+        Assert.AreEqual(0.4f, c.HorseChargePenetration, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_OnlyTrollsDwarvesAndSauronResistAHorse()
+    {
+        var races = _sut.GetConfig().RaceModifiers;
+
+        Assert.AreEqual(4f, races["cave_troll"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(4f, races["hill_troll"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(2.5f, races["dwarf"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(3f, races["sauron"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(1f, races["uruk_hai"].KnockdownResistanceMultiplier, 0.0001f);
+    }
+
+    [TestMethod]
     public void ShippedConfig_FileExists()
         => Assert.IsTrue(File.Exists(ConfigPath), $"Shipped config missing at {ConfigPath}");
 

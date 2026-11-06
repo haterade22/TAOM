@@ -261,14 +261,14 @@ rebuild, so a hit skips the whole `GetCharacterCode` body. The cache is keyed by
 next `PartyVM` constructor, whichever comes first. Talk deactivates and reactivates the party screen and abandons the old
 view model without `OnFinalize`; the new constructor's `BeginScreen` clears the cache, so nothing leaks across screens.
 
-**Why this is safe next to BannerColorPersistence.** Patch23's `PartyCharacterVM.GetCharacterCode` postfix writes
-`Color1` and `Color2` on the returned code. `CharacterImageIdentifier`'s constructor reads only `CharacterCode.Code`,
-which has a private setter and is built inside `CreateFrom` with the colours already in it, so those writes never
-change what a row renders and rows can share one code object. `PartyFastOpenBindingTests` reads the IL of the
-`CharacterImageIdentifier`, `CharacterImageIdentifierVM` and `UpgradeTargetVM` constructors (RequiresGameIL) and fails if
-any of them touches another member or passes the code anywhere else. On v1.4.8 that premise holds:
-`CharacterImageIdentifier`'s constructor copies only `CharacterCode.Code` into the image id
-(`CharacterImageIdentifier.cs:5-10`), so colour writes made after `CreateFrom` never reach the portrait.
+**Why this is safe next to BannerColorPersistence.** Patch23's `PartyCharacterVM.GetCharacterCode` postfix (#993)
+replaces the returned code with `ClanColoredCharacterCode.Recolor`: a code rebuilt with the clan colours in `Code`, or
+the same instance when its colours already match. Patch23 is applied before the GameInit categories and both postfixes
+have the default priority, so Patch23's runs first and the cache stores the recoloured code; on a hit Patch23 still
+runs and `Recolor` hands the cached code back unchanged. Nothing writes to a built code, so rows can share one code
+object. `PartyFastOpenBindingTests` reads the IL of the `CharacterImageIdentifier`, `CharacterImageIdentifierVM` and
+`UpgradeTargetVM` constructors (RequiresGameIL) and fails if any of them touches another member or passes the code
+anywhere else. If the order ever flipped, each hit would rebuild the code string again: slower, not wrong.
 
 **Toggle.** The toggle is read once, when the `PartyVM` constructor starts. Off at that point means every lookup misses
 and every store is ignored, but the session transitions still run. The open line's detail starts `fast open on;` or

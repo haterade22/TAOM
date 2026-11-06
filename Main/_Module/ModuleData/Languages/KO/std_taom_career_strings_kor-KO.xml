@@ -67,7 +67,7 @@
     <string id="taom_career_blade_dancer" text="검무자" />
     <string id="taom_career_blade_dancer_desc" text="제1시대에 단조된 고대의 검으로 흐르는 물처럼 전장을 가로지르는 우아한 엘프 전사." />
     <string id="taom_career_elven_archer" text="엘프 궁수" />
-    <string id="taom_career_elven_archer_desc" text="수세기의 수련으로 인도된 화살이 광활한 거리를 가로질러 정확히 날아가는 이ム라드리스의 비할 데 없는 명사수." />
+    <string id="taom_career_elven_archer_desc" text="A peerless marksman of Imladris whose arrows fly true across vast distances, guided by centuries of practice." />
     <string id="taom_career_rivendell_knight" text="리븐델 기사" />
     <string id="taom_career_rivendell_knight_desc" text="빠른 엘프 말을 타고 전쟁에 나아가는 엘론드 가문의 기마 전사로, 어둠에 맞서는 희망의 등불." />
     <string id="taom_career_warden" text="로리엔의 수호자" />
@@ -89,7 +89,7 @@
     <string id="taom_career_warg_scout" text="와르그 정찰병" />
     <string id="taom_career_warg_scout_desc" text="빠른 와르그에 올라탄 교활한 우르크 기수로, 아이센가드 군대의 선봉에서 정찰하고 도망치는 먹이를 쫓는다." />
     <string id="taom_career_cave_troll_master" text="동굴 트롤 지배자" />
-    <string id="taom_career_cave_troll_master_desc" text="채찍과 교활함으로 동굴 트롤을 전투에서 지휘하고 앞으로 몰아가는 잔혹한 오크 족장." />
+    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning." />
     <string id="taom_career_goblin_sniper" text="고블린 저격수" />
     <string id="taom_career_goblin_sniper_desc" text="산 협곡에 숨어서 독이 묻은 화살과 조잡한 활로 목표물을 저격하는 악의적인 고블린 명사수." />
     <string id="taom_career_warg_pack_leader" text="와르그 무리 우두머리" />
@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="불멸의 수호자" />
     <string id="taom_ws_t3_a_p2_desc" text="경비는 결코 끝나지 않습니다. +9 체력." />
     <string id="taom_ws_t3_a_p3" text="수비대 사령관" />
-    <string id="taom_ws_t3_a_p3_desc" text="당신의 수비대는 지원병들로 불어납니다. +4 부대 규모." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="수비자의 영광" />
     <string id="taom_ws_t3_a_p4_desc" text="방어 전투에서의 승리는 큰 명예를 가져옵니다. +12% 전투 명성 획득." />
     <string id="taom_ws_t3_b_key" text="끊임없는 경계" />

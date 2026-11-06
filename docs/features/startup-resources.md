@@ -164,12 +164,10 @@ Adding lords does not, which makes Umbar (10 lords, 40 fiefs, the inverse outlie
 spread) the cheapest remaining correction.
 
 **Why not just add settlements?** Because the engine's `rglConcurrentQueue` assert caps loaded
-prefab entities at 131,072 globally, across every loaded module. The size of the remaining headroom
-is genuinely unsettled: `tools/check_prefab_budget.py` reports 93,407, but CLAUDE.md's own trap
-table warns that the checker counts only `TAOM_Map/Prefabs` and therefore "prints OK at 99% of the
-cap", citing an all-module measurement of 130,151 with ~921 spare on 2026-08-08. **Neither figure
-has been verified as an all-module total recently**, so treat adding settlements as needing a fresh
-measurement first rather than as either safe or blocked. It was not attempted here.
+prefab entities at 131,072 globally, across every loaded module. `tools/check_prefab_budget.py` sums
+every module and reads 130,468 on the laptop, 604 spare, with NavalDLC in the sum. Treat adding
+settlements as needing a fresh measurement first rather than as either safe or blocked. It was not
+attempted here.
 
 ### The floor is not an income-only change
 

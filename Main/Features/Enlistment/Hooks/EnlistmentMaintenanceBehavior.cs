@@ -46,8 +46,8 @@ public class EnlistmentMaintenanceBehavior : CampaignBehaviorBase
         CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
         CampaignEvents.OnPartyAddedToMapEventEvent.AddNonSerializedListener(this, OnPartyAddedToMapEvent);
 
-        // TWO re-attach edges, not the donor's six. The pump already re-derives everything within
-        // 250 ms, so an edge only earns its place if it beats that — and only these two do
+        // TWO re-attach edges, not the donor's six. The pump already re-derives everything every 18 campaign
+        // minutes (about 250 ms at the menu's default fast forward), so an edge only earns its place if it beats that — and only these two do
         // anything the pump cannot: they fire at moments the pump is structurally silent, because
         // CampaignEvents.TickEvent does not run inside encounter/settlement menus or a map
         // conversation, and the wait-menu tick only runs on OUR menu. A commander walking out of a

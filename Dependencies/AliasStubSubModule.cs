@@ -15,10 +15,9 @@ namespace TAOM.Dependencies;
 /// drag-to-reorder operations on every other mod in the launcher.
 ///
 /// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements the design of
-/// BetaDeps.Foundation.AliasStubSubModule. Future phases will append additional
-/// shield installs (IncompatibleModDetector.RunEarlyPhase,
-/// CollectAssemblyTypesShim.Install, SubModuleConstructionGuard.Install) to the
-/// ctor as those classes are implemented in Dependencies/Foundation/.
+/// BetaDeps.Foundation.AliasStubSubModule. The ctor installs the assembly resolve
+/// handler and runs IncompatibleModDetector.RunEarlyPhase; the Harmony-based shields
+/// install later, from Dependencies/SubModule.OnSubModuleLoad.
 /// </summary>
 public class AliasStubSubModule : MBSubModuleBase
 {
@@ -44,9 +43,8 @@ public class AliasStubSubModule : MBSubModuleBase
 
         TrySwallow(SubModule.InstallAssemblyResolveHandler, "ctor/AssemblyResolve");
         TrySwallow(IncompatibleModDetector.RunEarlyPhase, "ctor/IncompatEarly");
-        // NOTE: CollectAssemblyTypesShim.Install + SubModuleConstructionGuard.Install
-        // are intentionally NOT called here — they need Harmony fully initialised,
-        // which isn't reliable at stub-ctor time. They run from
+        // NOTE: CollectAssemblyTypesShim.Install is intentionally NOT called here: it needs Harmony fully
+        // initialised, which isn't reliable at stub-ctor time. It runs from
         // Dependencies/SubModule.OnSubModuleLoad alongside PatchShield + SaveShield
         // (proven-good timing). Moved 2026-05-27 after observing silent ctor logs.
     }

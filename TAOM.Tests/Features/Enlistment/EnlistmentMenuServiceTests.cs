@@ -3,6 +3,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment;
+using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Tests.Features.Enlistment;
@@ -13,13 +14,220 @@ public class EnlistmentMenuServiceTests
     private IModLogger _logger = null!;
     private EnlistmentStore _store = null!;
     private EnlistmentMenuService _service = null!;
+    private IEncounterAdapter _encounter = null!;
+    private IEnlistmentContentConfigProvider _contentConfig = null!;
+    private SitOutLedger _ledger = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(_logger);
-        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), Substitute.For<IMobilePartyAttachmentAdapter>(), _logger);
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _contentConfig = Substitute.For<IEnlistmentContentConfigProvider>();
+        _contentConfig.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
+        _ledger = new SitOutLedger();
+        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(), Substitute.For<IMobilePartyAttachmentAdapter>(), _encounter, _contentConfig, _ledger, _logger);
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleAndCommanderLeadsSide_ReturnsTrue()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+
+        Assert.IsTrue(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleAndPlayerLeadsSide_ReturnsFalse()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleWithNoMapEvent_ReturnsFalse()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns((bool?)null);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_TruceBarsAttackAndSendTroops_ReturnsFalse()
+    {
+        // Vanilla's honour check greys out both advance options under a safe-passage truce; the
+        // encounter menu is the only thing that advances the player's own map event, so the last
+        // exit must stay (#827).
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.IsAttackBarredByTruce.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_PlayerLeadsSide_DoesNotProbeTruce()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+        _ = _encounter.DidNotReceive().IsAttackBarredByTruce;
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EveryNonBattleState_DoesNotReadEncounter()
+    {
+        // Every state but EnlistedBattle, so a state added later is covered without a new row.
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            if (state == EnlistmentState.EnlistedBattle)
+                continue;
+
+            MakeEnlisted(state);
+
+            Assert.IsFalse(_service.ShouldBlockBattleExit(), $"state {state} must not block");
+            _ = _encounter.DidNotReceive().IsMainPartyLeadingItsBattleSide;
+            _ = _encounter.DidNotReceive().IsAttackBarredByTruce;
+        }
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EveryStateAndSide_MatchesShouldStripPlayerCommandWithoutTruce()
+    {
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            foreach (var leads in new[] { true, false })
+            {
+                MakeEnlisted(state);
+                _encounter.IsAttackBarredByTruce.Returns(false);
+                _encounter.IsMainPartyLeadingItsBattleSide.Returns(leads);
+                Assert.AreEqual(BattleCommandPolicy.ShouldStripPlayerCommand(state, leads), _service.ShouldBlockBattleExit(),
+                    $"Battle-exit gate and command strip disagree for state {state}, leads={leads}.");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_EveryNonBattleState_ReadsNoSnapshotAndRecordsUnchanged()
+    {
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            if (state == EnlistmentState.EnlistedBattle)
+                continue;
+
+            MakeEnlisted(state);
+
+            Assert.AreEqual(SitOutVerdict.Unchanged, _service.EvaluateSitOut(), $"state {state}");
+            _ = _encounter.DidNotReceive().IsMainPartyLeadingItsBattleSide;
+            _encounter.DidNotReceive().GetSitOutSnapshot();
+        }
+        Assert.AreEqual(SitOutVerdict.Unchanged, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_PlayerLeadsHisSide_ReadsNoSnapshot()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(true);
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _service.EvaluateSitOut());
+        _encounter.DidNotReceive().GetSitOutSnapshot();
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_NoMapEvent_ReadsNoSnapshot()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns((bool?)null);
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _service.EvaluateSitOut());
+        _encounter.DidNotReceive().GetSitOutSnapshot();
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_CommanderLeads_RunsThePolicyAndRecordsTheVerdict()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(new SitOutSnapshot(false, true, false, 0.5f));
+
+        Assert.AreEqual(SitOutVerdict.RefusedField, _service.EvaluateSitOut());
+        Assert.AreEqual(SitOutVerdict.RefusedField, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_ShareAtTheConfiguredThreshold_IsOverwhelming()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(new SitOutSnapshot(false, true, false, 0.85f));
+
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _service.EvaluateSitOut());
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_UsesTheConfiguredThreshold()
+    {
+        var config = EnlistmentContentConfigProvider.BuildDefaults();
+        config.SitOut.OverwhelmingShare = 0.6f;
+        _contentConfig.GetConfig().Returns(config);
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(new SitOutSnapshot(false, true, false, 0.7f));
+
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _service.EvaluateSitOut());
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_LaterVerdictReplacesTheEarlierOne()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(
+            new SitOutSnapshot(false, true, false, 0.9f),
+            new SitOutSnapshot(true, true, false, 0.9f));
+
+        _service.EvaluateSitOut();
+        _service.EvaluateSitOut();
+
+        Assert.AreEqual(SitOutVerdict.WoundedFree, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_GateClosed_OverwritesAnEarlierVerdictWithUnchanged()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(new SitOutSnapshot(false, true, false, 0.9f));
+        _service.EvaluateSitOut();
+
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        _service.EvaluateSitOut();
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _ledger.Consume(), "a stale verdict must not outlive the gate");
+    }
+
+    [TestMethod]
+    public void EvaluateSitOut_MapEventAlreadyHasAWinner_RecordsNothing()
+    {
+        // An aftermath refresh must not overwrite the verdict taken when the player clicked.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.GetSitOutSnapshot().Returns(new SitOutSnapshot(false, true, false, 0.9f));
+        _service.EvaluateSitOut();
+        _encounter.PlayerMapEventHasWinner.Returns(true);
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _service.EvaluateSitOut());
+
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _ledger.Consume());
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

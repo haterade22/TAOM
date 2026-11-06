@@ -17,6 +17,13 @@ public interface IEncounterAdapter
 
     bool IsInsideSettlement { get; }
 
+    /// <summary>
+    /// True when the current encounter was created or extended by a battle join (<c>PlayerEncounter.IsJoinedBattle</c>).
+    /// Such an encounter's encountered party is the opposing leader, which is how an orphaned one is told apart from a
+    /// lord the player is talking to (#1021). False when there is no encounter or the read fails.
+    /// </summary>
+    bool IsJoinedBattleEncounter { get; }
+
     /// <summary>StringId of the encountered mobile party, or null.</summary>
     string EncounteredPartyId { get; }
 
@@ -33,6 +40,21 @@ public interface IEncounterAdapter
     bool IsPartyInMapEvent(string partyId);
 
     /// <summary>
+    /// Faction id of the leader of the side opposing the given party in its map event, or null when
+    /// it cannot be read. For a raid that leader is the village, so this is the faction vanilla's
+    /// hostile action would declare war on when the player chooses Attack or Send troops (#832).
+    /// </summary>
+    string GetOpposingLeaderFactionId(string partyId);
+
+    /// <summary>
+    /// True when the given party is the aggressor in a raid, forced supplies or forced volunteers and no
+    /// lord party with healthy troops defends it (#954). Read
+    /// through the same <c>VillageRaidReader</c> as the commander snapshots so the join floor and the
+    /// snapshots cannot disagree. False on a failed read, which joins (#831).
+    /// </summary>
+    bool IsPartyRaiding(string partyId);
+
+    /// <summary>
     /// True when the main party is genuinely inside a map event. This is the ground truth for
     /// "did the join actually land" — <see cref="JoinBattle"/> cannot be trusted on its own
     /// because the engine's JoinBattleInternal silently no-ops when EncounteredBattle is null.
@@ -43,10 +65,32 @@ public interface IEncounterAdapter
     /// True when the main party leads its side of its current map event, false when another
     /// party leads it, null when the main party is in no map event at all. The same read the two
     /// enlisted mission behaviors make inline (<c>mapEvent.GetLeaderParty(mapEvent.PlayerSide) ==
-    /// PartyBase.MainParty</c>); exposed here so <c>EnlistmentDeploymentService</c> can feed
-    /// <c>BattleCommandPolicy</c> without touching an engine type (#576).
+    /// PartyBase.MainParty</c>); exposed here so <c>EnlistmentDeploymentService</c> and
+    /// <c>EnlistmentMenuService</c> can feed <c>BattleCommandPolicy</c> without touching an
+    /// engine type (#576, #827).
     /// </summary>
     bool? IsMainPartyLeadingItsBattleSide { get; }
+
+    /// <summary>
+    /// True when vanilla's honour check (<c>MenuHelper.CheckEnemyAttackableHonorably</c>) would
+    /// grey out 'Attack' and 'Send troops' in the encounter menu, which is what a safe-passage
+    /// truce with the enemy faction does to a soldier who is not in an army. Asks that method
+    /// itself so the rule cannot drift. True on error (fail open, so the menu exits stay) (#827).
+    /// </summary>
+    bool IsAttackBarredByTruce { get; }
+
+    /// <summary>
+    /// One flat read of what the sit-out policy needs (#830): wounded, whether vanilla's Attack is
+    /// available, siege assault or sally-out, and the player side's strength share. Each field is read in its
+    /// own try and is null when it could not be read, so one throw never blanks the rest.
+    /// </summary>
+    SitOutSnapshot GetSitOutSnapshot();
+
+    /// <summary>
+    /// True when the player's own map event already has a winner, so a menu refresh now is the
+    /// aftermath, not the click. False when there is no map event or the read fails.
+    /// </summary>
+    bool PlayerMapEventHasWinner { get; }
 
     /// <summary>
     /// True when the given party's map event is still live enough to join. This is a MECHANICAL
@@ -106,4 +150,16 @@ public interface IEncounterAdapter
     /// while a party is inside a settlement. Each site must now state its intent.
     /// </summary>
     bool Finish(bool forcePlayerOutFromSettlement);
+
+    /// <summary>
+    /// Clears the last battle's result from a REUSED encounter (#1021). A defender's repulsed assault keeps its
+    /// encounter with that battle's result still set (<c>EnemyRetreated</c>). On the next assault
+    /// <c>PlayerEncounter.CheckIfBattleShouldContinueAfterBattleMissionInternal</c> (v1.4.8 PlayerEncounter.cs:1860-1866)
+    /// returns false on that result only when the event is not a siege assault or the other side is not the attacker;
+    /// for a defender the other side IS the attacker, so the old result reads as a battle to continue, and <c>ContinueBattle</c>
+    /// (:1287-1295) finishes the new assault and opens <c>menu_siege_strategies</c>. The check returns false on a NULL result
+    /// (:1853, :1863), so forgetting it fixes this. Acts only when an encounter exists, no battle is attached to it and a result
+    /// is still set. Never throws.
+    /// </summary>
+    void ForgetEndedBattleResult();
 }

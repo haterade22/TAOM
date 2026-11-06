@@ -26,7 +26,7 @@ The subagent prompt must contain the standard TAOM briefing (CLAUDE.md "Briefing
 
 1. "Read `docs/ai-includes/agent-operating-manual.md` first. You cannot invoke skills or spawn agents."
 2. **The full plan file text, inlined.** The worktree contains only committed files — if `plans/` is uncommitted, the executor can't read it. Never assume; always inline.
-3. Tool reminders: build with `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true`, test with `dotnet test TAOM.Tests -p:DisableModuleCopy=true` (the flag on BOTH — the tests project builds Main, whose post-build target deploys to the game install without it) — NEVER `./build.ps1` (deploys to the game install; single-flight only).
+3. Tool reminders: build with `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`, test with `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` (both flags on BOTH: the tests project builds Main, whose post-build target deploys to the game install without them); NEVER `./build.ps1` (deploys to the game install; single-flight only).
 4. The executor preamble:
 
 > You are the executor for the implementation plan below. Follow it step by

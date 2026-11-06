@@ -30,7 +30,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 - `tools/translation_status.sh` — coverage report.
 
 ## Validate
-`dotnet test TAOM.Tests --filter "Infrastructure.Localization"`:
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "Infrastructure.Localization"`:
 - `LanguageDataXmlTests` — enforces 11 LanguageFile refs/language (`AllLanguageDirs_HaveExactlyElevenLanguageFiles`), well-formed XML, no missing files. For Case B the count bump is mandatory or this goes red.
 - `LanguageFileCoverageTests` — every key the English source declares has a row in all 12 language files. Red here means you registered but never propagated: run the translator with `--sync-ids`.
 - `UnregisteredLocalizationKeyBaselineTests` — no `{=taom_*}` literal in C# lacks a ModuleData row. Red means you skipped step 2; `python tools/harvest_literal_loc_keys.py --apply` does it.

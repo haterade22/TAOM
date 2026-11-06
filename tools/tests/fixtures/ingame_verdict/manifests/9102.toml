@@ -1,0 +1,17 @@
+# Fixture: a log whose crash report echoed the log tail back, each line behind "[CrashReport] ".
+issue = 9102
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.fixture.days"
+needs = "three days"
+reached = ['\[Check\] id=taom\.fixture\.days result=pass']
+pass = ['\[Check\] id=taom\.fixture\.days result=pass']
+min = 3
+
+[[check]]
+id = "taom.fixture.attach"
+needs = "a battle"
+scope = 'phase=MissionOpenNew mission='
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']

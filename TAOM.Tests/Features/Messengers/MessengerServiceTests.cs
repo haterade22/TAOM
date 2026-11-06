@@ -39,7 +39,7 @@ public class MessengerServiceTests
         new HeroSnapshot(id,
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
     // --- Validation: skip-guard exhaustion ---
 
@@ -56,7 +56,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("player",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: true, isWanderer: false, isHumanPlayerCharacter: true,
-            isInPlayerParty: true, isInMapEvent: false);
+            isInPlayerParty: true);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -69,7 +69,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("lord_dead",
             isAlive: false, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -82,7 +82,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("lord_prisoner",
             isAlive: true, isPrisoner: true, isChild: false, isFugitive: false,
             isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -95,7 +95,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("lord_child",
             isAlive: true, isPrisoner: false, isChild: true, isFugitive: false,
             isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -108,7 +108,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("lord_fugitive",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: true,
             isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -121,7 +121,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("lord_idle",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -134,7 +134,7 @@ public class MessengerServiceTests
         var hero = new HeroSnapshot("companion",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: true, isWanderer: true, isHumanPlayerCharacter: false,
-            isInPlayerParty: true, isInMapEvent: false);
+            isInPlayerParty: true);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000);
 
@@ -167,7 +167,7 @@ public class MessengerServiceTests
         var wanderer = new HeroSnapshot("wanderer_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
             isActive: false, isWanderer: true, isHumanPlayerCharacter: false,
-            isInPlayerParty: false, isInMapEvent: false);
+            isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(wanderer, playerGold: 1000);
 

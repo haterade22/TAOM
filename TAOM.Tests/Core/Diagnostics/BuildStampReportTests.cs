@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Core.Diagnostics;
 
@@ -23,8 +26,8 @@ public class BuildStampReportTests
     public void TryParseStamp_RealBuildOutput_WithCommitShaSuffix_Parses()
     {
         // The ACTUAL string emitted by the build, read back off TAOM.dll with reflection.
-        // Bannerlord.BuildResources appends ".{commit-sha}" of its own accord, so the stamp is NOT
-        // at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
+        // The .NET SDK appends the commit SHA ('.' here, because the string then began "+build."),
+        // so the stamp is NOT at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
         // every real assembly while these tests passed — because they asserted the format the code
         // assumed rather than the one the build produces. This case is that format, verbatim.
         const string real = "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d";
@@ -47,6 +50,30 @@ public class BuildStampReportTests
     {
         Assert.IsFalse(BuildStampReport.TryParseStamp("2.0.15+build.not-a-date", out _));
         Assert.IsFalse(BuildStampReport.TryParseStamp("2.0.15+build.", out _));
+    }
+
+    [TestMethod]
+    public void TryParseStamp_DirtyAndNoGitSuffixes_StillParse()
+    {
+        foreach (var s in new[]
+        {
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty",
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.nogit",
+            "build.20260923-184249Z+nogit",
+        })
+        {
+            Assert.IsTrue(BuildStampReport.TryParseStamp(s, out var stamp), s);
+            Assert.AreEqual(new DateTime(2026, 9, 23, 18, 42, 49, DateTimeKind.Utc), stamp, s);
+        }
+    }
+
+    [TestMethod]
+    public void ReadInformationalVersion_TaomAssembly_CarriesTheBuildStamp()
+    {
+        string text = BuildStampReport.ReadInformationalVersion(typeof(BuildStampReport).Assembly);
+
+        StringAssert.StartsWith(text, "v");
+        Assert.IsTrue(BuildStampReport.TryParseStamp(text, out _), text);
     }
 
     // The three IsMismatched tests that used to sit here were deleted with the method itself:
@@ -138,5 +165,203 @@ public class BuildStampReportTests
         Assert.IsFalse(text.Contains("MISMATCH"),
             "an unhandled verdict must not be reported as a stale pairing");
         StringAssert.Contains(text, "unrecognised");
+    }
+
+    // ---- Engine identity line (player-report forensics) ----
+    //
+    // A 2026-08-19 player report arrived as a log that never started a game: the session sat at the
+    // main menu, so MissionDiagnosticService.LogSessionSnapshot never ran and the log recorded no
+    // Bannerlord version at all. The build was attributable (v2.0.20, pinned Native v1.4.7.*) but
+    // the engine the player was actually running was not, which is the one fact needed to rule an
+    // engine bump in or out. These pin the pure formatter that closes that gap at startup.
+
+    [TestMethod]
+    public void EngineReport_KnownVersionAndModules_NamesBothOnOneLine()
+    {
+        string line = BuildStampReport.EngineReport("v1.4.7.35937", new[] { "Native v1.4.7", "TAOM v2.0.20" });
+
+        StringAssert.Contains(line, "[Engine]");
+        StringAssert.Contains(line, "v1.4.7.35937");
+        StringAssert.Contains(line, "Native v1.4.7");
+        StringAssert.Contains(line, "TAOM v2.0.20");
+        StringAssert.Contains(line, "(2)", "the module count is what makes a truncated paste still readable");
+        Assert.IsFalse(line.Contains(((char)10).ToString()), "must stay a single log line");
+    }
+
+    [TestMethod]
+    public void EngineReport_NullOrBlankVersion_RendersUnknownRatherThanEmpty()
+    {
+        // ModuleHelper.GetModuleInfo("Native")?.Version is null-propagating, so the caller can and
+        // does hand us null. An empty value would read as "not recorded" and send the next reader
+        // hunting for a logging bug instead of an install problem.
+        foreach (var missing in new string?[] { null, "", "   " })
+        {
+            string line = BuildStampReport.EngineReport(missing, new[] { "Native v1.4.7" });
+            StringAssert.Contains(line, "unknown");
+            StringAssert.Contains(line, "Native v1.4.7", "a missing engine version must not cost us the module list");
+        }
+    }
+
+    [TestMethod]
+    public void EngineReport_NullOrEmptyModuleList_StillReportsTheEngineVersion()
+    {
+        // This runs inside OnSubModuleLoad, earlier than any TAOM code has run before. If the module
+        // enumeration is not ready yet the engine version is still worth having, and the line must
+        // not throw: the caller's try/catch would swallow it and we would be back to no version.
+        foreach (var none in new System.Collections.Generic.IEnumerable<string>?[] { null, System.Array.Empty<string>() })
+        {
+            string line = BuildStampReport.EngineReport("v1.4.7.35937", none);
+            StringAssert.Contains(line, "v1.4.7.35937");
+            StringAssert.Contains(line, "(0)");
+        }
+    }
+
+    [TestMethod]
+    public void EngineReport_IsGreppableAlongsideTheBuildStampLine()
+    {
+        // Both lines land adjacent at startup and get pasted together into reports. They must be
+        // distinguishable by tag so a reader can grep one without dragging in the other.
+        string engine = BuildStampReport.EngineReport("v1.4.7.35937", new[] { "Native v1.4.7" });
+        Assert.IsFalse(engine.StartsWith("[BuildStamp]"),
+            "the engine line needs its own tag so [BuildStamp] greps stay about module pairing");
+    }
+
+    // E3's two [BuildStamp] version strings, verbatim: the public 2026-09-30 refresh.
+    private const string E3Taom = "v2.0.0.0 build.20260930-120651Z+8df90444cc2f1e6d83bb95d2164ab764b4fcae65";
+    private const string E3Deps = "v0.1.0.0 build.20260914-032050Z+0c32343758068cdd60dcb92cd99412b00664dc6e";
+    private const string DebugTokens = "config=Debug jitOpt=OFF";
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_DebugWithOptimizerDisabled_RendersOff()
+    {
+        Assert.AreEqual("config=Debug jitOpt=OFF", BuildStampReport.DescribeBuildConfiguration("Debug", true));
+    }
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_ReleaseOrNoAttribute_RendersOn()
+    {
+        Assert.AreEqual("config=Release jitOpt=ON", BuildStampReport.DescribeBuildConfiguration("Release", false));
+    }
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_UnknownParts_RenderUnknown()
+    {
+        Assert.AreEqual("config=unknown jitOpt=unknown", BuildStampReport.DescribeBuildConfiguration(null, null));
+        Assert.AreEqual("config=My_Config jitOpt=OFF", BuildStampReport.DescribeBuildConfiguration("My Config", true),
+            "the configuration must stay one token or the line stops parsing");
+    }
+
+    [TestMethod]
+    public void ReadBuildConfiguration_TaomAssembly_MatchesItsDebuggableAttribute()
+    {
+        var asm = typeof(BuildStampReport).Assembly;
+        string line = BuildStampReport.ReadBuildConfiguration(asm);
+
+        StringAssert.Matches(line, new Regex(@"^config=\S+ jitOpt=(ON|OFF)$"));
+        bool jitOff = asm.GetCustomAttribute<DebuggableAttribute>()?.IsJITOptimizerDisabled == true;
+        Assert.AreEqual(jitOff, line.EndsWith("jitOpt=OFF"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_PlacesConfigTokensAfterEachStamp()
+    {
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        StringAssert.Matches(line, new Regex(
+            @"^\[BuildStamp\] TAOM=\S+ build\.\S+ config=Debug jitOpt=OFF TAOM\.Dependencies=\S+ build\.\S+ config=Debug jitOpt=OFF "));
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_StillMatchesTheVerdictToolPattern()
+    {
+        // The pattern tools/ingame_verdict.py uses (tools/ingame_verdict.py:94).
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        var m = Regex.Match(line, @"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)");
+        Assert.IsTrue(m.Success, line);
+        Assert.AreEqual("8df90444cc2f1e6d83bb95d2164ab764b4fcae65", m.Groups[1].Value);
+    }
+
+    private const string E3Commit = "8df90444cc2f1e6d83bb95d2164ab764b4fcae65";
+
+    [TestMethod]
+    public void TryParseCommit_CleanStamp_ReturnsTheCommitAndNoFlag()
+    {
+        Assert.IsTrue(BuildStampReport.TryParseCommit(E3Taom, out var commit, out var flagged));
+        Assert.AreEqual(E3Commit, commit);
+        Assert.IsFalse(flagged);
+    }
+
+    [TestMethod]
+    public void TryParseCommit_DirtyOrNoGitFlag_IsFlagged()
+    {
+        foreach (var suffix in new[] { ".dirty", ".nogit" })
+        {
+            Assert.IsTrue(BuildStampReport.TryParseCommit(E3Taom + suffix, out var commit, out var flagged), suffix);
+            Assert.AreEqual(E3Commit, commit, suffix);
+            Assert.IsTrue(flagged, suffix);
+        }
+    }
+
+    [TestMethod]
+    public void TryParseCommit_NoCommit_ReturnsFalse()
+    {
+        foreach (var none in new[] { "build.20260923-184249Z+nogit", "build.20260801-143000Z", null, "2.0.0.0" })
+        {
+            Assert.IsFalse(BuildStampReport.TryParseCommit(none, out _, out _), none ?? "<null>");
+        }
+    }
+
+    [TestMethod]
+    public void TryParseCommit_OlderDotSeparator_Parses()
+    {
+        Assert.IsTrue(BuildStampReport.TryParseCommit(
+            "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d", out var commit, out var flagged));
+        Assert.AreEqual("46ce6436e1b538a7734a23713ec818a23afec93d", commit);
+        Assert.IsFalse(flagged);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_SameCleanCommit_IsPairedWhateverTheGap()
+    {
+        string deps = $"v0.1.0.0 build.20260914-032050Z+{E3Commit}";
+
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, deps, DebugTokens);
+
+        StringAssert.Contains(line, "(pair OK: both built from 8df90444)");
+        Assert.IsFalse(line.Contains("MISMATCH"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_DifferentCommitsDaysApart_IsMismatchNamingBothCommits()
+    {
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        StringAssert.Contains(line, " MISMATCH — built 16d 08h 46m apart from different commits (8df90444, 0c323437)");
+        Assert.IsFalse(line.Contains("expect the preview patches to fail"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_SameCommitButDirty_FallsBackToTheClock()
+    {
+        string taom = $"v2.0.0.0 build.20260930-120651Z+{E3Commit}.dirty";
+        string deps = $"v0.1.0.0 build.20260927-120651Z+{E3Commit}";
+
+        string line = BuildStampReport.BuildReportFromParts(taom, DebugTokens, deps, DebugTokens);
+
+        StringAssert.Contains(line, "MISMATCH");
+        Assert.IsFalse(line.Contains("from different commits"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_FlaggedStampWithinTheHour_NeverSaysPairOk()
+    {
+        string taom = $"v2.0.0.0 build.20260930-120651Z+{E3Commit}.dirty";
+        string deps = $"v0.1.0.0 build.20260930-121651Z+{E3Commit}";
+
+        string line = BuildStampReport.BuildReportFromParts(taom, DebugTokens, deps, DebugTokens);
+
+        StringAssert.Contains(line, "(pair close in time, stamp flagged)");
+        Assert.IsFalse(line.Contains("pair OK"), line);
     }
 }

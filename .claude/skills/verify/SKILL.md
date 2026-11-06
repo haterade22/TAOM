@@ -16,16 +16,21 @@ Run comprehensive verification on current codebase state.
 ## Step 1: Build Check
 
 ```bash
-dotnet build Main --no-restore 2>&1
+dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= 2>&1
 ```
+
+Both flags, on this and on Step 2: without them the build copies into the game install, and fails
+while Bannerlord is running (.ai/verification.md). Never `./build.ps1` here.
 
 If it fails, report errors and **STOP** (no point running tests on broken build).
 
 ## Step 2: Test Suite
 
 ```bash
-dotnet test TAOM.Tests --no-build 2>&1
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= 2>&1
 ```
+
+No `--no-build`: Step 1 builds `Main` only, so skipping the build here would test a stale test DLL.
 
 Report:
 - Total tests
@@ -63,16 +68,16 @@ grep -rE 'TODO|FIXME' Main/ --include='*.cs' | wc -l
 
 Report count.
 
-## Step 5: CHANGELOG Check
+## Step 5: CHANGELOG.md untouched
 
-Check if `CHANGELOG.md` has been modified (staged or unstaged):
+Only `/release` writes `CHANGELOG.md` (generated from commit bodies). Check that this work did
+not edit it by hand:
 
 ```bash
-git diff --name-only -- CHANGELOG.md
-git diff --staged --name-only -- CHANGELOG.md
+git diff --name-only HEAD -- CHANGELOG.md
 ```
 
-If C# or XML files changed but CHANGELOG not updated, flag it.
+If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
 
 ## Output Format
 
@@ -86,7 +91,7 @@ Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
-CHANGELOG:  [Updated/NOT UPDATED]
+CHANGELOG:  [Untouched/HAND-EDITED]
 
 Ready for commit: [YES/NO]
 

@@ -6,7 +6,6 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Content;
-using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Hooks;
 using TAOM.Features.Enlistment.Presentation;
@@ -17,11 +16,10 @@ namespace TAOM.Tests.Features.Enlistment;
 /// <summary>
 /// Session scope for the Enlistment singletons (csharp-architecture.md, "Singleton Services Holding
 /// Per-Campaign State MUST Have a Session-Reset Story"). Every service here is Reuse.Singleton and
-/// outlives the campaign. Three kinds of per-session value are covered. The dwell anchor and the
+/// outlives the campaign. Two kinds of per-session value are covered. The dwell anchor and the
 /// offer cooldown hold absolute campaign hours: loading an earlier save, or starting a new
 /// campaign, runs the clock backwards, and a stamp left in the future reads as "a moment ago" until
-/// the new clock catches up with it. The rhythm snapshot is keyed on an equal hour stamp, so its
-/// hazard is a reload inside the same campaign hour serving the previous world's snapshot. The
+/// the new clock catches up with it. The
 /// adapter's cached commander MobileParty is a handle matched by StringId, which a later campaign
 /// can reissue. The hook tests pin that the load, new-campaign and game-end edges reach the one
 /// reset point, and that a load of a save with no Enlistment data starts from an empty record.
@@ -94,7 +92,7 @@ public class EnlistmentSessionResetTests
         return new EnlistmentWaitMenuPresenter(store, Substitute.For<ICommanderLordAdapter>(),
             Substitute.For<IEnlistmentDialogGateService>(), Substitute.For<IEnlistmentService>(),
             inquiry, coop, actions, Substitute.For<IGameMenuAdapter>(),
-            Substitute.For<IServiceStatusService>(), settings, Substitute.For<IModLogger>());
+            Substitute.For<IServiceStatusService>(), Substitute.For<IServiceStatusTextWriter>(), settings, Substitute.For<IModLogger>());
     }
 
     private static void AssertOffersShown(IInquiryAdapter inquiry, int count) =>
@@ -132,30 +130,6 @@ public class EnlistmentSessionResetTests
         sut.OfferTownLeave("town_EW1", 1030.0);
 
         AssertOffersShown(inquiry, 2);
-    }
-
-    // ---- army-rhythm snapshot (ArmyRhythmSnapshotService) --------------------------------------
-
-    [TestMethod]
-    public void RhythmReset_ForcesAFreshProbe_InTheSameCampaignHour()
-    {
-        // A quick reload inside the same campaign hour would otherwise serve the pre-load world.
-        var store = Substitute.For<IEnlistmentStore>();
-        store.Record.Returns(new EnlistmentRecord());
-        var content = Substitute.For<IEnlistmentContentStore>();
-        content.Record.Returns(new ServiceContentRecord());
-        var probe = Substitute.For<IArmyRhythmProbeAdapter>();
-        probe.Probe(Arg.Any<string>()).Returns(new ArmyRhythmProbe());
-        var sut = new ArmyRhythmSnapshotService(store, content, probe);
-
-        sut.GetSnapshot(10.0, 12.0);
-        sut.GetSnapshot(10.0, 12.0);
-        probe.Received(1).Probe(Arg.Any<string>());
-
-        sut.ResetForNewSession();
-        sut.GetSnapshot(10.0, 12.0);
-
-        probe.Received(2).Probe(Arg.Any<string>());
     }
 
     // ---- the lifecycle hooks (EnlistmentBehavior) ----------------------------------------------

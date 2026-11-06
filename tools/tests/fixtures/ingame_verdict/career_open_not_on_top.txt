@@ -1,0 +1,6 @@
+[2026-10-31 14:00:01] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-10-31 14:00:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-31 14:05:10] [INFO] CareerSystem: OpenCareerScreen called (switchMode=False)
+[2026-10-31 14:05:11] [WARNING] CareerSystem: OpenCareerScreen — MainHero is null
+[2026-10-31 14:05:12] [INFO] [Check] id=taom.career-screen.open result=fail source=button reason=not-on-top
+[2026-10-31 14:20:00] [INFO] [Shutdown] clean module unload

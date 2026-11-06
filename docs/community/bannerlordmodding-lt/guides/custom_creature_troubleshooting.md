@@ -27,7 +27,7 @@ involved, see [How to report a crash](/guides/how_to_report_a_crash/) and
 | All colour variants render the same colour | Materials lost on FBX re-import (same cause) |
 | Rider floats at his own feet | `rider_sit_bone` name does not match, so it resolved to -1 |
 | Creature becomes unmountable mid-fight | An attack was bound to an `actt_rear` action |
-| Creature flinches while dealing damage | An attack was bound to an `actt_mount_strike` action |
+| Creature flinches while dealing damage | An attack was bound to a hit-reaction clip, such as the horse's `act_horse_strike_*` (clips `horse_hit_from_*`) |
 | Character renders in bind pose in UI tableaux | The action set is valid but binds no clip for that action |
 | Crash when a unit walks into water | A standalone action set is missing the dive actions |
 | Dedicated server dies at boot, client is fine | A root-level `<action>` element |

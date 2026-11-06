@@ -370,26 +370,8 @@
 	<!-- These reuse the same localization tokens as vanilla C# code to override at load time -->
 	<string id="taom_alliance_formed" text="{=0cdXddA9}{KINGDOM1_LINK} has formed an alliance with {KINGDOM2_LINK}." />
 	<string id="taom_no_longer_enemies" text="{=1rbg3Hz2}{FACTION_1} and {FACTION_2} are no longer enemies." />
-	<string id="taom_policy_stop" text="{=2BVDp7Tg}{KINGDOM} will stop {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-	<string id="taom_policy_start" text="{=Lbs2bNlg}{KINGDOM} will start {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-	<string id="taom_policy_continue" text="{=jnYwiCAz}{KINGDOM} will continue {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-	<string id="taom_policy_reject" text="{=faUooB7V}{KINGDOM} will not be {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
 
 	<!-- DLL localization token overrides (hero titles and lord descriptions) -->
-	<string id="taom_hero_of_faction" text="{=TauRjAud}{NAME} of {FACTION}" />
-	<string id="taom_servant_of_faction" text="{=2mVZORaE}a servant of {FACTION_NAME}" />
-	<string id="taom_lord_ruler_desc" text="{=6d4ZTvGv}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of the {CLAN_NAME}, {CLAN_DESCRIPTION} of the realm. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_lord_member_desc" text="{=o5AUljbW}{LORD.NAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_lord_member_desc2" text="{=9Obe3S6L}{LORD.FIRSTNAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_lord_head_desc" text="{=hRfXSdlP}{LORD.FIRSTNAME} is a head of the {CLAN_NAME}, {CLAN_DESCRIPTION} from the lands of {FACTION_NAME}. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_lord_civilwar_member" text="{=0bPb5btR}{LORD.NAME} is a member of the {CLAN_NAME}, {CLAN_DESCRIPTION} of {FACTION_NAME} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_lord_civilwar_ruler" text="{=JuPUG5wX}{LORD.NAME} is {TITLE} of {FACTION_NAME} and head of the {CLAN_NAME}, {CLAN_DESCRIPTION} that is backing {RULER} in the civil war. {?LORD.GENDER}She{?}He{\?} has the reputation of being {REPUTATION}." />
-	<string id="taom_castle_desc" text="{=4pmvrnmN}The castle of {SETTLEMENT_LINK} is owned by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
-	<string id="taom_settlement_gov" text="{=q3wD0rbq}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {KEEP_INFO}" />
-	<string id="taom_settlement_land" text="{=RVDojUOM}The lands around {SETTLEMENT_LINK} are owned mostly by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO}" />
-	<string id="taom_settlement_gov2" text="{=UWzQsHA2}{SETTLEMENT_LINK} is governed by {LORD.LINK}, {FACTION_OFFICIAL} of {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
-	<string id="taom_prisoner_dialogue" text="{=yAOQnMVw}You're of {FACTION}, right? That means you're my prisoner." />
-	<string id="taom_protection_dialogue" text="{=YT4OvaAG}Very well. You may consider yourself under the protection of {FACTION_NAME}. You have until this time tomorrow to complete your journey, or we may ask for another payment from you." />
 
 	<!-- Erebor -->
 	<string id="str_faction_official.erebor" text="{=taom_str_faction_official.erebor}a noble dwarf" />
@@ -838,6 +820,7 @@
 	<string id="taom_career_tier2" text="{=taom_career_tier2}Tier 2" />
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
+	<string id="taom_career_repair_refund" text="{=taom_career_repair_refund}Career choices that belonged to another career were refunded: {COUNT}." />
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
 	<!-- Choice tree effect-scope badges (passive vs ability-bound) -->
 	<string id="taom_career_choice_while_active" text="{=taom_career_choice_while_active}While active" />
@@ -1575,7 +1558,7 @@
 	<string id="taom_faction_dominion_of_isengard_weakness_1" text="{=taom_faction_dominion_of_isengard_weakness_1}Single chokepoint settlement" />
 	<string id="taom_faction_dominion_of_isengard_weakness_2" text="{=taom_faction_dominion_of_isengard_weakness_2}Surrounded by Rohan and Fangorn" />
 	<string id="taom_faction_dominion_of_mordor_bonus_0" text="{=taom_faction_dominion_of_mordor_bonus_0}-60% army influence cost (The Dark Lord's Will)" />
-	<string id="taom_faction_dominion_of_mordor_bonus_1" text="{=taom_faction_dominion_of_mordor_bonus_1}+10% party size limit (Sauron's Hordes)" />
+	<string id="taom_faction_dominion_of_mordor_bonus_1" text="{=taom_faction_dominion_of_mordor_bonus_1}+20% party size limit (Sauron's Hordes)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_10" text="{=taom_faction_dominion_of_mordor_bonus_10}+15% smithing efficiency (Dark Smithing)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_2" text="{=taom_faction_dominion_of_mordor_bonus_2}+20% Nurn grain production (Nurn Farmlands)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_3" text="{=taom_faction_dominion_of_mordor_bonus_3}+25% raid damage (Sauron's Wrath)" />
@@ -1684,7 +1667,7 @@
 	<string id="taom_faction_golden_realm_of_rhun_bonus_4" text="{=taom_faction_golden_realm_of_rhun_bonus_4}-20% town tax income (Khuzait, inherited)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_5" text="{=taom_faction_golden_realm_of_rhun_bonus_5}-0.5 settlement loyalty per day (Easterling Tribute)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_6" text="{=taom_faction_golden_realm_of_rhun_bonus_6}+15% raid damage (Steppe Raider Doctrine)" />
-	<string id="taom_faction_golden_realm_of_rhun_desc" text="{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host party size. Heavy cavalry that arrives in numbers and tribute." />
+	<string id="taom_faction_golden_realm_of_rhun_desc" text="{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host +5% party size. Heavy cavalry that arrives in numbers and tribute." />
 	<string id="taom_faction_golden_realm_of_rhun_name" text="{=taom_faction_golden_realm_of_rhun_name}Golden-Realm of Rhun" />
 	<string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="{=taom_faction_golden_realm_of_rhun_perk_0_desc}+10% party speed on steppe — riders of the Sea of Rhun cross the plain fast." />
 	<string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="{=taom_faction_golden_realm_of_rhun_perk_0_name}Easterling Outriders" />
@@ -2190,7 +2173,7 @@
 	<string id="taom_faction_taskralan_of_harwan_bonus_6" text="{=taom_faction_taskralan_of_harwan_bonus_6}-15% party food consumption (Desert Endurance)" />
 	<string id="taom_faction_taskralan_of_harwan_bonus_7" text="{=taom_faction_taskralan_of_harwan_bonus_7}+15% raid damage (Far Harad Savagery)" />
 	<string id="taom_faction_taskralan_of_harwan_bonus_8" text="{=taom_faction_taskralan_of_harwan_bonus_8}+15% army influence cost (Divided Tribes)" />
-	<string id="taom_faction_taskralan_of_harwan_desc" text="{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add party size on top of the inherited caravan economy. Mumakil rule the southern plains." />
+	<string id="taom_faction_taskralan_of_harwan_desc" text="{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add +5% party size on top of the inherited caravan economy. Mumakil rule the southern plains." />
 	<string id="taom_faction_taskralan_of_harwan_name" text="{=taom_faction_taskralan_of_harwan_name}Taskralan of Harwan" />
 	<string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="{=taom_faction_taskralan_of_harwan_perk_0_desc}+10% party speed on desert — born to burning sands." />
 	<string id="taom_faction_taskralan_of_harwan_perk_0_name" text="{=taom_faction_taskralan_of_harwan_perk_0_name}Sons of the Sun" />
@@ -2244,23 +2227,6 @@
   <string id="str_adjective_for_culture.goblin" text="{=taom_str_adjective_for_culture.goblin}Goblin" />
   <string id="str_player_father_name.goblin" text="{=taom_str_player_father_name.goblin}Narzuk" />
   <string id="str_player_mother_name.goblin" text="{=taom_str_player_mother_name.goblin}Borlia" />
-  <string id="taom_bandit_goblin_name" text="{=taom_bandit_goblin_name}Goblin Raiders" />
-  <string id="taom_bandit_goblin_m1" text="{=taom_bandit_goblin_m1}Bolg" />
-  <string id="taom_bandit_goblin_m2" text="{=taom_bandit_goblin_m2}Yazneg" />
-  <string id="taom_bandit_goblin_m3" text="{=taom_bandit_goblin_m3}Fimbul" />
-  <string id="taom_bandit_goblin_m4" text="{=taom_bandit_goblin_m4}Narzug" />
-  <string id="taom_bandit_goblin_m5" text="{=taom_bandit_goblin_m5}Gorbag" />
-  <string id="taom_bandit_goblin_m6" text="{=taom_bandit_goblin_m6}Mauhûr" />
-  <string id="taom_bandit_goblin_m7" text="{=taom_bandit_goblin_m7}Snaga" />
-  <string id="taom_bandit_goblin_m8" text="{=taom_bandit_goblin_m8}Ufthak" />
-  <string id="taom_bandit_goblin_m9" text="{=taom_bandit_goblin_m9}Radbug" />
-  <string id="taom_bandit_goblin_m10" text="{=taom_bandit_goblin_m10}Lugdush" />
-  <string id="taom_bandit_goblin_f1" text="{=taom_bandit_goblin_f1}Skarra" />
-  <string id="taom_bandit_goblin_f2" text="{=taom_bandit_goblin_f2}Vorga" />
-  <string id="taom_bandit_goblin_f3" text="{=taom_bandit_goblin_f3}Mazra" />
-  <string id="taom_bandit_goblin_f4" text="{=taom_bandit_goblin_f4}Grishta" />
-  <string id="taom_bandit_goblin_f5" text="{=taom_bandit_goblin_f5}Narzga" />
-  <string id="taom_hideout_desc_goblin" text="{=taom_hideout_desc_goblin}Beneath the crags of the High Pass you find a reeking warren of goblins burrowed deep into the bare rock." />
 
   <!-- TAOM-NEWFACTIONS:goblin:END -->
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
@@ -2281,23 +2247,6 @@
   <string id="str_adjective_for_culture.mistymountainorcs" text="{=taom_str_adjective_for_culture.mistymountainorcs}Orc" />
   <string id="str_player_father_name.mistymountainorcs" text="{=taom_str_player_father_name.mistymountainorcs}Narzuk" />
   <string id="str_player_mother_name.mistymountainorcs" text="{=taom_str_player_mother_name.mistymountainorcs}Borlia" />
-  <string id="taom_bandit_mistymountainorcs_name" text="{=taom_bandit_mistymountainorcs_name}Orc Raiders" />
-  <string id="taom_bandit_mistymountainorcs_m1" text="{=taom_bandit_mistymountainorcs_m1}Bolg" />
-  <string id="taom_bandit_mistymountainorcs_m2" text="{=taom_bandit_mistymountainorcs_m2}Yazneg" />
-  <string id="taom_bandit_mistymountainorcs_m3" text="{=taom_bandit_mistymountainorcs_m3}Fimbul" />
-  <string id="taom_bandit_mistymountainorcs_m4" text="{=taom_bandit_mistymountainorcs_m4}Narzug" />
-  <string id="taom_bandit_mistymountainorcs_m5" text="{=taom_bandit_mistymountainorcs_m5}Gorbag" />
-  <string id="taom_bandit_mistymountainorcs_m6" text="{=taom_bandit_mistymountainorcs_m6}Mauhûr" />
-  <string id="taom_bandit_mistymountainorcs_m7" text="{=taom_bandit_mistymountainorcs_m7}Snaga" />
-  <string id="taom_bandit_mistymountainorcs_m8" text="{=taom_bandit_mistymountainorcs_m8}Ufthak" />
-  <string id="taom_bandit_mistymountainorcs_m9" text="{=taom_bandit_mistymountainorcs_m9}Radbug" />
-  <string id="taom_bandit_mistymountainorcs_m10" text="{=taom_bandit_mistymountainorcs_m10}Lugdush" />
-  <string id="taom_bandit_mistymountainorcs_f1" text="{=taom_bandit_mistymountainorcs_f1}Skarra" />
-  <string id="taom_bandit_mistymountainorcs_f2" text="{=taom_bandit_mistymountainorcs_f2}Vorga" />
-  <string id="taom_bandit_mistymountainorcs_f3" text="{=taom_bandit_mistymountainorcs_f3}Mazra" />
-  <string id="taom_bandit_mistymountainorcs_f4" text="{=taom_bandit_mistymountainorcs_f4}Grishta" />
-  <string id="taom_bandit_mistymountainorcs_f5" text="{=taom_bandit_mistymountainorcs_f5}Narzga" />
-  <string id="taom_hideout_desc_mistymountainorcs" text="{=taom_hideout_desc_mistymountainorcs}Beneath the crags of the Misty Mountains you find a foul warren of orcs burrowed into the bare rock." />
 
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
 
@@ -2935,10 +2884,186 @@
 	<string id="taom_bc_advice_keep" text="{=taom_bc_advice_keep}Keep mine" />
 	<string id="taom_bc_advice_done" text="{=taom_bc_advice_done}Battle settings saved." />
 	<string id="taom_bc_advice_failed" text="{=taom_bc_advice_failed}Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
+	<string id="taom_bc_apply_failed" text="{=taom_bc_apply_failed}[TAOM] Battle settings could not be applied: {ERROR}" />
 	<!-- CheatScreenGuardService -->
 	<string id="taom_cheat_screen_guard_notice" text="{=taom_cheat_screen_guard_notice}TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
 	<!-- TextureAdviceAdapter -->
 	<string id="taom_texture_advice_title" text="{=taom_texture_advice_title}TAOM: memory advice" />
 	<string id="taom_texture_advice_body" text="{=taom_texture_advice_body}This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />
 	<string id="taom_texture_advice_ok" text="{=taom_texture_advice_ok}Understood" />
+	<!-- Enlistment -->
+	<string id="taom_enlist_not_by_messenger" text="{=taom_enlist_not_by_messenger}Swear service in person, not through a messenger." />
+	<!-- TavernSpecialities -->
+	<string id="taom_tavern_drink_default" text="{=taom_tavern_drink_default}a mug of ale" />
+	<string id="taom_tavern_food_default" text="{=taom_tavern_food_default}a bowl of stew" />
+
+	<!-- ============================================== -->
+	<!-- Liege titles for the TAOM-only kingdom cultures (#955). Each row carries its own   -->
+	<!-- taom_culture_<id> tag (Main/Features/LiegeTitles/TaomCultureTags.cs): the coronation -->
+	<!-- picks by id suffix, dialogs pick by tag, and an untagged row would win for every culture. -->
+	<!-- ============================================== -->
+
+	<string id="str_liege_title.abanissa" text="{=taom_str_liege_title.abanissa}Châjaphân of Âbanissa">
+		<tags>
+			<tag tag_name="taom_culture_abanissa" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.abanissa" text="{=taom_str_liege_title_female.abanissa}Châjaphân of Âbanissa">
+		<tags>
+			<tag tag_name="taom_culture_abanissa" />
+		</tags>
+	</string>
+	<string id="str_liege_title.bluecraig" text="{=taom_str_liege_title.bluecraig}Great Goblin of Blue Craig">
+		<tags>
+			<tag tag_name="taom_culture_bluecraig" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.bluecraig" text="{=taom_str_liege_title_female.bluecraig}Great Goblin of Blue Craig">
+		<tags>
+			<tag tag_name="taom_culture_bluecraig" />
+		</tags>
+	</string>
+	<string id="str_liege_title.dolguldur" text="{=taom_str_liege_title.dolguldur}Dread-Lord of Dol Guldur">
+		<tags>
+			<tag tag_name="taom_culture_dolguldur" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.dolguldur" text="{=taom_str_liege_title_female.dolguldur}Dread-Lady of Dol Guldur">
+		<tags>
+			<tag tag_name="taom_culture_dolguldur" />
+		</tags>
+	</string>
+	<string id="str_liege_title.erebor" text="{=taom_str_liege_title.erebor}King under the Mountain">
+		<tags>
+			<tag tag_name="taom_culture_erebor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.erebor" text="{=taom_str_liege_title_female.erebor}Queen under the Mountain">
+		<tags>
+			<tag tag_name="taom_culture_erebor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.gondor" text="{=taom_str_liege_title.gondor}Lord of Gondor">
+		<tags>
+			<tag tag_name="taom_culture_gondor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.gondor" text="{=taom_str_liege_title_female.gondor}Lady of Gondor">
+		<tags>
+			<tag tag_name="taom_culture_gondor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.goblin" text="{=taom_str_liege_title.goblin}Great Goblin of the High Pass">
+		<tags>
+			<tag tag_name="taom_culture_goblin" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.goblin" text="{=taom_str_liege_title_female.goblin}Great Goblin of the High Pass">
+		<tags>
+			<tag tag_name="taom_culture_goblin" />
+		</tags>
+	</string>
+	<string id="str_liege_title.gundabad" text="{=taom_str_liege_title.gundabad}Warlord of Gundabad">
+		<tags>
+			<tag tag_name="taom_culture_gundabad" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.gundabad" text="{=taom_str_liege_title_female.gundabad}Warlord of Gundabad">
+		<tags>
+			<tag tag_name="taom_culture_gundabad" />
+		</tags>
+	</string>
+	<string id="str_liege_title.isengard" text="{=taom_str_liege_title.isengard}Lord of Isengard">
+		<tags>
+			<tag tag_name="taom_culture_isengard" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.isengard" text="{=taom_str_liege_title_female.isengard}Lady of Isengard">
+		<tags>
+			<tag tag_name="taom_culture_isengard" />
+		</tags>
+	</string>
+	<string id="str_liege_title.lindon" text="{=taom_str_liege_title.lindon}Lord of the Havens">
+		<tags>
+			<tag tag_name="taom_culture_lindon" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.lindon" text="{=taom_str_liege_title_female.lindon}Lady of the Havens">
+		<tags>
+			<tag tag_name="taom_culture_lindon" />
+		</tags>
+	</string>
+	<string id="str_liege_title.lothlorien" text="{=taom_str_liege_title.lothlorien}Lord of the Galadhrim">
+		<tags>
+			<tag tag_name="taom_culture_lothlorien" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.lothlorien" text="{=taom_str_liege_title_female.lothlorien}Lady of the Galadhrim">
+		<tags>
+			<tag tag_name="taom_culture_lothlorien" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mirkwood" text="{=taom_str_liege_title.mirkwood}Elvenking of Mirkwood">
+		<tags>
+			<tag tag_name="taom_culture_mirkwood" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mirkwood" text="{=taom_str_liege_title_female.mirkwood}Elvenqueen of Mirkwood">
+		<tags>
+			<tag tag_name="taom_culture_mirkwood" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mistymountainorcs" text="{=taom_str_liege_title.mistymountainorcs}Warlord of the Misty Mountains">
+		<tags>
+			<tag tag_name="taom_culture_mistymountainorcs" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mistymountainorcs" text="{=taom_str_liege_title_female.mistymountainorcs}Warlord of the Misty Mountains">
+		<tags>
+			<tag tag_name="taom_culture_mistymountainorcs" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mordor" text="{=taom_str_liege_title.mordor}Dark Lord of Mordor">
+		<tags>
+			<tag tag_name="taom_culture_mordor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mordor" text="{=taom_str_liege_title_female.mordor}Dark Lady of Mordor">
+		<tags>
+			<tag tag_name="taom_culture_mordor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.rivendell" text="{=taom_str_liege_title.rivendell}Lord of Imladris">
+		<tags>
+			<tag tag_name="taom_culture_rivendell" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.rivendell" text="{=taom_str_liege_title_female.rivendell}Lady of Imladris">
+		<tags>
+			<tag tag_name="taom_culture_rivendell" />
+		</tags>
+	</string>
+	<string id="str_liege_title.shaghana" text="{=taom_str_liege_title.shaghana}Taskral of Shaghâna">
+		<tags>
+			<tag tag_name="taom_culture_shaghana" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.shaghana" text="{=taom_str_liege_title_female.shaghana}Taskral of Shaghâna">
+		<tags>
+			<tag tag_name="taom_culture_shaghana" />
+		</tags>
+	</string>
+	<string id="str_liege_title.umbar" text="{=taom_str_liege_title.umbar}Corsair King of Umbar">
+		<tags>
+			<tag tag_name="taom_culture_umbar" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.umbar" text="{=taom_str_liege_title_female.umbar}Corsair Queen of Umbar">
+		<tags>
+			<tag tag_name="taom_culture_umbar" />
+		</tags>
+	</string>
+
+	<!-- Dunland coronation (empire culture): the engine reads this line instead of a liege title -->
+	<string id="str_become_king_empire" text="{=taom_str_become_king_empire}On {DAY_OF_YEAR}, {YEAR}, {KING_NAME} was hailed as {?IS_KING_MALE}Brenin{?}Brenhines{\?} of Dunland." />
 </strings>

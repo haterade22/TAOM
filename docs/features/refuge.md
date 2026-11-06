@@ -84,7 +84,9 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 - **An upgrading refuge is not ready** (defence, militia, raids, manage all drop until the rebuild
   finishes). Deliberate difference from the source, pinned by tests.
 - **AI re-pinned on load** (`SetMoveModeHold` + `SetDoNotMakeNewDecisions`): the source pinned only
-  at spawn, so refuges could wander after a reload.
+  at spawn. The engine saves the pin (`MobilePartyAi.DoNotMakeNewDecisions` is
+  `[SaveableProperty(11)]`) and a refuge is never unpinned, so the load pin is an idempotent belt for
+  a party whose founding pin threw or an orphan adopted from an older save.
 - **Raids ship OFF** (experimental in the source, same default here).
 - **A refuge never disbands; warden death orphan-adopts.** Vanilla starts its disband flow itself
   when a party leader dies with no other hero in the roster (1.4.8 `KillCharacterAction.MakeDead`:
@@ -103,14 +105,19 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   `BuildTargetHours` on a building row (a NaN or Infinity target could never reach
   `BuildProgress >= 1`: a permanent absorbing state eating a cap slot). `BuildProgress` itself
   uses a positive-requirement gate so NaN resolves as done rather than never.
-- **Clan screen: every refuge listed, wage control suppressed.** All rows (ready, building with a
+- **Clan screen: every refuge listed, wage slider hidden.** All rows (ready, building with a
   "(being raised)" suffix, orphan-adopted) appear under Garrisons (source parity; a mid-raise
   refuge holding a deposited garrison must not vanish for the build window). The Garrison-typed
   `ClanPartyItemVM` ctor builds a live wage slider whose figure is never charged
   (`DefaultClanFinanceModel` processes neither `WarPartyComponents` nor `OwnedCaravans` for a
-  refuge) and whose `SetWagePaymentLimit` is a silent base-`PartyComponent` no-op, so the patch
-  suppresses it post-construction (`ShouldPartyHaveExpense = false`, `ExpenseItem = null`) and
-  recomposes the static wage line to the honest 0.
+  refuge) and whose `SetWagePaymentLimit` is a silent base-`PartyComponent` no-op, so the slider
+  is hidden (`ShouldPartyHaveExpense = false`, `ExpenseItem = null`) and the static wage line it
+  reveals (v1.4.8 SandBox `ClanPartiesRightPanel.xml:58`) is recomposed to the honest 0. The
+  decoration is applied by a postfix on `ClanPartyItemVM.UpdateProperties`
+  (`RefugeClanRowRefreshPatch`, #994), not once at list build: `ClanPartiesVM.RefreshValues`
+  re-runs every row's `UpdateProperties` after the build, which resets `Name` and the wage line,
+  so a one-shot decoration lost the suffix and the zero wage. The row constructor's own refresh
+  decorates new rows, and `IRefugeBook.GetByPartyId` picks the refuge and its `Building` flag.
 
 ## Configuration
 
@@ -154,7 +161,7 @@ disagrees.
 | `Visuals/RefugeVisualService.cs` | refuge tpacs (scale 4/4.8, palisade 4.6/5.4) over CampLayoutBuilder, vanilla fallback |
 | `Hooks/RefugeCampaignBehavior.cs` + `RefugeMenuController.cs` | Events, SyncData, menus, index-4 insertions |
 | `Hooks/RefugeCampContributor.cs` | Overlay caption/blocked-reason/status through FieldCamp's seam |
-| `Hooks/RefugeClanScreenPatch.cs` + `RefugeEncounterPatch.cs` | Patch75 |
+| `Hooks/RefugeClanScreenPatch.cs` + `RefugeClanRowRefreshPatch.cs` + `RefugeEncounterPatch.cs` | Patch75 |
 | `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin's `BattleCombatant` (a mount's from its rider's), then `RefugeDamageReduction` (#741) |
 
 ## Traps

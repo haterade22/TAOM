@@ -39,7 +39,7 @@ public class HitchProbeBindingTests
             .Where(t => t.GetCustomAttributes<HarmonyPatchCategory>().Any(c =>
                 c.info.category is HitchProbeInstaller.Category or HitchProbeInstaller.CameraCategory));
 
-    // CreatureBanditsWiringTests.TargetOf, with the argument types.
+    // MissionTickProfilerBindingTests.TargetOf, with the argument types.
     private static MethodBase TargetOf(Type patch)
     {
         var byName = AccessTools.Method(patch, "TargetMethod");

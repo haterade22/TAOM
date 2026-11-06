@@ -19,5 +19,6 @@ public static class SaveManager_Save_Patch
     {
         try { _service?.BeginSaveAttempt(saveName ?? "<null>"); }
         catch { /* diagnostic only */ }
+        Core.Logging.Outcomes.WriteSummary("save"); // #1071; never throws
     }
 }

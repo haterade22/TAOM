@@ -353,8 +353,8 @@ finishes loading. TAOM hit 132,378 on 2026-07-24 after importing four packs, and
 the `Prefabs` / `Prefabs_Unused` split you see today
 ([editor-rglconcurrentqueue-assert-2026-07.md](../investigations/editor-rglconcurrentqueue-assert-2026-07.md)).
 
-`python tools/check_prefab_budget.py` counts `TAOM_Map/Prefabs` **only**, and the queue is global, so
-the tool reports a comfortable pass while the real total sits at the ceiling. Measured today:
+`python tools/check_prefab_budget.py` sums every installed module, because the queue is global.
+Measured:
 
 | Module | `<game_entity>` in `Prefabs/` |
 |---|---|
@@ -369,8 +369,9 @@ the tool reports a comfortable pass while the real total sits at the ceiling. Me
 
 <!-- measured: for m in */; do grep -ho '<game_entity' "$m"Prefabs/*.xml 2>/dev/null | wc -l; done 2026-09-05 -->
 
-The tool printed `TOTAL: 93830 entities in 141 files (cap 131072, warn 120000)` and `OK` on the same
-day. Sum every enabled module before believing it. `Prefabs_Unused/` holds another 91,023 entities
+It prints `TOTAL: 130468 entities in 7 modules (cap 131072, warn 120000)` and a `WARN` line, and exits 1
+in that band. Only `--dir <folder>` counts a single folder (`TOTAL: 93830 entities in 141 files` and `OK`
+for `TAOM_Map/Prefabs`), and that is not the budget. `Prefabs_Unused/` holds another 91,023 entities
 that are parked, not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
 
 ## Recipes
@@ -429,7 +430,9 @@ Code: No code changes needed
    villages, and by party-template and recruitment XML. Everything else on the tag is editable.
 2. **Rename:** edit the default text after `{=key}` in `settlements.xml` and the matching `text=` in
    all 12 `loc_settlements.xml`. `python tools/Apply-MapVillageNames.py` does the 13 files in one
-   pass; edit its `NAMES` dict first.
+   pass; edit its `NAMES` dict, read the dry run, then `--apply`. It writes only the ids whose English
+   changed and removes them from `tools/translation_cache/<lang>.json`, which the translator would
+   otherwise use to write the old wording back.
 3. **Re-own:** change `owner="Faction.<clan>"`, which exists only on towns and castles. Villages have
    no `owner` and inherit through `bound=`. `python tools/Assign-SettlementOwners.py` is the
    rules-driven version, dry-run by default.
@@ -441,8 +444,9 @@ Code: No code changes needed
    sanctioned idioms are in [tools/README.md](../../tools/README.md) under "XML I/O convention".
 
 Check: `python tools/validate_moduledata.py`
-Takes effect: next save load for `posX`/`posY`/`gate_pos*` and for display names; new campaign only
-for `owner`, `prosperity`, `hearth` and `<Building level>`
+Takes effect: next save load for `posX`/`posY`/`gate_pos*` and the English display name; the 12
+translated names at the next game start or after a language switch (`MBTextManager.ChangeLanguage`,
+v1.4.8); new campaign only for `owner`, `prosperity`, `hearth` and `<Building level>`
 Code: No code changes needed
 
 ### Delete a settlement

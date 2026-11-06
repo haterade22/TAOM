@@ -303,9 +303,11 @@ The first shipped version never joined a single battle. Five separate defects, a
 alternative exists), `MapState.EnterMenuMode` postfix (recovery for ids written without
 SetNextMenu), 4× `LordConversationsCampaignBehavior` condition prefixes (suppress
 join-army/ally-thanks lines while enlisted; the clickable variant carries `out TextObject
-hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All six targets pinned by
+hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All eight targets pinned by
 `Patch66EnlistmentBindingTests` against the installed DLLs. The donor's
 `MapState.OnMapConversationOver` patch was replaced by `CampaignEvents.ConversationEnded`.
+Since the WP128 port the category also holds the
+`MapEventHelper.CanMainPartyLeaveBattleCommonCondition` postfix (#827), described below.
 
 ## The remediation arc (2026-08-07, batches 0-10)
 
@@ -757,8 +759,9 @@ over.
 Be precise about what that does and does not justify, because the first version of this paragraph
 said the popup "stated the stakes" and it does not. `InteractiveDutyPresenter.PresentIncident` passes
 `ShowTwoOptionInquiry` exactly four strings: a title and body from the static `DutyCopy` table, and
-`Humanize(option.Key)` for each button. No difficulty, no skill name, no trust delta reaches the
-player. The exemption rests on the choice being the player's, nothing more. Making the stakes legible
+`Humanize(option.Key)` for each button. (Historical: #845 removed `DutyCopy` and `Humanize`, so the
+words now come from `enlistment_duties.json` through `DutyText`; it is still four strings.) No
+difficulty, no skill name, no trust delta reaches the player. The exemption rests on the choice being the player's, nothing more. Making the stakes legible
 would be a real improvement and is not in this change.
 
 One incident row is worse than that exemption can carry, and it predates this change: `press_claim`
@@ -849,6 +852,9 @@ and the alternative is a permanent zero), and it is why the trust boundary is he
 observed the resulting `CohesionRatio` in a live battle.
 
 Three consequences worth naming, because the score feeds more than trust.
+This list describes the code as it stood then. #844 later removed `RepDomain`/`RepAmount`, `FieldRep`
+and its siblings and `TrustLedger`, and #843 removed `HighScrutiny`, so the reputation items below
+are historical.
 `EnlistmentBattlePayoutService` grants the band's `ServiceXp`, `Gold`, `Trust`, `RepDomain`/
 `RepAmount` and folds `band.Renown` into `BattleRenownPolicy`:
 
@@ -1790,6 +1796,207 @@ event's settlement, not behind the trace toggle because it is rare:
 `InsideSettlementJoinDiagnosticTests` pins its place (after the settlement read, before
 `RestartPlayerEncounter`, ungated). Ported from the 1.5.x line (#1019).
 
+## Fixes ported from the 1.5.x line (port148 WP128)
+
+These fixes reached the 1.4.x line in WP128 of the 2026-11-04 port programme. Engine facts were
+re-checked on v1.4.8. The review records are the `docs/reviews/rca-enlistment-*` files named in
+each entry; they describe the 1.5.x review and cite v1.5.5 lines.
+
+### No walking out of the commander's battle (#827)
+
+The `Patch66_Enlistment` postfix on `MapEventHelper.CanMainPartyLeaveBattleCommonCondition` hides
+vanilla 'Leave' and 'Abandon army' while the soldier is in `EnlistedBattle` and does not lead his
+side (`IEnlistmentMenuService.ShouldBlockBattleExit`, which starts from `BattleCommandPolicy`).
+On v1.4.8 exactly three `EncounterGameMenuBehavior` conditions read the predicate (`:1566`,
+`:1638`, `:1877`); `Patch66EnlistmentBindingTests` pins the set by IL scan. A safe-passage truce
+that greys out 'Attack' and 'Send troops' (`MenuHelper.CheckEnemyAttackableHonorably`) releases
+the exits, so the menu always keeps one. Review: `rca-enlistment-battle-exit-2026-10-18.md`.
+
+### A way out of the service menu after a discharge during load (#828)
+
+The wait menu's own condition is `args => true`; every service option gates itself on
+`IEnlistmentPlayerActionService.IsServing`, because v1.4.8 ANDs a wait menu's condition with each
+option's (`GameMenu.cs:158-168`). When nobody serves, the one `isLeave` option "Go on your way"
+(`LeaveAfterDischarge`) leaves the menu, into the town menu when the player stands in a town, and
+the board reads "Your service has ended." `EnlistmentServiceMenuWiringTests` pins the shape.
+Review: `rca-enlistment-discharged-menu-2026-10-19.md`.
+
+### The commander's village raids are not battles to join (#831), unless a lord relieves the village (#954)
+
+`VillageRaidReader.IsRaiding` (one adapter read shared by both commander snapshots and
+`IEncounterAdapter.IsPartyRaiding`) is true when the commander is the attacker in a raid, forced
+supplies or forced volunteers and no mobile lord party with healthy troops defends it.
+`VillageActionJoinPolicy.IsJoinableBattle` gates the assessment, the pump's join request and both
+stale-latch predicates, and `ServiceBattleService` refuses the join as a floor. The board shows
+"The column is raiding." A relief lord joins the running Raid event on its defender side (v1.4.8
+`StartBattleAction.cs:23-30`, `:113-115`), so that fight is joined. Reviews:
+`rca-enlistment-village-raids-2026-10-20.md`, `rca-enlistment-relief-lord-2026-10-20.md`.
+
+### A joined battle starts no private war (#832, join-time part only)
+
+Before a join, `ServiceBattleService` asks `IServiceDiplomacyService.MirrorWarAtJoin` for the
+faction of the opposing side's leader (`IEncounterAdapter.GetOpposingLeaderFactionId`). For a
+soldier whose oath identity is his own clan (`ServiceWarPolicy.ShouldMirrorMidTerm`), a war his
+lord's realm fights and he does not is declared first with the default reason
+(`IServiceDiplomacyAdapter.FollowWarOn`; v1.4.8 cancels rather than fails quests for a war the
+player did not cause, `QuestHelper.cs:138-151`) and recorded in `MirroredWars`, so discharge
+unwinds it. Declarations and peace report success only when they landed (TAOM's alliance veto
+can skip them). Not ported from 1.5.x: the hourly mid-term war follow and the release when the
+lord's realm goes to war with the player's own (plan 128 decision P128-1).
+
+### Vassals sit out battles their kingdom is not at war in (#960)
+
+A soldier whose clan serves a kingdom sits out a commander's battle against a faction his kingdom
+is not at war with (`ShouldSitOutAsVassal`), because 'Attack' there would declare a kingdom-wide
+war (v1.4.8 `BeHostileAction.cs:187-197`). Review: `rca-enlistment-vassal-sit-out-2026-10-21.md`.
+
+### Merit is the hero's (#834) and the grace state promotes no one (#835)
+
+`EnlistmentMeritMissionBehavior` counts a kill only when `affectorAgent.Character` is
+`CharacterObject.PlayerCharacter` and treats a controlled non-hero soldier as the hero being
+down (v1.4.8 `Mission.CanTakeControlOfAgent` needs a non-hero, `Mission.cs:6332-6336`).
+`EnlistmentBattlePayoutService` evaluates no promotion in `CommanderUnavailable`, matching the
+daily tick. The 1.5.x personal spoils and promotion notice are not ported.
+
+### No battle encounter is left without a way out (#1021)
+
+A landed join whose `encounter` menu fails to open stays in the battle (the game opens the menu).
+`BreakStaleBattleLatch` also times an `EnlistedAttached` soldier outside a settlement whose open
+encounter is a joined battle (`IEncounterAdapter.IsJoinedBattleEncounter`), and releases an
+`EnlistedBattle` soldier inside a settlement without finishing the encounter, because a finish
+there teleports or walks out an unmerged party (v1.4.8 `PlayerEncounter.cs:1082-1093`). The next
+join forgets a reused encounter's old result (`ForgetEndedBattleResult`) so a defender's next
+assault is fought (`PlayerEncounter.cs:1860-1866`, `:1287-1295`). A feature-off discharge waits
+until the battle ends. This relies on ownership rule R1b being inert on 1.4.x; WP132 ports its
+deletion (`3b848c411`). Review: `rca-enlistment-encounter-exits-2026-10-26.md`.
+
+### The #842 to #845 batch
+
+`IsCommanderParty` compares the commander's party id through `GetPartyId` (#842). The army-rhythm
+probe reads only what duties use, and the unused hour parameter is gone (#843). Dead data is
+removed: battle and tournament counters, duty failures, the four reputation scores and
+`TrustLedger`, two unused events, petition withdrawal, `EquipmentPayoffCalculator` and the
+in-memory ledger; old saves load because `ServiceContentRecord.TryParse` ignores unknown keys
+(#844). Duty words live in `enlistment_duties.json` as `{=key}English` strings, `DutyText` owns
+the key formula, and `tools/harvest_duty_strings.py --check` proves the registry is in step; v1.4.8
+shows English inline text and never reads string files for English (`LocalizedTextManager.cs:235`)
+(#845). Reviews: `rca-enlistment-dead-surface-2026-10-26.md`, `rca-enlistment-duty-text-2026-10-26.md`.
+
+**Owed in-game checks (WP128).** See `plans/128-enlistment-fixes-a.md`, "In-game checks owed".
+
+## Fixes ported from the 1.5.x line (port148 WP132)
+
+These fixes reached the 1.4.x line in WP132 of the 2026-11-04 port programme, after WP128's.
+Engine facts were re-checked on v1.4.8. The `docs/reviews/rca-*` files named below describe the
+1.5.x review and cite v1.5.5 lines.
+
+### The quartermaster says why he refuses (#829)
+
+`QuartermasterAnswerPolicy.For(EquipmentIssueResult)` picks the reply to a kit request: issued,
+already drawn for this tier, empty stores (no roster or no valid item) or cannot load (party
+unavailable, and the default for any result added later). On a co-op client the behavior's
+authority branch answers "Only the host's quartermaster can issue kit" without reaching the
+issuer. Each conditioned answer is its own dialog line at priority 112; the cannot-load line has
+no condition and sits at 100, below them, so it also answers anything without a line of its own.
+Before #829 the refusal line had no condition at 111, so every refusal read "already drawn". The
+kit, reassignment and release lines are gated by `IEnlistmentDialogGateService.IsServingUnder`
+(renamed from `CanRequestDischargeFrom`). `QuartermasterAnswerPolicyTests` pins the mapping and the
+wiring. Review: `rca-quartermaster-answers-2026-10-19.md`.
+
+### Kit tiers are not ranks (#936)
+
+The equipment rosters key on `EnlistmentKitTier` (renamed from `EnlistmentRank`; same four members,
+values and roster ids), distinct from the career rank `ServiceRank`. The issuer and ledger members
+say tier: `IssueForTier`, `HasIssuedForTier`, `HighestIssuedTier`, `TierToken`,
+`AlreadyIssuedForTier`, `ServiceContentRecord.HighestIssuedKitTier`. The save key stays `kitRank`,
+pinned by `KitTierSaveKeyTests`, so old saves keep their kit ledger. The 1.5.x seven-rank ladder
+that prompted the rename is not ported.
+
+### Soldiers fight their commander's battles (#830)
+
+A `Patch66_Enlistment` postfix on the encounter menu's private
+`EncounterGameMenuBehavior.game_menu_encounter_order_attack_on_condition` (v1.4.8 `:1919`, the
+"Send troops" or "Leave it to the others" option) asks `IEnlistmentMenuService.EvaluateSitOut()`
+while the soldier is in `EnlistedBattle` and does not lead his side. The pure `SitOutPolicy`
+decides: wounded stays free; an unavailable Attack keeps the option open; a siege assault or
+sally-out refuses; any other battle refuses unless his side holds at least
+`sitOut.overwhelmingShare` (0.85) of the strength on the field, which allows it at a cost. The
+postfix only narrows: it never hides the option, never re-enables one vanilla disabled, and every
+refusal leaves Attack enabled. `IEncounterAdapter.GetSitOutSnapshot` probes vanilla's Attack with
+`MenuHelper.CheckEnemyAttackableHonorably` then `EncounterAttackCondition` on a throwaway
+`MenuCallbackArgs` (both write only to the args, `MenuHelper.cs:452`, `:182`) and reads the share
+with the read-only `MapEvent.GetStrengthsRelativeToParty` (`MapEvent.cs:1456`). The verdict goes
+to `SitOutLedger`. At `MapEventEnded` the payout reads `MapEvent.IsPlayerSimulation`, which on
+v1.4.8 only the `BattleSimulation` constructor sets, and only `PlayerEncounter.InitSimulation`
+builds one, called only from `MenuHelper` (`MenuHelper.cs:576`). A battle sat out with an allowed
+verdict pays no renown; at overwhelming odds it also pays `sitOut.baseXpFactor` (half) of the base
+XP and costs `sitOut.trustCost` (1) trust. `Patch66EnlistmentBindingTests` pins the target and, by
+IL scan of TaleWorlds.CampaignSystem, the setter and constructor caller sets. Review:
+`rca-enlistment-sit-out-2026-10-19.md`.
+
+### The board's daily pay is what service pays today (#839, partial)
+
+`ServiceStatusService` reads the board's daily pay from `IEnlistmentWagePreview.GetDailyWage()`
+(`ServiceRewardService`), which is 0 while the column is lost (`CommanderUnavailable`), the number
+the clan finance tooltip already uses. The 1.5.x retinue-cost line on the oath and the board is
+not ported.
+
+### The service upkeep runs once a frame (#841)
+
+Two clocks feed `ServiceMaintenanceService.Pump`: the campaign `TickEvent` and the service wait
+menu's tick. v1.4.8 ticks a wait menu before the campaign in the same frame (`MapState.OnTick`,
+`MapState.cs:156-160`) and hands it the campaign time since its previous frame
+(`GameMenu.RunOnTick`, `GameMenu.cs:224-232`). The wait menu now feeds the pump only when that
+delta is zero, which means time is stopped (`OnWaitMenuFrame`), so a running menu is no longer
+pumped twice per frame. While time runs the budget is the campaign tick's delta (0.25 is 18
+campaign minutes: `Campaign.cs:873-874` advances 4320 campaign seconds per delta unit); on a
+stopped menu it is real seconds. A raid join raised from the campaign tick while the service wait
+menu is open waits for the next wait-menu frame (`RequestJoin`, `FlushPendingRaidJoin`), because
+`Campaign.Tick` runs `MapEventManager.Tick` right after the tick dispatch (`Campaign.cs:958-962`)
+and that updates a raid even when it is the player's own event (`MapEventManager.cs:59-61`), while
+a join from the wait-menu frame switches menus, which stops time (`GameMenu.cs:335-337`,
+`:358-360`) before the campaign tick runs. Field battles, sieges and joins away from the service
+menu happen at once. The hourly reconciler's join request takes the same path
+(`IServiceMaintenanceService.RequestBattleJoin`). The "within 250 ms" and "real-time service pump"
+wording earlier in this doc predates #841. Review:
+`rca-enlistment-trace-and-pump-clock-2026-10-24.md`.
+
+### One fitness check for a commander (#1016, partial)
+
+`CommanderSnapshot.IsFit` (exists, alive, free, with an active party) replaces six copies of the
+same test: `EnlistmentRescueCheats`, `EnlistmentDialogGateService.CanEnlistWith`,
+`EnlistmentPlayerActionService`, the grace path of `EnlistmentReconciler`,
+`EnlistmentService.IsCommanderFit` and the `ServiceAttachmentService` assessment. It matches
+`CommanderTickSnapshot.IsFollowable` (`CommanderSnapshotIsFitTests`). The 1.5.x board line for a
+battle the oath keeps the soldier out of is not ported yet.
+
+### Siege duties for defenders, and wage order (#1014)
+
+The army-rhythm probe counts a commander defending a besieged town as in a siege:
+`MobileParty.SiegeEvent` is the besieger's camp event (`BesiegerCamp?.SiegeEvent`, v1.4.8
+`MobileParty.cs:1132`), null for a defender, so the probe also reads the current settlement's
+`SiegeEvent`. The snapshot is probed fresh on every call (the daily tick, the daily duty offer and
+a duty request), so the hourly cache and its session reset are gone. `ServiceRewardService.PayDailyWage`
+pays today's wage before it releases banked arrears, so arrears above the cap no longer eat a
+day's pay. The compiled default of `scheduler.maxOfferChance` is 0.4, the shipped value. Review:
+`rca-enlistment-followups-siege-wages-2026-10-26.md`.
+
+### A battle rule that never ran is gone (#796)
+
+Ownership rule R1b and `EncounterOwnershipSnapshot.IsBattleEncounter`, described as live in older
+sections of this doc, are removed. `EncounterAdapter.GetOwnership` computed the flag but never
+passed it to the snapshot, so R1b never fired and `EnlistmentLoadNormalizer.IsMidBattle` reduced to
+`presence.IsInMapEvent`. It was not needed either: on v1.4.8 the main party stays in its map event
+through the loot and aftermath screens and leaves it inside `PlayerEncounter.Finish`
+(`PlayerEncounter.cs:1071` calls `FinalizeBattle`, which finalizes the event at `:1909`;
+`MapEvent.FinalizeEventAux` raises `MapEventEnded` and calls `MapEventSide.HandleMapEventEnd`,
+which clears each party's side), and `MapEvent.Update` skips `FinishBattle` for the player's event
+while an encounter is open (`MapEvent.cs:1041`). Rule R1 (the player is in a map event) already
+protects that window. After a join the encountered party is the opposing leader
+(`PlayerEncounter.cs:945`). Review: `rca-enlistment-battle-encounter-rule-2026-10-26.md`.
+
+**Owed in-game checks (WP132).** See `plans/132-enlistment-fixes-b.md`, "In-game checks owed".
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
@@ -1820,6 +2027,8 @@ anywhere — renown, special resources, momentum. That is participation-consiste
 **Co-op.** Every world-mutating handler is host-only. The Codex pass found the one exception (the
 wait-menu leave option) after our own review passed, which is worth remembering: a menu *option
 consequence* is a world-mutating entry point even though it doesn't pattern-match like one.
+
+**Not through a messenger (#898).** `EnlistmentDialogBehavior.OfferIsTakeable(verdict, throughMessenger)` greys the offer while `IMessengerConversationState.IsOpen`, with `taom_enlist_not_by_messenger`. Swearing finishes the live encounter (`EnlistmentService`, `_encounter.Finish(true)`) and `MobilePartyAttachmentAdapter.ParkNear` sets the player's position to the commander's, which through a messenger would be a teleport. The line stays visible, so the player learns why. See [messengers.md](messengers.md).
 
 ## Testing
 
@@ -1933,7 +2142,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
   English-only.
 
   The **97 runtime-built duty keys** are the reason
-  `tools/generate_enlistment_duty_strings.py` exists: `InteractiveDutyPresenter` and
+  `tools/harvest_duty_strings.py` exists, and their English lives in `enlistment_duties.json`:
+  `InteractiveDutyPresenter` and
   `ServiceStatusTextWriter` assemble ids as `taom_enlist_duty_<row id>_<suffix>` at runtime, so a
   literal `{=key}` grep — the discovery mechanism `/localize` relies on — finds none of them. The
   generator enumerates them from the data rows instead. 84 are the 14 interactive-duty/incident

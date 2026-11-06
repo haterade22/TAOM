@@ -7,8 +7,11 @@ for Lindon) and parametrized — no hand-copied XML. Idempotent via TAOM-NEWFACT
 
 Run: python tools/generate_new_faction_kingdoms.py
 """
-import os, re, json
+import os, re, json, sys
 import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _marker_region import replace_region  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MD = os.path.join(ROOT, "Main", "_Module", "ModuleData")
@@ -95,11 +98,8 @@ def get_block(text, pattern):
 
 
 def upsert(text, close_tag, payload, marker):
-    text = re.sub(r'[ \t]*<!-- ' + re.escape(marker) + r':BEGIN -->.*?<!-- ' + re.escape(marker) + r':END -->\n',
-                  '', text, flags=re.DOTALL)
-    idx = text.rfind(close_tag)
-    block = f"  <!-- {marker}:BEGIN -->\n{payload}  <!-- {marker}:END -->\n"
-    return text[:idx] + block + text[idx:]
+    # In place, or refused when damaged (#947, #975): see tools/_marker_region.py.
+    return replace_region(text, marker, f"  <!-- {marker}:BEGIN -->\n{payload}  <!-- {marker}:END -->\n", close_tag)
 
 
 def main():

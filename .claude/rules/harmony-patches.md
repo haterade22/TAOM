@@ -41,7 +41,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 ## Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
 - **Postfix** — Runs after original method. Can modify `__result`.
-- **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
+- **Transpiler**: Modifies IL instructions. Most fragile: use sparingly. Every TAOM transpiler gets a test in TAOM.Tests/Migration/TranspilerSiteBindingTests.cs, or a feature binding test that runs it over the installed IL.
 - **Finalizer**: runs after the original on every call, with a null `__exception` when nothing threw. `return null` swallows. Returning the exception makes Harmony `throw` it (whenever any finalizer on the method returns a value), which erases the throw site, so hand it back as `return RethrowStackPreserver.PreserveForRethrow(__exception, null);` (`docs/reviews/rca-shield-rethrow-stack-2026-09-22.md`). An observe-only finalizer should be `void`, which keeps Harmony's `rethrow` and the trace (Patch91's probes are the shape). Before a finalizer or shield turns a swallow into a rethrow, follow the exception to its next catcher: an exception out of any `OnMissionTick` leaves `Mission.OnTick` after it cleared `tickCompleted` (v1.4.8 `Mission.cs:3740`), and every catcher above swallows, so without Patch91b the next frame waits in `WaitTickCompletion` forever (`lessons/harmony-il.md`, tick handshake).
 - **Prefix and finalizer pair**: the link between them is Harmony's `__state` (one zeroed local per call, set by the prefix before anything can throw or return early), never a static, a count or a thread-keyed flag. Harmony reruns every finalizer when a later one throws, and PatchShield strips prefixes but never finalizers (`TryUnpatchOffendingPatches` unpatches Prefix, Postfix and Transpiler only), so a finalizer can run without its prefix. Test the pair through real Harmony (`MissionStartGuardCanaryTests` is the shape). Why: `docs/features/mission-start-guard.md` ("The canary") and `lessons/harmony-il.md` "If a prefix writes shared state conditionally, the finalizer must clear it conditionally too".
 
@@ -55,6 +55,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Place in `Main/Features/{FeatureName}/Hooks/` directory
 - Name: `{TargetClass}{TargetMethod}Patch.cs`
 - Register in a `SubModule.cs` patch category (`[HarmonyPatchCategory]` + the SubModule apply batch — verify the apply TIMING fits the target: most apply in `OnGameInitializationFinished`, but targets that fire during new-game load/main menu need `OnSubModuleLoad`, e.g. `Patch58`/`Patch61`; see the registry)
+- A new patch number names one feature, and its category gets a `## <category>` heading in the registry: `PatchCategoryNumberTests` pins both.
 
 ## MovementOrder postfixes: use the shared deferred category (MANDATORY)
 Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`

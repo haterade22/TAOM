@@ -2,7 +2,7 @@
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="module_sound">
 	<module_sounds>
 		<!--Sounds in LOTR/Elves/Alert-->
-		<module_sound name="LOTR/Elves/Alert/elf_horn.wav" sound_category="alert" path="LOTR/Elves/Alert/elf_horn.wav" />
+		<module_sound name="LOTR/Elves/Alert/horn_elf.wav" sound_category="alert" path="LOTR/Elves/Alert/horn_elf.wav" />
 		<!--Sounds in LOTR/Isengard/Alert-->
 		<module_sound name="LOTR/Isengard/Alert/horn_trombone_1.wav" sound_category="alert" path="LOTR/Isengard/Alert/horn_trombone_1.wav" />
 		<module_sound name="LOTR/Isengard/Alert/horn_trombone_2.wav" sound_category="alert" path="LOTR/Isengard/Alert/horn_trombone_2.wav" />

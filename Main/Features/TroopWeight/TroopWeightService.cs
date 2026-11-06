@@ -107,6 +107,11 @@ public class TroopWeightService : ITroopWeightService
         if (party?.MemberRoster == null)
             return;
 
+        // Garrisons and patrols pay no penalty: their limits come from their settlement and nothing TAOM runs trims
+        // them, so a deflated limit made garrisons desert and patrols crawl (TroopWeightPenaltyScope).
+        if (!TroopWeightPenaltyScope.PaysSizePenalty(party))
+            return;
+
         // The descriptions variant is display-only (PartyBase.PartySizeLimitExplainer -> the party-screen
         // size tooltip + RecruitmentVM's capacity hint; v1.4.8-verified, no gameplay consumer). Deflating it
         // is what produced the user-visible "Base size +20 / Heavy troops -9 / Total +11" the 2026-09-06

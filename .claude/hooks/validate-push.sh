@@ -1,6 +1,6 @@
 #!/bin/bash
 # PreToolUse hook: Warn before git push to protected branches.
-# Hard-blocks force pushes to master (CLAUDE.md policy).
+# Hard-blocks force pushes to protected branches (CLAUDE.md "Commits").
 # Non-blocking warning for regular pushes to master/main.
 
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
@@ -45,7 +45,10 @@ fi
 # still tokenises; that also preserves the old behaviour of matching a quoted mention.
 CLEAN=${COMMAND//\"/ }
 CLEAN=${CLEAN//\'/ }
-read -r -a TOKENS <<< "$CLEAN"
+# A word split under set -f, never a here-string (#681). Only the first line is judged, as
+# read -a did; set -f keeps a refspec glob such as refs/heads/* whole.
+CLEAN=${CLEAN%%$'\n'*}
+set -f; TOKENS=($CLEAN); set +f
 
 PUSH_IDX=-1
 for i in "${!TOKENS[@]}"; do
@@ -110,16 +113,17 @@ fi
 # Protected branches. bannerlord-1.4.5 is this repo's actual trunk and was missing until
 # 2026-08-20, so a force push to the branch everyone works on passed unchallenged while
 # master and main, which this repo does not use, were the only names guarded.
+# bannerlord-1.5.x added 2026-11: a session on this line must not force-push the other trunk either.
 is_protected() {
   case "$1" in
-    master|main|bannerlord-1.4.5) return 0 ;;
+    master|main|bannerlord-1.4.5|bannerlord-1.5.x) return 0 ;;
     *) return 1 ;;
   esac
 }
 
 # Hard-block force push to a protected branch
 if [[ "$FORCE" == true ]] && is_protected "$TARGET"; then
-  echo "BLOCKED: force push to '$TARGET' is not allowed. CLAUDE.md policy." >&2
+  echo "BLOCKED: force push to '$TARGET' is not allowed. Do not retry with --no-verify or as a plain push; explain the block and ask the user whether to push to a non-protected branch." >&2
   exit 2
 fi
 

@@ -3,9 +3,10 @@
 ## Overview
 
 One read-only pass over `docs/` (plus `CLAUDE.md`, `AGENTS.md`, and the shipped ModuleData configs)
-that reports **doc rot** — the class of defect where the code moved and the prose did not. Seven
-checks, pure stdlib, no game install required. Three of the seven **block a commit** through
-`.claude/hooks/check-doc-config-drift.sh`; the other four are advisory.
+that reports **doc rot**, the class of defect where the code moved and the prose did not. Pure
+stdlib, no game install required. Checks 5 to 7 **block a commit** through
+`.claude/hooks/check-doc-config-drift.sh`; check 8 gates through `--fail-on-drift`; the others are
+advisory.
 
 Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
 Sibling validators: [moduledata-validation.md](moduledata-validation.md) (game data),
@@ -29,7 +30,7 @@ section below is so specific: **a check that is wrong every time is a deleted ch
 stale-version check spent months at 29 findings and 0 true positives, which trains every reader to
 skip the whole report — including the six checks that were correct.
 
-## The seven checks
+## The checks
 
 | # | Check | Blocks a commit? | What it means |
 |---|---|---|---|
@@ -41,6 +42,7 @@ skip the whole report — including the six checks that were correct.
 | 5 | **Config-example drift** | **yes** | a `docs/features/*.md` ```json block labelled with a config path whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json`, or a doc key the shipped config no longer has. Shared keys only, so a partial example is fine; an unparseable (annotated) block is skipped rather than guessed at |
 | 6 | **Version mismatch** | **yes** | `CLAUDE.md`'s `Target: Bannerlord X`, `AGENTS.md`'s `mod for Bannerlord X`, or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt` |
 | 7 | **CLAUDE.md / AGENTS.md eager budget** | **yes** (except `size-warn`) | size caps plus per-line caps on CLAUDE.md. Both files load into every session and every agent spawn, so bytes here are a permanent per-turn tax |
+| 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | through `--fail-on-drift` | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference nor a `no issue:` reason |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -50,7 +52,7 @@ pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) 
 reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
 this is a check and not a note.
 
-`--fail-on-drift` gates on **5, 6, and 7** — checks 1-4 never block. Within 7, only hard violations
+`--fail-on-drift` gates on **5 to 8**; checks 1-4 never block. Within 7, only hard violations
 gate; a `size-warn` finding is report-only by design.
 
 ### Budget constants (check 7)
@@ -62,6 +64,30 @@ gate; a `size-warn` finding is report-only by design.
 
 Plus, on `CLAUDE.md` only: table rows ≤ 400 chars, non-table prose lines ≤ 600 chars, fenced code
 exempt. A row is an index entry; prose belongs in the doc it links to.
+
+### Check 8: the RCA FOLLOW-UP owner
+
+Three times a deferred finding sat in an RCA as a bare `FOLLOW-UP` until someone filed an issue for
+it (#984), so a new one needs an owner on its own line. A table row is one line, so an issue in
+another cell counts.
+
+- **Scope is new lines only**, found the way the dash check finds them: `git diff -U0` against
+  `--dash-base` (default `HEAD`) restricted to `docs/reviews/rca-*.md`, plus untracked RCAs read in
+  full. `--staged` swaps both for the index (`git diff --cached`, file text from `git show :<path>`),
+  which is what a commit records. A file renamed into an RCA from a non-RCA path reads as new and is
+  checked in full.
+- **Matching** runs on the line with inline code spans and link targets removed. A `#<number>`
+  counts unless it follows a label that numbers something else (finding, crash, case, step, item,
+  row, line), is a six-digit hex colour, or sits inside `C#7` or an HTML entity. A Markdown link
+  whose target is `/issues/<number>` is kept as a citation; any other link target is dropped. The
+  reason must follow the phrase (`no issue:` with nothing after it is bare).
+- **To exempt a passing mention**, put the word in backticks. A citation in backticks does not
+  count: write the issue number in plain text.
+- **Blind spot:** an edited legacy line becomes a new line, so rewording an old bare `FOLLOW-UP` in
+  an existing RCA trips the check until it cites an issue or a reason.
+- **Not wired to the commit hook on this line yet.** `check-doc-config-drift.sh` does not run for a
+  commit that stages only an RCA and does not pass `--staged`; that half waits for the hook work of
+  plan 103.
 
 ## What "stale" means (check 2, the model that took two attempts)
 
@@ -143,7 +169,9 @@ python tools/lint_docs.py --summary        # --- delimited, grep-friendly counts
 python tools/lint_docs.py --quick          # dead links only (fastest; tight loops)
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
-python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5/6/7 — the pre-commit gate
+python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 8, the pre-commit gate
+python tools/lint_docs.py --drift-only    # only checks 5 to 8, the commit hook's mode (under a second)
+python tools/lint_docs.py --fail-on-drift --staged   # check 8 reads the index
 ```
 
 `--summary` emits one line per check plus `total_findings`, which is the form to assert against in a
@@ -160,10 +188,10 @@ before treating it as an all-clear.
 
 | File | Role |
 |---|---|
-| `tools/lint_docs.py` | the linter — all seven checks, ~757 lines, stdlib only |
+| `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
-| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--fail-on-drift` |
+| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged`, also for a commit staging only an RCA |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 
@@ -188,6 +216,7 @@ may delete this one.
 
 ## Changelog
 
+- **2026-11-05**: check 8 (RCA FOLLOW-UP owner, #984) and `--staged`, ported from the 1.5.x line without the commit-hook half (plan 136 D4).
 - **2026-08-07** — #399 (`fa7ba39b`, external contribution): stale-version model rewritten from "older
   than the pin" to "presented as the current target"; dead links skipped by target under
   `docs/reviews/raw/`; `docs/adrs/` added to the exempt prefixes; `_read_pin()` extracted. 43 findings

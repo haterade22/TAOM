@@ -335,7 +335,7 @@ Check: `python tools/validate_moduledata.py --code LANDLESS_CULTURE`
 Takes effect: next save load
 Code: No code changes needed
 
-**3. Rename a settlement.** Change the fallback text after `{=KEY}` in `name=` and the matching `text=` row in all 12 `loc_settlements.xml`. **Never change the `id`.** [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) does all 13 files in one pass and preserves the file's UTF-8 and CRLF bytes. The idiom table per region prefix is in [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md).
+**3. Rename a settlement.** Change the fallback text after `{=KEY}` in `name=` and the matching `text=` row in all 12 `loc_settlements.xml`. **Never change the `id`.** [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) does all 13 files in one pass and preserves the file's UTF-8 and CRLF bytes. It writes only the ids whose English changed, runs dry until `--apply`, refuses a name another settlement already carries, and removes each renamed id from `tools/translation_cache/<lang>.json` so the next translator run cannot write the old name back. The idiom table per region prefix is in [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md).
 
 Check: `python tools/check_external_loc_coverage.py`
 Takes effect: next save load
@@ -395,7 +395,7 @@ Code: Code changes required in `Main/Features/TroopProgression/` if the id has a
 - **The commit hook never fires on this file.** `.claude/hooks/check-moduledata-validation.sh` runs the validator only when the commit stages a path under `Main/_Module/ModuleData/*.xml` (lines 68 to 74), and this file is not in the repo at all. Run `python tools/validate_moduledata.py` by hand.
 - **What the validator covers here is narrow.** `TAOM_Map` contributes exactly two files to a run: `settlements.xslt` (one boolean, does it strip vanilla) and `settlements.xml` (the culture attribute plus town and village economy). Its 1,012 `Culture.` references are never swept, and because those ids feed the validator's own settled-culture set, a typo there masks a `LANDLESS_CULTURE` error instead of raising one ([`tools/README.md`](../../tools/README.md) line 37, [moduledata-validation.md](../features/moduledata-validation.md)).
 - **Siege camps are a scene contract, not a data one.** A settlement whose scene has no `siege_camp_1` entity logs a warning and runs on a safety net; the fix is in the map editor ([siege.md](../features/siege.md)).
-- **`tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs`** against a cap the engine applies across every loaded module, so it reports healthy at 99 percent of the real budget (`CLAUDE.md` Traps).
+- **The prefab budget is nearly spent.** `tools/check_prefab_budget.py` sums every module against the cap the engine applies across all of them: 130,468 of 131,072 ([module-map.md](module-map.md)). Its `--dir` form counts one folder and reads `OK` for `TAOM_Map/Prefabs` alone, which is not the budget.
 
 ### What TAOM has not answered
 

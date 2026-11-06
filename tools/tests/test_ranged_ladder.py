@@ -851,6 +851,16 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(self._run("--apply", "--asset-repo", str(self.mirror / "nope")), 0)
         self.assertTrue(self._elf_file().exists())
 
+    def test_without_asset_repo_the_mirror_is_never_written(self):
+        # Even with the example mirror path pointed at a real mirror, a run that names none leaves it alone.
+        argv = ["--game-modules", str(self.modules), "--spec", str(self.spec_path), "--moduledata", str(self.md)]
+        from unittest import mock
+        with mock.patch.object(self.gen, "DEFAULT_ASSET_REPO", self.mirror):
+            self.assertEqual(self.gen.main([*argv, "--apply"]), 0)
+            self.assertEqual(self.gen.main([*argv, "--verify"]), 0)
+        self.assertTrue(self._elf_file().exists())
+        self.assertFalse(self._elf_file(self.mirror / "ModuleData").exists())
+
 
 # --------------------------------------------------------------------------- #
 # The validator gate (tools/taom_schema.py RANGED_LADDER_INVERSION)             #

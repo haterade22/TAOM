@@ -20,12 +20,15 @@ public class ServiceAttachmentServiceTests
         _service = new ServiceAttachmentService(_attachment, Substitute.For<IGameMenuAdapter>(), Substitute.For<IModLogger>());
     }
 
-    private static CommanderSnapshot HealthyCommander(bool inMapEvent = false, bool inSettlement = false)
+    private static CommanderSnapshot HealthyCommander(
+        bool inMapEvent = false, bool inSettlement = false,
+        bool raiding = false)
     {
         return new CommanderSnapshot(
             exists: true, isAlive: true, isPrisoner: false,
             partyId: "lord_party_1", partyIsActive: true,
             partyIsInMapEvent: inMapEvent, partyIsInSettlement: inSettlement,
+            partyIsRaiding: raiding,
             cultureId: "gondor", name: "Lord Test");
     }
 
@@ -117,6 +120,45 @@ public class ServiceAttachmentServiceTests
             EnlistmentState.EnlistedAttached, HealthyCommander(inMapEvent: true), Player(parked: true), onTownLeave: false);
 
         Assert.AreEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderRaiding_FallsThroughToTheMarchRules()
+    {
+        // #831: a village hostile action is not a battle to join, so no BattleJoinRequired (and with
+        // it no retry budget and no pending flag). The soldier is parked and the column marches.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: true),
+            Player(parked: true), onTownLeave: false);
+
+        Assert.AreNotEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+        Assert.AreEqual(AttachmentStatus.Attached, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderInABattleThatIsNotARaid_StillRaisesTheJoin()
+    {
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: false),
+            Player(parked: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderRaidingWhilePlayerInAnotherMapEvent_IsBlockedAsForeign()
+    {
+        // #831: the raid is not a battle to join, so a player already in some map event reaches the
+        // foreign-event verdict. The reconciler takes no action on it.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: true),
+            Player(parked: false, inMapEvent: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.PlayerInForeignMapEvent, result.BlockReason);
     }
 
     [TestMethod]
@@ -266,11 +308,12 @@ public class ServiceAttachmentServiceTests
 
     // ---- The presence hold while a battle encounter is live (#577) ----------------------------
     //
-    // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window
-    // (MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes, so the window
-    // reads as "no battle anywhere"), or the join gap between EnsureEncounterAgainst and
-    // JoinBattle. Nothing may move the party there: a park clears AttachedTo, which pulls the
-    // party off its MapEventSide, and "Send troops" then indexes SelectedTroops[-1].
+    // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window,
+    // or the join gap between EnsureEncounterAgainst and JoinBattle. The trap is any moment with
+    // the encounter open and the party in no map event yet or any more: the join gap, and the
+    // inside of PlayerEncounter.Finish after FinalizeEvent. That reads as "no battle anywhere".
+    // Nothing may move the party there: a park clears AttachedTo, which pulls the party off its
+    // MapEventSide, and "Send troops" then indexes SelectedTroops[-1].
 
     [TestMethod]
     public void Assess_EnlistedBattle_LiveEncounter_HoldsPresence()

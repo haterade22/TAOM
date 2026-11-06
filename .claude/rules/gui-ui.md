@@ -10,6 +10,9 @@ paths:
 
 # GUI / UI / Sprite Rules
 
+A new or changed screen also passes the [Gauntlet screen checklist](../../docs/reference/gauntlet-screen-checklist.md)
+in game: empty, many and long-text states, disabled reasons, a way out, consistency with vanilla.
+
 ## Sprite AND Brush References (MANDATORY)
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
@@ -30,6 +33,8 @@ brush is its own declaration. Shipped instances of this bug: `ButtonBrush1.Text`
 PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml ×14 —
 deferred cleanup, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
 
+**Gate:** `PrefabExtensionBrushTests` fails a brush-typed attribute (`Brush`, `IconBrush`, ...) in a PrefabExtension that no module in TAOM's DependedModule set declares (#989). It does not cover prefab XML files.
+
 ### Adding a NEW sprite (not just referencing an existing one)
 
 The 4 steps above are for *referencing* a sprite that's already baked. **Adding a new sprite PNG is a different, multi-step process** — a loose PNG + a hand-added `TAOMSpriteData.xml` entry alone renders **BLANK** in the player client (no error, no log). Follow the canonical workflow in [docs/features/gui-sprite-system.md](../../docs/features/gui-sprite-system.md) ("The sprite-bake pipeline" + "Adding a New Sprite" + "Verifying a sprite"):
@@ -37,7 +42,7 @@ The 4 steps above are for *referencing* a sprite that's already baked. **Adding 
 1. Drop the PNG at a sane size (`feedback_sprite_dimensions`). Do NOT hand-edit the manifest — the generator overwrites it.
 2. **Run the sprite generator** (`bin/Win64_Shipping_wEditor/TaleWorlds.TwoDimension.SpriteSheetGenerator.exe`). It writes `AssetSources/GauntletUI/<cat>_<n>.png` + rewrites `GUI/<Module>SpriteData.xml`; the editor's downstream texture-compile pass then builds `Assets/GauntletUI/<cat>_<n>_tex.tpac` (the generator binary does not write the `.tpac` itself). **There is NO `pack0.tpac` for UI sprites.**
    **The generator binary moved on 2026-08-10 — spot-check the first sheet you regenerate after this bump.** It lives in the Modding Kit build, which jumped three engine versions in one update (`TaleWorlds.Library.GameVersion` `v1.4.5.114928` → `v1.4.8.119303`); `SpriteSheetGenerator.exe` and its `.Library.dll` were both rewritten with it. Neither binary stamps a usable version (`FileVersion 1.0.0.0`), so the only signal for which engine build you are baking with is `bin/Win64_Shipping_wEditor/Version.xml`. Anything regenerated from here on comes out of a different generator than every sheet baked before — don't assume byte-parity with the committed atlas; verify the bake per step 3.
-3. **Verify BOTH** (they fail independently): the **bake** (crop the sprite's `SheetX/Y` rect out of the regenerated sheet — pixels present?) AND the **render** (in-game — widget big enough + `Color` alpha high enough; **baked ≠ visible** — a thin sprite at ~22px / 27% alpha is invisible). Static review (incl. `/deep-review` + Codex) cannot certify a sprite renders — say so in the CHANGELOG `Not-tested:` line.
+3. **Verify BOTH** (they fail independently): the **bake** (crop the sprite's `SheetX/Y` rect out of the regenerated sheet: pixels present?) AND the **render** (in-game: widget big enough + `Color` alpha high enough; **baked ≠ visible**: a thin sprite at ~22px / 27% alpha is invisible). Static review (incl. `/deep-review` + Codex) cannot certify a sprite renders, so say so in the commit's `Not-tested:` trailer.
 
 Memory: `feedback_sprite_atlas_baked_regen_required` (the career-pip case — baked correctly yet blank because the prefab drew it too small/faint).
 
@@ -72,7 +77,7 @@ If ANY of these are true: **do NOT inject children into that container**. Use bo
 ```
 mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))
 ```
-A mod mutating a vanilla ViewModel collection it does not own can have its addition dropped without warning: `MapInfoVM.CreateItems()` calls `OnFinalize()` on every item, `Clear()`s both `PrimaryInfoItems` and `SecondaryInfoItems`, and re-adds only vanilla's nine. Anything a mixin added is gone. In v1.4.8 that method is called from exactly one site, the constructor (`MapInfoVM.cs:138`), so the hazard is real in shape but dormant in practice. `TAOM.SpecialResources` does this today and works.
+A mod mutating a vanilla ViewModel collection it does not own can have its addition dropped without warning: `MapInfoVM.CreateItems()` calls `OnFinalize()` on every item, `Clear()`s both `PrimaryInfoItems` and `SecondaryInfoItems`, and re-adds only vanilla's nine. Anything a mixin added is gone. In v1.4.8 that method is called from exactly one site, the constructor (`MapInfoVM.cs:138`), before any mixin exists, so the hazard is real in shape but dormant in practice. If you add anyway, do it on every refresh behind `Contains`, so a rebuilt list gets the item back, and remove it when it no longer applies, as `SpecialResourceMapBarMixin` does (#958, #977). Never skip the first refresh: `MapBarVM.Initialize` runs it before the view loads and the next one comes 2 s later.
 
 **Correction, 2026-09-04.** This section used to assert that adding to `SecondaryInfoItems` caused an `IndexOutOfRangeException` in vanilla's `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` via hardcoded positional indexing. **That does not reproduce against the installed v1.4.8.** The method contains no reference to `SecondaryInfoItems` and no positional indexing of anything: it is six `inputContext.IsGameKeyReleased(N)` branches dispatching to `MapNavigationExtensions.Open*`. A sweep of every 1.4.5 / 1.4.7 / 1.4.8 dump on this machine finds `SecondaryInfoItems` in `MapInfoVM` only.
 
@@ -80,7 +85,9 @@ The claim cost a session: it was read as fact and nearly drove a full rewrite of
 
 ## Custom GauntletLayer Input Wiring (MANDATORY)
 
-When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitializeFirstTime`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction or it paints but never registers with the screen's input dispatcher — mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
+When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitialize`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions(...)` after construction or it paints but never registers with the screen's input dispatcher; mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
+
+**In a battle, pass `(false, InputUsageMask.MouseButtons)`, never the parameterless call** (#970). The defaults are a visible cursor and all input: a visible cursor stops vanilla attack and block (`MissionMainAgentController` runs them only while it is hidden, v1.4.8 `MissionMainAgentController.cs:1001`) and turns the camera into an edge scroll. Put `DoNotAcceptEvents="true"` on every non-button widget of the prefab, because any widget that accepts events wins the mouse buttons from the scene layer. With the cursor hidden, a battle overlay button can be clicked only while another view shows a cursor (the Esc menu).
 
 The v1.4.5 input dispatcher does NOT distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents`) are the only exception; verify with grep before claiming it. (The CareerSystem `AbilityHUD` was the canonical display-only example until #382 retired it — the career energy bar now rides inside Native's AgentStatus movie via PrefabExtension, which needs no input wiring at all.)
 
@@ -111,12 +118,12 @@ public static void OnFinalize_Prefix(GauntletInventoryScreen __instance)
 
 **Correct pattern (MissionScreen overlay via MissionView):**
 ```csharp
-public override void OnMissionScreenInitializeFirstTime()
+public override void OnMissionScreenInitialize()
 {
-    base.OnMissionScreenInitializeFirstTime();
+    base.OnMissionScreenInitialize();
     _vm = new MyOverlayVM(...);
     _layer = new GauntletLayer("GauntletLayer", zOrder, false);
-    _layer.InputRestrictions.SetInputRestrictions();        // ← REQUIRED (same as ScreenBase)
+    _layer.InputRestrictions.SetInputRestrictions(false, InputUsageMask.MouseButtons); // REQUIRED; the cursor stays hidden
     _layer.LoadMovie(prefabName, _vm);
     MissionScreen.AddLayer(_layer);
 }
