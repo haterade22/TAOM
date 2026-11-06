@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.FieldCamp;
 using TAOM.Features.FieldCamp.Domain;
@@ -74,8 +75,9 @@ public class RefugeServiceTests
             IEnlistmentStateQuery enlistment,
             IRefugeVisualService visuals,
             Lazy<IRaidHostOwnSideQuery> hosts,
+            ICoopSessionProvider coop,
             IModLogger logger)
-            : base(settings, wardens, camps, enlistment, visuals, hosts, logger)
+            : base(settings, wardens, camps, enlistment, visuals, hosts, coop, logger)
         {
         }
 
@@ -292,6 +294,7 @@ public class RefugeServiceTests
     private IEnlistmentStateQuery _enlistment;
     private IRefugeVisualService _visuals;
     private IModLogger _logger;
+    private ICoopSessionProvider _coop;
     private IRaidHostOwnSideQuery _hosts;
     private TestableRefugeService _sut;
     private Dictionary<string, RefugeData> _book;
@@ -328,8 +331,10 @@ public class RefugeServiceTests
 
         _logger = Substitute.For<IModLogger>();
         _hosts = Substitute.For<IRaidHostOwnSideQuery>();
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.IsAuthority.Returns(true);
 
-        _sut = new TestableRefugeService(_settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _logger);
+        _sut = new TestableRefugeService(_settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _coop, _logger);
         _book = new Dictionary<string, RefugeData>();
 
         // Order-sensitive collaborators log into the same event stream as the subclass seams.
@@ -1635,6 +1640,34 @@ public class RefugeServiceTests
         Assert.AreEqual(0, _sut.Messages.Count);
     }
 
+    [TestMethod]
+    public void WorldEventEntryPoints_OnACoopClient_WriteNothing()
+    {
+        // #1086: the disband cancel, the raid roll, the militia rally and stand-down and the peace release
+        // are world writes the server owns. Each has a positive twin above and below, run with authority.
+        var data = Seed("r1");
+        data.MilitiaAdded = 11;
+        data.MilitiaTroopId = "militia_troop";
+        Seed("r2"); // no militia yet, so only the gate stops its rally
+        _settings.EnableRaids.Returns(true);
+        _sut.Days = 3;
+        _sut.TroopPresent["r1:militia_troop"] = 11;
+        _coop.IsAuthority.Returns(false);
+
+        _sut.HourlyTick();
+        _sut.OnMapEventStarted("r2");
+        _sut.OnMapEventEnded("r1");
+        _sut.OnPartyDisbandStarted("r1");
+        _sut.OnPeaceMade();
+
+        Assert.AreEqual(0, _sut.DisbandCancels.Count);
+        Assert.AreEqual(0, _sut.RollCalls);
+        Assert.AreEqual(0, _sut.TroopAdds.Count);
+        Assert.AreEqual(0, _sut.TroopRemovals.Count);
+        Assert.AreEqual(11, data.MilitiaAdded);
+        Assert.AreEqual(0, _sut.PeaceReleasedParties.Count);
+    }
+
     // --- OnPeaceMade (refuge-held hero prisoners; vanilla never enumerates custom components) ---
 
     [TestMethod]
@@ -1860,6 +1893,94 @@ public class RefugeServiceTests
 
         CollectionAssert.AreEquivalent(new[] { "r1", "r2" }, _sut.Pinned,
             "pinned at spawn and re-pinned on load; the engine saves the pin, so the load pin is a belt for a failed founding pin or an adopted orphan");
+    }
+
+    [TestMethod]
+    public void OnGameLoaded_OnACoopClient_LeavesThePartiesToTheServer()
+    {
+        // #1086: the AI pin and the disband cancel are world writes; a co-op client still
+        // reconciles its own book (the orphan adoption) so its menus and visuals match the world.
+        Seed("r1");
+        _sut.LiveParties = new List<string> { "r1", "r_orphan" };
+        _coop.IsAuthority.Returns(false);
+
+        _sut.OnGameLoaded();
+
+        Assert.AreEqual(0, _sut.Pinned.Count);
+        Assert.AreEqual(0, _sut.DisbandCancels.Count);
+        Assert.IsNotNull(_sut.GetByPartyId("r_orphan"));
+    }
+
+    [TestMethod]
+    public void OnGameLoaded_WithAuthority_CancelsAQueuedDisband()
+    {
+        Seed("r1");
+        _sut.LiveParties = new List<string> { "r1" };
+
+        _sut.OnGameLoaded();
+
+        CollectionAssert.AreEqual(new[] { "r1" }, _sut.DisbandCancels);
+    }
+
+    [TestMethod]
+    public void FrameTick_OnACoopClient_NeitherHoldsThePartyNorAnnouncesTheBuild()
+    {
+        // #1086: on a guest every building refuge in the book is another player's. Pinning the
+        // guest's own party next to it, or telling the guest it was raised, is wrong for that peer.
+        var near = Seed("r1", ready: false, building: true);
+        var done = Seed("r2", ready: false, building: true);
+        _sut.DistancesFromMain["r1"] = 2f;
+        _sut.Progress["r2"] = 1f;
+        _coop.IsAuthority.Returns(false);
+
+        _sut.FrameTick();
+
+        Assert.AreEqual(0, _sut.HoldCalls);
+        Assert.AreEqual(0, _sut.Messages.Count);
+        Assert.IsTrue(near.Building);
+        Assert.IsTrue(done.Established, "the book row still follows the world on a guest");
+    }
+
+    [TestMethod]
+    public void FrameTick_OnACoopClient_FinishesAStrongholdWithoutAnnouncingIt()
+    {
+        var data = Seed("r1", ready: true, building: true, upgrade: true);
+        _sut.Progress["r1"] = 1f;
+        _coop.IsAuthority.Returns(false);
+
+        _sut.FrameTick();
+
+        Assert.AreEqual(RefugeTier.Stronghold, data.TierEnum);
+        Assert.AreEqual(0, _sut.Messages.Count);
+    }
+
+    [TestMethod]
+    public void OnPartyDisbandStarted_OnACoopClient_OrphansTheRowWithoutCancellingTheDisband()
+    {
+        // The book follows the world on a guest, as in OnPartyDestroyed; the cancel and the news are the server's.
+        var data = Seed("r1");
+        _sut.WardenWithParty = false;
+        _coop.IsAuthority.Returns(false);
+
+        _sut.OnPartyDisbandStarted("r1");
+
+        Assert.AreEqual(0, _sut.DisbandCancels.Count);
+        Assert.IsNull(data.WardenHeroId);
+        Assert.IsFalse(data.IsReady);
+        Assert.AreEqual(0, _sut.Messages.Count);
+    }
+
+    [TestMethod]
+    public void OnPartyDestroyed_OnACoopClient_DropsTheRowSilently()
+    {
+        Seed("r1");
+        _coop.IsAuthority.Returns(false);
+
+        _sut.OnPartyDestroyed("r1");
+
+        Assert.IsNull(_sut.GetByPartyId("r1"));
+        _visuals.Received(1).Remove("r1");
+        Assert.AreEqual(0, _sut.Messages.Count, "the fall is news for the refuge's owner, not every guest");
     }
 
     [TestMethod]
@@ -2157,8 +2278,9 @@ public class RefugeServiceTests
             IEnlistmentStateQuery enlistment,
             IRefugeVisualService visuals,
             Lazy<IRaidHostOwnSideQuery> hosts,
+            ICoopSessionProvider coop,
             IModLogger logger)
-            : base(settings, wardens, camps, enlistment, visuals, hosts, logger)
+            : base(settings, wardens, camps, enlistment, visuals, hosts, coop, logger)
         {
         }
 
@@ -2189,7 +2311,7 @@ public class RefugeServiceTests
     public void Dismantle_MovesEveryHeroAndHeroPrisonerByActionBeforeTheBulkCopy()
     {
         var probe = new HeroMergeProbeService(
-            _settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _logger);
+            _settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _coop, _logger);
         probe.Heroes = new List<string> { "warden_promoted", "companion_deposited" };
         probe.HeroPrisoners = new List<string> { "captive_lord" };
         var book = new Dictionary<string, RefugeData>
@@ -2218,7 +2340,7 @@ public class RefugeServiceTests
     public void Dismantle_NoHeroesInRefuge_StillBulkMerges()
     {
         var probe = new HeroMergeProbeService(
-            _settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _logger);
+            _settings, _wardens, _camps, _enlistment, _visuals, Hosts(), _coop, _logger);
         var book = new Dictionary<string, RefugeData>
         {
             ["r1"] = new RefugeData { PartyId = "r1", Established = true },

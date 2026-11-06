@@ -4821,5 +4821,10 @@
 	<!-- TaomSettings.cs -->
 	<string id="taom_seat_mcm_rise" text="{=taom_seat_mcm_rise}Rise to give orders" />
 	<string id="taom_seat_mcm_rise_hint" text="{=taom_seat_mcm_rise_hint}With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CareerSystem -->
+	<string id="taom_career_coop_gold_off" text="{=taom_career_coop_gold_off}Paid career changes are not available in a shared campaign." />
+	<!-- SupplyLines -->
+	<string id="taom_sl_coop_off" text="{=taom_sl_coop_off}Supply orders are not available in a shared campaign." />
 
 </strings>

@@ -91,7 +91,8 @@ public class CoopVetoClassificationTests
         // --- Reviewed, safe to keep enforcing ------------------------------------------------
         ["SupplyCaravanEncounterPatch"] = new(CoopVeto.ReviewedSafe,
             "Player-local UI redirect, the caravan sibling of RefugeEncounterPatch: when the LOCAL " +
-            "player bumps their own supply caravan, the meeting conversation (which would strike a " +
+            "player bumps a supply caravan (the condition checks the component, not the owner, so a co-op " +
+            "guest meeting the host's caravan gets the same line, #1086), the meeting conversation (which would strike a " +
             "stranger dialog off a Leader-less roster) is replaced by an info line plus the same " +
             "Finish+hold teardown vanilla's leave path runs. DoMeeting only runs for the local " +
             "player's encounter, the condition reads the encountered party's component type " +
@@ -101,8 +102,9 @@ public class CoopVetoClassificationTests
             "Player-local UI redirect: when the LOCAL player clicks their own refuge, the meeting " +
             "conversation is swapped for the refuge menu. DoMeeting only runs for the local player's " +
             "encounter, the skipped body is presentation (conversation UI), and the condition reads " +
-            "the local player's own refuge book and enlistment state. No shared campaign mutation is " +
-            "skipped, so peers cannot diverge on it."),
+            "the local refuge book and enlistment state. While ShouldDeferToHost holds (a co-op guest, " +
+            "whose book holds other players' refuges, #1086) it returns true before any check, so a " +
+            "guest never reaches the menu's writes. No shared campaign mutation is skipped."),
         ["Patch84_ParticipantMenuGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard over a pure-presentation method. The skipped body " +
             "(menu_settlement_taken_player_participant_on_init) only sets menu text variables and a " +
@@ -405,7 +407,9 @@ public class CoopVetoClassificationTests
         ["Patch96_TournamentJoinChoices"] = new(CoopVeto.ReviewedSafe,
             "Delays the local player's own tournament Join until they pick a prize and a skill, then " +
             "re-enters vanilla's whole Join consequence unchanged; closing a dialog is the same as not " +
-            "clicking Join. Reads no other peer's state and skips no mutation for good."),
+            "clicking Join. Reads no other peer's state and skips no mutation for good. A co-op guest " +
+            "(ShouldDeferToHost) is re-entered at once with no prize swap, which would write the town's " +
+            "shared tournament (#1086)."),
         ["Patch102_StartSiegeMissionPicker"] = new(CoopVeto.ReviewedSafe,
             "Siege Forces (#734): delays the local player's own wall-battle Attack until he picks his troops on " +
             "vanilla's Manage Troops screen, then re-enters vanilla's whole StartSiegeMission unchanged. A cancel " +

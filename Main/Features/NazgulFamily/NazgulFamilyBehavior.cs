@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.NazgulFamily;
@@ -38,11 +39,13 @@ public sealed class NazgulFamilyBehavior : CampaignBehaviorBase
     private static readonly FieldInfo ExSpousesField = AccessTools.Field(typeof(Hero), "_exSpouses");
 
     private readonly INazgulRegistry _registry;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
-    public NazgulFamilyBehavior(INazgulRegistry registry, IModLogger logger)
+    public NazgulFamilyBehavior(INazgulRegistry registry, ICoopSessionProvider coop, IModLogger logger)
     {
         _registry = registry;
+        _coop = coop;
         _logger = logger;
     }
 
@@ -53,6 +56,9 @@ public sealed class NazgulFamilyBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        // Family links are shared hero state: the server severs them (#1086).
+        if (!_coop.IsAuthority)
+            return;
         int cleared = 0;
         foreach (var hero in Hero.AllAliveHeroes.Concat(Hero.DeadOrDisabledHeroes))
         {

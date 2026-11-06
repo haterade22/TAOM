@@ -7659,6 +7659,8 @@
     <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
     <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
     <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
+    <string id="taom_career_coop_gold_off" text="Paid career changes are not available in a shared campaign." />
+    <string id="taom_sl_coop_off" text="Supply orders are not available in a shared campaign." />
   </strings>
 
 </base>

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Features.Arena;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.TournamentRewards;
 
 namespace TAOM.Tests.Features.TournamentRewards;
@@ -19,6 +20,7 @@ public class TournamentJoinServiceTests
     private ITournamentService _arena = null!;
     private ITournamentChoicePresenter _presenter = null!;
     private TournamentRewardsService _rewards = null!;
+    private ICoopSessionProvider _coop = null!;
     private TournamentJoinService _sut = null!;
     private int _proceeded;
 
@@ -50,7 +52,8 @@ public class TournamentJoinServiceTests
         var config = Substitute.For<ITournamentRewardsConfigProvider>();
         config.GetCatalog().Returns(TournamentRewardsCatalog.AllNeutral());
         _rewards = new TournamentRewardsService(settings, config, Substitute.For<IHeroSkillXpAdapter>());
-        _sut = new TournamentJoinService(_join, _arena, _presenter, _rewards);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _sut = new TournamentJoinService(_join, _arena, _presenter, _rewards, _coop);
         _proceeded = 0;
     }
 
@@ -64,6 +67,21 @@ public class TournamentJoinServiceTests
         CollectionAssert.AreEqual(new[] { "prize_a", "prize_b", "prize_c" }, new List<string>(_offeredPrizes!));
         _presenter.DidNotReceive().ShowSkillChoice(Arg.Any<IReadOnlyList<string>>(), Arg.Any<Action<string>>(), Arg.Any<Action>());
         Assert.AreEqual(0, _proceeded);
+    }
+
+    [TestMethod]
+    public void BeginJoin_ForACoopGuest_JoinsAtOnceAndOffersNothing()
+    {
+        // #1086: the prize swap writes the town's shared tournament, which is the host's to change.
+        _coop.ShouldDeferToHost.Returns(true);
+
+        Begin();
+
+        Assert.AreEqual(1, _proceeded);
+        _join.DidNotReceive().GetCurrentTournament();
+        _presenter.DidNotReceiveWithAnyArgs().ShowPrizeChoice(default!, default!, default!);
+        _presenter.DidNotReceiveWithAnyArgs().ShowSkillChoice(default!, default!, default!);
+        _join.DidNotReceiveWithAnyArgs().SetPrize(default!, default!);
     }
 
     [TestMethod]

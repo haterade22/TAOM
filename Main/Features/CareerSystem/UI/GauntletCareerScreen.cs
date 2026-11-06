@@ -10,6 +10,7 @@ using TaleWorlds.ScreenSystem;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.CareerSystem.UI;
 
@@ -32,6 +33,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
     private readonly ICareerLifecycleService _lifecycle;
     private readonly ICareerPurseAdapter _purse;
     private readonly ICareerHeroAdapterFactory _adapterFactory;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
     private readonly string _heroStringId;
     private readonly int _heroLevel;
@@ -57,6 +59,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
         _lifecycle = IoC.Resolve<ICareerLifecycleService>();
         _purse = IoC.Resolve<ICareerPurseAdapter>();
         _adapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
+        _coop = IoC.Resolve<ICoopSessionProvider>();
         _logger = IoC.Resolve<IModLogger>();
         _heroStringId = hero?.StringId ?? "";
         _heroLevel = hero?.Level ?? 0;
@@ -127,6 +130,8 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
             SwitchAndClose(newCareerId, cost);
             return;
         }
+        if (RefuseGoldInSharedCampaign())
+            return;
 
         ShowConfirmation(
             new TextObject("{=taom_career_switch_cost_title}Switch career").ToString(),
@@ -160,6 +165,8 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
 
     private void OnRetrainRequested(int cost)
     {
+        if (RefuseGoldInSharedCampaign())
+            return;
         ShowConfirmation(
             new TextObject("{=taom_career_retrain_title}Retrain career").ToString(),
             new TextObject("{=taom_career_retrain_body}Refund every career choice except your first for {GOLD} gold? You keep your career and the tiers you unlocked.")
@@ -183,6 +190,16 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
                     .SetTextVariable("GOLD", cost).ToString());
                 break;
         }
+    }
+
+    // Hero gold is shared state the co-op host owns; a guest's charge would not hold (#1086).
+    private bool RefuseGoldInSharedCampaign()
+    {
+        if (!_coop.ShouldDeferToHost)
+            return false;
+        _logger?.LogInfo($"CareerSystem: paid career change refused for hero '{_heroStringId}': shared campaign");
+        ShowMessage(new TextObject("{=taom_career_coop_gold_off}Paid career changes are not available in a shared campaign.").ToString());
+        return true;
     }
 
     // Evaluated by the inquiry each time it draws, so the Confirm button dims while the purse is short.

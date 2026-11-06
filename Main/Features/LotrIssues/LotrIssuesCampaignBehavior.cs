@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Issues;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.LotrIssues.Domain;
 using TAOM.Features.LotrIssues.Templates;
 
@@ -18,11 +19,13 @@ namespace TAOM.Features.LotrIssues;
 public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
 {
     private readonly ILotrIssueService _service;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
-    public LotrIssuesCampaignBehavior(ILotrIssueService service, IModLogger logger)
+    public LotrIssuesCampaignBehavior(ILotrIssueService service, ICoopSessionProvider coop, IModLogger logger)
     {
         _service = service;
+        _coop = coop;
         _logger = logger;
     }
 
@@ -44,6 +47,14 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
     /// destroy player progress (an alternative-solution cancel recalls the committed companion+troops).
     /// </summary>
     private void OnGameLoaded(CampaignGameStarter starter)
+    {
+        // A co-op join is a save load: cancelling issues there is the server's call (#1086).
+        if (!_coop.IsAuthority) return;
+        SweepLingeringVanillaIssues();
+    }
+
+    /// <summary>The load sweep itself; virtual so a test can see whether the load handler reached it.</summary>
+    internal virtual void SweepLingeringVanillaIssues()
     {
         try
         {
@@ -88,7 +99,8 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
 
     private void OnCheckForIssue(Hero hero)
     {
-        if (hero == null) return;
+        // New issues are shared world state the server creates (#1086).
+        if (hero == null || !_coop.IsAuthority) return;
         var eligible = _service.GetEligibleIssues(new LotrIssueGiverAdapter(hero));
         if (eligible == null || eligible.Count == 0) return;
 

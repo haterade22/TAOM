@@ -38,7 +38,8 @@ public static class RefugeIoC
         RefugeEncounterPatch.Initialize(
             refugeService,
             container.Resolve<TAOM.Features.Enlistment.IEnlistmentStateQuery>(),
-            container.Resolve<TAOM.Adapters.IGameMenuAdapter>());
+            container.Resolve<TAOM.Adapters.IGameMenuAdapter>(),
+            container.Resolve<TAOM.Features.CoopInterop.ICoopSessionProvider>());
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

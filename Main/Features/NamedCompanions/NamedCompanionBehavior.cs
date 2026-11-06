@@ -1,3 +1,4 @@
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.NamedCompanions;
@@ -5,10 +6,12 @@ namespace TAOM.Features.NamedCompanions;
 public class NamedCompanionBehavior : CampaignBehaviorBase
 {
     private readonly INamedCompanionService _service;
+    private readonly ICoopSessionProvider _coop;
 
-    public NamedCompanionBehavior(INamedCompanionService service)
+    public NamedCompanionBehavior(INamedCompanionService service, ICoopSessionProvider coop)
     {
         _service = service;
+        _coop = coop;
     }
 
     public override void RegisterEvents()
@@ -29,8 +32,17 @@ public class NamedCompanionBehavior : CampaignBehaviorBase
             this, _ => _service.ResetSession());
         CampaignEvents.OnNewGameCreatedPartialFollowUpEvent.AddNonSerializedListener(
             this, OnNewGamePartialFollowUp);
-        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(
-            this, _ => _service.EnsureCompanionsPlaced());
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+    }
+
+    private void OnGameLoaded(CampaignGameStarter starter)
+    {
+        // A co-op join is a save load: placing heroes is the server's work (#1086). The new-game
+        // events above do fire in a first-time joiner's character creation, but in a local campaign
+        // the server never takes; Coop sends only the created hero.
+        if (!_coop.IsAuthority)
+            return;
+        _service.EnsureCompanionsPlaced();
     }
 
     public void OnNewGamePartialFollowUp(CampaignGameStarter starter, int index)

@@ -1,0 +1,21 @@
+Focused re-review of the fixes for the #1086 review findings, uncommitted in this worktree (branch fix/creature-spawn-coop-gate, base origin/bannerlord-1.5.x ee7fe04f4). Read-only: do not edit any file. Return the full report as your FINAL MESSAGE; do not write it to a file.
+
+CONTEXT: the first pass is docs/reviews/raw/codex-prereview-coop-audit-1086-2026-11-06.md (your own report; read its FINDINGS section from line 11226). A Claude data-flow lens also found one HIGH: RefugeEncounterPatch opened the refuge menu (upgrade charges gold, dismantle destroys the party) for a co-op guest, whose book holds other players' refuges. OUT OF SCOPE: the #1084 creature files (Main/Features/CreatureBandits/*, CreatureSpawnCoopGateTests).
+
+THE FIXES (see `git diff` for exact hunks):
+1. RefugeEncounterPatch.Prefix returns true (vanilla meeting) while ICoopSessionProvider.ShouldDeferToHost, before any other read. Initialize takes the provider; RefugeIoC.InitializePatchStatics passes it. Test: TAOM.Tests/Features/Refuge/RefugeEncounterPatchTests.cs.
+2. RefugeService takes ICoopSessionProvider and reads `_coop.IsAuthority` live (OwnsTheRefuges). Off authority: OnGameLoaded skips PinRefugePartyAi and CancelDisband (IRefugeService.OnGameLoaded is parameterless again); FrameTick skips HoldMainParty and the hold note; FinishBuild finishes the row but shows no raised or stronghold message; OnPartyDestroyed drops the row and visuals but returns before the warden log and the fallen message.
+3. TournamentJoinService.BeginJoin: ShouldDeferToHost makes it call proceed() at once (no prize swap via SetPrize, no skill pick).
+4. SupplyLinesCampaignBehavior: OnTick returns before FrameTick and the route visual off authority; OnMobilePartyDestroyed returns off authority. New tests use a real bare MobileParty with a SupplyCaravanComponent, and MenuCondition is tested with a MenuCallbackArgs.
+5. Tests: the Refuge disband test now uses a real refuge party with a positive twin; the LotrIssues load-sweep test pins in IL that IsAuthority is read before Campaign.Current. A mutation run (all new gates removed) failed all 8 new tests; restored, 3250 affected tests pass.
+6. docs/features/coop-interop.md: Refuge, Supply Lines, LotrIssues, Tournament and ArmourAcquisition rows; the character-creation paragraphs (CharacterCreationRegistration, FactionPresetRegistration, KingdomJoinOffer, StartupResources, TaomInitialChildGeneration); FieldCamp and FormationPreset paragraphs; the field camp overlay row (the human host defers too); entry-point rows now say "guests and the human host", plus a Refuge menu row.
+
+KNOWN SUSPECTS (CONFIRM or DISPUTE with file:line):
+1. Does any Refuge write a guest can still reach remain: the refuge menu opened another way than DoMeeting (RefugeMenuController, the clan screen patch RefugeClanScreenPatch, a menu option on another menu), or a FrameTick path that writes the world (raid scan, militia) off authority?
+2. OnPartyDestroyed off authority now returns before the warden info log. Is anything after the return a world write that the server needs a client to do? Is skipping CancelDisband on load still right for the BannerlordCoop human host (IsAuthority false there), whose save the dedicated server does not own?
+3. The Supply Lines OnTick early return skips the route visual's clear-once latch. Can a guest be left with route arrows drawn from before a session started (solo play, then join without restarting the game)?
+4. TournamentJoinService: Patch96_TournamentRewards calls BeginJoin from a menu consequence. With proceed() called synchronously for a guest, is vanilla's join resumed exactly as on a tournament with no TAOM prize (the `tournament == null` path)?
+5. Are the new tests discriminating (each fails if its gate is removed) and free of state leaks (RefugeEncounterPatch statics are cleared in TestCleanup; ClientMapVisualsCompositionTests clears _coop)?
+6. Doc claims: check every changed sentence against code. Report each wrong claim.
+
+REQUIRED SECTIONS: per-suspect verdict with evidence; FINDINGS (severity CRITICAL/HIGH/MEDIUM/LOW, file:line, failure scenario); OBSERVATIONS. QUALITY GATES: cite the file and line you read for every claim; missing evidence is UNVERIFIED; invent no API.

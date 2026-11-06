@@ -161,6 +161,11 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   player is reading. `IsSearchActive` is get-only on purpose: both `IsHidden` and `IsVisible`
   bindings write back through `ViewModel.SetPropertyValue`, which only finds public setters.
 
+**Co-op (#1086).** In a BannerlordCoop session only the server moves, delivers, respawns or loses
+caravans: off authority `SupplyOrderService` skips its ticks, its load respawn, its loss
+bookkeeping and the camp-break cancel, and `ActiveOrders` is empty, so a guest sees no route arrows. A guest sees the town
+option disabled (`SupplyOrderTownMenu`). The row is in [coop-interop.md](coop-interop.md).
+
 ## Source defects fixed in the port (not carried)
 
 | Source behaviour | Port behaviour |

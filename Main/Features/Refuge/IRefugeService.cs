@@ -100,7 +100,9 @@ public interface IRefugeService
 
     void SaveInto(out Dictionary<string, RefugeData> refuges, out int counter);
 
-    /// <summary>Post-load: reconcile book vs parties, re-pin AI on every refuge party.</summary>
+    /// <summary>Post-load: reconcile book vs parties, re-pin AI on every refuge party. Off authority (a co-op
+    /// client, #1086) the AI pin and the disband cancel are skipped: the server owns the parties, and the client
+    /// only rebuilds its book and visuals.</summary>
     void OnGameLoaded();
 
     /// <summary>Clears the book and transients for a session with no saved record; see

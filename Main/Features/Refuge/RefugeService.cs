@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.FieldCamp;
 using TAOM.Features.FieldCamp.Domain;
@@ -131,6 +132,7 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     // Fire and Tribute's live hosts, resolved at the first raid scan rather than at mod load (#1033).
     private readonly Lazy<IRaidHostOwnSideQuery> _hosts;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
     private Dictionary<string, RefugeData> _refuges = new Dictionary<string, RefugeData>();
@@ -154,6 +156,7 @@ public class RefugeService : IRefugeService, IRefugeBook
         IEnlistmentStateQuery enlistment,
         IRefugeVisualService visuals,
         Lazy<IRaidHostOwnSideQuery> hosts,
+        ICoopSessionProvider coop,
         IModLogger logger)
     {
         _settings = settings;
@@ -162,8 +165,16 @@ public class RefugeService : IRefugeService, IRefugeBook
         _enlistment = enlistment;
         _visuals = visuals;
         _hosts = hosts;
+        _coop = coop;
         _logger = logger;
     }
+
+    /// <summary>
+    /// False on a co-op client and on the BannerlordCoop human host, a loopback client (#1086). The book there is
+    /// the save's whole book and no refuge in it is this player's, so every refuge world write, the hold on the
+    /// player's party and every refuge message checks it; the book and the visuals still follow the world.
+    /// </summary>
+    private bool OwnsTheRefuges => _coop.IsAuthority;
 
     public IReadOnlyCollection<RefugeData> AllRefuges => _refuges.Values;
 
@@ -405,8 +416,8 @@ public class RefugeService : IRefugeService, IRefugeBook
                 }
                 // Hold-nearby rule: while a build runs within manage range the company stays.
                 // Ready refuges do not pin the party; only an active build does. Gameplay effect:
-                // with the feature off the build still finishes but nobody is pinned.
-                if (!enabled)
+                // with the feature off, or off authority, the build still finishes but nobody is pinned.
+                if (!enabled || !OwnsTheRefuges)
                     continue;
                 float distance = DistanceFromMainPartyTo(pair.Key);
                 if (FiniteFloatValidator.IsFinite(distance)
@@ -442,6 +453,8 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void HourlyTick()
     {
+        if (!OwnsTheRefuges)
+            return;
         // Disband re-cancel, hourly, for every booked refuge. MbEvent dispatches listeners LIFO
         // (AddNonSerializedListener head-inserts, 1.4.8 MbEvent`1.cs:28), so our
         // OnPartyDisbandStarted handler fires BEFORE vanilla's queue-add and the immediate cancel
@@ -493,7 +506,7 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void OnMapEventStarted(string partyId)
     {
-        if (partyId == null || !_refuges.TryGetValue(partyId, out var data))
+        if (!OwnsTheRefuges || partyId == null || !_refuges.TryGetValue(partyId, out var data))
             return;
         RallyMilitia(partyId, data);
     }
@@ -528,7 +541,7 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void OnMapEventEnded(string partyId)
     {
-        if (partyId == null || !_refuges.TryGetValue(partyId, out var data))
+        if (!OwnsTheRefuges || partyId == null || !_refuges.TryGetValue(partyId, out var data))
             return;
         if (data.MilitiaAdded > 0 && !string.IsNullOrEmpty(data.MilitiaTroopId))
         {
@@ -561,6 +574,8 @@ public class RefugeService : IRefugeService, IRefugeBook
         _visuals.Remove(partyId);
         _visualShown.Remove(partyId);
         _holdNoteShown.Remove(partyId);
+        if (!OwnsTheRefuges)
+            return;
         if (!string.IsNullOrEmpty(data.WardenHeroId))
         {
             // Never orphan the warden silently: he is (or became, via promotion) a clan
@@ -576,6 +591,8 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void OnPeaceMade()
     {
+        if (!OwnsTheRefuges)
+            return;
         foreach (var partyId in _refuges.Keys)
             ReleasePeacePrisoners(partyId);
     }
@@ -591,8 +608,9 @@ public class RefugeService : IRefugeService, IRefugeBook
         // cancel runs BEFORE vanilla's own queue-add (MbEvent dispatches LIFO and TAOM registers
         // after vanilla), so it only resets IsDisbanding; the cancel that actually empties the
         // queue is the hourly pass in HourlyTick, and the LoadFrom belt covers saves written
-        // inside the wait window.
-        CancelDisband(partyId);
+        // inside the wait window. Off authority the book still follows the world (#1086).
+        if (OwnsTheRefuges)
+            CancelDisband(partyId);
 
         if (IsWardenWithParty(partyId, data.WardenHeroId))
             return;
@@ -606,9 +624,10 @@ public class RefugeService : IRefugeService, IRefugeBook
         data.BuildingUpgrade = false;
         data.BuildTargetHours = 0f;
         _holdNoteShown.Remove(partyId);
-        ShowMessage(
-            new TextObject("{=taom_rf_warden_lost}Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now."),
-            error: true);
+        if (OwnsTheRefuges)
+            ShowMessage(
+                new TextObject("{=taom_rf_warden_lost}Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now."),
+                error: true);
     }
 
     public void LoadFrom(Dictionary<string, RefugeData> refuges, int counter)
@@ -684,6 +703,8 @@ public class RefugeService : IRefugeService, IRefugeBook
                 };
                 _logger.LogWarning($"[Refuge] party '{partyId}' had no book row on load; adopted un-established.");
             }
+            if (!OwnsTheRefuges)
+                continue;
             // Re-pin the AI on EVERY refuge party. The engine saves the pin itself
             // (MobilePartyAi.DoNotMakeNewDecisions is [SaveableProperty(11)]), and a refuge is
             // never unpinned, so this is an idempotent belt: it re-asserts the hold and pins a
@@ -770,16 +791,18 @@ public class RefugeService : IRefugeService, IRefugeBook
             // Drop the refuge-scale layout so the next Show rebuilds at stronghold scale.
             _visuals.Remove(partyId);
             _visualShown.Remove(partyId);
-            ShowMessage(
-                new TextObject("{=taom_rf_stronghold_done}The stronghold is complete; its walls and garrison stand stronger."),
-                error: false);
+            if (OwnsTheRefuges)
+                ShowMessage(
+                    new TextObject("{=taom_rf_stronghold_done}The stronghold is complete; its walls and garrison stand stronger."),
+                    error: false);
         }
         else
         {
             data.Established = true;
-            ShowMessage(
-                new TextObject("{=taom_rf_raised}The refuge is raised. It stands as your forward base; manage it to deposit troops."),
-                error: false);
+            if (OwnsTheRefuges)
+                ShowMessage(
+                    new TextObject("{=taom_rf_raised}The refuge is raised. It stands as your forward base; manage it to deposit troops."),
+                    error: false);
         }
         TryShowVisual(partyId, data);
     }
