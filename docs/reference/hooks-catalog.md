@@ -48,6 +48,16 @@
 
 Skill-inline (not in `.claude/hooks/`): `check-freeze.sh` — PreToolUse (Edit|Write) declared in the `/freeze` + `/investigate` SKILL.md frontmatter; blocks edits outside the frozen directory while one of those skills is active. Fires only during skill invocation (`harness-facts.md` "Hook lifecycle").
 
+## Git hooks (every committer)
+
+The hooks above run only for the commands Claude runs. The repository's own git hooks live in the
+tracked folder `.githooks/`, which `core.hooksPath` names (set once per clone with
+`git config core.hooksPath .githooks`; a worktree whose branch predates the folder runs no hook).
+
+| Hook | What it does |
+|---|---|
+| `commit-msg` | Runs `tools/check_commit_msg.py` on every commit and merge message, terminal and IDE commits included: the `<type>[(scope)]: vX.Y.Z - <description>` subject with the `<Version>` of the tree being committed, at most 72 characters, and no AI attribution line. A `fixup!`, `squash!` or `amend!` subject passes. Refuses with exit 1 and names each problem; fails open, saying so, when Python or the checker is missing, when the only Python is a Microsoft Store alias, or when the checker crashes. A merge therefore needs a labelled message (`git merge --no-ff -m "chore: vX.Y.Z - merge <branch>" <branch>`). Tests: `tools/tests/test_check_commit_msg.py`. |
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

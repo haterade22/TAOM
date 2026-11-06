@@ -14,6 +14,8 @@
 # state rather than rewriting anything. No churn.
 *.sh    text eol=lf
 *.bash  text eol=lf
+# Git hooks have no extension, and bash refuses a CRLF shebang line.
+.githooks/* text eol=lf
 
 # NOT *.py, deliberately. 72 tracked .py files are CRLF in the worktree; normalising them
 # would rewrite all 72 on the next checkout for no benefit, since Python is CRLF-tolerant
