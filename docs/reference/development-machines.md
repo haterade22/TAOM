@@ -40,10 +40,11 @@ letter into new code.
 - `.mcp.json` is committed with the desktop's `E:\` paths hardcoded, so on the laptop `serena`
   opens `E:/repos/TAOM` and `taom-moduledata` invokes `E:/repos/TAOM/tools/taom_mcp_server.py`
   (the `filesystem` server that also pointed at desktop folders was removed by WP116 (1.5.x removed it 2026-09-29); the
-  desktop reads those folders as `additionalDirectories` in the tracked `.claude/settings.local.json`). Editing that file to suit one machine breaks the
+  desktop reads those folders as `additionalDirectories` in its own untracked `.claude/settings.local.json`). Editing that file to suit one machine breaks the
   other. The fix is a local-scope MCP override in user config, not a change to the committed file.
-- `.claude/settings.local.json` is **tracked**, despite the name, so it is not a machine-local
-  slot either. Machine-specific values belong in Windows user environment variables.
+- `.codex/config.toml` hardcodes its own list of desktop `E:\` paths for Codex's `filesystem` server, with the same consequence on the laptop.
+
+`.claude/settings.local.json` is per-user and untracked (since WP142 on this line; the 1.5.x line untracked it on 2026-09-25): each checkout, every worktree included, keeps its own copy (personal allow rules, `additionalDirectories`, `enabledMcpjsonServers`). A new worktree starts without one, so copy yours in. A checkout of a commit before the untrack (`1b00d1acd` and older) still tracks the file: switching to one overwrites your copy and switching back removes it, so keep a copy outside the repo. `git restore --source=1b00d1acd -- .claude/settings.local.json` brings back the last tracked version. Anything every clone needs lives in the tracked `.claude/settings.json`.
 
 ## The trap: a red validator on the laptop is usually the laptop
 
