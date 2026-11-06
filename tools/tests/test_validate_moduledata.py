@@ -2917,6 +2917,82 @@ class ItemSlotRejectedTests(unittest.TestCase):
         self.assertEqual(code, 2)
 
 
+class BrokenRosterRefTests(unittest.TestCase):
+    """BROKEN_ROSTER_REF. An <EquipmentSet id> naming no defined <EquipmentRoster> null-dereferences
+    inside the NPCCharacters load, and the engine's empty catch then stops every character after it in
+    the merged document from loading, with no crash at the typo (RCA 2026-10-04 M3)."""
+
+    NPC = ('<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+           '  <NPCCharacter id="lord_x">\n    <Equipments>\n'
+           '      <EquipmentSet id="{ref}" />\n    </Equipments>\n  </NPCCharacter>\n</NPCCharacters>\n')
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self.md = self.root / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, rosters=("known_set",)):
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures=set(), party_templates=set(), equipment_rosters=set(rosters))
+        issues = ts.Validator(self.md, self.schemas, regs).run()
+        return [i for i in issues if i.code == "BROKEN_ROSTER_REF"]
+
+    def test_a_misspelt_roster_id_is_an_error_with_its_line(self):
+        _write(self.md / "characters" / "lords_test.xml", self.NPC.format(ref="knwon_set"))
+        found = self._found()
+        self.assertEqual(len(found), 1)
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+        self.assertEqual((found[0].file, found[0].line, found[0].entry_id),
+                         ("characters/lords_test.xml", 5, "lord_x"))
+        self.assertIn("knwon_set", found[0].message)
+
+    def test_a_defined_roster_id_is_clean(self):
+        _write(self.md / "characters" / "lords_test.xml", self.NPC.format(ref="known_set"))
+        self.assertEqual(self._found(), [])
+
+    def test_a_ref_in_an_xslt_is_read(self):
+        _write(self.md / "lords.xslt",
+               '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+               '  <xsl:template match="NPCCharacter[@id=\'lord_x\']/Equipments">\n'
+               '    <EquipmentSet id="knwon_set" />\n  </xsl:template>\n</xsl:stylesheet>\n')
+        self.assertEqual([i.file for i in self._found()], ["lords.xslt"])
+
+    def test_a_commented_out_ref_is_ignored(self):
+        _write(self.md / "characters" / "lords_test.xml",
+               '<NPCCharacters>\n<!-- <EquipmentSet id="knwon_set" /> -->\n</NPCCharacters>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_an_empty_registry_means_the_pass_is_unavailable(self):
+        _write(self.md / "characters" / "lords_test.xml", self.NPC.format(ref="knwon_set"))
+        self.assertEqual(self._found(rosters=()), [])
+
+    def _registry(self, with_install=True):
+        modules = self.root / "Modules"
+        _write(self.md / "characters" / "rosters.xml",
+               '<EquipmentRosters>\n  <EquipmentRoster id="taom_set"><equipment slot="Body" id="Item.a" /></EquipmentRoster>\n'
+               '  <!-- <EquipmentRoster id="commented_set"></EquipmentRoster> -->\n</EquipmentRosters>\n')
+        _write(self.md / "spkingdoms.xslt",
+               '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+               '  <xsl:template match="EquipmentRoster[@id=\'stripped_set\']"/>\n</xsl:stylesheet>\n')
+        # Vanilla writes the id on its own line after the element name.
+        _write(modules / "SandBoxCore" / "ModuleData" / "sandboxcore_equipment_sets.xml",
+               '<EquipmentRosters>\n  <EquipmentRoster\n    id="vanilla_set">\n  </EquipmentRoster>\n'
+               '  <EquipmentRoster\n    id="stripped_set">\n  </EquipmentRoster>\n</EquipmentRosters>\n')
+        return ts.build_registries(self.md, modules if with_install else None).equipment_rosters
+
+    def test_the_registry_holds_taom_and_vanilla_rosters_but_not_commented_or_stripped_ones(self):
+        rosters = self._registry()
+        self.assertEqual(rosters, {"taom_set", "vanilla_set"})
+
+    def test_the_registry_is_unavailable_without_an_install(self):
+        self.assertEqual(self._registry(with_install=False), set())
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced
