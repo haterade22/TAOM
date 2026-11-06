@@ -13,7 +13,7 @@ A change is judged on TWO axes simultaneously: how much it helps, and how much c
 | Tiny win + added complexity (new abstraction, new helper, new flag) | **Reject** | Future readers pay forever for a benefit they won't notice. |
 | Equal result + simpler code | **Keep** | Pure win. Take it. |
 | Deletion that holds parity (tests still green, behavior unchanged) | **Always keep** | Deletion is the highest-leverage change. Never argue against it. |
-| Improvement large enough to dominate complexity cost | **Keep**, but flag the trade-off in PR / CHANGELOG | Make the cost explicit so the next person can re-evaluate later. |
+| Improvement large enough to dominate complexity cost | **Keep**, but flag the trade-off in the PR or commit body | Make the cost explicit so the next person can re-evaluate later. |
 | New code "in case we need it later" | **Reject** | YAGNI. CLAUDE.md already forbids hypothetical-future plumbing. |
 
 ## How to apply

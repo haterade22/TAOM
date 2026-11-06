@@ -40,6 +40,12 @@ No provider is permanently the builder or reviewer.
   within the requested scope and budget. Do not dispatch from an ordinary
   build, documentation or local-review request. See the shared policy.
 
+## Documentation duty
+
+- The commit body is the changelog entry: write it for a reader of the release
+  note. `/release` generates `CHANGELOG.md` from commit subjects and bodies;
+  never edit that file by hand.
+
 ## Code Review Rules
 
 Use the reviewer role and TAOM severity/evidence rules, including intentional

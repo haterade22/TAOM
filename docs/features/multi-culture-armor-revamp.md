@@ -91,7 +91,7 @@ No new C# tests added (data-only change). Validation done via:
 5. Edit the `ArmorItem` list (or `parse_*_items()` function for spec-driven extraction).
 6. `python tools/generate_<new>_armor.py --dry-run` then `--apply`.
 7. Validate refs against troops_<culture>.xml.
-8. Add to CHANGELOG, update this feature doc table.
+8. Describe the culture in the commit body (the changelog entry), update this feature doc table.
 
 ## How to add items as KEYforce ships more meshes
 

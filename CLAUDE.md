@@ -61,7 +61,7 @@ says *when*. Full per-skill workflow lives in each `SKILL.md`.
 
 ### Workflow → Skill convention
 
-**Every recurring, multi-step workflow becomes a skill** when it is (a) repeatable, (b) multi-step or chains skills, and (c) carries TAOM-specific gotchas. The skill is a thin entry point pointing at the authoritative doc. **Do NOT skill-ify** one-offs, pure reference, or single commands — descriptions load eagerly into every conversation, a permanent context tax. New skills: description <=30 words, follow `.claude/rules/external-skill-ports.md`, register in the routing table below, update CHANGELOG.
+**Every recurring, multi-step workflow becomes a skill** when it is (a) repeatable, (b) multi-step or chains skills, and (c) carries TAOM-specific gotchas. The skill is a thin entry point pointing at the authoritative doc. **Do NOT skill-ify** one-offs, pure reference, or single commands: descriptions load eagerly into every conversation, a permanent context tax. New skills: description <=30 words, follow `.claude/rules/external-skill-ports.md`, register in the routing table below.
 
 ## Skill Routing (when to invoke what)
 
@@ -103,7 +103,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 
 - **`/freeze`** on "only fix this" / "don't touch X" / "stay in this folder" / a many-file refactor or focused one-feature fix; **`/unfreeze`** when they're done and the boundary is still set.
 - **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
-- **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG.
+- **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue.
 - **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
 - **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `output-style.md` Part 2 already governs new prose as you write.
 
@@ -273,10 +273,10 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## Documentation Requirements (MANDATORY)
 
-- **CHANGELOG.md every session.** ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
+- **The commit body is the changelog entry** (`/release` writes `CHANGELOG.md`). ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
 - **CLAUDE.md:** new features add their row to `docs/reference/feature-map.md`, NOT here — here only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget).
 - **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md) — detailed enough that a future session needs ZERO re-decompilation.
-- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc + CHANGELOG. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
+- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
 
 ## Commits
 
@@ -339,7 +339,7 @@ original bug over its own fix, with a message describing a fix that was no longe
 If the working tree contains another session's edits, leave them unstaged and say so — do not
 commit, revert, or "tidy" them. **If the user explicitly asks for both sessions' work to land**,
 commit theirs as its OWN commit, attributed in the message and verified green first — never folded
-into yours. Watch for the inverse tell: a CHANGELOG entry in `HEAD` whose code is absent means the
+into yours. Watch for the inverse tell: a feature doc or commit body in `HEAD` whose code is absent means the
 documentation half of a change committed and the code half did not.
 
 ## MCP Servers
@@ -369,7 +369,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-33 hook registrations: 28 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 29 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted 2026-09-13 after `check-commit-subject-version.sh`). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
+31 hook registrations: 26 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 27 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted when plan 020 retired the two CHANGELOG hooks). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".

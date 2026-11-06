@@ -42,7 +42,7 @@ where `vX.Y.Z` is the `<Version>` in `Main/_Module/SubModule.xml` (read it; do n
 | `TAOM.Tests/Features/<Name>/**` | `test:` | `test: v2.0.28 - add AlignmentService coverage` |
 | `Main/_Module/ModuleData/**/*.xml`, `*.xslt` | `data:` | `data: v2.0.28 - add gondor equipment templates` |
 | `docs/features/*.md` | `docs:` | `docs: v2.0.28 - add alignment-aware-execution feature doc` |
-| `CHANGELOG.md` | `docs:` | `docs: v2.0.28 - update changelog for execution system` |
+| `CHANGELOG.md` | `chore(release):` only | written by `/release` alone; any other staged edit is a hand edit to flag, never commit |
 | `CLAUDE.md`, `.claude/**` | `chore:` | `chore: v2.0.28 - update claude code tooling` |
 | `Main/IoC.cs`, `Main/SubModule.cs` | `chore:` | `chore: v2.0.28 - register alignment feature in IoC` (or bundle with feat:) |
 | `docs/adrs/**` | `docs:` | `docs: v2.0.28 - add ADR-010 for execution alignment approach` |

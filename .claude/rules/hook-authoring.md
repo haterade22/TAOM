@@ -38,7 +38,7 @@ When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate 
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
 
-**Reference pattern** (used by `check-changelog-changed.sh`, `check-claude-files-tracked.sh`, and `suggest-compact.sh`):
+**Reference pattern** (used by `check-claude-files-tracked.sh` and `suggest-compact.sh`):
 
 ```bash
 case "$COMMAND" in

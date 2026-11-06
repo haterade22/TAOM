@@ -88,7 +88,7 @@ Description of any optimizations, caching, or performance-sensitive patterns use
 
 ## Changelog
 
-Dated, feature-sliced history (newest first) — mirrors the entries about this feature from the repo-root `CHANGELOG.md`. Add a bullet here whenever the feature changes; the global `CHANGELOG.md` remains the chronological log of record.
+Dated, feature-sliced history (newest first). Add a bullet here whenever the feature changes; the commit bodies, which `/release` gathers into `CHANGELOG.md`, are the chronological log of record.
 
 - YYYY-MM-DD — summary of the change to this feature.
 

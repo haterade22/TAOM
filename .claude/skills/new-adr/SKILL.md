@@ -1,6 +1,6 @@
 ---
 name: new-adr
-description: Scaffold a new Architecture Decision Record, auto-numbered from existing ADRs, with context pre-filled from recent git history and CHANGELOG.
+description: Scaffold a new Architecture Decision Record, auto-numbered from existing ADRs, with context pre-filled from recent git history.
 argument-hint: "[decision-name e.g. use-singletons-for-services]"
 ---
 
@@ -33,8 +33,8 @@ git log --oneline -10
 # Current session's work
 git diff --name-only HEAD 2>/dev/null | head -20
 
-# Latest CHANGELOG entry (first 30 lines)
-head -30 CHANGELOG.md
+# Latest commit bodies (the changelog entries since the last release)
+git log -3 --format='%s%n%n%b'
 ```
 
 ## Step 3: Read Template Format
@@ -57,7 +57,7 @@ Write to `docs/adrs/[NNN]-[decision-name].md` using this exact format (matching 
 ## Context
 
 [2-4 sentences describing the problem or situation that motivated this decision.
-Pre-fill with context from: git log themes, CHANGELOG entry, changed files.]
+Pre-fill with context from: git log themes, recent commit bodies, changed files.]
 
 ## Decision
 

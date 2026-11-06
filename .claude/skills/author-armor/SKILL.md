@@ -34,7 +34,7 @@ python tools/validate_all_troop_refs.py
 Cross-checks every `sk_*/ar_*/clo_urukscout_*/urukscout_*` ref across all 7 culture troop XMLs against the Armory. Missing refs → characters spawn in underwear. Prefer this over the Gondor-only `validate_gondor_refs.py`.
 
 ## Step 4 — Ship
-`/ship` if any C# changed; otherwise `/verify` + CHANGELOG + issue.
+`/ship` if any C# changed; otherwise `/verify` + issue, with the commit body as the changelog entry.
 
 ## Gotchas
 - Verify troop IDs against canonical troop XML — sibling-naming symmetry is a false signal (memory `feedback_verify_troop_ids_against_canonical_xml.md`).

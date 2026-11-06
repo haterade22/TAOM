@@ -41,11 +41,6 @@
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-changelog-changed.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": ".claude/hooks/check-claude-files-tracked.sh",
             "timeout": 5
           },
@@ -200,11 +195,6 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/check-changelog-updated.sh",
-            "timeout": 10
-          },
           {
             "type": "command",
             "command": ".claude/hooks/check-deep-review.sh",
