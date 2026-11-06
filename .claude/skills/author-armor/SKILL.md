@@ -15,13 +15,13 @@ Before authoring ANY item, grep **all** `LOTRLOME_items/*/` subfolders for the i
 ```bash
 grep -rl 'sk_<prefix>_' "<armory>/ModuleData/LOTRLOME_items/"
 ```
-The first folder that already contains that prefix is the canonical home. Authoring into a different folder creates runtime duplicate-ID warnings (the engine silently shadows one). Even when the spec is named for culture X, the home may be a sub-culture — e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, NOT `erebor/` (caught in #211). `docs/reference/armory-guide.md` has the full per-prefix → folder table (moved out of CLAUDE.md 2026-07-18). Memory: `feedback_multi_folder_id_uniqueness.md`.
+The first folder that already contains that prefix is the canonical home. Authoring into a different folder creates runtime duplicate-ID warnings (the engine silently shadows one). Even when the spec is named for culture X, the home may be a sub-culture: e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, NOT `erebor/` (caught in #211). `docs/reference/armory-guide.md` has the full per-prefix → folder table (moved out of CLAUDE.md 2026-07-18).
 
 ## Step 1 — Author the armor items
 - Use/clone the matching generator: `tools/generate_<culture>_armor.py` (`--dry-run` then `--apply`; `--armory-path` to target the Steam install).
-- **Cover attributes** — leg items need `covers_legs="true"`, gloves `covers_hands="true"`, or the engine equips but doesn't render the mesh (bare legs/hands). Memory: `feedback_lotrlome_armor_cover_attributes.md`.
+- **Cover attributes**: leg items need `covers_legs="true"`, gloves `covers_hands="true"`, or the engine equips but doesn't render the mesh (bare legs/hands).
 - `<Flags UseTeamColor="true" />` for banner tint.
-- Standalone `<EquipmentRosters>` civ rosters need `equipmentType="Civilian"` (battle is the implicit default) — memory `feedback_equipmenttype_civilian_required.md`.
+- Standalone `<EquipmentRosters>` civ rosters need `equipmentType="Civilian"` (battle is the implicit default).
 
 ## Step 2 — Swap troop rosters
 - `tools/apply_<culture>_troop_revamp.py --dry-run` / `--apply` — mechanical EquipmentRoster swap (+ any new troops / deletes).
@@ -37,5 +37,5 @@ Cross-checks every `sk_*/ar_*/clo_urukscout_*/urukscout_*` ref across all 7 cult
 `/ship` if any C# changed; otherwise `/verify` + issue, with the commit body as the changelog entry.
 
 ## Gotchas
-- Verify troop IDs against canonical troop XML — sibling-naming symmetry is a false signal (memory `feedback_verify_troop_ids_against_canonical_xml.md`).
+- Verify troop IDs against canonical troop XML: sibling-naming symmetry is a false signal.
 - Armory dependency is `LOTRLOME_Armory` (NOT `Armory_2` — being deleted).

@@ -162,8 +162,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 First read the new build's first start in `taom_debug_*.log` for the native guards (`docs/features/skeleton-buffer-guard.md`, "After an engine bump"): both `[SkeletonBuffer] guard ON pool 1` and `guard ON pool 2` must appear; a `guard OFF pool N` (or one `guard OFF:`) with a pattern reason means players lost that pool's freeze protection until the patterns are re-derived. Then: vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
 Windows Event Log fault offset against the previous version's known sites BEFORE assuming your
 last change caused it** (`/native-crash-triage` Phase 1) — the rewritten native lookups in new
-engine versions turn previously-tolerated data misses into AVs
-(memory: `feedback_engine_lookup_total_key_coverage`).
+engine versions turn previously-tolerated data misses into AVs.
 
 Worked example of the whole protocol: `docs/features/spider.md` "The v1.4.6 engine-bump
 campaign" + CHANGELOG 2026-06-12.

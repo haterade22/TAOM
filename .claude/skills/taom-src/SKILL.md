@@ -66,7 +66,7 @@ DLL" for all of them.
 
 ## Why this exists
 
-The recurring failure mode (caught by Codex review 2026-05-06, see `feedback_codex_caught_api_misread.md` in memory): two agents disagreed on a TaleWorlds API; the more confident one was wrong because it inferred from the decompile folder rather than the installed DLLs. A single primitive that always lands on the installed engine version — and caches so the cost is paid once per type — removes the temptation to skip verification.
+The recurring failure mode (caught by Codex review 2026-05-06): two agents disagreed on a TaleWorlds API; the more confident one was wrong because it inferred from the decompile folder rather than the installed DLLs. A single primitive that always lands on the installed engine version: and caches so the cost is paid once per type: removes the temptation to skip verification.
 
 ## Environment requirements
 

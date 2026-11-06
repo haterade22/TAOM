@@ -43,7 +43,7 @@ resource** (mesh-only re-export → `CreateAgentSkeleton` null → RIDERLESS mou
 PASS is necessary, not sufficient — it can't see the mesh bone-palette split or in-game behaviour,
 so still do an in-game spawn-with-rider check. Full requirements + the four failure modes:
 [creature-mount-authoring.md](../../../docs/ai-includes/creature-mount-authoring.md) → "REPLACING
-FBX / TPAC FILES". Lesson: `feedback-mesh-reexport-drops-skeleton-resource` (spider rework
+FBX / TPAC FILES". (Spider rework
 2026-06-13 shipped mesh-only → riderless until caught).
 
 For rider clips use the composite method (master §4a): parent rider `human_skeleton` to the mount's sit

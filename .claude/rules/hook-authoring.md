@@ -21,7 +21,7 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
 | **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011; the polearm gate did the same until 2026-09-29 |
 
-**Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template — same shape as the C++-port hot-path miss (`feedback_native_port_hot_path_audit.md`). The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
+**Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template: same shape as the C++-port hot-path miss. The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
 
 ## Git invocation forms hooks must handle
 

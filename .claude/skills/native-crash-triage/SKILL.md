@@ -99,7 +99,7 @@ crash row (the tool shows them); the common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
-  a key. Fix: make the table TOTAL (see `feedback_engine_lookup_total_key_coverage` memory)
+  a key. Fix: make the table TOTAL
 - faulting address ≈ heap, or an index register holding float bits → **corrupted record**
   consumed downstream; check binding targets (phantom-animation sweep) and route around if
   engine-internal (Patch47 pattern)
@@ -135,4 +135,4 @@ control battle that exercises the trigger, and compare the next Event Log offset
 crashes — a NEW offset is progress, not failure.
 
 Full worked example with all three patterns: `docs/features/spider.md` ("The v1.4.6 engine-bump
-campaign"); generalized lessons: memory `feedback_engine_lookup_total_key_coverage`.
+campaign").

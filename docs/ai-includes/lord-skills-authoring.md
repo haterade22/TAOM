@@ -493,11 +493,11 @@ Before declaring done:
 
 Real failure modes from past sessions. Read these before you ship.
 
-| Trap | Source memory | Mitigation |
+| Trap | Source | Mitigation |
 |---|---|---|
-| `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref) — corrupted 24 BodyProperties lines in one apply | `feedback_re_sub_backref_followed_by_digit.md` | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
-| Renaming an NPC and forgetting `settlements.xml` lore-text references — "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | `feedback_rename_grep_all_moduledata.md` | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/` — audit every hit, not just `characters/` |
-| **Explicit `<skills>` block on hero NPCs is ignored by the engine** — only `skill_template` matters; this is the bug that led to the SkillSet rewrite | NEW: `feedback_skill_template_overrides_explicit_skills.md` | Always swap `skill_template` to a TAOM SkillSet, never hand-edit `<skills>` blocks for heroes |
+| `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref): corrupted 24 BodyProperties lines in one apply | a session | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
+| Renaming an NPC and forgetting `settlements.xml` lore-text references: "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | a session | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/`: audit every hit, not just `characters/` |
+| **Explicit `<skills>` block on hero NPCs is ignored by the engine**: only `skill_template` matters; this is the bug that led to the SkillSet rewrite | a session | Always swap `skill_template` to a TAOM SkillSet, never hand-edit `<skills>` blocks for heroes |
 | Same-ID NPCs in both `lords.xslt` (vanilla transform) and `characters/lords.xml` (TAOM additions) merge: `lords.xml` loads second and wins each attribute and `<skill id>` it redeclares, the XSLT copy supplies the rest, and differing `<Equipments>` sets union into a random per-campaign pick (#644) | `Main/_Module/SubModule.xml` load order; `MBObjectManager.MergeElements` | Grep BOTH files for the id before editing. If a fix isn't taking effect, the other file may redeclare that attribute or carry a second equipment set; #648 tracks the ids still in both |
 | Children (age <14) skipped by the script — appropriate for toddlers, but breaks for Nazgûl with placeholder ages 9/11 | Script's `process_file` | Canonical entries auto-bypass the age skip. Always add Nazgûl / immortals to `CULTURES[*]['canonical']` even if just `dict(archetype='nazgul')` |
 | `0Harmony.dll` lock when Bannerlord is running → `./build.ps1` fails | `.claude/rules/environment-failures.md` | Close Bannerlord OR skip the build — XML data changes don't need it. Use the Python XML parse smoke test instead |

@@ -207,7 +207,7 @@ Register in `Main/_Module/SubModule.xml` next to similar cultures:
 
 ## Phase 3: Tree wiring
 
-### 3a. Culture XSLT binding (MANDATORY — read `feedback_xslt_passthrough_unintended_inheritance` memory)
+### 3a. Culture XSLT binding (MANDATORY)
 
 For XSLT-passthrough cultures, the existing culture block in `spcultures.xslt` will preserve every vanilla attribute via `<xsl:apply-templates select="@*"/>` — including ones you don't want. Enumerate **every** CultureObject template/troop attribute the engine reads and explicitly classify each as BIND or PASSTHROUGH.
 
@@ -384,14 +384,14 @@ Each iteration that touches the `VolunteerRecruitmentService` pool **must update
 
 ## Patterns codified during Dale iteration
 
-These all became feedback-memory entries — read them before authoring:
+Read these before authoring:
 
-- `feedback_xslt_passthrough_unintended_inheritance.md` — enumerate every CultureObject attribute; passthrough silently inherits vanilla bindings you didn't want.
-- `feedback_enumerate_from_source_of_truth.md` — extending a config? enumerate from the upstream source, not the existing config rows.
-- `feedback_classify_by_grep_not_by_assumption.md` — unfamiliar IDs (kingdom? culture? clan?) — grep before classifying.
-- `feedback_multi_folder_id_uniqueness.md` — canonical-folder table for armor-item prefixes; check before authoring a new item to avoid duplicate-ID warnings.
-- `feedback_verify_troop_ids_against_canonical_xml.md` — user-spec troop name → ID conversion needs canonical XML grep, not sibling-naming inference.
-- `feedback_xml_grep_wrapper_offset.md` — `grep -c "<NPCCharacter"` overcounts by 1 because `<NPCCharacters>` wrapper matches.
+- Enumerate every CultureObject attribute; passthrough silently inherits vanilla bindings you didn't want.
+- Extending a config? enumerate from the upstream source, not the existing config rows.
+- Unfamiliar IDs (kingdom? culture? clan?): grep before classifying.
+- Canonical-folder table for armor-item prefixes; check before authoring a new item to avoid duplicate-ID warnings.
+- User-spec troop name → ID conversion needs canonical XML grep, not sibling-naming inference.
+- `grep -c "<NPCCharacter"` overcounts by 1 because `<NPCCharacters>` wrapper matches.
 
 And the patterns visible in the Dale generator code (clone these explicitly for your next culture):
 
