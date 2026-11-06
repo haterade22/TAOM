@@ -656,22 +656,22 @@ public class CultureBonusServiceTests
 
 ```powershell
 # Run all tests
-dotnet test
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 
 # Run specific test project
-dotnet test TAOM.Tests/TAOM.Tests.csproj
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId=
 
 # Run with verbose output
-dotnet test -v normal
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= -v normal
 
 # Run specific test class
-dotnet test --filter "ClassName=CultureBonusServiceTests"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "ClassName=CultureBonusServiceTests"
 
 # Run specific test method
-dotnet test --filter "FullyQualifiedName~GetBonus_WithValidAgents"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~GetBonus_WithValidAgents"
 
 # Run with coverage
-dotnet test --collect:"XPlat Code Coverage"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --collect:"XPlat Code Coverage"
 ```
 
 ### Visual Studio
@@ -702,7 +702,7 @@ dotnet test --collect:"XPlat Code Coverage"
 dotnet tool install -g dotnet-reportgenerator-globaltool
 
 # Run tests with coverage
-dotnet test --collect:"XPlat Code Coverage"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --collect:"XPlat Code Coverage"
 
 # Generate HTML report
 reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html

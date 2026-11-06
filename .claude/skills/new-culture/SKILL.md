@@ -28,7 +28,7 @@ If creating a **net-new `taom_spcultures.xml` Culture object**, read [docs/cultu
 - **Cover attributes** — leg items need `covers_legs="true"`, gloves `covers_hands="true"`, or the mesh doesn't render (bare legs/hands).
 - **`<Flags UseTeamColor="true" />`** on every armor item for banner tint.
 - Run `/xslt-check` after editing `spcultures.xslt`, then run the gate that actually catches the
-  recurring bug: `dotnet test TAOM.Tests --filter FullyQualifiedName~CulturePartyTemplate`.
+  recurring bug: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~CulturePartyTemplate`.
   `/xslt-check` passed on all four instances of the passthrough-inheritance bug (Dale, Rohan, Khand,
   settlement patrols) because it reads the markup, and the defect is an attribute that is not in the
   markup at all. Extend that test's attribute list if you bind something new.

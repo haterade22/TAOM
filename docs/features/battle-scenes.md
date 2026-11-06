@@ -6,7 +6,7 @@
 > 0–255 `map_indices` (0 crash suspects, every Scene id on disk). All 3 patch targets were verified against the
 > installed 1.4.5 DLLs before re-enabling (`Campaign.InitializeScenes`, `GameSceneDataManager.{LoadSPBattleScenes,
 > LoadConversationScenes,LoadMeetingScenes}`, `MBMapScene.GetBattleSceneIndexMap`, `SandBox.MapScene.Load`).
-> Build + `dotnet test TAOM.Tests` (2877 passed) clean.
+> Build + `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` (2877 passed) clean.
 >
 > **In-game validation pending** the `worldmap_battle_scene_grid` re-author (see
 > [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md)). Why this matters: with

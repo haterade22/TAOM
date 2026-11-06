@@ -16,7 +16,7 @@ tools:
 Behavior-preserving structural refactoring of TAOM C#. Use when code is hard to read/extend but isn't *redundant* — for redundancy use `/deslop` instead. The boundary:
 
 ## Execution model (read first)
-Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/deslop`, `/build-fix`, `/investigate`, `/scope-check`, `/new-adr`), **recommend it in your report** — don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true`). Don't assume CLAUDE.md / `.claude/rules` reached you. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/deslop`, `/build-fix`, `/investigate`, `/scope-check`, `/new-adr`), **recommend it in your report**; don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId=`). Don't assume CLAUDE.md / `.claude/rules` reached you. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 | Tool | Purpose | Mode |
 |------|---------|------|
@@ -49,7 +49,7 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
 
 ## Method (Martin Fowler-style discipline, TAOM-flavored)
 
-1. **Confirm tests green.** `dotnet test TAOM.Tests` must pass. If not, fix first.
+1. **Confirm tests green.** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` must pass. If not, fix first.
 
 2. **Identify ONE refactoring at a time.** Compose multiple small ones; never bundle into a single sweeping change.
 
@@ -61,7 +61,7 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
    - **Inline** — opposite of extract, when an abstraction adds noise without value
    - **Replace magic number with constant** — only if the constant has a name that adds meaning
 
-4. **Test after each refactoring.** `dotnet test TAOM.Tests` must still pass. If a test fails, the refactoring changed behavior — revert and re-think.
+4. **Test after each refactoring.** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` must still pass. If a test fails, the refactoring changed behavior: revert and re-think.
 
 5. **Per TAOM conventions:**
    - No `#region` (ADR-003)
@@ -84,7 +84,7 @@ REFACTORING REPORT
 Goal:           [what change in shape — "extract X" / "rename Y" / "move Z to W"]
 Files touched:  [list]
 Behavior change: NONE (verified by test pass)
-Tests:          dotnet test TAOM.Tests — N passed, 0 failed
+Tests:          dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=: N passed, 0 failed
 ADR conformance: [any ADR explicitly satisfied by this refactor]
 Status:         REFACTORED | NEEDS TESTS FIRST | OUT OF SCOPE
 ```

@@ -121,7 +121,7 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 - `TAOM.Tests/Features/CultureMarketplace/TownRosterAdapterGetItemCountsTests.cs`: 4 tests that run `TownRosterAdapter.GetItemCounts` itself, on a real `ItemRoster` behind a bare settlement with real items in a real object manager (the service tests above fake the adapter, so these are the only tests of the count): an item split across modifier stacks counts every stack and nothing else, each count lands in the slot of the id that asked for it in any order, an unknown, empty, null or unstocked id is a zero that keeps its slot, and a walk that throws partway logs one ERROR line and returns zeroes for every id.
 - `TAOM.Tests/Features/CultureMarketplace/ItemPoolAdapterMerchandiseTests.cs`: 5 tests: the predicate keeps merchandise, skips NotMerchandise and id-less items, and the pool scan asks it.
 
-Total: 122 tests across 12 classes, all green (`dotnet test --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`).
+Total: 122 tests across 12 classes, all green (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`).
 
 ## Cross-Culture Item Routing
 

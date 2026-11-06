@@ -210,7 +210,7 @@ Code: No code changes needed
 | `execution/alignment.json` | kingdom id **or** culture id | `FactionSide.Neutral`, which mis-scores executions (`AlignmentService.cs:41`) | nothing |
 | `configs/army_targeting.json` | kingdom id | neutral theater weighting | `WarTheaterConfigInvariantsTests`, which fails the build on a dead key or a missing kingdom |
 | `siege/siege_defense_config.json` | kingdom id | no bespoke siege message | nothing, and the 4 newest kingdoms are already absent |
-| `factionmap/factions.json` | a lore key, with `game_faction` naming a **culture** id | the region does not appear in character creation | `dotnet test TAOM.Tests --filter FactionMap` |
+| `factionmap/factions.json` | a lore key, with `game_faction` naming a **culture** id | the region does not appear in character creation | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FactionMap` |
 
 ## Numbers in this chapter
 
