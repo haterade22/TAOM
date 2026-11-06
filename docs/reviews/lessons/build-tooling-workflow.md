@@ -3617,3 +3617,37 @@ Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-
 - **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
 - **On this tree:** This incident ran on the 1.5.x line, and `notify-test-results.sh` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `dotnet test` is not the full suite: run the whole `/verify` before a review closes (Fords of War, 2026-10-31)
+Fords of War closed a tier 1 review on "suite 30216/0" from `dotnet test` alone. `/verify` before the commit
+then ran the Python tool tests, and `ShippedModuleStringsPinTests` refused all 81 text keys: they were
+`FOW_*`, and TAOM keys start with `taom_`, `TAOM_` or `aom_`. The rename touched 32 files after the review.
+- **Why missed:** the build and review cadence named `dotnet test` as the full suite. The Python tool tests
+  (`tools/tests`, about four minutes) hold the gates for strings, generators and docs, and only `/verify`
+  Step 2b runs them.
+- **Prevent:** before a review closes, and before any "ready to commit" claim, run the whole `/verify`, Step 2b
+  included. A new string key takes the `TAOM_<FEATURE>_` prefix.
+- **Source:** 1.5.x `docs/reviews/rca-fords-of-war-2026-10-31.md` row V1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A docs sweep for a changed value greps the old VALUE, not the new symbol
+The war ram's Monster moved from `action_set="as_horse"` to `"as_war_ram"`. The "update all documentation" pass searched by the new names and by `act_horse_kick`, and reported done; seven docs still showed the ram on `as_horse` with nothing authored, two of them in `<!-- example file=... -->` blocks naming the live file.
+- **Why missed:** a search written in the vocabulary of the new state cannot find text written in the old one. `check_handbook_attributes.py` validates marker attribute NAMES against the engine dump, not VALUES against the file a marker names, so it printed 0 findings.
+- **Prevent:** before claiming a docs sweep is done, grep the literal old value (`attr="old"`, the old id, the old number) across `docs/`, `Main/` comments and the external modules' comments, and classify every hit as fixed, historical (marked superseded) or generic advice that is still true.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_war_ram` exists only there; the rule holds here.
+- **Source:** 1.5.x #618 deep review, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Verify a re-serialised binary against the original bytes, not the fields its own library reads back
+`wire_anim_master_clip.ps1` re-saves a Kit-written clip tpac through TpacTool and verified the result by reading its fields back through TpacTool. The file came back 48 bytes shorter: the item version word 6 became 5 and the Kit's dependency tail (the master's GUID) was gone. The field read-back showed only the two intended changes.
+- **Why missed:** a round trip through one parser cannot see what that parser does not model.
+- **Prevent:** after any re-serialisation of a file another tool wrote, compare size and a byte diff against the original, and explain every difference before trusting it. Here each was then measured closed against shipping data (68 clips at version 5 and 48 without the tail all play in game) and written into the tool's docstring.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_anim_master_clip.ps1` exists only there; the rule holds here.
+- **Source:** 1.5.x #618, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before an in-game test, prove the running process loaded the change
+`dotnet test ... -p:DisableModuleCopy=true` builds without deploying, and a game started before the deploy keeps the
+old DLL. On 2026-09-18 the check was three facts: the deployed `TAOM.dll` contains the new string (a UTF-16 search for
+`act_war_ram_butt`), the game process started after the DLL's write time (15:06:44 against 15:06:35), and every
+on-disk tpac edit predates a Kit load (the Kit re-cooks a changed package's `.rdc` on load).
+- **Why missed:** nothing missed yet; without it the ram would have kept its old kick and read as a failed clip.
+- **Prevent:** run the three checks before asking for an in-game test, and say which build the test will run.
+- **Source:** 1.5.x #618, 2026-09-18, on `origin/bannerlord-1.5.x` (ported by WP142).

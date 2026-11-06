@@ -674,3 +674,43 @@ proof of a clean wrist; the real guard was the `--preview` render and Mike's loo
   function a number.
 - **On this tree:** This incident ran on the 1.5.x line, and `transfer_hand_morphs.py` exists only there; the rule holds here.
 - **Source:** 1.5.x tools review 2026-09-26 (Blender tooling lens, M1); `tools/blender/transfer_hand_morphs.py` `seam_weights`, `seam_offsets`, `seam_gate`; `docs/features/troll-race.md` "Hand pose morphs", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The Kit stores bone tracks in FBX node order and the engine reads the skeleton's list order
+
+**Context (2026-09-18, the war ram).** The troll procedure, run on `horse_skeleton`, stood the ram on its head
+with its hind legs in the air while the pelvis and spine were right. Read-back of the compiled master against
+two vanilla horse masters (`anim_horse_stand_4`, `horse_dash_forward`) showed the cause: the Kit writes a
+master's bone tracks in FBX node order (Blender exports depth-first) and never remaps them by name; the engine
+reads slot i as bone i of the skeleton's own list; `horse_skeleton` lists the rear legs and tail before the
+neck. Slots 16 to 31 were scrambled: the neck played the tail, the hind legs the neck. `human_skeleton`'s
+list IS depth-first, which is why the troll measurement said "verbatim" and saw nothing.
+
+**Why missed:** TaleWorlds' own horse FBX hangs `horseneck1` off `horsetail3`; the
+August work read that as a rig error and "fixed" it, which moved the neck's tracks into other bones' slots.
+The one hierarchy that looked wrong was the one that kept the order right.
+
+**Prevent:** A measurement made on one skeleton proves the rule for that skeleton's coincidences too. On EVERY
+new skeleton, read the compiled master back and check slot i against file-order bone i at frame 0 before
+trusting the viewer. When the list order is not a depth-first walk of the hierarchy, export from a hierarchy
+that makes it one, node locals kept engine-parent-relative. And keep the FBX take name stable: it is the master's name, and a reimport keeps the
+master's GUID only while the name matches (a Blender `.001` collision created `act_war_ram_butt.001`, a new
+GUID, an empty skeleton and an orphaned clip).
+- **Source:** 1.5.x the 1.5.x lessons file at `4520af802`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mount's clip needs a priority and `enforce_lowerbody`: the Kit's default clip plays in the viewer and not in battle
+
+**Context (2026-09-18, the war ram).** The head-butt played correctly in the Kit viewer and the TAOM log recorded it
+firing 1,300 times in a Custom Battle, yet Mike never saw the head drop. The clip carried the Kit's defaults, priority
+0 and no flags. At priority 34 it was still not visible (1,005 butts, next battle). Every vanilla horse clip read
+(`horse_kick` 34, `horse_rear` 74, even the hit reaction `horse_hit_from_front` at priority 2) carries
+`enforce_lowerbody`, and `horse_kick` and the warg's `warg_attack_stand` share priority 34 + `enforce_lowerbody` +
+`enforce_all` + blends 0.2 / 0.4; the ram now carries that recipe, in-game result pending.
+
+**Why missed:** The viewer plays a clip alone, with nothing competing for channel 0; a battle is the first place
+locomotion does. And the damage count proved nothing: the attack task plays the action and applies damage in the
+same tick, so damage lands whether or not the animation survives.
+
+**Prevent:** Give a mount's action clip the recipe of the nearest vanilla clip of its kind, read from the tpac (table in
+`docs/reference/bannerlord-animation-clip-flags.md`), and judge it in battle, never in the viewer.
+- **On this tree:** This incident ran on the 1.5.x line, and `warg_attack_stand` exists only there; the rule holds here.
+- **Source:** 1.5.x the 1.5.x lessons file at `4520af802`, on `origin/bannerlord-1.5.x` (ported by WP142).

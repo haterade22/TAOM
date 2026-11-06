@@ -927,3 +927,41 @@ Plan 038's audit modelled what `PreloadHelper.AddItemObject` registers, and ever
 - **Why missed:** the producer side was written down on 2026-09-19 and the consumer side was not, so the gap, recorded in `elephant.md` the same day, stayed open 17 days.
 - **Prevent:** resolve an agent's party with `(origin?.BattleCombatant as PartyBase)` (the parent damage model's idiom), and for a mount use its rider's origin. A switch on origin types is the smell, unless excluding an origin is the point: `BannerColorPersistence`'s `Mission_SpawnAgent_Patch` keeps its switch on purpose, so every BannerlordCoop battle troop (`CoopAgentOrigin`, puppets included) keeps its faction colours (#746 review).
 - **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `default(ActionIndexCache)` needs no engine in v1.4.8: check the beforefieldinit header before calling a method untestable (plan 015 decisions, 2026-09-24)
+The installed v1.4.8 `TaleWorlds.MountAndBlade.dll` declares `.class public sequential ansi sealed beforefieldinit TaleWorlds.MountAndBlade.ActionIndexCache`, and its `!=` compares only the instance `Index`. A test can build a check with `default(ActionIndexCache)` and drive `Tick` through substitutes; the engine-backed static constructor runs only on a static member access (`Create`, an `act_*` field). Plan 015 wrote "no test can call `Tick`" from `BoneCollisionServiceTests.cs` and the v1.4.7 note in animation-skeleton ("not beforefieldinit"), and shipped a weaker IL test because of it.
+- **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
+- **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A read-only `QueryData` accessor makes one read cheap, not the call: any expired read of its sync group re-evaluates the group (2026-10-02)
+Plan 032 swapped Patch30's cavalry gate to `FormationQuerySystem.IsCavalryFormationReadOnly` (`GetCachedValueUnlessTooOld`, a bare field read) and documented that the worker no longer evaluates the query system. Three lines later `LayoutPositioner.UnitPitch` reads `Formation.Interval` and `UnitDiameter`, which read the evaluating `CavalryUnitRatio`; `QueryData.Value` re-evaluates all 11 members of that sync group, the cavalry flag included, on whichever thread finds it expired. A mass transfer, in turn, only expires the group (`OnMassUnitTransferEnd` calls `QuerySystem.Expire()`, v1.4.8 `Formation.cs:1810-1813`), so "refreshed when a unit joins or leaves" was wrong in the other direction.
+- **Why missed:** the swap was verified member by member; nobody listed the other engine reads the same call makes or opened `SetupSyncGroup`.
+- **Prevent:** before claiming a hot path no longer evaluates engine queries, list every engine member the whole call reads (adapter getters included) and check each one's `QueryData` accessor and sync group in `FormationQuerySystem`'s constructor. Write the refresh rule from `QueryData.Value`, `Expire` and `ExpireAfterUnitAddRemove`, not from the member's name.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnitPitch` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Swapping an evaluating read for its cached sibling in a gate changes the decision when the engine can expire the cache without refreshing it (2026-10-03)
+Plan 032 kept the cached `IsCavalryFormationReadOnly` as Patch30's cavalry gate after the review above showed that the same call evaluates the same sync group three lines later, through `UnitPitch`. Codex then showed the swap was a behaviour change as well as a wrong claim. `Formation.OnMassUnitTransferEnd`, `TransferUnits` and `Split` call `QuerySystem.Expire()`, which clears every lifetime without re-evaluating anything, so after a transfer the cached gate answered from the old composition. A stale false let the call through, `UnitPitch` refreshed the flag to true, and the call still returned a TAOM position that the evaluating gate refuses; a stale true refused a position the evaluating gate gives. What the swap saved was a clock check, because the pitch read refreshes the same group.
+- **Why missed:** the plan promised unchanged positions and also accepted a stale flag, and the first review left that conflict as a maintainer decision instead of pricing the saving. The tests pinned which accessor the service read, not what it decided after an expiry.
+- **Prevent:** when a plan promises unchanged answers, keep the evaluating read in a gate, and price the cached one before proposing it. A cache the engine can expire without refreshing needs a test for each transition of the gated value, on a fake that follows the engine's refresh rule (`ExpiringCavalryQueries` in `FormationLayoutServiceTests`), not an assertion about which accessor was called.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnitPitch` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md`, "Codex adversarial review", finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine method's EFFECT is a decompile question too: quote the line that produces the effect you rely on (Fords of War, 2026-10-31)
+Four engine calls in one feature did less than their names say. `Mission.AddCustomMissile` (v1.4.8 dump `Mission.cs:4889`) passed a damage bonus of `0f` on 1.5.x, so a missile carries only its own item's damage: a tower firing `bodkin_arrows_a` hit for about
+3. `WorldPosition.IsValid` tests the 2D position and the scene pointer, not the navmesh (v1.4.8 dump `WorldPosition.cs:41-45`), so an
+"off the navmesh" guard never fired. `MissionEquipment.SetAmountOfSlot` sets the managed count only; the engine's ammo
+change is `Agent.SetWeaponAmountInSlot` (v1.4.8 `Agent.cs:2258`). `DeferredCallbackQueue.RunOrDefer` runs at once on the main
+thread, so a "parked" tower fall ran inside the native hit callback. Every call passed its binding test, and two
+architect checks verified the same members.
+- **Why missed:** a binding test pins that a member exists, and the checks were asked to verify signatures. This is the
+  EFFECT form of the COST lesson above, so the pattern is now a repeat.
+- **Prevent:** for every engine call an adapter relies on for an effect (damage, validity, ammo, thread, ordering),
+  the spec or the adapter's comment quotes the engine line that produces that effect; a reviewer who cannot find
+  that line marks the effect UNVERIFIED, not verified. A sentence about engine behaviour in a doc or comment gets the
+  same treatment (the spec also claimed the engine closes a finished mission after 30 s, which the Staged Siege lesson
+  above already disproved), and so does a mechanism relayed from a reviewer's report into a fix brief: the dread-aura
+  doc named the wrong behaviour as the one that turns panic into a rout because the brief copied a lens's claim
+  unopened.
+- **Source:** 1.5.x `rca-fords-of-war-2026-10-31.md` findings D2, D6, D7, D17, P3, R7, on `origin/bannerlord-1.5.x` (ported by WP142).
