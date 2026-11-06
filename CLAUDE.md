@@ -115,7 +115,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Scoped Rules (auto-loaded by file path)
 
-Full catalog (rule → scope → content, 17 path-scoped + 8 always-load):
+Full catalog (rule → scope → content, 18 path-scoped + 8 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
 full text is already in context every session; the path-scoped ones load when you open a matching file.
 

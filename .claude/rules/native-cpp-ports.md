@@ -22,5 +22,5 @@ Before you commit a C++ port, walk this checklist:
 5. **SRWLock balance.** Reads use `AcquireSRWLockShared`; writes use `AcquireSRWLockExclusive`. Verify both sides — upstream mods routinely take the exclusive lock for reads ("just in case") and silently serialise everything.
 6. **`/deep-review` with C++ in scope.** The skill prompt now includes C++ HOT-PATH CHECKS and C++ Native Hook Standards blocks that fire automatically when `.cpp`/`.h` files are in the changeset (per the post-mortem on the same RCA). Run it.
 
-This is a project-level discipline, not a one-off feature note — every future C++ port has the same risk profile. See `feedback_native_port_hot_path_audit.md`, `feedback_seh_filter_specificity.md`.
+This is a project-level discipline, not a one-off feature note: every future C++ port has the same risk profile.
 

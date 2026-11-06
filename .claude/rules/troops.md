@@ -59,17 +59,6 @@ correct in every UI surface. Only a live mission agent mixes. Check it in the da
 - `dg_khamul_shadow_initiate` — Dol Guldur, Khamul's line, shadow initiate
 - `gondor_ano_peasant` — Gondor, Anórien origin, peasant role
 
-## Race Attributes by Culture
-
-| Culture | Race Lines | Race Attribute |
-|---------|-----------|---------------|
-| Dol Guldur | Goblin | `race="goblin"` |
-| Dol Guldur | Orc | `race="orc"` |
-| Dol Guldur | Uruk | `race="dg_uruk"` |
-| Dol Guldur | Khamul (human) | no `race` attribute |
-| Gondor | Human | no `race` attribute |
-| Gundabad | Goblin/Orc | `race="goblin"` / `race="orc"` |
-
 ## Three cultures, one goblin tree
 
 `goblin` (Goblin-town), `bluecraig` (Ered Luin) and `mistymountainorcs` all field
@@ -112,28 +101,9 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 | `caravan_template_{culture}` | Caravans | 1 armed trader + 5-10 guards + 1-5 veterans |
 | `elite_caravan_template_{culture}` | Elite caravans | 1 armed trader + 10-20 guards + 5-10 veterans |
 
-Twelve per-culture types, not nine. The last three were missing from this table until 2026-08-12, and
-Dale had shipped without any of them, so its villagers and caravans were vanilla Sturgians. Authoring
-the three was the only new content the whole party-template fix needed.
+Twelve per-culture types, not nine.
 
-The clan row is per CLAN, not per culture, and that is where 176 of the 193 lord-party templates live
-(the other 17 are the culture defaults, which `Clan.DefaultPartyTemplate` falls back to only when the
-clan binds nothing). The binding is `default_party_template` in `characters/clans.xml` or
-`spclans.xslt`, and those two files are what you grep to prove a clan template is reachable, NOT the
-culture files. The id is a convention, not a derivation, so never compute one. Most embed the clan id
-minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebor_1_template`), but
-Gondor's 14 embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds
-`kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the ROSTER's culture,
-which is not always the clan's: the five `Culture.bluecraig` clans bind
-`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. The five
-`Culture.mistymountainorcs` clans are the counter-example that proves the token is a convention and
-not a derivation: they keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks
-are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing instead of
-grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
-`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14. A third binding site exists
-since 2026-09-12: `lord_party_templates/lord_party_templates.json` binds a template to ONE hero
-(Patch88, `docs/features/lord-party-templates.md`), and a template listed there is deliberately
-absent from every clan and culture. Grep it too before calling a template dead.
+A clan template id is a convention: never compute one. Grep `characters/clans.xml`, `spclans.xslt` and `lord_party_templates/lord_party_templates.json` for its binding ([party-templates.md](../../docs/modding/party-templates.md)).
 
 **`max_value` is not the party's size.** The engine draws ONE uniform ratio per party and fills every
 stack to `min + (max - min) * r`, so a template's max sum is a spawn ceiling and the expected spawn

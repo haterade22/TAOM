@@ -49,9 +49,7 @@ Memory: `feedback_sprite_atlas_baked_regen_required` (the career-pip case — ba
 
 ## GUI Prefab Clones Go Stale Across Engine Versions (MANDATORY)
 
-TAOM ships full `<Prefab>` **clones** of many vanilla prefabs (party screen, custom-battle, encyclopedia, nameplates — ~32 of 48 TAOM GUI prefabs). Vanilla **renames widget attributes between versions**; a clone frozen at an older version keeps the obsolete attribute, the engine silently ignores it, and the widget mis-renders or never renders — **no log, no crash, only visible in-game.**
-
-Before editing a clone (or after a Bannerlord version bump), **diff it against installed vanilla** and consult the v1.4.5 rename table + fix procedure in [`.claude/rules/vanilla-data-comparison.md`](./vanilla-data-comparison.md) ("GUI prefab clones" section). The canonical example: v1.4.5 renamed `ImageTypeCode` → `TextureProviderName` on `ImageIdentifierWidget`/`MaskedTextureWidget`; TAOM's stale clones left every Party-screen troop thumbnail stuck on the loading spinner (RCA `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`, memory `feedback_gui_prefab_clones_stale_across_versions.md`). **Rendering ≠ live** — only the running game confirms a prefab renders.
+TAOM ships full `<Prefab>` clones of many vanilla prefabs. Vanilla renames widget attributes between versions; a stale clone keeps the old one and the widget silently mis-renders, with no log and no crash. Diff a clone against installed vanilla before editing it and after an engine bump; gates, the verified rename table and the fix method are in [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md). Only the running game confirms a prefab renders.
 
 A clone can also stop consuming an engine signal with every attribute still valid: moving the `Sprite` off the widget the engine writes `Color` / `AlphaFactor` / `ColorFactor` to (vanilla's `SettlementNameplateItemWidget`) leaves those writes with nothing to draw, because `Widget.Render` never passes them to children. TAOM's nameplate redesign lost relation colour and plate transparency this way for five months (#591). When a clone re-parents visuals, list what the engine writes on the original element and make a custom container widget consume it: `docs/features/settlement-nameplate-relation.md`.
 
@@ -147,13 +145,7 @@ public override void OnMissionScreenFinalize()
 
 **Do NOT** also set `IsFocusLayer = true` on a parasitic overlay — that steals Esc/Tab/hotkey focus from the live vanilla screen underneath. `IsFocusLayer = true` is appropriate ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`), where the layer IS the screen. For overlays, the parent widget in the prefab should have `DoNotAcceptEvents="true"` so non-button areas pass clicks through to vanilla.
 
-**Why:** Two shipping bugs in 6 days:
-1. **EquipPresets "Presets" inventory button** (2026-05-19, #202) — `ScreenBase` overlay missing `SetInputRestrictions()`. Click was a silent no-op. RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`.
-2. **CompanionTactics OOB "Assign Heroes" + "Presets" + BattleActionBar mouse clicks** (2026-05-25, #225) — two `MissionScreen` overlays with the same defect. RCA: `docs/reviews/rca-companiontactics-overlay-input-2026-05-25.md`.
-
-Bug #2 shipped past the rule written for bug #1 because the original rule scoped to ScreenBase only — that scoping was based on the wrong inference that `BattleActionBar` "worked" without `SetInputRestrictions()`. It didn't work; only the hotkey path worked, which masked the broken mouse path. **Lesson: when classifying a sibling as a working precedent, verify it works via the SAME input path you care about. A working alternative input path is not evidence the broken path also works.**
-
-Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`. **Rendering ≠ live.**
+A sibling that works by hotkey is no proof its mouse path works (`rca-equippresets-presets-button-silent-2026-05-19.md`, `rca-companiontactics-overlay-input-2026-05-25.md`).
 
 **Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.4.5.
 

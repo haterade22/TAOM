@@ -38,6 +38,7 @@ _(8 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-s
 | `troops.md` | `troops/**`, `taom_partyTemplates.xml`, `TroopProgression/**` | Troop checklist, races, party templates, save compat |
 | `harmony-patches.md` | `Main/**/Hooks/**` | Patch types, thin entry points, thread-local state |
 | `gamemodels.md` | `Main/Features/**/*Model.cs` | GameModel override pattern, base class rules, registration |
+| `config-providers.md` | `Main/**/*Provider*.cs`, `*Config*`, `*Settings*`, `*Loader*`, `*Tuning*`, `Main/SceneScripts/**`, and their tests | Config files, MCM settings and editor-visible fields validate at load, not only parse; the NaN gate; both surfaces of a value |
 | `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
 | `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read |
 | `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
