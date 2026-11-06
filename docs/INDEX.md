@@ -315,6 +315,7 @@ These are recurring lessons the auto-memory system has captured. The memory file
 LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](research/README.md) for the structure and `/knowledge-compile` workflow.
 
 - [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
+- [harmony-fork-feasibility](research/harmony-fork-feasibility.md): the researched, not pursued option of forking Harmony 2.4.2 into `TAOM.Dependencies` (shared-state finding, risks); the shipped route is the bundled `Lib.Harmony` package
 - [reference/external-resources.md](reference/external-resources.md) — verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy, BUTR deps, Harmony, LOTR/Tolkien lore + naming generators, comparable total-conversion mods, save-compat versioning). Cite this instead of re-searching the web.
 
 ## Player-facing copy (Discord)

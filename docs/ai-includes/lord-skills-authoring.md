@@ -148,7 +148,7 @@ python tools/apply_culture_skills_traits.py --all-cultures --apply
 **Unsafe for live lords.** Like `--culture`, this mode re-resolves every NPC, so it can undo hand-tuned assignments. For a repoint use `tools/repoint_evil_lord_skillsets.py`.
 
 The script:
-- Regenerates `taom_lord_skill_sets.xml` from scratch (35 archetypes + every canonical with `skills=`)
+- Regenerates `taom_lord_skill_sets.xml` from scratch (every `BASE_ARCHETYPES` entry + every canonical with `skills=`)
 - Walks every NPCCharacter in lords.xml + lords.xslt with `culture="Culture.<id>"`
 - For each adult (age ≥14 unless canonical override): swaps the `skill_template` attribute to the matching TAOM SkillSet, populates the `<skills>` and `<Traits>` blocks (documentation only — engine ignores `<skills>`)
 
@@ -478,7 +478,7 @@ Before declaring done:
 
 - [ ] All three XML files well-formed (Python `ET.parse` smoke test).
 - [ ] Script is idempotent: re-running with no source changes produces no diff (`git status` shows clean after second `--apply`).
-- [ ] Generator-vs-committed drift pre-check ran BEFORE your change (regen on clean tree → empty diff).
+- [ ] `python tools/apply_culture_skills_traits.py --check` passed BEFORE your change (generator and committed SkillSets agree).
 - [ ] If a balance pass: non-target cultures' averages verified byte-identical (the `analyze_lord_balance`-based table), and shared sets forked rather than edited in place.
 - [ ] In-game Encyclopedia spot-check on at least one canonical hero per touched culture.
 - [ ] If touched a Leadership-285+ character, confirm the +1 party-size perk shows in-game (Encyclopedia → Perks).
@@ -503,7 +503,7 @@ Real failure modes from past sessions. Read these before you ship.
 | `0Harmony.dll` lock when Bannerlord is running → `./build.ps1` fails | `.claude/rules/environment-failures.md` | Close Bannerlord OR skip the build — XML data changes don't need it. Use the Python XML parse smoke test instead |
 | Save-compat: hero skills bake at hero CREATION | n/a (engine behavior) | Existing campaigns keep old stats. New campaigns + un-spawned heroes use the new SkillSets. Flag this in PR descriptions and the commit body |
 | Forgetting to register a new XML file in SubModule.xml → engine doesn't load it → fix has no effect | n/a | If you create a new ModuleData XML file, add an `<XmlNode>` entry to `Main/_Module/SubModule.xml` with the appropriate `id=` (SkillSets / NPCCharacters / etc.) and `path=` (file basename without `.xml`) |
-| **Generated XML hand-edited downstream** — 1f7a7a9a hand-tuned `taom_lord_skill_sets.xml`; a later blind regen would have reverted 14 canonical sets and DELETED Sauron's | commit 874e7574 (sync) | Before any `--apply`: regen on a clean tree, require empty `git diff`. Drift found → sync the generator's canonical entries to the live XML FIRST (acceptance: regen == committed semantically) |
+| **Generated XML hand-edited downstream:** 1f7a7a9a hand-tuned `taom_lord_skill_sets.xml`; a later blind regen would have reverted 14 canonical sets and DELETED Sauron's | commit 874e7574 (sync) | Before any `--apply`: run `--check`. Drift found → sync the generator's canonical entries to the live XML FIRST (acceptance: regen == committed semantically) |
 | **`--culture X --apply` clobbers hand-tuned assignments** — per-NPC re-resolution can't reproduce the live 149-lord drift (unified Nazgûl etc.) | #322 design | Narrow swaps/parity go through `tools/repoint_evil_lord_skillsets.py` (template swap maps + full inline sync from the sets XML), never through `process_file` on a drifted culture |
 | **Editing a shared set in place bleeds into other cultures** — the orc trio feeds 6 cultures, `taom_knight_skills` feeds 8 | #322/#326 design | Fork a per-culture variant + `archetype_alias` + repoint (see "Per-culture balance variants"). Verify non-target culture averages byte-identical afterward |
 | **Stale culture maps after reculturing** — `rebalance_lords.CULTURE_MAP` said battania→mirkwood long after battania became Khand: Variag lords wore ELF cultural mods and polluted every "mirkwood" report (71 = 30 elves + 41 Variags) | commit 12b06e47 | When a vanilla culture is re-themed, grep EVERY tool for the old mapping (`CULTURE_MAP`, `CULTURES`, validators). battania=khand, empire=dunland, sturgia=dale, vlandia=rohan, khuzait=rhun |
