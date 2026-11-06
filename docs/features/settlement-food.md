@@ -41,11 +41,12 @@ on the map is 1,860 men.
 Towns/castles ran chronic food deficits — garrisons and civilians outpacing production. Root causes
 (full mechanics + decompile cites: [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)):
 
-1. **Troop-Weight leak (TAOM bug).** `Patch17_TroopWeight` postfixes the global
-   `PartyBase.NumberOfAllMembers` getter and bumps it to the *weighted* count. `DefaultSettlementFoodModel`
+1. **Troop-Weight leak (TAOM bug, since removed at source).** `Patch17_TroopWeight` used to postfix the global
+   `PartyBase.NumberOfAllMembers` getter and bump it to the *weighted* count. `DefaultSettlementFoodModel`
    reads exactly that getter for the garrison food term (`NumberOfAllMembers / 20`), so an elite
    garrison (troop weights 2.0–3.0) consumed 2–3× the intended food. The Troop Weight feature was
-   designed for field-party size budgeting; weighting garrisons for food was never intended.
+   designed for field-party size budgeting; weighting garrisons for food was never intended. Commit
+   `bee07b487` removed the count-getter patches, so the getter is raw again.
 2. **Vanilla high-prosperity squeeze (not a bug, but the dominant term).** `Prosperity / 40` is the
    largest consumer while production caps low (base 15 + ≤18/village). Vanilla self-limits prosperous
    towns into deficit; TAOM amplifies it with large elite garrisons, frequent raids (looted villages
@@ -78,7 +79,7 @@ Thin GameModel → pure service → primitive snapshot (ADR-002 / ADR-007), mirr
   `FoodStocks` permanently NaN inside a `[SaveableProperty]`. See
   [rca-settlement-food-2026-09-06.md](../reviews/rca-settlement-food-2026-09-06.md).
 - **`TownFoodSnapshot.FromTown`** — boundary factory converting sealed `Town` → primitives
-  (raw `MemberRoster.TotalManCount` vs patched `NumberOfAllMembers`, per-Normal-village hearth levels,
+  (raw `MemberRoster.TotalManCount` vs the getter `NumberOfAllMembers`, per-Normal-village hearth levels,
   and `Prosperity` for the hinterland term).
 - **`SettlementFoodConfigProvider`** — loads + validates JSON; reverts invalid values to vanilla.
   The hinterland rate is validated against the **sanitized** `ProsperityFoodDivisor`, not the parsed
@@ -86,11 +87,11 @@ Thin GameModel → pure service → primitive snapshot (ADR-002 / ADR-007), mirr
 
 ### Garrison correction math
 
-Vanilla `PartyBase.NumberOfAllMembers == MemberRoster.TotalManCount` (`PartyBase.cs:381`); Patch17 only
-ever raises it. So `weighted − raw` is exactly the inflation, and adding back `(weighted−raw)/divisor`
-makes the garrison term use the raw body count. The global getter stays weighted, so AI strength reads
-and `DefaultSettlementGarrisonModel` capacity are unchanged (food-model-only fix). No-op when Troop
-Weight is off (weighted == raw).
+Vanilla `PartyBase.NumberOfAllMembers == MemberRoster.TotalManCount` (`PartyBase.cs:381`). While Patch17
+raised the getter, `weighted − raw` was exactly the inflation, and adding back `(weighted−raw)/divisor`
+made the garrison term use the raw body count. Since `bee07b487` no TAOM patch touches the getter (the elite
+tax moved to the party-size limit), so weighted equals raw and the correction adds 0 (`TownFoodSnapshot`
+documents it as an inert no-op kept to hold the boundary DTO stable).
 
 ## Configuration
 
@@ -136,8 +137,7 @@ are **absolute replacements** for the vanilla constant (default = vanilla), so a
 *lowers* production — these tune both directions, not relief-only (the divisors do too); only
 `flatFoodBonus` is purely additive. Validation never enforces "≥ vanilla".
 
-**MCM:** Settlement Food → **Enable Settlement Food Tuning** (on by default). Off = vanilla engine math
-(garrison food reverts to the weighted count). The JSON is loaded once (`Reuse.Singleton`), so **edits
+**MCM:** Settlement Food → **Enable Settlement Food Tuning** (on by default). Off = vanilla engine math. The JSON is loaded once (`Reuse.Singleton`), so **edits
 require an app restart**, not a save reload.
 
 ## Key Files
@@ -162,7 +162,7 @@ Registered: `IoC.cs` (`SettlementFoodIoC.RegisterSettlementFoodFeature`), `SubMo
 
 - `IPathService` (config path), `IModLogger` (validation warnings) — TAOM core infrastructure.
 - `TaomSettings.Instance` (MCM master toggle).
-- Reads, but does not modify, the Troop Weight feature's effect on `NumberOfAllMembers`.
+- Reads `NumberOfAllMembers` and the raw roster count; with Troop Weight no longer patching the getter the two are equal.
 
 ## Tests
 
@@ -180,8 +180,7 @@ Registered: `IoC.cs` (`SettlementFoodIoC.RegisterSettlementFoodFeature`), `SubMo
   survives its own validator with no warning, that it clears the worst town on the map, and that net
   food still falls as prosperity rises.
 
-51 tests, all green (full suite 8175 passed; 4 failures on this branch are pre-existing and unrelated,
-confirmed against a pristine `HEAD`).
+51 tests (counted by `[TestMethod]` in the three files).
 
 ## How-To
 
@@ -197,7 +196,7 @@ exists in the DEPLOYED module. If the directory is absent the provider silently 
 compiled defaults, which are vanilla, and logs a "not found" warning.
 
 **Disable entirely:** MCM → Settlement Food → Enable Settlement Food Tuning → off (reverts to vanilla
-engine math, including the weighted garrison food).
+engine math).
 
 ## Performance
 
