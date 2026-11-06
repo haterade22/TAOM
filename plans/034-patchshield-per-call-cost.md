@@ -368,8 +368,8 @@ This plan changes only `PatchShieldPolicy`'s comments.
   so the exception-path lookup must be thread-safe (Harmony's `originals` map is read under its own
   lock, `GetRealMethod` :1639) and must never throw (wrap it in try/catch, as every other PatchShield
   helper is).
-- `.claude/rules/provenance.md` covers `Dependencies/**/*.cs`: no outside code is copied here; the
-  lookup uses Harmony's public API only, so no register row is needed.
+- No outside code is copied here; the lookup uses Harmony's public API only, so no provenance
+  register row is needed.
 - No em or en dash in any line you write (AGENTS.md "Human prose"); code spans are exempt.
 
 ## Commands you will need

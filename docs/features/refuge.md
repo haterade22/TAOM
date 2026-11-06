@@ -217,6 +217,11 @@ disagrees.
   ({=taom_rf_found_orders_warning}); preserving such orders would need a reclassification seam on
   `ISupplyOrderService` (the delivery anchor, the main party, does not move) and is recorded as a
   possible follow-up, not wired.
+- In a BannerlordCoop session only the server writes refuges (#1086). A guest's book is the save's
+  whole book, so off authority `RefugeService` skips every tick and event world write and its
+  message. The player actions are reached only from menus a guest cannot open: a guest who clicks a
+  refuge gets vanilla's meeting. The rows and the reasons are in
+  [coop-interop.md](coop-interop.md).
 
 ## Owed
 

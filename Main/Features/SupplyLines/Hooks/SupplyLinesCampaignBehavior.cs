@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SupplyLines.Domain;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.SupplyLines.Hooks;
 
@@ -20,11 +18,10 @@ namespace TAOM.Features.SupplyLines.Hooks;
 /// </summary>
 public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
 {
-    private const string MenuOptionId = "taom_sl_order_supplies";
-
     private readonly ISupplyOrderService _orders;
     private readonly ISupplyLinesSettingsProvider _settings;
     private readonly ISupplyRouteVisualService _routeVisual;
+    private readonly SupplyOrderTownMenu _townMenu;
     private readonly IModLogger _logger;
 
     private bool _frameTickFaulted;
@@ -39,11 +36,13 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
         ISupplyOrderService orders,
         ISupplyLinesSettingsProvider settings,
         ISupplyRouteVisualService routeVisual,
+        ICoopSessionProvider coop,
         IModLogger logger)
     {
         _orders = orders;
         _settings = settings;
         _routeVisual = routeVisual;
+        _townMenu = new SupplyOrderTownMenu(settings, coop);
         _logger = logger;
     }
 
@@ -84,7 +83,7 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
     {
         EnsureSessionInitialized();
         _routeVisual.ClearAll(); // a previous session's map entities must never leak into this one
-        AddMenuOptions(starter);
+        _townMenu.AddTo(starter);
     }
 
     /// <summary>
@@ -101,26 +100,6 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
         // The singleton book now belongs to this session (empty); a stray second call must not
         // wipe orders placed after launch.
         _syncedThisSession = true;
-    }
-
-    private void AddMenuOptions(CampaignGameStarter starter)
-    {
-        var text = new TextObject("{=taom_sl_order}Order Supplies").ToString();
-        starter.AddGameMenuOption("town", MenuOptionId, text, MenuCondition, MenuConsequence);
-        starter.AddGameMenuOption("town_keep", MenuOptionId, text, MenuCondition, MenuConsequence);
-    }
-
-    private bool MenuCondition(MenuCallbackArgs args)
-    {
-        args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
-        if (!_settings.Enabled)
-            return false;
-        return Settlement.CurrentSettlement?.IsUnderSiege != true;
-    }
-
-    private void MenuConsequence(MenuCallbackArgs args)
-    {
-        UI.SupplyOrderScreens.Open();
     }
 
     private void OnHourlyTick()

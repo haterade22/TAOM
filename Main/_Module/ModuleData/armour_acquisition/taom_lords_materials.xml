@@ -74,4 +74,10 @@
         item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
     <Flags Civilian="true" />
   </Item>
+  <!-- Lothlorien (2026-11-06, Mike): the 14th material has no bar of its own yet, so it wears Mirkwood's lord_material_06
+       until the artist clones one (tools/tpac_clone_metamesh.py). The name is a placeholder like the others. -->
+  <Item id="taom_lords_material_lothlorien" name="{=taom_lm_lothlorien}Lórien Mallorn-silver" mesh="lord_material_06"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
 </Items>

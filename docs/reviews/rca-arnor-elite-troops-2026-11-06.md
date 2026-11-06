@@ -62,4 +62,4 @@ Written down in three places, by who needs it when: the three checks in `.claude
 
 ## Lessons recorded
 
-`docs/reviews/lessons/data-content-cultures.md`: "Adding an upgrade edge changes more than the troop tree" and "A role curve must match the engine skill of the weapon in Item0" (both 2026-11-06). `docs/reviews/lessons/misc.md`: "A review brief carries decisions and facts you read, not your own conclusions". The rule-provenance record for `evidence-over-claims.md` has the incident (`docs/reference/rule-provenance.md`).
+`docs/reviews/lessons/data-content-cultures.md`: "Adding an upgrade edge changes more than the troop tree" and "A role curve must match the engine skill of the weapon in Item0" (both 2026-11-06). `docs/reviews/lessons/misc.md`: "A review brief carries decisions and facts you read, not your own conclusions".

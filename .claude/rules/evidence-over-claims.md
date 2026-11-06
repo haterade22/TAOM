@@ -49,5 +49,3 @@ and API behaviour as much as counts and hashes. The traps behind past fabricatio
    your belief that it ran. Re-run `git log`, re-read the file.
 4. **Reporting an empty search as absence.** No hit proves absence only inside what was searched:
    name the scope (which build, which modules, which folders) with the negative result.
-
-Incidents behind each facet: [rule-provenance.md](../../docs/reference/rule-provenance.md).

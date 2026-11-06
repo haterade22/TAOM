@@ -40,6 +40,7 @@ public class TournamentRewardsWiringTests
         container.RegisterInstance(Substitute.For<IModLogger>());
         container.RegisterInstance(Substitute.For<IHeroSkillXpAdapter>());
         container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
         container.RegisterInstance(Substitute.For<IRaceManager>());
         container.RegisterInstance(Substitute.For<IArmourGateService>());
         ArenaIoC.RegisterArenaFeature(container);

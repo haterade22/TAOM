@@ -67,8 +67,6 @@ Full machine output: [`docs/reviews/scene-name-audit-2026-05-28.txt`](../reviews
 - [docs/modding/recipe-add-a-field-battle-scene.md](../modding/recipe-add-a-field-battle-scene.md)
 - [docs/modding/settlements.md](../modding/settlements.md)
 - [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
-- [docs/reference/doc-lookup.md](./doc-lookup.md)
-- [docs/reference/rule-provenance.md](./rule-provenance.md)
-- [docs/reference/worldmap-battle-scene-grid.md](./worldmap-battle-scene-grid.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)- [docs/reference/worldmap-battle-scene-grid.md](./worldmap-battle-scene-grid.md)
 
 <!-- backlinks-end -->

@@ -1,5 +1,6 @@
 using HarmonyLib;
 using TAOM.Adapters;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TaleWorlds.CampaignSystem.Encounters;
 
@@ -20,6 +21,11 @@ namespace TAOM.Features.Refuge.Hooks;
 /// dependency for one static property read on a thin patch buys nothing (simplicity criterion).
 /// The menu OPEN does go through <see cref="IGameMenuAdapter.EnsureMenuOpen"/> because raw
 /// GameMenu switching silently no-ops without a menu context - the adapter verifies.</para>
+///
+/// <para>CO-OP (#1086): a guest's book is the save's whole book, so every refuge in it is another
+/// player's. While <see cref="ICoopSessionProvider.ShouldDeferToHost"/> holds, this patch stands down
+/// and the guest gets vanilla's meeting with another clan's party; the menu's manage, upgrade and
+/// dismantle writes are not reachable.</para>
 /// </summary>
 [HarmonyPatch(typeof(PlayerEncounter), "DoMeeting")]
 [HarmonyPatchCategory("Patch75_Refuge")]
@@ -28,14 +34,16 @@ public static class RefugeEncounterPatch
     private static IRefugeService? _refuges;
     private static IEnlistmentStateQuery? _enlistment;
     private static IGameMenuAdapter? _menus;
+    private static ICoopSessionProvider? _coop;
 
     /// <summary>Called once from RefugeIoC at container build time.</summary>
     public static void Initialize(
-        IRefugeService refuges, IEnlistmentStateQuery enlistment, IGameMenuAdapter menus)
+        IRefugeService refuges, IEnlistmentStateQuery enlistment, IGameMenuAdapter menus, ICoopSessionProvider coop)
     {
         _refuges = refuges;
         _enlistment = enlistment;
         _menus = menus;
+        _coop = coop;
     }
 
     [HarmonyPrefix]
@@ -46,6 +54,9 @@ public static class RefugeEncounterPatch
             var refuges = _refuges;
             var menus = _menus;
             if (refuges == null || menus == null)
+                return true;
+
+            if (_coop?.ShouldDeferToHost == true)
                 return true;
 
             if (_enlistment?.IsEnlisted == true)

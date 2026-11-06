@@ -221,8 +221,7 @@ of that DLL read assembly version `4.0.4.1` today.
 
 **The licence notice is mandatory, not decoration.** The provenance rule says anything landing under
 `*/_Module/bin/**` that is not TAOM-built needs a `redistributed` row in the register and an entry in
-that module's `THIRD-PARTY-LICENSES.txt` ([provenance rule](../../.claude/rules/provenance.md), the
-"Redistributing a binary means reproducing its notice" row). The register rows for this module are
+that module's `THIRD-PARTY-LICENSES.txt`: redistributing a binary means reproducing its notice. The register rows for this module are
 Lib.Harmony, the BUTR stack, .NET Foundation, Serilog and BetaDeps
 ([provenance-register.md](../reference/provenance-register.md), the rows of those names). The notice file
 names each binary family with its exact version, holder, licence and upstream URL, then the full MIT
@@ -790,7 +789,7 @@ Code: No code changes needed
    back (`Dependencies/SubModule.cs:65-98`, `AssemblyRedirectListTests.cs:37-48`).
 7. **Never express a load-order requirement in `<DependedModuleMetadatas>` alone.** The engine does
    not read it (first engine table).
-8. **Never ship a binary under `_Module/bin/` without its notice paragraph** ([provenance rule](../../.claude/rules/provenance.md)).
+8. **Never ship a binary under `_Module/bin/` without its notice paragraph** ([provenance register](../reference/provenance-register.md)).
 
 Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter BundledDependencyManifest`
 Takes effect: full game restart
@@ -899,8 +898,7 @@ were added (a later manifest edit moves them again).
 - [coop-interop.md](../features/coop-interop.md): the load-order reasoning, the assembly-resolution
   table and the four coupled edits.
 - [mcm.md](../features/mcm.md): where MCM the library ends and TAOM's layout fix begins.
-- [provenance-register.md](../reference/provenance-register.md) and the
-  [provenance rule](../../.claude/rules/provenance.md): what a shipped notice must say.
+- [provenance-register.md](../reference/provenance-register.md): what a shipped notice must say.
 - [dependency-audit-2026-07-15.md](../migration/dependency-audit-2026-07-15.md): the audit that found
   the drift the tests now catch.
 - [bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md): the evidence behind the

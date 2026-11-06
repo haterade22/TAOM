@@ -637,7 +637,7 @@
              task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
 
   <LotrIssue id="lotr_armourer_commission_lindon" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
-             cultures="lindon,lothlorien" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             cultures="lindon" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
              reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="rivendell_body_gold_d" relation_min="0"
              title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
              description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
@@ -650,6 +650,17 @@
   <LotrIssue id="lotr_armourer_commission_mirkwood" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
              cultures="mirkwood" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
              reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="mkwd_inf3_chest_silver" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_lothlorien" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="lothlorien" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_ll_gl_chest_heavy_a" relation_min="0"
              title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
              description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
              brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
@@ -832,7 +843,7 @@
              task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
 
   <LotrIssue id="lotr_deep_seam_rivendell" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
-             cultures="rivendell,lindon,lothlorien" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             cultures="rivendell,lindon" count="6" count_per_difficulty="18" item_source="item:hardwood"
              reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_rivendell" reward_count="5" relation_min="0"
              title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
              description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
@@ -845,6 +856,17 @@
   <LotrIssue id="lotr_deep_seam_mirkwood" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
              cultures="mirkwood" count="6" count_per_difficulty="18" item_source="item:hardwood"
              reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_mirkwood" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_lothlorien" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="lothlorien" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_lothlorien" reward_count="5" relation_min="0"
              title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
              description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
              brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."

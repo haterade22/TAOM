@@ -16,6 +16,7 @@ public class TournamentSkillAwardServiceTests
     private IHeroSkillXpAdapter _xp = null!;
     private ITournamentChoicePresenter _presenter = null!;
     private IDedicatedServerProvider _server = null!;
+    private ICoopSessionProvider _coop = null!;
     private TournamentRewardsService _rewards = null!;
     private TournamentSkillAwardService _sut = null!;
 
@@ -29,7 +30,8 @@ public class TournamentSkillAwardServiceTests
         _rewards = new TournamentRewardsService(Substitute.For<ITournamentRewardsSettingsProvider>(), config, _xp);
         _presenter = Substitute.For<ITournamentChoicePresenter>();
         _server = Substitute.For<IDedicatedServerProvider>();
-        _sut = new TournamentSkillAwardService(_rewards, _presenter, _server);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _sut = new TournamentSkillAwardService(_rewards, _presenter, _server, _coop);
         _rewards.RememberSkillChoice("town_A", "Polearm");
     }
 
@@ -66,6 +68,19 @@ public class TournamentSkillAwardServiceTests
     {
         _sut.OnPlayerEliminated(0, "town_A", "main_hero", "gondor");
 
+        _presenter.DidNotReceive().ShowSkillTrained(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnACoopGuest_AwardsNothing()
+    {
+        // #1086: skill XP is hero state the co-op host owns; a guest's award would not hold.
+        _coop.ShouldDeferToHost.Returns(true);
+
+        _sut.OnTournamentFinished(true, "town_A", "main_hero", "gondor");
+        _sut.OnPlayerEliminated(3, "town_A", "main_hero", "gondor");
+
+        _xp.DidNotReceive().AddSkillXp(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
         _presenter.DidNotReceive().ShowSkillTrained(Arg.Any<string>());
     }
 

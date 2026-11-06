@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check TAOM's provenance register against what ships (.claude/rules/provenance.md).
+"""Check TAOM's provenance register against what ships (docs/reference/provenance-register.md).
 
 Three checks, and nothing else:
 

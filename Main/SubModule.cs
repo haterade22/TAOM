@@ -1012,7 +1012,8 @@ public class SubModule : MBSubModuleBase
 
         var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
         var bannerExclusionService = IoC.Resolve<IBannerExclusionService>();
-        campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService, bannerExclusionService));
+        campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService, bannerExclusionService,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
         var ccLogger = IoC.Resolve<IModLogger>();
@@ -1129,7 +1130,8 @@ public class SubModule : MBSubModuleBase
         var nazgulRegistry = IoC.Resolve<INazgulRegistry>();
         campaignStarter.AddModel(new TaomMarriageModel(
             nazgulRegistry, IoC.Resolve<Features.MarriageAlignment.IMarriageAlignmentService>()));
-        campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry, IoC.Resolve<IModLogger>()));
+        campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(), IoC.Resolve<IModLogger>()));
     }
 
     // Diplomacy / War of the Ring / siege defense / execution-relation registrations.
@@ -1143,7 +1145,7 @@ public class SubModule : MBSubModuleBase
         // the co-op host itself. See ICoopSessionProvider.
         var coopSession = IoC.Resolve<TAOM.Features.CoopInterop.ICoopSessionProvider>();
         campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger, coopSession));
-        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
+        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, coopSession, diplomacyLogger));
         campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
         campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService,
             IoC.Resolve<IOnAllianceAction>(), coopSession));
@@ -1366,7 +1368,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>()));
 
         var namedCompanionService = IoC.Resolve<INamedCompanionService>();
-        campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
+        campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         // QuickActions: per-save inventory-search-box persistence (SyncData round-trips
         // even when EnableInventorySearch is OFF — disabled = inert, not absent).
@@ -1446,6 +1449,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.SupplyLines.ISupplyOrderService>(),
             IoC.Resolve<Features.SupplyLines.ISupplyLinesSettingsProvider>(),
             IoC.Resolve<Features.SupplyLines.ISupplyRouteVisualService>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
             IoC.Resolve<IModLogger>()));
         // Rolls the town-gold ledger onto a fresh day and clears it between campaigns (#317 follow-up).
         campaignStarter.AddBehavior(IoC.Resolve<Features.EconomyDiagnostics.EconomyDiagnosticsBehavior>());
@@ -1523,6 +1527,7 @@ public class SubModule : MBSubModuleBase
         Features.LotrIssues.LotrIssueSuppression.SuppressAll(campaignStarter, IoC.Resolve<IModLogger>());
         campaignStarter.AddBehavior(new Features.LotrIssues.LotrIssuesCampaignBehavior(
             IoC.Resolve<Features.LotrIssues.ILotrIssueService>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
             IoC.Resolve<IModLogger>()));
     }
 

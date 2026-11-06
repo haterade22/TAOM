@@ -163,6 +163,8 @@ row. A bad value reverts with a warning; read once per process.
 - `IArmourGateService` (ArmourAcquisition): prize classes, through the Arena service.
 - `IHeroSkillXpAdapter` (Adapters): `HeroDeveloper.AddSkillXp`.
 - `IDedicatedServerProvider` (CoopInterop): no skill award on a dedicated server.
+- `ICoopSessionProvider` (CoopInterop): a co-op guest joins vanilla's way, with no prize swap and no skill
+  pick, and gets no skill award (#1086).
 
 ## Tests
 
@@ -171,8 +173,8 @@ row. A bad value reverts with a warning; read once per process.
 - `TournamentRewardsServiceTests`: hero count per town, culture and multiplier, own-kingdom influence, vanilla's
   renown for a null town (the leaderboard seeding), the skill choice's life, the session reset.
 - `TournamentJoinServiceTests`: dialog order, cancels, re-validation of each pick, the skips, the prize's tier
-  passed to the Arena service.
-- `TournamentSkillAwardServiceTests`: win, elimination, dedicated server.
+  passed to the Arena service, a co-op guest.
+- `TournamentSkillAwardServiceTests`: win, elimination, dedicated server, a co-op guest.
 - `TournamentRewardsConfigProviderTests`, `ShippedTournamentRewardsConfigTests`: one test per validation rule
   (the empty key and the repeated key included); the shipped factors and their culture ids.
 - `TournamentRewardsSettingsProviderTests`: the fallbacks against the compiled MCM defaults, the slider ranges

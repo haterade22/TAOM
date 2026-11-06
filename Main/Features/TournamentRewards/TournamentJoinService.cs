@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using TAOM.Adapters;
 using TAOM.Features.Arena;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.TournamentRewards;
 
@@ -16,23 +17,28 @@ public sealed class TournamentJoinService
     private readonly ITournamentService _arena;
     private readonly ITournamentChoicePresenter _presenter;
     private readonly TournamentRewardsService _rewards;
+    private readonly ICoopSessionProvider _coop;
 
     public TournamentJoinService(
         ITournamentJoinAdapter join,
         ITournamentService arena,
         ITournamentChoicePresenter presenter,
-        TournamentRewardsService rewards)
+        TournamentRewardsService rewards,
+        ICoopSessionProvider coop)
     {
         _join = join;
         _arena = arena;
         _presenter = presenter;
         _rewards = rewards;
+        _coop = coop;
     }
 
     /// <summary>Shows the choices; <paramref name="proceed"/> runs vanilla's join once both are made.</summary>
     public void BeginJoin(Action proceed)
     {
-        var tournament = _join.GetCurrentTournament();
+        // A co-op guest (#1086) joins vanilla's way: the prize swap writes the town's shared tournament, and the
+        // skill pick feeds an award a guest never gets.
+        var tournament = _coop.ShouldDeferToHost ? null : _join.GetCurrentTournament();
         if (tournament == null)
         {
             proceed();

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SupplyLines;
 using TAOM.Features.SupplyLines.Domain;
 using TaleWorlds.CampaignSystem;
@@ -55,8 +56,9 @@ public class SupplyOrderServiceTests
             ISupplyOrderEngine engine,
             ISupplyPricingService pricing,
             ISupplyLinesSettingsProvider settings,
+            ICoopSessionProvider coop,
             IModLogger logger)
-            : base(sources, caravans, engine, pricing, settings, logger)
+            : base(sources, caravans, engine, pricing, settings, coop, logger)
         {
         }
 
@@ -156,6 +158,7 @@ public class SupplyOrderServiceTests
     private ISupplyPricingService _pricing;
     private ISupplyLinesSettingsProvider _settings;
     private IModLogger _logger;
+    private ICoopSessionProvider _coop;
     private TestableSupplyOrderService _sut;
 
     private SupplySourceInfo _townSource;
@@ -169,7 +172,9 @@ public class SupplyOrderServiceTests
         _pricing = Substitute.For<ISupplyPricingService>();
         _settings = Substitute.For<ISupplyLinesSettingsProvider>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new TestableSupplyOrderService(_sources, _caravans, _engine, _pricing, _settings, _logger);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.IsAuthority.Returns(true);
+        _sut = new TestableSupplyOrderService(_sources, _caravans, _engine, _pricing, _settings, _coop, _logger);
 
         _settings.Enabled.Returns(true);
         _townSource = new SupplySourceInfo { SettlementId = "town_G1", CanOrder = true };
@@ -666,6 +671,43 @@ public class SupplyOrderServiceTests
     }
 
     // --- OnCaravanDestroyed (engine destroyed the party, e.g. a lost AI battle) ---
+
+    [TestMethod]
+    public void OnACoopClient_TheHostsOrdersAreNeitherMovedNorRespawnedNorDrawnNorLost()
+    {
+        // #1086: a guest's book holds the host's orders. Each call has a positive twin in this class.
+        var order = SeedInTransitOrder();
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Deliver);
+        _coop.IsAuthority.Returns(false);
+
+        _sut.HourlyTick();
+        _sut.FrameTick();
+        _sut.OnGameLoaded();
+        _sut.OnCaravanDestroyed(order.OrderId);
+
+        Assert.AreEqual(0, _sut.Delivered.Count);
+        _caravans.DidNotReceive().TickPositions();
+        _caravans.DidNotReceiveWithAnyArgs().RespawnMissing(default!);
+        Assert.AreEqual(SupplyOrderStatus.InTransit, order.StatusEnum);
+        Assert.AreEqual(0, _sut.ActiveOrders.Count, "the route visual gets nothing to draw and clears what it drew");
+        _coop.IsAuthority.Returns(true);
+        Assert.AreEqual(1, _sut.ActiveOrders.Count, "the order is still in the book");
+    }
+
+    [TestMethod]
+    public void CancelCampOrders_OnACoopClient_DestroysNothingAndKeepsTheBook()
+    {
+        // CampService.BreakPlayerCamp calls this from the camp ticks, which run on every peer (#1086).
+        var order = SeedInTransitOrder();
+        order.PlacedFromCamp = true;
+        _coop.IsAuthority.Returns(false);
+
+        _sut.CancelCampOrders();
+
+        _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default!);
+        Assert.AreEqual(SupplyOrderStatus.InTransit, order.StatusEnum);
+    }
 
     [TestMethod]
     public void OnCaravanDestroyed_InTransitOrder_MarksLostForgetsTrackerAndPurges()

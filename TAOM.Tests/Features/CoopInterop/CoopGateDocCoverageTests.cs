@@ -21,56 +21,18 @@ public class CoopGateDocCoverageTests
 {
     private const string DocPath = "docs/features/coop-interop.md";
 
-    /// <summary>
-    /// Behaviors that predate this test and are not yet classified. The list may only shrink: a new
-    /// behavior gets its row in coop-interop.md and is never added here.
-    /// </summary>
-    private static readonly string[] Baseline =
-    {
-        "ArmourAcquisitionCampaignBehavior",
-        "ArmouryMenuBehavior",
-        "CreatureBroodCampaignDiagBehavior",
-        "CreatureBroodSpawnBehavior",
-        "LordHarnessEventBehavior",
-        "LordsLadderBehavior",
-        "TournamentRewardsBehavior",
-        "TrollBandSpawnBehavior",
-        "WandererAllegianceDialogBehavior",
-        "RealmBordersCampaignBehavior",
-        // Landed on bannerlord-1.5.x while this test was in review (2026-10-19), so they predate it too.
-        "HostReviewCampaignBehavior",
-        "HiddenHostsBehavior",
-        "HiddenHostsPlainSightBehavior",
-        "TaomBuildingSeedingBehavior",
-        "LordCourtesiesDialogBehavior",
-    };
-
     [TestMethod]
     public void EveryFeatureModuleCampaignBehavior_HasACoopRow()
     {
         var section = ClassifiedSection();
         var missing = DeclaredNames()
-            .Where(n => !Baseline.Contains(n) && !IsClassified(section, n))
+            .Where(n => !IsClassified(section, n))
             .ToList();
 
         Assert.AreEqual(0, missing.Count,
             "Campaign behaviors with no co-op classification: " + string.Join(", ", missing)
             + ". Add a row to the 'Gated (host-only)' table or to the 'Deliberately NOT gated' list in "
             + DocPath + ".");
-    }
-
-    [TestMethod]
-    public void Baseline_HasNoStaleEntries()
-    {
-        var section = ClassifiedSection();
-        var declared = DeclaredNames();
-        var stale = Baseline
-            .Where(n => !declared.Contains(n) || IsClassified(section, n))
-            .ToList();
-
-        Assert.AreEqual(0, stale.Count,
-            "Baseline entries that are now classified in " + DocPath + " or no longer declared by a "
-            + "feature module: " + string.Join(", ", stale) + ". Remove it from the baseline.");
     }
 
     private static HashSet<string> DeclaredNames() =>

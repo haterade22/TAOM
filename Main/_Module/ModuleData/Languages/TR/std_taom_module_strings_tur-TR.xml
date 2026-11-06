@@ -7659,6 +7659,8 @@
     <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
     <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
     <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
+    <string id="taom_career_coop_gold_off" text="Paid career changes are not available in a shared campaign." />
+    <string id="taom_sl_coop_off" text="Supply orders are not available in a shared campaign." />
     <string id="taom_marshal_mcm_throwers_first" text="Throwers Throw First" />
     <string id="taom_marshal_mcm_throwers_first_hint" text="On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on." />
     <string id="TAOM_LD_Ability_Summon_Isengard" text="Uruk-hai of Isengard" />
@@ -7713,6 +7715,7 @@
     <string id="TAOM_LD_Fort_TowersFull" text="Fully manned" />
     <string id="TAOM_LD_Notice_TowersFull" text="The high towers are fully manned." />
     <string id="TAOM_LD_Fort_TowersVolleyDetail" text="Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them." />
+    <string id="taom_lm_lothlorien" text="Lórien Mallorn-silver" />
   </strings>
 
 </base>

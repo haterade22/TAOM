@@ -27,7 +27,7 @@ public class TournamentRewardsBehaviorTests
             Substitute.For<ITournamentRewardsConfigProvider>(),
             Substitute.For<IHeroSkillXpAdapter>());
         var award = new TournamentSkillAwardService(rewards, Substitute.For<ITournamentChoicePresenter>(),
-            Substitute.For<IDedicatedServerProvider>());
+            Substitute.For<IDedicatedServerProvider>(), Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
         var behavior = new TournamentRewardsBehavior(rewards, award, logger);
 
         behavior.OnTournamentFinished(null!, null!, null!, null!);

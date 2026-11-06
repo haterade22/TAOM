@@ -47,6 +47,7 @@ public class ClientMapVisualsCompositionTests
         Clear(typeof(RefugeEncounterPatch), "_refuges");
         Clear(typeof(RefugeEncounterPatch), "_enlistment");
         Clear(typeof(RefugeEncounterPatch), "_menus");
+        Clear(typeof(RefugeEncounterPatch), "_coop");
     }
 
     private static void Clear(Type type, string field) =>
@@ -63,6 +64,8 @@ public class ClientMapVisualsCompositionTests
         container.RegisterInstance(Substitute.For<IGameMenuAdapter>());
         // Fire and Tribute's module registers this in production (IoC.cs, before the Refuge resolve); the Refuge raid takes it lazily (#1033).
         container.RegisterInstance(Substitute.For<TAOM.Features.FireAndTribute.IRaidHostOwnSideQuery>());
+        // CoopInterop's module registers this in production, ahead of the camps features (IoC.cs).
+        container.RegisterInstance(Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
         SupplyLinesIoC.RegisterSupplyLinesFeature(container);
         FieldCampIoC.RegisterFieldCampFeature(container);
         RefugeIoC.RegisterRefugeFeature(container);

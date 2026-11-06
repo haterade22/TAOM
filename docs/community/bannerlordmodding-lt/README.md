@@ -120,7 +120,7 @@ replaces that note with `## The export mapping`. The new pages keep their own op
 Loading Type 2 plays through a bound clip, which monsters run the human animation system, and the
 melee page's "What is still open".
 
-**Third-party creature authors are named.** Per [`.claude/rules/provenance.md`](../../../.claude/rules/provenance.md),
+**Third-party creature authors are named.** Per the [provenance register](../../reference/provenance-register.md),
 a source gets its published name and never a euphemism. Artem (ADOD_Beasts) and Byak0 (Alliance,
 Alliance.Wargs) are credited on the hub and the reference page.
 

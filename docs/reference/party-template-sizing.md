@@ -254,7 +254,7 @@ Verified against `Main/_Module/ModuleData/taom_spcultures.xml` and `spcultures.x
 
 | Culture | `default_party_template` | Source |
 |---|---|---|
-| lothlorien | `kingdom_hero_party_rivendell_template` | `taom_spcultures.xml` |
+| lothlorien | `kingdom_hero_party_lothlorien_template` | `taom_spcultures.xml` |
 | umbar | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |
 | shaghana | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |
 | abanissa | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |

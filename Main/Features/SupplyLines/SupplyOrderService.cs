@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SupplyLines.Domain;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -38,6 +39,7 @@ public class SupplyOrderService : ISupplyOrderService
     private readonly ISupplyOrderEngine _engine;
     private readonly ISupplyPricingService _pricing;
     private readonly ISupplyLinesSettingsProvider _settings;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
     private Dictionary<string, SupplyOrder> _orders = new Dictionary<string, SupplyOrder>();
@@ -59,6 +61,7 @@ public class SupplyOrderService : ISupplyOrderService
         ISupplyOrderEngine engine,
         ISupplyPricingService pricing,
         ISupplyLinesSettingsProvider settings,
+        ICoopSessionProvider coop,
         IModLogger logger)
     {
         _sources = sources;
@@ -66,13 +69,23 @@ public class SupplyOrderService : ISupplyOrderService
         _engine = engine;
         _pricing = pricing;
         _settings = settings;
+        _coop = coop;
         _logger = logger;
     }
+
+    /// <summary>
+    /// False on a co-op client and on the BannerlordCoop human host, a loopback client (#1086). The book there
+    /// holds the host's orders, so the ticks, the respawn and the loss bookkeeping are the server's, and the
+    /// route visual is handed no order to draw (it clears what it drew).
+    /// </summary>
+    private bool OwnsTheOrders => _coop.IsAuthority;
 
     public IReadOnlyCollection<SupplyOrder> ActiveOrders
     {
         get
         {
+            if (!OwnsTheOrders)
+                return Array.Empty<SupplyOrder>();
             if (_activeOrdersCache == null)
             {
                 var active = new List<SupplyOrder>();
@@ -204,7 +217,7 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void HourlyTick()
     {
-        if (_orders.Count == 0)
+        if (_orders.Count == 0 || !OwnsTheOrders)
             return;
         AdvanceOrders();
         PurgeFinished();
@@ -212,7 +225,7 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void FrameTick()
     {
-        if (_orders.Count == 0)
+        if (_orders.Count == 0 || !OwnsTheOrders)
             return;
         // While the campaign clock is frozen (pause) neither the travel fraction nor any party
         // position can change, so the whole pass is skipped instead of burning work per frame.
@@ -229,6 +242,8 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void CancelCampOrders()
     {
+        if (!OwnsTheOrders)
+            return;
         int cancelled = CancelWhere(o => o.PlacedFromCamp);
         if (cancelled > 0)
             ShowMessage(new TextObject("{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost."), error: true);
@@ -328,6 +343,8 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void OnGameLoaded()
     {
+        if (!OwnsTheOrders)
+            return;
         _caravans.RespawnMissing(
             _orders.Values.Where(o => o.StatusEnum == SupplyOrderStatus.InTransit).ToList());
     }
@@ -423,7 +440,7 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void OnCaravanDestroyed(string orderId)
     {
-        if (string.IsNullOrEmpty(orderId) || !_orders.TryGetValue(orderId, out var order))
+        if (!OwnsTheOrders || string.IsNullOrEmpty(orderId) || !_orders.TryGetValue(orderId, out var order))
             return;
         // Only a live order records a loss here: Deliver/Lose/Cancel flip the status BEFORE
         // destroying the party, so our own teardown arrives with a finished status and falls

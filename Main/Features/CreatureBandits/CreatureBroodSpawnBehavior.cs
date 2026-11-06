@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.CreatureBandits.Diagnostics;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -22,11 +23,16 @@ namespace TAOM.Features.CreatureBandits;
 /// </summary>
 internal sealed class CreatureBroodSpawnBehavior : CampaignBehaviorBase
 {
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
     private bool _missingClanLogged;
     private bool _missingAnchorsLogged;
 
-    public CreatureBroodSpawnBehavior(IModLogger logger) => _logger = logger;
+    public CreatureBroodSpawnBehavior(ICoopSessionProvider coop, IModLogger logger)
+    {
+        _coop = coop;
+        _logger = logger;
+    }
 
     public override void RegisterEvents()
     {
@@ -51,6 +57,12 @@ internal sealed class CreatureBroodSpawnBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+        // A new party is server work (#1084): on a co-op client the spawn threw in WarPartyComponent.OnInitialize,
+        // and the stray orders would write AI state on parties only the server moves. Read each tick; the host flag can
+        // change.
+        if (!_coop.IsAuthority)
+            return;
+
         try
         {
             var clan = BroodClan;

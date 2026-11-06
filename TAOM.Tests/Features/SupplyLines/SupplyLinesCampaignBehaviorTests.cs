@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using System.Reflection;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SupplyLines;
 using TAOM.Features.SupplyLines.Domain;
 using TAOM.Features.SupplyLines.Hooks;
@@ -25,6 +27,7 @@ public class SupplyLinesCampaignBehaviorTests
     private ISupplyLinesSettingsProvider _settings;
     private ISupplyRouteVisualService _routeVisual;
     private IModLogger _logger;
+    private ICoopSessionProvider _coop;
     private SupplyLinesCampaignBehavior _behavior;
 
     [TestInitialize]
@@ -34,7 +37,9 @@ public class SupplyLinesCampaignBehaviorTests
         _settings = Substitute.For<ISupplyLinesSettingsProvider>();
         _routeVisual = Substitute.For<ISupplyRouteVisualService>();
         _logger = Substitute.For<IModLogger>();
-        _behavior = new SupplyLinesCampaignBehavior(_orders, _settings, _routeVisual, _logger);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.IsAuthority.Returns(true);
+        _behavior = new SupplyLinesCampaignBehavior(_orders, _settings, _routeVisual, _coop, _logger);
     }
 
     [TestMethod]
@@ -122,5 +127,54 @@ public class SupplyLinesCampaignBehaviorTests
         _behavior.EnsureSessionInitialized();
 
         _orders.Received(1).ResetForNewSession();
+    }
+
+    // --- The town menu option and the destroyed-caravan forward (the authority gates live in the service, #1086) ---
+
+    /// <summary>A bare engine party carrying a supply caravan component, as the Refuge behavior tests build one.</summary>
+    private static TaleWorlds.CampaignSystem.Party.MobileParty CaravanParty(string orderId)
+    {
+        var component = (TAOM.Features.SupplyLines.Components.SupplyCaravanComponent)
+            System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SupplyLines.Components.SupplyCaravanComponent));
+        component.GetType().GetField("_orderId", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(component, orderId);
+        var party = (TaleWorlds.CampaignSystem.Party.MobileParty)
+            System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TaleWorlds.CampaignSystem.Party.MobileParty));
+        typeof(TaleWorlds.CampaignSystem.Party.MobileParty)
+            .GetField("_partyComponent", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(party, component);
+        return party;
+    }
+
+    [TestMethod]
+    public void ADestroyedCaravan_IsForwardedWithItsOrderId()
+    {
+        typeof(SupplyLinesCampaignBehavior).GetMethod("OnMobilePartyDestroyed", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(_behavior, new object[] { CaravanParty("order_1"), null! });
+
+        _orders.Received(1).OnCaravanDestroyed("order_1");
+    }
+
+    [TestMethod]
+    public void TownMenuOption_ForACoopGuest_IsShownDisabledWithItsReason()
+    {
+        // IsEnabled starts true, so only the guest branch can turn it off.
+        _settings.Enabled.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
+        var args = new TaleWorlds.CampaignSystem.GameMenus.MenuCallbackArgs((TaleWorlds.CampaignSystem.GameState.MenuContext)null!, null!);
+
+        var shown = new SupplyOrderTownMenu(_settings, _coop).Condition(args);
+
+        Assert.IsTrue(shown);
+        Assert.IsFalse(args.IsEnabled);
+        StringAssert.Contains(args.Tooltip.ToString(), "shared campaign");
+    }
+
+    [TestMethod]
+    public void TownMenuOption_FeatureOff_IsHiddenForEveryone()
+    {
+        _settings.Enabled.Returns(false);
+        _coop.ShouldDeferToHost.Returns(true);
+        var args = new TaleWorlds.CampaignSystem.GameMenus.MenuCallbackArgs((TaleWorlds.CampaignSystem.GameState.MenuContext)null!, null!);
+
+        Assert.IsFalse(new SupplyOrderTownMenu(_settings, _coop).Condition(args));
     }
 }

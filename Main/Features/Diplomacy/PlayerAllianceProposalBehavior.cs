@@ -3,6 +3,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.Diplomacy;
 
@@ -15,6 +16,7 @@ namespace TAOM.Features.Diplomacy;
 public class PlayerAllianceProposalBehavior : CampaignBehaviorBase
 {
     private readonly IDiplomacyService _service;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
     // Singleton-lifetime behavior survives across campaigns in one process; re-register the
@@ -22,9 +24,10 @@ public class PlayerAllianceProposalBehavior : CampaignBehaviorBase
     private CampaignGameStarter _lastSessionStarter;
     private bool _dialogsRegistered;
 
-    public PlayerAllianceProposalBehavior(IDiplomacyService service, IModLogger logger)
+    public PlayerAllianceProposalBehavior(IDiplomacyService service, ICoopSessionProvider coop, IModLogger logger)
     {
         _service = service;
+        _coop = coop;
         _logger = logger;
     }
 
@@ -69,8 +72,11 @@ public class PlayerAllianceProposalBehavior : CampaignBehaviorBase
             null, null);
     }
 
-    private bool DialogCondition_CanProposeAlliance()
+    internal bool DialogCondition_CanProposeAlliance()
     {
+        // An alliance is shared world state the host owns; a co-op guest never sees the line (#1086).
+        if (_coop.ShouldDeferToHost) return false;
+
         var playerKingdom = PlayerKingdomHelper.GetPlayerRuledKingdom();
         if (playerKingdom == null) return false;
 

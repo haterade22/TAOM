@@ -135,7 +135,7 @@ co-op refusal was added 2026-08-03 from field testing.
 
 ### Current Values
 
-11 cultures with offers (owner culture → capital → resource):
+12 cultures with offers (owner culture → capital → resource):
 
 | Culture | Capital (StringId) | Resource | Example elites |
 |---|---|---|---|
@@ -147,13 +147,14 @@ co-op refusal was added 2026-08-03 from field testing.
 | gundabad | Mount Gundabad (`town_G1`) | War Spoils | dread_rider, bolgs_ironfang, berserker |
 | mirkwood | Felegoth (`town_M1`) | Elven Wine | palaceguard, thingolheir, beleglas |
 | rivendell | Rivendell (`town_R1`) | Elven Wine | high_captain, knight_golden_flower, glorfindel_guard |
+| lothlorien | Caras Galadhon (`town_L1`) | Elven Wine | gl_highblade, gl_mallorn_defender, gl_bowmaster (28 each); mw_high_ranger, mw_dawnrider, mw_waystalker (18 each) |
 | vlandia (Rohan) | Edoras (`town_V1`) | Marks | golden_hall_supreme_rider, kings_own_* |
 | khuzait (Rhun) | Mistrand (`town_RU1`) | War Banners | dragon_wrath_obsidian_*, warlord_chariot |
 | aserai (Harad) | Korb Taskral (`town_A1`) | War Drums | elephant_rider (70), mumakil_rider (2800) |
 
 Since 2026-10-15 the two Harad riders are Emissary-only: neither is in any volunteer pool, so this is the only way a player gets one. Their `recruit_cost` (50 and 2000) charges only a captured rider recruited from prisoners.
 
-Omitted (no L36+ elites): Dale (sturgia), Dunland (empire), Umbar, Khand (battania), Lothlorien.
+Omitted (no L36+ elites): Dale (sturgia), Dunland (empire), Umbar, Khand (battania). Lothlorien joined on 2026-11-06 (Mike) once its own tree had troops at levels 41 to 46; `LothlorienEliteEmissary_OffersItsOwnEliteTroopsAtTheElvenWinePriceForTheirLevel` pins it.
 Omitted: lindon (no special-resource mapping); goblin, mistymountainorcs and bluecraig (War Spoils since #1081, no offers listed).
 Omitted (no `<Culture>` row here, and no troop with a `troop_resource_costs.xml` row to price an offer):
 arthedain, cardolan, rhudaur, eredluin (Ered Luin), and dorwinion, southrhovanion, anduinvale and angaladh

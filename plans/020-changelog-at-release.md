@@ -367,7 +367,7 @@ full: run `mkdir -p E:/repos/taom-improve/scratch/tmp` once and prefix every `do
 - Lines that name CHANGELOG as a kind of prose or as history, left as they are:
   `AGENTS.md:34,40`, `.claude/rules/evidence-over-claims.md:54`, `.claude/rules/output-style.md:33`,
   `.claude/rules/external-skill-ports.md:132`, `.claude/rules/hook-authoring.md:59,65`,
-  `.claude/rules/provenance.md`, `.claude/agents/refactoring-specialist.md:75`,
+  `.claude/agents/refactoring-specialist.md:75`,
   `.claude/skills/humanizer/SKILL.md`, `.claude/skills/commit-split/SKILL.md:45`,
   `.claude/skills/engine-bump/SKILL.md:164`, `.claude/skills/deep-review/lenses/5-data-flow.md`,
   `6-design.md:29`, `7-xml.md:44`, `docs/ai-includes/codex-operating-guide.md:40`,
