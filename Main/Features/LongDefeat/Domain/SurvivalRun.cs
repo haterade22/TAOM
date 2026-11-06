@@ -325,6 +325,8 @@ internal sealed partial class SurvivalRun
         if (_stage == WaveStage.Fighting)
             QueueCommander();
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
+        if (_plan.Loadout?.Mounted == true)
+            fx.Sally = SallyMove.Out;
         fx.PublishStats = StatTableNow();
         fx.EngineHitPoints = RunModifiers.EngineHitPoints(_plan.Affixes, _waveAffixes);
         _terror = RunModifiers.Terror(_plan.Affixes, _waveAffixes);
@@ -378,6 +380,8 @@ internal sealed partial class SurvivalRun
         EndPoison();
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
+        if (_plan.Loadout?.Mounted == true)
+            fx.Sally = SallyMove.Home;
         OpenBoons(fx);
         if (_stale.Charging)
             fx.RestoreDefenderTactic = true;

@@ -107,6 +107,14 @@ internal sealed partial class LongDefeatDirector
         _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : _field.KeepFromScene();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
             LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
+        var refusal = PrepareSally();
+        if (refusal.Length > 0)
+        {
+            _logger.LogError($"{Tag}[Boot] {refusal}");
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(refusal));
+            return false;
+        }
+
         _session.Fill(_run);
         _started = true;
         Apply(_run.Begin());
@@ -125,6 +133,8 @@ internal sealed partial class LongDefeatDirector
         _deferred.Drain();
         if (!_started || _shutDown || _run.Result != null || !(dt > 0f))
             return;
+
+        DrainBodyEvents();
 
         _session.AddLiveSeconds(dt);
         _keepClock -= dt;
@@ -150,6 +160,7 @@ internal sealed partial class LongDefeatDirector
 
         if (_plan.Options.Autoplay)
             PlayShop(dt);
+        TickSally(dt);
         LogState(dt, read);
     }
 
@@ -205,12 +216,15 @@ internal sealed partial class LongDefeatDirector
 
         _deferred.Drain();
         _shutDown = true;
-        _wantsHits = false;
+        _poisonHits = false;
         if (_started)
         {
             _run.Abandon();
             Finish();
         }
+
+        _sallyHits = false;
+        _sally = null;
 
         _session.Clear();
         _field.Clear();
@@ -219,7 +233,8 @@ internal sealed partial class LongDefeatDirector
 
     private LdPlanSizes PlanSizes()
     {
-        var foot = _plan.Garrison.Where(r => r.Slot == FormationSlot.Infantry).Sum(r => _plan.Options.ScaledCount(r.Count)) + 1;
+        // The foot formation reserves a slot for the lord, unless he rides: a mounted lord joins the cavalry formation instead.
+        var foot = _plan.Garrison.Where(r => r.Slot == FormationSlot.Infantry).Sum(r => _plan.Options.ScaledCount(r.Count)) + (LordRides ? 0 : 1);
         var ranged = _plan.Garrison.Where(r => r.Slot == FormationSlot.Ranged).Sum(r => _plan.Options.ScaledCount(r.Count));
         var attackerRanged = _plan.Rules.LiveCap / 4;
         return new LdPlanSizes(foot, ranged, _plan.Rules.LiveCap - attackerRanged, attackerRanged);

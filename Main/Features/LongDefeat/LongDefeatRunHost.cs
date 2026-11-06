@@ -78,6 +78,18 @@ internal sealed class LongDefeatRunHost
     /// <summary>An attacker's blow on a defender, already filtered by the logic. May run off the main thread.</summary>
     public void OnHit(object affected, object attacker) => Guarded("OnHit", () => _director?.OnHit(affected, attacker));
 
+    /// <summary>
+    /// A hit as the engine raised it, for the sally's contact count: the lord or his horse struck or was struck. Unfiltered (a blocked blow is contact too). <paramref name="victimHealth"/> is read after the blow. May run
+    /// off the main thread.
+    /// </summary>
+    public void OnContactHit(object? affected, object? affector, float victimHealth) => Guarded("OnContactHit", () => _director?.OnContactHit(affected, affector, victimHealth));
+
+    /// <summary>Whether this run plans a removal of the lord's body (a mounted class): only then does the mission logic forward the callbacks that reach bodies. A plain read of the plan.</summary>
+    public bool WatchesBodies => _plan.Loadout?.Mounted == true;
+
+    /// <summary>A removal or a deletion reached an agent, with the engine's state name. May run off the main thread.</summary>
+    public void OnBodyEvent(object agent, string callback, string state) => Guarded("OnBodyEvent", () => _director?.OnBodyEvent(agent, callback, state));
+
     public void ShutDown()
     {
         var director = _director;

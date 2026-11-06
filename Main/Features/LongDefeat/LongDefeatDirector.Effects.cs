@@ -32,9 +32,12 @@ internal sealed partial class LongDefeatDirector
             RefreshAttackerStats();
 
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
-        var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
+
+        // A lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
+        var joinsBatch = fx.SpawnPlayer && !LordRides;
+        var closes = joinsBatch ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
-            SpawnBatch(batch, false, fx.SpawnPlayer, standing, closes);
+            SpawnBatch(batch, false, joinsBatch, standing, closes);
 
         if (fx.SpawnPlayer && !SpawnLord(false))
             _logger.LogError($"{Tag}[Boot] the player's lord could not be spawned");
@@ -54,6 +57,9 @@ internal sealed partial class LongDefeatDirector
             BeginAffixes(start.Wave);
             BeginCommander();
         }
+
+        if (fx.Sally == SallyMove.Out)
+            SallyOut(_run.Wave);
 
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
@@ -80,6 +86,8 @@ internal sealed partial class LongDefeatDirector
                 _logger.LogWarning($"{Tag}[Wave] asked to fell {fx.FellAttackers} attackers, {felled} fell; each one felled is marked, so only those removals pay no bounty");
         }
 
+        if (fx.Sally == SallyMove.Home)
+            SallyHome();
         foreach (var e in fx.Events)
             OnEvent(e);
         if (fx.RestShare > 0f)
@@ -89,7 +97,7 @@ internal sealed partial class LongDefeatDirector
         }
 
         // Read in the engine's hit callback, which may run off the main thread: a blades wave wants hits from its start until its clear or the run's end.
-        _wantsHits = _run.PoisonWave;
+        _poisonHits = _run.PoisonWave;
         if (_run.Result != null)
             Finish();
     }
@@ -271,6 +279,7 @@ internal sealed partial class LongDefeatDirector
         FlushTerror();
         FlushBlades();
         FinishCommander();
+        EndSallyWatch("run-ended");
     }
 
     private bool WriteReport()

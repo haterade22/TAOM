@@ -29,6 +29,9 @@ internal sealed record RunPlan(
     /// <summary>The recorded muster places of the fortress's defenders, or null: every defender then spawns at the scene's own frames.</summary>
     public MusterPoints? Muster { get; init; }
 
+    /// <summary>The recorded sally point of the fortress, or null: a mounted class then rides from the start with no sally (phase2-plan.md, "The sally").</summary>
+    public MusterFrame? Sally { get; init; }
+
     public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
 
     /// <summary>The affix schedule, numbers and the fortress's attacker culture names. <see cref="AffixPlan.None"/>: no wave carries an affix.</summary>

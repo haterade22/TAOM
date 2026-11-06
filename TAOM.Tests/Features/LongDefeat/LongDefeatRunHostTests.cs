@@ -58,6 +58,41 @@ public class LongDefeatRunHostTests
     }
 
     [TestMethod]
+    public void AContactHit_AndABodyEvent_BeforeTheRunStarts_AreIgnored()
+    {
+        var (host, menu, _, _) = NewHost(() => new FakeLongDefeatField());
+
+        host.OnContactHit("A:orc", "P", 40f);
+        host.OnBodyEvent("P", "removed", "Routed");
+
+        Assert.AreEqual(0, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void ABodyEvent_ReachesTheField_OnlyOnceTheRunHasStarted()
+    {
+        var field = new FakeLongDefeatField();
+        var (host, _, _, _) = NewHost(() => field);
+        host.MarkStartDue();
+        host.Step(0.1f, () => 1f);
+
+        host.OnBodyEvent("P", "removed", "Routed");
+
+        Assert.AreEqual(1, field.BodyNotes);
+    }
+
+    [TestMethod]
+    public void WatchesBodies_IsTrueOnlyForAMountedClass()
+    {
+        var (foot, _, _, _) = NewHost(() => new FakeLongDefeatField());
+        var mounted = new LongDefeatRunHost(Plan with { Loadout = new LdLoadout("cavalry", true, Array.Empty<LdKitSlot>()) }, new LongDefeatSession(),
+            Substitute.For<IModLogger>(), new RecordingOutcomeLog(), new FakeLongDefeatMenu(), "m1", () => new FakeLongDefeatField());
+
+        Assert.IsFalse(foot.WatchesBodies);
+        Assert.IsTrue(mounted.WatchesBodies);
+    }
+
+    [TestMethod]
     public void Step_BeforeTheStartIsDue_DoesNothing_AndNeverAsksTheMissionClock()
     {
         var (host, menu, session, _) = NewHost(() => new FakeLongDefeatField());

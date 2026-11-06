@@ -7,8 +7,8 @@ namespace TAOM.Adapters;
 /// <summary>
 /// All engine work on the Long Defeat field: the deployment, the siege engines, spawning, measuring, ordering and the player's
 /// body. Takes and returns domain types only, so the director never sees an engine type (ADR-007). Every method but
-/// <see cref="Classify"/>, <see cref="IsAttacker"/> and <see cref="TryHitKeys"/> runs on the main thread; those three are safe from the engine's callback
-/// threads, since they read an agent's own team and character and write only into the role registry, which holds one lock.
+/// <see cref="Classify"/>, <see cref="IsAttacker"/>, <see cref="TryHitKeys"/>, <see cref="TryContact"/> and <see cref="NoteBodyEvent"/> runs on the main thread; those five are safe from the engine's callback
+/// threads, since they read an agent's own team and character and write only into the role registry and the lord watch, which each hold one lock.
 /// </summary>
 internal interface ILongDefeatBattlefieldAdapter
 {
@@ -62,14 +62,34 @@ internal interface ILongDefeatBattlefieldAdapter
     /// director sized it for one more) and the director closes the batch afterward. A respawn is its own batch on the reinforcement
     /// frame. With a <paramref name="loadout"/> he spawns in a copy of his first battle set with the loadout's slots overwritten, and
     /// without a horse; with null, in the set the engine picks for him. The kit is read back from the spawned body in this call. False when the engine could not build the agent.
+    /// A mounted <paramref name="loadout"/> (spike S9) spawns him on a horse in the defenders' cavalry formation, not in the foot formation's batch, at <paramref name="place"/> with its direction
+    /// when one is given (a position always needs a direction), else at the engine's own frame for that formation. The field remembers the body as the lord's own.
     /// </summary>
-    bool SpawnPlayer(bool respawn, LdLoadout? loadout);
+    bool SpawnPlayer(bool respawn, LdLoadout? loadout, LdPlace? place = null);
 
     /// <summary>
     /// What the lord who spawned last was spawned with, read from his spawn equipment for each slot of the loadout he was given, and whether he sat a horse. The facts the
     /// <c>class</c> check judges; <c>Spawned</c> is false when no lord was built.
     /// </summary>
     LdKitFacts ReadKit();
+
+    /// <summary>Whether a point has a navmesh and lies inside the mission boundary: what a point the lord is put at needs. The boot line of the sally and home points is written from this.</summary>
+    LdPointFacts SallyPointUsable(LdPlace place);
+
+    /// <summary>
+    /// The lord as the field reads him now: the main agent, whether that body is the one the field spawned for him, his horse, whether he is inside the boundary. With <paramref name="detail"/> also his
+    /// formation and its order position, his distance to it, the nearest attacker and the gate, which cost a walk over the attackers and so are read only for a log line.
+    /// </summary>
+    LdLordFacts ReadLord(bool detail);
+
+    /// <summary>Moves the main agent (and his horse) to the place and turns him to its facing. False when there is no main agent to move.</summary>
+    bool TeleportPlayer(LdPlace place);
+
+    /// <summary>
+    /// A lord on foot is put on a horse at the place in one main-thread step: the old body is marked as a planned removal by identity, faded without its horse, and a new mounted body is spawned with the Player
+    /// controller, which makes it the main agent as it builds. The old body's share of health is written onto the new one. The new body's stats are derived by the director when it adopts the body, since the horse is built before its rider.
+    /// </summary>
+    LdRemount RemountPlayer(LdPlace place, LdLoadout loadout);
 
     /// <summary>Tells the mission its initial spawn is done, so agents spawned later get their stats and ammunition.</summary>
     void FinishInitialSpawn();
@@ -121,6 +141,21 @@ internal interface ILongDefeatBattlefieldAdapter
     /// felled mark the registry kept for him, which this call takes out of it; the commander is also reported when removed with no loss.
     /// </summary>
     LdRemoval Classify(object affected, bool loss);
+
+    /// <summary>
+    /// Sorts one hit into sally contact: the lord's blow or his horse's on an attacker, an attacker's blow on the lord or on his horse. False for anything else. <paramref name="victimHealth"/> is the victim's health after
+    /// the blow. Any thread.
+    /// </summary>
+    bool TryContact(object? affected, object? affector, float victimHealth, out LdContact contact);
+
+    /// <summary>
+    /// A removal or deletion reached an agent (<paramref name="callback"/> is "removed" or "deleted", <paramref name="state"/> the engine's state name). Kept when it is the lord's body, the body a remount faded or the
+    /// main agent; the director logs it on the main thread. Any thread.
+    /// </summary>
+    void NoteBodyEvent(object agent, string callback, string state);
+
+    /// <summary>The body events kept so far, once, in order. Main thread.</summary>
+    IReadOnlyList<LdBodyEvent> TakeBodyEvents();
 
     /// <summary>Whether the agent is on the attacking team.</summary>
     bool IsAttacker(object? agent);

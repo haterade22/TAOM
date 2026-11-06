@@ -539,7 +539,8 @@ class ManifestTests(unittest.TestCase):
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
-                          "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon"):
+                          "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
+                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -592,6 +593,38 @@ class ManifestTests(unittest.TestCase):
         for key in ("w=", "health=", "spawn=", "late=", "troop=", "in_mix=", "damage=", "amplified=", "steps=", "over_room="):
             self.assertIn(key + "{", formatted, key)
         self.assertRegex(self.SCALE_LINE, r"result=pass w=[0-9]+ health=[0-9.]+ spawn=[0-9.]+ late=[0-9.]+ troop=\S+ in_mix=(true|false) damage=[0-9.]+ amplified=[0-9]+ steps=[0-9]+ over_room=[0-9]+")
+
+    SALLY_LINES = {
+        "sally": "w=1 how=remount mount=yes dist=0.4 deaths=0->0 old_state=Routed old_lost=no",
+        "sally-return": "w=1 dist=1.2 keep_radius=14.0 deaths=0->0",
+        "sally-contact": "w=1 t=12.5 hits_given=1 hits_taken=0 mount_hits=0 kills=0",
+    }
+
+    def test_the_sally_rows_read_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        for name, detail in self.SALLY_LINES.items():
+            row = next(c for c in manifest.checks if c.id == f"taom.long-defeat.{name}")
+            head = f"[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.{name} result="
+            self.assertEqual(row.absence, "not-reached", name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "pass " + detail)], []).verdict, iv.PASS, name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "fail " + detail)], []).verdict, iv.FAIL, name)
+            self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED, name)
+
+    def test_a_skipped_sally_line_proves_nothing_and_a_late_fail_beside_a_pass_is_a_fail(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.sally")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.sally result="
+        skipped = [(None, 1, head + "skip w=1 reason=no-sally-point")]
+        both = [(None, 1, head + "pass " + self.SALLY_LINES["sally"]), (None, 2, head + "fail w=1 reason=old-body-reported-lost callback=removed old_state=Killed")]
+        self.assertEqual(iv.judge_segment(row, skipped, []).verdict, iv.NOT_REACHED)
+        self.assertEqual(iv.judge_segment(row, both, []).verdict, iv.FAIL)
+
+    def test_the_sally_lines_are_the_ones_the_csharp_checks_format(self):
+        checks = source("Diagnostics", "LongDefeatSallyChecks.cs")
+        for key in ("w=", "how=", "mount=", "dist=", "deaths=", "old_state=", "old_lost=", "keep_radius=", "t=", "reason=", "callback="):
+            self.assertIn(key, checks, key)
+        for name in ("sally", "sally-return", "sally-contact"):
+            self.assertIn(f'"taom.long-defeat.{name}"', source("Diagnostics", "LongDefeatChecks.cs"))
 
     def test_the_manifest_names_the_issue_and_the_taom_log(self):
         data = self.manifest()
@@ -1092,6 +1125,43 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         full = log_of(STANDARD + ("sally", "sally-return"), 5)
         self.assertEqual(ld.judge(FINAL, report, full)[0], 0)
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("sally",), 5))[0], 1)
+
+    def cavalry_run(self):
+        offer = mock.patch.object(ld, "class_offer", return_value=ld.CLASSES + ("cavalry",))
+        offer.start()
+        self.addCleanup(offer.stop)
+        ld.expected_report = {"class": "cavalry"}
+        return {**REPORT, "class": "cavalry"}, log_of(STANDARD + ("sally", "sally-return"), 5)
+
+    def test_sally_contact_is_reported_for_a_cavalry_run_and_never_required(self):
+        report, base = self.cavalry_run()
+        none = ld.judge(FINAL, report, base)
+        self.assertEqual(none[0], 0, none[1])
+        self.assertIn("sally-contact: not reached", none[1])
+        contact = pass_line("sally-contact") + "\n" + pass_line("sally-contact").replace("detail=1", "detail=2")
+        got = ld.judge(FINAL, report, base + "\n" + contact)
+        self.assertEqual(got[0], 0, got[1])
+        self.assertIn("sally-contact: 2 pass, 0 skip", got[1])
+        quiet = base + "\n" + pass_line("sally-contact").replace("result=pass", "result=skip")
+        self.assertIn("sally-contact: 0 pass, 1 skip", ld.judge(FINAL, report, quiet)[1])
+
+    def test_a_failed_sally_contact_line_still_fails_the_run_like_any_failed_check(self):
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally-contact").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_late_loss_report_on_the_old_body_fails_the_run_through_the_sally_check(self):
+        # The game writes a second line for the wave, result=fail, when native reports the faded body killed after the step passed: any failed check line fails the run.
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
+
+    def test_a_foot_class_report_adds_no_contact_note(self):
+        for name in ld.CLASSES:
+            ld.expected_report = {"class": name}
+            self.assertNotIn("sally-contact", ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[1], repr(name))
 
     def test_another_class_asks_nothing_extra(self):
         for name in ld.CLASSES:

@@ -55,7 +55,18 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
         base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
+        if (_host.WatchesBodies)
+            _host.OnBodyEvent(affectedAgent, "removed", agentState.ToString());
         _host.OnAgentRemoved(affectedAgent, IsLoss(agentState));
+    }
+
+    // Mission.OnAgentDeleted sets the state to Deleted and calls this, and never clears MainAgent (Mission.cs:2982-2996). A remount's faded body is deleted here some frames after it was removed;
+    // the callback is kept, with its state, for the sally line (spike S9). Only a mounted class plans a removal, so any other run pays nothing.
+    public override void OnAgentDeleted(Agent affectedAgent)
+    {
+        base.OnAgentDeleted(affectedAgent);
+        if (_host.WatchesBodies && affectedAgent != null)
+            _host.OnBodyEvent(affectedAgent, "deleted", affectedAgent.State.ToString());
     }
 
     // OnScoreHit carries the engine's own isBlocked and damagedHp (Mission.cs:5671-5672; OnAgentHit has neither) and may run off the main thread: the volatile want comes first, so a wave
@@ -70,6 +81,9 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         var attacker = LongDefeatHitFilter.Attacker(affectorAgent, a => a.IsMount, a => a.RiderAgent);
         if (LongDefeatHitFilter.Admits(affectedAgent, attacker, isBlocked, damagedHp, affectedAgent?.Health ?? 0f))
             _host.OnHit(affectedAgent, attacker!);
+
+        // The sally's contact count wants every hit that touches the lord or his horse, blocked or not, so it takes the raw agents; the director drops it at once outside a sally wave.
+        _host.OnContactHit(affectedAgent, affectorAgent, affectedAgent?.Health ?? 0f);
     }
 
     public override void OnAgentFleeing(Agent affectedAgent)

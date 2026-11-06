@@ -70,6 +70,12 @@ internal sealed class RunEffects
     /// <summary>A war cry began or ended (or the commander who raised it fell): derive every standing attacker's properties again, after <see cref="PublishStats"/>.</summary>
     public bool RefreshAttackers { get; set; }
 
+    /// <summary>
+    /// A mounted class's move at the edge of a wave: <see cref="SallyMove.Out"/> with the wave's start (before its first attacker batch), <see cref="SallyMove.Home"/> with its clear, the one that ends the
+    /// run included. None for a foot class, a run with no class and every other tick. Whether the point is usable and the body is the lord's own are the director's to decide.
+    /// </summary>
+    public SallyMove Sally { get; set; }
+
     /// <summary>The wave's first batch is out: force the attacker tactic and give it a fresh TacticBreachWalls.</summary>
     public bool RefreshAttackerTactic { get; set; }
 

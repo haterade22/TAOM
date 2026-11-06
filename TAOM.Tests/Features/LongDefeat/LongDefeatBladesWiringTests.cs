@@ -40,7 +40,7 @@ public class LongDefeatBladesWiringTests
 
         var attackers = apply.IndexOf("foreach (var batch in fx.AttackerBatches)", StringComparison.Ordinal);
         var poison = apply.IndexOf("ApplyPoison(fx.PoisonTicks)", StringComparison.Ordinal);
-        var wants = apply.IndexOf("_wantsHits = _run.PoisonWave", StringComparison.Ordinal);
+        var wants = apply.IndexOf("_poisonHits = _run.PoisonWave", StringComparison.Ordinal);
         var finish = apply.IndexOf("Finish();", StringComparison.Ordinal);
         Assert.IsTrue(attackers >= 0 && poison > attackers, "a tick needs the attackers the wave just spawned");
         Assert.IsTrue(wants > poison && wants < finish, "the want for hits follows what the tick did, before the end of the run is written");
@@ -53,7 +53,7 @@ public class LongDefeatBladesWiringTests
 
         StringAssert.Contains(BodyOf(source, "private void OnWaveCleared("), "FlushBlades()");
         StringAssert.Contains(BodyOf(source, "private void Finish()"), "FlushBlades()");
-        StringAssert.Contains(BodyOf(RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true), "public void Shutdown()"), "_wantsHits = false");
+        StringAssert.Contains(BodyOf(RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true), "public void Shutdown()"), "_poisonHits = false");
     }
 
     [TestMethod]
@@ -61,7 +61,7 @@ public class LongDefeatBladesWiringTests
     {
         var hit = BodyOf(RepoPaths.ReadSource(Blades, stripComments: true), "public void OnHit(");
 
-        var wants = hit.IndexOf("_wantsHits", StringComparison.Ordinal);
+        var wants = hit.IndexOf("_poisonHits", StringComparison.Ordinal);
         var keys = hit.IndexOf("TryHitKeys(", StringComparison.Ordinal);
         var parked = hit.IndexOf("_deferred.RunOrDefer(HitSite", StringComparison.Ordinal);
         var dose = hit.IndexOf("_run.DefenderHit(", StringComparison.Ordinal);

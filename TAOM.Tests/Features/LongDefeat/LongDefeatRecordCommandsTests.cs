@@ -133,6 +133,50 @@ public class LongDefeatRecordCommandsTests
     }
 
     [TestMethod]
+    public void Record_Sally_StoresThePointAndTheNormalizedLook_AndTakesNoRadius()
+    {
+        var reply = Record(Spot(x: -20.5f, y: 70f, z: 12f, lookX: 0f, lookY: -2f), "sally");
+
+        var record = _recorder.ReadAll(out _).Single();
+        Assert.AreEqual(LongDefeatRecorder.SallyKind, record.Kind);
+        Assert.AreEqual(-20.5f, record.X);
+        Assert.AreEqual(-1f, record.Fy, 1e-5f);
+        StringAssert.Contains(reply, _recorder.FilePath);
+        Assert.AreEqual("Only a keep record takes a radius.", Record(Spot(), "sally", "12"));
+    }
+
+    [TestMethod]
+    public void Record_ASallyWithAVerticalLook_IsRefused()
+    {
+        var refused = Record(Spot(lookX: 0f, lookY: 0f), "sally");
+
+        Assert.IsFalse(File.Exists(_recorder.FilePath), refused);
+    }
+
+    [TestMethod]
+    public void Record_TheUsageNamesTheSallyKind()
+    {
+        StringAssert.Contains(Record(Spot(), "nothing"), "sally");
+        StringAssert.Contains(LongDefeatCommands.RecordUsage, "sally");
+    }
+
+    [TestMethod]
+    public void Export_ASallyIsNotAMissingPiece_ButItsPasteIsMentioned()
+    {
+        Record(Spot(), "keep");
+        Record(Spot(), "muster_foot");
+        Record(Spot(), "muster_archers");
+        var without = LongDefeatCommands.Export(_recorder, Scene);
+        Record(Spot(), "sally");
+        var with = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(without, "complete");
+        Assert.IsFalse(without.Contains("sally"), without);
+        StringAssert.Contains(with, "complete");
+        StringAssert.Contains(with, "sally");
+    }
+
+    [TestMethod]
     public void Export_ARecordedKeepWithNoMusterPoints_StillSaysWhereToPasteIt()
     {
         Record(Spot(), "keep");
@@ -141,6 +185,18 @@ public class LongDefeatRecordCommandsTests
 
         StringAssert.Contains(reply, "fortresses.json");
         StringAssert.Contains(reply, "muster_foot");
+    }
+
+    [TestMethod]
+    public void Export_ASallyWithNoKeepRecorded_StillSaysWhereToPasteTheSally()
+    {
+        Record(Spot(), "sally");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(reply, "Paste its sally into");
+        StringAssert.Contains(reply, "fortresses.json");
+        Assert.IsFalse(reply.Contains("Paste its keep"), reply);
     }
 
     [TestMethod]

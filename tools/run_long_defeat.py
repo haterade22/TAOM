@@ -104,6 +104,10 @@ DEFAULT_FORTRESS = "helms"
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
 
+# The third check of the sally (spike S9) is reported, not required: a hit by or on the rider or his horse in a wave's first 180 s within 40 m of the sally point. The game writes it as a
+# pass at the first such hit and as a skip (never a fail) when none came, so a quiet ride neither fails the run nor reads as a pass; Mike reads it from the line.
+CONTACT_CHECK = "sally-contact"
+
 # A wave past the authored list (waves.json: Helm's Deep has ten) carries a health or damage factor above 1 in the report, so a run that reached one owes
 # the scale check whatever its flags. The Slice 2 proof is --start-wave 12 --waves 2: with a tier step every 3 extra waves, wave 13 is the first to step a troop.
 SCALE_CHECK = "scale"
@@ -650,6 +654,17 @@ def check_pattern(name, result):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=" + result + r"\b")
 
 
+def contact_note(report_json, log_text):
+    """", sally-contact: 2 pass, 1 skip" for a class that sallies, ", sally-contact: not reached" when the log has neither, and "" for every other class. Reported, never required."""
+    if "sally" not in CLASS_CHECKS.get(report_json.get("class"), ()):
+        return ""
+    passes = len(check_pattern(CONTACT_CHECK, "pass").findall(log_text))
+    skips = len(check_pattern(CONTACT_CHECK, "skip").findall(log_text))
+    if not passes and not skips:
+        return f", {CONTACT_CHECK}: not reached"
+    return f", {CONTACT_CHECK}: {passes} pass, {skips} skip"
+
+
 FAIL_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX) + r"\S+ result=fail\b")
 
 
@@ -754,7 +769,7 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}")
 
 
 def build_of(log_text):

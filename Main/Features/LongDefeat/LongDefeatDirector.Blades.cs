@@ -16,19 +16,19 @@ internal sealed partial class LongDefeatDirector
     // The first ticks of a wave are logged one by one; later ones only when they killed, were withheld, found no owner or went to a substitute owner. The wave's totals come in the check line.
     private const int LoggedTicks = 3;
 
-    private volatile bool _wantsHits;
+    private volatile bool _poisonHits;
     private BladesWatch? _blades;
 
     /// <summary>
-    /// Whether the running wave wants the engine's hits: a Morgul Blades wave is running. Read in the engine's hit callback, which may run off the main thread, before anything else is done for a hit, so any other wave costs one
-    /// volatile read per hit.
+    /// Whether the running wave wants the engine's hits: a Morgul Blades wave is running, or a mounted lord is out on his sally. Read in the engine's hit callback, which may run off the main thread, before anything else is done
+    /// for a hit, so any other wave costs two volatile reads per hit.
     /// </summary>
-    public bool WantsHits => _wantsHits;
+    public bool WantsHits => _poisonHits || _sallyHits;
 
     /// <summary>An attacker struck a defender (the logic has dropped null, own, blocked and zero-damage hits, and a mount's blow is its rider's). May run off the main thread.</summary>
     public void OnHit(object affected, object attacker)
     {
-        if (!_started || !_wantsHits || !_field.TryHitKeys(affected, attacker, out var victim, out var hitter))
+        if (!_started || !_poisonHits || !_field.TryHitKeys(affected, attacker, out var victim, out var hitter))
             return;
 
         _deferred.RunOrDefer(HitSite, () => _run.DefenderHit(victim, hitter));

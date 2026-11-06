@@ -27,13 +27,13 @@ public class LongDefeatClassPinTests
     }
 
     [TestMethod]
-    public void Spawn_PutsTheKitOnTheBuildData_BeforeTheSpawn_WithNoHorses()
+    public void Spawn_PutsTheKitOnTheBuildData_BeforeTheSpawn_WithNoHorsesUnlessTheClassRides()
     {
         var spawn = Body(RepoPaths.ReadSource(Field, stripComments: true), "private Agent Spawn(");
 
         var data = spawn.IndexOf("GetAgentBuildDataToSpawnTroop(", StringComparison.Ordinal);
         var equipment = spawn.IndexOf(".Equipment(kit)", StringComparison.Ordinal);
-        var horses = spawn.IndexOf(".NoHorses(true)", StringComparison.Ordinal);
+        var horses = spawn.IndexOf(".NoHorses(!mounted)", StringComparison.Ordinal);
         var engineSpawn = spawn.IndexOf("SpawnTroopWithAgentBuildData(", StringComparison.Ordinal);
         Assert.IsTrue(data >= 0 && equipment > data && horses > data && engineSpawn > equipment && engineSpawn > horses, "the kit is set after the build data exists and before the spawn");
         StringAssert.Contains(spawn, "if (kit != null)", "no kit leaves the spawn exactly as the wave soldiers' spawn is");

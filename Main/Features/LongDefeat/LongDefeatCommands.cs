@@ -70,17 +70,18 @@ internal static class LongDefeatCommands
     }
 
     internal static readonly string RecordUsage =
-        "Format is \"taom.ld_record <keep|muster_foot|muster_archers> [radius]\".\n"
+        "Format is \"taom.ld_record <keep|muster_foot|muster_archers|sally> [radius]\".\n"
         + "Appends the main agent's position and look to long_defeat_records.jsonl in Documents\\Mount and Blade II Bannerlord\\TAOM. "
-        + $"A radius ({FortressesReader.KeepRadiusMin:0} to {FortressesReader.KeepRadiusMax:0}) applies to keep only; without one the rules' keepRadius stays in charge. taom.ld_export folds the newest "
-        + "records of this scene into long_defeat_<scene>.json.";
+        + $"A radius ({FortressesReader.KeepRadiusMin:0} to {FortressesReader.KeepRadiusMax:0}) applies to keep only; without one the rules' keepRadius stays in charge. "
+        + "A sally is where a mounted class rides out to at each wave's start: stand outside the walls but inside the play area, face the way the rider should face, and record it. It is optional, "
+        + "and the next boot line says whether the point has a navmesh and lies inside the boundary. taom.ld_export folds the newest records of this scene into long_defeat_<scene>.json.";
 
     /// <summary>The body of <c>taom.ld_record</c>: <paramref name="args"/> are the words after the command name.</summary>
     internal static string Record(IReadOnlyList<string> args, LongDefeatRecorder recorder, LdSpot spot)
     {
         var kind = args.Count == 0 ? "" : args[0].ToLowerInvariant();
         if (!LongDefeatRecorder.IsKind(kind))
-            return "Expected a kind: keep, muster_foot or muster_archers.\n" + RecordUsage;
+            return "Expected a kind: keep, muster_foot, muster_archers or sally.\n" + RecordUsage;
 
         float? radius = null;
         if (args.Count > 1)
@@ -109,9 +110,13 @@ internal static class LongDefeatCommands
     {
         var export = recorder.Export(scene, out var path);
         var head = export.IsComplete ? $"Wrote the complete block for {scene} to {path}." : $"Wrote {path}.";
-        var paste = export.Missing.Contains(LongDefeatRecorder.KeepKind)
-            ? ""
-            : " Paste its keep into this fortress's row in fortresses.json; a game restart loads it.";
+        // The sally has its own reader, so a recorded one is worth pasting whether or not a keep is in the block.
+        var pieces = new List<string>();
+        if (!export.Missing.Contains(LongDefeatRecorder.KeepKind))
+            pieces.Add("keep");
+        if (export.HasSally)
+            pieces.Add("sally");
+        var paste = pieces.Count == 0 ? "" : $" Paste its {string.Join(" and its ", pieces)} into this fortress's row in fortresses.json; a game restart loads it.";
         var gaps = export.IsComplete ? "" : $" These pieces have no record yet: {string.Join(", ", export.Missing)}.";
         return head + paste + gaps;
     }

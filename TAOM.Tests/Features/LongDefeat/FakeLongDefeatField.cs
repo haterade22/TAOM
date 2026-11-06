@@ -125,12 +125,97 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     /// <summary>What <see cref="ReadKit"/> answers. Null reads back exactly the last loadout, with no mount for a foot class.</summary>
     public LdKitFacts? Kit { get; set; }
 
-    public bool SpawnPlayer(bool respawn, LdLoadout? loadout)
+    /// <summary>The place each lord spawn was given, in order (null for a spawn at the engine's own frame).</summary>
+    public List<LdPlace?> Places { get; } = new();
+
+    public bool SpawnPlayer(bool respawn, LdLoadout? loadout, LdPlace? place = null)
     {
         Calls.Add(loadout == null ? $"SpawnPlayer:{respawn}" : $"SpawnPlayer:{respawn}:{loadout.ClassId}");
         Loadouts.Add(loadout);
+        Places.Add(place);
         return SpawnPlayerOk;
     }
+
+    /// <summary>What <see cref="SallyPointUsable"/> answers for a place; every point has a navmesh and lies inside the boundary by default.</summary>
+    public Func<LdPlace, LdPointFacts> PointFacts { get; set; } = _ => new LdPointFacts(true, true);
+
+    /// <summary>The points the director asked about, in order.</summary>
+    public List<LdPlace> PointsAsked { get; } = new();
+
+    public LdPointFacts SallyPointUsable(LdPlace place)
+    {
+        PointsAsked.Add(place);
+        Calls.Add("PointCheck:" + F(place.X));
+        return PointFacts(place);
+    }
+
+    /// <summary>The lord as the next read finds him: standing, his own body, mounted, inside the boundary. A teleport or a remount moves him.</summary>
+    public LdLordFacts Lord { get; set; } = new(true, true, "lord_4_1", true, new LdPoint(10f, 20f, 30f), true, "Cavalry", new LdPoint(10f, 20f, 30f), 3f, 12f, "closed");
+
+    public int LordReads { get; private set; }
+
+    public LdLordFacts ReadLord(bool detail)
+    {
+        LordReads++;
+        Calls.Add(detail ? "ReadLord:detail" : "ReadLord");
+        return Lord;
+    }
+
+    public List<LdPlace> Teleports { get; } = new();
+
+    public bool TeleportOk { get; set; } = true;
+
+    public bool TeleportPlayer(LdPlace place)
+    {
+        Calls.Add("Teleport:" + F(place.X));
+        Teleports.Add(place);
+        if (TeleportOk)
+            Lord = Lord with { At = place.Point };
+        return TeleportOk;
+    }
+
+    public List<(LdPlace Place, LdLoadout Loadout)> Remounts { get; } = new();
+
+    /// <summary>What a remount answers; by default it worked, the old body read Routed and was not lost, and he kept half his health.</summary>
+    public LdRemount RemountResult { get; set; } = new(true, "Routed", false, 0.5f, "");
+
+    public LdRemount RemountPlayer(LdPlace place, LdLoadout loadout)
+    {
+        Calls.Add("Remount:" + F(place.X));
+        Remounts.Add((place, loadout));
+        if (RemountResult.Done)
+        {
+            Lord = Lord with { At = place.Point, HasMount = true };
+            MainBody++;
+        }
+
+        return RemountResult;
+    }
+
+    private readonly LongDefeatLordWatch _watch = new();
+
+    /// <summary>Hits the director asked to classify as contact: "P" is the lord, "M" his horse, an "A:", "S:" or "C:" text an attacker.</summary>
+    public bool TryContact(object? affected, object? affector, float victimHealth, out LdContact contact)
+    {
+        _watch.SetLord("P");
+        return _watch.TryContact(affected, affector, "M", victimHealth, a => a is string s && s.Length > 1 && "ASC".Contains(s[0]) && s[1] == ':', out contact);
+    }
+
+    public int BodyNotes { get; private set; }
+
+    public void NoteBodyEvent(object agent, string callback, string state) => BodyNotes++;
+
+    /// <summary>The body events the next <see cref="TakeBodyEvents"/> hands back; emptied by it.</summary>
+    public List<LdBodyEvent> PendingBodyEvents { get; } = new();
+
+    public IReadOnlyList<LdBodyEvent> TakeBodyEvents()
+    {
+        var taken = PendingBodyEvents.ToList();
+        PendingBodyEvents.Clear();
+        return taken;
+    }
+
+    private static string F(float value) => value.ToString("F0", System.Globalization.CultureInfo.InvariantCulture);
 
     public LdKitFacts ReadKit()
     {

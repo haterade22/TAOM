@@ -28,6 +28,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     private readonly IModLogger _logger;
     private readonly LongDefeatAgentRegistry _registry;
 
+    // The lord's body, the body a remount faded and the callbacks that reached them; by object reference, any thread.
+    private readonly LongDefeatLordWatch _lordWatch = new();
+
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
     // The recorded muster place each defender class spawns at while its batch is open (SetMusterFrame to EndBatch). A class with no entry spawns at the scene's frame.
@@ -297,15 +300,18 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     }
 
     // A kit goes on the build data, and the engine reads it before anything else (Mission.cs:4108). The engine still edits the copy it takes (a hero's banner, NoHorses, NoArmor and
-    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. NoHorses(true) repeats spawnWithHorse: false above (Mission.cs:4468), so a mounted
-    // class (Slice 11) must drive both from the loadout.
+    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. GetAgentBuildDataToSpawnTroop sets NoHorses(true) for spawnWithHorse: false (Mission.cs:4468),
+    // so a mounted class passes false there and clears it here: the horse then comes from the kit's Horse slot (Mission.cs:4311), with no mount key (risk 8, read back by the sally line).
+    // A place goes in as a position with its direction: the engine reads the direction of a given position at once (Mission.cs:4498), and a given position skips the formation layout (Mission.cs:4227).
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
-        bool intoOwnFormation = false, Equipment? kit = null)
+        bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false)
     {
-        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
+        Vec3? initialPosition = place == null ? null : new Vec3(place.X, place.Y, place.Z);
+        Vec2? initialDirection = place == null ? null : FacingOf(place);
+        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, initialPosition, initialDirection, formationIndex: cls)
             .Banner(team.Banner);
         if (kit != null)
-            data.Equipment(kit).NoHorses(true);
+            data.Equipment(kit).NoHorses(!mounted);
 
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
@@ -489,5 +495,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _knownMain = null;
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
+        _lordWatch.Clear();
     }
 }

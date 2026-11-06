@@ -146,7 +146,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     }
 
     // An attacker's removal is the last event for him, so his role and felled mark are taken from the registry and he is forgotten. Only the commander is reported when no loss
-    // came with the removal (a rout; a deletion only if native raises OnAgentRemoved for it, risk 2, since the managed OnAgentDeleted, Mission.cs:2982-2996, reaches no Long Defeat callback), because a commander who leaves alive stops summoning; any other attacker's non-loss removal is nothing.
+    // came with the removal (a rout; a deletion only if native raises OnAgentRemoved for it, risk 2, since the managed OnAgentDeleted, Mission.cs:2982-2996, reaches only LongDefeatMissionLogic.OnAgentDeleted, which logs the lord's bodies and never reaches Classify), because a commander who leaves alive stops summoning; any other attacker's non-loss removal is nothing.
     public LdRemoval Classify(object affected, bool loss)
     {
         if (!(affected is Agent agent) || !agent.IsHuman || !ReferenceEquals(agent.Mission, _mission))
@@ -154,6 +154,14 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         // A defender the registry holds (one an attacker struck while a blades wave ran) leaves it here too, and the removal carries its key so the run forgets it. The entry is taken before the
         // team is read: an agent with no team is still evicted, and its key still reaches the run.
+        // The body a remount faded is the lord's own removal, in whatever state native reports (the plan check reads FadeOut as setting Routed, and a kill or knock-out would be counted as a death): matched by
+        // identity, forgotten by the registry, and no loss. NoteBodyEvent has kept its state for the director to log.
+        if (_lordWatch.IsPlanned(agent))
+        {
+            _registry.TakeRemoval(agent, out _, out _, out var plannedKey);
+            return new LdRemoval(LdRemovalKind.None, "", Key: plannedKey);
+        }
+
         var id = agent.Character?.StringId ?? "";
         _registry.TakeRemoval(agent, out var role, out var felled, out var key);
         var team = agent.Team;

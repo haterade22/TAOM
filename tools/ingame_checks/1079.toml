@@ -256,6 +256,42 @@ fail = ['\[Check\] id=taom\.long-defeat\.summon result=fail']
 # before the clear (spawned=). fired_at, spawned_at and wave_seconds are wave seconds, so risk 16 (do the summons arrive in time) reads off the line. A run that ends before the soldiers all came writes a skip line, which reads NOT REACHED.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.sally"
+needs = "a mounted class on a fortress whose fortresses.json row has a recorded sally block (Slice 11 ships the class; until then only a hand-edited classes.json row marked mounted reaches it, because the catalog swaps an unoffered class for one on offer)"
+reached = ['\[Check\] id=taom\.long-defeat\.sally result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally result=pass w=[0-9]+ how=(teleport|remount) mount=yes ']
+fail = ['\[Check\] id=taom\.long-defeat\.sally result=fail']
+# Written by LongDefeatDirector.Sally.cs at each wave's start, key w<N>, from the lord read right after the move: he stands within 2 m of the sally point on the ground with a horse under him, no player death was counted by
+# the move (deaths=a->b), and for a remount (he was on foot: his horse died, or he was knocked off or dismounted) the step was done and the old body was not reported killed or knocked out (old_state, old_lost). Native reports the faded body Routed inside FadeOut,
+# before the new body spawns, so a later killed or knocked-out report is not expected; if one came it would write a second line for the wave, result=fail. A skip says why no sally was made (reason=no-sally-point, point-unusable, taken-over or no-lord). The same wave writes [LongDefeat][Sally] w<N> out: teleport|remount with the
+# formation and its order position (risk 3: a formation that drags the rider home against a camera or horse fault), mount=yes (risk 8 is closed from source: a null mount key builds the horse with a random coat, so mount= reads the horse, not the key), the old body's state and every removal and deletion callback for it.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.sally-return"
+needs = "the same run, a wave cleared after a sally"
+reached = ['\[Check\] id=taom\.long-defeat\.sally-return result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally-return result=pass w=[0-9]+ dist=']
+fail = ['\[Check\] id=taom\.long-defeat\.sally-return result=fail']
+# Written by LongDefeatDirector.Sally.cs at each clear of a wave the lord sallied in, key w<N>: after the teleport home he stands within the keep radius of the home point (the recorded foot muster, else the keep) and no player death was counted since he went out. A skip names why
+# he was not brought home (no-lord, taken-over: his body is a soldier's now).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.sally-contact"
+needs = "the same run, with attackers near the sally point in the wave's first 180 s"
+reached = ['\[Check\] id=taom\.long-defeat\.sally-contact result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally-contact result=pass w=[0-9]+ t=']
+fail = ['\[Check\] id=taom\.long-defeat\.sally-contact result=fail']
+# Written by LongDefeatDirector.Sally.cs, key w<N>: pass at the first hit in the wave's first 180 s, within 40 m of the sally point, by or on the lord or his horse (hits_given, hits_taken, mount_hits and kills are in the line, the horse's in its own field). A wave with
+# none writes a skip (reason=none-in-180s, none-before-clear), never a fail: the judge reports this check and does not require it. While he is more than 20 m outside the keep, a [LongDefeat][Sally] w<N> t=<s> line every 5 s carries the counts, nearest_attacker,
+# to_formation, gate and outside_boundary seconds (MissionBoundaryCrossingHandler retreats the mission after 10 s, which ends the run).
+absence = "not-reached"
+
+[[human]]
+claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
+
 [[human]]
 claim = "the commander is visible among the attackers, fights as a soldier and falls like one, and the HUD names his rank and next ability"
 

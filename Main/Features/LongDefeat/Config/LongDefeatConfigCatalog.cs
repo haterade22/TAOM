@@ -129,6 +129,7 @@ internal sealed class LongDefeatConfigCatalog
             Bounties = _waves.Value.Bounties,
             Keep = fortress.Keep,
             Muster = fortress.Muster,
+            Sally = fortress.Sally,
             Affixes = AffixesFor(fortress.AttackerCulture),
             Boons = _boons.Value,
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),

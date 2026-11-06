@@ -124,6 +124,32 @@ public class LongDefeatBindingTests
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }
 
+    // The sally (Slice 10, spike S9): the teleport, the fade of the old body, the mounted spawn at a given place, the boundary test, and the callbacks the logic forwards.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheSallyMembers_StillResolve()
+    {
+        Method(typeof(Agent), "TeleportToPosition", typeof(void), typeof(Vec3));
+        Method(typeof(Agent), "FadeOut", typeof(void), typeof(bool), typeof(bool));
+        Assert.IsNotNull(Property(typeof(Agent), "LookDirection", typeof(Vec3)).GetSetMethod(), "Agent.LookDirection lost its public setter");
+        Property(typeof(Agent), "MountAgent", typeof(Agent));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Property(typeof(Agent), "State", typeof(AgentState));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+        Method(typeof(AgentBuildData), "InitialPosition", typeof(AgentBuildData), typeof(Vec3).MakeByRefType());
+        Method(typeof(AgentBuildData), "InitialDirection", typeof(AgentBuildData), typeof(Vec2).MakeByRefType());
+        Method(typeof(AgentBuildData), "NoHorses", typeof(AgentBuildData), typeof(bool));
+        Method(typeof(AgentBuildData), "Equipment", typeof(AgentBuildData), typeof(Equipment));
+        Property(typeof(Formation), "OrderGroundPosition", typeof(Vec3));
+        Property(typeof(Formation), "OrderPositionIsValid", typeof(bool));
+        Property(typeof(CastleGate), "IsGateOpen", typeof(bool));
+        Property(typeof(CastleGate), "IsDestroyed", typeof(bool));
+        Method(typeof(MissionBehavior), "OnAgentDeleted", typeof(void), typeof(Agent));
+        Assert.IsTrue(typeof(MissionBehavior).GetMethod("OnAgentDeleted", AnyMember)!.IsVirtual, "the logic overrides OnAgentDeleted");
+    }
+
     // The endless scale (Slice 2): the health write after spawn, the character maximum it is read against, the blow the damage factor scales,
     // and the damage model seam it rides.
     [TestMethod]
