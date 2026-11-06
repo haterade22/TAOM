@@ -11,8 +11,8 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
   F. chariot vs VANILLA HORSE — the chariot is a ridden vehicle with no behaviour tree, so its
      reference class is the horse, not the warg. Sections A-E are baselined on the spider and
      deliberately do not cover it.
-  G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set;
-     checks the inheritance and the three action sets that chain over the horse's.
+  G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set and
+     sits on the vanilla as_horse action set; checks both.
 
 Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
 "AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
@@ -515,18 +515,15 @@ def section_f(types):
 # ---------- G. war ram vs vanilla horse ----------
 RAM = {
     "monster": (LOTR + r"\Monsters\LOTR\lotr_monster_war_ram.xml", "taom_war_ram"),
-    "action_sets": LOTR + r"\action_sets.xml",
 }
-# The three sets the engine looks up for a mount (mission, map, town and village), each over the horse's.
-RAM_SET_BASES = (("as_war_ram", "as_horse"), ("as_war_ram_map", "as_horse_map"),
-                 ("as_war_ram_town_and_village", "as_horse_town_and_village"))
 
 
-def ram_gaps(monster, action_sets, types):
+def ram_gaps(monster):
     """Where the war ram stops being the vanilla horse it is built on, as printable lines (empty = none).
 
-    `action_sets` maps an action_set id to its element. The ram inherits the horse's usage set through
-    base_monster, and monster_usage="horse" is what hands a dwarf rider his act_horse_* rows."""
+    The ram inherits the horse's usage set through base_monster, and monster_usage="horse" is what hands
+    a dwarf rider his act_horse_* rows. On the 1.4.x line it authors no action set of its own, so it sits
+    on as_horse and its kick is the vanilla act_horse_kick (war-ram.md)."""
     if monster is None:
         return ["Monster taom_war_ram not found"]
     gaps = []
@@ -534,31 +531,22 @@ def ram_gaps(monster, action_sets, types):
         gaps.append(f'base_monster is "{monster.get("base_monster")}", not "horse": the horse surface is not inherited')
     if monster.get("monster_usage") not in (None, "horse"):
         gaps.append(f'monster_usage is "{monster.get("monster_usage")}": the dwarf rider needs the horse usage set')
-    for set_id, base in RAM_SET_BASES:
-        el = action_sets.get(set_id)
-        if el is None:
-            gaps.append(f"{set_id} is not defined")
-        elif el.get("base_set") != base:
-            gaps.append(f'{set_id} has base_set "{el.get("base_set")}", not "{base}"')
-    if types.get("act_war_ram_butt") != "actt_kick":
-        gaps.append(f'act_war_ram_butt is typed "{types.get("act_war_ram_butt", "<UNDECLARED>")}", not "actt_kick"')
+    if monster.get("action_set") != "as_horse":
+        gaps.append(f'action_set is "{monster.get("action_set")}", not "as_horse"')
     return gaps
 
 
-def section_g(types):
+def section_g():
     """Prints section G and returns its gaps, which --strict counts: data_gates.py reads only the exit code."""
     print("=" * 72)
     print("G. WAR RAM vs VANILLA HORSE (horse-skeleton reskin, the horse usage set is inherited)")
-    # A missing file is a gap (ram_gaps names the absent Monster and sets), not a traceback.
+    # A missing file is a gap (ram_gaps names the absent Monster), not a traceback.
     monster = elem_by_id(RAM["monster"][0], "Monster", RAM["monster"][1]) if os.path.isfile(RAM["monster"][0]) else None
-    wanted = {s for s, _ in RAM_SET_BASES}
-    sets = ({e.get("id"): e for e in parse(RAM["action_sets"]).iter("action_set") if e.get("id") in wanted}
-            if os.path.isfile(RAM["action_sets"]) else {})
-    gaps = ram_gaps(monster, sets, types)
+    gaps = ram_gaps(monster)
     for g in gaps:
         print(f"      {g}   <-- REVIEW")
     if not gaps:
-        print("      Monster inherits the horse, its three action sets chain over the horse's, head-butt typed actt_kick")
+        print("      Monster inherits the horse and sits on as_horse")
     return gaps
 
 
@@ -578,7 +566,7 @@ def main():
     section_d(types)
     section_e()
     section_f(types)
-    ram_gaps_found = section_g(types)
+    ram_gaps_found = section_g()
     failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")

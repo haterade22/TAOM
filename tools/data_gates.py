@@ -119,7 +119,7 @@ GATES = (
          ("python", "tools/audit_action_set_parity.py"), (ARMORY_DOC,)),
     Gate("mount-parity", "creature mounts", CREATURE_GLOBS,
          ("python", "tools/audit_mount_parity.py", "--strict"), ("docs/ai-includes/creature-mount-authoring.md",),
-         note="--strict gates the BT-driven mounts in STRICT_MOUNTS; the report itself always exits 0"),
+         note="--strict gates the BT-driven mounts in STRICT_MOUNTS and the war ram (section G); without --strict a gap is report-only"),
     Gate("map-villages", "TAOM_Map settlements", MAP_GLOBS,
          ("python", "tools/add_map_villages.py", "--check"), ("docs/reference/taom-map-settlement-naming.md",)),
     Gate("banner-rdc", "banner icon Kit imports", ("*/bannericons/*",),

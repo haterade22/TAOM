@@ -71,55 +71,40 @@ class StrictGapsTests(unittest.TestCase):
 
 
 class WarRamGapsTests(unittest.TestCase):
-    """Section G. The war ram rides the vanilla horse skeleton and inherits the horse's usage set, so
-    it is held to the horse rather than to the BT-driven mounts. A missing _map or _town_and_village
-    child set is the elephant's native-AV class (war-ram.md)."""
-
-    TYPES = {"act_war_ram_butt": "actt_kick"}
+    """Section G. On the 1.4.x line the war ram is a horse-skeleton reskin that authors no action set:
+    its Monster sits on the vanilla as_horse and plays act_horse_kick (war-ram.md). The chained
+    as_war_ram sets and act_war_ram_butt exist only on the 1.5.x line, so they are not asked for here."""
 
     def monster(self, **attrs):
         return ET.Element("Monster", {"id": "taom_war_ram", "base_monster": "horse",
-                                      "action_set": "as_war_ram", **attrs})
+                                      "action_set": "as_horse", **attrs})
 
-    def sets(self, drop=(), **bases):
-        want = {"as_war_ram": "as_horse", "as_war_ram_map": "as_horse_map",
-                "as_war_ram_town_and_village": "as_horse_town_and_village", **bases}
-        return {sid: ET.Element("action_set", {"id": sid, "base_set": base})
-                for sid, base in want.items() if sid not in drop}
-
-    def test_a_ram_over_the_horse_sets_has_no_gaps(self):
-        self.assertEqual(amp.ram_gaps(self.monster(), self.sets(), self.TYPES), [])
+    def test_a_ram_on_the_horse_has_no_gaps(self):
+        self.assertEqual(amp.ram_gaps(self.monster()), [])
 
     def test_no_monster_is_a_gap(self):
-        self.assertEqual(len(amp.ram_gaps(None, self.sets(), self.TYPES)), 1)
+        self.assertEqual(len(amp.ram_gaps(None)), 1)
 
     def test_a_base_monster_other_than_the_horse_is_a_gap(self):
-        gaps = amp.ram_gaps(self.monster(base_monster="human"), self.sets(), self.TYPES)
+        gaps = amp.ram_gaps(self.monster(base_monster="human"))
         self.assertEqual(len(gaps), 1)
         self.assertIn("base_monster", gaps[0])
 
     def test_an_own_monster_usage_is_a_gap_unless_it_is_the_horse(self):
-        gaps = amp.ram_gaps(self.monster(monster_usage="ram"), self.sets(), self.TYPES)
+        gaps = amp.ram_gaps(self.monster(monster_usage="ram"))
         self.assertEqual(len(gaps), 1)
         self.assertIn("monster_usage", gaps[0])
-        self.assertEqual(amp.ram_gaps(self.monster(monster_usage="horse"), self.sets(), self.TYPES), [])
+        self.assertEqual(amp.ram_gaps(self.monster(monster_usage="horse")), [])
 
-    def test_a_missing_map_set_is_a_gap(self):
-        gaps = amp.ram_gaps(self.monster(), self.sets(drop=("as_war_ram_map",)), self.TYPES)
-        self.assertEqual(len(gaps), 1)
-        self.assertIn("as_war_ram_map", gaps[0])
-
-    def test_a_set_over_the_wrong_base_is_a_gap(self):
-        gaps = amp.ram_gaps(self.monster(), self.sets(as_war_ram="as_dwarf_warrior"), self.TYPES)
+    def test_an_action_set_other_than_the_horse_is_a_gap(self):
+        gaps = amp.ram_gaps(self.monster(action_set="as_dwarf_warrior"))
         self.assertEqual(len(gaps), 1)
         self.assertIn("as_horse", gaps[0])
 
-    def test_a_head_butt_not_typed_as_a_kick_is_a_gap(self):
-        for types in ({}, {"act_war_ram_butt": "actt_strike"}):
-            with self.subTest(types=types):
-                gaps = amp.ram_gaps(self.monster(), self.sets(), types)
-                self.assertEqual(len(gaps), 1)
-                self.assertIn("act_war_ram_butt", gaps[0])
+    def test_the_1_5_x_set_name_is_a_gap_on_this_line(self):
+        gaps = amp.ram_gaps(self.monster(action_set="as_war_ram"))
+        self.assertEqual(len(gaps), 1)
+        self.assertIn("as_war_ram", gaps[0])
 
 
 class MissingInstallTests(unittest.TestCase):
@@ -140,8 +125,7 @@ class SectionGGateTests(unittest.TestCase):
 
     def run_main(self, args, ram_gaps=None, ram_path="missing"):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
-            ram = {"monster": (os.path.join(td, ram_path + ".xml"), "taom_war_ram"),
-                   "action_sets": os.path.join(td, "missing_sets.xml")}
+            ram = {"monster": (os.path.join(td, ram_path + ".xml"), "taom_war_ram")}
             stack.enter_context(mock.patch.object(amp, "LOTR", td))
             stack.enter_context(mock.patch.object(amp, "RAM", ram))
             stack.enter_context(mock.patch.object(amp, "load_action_types", return_value={}))
@@ -175,9 +159,18 @@ class SectionGGateTests(unittest.TestCase):
         self.assertEqual(code, 0)
 
     def test_section_g_ReturnsItsGaps(self):
-        with mock.patch.object(amp, "RAM", {"monster": ("missing.xml", "taom_war_ram"), "action_sets": "missing.xml"}), \
+        with mock.patch.object(amp, "RAM", {"monster": ("missing.xml", "taom_war_ram")}), \
                 redirect_stdout(io.StringIO()):
-            self.assertEqual(amp.section_g({}), ["Monster taom_war_ram not found"])
+            self.assertEqual(amp.section_g(), ["Monster taom_war_ram not found"])
+
+    def test_section_g_TheShippedMonsterShape_HasNoGaps(self):
+        """Read from a file, with no action_sets.xml or action type table behind it: 1.4.x needs neither."""
+        with tempfile.TemporaryDirectory() as td:
+            path = os.path.join(td, "lotr_monster_war_ram.xml")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write('<base><Monster id="taom_war_ram" base_monster="horse" action_set="as_horse"/></base>')
+            with mock.patch.object(amp, "RAM", {"monster": (path, "taom_war_ram")}), redirect_stdout(io.StringIO()):
+                self.assertEqual(amp.section_g(), [])
 
 
 if __name__ == "__main__":
