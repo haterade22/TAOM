@@ -62,7 +62,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 ## Configuration
 
-Project-level MCP servers (Serena, ilspy, taom-moduledata, imagine, elevenlabs) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
+Project-level MCP servers (Serena, ilspy, taom-moduledata, imagine, elevenlabs) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-scope servers live in the top-level `mcpServers` of `~/.claude.json` (on 2026-10-08 only `davinci-resolve`). The older `~/.claude/.mcp/user.json` (sequential-thinking, context7) is not a file Claude Code reads: on 2026-10-08 neither server loaded, and neither appeared among the failed connections.
 
 **Project servers are keyed by the folder's spelling.** `~/.claude.json` keeps a project's local
 servers under the path as it was opened, case included: on 2026-10-16 `blender` and
