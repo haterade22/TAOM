@@ -304,12 +304,12 @@
         { "text": "{=TAOM_FOW_Trait_Isengard_Few}50 fewer troops in the field, and only warg riders for cavalry.", "strength": false }
       ],
       "units": [
-        { "id": "fighters", "troop": "fow_urukhai_fighter", "role": "Infantry", "packSize": 10, "level": 11, "eliteWeight": 1.25 },
-        { "id": "spearmen", "troop": "fow_urukhai_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.25 },
-        { "id": "pikemen", "troop": "fow_urukhai_pikeman", "role": "Spear", "packSize": 6, "level": 26, "eliteWeight": 1.25 },
-        { "id": "crossbowmen", "troop": "fow_urukhai_crossbowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.25 },
-        { "id": "white_hand", "troop": "fow_urukhai_veteraninfantry", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
-        { "id": "berserkers", "troop": "fow_urukhai_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
+        { "id": "fighters", "troop": "fow_urukhai_fighter", "role": "Infantry", "packSize": 10, "level": 11, "eliteWeight": 1.1 },
+        { "id": "spearmen", "troop": "fow_urukhai_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.1 },
+        { "id": "pikemen", "troop": "fow_urukhai_pikeman", "role": "Spear", "packSize": 6, "level": 26, "eliteWeight": 1.1 },
+        { "id": "crossbowmen", "troop": "fow_urukhai_crossbowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.1 },
+        { "id": "white_hand", "troop": "fow_urukhai_veteraninfantry", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
+        { "id": "berserkers", "troop": "fow_urukhai_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
         { "id": "warg_riders", "troop": "fow_orc_warg_enforcer", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 2.0 },
         { "id": "hill_troll", "troop": "fow_hill_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 4.0 }
       ],
@@ -426,11 +426,11 @@
         { "id": "miners", "troop": "fow_erebor_reg_miner", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
         { "id": "bowmen", "troop": "fow_erebor_reg_bowman", "role": "Ranged", "packSize": 5, "level": 26, "eliteWeight": 1.0 },
         { "id": "rams", "troop": "fow_ironpass_ram_rider", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 1.0 },
-        { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.2 },
-        { "id": "mattocks", "troop": "fow_erebor_reg_mattock_warrior", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.2 },
-        { "id": "shield_guard", "troop": "fow_erebor_noble_shield_guard", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.2 },
-        { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.2 },
-        { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.2 }
+        { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.4 },
+        { "id": "mattocks", "troop": "fow_erebor_reg_mattock_warrior", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.4 },
+        { "id": "shield_guard", "troop": "fow_erebor_noble_shield_guard", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.4 },
+        { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.4 },
+        { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.4 }
       ],
       "heroGuard": { "troop": "fow_erebor_noble_royal_warden", "count": 4, "role": "Infantry" },
       "heroes": [
@@ -504,7 +504,7 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_harad_reg_levy", "count": 5 },
+            { "troop": "fow_harad_reg_militia", "count": 5 },
             { "troop": "fow_harad_militia_spearman", "count": 3 },
             { "troop": "fow_harad_militia_archer", "count": 2, "role": "Ranged" }
           ]
@@ -820,22 +820,22 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_mirkwood_militia_spearman", "count": 2 },
-            { "troop": "fow_mirkwood_militia_archer", "count": 3, "role": "Ranged" }
+            { "troop": "fow_mirkwood_militia_spearman", "count": 3 },
+            { "troop": "fow_mirkwood_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_mirkwood_militia_veteran_spearman", "count": 2 },
-            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3, "role": "Ranged" }
+            { "troop": "fow_mirkwood_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_mirkwood_recruit", "count": 2 },
-            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3, "role": "Ranged" }
+            { "troop": "fow_mirkwood_recruit", "count": 3 },
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 2, "role": "Ranged" }
           ]
         }
       ]
