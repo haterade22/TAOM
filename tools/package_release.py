@@ -48,7 +48,7 @@ Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty
             (dry runs included) / a shipped
             ModuleData file defining a taom_test_ id / an Armory shader with no source players
             have, or an Armory shader report that cannot be checked (all dry runs included) /
-            failed --require-build.
+            failed --require-build (a DLL that is not a clean build of the release commit, or a TAOM file the commit does not track).
 """
 from __future__ import annotations
 
@@ -530,6 +530,7 @@ def require_build(plans, rev: str, requested=()) -> tuple:
     for name in requested:
         if name.casefold() in SHIPPED_DLLS and name.casefold() not in planned:
             problems.append(f"{name}: requested but not present in the source")
+    problems.extend(stale_module_files(plans, sha))
     for p in plans:
         dll_name = SHIPPED_DLLS.get(p.name.casefold())
         if dll_name is None:
@@ -740,6 +741,58 @@ def test_troop_files(plans) -> list:
             if _TEST_TROOP_ID_RE.search(data):
                 found.append(f"{p.name}/{rel}")
     return found
+
+
+# Where each pruned module's tracked files live in the repo: <game>/Modules/TAOM/<rel> is
+# Main/_Module/<rel>. TAOM.Dependencies is exempt: MCM's UI assets sit in its install and not in the repo
+# (docs/reference/release-process.md), so it has no entry.
+REPO_MODULE_ROOTS = {"taom": "Main/_Module"}
+# Deploys never delete, so an install keeps files from every earlier deploy. These are the build's own
+# outputs, not tracked sources: bin/ (the build), Shaders/D3D11/ (the Kit's shader compile) and
+# RuntimeDataCache* (excluded unless --keep-rdc).
+_BUILD_OUTPUT_PREFIX = ("bin/", "shaders/d3d11/")
+_EDITOR_PACK = re.compile(r"assetpackages/pack\d+\.tpac")
+
+
+def stale_module_files(plans, sha: str) -> list:
+    """Problem lines for a planned TAOM file that `sha` does not track under Main/_Module: a prefab
+    deleted in a later commit still ships from an install that deploys never pruned (the dead
+    prefabs of #1024). Paths compare case-folded, as Windows resolves them (the tag spells
+    GUI/PreFabs, the install GUI/Prefabs). A git failure or an empty tree is a problem, never a pass."""
+    problems = []
+    for p in plans:
+        root = REPO_MODULE_ROOTS.get(p.name.casefold())
+        if root is None:
+            continue
+        r = _git("ls-tree", "-r", "--name-only", "-z", sha, "--", root)
+        if not r or r.returncode != 0:
+            problems.append(f"{p.name}: cannot list {root} at {sha[:12]} to compare the install with it")
+            continue
+        tracked = {name.casefold() for name in r.stdout.split("\0") if name}
+        if not tracked:
+            problems.append(f"{p.name}: {sha[:12]} holds no files under {root}, so nothing can vouch for "
+                            "the install")
+            continue
+        # A module with no loose Assets/ is an editor-published channel folder: its AssetPackages/pack0.tpac
+        # is the packed TAOM UI and must stay. Beside loose Assets/ (the dev install) it is an editor leftover.
+        editor_published = not (p.root / "Assets").is_dir()
+        for rel, _size in p._copy_list:
+            folded = rel.casefold()
+            if folded.startswith(_BUILD_OUTPUT_PREFIX) or rel.split("/", 1)[0].casefold().startswith(
+                    RDC_DIR_PREFIX.casefold()):
+                continue
+            if editor_published and _EDITOR_PACK.fullmatch(folded):
+                continue
+            if f"{root.casefold()}/{folded}" not in tracked:
+                if _EDITOR_PACK.fullmatch(folded):
+                    problems.append(f"{p.name}/{rel}: an editor pack beside a loose Assets/ folder in {p.root}. "
+                                    "In the dev install it is an editor leftover: delete it. In an "
+                                    "editor-published channel folder it is TAOM's packed UI: keep it and "
+                                    "remove the stray Assets/ folder instead.")
+                    continue
+                problems.append(f"{p.name}/{rel}: not in {root} at {sha[:12]}; delete it from {p.root} "
+                                "(or commit it first if it is Kit output the repo has not taken yet)")
+    return problems
 
 
 ARMORY_MODULE = "LOTRLOME_Armory"
@@ -998,7 +1051,7 @@ def main(argv=None) -> int:
                          "(default: the parent of --source)")
     ap.add_argument("--require-build", metavar="REV",
                     help="refuse unless TAOM.dll and TAOM.Dependencies.dll are clean builds of "
-                         "this tag or commit (checked in --dry-run too)")
+                         "this tag or commit and every TAOM file is tracked there (checked in --dry-run too)")
     args = ap.parse_args(argv)
     # A piped stdout on Windows is cp1252: a folder name it cannot encode is escaped, never a
     # traceback that turns a clean run into exit 1.
@@ -1088,7 +1141,7 @@ def main(argv=None) -> int:
     if args.require_build is not None:
         problems, checked = require_build(plans, args.require_build, names)
         if problems:
-            print(f"\nERROR: not a clean build of {args.require_build}; refusing to package:",
+            print(f"\nERROR: not a clean build of {args.require_build}, or untracked TAOM files; refusing to package:",
                   file=sys.stderr)
             for msg in problems:
                 print(f"  {msg}", file=sys.stderr)

@@ -721,6 +721,121 @@ def _dll_bytes(stamp: str) -> bytes:
     return b"MZ\x90\x00\x01\x00" + stamp.encode("ascii") + b"\x00\x00trailer"
 
 
+class TestStaleModuleFiles(unittest.TestCase):
+    """Deploys never delete, so an install keeps a prefab a later commit removed (the dead prefabs of
+    #1024). With --require-build the packager compares the TAOM copy list with the release commit's
+    Main/_Module tree and refuses what the commit does not track."""
+
+    def _repo(self, td, tracked):
+        """A throwaway repo whose index holds `tracked` (repo path -> bytes); returns the tree id."""
+        def git(*a, inp=None):
+            return subprocess.run(["git", *a], cwd=td, input=inp, capture_output=True, check=True).stdout
+        git("init", "-q")
+        for path, data in tracked.items():
+            blob = git("hash-object", "-w", "--stdin", inp=data).decode().strip()
+            git("update-index", "--add", "--cacheinfo", f"100644,{blob},{path}")
+        return git("write-tree").decode().strip()
+
+    def _plan(self, td, name, files):
+        root = Path(td) / "Modules"
+        for rel in files:
+            _write(root, f"{name}/{rel}", 10)
+        return pr.plan_module(root / name)
+
+    def _stale(self, td, plan, tracked):
+        repo = Path(td) / "repo"
+        repo.mkdir()
+        tree = self._repo(repo, tracked)
+        with mock.patch.object(pr, "REPO_ROOT", repo):
+            return pr.stale_module_files([plan], tree)
+
+    def test_stale_module_files_names_an_untracked_prefab(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "GUI/PreFabs/Live.xml", "GUI/PreFabs/Dead.xml"])
+            problems = self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x",
+                                              "Main/_Module/GUI/PreFabs/Live.xml": b"x"})
+            self.assertEqual(len(problems), 1, problems)
+            self.assertIn("TAOM/GUI/PreFabs/Dead.xml", problems[0])
+
+    def test_stale_module_files_accepts_pack0_in_an_editor_published_module(self):
+        # An editor-published channel folder has no loose Assets/; its pack0.tpac is the packed TAOM UI.
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "AssetPackages/pack0.tpac"])
+            self.assertEqual(self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x"}), [])
+
+    def test_stale_module_files_names_pack0_beside_loose_assets(self):
+        # The dev install keeps loose Assets/; there pack0 is an editor leftover to delete.
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "AssetPackages/pack0.tpac",
+                                           "Assets/GauntletUI/a.tpac"])
+            problems = self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x",
+                                              "Main/_Module/Assets/GauntletUI/a.tpac": b"x"})
+            self.assertEqual(len(problems), 1, problems)
+            self.assertIn("AssetPackages/pack0.tpac", problems[0])
+
+    def test_stale_module_files_still_names_an_untracked_prefab_in_an_editor_published_module(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "AssetPackages/pack0.tpac",
+                                           "GUI/PreFabs/Dead.xml", "AssetPackages/old_camp.tpac"])
+            problems = self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x"})
+            self.assertEqual(len(problems), 2, problems)
+            prefab = [p for p in problems if "GUI/PreFabs/Dead.xml" in p]
+            pack = [p for p in problems if "AssetPackages/old_camp.tpac" in p]
+            self.assertEqual(len(prefab), 1, problems)
+            self.assertEqual(len(pack), 1, problems)
+            for problem in problems:
+                self.assertIn(str(plan.root), problem)
+
+    def test_stale_module_files_pack_beside_loose_assets_names_both_remedies(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "AssetPackages/pack0.tpac",
+                                           "Assets/GauntletUI/a.tpac"])
+            problems = self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x",
+                                              "Main/_Module/Assets/GauntletUI/a.tpac": b"x"})
+            self.assertEqual(len(problems), 1, problems)
+            self.assertIn("keep it", problems[0])
+            self.assertIn("delete it", problems[0])
+            self.assertIn(str(plan.root), problems[0])
+
+    def test_stale_module_files_compares_case_insensitively(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["GUI/Prefabs/Live.xml"])
+            self.assertEqual(self._stale(td, plan, {"Main/_Module/GUI/PreFabs/Live.xml": b"x"}), [])
+
+    def test_stale_module_files_ignores_bin_rdc_and_kit_shader_outputs(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml", "bin/Win64_Shipping_Client/TAOM.dll",
+                                           "Shaders/D3D11/shader_compile_report.log",
+                                           "Shaders/D3D11/shader_mapping.bin"])
+            _write(Path(td) / "Modules", "TAOM/RuntimeDataCache/a.rdc", 10)
+            plan = pr.plan_module(Path(td) / "Modules" / "TAOM", keep_rdc=True)
+            copied = {rel for rel, _size in plan._copy_list}
+            self.assertIn("RuntimeDataCache/a.rdc", copied)
+            self.assertIn("Shaders/D3D11/shader_mapping.bin", copied)
+            self.assertEqual(self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x"}), [])
+
+    def test_stale_module_files_ignores_other_modules(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM.Dependencies", ["GUI/Prefabs/McmOnly.xml"])
+            self.assertEqual(self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x"}), [])
+
+    def test_stale_module_files_fails_closed_on_git_error_or_empty_tree(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM", ["SubModule.xml"])
+            # no Main/_Module at the commit: an empty listing vouches for nothing
+            empty = self._stale(td, plan, {"Tools/other.txt": b"x"})
+            self.assertEqual(len(empty), 1, empty)
+            self.assertIn("holds no files", empty[0])
+            # a commit git cannot resolve
+            with mock.patch.object(pr, "REPO_ROOT", Path(td) / "repo"):
+                broken = pr.stale_module_files([plan], "0" * 40)
+            self.assertEqual(len(broken), 1, broken)
+            self.assertIn("cannot list", broken[0])
+            # git itself missing
+            with mock.patch.object(pr, "_git", return_value=None):
+                self.assertEqual(len(pr.stale_module_files([plan], "0" * 40)), 1)
+
+
 class TestBuildStamp(unittest.TestCase):
     def _dll(self, td, stamp):
         p = Path(td) / "TAOM.dll"
