@@ -95,7 +95,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 | User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
 | Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
-| "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X" | **`/improve`** | Repo-wide / proactive asks only — change-scoped C# review stays with `/deep-review`; build+test gating with `/verify`. |
+| "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X"; execute, review, merge or resume a plans backlog | **`/improve`** | Repo-wide or proactive asks only: change-scoped C# review stays with `/deep-review`, build and test gating with `/verify`; merge, push, issues and paid calls only on the maintainer's word. |
 | "cut a release", "bump the module version", "ship v2.0.x to players" | **`/release`** | None — always. Downstream of `/ship`, not a substitute: `/ship` closes a feature, `/release` versions + tags a build for players. |
 
 ### Soft suggest (offer, don't auto-invoke)

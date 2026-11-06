@@ -1,7 +1,7 @@
 # Codex prompt: fixed blocks
 
-Every Codex adversarial prompt carries these two blocks as written. `/review-codex` Phase 2d pastes them;
-edit them only here. Each block is
+Every Codex adversarial prompt carries these two blocks as written. `/review-codex` Phase 2d pastes them,
+and `python tools/improve_ctl.py codex-prompt` reads them from here; edit them only here. Each block is
 the text inside the fence under its heading, pasted flat (no indentation), as Phase 2d requires.
 
 ## TAOM ID CHEATSHEET

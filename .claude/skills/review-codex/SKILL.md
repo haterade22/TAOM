@@ -250,6 +250,8 @@ its 8 KB cap). After each review:
    **missed a bug category** Claude caught, to "Look harder here"; if it produced a **new false positive
    pattern**, to the false-positive list the section points at. Harvest any durable pattern into
    `docs/reviews/lessons/<category>.md` too.
+3. In an `/improve` run the review lead lists these instead of writing them, and the orchestrator
+   consolidates them once at wrap-up.
 
 This creates a feedback loop: Claude's findings improve Codex's next review. Over time, Codex's accuracy improves and the gap between what Codex finds and what Claude catches shrinks.
 
