@@ -236,8 +236,8 @@ class MilitiaDetectionTests(unittest.TestCase):
 
     def test_the_bound_set_is_the_authority(self):
         bound = rb.militia_troop_ids()
-        self.assertEqual(92, len(bound),
-                         "92 troops are bound to a culture militia slot (Cardolan's and Rhudaur's 8 since #978, Ered Luin's 4, Anduin Vale's and Angaladh's 8, Dorwinion's and South Rhovanion's 8). Change this deliberately.")
+        self.assertEqual(96, len(bound),
+                         "96 troops are bound to a culture militia slot (Cardolan's and Rhudaur's 8 since #978, Ered Luin's 4, Anduin Vale's and Angaladh's 8, Dorwinion's and South Rhovanion's 8, Lothlorien's 4). Change this deliberately.")
         self.assertTrue(rb.is_militia("dale_militia_archer"))
         self.assertFalse(
             rb.is_militia("gondor_ano_archer_militia"),

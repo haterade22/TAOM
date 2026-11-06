@@ -208,6 +208,7 @@
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.cardolan_warden" />
+      <upgrade_target id="NPCCharacter.cardolan_tharbad_bridge_guard" />
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
@@ -270,6 +271,50 @@
         <equipment slot="Item0" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item2" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_b" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="cardolan_tharbad_bridge_guard"
+      default_group="Infantry"
+      level="31"
+      name="{=aom_cardolan_tharbad_bridge_guard_name}[Cardolan] Tharbad Bridge Guard"
+      occupation="Soldier"
+      culture="Culture.cardolan">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="120" />
+      <skill id="Riding" value="0" />
+      <skill id="OneHanded" value="180" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="225" />
+      <skill id="Bow" value="35" />
+      <skill id="Crossbow" value="35" />
+      <skill id="Throwing" value="35" />
+    </skills>
+    <upgrade_targets></upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.fine_pike_t4" />
+        <equipment slot="Item1" id="Item.numenorean_bastard_elite_a" />
+        <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.fine_pike_t4" />
+        <equipment slot="Item1" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />

@@ -137,8 +137,8 @@ public class EnlistmentRosterResolverTests
     [TestMethod]
     public void Resolve_Lothlorien_PrefersItsOwnRosterOverTheDefault()
     {
-        // lothlorien binds to the Rivendell tree (taom_spcultures.xml: basic_troop=
-        // imladris_recruit), so enlist_lothlorien_* ships and must beat the default.
+        // lothlorien ships its own rosters (generated from troops_lothlorien.xml: basic_troop=
+        // lorien_scout), so enlist_lothlorien_* ships and must beat the default.
         var result = EnlistmentRosterResolver.Resolve(
             "lothlorien", ServiceAssignment.Infantry, EnlistmentKitTier.Veteran,
             Exists("enlist_lothlorien_infantry_veteran", "enlist_default_infantry_veteran"));

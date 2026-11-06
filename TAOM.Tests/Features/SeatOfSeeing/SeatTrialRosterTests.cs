@@ -30,12 +30,74 @@ public class SeatTrialRosterTests
     }
 
     [TestMethod]
+    public void PlayerFor_NoStepList_OrAnyOtherStep_IsTheStandardRoster()
+    {
+        foreach (var steps in new string?[] { null, "", "queue_two_moves", "hold_line_proof, hold_line_slot", "advance_throwers_never" })
+            CollectionAssert.AreEqual(SeatTrialRoster.Player.ToArray(), SeatTrialRoster.PlayerFor(steps).ToArray(), steps);
+    }
+
+    [TestMethod]
+    public void PlayerFor_EitherThrowerStep_FieldsFortyJavelineersInPlaceOfTheSpearmen_AndKeepsTheRest()
+    {
+        foreach (var steps in new[] { "advance_throwers", "advance_throwers_vanilla", " queue_two_moves , advance_throwers ", "advance_throwers,advance_throwers_vanilla", "ADVANCE_THROWERS", " Advance_Throwers_Vanilla " })
+        {
+            var roster = SeatTrialRoster.PlayerFor(steps);
+
+            CollectionAssert.AreEqual(
+                new[] { (SeatTrialRoster.ThrowerTroop, 40), ("fow_gondor_ano_archer_militia", 40), (SeatTrialRoster.MountedTroop, 20) },
+                roster.Select(g => (g.Id, g.Count)).ToArray(), steps);
+        }
+
+        Assert.AreEqual("gondor_har_javelineer", SeatTrialRoster.ThrowerTroop);
+    }
+
+    [TestMethod]
+    public void TheThrowerSteps_AreTheMarshalTrialRowsOfTheSameNames()
+    {
+        foreach (var step in SeatTrialRoster.ThrowerSteps)
+            Assert.IsTrue(TAOM.Features.MarshalsWord.Domain.MarshalTrialRows.Rows.Any(r => r.Name == step), step);
+        Assert.AreEqual(2, SeatTrialRoster.ThrowerSteps.Count);
+    }
+
+    [TestMethod]
+    public void Missing_ChecksTheJavelineer_OnlyWhenAThrowerStepIsChosen()
+    {
+        var asked = new System.Collections.Generic.List<string>();
+
+        SeatTrialRoster.Missing(_ => true, id => { asked.Add(id); return true; }, "advance_throwers");
+        Assert.IsTrue(asked.Contains("gondor_har_javelineer"));
+        Assert.IsFalse(asked.Contains("fow_gondor_militia_spearman"), "the spearmen are not fielded in that battle");
+
+        asked.Clear();
+        SeatTrialRoster.Missing(_ => true, id => { asked.Add(id); return true; }, null);
+        Assert.IsFalse(asked.Contains("gondor_har_javelineer"));
+        Assert.IsTrue(asked.Contains("fow_gondor_militia_spearman"));
+    }
+
+    [TestMethod]
+    public void TheJavelineer_IsAFootSoldierWithJavelinsASwordAndAShield_AndNoHorse()
+    {
+        var troop = Data("troops", "troops_gondor.xml").Descendants("NPCCharacter").Single(n => (string?)n.Attribute("id") == SeatTrialRoster.ThrowerTroop);
+
+        Assert.AreEqual("Infantry", (string?)troop.Attribute("default_group"));
+        var rosters = troop.Descendants("EquipmentRoster").ToList();
+        Assert.AreEqual(4, rosters.Count);
+        foreach (var roster in rosters)
+        {
+            var slots = roster.Elements("equipment").ToDictionary(e => (string)e.Attribute("slot")!, e => (string)e.Attribute("id")!);
+            Assert.AreEqual("Item.western_javelin_3_t4", slots["Item0"]);
+            Assert.AreEqual("Item.western_javelin_3_t4", slots["Item1"]);
+            Assert.IsFalse(slots.ContainsKey("Horse") || slots.ContainsKey("HorseHarness"));
+        }
+    }
+
+    [TestMethod]
     public void EveryTroopId_IsAnNpcCharacterInTheFordsRoster()
     {
         var ids = Data("fords_of_war", "fords_troops.xml").Descendants("NPCCharacter").Select(n => (string?)n.Attribute("id")).ToHashSet();
 
         Assert.IsTrue(ids.Count > 100, "the scan found the roster (a floor, so an empty read cannot pass)");
-        foreach (var id in SeatTrialRoster.TroopIds)
+        foreach (var id in SeatTrialRoster.PlayerFor(null).Concat(SeatTrialRoster.Enemy).Select(g => g.Id))
             Assert.IsTrue(ids.Contains(id), id + " is not in fords_troops.xml");
     }
 
@@ -88,7 +150,7 @@ public class SeatTrialRosterTests
         var missing = SeatTrialRoster.Missing(_ => false, _ => false);
 
         Assert.AreEqual(missing.Count, missing.Distinct().Count());
-        Assert.AreEqual(2 + 1 + SeatTrialRoster.TroopIds.Distinct().Count(), missing.Count);
+        Assert.AreEqual(2 + 1 + SeatTrialRoster.Player.Concat(SeatTrialRoster.Enemy).Select(g => g.Id).Distinct().Count(), missing.Count);
     }
 
     [TestMethod]

@@ -309,6 +309,30 @@ class AnchorTests(unittest.TestCase):
         self.assertEqual(recs["sk_gd_civ_coat_heavy_a"]["tier"], "civilian")   # worn at 46, still civilian
         self.assertEqual(recs["a_hood"]["tierSource"], "unworn")
 
+    def test_a_generator_owned_item_is_marked_so_in_the_map_not_under_or_over(self):
+        """The restat skips sk_ll_ items, so the map must not list them as work for the restat."""
+        old_index = dat.build_armory_index
+        try:
+            dat.build_armory_index = lambda: ({
+                "sk_ll_gl_chest_heavy_a": {"folder": "lothlorien", "slot": "body", "primary": 20, "weight": 1.0, "name": "x"},
+                "sk_gd_x_chest_heavy_a": {"folder": "gondor", "slot": "body", "primary": 20, "weight": 1.0, "name": "x"},
+            }, "fixture")
+            troops = Path(self._tmp.name) / "troops"
+            troops.joinpath("troops_alpha.xml").write_text(
+                "<NPCCharacters>"
+                '<NPCCharacter id="alpha_t6" level="31"><Equipments><EquipmentRoster>'
+                '<equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />'
+                "</EquipmentRoster></Equipments></NPCCharacter>"
+                '<NPCCharacter id="alpha_t7" level="36"><Equipments><EquipmentRoster>'
+                '<equipment slot="Body" id="Item.sk_gd_x_chest_heavy_a" />'
+                "</EquipmentRoster></Equipments></NPCCharacter>"
+                "</NPCCharacters>", encoding="utf-8")
+            recs, _ = dat.derive()
+        finally:
+            dat.build_armory_index = old_index
+        self.assertEqual(recs["sk_ll_gl_chest_heavy_a"]["status"], "generator-owned")
+        self.assertIn(recs["sk_gd_x_chest_heavy_a"]["status"], ("under", "over"))   # an ordinary item is still judged
+
 
 class WriterTests(unittest.TestCase):
     def setUp(self):
@@ -359,6 +383,64 @@ class WriterTests(unittest.TestCase):
         self.assertEqual(by_id["sk_gd_x_chest_unworn_a"]["status"], "UNCHANGED")  # no band at all: skipped
         self.assertEqual(by_id["sk_gd_x_chest_civ_a"]["status"], "UNCHANGED")     # civilian: skipped
         self.assertEqual(by_id["boromir_jerkin"]["status"], "UNCHANGED")          # hero kit: skipped
+
+    def test_a_generator_owned_item_is_left_to_its_generator_in_every_restat_mode(self):
+        """The Lorien and Snow Orc kits are priced by their own generators (a Mallorn piece one band up; each Snow Orc
+        item at the band its id names). No restat mode may touch them. Each mode also restates four control items that
+        carry the same values under an id no generator owns, so a mode that would not have changed the owned item
+        anyway proves nothing."""
+        cases = [
+            ("lothlorien", "sk_ll_ml_chest_heavy_a", "sk_xx_ml_chest_heavy_"),
+            ("gundabad_snow", "sk_gb_orc_inf_chest_heavy_a", "sk_zz_orc_inf_chest_heavy_"),
+        ]
+
+        def block(text, item_id):
+            start = text.index(f'id="{item_id}"')
+            return text[start:text.index("</Item>", start)]
+
+        for folder_name, owned_id, control_prefix in cases:
+            folder = self.armory / folder_name
+            folder.mkdir(exist_ok=True)
+            controls = [control_prefix + n for n in "abcd"]
+            records = {i: {"anchorLevel": 46, "tier": "heavy", "tierSource": "id-keyword"} for i in [owned_id] + controls}
+            tiers = {i: "heavy" for i in records}      # the legacy map the roster and materials-only modes read
+            modes = {
+                "roster-first": dict(tier_source="roster-first", roster_map=records, keep_weights=True,
+                                     keep_material_type=True),
+                "roster": dict(tier_source="roster", roster_map=tiers),
+                "keyword": dict(tier_source="keyword"),
+                "weights-only": dict(tier_source="keyword", weights_only=True),
+                "materials-only": dict(tier_source="roster", roster_map=tiers, materials_only=True),
+            }
+            for mode, kwargs in modes.items():
+                with self.subTest(kit=folder_name, mode=mode):
+                    path = folder / f"body_armors_{mode}.xml"
+                    path.write_bytes(_file(
+                        _item(owned_id, "BodyArmor", body_armor=10, arm_armor=4, weight=18.5,
+                              material_type="Cloth", modifier_group="cloth"),
+                        *[_item(i, "BodyArmor", body_armor=10, arm_armor=4, weight=18.5,
+                                material_type="Cloth", modifier_group="cloth") for i in controls],
+                        crlf=True))
+                    before = path.read_text(encoding="utf-8")
+                    recs = ra.process_file(str(path), "body", dry_run=False, backup_tag="t", **kwargs)
+                    after = path.read_text(encoding="utf-8")
+                    self.assertEqual([c["id"] for c in recs if c["id"] == owned_id and c["status"] != "UNCHANGED"], [])
+                    self.assertEqual(block(after, owned_id), block(before, owned_id))
+                    self.assertTrue(any(block(after, i) != block(before, i) for i in controls),
+                                    f"{folder_name} {mode} changed no control item, so this mode proves nothing about the skip")
+
+    def test_the_restat_counts_the_generator_owned_items_it_leaves_alone(self):
+        lorien = self.armory / "lothlorien"
+        lorien.mkdir()
+        path = lorien / "body_armors.xml"
+        path.write_bytes(_file(
+            _item("sk_ll_ml_chest_heavy_a", "BodyArmor", body_armor=42, arm_armor=14),
+            _item("sk_ll_rg_chest_light_a", "BodyArmor", body_armor=24, arm_armor=12),
+            _item("sk_gb_orc_arc_chest_med_a", "BodyArmor", body_armor=31, arm_armor=10),
+            _item("sk_gd_x_chest_heavy_a", "BodyArmor", body_armor=42, arm_armor=14),
+            crlf=True))
+        self.assertEqual(ra.count_generator_owned(str(path)), 3)
+        self.assertEqual(ra.count_generator_owned(str(self.armory / "gondor" / "body_armors.xml")), 0)
 
     def test_secondaries_scale_with_the_primary_and_zero_stays_zero(self):
         by_id = {c["id"]: c for c in self._run("gondor", "body_armors.xml", "body")}

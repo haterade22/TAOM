@@ -69,7 +69,7 @@ the gate.**
 | Area | Claude reads an in-repo file | `.claude/rules/*.md` with `paths:` | the rules and traps of that area, including promoted lessons |
 | Procedure | a skill is invoked | `.claude/skills/*/SKILL.md`, most important text first | the workflow and its traps; the only channel into out-of-repo work on the live Armory, TAOM_Map or the Modding Kit |
 | Reference | a link is followed | `docs/features/`, `docs/reference/`, `docs/ai-includes/` | full detail |
-| Archive | grep | `docs/reviews/lessons/`, RCAs, `CHANGELOG.md`, `docs/reference/rule-provenance.md` | evidence and history |
+| Archive | grep | `docs/reviews/lessons/`, RCAs, `CHANGELOG.md` | evidence and history |
 | Machine | main session on this machine | auto memory: `MEMORY.md` and resume cards | uncommitted or unpushed work on this machine |
 | Gates | a tool call, a commit, a push | hooks on visible channels, tests, CI | everything a machine can check |
 
@@ -275,8 +275,6 @@ The original rows above stay as the record of the decision. These facts have mov
 - [docs/adrs/012-graphify-code-graph-in-the-workflow.md](./012-graphify-code-graph-in-the-workflow.md)
 - [docs/adrs/README.md](./README.md)
 - [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
-- [docs/features/doc-health-linter.md](../features/doc-health-linter.md)
-- [docs/reference/rule-provenance.md](../reference/rule-provenance.md)
-- [docs/reference/rules-catalog.md](../reference/rules-catalog.md)
+- [docs/features/doc-health-linter.md](../features/doc-health-linter.md)- [docs/reference/rules-catalog.md](../reference/rules-catalog.md)
 
 <!-- backlinks-end -->

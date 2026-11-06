@@ -105,10 +105,22 @@ and faction-map colours match (`0xFF28745C`).
 
 ### Troop trees
 
-- **Cardolan** (20 troops with the tavern copy): Levy (L6) to Spearman, Cardolan Spearman, Barrow
+- **Cardolan** (21 troops with the tavern copy): Levy (L6) to Spearman, Cardolan Spearman, Barrow
   Guard, Veteran Barrow Guard and Warden of Tyrn Gorthad (L31). Dunadan of Cardolan (elite basic,
   L11) splits into the knights (Rider of Cardolan to Knight-Captain, then King's Guard of Caras
-  Gorthad, the mounted L36 capstone) and the Minhiriath Bowmen (to L26).
+  Gorthad, the mounted L36 capstone) and the Minhiriath Bowmen (to L26). The Veteran Barrow Guard
+  (L26) also upgrades to the Tharbad Bridge Guard (L31, 2026-11-06, from player feedback), the
+  Warden's sibling: a pike and an elite sword with no shield, a dead end. Gondor and Arnor have no
+  pike in the Armory, so it carries vanilla's `fine_pike_t4`, the pike of the Gondor Serelond
+  Pikeman (the Armory's only pikes are Isengard's). It sits at L31 on purpose. When a party
+  leader has no preferred upgrade formation, the engine's AI upgrader gives one target of a
+  two-target troop weight 9999, chosen by the leader's hash, so a second target on the Barrow
+  Guard (L21) would send about half of those lords' Barrow Guards to the dead end and away from
+  the Warden line. (A leader who prefers a formation weighs both targets the same here, as both
+  lines end in Infantry.) At L31 every Barrow Guard still reaches the Veteran, and the split
+  falls between two top-tier troops. A notable's volunteer slot grows into either at random. The
+  pike has no one-handed usage; whether the troop ever draws its sword in battle, and in which
+  grip, is native behaviour not yet seen in game.
 - **Rhudaur** (21 troops with the tavern copy): Hillman Levy (L6) to Hill Spearman, Rhudaur Axeman,
   Veteran Axeman and Fell Warden (L26); the Hill Spearman also leads to the Hill Rider (L21), the one
   cavalry troop. Dunadan of the Angle (elite basic, L11) splits into the Angle Rangers (to L31) and
@@ -160,6 +172,9 @@ Every table that names `arthedain` was decided for both. Four keep no row for ei
 
 - `tools/tests/test_realm_troops.py`: both designs (self-check, skill monotonicity, militia rule,
   mercenary, ladder cells, party templates, labels and cultures).
+- `tools/tests/test_generate_cardolan_troops.py` (2026-11-06): the Tharbad Bridge Guard sits at the
+  Warden's level as a second target of the Veteran Barrow Guard, the Barrow Guard keeps one target,
+  and the Bridge Guard carries a pike, no shield, and fights it at its best melee skill.
 - `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`: both pools.
 - Count and list pins moved with the data: `TroopUpgradeSkillMonotonicityTests`
   (`ExpectedMilitiaCultures`), `ShippedRaceAbilitiesConfigTests` (24 cultures),
@@ -260,10 +275,23 @@ generator and `--only <culture>`. Both `generate_new_faction_kingdoms.py` and
     row, so a reinstall that restores the old names fails the check.
   - Campaigns started before the swap keep the old house names in English ("Save Compatibility").
 
+- 2026-11-06 (no issue, waived by Mike): the Tharbad Bridge Guard (L31, vanilla `fine_pike_t4`, no
+  shield) from player feedback, a second upgrade of the Veteran Barrow Guard beside the Warden. Its
+  name waits for its translation (#763). Review record:
+  `docs/reviews/rca-arnor-elite-troops-2026-11-06.md`.
+
+## How to verify in game (the 2026-11-06 addition)
+
+Restart the game fully first. Give the party Veteran Barrow Guards and enough XP through the cheat
+console. On the party screen the Veteran Barrow Guard offers two upgrades, the Warden of Tyrn
+Gorthad and the Tharbad Bridge Guard. Upgrade one Bridge Guard and fight a field battle: it spawns
+holding the pike in both hands and no shield. Note whether it ever draws its sword.
+
 ## GitHub Issue
 
 - **Issue:** #978.
-- **Status:** built and verified in data; in-game check owed (#978 checklist).
+- **Status:** built and verified in data; in-game check owed (#978 checklist, and the 2026-11-06
+  addition above, which has no issue).
 
 ---
 

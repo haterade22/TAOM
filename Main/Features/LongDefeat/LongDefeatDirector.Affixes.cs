@@ -1,5 +1,6 @@
 using System.Linq;
 using TAOM.Features.LongDefeat.Diagnostics;
+using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Features.LongDefeat;
 
@@ -11,12 +12,20 @@ internal sealed partial class LongDefeatDirector
     private void BeginAffixes(int wave)
     {
         _affixesToRead = false;
+        _terror = null;
+        _blades = null;
         var rolled = _run.WaveAffixes;
         if (rolled.Count == 0 && _plan.Affixes.CountFor(wave) == 0)
             return;
 
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.AffixId, "w" + wave, LongDefeatAffixChecks.Affix(_plan.Affixes, wave, rolled, _run.AffixCut));
         _logger.LogInfo($"{Tag}[Affix] w{wave} {string.Join(", ", rolled.Select(id => id + " (" + PlainName(_plan.Affixes.NameOf(id) ?? id) + ")"))}");
+        if (_effects != null && rolled.Contains(AffixPlan.Hammer))
+            RecordHammer(wave);
+        if (_effects != null && rolled.Contains(AffixPlan.Terror))
+            _terror = new TerrorWatch(wave, _plan.Affixes.Value(AffixPlan.Terror, "floor"));
+        if (rolled.Contains(AffixPlan.Blades))
+            WatchBlades(wave);
         _affixesToRead = _effects != null && rolled.Any(id => LongDefeatAffixChecks.Expectations(_plan.Affixes, id).Count > 0);
     }
 

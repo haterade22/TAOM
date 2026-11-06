@@ -598,6 +598,7 @@ internal sealed partial class FordsMatch
         {
             effects.Spawns.Add(respawn);
             TrackCharge(respawn, TakeBuybackPaid(respawn.Side, respawn.TroopId), null);
+            AddGuard(respawn);
             _pendingEvents.Add(new MatchEvent(MatchEventKind.HeroRespawned, respawn.Side, respawn.TroopId, 0));
         }
     }

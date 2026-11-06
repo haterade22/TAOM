@@ -111,7 +111,7 @@ public sealed class CultureTroopIndex
 
     /// <summary>
     /// True when this culture already fields the troop. Not the same question as "is this troop
-    /// tagged with this culture": a culture that borrows another's line (Lothlorien fields Rivendell
+    /// tagged with this culture": a culture that borrows another's line (Khand fields Rhun
     /// troops) answers true for troops carrying the donor's culture, which is exactly what stops the
     /// mapper churning an already-correct garrison.
     /// </summary>

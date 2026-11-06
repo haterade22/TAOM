@@ -299,8 +299,8 @@ civilian variants, each with and without `IsFemaleTemplate`. Four `IsKingdomRule
 are optional and every shipped culture has them anyway.
 
 1. Add the lord, ruler and teen rosters to
-   `Main/_Module/ModuleData/equipmentsets/taom_lord_template_equipment.xml`, or regenerate with
-   `python tools/generate_lord_template_equipment.py`. Read
+   `Main/_Module/ModuleData/equipmentsets/taom_lord_template_equipment.xml`, or take them from a dry run of
+   `python tools/generate_lord_template_equipment.py`. Never use `--apply` on the shipped file (issue #637: it deletes the rosters of cultures it no longer lists and re-equips others). Read
    [the generator drift warning](../features/culture-playability-wiring.md) first: several files in
    this folder have been hand-corrected since their last generated run.
 2. Add the six child rosters to

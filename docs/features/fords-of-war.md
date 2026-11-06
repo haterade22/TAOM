@@ -259,6 +259,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | `units[].level`, `eliteWeight` | int, float | Feed `TroopPricing`; the shipped offers state no `price` |
 | `units[].price` | int | Optional explicit pack price that overrides `level` |
 | `heroes[].id`, `price` | string, int | NPCCharacter id and gold price |
+| `heroGuard` | object | `troop`, `count` (1 to 20) and `role`: the elite troops that take the field with each of the faction's heroes, at no extra price. A shipped guard is one of the faction's own offers, 3 to 6 strong (`EveryFaction_GuardsItsHeroesWithThreeToSixOfItsOwnEliteTroops`) |
 | `freeWaves[].fromMinute`, `units[]` | float, list | Tier that applies from that match minute; each unit is `troop` and `count` |
 | `feats`, `traits`, `upgradeCost`, `aiBuyCycle` | object, list, object, list | The faction's feats (see Factions), the strength and weakness lines the panel shows, price factors per upgrade track, and the AI's repeating buy order |
 | `rotation` | object | Call of the Regions (Gondor): `seconds`, `callFee` and `regions[]`, each with its own `units[]` |
@@ -315,15 +316,14 @@ is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a 
 | `harad` | `aserai` | 8, plus 2 beasts (war elephant, mumak) | `lord_A9_u` 1400, `lord_3_3_1` 1000, `lord_A9_l` 800 |
 | `gundabad` | `gundabad` | 8 | `lord_G1_1` 1400, `lord_G1_2` 1000, `lord_G1_3` 800 |
 | `dale` | `sturgia` | 8 | `lord_2_7_1` 1400, `lord_S9_u` 1000, `lord_S9_l` 800 |
-| `dolguldur` | `dolguldur` | 8, plus 2 creatures (spider riders, fell wargs) | `lord_D1_2` 1400, `lord_D1_4` 1000, `lord_D1_5` 800 |
+| `dolguldur` | `dolguldur` | 12 in three rows (7 uruk packs, Khamul's shadow guard and veiled knights, warg raiders, spider riders, one goblin swarm), plus 1 creature (fell wargs) | `lord_D1_2` 1400, `lord_D1_4` 1000, `lord_D1_5` 800 |
 | `easterlings` | `khuzait` | 8 | `lord_K8_u` 1400, `lord_K9_l` 1000, `lord_6_25` 800 |
 | `umbar` | `umbar` | 8 | `lord_U1_1` 1400, `lord_U2_1` 1000, `lord_U3_1` 800 |
 | `mirkwood` | `mirkwood` | 5 | `lord_M1_1` 2200, `lord_M1_11` 1600, `lord_M1_3` 900 |
 
 Only Isengard sells a Siege unit; Mordor's trolls come through its creature call. Most factions have free-wave tiers at minutes 0, 10 and 20;
 Isengard's step up every 5 minutes (0, 5, 10, 15 and 20) and Gundabad has one tier. Hero
-prices and pack sizes are first guesses for the balance pass. Decks are ordered so that the two dearest offers fall within F1 to
-F8.
+prices and pack sizes are first guesses for the balance pass. A faction with more than eight offers gets a third row of four (F9 to F12); Dol Guldur is the first (Mike, 2026-11-05).
 
 ## Lane rules
 
@@ -376,7 +376,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 | Faction | Strength | Weakness | Feats | Mechanic |
 |---|---|---|---|---|
-| Rohan | The best and cheapest cavalry: six of eight offers are riders at 0.5 of the full price for their level (the horse archers 0.4, `eliteWeight`; the foot 0.7), the two cheapest rider packs hold 8, every free wave brings 5 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
+| Rohan | The best and cheapest cavalry: six of eight offers are riders at 0.65 of the full price for their level (the horse archers 0.5, `eliteWeight`; the foot 0.7), the two lowest-level rider packs hold 8, every free wave brings 4 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75, the largest free waves (25 or more a wave) | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
@@ -385,7 +385,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 | Harad | Saves gold for one great beast at a time, then guards it; poisoned arrows | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85, `poisonPerSecond` 3, `poisonSeconds` 8 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
 | Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
 | Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows) | None yet |
-| Dol Guldur | Walks under slowed towers; calls spiders and fell wargs; venomed arrows; its four cheapest packs cost 0.8 of the full price | Few strong soldiers: its best come in packs of three | `enemyTowerFireRate` 0.75 (The Shadow), no income penalty, `poisonPerSecond` 2, `poisonSeconds` 6 | Creature call on a 45 s timer |
+| Dol Guldur | Walks under slowed towers; an uruk army in three rows, with Khamul's cavalry and spider riders to buy and a goblin swarm pack; free waves of uruks with two goblins; calls fell wargs; venomed arrows; its three cheapest uruk packs and the swarm cost 0.8 of the full price | Few strong soldiers: its best come in packs of three | `enemyTowerFireRate` 0.75 (The Shadow), no income penalty, `poisonPerSecond` 2, `poisonSeconds` 6 | Creature call on a 45 s timer |
 | Easterlings | Answers the enemy fastest with a mixed army of horse archers and iron legions | Weaker tower fire | `orderCooldown` 0.5 (Discipline), `towerFireRate` 0.85 | None yet |
 | Umbar | Gets rich from the map: raids camps and holds capture points | Less income; no troop above level 31 | `campReward` 3, `captureIncome` 2 (Plunder), `bounty` 1.25, `income` 0.8 | None yet |
 | Mirkwood | Holds at range with the finest archers (skills x1.2) | 150 troops and only five offers; elk riders are its only cavalry | `towerRange` 1.5 (Far Sight), `unitCapBonus` -150, `waveInterval` 1.5 | None yet |
@@ -398,6 +398,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
   damage, melee armour, missile armour, siegecraft and fortify. The damage and armour tracks work per blow in `TaomCustomBattleDamageModel`, so a level reaches the units already on the field with no stat refresh. Tower gunners gain nothing from the damage tracks.
   A faction's `upgradeCost` scales its prices. An `aiBuyCycle` entry `up:<track>` makes the AI save for that upgrade. Proof in a run: `[FordsOfWar][Upgrade]` lines, one per purchase and one with the blow totals at the end.
 - **Match speed** (`FordsGameSpeed`, `FordsMissionSpeed`, key L or the button in the top left corner): 1x, 2x, 4x and 10x, for a human and for an unattended run (`--speed`). 2x and 4x set the mission's `FixedDeltaTimeMode` each frame to the frame's own time times the speed, capped at 0.1 s, so a slow frame slows the match. 10x is the engine's fast forward, `Mission.SetFastForwardingFromUI`, which runs the AI on the main thread in steps of up to 0.1 s. `Scene.TimeSpeed` cannot do this: `Mission.UpdateSceneTimeSpeed` caps it at 1 every frame. A `[FordsOfWar][Speed]` line records each change, and `tools/fords_match_review.py` names a fast match first. Balance runs use 4x, and 10x is for smoke and crash runs only, because six matches showed that 10x changes the result: see [balance-log.md](fords-of-war/balance-log.md).
+- **Hero guards** (`heroGuard`, `FordsMatch.AddGuard`, Mike 2026-11-05): every time a hero takes the field (bought, free, respawned or bought back) its faction's guard is queued in the hero's lane for the hero's owner (`WaveScheduler.QueueGuard`), and marches with that lane. The guard goes out before the lane's packs but only within the lane and side caps, so it waits when they are full and takes no pack queue place. It costs nothing and refunds nothing when its spawn fails. It does not follow the hero away from the lane: the engine gives each lane one formation. Proof in a run: one `[FordsOfWar][Hero] guard side=... lane=... troop=... count=...` line per guard request, beside the `fielded` and `respawned` hero marks (the spawn counts by troop cannot show it, because a guard is also one of the faction's offers).
 - **Free heroes** (`heroes.freeArrivalSeconds`, `FordsMatch.HeroArrivals.cs`): every 5 minutes of live time each side's next hero takes the field for nothing, cheapest first, in the lane where the side is most outnumbered. A side with no slot free or no hero left waits for the next arrival, and a missed one does not carry over. A commander can still pay to field a hero early. The hero panel's title counts down. Proof in a run: `[FordsOfWar][Hero] kind=fielded` lines at about 300 and 600 s for both sides.
 - **Hero strength** (`heroes.damageFactor`, `heroes.damageTakenFactor`, `HeroCombatFactors`, `FordsUpgradeHooks`): a hero of the match deals 3 times the damage and takes 0.4 times the damage, per blow in `TaomCustomBattleDamageModel`. Blows on towers keep their own `towers.heroDamageFactor`. Proof in a run: `heroRaised` and `heroLowered` on the `[FordsOfWar][Upgrade]` totals line, and the hero table of `tools/fords_match_review.py`.
 - **Tower assault limit** (`towers.assaultDamagePerSecond`, `TowerAssaultLimit`): a tower takes at most 50 points a second from ordinary blows, and a blow past that is cut or counted as `Crowded`. Each tower holds at most one second's worth. Heroes and siege units pass the limit and spend none of it. So until the walls wear (see Wall wear), an outer tower lasts at least 160 s, an inner one 220 s and a keep 360 s against soldiers alone, and more bodies past a small assault add nothing. After minute 15 the limit rises with the wear: at minute 30 it is 162.5 points a second, and an outer tower of 8000 hit points can fall in about 49 s. Without it the cheapest pack was the best tower killer in the game: see [balance-log.md](fords-of-war/balance-log.md).
@@ -414,7 +415,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
   names the next region. `callFee` (150 gold) shows a chosen region at once and restarts the timer (key R opens the list). The region already showing costs nothing.
   The AI buys from whatever is showing and does not pay the fee.
 - **Creature call** (`creatures`, `FordsMatch.TryCallCreature`): the commander picks a creature (keys G, B, N, M) and pays for it, which queues it in the selected lane like
-  a bought pack and starts one shared timer of `cooldownSeconds` (Mordor 30, Dol Guldur 45, Harad 120). Mordor's list is warg riders, goblin spider riders, a hill troll and an armored cave troll, Dol Guldur's spider riders and fell wargs, Harad's a war elephant and a mumak. The spider
+  a bought pack and starts one shared timer of `cooldownSeconds` (Mordor 30, Dol Guldur 45, Harad 120). Mordor's list is warg riders, goblin spider riders, a hill troll and an armored cave troll, Dol Guldur's fell wargs, Harad's a war elephant and a mumak. The spider
   is the ridden one: a free-roaming spider only works as a campaign bandit today (`creature-bandits.md`). The AI calls a creature only from a `beast:` entry in its `aiBuyCycle`.
 
 ## The roster
@@ -442,7 +443,7 @@ up), and took the spear off the King's Riders so they fight with sword and shiel
 |---|---|---|
 | Top strip, centre | Faction name, both keeps' bars with hit points, the clock | Slim and always visible; a bar reads faster than a number |
 | Battle board, bottom left | One row per lane that also selects it: tower bars from West's inner to East's inner, order, unit counts. Then capture points and camps | One place for the state of the battle; the row scopes the buy grid and the orders |
-| Command deck, bottom centre | The faction's mechanic row, gold and income, a fixed 4 by 2 buy grid (F1 to F8), 2 by 2 orders (Z X C V) | Slots never move, so key position equals button position |
+| Command deck, bottom centre | The faction's mechanic row, gold and income, a fixed 4 by 2 buy grid (F1 to F8), 4 by 3 when a faction has more than eight offers (F9 to F12), 2 by 2 orders (Z X C V) | Slots never move, so key position equals button position |
 | Heroes, bottom right | One button per hero: state and what it costs | High value and rarely pressed |
 | Upgrades, right, above the heroes | Six upgrade tracks with level and price (Shift+F1 to F6 buys); key U shows or hides it | A purchase for the whole army, hidden when it is not wanted |
 | Speed button, top left | The match speed (1x, 2x, 4x or 10x); a click or key L steps to the next | Kept off the top strip, whose height the clock and keep bars set |
@@ -452,7 +453,7 @@ up), and took the spear off the King's Riders so they fight with sword and shiel
 Every button has a key letter on its face and a dimmed disabled state; a price turns red when the gold does not reach it; an order on cooldown shows the seconds and a shade that
 drains. A faction changes only the accent colour and name, never the layout, so muscle memory carries over (`FordsFactionStyle`).
 
-**Soldier control (key P).** The panel is for a commander with no agent, so while the commander controls a soldier (see "Fighting as a soldier") `FordsPanelStandAside` hides it, stops its key table and gives back the mouse, and the match runs at 1x. The chosen speed and the panel come back with the hand-back. The key hint in the intro lists P (`TAOM_FOW_Hud_KeysHintFull`). Three messages go to the engine's message log, not the feed: which soldier was taken (`TAOM_FOW_Hud_ControlTaken`), that it fell (`TAOM_FOW_Hud_ControlFell`), and that no soldier stood near the pointer (`TAOM_FOW_Hud_ControlNone`).
+**Soldier control (key P).** The panel is for a commander with no agent, so while the commander controls a soldier (see "Fighting as a soldier") `FordsPanelStandAside` hides it, stops its key table and gives back the mouse, and the match runs at 1x. The chosen speed and the panel come back with the hand-back. The key hint in the intro lists P (`TAOM_FOW_Hud_KeysHintF12`). Three messages go to the engine's message log, not the feed: which soldier was taken (`TAOM_FOW_Hud_ControlTaken`), that it fell (`TAOM_FOW_Hud_ControlFell`), and that no soldier stood near the pointer (`TAOM_FOW_Hud_ControlNone`).
 
 **A Gauntlet trap:** a child with `StretchToParent` inside a `CoverChildren` parent makes that parent fill the screen. A visibility binding on a widget with its own `DataSource` reads that
 data source, so a list's visibility goes on a wrapper.
@@ -792,7 +793,7 @@ checks below name log lines.
 5. Open the escape menu. Photo Mode reads disabled ("Photo mode isn't allowed."), and the Options entry
    opens the options screen. Report: `check=05` (pause edges, Photo Mode vetoes, Options requests and wiring).
 6. Run `taom.fords_gold 5000`. The console prints "Added 5000 gold. You now hold ..." and the panel's gold
-   matches. Buy a pack with F1 to F8 or the buttons; the gold drops by the pack price and a feed line
+   matches. Buy a pack with F1 to F12 or the buttons; the gold drops by the pack price and a feed line
    appears. Report: `check=06` (the gold command's reply, pack purchases, feed lines).
 7. Press H (or click a hero card) to field the first hero in the list that you can afford, for Mordor Sauron at 2400. The hero
    spawns in the selected lane. Kill it, then check the respawn timer on its card and the buyback button. Report: `check=07` (a fielded hero has a spawned mark of the same hero and side within 5 mission seconds, with the requested lane in the `[Hero]` line; death; respawn spawned within 1.5 mission seconds; buyback results). The row no longer compares the lane the engine put the hero in with the one asked for, because the adapter read that lane back from the formation it had just placed the hero in, so the two could never differ. Leaving the match more than 5 mission seconds after a fielding with no spawn mark reads FAIL. A hero bought in the last 5 s before the winner is named is excused, because the clock ended before the spawn ran: it neither fails the part nor takes away the pass of the heroes that did spawn, and a part with only excused purchases reads NOT_SEEN.
@@ -809,7 +810,7 @@ checks below name log lines.
     (relative impact speed / launch speed) squared, so an attacker walking into the volley takes more.
     Check also that no warning says the reach is below the fire range. Report: `check=11` (item N and S, reach against fire range, per-hit magnitude against N x multiplier x (impact speed / S) squared). The `hits` part also FAILs when the towers asked to fire at least 10 times and not one missile was added (`launched` counts missiles the adapter added, 0 when the aim skipped them all), and when 20 or more missiles flew and no hit was seen; the row prints the hits it filtered out, by reason. The hit reader takes engine structs, so only your run proves it.
 12. Field a Mordor or Isengard warg rider (`warg_raiders`, `warg_enforcers`) and watch a raging warg: it
-    returns to its lane formation instead of wandering off. Report: `check=12` (rage starts, formations restored, riders back in formation within 60 s of mission time, riders left on foot with no formation to return to, called `stranded`, which FAIL the restored part). A rider counts as back when it is within max(15 m, half the formation's width + 5 m) plus the formation's depth of the formation's front-middle, so a rider at the rear of a deep formation is not read as lost. A rider whose rage restarted before it returned is counted as `superseded` (in the row's numbers and a `[Warg][Rage]` log line): its first reset already counted toward `restored`, and only its return goes unjudged. The `[Warg][Rage]` lines in the log show each episode (start, end, returned, not-returned, stranded, superseded).
+    returns to its lane formation instead of wandering off. Report: `check=12` (rage starts, formations restored, riders back in formation within 60 s of mission time, riders left on foot with no formation to return to, called `stranded`, which FAIL the restored part). A rider counts as back when it is within max(15 m, half the formation's width + 5 m) plus the formation's depth of the formation's front-middle, so a rider at the rear of a deep formation is not read as lost, or when it is within 15 m of a mate in the formation's arrangement (not a detached unit, not another rider whose rage episode is open), so a rider with the lead group of a lane formation strung out along its lane is not read as lost either. The `returned` and `not-returned` lines print both distances (`distance=` to the front-middle, `nearest=` to the closest mate, `none` when there is none). A rider whose rage restarted before it returned is counted as `superseded` (in the row's numbers and a `[Warg][Rage]` log line): its first reset already counted toward `restored`, and only its return goes unjudged. The `[Warg][Rage]` lines in the log show each episode (start, end, returned, not-returned, stranded, superseded).
 13. Look at the capture-point row under the lane rows of the battle board (bottom left): it shows owner and capture
     progress in percent, and a contested mark when both sides stand on the point. Report: `check=13` (captures, contested time, nearest approach per point).
 14. Destroy a keep (use `taom.fords_gold` and a hero or siege unit to speed it up). The result panel
@@ -836,7 +837,7 @@ Persisted saves hold nothing, because a match lives and ends inside one mission.
 **Change what a faction sells.** Edit `factions.json`. Troop and hero ids must exist in the module data,
 and hero ids must also resolve in a Custom Game (`characters/custom_battle_lords.xml`, or `characters/lords.xml`,
 which is registered for `CustomGame`). Give an offer `level` and `eliteWeight` and let `TroopPricing` set the
-price; add a `price` only to override it. Keep the two dearest offers within the first eight (F1 to F8).
+price; add a `price` only to override it. A faction shows at most twelve offers, one per buy key (F1 to F12).
 Culture ids are traps (`empire` is Dunland): read them from the troop files.
 
 **Add a faction.** Add the block, a `TAOM_FOW_Faction_<Name>` key and its row in `taom_module_strings.xml` and the

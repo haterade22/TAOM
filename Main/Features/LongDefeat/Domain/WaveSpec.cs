@@ -20,5 +20,13 @@ internal sealed record WaveSpec(int Count, IReadOnlyList<WaveTroop> Mix, float H
 /// <summary>How waves past the authored list grow: the last roster, with this many more soldiers each wave up to the cap.</summary>
 internal sealed record WaveScaling(int CountPerWave, int MaxCount);
 
-/// <summary>One soldier of an expanded wave.</summary>
-internal sealed record WaveSoldier(string TroopId, FormationSlot Slot);
+/// <summary>What an attacker is to the wave (phase2-plan.md section 2): one of its roster, a soldier a commander summoned, or the commander himself. Only roster soldiers count toward the wave's roster.</summary>
+internal enum AttackerRole
+{
+    Roster,
+    Summoned,
+    Commander,
+}
+
+/// <summary>One soldier of an expanded wave. A summoned soldier carries the number of the summon (<c>Use</c>, from 1) that queued him, so a batch never mixes two summons; every other soldier has 0.</summary>
+internal sealed record WaveSoldier(string TroopId, FormationSlot Slot, AttackerRole Role = AttackerRole.Roster, int Use = 0);

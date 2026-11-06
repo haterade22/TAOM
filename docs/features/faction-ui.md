@@ -227,7 +227,7 @@ entry is skipped with a `[FactionUI]` warning, then one summary warning, while t
 |---|---|
 | `sprite_overrides.json` | each skill-icon image (`gui_skills_icon_*`) and the vanilla sprite it replaces; read when the main menu opens |
 | `facegen_camera.json` | per screen (`FaceGen`, `Narrative`, `Review`, `Options`): `x_offset`, `distance_offset`, `fov_offset`, each range-checked |
-| `faction_characters.json` | faction key to the character the 3D viewport shows; missing means the culture's elite infantry troop |
+| `faction_characters.json` | faction key to the character the 3D viewport shows (any character id, a lord or a troop); missing means the culture's elite infantry troop, picked by `FactionRoster.EliteInfantry` by tier, then level, then the lowest id. A new troop that ties the current top foot troop and sorts before it takes the viewport without anyone upgrading anything, so give the culture a line then (Arthedain, 2026-11-06: the Evendim Warden would have replaced the King's Guard; `FactionCharactersJson_ArthedainKey_PinsTheKingsGuard`) |
 | `faction_kingdoms.json` | faction key to the kingdom whose ruler and lords the browse lists show |
 | `faction_map_pos.json` | faction key to its minimap pin, `[x, y]` in 0 to 1 (Kysaro placed all 20 in game) |
 | `faction_viewport.json` | faction key to a viewport offset, or an object of `offset`, `hide_weapons` and `race` |

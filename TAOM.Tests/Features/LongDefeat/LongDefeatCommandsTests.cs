@@ -189,6 +189,20 @@ public class LongDefeatCommandsTests
     }
 
     [TestMethod]
+    public void Start_WithTheShippedClasses_CavalryIsAccepted_AsTheThirdWordAndAsTheSecond()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+        _catalog = LongDefeatConfigCatalog.FromTexts(Shipped("fortresses.json"), Shipped("waves.json"), Shipped("shop.json"), Substitute.For<IModLogger>(), classes: Shipped("classes.json"));
+
+        var reply = Start("helms", "3", "cavalry");
+
+        StringAssert.StartsWith(reply, "Starting");
+        Assert.AreEqual("cavalry", Started().Options.ClassId);
+        Assert.AreEqual(3, Started().Options.StopAfterWaves);
+        StringAssert.Contains(LongDefeatCommands.Usage(_catalog), "Classes: sword_and_board, two_handed, archer, cavalry.");
+    }
+
+    [TestMethod]
     public void Start_ASecondWordThatIsNotANumberAndNotAClass_IsAnUnknownClass_NotABadWaveCount()
     {
         var reply = StartWithClasses("helms", "cavalry");

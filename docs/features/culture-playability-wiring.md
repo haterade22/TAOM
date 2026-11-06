@@ -269,7 +269,7 @@ time a reader touches it. A culture retagged in `spcultures.xslt` inherits every
 `<xsl:apply-templates select="@*"/>` copies the vanilla value in, so an attribute the block never
 names keeps its Calradian binding with nothing in the file to show for it. That is how Dunland,
 Harad, Rohan and Rhun shipped with vanilla town patrols. Sharing another TAOM culture's templates is
-fine and common (Lothlórien uses Rivendell's, Umbar and the two Haradrim sub-cultures use Harad's,
+fine and common (Umbar and the two Haradrim sub-cultures use Harad's,
 Khand uses Rhun's) as long as the target is TAOM-authored.
 
 `TAOM.Tests/Core/CulturePartyTemplateTests.cs` pins all of it. See the fourth-instance entry in

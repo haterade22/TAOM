@@ -58,6 +58,25 @@ class DesignTests(unittest.TestCase):
         self.assertEqual(merc.upgrades, [])
         self.assertEqual(merc.sk, self.by_id[gat.MERC_SOURCE].sk)
 
+    def test_the_three_elite_additions_hang_off_the_end_of_their_lines(self):
+        edges = {"arthedain_lancer": ("arthedain_knight_of_annuminas", 31),
+                 "arthedain_warden": ("arthedain_evendim_warden", 36),
+                 "arthedain_ranger_captain": ("arthedain_steel_bowman", 36)}
+        for source, (target, level) in edges.items():
+            self.assertIn(target, self.by_id[source].upgrades, source)
+            self.assertEqual(self.by_id[target].level, level, target)
+            self.assertEqual(self.by_id[target].upgrades, [], f"{target} is the end of its line")
+
+    def test_the_evendim_warden_fights_its_opening_poleaxe_at_its_best_melee_skill(self):
+        # Item0 is the weapon in hand at spawn, and the engine reads a TwoHandedPolearm with the Polearm skill
+        # (WeaponComponentData.GetRelevantSkillFromWeaponClass), which scales the AI's block and parry
+        # (AgentStatCalculateModel.GetMeleeSkill). A curve that puts its best skill elsewhere leaves a tier 7
+        # troop fighting worse than its tier 6 source.
+        warden = self.by_id["arthedain_evendim_warden"]
+        self.assertEqual(warden.weapons[0][0], "numenorean_poleaxe_heavy")
+        for other in ("OneHanded", "TwoHanded"):
+            self.assertGreaterEqual(warden.sk["Polearm"], warden.sk[other], other)
+
     def test_bow_troops_hold_the_bow_in_item0_of_both_rosters(self):
         for t in self.troops:
             if t.role != "ranged":

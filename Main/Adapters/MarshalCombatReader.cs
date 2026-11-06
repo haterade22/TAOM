@@ -35,6 +35,7 @@ internal static class MarshalCombatReader
             return;
         var company = formation.Index;
         MarshalFireTable.NoteShooter(company, shooter);
+        MarshalFireTable.CountAnyShot(company);
         if (MarshalFireTable.ModeOf(company) == FireMode.Free)
             return;
         var component = shooter.GetComponent<MarshalWordComponent>();

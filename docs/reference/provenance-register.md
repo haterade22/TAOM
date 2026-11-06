@@ -6,8 +6,6 @@ read by `tools/check_provenance.py`, which checks the Derivation and Status voca
 shipped non-TAOM binary has a `redistributed` row, and that each adoption record is named here or
 says "nothing taken". The rest is kept current by hand, in the same commit as the code it describes.
 
-The rule: [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
-
 **This file does not ship.** It carries `uncleared` rows, which are a working list of open questions,
 and publishing an open question is not the same as discharging a notice obligation. The shipped
 subset lives in [`Main/_Module/THIRD-PARTY-LICENSES.txt`](../../Main/_Module/THIRD-PARTY-LICENSES.txt)
@@ -159,7 +157,7 @@ The same shape as the ADOD_Beasts row below, and worth one line in writing for t
 
 **This corrects an earlier misclassification.** Until 2026-08-28 `Alliance.Wargs` sat in this file's
 taom-owned token block, alongside `TAOM_Map` and `LOTRAOM`. That was an affirmative claim of
-ownership over another author's art, which `.claude/rules/provenance.md` names as the same defect as
+ownership over another author's art, which is the same defect as
 an unattributed taking, pointed the other way. `tools/package_release.py:51` had it right, calling
 the module "a redistributed companion" and keeping it out of `DEFAULT_MODULES`.
 

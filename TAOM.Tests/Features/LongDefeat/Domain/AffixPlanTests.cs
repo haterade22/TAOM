@@ -51,8 +51,9 @@ public class AffixPlanTests
     [TestMethod]
     public void Pool_IsThePowersWithAnEffect_InTheOrderOfTheEight()
     {
-        // Slice 8 adds hammer and terror, Slice 9 blades: each switches on here, when its effect lands, and the pinned rolls below change with it.
-        CollectionAssert.AreEqual(new[] { "lash", "drums", "eye", "discipline", "hide" }, AffixPlan.Pool.ToArray());
+        // Slice 8 added hammer and terror, Slice 9 added blades: each switched on here when its effect landed, and the pinned rolls below changed with it.
+        CollectionAssert.AreEqual(new[] { "lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades" }, AffixPlan.Pool.ToArray());
+        CollectionAssert.AreEqual(AffixPlan.Ids.ToArray(), AffixPlan.Pool.ToArray(), "all eight powers roll now");
         CollectionAssert.AreEqual(AffixPlan.Ids.Where(AffixPlan.Pool.Contains).ToList(), AffixPlan.Pool.ToList());
     }
 
@@ -63,26 +64,29 @@ public class AffixPlanTests
     }
 
     [DataTestMethod]
-    [DataRow(1UL, 5, "discipline")]
-    [DataRow(1UL, 10, "discipline,drums")]
-    [DataRow(1UL, 15, "lash,eye,hide")]
-    [DataRow(12345UL, 40, "hide,discipline,lash")]
-    [DataRow(7UL, 5, "discipline")]
-    [DataRow(0UL, 15, "drums,hide,discipline")]
+    [DataRow(1UL, 5, "hide")]
+    [DataRow(1UL, 10, "drums,terror")]
+    [DataRow(1UL, 15, "hide,hammer,blades")]
+    [DataRow(12345UL, 40, "drums,discipline,blades")]
+    [DataRow(7UL, 5, "terror")]
+    [DataRow(0UL, 15, "lash,drums,discipline")]
     public void Roll_PinnedSeedsAndWaves_GiveThePinnedPowers(ulong seed, int wave, string expected)
     {
         Assert.AreEqual(expected, string.Join(",", Plan().Roll(seed, wave)));
     }
 
     [TestMethod]
-    public void Roll_FindsSeedsForEveryStatPowerAtWaveFive()
+    public void Roll_FindsSeedsForEveryPowerWithAnEffectCheckAtWaveFive()
     {
-        // Seeds the in-game proof arms (--start-wave 5 --waves 1 --seed N): one for each power the Slice 3 checks read.
-        Assert.AreEqual("discipline", Plan().Roll(0, 5).Single());
-        Assert.AreEqual("hide", Plan().Roll(2, 5).Single());
-        Assert.AreEqual("lash", Plan().Roll(3, 5).Single());
-        Assert.AreEqual("eye", Plan().Roll(8, 5).Single());
-        Assert.AreEqual("drums", Plan().Roll(9, 5).Single());
+        // Seeds the in-game proof arms (--start-wave 5 --waves 1 --seed N), the same as tools/ingame_checks/1079.toml: one for each power the affix-effect check reads.
+        Assert.AreEqual("eye", Plan().Roll(0, 5).Single());
+        Assert.AreEqual("hide", Plan().Roll(1, 5).Single());
+        Assert.AreEqual("lash", Plan().Roll(2, 5).Single());
+        Assert.AreEqual("blades", Plan().Roll(3, 5).Single());
+        Assert.AreEqual("discipline", Plan().Roll(5, 5).Single());
+        Assert.AreEqual("terror", Plan().Roll(7, 5).Single());
+        Assert.AreEqual("hammer", Plan().Roll(9, 5).Single());
+        Assert.AreEqual("drums", Plan().Roll(15, 5).Single());
     }
 
     [TestMethod]
@@ -117,14 +121,13 @@ public class AffixPlanTests
     }
 
     [TestMethod]
-    public void Roll_NeverNamesAPowerWhoseEffectHasNotLanded()
+    public void Roll_NamesEveryPowerOfTheEight_NowThatEachEffectHasLanded()
     {
+        // A power with no effect would be a named wave that does nothing; each of the eight now acts (blades since Slice 9), so each can roll.
         var plan = Plan(new AffixStage(1, 3));
-        for (ulong seed = 0; seed < 500; seed++)
-        {
-            var roll = plan.Roll(seed, 20);
-            Assert.IsFalse(roll.Contains("hammer") || roll.Contains("terror") || roll.Contains("blades"), "seed " + seed);
-        }
+        var seen = Enumerable.Range(0, 200).SelectMany(seed => plan.Roll((ulong)seed, 20)).ToHashSet();
+
+        CollectionAssert.AreEquivalent(AffixPlan.Ids.ToList(), seen.ToList());
     }
 
     [TestMethod]

@@ -45,7 +45,7 @@
 		</stacks>
 	</MBPartyTemplate>
 
-	<!-- Grishûk (clan_gundabad_6): the Snow Orcs of Mount Gram (troops_gundabad_snow.xml). -->
+	<!-- Grishûk (clan_gundabad_6, holds castle_G6 Lithur): the Snow Orcs (troops_gundabad_snow.xml). -->
 	<MBPartyTemplate id="kingdom_hero_party_gundabad_snow_template">
 		<stacks>
 			<PartyTemplateStack min_value="10" max_value="22" troop="NPCCharacter.gundabad_snow_recruit" />
@@ -4482,6 +4482,81 @@
 			<PartyTemplateStack min_value="0" max_value="14" troop="NPCCharacter.harad_serp_guard" />
 			<PartyTemplateStack min_value="2" max_value="15" troop="NPCCharacter.harad_reg_scout_arc" />
 			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.harad_serp_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="villager_lothlorien_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_lothlorien" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_lothlorien_template">
+		<stacks>
+			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.lorien_scout" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.lorien_spearman" />
+			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.lorien_infantry" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_warden" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.lorien_bowman" />
+			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.lorien_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_longbowman" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_rider" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_lancer" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_gl_warrior" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_gl_infantry" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_gl_archer" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.lorien_gl_bladeguard" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_sentinel" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_marksman" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_blademaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_mallorn_defender" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_bowmaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_highblade" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lothlorien_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.lorien_spearman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.lorien_bowman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lorien_warden" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lorien_infantry" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lothlorien_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.lorien_infantry" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lorien_archer" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lorien_gl_bladeguard" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lorien_gl_blademaster" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lorien_longbowman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lothlorien_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.lorien_mw_high_ranger" />
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.lorien_gl_blademaster" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.lorien_gl_marksman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lorien_lancer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lorien_gl_highblade" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="militia_lothlorien_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lorien_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lorien_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="rebels_lothlorien_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.lorien_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.lorien_warden" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.lorien_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="vassal_reward_troops_lothlorien">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lorien_gl_highblade" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.lorien_gl_blademaster" />
 		</stacks>
 	</MBPartyTemplate>
 

@@ -30,7 +30,7 @@ internal sealed class CommandTrialLauncher
         {
             var objects = MBObjectManager.Instance;
             var missing = SeatTrialRoster.Missing(id => objects.GetObject<BasicCultureObject>(id) != null,
-                id => objects.GetObject<BasicCharacterObject>(id) != null);
+                id => objects.GetObject<BasicCharacterObject>(id) != null, _options.Steps);
             if (missing.Count > 0)
             {
                 _logger.LogError($"[SeatTrial] refused to start: the game has no [{string.Join(", ", missing)}]");
@@ -43,7 +43,7 @@ internal sealed class CommandTrialLauncher
             var player = Combatant("{=!}Seat trial, defenders", objects.GetObject<BasicCultureObject>(SeatTrialRoster.PlayerCulture), BattleSideEnum.Defender);
             player.AddCharacter(hero, 1);
             player.SetGeneral(hero);
-            Fill(player, SeatTrialRoster.Player, objects);
+            Fill(player, SeatTrialRoster.PlayerFor(_options.Steps), objects);
 
             var enemy = Combatant("{=!}Seat trial, attackers", objects.GetObject<BasicCultureObject>(SeatTrialRoster.EnemyCulture), BattleSideEnum.Attacker);
             Fill(enemy, SeatTrialRoster.Enemy, objects);

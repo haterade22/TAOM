@@ -3166,6 +3166,7 @@
 	<string id="taom_lm_khuzait" text="{=taom_lm_khuzait}Rhûnic Gilt-bronze" />
 	<string id="taom_lm_aserai" text="{=taom_lm_aserai}Haradric Bronze" />
 	<string id="taom_lm_empire" text="{=taom_lm_empire}Dunland Bog-iron" />
+	<string id="taom_lm_lothlorien" text="{=taom_lm_lothlorien}Lórien Mallorn-silver" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- ArmourAcquisition -->
 	<string id="taom_lg_piece_hands" text="{=taom_lg_piece_hands}lord's gauntlets" />
@@ -4503,7 +4504,7 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintFull" text="{=TAOM_FOW_Hud_KeysHintFull}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintF12" text="{=TAOM_FOW_Hud_KeysHintF12}1-4 lane   F1-F12 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
@@ -4528,7 +4529,7 @@
 	<string id="TAOM_FOW_Trait_Dale_Arrows" text="{=TAOM_FOW_Trait_Dale_Arrows}Black Arrows: your archers deal 4 times the damage to towers." />
 	<string id="TAOM_FOW_Trait_Dale_Bows" text="{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer." />
 	<string id="TAOM_FOW_Trait_Dale_Melee" text="{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders." />
-	<string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds." />
+	<string id="TAOM_FOW_Trait_DolGuldur_FellWargs" text="{=TAOM_FOW_Trait_DolGuldur_FellWargs}Call a fell warg every 45 seconds." />
 	<string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower." />
 	<string id="TAOM_FOW_Trait_Easterlings_Army" text="{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army." />
@@ -4605,6 +4606,8 @@
 	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
+	<string id="TAOM_LD_Ability_WarCry_Isengard" text="{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls" />
 	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
 	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
 	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
@@ -4636,6 +4639,8 @@
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Text}Your riders and their horses move 12 percent faster." />
 	<string id="TAOM_LD_Boon_FletchersFavour" text="{=TAOM_LD_Boon_FletchersFavour}Fletcher's Favour" />
 	<string id="TAOM_LD_Boon_FletchersFavour_Text" text="{=TAOM_LD_Boon_FletchersFavour_Text}Your archers hit 15 percent harder." />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas" text="{=TAOM_LD_Boon_GallopOfTheEorlingas}Gallop of the Eorlingas" />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Text" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Text}You and your horse move 15 percent faster." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="{=TAOM_LD_Boon_GlitteringCavesRefuge}Refuge of the Inner Keep" />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Drawback}Every intermission is 15 seconds shorter." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Text" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Text}The keep can hold 30 more defenders." />
@@ -4643,22 +4648,24 @@
 	<string id="TAOM_LD_Boon_GranaryStores_Text" text="{=TAOM_LD_Boon_GranaryStores_Text}Every cleared wave pays 35 percent more gold." />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras" text="{=TAOM_LD_Boon_HagglerOfEdoras}The Haggler of Edoras" />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Drawback" text="{=TAOM_LD_Boon_HagglerOfEdoras_Drawback}The horn pays half as much." />
-	<string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="{=TAOM_LD_Boon_HagglerOfEdoras_Text}Every pack costs 20 percent less." />
+	<string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="{=TAOM_LD_Boon_HagglerOfEdoras_Text}Everything in the shop costs 20 percent less." />
 	<string id="TAOM_LD_Boon_HealersOfTheHold" text="{=TAOM_LD_Boon_HealersOfTheHold}Healers of the Hold" />
 	<string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="{=TAOM_LD_Boon_HealersOfTheHold_Text}After each wave your defenders mend a further quarter of the health they lost." />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored" text="{=TAOM_LD_Boon_HeartsOfTheEored}Hearts of the Eored" />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored_Text" text="{=TAOM_LD_Boon_HeartsOfTheEored_Text}Your riders have 25 percent more health." />
 	<string id="TAOM_LD_Boon_HornblowersBargain" text="{=TAOM_LD_Boon_HornblowersBargain}The Hornblower's Bargain" />
-	<string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="{=TAOM_LD_Boon_HornblowersBargain_Drawback}Every pack costs 10 percent more." />
+	<string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="{=TAOM_LD_Boon_HornblowersBargain_Drawback}Everything in the shop costs 10 percent more." />
 	<string id="TAOM_LD_Boon_HornblowersBargain_Text" text="{=TAOM_LD_Boon_HornblowersBargain_Text}The horn pays twice as much for the time it skips." />
 	<string id="TAOM_LD_Boon_LightOfThePhial" text="{=TAOM_LD_Boon_LightOfThePhial}The Light of the Phial" />
-	<string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="{=TAOM_LD_Boon_LightOfThePhial_Drawback}Every pack costs 25 percent more." />
+	<string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="{=TAOM_LD_Boon_LightOfThePhial_Drawback}Everything in the shop costs 25 percent more." />
 	<string id="TAOM_LD_Boon_LightOfThePhial_Text" text="{=TAOM_LD_Boon_LightOfThePhial_Text}Every wave carries one affix fewer." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark" text="{=TAOM_LD_Boon_LongbowOfTheMark}The Longbow of the Mark" />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Drawback" text="{=TAOM_LD_Boon_LongbowOfTheMark_Drawback}You draw your bow 10 percent slower." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="{=TAOM_LD_Boon_LongbowOfTheMark_Text}Your arrows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_MarksmansCall" text="{=TAOM_LD_Boon_MarksmansCall}The Marksman's Call" />
 	<string id="TAOM_LD_Boon_MarksmansCall_Text" text="{=TAOM_LD_Boon_MarksmansCall_Text}Your archers aim 20 percent truer and draw 10 percent faster." />
+	<string id="TAOM_LD_Boon_OathOfEorl" text="{=TAOM_LD_Boon_OathOfEorl}Oath of Eorl" />
+	<string id="TAOM_LD_Boon_OathOfEorl_Text" text="{=TAOM_LD_Boon_OathOfEorl_Text}You can take 35 percent more punishment before you fall." />
 	<string id="TAOM_LD_Boon_RiddermarkLevy" text="{=TAOM_LD_Boon_RiddermarkLevy}Levy of the Riddermark" />
 	<string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="{=TAOM_LD_Boon_RiddermarkLevy_Text}Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
 	<string id="TAOM_LD_Boon_RidersAtDawn" text="{=TAOM_LD_Boon_RidersAtDawn}Riders at Dawn" />
@@ -4675,6 +4682,9 @@
 	<string id="TAOM_LD_Boon_ShieldwallOath" text="{=TAOM_LD_Boon_ShieldwallOath}Oath of the Shieldwall" />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="{=TAOM_LD_Boon_ShieldwallOath_Drawback}You move 5 percent slower." />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Text" text="{=TAOM_LD_Boon_ShieldwallOath_Text}You take 20 percent less damage." />
+	<string id="TAOM_LD_Boon_SpearOfEorl" text="{=TAOM_LD_Boon_SpearOfEorl}Spear of Eorl" />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Drawback" text="{=TAOM_LD_Boon_SpearOfEorl_Drawback}You swing and thrust 10 percent slower." />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Text" text="{=TAOM_LD_Boon_SpearOfEorl_Text}Your blows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="{=TAOM_LD_Boon_SpearsOfTheWestfold}Spears of the Westfold" />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Text}Your infantry hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_SteadyAim" text="{=TAOM_LD_Boon_SteadyAim}Steady Aim" />
@@ -4690,16 +4700,21 @@
 	<string id="TAOM_LD_Boon_SwiftNock" text="{=TAOM_LD_Boon_SwiftNock}The Swift Nock" />
 	<string id="TAOM_LD_Boon_SwiftNock_Drawback" text="{=TAOM_LD_Boon_SwiftNock_Drawback}Your archers take 10 percent more damage." />
 	<string id="TAOM_LD_Boon_SwiftNock_Text" text="{=TAOM_LD_Boon_SwiftNock_Text}Your archers draw 20 percent faster and reload 15 percent faster." />
+	<string id="TAOM_LD_Boon_TheLongSilence" text="{=TAOM_LD_Boon_TheLongSilence}The Long Silence" />
+	<string id="TAOM_LD_Boon_TheLongSilence_Drawback" text="{=TAOM_LD_Boon_TheLongSilence_Drawback}Everything in the shop costs 15 percent more." />
+	<string id="TAOM_LD_Boon_TheLongSilence_Text" text="{=TAOM_LD_Boon_TheLongSilence_Text}Enemy commanders wait 50 percent longer between war cries and summonings." />
 	<string id="TAOM_LD_Boon_TheLongWatch" text="{=TAOM_LD_Boon_TheLongWatch}The Long Watch" />
 	<string id="TAOM_LD_Boon_TheLongWatch_Text" text="{=TAOM_LD_Boon_TheLongWatch_Text}Every intermission lasts 30 seconds longer." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold" text="{=TAOM_LD_Boon_WainsOfTheWestfold}Wains of the Westfold" />
-	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Drawback}Every pack costs 10 percent more." />
+	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Drawback}Everything in the shop costs 10 percent more." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Text" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Text}Every pack brings 3 more soldiers." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark" text="{=TAOM_LD_Boon_WeregildOfTheMark}Weregild of the Mark" />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="{=TAOM_LD_Boon_WeregildOfTheMark_Drawback}Wave bonuses are 15 percent smaller." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="{=TAOM_LD_Boon_WeregildOfTheMark_Text}Every foe you cut down pays 30 percent more gold." />
 	<string id="TAOM_LD_Class_Archer" text="{=TAOM_LD_Class_Archer}Archer" />
 	<string id="TAOM_LD_Class_Archer_Text" text="{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in." />
+	<string id="TAOM_LD_Class_Cavalry" text="{=TAOM_LD_Class_Cavalry}Cavalry" />
+	<string id="TAOM_LD_Class_Cavalry_Text" text="{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight." />
 	<string id="TAOM_LD_Class_SwordBoard" text="{=TAOM_LD_Class_SwordBoard}Sword and Board" />
 	<string id="TAOM_LD_Class_SwordBoard_Text" text="{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows." />
 	<string id="TAOM_LD_Class_TwoHanded" text="{=TAOM_LD_Class_TwoHanded}Two Handed Infantry" />
@@ -4717,6 +4732,24 @@
 	<string id="TAOM_LD_End_Stalemate" text="{=TAOM_LD_End_Stalemate}The siege has stalled" />
 	<string id="TAOM_LD_End_TargetReached" text="{=TAOM_LD_End_TargetReached}The fortress held" />
 	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />
+	<string id="TAOM_LD_Fort_Care" text="{=TAOM_LD_Fort_Care}Field care" />
+	<string id="TAOM_LD_Fort_CareDetail" text="{=TAOM_LD_Fort_CareDetail}Every defender, the lord too, regains {SHARE}% of the health he is missing. Once between waves." />
+	<string id="TAOM_LD_Fort_Gate" text="{=TAOM_LD_Fort_Gate}Reinforce the gate" />
+	<string id="TAOM_LD_Fort_GateDetail" text="{=TAOM_LD_Fort_GateDetail}Level {LEVEL} of {MAX}: the gate holds {PERCENT}% more than a new one. A hurt gate stays as hurt." />
+	<string id="TAOM_LD_Fort_GateFull" text="{=TAOM_LD_Fort_GateFull}Fully reinforced" />
+	<string id="TAOM_LD_Fort_Repair" text="{=TAOM_LD_Fort_Repair}Repair the gate" />
+	<string id="TAOM_LD_Fort_RepairDetail" text="{=TAOM_LD_Fort_RepairDetail}Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost." />
+	<string id="TAOM_LD_Fort_RepairNone" text="{=TAOM_LD_Fort_RepairNone}Nothing to repair" />
+	<string id="TAOM_LD_Fort_Title" text="{=TAOM_LD_Fort_Title}Fortifications" />
+	<string id="TAOM_LD_Fort_Towers" text="{=TAOM_LD_Fort_Towers}High towers" />
+	<string id="TAOM_LD_Fort_TowersDetail" text="{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them." />
+	<string id="TAOM_LD_Fort_TowersFull" text="{=TAOM_LD_Fort_TowersFull}Fully manned" />
+	<string id="TAOM_LD_Fort_TowersVolleyDetail" text="{=TAOM_LD_Fort_TowersVolleyDetail}Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them." />
+	<string id="TAOM_LD_Fort_Used" text="{=TAOM_LD_Fort_Used}Used" />
+	<string id="TAOM_LD_Fort_Volley" text="{=TAOM_LD_Fort_Volley}Elven Volley" />
+	<string id="TAOM_LD_Fort_VolleyAuto" text="{=TAOM_LD_Fort_VolleyAuto}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave." />
+	<string id="TAOM_LD_Fort_VolleyCrosshair" text="{=TAOM_LD_Fort_VolleyCrosshair}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker near where you look. Press N during a wave." />
+	<string id="TAOM_LD_Fort_VolleyFull" text="{=TAOM_LD_Fort_VolleyFull}Fully upgraded" />
 	<string id="TAOM_LD_Fortress_Helms" text="{=TAOM_LD_Fortress_Helms}Helm's Deep" />
 	<string id="TAOM_LD_Hud_Affixes" text="{=TAOM_LD_Hud_Affixes}Affixes: {NAMES}" />
 	<string id="TAOM_LD_Hud_Attackers" text="{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}" />
@@ -4729,9 +4762,13 @@
 	<string id="TAOM_LD_Hud_CategoryLegend" text="{=TAOM_LD_Hud_CategoryLegend}Legend" />
 	<string id="TAOM_LD_Hud_CategoryWarChest" text="{=TAOM_LD_Hud_CategoryWarChest}War chest" />
 	<string id="TAOM_LD_Hud_Close" text="{=TAOM_LD_Hud_Close}Close" />
+	<string id="TAOM_LD_Hud_CommanderActive" text="{=TAOM_LD_Hud_CommanderActive}{RANK}: {ABILITY}, now" />
+	<string id="TAOM_LD_Hud_CommanderFallen" text="{=TAOM_LD_Hud_CommanderFallen}{RANK} has fallen" />
+	<string id="TAOM_LD_Hud_CommanderNext" text="{=TAOM_LD_Hud_CommanderNext}{RANK}: {ABILITY} in {SECONDS} s" />
 	<string id="TAOM_LD_Hud_Defenders" text="{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}" />
 	<string id="TAOM_LD_Hud_Gold" text="{=TAOM_LD_Hud_Gold}Gold: {GOLD}" />
 	<string id="TAOM_LD_Hud_HintOpen" text="{=TAOM_LD_Hud_HintOpen}B  Shop   H  Sound the horn and start the wave early" />
+	<string id="TAOM_LD_Hud_HintVolley" text="{=TAOM_LD_Hud_HintVolley}N  Loose the Elven Volley" />
 	<string id="TAOM_LD_Hud_HintWave" text="{=TAOM_LD_Hud_HintWave}Hold the walls. The shop opens between waves." />
 	<string id="TAOM_LD_Hud_Horn" text="{=TAOM_LD_Hud_Horn}Sound the horn: start the wave now for bonus gold" />
 	<string id="TAOM_LD_Hud_Keep" text="{=TAOM_LD_Hud_Keep}The keep is under attack" />
@@ -4748,6 +4785,10 @@
 	<string id="TAOM_LD_Hud_Speed" text="{=TAOM_LD_Hud_Speed}Speed: {SPEED}x   M  Next speed" />
 	<string id="TAOM_LD_Hud_SpeedButton" text="{=TAOM_LD_Hud_SpeedButton}{SPEED}x" />
 	<string id="TAOM_LD_Hud_SpeedTitle" text="{=TAOM_LD_Hud_SpeedTitle}Game speed" />
+	<string id="TAOM_LD_Hud_VolleyIn" text="{=TAOM_LD_Hud_VolleyIn}Elven Volley in {SECONDS} s" />
+	<string id="TAOM_LD_Hud_VolleyNoTargets" text="{=TAOM_LD_Hud_VolleyNoTargets}No attackers in reach" />
+	<string id="TAOM_LD_Hud_VolleyReady" text="{=TAOM_LD_Hud_VolleyReady}Elven Volley ready" />
+	<string id="TAOM_LD_Hud_VolleyWithheld" text="{=TAOM_LD_Hud_VolleyWithheld}The volley cannot be loosed now" />
 	<string id="TAOM_LD_Hud_Wave" text="{=TAOM_LD_Hud_Wave}Wave {WAVE}" />
 	<string id="TAOM_LD_Hud_WaveClass" text="{=TAOM_LD_Hud_WaveClass}{WAVE}, {CLASS}" />
 	<string id="TAOM_LD_Hud_WaveCleared" text="{=TAOM_LD_Hud_WaveCleared}Wave {WAVE} cleared" />
@@ -4758,14 +4799,23 @@
 	<string id="TAOM_LD_Notice_BoonClosed" text="{=TAOM_LD_Notice_BoonClosed}A boon is taken between waves." />
 	<string id="TAOM_LD_Notice_BoonNotOffered" text="{=TAOM_LD_Notice_BoonNotOffered}That boon is not on offer." />
 	<string id="TAOM_LD_Notice_BoonOffered" text="{=TAOM_LD_Notice_BoonOffered}A boon is on offer: press B." />
+	<string id="TAOM_LD_Notice_CareUsed" text="{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves." />
 	<string id="TAOM_LD_Notice_GarrisonFull" text="{=TAOM_LD_Notice_GarrisonFull}The garrison is full." />
+	<string id="TAOM_LD_Notice_GateFull" text="{=TAOM_LD_Notice_GateFull}The gate is fully reinforced." />
+	<string id="TAOM_LD_Notice_GateWhole" text="{=TAOM_LD_Notice_GateWhole}The gate needs no repair." />
+	<string id="TAOM_LD_Notice_FortUnavailable" text="{=TAOM_LD_Notice_FortUnavailable}That is not for sale." />
 	<string id="TAOM_LD_Notice_HornClosed" text="{=TAOM_LD_Notice_HornClosed}The horn can only sound between waves." />
 	<string id="TAOM_LD_Notice_NoBoon" text="{=TAOM_LD_Notice_NoBoon}No boon awaits." />
 	<string id="TAOM_LD_Notice_NoGold" text="{=TAOM_LD_Notice_NoGold}Not enough gold." />
 	<string id="TAOM_LD_Notice_NoReroll" text="{=TAOM_LD_Notice_NoReroll}No reroll is banked." />
 	<string id="TAOM_LD_Notice_RunOver" text="{=TAOM_LD_Notice_RunOver}The run is over." />
 	<string id="TAOM_LD_Notice_ShopClosed" text="{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave." />
+	<string id="TAOM_LD_Notice_TowersFull" text="{=TAOM_LD_Notice_TowersFull}The high towers are fully manned." />
 	<string id="TAOM_LD_Notice_UnknownOffer" text="{=TAOM_LD_Notice_UnknownOffer}That pack is not for sale." />
+	<string id="TAOM_LD_Notice_VolleyCooldown" text="{=TAOM_LD_Notice_VolleyCooldown}The Elven Volley is not ready yet." />
+	<string id="TAOM_LD_Notice_VolleyFull" text="{=TAOM_LD_Notice_VolleyFull}The Elven Volley is fully upgraded." />
+	<string id="TAOM_LD_Notice_VolleyNotInWave" text="{=TAOM_LD_Notice_VolleyNotInWave}The Elven Volley is loosed during a wave." />
+	<string id="TAOM_LD_Notice_VolleyNotOwned" text="{=TAOM_LD_Notice_VolleyNotOwned}Buy the Elven Volley between waves first." />
 	<string id="TAOM_LD_Offer_Axemen" text="{=TAOM_LD_Offer_Axemen}Westfold Axemen" />
 	<string id="TAOM_LD_Offer_Bowmen" text="{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen" />
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
@@ -4775,9 +4825,12 @@
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
 	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
-	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
+	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+	<string id="TAOM_LD_Rank_Captain" text="{=TAOM_LD_Rank_Captain}Captain" />
+	<string id="TAOM_LD_Rank_General" text="{=TAOM_LD_Rank_General}General" />
+	<string id="TAOM_LD_Rank_Lieutenant" text="{=TAOM_LD_Rank_Lieutenant}Lieutenant" />
 	<string id="TAOM_LD_StartFailed" text="{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- MarshalScreenAdapter -->
@@ -4826,5 +4879,8 @@
 	<string id="taom_career_coop_gold_off" text="{=taom_career_coop_gold_off}Paid career changes are not available in a shared campaign." />
 	<!-- SupplyLines -->
 	<string id="taom_sl_coop_off" text="{=taom_sl_coop_off}Supply orders are not available in a shared campaign." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_marshal_mcm_throwers_first" text="{=taom_marshal_mcm_throwers_first}Throwers Throw First" />
+	<string id="taom_marshal_mcm_throwers_first_hint" text="{=taom_marshal_mcm_throwers_first_hint}On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on." />
 
 </strings>

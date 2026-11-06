@@ -8,6 +8,8 @@ internal sealed record RunOptions
     /// <summary>The largest seed, 2^53-1: a JavaScript reader (the leaderboard bot may be one) keeps every digit of a number up to there and rounds above it.</summary>
     public const ulong MaxSeed = (1UL << 53) - 1;
 
+    public const int MaxStartGold = 100_000;
+
     /// <summary>The run ends as TargetReached when this many waves are cleared; null plays until it is lost.</summary>
     public int? StopAfterWaves { get; init; }
 
@@ -23,6 +25,9 @@ internal sealed record RunOptions
 
     /// <summary>A test option: boon rerolls in the bank at the start, 0 to 3. A board run needs 0.</summary>
     public int StartRerolls { get; init; }
+
+    /// <summary>A test option: the gold the run starts with instead of the shop's, 0 to <see cref="MaxStartGold"/>. Null (a board run) keeps the shop's.</summary>
+    public int? StartGold { get; init; }
 
     /// <summary>
     /// The class the lord plays, by its id in classes.json. Null asks for none: the catalog then takes the first class on offer for a person, or the seed's draw for the bot. After

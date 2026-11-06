@@ -187,6 +187,50 @@ public class LongDefeatSetupPromptTests
         _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "bow" }));
     }
 
+    private LongDefeatSetupPrompt PromptWithShippedClasses() =>
+        new(_menu, _factory, _logger,
+            LongDefeatConfigCatalog.FromTexts(Shipped("fortresses.json"), Shipped("waves.json"), Shipped("shop.json"), _logger, classes: Shipped("classes.json")),
+            new LongDefeatRunRecords(Store(), null));
+
+    [TestMethod]
+    public void Begin_WithTheShippedClasses_ListsCavalryLast_WithItsKitText()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        PromptWithShippedClasses().Begin();
+
+        var second = _menu.Prompts[1];
+        CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer", "cavalry" }, second.Choices.Select(c => c.Id).ToArray());
+        Assert.AreEqual("{=TAOM_LD_Class_Cavalry}Cavalry", second.Choices[3].Variables!["NAME"]);
+        StringAssert.StartsWith(second.Choices[3].Variables["TEXT"], "{=TAOM_LD_Class_Cavalry_Text}");
+    }
+
+    // Slice 11 review (data flow, trace 10): the Cavalry kit overwrites the armour (Head, Body, Cape, Gloves, Leg) and the horse slots, so the class question may not say that the rest of the
+    // gear stays as it is.
+    [TestMethod]
+    public void Begin_TheClassQuestion_SaysCavalrySetsTheArmourAndTheHorse_NotThatTheRestOfTheGearStays()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        PromptWithShippedClasses().Begin();
+
+        var description = _menu.Prompts[1].Description;
+        StringAssert.Contains(description, "armour");
+        StringAssert.Contains(description, "horse");
+        Assert.IsFalse(description.Contains("stays as it is"), description);
+    }
+
+    [TestMethod]
+    public void Begin_PickingCavalry_StartsAMenuRunWithCavalryInTheOptions()
+    {
+        _menu = new FakeLongDefeatMenu("helms", "cavalry");
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        PromptWithShippedClasses().Begin();
+
+        _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "cavalry" }));
+    }
+
     [TestMethod]
     public void Begin_CancellingTheClassQuestion_StartsNothing()
     {

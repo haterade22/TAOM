@@ -1996,6 +1996,10 @@ class Validator:
         # Under-dressed: the Arnor kit has no elite chest, and the rangers are light by choice (Arthedain, 2026-10-07).
         ("arthedain_kings_guard", "sk_ar_art_chest_noble_heavy_a"): "L36 wears heavy; the Arnor kit ships no elite chest",
         ("arthedain_kings_guard", "sk_ar_art_chest_noble_heavy_b"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_evendim_warden", "sk_ar_art_chest_noble_heavy_a"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_evendim_warden", "sk_ar_art_chest_noble_heavy_b"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_steel_bowman", "sk_ar_art_chest_noble_heavy_a"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_steel_bowman", "sk_ar_art_chest_noble_heavy_b"): "L36 wears heavy; the Arnor kit ships no elite chest",
         ("arthedain_ranger_captain", "sk_ar_art_chest_noble_med_a"): "L31 wears medium; the rangers fight light by design",
         ("arthedain_ranger_captain", "sk_ar_art_chest_noble_med_b"): "L31 wears medium; the rangers fight light by design",
         # Rhudaur (#978) wears the same Arnor kit as Arthedain, so its capstone and ranger captain share the reasons.

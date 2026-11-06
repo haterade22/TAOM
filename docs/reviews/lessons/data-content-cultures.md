@@ -2284,3 +2284,75 @@ Three goblin cultures joined War Spoils. The kingdom recipe, the Elite Emissary 
 - **Why missed:** the search covered code that branches on the resource, and the cost model was read from the upgrade path only.
 - **Prevent:** grep the culture ids across `docs/`, config comments and test comments in the same change. A paid troop's cost row covers each route that adds it: upgrade, recruit and merchant.
 - **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).
+
+### Pin the promise of a new troop tree, not only its files (Lothlorien, 2026-11-05)
+
+Lothlorien got its own tree, and the tree loaded, validated and passed every test. Its seven military party templates, its enlistment kits, its troop weights and its career kits still belonged to Rivendell, so joining Lothlorien paid out Rivendell troops.
+
+- **Why missed:** every gate checks that a reference resolves or a file is well formed. None checks who owns it, and the party-template test allows sharing another culture's templates on purpose.
+- **Prevent:** a culture that gets its own troops file gets a data test that its culture block, its templates and its weights name no other culture's troops (`LothlorienOwnTreeDataTests` is the shape). Walk the consumer list in `.claude/rules/troops.md` and `docs/ai-includes/new-culture-authoring.md` for each one.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) findings F2, F3, F8 and F9.
+
+### Check the art cache entries before saying new Armory art works (Lothlorien, 2026-11-05)
+
+The Lorien armour pack arrived in the live Armory with every item, mesh name and collision reference correct and no `RuntimeDataCache` entry for any of its 23 packages. The client skips a mesh package that has no entry and logs nothing (observed; the native code that decides it is not traced, and material packages load without one).
+
+- **Why missed:** the armory audit and the validator check names and references, which pass without the entry. The contributor's notes said the check could not run on his machine.
+- **Prevent:** after any art drop, run `python tools/check_rdc_entries.py --under <the new folder>` and read `without-rdc`. The lotraom-assets mirror tracks the entries; copy the missing ones, or open the Armory in the Kit and save. See also `docs/reviews/lessons/animation-skeleton.md`.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F1.
+
+### Adding an upgrade edge changes more than the troop tree (Arnor elite troops, 2026-11-06)
+
+Three troops were added as upgrade targets and kept out of every party template and recruitment pool, on the reasoning that nothing else in the game would change. The engine's AI upgrader and the notables' volunteer growth both read `upgrade_targets`: every AI Lancer, Warden and Ranger Captain with the XP now upgrades into them, a former leaf now grows volunteers, and a second target on one troop sends about half of the AI lords' upgrades to whichever target the party leader's hash picks (`DefaultPartyTroopUpgradeModel.GetUpgradeChanceForTroopUpgrade`).
+
+- **Why missed:** the scope claim came from "in no template and no pool", not from a list of the readers of `UpgradeTargets`. The generator's self-check proves the tree is well formed, not what the engine does with an edge.
+- **Prevent:** before adding a troop to a tree, list the readers of the edge (AI upgrader, volunteer growth below `MaxVolunteerTier`, garrison conversion, field commission, and any "highest troop of a culture" selector such as `FactionRoster.EliteInfantry`) and write what each does with the new id. Never give a mid-tree troop a second target unless both targets lead somewhere of equal standing: put a branch at the top of a line, where the split falls between two end points.
+- **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) findings F2, F3 and F4.
+
+### A role curve must match the engine skill of the weapon in Item0 (Arnor elite troops, 2026-11-06)
+
+The Evendim Warden carried a poleaxe in Item0 on the generator's `twohand` curve (TwoHanded 270, Polearm 220). The engine scores a `TwoHandedPolearm` with Polearm, and the AI's block and parry scale with the skill of the weapon in hand, which at spawn is Item0. The tier 7 troop fought below its tier 6 source. The King's Guard uses the same curve without a problem because its Item0 is a greatsword.
+
+- **Why missed:** a role name describes a weapon family ("two-handed"), and a poleaxe is two-handed by name. No gate compares the relevant skill of Item0 with the curve; two older troops (`arthedain_squire`, `rhudaur_squire`) have the same shape.
+- **Prevent:** for every new troop read the crafting template of Item0 and map it with `WeaponComponentData.GetRelevantSkillFromWeaponClass`: polearms (and pikes) take the `spear` role, two-handed swords and axes `twohand`, one-handed blades `sword`. Pin it in the generator's test (`test_the_evendim_warden_fights_its_opening_poleaxe_at_its_best_melee_skill` is the shape).
+- **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) finding F1.
+
+### Compare every attribute of a generated item family with a sibling's same-slot items (Lorien leg armour, 2026-11-06)
+
+The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces, so the leg skin mesh was drawn under every greave (whether the shin showed depends on each mesh, and no in-game sighting is cited). The deep review of 2026-11-05 had read the same generator and fixed `has_gender_variations` and the lord-only flag, because those were the attributes it already suspected. It never listed the others.
+
+- **Why missed:** the review checked the attributes it expected to be wrong. No gate reads `covers_legs` ([moduledata-validation.md](../../features/moduledata-validation.md) lists it as a coverage gap), and [items-armor.md](../../modding/items-armor.md) rule 5 states the convention but nothing enforces it.
+- **Prevent:** before the first `--apply` of an item generator, list the attributes it writes for each slot and diff that set against a sibling culture's items of the same slot. `tools/tests/test_generate_lothlorien_armor.py` pins `covers_legs` for Lorien. Shoes that leave the shin bare stay `false` on purpose (Mike, 2026-11-06).
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R6.
+
+### Look for where an asset lives before calling it unversioned (Lorien armour, 2026-11-05)
+
+The first review report said the Lorien armour was in no repo and would break a clean checkout. The items and art are in the lotraom-assets repo (`E:\repos\lotraom-assets`), which the maintainer syncs into the live Armory by hand.
+
+- **Why missed:** the trap index says the Armory is unversioned, and the report stopped there instead of looking for the source repo.
+- **Prevent:** before reporting a risk about an unversioned module, check lotraom-assets (`git log -- <path>`) and the mirror's `RuntimeDataCache` folder. A session never edits the mirror: it is the maintainer's to sync. The same assumption came back for the Snow Orc armour on 2026-11-06 ("exists only in the live Armory"; the mirror held it, byte-equal, since commit `274f7c18f`): check each file, not the folder.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R1.
+
+### Run dependent generators in order, and scope each to one culture (Lorien enlistment, 2026-11-05)
+
+The Lorien enlistment rosters were seeded before the militia troops existed, so 9 of 14 cells were seeded and an archer recruit got a spear and shield with no bow. A later unscoped `generate_enlistment_rosters.py --apply` rewrote about 6,700 lines across other cultures, which had to be reverted.
+
+- **Why missed:** the order troops, then skills, then enlistment was kept in the session's head. The enlistment generator has no `--check`, so no command compared its output with the shipped file.
+- **Prevent:** follow the order in [new-culture-authoring.md](../../ai-includes/new-culture-authoring.md) 3d, always pass `--culture`, and diff a generator without `--check` against a scratch copy. Adding `--check` to the troop and enlistment generators is a standing follow-up.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F3 and round 2, R3.
+
+### A file generated from a hand-edited source is a consumer: regenerate it or hand-port it in the same change (Lorien lord templates, 2026-11-06)
+
+Five Lorien lord battle templates were rewritten into Lorien armour and the lords were declared done. `taom_lord_template_equipment.xml` is generated from the first battle set of each culture's equipment file, and its Lorien lord and ruler battle rosters kept Rivendell gold. The engine picks those rosters for a new ruler, for a rebel lord and for a woman who comes of age as a lord. Regenerating is not safe either: the generator's dry run renders 186 rosters against the 306 shipped, so `--apply` deletes 120 and re-equips 78 (issue #637).
+
+- **Why missed:** the consumer checklist was written from the troop side and named no file derived from a hand-edited source. The generator has no `--check`, and the file is in neither commit, so a review scoped by the diff could not list it. Codex, the Data flow lens and the Engine lens found it by reading the generator and following the file forward.
+- **Prevent:** when you change a source file, grep the repo for the tools that read it (`grep -rn "taom_equipment_sets_" tools/`) and list every derived file before you call the change done. A derived file that cannot be regenerated safely is hand-ported, and a data test pins the result (`LothlorienGeneratedLordAndRulerBattleRosters_WearLorienArmourOnEveryArmourSlot`). The consumer table is in [new-culture-authoring.md](../../ai-includes/new-culture-authoring.md) 3d.
+- **Source:** [rca-lothlorien-round2-2026-11-06.md](../rca-lothlorien-round2-2026-11-06.md) finding F1.
+
+### Restore a decision by the property behind it, and assert a guard or delete it (Isengard starter boots, 2026-11-06)
+
+The maintainer decided that the Uruk-hai shoes show the shin. A one-off script flipped every false in the Isengard starter file to true, and a second script restored the two items whose ids said "shoes". Three starter boots that draw the same shoe mesh stayed true. The first script also built a list meant to prove every changed item was a leg piece, and never asserted it.
+
+- **Why missed:** both scripts selected items by id, and the decision was about a mesh. Neither defaulted to a dry run, and an unchecked guard looks like a check.
+- **Prevent:** select by the property the decision names (here the mesh), assert the expected count, default to a dry run, and delete a computed guard that nothing asserts. `tools/audit_leg_cover_flags.py` (a `data_gates` row) now enforces the leg rule and reports all three boots on the pre-fix file.
+- **Source:** [rca-lothlorien-round2-2026-11-06.md](../rca-lothlorien-round2-2026-11-06.md) finding F2.

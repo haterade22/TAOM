@@ -16,6 +16,7 @@ survives, as Arthedain's does. Weak in numbers like Arthedain, but the horse rea
 
   Levy (basic, L6) -> Spearman -> Cardolan Spearman -> Barrow Guard -> Veteran Barrow Guard
       -> Warden of Tyrn Gorthad (L31)                     spear + shield + sword
+      Veteran Barrow Guard -> Tharbad Bridge Guard (L31, 2026-11-06)   a pike in both hands, no shield
   Dunadan of Cardolan (elite basic, L11) splits two ways:
       Knights:  Rider of Cardolan (L16) -> Lancer -> Knight of Cardolan -> Knight-Captain
                 -> King's Guard of Caras Gorthad (L36, the capstone, mounted)
@@ -67,6 +68,7 @@ bow = functools.partial(rt.bow, REALM)
 
 SPEAR = "wm_gondor_spear_b_cardolan"
 LIGHT_SPEAR = "wm_gondor_light_spear_cardolan"
+PIKE = "fine_pike_t4"
 LANCE = "wm_swan_knight_lance_a"
 SHIELD_LOW = ("sm_gd_shield_a1", "sm_gd_shield_a3")
 SHIELD_MID = ("sm_gd_shield_a3", "sm_gd_shield_a4")
@@ -104,13 +106,23 @@ def build():
                    armour(ab("anf_inf_helmet_med"), ab("anf_inf_chest_med"), one("ano_grvs_inf_med_a"),
                           one("ano_bracer_inf_med_a"), ab("ano_pauld_inf_med")),
                    ["cardolan_veteran_barrow_guard"]))
+    # The Barrow Guard keeps one target. A second one here would send about half of the AI lords' Barrow Guards
+    # to a dead end: the engine gives each party leader's hash one target of a two-target troop weight 9999.
     t.append(Troop("cardolan_veteran_barrow_guard", "Veteran Barrow Guard", 26, "Infantry", "spear",
                    paired(SPEAR, SHIELD_HIGH, BASTARD_ELITE),
                    armour(ab("pin_spear_helmet_heavy"), ab("pin_inf_chest_heavy"), one("ano_grvs_inf_heavy_a"),
                           one("ano_bracer_noble_heavy_a"), one("ano_pauld_inf_heavy_a")),
-                   ["cardolan_warden"]))
+                   ["cardolan_warden", "cardolan_tharbad_bridge_guard"]))
     t.append(Troop("cardolan_warden", "Warden of Tyrn Gorthad", 31, "Infantry", "sword",
                    paired(BASTARD_ELITE, SHIELD_HIGH, SPEAR),
+                   armour(ab("pin_spear_helmet_heavy"), ab("pin_inf_chest_heavy"), one("ano_grvs_inf_heavy_a"),
+                          one("ano_bracer_noble_heavy_a"), one("ano_pauld_cape_inf_elite_a"))))
+    # Holds the Greyflood crossing at Tharbad, the Warden's sibling at the top of the line (2026-11-06, from
+    # player feedback): a pike in both hands and no shield. fine_pike_t4 is vanilla's, the pike of the Gondor
+    # Serelond Pikeman; the Armory has no Gondor or Arnor pike. Role spear: Item0 is the weapon in hand at spawn
+    # and the engine scores a pike with the Polearm skill.
+    t.append(Troop("cardolan_tharbad_bridge_guard", "Tharbad Bridge Guard", 31, "Infantry", "spear",
+                   paired(PIKE, BASTARD_ELITE),
                    armour(ab("pin_spear_helmet_heavy"), ab("pin_inf_chest_heavy"), one("ano_grvs_inf_heavy_a"),
                           one("ano_bracer_noble_heavy_a"), one("ano_pauld_cape_inf_elite_a"))))
 

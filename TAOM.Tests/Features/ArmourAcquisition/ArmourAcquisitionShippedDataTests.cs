@@ -64,12 +64,11 @@ public class ArmourAcquisitionShippedDataTests
     {
         var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
         var cultures = new[] { "gondor", "vlandia", "erebor", "sturgia", "rivendell", "mirkwood", "mordor", "isengard",
-            "dolguldur", "gundabad", "khuzait", "aserai", "empire" };
+            "dolguldur", "gundabad", "khuzait", "aserai", "empire", "lothlorien" };
 
         CollectionAssert.AreEquivalent(cultures, ladder.Materials.Keys.ToArray(), "one lord's material per culture that owns armour");
-        // Lórien owns no armour but has a named weapon of its own, Galadriel's sword (Mike, 2026-09-28).
-        CollectionAssert.AreEquivalent(cultures.Append("lothlorien").ToArray(), ladder.Weapons.Keys.ToArray(),
-            "every culture's weapon rung has a pick");
+        // Lórien's weapon pick is Galadriel's sword (Mike, 2026-09-28); it owns armour and a material since 2026-11-06.
+        CollectionAssert.AreEquivalent(cultures, ladder.Weapons.Keys.ToArray(), "every culture's weapon rung has a pick");
         CollectionAssert.AreEquivalent(ArmourAcquisitionConfig.Default.Ladder.Materials.ToArray(), ladder.Materials.ToArray(),
             "the compiled default mirrors the shipped file");
     }
@@ -159,7 +158,7 @@ public class ArmourAcquisitionShippedDataTests
         var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
         var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
 
-        foreach (var culture in new[] { "lindon", "lothlorien", "abanissa", "shaghana", "battania", "goblin", "mistymountainorcs", "bluecraig", "umbar", "arthedain" })
+        foreach (var culture in new[] { "lindon", "abanissa", "shaghana", "battania", "goblin", "mistymountainorcs", "bluecraig", "umbar", "arthedain" })
         {
             var donor = marketplace.GetArmourDonor(culture);
             Assert.IsNotNull(donor, culture);
@@ -208,13 +207,16 @@ public class ArmourAcquisitionShippedDataTests
         var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
         var expected = new (string Culture, string Donor)[]
         {
-            ("lindon", "rivendell"), ("lothlorien", "rivendell"), ("abanissa", "aserai"), ("shaghana", "aserai"),
+            ("lindon", "rivendell"), ("abanissa", "aserai"), ("shaghana", "aserai"),
             ("battania", "khuzait"), ("goblin", "mordor"), ("mistymountainorcs", "mordor"), ("bluecraig", "mordor"),
             ("umbar", "mordor"), ("arthedain", "gondor"),
         };
 
         foreach (var (culture, donor) in expected)
             Assert.AreEqual(donor, marketplace.GetArmourDonor(culture), culture);
+
+        // Lothlorien owns armour since 2026-11-06 and draws on no donor.
+        Assert.IsNull(marketplace.GetArmourDonor("lothlorien"));
     }
 
     [TestMethod]
@@ -308,7 +310,7 @@ public class ArmourAcquisitionShippedDataTests
             .Where(e => ((string?)e.Attribute("id") ?? string.Empty).StartsWith("lotr_armourer_commission_", StringComparison.Ordinal))
             .ToList();
 
-        Assert.AreEqual(26, commissions.Count);
+        Assert.AreEqual(27, commissions.Count);
         foreach (var issue in commissions)
         {
             var id = (string?)issue.Attribute("id");

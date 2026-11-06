@@ -138,10 +138,8 @@ internal sealed partial class SurvivalRun
         _pendingBoon = null;
     }
 
-    /// <summary>The table for the wave in hand and the boons owned: the attackers' part is the wave's, the defenders' part is the boons'.</summary>
-    private LdStatTable StatTableNow() => RunModifiers.StatTable(_plan.Affixes, _waveAffixes, _damageFactor, _deck.Owned);
-
-    private float AttackerHealth(WaveSoldier soldier) => _healthFactor;
+    /// <summary>The table for the wave in hand and the boons owned: the attackers' part is the wave's (and a war cry's, while one runs), the defenders' part is the boons'.</summary>
+    private LdStatTable StatTableNow() => RunModifiers.StatTable(_plan.Affixes, _waveAffixes, _damageFactor, _deck.Owned, _warCry);
 
     private float DefenderHealth(WaveSoldier soldier) => _healthFactors[(int)_plan.GroupOf(soldier.TroopId, soldier.Slot)];
 

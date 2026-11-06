@@ -49,10 +49,12 @@
 	<string id="aom_arthedain_citadel_guard_name" text="{=aom_arthedain_citadel_guard_name}[Arthedain] Guard of the Citadel" />
 	<string id="aom_arthedain_dunadan_youth_merc_name" text="{=aom_arthedain_dunadan_youth_merc_name}[Arthedain] Dunadan Sellsword" />
 	<string id="aom_arthedain_dunadan_youth_name" text="{=aom_arthedain_dunadan_youth_name}[Arthedain] Dunadan Youth" />
+	<string id="aom_arthedain_evendim_warden_name" text="{=aom_arthedain_evendim_warden_name}[Arthedain] Evendim Warden" />
 	<string id="aom_arthedain_footman_name" text="{=aom_arthedain_footman_name}[Arthedain] Fornost Footman" />
 	<string id="aom_arthedain_fornost_guard_name" text="{=aom_arthedain_fornost_guard_name}[Arthedain] Fornost Guard" />
 	<string id="aom_arthedain_kings_guard_name" text="{=aom_arthedain_kings_guard_name}[Arthedain] King's Guard of Fornost" />
 	<string id="aom_arthedain_knight_name" text="{=aom_arthedain_knight_name}[Arthedain] Knight of Arthedain" />
+	<string id="aom_arthedain_knight_of_annuminas_name" text="{=aom_arthedain_knight_of_annuminas_name}[Arthedain] Knight of Annuminas" />
 	<string id="aom_arthedain_lancer_name" text="{=aom_arthedain_lancer_name}[Arthedain] Lancer" />
 	<string id="aom_arthedain_levy_name" text="{=aom_arthedain_levy_name}[Arthedain] Levy" />
 	<string id="aom_arthedain_militia_archer_name" text="{=aom_arthedain_militia_archer_name}[Arthedain] Militia Archer" />
@@ -66,6 +68,7 @@
 	<string id="aom_arthedain_shieldman_name" text="{=aom_arthedain_shieldman_name}[Arthedain] Fornost Shieldman" />
 	<string id="aom_arthedain_spearman_name" text="{=aom_arthedain_spearman_name}[Arthedain] Spearman" />
 	<string id="aom_arthedain_squire_name" text="{=aom_arthedain_squire_name}[Arthedain] Dunadan Squire" />
+	<string id="aom_arthedain_steel_bowman_name" text="{=aom_arthedain_steel_bowman_name}[Arthedain] Dunedain Steel Bowman" />
 	<string id="aom_arthedain_veteran_citadel_guard_name" text="{=aom_arthedain_veteran_citadel_guard_name}[Arthedain] Veteran Citadel Guard" />
 	<string id="aom_arthedain_veteran_ranger_name" text="{=aom_arthedain_veteran_ranger_name}[Arthedain] Veteran Ranger" />
 	<string id="aom_arthedain_warden_name" text="{=aom_arthedain_warden_name}[Arthedain] Warden of Fornost" />
@@ -107,6 +110,7 @@
 	<string id="aom_cardolan_rider_name" text="{=aom_cardolan_rider_name}[Cardolan] Rider of Cardolan" />
 	<string id="aom_cardolan_river_spearman_name" text="{=aom_cardolan_river_spearman_name}[Cardolan] Cardolan Spearman" />
 	<string id="aom_cardolan_spearman_name" text="{=aom_cardolan_spearman_name}[Cardolan] Spearman" />
+	<string id="aom_cardolan_tharbad_bridge_guard_name" text="{=aom_cardolan_tharbad_bridge_guard_name}[Cardolan] Tharbad Bridge Guard" />
 	<string id="aom_cardolan_veteran_barrow_guard_name" text="{=aom_cardolan_veteran_barrow_guard_name}[Cardolan] Veteran Barrow Guard" />
 	<string id="aom_cardolan_veteran_bowman_name" text="{=aom_cardolan_veteran_bowman_name}[Cardolan] Veteran Minhiriath Bowman" />
 	<string id="aom_cardolan_warden_name" text="{=aom_cardolan_warden_name}[Cardolan] Warden of Tyrn Gorthad" />
@@ -790,6 +794,10 @@
 	<string id="aom_lorien_infantry_name" text="{=aom_lorien_infantry_name}[Lothlórien] Lórien Infantry" />
 	<string id="aom_lorien_lancer_name" text="{=aom_lorien_lancer_name}[Lothlórien] Lórien Lancer" />
 	<string id="aom_lorien_longbowman_name" text="{=aom_lorien_longbowman_name}[Lothlórien] Lórien Longbowman" />
+	<string id="aom_lorien_militia_archer_name" text="{=aom_lorien_militia_archer_name}[Lothlórien] Militia Archer" />
+	<string id="aom_lorien_militia_spearman_name" text="{=aom_lorien_militia_spearman_name}[Lothlórien] Militia Spearman" />
+	<string id="aom_lorien_militia_veteran_archer_name" text="{=aom_lorien_militia_veteran_archer_name}[Lothlórien] Militia Veteran Archer" />
+	<string id="aom_lorien_militia_veteran_spearman_name" text="{=aom_lorien_militia_veteran_spearman_name}[Lothlórien] Militia Veteran Spearman" />
 	<string id="aom_lorien_mw_ambusher_name" text="{=aom_lorien_mw_ambusher_name}[Lothlórien] Marchwarden Ambusher" />
 	<string id="aom_lorien_mw_archer_name" text="{=aom_lorien_mw_archer_name}[Lothlórien] Marchwarden Archer" />
 	<string id="aom_lorien_mw_dawnrider_name" text="{=aom_lorien_mw_dawnrider_name}[Lothlórien] Marchwarden Dawnrider" />

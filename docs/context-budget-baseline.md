@@ -26,7 +26,7 @@ Run `bash tools/context_budget_scan.sh` (`--verbose` for per-file numbers). Eage
 | **Scan total** | | **~68,241** | worst-case ~120K |
 
 The always-load rule set is now 7 files / 43.5 KB: the original 5 survivors (provenance sections
-stripped to `docs/reference/rule-provenance.md`), plus `working-discipline.md` (moved from
+stripped out), plus `working-discipline.md` (moved from
 CLAUDE.md — budget-neutral) and `output-style.md` (merger of `response-style` + `ai-prose-style`).
 
 ## The MCP number is conditional — read this before acting on it

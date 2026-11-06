@@ -26,9 +26,11 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _gamedir import DEFAULT_GAME_ROOT, game_modules  # noqa: E402
+from _gamedir import DEFAULT_GAME_ROOT, ensure_exists, game_modules  # noqa: E402
+import _generated_files as gf  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
 
 CULTURE_KEY = "lothlorien"
@@ -157,6 +159,15 @@ def stats_for(item_id, slot, band):
     return ra.calculate_stats(band, slot, CULTURE_KEY, item_id=item_id)
 
 
+def lord_only(item_id):
+    """Pieces the module docstring keeps for lords: `_lord_` helmets and the Mallorn `_elite_` chests and helmets.
+
+    They are written is_merchandise="false". The armour gate refuses a piece the XML never sold
+    (ArmourGateService), so no market stocks them; a town level only gates the ones that are merchandise.
+    """
+    return "_lord_" in item_id or (kit_of(item_id) == "ml" and "_elite_" in item_id)
+
+
 def hair_cover(item_id):
     """Hooded and masked helmets (variant b/c of the Galadhrim and Mallorn kits) hide all hair."""
     if kit_of(item_id) in ("gl", "ml") and item_id[-1] in "bc":
@@ -167,7 +178,7 @@ def hair_cover(item_id):
 def armor_attrs(item_id, slot, st):
     if slot == "body":
         parts = [f'body_armor="{st["body_armor"]}"', f'leg_armor="{st["leg_armor"]}"',
-                 'has_gender_variations="true"', 'covers_body="true"']
+                 'has_gender_variations="false"', 'covers_body="true"']
     elif slot == "head":
         parts = [f'head_armor="{st["head_armor"]}"', 'has_gender_variations="false"']
         if "crown" not in item_id:
@@ -175,7 +186,7 @@ def armor_attrs(item_id, slot, st):
     elif slot == "arm":
         parts = [f'arm_armor="{st["arm_armor"]}"', 'covers_hands="true"']
     elif slot == "leg":
-        parts = [f'leg_armor="{st["leg_armor"]}"', 'covers_legs="false"']
+        parts = [f'leg_armor="{st["leg_armor"]}"', 'covers_legs="true"']
     else:
         parts = [f'body_armor="{st["body_armor"]}"', f'arm_armor="{st["arm_armor"]}"']
     parts.append(f'modifier_group="{st["modifier_group"]}"')
@@ -189,7 +200,7 @@ def item_xml(item_id, slot, name, st, appearance, merchandise=True):
     diff = ' difficulty="0"' if slot != "shoulder" else ""
     flags = '<Flags UseTeamColor="true" />'
     return (
-        f'    <Item id="{item_id}" name="{{=aom_{item_id}_name}}{TAG} {name}"{sub} mesh="{item_id}" '
+        f'    <Item id="{item_id}" name="{{=aom_{item_id}_name}}{TAG} {escape(name, {chr(34): "&quot;"})}"{sub} mesh="{item_id}" '
         f'culture="{CULTURE_ATTR}" is_merchandise="{"true" if merchandise else "false"}" '
         f'weight="{st["weight"]}"{diff} appearance="{appearance}" Type="{ITEM_TYPE[slot]}">\n'
         f"        <ItemComponent>\n"
@@ -207,7 +218,7 @@ def build():
         band = priced_band(item_id)
         st = stats_for(item_id, slot, band)
         name = f"{KIT_NAMES[kit_of(item_id)]} {stem}"
-        by_file[slot].append(item_xml(item_id, slot, name, st, APPEARANCE[band]))
+        by_file[slot].append(item_xml(item_id, slot, name, st, APPEARANCE[band], merchandise=not lord_only(item_id)))
         rows.append((item_id, slot, band, {k: v for k, v in st.items() if k.endswith("_armor")}, st["weight"]))
     for item_id, slot, name in GALADRIEL:
         st = stats_for(item_id, slot, "lord")
@@ -227,7 +238,9 @@ def render(slot, items):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("--apply", action="store_true", help="write the files (default: dry run)")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true", help="write the files (default: dry run)")
+    mode.add_argument("--check", action="store_true", help="write nothing; exit 1 when the Armory differs from the render")
     p.add_argument("--armory", help="LOTRLOME_Armory folder (default: <game>/Modules/LOTRLOME_Armory)")
     args = p.parse_args()
 
@@ -236,18 +249,17 @@ def main():
         vals = " ".join(f"{k.split('_')[0]}={v}" for k, v in armour.items())
         print(f"{item_id:32} {slot:9} {band:7} {vals:28} w={weight}")
     print(f"{len(rows)} items")
-    if not args.apply:
-        print("dry run; pass --apply to write")
-        return 0
-
     armory = Path(args.armory) if args.armory else game_modules(DEFAULT_GAME_ROOT) / "LOTRLOME_Armory"
+    writing = args.apply or args.check
+    if writing:
+        armory = ensure_exists(armory, "the LOTRLOME_Armory module")
+        ensure_exists(armory / "ModuleData" / "LOTRLOME_items", "LOTRLOME_Armory/ModuleData/LOTRLOME_items")
+    elif not armory.exists():
+        print("dry run; pass --apply to write (no Armory here to compare with)")
+        return 0
     out = armory / "ModuleData" / "LOTRLOME_items" / CULTURE_KEY
-    out.mkdir(parents=True, exist_ok=True)
-    for slot, fname in FILES.items():
-        (out / fname).write_text(render(slot, by_file[slot]), encoding="utf-8", newline="\r\n")
-        print(f"wrote {out / fname}")
-    return 0
-
+    rendered = {fname: render(slot, by_file[slot]) for slot, fname in FILES.items()}
+    return gf.sync(out, rendered, apply=args.apply, check=args.check)
 
 if __name__ == "__main__":
     sys.exit(main())

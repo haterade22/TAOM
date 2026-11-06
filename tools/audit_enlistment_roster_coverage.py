@@ -56,7 +56,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import derive_armor_tiers as dat  # noqa: E402  (armour index carries each item's source folder)
 import taom_schema as ts  # noqa: E402
 from _gamedir import ENV_VAR, game_modules  # noqa: E402
-# IMPORTED, not restated. lothlorien and battania own no troops_*.xml but bind to another
+# IMPORTED, not restated. battania and abanissa own no troops_*.xml but bind to another
 # culture's tree, so they are legitimate roster cultures; a second copy of that list here would
 # be a mirror free to drift from the generator that acts on it.
 from generate_enlistment_rosters import TREE_ALIASES  # noqa: E402

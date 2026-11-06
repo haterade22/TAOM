@@ -752,7 +752,7 @@ public class SurvivalRunTests
         Assert.IsNull(run.Result);
         var before = run.Gold;
         for (var i = 0; i < 5; i++)
-            run.AttackerDown("orc");
+            run.AttackerDown("orc", AttackerRole.Roster, felled: true);
         Assert.AreEqual(before, run.Gold, "a felled soldier pays no bounty");
         var clear = run.Tick(Snap(attackers: 0, defenders: 20, dt: 1f));
 
@@ -764,15 +764,14 @@ public class SurvivalRunTests
     }
 
     [TestMethod]
-    public void Stalemate_FellPendingResetsAtAClear_SoAShortFellNeverSwallowsALaterBounty()
+    public void Stalemate_AShortFell_NeverSwallowsALaterBounty_SinceOnlyAMarkedRemovalIsFelled()
     {
         var run = InFighting();
         run.Tick(Snap(attackers: 5, defenders: 20, dt: 60f));
         run.Tick(Snap(attackers: 5, defenders: 20, dt: 90f));
-        // The engine reported only 3 of the 5 removals before the clear.
-        run.AttackerDown("orc");
-        run.AttackerDown("orc");
-        run.AttackerDown("orc");
+        // The engine reported only 3 of the 5 removals before the clear, each with its felled mark.
+        for (var i = 0; i < 3; i++)
+            run.AttackerDown("orc", AttackerRole.Roster, felled: true);
         run.Tick(Snap(attackers: 0, defenders: 20, dt: 1f));
         run.Tick(Snap(dt: 60f, defenders: 20));
         SpawnWave(run, defenders: 20);
@@ -965,7 +964,7 @@ public class SurvivalRunTests
         Assert.IsTrue(run.Tick(Snap(attackers: 5, defenders: 20, dt: 60f)).OrderCharge);
         Assert.AreEqual(5, run.Tick(Snap(attackers: 5, defenders: 20, dt: 90f)).FellAttackers);
         for (var i = 0; i < 5; i++)
-            run.AttackerDown("orc");
+            run.AttackerDown("orc", AttackerRole.Roster, felled: true);
         run.Tick(Snap(attackers: 0, defenders: 20, dt: 1f));
         Assert.AreEqual(5, run.Stats.Waves[0].Felled);
 

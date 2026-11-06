@@ -79,7 +79,7 @@ next hook that way; it fixes no defect today.
 | X5 | GitHub issue import and completeness score | Declined: TAOM's backlog is issue-first through `/improve`, and most open issues wait on in-game checks |
 | X6 | SHA-pinned actions, `persist-credentials` test, Dependabot, AI review CI | Declined: TAOM has no `.github/workflows` since 2026-10-05; revisit if CI returns |
 | X7 | Compound-command detection for permission denials | Declined: the gates already read each shell segment past wrappers (#985) |
-| X8 | Issue numbers on every rule in CLAUDE.md | Declined: `docs/reference/rule-provenance.md` keeps the incidents out of always-loaded text |
+| X8 | Issue numbers on every rule in CLAUDE.md | Declined: the incidents stay out of always-loaded text |
 | X9 | Specification workshop (Given/When/Then) | Declined: the plan template, `/new-feature` and TDD cover it |
 | X10 | "Limit testing to about 20% of effort" | Declined: conflicts with AGENTS.md TDD |
 | X11 | A test against bare `!` lines in a `set -e` test script | Declined: `tools/test_hooks.sh` runs `set -uo pipefail` and has no such line |

@@ -19,15 +19,13 @@
   vlandia=Rohan, empire=Dunland, aserai=Harad, khuzait=Rhun, sturgia=Dale,
   battania=Khand, lothlorien=Galadhrim.
 
-  lothlorien, battania and abanissa define no troops_*.xml file of their OWN, but each binds
-  to another culture's tree, so they are NOT rosterless: taom_spcultures.xml gives
-  lothlorien basic_troop=imladris_recruit / elite_basic_troop=imladris_infantry,
-  i.e. the same Rivendell tree rivendell itself uses; spcultures.xslt gives
+  battania and abanissa define no troops_*.xml file of their OWN, but each binds
+  to another culture's tree, so they are NOT rosterless: spcultures.xslt gives
   battania (Variag/Khand) basic_troop=loke_rim_initiate /
   elite_basic_troop=loke_rim_cavalry, i.e. khuzait's Rhun tree. abanissa binds
   harad_reg_levy / harad_serp_noble, aserai's Harad tree. The generator's TREE_ALIASES map
-  builds their rosters from those trees, so they mirror rivendell, khuzait and aserai
-  rank-for-rank. The Harad-sphere archer bows come from the generator's ISSUE_LAUNCHER table.
+  builds their rosters from those trees, so they mirror khuzait and aserai
+  rank-for-rank. Lothlorien fields its own troops_lothlorien.xml tree. The Harad-sphere archer bows come from the generator's ISSUE_LAUNCHER table.
 
   A cell is ABSENT when its group pool has no donor within one band of the rank. That is
   deliberate: an infantry-seeded roster under a cavalry id would read as an authored
@@ -1731,138 +1729,150 @@
     <EquipmentRoster id="enlist_lothlorien_infantry_recruit" culture="Culture.lothlorien">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_archer_recruit" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.highelf_longbow_starter" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_q1v4" />
-            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_support_recruit" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_infantry_soldier" culture="Culture.lothlorien">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_infantry_tier1" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_archer_soldier" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.highelf_longbowa" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
-            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_archer_tier1" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_support_soldier" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_infantry_tier1" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
+            <Equipment slot="Item2" id="Item.wm_gf_knight_broadsword" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_infantry_veteran" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-            <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-            <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_archer_veteran" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.highelf_longbowc" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
-            <Equipment slot="Item2" id="Item.wm_elven_arrow_q3v3" />
-            <Equipment slot="Item3" id="Item.he_sword" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_infantry_tier3" />
-            <Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
-            <Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-            <Equipment slot="Cape" id="Item.rivendell_cape_a" />
-        </EquipmentSet>
-    </EquipmentRoster>
-    <EquipmentRoster id="enlist_lothlorien_support_veteran" culture="Culture.lothlorien">
-        <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-            <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-            <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_rg_pauld_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_infantry_sergeant" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_cavalry_tier3" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier4" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-            <Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a02_black" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_b" />
+            <Equipment slot="Item2" id="Item.northern_javelin_3_t4" />
+            <Equipment slot="Item3" id="Item.northern_javelin_2_t3" />
+            <Equipment slot="Head" id="Item.sk_ll_mw_helmet_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_archer_recruit" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t2" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.wm_elven_arrow_q1v3" />
+            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a01" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_archer_soldier" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t3" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
+            <Equipment slot="Item2" id="Item.wm_elven_arrow_q2v3" />
+            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a02" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_archer_veteran" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t5" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
+            <Equipment slot="Item2" id="Item.wm_elven_arrow_q1v3" />
+            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a02_silver" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_rg_pauld_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_archer_sergeant" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.highelf_longbowc" />
-            <Equipment slot="Item1" id="Item.he_sword" />
-            <Equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
-            <Equipment slot="Item3" id="Item.wm_elven_arrow_q2v4" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_cavalry_tier3" />
-            <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-            <Equipment slot="Cape" id="Item.rivendell_cape_a" />
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t6" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
+            <Equipment slot="Item2" id="Item.wm_elven_arrow_q2v3" />
+            <Equipment slot="Item3" id="Item.wm_rivendell_sword_a01_black" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_rg_pauld_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_cavalry_veteran" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.he_spear" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_b" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_grvs_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_cavalry_sergeant" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.highelf_longbowc" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_q1v2" />
-            <Equipment slot="Item2" id="Item.wm_elven_arrow_v3_a" />
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t7" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
+            <Equipment slot="Item2" id="Item.wm_elven_arrow_q3v3" />
             <Equipment slot="Item3" id="Item.he_sword" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_archer_tier1_silver" />
-            <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier2_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1_silver" />
-            <Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-            <Equipment slot="Cape" id="Item.rivendell_cape_a" />
+            <Equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_ll_mw_chest_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ll_mw_bracer_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_support_recruit" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_support_soldier" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gf_knight_broadsword" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lothlorien_support_veteran" culture="Culture.lothlorien">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_rg_pauld_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_lothlorien_support_sergeant" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.rivendell_helmet_cavalry_tier3" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier4" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
-            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
-            <Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a02_black" />
+            <Equipment slot="Head" id="Item.sk_ll_mw_helmet_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
+            <Equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
+            <Equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
         </EquipmentSet>
     </EquipmentRoster>
 

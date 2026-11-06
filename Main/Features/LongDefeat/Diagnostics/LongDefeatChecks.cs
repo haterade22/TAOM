@@ -44,6 +44,19 @@ internal static class LongDefeatChecks
     internal const string BoonId = "taom.long-defeat.boon";
     internal const string RerollId = "taom.long-defeat.reroll";
     internal const string ClassId = "taom.long-defeat.class";
+    internal const string CommanderId = "taom.long-defeat.commander";
+    internal const string SummonId = "taom.long-defeat.summon";
+    internal const string SallyId = "taom.long-defeat.sally";
+    internal const string SallyReturnId = "taom.long-defeat.sally-return";
+    internal const string SallyContactId = "taom.long-defeat.sally-contact";
+    internal const string FieldCareId = "taom.long-defeat.field-care";
+    internal const string GateLevelId = "taom.long-defeat.gate-level";
+    internal const string GateRepairId = "taom.long-defeat.gate-repair";
+    internal const string GateAttackedId = "taom.long-defeat.gate-attacked";
+    internal const string FortPointsId = "taom.long-defeat.fort-points";
+    internal const string VolleyId = "taom.long-defeat.volley";
+    internal const string TowerVolleyId = "taom.long-defeat.tower-volley";
+    internal const string PostsId = "taom.long-defeat.posts";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -95,8 +108,9 @@ internal static class LongDefeatChecks
         return Verdict(ok, $"source={source} at=({F1(p.X)},{F1(p.Y)},{F1(p.Z)}) radius={F1(radius)}");
     }
 
+    /// <summary>The roster soldiers must all be killed or felled, and the felled at most the straggler share of the wave as the stalemate rule counts it: roster plus summons (<c>SurvivalRun.RunWave</c>).</summary>
     internal static CheckVerdict Wave(WaveStats w, int count, float stragglerShare) =>
-        Verdict(w.Felled <= stragglerShare * count && w.Kills + w.Felled >= count,
+        Verdict(w.Felled <= stragglerShare * (count + w.Summoned) && w.Kills + w.Felled >= count,
             $"kills={Num(w.Kills)} felled={Num(w.Felled)} lost={Num(w.Lost)} seconds={F1(w.Seconds)} count={Num(count)}");
 
     internal static CheckVerdict StaleCleared() => new(CheckResult.Pass, "cleared=true");

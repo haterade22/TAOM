@@ -384,7 +384,7 @@
                 <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                            StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
                   <Children>
-                    <!-- Gold and the troops for the selected lane: F1 to F8, in slots that never move. -->
+                    <!-- Gold and the troops for the selected lane: F1 to F12, in slots that never move; a third row shows when a faction has more than eight offers. -->
                     <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="10"
                                StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                       <Children>

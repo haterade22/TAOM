@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
+	<!-- Villager (upgrades to lorien_scout, the culture's entry troop) -->
+	<NPCCharacter id="villager_lothlorien" race="elf" default_group="Infantry" level="1" name="{=aom_rv_villager}Villager" occupation="Villager" culture="Culture.lothlorien">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="30" />
+			<skill id="Riding" value="0" />
+			<skill id="OneHanded" value="30" />
+			<skill id="TwoHanded" value="20" />
+			<skill id="Polearm" value="30" />
+			<skill id="Bow" value="0" />
+			<skill id="Crossbow" value="0" />
+			<skill id="Throwing" value="20" />
+		</skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.lorien_scout" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_ll_rg_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_ll_rg_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_lothlorien_0" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0}Cautious Golden Wood merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>

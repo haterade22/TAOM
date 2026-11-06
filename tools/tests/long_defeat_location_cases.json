@@ -1,0 +1,5270 @@
+{
+ "note": "Shared by TAOM.Tests LongDefeatLocationsReaderTests and tools/tests/test_run_long_defeat.py. Expectations are written by hand from phase4-plan.md section 5. `shop` is one shop object of shop.json; classIds are the class ids classes.json holds. Expected sets are objects, slots [slot, item] pairs, engines [kind, price] pairs.",
+ "classIds": [
+  "sword_and_board",
+  "two_handed",
+  "archer",
+  "cavalry"
+ ],
+ "cases": [
+  {
+   "name": "a valid shop loads all three blocks, no warning",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    },
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    },
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      },
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "no armoury, yard or marshal key is no plan and no warning",
+   "shop": {},
+   "expected": null
+  },
+  {
+   "name": "an unknown key beside the blocks is ignored",
+   "shop": {
+    "ballista": {
+     "price": 1
+    },
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ],
+     "mystery": 7
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "only the yard",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "only the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "an armoury that is an array is one warning and no armoury, the yard stays",
+   "shop": {
+    "armoury": [],
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury that is null is one warning",
+   "shop": {
+    "armoury": null,
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "{=TAOM_LD_Marshal}Theodred",
+     "text": "{=TAOM_LD_Marshal_Text}A hero."
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard that is a string is one warning",
+   "shop": {
+    "yard": "x"
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal that is a number is one warning",
+   "shop": {
+    "marshal": 5
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an absent reach is the default, armoury 4 and yard 6, silently",
+   "shop": {
+    "armoury": {
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    },
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "an armoury reach of 0.5 is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": 0.5,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of 15.5 is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": 15.5,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of a string is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": "far",
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of null is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": null,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of true is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": true,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of 0 is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": 0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of 15.0000000001 is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": 15.0000000001,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury reach of 0.9999999999 is the default 4 with one warning",
+   "shop": {
+    "armoury": {
+     "reach": 0.9999999999,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard reach of 20 is the default 6 with one warning",
+   "shop": {
+    "yard": {
+     "reach": 20,
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard reach of -1 is the default 6 with one warning",
+   "shop": {
+    "yard": {
+     "reach": -1,
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "reach at both ends of its range is kept",
+   "shop": {
+    "armoury": {
+     "reach": 1,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    },
+    "yard": {
+     "reach": 15,
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 1.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": {
+     "reach": 15.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a fractional reach is kept",
+   "shop": {
+    "armoury": {
+     "reach": 2.5,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 2.5,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "an armoury with no sets key drops the armoury",
+   "shop": {
+    "armoury": {
+     "reach": 4
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury whose sets is an object drops the armoury",
+   "shop": {
+    "armoury": {
+     "sets": {}
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury with an empty sets list drops the armoury",
+   "shop": {
+    "armoury": {
+     "sets": []
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set that is not an object is skipped, the next stays",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      5,
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armoury whose every set is bad is dropped, with the sets' warnings and its own",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 0,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id missing skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id blank skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "  ",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id a number skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": 5,
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id upper case skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "Armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id with a space skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour 1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a set id with a hyphen skips the set, the armoury is dropped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour-1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "an id of digits and underscores is fine",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "a_1_9",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "a_1_9",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "an id is trimmed",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": " armour_1 ",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a repeated set id keeps the first",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 999,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set skipped for another reason does not claim its id",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 0,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set kind missing drops the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set kind capitalised drops the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "Armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set kind unknown drops the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "shield",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set kind a number drops the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": 1,
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armour set naming a weapon slot is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Item0": "sword"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a weapons set naming an armour slot is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Head": "helm"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set naming Horse is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Horse": "horse"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set naming HorseHarness is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "HorseHarness": "horse"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set naming an unknown slot is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Pants": "p"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set naming a lower case slot is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "head": "h"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set whose slots are missing is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail."
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set whose slots are empty is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {}
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set whose slots are an array is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": [
+        "Head"
+       ]
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set whose slots are a string is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": "Head"
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a slot whose item is empty skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": ""
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a slot whose item is blank skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "   "
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a slot whose item is a number skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": 7
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a slot whose item is null skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": null
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an item id is trimmed",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": " h1 "
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "the slots keep the file's order",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Cape": "c",
+        "Head": "h",
+        "Leg": "l"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Cape",
+         "c"
+        ],
+        [
+         "Head",
+         "h"
+        ],
+        [
+         "Leg",
+         "l"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a weapons set may name one slot, or all four",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item3": "dagger"
+       }
+      },
+      {
+       "id": "w4",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "a",
+        "Item1": "b",
+        "Item2": "c",
+        "Item3": "d"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item3",
+         "dagger"
+        ]
+       ]
+      },
+      {
+       "id": "w4",
+       "name": "w4",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "a"
+        ],
+        [
+         "Item1",
+         "b"
+        ],
+        [
+         "Item2",
+         "c"
+        ],
+        [
+         "Item3",
+         "d"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a set price missing skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price 0 skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 0,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price -5 skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": -5,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price 1000001 skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 1000001,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price 2.5 skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 2.5,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price a string skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": "100",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price null skips the set",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": null,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a set price of 1 or 1000000 is kept",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 1,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 1000000,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 1,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      },
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 1000000,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a weapons set with no classes is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a weapons set whose classes is a string is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": "archer",
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a weapons set with an empty class list is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an unknown class id is dropped with a warning, the rest stay",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer",
+        "wizard",
+        "cavalry"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer",
+        "cavalry"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a weapons set left with no known class is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "wizard"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a class id that is not a string is dropped with a warning",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer",
+        5
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a repeated class id is kept once, silently",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer",
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a class id is matched exactly, not by case",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "Archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "an armour set may list classes",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       },
+       "classes": [
+        "cavalry",
+        "archer"
+       ]
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": [
+        "cavalry",
+        "archer"
+       ],
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "an armour set whose every listed class is unknown is skipped, never widened to every class",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       },
+       "classes": [
+        "wizard"
+       ]
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "an armour set with an empty class list is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       },
+       "classes": []
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an armour set whose classes is an object is skipped",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "{=TAOM_LD_Gear_Armour1}Riders' mail",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       },
+       "classes": {}
+      },
+      {
+       "id": "weapons_archer",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": {
+        "Item0": "bow",
+        "Item1": "arrows"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "weapons_archer",
+       "name": "weapons_archer",
+       "text": "",
+       "kind": "weapons",
+       "classes": [
+        "archer"
+       ],
+       "price": 200,
+       "slots": [
+        [
+         "Item0",
+         "bow"
+        ],
+        [
+         "Item1",
+         "arrows"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a missing name is the id and a missing text is empty",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "armour_1",
+       "text": "",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a blank name is the id",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": "  ",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "armour_1",
+       "text": "{=TAOM_LD_Gear_Armour1_Text}A rider's mail.",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a name that is not a string is the id",
+   "shop": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "kind": "armour",
+       "donor": "fow_rohan_a",
+       "price": 250,
+       "name": 5,
+       "text": [],
+       "slots": {
+        "Head": "h1",
+        "Body": "b1",
+        "Gloves": "g1",
+        "Leg": "l1"
+       }
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": {
+     "reach": 4.0,
+     "sets": [
+      {
+       "id": "armour_1",
+       "name": "armour_1",
+       "text": "",
+       "kind": "armour",
+       "classes": null,
+       "price": 250,
+       "slots": [
+        [
+         "Head",
+         "h1"
+        ],
+        [
+         "Body",
+         "b1"
+        ],
+        [
+         "Gloves",
+         "g1"
+        ],
+        [
+         "Leg",
+         "l1"
+        ]
+       ]
+      }
+     ]
+    },
+    "yard": null,
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a yard with no engines key drops the yard",
+   "shop": {
+    "yard": {
+     "reach": 6
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard whose engines is an object drops the yard",
+   "shop": {
+    "yard": {
+     "engines": {}
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard with an empty engine list drops the yard",
+   "shop": {
+    "yard": {
+     "engines": []
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine row that is not an object is skipped",
+   "shop": {
+    "yard": {
+     "engines": [
+      "mangonel",
+      {
+       "kind": "mangonel",
+       "price": 450
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a ballista row is refused while the ballista is not sold",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "ballista",
+       "price": 300
+      },
+      {
+       "kind": "mangonel",
+       "price": 450
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine kind missing skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine kind unknown skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "catapult",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine kind capitalised skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "Mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine kind a number skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": 3,
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a repeated engine kind keeps the first",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "mangonel",
+       "price": 1
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine skipped for its price does not claim its kind",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 0
+      },
+      {
+       "kind": "mangonel",
+       "price": 450
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price missing skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel"
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price 0 skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 0
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price 1000001 skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 1000001
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price 2.5 skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 2.5
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price a string skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": "9"
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an engine price null skips the row",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": null
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a yard whose every engine is bad is dropped, with the row's warning and its own",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 0
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 2
+   }
+  },
+  {
+   "name": "the engines keep the file's order",
+   "shop": {
+    "yard": {
+     "engines": [
+      {
+       "kind": "trebuchet",
+       "price": 700
+      },
+      {
+       "kind": "mangonel",
+       "price": 450
+      }
+     ]
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "trebuchet",
+       700
+      ],
+      [
+       "mangonel",
+       450
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a marshal with only a troop and a price takes the troop id for its name and no text",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 500,
+     "name": "lord_4_7",
+     "text": ""
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a marshal troop missing drops the marshal",
+   "shop": {
+    "marshal": {
+     "price": 500
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal troop blank drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "  ",
+     "price": 500
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal troop a number drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": 4,
+     "price": 500
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal price missing drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7"
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal price 0 drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 0
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal price 1000001 drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 1000001
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal price 1.5 drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": 1.5
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a marshal price a string drops the marshal",
+   "shop": {
+    "marshal": {
+     "troop": "lord_4_7",
+     "price": "500"
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": null,
+    "marshal": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "one bad block does not touch the others",
+   "shop": {
+    "armoury": {
+     "reach": 4
+    },
+    "yard": {
+     "engines": [
+      {
+       "kind": "mangonel",
+       "price": 450
+      },
+      {
+       "kind": "trebuchet",
+       "price": 700
+      }
+     ]
+    },
+    "marshal": {
+     "troop": "lord_4_7"
+    }
+   },
+   "expected": {
+    "armoury": null,
+    "yard": {
+     "reach": 6.0,
+     "engines": [
+      [
+       "mangonel",
+       450
+      ],
+      [
+       "trebuchet",
+       700
+      ]
+     ]
+    },
+    "marshal": null,
+    "warnings": 2
+   }
+  }
+ ]
+}

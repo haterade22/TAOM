@@ -453,7 +453,7 @@ public class MarshalMarkCaptureAndShotTableTests
         var reader = Code("Main/Adapters/MarshalCombatReader.cs");
         var table = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
 
-        StringAssert.Contains(reader, "MarshalFireTable.NoteShooter(company, shooter); if (MarshalFireTable.ModeOf(company) == FireMode.Free) return;");
+        StringAssert.Contains(reader, "MarshalFireTable.NoteShooter(company, shooter); MarshalFireTable.CountAnyShot(company); if (MarshalFireTable.ModeOf(company) == FireMode.Free) return;");
         StringAssert.Contains(table, "if (InRange(company) && company == Volatile.Read(ref _watched)) Watch.Note(shooter);");
     }
 
@@ -653,7 +653,7 @@ public class MarshalMarkCaptureAndShotTableTests
         StringAssert.Contains(code, "catch (Exception ex) { Fault(ex); PayAgentCleanup(); }");
         StringAssert.Contains(code, "if (_agentCleanupOwed) PayAgentCleanup(); if (_finished || Faulted) return;");
         StringAssert.Contains(code, "_agentCleanupOwed = false; Swallow(_outlines.ClearAll); Swallow(_outlines.Drop); Swallow(_fire.ReleaseAll); Swallow(_fire.Drop);");
-        StringAssert.Contains(code, "if (owner) { Swallow(_fire.Summarize); MarshalHooks.Clear(); } if (!_agentCleanupOwed) { Swallow(_fire.Drop); Swallow(_outlines.Drop); }");
+        StringAssert.Contains(code, "if (owner) { Swallow(_fire.Summarize); Swallow(_throwers.Summarize); MarshalHooks.Clear(); } if (!_agentCleanupOwed) { Swallow(_fire.Drop); Swallow(_outlines.Drop); }");
     }
 
     [TestMethod]

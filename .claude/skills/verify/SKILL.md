@@ -147,7 +147,7 @@ With a review base known, diff against `<base>` instead of `HEAD`. Read every hi
 python tools/check_provenance.py
 ```
 
-Every miss goes under Issues: a register Derivation or Status outside its closed set, a shipped non-TAOM binary with no `redistributed` row, or an adoption record the register does not name. A zero does not prove intent ([provenance.md](../../rules/provenance.md)).
+Every miss goes under Issues: a register Derivation or Status outside its closed set, a shipped non-TAOM binary with no `redistributed` row, or an adoption record the register does not name. A zero does not prove intent ([provenance-register.md](../../../docs/reference/provenance-register.md)).
 
 ## Step 6: Owed in-game verdicts (information only)
 

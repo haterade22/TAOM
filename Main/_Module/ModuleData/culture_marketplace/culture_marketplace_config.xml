@@ -118,7 +118,6 @@
       <Item id="sk_ar_art_crown_king_a" />
     </Blacklist>
   </Culture>
-  <Culture id="lothlorien" armour_from="rivendell" />
   <Culture id="abanissa" armour_from="aserai" />
   <Culture id="shaghana" armour_from="aserai" />
   <Culture id="battania" armour_from="khuzait" />

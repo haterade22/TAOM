@@ -38,7 +38,7 @@ round the same day, and designed the ladder on 2026-09-28 (#693, below). Target 
 | Market thresholds | A town's armoury level: heavy at 1, elite and heavy at 2, lord and all at 3 (the review round: lord kit is sold at 3, as KEYforce proposed) |
 | KEYforce's "armoury or some building is tier X-Y-Z" | The Barracks level. Every live town starts at 1 or more (19 at 1, 33 at 2, 26 at 3), so heavy is on sale in every town, elite in 59 of 78, lord kit in 26 |
 | Loot of a heavy, elite, lord or named piece | Never drops; the loot roll runs over the troop's other gear |
-| Lord kit | Sold at a level 3 armoury, forged there for the best metal (thamaskene) plus the special resource, the lord's gear ladder (below), and the "Lord's Harness Unclaimed" event |
+| Lord kit | Sold at a level 3 armoury, forged there for the best metal (thamaskene) plus the special resource, the lord's gear ladder (below), and the "Lord's Harness Unclaimed" event. The one exception is Lórien's lord-grade pieces (the Marchwarden lord helmets and the Mallorn elite chests and helmets): they are `is_merchandise="false"` by design (Mike, 2026-11-06), so no armoury sells them and the lord's gear ladder is their route |
 | Named items | All seventeen hero weapons and shields are never sold or looted, and ten more since 2026-09-28 (Tuor's heirloom axes, Galadriel's sword, the seven Noldor swords); the ladder's weapon rung awards the named weapons (table below) |
 | Cultures with no armour of their own | Draw on a related culture's armour for their markets and their lord kit: the Armourer's Commission mapping |
 | Market sweep | Daily, per town, not once per save |
@@ -61,7 +61,7 @@ from it).
 | The other route | Bring the armourer N of the culture's lord's materials instead of the deeds |
 | Reward | The culture's lord piece for the slot, else its best elite piece there |
 | Weapon rung | The culture's named weapons where it has them, else a per-culture pick in config |
-| Materials | New items, one per culture that owns armour (13); a culture without armour uses its donor's |
+| Materials | New items, one per culture that owns armour (14); a culture without armour uses its donor's |
 | Material sources | Battle drops of the hero's own culture's material, and new notable quests per culture. No smelting |
 
 Defaults set here, for Mike to overrule: a knockout counts as struck down (`count_knockouts`); a rung's
@@ -114,7 +114,7 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    lord 3, named pieces never qualify, and an item whose XML marks it non-merchandise never does (the
    ranged ladders and starter kits were leaking). A town's level is its Barracks level plus a visiting
    master armourer's bonus, capped at 3 (`ArmouryLevelService.GetTownLevel`). A culture with no armour of
-   its own draws on another's: `<Culture id="lothlorien" armour_from="rivendell" />` in
+   its own draws on another's: `<Culture id="abanissa" armour_from="aserai" />` in
    `culture_marketplace_config.xml` merges the donor's character armour into its pool, unless the culture
    lists `<Stock>` rows, which then decide its market stock (Lindon and Arthedain, #755). A **daily sweep**
    (`DailyTickSettlementEvent`) takes out of each town's market the gated pieces its armoury does not
@@ -150,7 +150,7 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    dictionary would carry TAOM objects in the save. It hands out class-table lord kit of the right
    culture (never a vanilla piece): the culture's lord pieces, else its elite pieces, else any culture's
    lord pieces, a culture with no armour using its `armour_from` donor.
-7. **Lord's materials.** Thirteen TAOM items (`taom_lords_materials.xml`, TAOM's only item file), `Goods`
+7. **Lord's materials.** Fourteen TAOM items (`taom_lords_materials.xml`, TAOM's only item file), `Goods`
    in the `unassigned` category, non-merchandise, with no culture and a value of 500: no workshop makes
    them, no caravan buys them, and neither the loot model, plunder, the hideout pool nor
    CultureMarketplace hands them out (the engine facts below). They come from battles won, while a rung
@@ -200,7 +200,7 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
 - **Icons.** An item's inventory icon is a render of its mesh (`ItemImageIdentifierVM`), never a 2D
   sprite, so each material has its own bar. Vanilla's smithing materials share one material
   (`crafting_materials`: `pbr_metallic`, a 512 `crafting_mat_d/_n/_s` atlas in `core_game.tpac`), each
-  mesh sampling its own patch. The thirteen bars (`lord_material_01` to `13`, LOTRLOME_Armory
+  mesh sampling its own patch. The thirteen bars (`lord_material_01` to `13`; Lórien's fourteenth material wears `lord_material_06` until a bar is cloned for it, LOTRLOME_Armory
   `Assets/smithing/lord_materials_geo.tpac`) are vanilla's `thamaskene_steel` cloned with
   `tools/tpac_clone_metamesh.py` onto materials `lord_material_m_01` to `13`, whose 1K `_d` recolours the
   atlas's thamaskene patches per culture over one shared `_n` and `_s` (Mike, 2026-09-28).
@@ -250,7 +250,7 @@ target inside their kit line (the rest are mostly elite pieces with no lord sibl
 | `<LordEvent>` | chance, cooldown_days, leave_relation | 0.08, 90, 5 | |
 | `<VisitingArmourer>` | chance_per_day, duration_days, level_bonus | 0.04, 7, 1 | A visit goes only to a town whose Barracks is below 3 |
 | `<LordsLadder>` | count_knockouts; `<Step slot quest materials>` | true; hands 10, legs 15, shoulders 20, head 30, body 40, weapon 60 | The rungs in climbing order, each slot once, each on its own career quest; materials 1 to 999 |
-| `<LordsMaterials>` | base_chance, chance_per_ten_kills, max_chance, min_units, max_units; `<Material culture item>` | 0.1, 0.01, 0.6, 1, 3; 13 cultures | The find after a battle won: 10%, plus 1 point per ten enemies the hero struck down in it, at most 60%, for 1 to 3 units |
+| `<LordsMaterials>` | base_chance, chance_per_ten_kills, max_chance, min_units, max_units; `<Material culture item>` | 0.1, 0.01, 0.6, 1, 3; 14 cultures | The find after a battle won: 10%, plus 1 point per ten enemies the hero struck down in it, at most 60%, for 1 to 3 units |
 | `<LadderWeapons>` | `<Weapon culture item>` | 39 rows, 14 cultures | The weapon rung's choices per culture, in order |
 | `<LadderPieces>` | `<Piece culture slot item>` | 1 row: Arthedain's head rung, the Arnor King's Crown | Named armour an armour rung offers first, for the hero's own culture only (never through its armour donor); a piece the Armory does not load is skipped (2026-10-08) |
 
@@ -282,12 +282,10 @@ thamaskene 260. Special resources earn about 14 per battle won, so 150 is roughl
 
 ### `culture_marketplace_config.xml`
 
-Seventeen `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
-Rivendell, Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), the
+Sixteen `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon draws on Rivendell (Lórien left the mapping on 2026-11-06, when it got a ladder of its own: a material, a Deep Seam row and a commission row), Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), the
 three orc cultures and Umbar on Mordor, Arthedain (2026-10-07), Cardolan and Rhudaur on Gondor, Ered Luin
 on Erebor (2026-10-27), Anduin Vale, Angáladh and Dorwinion on Dale (`sturgia`), and South Rhovanion
-on Rohan (`vlandia`). Those cultures own 43 of the 100 towns in the live map (counted
-2026-11-03). `armour_from` always names the lord kit, ladder weapon and lord's material donor;
+on Rohan (`vlandia`). Those cultures owned 43 of the 100 towns in the live map when counted on 2026-11-03, before Lórien left the mapping. `armour_from` always names the lord kit, ladder weapon and lord's material donor;
 for the market it only applies to a culture without `<Stock>` rows. Lindon, Arthedain, Cardolan,
 Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion stock their markets through `<Stock>` rows instead (#755, [culture marketplace](culture-marketplace.md)). The Animalia moose is
 routed to Mirkwood with `min_stock="1"`.
@@ -306,7 +304,7 @@ game's gate is on. The ladder has no toggle of its own: it runs while the gate i
   plus up to 18 by difficulty), one per culture that owns armour and shared by the cultures that draw on
   it, each paying five of the culture's lord's material (`reward_count="5"`).
 - `career_system/taom_career_quests.xml`: the six `taom_lords_gear_*` rung quests (above).
-- `armour_acquisition/taom_lords_materials.xml`: the thirteen lord's materials, registered as an `Items`
+- `armour_acquisition/taom_lords_materials.xml`: the fourteen lord's materials, registered as an `Items`
   node in `SubModule.xml` (campaign game types only). Names and art are placeholders: Númenórean Steel,
   Eorling Steel, Erebor Dwarf-steel, Dale-forged Steel, Noldorin Silver-steel, Greenwood Silver, Barad-dûr
   Black Iron, Isengard Forge-iron, Dol Guldur Shadow-iron, Gundabad Orc-steel, Rhûnic Gilt-bronze,
@@ -409,7 +407,7 @@ event service and policy, wiring (the module with its four behaviors, the kill c
 `MissionBehaviorDecl` built through its factory, the SubModule call, a container that builds them all:
 `RequiresGame`), and shipped data through the real providers (every rung's quest, `HeroKills` only in
 rung quests, the compiled ladder mirroring the shipped file, the materials' economy attributes, the Deep
-Seam's culture map and player filter, a material and weapon picks for all thirteen cultures).
+Seam's culture map and player filter, a material and weapon picks for all fourteen cultures).
 Elsewhere: `SpecialResourceSpenderTests`, `CultureMarketplaceArmourDonorTests` (the pool merge and its
 config), the CultureMarketplace injection tests (the per-town filter), the Animalia moose route,
 `CareerQuestConfigProviderTests` and `CareerQuestServiceTests` (`HeroKills`),
@@ -492,7 +490,7 @@ Arthedain carry what their `<Stock>` rows name). An item
 - **Translation:** 102 new keys (88 module, 14 issue) are registered and seeded with English in all 12
   languages. The paid translator run is Mike's call (`translate_with_claude.py --module TAOM --sync-ids
   --apply`); until then `NoTranslatedString_MixesWritingSystems` flags the English rows in CN, JP, KO and RU.
-- **Names and art:** the thirteen material names and the weapon picks of the seven cultures without named
+- **Names and art:** the fourteen material names and the weapon picks of the seven cultures without named
   weapons are placeholders for Mike or KEYforce. The bars, their materials and textures live only in the
   live Armory (unversioned): the Kit must save the Armory once so the game loads the new package, and an
   in-game look is owed.
@@ -562,6 +560,7 @@ The lord's gear ladder: #693. The base feature: none yet (see Owed).
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+- 2026-11-06: Lórien owns a ladder of its own (Mike): `taom_lords_material_lothlorien` (placeholder name and Mirkwood's bar), its `<Material>` row and the compiled default, a Deep Seam row and an Armourer's Commission row (`sk_ll_gl_chest_heavy_a`), and no `armour_from` donor. Its lord-grade pieces stay lord-only.
 
 ## Referenced by
 

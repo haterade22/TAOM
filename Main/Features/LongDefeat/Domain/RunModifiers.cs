@@ -14,9 +14,9 @@ internal static class RunModifiers
 {
     /// <summary>
     /// The table for a wave with these affixes and this attacker damage factor, and the troop and class boons <paramref name="owned"/>: a new record on every call so a table
-    /// the engine's threads already hold is never mutated.
+    /// the engine's threads already hold is never mutated. A war cry in progress adds its two percents to the attackers' record.
     /// </summary>
-    public static LdStatTable StatTable(AffixPlan plan, IReadOnlyList<string> affixes, float attackerDamage, IReadOnlyCollection<BoonRow>? owned = null)
+    public static LdStatTable StatTable(AffixPlan plan, IReadOnlyList<string> affixes, float attackerDamage, IReadOnlyCollection<BoonRow>? owned = null, CommanderAbility? warCry = null)
     {
         var fx = new RaceAbilityEffects();
         var armour = 0f;
@@ -53,6 +53,13 @@ internal static class RunModifiers
             }
         }
 
+        if (warCry != null)
+        {
+            fx.SwingSpeedPercent += warCry.SwingSpeedPercent;
+            fx.MoveSpeedPercent += warCry.MoveSpeedPercent;
+            stats = true;
+        }
+
         fx.MountSpeedPercent = fx.MoveSpeedPercent;
         var boons = owned ?? Array.Empty<BoonRow>();
         return new LdStatTable(attackerDamage, stats ? fx : null, armour)
@@ -63,6 +70,59 @@ internal static class RunModifiers
             Player = TargetStats(boons, BoonTarget.Player),
         };
     }
+
+    /// <summary>
+    /// What the siege engines' vanilla hit points (<c>SiegeEngineType.BaseHitPoints</c>) are multiplied by for a wave: <c>1 + engineHitPointsPercent / 100</c> when the Hammer of the Underworld is in
+    /// the roll, else 1, so the write at each wave start also restores the vanilla value after a hammer wave. It is the only number that touches an engine's hit points. The endless health factor
+    /// multiplies the attackers' soldiers' health limit and the endless damage factor their blows (<see cref="LdStatTable.AttackerDamage"/>, which the damage model applies to a soldier's blow on the
+    /// gate, a wall or a shield but not to the ram, whose damage reaches the gate through <c>DestructableComponent.TriggerOnHit</c>); neither multiplies this factor or is multiplied by it. Never
+    /// below 0.1, because an engine with no hit points is a destroyed engine, and a factor that is not a number changes nothing.
+    /// </summary>
+    public static float EngineHitPoints(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Hammer))
+            return 1f;
+
+        var factor = 1f + plan.Value(AffixPlan.Hammer, "engineHitPointsPercent") / 100f;
+        if (float.IsNaN(factor) || float.IsInfinity(factor))
+            return 1f;
+
+        return Math.Max(MinEngineFactor, factor);
+    }
+
+    /// <summary>The Winged Terror pulse of a wave, or null when the wave has none or the power's numbers cannot pulse (no positive finite interval or radius, a number that is not a number).</summary>
+    public static LdTerror? Terror(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Terror))
+            return null;
+
+        var seconds = plan.Value(AffixPlan.Terror, "pulseSeconds");
+        var radius = plan.Value(AffixPlan.Terror, "radius");
+        var amount = plan.Value(AffixPlan.Terror, "amount");
+        var floor = plan.Value(AffixPlan.Terror, "floor");
+        if (!IsPositive(seconds) || !IsPositive(radius) || float.IsNaN(amount) || float.IsNaN(floor) || float.IsInfinity(amount) || float.IsInfinity(floor))
+            return null;
+
+        return new LdTerror(seconds, new LdMoralePulse(radius, amount, floor));
+    }
+
+    /// <summary>
+    /// The Morgul Blades doses of a wave, or null when the wave has none or the power's numbers cannot poison anyone (a rate or a length that is not positive and finite). One dose does
+    /// <c>poisonPerSecond</c> a second for <c>poisonSeconds</c> seconds.
+    /// </summary>
+    public static LdPoisonBook? Blades(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Blades))
+            return null;
+
+        var perSecond = plan.Value(AffixPlan.Blades, "poisonPerSecond");
+        var seconds = plan.Value(AffixPlan.Blades, "poisonSeconds");
+        return IsPositive(perSecond) && IsPositive(seconds) ? new LdPoisonBook(perSecond, seconds) : null;
+    }
+
+    private const float MinEngineFactor = 0.1f;
+
+    private static bool IsPositive(float v) => v > 0f && !float.IsInfinity(v);
 
     /// <summary>
     /// The health factor in force for a target: the product of each boon's own factor, so a standing soldier scaled once by every boon's own factor (<see cref="OwnHealthFactor"/>)
@@ -134,6 +194,9 @@ internal static class RunModifiers
 
     /// <summary>The gold the boons owned paid at their picks, in all.</summary>
     public static int GoldPaid(IReadOnlyCollection<BoonRow> owned) => (int)owned.Sum(b => b.Effects.Where(e => e.Key == BoonKeys.Gold).Sum(e => e.Value));
+
+    /// <summary>What the boons owned multiply every commander ability's cooldown by (1 plus the summed percents over 100, never below 0). The first delay is not a cooldown and is left alone.</summary>
+    public static float CommanderCooldown(IReadOnlyCollection<BoonRow> owned) => Factor(owned, BoonKeys.CommanderCooldownPercent);
 
     /// <summary>The affix count the boons owned add to every later wave's schedule: zero or negative.</summary>
     public static int AffixCut(IReadOnlyCollection<BoonRow> owned) => (int)Sum(owned, BoonKeys.AffixCount);

@@ -10246,8 +10246,8 @@ reskinned vanilla rig is still unresolved and the animation page says so. **The 
 playbook is deliberately absent.** The general lessons that apply to your own assets are in;
 the step-by-step for lifting another mod's creature is not.
 
-Artem (ADOD_Beasts) and Byak0 (Alliance, Alliance.Wargs) are credited by name per
-`.claude/rules/provenance.md`, which forbids the euphemism as much as the bare mention.
+Artem (ADOD_Beasts) and Byak0 (Alliance, Alliance.Wargs) are credited by name; a
+euphemism is as much a defect as a bare mention.
 
 Verified: both quoted Monster blocks diffed attribute by attribute against the live files, the
 elephant Horse item likewise, `dump_engine_skeleton.ps1` invocations checked against its actual
@@ -12464,8 +12464,7 @@ per-directory authorship, and an honest note that raw AI-generated sprites are t
 copyright claim while the models, map, lore, and compilation are solid.
 
 **It very nearly shipped as a second, contradictory register.** `docs/reference/provenance-register.md`
-already exists, already calls itself the single authoritative record, and is governed by
-`.claude/rules/provenance.md`, a path-scoped rule that fires on the exact files this change touched.
+already exists and already calls itself the single authoritative record.
 The first draft of the new file duplicated its software rows and asserted that BetaDeps' license was
 "not recorded anywhere in this repo." It is recorded, as `UNKNOWN` / `uncleared`, with a detail
 section explaining that the derivation type was corrected from `clean-room` to `behavioural-port` on
@@ -14632,8 +14631,7 @@ all deliberately out of this change. Details: `docs/features/dread-aura.md`.
 
 **New `docs/reference/provenance-register.md`.** One table of the external sources TAOM's code and
 content derive from, each with its licence, the kind of derivation (a closed vocabulary), and the
-concrete TAOM paths it covers. `.claude/rules/provenance.md` is the path-scoped authoring rule that
-goes with it, registered in `docs/reference/rules-catalog.md`.
+concrete TAOM paths it covers.
 
 **New `Main/_Module/THIRD-PARTY-LICENSES.txt`.** Carries the notice for the redistributed native
 hooking library under `Main/_Module/bin/`, matching the file the Dependencies module already ships
@@ -19600,7 +19598,7 @@ load-bearing "Documentation Requirements (MANDATORY)" heading (issue-body templa
 `armory-shield-audit.md`). Corrected two stale counts: "42 skills load eagerly" → 40 of 42
 (two are `disable-model-invocation`), "25 hooks" → 24 registrations across 9 events.
 
-**Always-load rules: provenance stripped to `docs/reference/rule-provenance.md`.** The "Why this
+**Always-load rules: provenance sections stripped.** The "Why this
 rule exists" / "Relationship to other rules" / "Source" sections of five always-load rules
 (evidence-over-claims, simplicity-criterion, think-before-coding, response-style, ai-prose-style)
 are import history and cross-rule commentary — zero runtime behavior, paid on every turn. Moved
@@ -19621,7 +19619,7 @@ one concern (chat replies vs written artifacts), cross-referenced each other fou
 re-listed the same banned phrases. Now one rule: Part 1 (reply openings + confidence tags),
 Part 2 (AI-prose tells + the TAOM house-style carve-out) — operative text verbatim, one
 banned-phrase deferral, sources already in the provenance doc. Referrers updated (`/humanizer`
-×5, CLAUDE.md soft-suggest, rules-catalog, rule-provenance headings). Size-neutral (+0.4 KB) —
+×5, CLAUDE.md soft-suggest, rules-catalog). Size-neutral (+0.4 KB) —
 the projected saving landed in the provenance strip; the merge's win is one banned-phrase list
 and one less cross-referenced file.
 
@@ -19682,7 +19680,7 @@ re-confirmed empirically this session.
 42 → 28 KB); always-load rules' original content 48,794 → 38,871 B (−20%); the every-turn
 CHANGELOG nag muted (~3.5K tok/long session); post-compaction rehydration reads live memory
 instead of a March snapshot; one unmigrated lesson recovered from a dir two audits called empty.
-Three new reference docs (rules-catalog, mcp-servers, rule-provenance), one new always-load rule
+Two new reference docs (rules-catalog, mcp-servers), one new always-load rule
 (working-discipline), one merged rule (output-style), two rules deleted. Every move
 grep-verified against its destination before the source was deleted (Track C4/C5); `--fail-on-drift`
 rc=0 and dead-links held at 11 after every commit. Caps stay 46K/44K by user decision — regrowth

@@ -63,7 +63,7 @@ class DeadMemoryRefTests(_Repo):
 
     def test_the_engine_study_is_scanned_and_the_rest_of_reference_is_not(self):
         _write(self.root / "docs/reference/engine/a.md", "see `feedback_foo`\n")
-        _write(self.root / "docs/reference/rule-provenance.md", "came from feedback_old\n")
+        _write(self.root / "docs/reference/other.md", "came from feedback_old\n")
         f = ld.check_dead_memory_refs()
         self.assertEqual(self.kinds(f), ["dead-memory-ref"])
         self.assertIn("engine", str(f[0][0]))

@@ -67,12 +67,11 @@ troop sits one tier below the top, the row takes the guard: Rohan's King's Royal
 the Gundabad and Goblin Mountain Guards (below Bolg's Ironfang), and Khand's Ash Shieldguard (below the Obsidian
 Shieldmaster, which guards Rhun).
 
-- **Borrowed troops:** three cultures own no line troops of their own culture and field another's tree, so their row
-  borrows it: Lothlorien guards are `imladris_warden` (Rivendell), Khand (`battania`) guards are
-  `dragon_wrath_ash_shieldguard` (Rhun), Abanissa guards are `harad_serp_guard` (Harad). They wear the crowned
-  culture's colours.
-- **Shared troops:** Rivendell and Lothlorien share `imladris_warden`; Harad (`aserai`) and Abanissa share
-  `harad_serp_guard`.
+- **Borrowed troops:** two cultures own no line troops of their own culture and field another's tree, so their row
+  borrows it: Khand (`battania`) guards are `dragon_wrath_ash_shieldguard` (Rhun), Abanissa guards are
+  `harad_serp_guard` (Harad). They wear the crowned culture's colours. Lothlorien guards are its own
+  `lorien_gl_mallorn_defender` since 2026-11-05.
+- **Shared troops:** Harad (`aserai`) and Abanissa share `harad_serp_guard`.
 - **Mounted troops on foot:** Rohan's row is a cavalry troop. The scene draws a horse only when the character asks for
   one, and the postfix does not, so every guard stands on foot.
 - **No trolls:** Mordor's top troops are the armoured and hill trolls, but Mordor's townsfolk are uruks. A troll guard

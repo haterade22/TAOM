@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -27,8 +28,10 @@ internal sealed record LdSpawnReport(IReadOnlyList<LdPoint> Points, int Far, int
 /// <summary>
 /// One look at the field. Standing counts live humans that are not running away; Fleeing counts the ones that are. The keep
 /// counts are only meaningful when the read asked for them. <c>MainBody</c> is 0 with no player agent, otherwise a number the
-/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The last three are
-/// diagnostics only: defenders running away, and how many of each side stand at or above the wall line.
+/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The next three are
+/// diagnostics only: defenders running away, and how many of each side stand at or above the wall line. <c>DefenderHealthMean</c> is the mean of health over limit across every active human of the
+/// defending team with a limit, runners included (the people <c>RestDefenders</c> heals), or -1 when none was read; the <c>field-care</c> check compares it with the heal's own read-back.
+/// <c>Gates</c> are the visible gates as the field read them this tick (null from a field that reads none), which the run keeps for its gate row, its repair quote and the wave's gate record.
 /// </summary>
 internal readonly record struct LdReading(
     int AttackersStanding,
@@ -40,7 +43,9 @@ internal readonly record struct LdReading(
     int SiegeBattleSize,
     int DefendersFleeing = 0,
     int AttackersHigh = 0,
-    int DefendersHigh = 0);
+    int DefendersHigh = 0,
+    float DefenderHealthMean = -1f,
+    IReadOnlyList<LdGateFacts>? Gates = null);
 
 internal enum LdRemovalKind
 {
@@ -50,8 +55,15 @@ internal enum LdRemovalKind
     Player,
 }
 
-/// <summary>What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is not a loss.</summary>
-internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId);
+/// <summary>
+/// What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is no loss, except the commander's: an attacker comes with the <c>Role</c> the registry holds
+/// for him and whether the stalemate rule's <c>Fell</c> marked him (<c>Felled</c>), and a commander removed with no loss (a rout; a deletion only if native raises a removal for it, risk 2) is reported with <c>Loss</c> false so the run stops him.
+/// </summary>
+internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true, AgentKey Key = default)
+{
+    /// <summary>Whether the registry held the agent, so the run must forget its key (a removal of a kind <see cref="LdRemovalKind.None"/> can still carry one: a routed soldier, a deleted horse's rider).</summary>
+    public bool HasKey => Key.Value > 0;
+}
 
 /// <summary>A rest between waves: how many defenders it reached, and their mean health as a share of their limit, before and after.</summary>
 internal readonly record struct LdRest(int Count, float MeanBefore, float MeanAfter);
@@ -93,6 +105,13 @@ internal sealed record LdTargetSample(string TroopId, float HealthLimit, float C
 
     public bool HasAgent => TroopId.Length > 0;
 }
+
+/// <summary>
+/// What one Morgul Blades tick did to a defender: the health it took (<c>Damage</c>), whether it killed him, whether it was withheld because no attacker stood to own the kill (he keeps 1 health),
+/// whether the owner it chose was not active at the call (<c>OwnerMissing</c>, which must stay 0, and then nothing is killed) and whether the owner was not the poisoner (<c>Substituted</c>).
+/// All false and 0 for a victim already gone.
+/// </summary>
+internal readonly record struct LdPoisonResult(int Damage, bool Killed, bool Withheld, bool OwnerMissing, bool Substituted);
 
 /// <summary>What an effects-adapter call reached: how many agents, and the milliseconds it took (risk 11 reads the pick's refresh from the log).</summary>
 internal readonly record struct LdTouched(int Count, double Milliseconds);

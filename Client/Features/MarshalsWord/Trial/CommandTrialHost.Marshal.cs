@@ -23,6 +23,7 @@ internal sealed partial class CommandTrialHost
     private WorldPosition _dragEnd;
     private Formation? _enemyCompany;
     private MarshalView? _marshalView;
+    private readonly MarshalThrowerAdapter _throwerReads = new();
 
     private MarshalView? MarshalViewOfMission => _marshalView ??= _mission.GetMissionBehavior<MarshalView>();
 
@@ -520,4 +521,80 @@ internal sealed partial class CommandTrialHost
 
     private WorldPosition GroundPosition(float x, float y) =>
         new(_mission.Scene, new Vec3(x, y, _adapter.GroundHeight(x, y, GroundProbeStartHeight), -1f));
+
+    public ThrowerCensus MarshalChooseThrowers()
+    {
+        _chosenCompanies.Clear();
+        Formation? chosen = null;
+        var best = default(ThrowerCensus);
+        foreach (var formation in _mission.PlayerTeam?.FormationsIncludingEmpty ?? Enumerable.Empty<Formation>())
+        {
+            if (formation.CountOfUnits == 0 || WhyNotIfAdvanced(MarshalOrderAdapter.CompanyOf(formation), out var census).Length > 0)
+                continue;
+            if (chosen == null || census.Units > best.Units)
+            {
+                chosen = formation;
+                best = census;
+            }
+        }
+
+        if (chosen != null)
+            _chosenCompanies.Add(chosen);
+        return best;
+    }
+
+    public float MarshalThrowerRange(int company) => company < _chosenCompanies.Count ? _throwerReads.Range(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? float.NaN : float.NaN;
+
+    public void MarshalAdvance()
+    {
+        NoteWrite("CommandTrialHost.MarshalAdvance");
+        if (_chosenCompanies.Count == 0 || _enemyCompany == null)
+            return;
+        PlayerController?.SetOrderWithFormation(OrderType.Advance, _enemyCompany);
+    }
+
+    public ThrowerFacts? MarshalThrowerRun(int company) =>
+        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Throwers.FactsOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) : null;
+
+    public string MarshalThrowerWhy(int company) =>
+        company < _chosenCompanies.Count ? WhyNotIfAdvanced(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]), out _) : "no-company";
+
+    public ThrowerCostRead MarshalThrowerCostRead => MarshalThrowerCost.Read();
+
+    public int MarshalThrowerPublished => MarshalSessionOfMission?.Throwers.Published ?? 0;
+
+    public bool MarshalThrowerFaulted => MarshalHooks.ThrowerFault != null;
+
+    public ThrowerCensus MarshalThrowerCensus(int company) =>
+        company < _chosenCompanies.Count ? _throwerReads.Census(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) : default;
+
+    public float MarshalFrontGap(int company)
+    {
+        if (company >= _chosenCompanies.Count || _enemyCompany == null || _enemyCompany.CountOfUnits <= 0)
+            return float.NaN;
+        var own = _chosenCompanies[company];
+        var at = own.CurrentPosition;
+        var enemyAt = _enemyCompany.CachedMedianPosition.AsVec2;
+        return MarshalThrowerRules.Gap(new GroundPoint(at.x, at.y), new GroundPoint(enemyAt.x, enemyAt.y), _enemyCompany.Depth);
+    }
+
+    public GroundPoint? MarshalCompanyAt(int company)
+    {
+        if (company >= _chosenCompanies.Count || _chosenCompanies[company].CountOfUnits <= 0)
+            return null;
+        var at = _chosenCompanies[company].CurrentPosition;
+        return new GroundPoint(at.x, at.y);
+    }
+
+    public void MarshalThrowersOff(bool off) => MarshalHooks.TrialThrowersOff = off;
+
+    private string WhyNotIfAdvanced(int company, out ThrowerCensus census)
+    {
+        census = _throwerReads.Census(company);
+        var gates = _throwerReads.Gates(company) with { Advance = true };
+        var why = MarshalThrowerRules.WhyNot(gates, census);
+        if (why.Length > 0)
+            return why;
+        return MarshalThrowerRules.WhyNot(gates with { Range = _throwerReads.Range(company) ?? float.NaN }, census);
+    }
 }

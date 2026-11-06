@@ -125,7 +125,7 @@ its assembly selection and overwrite behavior before running it. Pass verified
 machine-specific paths; do not rely on desktop defaults on another machine.
 
 Bulk helpers can cover different builds and dependencies. Apply
-[provenance and no-decompile restrictions](../../.claude/rules/provenance.md)
+[provenance and no-decompile restrictions](../reference/provenance-register.md)
 before authorizing their scope. Keep proprietary output outside Git and external
 review packets. Check actual coverage, skipped directories, errors and version
 fingerprints after a refresh; file count alone does not prove a complete or

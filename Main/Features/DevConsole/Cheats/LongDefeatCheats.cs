@@ -21,9 +21,13 @@ public static class LongDefeatCheats
     public static string LdRecord(List<string> strings) =>
         TaomConsole.RunInMission(strings, LongDefeatCommands.RecordUsage, args =>
         {
-            var refusal = TryGet(needMain: true, out var mission);
+            // A clear reads only the scene, so it works with no soldier to control (as ld_export does).
+            var clearing = LongDefeatCommands.IsClear(args);
+            var refusal = TryGet(needMain: !clearing, out var mission);
             if (refusal != null)
                 return refusal;
+            if (clearing)
+                return LongDefeatCommands.Record(args, LongDefeatRecorder.Default, new LdSpot(mission!.SceneName, 0f, 0f, 0f, 0f, 1f));
             var look = mission!.MainAgent.LookDirection.AsVec2;
             var position = mission.MainAgent.Position;
             return LongDefeatCommands.Record(args, LongDefeatRecorder.Default,

@@ -43,7 +43,6 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `hook-authoring.md` | Hook conventions: sibling-mirroring, the two-stage git-commit matcher, amend handling, fail open but never silent, timeouts, prove a gate live, log rotation |
 | `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; the gate per file kind; the codes are in [moduledata-validator-codes.md](moduledata-validator-codes.md) |
 | `native-cpp-ports.md` | The 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ review) |
-| `provenance.md` | Name the third-party source and state its license; the derivation vocabulary; the register as the record |
 | `tests.md` | TDD, naming, AAA pattern, coverage |
 | `troops.md` | Troop checklist, races, party templates, save compatibility |
 | `vanilla-data-comparison.md` | Compare against the installed vanilla before modifying mirrored data; stale references crash |

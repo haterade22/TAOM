@@ -59,12 +59,12 @@ public class LongDefeatEndlessScalePinTests
     }
 
     [TestMethod]
-    public void TheEffectsAdapter_PublishesThroughTheCombatHook_AndReadsTheCharacterMaximum()
+    public void TheEffectsAdapter_PublishesThroughTheSharedHookState_AndReadsTheCharacterMaximum()
     {
         var source = RepoPaths.ReadSource(EffectsAdapter, stripComments: true);
 
-        StringAssert.Contains(source, "LongDefeatCombatHooks.Publish(_mission, table.AttackerDamage)");
-        StringAssert.Contains(source, "LongDefeatCombatHooks.PublishTargets(_mission, table)");
+        StringAssert.Contains(source, "LongDefeatHookState.Publish(_mission, table)");
+        StringAssert.Contains(source, "LongDefeatHookState.Raised");
         StringAssert.Contains(source, "character.MaxHitPoints()");
         StringAssert.Contains(source, "agent.HealthLimit");
     }
@@ -96,7 +96,7 @@ public class LongDefeatEndlessScalePinTests
     {
         var source = RepoPaths.ReadSource("Main/Features/LongDefeat/Hooks/LongDefeatMissionLogic.cs", stripComments: true);
 
-        StringAssert.Contains(source, "() => new LongDefeatEffectsAdapter(Mission)");
+        StringAssert.Contains(source, "() => new LongDefeatEffectsAdapter(Mission, registry)");
     }
 
     [TestMethod]

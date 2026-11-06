@@ -39,6 +39,8 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
 
     public event Action<IReadOnlyList<int>>? DirectOrder;
 
+    public event Action<IReadOnlyList<int>>? AdvanceGiven;
+
     public event Action? PlayerTeamChanged;
 
     public double Now => Mission.Current?.CurrentTime ?? 0.0;
@@ -356,11 +358,14 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
 
     private void OnOrderIssued(OrderType orderType, MBReadOnlyList<Formation> appliedFormations, OrderController orderController, params object[] delegateParams)
     {
-        if (!MarshalOrderPayload.ClearsQueue(orderType) || DirectOrder == null || appliedFormations.Count == 0)
+        var direct = MarshalOrderPayload.ClearsQueue(orderType) ? DirectOrder : null;
+        var advance = orderType == OrderType.Advance ? AdvanceGiven : null;
+        if ((direct == null && advance == null) || appliedFormations.Count == 0)
             return;
         var companies = new List<int>(appliedFormations.Count);
         foreach (var formation in appliedFormations)
             companies.Add(formation.Index);
-        DirectOrder.Invoke(companies);
+        direct?.Invoke(companies);
+        advance?.Invoke(companies);
     }
 }

@@ -18,6 +18,7 @@ public class MarshalSettingsProviderTests
         Assert.IsTrue(MarshalSettingsProvider.DefaultOutlines);
         Assert.IsTrue(MarshalSettingsProvider.DefaultHollowSquare);
         Assert.IsTrue(MarshalSettingsProvider.DefaultSpacingRepair);
+        Assert.IsTrue(MarshalSettingsProvider.DefaultThrowersFirst);
     }
 
     [TestMethod]
@@ -31,12 +32,13 @@ public class MarshalSettingsProviderTests
         Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, settings.MarshalOutlines);
         Assert.AreEqual(MarshalSettingsProvider.DefaultHollowSquare, settings.MarshalHollowSquare);
         Assert.AreEqual(MarshalSettingsProvider.DefaultSpacingRepair, settings.MarshalSpacingRepair);
+        Assert.AreEqual(MarshalSettingsProvider.DefaultThrowersFirst, settings.MarshalThrowersFirst);
     }
 
     [TestMethod]
     public void EachValue_ReadsThroughToItsOwnProperty()
     {
-        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false, MarshalOutlines = false, MarshalHollowSquare = false, MarshalSpacingRepair = false };
+        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false, MarshalOutlines = false, MarshalHollowSquare = false, MarshalSpacingRepair = false, MarshalThrowersFirst = false };
         var sut = new MarshalSettingsProvider(settings);
 
         Assert.IsFalse(sut.Enabled);
@@ -45,8 +47,11 @@ public class MarshalSettingsProviderTests
         Assert.IsFalse(sut.Outlines);
         Assert.IsFalse(sut.HollowSquare);
         Assert.IsFalse(sut.SpacingRepair);
+        Assert.IsFalse(sut.ThrowersFirst);
 
         settings.MarshalKeepArray = false;
+        settings.MarshalThrowersFirst = true;
+        Assert.IsTrue(sut.ThrowersFirst, "the provider keeps the settings object, not a copy of a value");
         Assert.IsFalse(sut.KeepArray, "the provider keeps the settings object, not a copy of a value");
     }
 
@@ -62,5 +67,6 @@ public class MarshalSettingsProviderTests
         Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, sut.Outlines);
         Assert.AreEqual(MarshalSettingsProvider.DefaultHollowSquare, sut.HollowSquare);
         Assert.AreEqual(MarshalSettingsProvider.DefaultSpacingRepair, sut.SpacingRepair);
+        Assert.AreEqual(MarshalSettingsProvider.DefaultThrowersFirst, sut.ThrowersFirst);
     }
 }

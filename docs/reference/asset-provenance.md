@@ -7,8 +7,7 @@ TAOM made, and on what basis it is TAOM's to license onward.
 **This file covers TAOM-owned content only.** Every third-party source, with its license, derivation
 type, and clearance status, belongs in
 [provenance-register.md](provenance-register.md), which is the single authoritative record and the
-one to update when something new comes in. The governing rule is
-[`.claude/rules/provenance.md`](../../.claude/rules/provenance.md): name the source, state its
+one to update when something new comes in. The governing rule: name the source, state its
 license.
 
 ## TAOM-authored content (CC BY-NC-SA 4.0)
@@ -82,7 +81,6 @@ a list here.
 ## Related
 
 - [provenance-register.md](provenance-register.md), the authoritative third-party record
-- [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md), the rule
 - [LICENSE-CONTENT.md](../../LICENSE-CONTENT.md), the path-by-path license split
 - [TRADEMARK.md](../../TRADEMARK.md), the name, which no license grants
 - [scene-scripts/ATTRIBUTION.md](../scene-scripts/ATTRIBUTION.md), the clean-room procedure

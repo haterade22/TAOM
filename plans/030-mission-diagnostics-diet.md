@@ -78,8 +78,8 @@ All excerpts were read at `dffdf879`. Every claim below is re-checked by a step 
   body you write.
 - Read the `.claude/rules/*.md` files whose `paths:` match the files you touch, from your worktree
   (path-scoped rules do not load automatically outside the main checkout): at least
-  `csharp-architecture.md`, `csharp-patterns.md`, `harmony-patches.md`, `tests.md`, `provenance.md`
-  (it matches `Main/**/*.cs` and `docs/features/**/*.md`; this plan adds no third-party derivation).
+  `csharp-architecture.md`, `csharp-patterns.md`, `harmony-patches.md`, `tests.md`
+  (this plan adds no third-party derivation).
 
 ### Engine facts (v1.5.3, decompiled with `pwsh tools/taom-src.ps1 path MBActionSet` and `path Agent`)
 

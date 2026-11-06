@@ -23,8 +23,8 @@ namespace TAOM.Features.Arena;
 /// Never barred: the player and the player's clan (the player chose them); an entrant with no culture and
 /// no kingdom (no side to judge, so vanilla stands); and a troop of the town's own culture or of the culture
 /// of its basic or elite troop, because vanilla pads the roster (the basic troop's tree, then basic and elite
-/// troops) and Patch69 fills it (elite, else basic) from exactly those troops. Seven cultures borrow another
-/// culture's troops (Lothlorien from Rivendell, Khand from khuzait, the Harad realms and Umbar's basic troop
+/// troops) and Patch69 fills it (elite, else basic) from exactly those troops. Several cultures borrow another
+/// culture's troops (Khand from khuzait, the Harad realms and Umbar's basic troop
 /// from aserai, the goblin realms from goblin), hence the troop ids. Without the exemption a captured town's
 /// filler would be barred and replaced by itself.
 /// </para>

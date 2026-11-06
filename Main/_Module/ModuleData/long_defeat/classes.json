@@ -20,6 +20,19 @@
       "text": "{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in.",
       "mounted": false,
       "kits": { "vlandia": { "Item0": "ladder_rohan_bow_t3", "Item1": "bodkin_arrows_a", "Item2": "bodkin_arrows_b", "Item3": "sturgia_sword_2_t3" } }
+    },
+    {
+      "id": "cavalry",
+      "name": "{=TAOM_LD_Class_Cavalry}Cavalry",
+      "text": "{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight.",
+      "mounted": true,
+      "kits": {
+        "vlandia": {
+          "Item0": "wm_rohan_ws_spear_a03", "Item1": "wm_rohan_shield_a02_ggw", "Item2": "wm_rohan_ws_sword_a01", "Item3": "",
+          "Head": "cts_rohan_helmet3", "Body": "cts_rohan_armor2222", "Cape": "cts_rohan_cape2", "Gloves": "cts_rohan_armguard3", "Leg": "cts_rohan_boots1",
+          "Horse": "t3_empire_horse", "HorseHarness": "rohan_horse_armor_one"
+        }
+      }
     }
   ]
 }

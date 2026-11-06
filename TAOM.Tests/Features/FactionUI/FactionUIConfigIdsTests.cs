@@ -99,6 +99,10 @@ public class FactionUIConfigIdsTests
         foreach (var file in Directory.GetFiles(Path.Combine(moduleData, "characters"), "*.xml"))
             ids.UnionWith(NpcCharacterIds(File.ReadAllText(file)));
 
+        // The engine resolves a faction viewport id with GetObject<CharacterObject>, so a troop id is as good as a lord's.
+        foreach (var file in Directory.GetFiles(Path.Combine(moduleData, "troops"), "troops_*.xml"))
+            ids.UnionWith(NpcCharacterIds(File.ReadAllText(file)));
+
         var namedCompanions = Path.Combine(moduleData, "named_companions", "named_companions.xml");
         if (File.Exists(namedCompanions))
             ids.UnionWith(NpcCharacterIds(File.ReadAllText(namedCompanions)));
@@ -153,6 +157,24 @@ public class FactionUIConfigIdsTests
 
         Assert.AreEqual(0, unknown.Count,
             $"faction_characters.json keys naming no faction in factions.json: {string.Join(", ", unknown)}");
+    }
+
+    /// <summary>
+    /// <c>FactionRoster.EliteInfantry</c> ranks by tier, then level, then the lowest id, so a new level 36 foot
+    /// troop that sorts before <c>arthedain_kings_guard</c> (the Evendim Warden does) takes the faction screen's
+    /// 3D viewport over from it. The pin keeps the viewport on the King's Guard.
+    /// </summary>
+    [TestMethod]
+    public void FactionCharactersJson_ArthedainKey_PinsTheKingsGuard()
+    {
+        var md = FindRepoModuleData();
+        if (md == null) { Assert.Inconclusive("Repo ModuleData path not found - run from repo root"); return; }
+
+        var config = RealFactionScreenConfig(md);
+
+        Assert.IsTrue(config.ViewportCharacters.TryGetValue("kingdom_of_arthedain", out var id),
+            "faction_characters.json has no kingdom_of_arthedain line, so the viewport falls back to the highest-ranked elite foot troop");
+        Assert.AreEqual("arthedain_kings_guard", id);
     }
 
     [TestMethod]

@@ -18,7 +18,7 @@ public class LongDefeatHudStringsTests
 {
     private static readonly Regex Literal = new(@"""\{=(?<key>[^}""]+)\}(?<text>[^""]*)""", RegexOptions.Compiled);
 
-    private static readonly string[] HudPrefixes = { "TAOM_LD_Hud_", "TAOM_LD_Notice_", "TAOM_LD_End_" };
+    private static readonly string[] HudPrefixes = { "TAOM_LD_Hud_", "TAOM_LD_Notice_", "TAOM_LD_End_", "TAOM_LD_Fort_" };
 
     private static IEnumerable<string> ClientSources() =>
         Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "LongDefeat"), "*.cs", SearchOption.AllDirectories);

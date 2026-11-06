@@ -28,8 +28,7 @@ times under a `tools:` allowlist without it; `feature-builder.md:88` and `releas
 `./build.ps1 -RunTests`; `check-freeze.sh` tests only that `freeze-dir.txt` exists, so a boundary
 survives a new session while `unfreeze/SKILL.md:29` says ending the conversation clears it;
 `translate_with_claude.py:902` takes one required `--lang`; CLAUDE.md has no routing table although
-`harmony-patches.md:31-32` says it keeps one; `docs/INDEX.md:47` is now a heading, not the text
-`provenance.md:28` quotes; `gamemodels.md`'s snippet names a `GetGameModels` that does not exist.
+`harmony-patches.md:31-32` says it keeps one; `docs/INDEX.md:47` is now a heading; `gamemodels.md`'s snippet names a `GetGameModels` that does not exist.
 
 ## Summary
 
@@ -81,7 +80,6 @@ Counts: Group 1 (dated prompt text) 10; Group 2 (configuration files) 64; Group 
 | 16 | `issue/SKILL.md:25,57,77-83` | replace the `--body "$(cat <<'EOF' ...)"` heredocs: Write the body to a file, run `python tools/check_public_text.py <file>`, then `gh issue create --title ... --label ... --body-file <file>` (CLAUDE.md: heredocs mangle backslashes and quotes) |
 | 17 | `harmony-patches.md:29-32` | delete "CLAUDE.md keeps only the thin routing table (category \| feature \| target \| status)." |
 | 18 | `gamemodels.md:44-60` | delete the "Registration Pattern" block; rule 7 at line 40 states it correctly |
-| 19 | `provenance.md:28-29` | `De-naming does not work in practice: a link target or file name always carries the name anyway.` |
 | 20 | `csharp-architecture.md:273-276` against `harmony-patches.md:140` | the two files list different "observed off-main" callbacks; point csharp-architecture at the harmony-patches table ("Which thread runs your target") as the single list |
 
 Also high but tied to the moving tree: `ship/SKILL.md:20` says "6+ parallel senior deep-reviewer
@@ -109,7 +107,6 @@ the lessons file. One finding per row; each is "delete the clause, keep the rule
 | `xslt.md` | 20, 52-55 | `xslt-moduledata.md` |
 | `external-skill-ports.md` | 65, 82-86, 134-143 | `build-tooling-workflow.md` |
 | `hook-authoring.md` | 55, 70, 86-89, 112-113, 160-161 | `build-tooling-workflow.md` (the headings exist there) |
-| `provenance.md` | 19-29, 75-76 | none; the live rule is "name the source" |
 | `review-codex/SKILL.md` | 34 | none; keep the trust requirement only |
 | `refactoring-specialist.md` | 107 (the removed `deslop` skill) | none |
 

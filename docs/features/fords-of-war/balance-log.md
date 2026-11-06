@@ -269,7 +269,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.**
 
-### Rohan's cheap cavalry (this change)
+### Rohan's cheap cavalry
 
 **Why:** Mike, 2026-11-05: "Rohan needs cheap cavalry because they seem weak. They should get a lot of cavalry opportunities." The 2026-11-04 rider price pass (0.7 of the full price) left Rohan's gold trade between 0.7 and 2.0 over its seven matches. In the round robin on `92973f27a`, Rohan stood at 1 win and 1 loss when this change was made, so the round's data alone does not show the weakness yet.
 
@@ -281,6 +281,76 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 - The AI's last militia buy becomes a spear rider pack, so 7 of its 10 pack buys are riders; two foot buys stay to take towers.
 
 **Result: not measured.** The change lands after the round robin on `92973f27a`, so that round's data stays on one build. More Rohan horses can also mean more riderless mounts; the native crash at `0x6B716E` struck two Rohan matches of three (see the feature doc), so watch the crash rate.
+
+### Dol Guldur's uruk army
+
+**Why:** Mike, 2026-11-05: Dol Guldur should field many more Dol Guldur uruks in place of goblins, with one or two goblins for a swarm; it has good troop lines, so three rows of troops; it also has Khamul's cavalry and spider riders. Dol Guldur was the weakest faction in the night survey (trade 0.34 before its price pass) and took no tower in the 2026-11-04 wear runs.
+
+**Changed:**
+
+- Twelve offers in three rows, the first faction with a third row (F9 to F12): uruk foul, warriors, veterans, swordsmen, bowmen, fell archers and fell fangs; Khamul's shadow guard and veiled knights (cavalry, level 41); warg raiders; spider riders; one goblin crawler pack of 16 as the swarm.
+- Spider riders are bought, not called: Mike found a paid call the same as a purchase with a cooldown. The creature call keeps the fell wargs.
+- Free waves: 8 uruk foul and 2 goblin crawlers at minute 0; 6 uruk warriors, 2 goblin skirmishers and 2 uruk skirmishers at minute 10; 6 veteran uruks, 2 goblin impalers and 2 uruk bowmen at minute 20. Before: goblins and orcs only.
+- Dol Guldur's hidden tower gunner, the first ranged offer, is now an uruk bowman in place of a goblin archer; the volley item is the same.
+- Spider riders cost 120 a pack of 3 with no timer (weight 1.5); Mordor's call costs 205 behind a 30 s timer.
+- Every faction: 27 free-wave archer entries (25 troops) spawned with the role Infantry, because WaveScheduler falls back to Infantry when neither the entry nor an offer names a role. They now say Ranged, so the field probe and check 09 no longer count them as melee; a test holds every wave troop to its declared class.
+- Five new copies in `fords_troops.xml` (uruk warrior, swordsman, skirmisher, bowman, Khamul veiled knight); six goblin and orc copies that nothing fields any more are gone.
+
+**Result: not measured.** It lands after the round robin on `92973f27a`.
+
+### Hero guards
+
+**Why:** Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."
+
+**Changed:** each hero arrival brings its faction's guard at no extra price: 4 of the faction's elite foot (Gondor Fountain Guard, Mordor Barad-dur Guard, Isengard berserkers, Erebor royal wardens and so on), Rohan's King's Knights mounted, and 3 for the two elf factions (Imladris blademasters; Mirkwood sentinels, archers, since Mirkwood has no elite foot). Hero prices are unchanged, so a hero is now worth more for the same gold, and a killed guard pays the enemy the usual kill bounty on its unit value.
+
+**Result: not measured.** It lands after the round robin on `92973f27a`.
+
+### Round robin 1 on `92973f27a`
+
+**Seen:** all 78 pairs played once at 4x, 2026-11-05 10:00 to 2026-11-06 04:05, from `python tools/fords_round_robin.py summary --build 92973f27a`. The build has the Mordor swarm, and none of the evening's changes (Rohan's cheap cavalry, Dol Guldur's uruk army, hero guards).
+
+| Faction | Won | Lost | Won by keep | Won on time | Gold trade | Towers taken | Towers lost | Minutes |
+|---|---|---|---|---|---|---|---|---|
+| Mirkwood | 11 | 1 | 9 | 2 | 1.83 | 70 | 33 | 31.6 |
+| Erebor | 11 | 1 | 9 | 2 | 1.08 | 70 | 23 | 32.1 |
+| Easterlings | 9 | 3 | 9 | 0 | 1.37 | 70 | 20 | 33.0 |
+| Rohan | 9 | 3 | 6 | 3 | 1.20 | 59 | 31 | 32.5 |
+| Gondor | 7 | 5 | 2 | 5 | 1.14 | 35 | 33 | 37.2 |
+| Umbar | 7 | 5 | 2 | 5 | 1.03 | 35 | 31 | 35.1 |
+| Mordor | 7 | 5 | 1 | 6 | 0.48 | 35 | 25 | 39.0 |
+| Dale | 5 | 7 | 2 | 3 | 1.19 | 30 | 40 | 34.4 |
+| Rivendell | 3 | 9 | 3 | 0 | 1.19 | 24 | 65 | 29.0 |
+| Harad | 3 | 9 | 2 | 1 | 1.08 | 26 | 49 | 33.0 |
+| Gundabad | 3 | 9 | 2 | 1 | 0.89 | 35 | 45 | 35.8 |
+| Isengard | 3 | 9 | 1 | 2 | 0.62 | 24 | 51 | 33.9 |
+| Dol Guldur | 0 | 12 | 0 | 0 | 0.70 | 12 | 79 | 25.4 |
+
+- **Sides:** West and East won 39 each, so the scene favours neither side.
+- **Length:** 31 matches ended before minute 30 (20.3 at the shortest), 17 between 30 and 40, and 30 on the time limit. The median was 33.7 minutes. Short matches are the one-sided pairs, so a closer balance also moves them toward the target. Mordor ran to the limit in 8 of its 12 matches, with the lowest gold trade (0.48) and few towers lost on either side: the swarm holds a lane but takes few towers.
+- **Rohan** won 9 of 12 on this build, before its cheap cavalry. The data does not show the weakness that the cavalry change answers, so Rohan may now be too strong.
+- **Crashes:** three pairs crashed once and counted on their replay: Rohan v Mordor, Rohan v Rivendell and Erebor v Rohan (`0x6B716E`, see the feature doc). From 19:15 to the end, 48 matches ran with no crash. Of those, check 8 failed in three (Rivendell v Umbar, Dol Guldur v Easterlings, Mirkwood v Easterlings) and check 12 in one (Umbar v Dol Guldur).
+
+**Changed:** only factions that the evening's changes leave about as they were. Rohan, Dol Guldur and Rivendell wait for the next round: Rohan and Dol Guldur have new rosters, and Rivendell gets the most from hero guards, since three of its heroes can fight at once.
+
+- **Erebor:** its five elite packs cost 1.4 of the full price for their level, up from 1.2. It won with even fights (gold trade 1.08) and 40% more income, so the price of its best troops is the lever. Its trait lines stay true.
+- **Mirkwood:** each free wave brings 3 spearmen and 2 archers, where it brought 2 and 3. The body count stays the same; its archers did most of its killing, and 72% of its units came free in the night survey.
+- **Isengard:** its six foot packs cost 1.1 of the full price, down from 1.25. It had the second lowest gold trade (0.62) and lost 51 towers. Warg riders and the troll keep their prices.
+- **Harad:** its first free wave brings 5 militia (level 11) where it brought 5 levies (level 6). It fought evenly (1.08) but lost 49 towers, and its first wave was its weakest troop.
+
+**Undo:** each change is one value set in `factions.json`; the old values are above. Gundabad (3 wins, gold trade 0.89) is not changed: its weak towers are a stated trait, and the hero guards add four berserkers to each hero.
+
+**Result: not measured.** Round 2 runs on the build that carries this change and the evening's changes together.
+
+### Rohan's riders made weaker (this change)
+
+**Why:** Mike, 2026-11-06: "Reduce the strength of the cheap riders [if] Rohan is 10 and 0." In round 2 on `329e841d2`, after 21 of 78 pairs, Rohan won 10 of 10, 9 of them by the keep, in 27.0 minutes on average, with a gold trade of 1.37 (`python tools/fords_round_robin.py summary --build 329e841d2`, 2026-11-06 07:40). Before its cheap cavalry, Rohan won 9 of 12 in round 1.
+
+**Changed:** the five rider packs cost 0.65 of the full price for their level, up from 0.5; the horse archers 0.5, up from 0.4; each free wave brings 4 riders, down from 5. The rider packs stay the cheapest of any faction (Gundabad's wolf riders are next at 0.75), the two lowest-level packs still hold 8 riders, and the AI still buys riders in 7 of its 10 pack buys, so Rohan keeps many cheap riders. The rider troops' skills are not cut, because Long Defeat fields two of the same troops.
+
+**Undo:** set the five `eliteWeight` values back to 0.5, the horse archers to 0.4 and the three free-wave rider counts to 5 in `factions.json`.
+
+**Result: not measured.** Round 2 keeps `329e841d2` to the end, so its other pairs stay on one build; the next round measures this change.
 
 ## Open questions
 

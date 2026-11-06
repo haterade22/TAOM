@@ -18,7 +18,7 @@ public class LongDefeatChecksTests
         p.Earn(PurseSource.WaveBonus, bonus);
         p.Earn(PurseSource.EarlyStart, early);
         if (spent > 0)
-            p.TrySpend(spent);
+            p.TrySpend(spent, PurseSink.Packs);
         return p;
     }
 
@@ -126,6 +126,17 @@ public class LongDefeatChecksTests
         Is(CheckResult.Pass, v);
         StringAssert.Contains(v.Detail, "kills=100 felled=11 lost=20 seconds=40.0");
         Is(CheckResult.Fail, LongDefeatChecks.Wave(new WaveStats(1, 98, 12, 20, 40f), 110, 0.10f));
+    }
+
+    [TestMethod]
+    public void Wave_TheStragglerShareCoversTheSummonsToo_AsTheStalemateRulesCountDoes()
+    {
+        // Wave 8: 170 roster soldiers and one summon of 20. The rule fells up to 10 percent of 190, so 19 roster soldiers felled is legitimate.
+        var stats = new WaveStats(1, 151, 19, 0, 40f) { Summoned = 20 };
+
+        Is(CheckResult.Pass, LongDefeatChecks.Wave(stats, 170, 0.10f));
+        Is(CheckResult.Fail, LongDefeatChecks.Wave(stats with { Felled = 20, Kills = 150 }, 170, 0.10f));
+        Is(CheckResult.Fail, LongDefeatChecks.Wave(new WaveStats(1, 151, 19, 0, 40f), 170, 0.10f));
     }
 
     [TestMethod]
