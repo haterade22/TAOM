@@ -2810,3 +2810,20 @@ Plan 038 specified packed-first for `--loose-assets` (the `AssetPackages` copy w
 - **Why missed:** a plan choice reads as a requirement to the executor and as a decision to the reviewer, and nobody grepped the guide for the rule it contradicted.
 - **Prevent:** when a plan fixes a precedence or fallback order for an offline model of the engine, grep `docs/reference` and the lessons for that rule before building, and name in the plan the source that settles it. Model the engine's unit of choice (a module's tree), then record what the model skipped as a reason row (`COOKED_TREE_NOT_READ`).
 - **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator that touches a hand-edited file may only add to it, and the proof is a byte comparison (#959, 2026-10-21)
+`tools/complete_lords_xslt.py --apply` rebuilt `lords.xslt` from vanilla and what it parsed back, and the result was not the
+shipped file: 389 `<Equipments>` blocks and 19 `race` attributes dropped, five skills and Traits blocks in three lords reflowed,
+one attribute reordered, an explicit `is_female="false"` removed, and the BOM and the final newline lost. The tools that wrote the
+Equipments blocks (`assign_xslt_lord_equipment.py`) were retired in `19b5d77c5`, so the blocks had become hand-owned data the
+generator never read. #758 and #957 each fixed only the block they had just added. The symptom (`race`) was named in two docs
+(`lords-and-heroes.md`, `lord-identity-reconciliation.md`), never in a lesson.
+- **Why missed:** each fix checked its own block (`assertIn` of a constant) and never asked whether the whole regeneration equals
+  the file. A first answer, a generator that read every unmodelled part back, grew a refusal guard and a parse-back of each shape
+  of hand data, and still needed a new case for every shape nobody had modelled.
+- **Prevent:** a tool that touches a hand-edited file only adds to it. `--apply` inserts a template for each vanilla lord the file
+  lacks, after its section's last template, and never rewrites a byte that is already there; it keeps the BOM and the dominant
+  line ending (a file with mixed line endings comes back with its dominant one) and parses before writing. A hand block in the file is therefore safe without a copy in the generator. Prove an
+  `--apply` by reading the file and `git show HEAD:<path>` as bytes (converted to the worktree's line endings) and comparing
+  them: `git hash-object` and `git diff --stat` cannot see line endings under `core.autocrlf`. Contract: `tools/README.md`.
+- **Source:** 1.5.x issue #959; `tools/tests/test_complete_lords_xslt.py`, on `origin/bannerlord-1.5.x` (ported by WP142).

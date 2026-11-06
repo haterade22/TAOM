@@ -1277,3 +1277,34 @@ Plan 038's item type rule maps the `WeaponClass` enum (32 members) to item types
 - **Why missed:** the mutants were chosen per guard from the rules the change added, so a 30-row table counted as one guard and three rows stood for thirty; "none survived" described the sample, not the rule.
 - **Prevent:** for a lookup table that decides behaviour, generate the mutants from the table (each row sent to the failing value, its key mistyped, and sent to another valid value) and write one test row per table row against a hand-written copy of the engine's own table, never against the tool's. Report the mutant count per table, not only the total.
 - **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` convergence of the Codex pass, Y1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A Harmony state pair needs one test through the real Prefix, and a trace test must reject the fallback text
+Plan 012's Prefix/Postfix pair was pinned by a reflection test of the Prefix's signature and by
+Postfix tests fed a hand-made `__state`. A Prefix hard-coded to `true` (the per-frame flood back)
+or to `false` (every real lower silenced) passed all eight tests. The lowered-line test accepted
+any `callers:` text, so a helper between the Postfix and `TraceWithCallers` (which skips exactly
+two frames), `callers: <none>` or `callers: <unavailable>` all passed.
+- **Why missed:** the tests were written from the plan's test list, which named the Prefix test
+  after what the Prefix should do while asserting only its shape. Nobody ran a mutant.
+- **Prevent:** for every `__state` pair, add one test that calls the real Prefix and passes its
+  output to the Postfix, in whatever engine state the test host can reach. For a trace or log
+  assertion, also assert the fallback strings are absent and that the first caller is not the
+  patch class itself. Prove both with a mutant run (`__state = true`; a helper hop), per "If you
+  didn't watch the test fail, mutate the code until it does".
+- **Source:** 1.5.x `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` findings 3 and 4 (lens 4, lens 5, Codex P3-1 and P3-2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that cannot finish outside a campaign is testable up to its first engine read: throw a sentinel from the argument before it (plan 014, 2026-09-24)
+
+`EnlistmentBehavior.OnGameLoaded` calls `_normalizer.Normalize(_playerParty.GetMainHeroId(),
+CampaignTime.Now.ToDays)`, and `CampaignTime.Now` needs a live campaign, so plan 014 declared the
+load hook untestable and pinned only the new-campaign hook. The load edge, the one the CHANGELOG led
+with, had no test. C# evaluates arguments left to right, so a substitute whose `GetMainHeroId()`
+throws a private sentinel exception stops the hook after the reset and before the engine read.
+`GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing` asserts the sentinel, the reset, and
+their order with `Received.InOrder`.
+
+- **Why missed:** "calls the engine" was read as "cannot be unit tested", for the whole method.
+- **Prevent:** before calling a hook untestable, find the first statement that touches the engine
+  and ask what an adapter call evaluated just before it can do: throw a sentinel there and assert
+  everything that ran first. Prefer this to reflection or to moving an engine read.
+- **Source:** 1.5.x Codex review of plan 014 (gpt-6-astra, ultra), observation 1; `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).

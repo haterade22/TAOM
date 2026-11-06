@@ -624,3 +624,13 @@ The first review of plan 038 named slot fit (`Equipment.IsItemFitsToSlot`), note
 - **Why missed:** the model was read from the `case "Weapon"` arm and its data, and a census showing every real item agrees turned a gap into a non-finding.
 - **Prevent:** when a model cites an engine type test (`X != null`, `is X`), list the subclasses of X and the XML elements that construct each (here the `switch` in `ItemObject.Deserialize`), give each a fixture, and route every consumer of that test through one flag. Read "the real data agrees" as proof the gap is latent, not absent.
 - **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` convergence of the Codex pass, Y2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the native body behind a name before trusting what the name implies
+- **Why missed:** `Scene.DoesPathExistBetweenPositions` only compares two faces' navmesh island ids (native 0x4C7A60) and takes no agent, so it ignores per-agent face exclusion, and islands merge when a ladder is raised; `Scene.GetGroundHeightAtPosition` returns 0, not NaN, on a miss (0x4C4D80). The siege design trusted both names and a copied vanilla fallback order, and scripted trolls behind shut gates.
+- **Prevent:** for every engine call whose result gates a decision, read the native or managed body for what it actually computes, its miss value and whether it is agent-aware, and write that into the adapter's interface doc. Prefer calls that return a hit flag (`RayCastForClosestEntityOrTerrain`) over ones with a sentinel value.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F2, F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native capacity claim reads every writer of the resource, not only the registrar
+- **Why missed:** the per-agent face exclusion capacity was derived from the registry's per-face mark byte (8 bits, bit 7 the navmesh boundary), but the face-ability setter (0x401B20) re-marks sets only from index 1 because bit 0 belongs to the engine, so the safe cap is 6, not 7.
+- **Prevent:** before fixing a cap from native bookkeeping, list every function that writes the field (xrefs) and check which bits or slots each owns; cap under the most conservative reading when one stays unverified.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).

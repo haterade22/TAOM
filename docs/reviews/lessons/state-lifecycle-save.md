@@ -872,3 +872,71 @@ and no reminder.
   re-arm, and a clear that happens on the guarded path. Ask what the marker holds after an upgrade
   from an older writer, too.
 - **Source:** 1.5.x `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F2, F10 (Codex P2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Every per-session value is reset" is an enumeration: sweep the singletons' mutable fields before writing it (plan 014, 2026-09-24)
+
+Plan 014 reset three campaign-clock latches, and its CHANGELOG said "Both paths now clear every
+per-session value". `EnlistmentReconciler._lossAnnouncedFor`, a shown-flag on the same singleton, is
+per-session and no reset clears it (so a reloaded or repeated loss of the same commander can go
+unannounced), and `FieldDutyRuntime` keeps a real-time pace estimate. The feature doc's bold claim
+("on both lifecycle edges") sat one line below its own note that a co-op client's load skips the
+reset.
+
+- **Why missed:** the summary was written from the plan's list of three latches, not from the code.
+  The architecture rule names shown-flags explicitly, but nobody swept for them.
+- **Prevent:** before writing "every" about session state, list the fields not marked `readonly` on
+  every `Reuse.Singleton` the feature and its adapters register, and mark each reset or not. Write the claim from that list, and name the values left out. State
+  the edges exactly: a load gated on co-op authority is "a host's load".
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A state that ends "when the stop ends" is cleared on the stop's own edge, not on one way the player leaves (plan 014 decisions, 2026-09-24)
+
+Decision 6 said the shore-leave offer's settlement latch clears when the column's stop ends. The
+code cleared it in `ServiceAttachmentService.ExitSettlementForService`, the sweep that walks the
+player out when the commander has gone. The offer grants a pass, and a pass suspends that sweep
+(#512), so the route every accepted offer takes (the player walks out later through vanilla's Leave
+option) never cleared it, and the next stop in the same town stayed silent. The feature doc called
+"once per stop" literal. Five review lenses and Codex found it.
+
+- **Why missed:** the stop's end was identified with one of the player's exits instead of with the
+  event that ends a stop (the commander leaving the town). The `TownLeavePolicy` class doc still
+  said a pass dies when the commander leaves, and the new tests called the handler directly, so no
+  test went through a real route.
+- **Prevent:** before wiring an "X ended" clear, list every way X can end and every way the player
+  can leave it (sweep, pass, discharge, battle, load), and prefer the edge owned by X itself (here
+  the commander's `OnSettlementLeft`, already routed and filtered) over any one exit. Test through
+  the edge that raises the clear, not the handler it calls.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Released at game end" is a reachability claim, and "runs after X" is an ordering claim: trace both before writing them (plan 014 decisions, 2026-09-24)
+
+`SubModule.OnGameEnd` was made to call Enlistment's session reset, and the CHANGELOG said the
+finished campaign's commander party and army "are released at the main menu". The reset nulls two
+handles, but `EnlistmentBehavior._lastSessionStarter` (a singleton field holding the finished
+`CampaignGameStarter`, with every behavior and model) and `CommanderLordAdapter._lastSeenMapEvent`
+still reference that campaign. The same change's comment said the reset runs "after the Game is
+gone"; `Game.Destroy` calls `GameManager.OnGameEnd` before `GameType.OnDestroy` and before
+`Game.Current = null`. A source-level test named `..._SoTheDeadCampaignsObjectsAreReleased` passed
+on a commented-out call.
+
+- **Why missed:** the outcome the call was meant to have was written down as the outcome it has.
+  No one listed the other roots, and the teardown order was assumed rather than read (a recurrence
+  of the "open its caller" lesson on `MBSubModuleBase` virtuals above).
+- **Prevent:** a release claim names every root the feature's singletons hold into the object graph
+  (grep the fields that are not `readonly` on every `Reuse.Singleton`, behaviors included) or says
+  "handles dropped, heap effect unmeasured"; only a heap snapshot supports "released". Read the
+  caller of a teardown virtual before writing when it runs. Name a source-presence test for what it
+  proves, and make it ignore comment lines.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The engine re-initializes dead characters from their template on load, so per-hero state must enumerate every hero character (`Hero.FindAll`), not the alive and dead lists (#1011, 2026-10-26)
+`SandBoxManager.InitializeCharactersAfterLoad` resets `CharacterObject.Race` from the template for every non-original character, dead and disabled ones too. `RacePersistenceService` captured and restored races through a roster that read only `Hero.AllAliveHeroes`, so a dead hero's race was never saved and came back reverted after every load. The encyclopedia and family tree effect is derived from the source, not observed in game. Heroes who died before the fix keep the reverted race, because nothing was ever captured for them.
+- **Why missed:** "all heroes" was read as `AllAliveHeroes`, and the service tests feed a fake roster, so nothing exercised the alive/dead split.
+- **Prevent:** any per-hero state TAOM persists or restores across a load enumerates `Hero.FindAll` (it reaches dead heroes the engine removed from `DeadOrDisabledHeroes`), unless the state is meaningless once the hero is dead. Name the choice where the roster is read.
+- **Source:** 1.5.x issue #1011, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### CampaignBehaviorBase has no OnGameEnd, and a static engine event outlives the campaign
+`CampaignBehaviorBase` in v1.3.15 (verified via `ilspycmd ... -t TaleWorlds.CampaignSystem.CampaignBehaviorBase`) exposes only `RegisterEvents()` + `SyncData(IDataStore)`: no `OnFinalize`, no `OnGameEnd` virtual. A static engine event such as `ScreenManager.OnPushScreen` outlives every campaign and keeps each subscribed handler's target alive, so a campaign behavior that subscribes leaves one handler per save load behind. Nothing makes the orphan collectable, and an `OnGameOverEvent` unsubscribe does not run on a main-menu exit or a load over a live campaign.
+- **Why missed:** Codex audit (Phase 9b #133, 2026-05-13) recommended an `OnGameEnd()` override that does not exist; the fix unsubscribed on Game Over and documented the limitation, claiming the orphan became GC-eligible. It never did: after N loads each party-screen open ran N handlers and wrote N `[SpecRes] PartyScreen session BEGUN` lines (#771). `TroopCountDiagnosticsBehavior` had the same shape.
+- **Prevent:** (1) A campaign behavior subscribing to a static event keeps exactly one live handler per process: store the handler in a private static field, and in `RegisterEvents` remove the previous one, then store and add this instance's; Game Over removes it and clears the field. Or subscribe from a process-lifetime object (a `Reuse.Singleton` service) and add the handler once, removing before adding. Never write that the orphan is collectable. (2) `OnGameOverEvent.AddNonSerializedListener(this, ...)` is only a best-effort cleanup and does not cover main-menu exit. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety, use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one), so reset happens just before fresh state is built: shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
+- **Source:** 1.5.x #771 (static `ScreenManager.OnPushScreen` handlers stacked once per save load); earlier memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133), on `origin/bannerlord-1.5.x` (ported by WP142).

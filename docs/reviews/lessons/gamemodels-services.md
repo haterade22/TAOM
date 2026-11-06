@@ -895,3 +895,8 @@ today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with t
   the two cannot disagree. Review a new "needs X" member by finding the decision it mirrors and checking the
   decision calls it.
 - **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A damage-model stage value is not the final damage
+- **Why missed:** the creature gate-blow log printed `hitPoint - scaled` from `ApplyDamageScaling`, but reductions, general modifiers (campaign damage bonuses, career buffs) and rounding run after that stage, so the logged "after" HP overstated what was left in the campaign while matching Custom Battle.
+- **Prevent:** log only values the stage owns; read the outcome from the next observation (the following blow's "before" HP) and say in tuning docs which later stages change the number per game mode.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).

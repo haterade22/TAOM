@@ -909,3 +909,24 @@ never patched before did not do.
   list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
   that list, not for TAOM's own finalizer alone.
 - **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a postfix sees the same state after a real call and a no-op, capture the pre-call value in a Prefix through `__state`
+`LoadingWindow.DisableGlobalLoadingWindow()` sets `IsLoadingWindowActive = false` whenever a
+manager exists, whether or not the window was up, and the engine calls it every frame from most
+full-screen menus. A postfix alone therefore sees `false` after both a real lower and a no-op, and
+the v2.0.29 trace wrote one stack walk and one flushed line per rendered frame (84 MB in 35
+minutes, 1.16 GB in three hours on the main menu).
+- **Why missed:** the patch was written for "a handful" of transitions and assumed the target was
+  called only on transitions; nobody enumerated its callers or read that the clear sits outside
+  the `IsLoadingWindowActive` branch.
+- **Prevent:** before logging from a postfix on an engine setter-like method, read whether the
+  method writes its state unconditionally and list its per-frame callers. If it does, capture the
+  pre-call value with `Prefix(out T __state)` and decide in the Postfix from (before, after). Keep
+  the decision in a pure gate so the unreachable cells (a null manager, a skipped original) are
+  unit-testable, and keep the trace call directly in the Postfix when a tracer skips frames.
+- **Source:** 1.5.x plan 012, `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`, `LoadingWindowDisablePatchTests`, `LoadingWindowTraceGateTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When one patch compensates for another's effect, apply the compensator first and gate the other on it
+- **Why missed:** the Siege Forces design treated its two prefixes as one unit. `PatchCategoryIndex` applies a category's classes in assembly order, and a class that throws stops the category while earlier classes stay patched, so the picker (declared first) could be live with the spawn-total fit absent, which stalls deployment.
+- **Prevent:** declare the compensating patch class first and pin the order in a wiring test against `PatchCategoryIndex`'s own enumeration; before the dependent patch acts, confirm the compensator is attached (`Harmony.GetPatchInfo` owner check through the adapter) and refuse the behaviour if it is not.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -273,3 +273,30 @@ memory of the ideas, not of the code.
 - **Prevent:** before writing a `behavioural-port` row, diff the new files against the source (names, string literals,
   loop shapes, ids) and either rewrite each match from a TAOM spec or relabel it `verbatim-port`.
 - **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 6 (Completeness lens), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's stale-claim grep is a floor: search the whole repo, tests included, by distinctive words (plan 014, 2026-09-24)
+
+Plan 014 rewrote the claim "ResetSessionCaches is wired to OnGameLoaded only" and its Step 7 gate
+grepped `EnlistmentReconciler.cs` for it. The executor ran the gate as written and it passed, while
+the same claim sat in `EnlistmentReconcilerTests.cs`, split across two lines so no phrase
+grep could have matched it. Four review lenses caught it; Codex, which checked the same file the
+plan named, did not.
+
+- **Why missed:** the gate was scoped to the file the plan changed, and it searched for a phrase. A
+  test comment is a copy of the claim too, and a line break splits a phrase.
+- **Prevent:** after rewriting a claim, grep the whole repo (`Main`, `TAOM.Tests`, `docs`) for one or
+  two of its distinctive words (`OnGameLoaded only`, `wired to`), never for the full sentence, and
+  treat a plan's narrower grep as the minimum, not the check. Recurrence of the #644 and #645 lesson
+  above.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's RED step builds the project that holds the test, and names the test filter (plan 001, 2026-09-24)
+Plan 001 said building `Main/TAOM.csproj` would fail because a new test calls a missing handler, and
+called that compile failure the RED state. The test lives in `TAOM.Tests`, which references `Main`, not
+the other way round, so that build cannot see the test at all.
+- **Why missed:** the plan reasoned from "the method is missing" without asking which project compiles
+  the call.
+- **Prevent:** a handoff plan's RED step runs
+  `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
+  and states the expected failure (a CS error in the test project, or a named failing assertion).
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3, on `origin/bannerlord-1.5.x` (ported by WP142).
