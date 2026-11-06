@@ -1407,3 +1407,21 @@ gate's own floor (at least 10 races) was met by `cultures.json` alone, so `sauro
 - **Prevent:** when a scan moves into a helper, the asserts that prove the scan read something move into the helper
   too, so every caller keeps them; a new gate's floor must not be satisfiable by an input other than the one it guards.
 - **Source:** 1.5.x `docs/reviews/rca-coronation-fixes-2026-10-20.md` C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A pure rule's tests go in an untagged class, even when the rule lives in an engine-bound file (plan 026, 2026-09-24)
+Plan 026 extracted `FortificationSearch.NearestDistance`, a pure function behind the camp, refuge
+and stronghold keep-outs, and put its eight tests in `CampServiceTests` because the rule is declared
+in `CampService.cs`. That class is tagged `RequiresGame`, and hosted CI runs
+`TestCategory!=RequiresGame`, so the one rule written to be CI-testable never ran there. Every local
+run was green.
+- **Why missed:** the test location followed the source file, and nobody read the class's category
+  tag; a local run cannot show the CI filter.
+- **Prevent:** a test that touches no engine member goes in an untagged class (a new
+  `<Rule>Tests.cs` if its neighbours are tagged). When a plan adds tests to an existing class, it
+  states the class's category and why the new tests belong under it.
+- **Source:** 1.5.x `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S3 (Agents 1, 4 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A boundary test gives each mapped field its own non-default value, and a call-site pin covers every argument with more than one candidate (#737, 2026-10-05)
+- **Why missed:** the #737 facade tests passed zero damage, empty blow flags and a non-charge collision, so a swapped flag mask or a dropped field mapped default to default and passed. The source pin on the model's call sites covered only "the seams that take two agents" and missed the refuge step's agent origin (one of four on `AttackInformation`) and the shield seam's base result, where a wrong argument also compiles.
+- **Prevent:** give every field a boundary maps a distinct non-default value (`CollisionDataFixture` writes the get-only `AttackCollisionData` members; a bare `Agent` from `FormatterServices.GetUninitializedObject` reaches code that reads the agent only past a guard). Choose pins by the mistake, not by the type: list each argument's in-scope candidates of the same type and pin every call site that has more than one.
+- **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
