@@ -121,7 +121,7 @@ The pre-decompiled dump helps navigation, but installed DLLs establish current
 signatures. Some assemblies live under game `Modules/<module>/bin/`, not the
 top-level `bin/`. Shipping client, server and editor builds differ. Check the
 appropriate build before concluding a type does not exist. Keep third-party
-no-decompile restrictions in scope; see [provenance rules](../../.claude/rules/provenance.md).
+no-decompile restrictions in scope; see the [provenance register](../reference/provenance-register.md).
 
 Read the event raise site, every competing patch on the relevant engine method,
 and the base method an override calls. Quote the proving code with its assembly,

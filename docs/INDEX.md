@@ -377,9 +377,8 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - [reference/rules-catalog.md](reference/rules-catalog.md) — full `.claude/rules/` catalog (rule → scope → content, always-load vs path-scoped); CLAUDE.md keeps only the load-convention note
 - [features/commit-gates.md](features/commit-gates.md): the `.githooks/` gates that judge every commit (message, doc budgets, ModuleData), what each reads, and their known limits
 - [context-budget-baseline.md](context-budget-baseline.md): the 2026-08-05 measurement of what loads eagerly into a session, and how `tools/context_budget_scan.sh` counts it
-- [reference/rule-provenance.md](reference/rule-provenance.md) — the always-load rules' "why this exists / relationships / source" sections, moved out of the eager load; read when auditing or editing a rule
 - [reference/external-mod-couplings.md](reference/external-mod-couplings.md): the TAOM members other mods (Armory_TAOM, RealmUI, CampaignProbe, VanillaTuning_TAOM) patch or read by name; check it before renaming or moving one
-- [reference/provenance-register.md](reference/provenance-register.md): every named third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
+- [reference/provenance-register.md](reference/provenance-register.md): every named third-party source TAOM derives from, with its license and derivation type. Read before porting anything
 - [ai-includes/architecture.md](ai-includes/architecture.md): overview, client seam, folders
 - [ai-includes/patterns.md](ai-includes/patterns.md): thread-local state and cache patterns
 - [ai-includes/agent-teams.md](ai-includes/agent-teams.md): spawning parallel agents

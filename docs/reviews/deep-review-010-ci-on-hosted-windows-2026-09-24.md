@@ -124,7 +124,7 @@ edits for whoever lands the branch, or belong to another plan):
   `GameReferencesTargetsTests` (Agents 1, 4, 5; CLAUDE.md "write the gate, then one line naming it").
 - `.github/workflows/build.yml:1,10-12`: the name "Build & Test" and the `DOTNET_*` env block no
   longer fit a workflow that runs no dotnet (Agents 1, 4, 5, 6).
-- `.ai/verification.md:87-90` and `.claude/rules/provenance.md:74-75` still describe the old CI
+- `.ai/verification.md:87-90` still describes the old CI
   (Agents 1, 4, 5).
 - `Directory.Build.props:34-35` and `Main/TAOM.csproj:19` comments are true only in install mode
   (single-owner files; Agents 1, 5).

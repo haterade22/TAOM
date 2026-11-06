@@ -77,8 +77,7 @@ files them later, so the executor may get no number. Say "if no issue number was
 **N6. `ICareerAgentStatService.cs:73-74` replacement (lines 1053-1056) is given in backticks; the file
 uses XML doc `<c>...</c>`.** Give the exact `/// <summary>` lines.
 
-**N7. Rules to read (line 75-77).** `.claude/rules/provenance.md` also matches `Main/**/*.cs` and
-`docs/features/**/*.md`; "at least" covers it, but naming it costs nothing.
+**N7. Rules to read (line 75-77).** "At least" covers the rule list.
 
 ## Checks that passed (evidence)
 

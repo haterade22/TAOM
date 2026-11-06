@@ -176,7 +176,7 @@ None. The lessons:
   new lesson for the engine bump's F10 ("A native pin table fails the engine-bump gate on a build it does not list").
 
 Findings 2 and 5 are repeats, so their preventive action is the existing lesson plus a concrete rule for this shape;
-no new rule file, since `evidence-over-claims.md` and `provenance.md` already state the general rule.
+no new rule file, since `evidence-over-claims.md` already states the general rule.
 
 The second review added:
 
