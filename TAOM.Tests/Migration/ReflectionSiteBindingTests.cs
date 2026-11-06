@@ -229,6 +229,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestsVM", "QuestsVM", "SetSelectedItem", "Method", "QuestJournalAdapter.cs:39")]
     // --- Marshal's Word (9.4): vanilla's sticky Advance point, set invalid after each answer the thrower stand moved. Missing: Forget throws, the postfix latches its fault and the stand is off for the mission.
     [DataRow("TaleWorlds.MountAndBlade.MovementOrder", "MovementOrder", "_engageTargetPositionCache", "Field", "MarshalEngagePoint.cs:17")]
+    // --- The Long Defeat gate repair (#1079, phase 3 Slice 5, D17): vanilla's own mission reset, protected internal, called by name on a gate the Mission has disabled. Missing: no gate is repaired and gate-repair fails.
+    [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Gates.cs:46")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

@@ -4733,6 +4733,12 @@
 	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />
 	<string id="TAOM_LD_Fort_Care" text="{=TAOM_LD_Fort_Care}Field care" />
 	<string id="TAOM_LD_Fort_CareDetail" text="{=TAOM_LD_Fort_CareDetail}Every defender, the lord too, regains {SHARE}% of the health he is missing. Once between waves." />
+	<string id="TAOM_LD_Fort_Gate" text="{=TAOM_LD_Fort_Gate}Reinforce the gate" />
+	<string id="TAOM_LD_Fort_GateDetail" text="{=TAOM_LD_Fort_GateDetail}Level {LEVEL} of {MAX}: the gate holds {PERCENT}% more than a new one. A hurt gate stays as hurt." />
+	<string id="TAOM_LD_Fort_GateFull" text="{=TAOM_LD_Fort_GateFull}Fully reinforced" />
+	<string id="TAOM_LD_Fort_Repair" text="{=TAOM_LD_Fort_Repair}Repair the gate" />
+	<string id="TAOM_LD_Fort_RepairDetail" text="{=TAOM_LD_Fort_RepairDetail}Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost." />
+	<string id="TAOM_LD_Fort_RepairNone" text="{=TAOM_LD_Fort_RepairNone}Nothing to repair" />
 	<string id="TAOM_LD_Fort_Title" text="{=TAOM_LD_Fort_Title}Fortifications" />
 	<string id="TAOM_LD_Fort_Used" text="{=TAOM_LD_Fort_Used}Used" />
 	<string id="TAOM_LD_Fortress_Helms" text="{=TAOM_LD_Fortress_Helms}Helm's Deep" />
@@ -4781,6 +4787,8 @@
 	<string id="TAOM_LD_Notice_BoonOffered" text="{=TAOM_LD_Notice_BoonOffered}A boon is on offer: press B." />
 	<string id="TAOM_LD_Notice_CareUsed" text="{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves." />
 	<string id="TAOM_LD_Notice_GarrisonFull" text="{=TAOM_LD_Notice_GarrisonFull}The garrison is full." />
+	<string id="TAOM_LD_Notice_GateFull" text="{=TAOM_LD_Notice_GateFull}The gate is fully reinforced." />
+	<string id="TAOM_LD_Notice_GateWhole" text="{=TAOM_LD_Notice_GateWhole}The gate needs no repair." />
 	<string id="TAOM_LD_Notice_FortUnavailable" text="{=TAOM_LD_Notice_FortUnavailable}That is not for sale." />
 	<string id="TAOM_LD_Notice_HornClosed" text="{=TAOM_LD_Notice_HornClosed}The horn can only sound between waves." />
 	<string id="TAOM_LD_Notice_NoBoon" text="{=TAOM_LD_Notice_NoBoon}No boon awaits." />

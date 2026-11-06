@@ -343,6 +343,34 @@ public class LongDefeatBindingTests
         Property(typeof(Agent), "Position", typeof(Vec3));
     }
 
+    // The gates (phase3-plan.md Slice 5, D17 and D18): the vanilla reset the repair calls by reflection, the closing call after it, the destructible's public hit point fields the level writes, the damage-state
+    // string whose length is the state count, the gate's state and the engine's own archer-position count the boot line reads (A23).
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheGateMembers_StillResolve()
+    {
+        // The reflection site: found by name on CastleGate itself, so an override that moves up the hierarchy would make AccessTools find another method.
+        var reset = typeof(CastleGate).GetMethod("OnMissionReset", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null);
+        Assert.IsNotNull(reset, "CastleGate.OnMissionReset() is no longer declared on CastleGate: a gate repair cannot reset the door (R10)");
+        Assert.AreEqual(typeof(void), reset!.ReturnType);
+        Assert.IsTrue(reset.IsVirtual, "the repair invokes the override the engine itself runs on a mission reset");
+        Method(typeof(CastleGate), "SetAutoOpenState", typeof(void), typeof(bool));
+        Property(typeof(CastleGate), "State", typeof(CastleGate.GateState));
+        Assert.IsTrue(Enum.IsDefined(typeof(CastleGate.GateState), "Closed"), "CastleGate.GateState.Closed");
+        Property(typeof(CastleGate), "IsDisabled", typeof(bool));
+        Field(typeof(DestructableComponent), "MaxHitPoint", typeof(float));
+        Assert.IsFalse(typeof(DestructableComponent).GetField("MaxHitPoint", AnyMember)!.IsInitOnly, "the level writes MaxHitPoint");
+        Field(typeof(DestructableComponent), "DestructionStates", typeof(string));
+        Assert.IsNotNull(Property(typeof(DestructableComponent), "HitPoint", typeof(float)).GetSetMethod(), "DestructableComponent.HitPoint lost its public setter");
+        Property(typeof(DestructableComponent), "IsDestroyed", typeof(bool));
+        Method(typeof(DestructableComponent), "Reset", typeof(void));
+        Property(typeof(TeamAISiegeDefender), "ArcherPositions", typeof(System.Collections.Generic.List<ArcherPosition>));
+        Property(typeof(Team), "FormationsIncludingEmpty", typeof(MBList<Formation>));
+        Property(typeof(Formation), "CountOfUnits", typeof(int));
+        Field(typeof(Formation), "FormationIndex", typeof(FormationClass));
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+    }
+
     // Morgul Blades and the kill owner (phase2-plan.md Slice 9): the hit callback with the engine's own isBlocked and damagedHp, and the blow the two members allowed to kill build.
     [TestMethod]
     [TestCategory("BindingVerification")]

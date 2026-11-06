@@ -136,6 +136,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _gates = all.Where(g => g.GameEntity.IsVisibleIncludeParents()).OrderByDescending(g => g.GameEntity.HasTag("outer_gate")).ToList();
         var walls = _mission.ActiveMissionObjects.FindAllWithType<WallSegment>().Where(w => w.DefenseSide != FormationAI.BehaviorSide.BehaviorSideNotSet).ToList();
         _highZ = HighLine(_gates.FirstOrDefault(), walls);
+        CaptureGates(_gates, all.Where(g => !_gates.Contains(g)).ToList());
         var broken = 0;
         foreach (var hidden in all.Where(g => !_gates.Contains(g)))
         {
@@ -513,6 +514,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     public void Clear()
     {
         _gates = new List<CastleGate>();
+        ClearGates();
         _ladders = new List<SiegeLadder>();
         _towers = new List<SiegeTower>();
         _rams = new List<BatteringRam>();

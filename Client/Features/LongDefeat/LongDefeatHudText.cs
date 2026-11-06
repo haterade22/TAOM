@@ -240,7 +240,22 @@ internal static class LongDefeatHudText
 
     internal static string CareUsed() => new TextObject("{=TAOM_LD_Fort_Used}Used").ToString();
 
-    /// <summary>The refusal line for a fortification the run turned down; empty for Ok. Rows past field care reuse the generic line until their slice words their own.</summary>
+    internal static string GateName() => new TextObject("{=TAOM_LD_Fort_Gate}Reinforce the gate").ToString();
+
+    /// <summary>The gate row's line: the level the next buy brings (the top one when all are owned) and the hit points that level gives, as a whole percent over a new gate's.</summary>
+    internal static string GateDetail(int level, int maxLevel, float percent) => new TextObject("{=TAOM_LD_Fort_GateDetail}Level {LEVEL} of {MAX}: the gate holds {PERCENT}% more than a new one. A hurt gate stays as hurt.")
+        .SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel)
+        .SetTextVariable("PERCENT", percent > 0f && !float.IsInfinity(percent) ? (int)Math.Round(percent) : 0).ToString();
+
+    internal static string GateFull() => new TextObject("{=TAOM_LD_Fort_GateFull}Fully reinforced").ToString();
+
+    internal static string RepairName() => new TextObject("{=TAOM_LD_Fort_Repair}Repair the gate").ToString();
+
+    internal static string RepairDetail() => new TextObject("{=TAOM_LD_Fort_RepairDetail}Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost.").ToString();
+
+    internal static string RepairNone() => new TextObject("{=TAOM_LD_Fort_RepairNone}Nothing to repair").ToString();
+
+    /// <summary>The refusal line for a fortification the run turned down; empty for Ok. The gate rows word <c>MaxLevel</c> and <c>NothingToRepair</c> for the gate; the tower and volley buys also answer <c>MaxLevel</c>, so their slices (6 and 7) word their own before they are wired to a button.</summary>
     internal static string Refusal(FortResult result)
     {
         switch (result)
@@ -255,6 +270,10 @@ internal static class LongDefeatHudText
                 return new TextObject("{=TAOM_LD_Notice_GarrisonFull}The garrison is full.").ToString();
             case FortResult.Used:
                 return new TextObject("{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves.").ToString();
+            case FortResult.MaxLevel:
+                return new TextObject("{=TAOM_LD_Notice_GateFull}The gate is fully reinforced.").ToString();
+            case FortResult.NothingToRepair:
+                return new TextObject("{=TAOM_LD_Notice_GateWhole}The gate needs no repair.").ToString();
             case FortResult.RunOver:
                 return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
             default:

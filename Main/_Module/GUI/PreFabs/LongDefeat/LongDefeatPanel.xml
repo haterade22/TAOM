@@ -110,6 +110,44 @@
                             </ListPanel>
                           </Children>
                         </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsGateVisible" IsEnabled="@CanBuyGate" Command.Click="ExecuteBuyGate">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@GateName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@GateDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@GatePrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsRepairVisible" IsEnabled="@CanRepair" Command.Click="ExecuteRepair">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@RepairName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@RepairDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@RepairPrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
                       </Children>
                     </ListPanel>
                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8"

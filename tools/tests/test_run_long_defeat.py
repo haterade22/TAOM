@@ -551,7 +551,8 @@ class ManifestTests(unittest.TestCase):
             result = iv.judge_segment(row, lines, []).verdict
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
-                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care"):
+                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
+                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -2527,11 +2528,11 @@ class FortificationsLoaderTests(unittest.TestCase):
     def test_a_fortress_the_file_does_not_know_has_no_plan(self):
         self.assertIsNone(ld.shipped_fortifications("nowhere"))
 
-    def test_the_offered_list_is_the_games_and_offers_field_care_alone(self):
+    def test_the_offered_list_is_the_games_and_offers_the_gate_and_field_care(self):
         domain = source("Domain", "FortPlan.cs")
-        self.assertIn("Offered { get; } = new(0, 0, true, 0);", domain)
+        self.assertIn("Offered { get; } = new(3, 0, true, 0);", domain)
         self.assertIn("None { get; } = new(0, 0, false, 0);", domain)
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": True, "volley": 0})
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 0, "fieldCare": True, "volley": 0})
 
     def test_the_price_range_is_the_shops(self):
         self.assertIn("MaxPrice = 1_000_000;", source("Config", "FortificationsReader.cs"))
@@ -2586,8 +2587,11 @@ class PurchaseJudgeTests(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def buy(self, wave, kind, base, price, level=0, share=0.0, id=""):
-        return {"beforeWave": wave, "kind": kind, "id": id, "level": level, "basePrice": base, "price": price, "share": share}
+    def buy(self, wave, kind, base, price, level=0, share=0.0, id="", shares=None):
+        row = {"beforeWave": wave, "kind": kind, "id": id, "level": level, "basePrice": base, "price": price, "share": share}
+        if kind == "gateRepair":
+            row["shares"] = [share] if shares is None else shares
+        return row
 
     def report(self, purchases, boons=(), waves=(), **more):
         spent_on = dict.fromkeys(ld.SPENT_ON, 0)
@@ -2636,6 +2640,32 @@ class PurchaseJudgeTests(unittest.TestCase):
     def test_a_repair_share_is_read_to_the_three_decimals_the_report_writes(self):
         # 200 * 0.3704 is 74.08 and the game charges 75; the report writes 0.37, whose own ceil is 74. The half-thousandth either side is allowed.
         self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 75, share=0.37)])))
+
+    def test_a_repair_of_two_gates_is_priced_per_gate(self):
+        # Slice 5 (RCA row 8): two gates of 0.371 at a repair price of 100 cost ceil(37.1) twice, 76; one gate of 0.742 would cost 75. The share is the total, the shares are the gates'.
+        plan = {**self.PLAN, "gate": {"repairPrice": 100, "levels": [[50, 200]]}}
+        two = self.report([self.buy(2, "gateRepair", 100, 76, share=0.742, shares=[0.371, 0.371])])
+        one = self.report([self.buy(2, "gateRepair", 100, 75, share=0.742, shares=[0.371, 0.371])])
+
+        self.assertIsNone(ld.purchase_problem(two, "helms", fort=plan, offers=self.OFFERS, percents=self.PERCENTS))
+        self.assertIn("paid 75", ld.purchase_problem(one, "helms", fort=plan, offers=self.OFFERS, percents=self.PERCENTS))
+
+    def test_a_repair_of_a_broken_and_a_damaged_gate_may_total_over_one(self):
+        # A share is a gate's; three gates of 0.4 total 1.2 and are accepted, where the single-share rule refused any share above 1.
+        report = self.report([self.buy(2, "gateRepair", 200, 240, share=1.2, shares=[0.4, 0.4, 0.4])])
+
+        self.assertIsNone(self.problem(report))
+
+    def test_a_repair_needs_a_share_for_each_gate_that_adds_up_to_its_share(self):
+        self.assertIn("shares", self.problem(self.report([{**self.buy(2, "gateRepair", 200, 74, share=0.37), "shares": None}])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[])])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.37, 1.5])])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.0])])), "a gate that was not repaired has no share")
+        self.assertIn("sum", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.2, 0.2])])))
+
+    def test_a_repair_of_the_smallest_share_the_game_sells_replays(self):
+        # The game refuses a repair under 0.0005 (GateMath.MinMissingShare) and writes a share half away from zero, so the smallest written share is 0.001 at a price of 1.
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 1, share=0.001)])))
 
     def test_a_purchase_in_the_intermission_of_a_pick_may_come_before_or_after_it(self):
         pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
@@ -2898,14 +2928,14 @@ class FieldCareJudgeTests(unittest.TestCase):
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
 
-    def test_the_build_offers_field_care_alone(self):
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": True, "volley": 0})
+    def test_the_build_offers_the_gate_and_field_care(self):
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 0, "fieldCare": True, "volley": 0})
 
     def test_a_report_that_bought_care_replays_from_the_shop(self):
         self.assertIsNone(ld.purchase_problem(self.report()))
 
     def test_every_other_kind_is_still_refused(self):
-        for kind, level, base in (("gateLevel", 1, 200), ("towerLevel", 1, 250), ("volleyLevel", 1, 350)):
+        for kind, level, base in (("towerLevel", 1, 250), ("volleyLevel", 1, 350)):
             report = self.report(care=False, purchases=[{"beforeWave": 1, "kind": kind, "id": "", "level": level, "basePrice": base, "price": base, "share": 0.0}],
                                  gold={"spent": base, "spentOn": {"packs": 0, "gate": base if kind == "gateLevel" else 0, "towers": base if kind == "towerLevel" else 0,
                                                                   "fieldCare": 0, "volley": base if kind == "volleyLevel" else 0}},
@@ -2980,6 +3010,191 @@ class FieldCareJudgeTests(unittest.TestCase):
 
     def test_the_wrapper_names_the_proof_run(self):
         self.assertIn("--waves 2 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+
+
+class GateJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 5: the gate is offered, so the report may list a level and a repair and the judge owes their check lines (phase3-plan.md section 6, D31)."""
+
+    # The details LongDefeatGateChecks formats, as LongDefeatGateChecksTests pins them.
+    LEVEL = "l=1 factor=1.50 gates=1 max=22500.0/22500.0 hp=11000.0->16499.0 share=0.733->0.733 index=1->1"
+    REPAIR = "w=2 path=broken gates=1 hp=15000.0/15000.0 index=0 disabled=false closed=true open=false near=0 hidden_down=true reset=found"
+    ATTACKED = "w=2 path=broken start=15000.0 now=12000.0 lost=3000.0 fell=false through=0 samples=12"
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.{} result={} "
+
+    def setUp(self):
+        ld.target_waves = 3
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, level=True, repair=True, waves=3, **more):
+        bought = []
+        if repair:
+            bought.append({"beforeWave": 2, "kind": "gateRepair", "id": "", "level": 0, "basePrice": 200, "price": 200, "share": 1.0, "shares": [1.0]})
+        if level:
+            bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
+        spent = sum(p["price"] for p in bought)
+        return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0}},
+                "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 3) + "\n" + "\n".join(extra)
+
+    def line(self, name, result, detail):
+        return self.HEAD_LINE.format(name, result) + detail
+
+    def passes(self):
+        return [self.line("gate-level", "pass", self.LEVEL), self.line("gate-repair", "pass", self.REPAIR), self.line("gate-attacked", "pass", self.ATTACKED)]
+
+    def test_the_debts_follow_the_purchases(self):
+        both = self.report()
+        self.assertTrue(ld.owes_gate_level(both))
+        self.assertTrue(ld.owes_gate_repair(both))
+        self.assertTrue(ld.owes_gate_attacked(both))
+        self.assertFalse(ld.owes_gate_repair(self.report(repair=False)))
+        self.assertFalse(ld.owes_gate_attacked(self.report(repair=False)))
+        self.assertFalse(ld.owes_gate_level(self.report(level=False)))
+
+    def test_the_attack_is_owed_only_when_a_wave_after_the_repair_was_played(self):
+        # The repair is before wave 2; a run that ended with wave 1 cleared never met the repaired gate.
+        self.assertFalse(ld.owes_gate_attacked(self.report(waves=1)))
+        self.assertTrue(ld.owes_gate_attacked(self.report(waves=1, wave=2)), "ended in wave 2: the run ends in the wave the gate was attacked in")
+        self.assertTrue(ld.owes_gate_attacked(self.report(waves=2)))
+
+    def test_the_debts_read_the_purchases_and_nothing_else(self):
+        for bad in ({}, {"purchases": "x"}, {"purchases": [5, {"kind": "pack"}]}):
+            self.assertFalse(ld.owes_gate_level(bad))
+            self.assertFalse(ld.owes_gate_repair(bad))
+            self.assertFalse(ld.owes_gate_attacked(bad))
+        self.assertFalse(ld.owes_gate_attacked({"purchases": [{"kind": "gateRepair", "beforeWave": "2"}], "wave": 3}))
+
+    def test_a_report_that_bought_the_gate_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+
+    def test_a_run_with_all_three_lines_passes(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes()))
+
+        self.assertEqual(code, 0, why)
+        for name in ("gate-level", "gate-repair", "gate-attacked"):
+            self.assertIn(name, why)
+
+    def test_each_missing_line_fails_the_run_by_its_name(self):
+        for missing, lines in (("gate-level", [1, 2]), ("gate-repair", [0, 2]), ("gate-attacked", [0, 1])):
+            code, why = ld.judge(FINAL, self.report(), self.log(*[self.passes()[i] for i in lines]))
+            self.assertEqual(code, 1, missing)
+            self.assertIn("taom.long-defeat." + missing, why)
+
+    def test_a_skip_does_not_pay_the_debt_and_a_no_blow_skip_says_why(self):
+        skipped = self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow")
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], skipped))
+
+        self.assertEqual(code, 1)
+        self.assertIn("gate-attacked", why)
+        self.assertIn("no-blow", why)
+
+    def test_a_failed_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("gate-attacked", "fail", self.ATTACKED.replace("through=0", "through=2"))))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_run_that_bought_no_gate_owes_none(self):
+        code, why = ld.judge(FINAL, self.report(level=False, repair=False), self.log())
+
+        self.assertEqual(code, 0, why)
+
+    def test_a_lose_run_is_not_asked_for_them(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_manifest_rows_read_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        lines = {"gate-level": self.LEVEL, "gate-repair": self.REPAIR, "gate-attacked": self.ATTACKED}
+        for name, detail in lines.items():
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertEqual(row.absence, "not-reached", name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "pass", detail))], []).verdict, iv.PASS, name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "fail", detail))], []).verdict, iv.FAIL, name)
+            self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED, name)
+        attacked = next(c for c in manifest.checks if c.id == "taom.long-defeat.gate-attacked")
+        self.assertEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow"))], []).verdict, iv.NOT_REACHED)
+        self.assertNotEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", self.ATTACKED.replace("through=0", "through=2")))], []).verdict, iv.PASS,
+                            "a repaired gate with attackers behind it is not a pass")
+
+    def test_the_manifest_rows_read_a_fortress_with_two_gates_too(self):
+        # With two or more visible gates the C# checks key every number g0., g1. and so on (LongDefeatGateChecks.Prefix); the pass patterns must still match them.
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        level = ("l=1 factor=1.50 gates=2 g0.max=22500.0/22500.0 g0.hp=11000.0->16499.0 g0.share=0.733->0.733 g0.index=1->1 "
+                 "g1.max=22500.0/22500.0 g1.hp=15000.0->22499.0 g1.share=1.000->1.000 g1.index=0->0")
+        repair = ("w=2 path=broken gates=2 g0.hp=15000.0/15000.0 g0.index=0 g0.disabled=false g0.closed=true g0.open=false g0.near=0 "
+                  "g1.hp=15000.0/15000.0 g1.index=0 g1.disabled=false g1.closed=true g1.open=false g1.near=1 hidden_down=true reset=found")
+        for name, detail in (("gate-level", level), ("gate-repair", repair)):
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "pass", detail))], []).verdict, iv.PASS, name)
+
+    def test_a_gate_attacked_line_that_measured_nothing_is_not_a_pass(self):
+        # samples= counts only the samples that measured a plane; through=0 over none proves nothing.
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        attacked = next(c for c in manifest.checks if c.id == "taom.long-defeat.gate-attacked")
+        unmeasured = self.ATTACKED.replace("samples=12", "samples=0")
+        self.assertNotEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", unmeasured))], []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", self.ATTACKED))], []).verdict, iv.PASS)
+
+    def test_the_manifest_names_the_proof_run(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        for name in ("gate-level", "gate-repair", "gate-attacked"):
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", row.needs, name)
+
+    def test_the_lines_are_the_ones_the_csharp_checks_format(self):
+        checks = source("Diagnostics", "LongDefeatGateChecks.cs")
+        ids = source("Diagnostics", "LongDefeatChecks.cs")
+        for const, name in (("GateLevelId", "gate-level"), ("GateRepairId", "gate-repair"), ("GateAttackedId", "gate-attacked"), ("FortPointsId", "fort-points")):
+            self.assertIn(f'{const} = "taom.long-defeat.{name}"', ids, name)
+        for key in ("l=", "factor=", "gates=", "max=", "hp=", "share=", "index=", "w=", "path=", "disabled=", "closed=", "open=", "near=", "hidden_down=", "reset=",
+                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "points=", "failed=", "reason=none-recorded"):
+            self.assertIn(key, checks, key)
+        self.assertRegex(self.LEVEL, r"^l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ max=[0-9.]+/[0-9.]+ hp=[0-9.]+->[0-9.]+ share=[0-9.]+->[0-9.]+ index=[0-9]+->[0-9]+$")
+        self.assertRegex(self.REPAIR, r"^w=[0-9]+ path=(broken|damaged) gates=[0-9]+ hp=[0-9.]+/[0-9.]+ index=[0-9]+ disabled=(true|false) closed=(true|false) open=(true|false) near=[0-9]+ hidden_down=(true|false) reset=(found|missing)$")
+        self.assertRegex(self.ATTACKED, r"^w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=[0-9]+ samples=[0-9]+$")
+        director = source("LongDefeatDirector.Gates.cs")
+        for key in ('"l" + level', '"w" + wave', '"w" + watch.Wave'):
+            self.assertIn(key, director, key)
+
+    def test_the_wrapper_names_the_proof_run(self):
+        self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+
+
+class FortPointsJudgeTests(unittest.TestCase):
+    """The fort-points check (Slice 5): a skip while the fortress records no point, a pass line owed once it does."""
+
+    def fortresses(self, helms):
+        return {"fortresses": [{"id": "helms", **helms}, {"id": "other", "towers": [{"id": "t", "posts": [{}]}]}]}
+
+    def test_a_fortress_with_no_recorded_point_owes_nothing(self):
+        for helms in ({}, {"towers": []}, {"volley": {"origins": []}}, {"towers": "x"}, {"volley": 3}):
+            self.assertFalse(ld.recorded_fort_points("helms", self.fortresses(helms)), helms)
+
+    def test_a_tower_or_a_volley_origin_is_a_recorded_point(self):
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "posts": [{"x": 1}], "volley": []}]})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "volley": [{"x": 1}]}]})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"volley": {"origins": [{"x": 1, "y": 2, "z": 3}]}})))
+
+    def test_the_shipped_helms_records_none_yet(self):
+        self.assertFalse(ld.recorded_fort_points("helms"), "Mike records the points on 2026-11-06")
+
+    def test_the_debt_is_a_pass_line_and_a_skip_does_not_pay_it(self):
+        report = {"fortress": "helms"}
+        self.assertFalse(ld.owes_fort_points(report, {"fortresses": [{"id": "helms"}]}))
+        self.assertTrue(ld.owes_fort_points(report, {"fortresses": [{"id": "helms", "volley": {"origins": [{"x": 1}]}}]}))
 
 
 if __name__ == "__main__":

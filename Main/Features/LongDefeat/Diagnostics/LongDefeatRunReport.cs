@@ -118,17 +118,25 @@ internal static class LongDefeatRunReport
 
     private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel" };
 
-    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid, and the share (a repair's missing share, care's heal share) to three decimals.</summary>
-    private static JObject Purchase(FortPurchase p) => new()
+    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid, and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    private static JObject Purchase(FortPurchase p)
     {
-        ["beforeWave"] = p.BeforeWave,
-        ["kind"] = PurchaseKinds[(int)p.Kind],
-        ["id"] = p.Id,
-        ["level"] = p.Level,
-        ["basePrice"] = p.BasePrice,
-        ["price"] = p.Price,
-        ["share"] = Math.Round((double)p.Share, 3),
-    };
+        var row = new JObject
+        {
+            ["beforeWave"] = p.BeforeWave,
+            ["kind"] = PurchaseKinds[(int)p.Kind],
+            ["id"] = p.Id,
+            ["level"] = p.Level,
+            ["basePrice"] = p.BasePrice,
+            ["price"] = p.Price,
+            ["share"] = Math.Round((double)p.Share, 3, MidpointRounding.AwayFromZero),
+        };
+
+        // A repair is priced per gate (D18), so its row lists each gate's missing share beside the total; a row with no list is a one-gate repair.
+        if (p.Kind == PurchaseKind.GateRepair)
+            row["shares"] = new JArray((p.Shares ?? new[] { p.Share }).Select(s => Math.Round((double)s, 3, MidpointRounding.AwayFromZero)));
+        return row;
+    }
 
     /// <summary>A wave's commander: his troop, the rank's id and the steps past the ranks, how he ended, how often each ability fired and how often after his end (0 unless a clock failed to stop).</summary>
     private static JObject Commander(CommanderRecord c) => new()

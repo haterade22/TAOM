@@ -106,6 +106,32 @@ public class LongDefeatRunReportFortTests
     }
 
     [TestMethod]
+    public void Build_AGateRepair_WritesEachGatesShare_AndOnlyARepairDoes()
+    {
+        var fort = new RunFort(new[]
+        {
+            new FortPurchase(2, PurchaseKind.GateRepair, "", 0, 100, 76, 0.742f, new[] { 0.371f, 0.371f }),
+            new FortPurchase(2, PurchaseKind.FieldCare, "", 0, 150, 150, 0.75f),
+        }, 0, 0, 0);
+
+        var rows = ((JArray)Report(OneWave(), new Purse(5000), fort: fort)["purchases"]!).Cast<JObject>().ToList();
+
+        CollectionAssert.AreEqual(new[] { 0.371, 0.371 }, rows[0]["shares"]!.Select(t => (double)t).ToArray());
+        Assert.AreEqual(0.742, (double)rows[0]["share"]!, 1e-9, "share stays the total over the gates");
+        Assert.IsNull(rows[1]["shares"], "care has one share, written in share");
+    }
+
+    [TestMethod]
+    public void Build_AGateRepairWithNoShareList_WritesItsShareAsTheOnlyGate()
+    {
+        var fort = new RunFort(new[] { new FortPurchase(2, PurchaseKind.GateRepair, "", 0, 200, 200, 1f) }, 0, 0, 0);
+
+        var row = (JObject)((JArray)Report(OneWave(), new Purse(5000), fort: fort)["purchases"]!).Single();
+
+        CollectionAssert.AreEqual(new[] { 1.0 }, row["shares"]!.Select(t => (double)t).ToArray());
+    }
+
+    [TestMethod]
     public void Build_EveryPurchaseKind_HasAName_AndNoTwoShareOne()
     {
         var kinds = Enum.GetValues(typeof(PurchaseKind)).Cast<PurchaseKind>().ToList();

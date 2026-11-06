@@ -58,6 +58,12 @@ internal sealed class LongDefeatSession
     /// <summary>Buys field care (D21): the standing defenders regain their share of the health they are missing on the next tick.</summary>
     public FortResult TryFieldCare() => _run?.TryFieldCare() ?? FortResult.RunOver;
 
+    /// <summary>Buys the next gate level (D18): every visible gate's maximum is raised on the next tick, keeping its share of hit points.</summary>
+    public FortResult TryBuyGateLevel() => _run?.TryBuyGateLevel() ?? FortResult.RunOver;
+
+    /// <summary>Buys the repair (D17): every visible gate that is broken or damaged is made whole at the levelled maximum on the next tick.</summary>
+    public FortResult TryRepairGates() => _run?.TryRepairGates() ?? FortResult.RunOver;
+
     /// <summary>The boons taken, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public IReadOnlyList<BoonCard> BoonsTaken => _run?.OwnedCards ?? _boons;
 

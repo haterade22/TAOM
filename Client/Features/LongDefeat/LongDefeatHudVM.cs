@@ -58,7 +58,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         Offers = new MBBindingList<LongDefeatOfferVM>();
         Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
-        Fort = new LongDefeatFortVM(BuyCare);
+        Fort = new LongDefeatFortVM(BuyCare, BuyGate, RepairGate);
         foreach (var level in LongDefeatSession.SpeedLevels)
             Speeds.Add(new LongDefeatSpeedVM(level, SelectSpeed));
     }
@@ -358,6 +358,18 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private void BuyCare()
     {
         Notify(LongDefeatHudText.Refusal(_session.TryFieldCare()));
+        Refresh();
+    }
+
+    private void BuyGate()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryBuyGateLevel()));
+        Refresh();
+    }
+
+    private void RepairGate()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryRepairGates()));
         Refresh();
     }
 

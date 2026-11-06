@@ -21,7 +21,7 @@ public class LongDefeatHudFortTests
         run = new SurvivalRun(plan);
         run.Begin();
         for (var i = 0; intermission && i < 5000 && run.Phase != RunPhase.Intermission; i++)
-            run.Tick(new RunSnapshot(1f, 0, 0, 40, 0, 0, 1000));
+            run.Tick(new RunSnapshot(1f, 0, 0, 40, 0, 0, 1000) { Gates = new[] { new LdGateFacts(0, 15000f, 15000f, 15000f, false, false) } });
 
         Assert.IsTrue(!intermission || run.Phase == RunPhase.Intermission, "the first wave never cleared");
         session = new LongDefeatSession();
@@ -135,5 +135,110 @@ public class LongDefeatHudFortTests
     public void ASessionWithNoRun_RefusesCare()
     {
         Assert.AreEqual(FortResult.RunOver, new LongDefeatSession().TryFieldCare());
+        Assert.AreEqual(FortResult.RunOver, new LongDefeatSession().TryBuyGateLevel());
+        Assert.AreEqual(FortResult.RunOver, new LongDefeatSession().TryRepairGates());
+    }
+
+    // ---- the gate rows (Slice 5) ----
+
+    private static readonly FortPlan WithGate = new(new GatePlan(200, new[] { new GateLevelPlan(50f, 200), new GateLevelPlan(100f, 300), new GateLevelPlan(150f, 450) }), null, new CarePlan(0.75f, 150, 1), null);
+
+    private static RunSnapshot WithGates(params LdGateFacts[] gates) => new(1f, 0, 0, 40, 0, 0, 1000) { Gates = gates };
+
+    private static LdGateFacts Broken() => new(4, 0f, 15000f, 15000f, true, false);
+
+    private static LdGateFacts Whole() => new(0, 15000f, 15000f, 15000f, false, false);
+
+    [TestMethod]
+    public void TheShop_ListsTheGateRow_WithItsLevelPercentAndPrice_AndTheRepairRowBesideIt()
+    {
+        var vm = Panel(out _, out _, fort: WithGate);
+
+        Assert.IsTrue(vm.Fort.IsVisible);
+        Assert.IsTrue(vm.Fort.IsGateVisible);
+        Assert.AreEqual("Reinforce the gate", vm.Fort.GateName);
+        StringAssert.Contains(vm.Fort.GateDetail, "Level 1 of 3");
+        StringAssert.Contains(vm.Fort.GateDetail, "50%");
+        Assert.AreEqual("200 gold", vm.Fort.GatePrice);
+        Assert.IsTrue(vm.Fort.CanBuyGate);
+        Assert.IsTrue(vm.Fort.IsRepairVisible);
+        Assert.AreEqual("Repair the gate", vm.Fort.RepairName);
+        Assert.AreEqual("Nothing to repair", vm.Fort.RepairPrice, "no gate has been read as hurt");
+        Assert.IsFalse(vm.Fort.CanRepair);
+    }
+
+    [TestMethod]
+    public void BuyingAGateLevel_SpendsTheGold_AndTheRowMovesToTheNextLevel_UntilTheTop()
+    {
+        var vm = Panel(out var session, out _, fort: WithGate, gold: 2000);
+
+        vm.Fort.ExecuteBuyGate();
+        StringAssert.Contains(vm.Fort.GateDetail, "Level 2 of 3");
+        StringAssert.Contains(vm.Fort.GateDetail, "100%");
+        Assert.AreEqual("300 gold", vm.Fort.GatePrice);
+        vm.Fort.ExecuteBuyGate();
+        vm.Fort.ExecuteBuyGate();
+
+        Assert.AreEqual(2000 - 200 - 300 - 450, session.GetView()!.Gold);
+        Assert.AreEqual("Fully reinforced", vm.Fort.GatePrice);
+        Assert.IsFalse(vm.Fort.CanBuyGate);
+        StringAssert.Contains(vm.Fort.GateDetail, "Level 3 of 3");
+        Assert.IsTrue(vm.Fort.IsGateVisible, "a row at its top is still listed");
+
+        vm.Fort.ExecuteBuyGate();
+        Assert.AreEqual("The gate is fully reinforced.", vm.NoticeText);
+    }
+
+    [TestMethod]
+    public void ABrokenGate_MakesTheRepairRowLive_AtItsPrice_AndBuyingItSpendsThePrice()
+    {
+        var vm = Panel(out var session, out var run, fort: WithGate);
+        run.Tick(WithGates(Broken()));
+        vm.Refresh();
+
+        Assert.AreEqual("200 gold", vm.Fort.RepairPrice);
+        Assert.IsTrue(vm.Fort.CanRepair);
+        vm.Fort.ExecuteRepair();
+
+        Assert.AreEqual(400, session.GetView()!.Gold);
+        Assert.AreEqual(string.Empty, vm.NoticeText);
+        Assert.IsFalse(vm.Fort.CanRepair, "bought, and written on the next tick");
+        Assert.AreEqual("Nothing to repair", vm.Fort.RepairPrice);
+    }
+
+    [TestMethod]
+    public void ARepairClickedOnAWholeGate_SaysItNeedsNone_AndSpendsNothing()
+    {
+        var vm = Panel(out var session, out var run, fort: WithGate);
+        run.Tick(WithGates(Whole()));
+        vm.Refresh();
+
+        vm.Fort.ExecuteRepair();
+
+        Assert.AreEqual("The gate needs no repair.", vm.NoticeText);
+        Assert.AreEqual(600, session.GetView()!.Gold);
+    }
+
+    [TestMethod]
+    public void TheGateRows_AreHidden_WhenTheBuildOffersNoGate_OrTheShopCarriesNone_ButTheGroupStaysForCare()
+    {
+        var noneOffered = Panel(out _, out _, fort: WithGate, offered: new FortOffer(0, 0, true, 0));
+        var carried = Panel(out _, out _);
+
+        Assert.IsFalse(noneOffered.Fort.IsGateVisible);
+        Assert.IsFalse(noneOffered.Fort.IsRepairVisible);
+        Assert.IsTrue(noneOffered.Fort.IsVisible, "field care is still offered");
+        Assert.IsFalse(carried.Fort.IsGateVisible);
+        Assert.IsFalse(Panel(out _, out _, fort: WithGate, offered: FortOffer.None).Fort.IsVisible);
+    }
+
+    [TestMethod]
+    public void TheGateRows_CanBeBoughtInThePreparation_UnlikeCare()
+    {
+        var vm = Panel(out _, out _, fort: WithGate, intermission: false);
+
+        Assert.IsTrue(vm.Fort.IsGateVisible);
+        Assert.IsTrue(vm.Fort.CanBuyGate);
+        Assert.IsFalse(vm.Fort.IsCareVisible);
     }
 }

@@ -12,7 +12,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 /// slot of its index in its batch, as the engine does, so a later batch reuses an earlier one's slots. Agents are strings:
 /// "A:troop" is an attacker, "D:troop" a defender and "P" the player.
 /// </summary>
-internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
+internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapter, ILongDefeatFortAdapter
 {
     private readonly List<LdPoint> _defenderPoints = new();
 
@@ -277,7 +277,7 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
         if (countKeep)
             Calls.Add("ReadKeep");
         return new LdReading(AttackersStanding, AttackersFleeing, Defenders, countKeep ? AttackersAtKeep : 0, countKeep ? DefendersAtKeep : 0, MainBody, BattleSize, DefendersFleeing, AttackersHigh,
-            DefendersHigh, DefenderHealthMean);
+            DefendersHigh, DefenderHealthMean, Gates.Count == 0 ? null : ReadGates());
     }
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) => Sample ?? Array.Empty<LdPoint>();

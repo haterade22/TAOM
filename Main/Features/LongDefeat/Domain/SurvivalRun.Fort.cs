@@ -12,6 +12,7 @@ internal sealed partial class SurvivalRun
 {
     private readonly List<FortPurchase> _purchases = new();
     private IReadOnlyList<LdGateFacts> _gates = Array.Empty<LdGateFacts>();
+    private bool _gatesRead;
     private int _gateLevel;
     private int _towerLevel;
     private int _volleyLevel;
@@ -20,6 +21,7 @@ internal sealed partial class SurvivalRun
     private bool _pendingFill;
     private float? _pendingGate;
     private bool _pendingRepair;
+    private bool _repairHandedOut;
     private float _pendingCare;
     private int _gateWaveLevel;
     private float _gateStartHitPoints;
@@ -69,7 +71,7 @@ internal sealed partial class SurvivalRun
         if (quote.Result != FortResult.Ok)
             return quote.Result;
 
-        var result = Complete(quote, PurseSink.Gate, PurchaseKind.GateRepair, 0, quote.Share);
+        var result = Complete(quote, PurseSink.Gate, PurchaseKind.GateRepair, 0, quote.Share, quote.Shares);
         if (result == FortResult.Ok)
             _pendingRepair = true;
 
@@ -139,7 +141,13 @@ internal sealed partial class SurvivalRun
         return result;
     }
 
-    private readonly record struct Quote(FortResult Result, int BasePrice = 0, int Price = 0, float Share = 0f, int Posts = 0);
+    private readonly record struct Quote(FortResult Result, int BasePrice = 0, int Price = 0, float Share = 0f, int Posts = 0, IReadOnlyList<float>? Shares = null);
+
+    /// <summary>
+    /// The field has been read and showed no visible gate it can write to (a gate without a destructible is skipped at the boot), so a gate level or a repair would spend gold on nothing and its check would fail
+    /// with <c>gates=0</c>. Before the first tick nothing has been read and the rows are sold as the shop lists them.
+    /// </summary>
+    private bool NoGateInField => _gatesRead && _gates.Count == 0;
 
     private FortResult? Closed() => Result != null ? FortResult.RunOver : !BetweenWaves ? FortResult.NotOpen : null;
 
@@ -153,7 +161,7 @@ internal sealed partial class SurvivalRun
         var gate = _plan.Shop.Fort?.Gate;
         if (_plan.Offered.Gate <= 0)
             return Refuse(FortResult.NotOffered);
-        if (gate == null)
+        if (gate == null || NoGateInField)
             return Refuse(FortResult.Hidden);
         if (_gateLevel >= gate.Levels.Count)
             return Refuse(FortResult.MaxLevel);
@@ -169,16 +177,21 @@ internal sealed partial class SurvivalRun
         var gate = _plan.Shop.Fort?.Gate;
         if (_plan.Offered.Gate <= 0)
             return Refuse(FortResult.NotOffered);
-        if (gate == null)
+        if (gate == null || NoGateInField)
             return Refuse(FortResult.Hidden);
 
-        var missing = _gates.Select(g => g.MissingShare).Where(share => share > 0f).ToList();
+        // The facts below are last tick's: while a repair waits to be written, or was written after this tick's read, a gate still reads as broken and would be sold again.
+        if (_pendingRepair || _repairHandedOut)
+            return Refuse(FortResult.NothingToRepair);
+
+        var missing = _gates.Select(g => g.MissingShare).Where(share => share >= GateMath.MinMissingShare).ToList();
         if (missing.Count == 0)
             return Refuse(FortResult.NothingToRepair);
 
-        // One row acts on every visible gate and charges per gate (D18).
+        // One row acts on every visible gate and charges per gate (D18); the purchase keeps each gate's share, rounded as the report writes it, so the judge can replay the per-gate prices.
         var whole = FortPrice(gate.RepairPrice);
-        return new Quote(FortResult.Ok, gate.RepairPrice, missing.Sum(share => GateMath.RepairPrice(whole, share)), missing.Sum());
+        var shares = missing.Select(GateMath.ReportedShare).ToList();
+        return new Quote(FortResult.Ok, gate.RepairPrice, missing.Sum(share => GateMath.RepairPrice(whole, share)), shares.Sum(), 0, shares);
     }
 
     private Quote QuoteTowers()
@@ -229,7 +242,7 @@ internal sealed partial class SurvivalRun
     }
 
     /// <summary>Spends the quote's price and lists the purchase. The gold is tested before the cap, as a pack's is.</summary>
-    private FortResult Complete(Quote quote, PurseSink sink, PurchaseKind kind, int level, float share)
+    private FortResult Complete(Quote quote, PurseSink sink, PurchaseKind kind, int level, float share, IReadOnlyList<float>? shares = null)
     {
         if (quote.Price > _purse.Balance)
             return FortResult.NoGold;
@@ -238,7 +251,7 @@ internal sealed partial class SurvivalRun
         if (!_purse.TrySpend(quote.Price, sink))
             return FortResult.NoGold;
 
-        _purchases.Add(new FortPurchase(_wave + 1, kind, string.Empty, level, quote.BasePrice, quote.Price, (float)Math.Round(share, 3)));
+        _purchases.Add(new FortPurchase(_wave + 1, kind, string.Empty, level, quote.BasePrice, quote.Price, GateMath.ReportedShare(share), shares));
         return FortResult.Ok;
     }
 
@@ -263,6 +276,7 @@ internal sealed partial class SurvivalRun
     {
         fx.GateLevel = _pendingGate;
         fx.RepairGates = _pendingRepair ? GateFactor() : null;
+        _repairHandedOut |= _pendingRepair;
         fx.FieldCare = _pendingCare;
         var handed = _pendingGate != null || _pendingRepair || _pendingCare > 0f || _pendingFill;
         _pendingGate = null;
@@ -291,7 +305,12 @@ internal sealed partial class SurvivalRun
         return new LdPostFill(troop.Troop, troop.Levels[_towerLevel - 1].Posts, Math.Max(0, room));
     }
 
-    private void ObserveGates(IReadOnlyList<LdGateFacts>? gates) => _gates = gates ?? Array.Empty<LdGateFacts>();
+    private void ObserveGates(IReadOnlyList<LdGateFacts>? gates)
+    {
+        _gates = gates ?? Array.Empty<LdGateFacts>();
+        _gatesRead = true;
+        _repairHandedOut = false;
+    }
 
     /// <summary>The wave begins: the level in force, and the hit points and gates down as it starts.</summary>
     private void InitGateRecord()
@@ -326,6 +345,7 @@ internal sealed partial class SurvivalRun
             _plan.Options.StartGold != null)
         {
             CareShare = fort.Care?.Share ?? 0f,
+            GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,
         };
     }
 

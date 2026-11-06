@@ -60,7 +60,10 @@ public class SurvivalRunFortTests
     /// <summary>The preparation lasts one tick, so the second tick is already a wave.</summary>
     private static RunRules Fast() => RunRules.Default with { PreparationSeconds = 1f, IntermissionSeconds = 10f };
 
-    private static RunSnapshot Snap(int defenders = 40, params LdGateFacts[] gates) => new(1f, 0, 0, defenders, 0, 0, 1000) { Gates = gates };
+    /// <summary>A tick that reads the gates given, or one whole gate when none is given: a fortress with no gate is <see cref="NoGateSnap"/>.</summary>
+    private static RunSnapshot Snap(int defenders = 40, params LdGateFacts[] gates) => new(1f, 0, 0, defenders, 0, 0, 1000) { Gates = gates.Length > 0 ? gates : new[] { Whole() } };
+
+    private static RunSnapshot NoGateSnap() => new(1f, 0, 0, 40, 0, 0, 1000) { Gates = Array.Empty<LdGateFacts>() };
 
     private static LdGateFacts Whole() => new(0, 15000f, 15000f, 15000f, false, false);
 
@@ -118,9 +121,9 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void TheShippedOffered_IsFieldCareAlone_AndNoneIsEmpty()
+    public void TheShippedOffered_IsTheGateAndFieldCare_AndNoneIsEmpty()
     {
-        Assert.AreEqual(new FortOffer(0, 0, true, 0), FortOffer.Offered, "Slice 4 landed field care's effect and nothing else");
+        Assert.AreEqual(new FortOffer(3, 0, true, 0), FortOffer.Offered, "Slice 4 landed field care's effect and Slice 5 the gate's three levels and its repair; the towers and the volley wait");
         Assert.AreEqual(new FortOffer(0, 0, false, 0), FortOffer.None);
         Assert.AreEqual(FortOffer.None, Plan().Offered with { Gate = 0, Towers = 0, FieldCare = false, Volley = 0 });
         var bare = new RunPlan("h", Array.Empty<GarrisonRow>(), new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
@@ -129,15 +132,26 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void WithTheShippedOffered_OnlyFieldCareCanBeBought()
+    public void WithTheShippedOffered_OnlyTheGateAndFieldCareCanBeBought()
     {
-        var run = InIntermission(Plan(offered: FortOffer.Offered, gold: 5000));
+        var run = InIntermission(Plan(offered: FortOffer.Offered, gold: 5000), () => Snap(40, Dented(0.5f)));
 
-        Assert.AreEqual(FortResult.NotOffered, run.TryBuyGateLevel());
-        Assert.AreEqual(FortResult.NotOffered, run.TryRepairGates());
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyTowerLevel());
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyVolleyLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
         Assert.AreEqual(FortResult.Ok, run.TryFieldCare());
+    }
+
+    [TestMethod]
+    public void TheGate_IsOfferedThroughAllThreeLevels_WithTheShippedOffered()
+    {
+        var run = Begun(Plan(offered: FortOffer.Offered, gold: 5000));
+
+        Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
+        Assert.AreEqual(FortResult.MaxLevel, run.TryBuyGateLevel());
     }
 
     [TestMethod]
@@ -165,6 +179,22 @@ public class SurvivalRunFortTests
         Assert.AreEqual(FortResult.Hidden, run.TryBuyTowerLevel());
         Assert.AreEqual(FortResult.Hidden, run.TryFieldCare());
         Assert.AreEqual(FortResult.Hidden, run.TryBuyVolleyLevel());
+    }
+
+    [TestMethod]
+    public void TheGateLevel_WhenTheFieldReadsNoGateToWriteTo_IsHidden_AndCostsNothing()
+    {
+        var run = Begun(Plan(offered: FortOffer.Offered, gold: 5000));
+        run.Tick(NoGateSnap());
+
+        Assert.AreEqual(FortResult.Hidden, run.TryBuyGateLevel(), "a fortress whose visible gates have no destructible would sell a level that fails with gates=0");
+        Assert.AreEqual(5000, run.Gold);
+        Assert.IsFalse(run.GetView().Fort.Gate.Available);
+        Assert.AreEqual(FortResult.Hidden, run.TryRepairGates());
+
+        run.Tick(Snap());
+
+        Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel(), "a gate in the next read makes the row for sale again");
     }
 
     [TestMethod]
@@ -329,6 +359,80 @@ public class SurvivalRunFortTests
         Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
 
         Assert.AreEqual(5000 - 200 - 100, run.Gold);
+    }
+
+    // Found building Slice 5: the gate facts a quote reads are last tick's, so a repair bought but not yet written, or written this very tick, still reads as broken and sold twice (the second would pay for a gate that is whole).
+    [TestMethod]
+    public void ARepair_BoughtTwiceBeforeATick_IsSoldOnce()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Broken()));
+
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+        Assert.AreEqual(FortResult.NothingToRepair, run.TryRepairGates(), "the first is still to be written");
+        Assert.IsFalse(run.GetView().Fort.Repair.Available);
+
+        Assert.AreEqual(4800, run.Gold);
+    }
+
+    [TestMethod]
+    public void ARepair_WrittenOnThisTick_IsNotSoldAgainOnTheSameTicksStaleFacts_ButIsOnceTheGatesAreReadAgain()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Broken()));
+        run.TryRepairGates();
+
+        var fx = TickOnce(run, Snap(40, Broken()));
+
+        Assert.IsNotNull(fx.RepairGates);
+        Assert.AreEqual(FortResult.NothingToRepair, run.TryRepairGates(), "this tick's facts were read before the repair was written");
+        Assert.IsFalse(run.GetView().Fort.Repair.Available);
+
+        run.Tick(Snap(40, Dented(0.5f)));
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates(), "a gate hit again is sold again once it is read again");
+    }
+
+    // Owed from the Slice 2 review (RCA row 8): the repair is priced per gate, so the purchase keeps each gate's share, and the judge replays the sum of the per-gate prices.
+    [TestMethod]
+    public void ARepair_OfTwoGates_RecordsEachGatesShare_AndChargesThePerGatePrices()
+    {
+        var fort = Everything with { Gate = new GatePlan(100, Gate.Levels) };
+        var run = Begun(Plan(fort));
+        run.Tick(Snap(40, Dented(0.371f), Dented(0.371f)));
+
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+
+        var bought = run.FortSummary().Purchases.Single();
+        Assert.AreEqual(76, bought.Price, "ceil(100 * 0.371) = 38 for each gate; one gate of 0.742 would cost 75");
+        CollectionAssert.AreEqual(new[] { 0.371f, 0.371f }, bought.Shares!.ToArray());
+        Assert.AreEqual(0.742f, bought.Share, 1e-6f);
+    }
+
+    [TestMethod]
+    public void ARepair_OfABrokenAndADamagedGate_RecordsAShareAtMostOneForEach()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Broken(), Dented(0.5f)));
+
+        run.TryRepairGates();
+
+        CollectionAssert.AreEqual(new[] { 1f, 0.5f }, run.FortSummary().Purchases.Single().Shares!.ToArray());
+    }
+
+    [TestMethod]
+    public void ARepair_OfAGateMissingUnderHalfAThousandth_IsNothingToRepair_AndOneOverIsSoldAtOneGold()
+    {
+        var under = Begun(Plan());
+        under.Tick(Snap(40, Dented(0.0004f)));
+        Assert.AreEqual(FortResult.NothingToRepair, under.TryRepairGates(), "the report writes a share to three decimals, so a repair under 0.0005 would be written as 0 and refused by the judge");
+        Assert.AreEqual(5000, under.Gold);
+
+        var over = Begun(Plan());
+        over.Tick(Snap(40, Dented(0.0006f)));
+        Assert.AreEqual(FortResult.Ok, over.TryRepairGates());
+        var bought = over.FortSummary().Purchases.Single();
+        Assert.AreEqual(1, bought.Price);
+        CollectionAssert.AreEqual(new[] { 0.001f }, bought.Shares!.ToArray(), "a share is rounded half away from zero, so 0.0006 is written 0.001, never 0");
     }
 
     [TestMethod]
@@ -814,7 +918,7 @@ public class SurvivalRunFortTests
     {
         var run = Begun(Plan());
 
-        ClearTo(run, 1);
+        ClearTo(run, 1, NoGateSnap);
 
         var fort = run.Stats.Waves.Single().Fort;
         Assert.AreEqual(GateWaveRecord.None, fort.Gate);

@@ -302,6 +302,50 @@ fail = ['\[Check\] id=taom\.long-defeat\.field-care result=fail']
 # The [LongDefeat][Care] c<N> line names the means in percent. The game shows no soldier's health, so the line is the proof of the garrison's heal; whether the lord's own health bar visibly rose is the human row about the Fortifications group below.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.fort-points"
+needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts, tower volley spots or volley origins (Mike records them with taom.ld_record; none is recorded for Helm's Deep until 2026-11-06, and the line is then a skip)"
+reached = ['\[Check\] id=taom\.long-defeat\.fort-points result=']
+pass = ['\[Check\] id=taom\.long-defeat\.fort-points result=pass points=[0-9]+ failed=0']
+fail = ['\[Check\] id=taom\.long-defeat\.fort-points result=fail']
+# Written once at the boot by LongDefeatDirector.Gates.cs (key: the mission): every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary, the sally points' own test. A point that fails is named
+# (bad=hornburg.post[1](navmesh=no boundary=yes)) and warned about at the boot; it does not refuse the run, because the slice that reads the point decides what to do without it. With nothing recorded the line is a skip (points=0 reason=none-recorded), which proves nothing
+# and reads NOT REACHED. The 2 m clear-ray test of a volley origin (phase3-plan.md section 4) is built with the Elven Volley that reads the origins.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-level"
+needs = "a Long Defeat run in which the gate is reinforced: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys gate level 1 at clear 1 and level 2 at clear 2; the report lists them as gateLevel purchases)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-level result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-level result=pass l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ (g[0-9]+\.)?max=[0-9.]+/[0-9.]+ (g[0-9]+\.)?hp=']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-level result=fail']
+# Written by LongDefeatDirector.Gates.cs, key l<N> (the level reached), on the tick after the buy, once the adapter has written every visible gate (D18): each gate's maximum is its vanilla maximum (read at the boot before any hit, 15000 at Helm's Deep) times
+# the level's factor within 1% (max=actual/wanted), a standing gate's share of hit points held within 0.1% (share=before->after: the write is HP * newMax / oldMax less one hit point, so a level never heals the missing share and a broken gate stays at 0), and the damage-state index the
+# next hit computes did not fall (index=before->after, E9b: a next hit that computes index 0 on a gate stored at 1 or more reads state -1 and throws; a level keeps the index from falling at all). A level bought where no gate stands fails (gates=0).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-repair"
+needs = "a Long Defeat run in which a gate is repaired: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot repairs at clear 1 when the ram broke the gate or took a tenth of it; if wave 1 leaves it under 0.1 missing the line is not reached and Slice 10's runs owe it; the damaged path and the broken path are each owed once across the runs)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-repair result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-repair result=pass w=[0-9]+ path=(broken|damaged) gates=[0-9]+ (g[0-9]+\.)?hp=[0-9.]+/[0-9.]+ (g[0-9]+\.)?index=0 (g[0-9]+\.)?disabled=false (g[0-9]+\.)?closed=true (g[0-9]+\.)?open=false']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-repair result=fail']
+# Written by LongDefeatDirector.Gates.cs, key w<N> (the wave the repair precedes), on the tick after the buy (D17): the one repair path (the maximum written, then vanilla's CastleGate.OnMissionReset by reflection, then SetAutoOpenState(false)) left every gate it acted on
+# standing, enabled, with State Closed and not open, its hit points at the levelled maximum (vanilla times the level's factor within 1%) and its damage-state index 0, and the hidden gate the boot broke still broken (hidden_down=true). path=broken when any repaired gate was destroyed, else damaged.
+# With two or more visible gates every number is keyed g0., g1. and so on, which the patterns accept. near= counts the defenders within 4 m of the gate (R3: a soldier in the gateway when it closes may be caught in the door, so read it before treating a stuck soldier as a bug). reset=missing means the reflection found nothing (R10).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-attacked"
+needs = "the same run, a wave played after the repair (--waves 3 --garrison-scale 1.3 --start-gold 5000: the ram attacks the repaired gate in wave 2)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=pass w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=0 samples=[1-9]']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=fail']
+# Written by LongDefeatDirector.Gates.cs, key w<N>, at the next clear or the run's end (ended=run): the repaired gates lost hit points since the repair (or a later level write) or fell again (A20), and through= attackers sampled on the 5 s state line within 3 m behind the gate's plane
+# while it stood stayed 0 (the plane is the gate's own forward axis, turned to face the keep; the box is 3 m deep, 5 m either side of the door's centre and 4 m up or down from the gate, a first guess, so the wall walk above the door does not count; samples= counts only the samples that measured a plane, and a pass over 0 of them is not accepted). An untouched gate is a skip (reason=no-blow): a wave whose ram died earlier brings no blow at all (E30, R4),
+# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck.
+absence = "not-reached"
+
 [[human]]
 claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
 
@@ -367,6 +411,9 @@ claim = "a Cavalry lord who loses his horse (killed under him, or knocked off) f
 
 [[human]]
 claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"
+
+[[human]]
+claim = "the repaired gate looks closed and whole, plank and door, and the ram plays its hits on it again (wave 2 of --waves 3 --garrison-scale 1.3 --start-gold 5000); a reinforced gate takes visibly more blows to break; the Fortifications group lists Reinforce the gate with its level, its percent and its price, and Repair the gate with a price only when a gate is hurt"
 
 [[human]]
 claim = "the shop's Fortifications group reads clearly: field care is listed with its share and price, buying it spends the gold at once and the group then reads Used until the next wave is cleared, and, if the lord was hurt, his own health bar rises on the next tick (the game shows no soldier's health, so the field-care line proves the garrison's heal); care is not listed in the preparation before wave 1"

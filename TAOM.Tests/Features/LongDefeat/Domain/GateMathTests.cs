@@ -65,14 +65,6 @@ public class GateMathTests
     }
 
     [TestMethod]
-    public void LevelledMax_IsTheVanillaMaximumTimesOnePlusThePercent()
-    {
-        Assert.AreEqual(22500f, GateMath.LevelledMax(15000f, 50f), 0.01f);
-        Assert.AreEqual(30000f, GateMath.LevelledMax(15000f, 100f), 0.01f);
-        Assert.AreEqual(15000f, GateMath.LevelledMax(15000f, 0f), 0.01f);
-    }
-
-    [TestMethod]
     public void KeepShare_TheNaiveWrite_WouldLowerTheIndex_TheSharedWriteNever()
     {
         // E9b: adding the same 7500 to the maximum and the hit points takes 11000 of 15000 (state 1) to 18500 of 22500 (state 0), and the next hit reads index -1.

@@ -26,6 +26,7 @@ internal sealed partial class LongDefeatDirector
     private readonly SurvivalRun _run;
     private readonly ILongDefeatBattlefieldAdapter _field;
     private readonly ILongDefeatEffectsAdapter? _effects;
+    private readonly ILongDefeatFortAdapter? _fort;
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
@@ -58,13 +59,15 @@ internal sealed partial class LongDefeatDirector
     private int _musterBatchesSpawned;
 
     /// <param name="effects">The engine writes and reads beyond the field; null runs the wave with no published factors and no <c>scale</c> check (the director's tests).</param>
+    /// <param name="fort">The fortification engine work (the gates; later the posts and the volleys), the same object as <paramref name="field"/> in the game; null buys and checks no fortification effect (the director's tests).</param>
     public LongDefeatDirector(RunPlan plan, ILongDefeatBattlefieldAdapter field, LongDefeatSession session, IModLogger logger,
-        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null)
+        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null, ILongDefeatFortAdapter? fort = null)
     {
         _plan = plan;
         _run = new SurvivalRun(plan);
         _field = field;
         _effects = effects;
+        _fort = fort;
         _session = session;
         _logger = logger;
         _outcomes = outcomes;
@@ -115,6 +118,8 @@ internal sealed partial class LongDefeatDirector
             return false;
         }
 
+        CheckFortPoints();
+
         _session.Fill(_run);
         _started = true;
         Apply(_run.Begin());
@@ -122,6 +127,7 @@ internal sealed partial class LongDefeatDirector
         _mainBody = read.MainBody;
         AdoptIfNew();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(_field.BootFacts()));
+        LogArcherPositions();
         _logger.LogInfo($"{Tag}[Boot] run started: fortress {_plan.FortressId}, keep {KeepText()} ({(recorded != null ? "recorded" : "scene")}), autoplay {_plan.Options.Autoplay}");
         return true;
     }
@@ -154,7 +160,7 @@ internal sealed partial class LongDefeatDirector
         JudgeFieldCare(read.DefenderHealthMean);
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
-            _defendersAtKeep, read.SiegeBattleSize));
+            _defendersAtKeep, read.SiegeBattleSize, read.Gates));
         Apply(fx);
         if (_run.Result != null)
             return;
@@ -310,6 +316,11 @@ internal sealed partial class LongDefeatDirector
 
         _stateClock = 0f;
         var v = _run.GetView();
+        if (v.Phase == RunPhase.Wave)
+        {
+            SampleGateWatch();
+            LogArcherPositionsInWave();
+        }
         _logger.LogInfo($"{Tag}[State] wave {v.Wave} {v.Phase}: attackers {read.AttackersStanding} fleeing {read.AttackersFleeing} high {read.AttackersHigh}, "
             + $"defenders {read.DefendersStanding} fleeing {read.DefendersFleeing} high {read.DefendersHigh} pending {v.DefendersPending}, gold {v.Gold}, "
             + $"keep {F2(v.KeepProgress)} at {_atKeep}/{_defendersAtKeep}; frame mean {F2(_frameTotal / _frames * 1000f)} ms max {F2(_frameMax * 1000f)} ms");

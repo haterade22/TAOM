@@ -31,6 +31,7 @@ internal sealed record LdSpawnReport(IReadOnlyList<LdPoint> Points, int Far, int
 /// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The next three are
 /// diagnostics only: defenders running away, and how many of each side stand at or above the wall line. <c>DefenderHealthMean</c> is the mean of health over limit across every active human of the
 /// defending team with a limit, runners included (the people <c>RestDefenders</c> heals), or -1 when none was read; the <c>field-care</c> check compares it with the heal's own read-back.
+/// <c>Gates</c> are the visible gates as the field read them this tick (null from a field that reads none), which the run keeps for its gate row, its repair quote and the wave's gate record.
 /// </summary>
 internal readonly record struct LdReading(
     int AttackersStanding,
@@ -43,7 +44,8 @@ internal readonly record struct LdReading(
     int DefendersFleeing = 0,
     int AttackersHigh = 0,
     int DefendersHigh = 0,
-    float DefenderHealthMean = -1f);
+    float DefenderHealthMean = -1f,
+    IReadOnlyList<LdGateFacts>? Gates = null);
 
 internal enum LdRemovalKind
 {

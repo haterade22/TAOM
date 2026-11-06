@@ -59,7 +59,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         }
 
         return new LdReading(attackers, fleeing, defenders, atKeep, defendersAtKeep, MainBody(), BannerlordConfig.GetRealBattleSizeForSiege(),
-            defendersFleeing, attackersHigh, defendersHigh, healthRead == 0 ? -1f : healthShares / healthRead);
+            defendersFleeing, attackersHigh, defendersHigh, healthRead == 0 ? -1f : healthShares / healthRead, ReadGates());
     }
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) =>

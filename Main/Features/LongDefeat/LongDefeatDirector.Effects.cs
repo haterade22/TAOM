@@ -26,6 +26,12 @@ internal sealed partial class LongDefeatDirector
             _effects?.PublishStats(stats);
         if (fx.EngineHitPoints is { } engines)
             SetEngineHitPoints(engines);
+
+        // The gates are written after the Hammer (which writes rams and towers only, D19), the level before the repair so a repair restores the new maximum.
+        if (fx.GateLevel is { } gateLevel)
+            ApplyGateLevel(gateLevel);
+        if (fx.RepairGates is { } restore)
+            ApplyGateRepair(restore);
         if (fx.ApplyBoon is { } boon)
             ApplyBoonToStanding(boon);
         if (fx.RefreshAttackers)
@@ -235,6 +241,7 @@ internal sealed partial class LongDefeatDirector
 
     private void OnWaveCleared(RunEvent e)
     {
+        JudgeGateAttacked(false);
         FlushScale();
         FlushTerror();
         FlushBlades();
@@ -271,6 +278,7 @@ internal sealed partial class LongDefeatDirector
 
         _finished = true;
         JudgeFieldCare(null);
+        JudgeGateAttacked(true);
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));

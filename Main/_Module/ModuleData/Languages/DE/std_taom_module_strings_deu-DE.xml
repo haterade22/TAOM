@@ -7783,6 +7783,14 @@
     <string id="TAOM_LD_Fort_Used" text="Used" />
     <string id="TAOM_LD_Notice_CareUsed" text="Field care is already used between these waves." />
     <string id="TAOM_LD_Notice_FortUnavailable" text="That is not for sale." />
+    <string id="TAOM_LD_Fort_Gate" text="Reinforce the gate" />
+    <string id="TAOM_LD_Fort_GateDetail" text="Level {LEVEL} of {MAX}: the gate holds {PERCENT}% more than a new one. A hurt gate stays as hurt." />
+    <string id="TAOM_LD_Fort_GateFull" text="Fully reinforced" />
+    <string id="TAOM_LD_Fort_Repair" text="Repair the gate" />
+    <string id="TAOM_LD_Fort_RepairDetail" text="Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost." />
+    <string id="TAOM_LD_Fort_RepairNone" text="Nothing to repair" />
+    <string id="TAOM_LD_Notice_GateFull" text="The gate is fully reinforced." />
+    <string id="TAOM_LD_Notice_GateWhole" text="The gate needs no repair." />
   </strings>
 
 </base>

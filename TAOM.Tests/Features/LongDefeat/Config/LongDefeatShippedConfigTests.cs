@@ -129,7 +129,7 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedBuild_OffersFieldCareAlone_UntilEachSlicesEffectLands()
+    public void ShippedBuild_OffersTheGateAndFieldCare_UntilEachSlicesEffectLands()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
@@ -137,8 +137,27 @@ public class LongDefeatShippedConfigTests
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
         Assert.AreEqual(FortOffer.Offered, plan.Offered);
-        Assert.AreEqual(new FortOffer(0, 0, true, 0), plan.Offered);
+        Assert.AreEqual(new FortOffer(3, 0, true, 0), plan.Offered);
         Assert.IsNotNull(plan.Shop.Fort?.Care, "the shipped shop carries the care row the build offers");
+        Assert.AreEqual(plan.Offered.Gate, plan.Shop.Fort!.Gate!.Levels.Count, "the shipped shop carries exactly the gate levels the build delivers");
+        Assert.IsTrue(plan.Shop.Fort.Gate.RepairPrice > 0);
+    }
+
+    // D28: CreatureSiegeRules.Track latches a gate as destroyed (E25), so a creature would treat a repaired gate as open. No Helm's Deep roster fields one, and Phase 5 (trolls) owns the reset on repair.
+    [TestMethod]
+    public void ShippedHelms_FieldsNoOversizedCreature_SoARepairedGateIsNeverReadAsOpenByTheCreatureRole()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+        var troops = Troops();
+        var creatures = TAOM.Features.SiegeForces.Domain.OversizedCreatureRaces.RaceNames;
+
+        var ids = RunPlanTroops.AllTroopIds(plan);
+        var found = ids.Where(id => troops.TryGetValue(id, out var npc) && creatures.Contains((string?)npc.Attribute("race") ?? "")).ToList();
+
+        Assert.IsTrue(ids.Count > 10, "the roster read found only " + ids.Count + " troops");
+        Assert.AreEqual(0, found.Count, "a creature in a Helm's Deep roster needs Phase 5's gate reset first: " + string.Join(", ", found));
     }
 
     [TestMethod]

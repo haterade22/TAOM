@@ -3,11 +3,20 @@ using System;
 namespace TAOM.Features.LongDefeat.Domain;
 
 /// <summary>
-/// The gate arithmetic (phase3-plan.md D17 and D18): the damage-state index the engine computes, the hit points a level write leaves, the levelled maximum and the repair price.
-/// Pure. The engine's state index only has to stay or rise from one hit to the next, or the gate's next hit reads a state of -1 and throws (E9b).
+/// The gate arithmetic (phase3-plan.md D17 and D18): the damage-state index the engine computes, the hit points a level write leaves and the repair price.
+/// Pure. The engine's state index must not fall to 0 from a stored 1 or more between two hits, or the next hit reads <c>_destructionStates[-1]</c> and throws (E9b); a level keeps it from falling at all.
 /// </summary>
 internal static class GateMath
 {
+    /// <summary>
+    /// The least missing share a repair mends or charges for. The report writes a share to three decimals, so half a thousandth is the smallest that is not written as 0 (and refused by the judge, RCA row 9); a gate
+    /// missing less is left alone, which is under 8 hit points of a 15000 gate. The run quotes by it and the adapter repairs by it.
+    /// </summary>
+    public const float MinMissingShare = 0.0005f;
+
+    /// <summary>A share as the report holds it: three decimals, a half rounded away from zero, so a share at or over <see cref="MinMissingShare"/> is never written as 0.</summary>
+    public static float ReportedShare(float share) => (float)Math.Round(share, 3, MidpointRounding.AwayFromZero);
+
     /// <summary>
     /// The state index <c>DestructableComponent.CalculateNextDestructionLevel</c> gives a gate with <paramref name="states"/> damage states (v1.5.6, <c>DestructableComponent.cs:405-418</c>):
     /// the number of whole steps of <c>max / states</c> the hit points have fallen past, in 32-bit float as the engine does. A maximum that is not a positive finite number, no states, or hit points that are
@@ -29,9 +38,6 @@ internal static class GateMath
 
         return index;
     }
-
-    /// <summary>The maximum of a level: the vanilla maximum times one plus the level's cumulative percent over 100.</summary>
-    public static float LevelledMax(float vanillaMax, float hitPointsPercent) => vanillaMax * (1f + hitPointsPercent / 100f);
 
     /// <summary>
     /// The hit points to write when the maximum rises from <paramref name="oldMax"/> to <paramref name="newMax"/> on a standing gate: its share of the maximum, less one hit point (the one is left off a
