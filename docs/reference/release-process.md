@@ -59,14 +59,18 @@ bump one by hand.
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
 `InformationalVersion` as `build.yyyyMMdd-HHmmssZ` per build, which both modules log at startup so a
-mismatched pair is one line in the log. That stamp identifies a *build*; the tag identifies a
+mismatched pair is one line in the log. The .NET SDK appends `+<commit SHA>` to that stamp, and a
+build of a tree with uncommitted changes to its inputs appends `.dirty` after the SHA (`nogit` or
+`.nogit` when git could not tell). That stamp identifies a *build*; the tag identifies a
 *release*. Both are needed.
 
 ## Cutting a release
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
-1. Tree clean, on `bannerlord-1.4.5`, current version already tagged.
+1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because
+   `build.ps1` compiles and deploys every file in the tree, committed or not; only the Phase 8 build
+   moves to a detached worktree of the tag), on `bannerlord-1.4.5`, current version already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
@@ -79,6 +83,45 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin bannerlord-1.4.5 vX.Y.Z`.
+9. Build at the tag, gate the DLLs and the pairing, prune, package (the skill's Phase 8). The gate is
+   `python tools/package_release.py --source "<game>/Modules" --dest <out> --game-root "<game>" --require-build vX.Y.Z --dry-run`,
+   which must print `build stamp OK`. It reads every `bin/<platform>/` copy of `TAOM.dll` and
+   `TAOM.Dependencies.dll` and refuses a `.dirty` or `nogit` copy or one from another commit, a
+   missing requested module, a tag whose `Directory.Build.props` predates the `.dirty` flag, an
+   installed TAOM or TAOM.Dependencies `SubModule.xml` whose `<Version>` or DLL list differs from the
+   tag's, and a release number in the 1.5.x range, with four parts or held by another line's tag. On
+   every run it also refuses retired binaries, a `Gaming.Desktop.x64_Shipping_Client` bin, a shipped
+   ModuleData file defining a `taom_test_` id, and an Armory shader with no source players have. The
+   gate proves the DLLs only. Deploys never delete, so the install also holds files from every
+   earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
+   - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the tag
+     (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`), and any leftover `taom_test_` file. Compare
+     paths case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, so an exact
+     comparison deletes every live prefab. Leave `RuntimeDataCache*` alone: the packager already
+     excludes it unless `--keep-rdc` asks for it.
+   - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets exist in
+     the install only, and no build step recreates them
+     ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
+   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under `_Module/bin/`
+     (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`: 2 files for
+     TAOM, 42 for TAOM.Dependencies) or the tag's build writes. The build writes `TAOM.dll`, `TAOM.pdb`,
+     `DryIoc.dll`, `Newtonsoft.Json.dll` and `System.Runtime.CompilerServices.Unsafe.dll` into TAOM, and
+     `TAOM.Dependencies.dll`, `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`,
+     `MCMv5.dll` and `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies, in the folders
+     the `MirrorWin64ShippingClientTo*` targets of each csproj write. Remove anything else,
+     `Gaming.Desktop.x64_Shipping_Client` folders and retired binaries included; `.pdb`, `.exp` and
+     `.lib` may stay, since the packager never ships them.
+
+   Every run also prints three reports that never refuse and never change the exit code: one line per
+   shipped `<module>/SceneObj/<scene>` saying whether `ShaderCache/D3D11/` holds
+   `terrain_shaders_header_data.bin` and `compressed_shader_cache.sack`, with the sack's format, a
+   summary line and a `WARNING` for any sack whose format differs from the majority of the shipped
+   sacks; one line per module-level `<module>/Shaders/D3D11/compressed_shader_cache.sack`, with its size
+   and format; and one `JIT optimization` line per shipped copy of `TAOM.dll` and
+   `TAOM.Dependencies.dll` (OFF for the Debug builds TAOM ships on purpose). A scene without a sack is
+   not an error. The `WARNING` compares the shipped scene sacks with each other, so a set of them that
+   lags the engine as a whole raises none. Module sacks are listed and ship: on the 1.4.x line, leaving
+   them out waits on a v1.4.8 test that the game uses a Kit-built sack.
 
 **Step 8 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
@@ -93,7 +136,12 @@ of the 1.5.x line, and `v2.1.0` and `v2.1.1` are tags on no branch, so none of t
 here. Three parts keep `tools/changelog_from_commits.py`, whose `--version` accepts only
 `vX.Y.Z`, and the subject hook unchanged; `2.4` sorts above the public build's hand-labelled
 `2.0.29.5` and reads as "the 1.4 line" in a crash bundle's `TaomVersion`. Until that release
-commit, every subject on this line carries `v2.0.28`.
+commit, every subject on this line carries `v2.0.28`. A fourth component is never written either (the
+public channel's hand-typed `v2.0.29.5`). `tools/package_release.py --require-build` refuses a release
+commit numbered in the 1.5.x range, with four parts or with a number another line's tag holds (`v2.1.0`,
+`v2.1.1`), and an installed TAOM or TAOM.Dependencies `SubModule.xml` whose `<Version>` differs from the
+tag's; `tools/check_release_pairing.py` refuses either form in TAOM_Map's or LOTRLOME_Armory's
+`SubModule.xml`.
 
 ## Resolving a crash report to a commit
 
@@ -107,6 +155,29 @@ git describe --tags --match 'v[0-9]*' <sha>   # which release a given commit is 
 ```
 
 If the version is one of the five phantoms below, stop — there is nothing to find.
+
+A bundle's `report.txt` (Identity section, `Build:` line) and `manifest.txt` (`TAOM build:` line)
+also carry the build stamp, for example `v2.0.0.0 build.20260923-184249Z+c79a585218ad...`. That SHA
+is the commit the DLL was compiled from: `git show <sha>`. A `.dirty` suffix means the build also
+held uncommitted edits, so the commit is only the nearest known state; `nogit` means git could not
+tell. Bundles written before this field existed lack the line: read the `[BuildStamp]` line near the
+top of the bundled `taom_debug.log` instead.
+
+Reading the `[BuildStamp]` line: each DLL's stamp is followed by `config=<configuration>
+jitOpt=<ON|OFF|unknown>`. `(pair OK: both built from <sha>)` means one clean commit; `(pair close in
+time, stamp flagged)` means a flagged stamp cannot prove it; `MISMATCH ... from different commits
+(<a>, <b>)` means the modules were not installed from one release. A log ending without
+`[Shutdown] clean module unload` ended in a crash or a kill. The `[Engine]` line names the Bannerlord
+build and every active module with its version.
+
+## TAOM_Map and LOTRLOME_Armory ship with a recorded identity
+
+Both are unversioned installs outside git. Each release records their version and ModuleData
+fingerprint (the `modules:` line of `tools/check_release_pairing.py`), and the line's approved copies
+live in `tools/release_pins.json`. A `PAIRING SIGNAL` such as `taom_body_length` means a 1.5.x-era
+Armory: it is named in the release note and never allowlisted (decision D15). `VILLAGE` findings mean
+TAOM data names villages the map lacks (`recruitment_pools/gondor.json` names four). `HIDEOUT` findings
+predict the new-game hideout throw that plan 112 guards.
 
 ## Historical record: the backfill (2026-08-08)
 
