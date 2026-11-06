@@ -1021,3 +1021,15 @@ The same shape sat behind the dead prefabs of #1022 and #1024.
   `VisualDefinition="X"` attribute, a `!Constant` reference, a tag, a movie load); if there is none, delete it instead.
 - **On this tree:** This incident ran on the 1.5.x line, and `LeftPanel` exists only there; the rule holds here.
 - **Source:** 1.5.x `rca-panel-ease-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hover target lies inside every ancestor's rectangle: Gauntlet hit-tests by containment (2026-10-23)
+`EventManager.CollectEnableWidgetsAt` (v1.4.8 EventManager.cs:880-901) descends into a child only when it is
+enabled and the pointer is inside that child's own `AreaRect` (`:891`, `IsPointInsideMeasuredArea` `:742`), and a
+`HintWidget` relays only its parent's hover (HintWidget.cs:15, :31-35). A widget placed outside its parent (a
+negative `PositionYOffset`, an offset past the parent's edge) still draws, because nothing clips it, but no
+pointer ever reaches it, so its tooltip never opens.
+- **Why missed:** the markup was copied without its place, and nobody walked the hit test.
+- **Prevent:** put a hint on an enabled widget that lies inside every ancestor's rectangle, give that widget
+  `DoNotPassEventsToChildren` when it has enabled children (children are collected first), and pin it with a
+  structural test (the hint's parent, its events flags, no offset out of the parent). Hover it in game.
+- **Source:** 1.5.x `fcd1409074c6eb13709233e5161f6779de1ccd64` (#877), lesson re-cited to v1.4.8.

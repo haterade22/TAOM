@@ -70,7 +70,7 @@ If ANY of these are true: **do NOT inject children into that container**. Use bo
 
 `PrefabInsertPositionTests` fails a Child insert without its own Index or not on `/Children`, and an Append or Prepend on `/Children`.
 
-**Hover targets:** a `HintWidget` relays only its parent's hover (v1.4.8 `HintWidget.cs:15`) and hit-testing skips a widget with `DoNotAcceptEvents="true"` (`EventManager.cs:897`), so a hint under such a parent never shows. `PrefabHintParentGateTests` fails any in-code PrefabExtension hint whose parent sets `DoNotAcceptEvents="true"` (#910, the third repeat).
+**Hover targets:** a `HintWidget` relays only its parent's hover (v1.4.8 `HintWidget.cs:15`), and `EventManager.CollectEnableWidgetsAt` enters a child only when it is enabled and the pointer is inside its own `AreaRect` (`EventManager.cs:891`). So a hint's parent must be enabled and lie inside every ancestor's rectangle (no offset past a parent's edge), with `DoNotPassEventsToChildren` when it has enabled children; hit-testing also skips a widget with `DoNotAcceptEvents="true"` (`EventManager.cs:897`), so a hint under such a parent never shows. `PrefabHintParentGateTests` fails any in-code PrefabExtension hint whose parent sets `DoNotAcceptEvents="true"` (#910, the third repeat). Pin the rest of the shape with a structural test and hover it in game (`docs/reviews/lessons/localization-ui.md`, #877).
 
 **Safe pattern:**
 ```
