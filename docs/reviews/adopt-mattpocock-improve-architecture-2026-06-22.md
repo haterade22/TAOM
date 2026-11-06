@@ -52,6 +52,12 @@ The honest answer to "what can we do more effectively": almost nothing here that
 - `python tools/audit_claude_config.py` (self-audit after the edits) — exit 0, no new findings.
 - Both edits are documentation-only (a playbook reference + an always-load rule line); no code, no tests affected.
 
+**Correction (2026-09-29):** the "no findings" from the foreign-skill vet above was vacuous. mattpocock/skills
+has no `.claude/` folder, and until 2026-09-29 `audit_claude_config.py --external` read only `.claude/**`,
+so it scanned none of the skill files. The manual read above stands; the automated vet did not run in any
+useful sense. The collector now reads plugin layouts and bare skill folders and reports `UNCHECKED` when
+it collects nothing ([adopt-ecc-2026-09-29.md](adopt-ecc-2026-09-29.md), Step 1).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
