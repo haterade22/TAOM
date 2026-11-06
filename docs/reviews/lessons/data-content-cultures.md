@@ -1577,3 +1577,9 @@ Cardolan's banner went green and white while its clans kept brown `color`/`color
 - **Why missed:** the change was made and reviewed where banners are defined.
 - **Prevent:** when a realm's banner or colours change, update in one change the kingdom banner key and colours, the clans' `color`/`color2` (Patch23 tint), the culture `color`/`color2`, the `factionmap/factions.json` colour, and every tool table that writes them (`generate_new_faction_kingdoms.py`, `promote_borrowed_cultures.py`, `make_new_factions_playable.py`).
 - **Source:** 1.5.x `rca-banner-packing-2026-10-28.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Check a culture-keyed config against the cultures the troops carry, after roster sharing (Race Abilities, 2026-10-04)
+Race Abilities keyed its men's profiles on culture ids and proved each id exists. Khand's `spcultures.xslt` block binds Rhun's roster, and those troops carry `Culture.khuzait`, so the `battania` profile reached only Khand's lords and town guard while Khand's soldiers fired Rhun's ability; Umbar likewise fields Harad's levies. The commit body promised "Khand's Variags fight savage".
+- **Why missed:** existence was checked, reach was not. A culture's definition says nothing about which troops carry it once the XSLT shares rosters between kingdoms.
+- **Prevent:** for every culture key, list the troops whose own `culture=` is that id (the troop files, and the XSLT bindings that feed recruitment and garrisons). A key whose culture fields no soldiers is a design question to raise, not a row to ship.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R17 (lens 7), on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -2859,3 +2859,31 @@ run from a subfolder or outside the repo reported "no leaks" with exit 0.
   not read as a pass). Prefer passing a tool's options on the command line over a tracked config
   file that a CR-intolerant tool reads.
 - **Source:** 1.5.x `docs/reviews/rca-quality-gates-2026-10-26.md` findings 1 to 4, 6 and 11 (#1020), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A review round is every lens in scope; stopping after the first wave is a partial review (Race Abilities, 2026-10-04)
+Round 1 of the Race Abilities review ran the defect wave (standards, engine compatibility, data flow, XML) and stopped. Efficiency, completeness and design never looked, and round 2's efficiency lens then found a HIGH per-frame allocation and four MEDIUM hot-path costs in code round 1 had passed.
+- **Why missed:** the first wave's findings were fixed and the round was treated as done; the deep-review table runs completeness and design always and efficiency whenever C# changed.
+- **Prevent:** run every lens the table puts in scope, in waves of four. When a round must stop early (a usage limit, Mike's call), its RCA names the lenses that did not run, and the next round starts with them.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R20 to R24, "Root-cause pattern 2", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Count a scripted attack by a unique blow fingerprint; a landed blow never proves its animation played
+`[BlowDiag]` lines carry only `attackerIdx`, and the war ram's attack task applies damage in the same tick it plays
+the action. The ram's `AttackBlowMagnitude` (35) is the only such constant in `Main/`, so `mag=35 missile=False` counted
+every head-butt (1,300 in one test, 1,005 in the next) and, grouped by attacker and second, the victims per butt.
+- **Why missed:** "it fired" and "it played" were read as the same fact; the head never dropped in 2,305 firings.
+- **Prevent:** before reading a count, grep the source for the constant to prove the fingerprint is unique. A log keeps
+  growing while the battle runs, so rerun every count on the same snapshot before comparing two of them. Attribute an
+  engine warning by its timestamp against the edit and import times: `rgl_log_<pid>.txt` accumulates a whole session.
+- **Source:** 1.5.x #618, 2026-09-18 (`docs/features/war-ram.md` "Verifying from the logs"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `r.pos += r.take(...)` drops the advance that `take` itself makes
+A tpac header parser skipped each item's metadata with `r.pos += r.take("<Q")`. Python evaluates the attribute on the
+left of an augmented assignment before it calls the right side, so the stored position was the old one plus the
+length: the 8 bytes `take` had just consumed were lost and every later field read shifted. The unit tests over a
+synthetic package failed on their first run; the scratch prototype had used a local variable and never showed it.
+- **Why missed:** the line reads as "skip the length-prefixed block", and nothing about it looks order-dependent.
+- **Prevent:** read a length into a local first (`n = r.take(...)`, then `r.pos += n`); never put a call that moves
+  a cursor on the right of an augmented assignment to that same cursor. Better still, reuse the tested container code:
+  `tools/tpac_clone_metamesh.py`'s `parse` and `serialize` round-trip a real package byte for byte, and the new tool
+  moved onto them the same day instead of carrying another tpac parser in `tools/`.
+- **Source:** 1.5.x `tools/skeleton_hit_capsules.py`, `tools/tests/test_skeleton_hit_capsules.py` (2026-09-18), on `origin/bannerlord-1.5.x` (ported by WP142).

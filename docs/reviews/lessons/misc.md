@@ -369,3 +369,9 @@ bundle players upload.
   executes and the data it publishes. Read only TAOM's own objects there; anything else is snapshotted on the main
   thread at a normal moment, filtered, or left out.
 - **Source:** 1.5.x `rca-982-collector-instance-2026-10-23.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A scope word in a claim is checked by a grep over that scope; a behaviour difference is stated as the condition the code tests (plan 015 decisions, 2026-09-24)
+The decisions commit said "no node is a service locator" while the same `BuildTree` built three `LogTask`s that resolve per Execute (the first review had already corrected the same `LogTask` overclaim in the feature doc). It also said a skeleton missing during the wind-up "ends the bite when the hit window opens", but the code tests the skeleton at the first in-window tick, so one that is back by then lets the bite go on and hit.
+- **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
+- **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2), on `origin/bannerlord-1.5.x` (ported by WP142).
