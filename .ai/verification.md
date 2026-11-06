@@ -11,8 +11,8 @@ untrusted PR code on the personal self-hosted workstation.
 | `contract` | `python tools/reviewctl.py lint` |
 | `reviewctl-tests` | `python -m unittest tools.tests.test_reviewctl tools.tests.test_ai_documentation -v` |
 | `python-tests` | `python -m unittest discover -s tools/tests -t .` |
-| `managed-build` | After an authorized `dotnet restore TAOM.sln`: `dotnet build TAOM.sln -c Release --no-restore -p:DisableModuleCopy=true -p:ModuleId=` |
-| `managed-tests` | Only after the above solution build at this SHA: `dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal` |
+| `managed-build` | After an authorized `dotnet restore TAOM.sln`: `dotnet build TAOM.sln --no-restore -p:DisableModuleCopy=true -p:ModuleId=` |
+| `managed-tests` | Only after the above solution build at this SHA: `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal` |
 | `mcm-defaults` | `python tools/check_mcm_default_flips.py`: exit 1 when an MCM setting's default changed under an unchanged name since any release tag reachable from HEAD (rename it, or allowlist `Class.Name` with from, to and reason; a stale entry fails). |
 | `api-snapshot` | After a Debug build of the tests (`dotnet build TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`): `pwsh -NoProfile -File tools/snapshot_api_surface.ps1 -Check`. It reflects over `TAOM.Tests/bin/Debug/net472/TAOM.dll` whenever that exists, so a Release-only build leaves it reading a stale assembly. Exit 1 (`DRIFT:`) when a patch target or GameModel base changed and `docs/reference/taleworlds-api-snapshot/` was not regenerated; needs the game install. |
 | `moduledata` | `python tools/validate_moduledata.py` with the actual game and required external module roots available. Record roots, versions and skipped-check output. |
@@ -74,7 +74,7 @@ The standard-library validator checks record structure, SHA, check IDs, pass
 status, zero exit code and a nonempty command/evidence reference. It cannot prove
 execution, inspect linked CI logs, enforce command ordering, authenticate identities,
 or validate claimed coverage. The maintainer must inspect those records. Use exact
-commands and attach logs/CI run links, environment versions, external artifact
+commands and attach logs, environment versions, external artifact
 hashes, discovery totals and skips. Keep any private logs in ignored artifacts;
 redact before sharing. Never present manual inspections as process exit codes.
 

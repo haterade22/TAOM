@@ -69,7 +69,7 @@ Use `checks.template.json`. Each required check appears exactly once with
 `id`, `status`, `command`, `exit_code`, `evidence`. Record actual execution and
 the exact command. Status must be `pass` and exit code an integer zero to pass
 validation. Failed, skipped or not-run checks cannot satisfy the packet.
-Evidence is a real log/artifact location or CI run link with the environment,
+Evidence is a real log or artifact location with the environment,
 counts and relevant skip information. The checker does not fetch or authenticate
 that evidence. See [verification.md](verification.md).
 

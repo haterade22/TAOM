@@ -10,14 +10,14 @@ review. Review neighboring unchanged consumers even when absent from the diff.
 The rules below are plain Markdown, usable by every AI. Some technical rules
 still live under `.claude/rules/` to preserve existing integrations. Read their
 technical content directly; do not assume another client loads their frontmatter
-or possesses their slash commands. New shared workflow policy belongs in `.ai`,
-not in duplicated vendor files. The [shared policy](policy.md) governs roles and
+or possesses their slash commands. Packet and role workflow belongs in `.ai`;
+every other shared rule goes in AGENTS.md or the rule that scopes it. The [shared policy](policy.md) governs roles and
 authority when a legacy Claude workflow assumes the reader is a builder.
 
 | Lane | Inspect and read first |
 | --- | --- |
 | `general` | Requested behavior, omitted files, dependencies, cross-feature interactions, positive requirements, and evidence. [Feature map](../docs/reference/feature-map.md), [lessons index](../docs/reviews/LESSONS-LEARNED.md), [prior review catalog](../docs/reviews/codex-track-record.md). |
-| `managed` | C# services, adapters, hooks, GameModels, behaviors, tests, IoC, save/host authority, lifecycle and hot paths. [Architecture](../.claude/rules/csharp-architecture.md), [patterns](../.claude/rules/csharp-patterns.md), [adapters](../.claude/rules/adapters.md), [Harmony](../.claude/rules/harmony-patches.md), [GameModels](../.claude/rules/gamemodels.md), [tests](../.claude/rules/tests.md), [ADRs](../docs/adrs/README.md). |
+| `managed` | C# services, adapters, hooks, GameModels, behaviors, tests, IoC, save/host authority, lifecycle and hot paths. [Architecture](../.claude/rules/csharp-architecture.md), [config providers](../.claude/rules/config-providers.md), [patterns](../.claude/rules/csharp-patterns.md), [adapters](../.claude/rules/adapters.md), [Harmony](../.claude/rules/harmony-patches.md), [GameModels](../.claude/rules/gamemodels.md), [tests](../.claude/rules/tests.md), [ADRs](../docs/adrs/README.md). |
 | `moduledata` | XML, XSLT, JSON configs and cross-file identity completeness. [XML](../.claude/rules/xml-data.md), [XSLT](../.claude/rules/xslt.md), [troops](../.claude/rules/troops.md), [vanilla comparison](../.claude/rules/vanilla-data-comparison.md), [validator limits](../docs/features/moduledata-validation.md). Additions require checking absent rows in other configs, not just present rows. |
 | `ui` | ViewModels, prefabs, sprite identifiers, input, lifecycle, cleanup and native screen seams. [UI rules](../.claude/rules/gui-ui.md), [engine UI process](../docs/reference/engine/gauntletui-viewmodel-screen.md). |
 | `tooling` | Python, PowerShell, shell, CI, packaging and data migrations. Inspect destructive targets, credentials, process exits, discovery counts, test fixture independence, artifact scope and reproducibility. [Tooling lessons](../docs/reviews/lessons/build-tooling-workflow.md), [tools index](../tools/README.md). |

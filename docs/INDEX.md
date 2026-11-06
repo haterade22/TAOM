@@ -287,15 +287,9 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - [ai-includes/architecture.md](ai-includes/architecture.md) — layer stack, IoC, lifetimes
 - [ai-includes/patterns.md](ai-includes/patterns.md) — Hook / Strategy / GameModel patterns
 - [ai-includes/agent-teams.md](ai-includes/agent-teams.md) — when to spawn parallel agents
-- [ai-includes/tdd-enforcement.md](ai-includes/tdd-enforcement.md) — TDD workflow rules
 - [ai-includes/testing-guide.md](ai-includes/testing-guide.md) — MSTest + NSubstitute patterns
-- [ai-includes/research-workflow.md](ai-includes/research-workflow.md) — `taom-src` + decompilation workflow
 - [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) — decompiled-source navigation
-- [ai-includes/decompiled-code-analysis.md](ai-includes/decompiled-code-analysis.md) — reading decompiled output
-- [ai-includes/iterative-problem-solving.md](ai-includes/iterative-problem-solving.md) — multi-pass refinement
-- [ai-includes/multi-approach-validation.md](ai-includes/multi-approach-validation.md) — comparing alternative implementations
 - [ai-includes/code-quality.md](ai-includes/code-quality.md) — non-negotiable C# quality rules
-- [ai-includes/security.md](ai-includes/security.md) — input validation, boundary trust
 - [ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md) — repeatable end-to-end culture authoring (Dale + Gondor)
 
 ## Cross-cutting concerns (where memory ↔ docs intersect)

@@ -2,6 +2,8 @@
 
 How to create new clan/faction banner **sigil icons** for TAOM with AI (imagine.art), key them, and wire them through **both** banner pipelines so they render in-game. Distilled from the 2026-06 batch that added 9 new sheets (Misty Mountain Orcs ×2, Goblin, Isengard #2, Mordor #2, Gundabad #2, Dol Guldur #2, Dunland #2, and a mixed Rohan/Rhûn/Lindon/Dale sheet).
 
+Heraldry is sober Tolkien style with one bold plain motif; show designs before wiring (maintainer, 2026-10-28).
+
 > **The single most important fact:** there are **two independent pipelines**, both keyed by the same icon ids from `banner_icons.xml`, and **both** must be produced:
 > 1. **Banner material** (`taom_banners_*` `.tpac`) — what the banner actually *renders* from (vanilla system).
 > 2. **GauntletUI sprite atlas** (`ui_taom_bannericons_*` + `TAOMSpriteData.xml`) — the per-icon UI sprite set, packed by the sprite generator.

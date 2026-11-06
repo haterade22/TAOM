@@ -73,16 +73,16 @@ Teammates report needed changes to these files via message; the lead integrates.
 **Spawn prompt (Feature Dev):**
 ```
 You are a Feature Developer for the TAOM Bannerlord mod. Read docs/ai-includes/architecture.md
-and docs/ai-includes/tdd-enforcement.md first. Your scope is Main/Features/PartySpeed/ only.
+and .claude/rules/tests.md first. Your scope is Main/Features/PartySpeed/ only.
 Follow the adapter pattern (ADR-007). Do NOT edit IoC.cs or SubModule.cs — report needed
 registrations to the lead via message. Build with: dotnet build Main -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
 **Spawn prompt (Test Dev):**
 ```
-You are a Test Developer for the TAOM Bannerlord mod. Read docs/ai-includes/tdd-enforcement.md
+You are a Test Developer for the TAOM Bannerlord mod. Read .claude/rules/tests.md
 and docs/ai-includes/testing-guide.md first. Your scope is TAOM.Tests/Features/PartySpeed/ only.
-Use MSTest + NSubstitute. Mock all adapters. 100% service/engine coverage required (ADR-008).
+Use MSTest + NSubstitute. Mock all adapters. Every decision path gets a test (ADR-008).
 Run tests with: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
@@ -213,7 +213,7 @@ You are a Feature Developer for the TAOM Bannerlord mod.
 
 Read these docs first:
 - docs/ai-includes/architecture.md (layer architecture)
-- docs/ai-includes/tdd-enforcement.md (TDD workflow)
+- .claude/rules/tests.md (TDD workflow)
 - docs/ai-includes/patterns.md (design patterns)
 
 Your scope: Main/Features/{FEATURE_NAME}/ only.
@@ -375,7 +375,6 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 ## Related Guides
 
 - [architecture.md](./architecture.md) — Layer architecture and patterns
-- [tdd-enforcement.md](./tdd-enforcement.md) — TDD workflow
 - [patterns.md](./patterns.md) — Design patterns (Hook, Strategy, Builder)
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) — Decompilation workflow
 - [code-quality.md](./code-quality.md) — Clean code principles

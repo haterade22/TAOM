@@ -59,8 +59,8 @@ the truth of a quote, reproduction, identity, or coverage assertion.
 
 ## Safety and trust
 
-Use separate clean checkouts for builder and reviewers. Reviewers must not share
-a writable source directory with a running builder. Prefer tool-enforced
+For a packet review, use separate clean checkouts for builder and reviewers.
+Reviewers must not share a writable source directory with a running builder. Prefer tool-enforced
 read-only access, no production credentials, least-privilege network access,
 and a separate writable artifact directory. Text instructions are not a sandbox.
 
