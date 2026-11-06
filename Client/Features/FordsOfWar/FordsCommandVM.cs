@@ -18,7 +18,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 public sealed partial class FordsCommandVM : FordsViewModel
 {
     internal const int LaneHotkeys = 4;
-    internal const int OfferHotkeys = 8;
+    internal static int OfferHotkeys => FordsCommandHotkeys.OfferKeys.Length;
     internal const int MaxFeedLines = 4;
     internal const float FeedLineSeconds = 12f;
     private const float NoticeSeconds = 4f;

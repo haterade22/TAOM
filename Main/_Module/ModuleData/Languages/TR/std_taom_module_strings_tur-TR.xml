@@ -7333,7 +7333,7 @@
 
     <string id="TAOM_FOW_Trait_Dale_Melee" text="Weak foot soldiers, and few riders." />
 
-    <string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="Call a spider or a fell warg every 45 seconds." />
+    <string id="TAOM_FOW_Trait_DolGuldur_FellWargs" text="Call a fell warg every 45 seconds." />
 
 
     <string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="The Shadow: enemy towers fire a quarter slower." />
@@ -7528,7 +7528,7 @@
     <string id="taom_seat_time_other_clock" text="This battle has its own speed control." />
     <string id="taom_seat_mcm_rise" text="Rise to give orders" />
     <string id="taom_seat_mcm_rise_hint" text="With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off." />
-    <string id="TAOM_FOW_Hud_KeysHintFull" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+    <string id="TAOM_FOW_Hud_KeysHintF12" text="1-4 lane   F1-F12 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
     <string id="TAOM_FOW_Feed_TimeRunningOut" text="Five minutes remain. The side with the most towers standing will then win." />
     <string id="TAOM_FOW_Feed_TimeUp" text="Time is up." />
     <string id="TAOM_FOW_Result_TimeVictoryText" text="Time ran out, and you hold more of the field." />

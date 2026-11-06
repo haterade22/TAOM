@@ -103,3 +103,17 @@ Not applied:
 - **A same-side death credits the killer's troop** in the tally (Lens 5 5): no report of nine has one.
 - **"Soldiers never target a riderless mount"** in the patch registry rests on addresses from before changeset 125270 (Lens 2 F2):
   pre-existing text in another feature's entry.
+
+## Addendum: the third buy row and Dol Guldur's uruk roster (2026-11-05, evening)
+
+Tier 2 (UI that reads game state, Fords troop XML): Lens 5 Data flow and Lens 7 XML at `high`, and Codex at `xhigh` on Mike's word.
+No CRITICAL or HIGH. Applied:
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | MED | Free-wave archers spawned with the role Infantry in every faction (27 entries, 25 troops): `WaveScheduler` falls back to Infantry when neither the wave entry nor an offer names the troop, so the field probe and check 09 counted them as melee. Found on Dol Guldur's new uruk skirmishers (Codex, Lens 5); the test then found the other 26. | The fallback was silent and no test compared a wave troop's role with its own class. | `EveryFreeWaveTroop_SpawnsInTheRoleItsTroopDeclares`; each entry names `"role": "Ranged"`. |
+| 2 | LOW | A doc line still said Dol Guldur calls spider riders. | Three of four lines were updated by hand. | Fixed. |
+| 3 | LOW | The buy key count lived in two places, and a test (the two dearest offers within the hotkeys) could no longer fail while the count test passed. | Both rules predate the third row. | `OfferHotkeys` reads the key table; the count test reads `OfferHotkeys`; the redundant test is gone. |
+
+Not applied: the new troop copies keep their attributes on one line (Lens 7, style only; the engine reads attributes by name), and a
+spawn failure still moves later offers up one key (Lens 5, pre-existing, no shipped troop fails).

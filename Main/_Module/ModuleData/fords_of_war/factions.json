@@ -160,7 +160,7 @@
           "units": [
             { "troop": "fow_gondor_ano_footman", "count": 5 },
             { "troop": "fow_gondor_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_gondor_ano_skirmisher", "count": 2 }
+            { "troop": "fow_gondor_ano_skirmisher", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -206,7 +206,7 @@
           "units": [
             { "troop": "fow_rohan_westfold_recruit", "count": 3 },
             { "troop": "fow_rohan_westemnet_recruit", "count": 5, "role": "Cavalry" },
-            { "troop": "fow_rohan_eastfold_recruit", "count": 2 }
+            { "troop": "fow_rohan_eastfold_recruit", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -222,7 +222,7 @@
           "units": [
             { "troop": "fow_rohan_westfold_axeman", "count": 3 },
             { "troop": "fow_rohan_westemnet_veteran_rider", "count": 5, "role": "Cavalry" },
-            { "troop": "fow_rohan_eastfold_bowman", "count": 2 }
+            { "troop": "fow_rohan_eastfold_bowman", "count": 2, "role": "Ranged" }
           ]
         }
       ]
@@ -284,7 +284,7 @@
           "units": [
             { "troop": "fow_mordor_orc_warrior", "count": 15 },
             { "troop": "fow_morannon_spearman", "count": 6 },
-            { "troop": "fow_mordor_orc_scout", "count": 4 }
+            { "troop": "fow_mordor_orc_scout", "count": 4, "role": "Ranged" }
           ]
         }
       ]
@@ -321,7 +321,7 @@
           "units": [
             { "troop": "fow_urukhai_fighter", "count": 5 },
             { "troop": "fow_isengard_militia_spearman", "count": 3 },
-            { "troop": "fow_isengard_militia_archer", "count": 2 }
+            { "troop": "fow_isengard_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -329,7 +329,7 @@
           "units": [
             { "troop": "fow_urukhai_warrior", "count": 5 },
             { "troop": "fow_urukhai_spearman", "count": 3 },
-            { "troop": "fow_urukhai_skirmisher", "count": 2 }
+            { "troop": "fow_urukhai_skirmisher", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -337,7 +337,7 @@
           "units": [
             { "troop": "fow_urukhai_swordman", "count": 5 },
             { "troop": "fow_urukhai_spearman", "count": 3 },
-            { "troop": "fow_urukhai_arbalest", "count": 2 }
+            { "troop": "fow_urukhai_arbalest", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -353,7 +353,7 @@
           "units": [
             { "troop": "fow_urukhai_veteraninfantry", "count": 5 },
             { "troop": "fow_urukhai_veteranpikeman", "count": 3 },
-            { "troop": "fow_urukhai_veterancrossbowman", "count": 2 }
+            { "troop": "fow_urukhai_veterancrossbowman", "count": 2, "role": "Ranged" }
           ]
         }
       ]
@@ -387,21 +387,21 @@
           "fromMinute": 0,
           "units": [
             { "troop": "fow_imladris_recruit", "count": 2 },
-            { "troop": "fow_rivendell_militia_archer", "count": 1 }
+            { "troop": "fow_rivendell_militia_archer", "count": 1, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
             { "troop": "fow_imladris_infantry", "count": 2 },
-            { "troop": "fow_imladris_bowman", "count": 1 }
+            { "troop": "fow_imladris_bowman", "count": 1, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
             { "troop": "fow_imladris_swordguard", "count": 2 },
-            { "troop": "fow_imladris_archer", "count": 1 }
+            { "troop": "fow_imladris_archer", "count": 1, "role": "Ranged" }
           ]
         }
       ]
@@ -438,7 +438,7 @@
           "units": [
             { "troop": "fow_erebor_reg_miner", "count": 5 },
             { "troop": "fow_erebor_militia_spearman", "count": 3 },
-            { "troop": "fow_erebor_militia_archer", "count": 2 }
+            { "troop": "fow_erebor_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -446,7 +446,7 @@
           "units": [
             { "troop": "fow_erebor_reg_militia", "count": 5 },
             { "troop": "fow_erebor_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_erebor_militia_veteran_archer", "count": 2 }
+            { "troop": "fow_erebor_militia_veteran_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -454,7 +454,7 @@
           "units": [
             { "troop": "fow_erebor_reg_company", "count": 5 },
             { "troop": "fow_erebor_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_erebor_reg_skirmisher", "count": 2 }
+            { "troop": "fow_erebor_reg_skirmisher", "count": 2, "role": "Ranged" }
           ]
         }
       ]
@@ -499,7 +499,7 @@
           "units": [
             { "troop": "fow_harad_reg_levy", "count": 5 },
             { "troop": "fow_harad_militia_spearman", "count": 3 },
-            { "troop": "fow_harad_militia_archer", "count": 2 }
+            { "troop": "fow_harad_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -507,7 +507,7 @@
           "units": [
             { "troop": "fow_harad_reg_militia", "count": 5 },
             { "troop": "fow_harad_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_harad_militia_veteran_archer", "count": 2 }
+            { "troop": "fow_harad_militia_veteran_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -589,7 +589,7 @@
           "units": [
             { "troop": "fow_dale_recruit", "count": 3 },
             { "troop": "fow_dale_militia_spearman", "count": 3 },
-            { "troop": "fow_dale_militia_archer", "count": 4 }
+            { "troop": "fow_dale_militia_archer", "count": 4, "role": "Ranged" }
           ]
         },
         {
@@ -597,7 +597,7 @@
           "units": [
             { "troop": "fow_dale_militia", "count": 3 },
             { "troop": "fow_dale_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_dale_militia_veteran_archer", "count": 4 }
+            { "troop": "fow_dale_militia_veteran_archer", "count": 4, "role": "Ranged" }
           ]
         },
         {
@@ -613,29 +613,32 @@
     "dolguldur": {
       "name": "{=TAOM_FOW_Faction_DolGuldur}Dol Guldur",
       "culture": "dolguldur",
-      "aiBuyCycle": ["foul", "hunters", "beast:fell_wargs", "crawlers", "up:melee_damage", "fighters", "beast:spider_riders", "warg_riders", "fellbows", "up:missile_armour", "beast:fell_wargs", "fell_fangs", "shadow_guard"],
+      "aiBuyCycle": ["foul", "crawlers", "up:melee_damage", "warriors", "beast:fell_wargs", "bowmen", "fighters", "spider_riders", "up:missile_armour", "swordsmen", "warg_riders", "fellbows", "beast:fell_wargs", "fell_fangs", "khamul_knights", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
       "feats": { "enemyTowerFireRate": 0.75, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_FellWargs}Call a fell warg every 45 seconds.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Venom}Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three.", "strength": false }
       ],
       "units": [
-        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.8 },
         { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.8 },
-        { "id": "hunters", "troop": "fow_dg_goblin_archer", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 0.8 },
+        { "id": "warriors", "troop": "fow_dg_uruk_warrior", "role": "Infantry", "packSize": 10, "level": 16, "eliteWeight": 0.8 },
         { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 0.8 },
-        { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "swordsmen", "troop": "fow_dg_uruk_swordsman", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "fow_dg_uruk_bowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 0.9 },
         { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
         { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.25 }
+        { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.25 },
+        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.8 },
+        { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.5 },
+        { "id": "khamul_knights", "troop": "fow_dg_khamul_veiled_knight", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 1.0 }
       ],
       "creatures": {
         "cooldownSeconds": 45,
         "units": [
-          { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.5 },
           { "id": "fell_wargs", "troop": "fow_dg_fell_warg_rider", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 1.2 }
         ]
       },
@@ -648,25 +651,24 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_dg_goblin_crawler", "count": 5 },
-            { "troop": "fow_dg_orc_recruit", "count": 3 },
-            { "troop": "fow_dg_goblin_hunter", "count": 2 }
+            { "troop": "fow_dg_uruk_foul", "count": 8 },
+            { "troop": "fow_dg_goblin_crawler", "count": 2 }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_dg_orc_gnasher", "count": 5 },
-            { "troop": "fow_dg_goblin_skirmisher", "count": 3 },
-            { "troop": "fow_dg_goblin_archer", "count": 2 }
+            { "troop": "fow_dg_uruk_warrior", "count": 6 },
+            { "troop": "fow_dg_goblin_skirmisher", "count": 2 },
+            { "troop": "fow_dg_uruk_skirmisher", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_dg_orc_warrior", "count": 5 },
-            { "troop": "fow_dg_goblin_impaler", "count": 3 },
-            { "troop": "fow_dg_orc_archer", "count": 2 }
+            { "troop": "fow_dg_uruk_veteran_warrior", "count": 6 },
+            { "troop": "fow_dg_goblin_impaler", "count": 2 },
+            { "troop": "fow_dg_uruk_bowman", "count": 2 }
           ]
         }
       ]
@@ -703,7 +705,7 @@
           "units": [
             { "troop": "fow_easterling_recruit", "count": 5 },
             { "troop": "fow_rhun_militia_spearman", "count": 3 },
-            { "troop": "fow_rhun_militia_archer", "count": 2 }
+            { "troop": "fow_rhun_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -711,7 +713,7 @@
           "units": [
             { "troop": "fow_easterling_militia", "count": 5 },
             { "troop": "fow_rhun_militia_veteran_spearman", "count": 3 },
-            { "troop": "fow_easterling_bowman", "count": 2 }
+            { "troop": "fow_easterling_bowman", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -719,7 +721,7 @@
           "units": [
             { "troop": "fow_easterling_footman_new", "count": 5 },
             { "troop": "fow_easterling_halberdier_new", "count": 3 },
-            { "troop": "fow_easterling_skirmisher_new", "count": 2 }
+            { "troop": "fow_easterling_skirmisher_new", "count": 2, "role": "Ranged" }
           ]
         }
       ]
@@ -756,7 +758,7 @@
           "units": [
             { "troop": "fow_aux_basic", "count": 5 },
             { "troop": "fow_umbar_elite", "count": 3 },
-            { "troop": "fow_umbar_elite_root1", "count": 2 }
+            { "troop": "fow_umbar_elite_root1", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -764,7 +766,7 @@
           "units": [
             { "troop": "fow_umbar_elite", "count": 5 },
             { "troop": "fow_umbar_elite_root0", "count": 3 },
-            { "troop": "fow_umbar_elite_root1", "count": 2 }
+            { "troop": "fow_umbar_elite_root1", "count": 2, "role": "Ranged" }
           ]
         },
         {
@@ -806,21 +808,21 @@
           "fromMinute": 0,
           "units": [
             { "troop": "fow_mirkwood_militia_spearman", "count": 2 },
-            { "troop": "fow_mirkwood_militia_archer", "count": 3 }
+            { "troop": "fow_mirkwood_militia_archer", "count": 3, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
             { "troop": "fow_mirkwood_militia_veteran_spearman", "count": 2 },
-            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3 }
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
             { "troop": "fow_mirkwood_recruit", "count": 2 },
-            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3 }
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3, "role": "Ranged" }
           ]
         }
       ]

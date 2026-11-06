@@ -165,9 +165,9 @@ public class FordsCommandVMTests
     }
 
     [TestMethod]
-    public void Refresh_OffersBeyondTheEightHotkeys_ShowNoKey()
+    public void Refresh_OffersBeyondTheTwelveHotkeys_ShowNoKey()
     {
-        var units = Enumerable.Range(0, 10).Select(i => new UnitOffer("o" + i, "t" + i, UnitRole.Infantry, 5, 50)).ToList();
+        var units = Enumerable.Range(0, 14).Select(i => new UnitOffer("o" + i, "t" + i, UnitRole.Infantry, 5, 50)).ToList();
         var factions = Factions().ToDictionary(p => p.Key, p => p.Value with { Units = units });
         var match = new FordsMatch(Config(), Layout(), factions, Slots(), new SeededFordsRandom(3));
         var session = new FordsSession();
@@ -175,9 +175,9 @@ public class FordsCommandVMTests
 
         var vm = Panel(session);
 
-        Assert.AreEqual(10, vm.Offers.Count);
-        Assert.AreEqual("F8", vm.Offers[7].KeyText);
-        Assert.AreEqual(string.Empty, vm.Offers[8].KeyText);
+        Assert.AreEqual(14, vm.Offers.Count);
+        Assert.AreEqual("F12", vm.Offers[11].KeyText);
+        Assert.AreEqual(string.Empty, vm.Offers[12].KeyText);
     }
 
     [TestMethod]

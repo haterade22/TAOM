@@ -4503,7 +4503,7 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintFull" text="{=TAOM_FOW_Hud_KeysHintFull}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintF12" text="{=TAOM_FOW_Hud_KeysHintF12}1-4 lane   F1-F12 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
@@ -4528,7 +4528,7 @@
 	<string id="TAOM_FOW_Trait_Dale_Arrows" text="{=TAOM_FOW_Trait_Dale_Arrows}Black Arrows: your archers deal 4 times the damage to towers." />
 	<string id="TAOM_FOW_Trait_Dale_Bows" text="{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer." />
 	<string id="TAOM_FOW_Trait_Dale_Melee" text="{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders." />
-	<string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds." />
+	<string id="TAOM_FOW_Trait_DolGuldur_FellWargs" text="{=TAOM_FOW_Trait_DolGuldur_FellWargs}Call a fell warg every 45 seconds." />
 	<string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower." />
 	<string id="TAOM_FOW_Trait_Easterlings_Army" text="{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army." />
