@@ -332,12 +332,13 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedFactions_EachShowsFiveToEightOffers_ForTheEightBuyKeys_AndTwoOrThreeHeroes()
+    public void ShippedFactions_EachShowsFiveToTwelveOffers_ForTheTwelveBuyKeys_AndTwoOrThreeHeroes()
     {
+        // The grid shows a third row of four (F9 to F12) when a faction has more than eight offers (Mike, 2026-11-05).
         foreach (var faction in Load(Substitute.For<IModLogger>()).Factions)
         {
             var shown = faction.Units.Count + (faction.Rotation?.Regions.Max(r => r.Units.Count) ?? 0);
-            Assert.IsTrue(shown >= 5 && shown <= 8, $"{faction.FactionId}: {shown} unit offers");
+            Assert.IsTrue(shown >= 5 && shown <= TAOM.Client.Features.FordsOfWar.FordsCommandVM.OfferHotkeys, $"{faction.FactionId}: {shown} unit offers, more than the buy keys");
             Assert.IsTrue(faction.Heroes.Count >= 2 && faction.Heroes.Count <= 3, $"{faction.FactionId}: {faction.Heroes.Count} heroes");
         }
     }
@@ -394,20 +395,6 @@ public class ShippedFordsConfigTests
             .ToList();
 
         Assert.AreEqual(0, stored.Count, "price is an optional override; the shipped offers state level and eliteWeight instead: " + string.Join(", ", stored));
-    }
-
-    [TestMethod]
-    public void ShippedFactions_TheTwoDearestOffers_FallWithinTheFirstEightHotkeys()
-    {
-        // The panel binds F1 to F8 to the first eight offers of the list; the elite and the siege unit are the dearest and must have a key.
-        var catalog = Load(Substitute.For<IModLogger>());
-
-        foreach (var faction in catalog.Factions)
-        {
-            var dearest = faction.Units.OrderByDescending(u => u.PackPrice).Take(2).ToList();
-            foreach (var offer in dearest)
-                Assert.IsTrue(faction.Units.ToList().IndexOf(offer) < 8, $"{faction.FactionId}/{offer.OfferId} is past the eighth offer and has no hotkey");
-        }
     }
 
     [TestMethod]

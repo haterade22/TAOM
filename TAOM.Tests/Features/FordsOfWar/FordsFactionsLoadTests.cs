@@ -29,6 +29,36 @@ public class FordsFactionsLoadTests
     private void AssertOneWarningNaming(params string[] parts) =>
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("factions.json") && parts.All(p => m.Contains(p))));
 
+    private const string OneUnit = "[{ 'id': 'm', 'troop': 'a', 'role': 'Infantry', 'packSize': 5, 'price': 50 }]";
+
+    private FactionCatalog WithGuard(string guard)
+    {
+        var text = OneFaction(OneUnit);
+        text = text.Substring(0, text.Length - "} } }".Length) + ", 'heroGuard': " + guard + " } } }";
+        Assert.IsTrue(Load(text).TryGetFaction("gondor", out var gondor));
+        return gondor;
+    }
+
+    [TestMethod]
+    public void Factions_HeroGuard_IsReadWithItsTroopCountAndRole()
+    {
+        var gondor = WithGuard("{ 'troop': 'tower_guard', 'count': 4, 'role': 'Infantry' }");
+
+        Assert.AreEqual(new HeroGuard("tower_guard", 4, UnitRole.Infantry), gondor.HeroGuard);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Factions_HeroGuardWithABadCountOrRole_IsDroppedWithOneWarning()
+    {
+        Assert.IsNull(WithGuard("{ 'troop': 'tower_guard', 'count': 0, 'role': 'Infantry' }").HeroGuard);
+        AssertOneWarningNaming("gondor", "heroGuard");
+        _logger.ClearReceivedCalls();
+
+        Assert.IsNull(WithGuard("{ 'troop': 'tower_guard', 'count': 4, 'role': 'Hero' }").HeroGuard);
+        AssertOneWarningNaming("gondor", "heroGuard");
+    }
+
     [TestMethod]
     public void Factions_GoodFile_ParsesBothFactionsInFileOrder()
     {

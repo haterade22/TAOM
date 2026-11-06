@@ -5,11 +5,17 @@ namespace TAOM.Client.Features.FordsOfWar;
 
 /// <summary>
 /// The command panel's key table, read from the scene layer's input context each frame (the panel layer is not a focus layer):
-/// 1 to 4 pick a lane, F1 to F8 buy a pack, Shift+F1 to F6 buy an upgrade, U shows or hides the upgrades, H fields the first affordable hero, Z Push, X Hold, C Fall back. Ctrl or Alt held
+/// 1 to 4 pick a lane, F1 to F12 buy a pack, Shift+F1 to F6 buy an upgrade, U shows or hides the upgrades, H fields the first affordable hero, Z Push, X Hold, C Fall back. Ctrl or Alt held
 /// leaves every key to the game's own shortcuts. Kept out of <see cref="FordsCommandView"/> to hold it under the ADR-002 cap.
 /// </summary>
 internal static class FordsCommandHotkeys
 {
+    /// <summary>The buy keys by offer slot. A table, not F1 plus the slot: the engine numbers F11 and F12 apart from F10 (InputKey.cs).</summary>
+    internal static readonly InputKey[] OfferKeys =
+    {
+        InputKey.F1, InputKey.F2, InputKey.F3, InputKey.F4, InputKey.F5, InputKey.F6, InputKey.F7, InputKey.F8, InputKey.F9, InputKey.F10, InputKey.F11, InputKey.F12,
+    };
+
     internal static void Read(IInputContext input, FordsCommandVM vm)
     {
         if (input.IsControlDown() || input.IsAltDown())
@@ -21,9 +27,9 @@ internal static class FordsCommandHotkeys
                 vm.SelectLane(lane);
         }
 
-        for (var offer = 0; offer < FordsCommandVM.OfferHotkeys; offer++)
+        for (var offer = 0; offer < OfferKeys.Length; offer++)
         {
-            if (!input.IsKeyPressed(InputKey.F1 + offer))
+            if (!input.IsKeyPressed(OfferKeys[offer]))
                 continue;
 
             if (input.IsShiftDown())

@@ -66,6 +66,15 @@ public class FordsCommandHotkeysTests
     }
 
     [TestMethod]
+    public void OfferKeys_AreF1ToF12_InOrder_ThoughTheEngineNumbersF11AndF12ApartFromF10()
+    {
+        // InputKey.F10 is 68 and F11 is 87, so F1 plus an offer index would bind keys 69 and 70, not F11 and F12, to offers 11 and 12.
+        CollectionAssert.AreEqual(
+            new[] { InputKey.F1, InputKey.F2, InputKey.F3, InputKey.F4, InputKey.F5, InputKey.F6, InputKey.F7, InputKey.F8, InputKey.F9, InputKey.F10, InputKey.F11, InputKey.F12 },
+            FordsCommandHotkeys.OfferKeys);
+    }
+
+    [TestMethod]
     public void Read_FirstBuyKey_BuysTheFirstPack()
     {
         FordsCommandHotkeys.Read(Pressed(InputKey.F1), _vm);
