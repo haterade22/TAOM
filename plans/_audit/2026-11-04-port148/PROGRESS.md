@@ -59,6 +59,12 @@ D26, D27 and D29 released most of those holds. `port148/overnight` went on to 40
 since `1ab48c21d`. Still held: 102, 103, 116, 138, 142 and 143 whole, and WP108 Step B4, WP127 Parts C and M and WP145 Parts E to G.
 The status column of [`plans/README.md`](../../README.md) is the record, and nothing has been pushed or run in the game.
 
+## Integrated review 2 and tip verification (2026-11-05)
+
+Integrated review 2 and its fix branch merged as `6ac230b05`, record `30868fc76`. Debug and Release: 13474 total, 13466 passed, 8 skipped,
+0 failed. Results and the symptom map: [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md). What remains needs the maintainer: the holds above,
+the public Armory, the in-game test and the merge to trunk.
+
 ## State at the end of planning
 
 Planning is finished; execution starts with WP101. No plan has been executed: conflict lists come from simulation against
