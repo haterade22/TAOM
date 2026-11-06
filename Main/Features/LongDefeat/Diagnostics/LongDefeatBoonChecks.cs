@@ -14,11 +14,15 @@ internal static class LongDefeatBoonChecks
 {
     private const float Tolerance = 1e-3f;
 
+    /// <summary>The driven property of a rider's horse: read from the mount agent, not the rider, so the adapter special-cases this name.</summary>
+    internal const string MountSpeed = "MountSpeed";
+
     /// <summary>
     /// A pick: the last draw showed as many cards as it could (three, or what was eligible), none twice, the boon taken was among them, and the numbers read back
     /// from the run (<paramref name="rulesNow"/>, <paramref name="factorsNow"/> and the gold the boons paid) are the shipped ones changed by every boon owned, drawbacks included.
     /// </summary>
-    internal static CheckVerdict Pick(BoonPickRecord record, IReadOnlyCollection<BoonRow> owned, RunRules shipped, RunRules rulesNow, GoldFactors factorsNow, long goldFromBoons)
+    internal static CheckVerdict Pick(BoonPickRecord record, IReadOnlyCollection<BoonRow> owned, RunRules shipped, RunRules rulesNow, GoldFactors factorsNow, long goldFromBoons,
+        IReadOnlyCollection<CheckVerdict>? reads = null)
     {
         var last = record.Draws.Count == 0 ? new BoonDraw(Array.Empty<string>(), 0, 0, 0) : record.Draws[record.Draws.Count - 1];
         var wanted = Math.Min(BoonDeck.CardCount, last.Eligible);
@@ -26,9 +30,70 @@ internal static class LongDefeatBoonChecks
         var distinct = last.Ids.Distinct().Count() == last.Ids.Count;
         var taken = record.Taken != null && last.Ids.Contains(record.Taken);
         var applied = Applied(owned, shipped, rulesNow, factorsNow, goldFromBoons);
-        return LongDefeatChecks.Verdict(cardsOk && distinct && taken && applied,
+        var read = reads == null || reads.Count == 0 ? null : reads.Any(r => r.Result == CheckResult.Fail) ? "fail" : reads.Any(r => r.Result == CheckResult.Pass) ? "pass" : "skip";
+        return LongDefeatChecks.Verdict(cardsOk && distinct && taken && applied && read != "fail",
             $"p={Num(record.Pick)} cards={Num(last.Ids.Count)} eligible={Num(last.Eligible)} offered={string.Join(",", last.Ids)} taken={record.Taken ?? "none"} "
-            + $"draws={Num(record.Draws.Count)} distinct={Flag(distinct)} applied={Flag(applied)} gold={Num(goldFromBoons)}");
+            + $"draws={Num(record.Draws.Count)} distinct={Flag(distinct)} applied={Flag(applied)} gold={Num(goldFromBoons)}" + (read == null ? "" : " read=" + read));
+    }
+
+    /// <summary>
+    /// The driven properties a target's soldiers are expected to hold with the boons <paramref name="owned"/>: each stat key of that target (drawbacks included) summed into one percent
+    /// per property, with the arithmetic the engine's applier uses. The names are written out here on purpose, apart from <c>RunModifiers</c>.
+    /// </summary>
+    internal static IReadOnlyList<AffixExpect> TargetExpectations(IReadOnlyCollection<BoonRow> owned, BoonTarget target)
+    {
+        float Sum(string key) => owned.Sum(b => b.Effects.Concat(b.Drawback).Where(e => e.Key == key && e.Target == target).Sum(e => e.Value));
+        var found = new List<AffixExpect>();
+        void Add(string key, AffixMath math, params string[] stats)
+        {
+            if (!owned.Any(b => b.Effects.Concat(b.Drawback).Any(e => e.Key == key && e.Target == target)))
+                return;
+
+            found.AddRange(stats.Select(stat => new AffixExpect(stat, math, Sum(key))));
+        }
+
+        Add(BoonKeys.SwingSpeedPercent, AffixMath.Times, "SwingSpeedMultiplier");
+        Add(BoonKeys.MoveSpeedPercent, AffixMath.Times, "MaxSpeedMultiplier", "CombatMaxSpeedMultiplier");
+        Add(BoonKeys.DrawSpeedPercent, AffixMath.Times, "ThrustOrRangedReadySpeedMultiplier");
+        Add(BoonKeys.ReloadSpeedPercent, AffixMath.Times, "ReloadSpeed");
+        Add(BoonKeys.BlockPercent, AffixMath.Chance, "AIBlockOnDecideAbility");
+        Add(BoonKeys.ParryPercent, AffixMath.Chance, "AIParryOnDecideAbility");
+        Add(BoonKeys.AimErrorPercent, AffixMath.Times, "AiShooterError");
+        // The horse of a rider takes the same percent as his MountSpeed (RunModifiers gives the cavalry and the lord a mount speed). The rider's own speed carries the boon whether or not his horse does.
+        if (target is BoonTarget.Cavalry or BoonTarget.Player)
+            Add(BoonKeys.MoveSpeedPercent, AffixMath.Times, MountSpeed);
+        return found;
+    }
+
+    /// <summary>The health limit over the character's maximum a target's soldier is expected to hold: the product, over the boons owned, of each boon's own factor for that target.</summary>
+    internal static float ExpectedHealth(IReadOnlyCollection<BoonRow> owned, BoonTarget target) =>
+        owned.Aggregate(1f, (factor, b) => b.Effects.Concat(b.Drawback).Where(e => e.Key == BoonKeys.HealthPercent && e.Target == target).Aggregate(factor, (f, e) => f * (1f + e.Value / 100f)));
+
+    /// <summary>
+    /// A soldier of a target read back after a pick (<paramref name="when"/> is <c>standing</c> for one that stood at the pick, <c>spawned</c> for one built after it): its health limit
+    /// over the character's maximum is the combined health factor and each property is its baseline changed by the summed percent, within 1%. No soldier of the group is a skip, so is a
+    /// read that could not show a change; neither reads as a pass it did not earn.
+    /// </summary>
+    internal static CheckVerdict TargetRead(int pick, string when, BoonTarget target, IReadOnlyCollection<BoonRow> owned, LdTargetSample sample)
+    {
+        var head = $"p={Num(pick)} read={when} target={target.ToString().ToLowerInvariant()}";
+        if (!sample.HasAgent)
+            return new CheckVerdict(CheckResult.Skip, head + " reason=no-soldier");
+
+        var wantHealth = ExpectedHealth(owned, target);
+        var ratio = sample.CharacterMax > 0f ? sample.HealthLimit / sample.CharacterMax : float.NaN;
+        var healthOk = Math.Abs(ratio - wantHealth) <= 0.01f * wantHealth;
+        // A soldier on foot has no horse to read; the adapter adds a MountSpeed reading only when one stands under him.
+        var expected = TargetExpectations(owned, target).Where(e => e.Stat != MountSpeed || sample.Readings.Any(r => r.Stat == MountSpeed)).ToList();
+        var compared = LongDefeatAffixChecks.Compare(expected, new LdStatSample(sample.TroopId, sample.Readings));
+        var informative = compared.Informative || Math.Abs(wantHealth - 1f) > 1e-4f;
+        var parts = new List<string> { $"health={ratio.ToString("F3", CultureInfo.InvariantCulture)} want {wantHealth.ToString("F3", CultureInfo.InvariantCulture)}{(healthOk ? "" : " WRONG")}" };
+        parts.AddRange(compared.Parts);
+        var detail = $"{head} troop={sample.TroopId} {string.Join("; ", parts)}";
+        if (!healthOk || !compared.Ok)
+            return new CheckVerdict(CheckResult.Fail, detail);
+
+        return informative ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
     }
 
     /// <summary>

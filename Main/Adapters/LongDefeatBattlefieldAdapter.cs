@@ -26,6 +26,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private readonly Mission _mission;
     private readonly IModLogger _logger;
+    private readonly LongDefeatAgentRegistry _registry;
+
+    // The lord's body, the body a remount faded and the callbacks that reached them; by object reference, any thread.
+    private readonly LongDefeatLordWatch _lordWatch = new();
 
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
@@ -42,10 +46,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     private int _bodySequence;
     private float _highZ = float.MaxValue;
 
-    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger)
+    /// <param name="registry">Where each spawned attacker's role is kept; the effects adapter reads the same one. A fresh one when none is given.</param>
+    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger, LongDefeatAgentRegistry? registry = null)
     {
         _mission = mission;
         _logger = logger;
+        _registry = registry ?? new LongDefeatAgentRegistry();
     }
 
     private Team Side(bool attackers) => attackers ? _mission.AttackerTeam : _mission.DefenderTeam;
@@ -263,6 +269,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         {
             var agent = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false, mustered);
             ScaleHealth(agent, batch.HealthFactor);
+            if (attackers)
+                _registry.Register(agent, batch.Role);
             var at = agent.Position;
             points.Add(Point(at));
             if (frame is not { } f)
@@ -292,15 +300,18 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     }
 
     // A kit goes on the build data, and the engine reads it before anything else (Mission.cs:4108). The engine still edits the copy it takes (a hero's banner, NoHorses, NoArmor and
-    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. NoHorses(true) repeats spawnWithHorse: false above (Mission.cs:4468), so a mounted
-    // class (Slice 11) must drive both from the loadout.
+    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. GetAgentBuildDataToSpawnTroop sets NoHorses(true) for spawnWithHorse: false (Mission.cs:4468),
+    // so a mounted class passes false there and clears it here: the horse then comes from the kit's Horse slot (Mission.cs:4311), with no mount key (risk 8, read back by the sally line).
+    // A place goes in as a position with its direction: the engine reads the direction of a given position at once (Mission.cs:4498), and a given position skips the formation layout (Mission.cs:4227).
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
-        bool intoOwnFormation = false, Equipment? kit = null)
+        bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false)
     {
-        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
+        Vec3? initialPosition = place == null ? null : new Vec3(place.X, place.Y, place.Z);
+        Vec2? initialDirection = place == null ? null : FacingOf(place);
+        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, initialPosition, initialDirection, formationIndex: cls)
             .Banner(team.Banner);
         if (kit != null)
-            data.Equipment(kit).NoHorses(true);
+            data.Equipment(kit).NoHorses(!mounted);
 
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
@@ -385,20 +396,69 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             + $"behavior={formation?.AI?.ActiveBehavior?.GetType().Name} speed={agent.MovementVelocity.Length:F1} at=({at.x:F1}, {at.y:F1}, {at.z:F1})";
     }
 
+    // KillAgentCheat inflicts 2000 ("blow.InflictedDamage = 2000;", Mission.cs:6228) and HandleBlow kills only when "if (Health < 1f)" holds afterwards (Agent.cs:5529). A commander of
+    // wave 36 or later stands above 2000 (rank health times the endless factor), so a felled soldier is first brought under half the blow: it is then lethal whatever his limit.
+    private const float FellBlowDamage = 2000f;
+
+    internal static float FellHealth(float health) => Math.Min(health, FellBlowDamage / 2f);
+
+    // Every kill needs a living owner (phase2-plan.md section 4): CustomBattleMoraleModel reads affectorAgent.Formation with no null test, and KillAgentCheat takes "MainAgent ?? agent" as the owner
+    // (Mission.cs:6220-6221), so with the player dead the victim would own his own death, or Agent.Die would swap in a stale last hitter (Agent.cs:4689-4693). While the player's body stands
+    // KillAgentCheat is used as before. Without it the same blow is built here (a blunt 2000, its debug collision data, RegisterBlow, as KillAgentCheat does at :6216-6254) owned by a
+    // standing defender, who gains the kill and the defenders the morale a felled straggler would give the player's body anyway (decision D13). With no defender standing nobody is felled: the run ends on that tick.
     public int Fell(int count)
     {
         if (count <= 0)
             return 0;
 
+        var main = _mission.MainAgent;
+        var mainStands = main != null && main.IsActive();
+        var owner = mainStands ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
+        if (owner == null)
+        {
+            _logger.LogWarning("[LongDefeat][Wave] no defender stands to own a felled straggler's death; nobody was felled");
+            return 0;
+        }
+
         var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway).Take(count).ToList();
+        _logger.LogInfo($"[LongDefeat][Wave] felling {left.Count} straggler(s), kills owned by {(mainStands ? "the player's body" : "defender " + owner.Character?.StringId)}");
         foreach (var agent in left)
         {
             _logger.LogInfo(DescribeStraggler(agent));
-            _mission.KillAgentCheat(agent);
+
+            // Marked before the kill, so the removal the engine raises for him is booked as felled by identity (the run keeps no shared counter), whatever order the callbacks come in.
+            if (!_registry.MarkFelled(agent))
+                _logger.LogWarning($"[LongDefeat][Wave] a felled attacker ({agent.Character?.StringId}) was not in the registry; his removal will be booked as a kill");
+            agent.Health = FellHealth(agent.Health);
+            if (mainStands)
+            {
+                _mission.KillAgentCheat(agent);
+                continue;
+            }
+
+            var blow = new Blow(owner.Index)
+            {
+                DamageType = DamageTypes.Blunt,
+                BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
+                GlobalPosition = agent.Position,
+                BaseMagnitude = FellBlowDamage,
+                InflictedDamage = (int)FellBlowDamage,
+                SwingDirection = agent.LookDirection,
+                DamageCalculated = true,
+            };
+            blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
+            blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+            blow.Direction = blow.SwingDirection;
+            var collision = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, CombatCollisionResult.StrikeAgent,
+                -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, owner.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+                Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, agent.Velocity, Vec3.Up);
+            agent.RegisterBlow(blow, in collision);
         }
 
         return left.Count;
     }
+
+    private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());
 
     public void AdoptMain(bool aiDriven)
     {
@@ -430,9 +490,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _rams = new List<BatteringRam>();
         _open.Clear();
         _muster.Clear();
+        _registry.Clear();
         _lastMain = null;
         _knownMain = null;
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
+        _lordWatch.Clear();
     }
 }

@@ -248,6 +248,22 @@ public class FordsMissionDirectorTests
     }
 
     [TestMethod]
+    public void Tick_AHeroGuard_SpawnsInTheHerosLane_AndIsLoggedOnce()
+    {
+        // The run's proof of the guards (Mike, 2026-11-05): a pack of the same troop leaves no [Hero] guard line.
+        var f = FordsDirectorFixture.Create(RichPlayers, factions: fs => fs.ToDictionary(p => p.Key, p => p.Value with { HeroGuard = new HeroGuard("footman", 3, UnitRole.Infantry) }));
+        Assert.IsTrue(f.Director.Start());
+        Assert.AreEqual(CommandResult.Ok, f.Session.TryBuyHero(0, FordsMatchFixture.HeroA.HeroId));
+
+        f.Director.Tick(1f);
+        f.Director.Tick(1f);
+
+        var hero = f.Spawned.Single(s => s.Troop == FordsMatchFixture.HeroA.HeroId);
+        Assert.AreEqual(3, f.Spawned.Count(s => s.Troop == "footman" && s.Lane == hero.Lane && s.Side == hero.Side));
+        f.Logger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains("[FordsOfWar][Hero] guard") && m.Contains("troop=footman") && m.Contains("count=3")));
+    }
+
+    [TestMethod]
     public void Tick_MoreRequestsThanTheSpawnBudget_SpreadsThemOverTheNextTicks()
     {
         var f = Started(c => RichPlayers(c) with { Waves = c.Waves with { MaxSpawnsPerTick = 1 } });

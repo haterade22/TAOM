@@ -63,6 +63,12 @@
                     Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#E9B84AFF"
                     Text="@AffixText" DoNotAcceptEvents="true" />
 
+        <!-- The commander line: his rank and the ability due soonest, or that he has fallen. Under the affix line. -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="150"
+                    Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#FF8A70FF"
+                    Text="@CommanderText" DoNotAcceptEvents="true" />
+
         <!-- The last refusal. -->
         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                     HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="96"

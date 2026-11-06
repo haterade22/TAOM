@@ -71,6 +71,7 @@ internal sealed class LongDefeatMissionLauncher
 
             plan = plan with
             {
+                TroopGroups = LongDefeatTroopGroups.Read(plan),
                 Provenance = plan.Provenance with
                 {
                     Build = BuildStampReport.ReadInformationalVersion(typeof(LongDefeatMissionLauncher).Assembly),

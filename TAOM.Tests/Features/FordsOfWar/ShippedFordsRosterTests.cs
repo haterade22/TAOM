@@ -136,6 +136,64 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void EveryFaction_GuardsItsHeroesWithThreeToSixOfItsOwnEliteTroops()
+    {
+        // Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."
+        var groups = Roster().ToDictionary(t => (string)t.Attribute("id")!, t => (string?)t.Attribute("default_group") ?? "Infantry");
+        foreach (var faction in Catalog().Factions)
+        {
+            var guard = faction.HeroGuard;
+            Assert.IsNotNull(guard, faction.FactionId);
+            Assert.IsTrue(guard!.Count >= 3 && guard.Count <= 6, $"{faction.FactionId}: {guard.Count}");
+            var offer = faction.AllOffers.FirstOrDefault(o => o.TroopId == guard.TroopId);
+            Assert.IsNotNull(offer, $"{faction.FactionId}: the guard is one of the faction's own offers");
+            Assert.AreEqual(offer!.Role, guard.Role, faction.FactionId);
+            var group = guard.Role switch { UnitRole.Ranged => "Ranged", UnitRole.Cavalry => "Cavalry", UnitRole.HorseArcher => "HorseArcher", _ => "Infantry" };
+            Assert.AreEqual(groups[guard.TroopId], group, faction.FactionId);
+        }
+    }
+
+    [TestMethod]
+    public void EveryFreeWaveTroop_SpawnsInTheRoleItsTroopDeclares()
+    {
+        // WaveScheduler takes a wave unit's role from the entry, else from an offer of the same troop, else Infantry; an archer with neither
+        // counted as melee near a tower and could fail check 09 (Codex and Lens 5, 2026-11-05).
+        var groups = Roster().ToDictionary(t => (string)t.Attribute("id")!, t => (string?)t.Attribute("default_group") ?? "Infantry");
+        foreach (var faction in Catalog().Factions)
+        {
+            foreach (var unit in faction.FreeWaves.SelectMany(w => w.Units))
+            {
+                var role = unit.Role ?? faction.AllOffers.FirstOrDefault(o => o.TroopId == unit.TroopId)?.Role ?? UnitRole.Infantry;
+                // Spear and Siege are TAOM's kinds of foot soldier, so only the engine's four classes are compared.
+                var group = role switch { UnitRole.Ranged => "Ranged", UnitRole.Cavalry => "Cavalry", UnitRole.HorseArcher => "HorseArcher", _ => "Infantry" };
+                Assert.AreEqual(groups[unit.TroopId], group, $"{faction.FactionId}/{unit.TroopId} spawns as {role}");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void DolGuldur_FieldsMostlyUruks_WithKhamulCavalry_SpiderRidersToBuy_AndAGoblinSwarm()
+    {
+        // Mike, 2026-11-05: "a lot more Dol Guldur Uruks as units instead of Goblins, maybe one or two goblins for swarm", three rows,
+        // Khamul cavalry and spider riders. Spiders are bought, so the creature call keeps only the fell wargs.
+        Assert.IsTrue(Catalog().TryGetFaction("dolguldur", out var dg));
+        var troops = dg.Units.Select(u => u.TroopId).ToList();
+
+        Assert.AreEqual(12, dg.Units.Count, "three rows of four");
+        Assert.IsTrue(troops.Count(t => t.StartsWith("fow_dg_uruk_")) >= 7, string.Join(",", troops));
+        Assert.IsTrue(troops.Count(t => t.StartsWith("fow_dg_goblin_")) <= 1, "one goblin swarm pack");
+        Assert.IsTrue(dg.Units.Any(u => u.Role == UnitRole.Cavalry && u.TroopId.StartsWith("fow_dg_khamul_")), "Khamul cavalry");
+        Assert.IsTrue(troops.Contains("fow_goblin_spider_rider"), "spider riders in the buy grid");
+        Assert.IsFalse(dg.Creatures!.Offers.Any(c => c.TroopId == "fow_goblin_spider_rider"), "spiders are not also a creature call");
+        foreach (var wave in dg.FreeWaves)
+        {
+            var uruks = wave.Units.Where(u => u.TroopId.StartsWith("fow_dg_uruk_")).Sum(u => u.Count);
+            var goblins = wave.Units.Where(u => u.TroopId.StartsWith("fow_dg_goblin_")).Sum(u => u.Count);
+            Assert.IsTrue(uruks > 2 * goblins && goblins >= 1, $"minute {wave.FromMinute}: {uruks} uruks, {goblins} goblins");
+        }
+    }
+
+    [TestMethod]
     public void Gondor_RotatesRegionsOfFourOffers_EverySlotFixed_OnAThirtySecondTimer()
     {
         Assert.IsTrue(Catalog().TryGetFaction("gondor", out var gondor));
@@ -228,12 +286,12 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
-    public void DolGuldur_AloneSlowsTheEnemysTowers_AndCallsSpiders()
+    public void DolGuldur_AloneSlowsTheEnemysTowers_AndCallsFellWargs()
     {
         var dolguldur = Shipped("dolguldur");
 
         Assert.IsTrue(Catalog().Factions.Where(f => f.FactionId != "dolguldur").All(f => f.FeatsOrNone.EnemyTowerFireRate > dolguldur.FeatsOrNone.EnemyTowerFireRate));
-        CollectionAssert.Contains(dolguldur.Creatures!.Offers.Select(o => o.TroopId).ToList(), "fow_goblin_spider_rider");
+        CollectionAssert.Contains(dolguldur.Creatures!.Offers.Select(o => o.TroopId).ToList(), "fow_dg_fell_warg_rider");
     }
 
     [TestMethod]

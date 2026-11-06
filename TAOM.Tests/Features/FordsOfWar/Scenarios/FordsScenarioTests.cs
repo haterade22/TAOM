@@ -384,6 +384,32 @@ public class FordsScenarioTests
     }
 
     [TestMethod]
+    public void DeathsAfterTheEnd_DoNotChangeTheBalanceTally()
+    {
+        // Codex, 2026-11-05 (F1): deaths in the result window entered the troop tally the round robin reads as the gold trade.
+        static string Tally(bool killAfterEnd)
+        {
+            var sc = FordsScenarios.Started(s => s.ConfigTweak = c => c with { TimeLimitMinutes = 6f });
+            sc.Until(() => sc.Report.Run!.End.Winner != null, 600);
+            Assert.IsTrue(sc.Field.Deaths > 0, "soldiers died before the end");
+            if (killAfterEnd)
+            {
+                Assert.IsTrue(sc.Field.Alive.Any(), "soldiers were alive after the end");
+                foreach (var unit in sc.Field.Alive.ToList())
+                    sc.Field.Kill(unit, null);
+                Assert.IsTrue(sc.Report.Run!.Kills.Credit.Keys.Any(k => k.EndsWith(":AfterEnd")), "the report still counts deaths after the end");
+            }
+
+            sc.Close(2.0);
+            return string.Join("\n", sc.Logger.Lines.Where(l => l.Contains("[Balance] troop=")));
+        }
+
+        var clean = Tally(false);
+        Assert.IsTrue(clean.Length > 0, "the match logged a troop tally");
+        Assert.AreEqual(clean, Tally(true));
+    }
+
+    [TestMethod]
     public void TimeLimit_EndsTheMatch_AndTheDirectorRecordsAnEndOnTime()
     {
         var sc = FordsScenarios.Started(s => s.ConfigTweak = c => c with { TimeLimitMinutes = 1f });

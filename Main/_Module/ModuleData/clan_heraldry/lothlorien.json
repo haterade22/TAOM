@@ -12,69 +12,99 @@
       "color2": "FFC0E3B5",
       "roster": [
         {
-          "troop": "rivendell_militia_spearman",
+          "troop": "lorien_scout",
           "min": 2,
-          "max": 12
+          "max": 16
         },
         {
-          "troop": "rivendell_militia_veteran_spearman",
+          "troop": "lorien_spearman",
           "min": 2,
-          "max": 12
+          "max": 14
         },
         {
-          "troop": "imladris_swordguard",
+          "troop": "lorien_infantry",
           "min": 1,
           "max": 11
         },
         {
-          "troop": "imladris_nobleman",
+          "troop": "lorien_warden",
+          "min": 0,
+          "max": 8
+        },
+        {
+          "troop": "lorien_bowman",
+          "min": 2,
+          "max": 14
+        },
+        {
+          "troop": "lorien_archer",
           "min": 1,
           "max": 11
         },
         {
-          "troop": "battlemaster_of_the_first_age",
+          "troop": "lorien_longbowman",
           "min": 0,
-          "max": 12
+          "max": 8
         },
         {
-          "troop": "rivendell_militia_archer",
-          "min": 2,
-          "max": 12
-        },
-        {
-          "troop": "rivendell_militia_veteran_archer",
-          "min": 2,
-          "max": 12
-        },
-        {
-          "troop": "imladris_bowman",
+          "troop": "lorien_rider",
           "min": 1,
-          "max": 11
+          "max": 10
         },
         {
-          "troop": "imladris_marksman",
+          "troop": "lorien_lancer",
           "min": 0,
-          "max": 11
+          "max": 8
         },
         {
-          "troop": "rivendell_noble",
-          "min": 2,
-          "max": 12
+          "troop": "lorien_gl_warrior",
+          "min": 1,
+          "max": 10
         },
         {
-          "troop": "rivendell_royal_knight",
+          "troop": "lorien_gl_infantry",
           "min": 0,
-          "max": 11
+          "max": 8
         },
         {
-          "troop": "imladris_horse_archer",
-          "min": 2,
-          "max": 12
-        },
-        {
-          "troop": "rider_of_himring",
+          "troop": "lorien_gl_archer",
           "min": 0,
-          "max": 11
+          "max": 8
+        },
+        {
+          "troop": "lorien_gl_bladeguard",
+          "min": 0,
+          "max": 6
+        },
+        {
+          "troop": "lorien_gl_sentinel",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "troop": "lorien_gl_marksman",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "troop": "lorien_gl_blademaster",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "troop": "lorien_gl_mallorn_defender",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "troop": "lorien_gl_bowmaster",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "troop": "lorien_gl_highblade",
+          "min": 0,
+          "max": 2
         }
       ],
       "template_id": "kingdom_hero_party_lothlorien_lothlorien_1_template"

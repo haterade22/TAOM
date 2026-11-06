@@ -124,6 +124,32 @@ public class LongDefeatBindingTests
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }
 
+    // The sally (Slice 10, spike S9): the teleport, the fade of the old body, the mounted spawn at a given place, the boundary test, and the callbacks the logic forwards.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheSallyMembers_StillResolve()
+    {
+        Method(typeof(Agent), "TeleportToPosition", typeof(void), typeof(Vec3));
+        Method(typeof(Agent), "FadeOut", typeof(void), typeof(bool), typeof(bool));
+        Assert.IsNotNull(Property(typeof(Agent), "LookDirection", typeof(Vec3)).GetSetMethod(), "Agent.LookDirection lost its public setter");
+        Property(typeof(Agent), "MountAgent", typeof(Agent));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Property(typeof(Agent), "State", typeof(AgentState));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+        Method(typeof(AgentBuildData), "InitialPosition", typeof(AgentBuildData), typeof(Vec3).MakeByRefType());
+        Method(typeof(AgentBuildData), "InitialDirection", typeof(AgentBuildData), typeof(Vec2).MakeByRefType());
+        Method(typeof(AgentBuildData), "NoHorses", typeof(AgentBuildData), typeof(bool));
+        Method(typeof(AgentBuildData), "Equipment", typeof(AgentBuildData), typeof(Equipment));
+        Property(typeof(Formation), "OrderGroundPosition", typeof(Vec3));
+        Property(typeof(Formation), "OrderPositionIsValid", typeof(bool));
+        Property(typeof(CastleGate), "IsGateOpen", typeof(bool));
+        Property(typeof(CastleGate), "IsDestroyed", typeof(bool));
+        Method(typeof(MissionBehavior), "OnAgentDeleted", typeof(void), typeof(Agent));
+        Assert.IsTrue(typeof(MissionBehavior).GetMethod("OnAgentDeleted", AnyMember)!.IsVirtual, "the logic overrides OnAgentDeleted");
+    }
+
     // The endless scale (Slice 2): the health write after spawn, the character maximum it is read against, the blow the damage factor scales,
     // and the damage model seam it rides.
     [TestMethod]
@@ -244,6 +270,107 @@ public class LongDefeatBindingTests
         Assert.AreEqual(EquipmentIndex.Weapon3, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Item3"));
         Assert.AreEqual(EquipmentIndex.HorseHarness, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("HorseHarness"));
         Assert.AreEqual(EquipmentIndex.Head, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Head"));
+    }
+
+    // The troop and class boons (Slice 6): the character flags that name a group, the main agent, the mount a refresh follows and whose speed is read back, the victim side of a blow, and the damage seam they scale.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheTargetBoonMembers_StillResolve()
+    {
+        Property(typeof(BasicCharacterObject), "IsMounted", typeof(bool));
+        Property(typeof(BasicCharacterObject), "IsRanged", typeof(bool));
+        Property(typeof(Agent), "MountAgent", typeof(Agent));
+        Property(typeof(AgentDrivenProperties), "MountSpeed", typeof(float));
+        Property(typeof(Mission), "MainAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "VictimAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "IsVictimAgentMount", typeof(bool));
+        Method(typeof(TaleWorlds.MountAndBlade.ComponentInterfaces.AgentApplyDamageModel), "ApplyDamageReductions", typeof(float),
+            typeof(AttackInformation).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float));
+        // The bare-agent fixtures of LongDefeatTargetHooksTests write these private fields.
+        Assert.IsNotNull(typeof(Agent).GetField("_character", AnyMember), "Agent._character: the bare-agent fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(Mission).GetField("_mainAgent", AnyMember), "Mission._mainAgent: the bare-mission fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(BasicCharacterObject).GetField("_isMounted", AnyMember), "BasicCharacterObject._isMounted: the bare-character fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(BasicCharacterObject).GetField("_isRanged", AnyMember), "BasicCharacterObject._isRanged: the bare-character fixture no longer matches the engine");
+    }
+
+    // The commanders (Slice 7): a hero spawns through the same call as a soldier and is marked unique by the spawn (Mission.cs:4517-4523), the refresh a war cry needs is the one the boons use, and the
+    // log line of risk 1 reads his flags, formation and speed.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheCommanderMembers_StillResolve()
+    {
+        Method(typeof(Mission), "SpawnTroopWithAgentBuildData", typeof(Agent), typeof(AgentBuildData), typeof(bool), typeof(bool), typeof(string));
+        Method(typeof(Agent), "UpdateAgentProperties", typeof(void));
+        Method(typeof(Agent), "GetAgentFlags", typeof(AgentFlag));
+        Assert.IsTrue(Enum.IsDefined(typeof(AgentFlag), nameof(AgentFlag.IsUnique)), "AgentFlag.IsUnique: the engine marks a hero unique at his spawn");
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Property(typeof(Agent), "MovementVelocity", typeof(Vec2));
+        Property(typeof(BasicCharacterObject), "IsHero", typeof(bool));
+        Property(typeof(Agent), "BaseHealthLimit", typeof(float));
+        Method(typeof(BasicCharacterObject), "MaxHitPoints", typeof(int));
+    }
+
+    // The wrapper's replay (tools/run_long_defeat.py, troop_groups) reads each troop's default_group from fords_troops.xml and applies this table, because the report names no troop group.
+    // Each class once: NumberOfDefaultFormations is Skirmisher and NumberOfRegularFormations is General, which Distinct merges.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheFormationClassFlags_AreTheTableTheWrapperReplayAssumes()
+    {
+        var table = string.Join(",", Enum.GetValues(typeof(FormationClass)).Cast<FormationClass>().Where(c => c < FormationClass.NumberOfAllFormations).Distinct()
+            .Select(c => $"{c}:{(c.IsMounted() ? "M" : "")}{(c.IsRanged() ? "R" : "")}"));
+
+        Assert.AreEqual("Infantry:,Ranged:R,Cavalry:M,HorseArcher:MR,Skirmisher:R,HeavyInfantry:,LightCavalry:R,HeavyCavalry:M,NumberOfRegularFormations:,Bodyguard:", table,
+            "tools/run_long_defeat.py MOUNTED_GROUPS and RANGED_GROUPS follow this table (the engine's flags, read once from a troop's default_group)");
+    }
+
+    // The Hammer of the Underworld and Winged Terror (phase2-plan.md Slice 8): the engines' hit points the hammer writes and the morale the pulse reads and lowers.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheHammerAndTerrorMembers_StillResolve()
+    {
+        Field(typeof(DestructableComponent), "MaxHitPoint", typeof(float));
+        Assert.IsFalse(typeof(DestructableComponent).GetField("MaxHitPoint", AnyMember)!.IsInitOnly, "the hammer assigns MaxHitPoint");
+        Assert.IsNotNull(Property(typeof(DestructableComponent), "HitPoint", typeof(float)).GetSetMethod(), "DestructableComponent.HitPoint lost its public setter");
+        Property(typeof(DestructableComponent), "IsDestroyed", typeof(bool));
+        Property(typeof(UsableMachine), "IsDestroyed", typeof(bool));
+        Property(typeof(UsableMachine), "IsDisabled", typeof(bool));
+        Method(typeof(SiegeWeapon), "GetSiegeEngineType", typeof(SiegeEngineType));
+        Property(typeof(SiegeEngineType), "BaseHitPoints", typeof(int));
+        Assert.IsTrue(typeof(SiegeWeapon).IsAssignableFrom(typeof(BatteringRam)) && typeof(SiegeWeapon).IsAssignableFrom(typeof(SiegeTower)), "the hammer treats a ram and a tower as one kind of engine");
+        Assert.IsTrue(typeof(UsableMachine).IsAssignableFrom(typeof(CastleGate)), "the gate's state is UsableMachine.IsDestroyed");
+        Method(typeof(AgentComponentExtensions), "GetMorale", typeof(float), typeof(Agent));
+        Method(typeof(AgentComponentExtensions), "ChangeMorale", typeof(void), typeof(Agent), typeof(float));
+        Property(typeof(Agent), "Position", typeof(Vec3));
+    }
+
+    // Morgul Blades and the kill owner (phase2-plan.md Slice 9): the hit callback with the engine's own isBlocked and damagedHp, and the blow the two members allowed to kill build.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheBladesAndKillOwnerMembers_StillResolve()
+    {
+        Method(typeof(MissionBehavior), "OnScoreHit", typeof(void), typeof(Agent), typeof(Agent), typeof(WeaponComponentData), typeof(bool), typeof(bool),
+            typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float), typeof(float), typeof(float));
+        Method(typeof(Agent), "Die", typeof(void), typeof(Blow), typeof(Agent.KillInfo));
+        Method(typeof(Agent), "RegisterBlow", typeof(void), typeof(Blow), typeof(AttackCollisionData).MakeByRefType());
+        Method(typeof(Agent), "GetEyeGlobalHeight", typeof(float));
+        Property(typeof(Agent), "Index", typeof(int));
+        Property(typeof(Agent), "IsMount", typeof(bool));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "LookDirection", typeof(Vec3));
+        Property(typeof(Agent), "Velocity", typeof(Vec3));
+        Property(typeof(Agent), "CurrentMortalityState", typeof(Agent.MortalityState));
+        Assert.IsNotNull(Property(typeof(Agent), "Health", typeof(float)).GetSetMethod(), "Agent.Health lost its public setter");
+        Assert.IsNotNull(typeof(Blow).GetConstructor(new[] { typeof(int) }), "Blow(int ownerId) no longer resolves");
+        foreach (var (name, type) in new[]
+        {
+            ("DamageType", typeof(DamageTypes)), ("BoneIndex", typeof(sbyte)), ("GlobalPosition", typeof(Vec3)), ("BaseMagnitude", typeof(float)), ("InflictedDamage", typeof(int)),
+            ("SwingDirection", typeof(Vec3)), ("Direction", typeof(Vec3)), ("DamageCalculated", typeof(bool)), ("WeaponRecord", typeof(BlowWeaponRecord)),
+        })
+            Field(typeof(Blow), name, type);
+        Method(typeof(BlowWeaponRecord), "FillAsMeleeBlow", typeof(void), typeof(ItemObject), typeof(WeaponComponentData), typeof(int), typeof(sbyte));
+        Assert.IsNotNull(typeof(AttackCollisionData).GetMethod("GetAttackCollisionDataForDebugPurpose", BindingFlags.Public | BindingFlags.Static), "AttackCollisionData.GetAttackCollisionDataForDebugPurpose no longer resolves");
+        Property(typeof(Monster), "HeadLookDirectionBoneIndex", typeof(sbyte));
+        Property(typeof(Monster), "MainHandItemBoneIndex", typeof(sbyte));
     }
 
     private static PropertyInfo Property(Type type, string name, Type expected)

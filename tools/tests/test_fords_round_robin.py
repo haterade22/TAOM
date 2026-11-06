@@ -28,10 +28,11 @@ def result(west, east, winner="West", mt=2400.0, time_win=True, killed=(100, 100
 
 
 def write_run(root, name, west="a", east="b", taom=f"build.20261105T010203Z+{SHA}", winner="West", final=True, winner_mt=None, report_text=None, on_time=None,
-              west_ai=True, speed=4, control_check=None):
+              west_ai=True, speed=4, control_check=None, logged_speeds=(4,)):
     folder = Path(root) / name
     folder.mkdir()
-    (folder / "taom_debug_1.log").write_text(LOG, encoding="utf-8")
+    speeds = "".join(f"[2026-11-03 11:00:0{i}] [INFO] [FordsOfWar][Speed] speed={s} mt={i}.1\n" for i, s in enumerate(logged_speeds))
+    (folder / "taom_debug_1.log").write_text(speeds + LOG, encoding="utf-8")
     names = f"west={west}\neast={east}\n" if west is not None else ""
     arm = names + ("west_ai=1\n" if west_ai else "") + (f"speed={speed}\n" if speed else "") + (f"control_check={control_check}\n" if control_check else "")
     (folder / "arm.txt").write_text(arm, encoding="utf-8")
@@ -161,6 +162,19 @@ class ResultsForTests(unittest.TestCase):
                 self.assertEqual([], results)
                 self.assertIn(f"left out {name}: ", err)
                 self.assertIn(why, err)
+                self.assertEqual(pairs, rr.todo(pairs, results))
+                shutil.rmtree(Path(self.root) / name)
+
+    def test_a_match_whose_logged_speed_changed_during_play_is_named_and_left_out(self):
+        # Codex, 2026-11-05 (F2): an arm file of 4x said nothing about a press of L during the match.
+        pairs = [("a", "b")]
+        for name, speeds in (("faster", (4, 10)), ("slower", (4, 1, 4)), ("unlogged", ()), ("onetenx", (10,))):
+            with self.subTest(name):
+                write_run(self.root, name, logged_speeds=speeds)
+                results, err = run_results(self.root)
+                self.assertEqual([], results)
+                self.assertIn(f"left out {name}: ", err)
+                self.assertIn("speed", err)
                 self.assertEqual(pairs, rr.todo(pairs, results))
                 shutil.rmtree(Path(self.root) / name)
 

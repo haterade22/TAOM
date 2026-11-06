@@ -34,7 +34,7 @@ public class LongDefeatStatHooksTests
     [TestCleanup]
     public void Clean()
     {
-        LongDefeatStatHooks.Arm(null);
+        LongDefeatHookState.Arm(null);
         foreach (var block in _flagBlocks)
             Marshal.FreeHGlobal(block);
         _flagBlocks.Clear();
@@ -112,7 +112,7 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_NothingArmed_ChangesNothing()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Publish(mission, Swing(50f));
+        LongDefeatHookState.Publish(mission, Swing(50f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), props);
@@ -124,8 +124,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_AnAttackerOfTheArmedMission_TakesTheRecord()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), props);
@@ -139,8 +139,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_ADefender_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Defender, Human), props);
@@ -152,8 +152,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_AnAgentOfAnotherMission_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(NewMission(), BattleSideEnum.Attacker, Human), props);
@@ -165,8 +165,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_NoRecordInTheTable_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1.5f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1.5f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), props);
@@ -178,8 +178,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_AHorseWithAnAttackerRider_TakesTheRidersMountSpeedOnly()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var rider = AgentOf(mission, BattleSideEnum.Attacker, Human);
         var horse = AgentOf(mission, null, Horse, rider);
         var props = Props();
@@ -195,8 +195,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_AHorseWithADefenderRider_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var rider = AgentOf(mission, BattleSideEnum.Defender, Human);
         var props = Props();
 
@@ -209,8 +209,8 @@ public class LongDefeatStatHooksTests
     public void UpdateStats_ARiderlessHorse_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, null, Horse), props);
@@ -222,13 +222,13 @@ public class LongDefeatStatHooksTests
     public void Disarm_ForAnotherMission_KeepsTheTable_AndForTheArmedOneClearsIt()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
 
-        LongDefeatStatHooks.Disarm(NewMission());
+        LongDefeatHookState.Disarm(NewMission());
         var kept = Props();
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), kept);
-        LongDefeatStatHooks.Disarm(mission);
+        LongDefeatHookState.Disarm(mission);
         var gone = Props();
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), gone);
 
@@ -240,8 +240,8 @@ public class LongDefeatStatHooksTests
     public void Publish_FromAnUnarmedMission_IsIgnored()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(NewMission(), Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(NewMission(), Swing(15f));
         var props = Props();
 
         LongDefeatStatHooks.UpdateStats(AgentOf(mission, BattleSideEnum.Attacker, Human), props);
@@ -253,8 +253,8 @@ public class LongDefeatStatHooksTests
     public void Baseline_RunsTheHookAsIfNothingWerePublished_OnThisThreadOnly()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, Swing(15f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, Swing(15f));
         var inside = Props();
         var after = Props();
         var agent = AgentOf(mission, BattleSideEnum.Attacker, Human);
@@ -270,8 +270,8 @@ public class LongDefeatStatHooksTests
     public void InitializeArmour_AnAttackerOfAHideWave_RaisesTheFourArmourValues()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var props = Props();
 
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Attacker, Human), props, BuildData(BattleSideEnum.Attacker));
@@ -286,8 +286,8 @@ public class LongDefeatStatHooksTests
     public void InitializeArmour_NullBuildData_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var props = Props();
 
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Attacker, Human), props, null);
@@ -299,8 +299,8 @@ public class LongDefeatStatHooksTests
     public void InitializeArmour_AHorse_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var props = Props();
 
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Attacker, Horse), props, BuildData(BattleSideEnum.Attacker));
@@ -312,8 +312,8 @@ public class LongDefeatStatHooksTests
     public void InitializeArmour_ADefenderBuild_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var props = Props();
 
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Defender, Human), props, BuildData(BattleSideEnum.Defender));
@@ -325,8 +325,8 @@ public class LongDefeatStatHooksTests
     public void InitializeArmour_AnInvalidTeamBuild_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var props = Props();
 
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, null, Human), props, BuildData(null));
@@ -372,22 +372,23 @@ public class LongDefeatStatHooksTests
     {
         // The check's stat names and arithmetic against the real producers (RunModifiers, then the hooks), not a canned sample.
         var plan = ShippedNumbers();
-        foreach (var power in AffixPlan.Pool)
+        var statPowers = AffixPlan.Pool.Where(power => LongDefeatAffixChecks.Expectations(plan, power).Count > 0).ToList();
+        CollectionAssert.AreEquivalent(new[] { "hammer", "terror", "blades" }, AffixPlan.Pool.Except(statPowers).ToArray(), "only the engine, morale and poison powers have no stat effect to round-trip; they have their own verdicts");
+        foreach (var power in statPowers)
         {
             var expected = LongDefeatAffixChecks.Expectations(plan, power);
-            Assert.IsTrue(expected.Count > 0, power + " has a stat effect");
             var mission = NewMission();
             var attacker = AgentOf(mission, BattleSideEnum.Attacker, Human);
 
-            LongDefeatStatHooks.Arm(mission);
-            LongDefeatStatHooks.Publish(mission, RunModifiers.StatTable(plan, new[] { power }, 1f));
+            LongDefeatHookState.Arm(mission);
+            LongDefeatHookState.Publish(mission, RunModifiers.StatTable(plan, new[] { power }, 1f));
             var before = EngineProps(expected);
             var after = EngineProps(expected);
             LongDefeatStatHooks.UpdateStats(attacker, after);
             LongDefeatStatHooks.InitializeArmour(attacker, after, BuildData(BattleSideEnum.Attacker));
             var published = LongDefeatAffixChecks.Effect(power, expected, ReadBack(expected, before, after));
 
-            LongDefeatStatHooks.Arm(mission);
+            LongDefeatHookState.Arm(mission);
             var unchanged = EngineProps(expected);
             LongDefeatStatHooks.UpdateStats(attacker, unchanged);
             LongDefeatStatHooks.InitializeArmour(attacker, unchanged, BuildData(BattleSideEnum.Attacker));
@@ -403,15 +404,15 @@ public class LongDefeatStatHooksTests
     {
         var mission = NewMission();
         var first = Props();
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Attacker, Human), first, BuildData(BattleSideEnum.Attacker));
 
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 30f));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 30f));
         var other = Props();
         LongDefeatStatHooks.InitializeArmour(AgentOf(NewMission(), BattleSideEnum.Attacker, Human), other, BuildData(BattleSideEnum.Attacker));
 
-        LongDefeatStatHooks.Publish(mission, new LdStatTable(1f, null, 0f));
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f, null, 0f));
         var none = Props();
         LongDefeatStatHooks.InitializeArmour(AgentOf(mission, BattleSideEnum.Attacker, Human), none, BuildData(BattleSideEnum.Attacker));
 

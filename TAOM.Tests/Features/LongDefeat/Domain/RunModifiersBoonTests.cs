@@ -119,12 +119,14 @@ public class RunModifiersBoonTests
     }
 
     [TestMethod]
-    public void TheVocabulary_IsClosed_AndNamesEveryKeyOfSlice4()
+    public void TheVocabulary_IsClosed_AndNamesEveryKeyOfSlices4To7()
     {
         var expected = new[]
         {
             "bountyPercent", "waveBonusPercent", "earlyGoldPercent", "pricePercent", "gold",
             "garrisonCap", "intermissionSeconds", "restShare", "keepHoldPercent", "packBonus", "affixCount",
+            "swingSpeedPercent", "moveSpeedPercent", "drawSpeedPercent", "reloadSpeedPercent", "blockPercent", "parryPercent", "aimErrorPercent",
+            "damagePercent", "damageTakenPercent", "healthPercent", "commanderCooldownPercent",
         };
 
         CollectionAssert.AreEquivalent(expected, BoonKeys.Rules.Keys.ToArray());
@@ -132,5 +134,9 @@ public class RunModifiersBoonTests
         Assert.IsTrue(BoonKeys.Rules["packBonus"].Whole);
         Assert.IsFalse(BoonKeys.Rules["restShare"].Whole);
         Assert.IsTrue(BoonKeys.Rules["affixCount"].Max < 0, "affixCount is negative only");
+        Assert.IsTrue(BoonKeys.Rules.Keys.Where(BoonKeys.IsTargeted).All(k => !BoonKeys.Rules[k].Whole), "the troop and class percents are not whole numbers");
+        CollectionAssert.AreEquivalent(
+            new[] { "swingSpeedPercent", "moveSpeedPercent", "drawSpeedPercent", "reloadSpeedPercent", "blockPercent", "parryPercent", "aimErrorPercent", "damagePercent", "damageTakenPercent", "healthPercent" },
+            BoonKeys.Rules.Keys.Where(BoonKeys.IsTargeted).ToArray(), "exactly the stat, damage and health keys name a target");
     }
 }

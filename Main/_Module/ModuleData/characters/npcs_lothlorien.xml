@@ -420,7 +420,7 @@
 	</NPCCharacter>
 
 	<!-- Practice Dummies -->
-	<NPCCharacter id="gear_practice_dummy_lothlorien" race="elf" default_group="Infantry" level="15" is_hero="false" name="{=aom_lt_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.lothlorien">
+	<NPCCharacter id="gear_practice_dummy_lothlorien" race="elf" default_group="Infantry" level="15" is_hero="false" is_obsolete="true" name="{=aom_lt_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.lothlorien">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>

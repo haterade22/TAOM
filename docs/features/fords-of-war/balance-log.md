@@ -2,11 +2,11 @@
 
 What each match showed, and what changed because of it. `python tools/fords_match_review.py <run folder>` gives the numbers; a person reads them for the design. One match proves little, so a change here names the matches behind it, and the same pair runs again after the change.
 
-**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
+**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. From the builds after 2026-11-05's Codex review onward, it leaves out deaths in the 25 s result window after the winner is named, which the `[Summary]` deaths and "units lost" still include (0 to 79 deaths a match, at most 2.5%); gold trades before and after that build are not exactly like for like. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
 
 ## How balance is decided
 
-Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. Only finished, clean, scheduled matches count: a final report with a winner, from a build that is not `.dirty` or `.nogit`, with the scheduled faction on the West side, played at 4x with both sides AI and no control check. The faction table comes from the `factions.json` the build committed, and a troop both factions field counts for neither side. Folders of other builds are skipped silently; a left-out folder of this build is named on stderr. A balance change starts a new round.
+Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. Only finished, clean, scheduled matches count: a final report with a winner, from a build that is not `.dirty` or `.nogit`, with the scheduled faction on the West side, played at 4x with both sides AI and no control check, whose log holds exactly one `[Speed] speed=4` line. A second line means the speed changed during play: a press of the speed key, or a soldier taken with P, since the match runs at 1x while a person controls one. The faction table comes from the `factions.json` the build committed, and a troop both factions field counts for neither side. Folders of other builds are skipped silently; a left-out folder of this build is named on stderr. A balance change starts a new round.
 
 ## Matches
 
@@ -269,7 +269,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.**
 
-### Rohan's cheap cavalry (this change)
+### Rohan's cheap cavalry
 
 **Why:** Mike, 2026-11-05: "Rohan needs cheap cavalry because they seem weak. They should get a lot of cavalry opportunities." The 2026-11-04 rider price pass (0.7 of the full price) left Rohan's gold trade between 0.7 and 2.0 over its seven matches. In the round robin on `92973f27a`, Rohan stood at 1 win and 1 loss when this change was made, so the round's data alone does not show the weakness yet.
 
@@ -281,6 +281,30 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 - The AI's last militia buy becomes a spear rider pack, so 7 of its 10 pack buys are riders; two foot buys stay to take towers.
 
 **Result: not measured.** The change lands after the round robin on `92973f27a`, so that round's data stays on one build. More Rohan horses can also mean more riderless mounts; the native crash at `0x6B716E` struck two Rohan matches of three (see the feature doc), so watch the crash rate.
+
+### Dol Guldur's uruk army
+
+**Why:** Mike, 2026-11-05: Dol Guldur should field many more Dol Guldur uruks in place of goblins, with one or two goblins for a swarm; it has good troop lines, so three rows of troops; it also has Khamul's cavalry and spider riders. Dol Guldur was the weakest faction in the night survey (trade 0.34 before its price pass) and took no tower in the 2026-11-04 wear runs.
+
+**Changed:**
+
+- Twelve offers in three rows, the first faction with a third row (F9 to F12): uruk foul, warriors, veterans, swordsmen, bowmen, fell archers and fell fangs; Khamul's shadow guard and veiled knights (cavalry, level 41); warg raiders; spider riders; one goblin crawler pack of 16 as the swarm.
+- Spider riders are bought, not called: Mike found a paid call the same as a purchase with a cooldown. The creature call keeps the fell wargs.
+- Free waves: 8 uruk foul and 2 goblin crawlers at minute 0; 6 uruk warriors, 2 goblin skirmishers and 2 uruk skirmishers at minute 10; 6 veteran uruks, 2 goblin impalers and 2 uruk bowmen at minute 20. Before: goblins and orcs only.
+- Dol Guldur's hidden tower gunner, the first ranged offer, is now an uruk bowman in place of a goblin archer; the volley item is the same.
+- Spider riders cost 120 a pack of 3 with no timer (weight 1.5); Mordor's call costs 205 behind a 30 s timer.
+- Every faction: 27 free-wave archer entries (25 troops) spawned with the role Infantry, because WaveScheduler falls back to Infantry when neither the entry nor an offer names a role. They now say Ranged, so the field probe and check 09 no longer count them as melee; a test holds every wave troop to its declared class.
+- Five new copies in `fords_troops.xml` (uruk warrior, swordsman, skirmisher, bowman, Khamul veiled knight); six goblin and orc copies that nothing fields any more are gone.
+
+**Result: not measured.** It lands after the round robin on `92973f27a`.
+
+### Hero guards (this change)
+
+**Why:** Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."
+
+**Changed:** each hero arrival brings its faction's guard at no extra price: 4 of the faction's elite foot (Gondor Fountain Guard, Mordor Barad-dur Guard, Isengard berserkers, Erebor royal wardens and so on), Rohan's King's Knights mounted, and 3 for the two elf factions (Imladris blademasters; Mirkwood sentinels, archers, since Mirkwood has no elite foot). Hero prices are unchanged, so a hero is now worth more for the same gold, and a killed guard pays the enemy the usual kill bounty on its unit value.
+
+**Result: not measured.** It lands after the round robin on `92973f27a`.
 
 ## Open questions
 

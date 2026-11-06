@@ -26,12 +26,12 @@ public class LongDefeatStatWiringTests
     }
 
     [TestMethod]
-    public void TheEffectsAdapter_PublishesTheWholeTableToTheStatHooks()
+    public void TheEffectsAdapter_PublishesTheWholeTableOnce_ToBothHooks()
     {
         var source = RepoPaths.ReadSource(EffectsAdapter, stripComments: true);
         var publish = BodyOf(source, "public void PublishStats(");
 
-        StringAssert.Contains(publish, "LongDefeatStatHooks.Publish(_mission, table)");
+        StringAssert.Contains(publish, "LongDefeatHookState.Publish(_mission, table)");
     }
 
     [TestMethod]

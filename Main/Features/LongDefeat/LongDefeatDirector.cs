@@ -18,6 +18,7 @@ internal sealed partial class LongDefeatDirector
 {
     private const string Tag = "[LongDefeat]";
     private const string RemovedSite = "LongDefeatDirector.OnAgentRemoved";
+    private const string HitSite = "LongDefeatDirector.OnHit";
     private const float KeepReadSeconds = 0.5f;
     private const float StateLogSeconds = 5f;
 
@@ -106,6 +107,14 @@ internal sealed partial class LongDefeatDirector
         _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : _field.KeepFromScene();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
             LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
+        var refusal = PrepareSally();
+        if (refusal.Length > 0)
+        {
+            _logger.LogError($"{Tag}[Boot] {refusal}");
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(refusal));
+            return false;
+        }
+
         _session.Fill(_run);
         _started = true;
         Apply(_run.Begin());
@@ -124,6 +133,8 @@ internal sealed partial class LongDefeatDirector
         _deferred.Drain();
         if (!_started || _shutDown || _run.Result != null || !(dt > 0f))
             return;
+
+        DrainBodyEvents();
 
         _session.AddLiveSeconds(dt);
         _keepClock -= dt;
@@ -149,6 +160,7 @@ internal sealed partial class LongDefeatDirector
 
         if (_plan.Options.Autoplay)
             PlayShop(dt);
+        TickSally(dt);
         LogState(dt, read);
     }
 
@@ -159,15 +171,21 @@ internal sealed partial class LongDefeatDirector
             return;
 
         var removal = _field.Classify(affected, loss);
-        if (removal.Kind == LdRemovalKind.None)
+        if (removal.Kind == LdRemovalKind.None && !removal.HasKey)
             return;
 
         _deferred.RunOrDefer(RemovedSite, () =>
         {
+            // Every agent the registry held leaves it at its removal, and the run forgets its key: a later hit that names it is dropped and its dose ends.
+            if (removal.HasKey)
+                _run.Forget(removal.Key);
             switch (removal.Kind)
             {
                 case LdRemovalKind.Attacker:
-                    _run.AttackerDown(removal.TroopId);
+                    if (removal.Role == AttackerRole.Commander && !removal.Loss)
+                        _run.CommanderDown(false);
+                    else
+                        _run.AttackerDown(removal.TroopId, removal.Role, removal.Felled);
                     break;
                 case LdRemovalKind.Defender:
                     _run.DefenderDown();
@@ -198,11 +216,15 @@ internal sealed partial class LongDefeatDirector
 
         _deferred.Drain();
         _shutDown = true;
+        _poisonHits = false;
         if (_started)
         {
             _run.Abandon();
             Finish();
         }
+
+        _sallyHits = false;
+        _sally = null;
 
         _session.Clear();
         _field.Clear();
@@ -211,7 +233,8 @@ internal sealed partial class LongDefeatDirector
 
     private LdPlanSizes PlanSizes()
     {
-        var foot = _plan.Garrison.Where(r => r.Slot == FormationSlot.Infantry).Sum(r => _plan.Options.ScaledCount(r.Count)) + 1;
+        // The foot formation reserves a slot for the lord, unless he rides: a mounted lord joins the cavalry formation instead.
+        var foot = _plan.Garrison.Where(r => r.Slot == FormationSlot.Infantry).Sum(r => _plan.Options.ScaledCount(r.Count)) + (LordRides ? 0 : 1);
         var ranged = _plan.Garrison.Where(r => r.Slot == FormationSlot.Ranged).Sum(r => _plan.Options.ScaledCount(r.Count));
         var attackerRanged = _plan.Rules.LiveCap / 4;
         return new LdPlanSizes(foot, ranged, _plan.Rules.LiveCap - attackerRanged, attackerRanged);
@@ -224,6 +247,7 @@ internal sealed partial class LongDefeatDirector
 
         _adoptedBody = _mainBody;
         _field.AdoptMain(_plan.Options.Autoplay);
+        DressNewBody();
         _logger.LogInfo($"{Tag}[General] {_field.DescribeFormations()}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GeneralId, _mission, LongDefeatChecks.General(_field.BootFacts()));
         if (!_deathPending)
@@ -277,6 +301,7 @@ internal sealed partial class LongDefeatDirector
         _frameMax = 0f;
         _frames = 0;
         SampleLateScale();
+        LogCommander();
         _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
         _logger.LogInfo($"{Tag}[Keep] attackers={_atKeep} defenders={_defendersAtKeep} progress={F2(v.KeepProgress)} at={KeepText()} positions={SampleText()}");
     }

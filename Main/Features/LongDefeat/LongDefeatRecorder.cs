@@ -13,8 +13,10 @@ namespace TAOM.Features.LongDefeat;
 /// <summary>One line of <c>long_defeat_records.jsonl</c>: where the main agent stood and looked when a point was recorded.</summary>
 internal sealed record LongDefeatRecord(string Scene, string Kind, float X, float Y, float Z, float Fx, float Fy, float? Radius);
 
-/// <summary>The block <c>taom.ld_export</c> writes for a scene, and the kinds of point still unrecorded.</summary>
-internal sealed record LongDefeatExport(string Json, IReadOnlyList<string> Missing)
+/// <summary>
+/// The block <c>taom.ld_export</c> writes for a scene, and the kinds of point still unrecorded. The sally is optional: it is never a missing piece, and <paramref name="HasSally"/> says the block carries one.
+/// </summary>
+internal sealed record LongDefeatExport(string Json, IReadOnlyList<string> Missing, bool HasSally = false)
 {
     public bool IsComplete => Missing.Count == 0;
 }
@@ -29,9 +31,14 @@ internal sealed class LongDefeatRecorder
     internal const string MusterFootKind = "muster_foot";
     internal const string MusterArchersKind = "muster_archers";
 
+    /// <summary>The place a mounted class rides out to at each wave's start (spike S9): stand outside the walls, inside the play area, facing the way the sally should face.</summary>
+    internal const string SallyKind = "sally";
+
     private const string RecordsFile = "long_defeat_records.jsonl";
 
-    private static readonly string[] Kinds = { KeepKind, MusterFootKind, MusterArchersKind };
+    // The kinds a scene needs, and every kind that can be recorded: the sally is optional, so a scene without one is complete.
+    private static readonly string[] Required = { KeepKind, MusterFootKind, MusterArchersKind };
+    private static readonly string[] Kinds = { KeepKind, MusterFootKind, MusterArchersKind, SallyKind };
 
     private readonly string _directory;
 
@@ -145,7 +152,8 @@ internal sealed class LongDefeatRecorder
         if (muster.Count > 0)
             block["muster"] = muster;
 
-        var export = new LongDefeatExport(block.ToString(Formatting.Indented), Kinds.Where(k => !newest.ContainsKey(k)).ToList());
+        AddMuster(block, "sally", newest, SallyKind);
+        var export = new LongDefeatExport(block.ToString(Formatting.Indented), Required.Where(k => !newest.ContainsKey(k)).ToList(), newest.ContainsKey(SallyKind));
         path = ExportPath(scene);
         Directory.CreateDirectory(_directory);
         File.WriteAllText(path, export.Json, new UTF8Encoding(false));

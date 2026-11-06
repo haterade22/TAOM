@@ -312,8 +312,11 @@ public class LongDefeatShippedConfigTests
 
         Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.WarChest) >= 3, "war chest rows");
         Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Fortress) >= 3, "fortress rows");
-        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
-        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Legend).All(r => r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "this slice's Legend rows cut affixes");
+        Assert.AreEqual(3, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
+        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend && r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "two Legend rows cut affixes");
+        var silence = rows.Single(r => r.Id == "the_long_silence");
+        Assert.AreEqual(BoonCategory.Legend, silence.Category);
+        Assert.AreEqual(50f, silence.Effects.Single(e => e.Key == BoonKeys.CommanderCooldownPercent).Value, "the commander row stretches every commander cooldown by half");
         Assert.IsTrue(rows.Any(r => r.HasDrawback), "some boons carry a real drawback");
     }
 
@@ -356,20 +359,79 @@ public class LongDefeatShippedConfigTests
         deck.TryReroll();
         deck.TryReroll();
 
-        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's twelve rows; the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
-        CollectionAssert.AreEqual(new[] { "granary_stores", "glittering_caves_refuge", "weregild_of_the_mark" }, deck.Picks[0].Draws[0].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras" }, deck.Picks[0].Draws[1].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "granary_stores", "weregild_of_the_mark", "healers_of_the_hold" }, deck.Picks[0].Draws[2].Ids.ToArray());
+        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's thirteen free rows (Slice 7 added the third Legend row); the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
+        CollectionAssert.AreEqual(new[] { "haggler_of_edoras", "stout_hearts_at_the_gate", "the_long_watch" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "hornblowers_bargain", "riddermark_levy", "wains_of_the_westfold" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "the_long_watch", "healers_of_the_hold", "granary_stores" }, deck.Picks[0].Draws[2].Ids.ToArray());
 
-        // Reroll twice again from a fresh deck, take the first card of draw 1, and the second pick is drawn over the eleven rows left.
+        // Reroll once from a fresh deck, take the first card of draw 1, and the second pick is drawn over the twelve rows left.
         var second = new BoonDeck(plan, 1UL, 1);
         for (var n = 1; n <= 3; n++)
             second.Cleared(n, n);
         second.TryReroll();
-        second.TryPick("stout_hearts_at_the_gate", 3, 4);
+        second.TryPick("hornblowers_bargain", 3, 4);
         for (var n = 4; n <= 6; n++)
             second.Cleared(n, n);
-        CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { "haggler_of_edoras", "granary_stores", "healers_of_the_hold" }, second.Offer.Select(r => r.Id).ToArray());
+    }
+
+    [TestMethod]
+    public void ShippedBoons_ClassAndTroopRows_NameARealClass_AndAimOnlyAtTheirOwnGroup()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var rows = catalog.BuildPlan(helms, RunOptions.Default).Boons.Rows;
+        var classes = catalog.ClassesFor(helms).Select(c => c.Id).ToList();
+
+        foreach (var id in classes)
+            Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Class && r.ClassId == id) >= 3, id + " needs 3 rows to show a full offer");
+        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Class).All(r => classes.Contains(r.ClassId)), "a class row names a class the fortress offers");
+        foreach (var category in new[] { BoonCategory.Infantry, BoonCategory.Archers, BoonCategory.Cavalry })
+        {
+            var own = rows.Where(r => r.Category == category).ToList();
+            Assert.IsTrue(own.Count >= 3, category + " rows");
+            var group = Enum.GetValues(typeof(BoonTarget)).Cast<BoonTarget>().Single(t => BoonTargets.CategoryOf(t) == category);
+            Assert.IsTrue(own.All(r => r.Effects.Concat(r.Drawback).All(e => e.Target == group)), category + " rows change their own group only");
+        }
+
+        Assert.IsTrue(rows.All(r => r.Effects.Concat(r.Drawback).All(e => BoonKeys.IsTargeted(e.Key) == e.Target.HasValue)), "a targeted key names its target, and no other key does");
+    }
+
+    [TestMethod]
+    public void ShippedHelms_HoldsATroopOfEachGroup_ReadFromTheXmlDefaultGroupTheWayTheEngineClassifiesIt()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var troops = Troops();
+        BoonTarget GroupOf(string id)
+        {
+            var group = (string?)troops[id].Attribute("default_group");
+            return BoonTargets.OfCharacter(group == "Cavalry" || group == "HorseArcher", group == "Ranged" || group == "HorseArcher");
+        }
+
+        var groups = helms.Garrison.Select(g => g.TroopId).Concat(helms.Shop.Offers.Select(o => o.TroopId)).Select(GroupOf).Distinct().OrderBy(g => g).ToList();
+
+        CollectionAssert.AreEqual(new[] { BoonTarget.Infantry, BoonTarget.Archers, BoonTarget.Cavalry }, groups,
+            "King's Knights are a Cavalry troop on the shop list, so the cavalry rows are eligible at Helm's Deep; tools/run_long_defeat.py troop_groups reads the same file");
+    }
+
+    [TestMethod]
+    public void ShippedBoons_TheFirstOffersOfAnArcherAtHelms_ArePinned_ToTheSameVectorsAsThePythonReplay()
+    {
+        var (catalog, _) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var groups = new[] { BoonCategory.Infantry, BoonCategory.Archers, BoonCategory.Cavalry };
+        var deck = new BoonDeck(plan, 1UL, 2, "archer", groups);
+        for (var n = 1; n <= 3; n++)
+            deck.Cleared(n, n);
+        deck.TryReroll();
+        deck.TryReroll();
+
+        // Seed 1, pick 1, an archer with the garrison and shop of Helm's Deep: 25 rows are eligible (the war chest, fortress and Legend rows, the archer's class rows, and all three troop categories).
+        CollectionAssert.AreEqual(new[] { "marksmans_call", "hornblowers_bargain", "spears_of_the_westfold" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "shields_locked", "the_long_watch", "hearts_of_the_eored" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "spears_of_the_westfold", "glittering_caves_refuge", "marksmans_call" }, deck.Picks[0].Draws[2].Ids.ToArray());
+        Assert.AreEqual(25, deck.Picks[0].Draws[0].Eligible);
     }
 
     // The own-gear rule: a class kit gives the lord only what a troop of his people carries in fords_troops.xml. An item no troop carries sits here with its source, as a named exception.

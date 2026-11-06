@@ -16,8 +16,8 @@ internal enum BoonCategory
     Legend,
 }
 
-/// <summary>One number a boon changes, by the key of <see cref="BoonKeys"/>.</summary>
-internal readonly record struct BoonEffect(string Key, float Value);
+/// <summary>One number a boon changes, by the key of <see cref="BoonKeys"/>. A key that <see cref="BoonKeys.IsTargeted"/> says whom it changes in <paramref name="Target"/>; the others have none.</summary>
+internal readonly record struct BoonEffect(string Key, float Value, BoonTarget? Target = null);
 
 /// <summary>
 /// One boon: TAOM's own name and text as <c>{=KEY}English</c>, what it gives and what it costs. A drawback uses the same keys as an effect and
@@ -74,7 +74,8 @@ internal sealed class BoonPlan
 internal readonly record struct BoonKeyRule(float Min, float Max, bool Whole);
 
 /// <summary>
-/// The keys a boon effect may use. Slice 4 holds the war chest keys, the fortress keys and <c>affixCount</c>; the troop and class keys join with their slices.
+/// The keys a boon effect may use: the war chest keys, the fortress keys and <c>affixCount</c> (Slice 4), the troop and class keys that name a <see cref="BoonTarget"/> (Slice 6) and
+/// <c>commanderCooldownPercent</c> (Slice 7, a Legend key: it stretches or shortens every commander ability's cooldown, the first delay left alone).
 /// <c>affixCount</c> is negative only, and <c>gold</c> (paid once, at the pick) is an effect, never a drawback.
 /// </summary>
 internal static class BoonKeys
@@ -90,6 +91,17 @@ internal static class BoonKeys
     public const string KeepHoldPercent = "keepHoldPercent";
     public const string PackBonus = "packBonus";
     public const string AffixCount = "affixCount";
+    public const string SwingSpeedPercent = "swingSpeedPercent";
+    public const string MoveSpeedPercent = "moveSpeedPercent";
+    public const string DrawSpeedPercent = "drawSpeedPercent";
+    public const string ReloadSpeedPercent = "reloadSpeedPercent";
+    public const string BlockPercent = "blockPercent";
+    public const string ParryPercent = "parryPercent";
+    public const string AimErrorPercent = "aimErrorPercent";
+    public const string DamagePercent = "damagePercent";
+    public const string DamageTakenPercent = "damageTakenPercent";
+    public const string HealthPercent = "healthPercent";
+    public const string CommanderCooldownPercent = "commanderCooldownPercent";
 
     public static IReadOnlyDictionary<string, BoonKeyRule> Rules { get; } = new Dictionary<string, BoonKeyRule>(StringComparer.Ordinal)
     {
@@ -104,7 +116,27 @@ internal static class BoonKeys
         [KeepHoldPercent] = new(-90f, 300f, false),
         [PackBonus] = new(-10f, 50f, true),
         [AffixCount] = new(-8f, -1f, true),
+        [SwingSpeedPercent] = new(-90f, 300f, false),
+        [MoveSpeedPercent] = new(-90f, 300f, false),
+        [DrawSpeedPercent] = new(-90f, 300f, false),
+        [ReloadSpeedPercent] = new(-90f, 300f, false),
+        [BlockPercent] = new(-90f, 300f, false),
+        [ParryPercent] = new(-90f, 300f, false),
+        [AimErrorPercent] = new(-90f, 300f, false),
+        [DamagePercent] = new(-90f, 300f, false),
+        [DamageTakenPercent] = new(-90f, 300f, false),
+        [HealthPercent] = new(-90f, 300f, false),
+        [CommanderCooldownPercent] = new(-90f, 300f, false),
     };
+
+    /// <summary>The keys whose stat percent is written onto a target's <c>RaceAbilityEffects</c> record and needs a refresh of the agents standing.</summary>
+    public static IReadOnlyCollection<string> StatKeys { get; } = new[]
+    {
+        SwingSpeedPercent, MoveSpeedPercent, DrawSpeedPercent, ReloadSpeedPercent, BlockPercent, ParryPercent, AimErrorPercent,
+    };
+
+    /// <summary>The keys that change one <see cref="BoonTarget"/> and so need a <c>target</c>: the stat keys, the two damage factors and health.</summary>
+    public static bool IsTargeted(string key) => StatKeys.Contains(key) || key == DamagePercent || key == DamageTakenPercent || key == HealthPercent;
 
     /// <summary>Whether a key may appear in a boon's drawback: a drawback costs, so it never pays gold at the pick or cuts an affix.</summary>
     public static bool AllowedAsDrawback(string key) => key != Gold && key != AffixCount;

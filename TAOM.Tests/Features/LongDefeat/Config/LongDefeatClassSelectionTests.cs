@@ -57,6 +57,16 @@ public class LongDefeatClassSelectionTests
     }
 
     [TestMethod]
+    public void TheChosenClassName_RidesTheRawNameToTheHud_AndIsEmptyWhenNoneIsOnOffer()
+    {
+        var named = Plan(RunOptions.Default with { ClassId = "axe" });
+        var none = Plan(RunOptions.Default, classes: null);
+
+        Assert.AreEqual("{=N2}Axe", named.ClassName);
+        Assert.AreEqual("", none.ClassName);
+    }
+
+    [TestMethod]
     public void NoClassAsked_ForAPerson_TakesTheFirstClassOnOffer()
     {
         var plan = Plan(RunOptions.Default);

@@ -26,6 +26,23 @@
         "fow_urukhai_veteranspearman": "fow_urukhai_veteranpikeman", "fow_urukhai_skirmisher": "fow_urukhai_arbalest",
         "fow_urukhai_arbalest": "fow_urukhai_crossbowman", "fow_urukhai_crossbowman": "fow_urukhai_veterancrossbowman"
       },
+      "commanders": {
+        "every": 4,
+        "ranks": [
+          { "rank": "captain", "name": "{=TAOM_LD_Rank_Captain}Captain", "troop": "lord_I3_1", "bounty": 150, "health": 2.0, "abilities": [ "war_cry" ] },
+          { "rank": "lieutenant", "name": "{=TAOM_LD_Rank_Lieutenant}Lieutenant", "troop": "lord_I1_1", "bounty": 250, "health": 3.0, "abilities": [ "war_cry", "summon_uruks" ] },
+          { "rank": "general", "name": "{=TAOM_LD_Rank_General}General", "troop": "lord_I4_1", "bounty": 400, "health": 4.0, "abilities": [ "war_cry", "summon_uruks" ] }
+        ],
+        "beyond": { "healthPerStep": 0.25, "cooldownFactorPerStep": 0.9, "summonPerStep": 5, "maxSteps": 10 },
+        "abilities": {
+          "war_cry": { "kind": "WarCry", "name": "{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls",
+            "firstSeconds": 20, "cooldownSeconds": 60, "durationSeconds": 15, "swingSpeedPercent": 15, "moveSpeedPercent": 10 },
+          "summon_uruks": { "kind": "Summon", "name": "{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard",
+            "firstSeconds": 30, "cooldownSeconds": 120, "count": 20,
+            "mix": [ { "troop": "fow_urukhai_veteraninfantry", "class": "Infantry", "weight": 3 },
+                     { "troop": "fow_urukhai_veterancrossbowman", "class": "Ranged", "weight": 1 } ] }
+        }
+      },
       "waves": [
         { "count": 110, "mix": [
           { "troop": "fow_urukhai_fighter", "class": "Infantry", "weight": 50 },

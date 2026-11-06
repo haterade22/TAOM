@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Adapters;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Tests.Features.LongDefeat;
@@ -42,6 +43,9 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     public int Far { get; set; }
     public int OffMesh { get; set; }
     public int ShortBy { get; set; }
+
+    /// <summary>A troop the engine cannot spawn: its batches make nobody.</summary>
+    public string? Unspawnable { get; set; }
     public int FellResult { get; set; } = -1;
 
     /// <summary>What the last <see cref="Read"/> was asked to measure around.</summary>
@@ -98,7 +102,7 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     {
         Calls.Add($"Spawn:{Side(attackers)}:{batch.TroopId}:{batch.Count}");
         Spawned.Add((attackers, batch));
-        var made = Math.Max(0, batch.Count - ShortBy);
+        var made = batch.TroopId == Unspawnable ? 0 : Math.Max(0, batch.Count - ShortBy);
         var points = Enumerable.Range(batch.FirstIndex, made).Select(i => new LdPoint(i, attackers ? 50 : 0, 0)).ToList();
         if (attackers)
             AttackersStanding += made;
@@ -121,12 +125,97 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     /// <summary>What <see cref="ReadKit"/> answers. Null reads back exactly the last loadout, with no mount for a foot class.</summary>
     public LdKitFacts? Kit { get; set; }
 
-    public bool SpawnPlayer(bool respawn, LdLoadout? loadout)
+    /// <summary>The place each lord spawn was given, in order (null for a spawn at the engine's own frame).</summary>
+    public List<LdPlace?> Places { get; } = new();
+
+    public bool SpawnPlayer(bool respawn, LdLoadout? loadout, LdPlace? place = null)
     {
         Calls.Add(loadout == null ? $"SpawnPlayer:{respawn}" : $"SpawnPlayer:{respawn}:{loadout.ClassId}");
         Loadouts.Add(loadout);
+        Places.Add(place);
         return SpawnPlayerOk;
     }
+
+    /// <summary>What <see cref="SallyPointUsable"/> answers for a place; every point has a navmesh and lies inside the boundary by default.</summary>
+    public Func<LdPlace, LdPointFacts> PointFacts { get; set; } = _ => new LdPointFacts(true, true);
+
+    /// <summary>The points the director asked about, in order.</summary>
+    public List<LdPlace> PointsAsked { get; } = new();
+
+    public LdPointFacts SallyPointUsable(LdPlace place)
+    {
+        PointsAsked.Add(place);
+        Calls.Add("PointCheck:" + F(place.X));
+        return PointFacts(place);
+    }
+
+    /// <summary>The lord as the next read finds him: standing, his own body, mounted, inside the boundary. A teleport or a remount moves him.</summary>
+    public LdLordFacts Lord { get; set; } = new(true, true, "lord_4_1", true, new LdPoint(10f, 20f, 30f), true, "Cavalry", new LdPoint(10f, 20f, 30f), 3f, 12f, "closed");
+
+    public int LordReads { get; private set; }
+
+    public LdLordFacts ReadLord(bool detail)
+    {
+        LordReads++;
+        Calls.Add(detail ? "ReadLord:detail" : "ReadLord");
+        return Lord;
+    }
+
+    public List<LdPlace> Teleports { get; } = new();
+
+    public bool TeleportOk { get; set; } = true;
+
+    public bool TeleportPlayer(LdPlace place)
+    {
+        Calls.Add("Teleport:" + F(place.X));
+        Teleports.Add(place);
+        if (TeleportOk)
+            Lord = Lord with { At = place.Point };
+        return TeleportOk;
+    }
+
+    public List<(LdPlace Place, LdLoadout Loadout)> Remounts { get; } = new();
+
+    /// <summary>What a remount answers; by default it worked, the old body read Routed and was not lost, and he kept half his health.</summary>
+    public LdRemount RemountResult { get; set; } = new(true, "Routed", false, 0.5f, "");
+
+    public LdRemount RemountPlayer(LdPlace place, LdLoadout loadout)
+    {
+        Calls.Add("Remount:" + F(place.X));
+        Remounts.Add((place, loadout));
+        if (RemountResult.Done)
+        {
+            Lord = Lord with { At = place.Point, HasMount = true };
+            MainBody++;
+        }
+
+        return RemountResult;
+    }
+
+    private readonly LongDefeatLordWatch _watch = new();
+
+    /// <summary>Hits the director asked to classify as contact: "P" is the lord, "M" his horse, an "A:", "S:" or "C:" text an attacker.</summary>
+    public bool TryContact(object? affected, object? affector, float victimHealth, out LdContact contact)
+    {
+        _watch.SetLord("P");
+        return _watch.TryContact(affected, affector, "M", victimHealth, a => a is string s && s.Length > 1 && "ASC".Contains(s[0]) && s[1] == ':', out contact);
+    }
+
+    public int BodyNotes { get; private set; }
+
+    public void NoteBodyEvent(object agent, string callback, string state) => BodyNotes++;
+
+    /// <summary>The body events the next <see cref="TakeBodyEvents"/> hands back; emptied by it.</summary>
+    public List<LdBodyEvent> PendingBodyEvents { get; } = new();
+
+    public IReadOnlyList<LdBodyEvent> TakeBodyEvents()
+    {
+        var taken = PendingBodyEvents.ToList();
+        PendingBodyEvents.Clear();
+        return taken;
+    }
+
+    private static string F(float value) => value.ToString("F0", System.Globalization.CultureInfo.InvariantCulture);
 
     public LdKitFacts ReadKit()
     {
@@ -151,10 +240,14 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
         return RestResult;
     }
 
+    /// <summary>Soldiers <see cref="Fell"/> has marked and the next plain attacker removals will consume as felled, as the registry's mark does for the real field.</summary>
+    public int FelledMarks { get; private set; }
+
     public int Fell(int count)
     {
         Calls.Add($"Fell:{count}");
         var felled = FellResult >= 0 ? FellResult : count;
+        FelledMarks += felled;
         AttackersStanding = Math.Max(0, AttackersStanding - felled);
         for (var i = 0; i < felled; i++)
             AttackerRemoved?.Invoke();
@@ -185,19 +278,66 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public string DescribeFormations() => "ai_formations=3 of 3";
 
+    /// <summary>
+    /// "A:troop" is a roster attacker, "S:troop" a summoned one and "C:troop" the commander; a trailing "!" marks the removal felled, and a plain "A:" consumes one mark <see cref="Fell"/> left. A
+    /// commander removed with no loss is reported (a rout), any other non-loss removal is nothing.
+    /// </summary>
     public LdRemoval Classify(object affected, bool loss)
     {
         var text = affected as string ?? "";
+        var key = KeyOf(text.TrimEnd('!'));
+        if (text.StartsWith("C:", StringComparison.Ordinal))
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss, key);
         if (!loss)
-            return default;
+            return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")
-            return new LdRemoval(LdRemovalKind.Player, "");
-        if (text.StartsWith("A:", StringComparison.Ordinal))
-            return new LdRemoval(LdRemovalKind.Attacker, text.Substring(2));
-        return text.StartsWith("D:", StringComparison.Ordinal) ? new LdRemoval(LdRemovalKind.Defender, text.Substring(2)) : default;
+            return new LdRemoval(LdRemovalKind.Player, "", Key: key);
+        if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
+        {
+            var marked = text.EndsWith("!", StringComparison.Ordinal);
+            if (!marked && text[0] == 'A' && FelledMarks > 0)
+            {
+                FelledMarks--;
+                marked = true;
+            }
+
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), text[0] == 'S' ? AttackerRole.Summoned : AttackerRole.Roster, marked, true, key);
+        }
+
+        return text.StartsWith("D:", StringComparison.Ordinal) ? new LdRemoval(LdRemovalKind.Defender, text.Substring(2), Key: key) : default;
     }
 
     public bool IsAttacker(object? agent) => agent is string s && s.StartsWith("A:", StringComparison.Ordinal);
+
+    private readonly Dictionary<string, AgentKey> _keys = new();
+
+    /// <summary>How many hits the director asked this field to resolve to keys.</summary>
+    public int HitAsks { get; private set; }
+
+    /// <summary>The key the field gave an agent text on its first hit (keys count from 1), or default for a text it has not been asked about.</summary>
+    public AgentKey KeyOf(string text) => _keys.TryGetValue(text, out var key) ? key : default;
+
+    /// <summary>An attacker ("A:", "S:" or "C:" text) striking a defender ("D:" or "P"): both get a key the first time they are named, as the registry hands one out.</summary>
+    public bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker)
+    {
+        HitAsks++;
+        victim = attacker = default;
+        if (affected is not string hit || affector is not string hitter)
+            return false;
+        if (!(hit == "P" || hit.StartsWith("D:", StringComparison.Ordinal)) || !(hitter.Length > 1 && "ASC".Contains(hitter[0]) && hitter[1] == ':'))
+            return false;
+
+        victim = Key(hit);
+        attacker = Key(hitter);
+        return true;
+    }
+
+    private AgentKey Key(string text)
+    {
+        if (!_keys.TryGetValue(text, out var key))
+            _keys[text] = key = new AgentKey(_keys.Count + 1);
+        return key;
+    }
 
     public void Clear() => Calls.Add("Clear");
 

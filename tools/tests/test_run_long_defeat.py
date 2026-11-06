@@ -59,15 +59,20 @@ def log_of(names, waves, stamp=None):
 
 # A run that clears 5 waves reached wave 5, which carries an affix, so it also owes the affix check (ld.AFFIX_FROM_CLEARS), and a report row with
 # a power the game reads back owes an affix-effect line too. A run that cleared 3 waves was owed a pick, which the bot takes in the next intermission: it owes the
-# boon check (ld.BOON_FROM_CLEARS). The reroll check is owed only when the report says a reroll was banked or spent.
+# boon check (ld.BOON_FROM_CLEARS). The reroll check is owed only when the report says a reroll was banked or spent. A run that cleared wave 4 met its first commander (ld.owes_commander).
 BOONED = ld.REQUIRED_CHECKS + ("boon",)
-STANDARD = BOONED + ("affix", "affix-effect")
+STANDARD = BOONED + ("affix", "affix-effect", "commander")
 FULL_LOG = log_of(STANDARD, 5)
 LOSE_LOG = log_of(ld.LOSE_CHECKS, 0)
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
 def wave_row(wave, seed=7, **more):
-    """A wave row of a schema 2 report with the affixes the game would roll for it: the scheduled count of the shipped schedule, drawn from the seed."""
-    return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)), **more}
+    """A wave row of a schema 2 report with the affixes the game would roll for it (the scheduled count of the shipped schedule, drawn from the seed) and the commander the
+    roster configures for the wave, killed with no ability used (the summon counts are 0)."""
+    spec = ld.shipped_commanders()
+    expected = ld.commander_expected(spec, wave) if spec else None
+    commander = None if expected is None else {"troop": expected[1], "rank": expected[0], "steps": expected[2], "outcome": "killed", "uses": {}, "usesAfterEnd": 0}
+    return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)),
+            "summoned": 0, "summonKills": 0, "summonFelled": 0, "commander": commander, **more}
 
 
 # The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
@@ -505,6 +510,20 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
 
+    def test_the_affix_effect_row_judges_the_blades_line_the_game_writes(self):
+        # The line is LongDefeatAffixChecks.Blades' detail under the affix-effect id, keyed by power (see LongDefeatBladesChecksTests for the exact text).
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.affix-effect")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} "
+        detail = "power=blades w=5 doses=12 hits=40 damage=96 owner_missing={} withheld=1"
+        passing = [(None, 1, head.format("pass") + detail.format(0))]
+        failing = [(None, 1, head.format("fail") + detail.format(1))]
+        skipping = [(None, 1, head.format("skip") + "power=blades w=5 doses=0 hits=0 damage=0 owner_missing=0 withheld=0 reason=no-hit")]
+
+        self.assertEqual(iv.judge_segment(row, passing, []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, failing, []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, skipping, []).verdict, iv.NOT_REACHED, "a wave in which nothing could show the poison proves nothing")
+
     def test_the_wave_row_needs_its_minimum_of_five_lines(self):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
         row = next(c for c in manifest.checks if c.id == "taom.long-defeat.wave")
@@ -520,7 +539,8 @@ class ManifestTests(unittest.TestCase):
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
-                          "taom.long-defeat.boon", "taom.long-defeat.reroll"):
+                          "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
+                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -573,6 +593,38 @@ class ManifestTests(unittest.TestCase):
         for key in ("w=", "health=", "spawn=", "late=", "troop=", "in_mix=", "damage=", "amplified=", "steps=", "over_room="):
             self.assertIn(key + "{", formatted, key)
         self.assertRegex(self.SCALE_LINE, r"result=pass w=[0-9]+ health=[0-9.]+ spawn=[0-9.]+ late=[0-9.]+ troop=\S+ in_mix=(true|false) damage=[0-9.]+ amplified=[0-9]+ steps=[0-9]+ over_room=[0-9]+")
+
+    SALLY_LINES = {
+        "sally": "w=1 how=remount mount=yes dist=0.4 deaths=0->0 old_state=Routed old_lost=no",
+        "sally-return": "w=1 dist=1.2 keep_radius=14.0 deaths=0->0",
+        "sally-contact": "w=1 t=12.5 hits_given=1 hits_taken=0 mount_hits=0 kills=0",
+    }
+
+    def test_the_sally_rows_read_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        for name, detail in self.SALLY_LINES.items():
+            row = next(c for c in manifest.checks if c.id == f"taom.long-defeat.{name}")
+            head = f"[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.{name} result="
+            self.assertEqual(row.absence, "not-reached", name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "pass " + detail)], []).verdict, iv.PASS, name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "fail " + detail)], []).verdict, iv.FAIL, name)
+            self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED, name)
+
+    def test_a_skipped_sally_line_proves_nothing_and_a_late_fail_beside_a_pass_is_a_fail(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.sally")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.sally result="
+        skipped = [(None, 1, head + "skip w=1 reason=no-sally-point")]
+        both = [(None, 1, head + "pass " + self.SALLY_LINES["sally"]), (None, 2, head + "fail w=1 reason=old-body-reported-lost callback=removed old_state=Killed")]
+        self.assertEqual(iv.judge_segment(row, skipped, []).verdict, iv.NOT_REACHED)
+        self.assertEqual(iv.judge_segment(row, both, []).verdict, iv.FAIL)
+
+    def test_the_sally_lines_are_the_ones_the_csharp_checks_format(self):
+        checks = source("Diagnostics", "LongDefeatSallyChecks.cs")
+        for key in ("w=", "how=", "mount=", "dist=", "deaths=", "old_state=", "old_lost=", "keep_radius=", "t=", "reason=", "callback="):
+            self.assertIn(key, checks, key)
+        for name in ("sally", "sally-return", "sally-contact"):
+            self.assertIn(f'"taom.long-defeat.{name}"', source("Diagnostics", "LongDefeatChecks.cs"))
 
     def test_the_manifest_names_the_issue_and_the_taom_log(self):
         data = self.manifest()
@@ -784,12 +836,12 @@ class SharedVectorTests(unittest.TestCase):
 
 PINNED_ROLLS = [
     # (seed, wave, the roll at the shipped schedule): the same rows as AffixPlanTests.cs, taken from an independent implementation.
-    (1, 5, ["discipline"]),
-    (1, 10, ["discipline", "drums"]),
-    (1, 15, ["lash", "eye", "hide"]),
-    (12345, 40, ["hide", "discipline", "lash"]),
-    (7, 5, ["discipline"]),
-    (0, 15, ["drums", "hide", "discipline"]),
+    (1, 5, ["hide"]),
+    (1, 10, ["drums", "terror"]),
+    (1, 15, ["hide", "hammer", "blades"]),
+    (12345, 40, ["drums", "discipline", "blades"]),
+    (7, 5, ["terror"]),
+    (0, 15, ["lash", "drums", "discipline"]),
 ]
 
 
@@ -819,7 +871,7 @@ class AffixReplayTests(unittest.TestCase):
         self.assertIsNotNone(found)
         names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
         self.assertEqual(list(ld.AFFIX_POOL), [names[part.strip()] for part in found.group(1).split(",")])
-        self.assertEqual(["lash", "drums", "eye", "discipline", "hide"], list(ld.AFFIX_POOL), "Slices 8 and 9 add hammer, terror and blades here")
+        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades"], list(ld.AFFIX_POOL), "all eight roll since Slice 9")
         self.assertEqual([i for i in ld.AFFIX_IDS if i in ld.AFFIX_POOL], list(ld.AFFIX_POOL), "the pool keeps the order of the eight")
         self.assertTrue(set(ld.AFFIX_EFFECT_IDS) <= set(ld.AFFIX_POOL), "an effect line is only owed for a power that can roll")
 
@@ -830,10 +882,9 @@ class AffixReplayTests(unittest.TestCase):
             for count in range(len(ld.AFFIX_POOL) + 1):
                 self.assertEqual(full[:count], ld.affix_roll(seed, 20, count), (seed, count))
 
-    def test_no_seed_rolls_a_power_that_does_nothing_yet(self):
-        for seed in range(200):
-            for wave in (5, 10, 15, 40):
-                self.assertFalse({"hammer", "terror", "blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
+    def test_every_power_of_the_eight_can_roll_now_that_each_acts(self):
+        seen = {power for seed in range(200) for wave in (5, 10, 15, 40) for power in ld.affix_roll(seed, wave, 3)}
+        self.assertEqual(set(ld.AFFIX_IDS), seen)
 
     def test_the_schedule_is_the_shipped_files(self):
         self.assertEqual(((5, 1), (10, 2), (15, 3)), ld.shipped_affix_schedule())
@@ -904,7 +955,7 @@ class AffixJudgeTests(unittest.TestCase):
         # The plan says "4 or more clears", which would fail a --waves 4 run: the check is written when a wave with affixes starts.
         ld.target_waves = 4
         self.assertEqual(ld.AFFIX_FROM_CLEARS, 5)
-        self.assertEqual(ld.judge(FINAL, self.report(cleared=4), log_of(BOONED, 4))[0], 0)
+        self.assertEqual(ld.judge(FINAL, self.report(cleared=4), log_of(BOONED + ("commander",), 4))[0], 0, "wave 4 met its commander")
 
     def test_a_report_showing_a_wave_with_affixes_owes_the_check_whatever_it_cleared(self):
         # --start-wave 5 --waves 1: one clear, but the wave carried an affix.
@@ -940,12 +991,12 @@ class AffixJudgeTests(unittest.TestCase):
         ld.target_waves = 5
         rows = [wave_row(w) for w in range(1, 6)]
         wrong = [{**row, "affixes": ["lash"]} if row["wave"] == 5 else row for row in rows]
-        self.assertEqual(["discipline"], rows[4]["affixes"], "seed 7 rolls discipline at wave 5")
+        self.assertEqual(["terror"], rows[4]["affixes"], "seed 7 rolls terror at wave 5")
         code, why = ld.judge(FINAL, self.report(rows=wrong), FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("wave 5", why)
         self.assertIn("lash", why)
-        self.assertIn("discipline", why)
+        self.assertIn("terror", why)
 
     def test_a_wave_that_lost_its_affixes_or_gained_one_fails(self):
         rows = [wave_row(w) for w in range(1, 6)]
@@ -971,7 +1022,7 @@ class AffixJudgeTests(unittest.TestCase):
     def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
         without = log_of(BOONED + ("affix",), 5)
         # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
-        seeds = {"discipline": 0, "hide": 2, "lash": 3, "eye": 8, "drums": 9}
+        seeds = {"eye": 0, "hide": 1, "lash": 2, "blades": 3, "discipline": 5, "terror": 7, "hammer": 9, "drums": 15}
         for power, seed in seeds.items():
             report = self.report(seed=seed, rows=[wave_row(w, seed) for w in range(1, 6)])
             self.assertEqual([power], report["waves"][4]["affixes"])
@@ -982,7 +1033,7 @@ class AffixJudgeTests(unittest.TestCase):
         self.assertEqual(sorted(seeds), sorted(ld.AFFIX_EFFECT_IDS))
 
     def test_the_effect_line_may_be_a_pass_or_a_skip_but_a_fail_fails_the_run(self):
-        base = log_of(BOONED + ("affix",), 5)
+        base = log_of(BOONED + ("affix", "commander"), 5)
         line = "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} power=hide troop=x"
         self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("pass"))[0], 0)
         self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("skip"))[0], 0, "an unarmoured soldier cannot show hide: still read")
@@ -990,7 +1041,10 @@ class AffixJudgeTests(unittest.TestCase):
 
     def test_a_row_with_no_effect_power_owes_no_effect_line(self):
         self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
-        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer", "eye"]}]}))
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades proves its poison under the same id")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades", "eye"]}]}))
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer"]}]}), "the hammer proves its engine write under the same id")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["terror"]}]}), "terror proves its pulses under the same id")
 
     def test_a_report_with_no_wave_rows_has_nothing_to_replay(self):
         self.assertIsNone(ld.affix_problem({"seed": 7}))
@@ -1046,6 +1100,13 @@ class PhaseTwoJudgeTests(unittest.TestCase):
             self.assertEqual(code, 1, count)
             self.assertIn("owner_missing=" + count, why)
 
+    def test_a_blades_line_with_owner_missing_fails_the_run_even_as_a_pass(self):
+        line = "\n[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=blades w=5 doses=3 hits=4 damage=9 owner_missing={} withheld=0"
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG + line.format(0))[0], 0)
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG + line.format(2))
+        self.assertEqual(code, 1)
+        self.assertIn("owner_missing=2", why)
+
     def test_the_largest_owner_missing_in_the_log_is_the_one_reported(self):
         log = FULL_LOG + "\nx owner_missing=0\ny owner_missing=4\nz owner_missing=2"
         self.assertIn("owner_missing=4", ld.judge(FINAL, REPORT, log)[1])
@@ -1064,6 +1125,43 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         full = log_of(STANDARD + ("sally", "sally-return"), 5)
         self.assertEqual(ld.judge(FINAL, report, full)[0], 0)
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("sally",), 5))[0], 1)
+
+    def cavalry_run(self):
+        offer = mock.patch.object(ld, "class_offer", return_value=ld.CLASSES + ("cavalry",))
+        offer.start()
+        self.addCleanup(offer.stop)
+        ld.expected_report = {"class": "cavalry"}
+        return {**REPORT, "class": "cavalry"}, log_of(STANDARD + ("sally", "sally-return"), 5)
+
+    def test_sally_contact_is_reported_for_a_cavalry_run_and_never_required(self):
+        report, base = self.cavalry_run()
+        none = ld.judge(FINAL, report, base)
+        self.assertEqual(none[0], 0, none[1])
+        self.assertIn("sally-contact: not reached", none[1])
+        contact = pass_line("sally-contact") + "\n" + pass_line("sally-contact").replace("detail=1", "detail=2")
+        got = ld.judge(FINAL, report, base + "\n" + contact)
+        self.assertEqual(got[0], 0, got[1])
+        self.assertIn("sally-contact: 2 pass, 0 skip", got[1])
+        quiet = base + "\n" + pass_line("sally-contact").replace("result=pass", "result=skip")
+        self.assertIn("sally-contact: 0 pass, 1 skip", ld.judge(FINAL, report, quiet)[1])
+
+    def test_a_failed_sally_contact_line_still_fails_the_run_like_any_failed_check(self):
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally-contact").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_late_loss_report_on_the_old_body_fails_the_run_through_the_sally_check(self):
+        # The game writes a second line for the wave, result=fail, when native reports the faded body killed after the step passed: any failed check line fails the run.
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
+
+    def test_a_foot_class_report_adds_no_contact_note(self):
+        for name in ld.CLASSES:
+            ld.expected_report = {"class": name}
+            self.assertNotIn("sally-contact", ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[1], repr(name))
 
     def test_another_class_asks_nothing_extra(self):
         for name in ld.CLASSES:
@@ -1189,8 +1287,8 @@ class DeepJudgeTests(unittest.TestCase):
         self.assertIn("final", why)
 
     def test_the_deep_ids_are_owned_by_a_checks_class_or_named_as_not_built_yet(self):
-        # Slice 7 adds this id to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2, affix in Slice 3, class in Slice 5).
-        not_built_yet = {"commander"}
+        # Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2, affix in Slice 3, class in Slice 5, commander in Slice 7). Nothing is owed now.
+        not_built_yet = set()
         checks = source("Diagnostics", "LongDefeatChecks.cs") + (REPO / "Client" / "Features" / "LongDefeat" / "LongDefeatClientChecks.cs").read_text(encoding="utf-8")
         for name in ld.DEEP_CHECKS:
             owned = f'"taom.long-defeat.{name}"' in checks
@@ -1530,25 +1628,27 @@ class ClassManifestTests(unittest.TestCase):
         self.assertTrue(any("second question" in c for c in claims), claims)
 
 
-# The pinned boon draws over the shipped boons.json (twelve rows at Slice 4): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
-# pick 2 after taking stout_hearts_at_the_gate from draw 1. The same rows are pinned in LongDefeatShippedConfigTests.cs, so the bot's replay cannot drift from
+# The pinned boon draws over the shipped boons.json (thirteen free rows since Slice 7 added the third Legend row): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
+# pick 2 after taking the first card of draw 1. The same rows are pinned in LongDefeatShippedConfigTests.cs, so the bot's replay cannot drift from
 # the game. They move when a later slice adds rows to boons.json, and both suites move with them.
 BOON_PINNED = (
-    (1, 1, 0, ["granary_stores", "glittering_caves_refuge", "weregild_of_the_mark"]),
-    (1, 1, 1, ["stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras"]),
-    (1, 1, 2, ["granary_stores", "weregild_of_the_mark", "healers_of_the_hold"]),
+    (1, 1, 0, ["haggler_of_edoras", "stout_hearts_at_the_gate", "the_long_watch"]),
+    (1, 1, 1, ["hornblowers_bargain", "riddermark_levy", "wains_of_the_westfold"]),
+    (1, 1, 2, ["the_long_watch", "healers_of_the_hold", "granary_stores"]),
 )
-BOON_PINNED_SECOND = (1, 2, 0, ["light_of_the_phial", "riddermark_levy", "haggler_of_edoras"])
+BOON_PINNED_SECOND = (1, 2, 0, ["haggler_of_edoras", "granary_stores", "healers_of_the_hold"])
 
 
-def boon_pool(owned=()):
+def boon_pool(owned=(), class_id="", groups=()):
+    """The rows a draw may use: the free categories, the class rows of `class_id`, and the troop category rows of `groups`, less `owned` (written out here, apart from ld.boon_eligible)."""
     rows, weight = ld.shipped_boons()
-    return [r for r in rows if r["category"] in ld.BOON_FREE_CATEGORIES and r["id"] not in owned], weight
+    return [r for r in rows if r["id"] not in owned
+            and (r["category"] in ld.BOON_FREE_CATEGORIES or (r["category"] == "class" and r["class"] == class_id) or r["category"] in groups)], weight
 
 
-def boon_picks(seed=1, rerolls=1, take=None):
+def boon_picks(seed=1, rerolls=1, take=None, class_id="", groups=()):
     """The boons[] a game would report for one pick drawn from this seed with `rerolls` rerolls, taking `take` (a card of the last draw) or the first."""
-    pool, weight = boon_pool()
+    pool, weight = boon_pool(class_id=class_id, groups=groups)
     draws, shown = [], []
     for draw in range(rerolls + 1):
         shown = ld.boon_cards(seed, 1, draw, pool, weight, shown)
@@ -1613,9 +1713,12 @@ class BoonReplayTests(unittest.TestCase):
                     path.write_text(text, encoding="utf-8")
                 self.assertEqual(ld.shipped_boons(path), ([], 1))
 
-    def test_no_shipped_row_needs_the_garrison_yet(self):
+    def test_the_shipped_file_holds_class_and_troop_rows_for_the_replay_to_draw(self):
         rows, _ = ld.shipped_boons()
-        self.assertTrue(all(r["category"] in ld.BOON_FREE_CATEGORIES for r in rows), "a troop row needs the replay extended first (boon_problem refuses it)")
+        for category in ld.BOON_TROOP_CATEGORIES:
+            self.assertGreaterEqual(sum(r["category"] == category for r in rows), 3, category)
+        for cid in ld.CLASSES:
+            self.assertGreaterEqual(sum(r["category"] == "class" and r["class"] == cid for r in rows), 3, cid)
 
     def test_a_replayed_pick_with_a_reroll_passes(self):
         report = {"seed": 1, "wavesCleared": 5, "startRerolls": 1, "boons": boon_picks(1, rerolls=1), "rerolls": {"earned": 2, "used": 1, "banked": 1}}
@@ -1627,7 +1730,7 @@ class BoonReplayTests(unittest.TestCase):
         report = {"seed": 1, "wavesCleared": 5, "boons": picks, "rerolls": {"earned": 2, "used": 1, "banked": 1}}
         problem = ld.boon_problem(report)
         self.assertIn("pick 1 draw 1", problem)
-        self.assertIn("stout_hearts_at_the_gate", problem)
+        self.assertIn("hornblowers_bargain", problem)
 
     def test_a_taken_card_that_was_never_shown_fails(self):
         picks = boon_picks(1, rerolls=0)
@@ -1719,12 +1822,6 @@ class BoonReplayTests(unittest.TestCase):
             self.assertIsNone(ld.boon_problem({**archer, "boons": [{"pick": 1, "offered": both, "taken": both[0][0], "takenBeforeWave": 4}]}, path))
             self.assertIsNone(ld.boon_problem({**archer, "class": "", "boons": [{"pick": 1, "offered": only, "taken": "w", "takenBeforeWave": 4}]}, path))
 
-    def test_a_troop_category_row_is_refused_until_the_replay_reads_the_garrison(self):
-        with tempfile.TemporaryDirectory() as folder:
-            path = Path(folder) / "boons.json"
-            path.write_text(json.dumps({"boons": [{"id": "x", "category": "cavalry"}]}), encoding="utf-8")
-            self.assertIn("troop category", ld.boon_problem({"seed": 1, "boons": []}, path))
-
 
 class BoonJudgeTests(unittest.TestCase):
 
@@ -1737,7 +1834,7 @@ class BoonJudgeTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, picks=None, cleared=5, **more):
-        picks = boon_picks(1, rerolls=1) if picks is None else picks
+        picks = boon_picks(1, rerolls=1, class_id=ld.bot_class(1)) if picks is None else picks
         used = sum(max(0, len(p["offered"]) - 1) for p in picks)
         return {**REPORT, "seed": 1, "class": ld.bot_class(1), "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
                 "waves": [wave_row(w, 1) for w in range(1, cleared + 1)], **more}
@@ -1748,12 +1845,12 @@ class BoonJudgeTests(unittest.TestCase):
         code, why = ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("reroll",), 4))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.boon", why)
-        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("boon", "reroll"), 4))[0], 0)
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("boon", "reroll", "commander"), 4))[0], 0)
 
     def test_a_run_that_stops_at_the_third_clear_never_sees_the_intermission_and_owes_neither(self):
         # --waves 3: the pick opens at the clear that ends the run, so the bot has no intermission to take it in.
         ld.target_waves = 3
-        report = self.report(picks=[{"pick": 1, "wave": 3, "offered": [boon_picks(1, rerolls=0)[0]["offered"][0]], "taken": None, "takenBeforeWave": 0}], cleared=3,
+        report = self.report(picks=[{"pick": 1, "wave": 3, "offered": [boon_picks(1, rerolls=0, class_id=ld.bot_class(1))[0]["offered"][0]], "taken": None, "takenBeforeWave": 0}], cleared=3,
                              rerolls={"earned": 1, "used": 0, "banked": 1})
         self.assertIsNone(ld.boon_problem(report))
         self.assertFalse(ld.owes_boon(report))
@@ -1774,14 +1871,14 @@ class BoonJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("reroll",), 5))[0], 0)
 
     def test_a_run_armed_with_no_reroll_that_spent_none_owes_no_reroll_check(self):
-        picks = boon_picks(1, rerolls=0)
+        picks = boon_picks(1, rerolls=0, class_id=ld.bot_class(1))
         report = self.report(picks=picks, startRerolls=0, rerolls={"earned": 1, "used": 0, "banked": 1})
         ld.expected_report = {"startRerolls": 0}
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0)
         self.assertFalse(ld.owes_reroll(report))
 
     def test_boons_that_do_not_replay_fail_the_run_naming_the_draw(self):
-        picks = boon_picks(1, rerolls=1)
+        picks = boon_picks(1, rerolls=1, class_id=ld.bot_class(1))
         picks[0]["offered"][0] = ["riders_at_dawn", "the_long_watch", "haggler_of_edoras"]
         code, why = ld.judge(FINAL, self.report(picks=picks), log_of(STANDARD + ("reroll",), 5))
         self.assertEqual(code, 1)
@@ -1824,8 +1921,8 @@ class BoonAffixCutTests(unittest.TestCase):
         self.assertIn("cut of -1", ld.affix_problem(report))
 
     def test_the_cut_shortens_the_roll_the_game_took_not_the_schedule_count(self):
-        # A schedule row can ask for 8 while the pool holds 5: the game rolls 5 and the cut leaves 4.
-        report = self.report([{"wave": 11, "affixes": ld.affix_roll(self.SEED, 11, 8)[:4]}])
+        # A schedule row can ask for 8 while the pool holds fewer: the game rolls the whole pool and the cut leaves one less.
+        report = self.report([{"wave": 11, "affixes": ld.affix_roll(self.SEED, 11, 8)[:len(ld.AFFIX_POOL) - 1]}])
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "affixes.json"
             path.write_text('{"schedule": [{"fromWave": 1, "count": 8}]}', encoding="utf-8")
@@ -1847,6 +1944,387 @@ class BoonAffixCutTests(unittest.TestCase):
         picks = [{"pick": 1, "taken": "light_of_the_phial", "takenBeforeWave": 11}, {"pick": 2, "taken": "riders_at_dawn", "takenBeforeWave": 14}]
         report = {"seed": self.SEED, "boons": picks}
         self.assertEqual((ld.affix_cut(report, 13), ld.affix_cut(report, 14)), (-1, -3))
+
+
+# Seed 1, pick 1, an archer at Helm's Deep (the garrison and shop hold infantry, archers and a Cavalry troop on the shop list): 25 rows are eligible. Pinned in
+# LongDefeatShippedConfigTests.cs too, over the same boons.json, so the replay of class and troop rows cannot drift from the game.
+BOON_PINNED_ARCHER = (
+    (1, 1, 0, ["marksmans_call", "hornblowers_bargain", "spears_of_the_westfold"]),
+    (1, 1, 1, ["shields_locked", "the_long_watch", "hearts_of_the_eored"]),
+    (1, 1, 2, ["spears_of_the_westfold", "glittering_caves_refuge", "marksmans_call"]),
+)
+ALL_GROUPS = ("infantry", "archers", "cavalry")
+
+
+class TroopGroupTests(unittest.TestCase):
+    """A defender's group is its character's default_group through the engine's flags (the game's BoonTargets.OfCharacter): the replay needs it to know which troop rows were eligible."""
+
+    def test_each_default_group_lands_in_one_group_mounted_first(self):
+        expected = {"Infantry": "infantry", "HeavyInfantry": "infantry", "Ranged": "archers", "Skirmisher": "archers", "LightCavalry": "archers", "Cavalry": "cavalry",
+                    "HeavyCavalry": "cavalry", "HorseArcher": "cavalry", None: "infantry", "NoSuchGroup": "infantry", "": "infantry"}
+        for default_group, group in expected.items():
+            self.assertEqual(ld.troop_group(default_group), group, default_group)
+
+    def test_the_two_flag_tables_are_the_ones_the_binding_test_pins_to_the_engine(self):
+        text = (REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "LongDefeatBindingTests.cs").read_text(encoding="utf-8")
+        table = dict(re.findall(r"(\w+):(M?R?)[,\"]", re.search(r'Assert\.AreEqual\("(Infantry:[^"]+)"', text).group(1)))
+        self.assertEqual({k.lower() for k, v in table.items() if "M" in v}, set(ld.MOUNTED_GROUPS))
+        self.assertEqual({k.lower() for k, v in table.items() if "R" in v}, set(ld.RANGED_GROUPS))
+
+    def test_helms_holds_a_troop_of_each_group_because_the_kings_knights_are_a_cavalry_troop(self):
+        self.assertEqual(ld.troop_groups("helms"), set(ALL_GROUPS))
+        self.assertEqual(ld.troop_groups(), set(ALL_GROUPS), "the default fortress is helms")
+        self.assertEqual(ld.troop_groups("no_such_fortress"), set())
+
+    def write_world(self, folder, garrison, offers, troops):
+        folder = Path(folder)
+        (folder / "fortresses.json").write_text(json.dumps({"fortresses": [{"id": "f", "shop": "s", "garrison": [{"troop": t, "class": c, "count": 1} for t, c in garrison]}]}), encoding="utf-8")
+        (folder / "shop.json").write_text(json.dumps({"shops": {"s": {"offers": [{"id": t, "troop": t, "class": c} for t, c in offers]}}}), encoding="utf-8")
+        body = "".join(f'<NPCCharacter id="{t}"' + (f' default_group="{g}"' if g else "") + "/>" for t, g in troops)
+        (folder / "troops.xml").write_text(f"<NPCCharacters>{body}</NPCCharacters>", encoding="utf-8")
+        return mock.patch.multiple(ld, FORTRESS_FILE=folder / "fortresses.json", SHOP_FILE=folder / "shop.json", TROOP_FILE=folder / "troops.xml")
+
+    def test_the_groups_come_from_the_garrison_and_the_shop_of_the_named_fortress(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with self.write_world(folder, [("a", "Infantry")], [("b", "Ranged")], [("a", "Infantry"), ("b", "Ranged")]):
+                self.assertEqual(ld.troop_groups("f"), {"infantry", "archers"})
+            with self.write_world(folder, [("a", "Infantry")], [("k", "Infantry")], [("a", "Infantry"), ("k", "Cavalry")]):
+                self.assertEqual(ld.troop_groups("f"), {"infantry", "cavalry"}, "a rider on the shop list is cavalry whatever slot it fills")
+
+    def test_a_troop_the_file_does_not_hold_falls_back_on_its_formation_slot_as_the_game_does(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with self.write_world(folder, [("x", "Ranged"), ("y", "Infantry")], [], []):
+                self.assertEqual(ld.troop_groups("f"), {"archers", "infantry"})
+
+    def test_a_missing_troop_file_still_gives_the_slot_groups(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with self.write_world(folder, [("x", "Ranged")], [], []), mock.patch.object(ld, "TROOP_FILE", Path(folder) / "none.xml"):
+                self.assertEqual(ld.troop_groups("f"), {"archers"})
+
+
+class TargetBoonReplayTests(unittest.TestCase):
+    """The class and troop rows in the replay (phase2-plan.md Slice 6): the deck is built with the run's class and the groups its garrison and shop hold."""
+
+    def report(self, picks, **more):
+        used = sum(max(0, len(p["offered"]) - 1) for p in picks)
+        return {"seed": 1, "class": "archer", "fortress": "helms", "wavesCleared": 5, "startRerolls": 1, "boons": picks,
+                "rerolls": {"earned": 2, "used": used, "banked": 2 - used}, **more}
+
+    def pick(self, class_id="archer", groups=ALL_GROUPS, rerolls=1, take=None):
+        return boon_picks(1, rerolls=rerolls, take=take, class_id=class_id, groups=groups)
+
+    def test_the_python_draw_over_an_archers_pool_gives_the_pinned_cards(self):
+        pool, weight = boon_pool(class_id="archer", groups=ALL_GROUPS)
+        self.assertEqual(len(pool), 25)
+        shown = []
+        for seed, pick, draw, cards in BOON_PINNED_ARCHER:
+            shown = ld.boon_cards(seed, pick, draw, pool, weight, shown)
+            self.assertEqual(shown, cards, (seed, pick, draw))
+
+    def test_every_archer_vector_is_also_pinned_in_the_csharp_test(self):
+        text = (REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Config" / "LongDefeatShippedConfigTests.cs").read_text(encoding="utf-8")
+        for _, _, _, cards in BOON_PINNED_ARCHER:
+            self.assertIn("new[] { " + ", ".join(f'"{c}"' for c in cards) + " }", text, cards)
+
+    def test_a_pick_drawn_over_the_class_and_troop_rows_replays(self):
+        report = self.report(self.pick())
+        self.assertIsNone(ld.boon_problem(report))
+        self.assertTrue(any(r["category"] in ld.BOON_TROOP_CATEGORIES + ("class",) for r in ld.shipped_boons()[0] if r["id"] in report["boons"][0]["offered"][0]),
+                        "the pinned first draw must hold a troop or class row, or this test proves nothing")
+
+    def test_a_class_row_of_another_class_is_never_drawn_for_this_class(self):
+        report = self.report(self.pick(class_id="two_handed"), **{"class": "archer"})
+        self.assertIn("pick 1 draw", ld.boon_problem(report) or "")
+
+    def test_a_run_of_another_class_draws_its_own_class_rows(self):
+        report = self.report(self.pick(class_id="sword_and_board"), **{"class": "sword_and_board"})
+        self.assertIsNone(ld.boon_problem(report))
+        self.assertIn("shieldwall_captain", [r["id"] for r in boon_pool(class_id="sword_and_board", groups=ALL_GROUPS)[0]])
+        self.assertNotIn("shieldwall_captain", [r["id"] for r in boon_pool(class_id="archer", groups=ALL_GROUPS)[0]])
+
+    def test_a_troop_row_is_only_drawn_when_the_fortress_holds_that_group(self):
+        no_cavalry = self.report(self.pick(groups=("infantry", "archers")))
+        self.assertIn("pick 1 draw", ld.boon_problem(no_cavalry) or "", "helms holds a cavalry troop, so a pool without cavalry rows is not the game's")
+        with tempfile.TemporaryDirectory() as folder:
+            troops = Path(folder) / "troops.xml"
+            troops.write_text('<NPCCharacters><NPCCharacter id="fow_rohan_edoras_golden_hall_eorlingas_rider" default_group="Infantry"/></NPCCharacters>', encoding="utf-8")
+            with mock.patch.object(ld, "TROOP_FILE", troops):
+                self.assertEqual(ld.troop_groups("helms"), set(ALL_GROUPS) - {"cavalry"}, "with the rider made infantry the shop holds no cavalry troop")
+                self.assertIsNone(ld.boon_problem(self.report(self.pick(groups=("infantry", "archers")))))
+
+    def test_a_report_that_names_no_fortress_replays_over_the_free_and_class_rows_only(self):
+        report = self.report(self.pick(groups=()))
+        del report["fortress"]
+        self.assertIsNone(ld.boon_problem(report))
+
+    def test_a_troop_row_of_a_missing_group_is_not_eligible(self):
+        rows = {"id": "c", "category": "cavalry", "class": "", "cut": 0, "reads": False}
+        self.assertFalse(ld.boon_eligible(rows, "", {"infantry"}))
+        self.assertTrue(ld.boon_eligible(rows, "", {"cavalry"}))
+        self.assertTrue(ld.boon_eligible({**rows, "category": "warchest"}, "", set()))
+        self.assertFalse(ld.boon_eligible({**rows, "category": "class", "class": "archer"}, "", set()))
+        self.assertTrue(ld.boon_eligible({**rows, "category": "class", "class": "archer"}, "archer", set()))
+
+
+class NamedBoonSeedTests(unittest.TestCase):
+    """The seeds 1079.toml names for the boon check take a boon the unattended bot can read back. The bot buys the first offer of the slot it wants, so no cavalry ever
+    stands in its run and a cavalry boon could only write read=skip (reason=no-soldier): a named seed must take a boon of a group that is fielded."""
+
+    # (seed, class armed with --class or None for the bot's own draw, the boon its first pick takes, the target group it changes)
+    SEEDS = ((33, None, "stout_yeomanry", "infantry"), (22, "archer", "marksmans_call", "archers"), (4, None, "steady_hand", "player"))
+    FIELDED = {"infantry", "archers", "player"}
+
+    def first_pick(self, seed, class_id):
+        """The game's bot at the first pick (ShopBot.Decide): one reroll from the start bank, more only while every card has a drawback, then the first card without one."""
+        raw = json.loads(ld.BOON_FILE.read_text(encoding="utf-8-sig"))
+        drawback = {b["id"]: bool(b.get("drawback")) for b in raw["boons"]}
+        rows, weight = ld.shipped_boons()
+        groups = ld.troop_groups()
+        pool = [r for r in rows if ld.boon_eligible(r, class_id, groups)]
+        cards = ld.boon_cards(seed, 1, 0, pool, weight, [])
+        bank, draw = ld.DEFAULT_START_REROLLS, 0
+        while bank > 0 and (draw == 0 or all(drawback[c] for c in cards)):
+            draw += 1
+            bank -= 1
+            cards = ld.boon_cards(seed, 1, draw, pool, weight, cards)
+        return next((c for c in cards if not drawback[c]), cards[0]), raw
+
+    def seed_line(self):
+        text = (REPO / "tools" / "ingame_checks" / "1079.toml").read_text(encoding="utf-8")
+        return next(line for line in text.splitlines() if line.startswith("# Seeds whose first offer"))
+
+    def test_each_named_seed_takes_the_boon_it_is_named_for_and_that_boon_changes_a_group_that_stands(self):
+        for seed, armed, boon, group in self.SEEDS:
+            class_id = armed or ld.bot_class(seed)
+            taken, raw = self.first_pick(seed, class_id)
+            self.assertEqual(taken, boon, (seed, armed))
+            row = next(b for b in raw["boons"] if b["id"] == boon)
+            targets = {e["target"] for e in row["effects"] + row.get("drawback", []) if e.get("key") in ld.BOON_READ_KEYS}
+            self.assertEqual(targets, {group}, (seed, boon))
+            self.assertLessEqual(targets, self.FIELDED, (seed, boon))
+
+    def test_the_bot_never_buys_a_rider_because_the_first_offer_of_each_slot_is_not_cavalry(self):
+        known = {c.get("id"): c.get("default_group") for c in ld.ET.parse(ld.TROOP_FILE).getroot().iter("NPCCharacter")}
+        shop = json.loads(ld.SHOP_FILE.read_text(encoding="utf-8-sig"))["shops"]["rohan"]["offers"]
+        for slot in ("Infantry", "Ranged"):
+            first = next(o for o in shop if o["class"] == slot)
+            self.assertNotEqual(ld.troop_group(known[first["troop"]]), "cavalry", first["id"])
+        fortress = next(f for f in json.loads(ld.FORTRESS_FILE.read_text(encoding="utf-8-sig"))["fortresses"] if f["id"] == "helms")
+        for row in fortress["garrison"]:
+            self.assertNotEqual(ld.troop_group(known[row["troop"]]), "cavalry", row["troop"])
+
+    def test_the_manifest_names_exactly_these_seeds_and_no_cavalry_one(self):
+        line = self.seed_line()
+        for seed, armed, _, _ in self.SEEDS:
+            self.assertIn((f"--class {armed} " if armed else "") + f"--seed {seed}", line)
+        self.assertNotIn("cavalry", line.lower())
+
+
+class BoonReadBackJudgeTests(unittest.TestCase):
+    """A taken boon with a stat or health key was read back from a soldier of its target: the boon line says read=pass or read=skip, or the run never proved the boon reached anyone."""
+
+    # Seed 5 draws wains_of_the_westfold, swift_nock and haggler_of_edoras first for its class (sword_and_board), one of which owes a read-back; the draw moves when a slice adds boon rows.
+    SEED = 5
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def card(self, reads):
+        """A card of the first draw for the bot's class at Helm's Deep that does (reads) or does not owe a read-back; the draw moves when a slice adds boon rows."""
+        draw = boon_picks(self.SEED, rerolls=0, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)[0]["offered"][0]
+        owed = {r["id"]: r["reads"] for r in ld.shipped_boons()[0]}
+        return next(c for c in draw if owed[c] == reads)
+
+    def report(self, taken, cleared=5):
+        picks = boon_picks(self.SEED, rerolls=0, take=taken, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)
+        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": ld.bot_class(self.SEED), "wavesCleared": cleared, "startRerolls": 0, "boons": picks,
+                "rerolls": {"earned": 1, "used": 0, "banked": 1}, "waves": [wave_row(w, self.SEED) for w in range(1, cleared + 1)]}
+
+    def test_the_read_owed_rows_are_exactly_those_with_a_stat_or_health_key(self):
+        owed = {r["id"] for r in ld.shipped_boons()[0] if r["reads"]}
+        self.assertIn("stout_yeomanry", owed)
+        self.assertIn("steady_aim", owed)
+        self.assertNotIn("spears_of_the_westfold", owed, "a damage-only boon is read at the blow, not from a driven property")
+        self.assertNotIn("granary_stores", owed)
+        self.assertNotIn("light_of_the_phial", owed)
+
+    def test_a_pick_of_a_read_owed_boon_owes_its_read_token_once_a_later_wave_cleared(self):
+        self.assertEqual(ld.read_owed_picks(self.report("stout_yeomanry")), [1])
+        self.assertEqual(ld.read_owed_picks(self.report("granary_stores")), [])
+        self.assertEqual(ld.read_owed_picks(self.report("stout_yeomanry", cleared=3)), [], "the run ended at the clear that opened the pick")
+        self.assertEqual(ld.read_owed_picks({"boons": [{"pick": 1, "taken": None, "wave": 3}], "wavesCleared": 5}), [])
+        self.assertEqual(ld.read_owed_picks({"wavesCleared": 5}), [])
+
+    def log(self, read):
+        tail = f" read={read}" if read else ""
+        boon = ("[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.boon result=pass p=1 cards=3 eligible=24 offered=a,b,c taken=stout_yeomanry "
+                "draws=1 distinct=true applied=true gold=0" + tail)
+        return log_of(STANDARD, 5).replace(pass_line("boon"), boon)
+
+    def judged(self, read, taken=None):
+        return ld.judge(FINAL, self.report(taken or self.card(True)), self.log(read))
+
+    def test_a_run_whose_boon_line_lacks_the_read_token_fails_naming_the_pick(self):
+        code, why = self.judged(None)
+        self.assertEqual(code, 1)
+        self.assertIn("pick(s) 1", why)
+        self.assertIn("read=", why)
+
+    def test_a_read_that_failed_never_satisfies_the_judge(self):
+        self.assertEqual(self.judged("fail")[0], 1)
+
+    def test_a_pass_or_a_skip_read_satisfies_the_judge(self):
+        for read in ("pass", "skip"):
+            code, why = self.judged(read)
+            self.assertEqual(code, 0, f"{read}: {why}")
+
+    def test_a_boon_with_nothing_to_read_owes_no_token(self):
+        # A card with no stat or health key (a war chest or damage-only boon) is read at the blow or in the purse, not from a driven property.
+        code, why = self.judged(None, taken=self.card(False))
+        self.assertEqual(code, 0, why)
+
+    def test_the_csharp_line_carries_the_token_the_wrapper_asks_for(self):
+        source_text = source("Diagnostics", "LongDefeatBoonChecks.cs")
+        self.assertIn('" read=" + read', source_text)
+        self.assertIn("p={Num(record.Pick)} cards={Num(last.Ids.Count)}", source_text)
+
+    def test_the_read_keys_are_the_games_stat_keys_and_health(self):
+        plan = source("Domain", "BoonPlan.cs")
+        stat_block = re.search(r"StatKeys \{ get; \} = new\[\]\s*\{(.*?)\};", plan, re.S).group(1)
+        names = re.findall(r"(\w+)", stat_block)
+        values = dict(re.findall(r'public const string (\w+) = "(\w+)";', plan))
+        self.assertEqual(sorted([values[n] for n in names] + ["healthPercent"]), sorted(ld.BOON_READ_KEYS))
+
+
+class CommanderJudgeTests(unittest.TestCase):
+    """The commanders in the report (phase2-plan.md section 7, rules 16 and 17): one at each multiple of the roster's `every` with the configured troop, rank and steps, every summon
+    accounted for, and the `commander` and `summon` checks owed by a run that reached them."""
+
+    SEED = 5
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def commander(self, troop, rank, steps=0, outcome="killed", uses=None, after_end=0):
+        return {"troop": troop, "rank": rank, "steps": steps, "outcome": outcome, "uses": uses if uses is not None else {"war_cry": 1}, "usesAfterEnd": after_end}
+
+    def rows(self, through=5, **overrides):
+        """Wave rows 1..through with the configured commander at the multiples of four; `overrides` replaces fields of a row by wave number (w4=...)."""
+        shipped = {4: self.commander("lord_I3_1", "captain"), 8: self.commander("lord_I1_1", "lieutenant"), 12: self.commander("lord_I4_1", "general"),
+                   16: self.commander("lord_I4_1", "general", steps=1)}
+        rows = []
+        for w in range(1, through + 1):
+            row = wave_row(w, self.SEED, summoned=0, summonKills=0, summonFelled=0, commander=shipped.get(w))
+            rows.append({**row, **overrides.get(f"w{w}", {})})
+        return rows
+
+    def report(self, rows, **more):
+        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": ld.bot_class(self.SEED), "wavesCleared": len(rows), "startRerolls": 0, "waves": rows,
+                "boons": [], "rerolls": {"earned": 0, "used": 0, "banked": 0}, **more}
+
+    def test_the_shipped_commanders_are_read_from_waves_json(self):
+        spec = ld.shipped_commanders()
+        self.assertEqual(spec["every"], 4)
+        self.assertEqual(spec["ranks"], [("captain", "lord_I3_1"), ("lieutenant", "lord_I1_1"), ("general", "lord_I4_1")])
+        self.assertEqual(spec["summon"], {"summon_uruks"})
+        self.assertEqual(spec["max_steps"], 10)
+        self.assertIsNone(ld.shipped_commanders("no_such_fortress"))
+
+    def test_the_rank_and_steps_follow_the_ranks_then_the_steps(self):
+        spec = ld.shipped_commanders()
+        got = {w: ld.commander_expected(spec, w) for w in (3, 4, 8, 12, 16, 20, 200)}
+        self.assertIsNone(got[3])
+        self.assertEqual(got[4], ("captain", "lord_I3_1", 0))
+        self.assertEqual(got[8], ("lieutenant", "lord_I1_1", 0))
+        self.assertEqual(got[12], ("general", "lord_I4_1", 0))
+        self.assertEqual(got[16], ("general", "lord_I4_1", 1))
+        self.assertEqual(got[20], ("general", "lord_I4_1", 2))
+        self.assertEqual(got[200], ("general", "lord_I4_1", 10), "the steps stop at maxSteps")
+
+    def test_a_clean_run_of_waves_with_commanders_replays(self):
+        self.assertIsNone(ld.commander_problem(self.report(self.rows(16))))
+
+    def test_a_report_with_no_waves_or_an_unknown_fortress_has_nothing_to_replay(self):
+        self.assertIsNone(ld.commander_problem({"fortress": "helms"}))
+        self.assertIsNone(ld.commander_problem(self.report(self.rows(5), fortress="no_such_fortress")))
+
+    def test_a_missing_or_extra_commander_fails_naming_the_wave(self):
+        self.assertIn("wave 4", ld.commander_problem(self.report(self.rows(5, w4={"commander": None}))))
+        extra = ld.commander_problem(self.report(self.rows(5, w5={"commander": self.commander("lord_I3_1", "captain")})))
+        self.assertIn("wave 5", extra)
+
+    def test_a_wrong_troop_rank_or_steps_fails(self):
+        for field, wrong in (("troop", "lord_I1_1"), ("rank", "general"), ("steps", 1)):
+            commander = {**self.commander("lord_I3_1", "captain"), field: wrong}
+            problem = ld.commander_problem(self.report(self.rows(5, w4={"commander": commander})))
+            self.assertIn(field, problem)
+
+    def test_a_commander_still_standing_at_a_clear_or_using_an_ability_after_his_end_fails(self):
+        standing = self.commander("lord_I3_1", "captain", outcome="standing")
+        self.assertIn("outcome", ld.commander_problem(self.report(self.rows(5, w4={"commander": standing}))))
+        late = self.commander("lord_I3_1", "captain", after_end=1)
+        self.assertIn("usesAfterEnd", ld.commander_problem(self.report(self.rows(5, w4={"commander": late}))))
+
+    def test_every_summon_of_a_cleared_wave_was_killed_or_felled(self):
+        ok = {"summoned": 20, "summonKills": 17, "summonFelled": 3}
+        self.assertIsNone(ld.commander_problem(self.report(self.rows(5, w4=ok))))
+        short = {"summoned": 20, "summonKills": 17, "summonFelled": 2}
+        self.assertIn("summon", ld.commander_problem(self.report(self.rows(5, w4=short))))
+
+    def test_a_run_that_cleared_a_commander_wave_owes_the_commander_check_and_a_summon_owes_its_own(self):
+        self.assertTrue(ld.owes_commander(self.report(self.rows(4))))
+        self.assertFalse(ld.owes_commander(self.report(self.rows(3))))
+        self.assertTrue(ld.owes_commander({"startWave": 1, "wavesCleared": 5}), "no wave rows: the cleared count decides")
+        self.assertFalse(ld.owes_commander({"startWave": 1, "wavesCleared": 3}))
+        lieutenant = self.commander("lord_I1_1", "lieutenant", uses={"war_cry": 2, "summon_uruks": 1})
+        self.assertTrue(ld.owes_summon(self.report(self.rows(8, w8={"commander": lieutenant}))))
+        self.assertFalse(ld.owes_summon(self.report(self.rows(8))), "he never summoned")
+
+    def five_clears(self, rows):
+        """A report of five clears, which owe one boon pick (at the third clear), taken as the first card of the seed's draw."""
+        picks = boon_picks(self.SEED, rerolls=0, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)
+        return self.report(rows, boons=picks, rerolls={"earned": 1, "used": 0, "banked": 1})
+
+    def judged(self, rows, checks):
+        return ld.judge(FINAL, self.five_clears(rows), log_of(checks, len(rows)))
+
+    def test_the_judge_fails_a_run_with_a_commander_wave_and_no_commander_line(self):
+        owed = tuple(c for c in STANDARD if c != "commander")
+        code, why = self.judged(self.rows(5), owed)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.commander", why)
+
+    def test_the_judge_passes_it_with_the_line(self):
+        code, why = self.judged(self.rows(5), STANDARD)
+        self.assertEqual(code, 0, why)
+
+    def test_the_judge_asks_for_the_summon_check_of_a_run_whose_commander_summoned(self):
+        # --start-wave 8 --waves 1: one clear, so no pick is owed and the lieutenant's wave is the only row.
+        ld.target_waves = 1
+        ld.expected_report = {"startWave": 8}
+        lieutenant = self.commander("lord_I1_1", "lieutenant", uses={"war_cry": 2, "summon_uruks": 1})
+        rows = [wave_row(8, self.SEED, commander=lieutenant, summoned=20, summonKills=20, summonFelled=0)]
+        report = self.report(rows, startWave=8, wavesCleared=1)
+        code, why = ld.judge(FINAL, report, log_of(STANDARD, 1))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.summon", why)
+        code, why = ld.judge(FINAL, report, log_of(STANDARD + ("summon",), 1))
+        self.assertEqual(code, 0, why)
+
+    def test_the_judge_fails_a_report_whose_commanders_do_not_replay(self):
+        code, why = self.judged(self.rows(5, w4={"commander": None}), STANDARD)
+        self.assertEqual(code, 1)
+        self.assertIn("commanders", why)
 
 
 if __name__ == "__main__":

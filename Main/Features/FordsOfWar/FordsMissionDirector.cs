@@ -286,7 +286,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (record != null && credit is { } paid)
             {
                 _report.Death(record.Side, paid);
-                TallyDeath(victim, killer, record.Value);
+                // The tally is the match's trade: a death in the result window changes no result, so it stays out (Codex, 2026-11-05).
+                if (paid != KillCredit.AfterEnd)
+                    TallyDeath(victim, killer, record.Value);
             }
         });
     }
@@ -647,7 +649,13 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private void ApplyEffects(MatchEffects effects)
     {
         foreach (var spawn in effects.Spawns)
+        {
             _backlog.Add(new PendingSpawn(spawn) { Remaining = spawn.Count });
+            // A guard may share its troop with a bought pack, so the spawn counts by troop cannot show it (Lens 5, 2026-11-05).
+            if (spawn.IsGuard)
+                _logger.LogInfo($"[FordsOfWar][Hero] guard side={spawn.Side} lane={spawn.Lane} troop={spawn.TroopId} count={spawn.Count}");
+        }
+
         SpawnFromBacklog();
 
         foreach (var command in effects.Commands)

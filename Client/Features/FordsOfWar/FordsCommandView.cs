@@ -14,7 +14,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 
 /// <summary>
 /// The Fords of War command panel layer: attaches <c>FordsCommand.xml</c> once the session is active, refreshes the view model four
-/// times a second and reads the hotkeys (1 to 4 lane, F1 to F8 buy a pack, H field the first affordable hero, Z Push, X Hold, C Fall
+/// times a second and reads the hotkeys (1 to 4 lane, F1 to F12 buy a pack, H field the first affordable hero, Z Push, X Hold, C Fall
 /// back). The layer shows the cursor for the whole mission and takes mouse buttons and the wheel, but only where a widget takes
 /// events; the camera view reads keys, the right button and the wheel off the scene. A cursor left hidden is pinned to the screen
 /// centre and a layer under it gets no clicks (#970), so the restriction is set before the movie loads. Built by the mission's

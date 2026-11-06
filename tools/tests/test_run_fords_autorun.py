@@ -859,6 +859,85 @@ class WaitAfterCrashTests(unittest.TestCase):
         self.assertFalse(r.wait_after_crash(self.Proc([None]), 0, said.append))
         self.assertEqual([], said)
 
+    def test_calls_on_poll_while_it_waits_and_once_after(self):
+        polls = []
+        r.wait_after_crash(self.Proc([None, None, 0]), 60, lambda _: None, sleep=lambda _: None, on_poll=lambda: polls.append(1))
+        self.assertEqual(3, len(polls))
+
+
+class SaveEngineDumpTests(unittest.TestCase):
+    """2026-11-05: the crash uploader deleted crashes/<stamp>/dump.dmp when Mike sent the report, so the run kept no dump. The Watchdog
+    writes the dump twice (a stack-only pass, then the full one) and lets the game die right after, so the signal is its own log."""
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, str(self.root), True)
+        self.log = self.root / "watchdog_log_7.txt"
+        self.target = self.root / "engine_dump.dmp"
+        self.said = []
+
+    def dump(self, stamp, data):
+        path = self.root / "crashes" / stamp / "dump.dmp"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        return path
+
+    def write_log(self, *paths, uploader=True):
+        lines = ["Writing stack only dump... This may take a while..."] + [f"Dump file created at {p}." for p in paths]
+        self.log.write_text("\n".join(lines + (["Starting Crash Uploader"] if uploader else [])) + "\n", encoding="utf-8")
+
+    def save(self, state=None):
+        return r.save_engine_dump(self.log, self.target, state if state is not None else {}, self.said.append)
+
+    def test_copies_the_dump_the_log_names_once_the_uploader_starts(self):
+        path = self.dump("a", b"H" * 100)
+        self.write_log(path, path)
+        self.assertTrue(self.save())
+        self.assertEqual(b"H" * 100, self.target.read_bytes())
+        self.assertIn("engine_dump.dmp", self.said[-1])
+
+    def test_waits_while_the_watchdog_is_still_writing(self):
+        path = self.dump("a", b"S" * 10)
+        self.write_log(path, uploader=False)
+        self.assertFalse(self.save())
+        self.assertFalse(self.target.exists())
+
+    def test_takes_the_last_dump_the_log_names_not_a_newer_one_elsewhere(self):
+        ours = self.dump("ours", b"O" * 10)
+        self.dump("other", b"X" * 50)
+        self.write_log(ours)
+        self.assertTrue(self.save())
+        self.assertEqual(b"O" * 10, self.target.read_bytes())
+
+    def test_copies_once_and_says_it_once(self):
+        path = self.dump("a", b"H" * 10)
+        self.write_log(path)
+        state = {}
+        for _ in range(3):
+            self.assertTrue(self.save(state))
+        self.assertEqual(1, sum("saved" in line for line in self.said))
+
+    def test_no_log_or_no_dump_line_saves_nothing_quietly(self):
+        self.assertFalse(self.save())
+        self.write_log()
+        self.assertFalse(self.save())
+        self.assertEqual([], self.said)
+
+    def test_a_dump_the_uploader_already_deleted_is_said_once(self):
+        self.write_log(self.root / "crashes" / "gone" / "dump.dmp")
+        state = {}
+        self.assertFalse(self.save(state))
+        self.assertFalse(self.save(state))
+        self.assertEqual(1, len(self.said))
+        self.assertIn("by hand", self.said[0])
+
+    def test_a_copy_error_is_said_and_not_raised(self):
+        path = self.dump("a", b"H" * 10)
+        self.write_log(path)
+        with mock.patch.object(r.shutil, "copy2", side_effect=PermissionError(13, "denied")):
+            self.assertFalse(self.save())
+        self.assertIn(str(path), self.said[-1])
+
 
 class DumpCrashTests(unittest.TestCase):
     """procdump v12.01 returns 0xFFFFFFFE for a dump it wrote and for a pid it never found, so the file decides."""

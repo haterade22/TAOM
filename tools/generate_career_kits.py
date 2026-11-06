@@ -8,7 +8,7 @@ Leg; the twohanded layout has no Item2) of each `player_career_{culture}_{archet
 1. candidates are the items of that slot's class that a non-hero troop of the culture carries in
    a battle set (`troops/troops_*.xml`: inline `EquipmentRoster`s that are not `civilian="true"`,
    plus direct `<Equipments>/<equipment>` overrides, which the engine applies to every set). For
-   Isengard's and Mordor's Body and Leg, only their uruk line (`ARMOUR_LINE`): their level-1 orcs
+   Isengard's, Mordor's and Gundabad's Body and Leg, only their uruk line (`ARMOUR_LINE`): their low orcs
    wear Mordor orc kit, which does not fit an uruk player, while uruk armour sits on the human
    skeleton every race of theirs uses. A culture with no piece on its line is an error;
 2. a bow or crossbow first keeps only the candidates with the lowest `difficulty` (the skill
@@ -77,7 +77,8 @@ RANGED = {"isengard": ("Crossbow", "Bolts"),   # Uruk Crossbow
           "eredluin": ("Crossbow", "Bolts"),   # Firebeard Arbalester; no cavalry career (no rams)
           "aserai": ("Javelin", "Shield"),     # Pezarsani Javelineer (Harad)
           "shaghana": ("Javelin", "Shield")}   # Chatak Javelineer: every Shaghana bow needs skill 100
-ARMOUR_LINE = {"isengard": "sk_uruk_hai_", "mordor": "sk_uruk_mordor_"}   # docstring step 1
+ARMOUR_LINE = {"isengard": "sk_uruk_hai_", "mordor": "sk_uruk_mordor_",   # docstring step 1
+               "gundabad": "sk_gb_uruk_"}   # pale uruks; the Snow Orc kit is orc-only
 # A culture whose troops carry another culture's id takes that culture's troops and slot rules: the
 # culture= of the troops its volunteer pool recruits (VolunteerRecruitmentService). Umbar is not here:
 # its basic_troop is a Harad levy, but its pool recruits its own troops. StarterKitCoverageTests'

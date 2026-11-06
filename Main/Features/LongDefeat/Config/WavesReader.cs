@@ -28,7 +28,7 @@ internal sealed class WavesConfig
 /// waves.json: a bad rule number keeps its default; a wave with a bad count or weight is skipped, a mix row with a bad class or no
 /// troop is skipped; a roster with no valid wave is dropped (the fortress naming it is then skipped). A troop a wave or a tier link
 /// reaches with no bounty pays nothing, with one warning. A bad growth number keeps its default; a tier link that is not text, points
-/// at its own troop, joins two known classes or closes a cycle is skipped.
+/// at its own troop, joins two known classes or closes a cycle is skipped. The <c>commanders</c> block is read by <see cref="CommandersReader"/>.
 /// </summary>
 internal static class WavesReader
 {
@@ -170,7 +170,8 @@ internal static class WavesReader
         }
 
         if (waves.Count > 0)
-            return new WavePlan(waves, scale, new EndlessScale(healthPerWave, damagePerWave, maxFactor, tierEveryWaves, ReadTiers(roster, label, waves, s)));
+            return new WavePlan(waves, scale, new EndlessScale(healthPerWave, damagePerWave, maxFactor, tierEveryWaves, ReadTiers(roster, label, waves, s)),
+                CommandersReader.Read(roster, label, s));
 
         s.Warn($"'{label}' has no valid wave; roster skipped");
         return null;
@@ -286,7 +287,7 @@ internal static class WavesReader
         var warned = new HashSet<string>(StringComparer.Ordinal);
         foreach (var roster in rosters)
         {
-            foreach (var troop in roster.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)).Concat(roster.Endless.Targets))
+            foreach (var troop in roster.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)).Concat(roster.Endless.Targets).Concat(roster.Commanders.SummonTroopIds))
             {
                 if (!bounties.ContainsKey(troop) && warned.Add(troop))
                     s.Warn($"'bounties' has no entry for '{troop}'; it pays 0");

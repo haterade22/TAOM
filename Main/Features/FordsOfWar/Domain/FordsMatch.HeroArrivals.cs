@@ -59,6 +59,17 @@ internal sealed partial class FordsMatch
         var request = _heroes.Get(side, offer.HeroId)!.ToSpawnRequest(_waves.NextRequestId());
         _pendingSpawns.Add(request);
         TrackCharge(request, paid, null);
+        AddGuard(request);
         _pendingEvents.Add(new MatchEvent(MatchEventKind.HeroFielded, side, offer.HeroId, paid));
+    }
+
+    /// <summary>
+    /// Queues the faction's hero guard into the hero's lane for the hero's owner. The wave scheduler sends it within the lane and side caps,
+    /// it charges nobody, and a failed spawn refunds nothing.
+    /// </summary>
+    private void AddGuard(SpawnRequest hero)
+    {
+        if (_factions[hero.Side].HeroGuard is { } guard)
+            _waves.QueueGuard(hero.Side, hero.Lane, hero.OwnerSlot, guard);
     }
 }

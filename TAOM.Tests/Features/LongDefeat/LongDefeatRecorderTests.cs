@@ -157,6 +157,71 @@ public class LongDefeatRecorderTests
         Assert.IsNotNull(LongDefeatRecorder.NormalizeLook(float.NaN, 1f, out _, out _));
     }
 
+    [TestMethod]
+    public void Sally_IsAKind_ThatAppendsAndReadsBackLikeTheMusterPoints()
+    {
+        Assert.IsTrue(LongDefeatRecorder.IsKind(LongDefeatRecorder.SallyKind));
+        Assert.AreEqual("sally", LongDefeatRecorder.SallyKind);
+
+        _recorder.Append(Scene, LongDefeatRecorder.SallyKind, -20.5f, 70f, 12f, 0f, -1f, null);
+
+        var record = _recorder.ReadAll(out var bad).Single();
+        Assert.AreEqual(0, bad);
+        Assert.AreEqual(LongDefeatRecorder.SallyKind, record.Kind);
+        Assert.AreEqual(-1f, record.Fy);
+    }
+
+    [TestMethod]
+    public void Export_ARecordedSally_BecomesTheSallyBlock_InTheMusterShape_AndTheNewestOneWins()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.SallyKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.SallyKind, -20.5f, 70f, 12f, 0f, -1f, null);
+
+        var export = _recorder.Export(Scene, out var path);
+
+        var sally = JObject.Parse(File.ReadAllText(path))["sally"]!;
+        Assert.AreEqual(-20.5f, (float)sally["x"]!);
+        Assert.AreEqual(70f, (float)sally["y"]!);
+        Assert.AreEqual(12f, (float)sally["z"]!);
+        Assert.AreEqual(0f, (float)sally["fx"]!);
+        Assert.AreEqual(-1f, (float)sally["fy"]!);
+        Assert.IsTrue(export.HasSally);
+    }
+
+    [TestMethod]
+    public void Export_WithNoSally_HasNoSallyBlock_AndASallyIsNeverAMissingPiece()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.KeepKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.MusterFootKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.MusterArchersKind, 1f, 1f, 1f, 0f, 1f, null);
+
+        var export = _recorder.Export(Scene, out var path);
+
+        Assert.IsNull(JObject.Parse(File.ReadAllText(path))["sally"]);
+        Assert.IsFalse(export.HasSally);
+        Assert.IsTrue(export.IsComplete, "the sally is optional: a scene without one is complete");
+        CollectionAssert.DoesNotContain(export.Missing.ToArray(), LongDefeatRecorder.SallyKind);
+    }
+
+    [TestMethod]
+    public void TheSallyBlockOfAnExport_IsReadBackByTheFortressCatalog()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.SallyKind, -20.5f, 70f, 12f, 0f, -1f, null);
+        var sally = JObject.Parse(File.ReadAllText(ExportedPath()))["sally"]!;
+        var fortresses = JObject.Parse(File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "fortresses.json")));
+        fortresses["fortresses"]![0]!["sally"] = sally;
+
+        var catalog = LongDefeatConfigCatalog.FromTexts(fortresses.ToString(),
+            File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "waves.json")),
+            File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "shop.json")), Substitute.For<IModLogger>());
+
+        var point = catalog.Fortresses[0].Sally!;
+        Assert.AreEqual(-20.5f, point.X);
+        Assert.AreEqual(70f, point.Y);
+        Assert.AreEqual(12f, point.Z);
+        Assert.AreEqual(-1f, point.Fy);
+    }
+
     private string ExportedPath()
     {
         _recorder.Export(Scene, out var path);

@@ -105,16 +105,43 @@ public class LongDefeatMissionLogicTests
         var source = RepoPaths.ReadSource(LogicPath, stripComments: true);
 
         StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatMorale.Arm(Mission)");
-        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatCombatHooks.Arm(Mission)");
-        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatStatHooks.Arm(Mission)");
+        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatHookState.Arm(Mission)");
         foreach (var exit in new[] { "OnEndMission", "OnRemoveBehavior" })
             StringAssert.Contains(BodyOf(source, "override void " + exit), "TearDown()", exit + " does not tear down");
 
         var tearDown = BodyOf(source, "private void TearDown()");
         StringAssert.Contains(tearDown, "LongDefeatMorale.Disarm(Mission)");
-        StringAssert.Contains(tearDown, "LongDefeatCombatHooks.Disarm(Mission)");
-        StringAssert.Contains(tearDown, "LongDefeatStatHooks.Disarm(Mission)");
+        StringAssert.Contains(tearDown, "LongDefeatHookState.Disarm(Mission)");
         StringAssert.Contains(tearDown, "_host.ShutDown()");
+    }
+
+    [TestMethod]
+    public void OnScoreHit_AsksTheDirectorsWantFirst_ThenFiltersTheHit_ThenForwardsTheRidersBlow()
+    {
+        // OnScoreHit carries the engine's own isBlocked and damagedHp (Mission.cs:5672); OnAgentHit has neither. It may run off the main thread, so the cheap volatile read comes first.
+        var body = BodyOf(RepoPaths.ReadSource(LogicPath, stripComments: true), "override void OnScoreHit");
+
+        var wants = body.IndexOf("_host.WantsHits", StringComparison.Ordinal);
+        var attacker = body.IndexOf("LongDefeatHitFilter.Attacker(", StringComparison.Ordinal);
+        var admits = body.IndexOf("LongDefeatHitFilter.Admits(", StringComparison.Ordinal);
+        var forward = body.IndexOf("_host.OnHit(", StringComparison.Ordinal);
+        Assert.IsTrue(wants >= 0 && wants < attacker && attacker < admits && admits < forward, body);
+        StringAssert.Contains(body, "isBlocked");
+        StringAssert.Contains(body, "damagedHp");
+        StringAssert.Contains(body, "affectedAgent?.Health", "a killing blow is read from the victim's health, which HandleBlow writes before it raises the hit (Agent.cs:5513, :5527)");
+        StringAssert.Contains(body, ".IsMount");
+        StringAssert.Contains(body, ".RiderAgent");
+    }
+
+    [TestMethod]
+    public void OnScoreHit_BeforeAnythingStarted_DoesNothingAndDoesNotThrow()
+    {
+        var logic = Logic();
+        var blow = default(Blow);
+        var collision = default(AttackCollisionData);
+
+        logic.OnScoreHit(null!, null!, null!, false, false, in blow, in collision, 5f, 0f, 0f);
+        logic.OnScoreHit(null!, null!, null!, true, true, in blow, in collision, 0f, 0f, 0f);
     }
 
     [TestMethod]

@@ -31,6 +31,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private bool _isKeepVisible;
     private string _hintText = string.Empty;
     private string _affixText = string.Empty;
+    private string _commanderText = string.Empty;
     private string _speedText = string.Empty;
     private string _speedTitle = string.Empty;
     private string _noticeText = string.Empty;
@@ -92,6 +93,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public string AffixText { get => _affixText; private set => Set(ref _affixText, value, nameof(AffixText)); }
+
+    [DataSourceProperty]
+    public string CommanderText { get => _commanderText; private set => Set(ref _commanderText, value, nameof(CommanderText)); }
 
     [DataSourceProperty]
     public string SpeedText { get => _speedText; private set => Set(ref _speedText, value, nameof(SpeedText)); }
@@ -248,7 +252,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         if (result != null)
         {
             EndTitle = LongDefeatHudText.EndTitle(result.Reason);
-            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves, _session.BoonsTaken);
+            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves, _session.BoonsTaken, _session.ClassName);
             ReportText = _session.ReportPath is { } path ? LongDefeatHudText.ReportFile(System.IO.Path.GetFileName(path)) : string.Empty;
             BestText = _session.Best is { } best ? LongDefeatHudText.Best(best.Waves, best.Kills) : LongDefeatHudText.NoBest();
             LeaveText = LongDefeatHudText.Leave();
@@ -257,13 +261,14 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     private void ApplyStrip(RunView view)
     {
-        WaveText = LongDefeatHudText.Wave(view.Phase, view.Wave);
+        WaveText = LongDefeatHudText.WithClass(LongDefeatHudText.Wave(view.Phase, view.Wave), view.ClassName);
         TimerText = view.ShopOpen ? LongDefeatHudText.Clock(view.SecondsLeft) : string.Empty;
         GoldText = LongDefeatHudText.Gold(view.Gold);
         AttackersText = LongDefeatHudText.Attackers(view.AttackersStanding);
         DefendersText = LongDefeatHudText.Defenders(view.DefendersStanding + view.DefendersPending);
         HintText = LongDefeatHudText.Hint(view);
         AffixText = LongDefeatHudText.AffixLine(view);
+        CommanderText = LongDefeatHudText.CommanderLine(view);
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;

@@ -29,6 +29,11 @@ internal static class LongDefeatHudText
         }
     }
 
+    /// <summary>The wave line with the lord's class after it; the wave line alone when he plays none. <paramref name="rawClassName"/> is the class's <c>{=KEY}English</c> name.</summary>
+    internal static string WithClass(string waveText, string rawClassName) => rawClassName.Length == 0
+        ? waveText
+        : new TextObject("{=TAOM_LD_Hud_WaveClass}{WAVE}, {CLASS}").SetTextVariable("WAVE", waveText).SetTextVariable("CLASS", OfferName(rawClassName)).ToString();
+
     internal static string Gold(int gold) => new TextObject("{=TAOM_LD_Hud_Gold}Gold: {GOLD}").SetTextVariable("GOLD", gold).ToString();
 
     internal static string Attackers(int count) => new TextObject("{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}").SetTextVariable("COUNT", count).ToString();
@@ -89,6 +94,38 @@ internal static class LongDefeatHudText
                 return string.Empty;
         }
     }
+
+    /// <summary>
+    /// The HUD strip's commander line, during a wave only: his rank and the ability that is running or due soonest ("Captain: The White Hand Calls in 12 s"), or that he has fallen. Nothing before he
+    /// spawns, and nothing once he was felled or left, since the HUD stops showing him then.
+    /// </summary>
+    internal static string CommanderLine(RunView view)
+    {
+        if (view.Phase != RunPhase.Wave || view.Commander is not { } commander || !commander.Up)
+            return string.Empty;
+
+        var rank = OfferName(commander.RankName);
+        switch (commander.Outcome)
+        {
+            case CommanderOutcome.Killed:
+                return new TextObject("{=TAOM_LD_Hud_CommanderFallen}{RANK} has fallen").SetTextVariable("RANK", rank).ToString();
+            case CommanderOutcome.Standing:
+                var running = commander.Abilities.FirstOrDefault(a => a.Running);
+                if (running != null)
+                    return new TextObject("{=TAOM_LD_Hud_CommanderActive}{RANK}: {ABILITY}, now").SetTextVariable("RANK", rank).SetTextVariable("ABILITY", OfferName(running.Name)).ToString();
+
+                var next = commander.Abilities.OrderBy(a => a.SecondsLeft).FirstOrDefault();
+                return next == null
+                    ? rank
+                    : new TextObject("{=TAOM_LD_Hud_CommanderNext}{RANK}: {ABILITY} in {SECONDS} s").SetTextVariable("RANK", rank)
+                        .SetTextVariable("ABILITY", OfferName(next.Name)).SetTextVariable("SECONDS", WholeSeconds(next.SecondsLeft)).ToString();
+            default:
+                return string.Empty;
+        }
+    }
+
+    /// <summary>Seconds rounded up, so a countdown never reads 0 while the ability is still due. Not a positive finite number reads 0.</summary>
+    private static int WholeSeconds(float seconds) => seconds > 0f && !float.IsInfinity(seconds) ? (int)Math.Ceiling(Math.Min(seconds, 359999f)) : 0;
 
     private static string AffixNames(IReadOnlyList<AffixLabel> affixes) => string.Join(", ", affixes.Select(a => new TextObject(a.Name).ToString()));
 
@@ -224,7 +261,10 @@ internal static class LongDefeatHudText
         }
     }
 
-    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves, IReadOnlyList<BoonCard>? boons = null) =>
+    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves, IReadOnlyList<BoonCard>? boons = null, string rawClassName = "") =>
+        (rawClassName.Length == 0
+            ? string.Empty
+            : new TextObject("{=TAOM_LD_End_Class}Class: {CLASS}").SetTextVariable("CLASS", OfferName(rawClassName)).ToString() + "\n") +
         new TextObject("{=TAOM_LD_End_Waves}Waves cleared: {WAVES}").SetTextVariable("WAVES", wavesCleared).ToString() + "\n" +
         new TextObject("{=TAOM_LD_End_Kills}Kills: {KILLS}").SetTextVariable("KILLS", kills).ToString() + "\n" +
         new TextObject("{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}").SetTextVariable("LOST", lostInClearedWaves).ToString() +

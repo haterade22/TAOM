@@ -31,6 +31,9 @@ internal sealed record RunView(
 
     public float NextDamageFactor { get; init; } = 1f;
 
+    /// <summary>The raw <c>{=KEY}English</c> name of the lord's class, or empty when he plays none: the HUD strip shows it after the wave number.</summary>
+    public string ClassName { get; init; } = "";
+
     /// <summary>The garrison cap in force, boons included: a pack that would carry the garrison past it is refused by <c>TryBuy</c>.</summary>
     public int GarrisonCap { get; init; } = int.MaxValue;
 
@@ -47,4 +50,13 @@ internal sealed record RunView(
 
     /// <summary>The boons taken so far, in order.</summary>
     public IReadOnlyList<BoonCard> Boons { get; init; } = Array.Empty<BoonCard>();
+
+    /// <summary>The running wave's commander, or null between waves and in a wave with none.</summary>
+    public CommanderView? Commander { get; init; }
 }
+
+/// <summary>One ability of the commander as the HUD shows it: its raw <c>{=KEY}English</c> name, the seconds to its next use and whether it is running now (a war cry).</summary>
+internal sealed record CommanderAbilityView(string Name, float SecondsLeft, bool Running);
+
+/// <summary>The commander as the HUD shows him: his rank's raw <c>{=KEY}English</c> name, how he stands, whether he has spawned, and his abilities.</summary>
+internal sealed record CommanderView(string RankName, CommanderOutcome Outcome, bool Up, IReadOnlyList<CommanderAbilityView> Abilities);

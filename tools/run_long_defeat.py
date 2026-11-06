@@ -21,8 +21,8 @@ a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHE
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only, so a class the game cannot play yet (cavalry) is refused here instead of being replaced by the game.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
-A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
-The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, and one that banked a reroll at its first pick or spent one owes the reroll check.
+A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
+The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
 collection. It changes the arm variable, the done and status files, the arm text and the judge, and presses Cancel on the Helm's Deep
@@ -34,6 +34,7 @@ import json
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -79,15 +80,17 @@ DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
 # starts, so wave 5 (the first with an affix) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
 # affixes, owes it. The plan's "4 or more clears" would fail a --waves 4 run, which stops at the clear of wave 4 and never starts wave 5.
 AFFIX_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
-# The powers with an effect in the game (AffixPlan.Pool): hammer, terror and blades join in Slices 8 and 9, when each one's effect lands.
-AFFIX_POOL = ("lash", "drums", "eye", "discipline", "hide")
+# The powers with an effect in the game (AffixPlan.Pool): hammer and terror joined in Slice 8, blades in Slice 9 when its poison and its kill owner landed: all eight roll now.
+AFFIX_POOL = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 AFFIX_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "affixes.json"
 AFFIX_DEFAULT_SCHEDULE = ((5, 1), (10, 2), (15, 3))
 AFFIX_FROM_CLEARS = 5
 AFFIX_CHECK = "affix"
 # A cleared wave that rolled one of these has written an affix-effect line (pass, or skip for a soldier that could not show it): a run with none never read the effect back.
+# The stat powers and hide are read from a sampled attacker, hammer from the engines it hardened (with the gate's state), terror from its own pulses, blades from the poison the wave dealt
+# (doses, hits, damage and owner_missing); all record under this id.
 AFFIX_EFFECT_CHECK = "affix-effect"
-AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide")
+AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 
 # The classes (phase2-plan.md section 2, "Classes"): the game plays the ones in classes.json that have a kit for the fortress's defender culture, and the bot draws one
 # from RunRandom stream 3 when none is armed. Cavalry is in the plan but not in classes.json until Slices 10 and 11, so it is refused by name below.
@@ -100,6 +103,10 @@ DEFAULT_FORTRESS = "helms"
 
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
+
+# The third check of the sally (spike S9) is reported, not required: a hit by or on the rider or his horse in a wave's first 180 s within 40 m of the sally point. The game writes it as a
+# pass at the first such hit and as a skip (never a fail) when none came, so a quiet ride neither fails the run nor reads as a pass; Mike reads it from the line.
+CONTACT_CHECK = "sally-contact"
 
 # A wave past the authored list (waves.json: Helm's Deep has ten) carries a health or damage factor above 1 in the report, so a run that reached one owes
 # the scale check whatever its flags. The Slice 2 proof is --start-wave 12 --waves 2: with a tier step every 3 extra waves, wave 13 is the first to step a troop.
@@ -295,8 +302,8 @@ def affix_problem(report_json):
 
 
 # The boons (phase2-plan.md section 2, "Boons"): a pick owed at every third cleared wave, three weighted cards a draw from stream 2 at (pick, draw), a reroll
-# earned at every fifth clear into a bank of three. Only the rows with no garrison or class condition can be replayed from the report alone: the war chest,
-# fortress and Legend rows, and the class rows of the report's own class.
+# earned at every fifth clear into a bank of three. The pool a draw uses is the war chest, fortress and Legend rows, the class rows of the report's own class, and a troop
+# category's rows while the fortress's garrison or shop holds a troop of that group (troop_groups, from static data, so the replay sees what the game saw).
 BOON_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "boons.json"
 BOON_CHECK = "boon"
 REROLL_CHECK = "reroll"
@@ -307,10 +314,50 @@ BOON_MAX_BANK = 3
 BOON_REROLL_EVERY = 5
 BOON_FREE_CATEGORIES = ("fortress", "warchest", "legend")
 BOON_TROOP_CATEGORIES = ("infantry", "archers", "cavalry")
+# The keys a boon read-back checks on a soldier of its target (the game's BoonKeys.StatKeys and healthPercent): a taken boon with one owes a read= token on its boon line.
+BOON_READ_KEYS = ("swingSpeedPercent", "moveSpeedPercent", "drawSpeedPercent", "reloadSpeedPercent", "blockPercent", "parryPercent", "aimErrorPercent", "healthPercent")
+
+# The group of a defender troop is its character's default_group through the engine's FormationClass flags: mounted is cavalry, else ranged is archers, else infantry. A test in
+# LongDefeatBindingTests.cs pins these two tuples to the engine's IsMounted() and IsRanged() for every formation class. An absent or unknown default_group is infantry.
+MOUNTED_GROUPS = ("cavalry", "horsearcher", "heavycavalry")
+RANGED_GROUPS = ("ranged", "horsearcher", "skirmisher", "lightcavalry")
+TROOP_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "fords_of_war" / "fords_troops.xml"
+SHOP_FILE = MODULE_DATA / "shop.json"
+
+
+def _json_object(path):
+    try:
+        root = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return {}
+    return root if isinstance(root, dict) else {}
+
+
+def troop_group(default_group):
+    """infantry, archers or cavalry for a troop's default_group text (the game's BoonTargets.OfCharacter over the engine's flags)."""
+    name = (default_group or "").lower()
+    return "cavalry" if name in MOUNTED_GROUPS else "archers" if name in RANGED_GROUPS else "infantry"
+
+
+def troop_groups(fortress_id=None, troop_file=None):
+    """The troop categories a fortress's garrison or shop holds a troop of (the game's RunPlanTroops.DefenderGroups): each troop's default_group in fords_troops.xml, or its
+    formation class when the file does not hold it (the ranged slot is archers, the other infantry). A fortress the file does not know holds none."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    if fortress is None:
+        return set()
+    wanted = [(g.get("troop"), g.get("class")) for g in fortress.get("garrison", []) if isinstance(g, dict)]
+    shop = _json_object(SHOP_FILE).get("shops", {}).get(fortress.get("shop"), {})
+    wanted += [(o.get("troop"), o.get("class")) for o in shop.get("offers", []) if isinstance(o, dict)] if isinstance(shop, dict) else []
+    try:
+        known = {c.get("id"): c.get("default_group") for c in ET.parse(troop_file or TROOP_FILE).getroot().iter("NPCCharacter")}
+    except (OSError, ET.ParseError):
+        known = {}
+    return {troop_group(known[t]) if t in known else ("archers" if c == "Ranged" else "infantry") for t, c in wanted}
 
 
 def shipped_boons(path=None):
-    """(rows, legend weight) of this tree's boons.json: each row {id, category, class, cut}, where cut is the row's affixCount (0 or negative) and the order is the file's.
+    """(rows, legend weight) of this tree's boons.json: each row {id, category, class, cut, reads}, where cut is the row's affixCount (0 or negative), reads is whether a taken
+    boon of the row owes a read-back on a soldier (a stat or health key) and the order is the file's.
     The shipped file is held valid by LongDefeatShippedConfigTests, so a row is taken as it stands; a missing or unreadable file has no rows."""
     try:
         root = json.loads(Path(path or BOON_FILE).read_text(encoding="utf-8-sig"))
@@ -325,7 +372,8 @@ def shipped_boons(path=None):
         if not isinstance(row, dict) or not isinstance(row.get("id"), str):
             continue
         cut = sum(e.get("value", 0) for e in row.get("effects", []) if isinstance(e, dict) and e.get("key") == "affixCount" and isinstance(e.get("value"), int))
-        rows.append({"id": row["id"], "category": row.get("category"), "class": row.get("class") or "", "cut": cut})
+        reads = any(isinstance(e, dict) and e.get("key") in BOON_READ_KEYS for e in list(row.get("effects", [])) + list(row.get("drawback", [])))
+        rows.append({"id": row["id"], "category": row.get("category"), "class": row.get("class") or "", "cut": cut, "reads": reads})
     return rows, weight
 
 
@@ -355,6 +403,12 @@ def _is_int(value):
     return isinstance(value, int) and not isinstance(value, bool)
 
 
+def boon_eligible(row, class_id, groups):
+    """Whether a row may be drawn: a free category, a class row of the lord's class, or a troop category row whose group the garrison or shop holds (the game's BoonDeck.IsEligible)."""
+    category = row["category"]
+    return category in BOON_FREE_CATEGORIES or (category == "class" and row["class"] == class_id) or (category in BOON_TROOP_CATEGORIES and category in groups)
+
+
 def boon_problem(report_json, path=None):
     """None when every pick of the report's boons[] replays from its seed, else what is wrong: each draw equals the game's draw over the rows eligible after the
     boons taken before it (the shown cards left out of a reroll), the taken boon was among the last draw, only the last pick may be left open, and the
@@ -364,15 +418,15 @@ def boon_problem(report_json, path=None):
     if not isinstance(picks, list) or not _is_int(seed):
         return None
     rows, legend_weight = shipped_boons(path)
-    if any(row["category"] in BOON_TROOP_CATEGORIES for row in rows):
-        return "boons.json holds a troop category row, whose eligibility needs the garrison's troop groups, which this replay does not read yet"
     class_id = report_json.get("class") or ""
+    fortress = report_json.get("fortress")
+    groups = troop_groups(fortress) if isinstance(fortress, str) else set()
     owned = []
     used = 0
     for number, pick in enumerate(picks, 1):
         if not isinstance(pick, dict) or pick.get("pick") != number:
             return f"pick {number} is missing or numbered {pick.get('pick') if isinstance(pick, dict) else pick!r}"
-        pool = [r for r in rows if r["id"] not in owned and (r["category"] in BOON_FREE_CATEGORIES or (r["category"] == "class" and r["class"] == class_id))]
+        pool = [r for r in rows if r["id"] not in owned and boon_eligible(r, class_id, groups)]
         offered = pick.get("offered")
         if not isinstance(offered, list) or not all(isinstance(d, list) for d in offered):
             return f"pick {number} has no list of draws"
@@ -431,6 +485,23 @@ def affix_cut(report_json, wave, rows=None):
     return cut
 
 
+def read_owed_picks(report_json, rows=None):
+    """The numbers of the picks whose boon line must carry a read= token: a pick that took a boon with a stat or health key (BOON_READ_KEYS), in a run that cleared a wave
+    after the pick's own (the bot takes the pick in the intermission, and the director writes the line on the next tick, so a run that ended at the pick's clear never wrote it)."""
+    picks = report_json.get("boons")
+    cleared = report_json.get("wavesCleared")
+    if not isinstance(picks, list) or not _is_int(cleared):
+        return []
+    by_id = {row["id"]: row for row in (shipped_boons()[0] if rows is None else rows)}
+    return [p["pick"] for p in picks if isinstance(p, dict) and p.get("taken") in by_id and by_id[p["taken"]]["reads"]
+            and _is_int(p.get("pick")) and _is_int(p.get("wave")) and cleared > p["wave"]]
+
+
+def boon_read_pattern(pick):
+    """The boon pass line of one pick with its read-back token (pass, or skip for a group with no soldier standing): the shape LongDefeatBoonChecks.Pick writes."""
+    return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + BOON_CHECK) + rf" result=pass p={pick} cards=[^\n]* read=(?:pass|skip)\b")
+
+
 def reached_boons(report_json):
     """True when the report lists a pick: the director wrote a boon check for it, unless the run ended with the pick still open."""
     picks = report_json.get("boons")
@@ -481,8 +552,117 @@ def reached_endless(report_json):
     return False
 
 
+# The commanders (phase2-plan.md section 2, "Commanders"): waves.json gives each roster an `every`, the ranks in order and the abilities, and the report lists the commander of every wave
+# that had one. COMMANDER_CHECK is written when his wave clears, SUMMON_CHECK for each summon of it.
+WAVES_FILE = MODULE_DATA / "waves.json"
+COMMANDER_CHECK = "commander"
+SUMMON_CHECK = "summon"
+COMMANDER_OUTCOMES = ("killed", "felled", "left")
+
+
+def shipped_commanders(fortress_id=None, path=None):
+    """{every, ranks: [(rank id, troop)], summon: {ability ids of kind Summon}, max_steps} of the commanders the fortress's roster plays, or None when the file or the block is missing
+    or the fortress is unknown. The shipped file is held valid by LongDefeatShippedCommandersTests, so a rank is taken as it stands."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    roster = _json_object(path or WAVES_FILE).get("rosters", {})
+    block = roster.get(fortress.get("waves")) if fortress is not None and isinstance(roster, dict) else None
+    block = block.get("commanders") if isinstance(block, dict) else None
+    if not isinstance(block, dict) or not _is_int(block.get("every")) or block["every"] <= 0:
+        return None
+    ranks = [(r.get("rank"), r.get("troop")) for r in block.get("ranks", []) if isinstance(r, dict) and isinstance(r.get("rank"), str) and isinstance(r.get("troop"), str)]
+    abilities = block.get("abilities") if isinstance(block.get("abilities"), dict) else {}
+    beyond = block.get("beyond") if isinstance(block.get("beyond"), dict) else {}
+    max_steps = beyond.get("maxSteps") if _is_int(beyond.get("maxSteps")) else 10
+    summon = {k for k, a in abilities.items() if isinstance(a, dict) and a.get("kind") == "Summon"}
+    return {"every": block["every"], "ranks": ranks, "summon": summon, "max_steps": max_steps} if ranks else None
+
+
+def commander_expected(spec, wave):
+    """(rank id, troop, steps) of the commander of this wave, or None: a multiple of `every`, the rank min(n - 1, ranks - 1) for n = wave // every, and the steps
+    min(maxSteps, max(0, n - ranks)) (the game's CommanderPlan.ForWave)."""
+    if not _is_int(wave) or wave <= 0 or wave % spec["every"] != 0:
+        return None
+    n = wave // spec["every"]
+    ranks = spec["ranks"]
+    rank, troop = ranks[min(n - 1, len(ranks) - 1)]
+    return rank, troop, min(spec["max_steps"], max(0, n - len(ranks)))
+
+
+def _commander_spec(report_json):
+    fortress = report_json.get("fortress")
+    return shipped_commanders(fortress if isinstance(fortress, str) else None)
+
+
+def commander_problem(report_json):
+    """None when the report's waves[] holds a commander exactly at the multiples of the roster's `every` with the configured troop, rank and steps, each one ended and with no ability used
+    after his end, and every cleared wave's summons killed or felled (leaderboard rules 16 and 17); else what is wrong. A report with no waves list, or a fortress with no commanders, has nothing to replay."""
+    rows = report_json.get("waves")
+    spec = _commander_spec(report_json)
+    if not isinstance(rows, list) or spec is None:
+        return None
+    for row in rows:
+        if not isinstance(row, dict) or not _is_int(row.get("wave")):
+            continue
+        wave, got = row["wave"], row.get("commander")
+        summoned, kills, felled = row.get("summoned"), row.get("summonKills"), row.get("summonFelled")
+        if all(_is_int(v) for v in (summoned, kills, felled)) and kills + felled != summoned:
+            return f"wave {wave} summoned {summoned} but {kills} were killed and {felled} felled"
+        expected = commander_expected(spec, wave)
+        if expected is None:
+            if got is not None:
+                return f"wave {wave} lists a commander, but it is not a multiple of {spec['every']}"
+            continue
+        if not isinstance(got, dict):
+            return f"wave {wave} should have a commander ({expected[0]}, {expected[1]}) and lists none"
+        for field, want in zip(("rank", "troop", "steps"), expected):
+            if got.get(field) != want or (field == "steps" and not _is_int(got.get(field))):
+                return f"wave {wave} commander {field} is {got.get(field)!r}, wanted {want!r}"
+        if got.get("outcome") not in COMMANDER_OUTCOMES:
+            return f"wave {wave} commander outcome is {got.get('outcome')!r} at the clear, wanted one of {', '.join(COMMANDER_OUTCOMES)}"
+        if not _is_int(got.get("usesAfterEnd")) or got["usesAfterEnd"] != 0:
+            return f"wave {wave} commander used an ability after his end (usesAfterEnd={got.get('usesAfterEnd')!r})"
+    return None
+
+
+def owes_commander(report_json):
+    """The commander check is owed once a wave of the report that had a commander was cleared; with no wave rows, once `every` waves were cleared from wave 1."""
+    spec = _commander_spec(report_json)
+    if spec is None:
+        return False
+    rows = report_json.get("waves")
+    if isinstance(rows, list) and rows:
+        return any(isinstance(r, dict) and commander_expected(spec, r.get("wave")) is not None for r in rows)
+    cleared, start = report_json.get("wavesCleared"), report_json.get("startWave")
+    return _is_int(cleared) and _is_int(start) and start == 1 and cleared >= spec["every"]
+
+
+def owes_summon(report_json):
+    """The summon check is owed once a cleared wave's commander used a Summon ability."""
+    spec = _commander_spec(report_json)
+    rows = report_json.get("waves")
+    if spec is None or not isinstance(rows, list):
+        return False
+    for row in rows:
+        commander = row.get("commander") if isinstance(row, dict) else None
+        uses = commander.get("uses") if isinstance(commander, dict) else None
+        if isinstance(uses, dict) and any(_is_int(uses.get(a)) and uses[a] > 0 for a in spec["summon"]):
+            return True
+    return False
+
+
 def check_pattern(name, result):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=" + result + r"\b")
+
+
+def contact_note(report_json, log_text):
+    """", sally-contact: 2 pass, 1 skip" for a class that sallies, ", sally-contact: not reached" when the log has neither, and "" for every other class. Reported, never required."""
+    if "sally" not in CLASS_CHECKS.get(report_json.get("class"), ()):
+        return ""
+    passes = len(check_pattern(CONTACT_CHECK, "pass").findall(log_text))
+    skips = len(check_pattern(CONTACT_CHECK, "skip").findall(log_text))
+    if not passes and not skips:
+        return f", {CONTACT_CHECK}: not reached"
+    return f", {CONTACT_CHECK}: {passes} pass, {skips} skip"
 
 
 FAIL_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX) + r"\S+ result=fail\b")
@@ -524,6 +704,9 @@ def judge(done, report_json, log_text=None):
     mismatch = boon_problem(report_json)
     if mismatch:
         return 1, f"the report's boons do not replay from its seed: {mismatch}"
+    mismatch = commander_problem(report_json)
+    if mismatch:
+        return 1, f"the report's commanders do not replay from the roster: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -557,6 +740,10 @@ def judge(done, report_json, log_text=None):
     owes_affix = reached_affixes(report_json) or (isinstance(cleared_waves, int) and not isinstance(cleared_waves, bool) and cleared_waves >= AFFIX_FROM_CLEARS)
     if not lose and owes_affix and AFFIX_CHECK not in required:
         required = required + (AFFIX_CHECK,)
+    if not lose and owes_commander(report_json) and COMMANDER_CHECK not in required:
+        required = required + (COMMANDER_CHECK,)
+    if not lose and owes_summon(report_json) and SUMMON_CHECK not in required:
+        required = required + (SUMMON_CHECK,)
     if not lose and owes_boon(report_json) and BOON_CHECK not in required:
         required = required + (BOON_CHECK,)
     if not lose and owes_reroll(report_json) and REROLL_CHECK not in required:
@@ -566,6 +753,9 @@ def judge(done, report_json, log_text=None):
         missing.append(AFFIX_EFFECT_CHECK)
     if missing:
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing)
+    unread_boons = [n for n in read_owed_picks(report_json) if not boon_read_pattern(n).search(log_text)]
+    if not lose and unread_boons:
+        return 1, f"reason={reason} but the boon check of pick(s) {', '.join(map(str, unread_boons))} has no read= token: a troop or class boon was never read back from a soldier"
     unread = [line for line in READ_BACK if line not in log_text]
     if unread:
         return 1, f"reason={reason} but the log has no '{unread[0]}' line, so that side's spawn floor was never read back"
@@ -579,7 +769,7 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}")
 
 
 def build_of(log_text):
