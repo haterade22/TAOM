@@ -23,7 +23,7 @@ internal sealed class LongDefeatPanelHost
     internal LongDefeatPanelHost(Action<string> log) => _log = log;
 
     /// <summary>
-    /// M steps the speed, also while a panel is open (read from that panel's own input, since the focus layer takes the keys). B toggles the shop, H sounds the horn and N looses the Elven Volley,
+    /// M steps the speed, also while a panel is open (read from that panel's own input, since the focus layer takes the keys), and B closes an open shop from that input. B toggles the shop, H sounds the horn and N looses the Elven Volley,
     /// while no panel is open (the panel opens between waves and the volley is loosed in one, so it only buys, D24). N is the campaign Encyclopedia key and B the Banner window's, so a clash found in play is
     /// this one line. Ctrl or Alt leave every key to the game. Not T: the chat view reads it from the scene layer.
     /// </summary>
@@ -36,7 +36,12 @@ internal sealed class LongDefeatPanelHost
         if (keys.IsKeyPressed(InputKey.M))
             vm.CycleSpeed();
         if (_layer != null)
+        {
+            // B closes an open shop from the panel's own input, as the footer says; the end panel ignores it.
+            if (vm.IsShopVisible && keys.IsKeyPressed(InputKey.B))
+                vm.ToggleShop();
             return;
+        }
 
         if (input.IsKeyPressed(InputKey.B))
             vm.ToggleShop();

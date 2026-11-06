@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- The themed Long Defeat HUD, loaded in place of LongDefeatHud by FrontEndMovieService and bound to LongDefeatHudVM. The player has an
+         agent, so nothing here takes events and the layer shows no cursor. Laid out on the 1920x1080 logical canvas: a 1200x84 stone rail
+         at the top (wave and class, the intermission clock, attackers, defenders, the purse, the speed), the affix, commander and notice lines
+         under it, the key strip low centre and the keep warning low right. Only the key letters are literal: every line is a bound
+         TAOM_LD_ string. The movie root carries no DataSource. -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <!-- The rail: 1000x66 (the nine-slice rim is 28 a side, so 66 keeps it whole). Its content row is centred and measured from its
+             children only (no child stretches to it), so every segment stays inside the rail. -->
+        <EncyclopediaStonePanelWidget Id="LdHudRail" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="66"
+                                      HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="28" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+          <Children>
+            <ListPanel Id="LdHudRailContent" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+              <Children>
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginRight="14"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="27" Brush="TAOM.LD.HudWave" Text="@WaveLabel" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="19" Brush="TAOM.LD.HudClass" Text="@ClassLabel" IsVisible="@HasClass" DoNotAcceptEvents="true" />
+                  </Children>
+                </ListPanel>
+
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsTimerVisible" DoNotAcceptEvents="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="30" VerticalAlignment="Center" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" MarginLeft="14" MarginRight="14" Brush="TAOM.LD.HudTimer" Text="@TimerText" DoNotAcceptEvents="true" />
+                  </Children>
+                </ListPanel>
+
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="30" VerticalAlignment="Center" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" MarginLeft="14" MarginRight="14" Brush="TAOM.LD.HudAttackers" Text="@AttackersText" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="30" VerticalAlignment="Center" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" MarginLeft="14" MarginRight="14" Brush="TAOM.LD.HudValue" Text="@DefendersText" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="30" VerticalAlignment="Center" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" VerticalAlignment="Center" MarginLeft="14" MarginRight="8" Brush="TAOM.LD.GoldIcon" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" MarginRight="14" Brush="TAOM.LD.HudValue" Text="@GoldValue" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="30" VerticalAlignment="Center" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" MarginLeft="14" MarginRight="6" Brush="TAOM.LD.HudValue" Text="[M]" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" Brush="TAOM.LD.HudValue" Text="@SpeedValue" DoNotAcceptEvents="true" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </EncyclopediaStonePanelWidget>
+
+        <!-- Directly under the rail: the affixes (running or next wave), the commander, then the last refusal. -->
+        <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="1200" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="102"
+                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.LD.HudLine" Text="@AffixText" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" Brush="TAOM.LD.HudCommander" Text="@CommanderText" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" Brush="TAOM.LD.HudNotice" Text="@NoticeText" DoNotAcceptEvents="true" />
+          </Children>
+        </ListPanel>
+
+        <!-- Low centre, 60 above the bottom as approved: the reason B and H are grey, or the open boon pick, stacked above the key strip so they never overlap it. -->
+        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="60"
+                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="6" Brush="TAOM.LD.HudLine" Text="@KeysLockedText" IsVisible="@IsKeysLocked" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="6" Brush="TAOM.LD.HudLine" Text="@BoonHintText" IsVisible="@IsBoonHintVisible" DoNotAcceptEvents="true" />
+            <EncyclopediaStonePanelWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="56" HorizontalAlignment="Center" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginLeft="34" MarginRight="34" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                  <Children>
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                      <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsShopKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.Key" Text="[B]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.Key" Text="@KeyShopText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsHidden="@IsShopKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.KeyOff" Text="[B]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.KeyOff" Text="@KeyShopText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="26" VerticalAlignment="Center" MarginLeft="26" MarginRight="26" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                      <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsHornKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.Key" Text="[H]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.Key" Text="@KeyHornText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsHidden="@IsHornKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.KeyOff" Text="[H]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.KeyOff" Text="@KeyHornText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="26" VerticalAlignment="Center" MarginLeft="26" MarginRight="26" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.Key" Text="[M]" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.Key" Text="@KeySpeedText" DoNotAcceptEvents="true" />
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="26" VerticalAlignment="Center" MarginLeft="26" MarginRight="26" Brush="TAOM.LD.HudDivider" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                      <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsVolleyKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.Key" Text="[N]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.Key" Text="@KeyVolleyText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" IsHidden="@IsVolleyKeyEnabled" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="10" Brush="TAOM.LD.KeyOff" Text="[N]" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.KeyOff" Text="@KeyVolleyText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ListPanel>
+              </Children>
+            </EncyclopediaStonePanelWidget>
+          </Children>
+        </ListPanel>
+
+        <!-- The keep warning, low right, only while attackers are taking the keep zone. The fill is the run's own keep progress (KeepFillWidth over a 300 track). -->
+        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="62" MarginBottom="60"
+                   StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsKeepVisible" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="8" Brush="TAOM.LD.HudKeep" Text="@KeepText" DoNotAcceptEvents="true" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="302" SuggestedHeight="14" HorizontalAlignment="Center" Sprite="BlankWhiteSquare" Color="#AD8849FF" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="12" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.LD.KeepTrack" DoNotAcceptEvents="true" />
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@KeepFillWidth" HorizontalAlignment="Left" Brush="TAOM.LD.KeepFill" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+          </Children>
+        </ListPanel>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

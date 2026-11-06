@@ -128,6 +128,13 @@ public sealed class FrontEndMovieService
             case "TaomFieldCampOverlay" when dataSourceTypeName == "FieldCampOverlayVM":
                 return Themed(movieName, "TAOMFieldCampOverlay", CreationFrame);
 
+            // The Long Defeat HUD and its panel (shop, boons, end summary), both bound to one LongDefeatHudVM. Each
+            // holds the chrome for as long as its mission movie lives; a missing or failed themed prefab keeps the
+            // original LongDefeat movie.
+            case "LongDefeatHud" when dataSourceTypeName == "LongDefeatHudVM":
+            case "LongDefeatPanel" when dataSourceTypeName == "LongDefeatHudVM":
+                return Themed(movieName, "TAOM" + movieName, CreationFrame);
+
             default:
                 return null;
         }

@@ -51,6 +51,36 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private string _bestText = string.Empty;
     private string _reportText = string.Empty;
     private string _leaveText = string.Empty;
+    private bool _fortTab;
+    private bool _boonsHidden;
+    private string _waveLabel = string.Empty;
+    private string _classLabel = string.Empty;
+    private bool _hasClass;
+    private string _goldValue = string.Empty;
+    private string _speedValue = string.Empty;
+    private bool _isTimerVisible;
+    private string _shopTimerText = string.Empty;
+    private string _reinforcementsText = string.Empty;
+    private string _fortificationsText = string.Empty;
+    private bool _isReinforcementsTab = true;
+    private bool _isFortificationsTab;
+    private bool _hasFortTab;
+    private string _shopHintText = string.Empty;
+    private bool _isOffersEmpty;
+    private string _noOffersText = string.Empty;
+    private string _pickSubtitle = string.Empty;
+    private bool _isBoonPanelVisible;
+    private string _keyShopText = string.Empty;
+    private string _keyHornText = string.Empty;
+    private string _keySpeedText = string.Empty;
+    private string _keyVolleyText = string.Empty;
+    private bool _isShopKeyEnabled;
+    private bool _isHornKeyEnabled;
+    private bool _isVolleyKeyEnabled;
+    private string _keysLockedText = string.Empty;
+    private bool _isKeysLocked;
+    private string _boonHintText = string.Empty;
+    private bool _isBoonHintVisible;
 
     internal LongDefeatHudVM(LongDefeatSession session, Action leave)
     {
@@ -165,6 +195,109 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     [DataSourceProperty]
     public string LeaveText { get => _leaveText; private set => Set(ref _leaveText, value, nameof(LeaveText)); }
 
+    // The themed movies (TAOMLongDefeatHud, TAOMLongDefeatPanel) bind the properties below; the original movies keep the ones above.
+
+    [DataSourceProperty]
+    public string WaveLabel { get => _waveLabel; private set => Set(ref _waveLabel, value, nameof(WaveLabel)); }
+
+    [DataSourceProperty]
+    public string ClassLabel { get => _classLabel; private set => Set(ref _classLabel, value, nameof(ClassLabel)); }
+
+    [DataSourceProperty]
+    public bool HasClass { get => _hasClass; private set => Set(ref _hasClass, value, nameof(HasClass)); }
+
+    [DataSourceProperty]
+    public string GoldValue { get => _goldValue; private set => Set(ref _goldValue, value, nameof(GoldValue)); }
+
+    [DataSourceProperty]
+    public string SpeedValue { get => _speedValue; private set => Set(ref _speedValue, value, nameof(SpeedValue)); }
+
+    [DataSourceProperty]
+    public bool IsTimerVisible { get => _isTimerVisible; private set => Set(ref _isTimerVisible, value, nameof(IsTimerVisible)); }
+
+    [DataSourceProperty]
+    public string ShopTimerText { get => _shopTimerText; private set => Set(ref _shopTimerText, value, nameof(ShopTimerText)); }
+
+    [DataSourceProperty]
+    public string ReinforcementsText { get => _reinforcementsText; private set => Set(ref _reinforcementsText, value, nameof(ReinforcementsText)); }
+
+    [DataSourceProperty]
+    public string FortificationsText { get => _fortificationsText; private set => Set(ref _fortificationsText, value, nameof(FortificationsText)); }
+
+    [DataSourceProperty]
+    public bool IsReinforcementsTab { get => _isReinforcementsTab; private set => Set(ref _isReinforcementsTab, value, nameof(IsReinforcementsTab)); }
+
+    [DataSourceProperty]
+    public bool IsFortificationsTab { get => _isFortificationsTab; private set => Set(ref _isFortificationsTab, value, nameof(IsFortificationsTab)); }
+
+    [DataSourceProperty]
+    public bool HasFortTab { get => _hasFortTab; private set => Set(ref _hasFortTab, value, nameof(HasFortTab)); }
+
+    [DataSourceProperty]
+    public string ShopHintText { get => _shopHintText; private set => Set(ref _shopHintText, value, nameof(ShopHintText)); }
+
+    [DataSourceProperty]
+    public bool IsOffersEmpty { get => _isOffersEmpty; private set => Set(ref _isOffersEmpty, value, nameof(IsOffersEmpty)); }
+
+    [DataSourceProperty]
+    public string NoOffersText { get => _noOffersText; private set => Set(ref _noOffersText, value, nameof(NoOffersText)); }
+
+    [DataSourceProperty]
+    public string PickSubtitle { get => _pickSubtitle; private set => Set(ref _pickSubtitle, value, nameof(PickSubtitle)); }
+
+    [DataSourceProperty]
+    public bool IsBoonPanelVisible { get => _isBoonPanelVisible; private set => Set(ref _isBoonPanelVisible, value, nameof(IsBoonPanelVisible)); }
+
+    [DataSourceProperty]
+    public string KeyShopText { get => _keyShopText; private set => Set(ref _keyShopText, value, nameof(KeyShopText)); }
+
+    [DataSourceProperty]
+    public string KeyHornText { get => _keyHornText; private set => Set(ref _keyHornText, value, nameof(KeyHornText)); }
+
+    [DataSourceProperty]
+    public string KeySpeedText { get => _keySpeedText; private set => Set(ref _keySpeedText, value, nameof(KeySpeedText)); }
+
+    [DataSourceProperty]
+    public string KeyVolleyText { get => _keyVolleyText; private set => Set(ref _keyVolleyText, value, nameof(KeyVolleyText)); }
+
+    [DataSourceProperty]
+    public bool IsShopKeyEnabled { get => _isShopKeyEnabled; private set => Set(ref _isShopKeyEnabled, value, nameof(IsShopKeyEnabled)); }
+
+    [DataSourceProperty]
+    public bool IsHornKeyEnabled { get => _isHornKeyEnabled; private set => Set(ref _isHornKeyEnabled, value, nameof(IsHornKeyEnabled)); }
+
+    [DataSourceProperty]
+    public bool IsVolleyKeyEnabled { get => _isVolleyKeyEnabled; private set => Set(ref _isVolleyKeyEnabled, value, nameof(IsVolleyKeyEnabled)); }
+
+    [DataSourceProperty]
+    public string KeysLockedText { get => _keysLockedText; private set => Set(ref _keysLockedText, value, nameof(KeysLockedText)); }
+
+    [DataSourceProperty]
+    public bool IsKeysLocked { get => _isKeysLocked; private set => Set(ref _isKeysLocked, value, nameof(IsKeysLocked)); }
+
+    [DataSourceProperty]
+    public string BoonHintText { get => _boonHintText; private set => Set(ref _boonHintText, value, nameof(BoonHintText)); }
+
+    [DataSourceProperty]
+    public bool IsBoonHintVisible { get => _isBoonHintVisible; private set => Set(ref _isBoonHintVisible, value, nameof(IsBoonHintVisible)); }
+
+    public void ExecuteShowReinforcements() => ShowTab(fortifications: false);
+
+    public void ExecuteShowFortifications() => ShowTab(fortifications: true);
+
+    /// <summary>Hides the boon panel until the shop is next opened. The pick stays on offer: nothing is taken or rerolled.</summary>
+    public void ExecuteHideBoons()
+    {
+        _boonsHidden = true;
+        Refresh();
+    }
+
+    private void ShowTab(bool fortifications)
+    {
+        _fortTab = fortifications;
+        Refresh();
+    }
+
     public void ExecuteHorn() => SoundHorn();
 
     public void ExecuteClose()
@@ -210,6 +343,11 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         }
 
         _shopWanted = !_shopWanted;
+        if (_shopWanted)
+        {
+            _fortTab = false;
+            _boonsHidden = false;
+        }
         Refresh();
     }
 
@@ -253,6 +391,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             CloseText = LongDefeatHudText.Close();
             ApplyOffers(view);
             Fort.Update(view);
+            ApplyShop(view);
         }
         else
         {
@@ -286,12 +425,49 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;
+        WaveLabel = LongDefeatHudText.Wave(view.Phase, view.Wave);
+        ClassLabel = LongDefeatHudText.ClassLabel(view.ClassName);
+        HasClass = ClassLabel.Length > 0;
+        GoldValue = LongDefeatHudText.GoldValue(view.Gold);
+        IsTimerVisible = view.ShopOpen;
+        ApplyKeys(view);
+    }
+
+    /// <summary>The themed key strip: B and H usable only while the shop is open, N from the run's own volley state, and the line above the strip (the reason B and H are grey, or the open boon pick).</summary>
+    private void ApplyKeys(RunView view)
+    {
+        KeyShopText = LongDefeatHudText.ShopTitle();
+        KeyHornText = LongDefeatHudText.KeyHorn();
+        KeyVolleyText = LongDefeatHudText.KeyVolley(view);
+        IsShopKeyEnabled = view.ShopOpen;
+        IsHornKeyEnabled = view.ShopOpen;
+        IsVolleyKeyEnabled = view.Phase == RunPhase.Wave && view.Volleys.Owned && view.Volleys.Ready;
+        IsKeysLocked = view.Phase == RunPhase.Wave;
+        KeysLockedText = IsKeysLocked ? LongDefeatHudText.KeysLocked() : string.Empty;
+        IsBoonHintVisible = view.ShopOpen && view.BoonOffer.Count > 0 && !_shopWanted;
+        BoonHintText = IsBoonHintVisible ? LongDefeatHudText.BoonAwaits() : string.Empty;
+    }
+
+    /// <summary>The themed shop's header, tabs and hints. The Fortifications tab shows only while the build sells a fortification; without one the shop stays on Reinforcements.</summary>
+    private void ApplyShop(RunView view)
+    {
+        ShopTimerText = LongDefeatHudText.NextWaveIn(view.SecondsLeft);
+        ReinforcementsText = LongDefeatHudText.TabReinforcements();
+        FortificationsText = LongDefeatHudText.FortTitle();
+        HasFortTab = Fort.IsVisible;
+        IsFortificationsTab = _fortTab && HasFortTab;
+        IsReinforcementsTab = !IsFortificationsTab;
+        IsOffersEmpty = view.Offers.Count == 0;
+        NoOffersText = IsOffersEmpty ? LongDefeatHudText.NoOffers() : string.Empty;
+        ShopHintText = IsOffersEmpty ? string.Empty : LongDefeatHudText.ShopHint();
     }
 
     private void ApplySpeed()
     {
         SpeedText = LongDefeatHudText.Speed(_session.Speed);
         SpeedTitle = LongDefeatHudText.SpeedTitle();
+        SpeedValue = LongDefeatHudText.SpeedButton(_session.Speed);
+        KeySpeedText = LongDefeatHudText.KeySpeed(_session.Speed);
         foreach (var button in Speeds)
             button.Update(_session.Speed);
     }
@@ -323,6 +499,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         }
 
         IsPickVisible = _shopWanted && offer.Count > 0;
+        IsBoonPanelVisible = IsPickVisible && !_boonsHidden;
         if (!IsPickVisible)
         {
             if (Boons.Count > 0)
@@ -331,6 +508,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         }
 
         PickTitle = LongDefeatHudText.PickTitle();
+        PickSubtitle = LongDefeatHudText.PickSubtitle();
         RerollText = LongDefeatHudText.Reroll(view!.Rerolls);
         CanReroll = view.Rerolls > 0;
         if (Boons.Count != offer.Count)

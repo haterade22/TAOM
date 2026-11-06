@@ -4895,4 +4895,15 @@
 	<string id="taom_dwarf_attacks_mcm_damage" text="{=taom_dwarf_attacks_mcm_damage}Dwarf Attack Damage (%)" />
 	<string id="taom_dwarf_attacks_mcm_damage_hint" text="{=taom_dwarf_attacks_mcm_damage_hint}The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100." />
 
+	<string id="TAOM_LD_Hud_TabReinforcements" text="{=TAOM_LD_Hud_TabReinforcements}Reinforcements" />
+	<string id="TAOM_LD_Hud_NextWaveIn" text="{=TAOM_LD_Hud_NextWaveIn}Next wave in {TIME}" />
+	<string id="TAOM_LD_Hud_ShopHint" text="{=TAOM_LD_Hud_ShopHint}Select a row to recruit" />
+	<string id="TAOM_LD_Hud_NoOffers" text="{=TAOM_LD_Hud_NoOffers}No reinforcements are for sale here." />
+	<string id="TAOM_LD_Hud_PickSubtitle" text="{=TAOM_LD_Hud_PickSubtitle}Select one blessing" />
+	<string id="TAOM_LD_Hud_KeyHorn" text="{=TAOM_LD_Hud_KeyHorn}Sound the horn" />
+	<string id="TAOM_LD_Hud_KeySpeed" text="{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x" />
+	<string id="TAOM_LD_Hud_KeysLocked" text="{=TAOM_LD_Hud_KeysLocked}Shop and horn available between waves" />
+	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
+	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
+	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
 </strings>
