@@ -103,8 +103,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     // One missile per shot, owned by a defender chosen and read for IsLive, AI control and the main agent right here, then the call: a missile that outlives its owner is A24's case. The missile gets the
     // direction as its forward axis, as the Fords tower fire builds it (FordsTowerAdapter.Fire), and the item's speed for both the base and the flight speed (A25). A null mission object to ignore is handled
     // outside a server or a recorder ("missionObjectToIgnore?.GameEntity ?? WeakGameEntity.Invalid", Mission.cs:4954-4980, E11; only the server branch reads the object's Id); a wall origin has none, and neither has
-    // a tower's: Fords passes its tower's FordsTowerComponent (FordsTowerAdapter.cs:348-349), a MissionObject, while Helm's Deep's high towers are plain static entities (scene.xscene: "towertop" and "walltower" carry a
-    // mesh and a physics shape and no script), so there is no MissionObject to name; the guard against an arrow striking its own parapet is the boot clearance ray and the origin height (R5). A missile is no agent,
+    // a tower's: Fords passes its tower's FordsTowerComponent (FordsTowerAdapter.cs:348-349), a MissionObject, while Helm's Deep's high towers are plain static entities (scene.xscene, reworked 2026-11-06: "sm_helms_dep_castle_tower_a" carries a
+    // mesh and no script), so there is no MissionObject to name; the guard against an arrow striking its own parapet is the boot clearance ray and the origin height (R5). A missile is no agent,
     // which the agent count around the calls shows, and the missile list's growth is the count added. The index of each missile is handed back, because it is what a hit carries (E11) and tells one use's arrows from another's.
     public LdVolleyFire FireVolley(string itemId, IReadOnlyList<LdVolleyShot> shots, string towerId)
     {
