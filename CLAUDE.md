@@ -383,6 +383,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
 - No git action that changes a ref, the index or the working tree unless asked; reads are free
+- Test for CRLF with `file <path>`; `grep -c $'\r'` reports 0 under this shell.
 - Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 
 ## Equipment & Armory

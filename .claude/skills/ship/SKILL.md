@@ -17,8 +17,8 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 
 ### Phase 1 — Build & internal review
 1. `/verify` — build + tests must pass. If red, stop and fix.
-2. `/deep-review $ARGUMENTS`: senior `deep-reviewer` agents, one per lens, in waves of four (standards, compat, efficiency, completeness, data-flow, design; C++ checks auto-fire if `.cpp`/`.h` in scope; the XML integrity lens joins whenever XML or XSLT is in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`), then its Step 4 applies every KEEP improvement to the changed code.
-3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
+2. `/deep-review $ARGUMENTS`: its Step 2 sets the tier, the lenses and the waves.
+3. Handle findings as `/deep-review` requires.
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)
 4. `/review-codex`: writes the prompt and dispatches Codex via `codex exec` in the background, at a reasoning effort the session sizes to the change; tells the user the level, the reason and the expected window once.
@@ -29,7 +29,7 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 
 ### Phase 4 — Close out
 7. `/verify` — final build + tests green.
-8. The GitHub issue must **already exist** (open it when work started, per `/issue`). Close it with the final commit — do NOT create it retroactively.
+8. The issue exists before the closing commit, opened on the maintainer's word when work starts (per `/issue`). Close it with the final commit. Work already done without an issue: ask the maintainer; if the maintainer declines, the commit body says so.
 9. Write/update `docs/features/<name>.md`, including `## How to verify in game`. An in-game check still owed goes there as steps before the issue gets `triage-needs-ingame`.
 10. Write the commit body as the changelog entry; `/release` generates `CHANGELOG.md` from it.
 11. If the work ran in a worktree, run `python tools/worktree_audit.py` once it lands and report its bucket for that worktree. Remove nothing without Mike's word.

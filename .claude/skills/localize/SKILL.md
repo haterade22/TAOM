@@ -39,5 +39,7 @@ Stage the edit, then run `python tools/check_stale_loc_rows.py --staged` (report
 - `UnregisteredLocalizationKeyBaselineTests` — no `{=taom_*}` literal in C# lacks a ModuleData row. Red means you skipped step 2; `python tools/harvest_literal_loc_keys.py --apply` does it.
 
 ## Gotchas
+
+- Search GitHub issue bodies, not only titles, for owed translator runs: #446 and four checkbox items were invisible to a title search.
 - Morphologically-rich languages (RU/JP/KO/TR/CN) hit gender-agreement rejections that fall back to English — flag for human polish (no auto-fix).
 - Two external modules also have loc (`TAOM_Map`, `LOTRLOME_Armory`) deployed straight to the game install, not in the repo.
