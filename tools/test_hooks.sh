@@ -1094,6 +1094,86 @@ done
 rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw.json"
 
 # ---------------------------------------------------------------------------
+head2 "7j. every hook registration is anchored on CLAUDE_PROJECT_DIR, so a gate still runs after a cd (#690)"
+# Claude Code runs a hook command in the session's current directory, and a Bash `cd` into a project
+# subdirectory persists across tool calls. A registration written as `.claude/hooks/x.sh` then fails
+# to start ("No such file or directory"), which the harness treats as a non-blocking error, so every
+# gate fell silent after `cd tools` (proven live 2026-09-26, #690). Each settings.json registration
+# names its script as "$CLAUDE_PROJECT_DIR"/.claude/..., and each skill or agent frontmatter one (the
+# surface section 5 says gets forgotten) names it through ${CLAUDE_PROJECT_DIR} or "$CLAUDE_PROJECT_DIR".
+J7_UNANCHORED=$("$HPY" - <<'PY' | tr -d '\r'
+import json, pathlib, re
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+for ev, gs in d.get('hooks', {}).items():
+    for g in gs:
+        for h in g.get('hooks', []):
+            c = h.get('command', '')
+            if not c.startswith('"$CLAUDE_PROJECT_DIR"/.claude/'):
+                print('settings.json ' + ev + ' ' + c)
+root = pathlib.Path('.')
+for src in sorted((root / '.claude' / 'skills').glob('*/SKILL.md')) + sorted((root / '.claude' / 'agents').glob('*.md')):
+    text = src.read_text(encoding='utf-8', errors='replace').replace('\r\n', '\n')
+    fm = text[3:].split('\n---', 1)[0] if text.startswith('---') else ''
+    for m in re.finditer(r'^\s*(?:-\s*)?command:\s*(.+?)\s*$', fm, re.M):
+        if not re.search(r'"?\$\{?CLAUDE_PROJECT_DIR\}?"?/\.claude/', m.group(1)):
+            print(src.as_posix() + ' ' + m.group(1))
+PY
+)
+if [[ -z "$J7_UNANCHORED" ]]; then
+    ok 'every hook registration (settings.json and skill or agent frontmatter) is anchored on CLAUDE_PROJECT_DIR'
+else
+    bad "hook registrations not anchored on \$CLAUDE_PROJECT_DIR (they stop running after a cd into a subdirectory): $(printf '%s' "$J7_UNANCHORED" | tr '\n' ';')"
+fi
+# End to end, the way the harness runs it: the registered command string through bash -c, from a
+# subdirectory, with CLAUDE_PROJECT_DIR set. The gate must still refuse a trunk force push.
+J7_CMD=$("$HPY" -c 'import json; d = json.load(open(".claude/settings.json", encoding="utf-8")); print(next(h["command"] for g in d["hooks"]["PreToolUse"] for h in g["hooks"] if h["command"].endswith("/validate-push.sh")))' | tr -d '\r')
+J7_PAYLOAD=$("$HPY" -c 'import json; print(json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push --" + "force origin HEAD:bannerlord-1.4.5"}, "hook_event_name": "PreToolUse"}))')
+for j7_dir in tools .claude/hooks; do
+    J7_RC=0
+    (cd "$REPO/$j7_dir" && printf '%s' "$J7_PAYLOAD" | timeout -k 2 15 env CLAUDE_PROJECT_DIR="$REPO" bash -c "$J7_CMD" >/dev/null 2>&1) || J7_RC=$?
+    if [[ "$J7_RC" == 2 ]]; then
+        ok "validate-push, run as registered from $j7_dir/, refuses a trunk force push (rc 2)"
+    else
+        bad "validate-push, run as registered ($J7_CMD) from $j7_dir/, answered rc=$J7_RC to a trunk force push; expected 2 (rc 127: the relative path did not resolve, #690)"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+head2 "7k. the git gates run for the Bash and PowerShell tools; Serena's editors are denied (D19, D3)"
+K7=$("$HPY" - <<'PY' | tr -d '\r'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+gates = {"block-no-verify.sh", "validate-push.sh", "check-claude-files-tracked.sh",
+         "check-commit-subject-version.sh", "block-dangerous-git.sh", "block-broad-git-add.sh",
+         "check-moduledata-validation.sh", "check-native-dll-crt.sh", "check-doc-config-drift.sh"}
+for g in d["hooks"]["PreToolUse"]:
+    names = {h["command"].rsplit("/", 1)[-1] for h in g["hooks"]}
+    if names & gates and g.get("matcher") != "Bash|PowerShell":
+        print("matcher %r for %s" % (g.get("matcher"), ",".join(sorted(names & gates))))
+    gates -= names
+for n in sorted(gates):
+    print("unregistered " + n)
+deny = set(d.get("permissions", {}).get("deny", []))
+for n in ["create_text_file", "replace_content", "replace_in_files", "delete_lines", "replace_lines",
+          "insert_at_line", "replace_symbol_body", "insert_after_symbol", "insert_before_symbol",
+          "rename_symbol", "safe_delete_symbol", "execute_shell_command", "jet_brains_move",
+          "jet_brains_safe_delete", "jet_brains_rename", "jet_brains_inline_symbol"]:
+    if "mcp__serena__" + n not in deny:
+        print("not denied mcp__serena__" + n)
+for n in ["find_symbol", "find_referencing_symbols", "get_symbols_overview", "read_memory", "write_memory"]:
+    if "mcp__serena__" + n in deny:
+        print("read or memory tool denied mcp__serena__" + n)
+if d.get("attribution", {}).get("commit") != "" or d.get("attribution", {}).get("pr") != "":
+    print("attribution.commit and attribution.pr are not both empty")
+PY
+)
+if [[ -z "$K7" ]]; then
+    ok "git-gate group matches Bash|PowerShell; 16 Serena editors denied, read and memory tools kept; attribution off"
+else
+    bad "settings.json: $(printf '%s' "$K7" | tr '\n' ';')"
+fi
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then

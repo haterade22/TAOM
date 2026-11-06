@@ -360,13 +360,12 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 
 **Always use `taom-src` first** — authoritative signatures from the installed DLLs. The order:
 **0.** [engine process docs](./docs/reference/engine/) for "how does X work" → **1.** `pwsh tools/taom-src.ps1 path <Type>`
-for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` (shipping-client decompile — editor-only
-types are stripped, "absent" != "doesn't exist") → **3.** ILSpy MCP as fallback.
+for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` → **3.** ILSpy MCP as fallback.
 Full detail (compose examples, dual-build layout, DLL paths, configuration): [`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md).
 
 ## Hooks
 
-Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Gate them with `bash tools/test_hooks.sh`. Full catalog, with the current counts (hook → event → purpose):
+Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Each names its script as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh` (a relative path stopped every gate after a `cd`, #690). Gate them with `bash tools/test_hooks.sh`. Full catalog, with the current counts (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -390,7 +389,6 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 - Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 

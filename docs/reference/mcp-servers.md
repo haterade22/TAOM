@@ -25,7 +25,9 @@ Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.lo
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
 
-**Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
+Sixteen Serena editing tools are denied in `.claude/settings.json` (`permissions.deny`, maintainer decision 2026-11-04): `mcp__serena__` followed by `create_text_file`, `replace_content`, `replace_in_files`, `delete_lines`, `replace_lines`, `insert_at_line`, `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `rename_symbol`, `safe_delete_symbol`, `execute_shell_command`, `jet_brains_move`, `jet_brains_safe_delete`, `jet_brains_rename`, `jet_brains_inline_symbol`. Serena's read tools and its four memory tools stay allowed. The list is the can-edit set the 1.5.x line derived for Serena 7a296833 (7d13adc36); this line runs Serena unpinned, so re-derive it when Serena adds an editing tool.
+
+**Why:** every safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
 write tools went straight past the force-push block, the CHANGELOG-staged gate, the
 `.claude/`-tracked-files gate, the ModuleData ref gate and the settings/ADR protection, all
