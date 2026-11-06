@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 49 GameModel overrides (48 registered + 1 abstract base). All follow the same pattern.
+TAOM overrides game models by inheriting the engine's model for the slot. All follow the same pattern.
 
 ## Pattern
 
@@ -43,55 +43,6 @@ Live example, with one more service call: `Main/Features/CulturalFeats/Models/Ta
 8. **Tests** — Service logic is fully unit-tested. The model class itself is thin enough to not need direct tests.
 9. **Cross-entity propagation (MANDATORY when the override returns a per-entity capability/value)**: If your override returns a per-entity value (per party, per hero, per settlement) that the engine **propagates** to related entities or **recomputes per-entity**, you MUST decompile the engine *consumer* of your result and mirror that propagation: or related entities desync. Before overriding, answer two questions from the decompiled engine code: (a) **Propagation**: does the value get pushed onto attached/child entities (army attached parties, settlement bound villages, family members)? (b) **Recompute**: is it recomputed per-entity from a per-entity getter the engine drives across the group? If yes to either, the override is NOT a per-entity-isolated decision. Also encode **lifecycle**: an entity already mid-transition must retain the capability to *complete/exit* (e.g. a party already at sea keeps naval capability to reach land regardless of toggles; gates govern only new transitions). **Worked example (NavalTravel #296, the bug this rule prevents):** `PartyNavigationModel.HasNavalNavigationCapability` keyed only on `IsMainParty` stranded a player-led army's attached AI parties: the engine force-propagates `MobileParty.IsCurrentlyAtSea` down the attachment tree AND recomputes `NavigationCapability` per party (`MobileParty.cs:464-479,493-496`), so attached parties were dragged to sea with `Default`-only navigation. The donor model (NavalDLC's `NavalPartyNavigationModel`) encoded attached-to inheritance; the port dropped that limb when it rewrote the one method it changed. Caught by Codex, missed by all 5 deep-review agents (none opened `MobileParty`). Extract the full decision to a pure service method and pin it with a decision-matrix test. See `docs/reviews/rca-navaltravel-2026-06-24.md`. **Corollary:** when you keep N-1 limbs of a faithful engine-model port and rewrite limb N, re-audit limb N's *entire* behavior, not just the sub-change you intended.
 
-## Existing Overrides (50 total: 49 registered + 1 abstract base)
+## Existing overrides
 
-| Model | Base | Feature |
-|-------|------|---------|
-| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the career mount bonuses #611: mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
-| `TaomClanTierModel` | `DefaultClanTierModel` | `CareerSystem` |
-| `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | `CareerSystem` |
-| `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |
-| `TaomBanditDensityModel` | `DefaultBanditDensityModel` | `BanditManagement` |
-| `TaomNotableSpawnModel` | `DefaultNotableSpawnModel` | `CulturalFeats` |
-| `TaomMarriageModel` | `DefaultMarriageModel` | `NazgulFamily` + `MarriageAlignment` (one slot, two rules) |
-| `TaomSettlementEconomyModel` | `DefaultSettlementEconomyModel` | `SettlementEconomy` |
-| `TaomSettlementFoodModel` | `DefaultSettlementFoodModel` | `SettlementFood` |
-| `TaomSiegeEventModel` | `DefaultSiegeEventModel` | `Siege` |
-| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | `ArmyTargeting` |
-| `TaomPartyNavigationModel` | `DefaultPartyNavigationModel` | `NavalTravel` — **not registered**; the `AddModel` call in `SubModule.cs` is commented out, so these overrides do not run |
-| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `TroopProgression` |
-| `TaomPartyWageModel` | `DefaultPartyWageModel` | `CulturalFeats` |
-| `TaomVolunteerModel` | `DefaultVolunteerModel` | `TroopProgression` (+ `AlignmentRecruitment`, `CastleRecruitment`) |
-| `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | `CulturalFeats` |
-| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | `CulturalFeats` |
-| `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | `CulturalFeats` |
-| `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | `CulturalFeats` |
-| `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | `CulturalFeats` |
-| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | `CulturalFeats` |
-| `TaomCaravanModel` | `DefaultCaravanModel` | `CulturalFeats` + `CaravanTrade` |
-| `TaomBattleRewardModel` | `DefaultBattleRewardModel` | `CulturalFeats` |
-| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | `CulturalFeats` |
-| `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | `CulturalFeats` |
-| `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | `CulturalFeats` |
-| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | `CulturalFeats` |
-| `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | `CulturalFeats` |
-| `TaomSmithingModel` | `DefaultSmithingModel` | `CulturalFeats` |
-| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | `CulturalFeats` |
-| `TaomRaidModel` | `DefaultRaidModel` | `CulturalFeats` |
-| `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | `BattleBalance` |
-| `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | `BattleBalance` |
-| `TaomPartyHealingModel` | `DefaultPartyHealingModel` | `Arena` |
-| `TaomTournamentModel` | `DefaultTournamentModel` | `Arena` |
-| `TaomAgeModel` | `DefaultAgeModel` | `RaceAge` |
-| `TaomPregnancyModel` | `DefaultPregnancyModel` | `RaceAge` |
-| `TaomAllianceModel` | `DefaultAllianceModel` | `Diplomacy` |
-| `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | `Diplomacy` |
-| `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |
-| `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | `Execution` |
-| `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
-| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract** — career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` |
-| `TaomCustomBattleDamageModel` | `CustomAgentApplyDamageModel` | `CombatMechanics` (Custom Battle) |
-| `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | `PrisonerRecruitment` |
-| `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` (SandBox) | `BannerBearers` |
-| `TaomCustomBattleBannerBearersModel` | `CustomBattleBannerBearersModel` | `BannerBearers` (Custom Battle) |
-| `TaomBattleInitializationModel` | `SandboxBattleInitializationModel` (SandBox) | `Enlistment` |
+The one catalogue of every override (base, feature, thread notes, Custom Battle wiring) is [gamemodel-registry.md](../../docs/reference/gamemodel-registry.md). Add a row there with a new model; `tools/lint_docs.py` checks it against the code.

@@ -1071,7 +1071,6 @@ def check_unflagged_dotnet(commit: CommitView | None = None) -> list[tuple[Path,
 # Both directions matter, and so does the count in the prose: a hardcoded "TAOM has N overrides"
 # is exactly the shape that rots, and it rots silently because nobody recounts 40 table rows.
 
-MODEL_RULES_DOC = REPO_ROOT / ".claude" / "rules" / "gamemodels.md"
 MODEL_REGISTRY_DOC = DOCS_DIR / "reference" / "gamemodel-registry.md"
 MODELS_SEARCH_ROOT = REPO_ROOT / "Main"
 
@@ -1081,10 +1080,7 @@ MODEL_CLASS_RE = re.compile(
     r"^[ \t]*(?:public\s+|internal\s+)?(?:sealed\s+|abstract\s+|partial\s+)*"
     r"class\s+(Taom\w*Model)\s*:\s*(\w*Model)\b", re.M)
 MODEL_MENTION_RE = re.compile(r"`(Taom\w*Model)`")
-MODEL_COUNT_CLAIM_RES = (
-    re.compile(r"TAOM has (\d+) GameModel overrides"),
-    re.compile(r"Existing Overrides \((\d+) total\)"),
-)
+MODEL_COUNT_CLAIM_RE = re.compile(r"TAOM has (\d+) GameModel overrides")
 
 
 def discover_model_classes() -> dict[str, Path]:
@@ -1121,26 +1117,25 @@ def check_model_registry() -> list[tuple[Path, int, str, str]]:
                          "the search root moved, so this check cannot vouch for anything"))
         return findings
 
-    for doc in (MODEL_RULES_DOC, MODEL_REGISTRY_DOC):
-        if not doc.is_file():
-            findings.append((doc, 0, "missing-doc", f"{rel(doc)} does not exist"))
-            continue
-        text = doc.read_text(encoding="utf-8", errors="replace")
-        listed = set(MODEL_MENTION_RE.findall(text))
+    doc = MODEL_REGISTRY_DOC
+    if not doc.is_file():
+        findings.append((doc, 0, "missing-doc", f"{rel(doc)} does not exist"))
+        return findings
+    text = doc.read_text(encoding="utf-8", errors="replace")
+    listed = set(MODEL_MENTION_RE.findall(text))
 
-        for name in sorted(set(in_code) - listed):
-            findings.append((doc, 0, "unlisted-model",
-                             f"`{name}` ({rel(in_code[name])}) is not in {rel(doc)}"))
-        for name in sorted(listed - set(in_code)):
-            findings.append((doc, _line_of(text, f"`{name}`"), "phantom-model",
-                             f"`{name}` is listed in {rel(doc)} but no such class exists"))
+    for name in sorted(set(in_code) - listed):
+        findings.append((doc, 0, "unlisted-model",
+                         f"`{name}` ({rel(in_code[name])}) is not in {rel(doc)}"))
+    for name in sorted(listed - set(in_code)):
+        findings.append((doc, _line_of(text, f"`{name}`"), "phantom-model",
+                         f"`{name}` is listed in {rel(doc)} but no such class exists"))
 
-        for pattern in MODEL_COUNT_CLAIM_RES:
-            for m in pattern.finditer(text):
-                claimed = int(m.group(1))
-                if claimed != len(in_code):
-                    findings.append((doc, text.count("\n", 0, m.start()) + 1, "model-count",
-                                     f"claims {claimed} GameModel overrides; {len(in_code)} exist"))
+    for m in MODEL_COUNT_CLAIM_RE.finditer(text):
+        claimed = int(m.group(1))
+        if claimed != len(in_code):
+            findings.append((doc, text.count("\n", 0, m.start()) + 1, "model-count",
+                             f"claims {claimed} GameModel overrides; {len(in_code)} exist"))
     return findings
 
 
@@ -1593,7 +1588,7 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         out.append(f"- Prose trapped in an auto-generated backlinks region: **{len(report.backlinks_prose)}**")
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
         out.extend(gating)
-        out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
+        out.append(f"- GameModel registry drift (code vs the registry): **{len(report.model_registry)}**")
         out.append(f"- Em/en dashes in newly written prose: **{len(report.dashes)}**")
         out.append(f"- Missing symbols in ADRs (report-only): **{len(report.adr_symbols)}**")
     out.append("")

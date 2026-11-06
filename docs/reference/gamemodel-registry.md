@@ -2,6 +2,8 @@
 
 > Every TAOM GameModel override (vanilla model -> TAOM override -> purpose). Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure). Override *pattern* + base-class rules live in `.claude/rules/gamemodels.md`.
 
+TAOM has 49 GameModel overrides, the parked and abstract ones included (tools/lint_docs.py checks the total against the code and that every one is listed here).
+
 
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
