@@ -174,9 +174,9 @@ appears **zero times**.
 |---|---|
 | Group | `taom`, always |
 | Case | `^[a-z][a-z0-9_]*$` |
-| Order | `<verb>_<object>[_of_<owner>\|_to_<target>]`, matching vanilla |
-| Read-only verb | **`print_` by default.** `audit_` is the single admitted alternative, for a command that returns a verdict plus a computed replacement value rather than printing current state (`audit_settlement_entrances`). `dump_`, `list_`, `get_` stay banned — they are pure synonyms for `print_`, and admitting synonyms is how the convention drifts |
-| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_ damage_ requeue_` |
+| Order | `<verb>_<object>[_of_<owner>\|_to_<target>]`, matching vanilla (shipped exception with a feature prefix before the verb: `fc_grant_merit`) |
+| Read-only verb | **`print_` by default.** `audit_` is the single admitted alternative, for a command that returns a verdict plus a computed replacement value rather than printing current state (`audit_settlement_entrances`). Shipped exceptions, kept rather than renamed and not a precedent: the `<subject>_status` reports (`time_status`, `service_status`, `fc_status`). `dump_`, `list_`, `get_` stay banned: they are pure synonyms for `print_`, and admitting synonyms is how the convention drifts |
+| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_ damage_ requeue_`. Shipped exceptions with a verb outside this list, kept rather than renamed and not a precedent: `grant_` (`fc_grant_merit`), `nudge_`, `save_` and `reload_` (`nudge_race_offset`, `save_race_offsets`, `reload_race_offsets`) and `rescue_` (`rescue_service`, `rescue_time`). |
 | `show_` / `hide_` | Reserved for genuine visibility toggles, as in `campaign.show_settlements` |
 | Redundancy | Never put `taom` in the name; the group carries it |
 | Mirroring vanilla | Encouraged — `taom.add_special_resources` deliberately echoes `campaign.add_gold_to_hero` |
@@ -197,7 +197,7 @@ Cheat mode also changes two vanilla screens: the player's own inventory lists ev
 
 | Tier | Definition | Safeguard |
 |---|---|---|
-| **A** | Read-only (`print_*`, `audit_*`) | Cheat gate only. Nothing else. |
+| **A** | Read-only (`print_*`, `audit_*`, and the shipped read-only exceptions in the naming table) | Cheat gate only. Nothing else. |
 | **B** | Reversible, clamped mutation | Cheat gate + an honest before→after echo |
 | **C** | Mutates **persisted** state, not undoable from the console | Cheat gate + dry-run default + a literal positional `confirm` token + validate-before-lookup + an Entity State Matrix (`.claude/rules/csharp-architecture.md`) |
 
@@ -297,6 +297,9 @@ A feature doc pairs these commands with the observable result that proves each s
 | `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier plus the daily breakdown (income with town count, one upkeep line per troop type, net) since 2026-09-11. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
 | `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit, and since #545 prints the ENFORCED frame (`raw/deflated`) beside the DISPLAYED one (`weighted/true-base`) so the two can be compared in one line |
+| `taom.print_ai_food_relief [count]` | A | campaign | Nothing else shows it: each AI party's daily food consumption as a fraction of the vanilla members/20 rate, split by whether the party is eligible for the AI food relief; the count caps the per-party table (default 25), and the summary covers every party. See [ai-party-size.md](ai-party-size.md) |
+| `taom.fc_status` | A | campaign | Field Commission config, banked merit per troop, promoted-companion count, and whether an offer is queued or showing. See [field-commission.md](field-commission.md) |
+| `taom.fc_grant_merit <troopId> <amount>` | C | campaign | Playing out battles to test a promotion offer: adds 1 to 100,000 merit to a troop type's saved bank (`_taom_fc_merits`). Nothing undoes it from the console, and it ships without the Tier C dry run and `confirm` |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
 | `taom.time_status` | A | campaign | Dump every state that can freeze campaign time (menu context, time lock, engine pause, waiting flag, encounter) in one shot; built for the 2026-08-23 camp-menu freeze, replaces a decompile-and-guess loop |

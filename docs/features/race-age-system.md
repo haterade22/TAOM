@@ -101,11 +101,10 @@ Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age a
 | `Main/Features/RaceAge/Models/TaomPregnancyModel.cs` | GameModel override (race fertility) |
 | `Main/Features/RaceAge/RaceAgeBehavior.cs` | DailyTick age-death check |
 | `Main/Features/RaceAge/RaceAgeIoC.cs` | DryIoc registration |
-| `Main/Features/RaceAge/Hooks/GetCivilianEquipment_Patch.cs` | Harmony patch — defensive fallback for missing child equipment rosters |
 | `Main/Adapters/IHeroAgeAdapter.cs` | Adapter interface |
 | `Main/Adapters/HeroAgeAdapter.cs` | TaleWorlds API wrapper |
 | `Main/_Module/ModuleData/raceage/race_age_config.json` | Race age data |
-| `Main/_Module/ModuleData/taom_child_equipment_templates.xml` | Child equipment rosters for all 10 custom cultures |
+| `Main/_Module/ModuleData/equipmentsets/taom_child_equipment_templates.xml` | Child equipment rosters for all 10 custom cultures |
 
 ## How Race Is Determined
 

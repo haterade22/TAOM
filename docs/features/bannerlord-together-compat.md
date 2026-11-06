@@ -121,7 +121,7 @@ It reports:
   revision was never sourced);
 - **contested** methods patched by more than one distinct owner where at least one isn't TAOM;
 - **TRANSPILER CONFLICT** rows where two owners both rewrite the same method's IL — the highest-risk
-  Harmony conflict class, and TAOM brings 7 transpilers of its own;
+  Harmony conflict class, and TAOM brings its own transpilers (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main`; 19 in 17 files on 2026-11-06);
 - how many `0Harmony` assemblies are loaded, with paths and versions.
 
 That last line is the one to read first. **If BT's owner id never appears while the game plainly
@@ -250,8 +250,7 @@ NavalTravel and NativeSkinFixes to be disabled at the wiring level instead.
 D1 survived for months because nothing forced anyone to ask the question. `CoopVetoClassificationTests`
 now does, at build time: it scans `Main/` for every class declaring a bool-returning Harmony prefix
 and requires each to carry a disposition — `GatedForCoop`, `ReviewedSafe`, or `Parked` — with a
-written reason. Adding a prefix without classifying it fails the build. 32 classes are currently
-classified; three are gated.
+written reason. Adding a prefix without classifying it fails the build. 55 classes are classified (2026-11-06: 51 ReviewedSafe, 3 GatedForCoop, 1 Parked); 3 are gated.
 
 The classification question is: **can this skip a campaign-state mutation the co-op host replicates,
 AND can its condition evaluate differently on two peers?** Both halves matter — `TraitLevelingHelper`

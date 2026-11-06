@@ -195,8 +195,7 @@ issue for quest…") and `CompleteQuestWithCancel()`'d (`:165-168`).
 **An issue-less quest is silently cancelled on load unless it overrides `SpecialQuestType` to a non-empty string.**
 TAOM's `CareerQuest` has no issue, so it sets `SpecialQuestType => "taom_career_quest"`
 ([CareerQuest.cs](../../../Main/Features/CareerSystem/Quests/CareerQuest.cs)) to survive save/load. Any future
-TAOM standalone quest (e.g. a LOTR main-quest line) needs the same. (See memory
-`feedback_questbase_subclass_special_or_issue`.)
+TAOM standalone quest (e.g. a LOTR main-quest line) needs the same. (See the [lesson](../../reviews/lessons/state-lifecycle-save.md).)
 
 ### SaveableTypeDefiner id math
 
@@ -205,7 +204,7 @@ fails. The engine global type id is `_saveBaseId + localId`. **TAOM definer base
 at 101, not 1.** `CareerQuestSaveableTypeDefiner` uses base `726900701` + localId `101` → `726900802`
 ([CareerQuestSaveableTypeDefiner.cs](../../../Main/Features/CareerSystem/Quests/CareerQuestSaveableTypeDefiner.cs)).
 Using `1` produced `726900702`, colliding with FormationPreset → "An item with the same key has already been added" at
-`Module.Initialize`. (See memory `feedback_saveable_typedefiner_localid_offset`.)
+`Module.Initialize`. (See the [lesson](../../reviews/lessons/state-lifecycle-save.md).)
 
 ## Flow diagram
 

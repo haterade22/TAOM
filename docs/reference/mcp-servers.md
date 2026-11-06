@@ -19,12 +19,12 @@
 
 ## Denied write tools (2026-08-31)
 
-Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.local.json`. They name servers that are now gone, so the entries are inert and the maintainer may delete them:
-
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
 
-Sixteen Serena editing tools are denied in `.claude/settings.json` (`permissions.deny`, maintainer decision 2026-11-04): `mcp__serena__` followed by `create_text_file`, `replace_content`, `replace_in_files`, `delete_lines`, `replace_lines`, `insert_at_line`, `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `rename_symbol`, `safe_delete_symbol`, `execute_shell_command`, `jet_brains_move`, `jet_brains_safe_delete`, `jet_brains_rename`, `jet_brains_inline_symbol`. Serena's read tools and its four memory tools stay allowed. The list is the can-edit set the 1.5.x line derived for Serena 7a296833 (7d13adc36); this line runs Serena unpinned, so re-derive it when Serena adds an editing tool.
+The nine `mcp__git__*` and `mcp__filesystem__*` entries above lived in `.claude/settings.local.json`, untracked since WP142; both servers left `.mcp.json` with WP116, so no tracked deny names them. If either server comes back, at project or user scope, deny its write tools in the tracked `.claude/settings.json` first, derived from the pinned version's `readOnlyHint: false` annotations.
+
+Sixteen Serena editing tools are denied in `.claude/settings.json` (`permissions.deny`, maintainer decision 2026-11-04): `mcp__serena__` followed by `create_text_file`, `replace_content`, `replace_in_files`, `delete_lines`, `replace_lines`, `insert_at_line`, `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `rename_symbol`, `safe_delete_symbol`, `execute_shell_command`, `jet_brains_move`, `jet_brains_safe_delete`, `jet_brains_rename`, `jet_brains_inline_symbol`. Serena's read tools and its four memory tools stay allowed. The list is the can-edit set the 1.5.x line derived for Serena 7a296833 (7d13adc36); `.mcp.json` pins Serena to that commit, so the list matches what runs. On a pin bump, re-derive the Serena entries from the new commit's class markers (`ToolMarkerCanEdit` in `src/serena/tools/`), never from names ending in `Tool`: `SafeDeleteSymbol` and `JetBrainsInlineSymbol` lack the suffix. The four memory tools stay allowed because they write only Serena's memory folders (`.serena/memories/`, and `~/.serena/memories/global/` for a `global/` name).
 
 **Why:** every git safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
@@ -62,7 +62,9 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 ## Configuration
 
-Project-level MCP servers (Serena, ilspy, taom-moduledata, imagine, elevenlabs) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-scope servers live in the top-level `mcpServers` of `~/.claude.json` (on 2026-10-08 only `davinci-resolve`). The older `~/.claude/.mcp/user.json` (sequential-thinking, context7) is not a file Claude Code reads: on 2026-10-08 neither server loaded, and neither appeared among the failed connections.
+Project-level MCP servers (Serena, ilspy, taom-moduledata, imagine, elevenlabs) are configured in `.mcp.json` at the project root and each developer trusts them in their own `.claude/settings.local.json → enabledMcpjsonServers`; that file is per-user and untracked, because a tracked trust list would approve every server on every clone. (`taom-moduledata` is TAOM-authored, `tools/taom_mcp_server.py`, and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-scope servers live in the top-level `mcpServers` of `~/.claude.json` (on 2026-10-08 only `davinci-resolve`). The older `~/.claude/.mcp/user.json` (sequential-thinking, context7) is not a file Claude Code reads: on 2026-10-08 neither server loaded, and neither appeared among the failed connections.
+
+**Pins.** Every auto-fetched project server in `.mcp.json` runs an exact version: Serena a commit (`7a2968335f2198b966864de1ce3655c8e485a653`), `elevenlabs-mcp` a package version (`@0.12.2`). A pin bump changes every copy of the launch string together: `.mcp.json`, `.codex/config.toml` (Codex still runs `filesystem` and `git`, pinned to `@modelcontextprotocol/server-filesystem@2026.8.31` and `mcp-server-git@2026.8.18`) and the snippet in `docs/features/kingdom-voices.md`. `tools/audit_claude_config.py` flags only an unpinned `npx -y` in `.mcp.json`, so an unpinned `uvx` server or a stale copy elsewhere goes unflagged. User-scope servers (top-level `mcpServers` of `~/.claude.json`) are machine-local and not pinned.
 
 **Project servers are keyed by the folder's spelling.** `~/.claude.json` keeps a project's local
 servers under the path as it was opened, case included: on 2026-10-16 `blender` and

@@ -26,8 +26,8 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
    them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
    aside now** — that copy is the only baseline the NEXT bump will have. The cost of not having one
-   is already booked: the open player report at `crashz/report.json`
-   (`BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
+   is already booked: the open player report (untracked; read it with
+   `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
 3. `taom-src` auto-detects the new version (fresh cache under `~/.taom-src/v<new>/`) — old
    caches remain but are unused.
 
@@ -156,6 +156,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    `BindingVerification` and named here. Add a row per build from a read-only scan of the installed
    DLL (its file length, then the RVAs the tests resolve), and check the first start's guard lines
    (Phase 5).
+8. Write the gate results into a `## Gates` section of `docs/migration/v<ver>-impact.md` from the final `/verify` output, after the commit, in the past tense, and name the commit each number comes from. A later commit that changes one of those numbers rewrites the whole section, not only its own clause.
 
 ## Phase 5 — Control battles before believing anything
 

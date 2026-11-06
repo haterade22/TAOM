@@ -28,6 +28,11 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
    If it is not, tag that one **first** — bumping past an untagged version manufactures another
    unresolvable phantom.
 4. `git tag -l 'v*'` does not already contain the target version. **Never move a pushed tag.**
+4b. No release channel already carries the target version, tagged or not. On the desktop:
+   `grep -o '<Version value="[^"]*"' /e/LOTRAOM_Releases/*/Modules/TAOM/SubModule.xml`; on a machine
+   without that folder (the laptop), ask Mike what each channel holds. A channel holding an untagged
+   build of that number means a tester's crash report naming it is not your commit: take the next
+   number. The public 1.4.8 build carries the hand-typed `v2.0.29.5`, which is in no commit.
 5. The target version follows this line's scheme: `v2.4.0`, then `v2.4.1` and so on. Never
    `v2.0.29` to `v2.0.36` (1.5.x release tags) or `v2.1.x` (tags on no branch); see
    `docs/reference/release-process.md`, "Version numbers on the 1.4.x line". Never a fourth
@@ -59,8 +64,10 @@ Then `python tools/check_mcm_default_flips.py`. It must exit 0: a changed MCM de
 | File | Field | When |
 |------|-------|------|
 | `Main/_Module/SubModule.xml` | `<Version value="v2.0.X" />` | Every release |
-| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Only if the Dependencies assembly changed |
+| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Every release from v2.4.0 on, the same number as Main's, so all four modules read the release number (W1, 2026-11-04); it must change whenever the Dependencies assembly changed |
 | `Main/_Module/SubModule.xml` | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
+
+Outside the repo, set the same version in the live `<game>/Modules/TAOM_Map/SubModule.xml` and `<game>/Modules/LOTRLOME_Armory/SubModule.xml` too. Both modules are unversioned (no git), and the release note tells players all four modules read the release number. The #371 gate checks only the two repo files.
 
 **The #371 gate — do not skip.** After editing, read both files back and assert the two `v2.0.Y`
 values are byte-identical:
@@ -155,7 +162,7 @@ git describe --tags --match 'v[0-9]*' <release commit sha>   # expect vX.Y.Z
 
 The Phase 2 build ran before the release commit, so its DLLs carry the parent's SHA. Rebuild at the
 tag. TAOM and TAOM.Dependencies always ship from this one build, even when Dependencies did not
-change (#371).
+change (#371). When Mike says the packages and release folders are the maintainer's for this release, stop after step 1 and prove the stamps on the DLLs the build deployed instead of running the step 2 dry run: every `TAOM.dll` and `TAOM.Dependencies.dll` under `<game>/Modules/{TAOM,TAOM.Dependencies}/bin` reads `+<tag commit>` with no `.dirty` (`[System.Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).ProductVersion`). Hand the maintainer the prune, the sweep `-Apply` and steps 2 to 5 as a list.
 
 1. `git status --porcelain` is empty and `git rev-parse HEAD` equals `git rev-parse vX.Y.Z^{commit}`,
    then `./build.ps1` (it compiles and deploys every file in the tree, committed or not). If another

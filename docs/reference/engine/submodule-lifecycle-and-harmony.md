@@ -26,16 +26,16 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 | **`OnSubModuleUnloaded()`** (:726) | Module unload / shutdown | NativeSkinFixes **uninstall**; cleanup. |
 
 ## HOW it works — Harmony mechanics
-- **`new Harmony(id)`** — the patch *owner* (`"com.taom.mod"`); all TAOM patches belong to this owner (used by PatchShield's allowlist — `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`).
+- **`new Harmony(id)`**: the patch *owner* (`"com.taom.mod"`); all TAOM patches belong to this owner (used by PatchShield's allowlist; see [harmony-il lessons](../../reviews/lessons/harmony-il.md), "Derive a Harmony owner allowlist...").
 - **Categories:** a patch class carries `[HarmonyPatch(typeof(Target), "Method")]` + `[HarmonyPatchCategory("PatchNN_X")]`; **`TryPatchCategory("PatchNN_X")`** (in `SubModule`, through `PatchCategoryApplier`) applies all patches in that group. Harmony stops a category at its first class whose target does not resolve and throws, with no rollback of the classes it already applied; the helper contains that to the one category. Harmony's own `PatchCategory` builds its category index once per assembly by reading every type's attributes, so one attribute naming a type the engine no longer has would fail every category; TAOM builds that index class by class in `PatchCategoryIndex` (Harmony's public API only), skips the unreadable class, logs it as `[PatchApply] ... SKIPPED` and names it in the startup inquiry (#653). TAOM applies categories *selectively* (some conditionally; `Patch37_CrashReport` has been applied unconditionally since the plan 006 port, because no MCM setting is readable in `OnSubModuleLoad`), so a category can be skipped without disabling everything.
 - **Patch kinds:**
   - **Prefix** — runs before the original; **`return false` skips the original** (and you set `__result`). Used to fully replace behavior (the spider spawn patch, QuickActions Sell-All).
   - **Postfix** — runs after; reads/modifies `__result` + args. The default (SmartCavalry/CompanionTactics `SetMovementOrder`, banner-color).
-  - **Transpiler** — rewrites the target's IL (CastleRecruitment's `IsCastle`-gate swap). Pin to an ordinal + anchor, fail-safe to vanilla (`feedback_transpiler_ordinal_plus_anchor_failsafe`).
+  - **Transpiler**: rewrites the target's IL (CastleRecruitment's `IsCastle`-gate swap). Pin to an ordinal + anchor, fail-safe to vanilla ([harmony-il lessons](../../reviews/lessons/harmony-il.md), "Pin a single-occurrence transpiler swap...").
   - **Finalizer**: catches exceptions thrown by the original/other patches (PatchShield wraps every patch in one). Returning `null` swallows. When ANY finalizer on the method returns a value, the wrapper ends with the `throw` opcode, which REPLACES the exception's stack trace with the frames from the patched method outward (proven with a real patch in `RethrowStackPreserverTests`); only an all-`void` finalizer set gets `rethrow`, which keeps it (Harmony 2.4.2 `MethodCreator`). So an observe-only finalizer should be `void`, and one that hands the exception back writes `return RethrowStackPreserver.PreserveForRethrow(__exception, site);`, or the throw site is lost.
 - **Manual patches** — `_harmony.Patch(AccessTools.Method(typeof(T), "M"), prefix: new HarmonyMethod(...))` for explicit overload/private resolution (Patch23/Patch28 manual entries; the spider spawner's reflected `CreateAgent`/`BuildAgent`).
-- **`AccessTools`** — reflection helpers (`Method`/`Field`/`Constructor`/`PropertyGetter`) for private members; cache the result + bind an **open delegate** for hot paths (`feedback_hotpath_private_method_open_delegate`).
-- **Deferred application** — a category whose target type's **static cctor reads `Mission.Current`/`Campaign.Current`** must be applied in `OnMissionBehaviorInitialize`, NOT `OnSubModuleLoad` (where they're null → JIT-prep NRE) — `feedback_movementorder_cctor_mission_current`. Guard with a one-shot static flag (it fires per mission).
+- **`AccessTools`**: reflection helpers (`Method`/`Field`/`Constructor`/`PropertyGetter`) for private members; cache the result + bind an **open delegate** for hot paths ([harmony-il lessons](../../reviews/lessons/harmony-il.md), "Call private engine methods from hot-path patches...").
+- **Deferred application**: a category whose target type's **static cctor reads `Mission.Current`/`Campaign.Current`** must be applied in `OnMissionBehaviorInitialize`, NOT `OnSubModuleLoad` (where they're null → JIT-prep NRE); see [harmony-il lessons](../../reviews/lessons/harmony-il.md), "Defer patches whose parameter types have Mission/Campaign-dependent cctors". Guard with a one-shot static flag (it fires per mission).
 - **A patch method never lives on a closed generic type, and is never a `DynamicMethod`.** Harmony 2.4.2 records
   each patch method as module plus metadata token and re-resolves it whenever another patch lands on the same
   target. The token carries no type arguments, so it resolves to the open generic type's method, and every later
@@ -68,7 +68,7 @@ they exist (Phase 7/9).
 - **PatchShield** (Dependencies/Foundation, DR3) wraps every patch in a Finalizer that catches the
   MissingMethod/MissingField/TypeLoad trinity and **auto-unpatches the offending owner** — so an engine-bump signature
   drift degrades gracefully instead of crashing. Its owner-filter must enumerate every `new Harmony("X")` in vendored
-  DLLs we ship, not namespace prefixes (`feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`).
+  DLLs we ship, not namespace prefixes (same harmony-il lesson as above).
 - **Patch signature verification** — before writing/maintaining a patch, verify the target signature with `ilspycmd` on
   the *installed* DLLs (CLAUDE.md "Research First"; `/verify-bindings` refreshes the committed API snapshot after an
   engine bump). A wrong target = silent no-op (Postfix) or TypeLoad at startup (Prefix/Transpiler).
@@ -81,7 +81,7 @@ TAOM crosses that boundary only via **MinHook** (NativeSkinFixes byte-pattern ho
 
 ## Evidence (file:line)
 - `Main/SubModule.cs`:82 (`: MBSubModuleBase`), :91 (`OnSubModuleLoad`), :104 (`new Harmony("com.taom.mod")`), :133-242 (`PatchCategory("PatchNN_X")` ×N; CrashReport unconditional since the plan 006 port), :207-235 (`.Initialize` static wiring), :247 (`OnBeforeInitialModuleScreenSetAsRoot`), :294 (`OnGameStart` → `AddBehavior`/`AddModel` :310-391+), :512 (`OnGameInitializationFinished`), :640 (`OnMissionBehaviorInitialize`: deferred MovementOrder category), :704 (`OnApplicationTick`), :726 (`OnSubModuleUnloaded`).
-- TAOM patch catalogue + categories: `docs/reference/harmony-patch-registry.md` (full rationale/history) + the thin routing tables in `CLAUDE.md` ("Harmony Patch Categories" + "GameModel Overrides"). Defensive infra: `Dependencies/Foundation/PatchShield`. Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_transpiler_ordinal_plus_anchor_failsafe`, `feedback_hotpath_private_method_open_delegate`, `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`.
+- TAOM patch catalogue + categories: `docs/reference/harmony-patch-registry.md` (full rationale/history) + the thin routing tables in `CLAUDE.md` ("Harmony Patch Categories" + "GameModel Overrides"). Defensive infra: `Dependencies/Foundation/PatchShield`. Gotcha lessons: [harmony-il.md](../../reviews/lessons/harmony-il.md).
 - Linked: gamemodel-system.md (Phase 7, AddModel), campaignevents-and-campaignbehavior.md (Phase 9, AddBehavior), formations-and-team-ai.md / campaign-to-mission-bridge.md (Phases 13/17, deferred patch), bannerlord-engine-and-toolchain.md (the native/MinHook boundary).
 
 ---

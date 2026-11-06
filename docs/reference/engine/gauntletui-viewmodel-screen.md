@@ -8,7 +8,7 @@
 ## WHAT it is
 
 Bannerlord UI is **MVVM over Gauntlet**: a **`ViewModel`** holds the data (`[DataSourceProperty]` values + `Execute…`
-commands); a **movie** (a `.xml` widget tree in `GUI/Prefabs/`) is the view; **`GauntletLayer.LoadMovie(movieName,
+commands); a **movie** (a `.xml` widget tree in `GUI/PreFabs/`) is the view; **`GauntletLayer.LoadMovie(movieName,
 vm)`** binds them. A full custom window is a **`GameState`** + a **`GameStateScreen`** (which renders it via Gauntlet
 layers). Mods either build their own VM+movie+state, or **extend vanilla UI** with **UIExtenderEx** (mixins +
 prefab-extensions). TAOM does both.
@@ -23,7 +23,7 @@ The data source. You expose **`[DataSourceProperty]`** properties (the widget tr
 TAOM VMs (career, messengers, quick actions) subclass `ViewModel`.
 
 ### `GauntletLayer.LoadMovie(string movieName, ViewModel dataSource)` (Engine.GauntletUI/GauntletLayer.cs:119)
-Instantiates the named movie (a `.xml` UI prefab under `GUI/Prefabs/`) bound to the VM. The widget tree reads the
+Instantiates the named movie (a `.xml` UI prefab under `GUI/PreFabs/`) bound to the VM. The widget tree reads the
 VM's `[DataSourceProperty]` values by name and routes `Command.Click="ExecuteFoo"` to the VM method. A `GauntletLayer`
 is a `ScreenLayer` added to a `ScreenBase`/`MissionView`.
 
@@ -32,13 +32,13 @@ is a `ScreenLayer` added to a `ScreenBase`/`MissionView`.
 - **`GameState`** (Core/GameState.cs:7 — `: MBObjectBase`) — a game state (e.g. the career screen). **Push it via
   `GameStateManager.CreateState<T>()` + `PushState(state)`** — NOT `new T()` (the manager's `CreateState` runs
   `HandleCreateState` → wires the state to its `GameStateScreen` via `GameStateScreenManager.OnCreateState`; skipping
-  it = no screen, silent no-op — `feedback_gamestate_creation_pattern`).
+  it = no screen, silent no-op; [lesson](../../reviews/lessons/gamemodels-services.md)).
 - **`GameStateScreen`** (the screen for a state) — **MUST implement `IGameStateListener`** (IGameStateListener.cs:3 —
   `OnActivate`/`OnDeactivate`/`OnInitialize`/`OnFinalize`). The `GameStateManager` calls these on activation; **a
-  GameStateScreen that doesn't implement it crashes on open** (`feedback_gamestate_listener`).
+  GameStateScreen that doesn't implement it crashes on open** ([lesson](../../reviews/lessons/localization-ui.md)).
 - **Overlay on an existing screen** — add a `GauntletLayer` to the current screen, then call
   `_layer.InputRestrictions.SetInputRestrictions()` (pair `ResetInputRestrictions` on teardown). **Without it the
-  widgets render but receive no mouse input** — a silent dead button (`feedback_gauntlet_overlay_input_wiring`; the
+  widgets render but receive no mouse input**, a silent dead button ([lesson](../../reviews/lessons/localization-ui.md); the
   EquipPresets button shipped broken this way).
 
 ### UIExtenderEx (3rd-party, vendored) — extending vanilla UI
@@ -55,17 +55,17 @@ commands. The state/screen stack manages window lifecycle. UIExtenderEx lets mod
 replacing whole screens (forward-compatible across patches, as long as the bound names/XPaths hold).
 
 ## TAOM relevance + gotchas (the UI memory cluster)
-- **Career screen** = a `GameState` + `GameStateScreen : IGameStateListener` (CLAUDE.md CareerSystem); pushed via
+- **Career screen** = a `GameState` + `GameStateScreen : IGameStateListener` (`Main/Features/CareerSystem`); pushed via
   `CreateState`+`PushState`.
 - **Messengers** = a UIExtenderEx prefab-extension on `EncyclopediaHeroPage`; **QuickActions** = a mixin on the
   inventory VM. Both vanilla-UI extensions.
 - **Mutating a vanilla VM property:** use the **public setter**, never reflected field-set + a reflected
-  `OnPropertyChangedWithValue` (the generic-method lookup returns null) — `feedback_prefer_public_setter_over_reflected_notify`.
-  And **decompile the setter body before mutating** post-construction (`feedback_taleworlds_vm_setter_decompile`).
+  `OnPropertyChangedWithValue` (the generic-method lookup returns null; [lesson](../../reviews/lessons/localization-ui.md)).
+  And **decompile the setter body before mutating** post-construction ([lesson](../../reviews/lessons/gamemodels-services.md)).
 - **Player-facing strings in a VM:** `{=key}Text` must go through `new TextObject("{=key}Text").ToString()` — a raw
-  string shows the literal `{=key}` (`feedback_localization_textobject`).
+  string shows the literal `{=key}` ([lesson](../../reviews/lessons/localization-ui.md)).
 - **Custom sprites need a baked atlas** — a loose PNG + manifest entry renders BLANK; the sprite-sheet must be
-  regenerated (baked `*_tex.tpac`) — `feedback_sprite_atlas_baked_regen_required`/`feedback_sprite_dimensions` (resize
+  regenerated (baked `*_tex.tpac`; [lesson](../../reviews/lessons/localization-ui.md)) (resize
   before bake). Baked ≠ visible until the render check.
 - **Overlay input wiring** + **GameState creation** + **IGameStateListener** — the three crash/no-op gotchas above.
 - **Every return to the map leaks GPU memory** [yotthani; not confirmed in focused play]: the engine rebuilds the
@@ -154,7 +154,7 @@ is managed (yours).
 - `TaleWorlds.Engine.GauntletUI/GauntletLayer.cs`:13 (`: ScreenLayer`), 119 (`LoadMovie(movieName, ViewModel)`).
 - `TaleWorlds.ScreenSystem/ScreenBase.cs`:7; `TaleWorlds.Core/GameState.cs`:7 (`: MBObjectBase`); `IGameStateListener.cs`:3-12 (`OnActivate`/`OnDeactivate`/`OnInitialize`/`OnFinalize`).
 - Map conversation + encyclopedia (read 2026-09-22 on the v1.4.8 dump; lines re-anchored 2026-11-04 to the laptop's `C:\Decompiled_Bannerlord\_modules_build`): `SandBox__SandBox.View.cs` `MapConversationTableau.OnFinalize` :12131, `OnTick` :12164 (unguarded read :12198), `OnConversationPlay` :12585, `RemovePreviousAgentsSoundEvent` :12648, `PlayConversationSoundEvent` :12656-12663, `MapScreen` `IMapStateHandler.OnMenuModeTick` :14248 / `OnIdleTick` :14745; `SandBox__SandBox.GauntletUI.cs` `MapConversationTextureProvider` :3354 (`Clear` :3383 → `OnFinalize`, `Tick` :3422 → `OnTick`), `GauntletMapConversationView` :8416 (`Tick` :8530, `TrySetFocus` :8542, called from `OnFrameTick`/`OnIdleTick`/`OnMenuModeTick` :8698/:8704/:8710), `"MapConversation"` layer z 205 :8613, `"EncyclopediaBar"` layer z 310 :10924 with `RegisterActiveStateDisableRequest` :10931; category dump `Core/.../GameStateManager.cs` :193-207 (idle vs tick), `UI/.../TextureWidget.cs` :163-176 (provider ticks only after a visible render); `SandBox__SandBox.cs` `CampaignMissionComponent` lip-sync :16804/:16831.
-- TAOM gotcha memories: `feedback_gamestate_listener`, `feedback_gamestate_creation_pattern`, `feedback_gauntlet_overlay_input_wiring`, `feedback_prefer_public_setter_over_reflected_notify`, `feedback_taleworlds_vm_setter_decompile`, `feedback_localization_textobject`, `feedback_sprite_atlas_baked_regen_required`. Feature doc: `docs/features/gui-sprite-system.md`.
+- TAOM gotcha lessons: [localization-ui](../../reviews/lessons/localization-ui.md), [gamemodels-services](../../reviews/lessons/gamemodels-services.md). Feature doc: `docs/features/gui-sprite-system.md`.
 
 ---
 

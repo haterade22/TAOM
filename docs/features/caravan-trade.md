@@ -66,7 +66,7 @@ Levers 1–3 let caravans reach the undersupplied far / same-alignment towns van
 | `Main/Features/CaravanTrade/CaravanTradeConfig.cs` | JSON DTO + `WarTradePolicyParser` (known-set validation). |
 | `Main/Features/CaravanTrade/CaravanTradeConfigProvider.cs` | Load + field-by-field validation. |
 | `Main/Features/CaravanTrade/CaravanTradeSettingsProvider.cs` | MCM-over-JSON merge; dropdown-index → enum. |
-| `Main/Features/CaravanTrade/CaravanTradeIoC.cs` | 3 singleton registrations. |
+| `Main/Features/CaravanTrade/CaravanTradeIoC.cs` | 5 singleton registrations (config provider, settings provider, service, visit memory, visit-memory behavior). |
 | `Main/Features/CaravanTrade/Hooks/*.cs` | The 4 postfixes (Patch59_CaravanTrade). |
 | `Main/Features/CulturalFeats/Models/TaomCaravanModel.cs` | +2 diversity overrides (existing forming-cost override kept). |
 | `Main/_Module/ModuleData/caravan_trade/caravan_trade_config.json` | Config + inline docs. |

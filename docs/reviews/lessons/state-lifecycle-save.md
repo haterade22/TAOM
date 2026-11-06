@@ -112,11 +112,11 @@ For any system that sets timed/stateful data (buffs, tracked dictionaries, sched
 - **Prevent:** For every `SetBuff`/`ScheduleRestore`/dictionary write, verify these clear paths exist and work: (1) normal expiry (timer fires) — guards against replacement? refreshes stats? (2) reactivation (new buff overwrites old) — does the old timer's restore guard against clearing the new buff? (3) entity death (hero/agent dies) — are all tracked entries for that entity cleaned up? (4) mission end — are all static dictionaries and pending callbacks cleared? (5) screen/state change — are UI-bound references released? Each "set" line needs a traceable "clear" for every exit path; if the clear is delegated to a scheduled callback, verify the callback survives context clearing (e.g. `_activeContexts.Clear()` dropping pending restores).
 - **Source:** memory/feedback_lifecycle_state_matrix.md
 
-### CampaignBehaviorBase has no OnGameEnd — use OnGameOverEvent / OnNewGameCreatedEvent for singleton cleanup
-`CampaignBehaviorBase` in v1.3.15 (verified via `ilspycmd ... -t TaleWorlds.CampaignSystem.CampaignBehaviorBase`) exposes only `RegisterEvents()` + `SyncData(IDataStore)` — there is no `OnFinalize` and no `OnGameEnd` virtual. An audit on `SpecialResources` (#133) recommended overriding `OnGameEnd()` to unsubscribe a static event; that method doesn't exist.
-- **Why missed:** Codex audit (Phase 9b #133, 2026-05-13) recommended overriding `OnGameEnd()`; verified via `ilspycmd` that no such virtual exists. An inline comment in `SpecialResourcesBehavior.RegisterEvents` documents the constraint.
-- **Prevent:** For singleton cleanup at campaign teardown: (1) best-effort hook `CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeMethod)` — covers the death-of-character flow but NOT main-menu-exit (the orphan listener becomes GC-eligible once `CampaignGameStarter` releases). (2) For static event subscriptions on long-lived objects (e.g. `ScreenManager.OnPushScreen += handler`): same pattern, document the limitation inline. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety: use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one) so reset happens just before fresh state is built — pattern shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
-- **Source:** memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133 SpecialResources ScreenManager event-leak fix)
+### CampaignBehaviorBase has no OnGameEnd, and a static engine event outlives the campaign
+`CampaignBehaviorBase` in v1.3.15 (verified via `ilspycmd ... -t TaleWorlds.CampaignSystem.CampaignBehaviorBase`) exposes only `RegisterEvents()` + `SyncData(IDataStore)`: no `OnFinalize`, no `OnGameEnd` virtual. A static engine event such as `ScreenManager.OnPushScreen` outlives every campaign and keeps each subscribed handler's target alive, so a campaign behavior that subscribes leaves one handler per save load behind. Nothing makes the orphan collectable, and an `OnGameOverEvent` unsubscribe does not run on a main-menu exit or a load over a live campaign.
+- **Why missed:** Codex audit (Phase 9b #133, 2026-05-13) recommended an `OnGameEnd()` override that does not exist; the fix unsubscribed on Game Over and documented the limitation, claiming the orphan became GC-eligible. It never did: after N loads each party-screen open ran N handlers and wrote N `[SpecRes] PartyScreen session BEGUN` lines (#771). `TroopCountDiagnosticsBehavior` had the same shape.
+- **Prevent:** (1) A campaign behavior subscribing to a static event keeps exactly one live handler per process: store the handler in a private static field, and in `RegisterEvents` remove the previous one, then store and add this instance's; Game Over removes it and clears the field. Or subscribe from a process-lifetime object (a `Reuse.Singleton` service) and add the handler once, removing before adding. Never write that the orphan is collectable. (2) `OnGameOverEvent.AddNonSerializedListener(this, ...)` is only a best-effort cleanup and does not cover main-menu exit. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety, use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one), so reset happens just before fresh state is built: shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
+- **Source:** 1.5.x #771 (static `ScreenManager.OnPushScreen` handlers stacked once per save load); earlier memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133), on `origin/bannerlord-1.5.x` (ported by WP142).
 
 ### Pick a lifecycle hook by locating the engine call it must precede — never by copying a neighbour
 
@@ -760,3 +760,285 @@ days start at `CampaignStartTime`) runs day S's daily handlers twice, and repeat
   state, and skips a repeat. Describe the boundary in elapsed days, never in calendar hours. TAOM's daily
   listeners are not audited yet (#793).
 - **Source:** #793; found on the 1.5.x line (`e8504a62b`), re-checked on the installed v1.4.8 DLLs.
+
+### Every engine callback path re-checks the terminal state, not only the daily tick (2026-10-14)
+`ChronicleService` skipped every Pending and Active event once the War of the Ring ended, and said so in the
+feature doc, but only the launch and the daily step made the check. `OnSettlementOwnerChanged` and the siege-start
+callback reached the same resolve method around it, so a conquest between War Ended and the next daily step paid
+an Active siege and left a stale army focus (Codex F1, #765 Batch B).
+- **Why missed:** the guard was written where the contract was read, the daily path; the engine-callback entry
+  points were added afterwards, and no test fired a callback after the terminal state.
+- **Prevent:** when a feature has a terminal state (war ended, feature off, campaign over), list every entry
+  point that can resolve or pay (daily tick, each engine event, each console command) and put the check where they
+  converge, here the shared callback wrapper. Add one test per entry point that fires after the terminal state.
+- **Source:** 1.5.x `docs/reviews/rca-war-chronicle-events-2026-10-14.md` F1 (Codex), fixed in `8f2c9e458`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A config list with a non-empty default needs ObjectCreationHandling.Replace (#871, 2026-10-23)
+Hold the Walls added `CapturedFortHold.Sides = ["Free"]` to `army_targeting.json`, whose provider deserialized with
+Json.NET's defaults. `ObjectCreationHandling.Auto` reuses a non-null collection and appends the file's items, so
+`["Evil"]` loaded as Free plus Evil and Free could never be removed; a dedup hid the duplicate, so the shipped-file
+test passed.
+- **Why missed:** every earlier list in that config defaulted to empty, where Auto and Replace agree.
+- **Prevent:** deserialize every config with `ObjectCreationHandling.Replace` (this line's providers already use `Replace`: `git grep -l "ObjectCreationHandling.Replace" -- Main`), and test a non-default list value through the real provider, not a hand-built object.
+- **Source:** 1.5.x `docs/reviews/rca-hold-the-walls-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fail-closed rule is checked on every exit path, and traced through TAOM's own finalizers
+`ModuleRunner.Run` had two correct rules on the same state: a faulted module is skipped for the session, and a module that owns save data throws in the steps that decide whether its `SyncData` runs. The skip came first (`if (_faulted.Contains(module.Id)) continue;`), so a save owner that faulted in a fail-open step (a main-menu phase, a mission start) or on a retried campaign start was skipped silently, and the campaign's next save would have dropped its data (`CampaignBehaviorManager` saves only the behaviors present). Each rule had its own test; the only test of the campaign-start step passed `failClosed: false`, which production never does. A second layer defeats the throw anyway: TAOM's `Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows it while crash capture is on, and `GameLoadingState` re-runs the loading step on the next tick.
+- **Why missed:** the rules were written and tested one at a time, and the rethrow was traced up the engine's call chain to "no managed catch" without asking whether TAOM patches a frame on that chain.
+- **Prevent:** when a guard can both skip and throw, test the SEQUENCE where both apply (fault in step A, then the fail-closed step B, then a retry of B), and let the class that documents the rule own the flag rather than a literal at the call site. Before relying on an exception to stop the game, grep `harmony-patch-registry.md` for a finalizer on every TAOM-reachable frame above the throw (`Module.OnApplicationTick`, `ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`).
+- **Source:** 1.5.x `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 1, 2 and 12; Codex P2 and lenses 2, 5 and 6 (plan 018), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mission.Mode is Deployment at screen init in a field battle (#970, 2026-10-22)
+`DeploymentHandler.AfterStart` saves the mode and sets `Deployment` (`DeploymentHandler.cs`); `Battle` returns only
+when the handler is removed. A gate on `Mission.Mode == Battle` at `OnMissionScreenInitialize` is therefore false in every
+campaign and custom field battle.
+- **Why missed:** the gate read plausibly and the view never ran, so nothing exercised it.
+- **Prevent:** decide "field battle" with `Mission.IsFieldBattle` (set in `MissionCombatantsLogic.EarlyStart`), and attach on
+  the first screen tick whose mode is Battle (`BattleActionBarMissionView.ShouldAttach`).
+- **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A buffer moved from a local to a field takes its owner's lifetime: empty it after use in a singleton (plan 033, 2026-10-02)
+`SpatialGridDebugService` began scanning into a reused `List<Agent>` field. The service is a `Reuse.Singleton`, so the list kept the last overlay frame's agents, and through `Agent.Team` their finished mission, reachable into later battles; as a local it died with the frame.
+- **Why missed:** the allocation fix was judged per call; nobody looked up the registration that sets the field's lifetime.
+- **Prevent:** when hoisting a buffer into a field, read the owner's registration or construction site; if the owner outlives the data (an IoC singleton, a static), clear the buffer after each use and pin the clear with a test.
+- **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hero's getter hides a null field until a clone copies the raw value
+
+`CharacterObject.Culture` returns `HeroObject.Culture` on a hero, so a null raw `BasicCharacterObject._culture` passes every read while the character stays a hero. `FillFrom` copies the raw field onto a child's new character, which is not a hero yet, and `StealthEquipments` then throws at `CharacterObject.cs` (bundle `3fbdc0c5`, `lord_MM15_6`). The bundle could not say how the raw value became null, because nothing logged it.
+- **Why missed:** the stale-character sweep walks registered characters and tests four fields. It left `_culture` null on purpose, and it never looks at a hero's character through the base type.
+- **Prevent:** to check a field a `new` member shadows, read it through `BasicCharacterObject`. When a crash leaves the origin of a bad state open, land the repair with a log line that states the facts, and say in the commit body that the origin is open.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A repair of a restored object follows that object to the end of the method it protects
+
+A stack names the first null, not the only one. The first repair for bundle `3fbdc0c5` restored the culture, and on a hollow parent the birth then threw at `CharacterHelper.cs` on the body range, now after `AddHero`, so each daily tick left a half-built child in a saved list (found in review, never shipped). The same review showed that `IsRegistered` is saved: an object unregistered at one load stays out of the manager at every later load, while XML builds a new twin of its id, so "this log has no unregister line" does not clear a save.
+- **Why missed:** the service's own comment and the feature doc's "Why the repair covers four fields, not one" record this shape from September. The author read them and still stopped at the field the stack named.
+- **Prevent:** before calling a repair of a save-restored object done, read every member the protected method reads after the throw, with the object in its worst possible state. Copy from the registered twin with the engine's own method where one exists. A `[Check]` written before the protected work proves the repair ran, not that the work finished: report how the work ended with a second line from a void Finalizer, which also sees a throw.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine copy from a template overwrites every field another system restored
+
+`InitializeHeroCharacterOnAfterLoad` is safe at load because `RacePersistenceService` runs after it and puts each saved race back. The same call during a birth runs after that restore, so it replaced a registered generated hero's race with the template's, and the next save captured the wrong one (Codex F1, #1076; a Claude data-flow lens had seen the edge and accepted it).
+- **Why missed:** the engine's own copy looked safer than a hand copy, so nobody listed which copied fields TAOM owns.
+- **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A two-sample falling `shaders=` count is not "draining" when the 1 Hz stream went silent (2026-10-18)
+The battle-load triage tool called a player bundle (public 1.4.8 build, 2026-10-18) a cold shader cache that was
+DRAINING: two `WaitingForRender` samples read 3128 then 3066. But the line is written once per second on every
+render-wait frame, and the log held nothing after +11.7 s while the watchdog fired about 290 s later. The watchdog
+fires only when the published count is unchanged for 60 s, so the count was frozen and the main thread had gone
+silent. Slow compile and wedge cannot be told apart from that log.
+- **Why missed:** the tool compared the first and last sample and never asked how long after the last sample the
+  watchdog line came.
+- **Prevent:** judge a periodic stream by its cadence as well as its values. `triage_battle_load.py` now reports
+  the frozen case when the gap to the watchdog line is 30 s or more
+  (`RENDER_WAIT_SILENCE_THRESHOLD_S`), and names the next evidence: `compile_shader` lines in the full
+  `rgl_log_<pid>.txt`, then a hang dump.
+- **Source:** 1.5.x player bundle `taom_crash_20261018_184529_b18f3441`; fix in `tools/triage_battle_load.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The end of the log is a second silence anchor when no watchdog line exists (2026-10-26)
+A player log from 2026-10-25 again got the DRAINING verdict: three `WaitingForRender` samples (2771, 2737, 2704),
+then 117 s of `[MemSample]` lines and no watchdog line, because the player closed the frozen game about 2 minutes
+into the wait. The 2026-10-18 fix measured the silence only up to the watchdog line, so with no watchdog it
+measured nothing and fell back to "draining".
+- **Why missed:** the fix assumed every frozen load lasts until the 300 s watchdog. A player who closes a "not
+  responding" window earlier produces a log with no watchdog line at all.
+- **Prevent:** a silence check needs an anchor that always exists. `[MemSample]` runs on a timer thread, so its
+  lines keep coming while the game thread is frozen. The tool now measures to the newest stamped line of any kind
+  when there is no watchdog line (`Timeline.last_ts`), and the report says "before the log ended".
+- **Source:** 1.5.x player log `taom_debug_2026-10-25_17-36-25.log` (TAOM `84f0459bc`); fix in `tools/triage_battle_load.py`, test `test_silent_stream_before_the_log_ends_is_not_called_draining`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Say what an existing save holds from the last released data, not from the working tree (#646, 2026-09-23)
+The rider docs said an older campaign keeps Thranduil and the lords on the great elk. A hero's battle equipment is
+saved, but the great elk's lord wiring never shipped in a release, so every player's save has them on a `charger`.
+- **Why missed:** "before this change" was read from the working tree, which held another session's unreleased edit.
+- **Prevent:** when you describe what existing saves contain, read the value at the last release tag
+  (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A loop guard withholds output only; the state cleanup still runs (plan 011, 2026-09-25)
+The four Stop reminders exited at the top when `stop_hook_active` was true, the Stop that follows
+Claude's answer to a reminder. That answer is usually what ends the streak: a build, a CHANGELOG
+entry, a tag. The early exit skipped the "condition cleared, remove the marker" branch, so the
+marker outlived its streak and muted the next one: block, build, continuation Stop, fresh C# edit,
+and no reminder.
+- **Why missed:** the plan prescribed the early return as the loop guard and kept the marker logic
+  unchanged. The tests checked trigger, loop silence and mute, but never clear or re-arm, and never
+  a condition that clears during the continuation.
+- **Prevent:** place a loop or re-entry guard right before the emission it suppresses, never above
+  the state bookkeeping. For every one-shot marker, test the full cycle: trigger, mute, clear,
+  re-arm, and a clear that happens on the guarded path. Ask what the marker holds after an upgrade
+  from an older writer, too.
+- **Source:** 1.5.x `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F2, F10 (Codex P2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Every per-session value is reset" is an enumeration: sweep the singletons' mutable fields before writing it (plan 014, 2026-09-24)
+
+Plan 014 reset three campaign-clock latches, and its CHANGELOG said "Both paths now clear every
+per-session value". `EnlistmentReconciler._lossAnnouncedFor`, a shown-flag on the same singleton, is
+per-session and no reset clears it (so a reloaded or repeated loss of the same commander can go
+unannounced), and `FieldDutyRuntime` keeps a real-time pace estimate. The feature doc's bold claim
+("on both lifecycle edges") sat one line below its own note that a co-op client's load skips the
+reset.
+
+- **Why missed:** the summary was written from the plan's list of three latches, not from the code.
+  The architecture rule names shown-flags explicitly, but nobody swept for them.
+- **Prevent:** before writing "every" about session state, list the fields not marked `readonly` on
+  every `Reuse.Singleton` the feature and its adapters register, and mark each reset or not. Write the claim from that list, and name the values left out. State
+  the edges exactly: a load gated on co-op authority is "a host's load".
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A state that ends "when the stop ends" is cleared on the stop's own edge, not on one way the player leaves (plan 014 decisions, 2026-09-24)
+
+Decision 6 said the shore-leave offer's settlement latch clears when the column's stop ends. The
+code cleared it in `ServiceAttachmentService.ExitSettlementForService`, the sweep that walks the
+player out when the commander has gone. The offer grants a pass, and a pass suspends that sweep
+(#512), so the route every accepted offer takes (the player walks out later through vanilla's Leave
+option) never cleared it, and the next stop in the same town stayed silent. The feature doc called
+"once per stop" literal. Five review lenses and Codex found it.
+
+- **Why missed:** the stop's end was identified with one of the player's exits instead of with the
+  event that ends a stop (the commander leaving the town). The `TownLeavePolicy` class doc still
+  said a pass dies when the commander leaves, and the new tests called the handler directly, so no
+  test went through a real route.
+- **Prevent:** before wiring an "X ended" clear, list every way X can end and every way the player
+  can leave it (sweep, pass, discharge, battle, load), and prefer the edge owned by X itself (here
+  the commander's `OnSettlementLeft`, already routed and filtered) over any one exit. Test through
+  the edge that raises the clear, not the handler it calls.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Released at game end" is a reachability claim, and "runs after X" is an ordering claim: trace both before writing them (plan 014 decisions, 2026-09-24)
+
+`SubModule.OnGameEnd` was made to call Enlistment's session reset, and the CHANGELOG said the
+finished campaign's commander party and army "are released at the main menu". The reset nulls two
+handles, but `EnlistmentBehavior._lastSessionStarter` (a singleton field holding the finished
+`CampaignGameStarter`, with every behavior and model) and `CommanderLordAdapter._lastSeenMapEvent`
+still reference that campaign. The same change's comment said the reset runs "after the Game is
+gone"; `Game.Destroy` calls `GameManager.OnGameEnd` before `GameType.OnDestroy` and before
+`Game.Current = null`. A source-level test named `..._SoTheDeadCampaignsObjectsAreReleased` passed
+on a commented-out call.
+
+- **Why missed:** the outcome the call was meant to have was written down as the outcome it has.
+  No one listed the other roots, and the teardown order was assumed rather than read (a recurrence
+  of the "open its caller" lesson on `MBSubModuleBase` virtuals above).
+- **Prevent:** a release claim names every root the feature's singletons hold into the object graph
+  (grep the fields that are not `readonly` on every `Reuse.Singleton`, behaviors included) or says
+  "handles dropped, heap effect unmeasured"; only a heap snapshot supports "released". Read the
+  caller of a teardown virtual before writing when it runs. Name a source-presence test for what it
+  proves, and make it ignore comment lines.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The engine re-initializes dead characters from their template on load, so per-hero state must enumerate every hero character (`Hero.FindAll`), not the alive and dead lists (#1011, 2026-10-26)
+`SandBoxManager.InitializeCharactersAfterLoad` resets `CharacterObject.Race` from the template for every non-original character, dead and disabled ones too. `RacePersistenceService` captured and restored races through a roster that read only `Hero.AllAliveHeroes`, so a dead hero's race was never saved and came back reverted after every load. The encyclopedia and family tree effect is derived from the source, not observed in game. Heroes who died before the fix keep the reverted race, because nothing was ever captured for them.
+- **Why missed:** "all heroes" was read as `AllAliveHeroes`, and the service tests feed a fake roster, so nothing exercised the alive/dead split.
+- **Prevent:** any per-hero state TAOM persists or restores across a load enumerates `Hero.FindAll` (it reaches dead heroes the engine removed from `DeadOrDisabledHeroes`), unless the state is meaningless once the hero is dead. Name the choice where the roster is read.
+- **Source:** 1.5.x issue #1011, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cache an MCM settings reference lazily, never in a constructor (plan 003, 2026-09-24)
+`BattleBalanceSettingsProvider` took `TaomSettings.Instance` once in its constructor. MCM sets
+`BaseSettingsProvider.Instance` only in `MCMSubModule.OnBeforeInitialModuleScreenSetAsRoot`, so a
+resolve during `OnSubModuleLoad` (the `IoC.Configure` eager block, a patch hook `Initialize`) caches
+null and pins every setting in the group to its compiled default for the session, with no log line.
+It was safe only because its one resolve sits under `OnGameStart`, a fact recorded in the CHANGELOG.
+- **Why missed:** the June code copied `NameplateFadeSettingsProvider`, the older constructor-read
+  exemplar; the trap was documented only as a class comment in `NameplateRelationSettingsProvider`,
+  never as a lesson, and a port verifies the commit it is given rather than re-designing it.
+- **Prevent:** cache with `private TaomSettings? Settings => _settings ??= TaomSettings.Instance;`
+  and read every value through it (MCM edits its one registered instance in place, so this stays
+  live). Pin it with an IL rule that no constructor and no public getter calls `get_Instance`. A
+  correctness precondition on WHEN a singleton is first resolved belongs in code, never in a
+  CHANGELOG sentence.
+- **Source:** 1.5.x `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 1; `NameplateRelationSettingsProvider.cs` (first occurrence, 2026-09-13), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A quest's StringId keys its journal record, so a quest started again needs a new id (career quests, 2026-10-27)
+`JournalLogsCampaignBehavior.OnQuestStarted` finds the last journal record whose `JournalLogEntry.IsRelatedTo` matches the quest's `StringId`, and reuses it. A career quest offered again after a cancel under the same `"taom_cq_" + def.Id` took over the cancelled quest's record: attributed to the former hero, marked unsuccessful, then flipped to success when the new quest completed. Each offer now gets `CareerQuestService.NewQuestStringId` (definition, owner, campaign milliseconds).
+- **Why missed:** a ladder comment and an earlier entry in this file said "the engine keys only map markers by id", and that claim was trusted instead of the journal code.
+- **Prevent:** before a quest can be started twice (a re-offer, a second owner, a retry), give each instance its own StringId; an engine claim copied into a comment or a lesson is checked against the decompile before it carries a design.
+- **Source:** 1.5.x `rca-career-quest-owner-change-2026-10-27.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before reusing an engine object across a state change, list the saved fields it still carries and the steps that run before your guard (#1021, 2026-10-27)
+Enlistment kept a defender's encounter inside the commander's town after a repulsed assault. The encounter still held that battle's result (`EnemyRetreated`), so on the next assault the siege continue check read it as a battle to continue and the soldier landed on `menu_siege_strategies` with no battle. A second gap had the same shape: the discharge guard sat after the step (`RestorePresence`, which clears `AttachedTo`) that already pulled a merged soldier out of his battle.
+- **Why missed:** the plan checked that the object could be reused, not what it still held, and the guard was placed by reading the step list, not by asking which earlier step removes its condition.
+- **Prevent:** before reusing an engine object, list its saved fields and clear or verify each one; before placing a guard, list the steps that run ahead of it and check whether any of them removes the state the guard tests. Test with a merged soldier, not only an unmerged one.
+- **Source:** 1.5.x #1021, `docs/reviews/rca-enlistment-encounter-exits-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### List a state machine's whole lifecycle before you fix one of its orders
+
+The warg rage stores a rider and a formation, and four things can end it. A follow-up named one order, a rider who leaves a living warg, and its fix passed. A review then found a dead hitter that stopped the tree, a second rage that stored null, a rage with no enemy near that never closed, and a new rider who took the wrong formation. The re-review found that the fix for the last one was also wrong.
+- **Why missed:** the brief was the line, and the line named one order. Two game logs already held the tree exception, and nobody read them, because check 12 counted those rages as restored.
+- **Prevent:** before the first edit on a stored-state fix, write down each state, each event that can arrive in it and who owns the record. A record with one owner ends when its owner changes. Read the logs of the runs you have, not only the verdict line.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Reset a per-campaign singleton in the constructor of a behavior built per campaign, not in a campaign event (#764, 2026-10-08)
+A process-lifetime singleton that holds persisted per-campaign state must be reset before anything can read it. The one point TAOM owns that precedes every campaign event on both paths is the constructor of a behavior built with `new` in `SubModule.OnGameStart`: `GameManager.OnGameStart` (v1.4.8 `Campaign.cs:1391`) runs before `LoadBehaviorData` (`:1429`) on a load and before the `OnNewGameCreated` dispatch (`:1585`) on a new game, and a load's `SyncData` then restores the saved record over the reset. `OnSessionLaunched` is too late whenever another reader gets there first: listeners run newest-first (see "Campaign-event listener dispatch is LIFO" in `harmony-il.md`), so a behavior added later runs its handler before yours, and vanilla's `OnNewGameCreated` handlers run before any session event. `RegisterEvents` is wrong too: on a load it runs after `LoadBehaviorData` and would wipe the restored record.
+- **Why missed:** #764's first cut followed the session-reset rule in `csharp-architecture.md` and the earlier lessons in this file, which prescribe an `OnSessionLaunched` reset behind a `_syncedThisSession` latch. `WarOfTheRingMomentumBehavior`, added two lines later in `SubModule.cs`, read the stale FullWar in its own `OnSessionLaunched` and started the momentum war on day 0, and vanilla's `CampaignFactionManagerBehaviour` cached the stale "constant war" in `OnNewGameCreated`. The LIFO lesson had existed since #557, but it was filed under Harmony, not under resets.
+- **Prevent:** put the reset in the constructor of a per-campaign behavior, and pin with a source-text test that `SubModule.cs` builds it with `new`: a container-singleton behavior is constructed once per process, so its constructor reset would run once. A behavior that is itself a container singleton must become per-campaign first. Before choosing any other reset point, list every reader of the singleton and the event it reads in.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-session-reset-2026-10-08.md` (#764), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A MissionView added in OnMissionBehaviorInitialize never ticks (#970, 2026-10-22)
+`MissionScreen.OnMissionAfterStarting` registers views once (v1.4.8 `MissionScreen.cs:2684-2694`), before `Mission.AfterStart`
+runs the submodules' `OnMissionBehaviorInitialize` (`Mission.cs:3799-3815`). A view added there gets
+`OnMissionScreenInitialize` with a null `MissionScreen` and no tick, activate or finalize, so the battle action bar
+never ran, and a second rage-mode controller leaked its handlers.
+- **Why missed:** the add worked, the MissionDiag dump listed the view, and no log line existed for the view's own tick.
+- **Prevent:** every TAOM MissionView is a `[DefaultView]`, which the engine builds before the
+  registration; `MissionViewRegistrationGateTests` fails any other. Give a new view a log line that proves its screen is set.
+- **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A reading taken from a lifecycle event follows only the work that ran before that event (2026-10-02)
+The 2026-09-12 memory run read the inventory's `[MemStation] enter` line as the heap after two engine collections (the previous close and this open) and concluded that the 2.6 GB still there was rooted state. In v1.4.8 the line is written from `ScreenManager.OnPushScreen`, which `GameStateManager.OnPushState` reaches through its listeners before its own `Common.MemoryCleanupGC()` (`GameStateManager.cs:257-285`), so the reading followed one collection, the pop's, taken while the closing screen was still on the stack. A screen-close heap release was removed as redundant on that reading; a release one frame after the pop was never tried.
+- **Why missed:** the review checked that both state transitions collect, not where in each transition the sampler's event fires relative to the collection.
+- **Prevent:** before inferring how many collections, cache clears or flushes a reading follows, read the order of the event that writes it against the side effects in the same method, and state that order next to the conclusion.
+- **Source:** 1.5.x `plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md`; `docs/reviews/rca-memory-instruments-2026-09-12.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sibling tracker's scan is a limb, not a redundancy: carry it or write down why the callback set is complete
+`SignatureStrikesMissionLogic` (#605) was modelled on `DreadAuraMissionLogic` and `WargMissionBehavior` and registered agents through `OnAgentBuild` alone; both siblings also scan the agents already on the field once, for an agent built before the behavior could see it. The scan was dropped as redundant on the reasoning that behaviors initialize before spawns. That reasoning was never written down or proven, and the failure it guards against is silent: the one hero the feature exists for is simply never on the roster, and no log line says so.
+- **Why missed:** the sibling was copied for its structure, and the limb whose purpose was not obvious was the one left out. `/deep-review` Agent 5's lifecycle matrix caught it; nothing before the review asked "which callbacks can miss an agent".
+- **Prevent:** when a mission-scope tracker mirrors an existing one, keep every registration path the sibling has (build callback AND one-shot scan) unless the dropped path's safety is proven from the engine and stated in the class comment. A scan is one loop per mission; the proof costs more than the loop.
+- **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesMissionLogic` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A per-mission summary is written on every teardown path, and a gate is read with its else branch (2026-10-02)
+The `[AnimMem]` probe wrote its mission summary only from `OnEndMission`, whose caller is `Mission.EndMissionInternal`. A teardown that never calls `Mission.EndMission` (a mission state finalized without it: `MissionState.OnFinalize` calls `OnMissionStateFinalize` unconditionally, v1.4.8 `MissionState.cs:49-52`) skips `EndMissionInternal` and reaches only `OnRemoveBehavior`, which `OnMissionStateFinalize` calls on every behaviour (`Mission.cs`). The review then justified the fix with a false premise: that a network client never reaches `EndMissionInternal` because `CheckMissionEnd` is gated on `!GameNetwork.IsClient` (`Mission.cs:4781`). That gate covers only the first branch; a client that calls `EndMission` takes `else if (CurrentState != State.Continuing && currentTime > NextCheckTimeEndMission)` and runs `EndMissionInternal` on the next frame. The convergence pass caught it after the premise had reached the code comment, the RCA and the commit body.
+- **Why missed:** the review read the condition on the first branch of `CheckMissionEnd` and stopped; the `else if` that a client takes was a few lines below.
+- **Prevent:** for any end-of-mission output (summary, flush, release), write it from `OnRemoveBehavior` too, with a null-after-use latch so the normal path does not log twice. Before stating that a path never reaches a method, read every branch of the gating method, the `else` included, and quote the line that excludes it. Second occurrence of "An engine lifecycle virtual's firing set is read from its caller".
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C3; convergence round 1 in `docs/reviews/deep-review-036-anim-memory-probe-2026-10-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A session-launch write that raises a campaign event runs before vanilla's managers register their listeners (#772, 2026-10-08)
+`OnSessionLaunched` listeners run inside `Campaign.OnSessionStart`'s event dispatch. The campaign's own managers register afterwards (v1.4.8 `Campaign.cs:729`, then `:742` and `:744`): `KingdomManager.RegisterEvents` (its `WarDeclared` listener, `KingdomManager.cs`) and `CampaignInformationManager.RegisterEvents` (which sets `_isSessionLaunched`, so chat notices stay silent until then, `CampaignInformationManager.cs`). `ReconcileDeclaredWars` repaired saves in `OnSessionLaunched`, so its `DeclareWarAction`s reached the other campaign-event listeners (History entries, map notices) but not those two. Moving to `OnAfterSessionLaunched` does not help: it also precedes both registrations.
+- **Why missed:** the call was placed where the phase check already lived, and the question "which listeners of the event I raise exist yet" is not one the session-reset lessons ask. The Engine lens (F26) and Codex (R1) reached the mechanism separately; the loss turned out harmless (faction Aggressiveness is written and never read in the 1.5.x decompile; only the chat line is lost).
+- **Prevent:** before raising a campaign event from a session event, list the listeners that matter and where each registers; if one is registered later, either defer the write to a first tick or prove and document the loss. Here a delayed repair was rejected (a tick handler, a flag, up to about 67 chat lines at once) and `docs/features/war-of-the-ring.md` states the behavior. The same limit applies to a phase transition fired at launch.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-phase2-wars-2026-10-08.md` (#772), Codex R1 and review finding F26, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Do not make peace or war in `OnSessionLaunched` on a load (#818, 2026-10-18)
+The first version of the War of the Ring sweep made peace from `OnSessionLaunched`. On a load that event runs before
+`MapEventManager.OnAfterLoad` and `SiegeEventManager.OnAfterLoad` (v1.4.8 `Campaign.cs:729` against `:740-741`), and each peace
+raises `OnMapEventContinuityNeedsUpdate`, which can pull parties out of battles and sieges and open a menu its own
+behavior has not registered yet.
+- **Why missed:** session launch was chosen to act early on new games; the load order of the map event managers was not
+  traced.
+- **Prevent:** run stance changes on the first daily tick, or from an event that fires after the managers are restored.
+  `EnforcePermanentAlliances` has the same shape and rarely acts.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A SyncData key-miss guard is not a no-record guard, and the reset goes before an OnGameLoaded seed (plan 001, 2026-09-24)
+Plan 001 made `SpecialResourcesBehavior.SyncData` load into a null local so a missing key cannot hand
+back the live singleton's dictionary, and described it as covering "a save predating the feature". It does not: v1.4.8 `CampaignBehaviorDataStore.LoadBehaviorData` (`:86-91`) calls `SyncData` only when a record
+matches the behavior's StringId or type name, so a save older than the behavior never reaches the
+guard, keeps the previous campaign's balances, and its `Contains`-gated legacy seed is skipped.
+- **Why missed:** the plan predates this file's session-reset rule and stated the engine path from
+  memory; the executor checked the plan's TAOM excerpts for drift but not its engine premises.
+- **Prevent:** for every per-campaign singleton, name both load cases separately: a record without the
+  key (the null-local guard) and no record at all (a `_syncedThisSession` flag the loading `SyncData`
+  sets, as in `FiefGrantingCampaignBehavior` and `FieldCampCampaignBehavior`). Where the behavior seeds
+  in `OnGameLoaded`, run the no-record reset as the first statement of `OnGameLoaded`, not in
+  `OnSessionLaunched`: v1.4.8 `Campaign.cs:1670-1671` raises `OnGameLoaded` before `OnSessionStart`, so a
+  later reset would wipe the seed.
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Append new settlement rows at the end of the live settlements.xml, a town first (Arthedain, 2026-10-07)
+A save made before a batch still loads `settlements.xml` (`SandBoxManager.InitializeSandboxXMLs` skips Heroes, Kingdoms and Factions on a saved game, not Settlements). For a town or village the save has never seen, `Settlement.Deserialize` runs `Alleys[num].Initialize` on an empty list and throws (v1.4.8 `Settlement.cs:1031`); `MBObjectManager.LoadXML` wraps the whole file in an empty `catch`, so the load stops without failing; no later row is marked ready, and the load unregisters every non-ready object (`Campaign.cs`), so those settlements vanish from that save while its parties and heroes still point at them. Blue Craig's Luinkrag landed 34 rows from the end, ahead of 34 existing rows. Rows at the end are dropped cleanly instead: `IsReady` is set only after `Deserialize` returns and the load unregisters non-ready objects (`Campaign.cs`). A castle has no `<CommonAreas>`, does not throw and would load ownerless, so a town heads the tail.
+- **Why missed:** the map tools inserted after a region anchor to keep the file readable, a choice nobody had weighed against saves, and `docs/modding/settlements.md` predicted a crash from a v1.4.8 reading that missed the `catch`. Earlier mid-file batches had shipped as "new campaign only", so the order looked harmless.
+- **Prevent:** on the 1.5.x line both map tools append and a gate fails unless the unreleased batch is the file's tail under a town. This tree's `tools/add_map_villages.py` still inserts after an anchor, so the risk is open here. Any hand edit to the live file follows the same rule.
+- **Source:** 1.5.x `docs/reviews/rca-arthedain-2026-10-07.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

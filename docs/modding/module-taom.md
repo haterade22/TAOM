@@ -85,7 +85,7 @@ After the copy, `ReplaceFileText` rewrites the deployed `SubModule.xml`, substit
 |---|---|---|
 | Any `ModuleData` XML, XSLT or JSON | `./build.ps1` (or copy the file by hand) | Full game restart. `<Xmls>` rows are read once at process start (`Module.cs:1029-1033`) and directories are globbed when the data loads (`MBObjectManager.cs:900-910`); nothing reloads |
 | C# | `./build.ps1` | Full game restart; the DLL lands in all four `bin/` folders |
-| A prefab under `GUI/Prefabs/` | Copy the one file into the install | No bake; prefabs load at runtime (`docs/features/gui-sprite-system.md:166`) |
+| A prefab under `GUI/PreFabs/` | Copy the one file into the install | No bake; prefabs load at runtime (`docs/features/gui-sprite-system.md:166`) |
 | A sprite PNG under `GUI/SpriteParts/` | Deploy, run the sprite generator against the install, then `pwsh tools/sync_sprite_bake.ps1` to pull exactly the manifest and the two `GauntletUI` folders back into the repo | Fully exit and relaunch: a rebake moves existing sprites to new atlas rects (`docs/features/gui-sprite-system.md:138, 167-169`) |
 | A `GUI/SpriteData/FactionMap/*.png` | Copy it into the install | Nothing else; the widget reads the install path (`docs/features/gui-sprite-system.md:59-84`) |
 

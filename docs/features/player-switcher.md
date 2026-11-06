@@ -13,7 +13,7 @@ career choice, because they only ever applied to the character being set aside.
 
 This is a reimplementation of a feature LOTRAOM shipped on Bannerlord 1.2.12. Two of its assets
 crossed into this repo years ago and sat unused: the picker prefab
-(`Main/_Module/GUI/Prefabs/FacGen/PreBuildCharacterSelection.xml`) and the race-aware face
+(`Main/_Module/GUI/PreFabs/FacGen/PreBuildCharacterSelection.xml`) and the race-aware face
 generator transpiler (`Main/Features/CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs`,
 which is what makes a non-human preview render animated rather than in a bind pose).
 

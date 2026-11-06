@@ -34,15 +34,14 @@ Issue #566. Reported 2026-09-12 as "I click Return to Army in Orthanc and it wai
   rests in the settlement, the player enters it from the wait menu, and when the leader moves,
   `LeaveSettlementAction.ApplyForParty(leader)` (`LeaveSettlementAction.cs:13-26`) finishes the
   player's encounter for him. That is correct and the patch leaves it alone.
-- **How a player becomes an unattached member:** two ways.
-  1. A [Player Switcher](player-switcher.md) takeover inherits the lord's `Army` untouched
-     (`HeroSwitchService`, `PlayerIdentityAdapter.ApplyPlayerCharacter`; neither reads `Army` or
-     `AttachedTo`). A lord marching to join an army is exactly `Army != null, AttachedTo == null`.
-     This is how #566 happened.
-  2. Vanilla's own "Sure. We will wait other parties around X for a while, then follow us"
-     (`LordConversationsCampaignBehavior.cs:3510-3514`) sets `MainParty.Army` and nothing else.
-  From either, `PlayerEncounter.Init` (:715-718) enters any non-hostile settlement immediately, so
-  the town menu is reachable on foot.
+- **How a player becomes an unattached member:** a [Player Switcher](player-switcher.md) takeover
+  inherits the lord's `Army` untouched (`HeroSwitchService`, `PlayerIdentityAdapter.ApplyPlayerCharacter`;
+  neither reads `Army` or `AttachedTo`). A lord marching to join an army is exactly
+  `Army != null, AttachedTo == null`. This is how #566 happened. Vanilla's "Sure. We will wait other
+  parties around X for a while, then follow us" consequence (`LordConversationsCampaignBehavior.cs:3510-3514`)
+  would set the same state, but on v1.4.8 no dialog line outputs `lord_tell_gathering`, the state
+  that leads to it (:334-336), so the player cannot reach it. From this state, `PlayerEncounter.Init`
+  (:715-718) enters any non-hostile settlement immediately, so the town menu is reachable on foot.
 - **Without this feature:** the player is stuck in the town with no menu exit. The only ways out
   are the army dispersing on its own, or the dev console.
 
@@ -79,8 +78,7 @@ public API and in vanilla's order: `MainParty.Position = CurrentSettlement.GateP
 `PlayerEncounter.LeaveSettlement()`, `PlayerEncounter.Finish()`, `MainParty.SetMoveModeHold()`,
 `Campaign.Current.SaveHandler.SignalAutoSave()`. Its `AttachedParties` loop is consciously
 dropped: parties attach to the LEADER, and the leader never reaches this option. Nothing writes
-`Army`, so the player stays a member and is free on the map; vanilla's "follow us" already leaves
-the march back to him.
+`Army`, so the player stays a member and is free on the map; the march back is left to him.
 
 **Error paths, and why they differ.** Up to and including the gate-position write, a throw defers
 to vanilla: nothing vanilla reads has changed (the party is still inside, so its map position is
@@ -172,7 +170,7 @@ Search the TAOM debug log for `[ReturnToArmy]`:
 
 - `left <settlement> as an unattached member of <leader>'s army` is the fix doing its job. One line
   per click, never per tick.
-- `could not read the party's army state, deferring to vanilla's wait menu` means the prefix threw
+- `could not read the party's army state or place it at the gate, deferring to vanilla's wait menu` means the prefix threw
   before touching anything. The player is back in the #566 trap; the exception text says why.
 - `the leave sequence threw after mutating` is an ERROR, not a fallback. Something between the gate
   move and the autosave signal failed; vanilla was skipped on purpose because its body would now
@@ -203,8 +201,7 @@ Search the TAOM debug log for `[ReturnToArmy]`:
 
 ## In-game verification (owed)
 
-1. Repro state: take over a lord who is marching to join an army, or accept "follow us" from a
-   gathering leader. Enter a town of a faction you are not at war with. "Return to Army": expect the
+1. Repro state: take over a lord who is marching to join an army. Enter a town of a faction you are not at war with. "Return to Army": expect the
    party outside the gate on the map, still in the army (Kingdom > Armies), time stopped, no menu.
    Before the fix: "You are waiting in <town>".
 2. Same in a town of your own faction, and in a castle.

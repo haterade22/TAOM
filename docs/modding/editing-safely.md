@@ -220,7 +220,7 @@ All measured 2026-09-05 from the repo root (`$BANNERLORD_GAME_DIR` is the game i
 
 - [tools/README.md](../../tools/README.md), "XML I/O convention": the byte-faithful idioms and the backup-suffix rule.
 - [xml-data rule](../../.claude/rules/xml-data.md), "Formatting": the BOM and line-ending rule in force.
-- [moduledata-validation rule](../../.claude/rules/moduledata-validation.md): the validator's codes, its three-module scope, and "PASS ≠ in-game loaded" (line 156).
+- [Validator codes](../reference/moduledata-validator-codes.md): the validator's codes, and "PASS ≠ in-game loaded". The [moduledata-validation rule](../../.claude/rules/moduledata-validation.md) holds its three-module scope.
 - [moduledata-validation feature doc](../features/moduledata-validation.md): "Module coverage at a glance".
 - [module-backup-sweep](../reference/module-backup-sweep.md): the sweep, the quarantine, and the last-extension invariant.
 - [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md): the parser smoke test, the `.bak` grep trap, the line-ending capture rule, the rename grep.

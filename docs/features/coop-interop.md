@@ -248,7 +248,7 @@ save-backed field, but each peer keeps its own TAOM `SyncData` after join (see "
 so the flag reads naturally as *this peer's player has claimed it* — which is the intended meaning.
 The consequence to know: on a client the shared sweep never runs, so expired entries linger until
 `OnSiegeEnded` removes them. Harmless — the local half filters on `!Deadline.IsPast`, so a stale
-entry can never pay out. Pinned by three tests in `CoopAuthorityGateTests`.
+entry can never pay out. The authority half is pinned by two tests in `CoopAuthorityGateTests` (`SiegeDefense_OnHourlyTick_CoopClient_DoesNotTick`, `SiegeDefense_OnHourlyTick_Authority_Ticks`); no test calls `OnHourlyTickLocalPlayer`, so the local half's deadline filter is unpinned.
 
 ### Deliberately NOT gated
 
@@ -449,7 +449,7 @@ Still unconfirmed — worth walking if you have two machines:
 1. `[CoopPresence] EnsureProbed: co-op module(s) ACTIVE: Coop` in `Modules/TAOM.Dependencies/diag.log`,
    and `[PatchShield] co-op module(s) active … install skipped` alongside it.
 2. A `[HarmonyCensus]` block naming `Bannerlord.Coop`; check its `TRANSPILER CONFLICT` rows against
-   TAOM's 7 transpilers.
+   TAOM's own transpilers (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main`; 19 in 17 files on 2026-11-06).
 3. TAOM behaves identically **solo** with the Coop module merely enabled — what the `IsAuthority`
    fail-open direction protects, and now also where the PatchShield cost above lands.
 4. The spawned `/server` process starts TAOM cleanly (no blocking UI).

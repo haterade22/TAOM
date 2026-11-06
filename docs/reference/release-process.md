@@ -47,7 +47,7 @@ that shipped bind-posed characters to players:
 | File | Field | When |
 |------|-------|------|
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<Version value="v2.0.X" />` | Every release |
-| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Only when the Dependencies assembly changed |
+| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Every release from v2.4.0 on, so all four modules read one version (the public v2.0.29.5 build already labels all four that way by hand); it must change whenever the Dependencies assembly changed |
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
 
 The third line exists because BUTR/BLSE launchers read `DependedModuleMetadatas` and the vanilla
@@ -55,6 +55,8 @@ launcher does not — the in-file comment above it spells this out. A stale pair
 load against an old Dependencies, Harmony/UIExtenderEx types fail to resolve at the member level,
 and every character renders in bind pose. `/release` asserts the two `v2.0.Y` values match; do not
 bump one by hand.
+
+The two unversioned modules carry a version too. The live `<game>/Modules/TAOM_Map/SubModule.xml` and `<game>/Modules/LOTRLOME_Armory/SubModule.xml` hold their own `<Version>`, outside git, and the release note tells players all four modules read the release number. Edit both in the install before Mike packages; no commit records the change.
 
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
@@ -70,7 +72,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 
 1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because
    `build.ps1` compiles and deploys every file in the tree, committed or not; only the Phase 8 build
-   moves to a detached worktree of the tag), on `bannerlord-1.4.5`, current version already tagged.
+   moves to a detached worktree of the tag), on `bannerlord-1.4.5`, current version already tagged, and the target version in no tag (`git tag -l 'v*'`) and in no release channel: read the `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM\SubModule.xml`, because a channel can hold an untagged build of a number git never saw (see "A number a channel carried before git did" below).
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
@@ -99,7 +101,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
      (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`), and any leftover `taom_test_` file. Compare
      paths case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, so an exact
      comparison deletes every live prefab. Leave `RuntimeDataCache*` alone: the packager already
-     excludes it unless `--keep-rdc` asks for it.
+     excludes it unless `--keep-rdc` asks for it. `AssetPackages/pack0.tpac` is what packaging TAOM in the editor writes and is not needed: delete it. The four other tpacs there are git-tracked (`fieldcamp_*` and `refuge_*` prefabs) and stay.
    - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets exist in
      the install only, and no build step recreates them
      ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
@@ -170,6 +172,10 @@ time, stamp flagged)` means a flagged stamp cannot prove it; `MISMATCH ... from 
 (<a>, <b>)` means the modules were not installed from one release. A log ending without
 `[Shutdown] clean module unload` ended in a crash or a kill. The `[Engine]` line names the Bannerlord
 build and every active module with its version.
+
+**A number a channel carried before git did.** A build can reach a release channel under a number no commit or tag holds, so a tag of that name is not what the player ran. Resolve such a report by its build stamp, never by the tag. `v2.0.29.5` (the public 1.4.8 build) is in no commit on any branch (`git log --all -S v2.0.29.5 -- Main/_Module/SubModule.xml Dependencies/_Module/SubModule.xml` prints nothing). The players' `[BuildStamp]` line names `8df90444` (branch `fix/public-armory-ids-145`, merged into this line by WP101), whose `<Version>` in git is `v2.0.28`, and their log's module list shows all four modules at `v2.0.29.5`. `v2.0.29` to `v2.0.36` are 1.5.x release numbers. `/release` Phase 1 item 4b reads every channel's `<Version>` before a number is chosen.
+
+**The next release must ship TAOM_Map and Armory packages whose `language_data.xml` files carry Native's text processor.** A file with a `name` and no `text_processor` resets that language's grammar processor wherever it loads after Native, and a profile with no saved order loads `TAOM_Map` after `TAOM` (its `SubModule.xml` declares `id="TAOM" order="LoadBeforeThis"`), as do launchers that read `DependedModuleMetadatas`. Players get the fix only from a package that carries it (#1026). Check each channel before publishing, with the check that reads no baseline: `BANNERLORD_GAME_MODULES="E:/LOTRAOM_Releases/<channel>/Modules" python tools/check_external_loc_coverage.py --processors-only`, or in PowerShell `$env:BANNERLORD_GAME_MODULES = "E:/LOTRAOM_Releases/<channel>/Modules"; python tools/check_external_loc_coverage.py --processors-only`. Pass means exit 0 and a `PASS:` line. Exit 1 lists the files that still lack the processor; exit 2 means the folder, any `language_data.xml`, or Native was not found.
 
 ## TAOM_Map and LOTRLOME_Armory ship with a recorded identity
 

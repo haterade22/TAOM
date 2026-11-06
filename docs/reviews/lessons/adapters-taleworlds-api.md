@@ -519,3 +519,517 @@ The clan-leadership repair's "dead" guard read `Hero.IsAlive` and the service do
 - **Prevent:** a gate on online play reads the engine's fact and `ICoopSessionProvider.IsSessionActive`, and a test pins both reads.
 - **Source:** the 1.5.x line's review, carried by hand in `plans/_audit/2026-11-04-port148/delta-974e60bb2.md`.
 
+
+### An engine cache keyed on a different version counter than the one you bump (2026-10-14)
+`PartyBase.PartySizeLimit` caches its value against `MemberRoster.VersionNo` (v1.4.8 `PartyBase.cs:343-355`). The hunt start and end invalidated
+the party speed (`UpdateVersionNo`) and relied on the top-up changing the roster; a start that added no troops,
+and every end, left the old size limit in place, so the hunt's allowance outlived the hunt (Codex F2, #765 M8).
+- **Why missed:** the author invalidated the cache they were thinking of (speed). The size cache's key was never
+  read, and the tests mocked the adapter, so no test read the limit back.
+- **Prevent:** before invalidating an engine cache, read the getter and name the version it compares
+  (`taom-src path <Type>`). Bump that counter on every transition (`MemberRoster.UpdateVersion`), not only on those
+  that change the data, and pin it with an IL test.
+- **Source:** 1.5.x `docs/reviews/rca-eye-of-sauron-2026-10-14.md` F2 (Codex), fixed in `2d17ceba3`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A broad-phase search radius must exceed the exact filter's edge (2026-10-14)
+The hunter's frame read searches the locator grid around the player with radius `1.5 S`, and the service accepts
+the hunter at `d <= 1.5 S`. The engine's locator skips a locatable at exactly its radius (`>=` on the squared
+distance, v1.4.8 `LocatorGrid.cs:131` and `:139`), so a hunter exactly on the edge was never found. The edge had just moved there
+by a maintainer decision (E09) and the adapter's radius was copied from it (Codex F4, #765 M8).
+- **Why missed:** the tests handed the service a reading directly; none passed through the locator's half-open
+  comparison.
+- **Prevent:** a spatial broad phase searches slightly past the exact edge (here 1%) and the exact filter stays in
+  the service. When a decision moves an edge, grep every search radius that feeds the old one. Pin the radius with
+  an IL or boundary test.
+- **Source:** 1.5.x `docs/reviews/rca-eye-of-sauron-2026-10-14.md` F4 (Codex), fixed in `2d17ceba3`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Call a long all-bool engine signature with named arguments
+`CustomAttacksUtils.TakeDamage` builds a `CombatLogData` through its 17-argument constructor, fifteen of them bools, and passed them by position. The fifteenth is `crushedThrough`, which prints "Crushed through!" (`CombatLogData.cs`); TAOM passed `knockDown` there since the helper was ported, so every creature knockdown the player saw claimed a broken guard. A same-day review of the same struct fixed its `DamageType` and never mapped the other arguments.
+- **Why missed:** a positional list of bools reads as correct in any order, and a reviewer checks the argument they came for.
+- **Prevent:** name every argument of an engine constructor or factory that takes more than a few bools of one type (`crushedThrough: false`), at least from the first one TAOM sets on purpose; when reviewing such a call, map each position to the decompiled signature. `AttackCollisionData.GetAttackCollisionDataForDebugPurpose` (twelve leading bools) in the same method is the next candidate.
+- **Source:** 1.5.x `docs/reviews/rca-elk-delta-2026-09-23.md`, Codex F1 (#643), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine field with the right name may be corrected in a local one call earlier, and a capped engine value is set through the engine's own producer
+`AttackCollisionData.DamageType` is the struct's raw kind; `MissionCombatMechanicsHelper.GetAttackCollisionResults:200` computes a corrected local (bare hand, off-attach-bone, kick or bash, fall, horse charge become Blunt) and never writes it back, then `Mission.GetAttackCollisionResults` hands the same uncorrected struct to `AgentApplyDamageModel.CalculateDamage`. A model that keys a "blunt resistance" pip on the raw field misses a trample. Likewise `Agent.SetWeaponAmountInSlot` sets an amount the engine caps at `ModifiedMaxAmount` everywhere else (pickups merge only up to it, `Agent.cs`); vanilla's extra-ammo perks raise the max with the amount through `MissionEquipment.SetAmountOfSlot(slot, amount, addOverflowToMaxAmount: true)` in `InitializeMissionEquipment`, before build. The career ammo refill used the wrong setter for three months.
+- **Why missed:** the field and the setter both existed with the expected name and type; nobody read the engine's own consumer of the field or its own producer of the value. Third instance of the class in one day (#611: a property written where nothing reads it; #613: a value read where the engine reads a corrected copy, and a value written where the engine caps it).
+- **Prevent:** before keying on an engine value, find where the ENGINE reads it on that path and read that, and before writing an engine value, find how the ENGINE writes it for the same effect (a vanilla perk that does the same thing is the best map) and use that seam. A public helper vanilla uses for the rule (`IsCollisionBoneDifferentThanWeaponAttachBone`) beats a re-implementation.
+- **Source:** 1.5.x `docs/reviews/rca-career-perks-2026-09-17.md` findings 4 and 5, #613, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a change clears an engine flag on an agent, grep every TAOM reader of that flag the same day (2026-09-28)
+Route A clears `Mountable` on the creature bandit after its build so native targeting sees an enemy. Code written
+earlier for "a riderless mount" went stale at once: the routed-count backstop assumed SandBox skips the creature
+(it skips only an `IsMount` agent, `BattleAgentLogic.cs`), and the guard comments, the registry and the feature
+doc described a `Mountable` creature. The backstop then fired for every routed creature with a misleading warning.
+- **Why missed:** graphify follows TAOM types, not engine flags, so the blast-radius step never listed `IsMount`'s
+  readers; the change was reviewed as a targeting fix.
+- **Prevent:** after a change that sets or clears an `AgentFlag` (or anything behind `IsMount`, `IsHuman`,
+  `CanWieldWeapon`), `git grep` the property and the flag across `Main/` and the docs, and re-read each hit as if
+  the agent had the new flags. List the ones that change behaviour in the commit body.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 9 and 12, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before a shared component's presence means a kind, list every site that attaches it (Lost Footing, 2026-10-20)
+The census called an agent a creature when it carried a `BehaviorTreeAgentComponent`. Race Abilities attaches the same
+component to every soldier whose race or culture has a profile, on by default, so nearly every soldier would have read as
+a creature.
+- **Why missed:** the plan defined the kind from the creature features, the component's best-known users.
+- **Prevent:** before using a component, flag or marker as a classifier, grep every `AddComponent`/attach site of that type
+  and classify by what the component holds (here the tree type), not by its presence.
+- **Source:** 1.5.x `docs/reviews/rca-lost-footing-2026-10-20.md` rows 1 and 14, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read an engine getter's body and its callers before measuring with it (Lost Footing, 2026-10-20)
+The census read `Agent.GetTargetPosition()` as the AI move destination. Natively it is the movement-lock target, written
+only by `SetTargetPosition*` (ladders, siege engines, cheering) and (0,0) for an ordinary soldier; vanilla reads it only
+while `MovementLockedState` is set. The AI destination is `GetAIMoveDestination()`.
+- **Why missed:** the name fitted, and the plan's engine table listed it without reading it.
+- **Prevent:** for every engine member that feeds a gate or a measurement, read its body (native when it is an icall) and
+  at least one vanilla caller, and write the meaning into the plan with the citation.
+- **Source:** 1.5.x `docs/reviews/rca-lost-footing-2026-10-20.md` row 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A drift guard pins an engine dependency at the strength the code relies on it (2026-10-02)
+Patch99 re-implements `CreateMergedXmlFile`'s loop, copies `ApplyXslt`, and drops the `ToXDocument`/`ToXmlDocument`
+round trip, yet its IL tests compared an unordered set of callee names and its watched-method test checked names while
+the adapter resolves exact parameter lists. A reordered loop, a changed XSLT setting or a new conversion option would
+have changed the merged document with no exception, no fallback and a green `/verify-bindings`. This repeats the
+2026-10-01 entry "pin that order from its IL" for a re-implemented body.
+- **Why missed:** the guard copied the shape of the existing binding tests ("which helpers exist") instead of the
+  shape of the dependency ("this exact sequence, these exact signatures").
+- **Prevent:** for every engine body TAOM copies or whose effect it removes, pin its ordered calls, with their
+  overloads and the constants that feed them (`IlCallScanner.Fingerprint`; a name-only call list misses
+  `keepDuplicates: false` becoming `true`), in a
+  `BindingVerification` + `RequiresGameIL` test with re-pin instructions in the failure message
+  (`XmlMergeBindingTests.MirroredEngineBodies_CallExactlyThePinnedSequence`); resolve watched or bound members in the
+  test by the same parameter list the adapter uses, from one shared table.
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### In OnAgentBuild the gear an agent wears is `agent.SpawnEquipment`, not `Character.Equipment` (#627, 2026-09-19)
+`Character.Equipment` is the troop's default (first) roster; `Mission.SpawnAgent` rolls a battle roster, stores it with `InitializeSpawnEquipment` before `OnAgentBuild`, and builds the mount from that roster's Horse and HorseHarness. A gate that reads the character's equipment answers for a roster the agent may not be wearing.
+- **Why missed:** the troop had one roster, so both reads agreed and nothing failed.
+- **Prevent:** read `agent.SpawnEquipment[slot]` in any build-time gate about what the agent carries or rides.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs`, `:4309`, `:4324-4328`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mirror the engine's own partition rule, not the nearest public helper
+To decide which parties count toward the player's ally team, the doctrine used `MissionCombatantsLogic.SupportsAllyTeamOnPlayerSide(out ally)`, which is public and returns the FIRST non-commanded party with troops. The engine places every troop by `Mission.GetAgentTeam` (`Mission.cs`): on the player's side a troop lands on the ally team iff its origin is neither under the player's command nor in the player's army. With two allied lords the second one's troops fought on the ally team while their culture and Tactics skill were counted into the player team.
+- **Why missed:** the helper's name described the question being asked, it was public, and the design critique had recommended it. Nobody opened the engine's consumer of the same decision.
+- **Prevent:** when a TAOM rule must agree with how the engine assigns, groups or partitions something, decompile the engine's consumer (the method that performs the assignment) and apply its predicate per element; a public accessor that returns one element is a convenience for the engine's own UI path, not the rule.
+- **Source:** 1.5.x `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 3 (data-flow agent), #608, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Model an engine gate where the engine applies it, and expect the tool's own fixtures to break (2026-10-03)
+The first review of plan 038 named slot fit (`Equipment.IsItemFitsToSlot`), noted that it affected one skirt, and left it unmodelled. Codex found the case: two TAOM troops put a BodyArmor in the Cape slot and the audit counted it. Running the engine rule over every assignment in the five modules (135,359 of them) refused exactly those two, so the deferral kept a visible defect for a rule that is two tables and a few short functions. The gate sits in `Equipment.DeserializeNode`, once per assignment, so a refused override has to keep the earlier item: the tool now assembles each set assignment by assignment instead of filling a dict and judging it afterwards. The tool's own tests then broke, because five fixture assignments (a Goods item in `Body`, a BodyArmor in `Leg`, a HeadArmor in `Body`) were valid test data only while nothing checked them.
+- **Why missed:** the rule was deferred as an approximation without a count, so its size looked like "one skirt" until someone ran it; and fixtures are written to exercise the tool, not to be valid engine data.
+- **Prevent:** before deferring an engine rule, run it over the real data and write the count beside the deferral. Model a gate at the engine's call point (per assignment, in order), report each refusal as its own reason row, and make the existing fixtures obey the rule before the red test, with every expected number unchanged, so the green run proves the rule and not the fixtures.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mirror an engine's type test, not the XML element name that usually satisfies it (plan 038 convergence, 2026-10-04)
+`ItemObject.Deserialize` replaces an item's Type whenever `WeaponComponent != null`, and the audit applied the override when it found a `<Weapon>` element. `BannerComponent` derives from `WeaponComponent` and a `<Banner>` element builds one, so the engine gave a banner the type of its weapon class and the tool did not: it refused a `Type="Goods"` banner the engine equips and accepted a classless `Type="Banner"` item the engine gives Invalid. Nothing in the data showed it, because all 46 real banners carry the matching Type and class. `PreloadHelper.AddItemObject` gates its holster and flying meshes on the same test, so the same gap sat there.
+- **Why missed:** the model was read from the `case "Weapon"` arm and its data, and a census showing every real item agrees turned a gap into a non-finding.
+- **Prevent:** when a model cites an engine type test (`X != null`, `is X`), list the subclasses of X and the XML elements that construct each (here the `switch` in `ItemObject.Deserialize`), give each a fixture, and route every consumer of that test through one flag. Read "the real data agrees" as proof the gap is latent, not absent.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` convergence of the Codex pass, Y2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the native body behind a name before trusting what the name implies
+- **Why missed:** `Scene.DoesPathExistBetweenPositions` only compares two faces' navmesh island ids (native 0x4C7A60) and takes no agent, so it ignores per-agent face exclusion, and islands merge when a ladder is raised; `Scene.GetGroundHeightAtPosition` returns 0, not NaN, on a miss (0x4C4D80). The siege design trusted both names and a copied vanilla fallback order, and scripted trolls behind shut gates.
+- **Prevent:** for every engine call whose result gates a decision, read the native or managed body for what it actually computes, its miss value and whether it is agent-aware, and write that into the adapter's interface doc. Prefer calls that return a hit flag (`RayCastForClosestEntityOrTerrain`) over ones with a sentinel value.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F2, F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native capacity claim reads every writer of the resource, not only the registrar
+- **Why missed:** the per-agent face exclusion capacity was derived from the registry's per-face mark byte (8 bits, bit 7 the navmesh boundary), but the face-ability setter (0x401B20) re-marks sets only from index 1 because bit 0 belongs to the engine, so the safe cap is 6, not 7.
+- **Prevent:** before fixing a cap from native bookkeeping, list every function that writes the field (xrefs) and check which bits or slots each owns; cap under the most conservative reading when one stays unverified.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Verify the override the engine dispatches, not the base member you expected (generated lord kits, 2026-10-06)
+- **Why missed:** the donor adapter read `character.BattleEquipments` expecting the lord's authored roster (`BasicCharacterObject`), but `CharacterObject` overrides it to return the hero's live `HeroObject.BattleEquipment`, which falls back to the engine's shared `DeadBattleEquipment` once the hero dies. Dead lords donated that kit, and two deaths made it a "shared" kit.
+- **Prevent:** before relying on a virtual engine member, `grep override` its name in the most-derived type you hold (`pwsh tools/taom-src.ps1 path <Type>`), and read that body. When a getter has a live and an authored meaning, say which one the adapter needs in its comment. For a lord's authored kit, read the roster `BasicCharacterObject.Deserialize` registers under the character's id.
+- **Source:** 1.5.x `docs/reviews/rca-generated-lord-kits-2026-10-06.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mounts carry no Team: list every agent kind an engine callback passes before a rule reads its fields (Race Abilities, 2026-10-04)
+Race Abilities credited a kill when the victim died at the hand of a live soldier with an ability on another team. A horse killed under its rider passed: `Mission.SpawnAgent` sets the rider's team (`Mission.cs`) and builds the horse through `CreateHorseAgentFromRosterElements` without one, so `killer.Team == null` was false and the dead horse extended Bloodlust, healed the killer and spread fear around the carcass. Vanilla's own `KillCount` counts horses too; its morale-on-kill skips every non-human.
+- **Why missed:** the credit was modelled on `KillCount`, and the same-team gate was assumed to stop a horse; nobody listed what the removal callback carries.
+- **Prevent:** for every engine callback or query a rule reads (removals, hits, proximity scans), write down the agent kinds that arrive (soldier, mount, riderless creature, the player) and the value of each field the rule reads for each: a horse is `Character == null` and `Team == null`. Put the kind in the rule's inputs and pin each kind with a test row.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R14 (lens 2 F1, lens 5 L7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `CustomAttacksUtils.TakeDamage` bypasses armor: a creature's damage band is a post-armor number
+It sets `blow.InflictedDamage` directly with `DamageCalculated = true`, so the engine skips the armor step. Measured
+2026-09-18: 976 war ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll, and the goats floored
+level-51 trolls all battle.
+- **Why missed:** the band was set beside weapon swings quoted BEFORE armor (a mid-tier sword 25-35), which reads as
+  weaker than a sword while landing every point.
+- **Prevent:** compare a band routed through `TakeDamage` with weapon damage after armor, and say so next to the
+  constant. Applies to every caller: elephant and mumakil tramples, the war ram, warg and spider bites, signature strikes.
+- **Source:** 1.5.x #618, 2026-09-18 Custom Battle logs; `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a range check's body before quoting its bounds
+`Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, StrikeBegin, StrikeEnd)` with 48 and 52, and a 2026-08-28
+review wrote that anything from 48 to 52 reads as being struck, so `actt_mount_strike` (52) "sits inside the band".
+`IsBetween` is half-open (`value >= min && value < max`): 52 is outside. The claim went into a lesson, two handbook
+pages, the creature authoring guide and a CLAUDE.md trap row before an engine review read the body (2026-09-18).
+- **Why missed:** the constants are named Begin and End, which reads as inclusive, and the reviewer reasoned from
+  the names; a finding that passed review then gained authority with every copy.
+- **Prevent:** before stating that a value falls inside or outside an engine range, open the comparison's body
+  (`MBMath.IsBetween`, `MathF.Clamp`, a hand-written `<`/`<=`) and quote the operator. Treat a band quoted in a
+  lesson as a claim to re-check, not a fact, when it decides a design.
+- **Source:** 1.5.x `docs/reviews/rca-creature-collision-review-2026-09-18.md` finding 3; `TaleWorlds.Library.MBMath.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A binding gate's fallback must not let TAOM's own types satisfy an engine row (plan 025, 2026-09-24)
+The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` named no engine type. It passed from
+`41258657` (2026-05-28) until plan 025 removed it, because `ResolveType`'s simple-name fallback
+(`ReflectionSiteBindingTests.cs`) searches every loaded assembly, TAOM.dll included, and found TAOM's own
+`PathReuseCache`.
+- **Why missed:** the fallback was written for engine namespace moves; nobody asked which assemblies it searches, and
+  a mislabelled row looks the same as a good one when it is green.
+- **Prevent:** restrict the fallback to engine assemblies (`TaleWorlds.*`, `SandBox*`, `StoryMode*` and the other
+  shipped modules) or fail when the resolved type lives in a TAOM assembly. Reflection on TAOM's own types belongs in
+  Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
+  pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
+- **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before adding "missing" behaviour, trace what the live path's own vanilla calls already do (#971, 2026-10-23)
+#971 said the career button's click sound never plays, because the mixin method that held it was never added to the
+view model. The live handler, the Patch27 postfix, already called `CharacterDeveloperVM.ExecuteDone`, whose close callback
+(`GauntletCharacterDeveloperScreen.CloseCharacterDeveloperScreen`) plays the same `event:/ui/default`. The first fix
+added a second call and doubled the sound.
+- **Why missed:** the issue proved the dead copy was dead (the UIExtenderEx attribute filter, the brush) and inferred
+  the effect was absent, without reading the vanilla methods the live path calls.
+- **Prevent:** when an issue says "X never happens", find the path that runs and read each vanilla call it makes, one
+  level into callbacks, before adding X. An in-game check on the old build settles it in seconds; ask for one when the
+  trace is not conclusive.
+- **Source:** 1.5.x `rca-career-click-sound-971-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Promote a rule from its lesson's Prevent line, every branch kept (2026-10-16)
+
+The morale lesson's Prevent has two branches: floor the morale, or say in the feature doc that its routs spread.
+The one-line rule promoted into `.claude/rules/csharp-patterns.md` kept only the first, so it read as condemning
+three shipped fear writes that the maintainer had chosen to keep unfloored. It was the second time in two days
+that a relay dropped a condition (the first was the contagion's "when fewer than 10 stand within 4 m").
+- **Why missed:** the line was copied from the RCA's proposal, a summary that had already lost the branch, not
+  from the lesson.
+- **Prevent:** write a promoted rule from the lesson's own Prevent text, keep every branch and condition, and
+  check the rule against the code it will load on: a rule that flags shipped, accepted code is wrong or the code
+  is.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` S1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A morale effect that routs a troop is not local (2026-10-15)
+
+A troop that routs raises `AgentMoraleInteractionLogic.OnAgentFleeing`, and vanilla gives the morale loss
+to up to 10 allies: those within 4 m first, then, for every slot still empty, random members of the fleeing
+agent's whole formation at any distance. So a rout in a thinned or loose formation reaches past any radius
+the effect was written with, and in a dense block it lowers the neighbours' morale, so they break sooner.
+- **Why missed:** the Dread Aura design welcomed the contagion ("vanilla's own contagion carries the rout
+  outward") without tracing how far it reaches. The formation fill was never read, and Mike then saw dread
+  act "across the whole battlefield".
+- **Prevent:** a TAOM effect meant to stay local lowers morale to a floor above 0.01 and leaves the rout to
+  combat, or it accepts the formation-wide spread in its doc. Before claiming a radius for any morale write,
+  read `ApplyMoraleEffectOnAgentIncapacitated` to its end.
+- **Source:** 1.5.x `docs/features/dread-aura.md` "Why the aura does not rout by itself"; v1.5.5 `AgentMoraleInteractionLogic.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A remote conversation is an encounter: audit its setup as well as its lines (2026-10-23)
+
+The messenger session rules hid every dialog line that moves a party, and the review then found that Messengers'
+own setup moved one. For a target in a settlement it calls `PlayerEncounter.EnterSettlement`, and
+`EnterSettlementAction.ApplyForParty` attaches a main party that is in an army it does not lead to that army when the
+leader is in the settlement; `PlayerEncounter.Finish(true)` then leaves the attached party in place. No dialog line was
+involved. The same pass found three more lines that hand things over or move a hero with no presence check (clan
+troop and inventory exchange, companion recall, a gift line).
+- **Why missed:** the plan listed the dialog consequences that move a party and treated the encounter the
+  conversation runs in as neutral.
+- **Prevent:** before a feature opens a conversation the player is not physically part of (a messenger, a remote
+  hail), list what its encounter setup does (`PlayerEncounter.Start`, `SetupFields`, `EnterSettlement`, the
+  mission it opens and `Finish`), read each engine body for party, army, position and roster writes, and then sweep
+  every reachable dialog consequence for the same writes. Gate the feature's lines on one shared "remote
+  conversation" flag rather than one check per feature.
+- **Source:** 1.5.x `docs/reviews/rca-messenger-session-rules-2026-10-23.md` findings 1 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the engine's fallback before compensating for a missing role (enlisted survival redirect, 2026-10-26)
+The healing model redirected an enlisted player's survival roll to his commander's party, on the premise that his own
+one-hero party had no surgeon. Vanilla's effective surgeon falls back to the party leader, so the player already rolled
+with his own Medicine and Cheat Death, and the redirect made some players more likely to die.
+- **Why missed:** the comment stated the premise. The 2026-08-08 review did read the effective-role getters and their
+  leader fallback, but applied them to the commander's party and never to the player's own party.
+- **Prevent:** before code that makes up for an engine gap (a missing role, perk or bonus), read the engine getter that
+  fills that role and quote its fallback in the comment. If the fallback already covers the case, delete the workaround.
+- **Source:** 1.5.x `rca-camp-work-2026-10-26.md` Follow-ups, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard on TAOM's call does not guard the engine's call: pin its precondition in data (Lord Banners, 2026-10-19)
+TAOM checks every formation's heraldry before its own `SetFormationBanner`, because the native banner-tableau rebuild
+crashed on a troop with an empty heraldry banner (`rca-banner-bearers-siege-ctd-2026-07-23.md`). Lord Banners (#823)
+gave TAOM lords banner items, so vanilla's `GeneralsAndCaptainsAssignmentLogic` now banners their formations first,
+AI teams included, and TAOM's guarded path skips them. Nothing failed: every clan and kingdom `banner_key` parses to
+at least one layer. But nothing pinned that, so one malformed key would have reopened the crash with no guard in
+front.
+- **Why missed:** the plan traced the overridden model's reader, not where the value it produces is consumed
+  downstream, and so not which TAOM guard sat on the old consumer.
+- **Prevent:** when a change routes data onto another path to an engine call that TAOM guards only at its own call
+  site, the guard no longer applies there: make its precondition hold in the shipped data and pin that with a test
+  (`ShippedHeraldryBannerKeyTests`). Search the TAOM code for guards on the engine method the new path reaches.
+- **Source:** 1.5.x `docs/reviews/rca-lord-banners-2026-10-19.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a campaign behavior's RegisterEvents before stating when it acts (Lord Banners, 2026-10-19)
+The Lord Banners doc said existing saves would get banners over several days through the daily tick.
+`BannerCampaignBehavior` registers `GiveBannersToHeroes` on `OnGameLoadFinishedEvent` as well as on new game, so
+every eligible lord gets one as the save finishes loading, prisoners included.
+- **Why missed:** research read the give methods and inferred their triggers instead of reading `RegisterEvents`.
+- **Prevent:** before writing when or how often a vanilla behavior does something, read its `RegisterEvents` and list
+  every event that reaches the method.
+- **Source:** 1.5.x `docs/reviews/rca-lord-banners-2026-10-19.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A singleton adapter holds no engine objects between calls (#952, 2026-10-20)
+The face adapter cached every `Hero` by id to avoid a linear `Hero.Find`, and as a process singleton it kept the last created campaign's heroes alive after the player loaded another save.
+- **Why missed:** the cache was a performance shortcut and nothing cleared it.
+- **Prevent:** carry the engine object inside the snapshot as an opaque handle (the `MountSnapshot` pattern), so the adapter stays stateless and references live only for one call.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A roster write during a party-screen conversation is reverted by Escape (2026-10-19, second occurrence)
+
+A conversation opened from the party screen (`PartyVM.cs`) returns to that screen, which still holds
+its pre-conversation snapshot. Escape, Cancel or Reset runs `PartyScreenData.ResetUsing`, which clears the live
+prison, member and item rosters and re-adds every snapshot row (`PartyScreenData.cs`). A hero killed in
+the conversation comes back as a dead prisoner; loot added to the inventory disappears.
+- **Why missed:** the same `ResetUsing` behaviour was recorded on 2026-10-17 (`lessons/harmony-il.md`, the
+  roster-loss diagnostic), scoped to diagnostics, so nothing loaded it for a feature that writes rosters from a
+  dialog consequence.
+- **Prevent:** after any roster, inventory or hero-state write made from a conversation, commit an open party
+  screen the way vanilla does when a companion leaves (`GauntletPartyScreen.OnCompanionRemoved` calls
+  `PartyScreenLogic.DoneLogic(true)`): `GameStateManager.Current?.LastOrDefault<PartyState>()?.PartyScreenLogic?.DoneLogic(true)`.
+  Trap index row "Party-screen conversations".
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never null-check `PartyBase.MainParty`: with a campaign, its getter dereferences the stored main party (2026-10-14)
+`PartyBase.MainParty` returns null only when there is no campaign. With one, it returns
+`Campaign.Current.MainParty.Party` (v1.4.8 `PartyBase.cs:208-218`), so a null check on it throws in exactly the
+state it was written for. `MessengerCampaignBehavior.IsPlayerAvailable` carried one (1.5.x `91f369984`), from the
+Messenger port (`03a41b624`, 2026-05-06).
+- **Why missed:** the computed-statics paragraph in `.claude/rules/adapters.md` named `Hero.MainHero` and
+  `MobileParty.MainParty`, not this getter, whose failure is the reverse. The first source scan matched only
+  `== null` and missed a `!= null` guard.
+- **Prevent:** check `Campaign.Current?.MainParty`. `MainPartyNullCheckScanTests` rejects both polarities and the
+  reversed and `is` forms; it does not see a `PartyBase.MainParty?.` read.
+- **Source:** 1.5.x `docs/reviews/rca-review-followups-2026-10-14.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `Formation.GetHashCode` dereferences its Team: key engine types by reference, and a hot getter's postfix must not throw (2026-09-26)
+Patch92's store keyed `Formation` in a `ConcurrentDictionary` with the default comparer. `Formation.GetHashCode` is `Team.TeamIndex * 10 + FormationIndex` (v1.4.8 dump `Formation.cs:2423-2426`), and the order preview lays formations out on `new Formation(null, -1)`
+copies, so the first time the player dragged the troll line the `UnitDiameter` postfix threw a
+NullReferenceException inside `OrderTroopPlacer.OnMissionScreenTick` (Mike's debugger caught it).
+- **Why missed:** a class that overrides nothing looked safe as a key, and nobody opened `GetHashCode`; the
+  simulation copies were not known to exist.
+- **Prevent:** key a map of engine objects with a reference comparer unless you have read the type's `GetHashCode`
+  and `Equals`: `ReferenceIdentity.Instance` (`Main/Core/Collections/ReferenceIdentity.cs`, `ReferenceEquals` plus
+  `RuntimeHelpers.GetHashCode`) is the shared one, and `TrollFormationSpacingStore` and `TrollFormationSpacingTracker`
+  key on it (the Patch92-private `FormationIdentity` is gone). A postfix on a getter the engine calls from its UI, AI
+  and worker threads must not throw, so build it only from reads that cannot: since the 2026-09-26 review Patch92's
+  postfix reads the reference-keyed concurrent map and the public readonly `Formation.Team` field, and carries no
+  try/catch.
+- **On this tree:** This incident ran on the 1.5.x line, and `TrollFormationSpacingStore`, `TrollFormationSpacingTracker`, `FormationIdentity` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reference/harmony-patch-registry.md` Patch92; `Main/Core/Collections/ReferenceIdentity.cs`; `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Fetch an engine NativeObject wrapper once per tick, and range-gate before fetching it (plan 015, 2026-09-24)
+`MBAgentVisuals.GetSkeleton()` returns a new managed `Skeleton` on every call (v1.4.8 dump `ScriptingInterfaceOfIMBAgentVisuals.cs:776-786`): a native ref-count increase, a process-wide lock, a `NativeObjectKeeper` and a `GCHandle` (`NativeObject.cs`), then a finalizer that calls native again. `BoneCheck` fetched the attacker's skeleton twice per tick and every captured target's before testing the 4.5 m gate. Other `NativeObject` getters built through the scripting interface behave the same.
+- **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
+- **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
+- **Source:** 1.5.x plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Test a NativeObject reference with `is null` in code a unit test reaches (plan 015, 2026-09-24)
+`== null` on a `Skeleton` binds to `NativeObject.operator ==` (v1.4.8 dump `NativeObject.cs:221-227`), a static member, so the first call runs `NativeObject`'s static constructor, which calls `LibraryApplicationInterface.IManaged`, null in the test host. The `TypeInitializationException` poisons `NativeObject` for the rest of the test run. In game the operator returns `(object)a == null` for a null right side, so `is null` gives the same result.
+- **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
+- **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
+- **Source:** 1.5.x plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A perf commit's win names the cost it removes, read from the old path's body too (plan 033, 2026-10-02)
+Commit `d45774a5` replaced the spider hunt's scan of hostile agents with the engine's nearby query, claiming to save "up to three native reads per hostile agent". On 1.5.x `Agent.IsHuman`, `IsActive()` and `Position` are `[AggressiveInlining]` unsafe loads through pointers cached at agent creation (`AgentHelper`), while `GetNearbyAgentsAux` walks the same fields for every used slot under a static lock and adds a locked `GetManagedObjectWithId` per result. v1.4.8 differs, `Agent.IsHuman` reads `GetAgentFlags()` (`Agent.cs:640`), so price it again on this engine. The plan decompiled the new side four times and the old side never; the change was reverted.
+- **Why missed:** a recurrence of "An engine method's COST is a decompile question" (above): the replaced calls were costed by their names.
+- **Prevent:** before a perf plan claims a saving, open the body of every engine member on the path it removes, not only on the path it adds, and state both costs in the commit body. A saving argued from call counts alone ships only with a measurement.
+- **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Gate a non-formation agent's scripted moves on the deployment signals: AI ticking off, and a scripted move teleports (2026-09-28)
+The deployment controller sets `Mission.AllowAiTicking = false` for the whole deployment
+(v1.4.8 dump `DeploymentMissionController.cs:31`, back on at `:75`) and, for the Order of Battle screen,
+`Mission.IsTeleportingAgents = true`, under which `Agent.SetScriptedPosition` teleports the agent to the target when
+its XY differs (`Agent.cs:2420-2422`). Vanilla pauses and hides only formation members and humans, and TAOM's behaviour trees tick regardless (`BehaviorTreeMissionLogic.OnMissionTick`). A
+riderless creature bandit, in no formation, would have hunted during deployment and landed on the paused army.
+- **Why missed:** the spike spawned creatures from the console after deployment, and every engine AI component checks
+  `AllowAiTicking` itself, so nothing in the framework carries that check for a tree.
+- **Prevent:** any tree or task that moves an agent vanilla does not pause (no formation, not human) gates on
+  `AllowAiTicking && !IsTeleportingAgents` and holds the agent meanwhile (`CreatureMayFightDecorator`,
+  `CreatureHoldTask`). Formation members are paused by vanilla; everything else is yours.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureMayFightDecorator`, `CreatureHoldTask` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine type with no id gets a per-object adapter; a class that gains injection and tests is a service (2026-10-06)
+The stuck-battle guard's adapter returned `IReadOnlyList<MapEvent>` and took `MapEvent` in every member, and the
+orchestration that used them sat in `StuckBattleSweep`, an injected `Reuse.Singleton` under `Hooks/` with unit tests over
+a substituted adapter and `null!` handles. The "key by id" remedy above does not apply: a 1.5.x `MapEvent` inherits
+`StringId` but nothing ever assigns it, and its constructor is internal. Second occurrence of the sealed-token class in nine days.
+- **Why missed:** the builder copied `AutoResolveDiagnostics`, where an entry point holds the `MapEvent`, then moved the
+  logic into an injected class to test it. The move made it a service; the sealed-type rule was not re-checked, and the
+  entry above was not read before writing the adapter.
+- **Prevent:** for an engine type with no id, the adapter hands out one small adapter per object
+  (`IStuckBattleAdapter.LiveBattles()` returning `IStuckBattleEventAdapter`), and the service drives those. A class that
+  takes constructor injection, is registered `Reuse.Singleton` and is unit-tested is a service, whatever folder it sits in.
+- **On this tree:** This incident ran on the 1.5.x line, and `StuckBattleSweep` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 1 (Standards, adversarial Step 2b), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### After a programmatic batch of inventory transfers, refresh the panel with UpdateRightCharacter and RefreshInformationValues (Quick Actions, 2026-10-19)
+`InventoryLogic.AddTransferCommands` raises `SPInventoryVM.AfterTransfer` per command, which updates the item rows and
+the shown set's slots only. The paper doll, armour, weight, capacity, the no-saddle warning and the Done button are
+refreshed by the private `RefreshInformationValues`, which vanilla's single-transfer handlers call after their one
+transfer (v1.4.8 `SPInventoryVM.cs:1645-1647`). That is not enough for a batch: `AfterTransfer` clears the equipment
+dirty flag on every command, so a batch whose last command moved nothing leaves the doll stale. Run
+`UpdateRightCharacter` first, as vanilla does when the shown outfit or character changes. Quick Actions Unequip All shipped without the pair twice (May 2026 direct writes, then a
+transfer route with no panel refresh).
+- **Why missed:** both fixes read the event (`AfterTransfer`) as the screen's refresh and never opened the vanilla
+  handler that issues transfers to see what it calls after `AddTransferCommands`.
+- **Prevent:** before calling an engine command API from TAOM, read the vanilla callers of that API end to end, note
+  what each refreshes after the call, and check that it still holds for TAOM's batch (one command or many). For
+  inventory transfers, call `IInventoryVMAdapter.RefreshDisplay()`, which runs the pair through
+  cached delegates pinned by `ReflectionSiteBindingTests`. EquipPresets still needs the same (follow-up).
+- **Source:** 1.5.x `docs/reviews/rca-quickactions-unequip-2026-10-19.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An agent spawned beside the troop supplier needs its own origin, never a supplier-backed one (#627, 2026-09-19)
+The howdah crew were built with `AgentBuildData.TroopOrigin(mahout.Origin)`. In a campaign battle that is a `PartyGroupAgentOrigin`, which latches per instance: the first crew casualty went through its `SetKilled`, removing the Harad elephant rider from the party roster while he still rode, moving the troop supplier's `NumRemovedTroops` (so `MissionBattleSideSpawnContext.NumberOfActiveTroops` read a lost unit and a side could be declared beaten while its elephant fought), and the crew's hits paid the rider XP. A null origin is no escape: `BattleObserverMissionLogic.OnAgentBuild` reads `agent.Origin.BattleCombatant` unguarded.
+- **Why missed:** the spawn was parked code, re-enabled by removing a comment, and the flip was reviewed as a flag rather than as the path it switches on. The June port also deviated from its own reference (ADOD_Beasts built a fresh origin per crewman).
+- **Prevent:** an agent the troop supplier did not spawn gets a per-agent `IAgentOriginBase` whose casualty and score calls do nothing and whose `BattleCombatant`, colours and command forward to the parent's (`HowdahCrewAgentOrigin` is the pattern, unit-tested with `Substitute.For<IAgentOriginBase>()`). Grep every `TroopOrigin(` for an origin that came from another agent.
+- **On this tree:** This incident ran on the 1.5.x line, and `HowdahCrewAgentOrigin` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `PartyGroupAgentOrigin.cs`, `MissionBattleSideSpawnContext.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand-built `AgentBuildData` gets none of what `Mission.SpawnTroop` adds (#627, 2026-09-19)
+The crew builder set team, position, direction, origin and formation. Vanilla's `Mission.SpawnTroop` (v1.4.8 `Mission.cs:4430`) also sets the banner, both clothing colours and `NoHorses`, and calls `WieldInitialWeapons()` after the spawn; without them the crew wore the builder's default colours (which TAOM's colour persistence also skipped) and might stand with nothing in hand.
+- **Why missed:** the builder was written from what the spawn needed to work, not from what vanilla does to every troop.
+- **Prevent:** when spawning outside the troop supplier, open `Mission.SpawnTroop` and match their builder calls and post-spawn steps, or say in a comment why one is left out.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before relying on another mod's setting or table, find every reader and writer across all of its DLLs (#740, 2026-10-06)
+- **Why missed:** the research grepped ButterLib and MCM for the setting and concluded that a player could keep the Distance Matrix on with ButterLib's own `Options.json` key. MCM's `MBOptionScreen` owns ButterLib's settings page, stores a second key in the same file, applies it before TAOM's main-menu hook and rewrites the file without other keys on save; it enumerates `IEnumerable<ISubSystem>` and builds the key at runtime as `Id + " Enabled"`, so a name grep finds nothing. An earlier design also missed that ButterLib's public `DistanceMatrix<Kingdom>.Create()` reads the table it deferred.
+- **Prevent:** a name grep is not enough. Also grep every installed DLL (MCM and the version-specific implementation DLLs included) for the interfaces the type implements (here `ISubSystem`) and the settings folder id (here `ButterLib`), and read every settings page or container that enumerates them; trace each reader and writer before writing the design or the doc.
+- **Source:** 1.5.x `docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A member reached by name joins the reflection binding gate in the same change (#646, 2026-09-23)
+`MonsterSizeCatalogAdapter` reaches `HorseComponent.BodyLength`'s private setter, `ItemObject.CalculateEffectiveness`
+and the `Effectiveness` setter by name. None had a row in `ReflectionSiteBindingTests` or `reflection-sites.md`, so an
+engine update that renamed one would have left every sized mount at 1.0x (or its tournament rating stale) with no
+failing test, and the recompute's absence was not even logged.
+- **Why missed:** the size pass was designed inside the first review's fix round, and its convergence pass checked
+  that the members exist today, not that the offline gate would see them tomorrow; no lens asked.
+- **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
+  catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before replacing an engine list wholesale, grep the WHOLE dump for its writers
+The culture doctrine calls `Team.ClearTacticOptions()` and re-adds its own set at `EarlyStart`. The research had read every `AddTacticOption` in `MissionCombatantsLogic.EarlyStart` and the `TeamAIComponent` surface, and concluded that was the list. `SandBox.Missions.MissionLogics.MissionCaravanOrVillagerTacticsHandler.EarlyStart` (v1.4.8 `:9-15`) also adds a `TacticDefensiveLine` for a caravan or villager side regardless of skill, runs before TAOM's `EarlyStart`, and was swept away by the clear.
+- **Why missed:** the writer lived in a module assembly (`SandBox.dll`), not in `TaleWorlds.MountAndBlade`, and the grep stopped at the type that owns the list.
+- **Prevent:** when TAOM clears or replaces a collection the engine owns (a tactic list, a behaviour list, a template list), grep every assembly in the dump for the mutator's name before deciding what the list contains, and either preserve the other writers' rows or state in the feature doc that they are dropped and why.
+- **Source:** 1.5.x `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 5 (engine-fidelity agent), #608, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An offline model of an engine rule reads the callees, not only the entry point (2026-10-02)
+Plan 038's audit modelled what `PreloadHelper.AddItemObject` registers, and every rule it stated matched the decompile. It still counted a crafted weapon's Blade holster mesh on six templates where `CraftedDataView` returns null (`use_weapon_as_holster_mesh`), and split `EquipmentSet` ids at a dot where `BasicCharacterObject.Deserialize` looks them up whole. It also counted skins and horse materials as preload work although `PreloadHelper` registers neither, and left out skin assets without saying so. This is a recurrence of "An approximation of an engine gate must say so, or it becomes a false authority" above.
+- **Why missed:** the model was read from the entry point's method names (`GetHolsterMeshIfExists`), and a helper written for one call site (`Equipment.DeserializeNode`'s dot split) was reused at another without reading it.
+- **Prevent:** for each engine method the model cites, open the methods it calls and list their data-driven early exits (template flags, slot fit, the last child wins); model each one or name it in the tool's approximations. Before reusing a parsing helper at a second engine call site, read that call site.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R3, R5, R9, R14, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Find an agent's party through `origin.BattleCombatant as PartyBase`, never by switching over origin classes (#741, 2026-10-06)
+`RefugeDamageHooks` (from #507) switched on `PartyAgentOrigin` and `PartyGroupAgentOrigin`, so the howdah and mumak crews, whose own origin classes forward `BattleCombatant` to the mahout's or rider's (the lesson above), got no refuge reduction. Every vanilla party origin returns its `Party` from `BattleCombatant` (v1.4.8 dump `PartyAgentOrigin.cs:48`, `PartyGroupAgentOrigin.cs:31`, `SimpleAgentOrigin.cs:127`), and so does BannerlordCoop's `CoopAgentOrigin`.
+- **Why missed:** the producer side was written down on 2026-09-19 and the consumer side was not, so the gap, recorded in `elephant.md` the same day, stayed open 17 days.
+- **Prevent:** resolve an agent's party with `(origin?.BattleCombatant as PartyBase)` (the parent damage model's idiom), and for a mount use its rider's origin. A switch on origin types is the smell, unless excluding an origin is the point: `BannerColorPersistence`'s `Mission_SpawnAgent_Patch` keeps its switch on purpose, so every BannerlordCoop battle troop (`CoopAgentOrigin`, puppets included) keeps its faction colours (#746 review).
+- **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `default(ActionIndexCache)` needs no engine in v1.4.8: check the beforefieldinit header before calling a method untestable (plan 015 decisions, 2026-09-24)
+The installed v1.4.8 `TaleWorlds.MountAndBlade.dll` declares `.class public sequential ansi sealed beforefieldinit TaleWorlds.MountAndBlade.ActionIndexCache`, and its `!=` compares only the instance `Index`. A test can build a check with `default(ActionIndexCache)` and drive `Tick` through substitutes; the engine-backed static constructor runs only on a static member access (`Create`, an `act_*` field). Plan 015 wrote "no test can call `Tick`" from `BoneCollisionServiceTests.cs` and the v1.4.7 note in animation-skeleton ("not beforefieldinit"), and shipped a weaker IL test because of it.
+- **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
+- **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A read-only `QueryData` accessor makes one read cheap, not the call: any expired read of its sync group re-evaluates the group (2026-10-02)
+Plan 032 swapped Patch30's cavalry gate to `FormationQuerySystem.IsCavalryFormationReadOnly` (`GetCachedValueUnlessTooOld`, a bare field read) and documented that the worker no longer evaluates the query system. Three lines later `LayoutPositioner.UnitPitch` reads `Formation.Interval` and `UnitDiameter`, which read the evaluating `CavalryUnitRatio`; `QueryData.Value` re-evaluates all 11 members of that sync group, the cavalry flag included, on whichever thread finds it expired. A mass transfer, in turn, only expires the group (`OnMassUnitTransferEnd` calls `QuerySystem.Expire()`, v1.4.8 `Formation.cs:1810-1813`), so "refreshed when a unit joins or leaves" was wrong in the other direction.
+- **Why missed:** the swap was verified member by member; nobody listed the other engine reads the same call makes or opened `SetupSyncGroup`.
+- **Prevent:** before claiming a hot path no longer evaluates engine queries, list every engine member the whole call reads (adapter getters included) and check each one's `QueryData` accessor and sync group in `FormationQuerySystem`'s constructor. Write the refresh rule from `QueryData.Value`, `Expire` and `ExpireAfterUnitAddRemove`, not from the member's name.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnitPitch` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Swapping an evaluating read for its cached sibling in a gate changes the decision when the engine can expire the cache without refreshing it (2026-10-03)
+Plan 032 kept the cached `IsCavalryFormationReadOnly` as Patch30's cavalry gate after the review above showed that the same call evaluates the same sync group three lines later, through `UnitPitch`. Codex then showed the swap was a behaviour change as well as a wrong claim. `Formation.OnMassUnitTransferEnd`, `TransferUnits` and `Split` call `QuerySystem.Expire()`, which clears every lifetime without re-evaluating anything, so after a transfer the cached gate answered from the old composition. A stale false let the call through, `UnitPitch` refreshed the flag to true, and the call still returned a TAOM position that the evaluating gate refuses; a stale true refused a position the evaluating gate gives. What the swap saved was a clock check, because the pitch read refreshes the same group.
+- **Why missed:** the plan promised unchanged positions and also accepted a stale flag, and the first review left that conflict as a maintainer decision instead of pricing the saving. The tests pinned which accessor the service read, not what it decided after an expiry.
+- **Prevent:** when a plan promises unchanged answers, keep the evaluating read in a gate, and price the cached one before proposing it. A cache the engine can expire without refreshing needs a test for each transition of the gated value, on a fake that follows the engine's refresh rule (`ExpiringCavalryQueries` in `FormationLayoutServiceTests`), not an assertion about which accessor was called.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnitPitch` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md`, "Codex adversarial review", finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine method's EFFECT is a decompile question too: quote the line that produces the effect you rely on (Fords of War, 2026-10-31)
+Four engine calls in one feature did less than their names say. `Mission.AddCustomMissile` (v1.4.8 dump `Mission.cs:4889`) passed a damage bonus of `0f` on 1.5.x, so a missile carries only its own item's damage: a tower firing `bodkin_arrows_a` hit for about
+3. `WorldPosition.IsValid` tests the 2D position and the scene pointer, not the navmesh (v1.4.8 dump `WorldPosition.cs:41-45`), so an
+"off the navmesh" guard never fired. `MissionEquipment.SetAmountOfSlot` sets the managed count only; the engine's ammo
+change is `Agent.SetWeaponAmountInSlot` (v1.4.8 `Agent.cs:2258`). `DeferredCallbackQueue.RunOrDefer` runs at once on the main
+thread, so a "parked" tower fall ran inside the native hit callback. Every call passed its binding test, and two
+architect checks verified the same members.
+- **Why missed:** a binding test pins that a member exists, and the checks were asked to verify signatures. This is the
+  EFFECT form of the COST lesson above, so the pattern is now a repeat.
+- **Prevent:** for every engine call an adapter relies on for an effect (damage, validity, ammo, thread, ordering),
+  the spec or the adapter's comment quotes the engine line that produces that effect; a reviewer who cannot find
+  that line marks the effect UNVERIFIED, not verified. A sentence about engine behaviour in a doc or comment gets the
+  same treatment (the spec also claimed the engine closes a finished mission after 30 s, which the Staged Siege lesson
+  above already disproved), and so does a mechanism relayed from a reviewer's report into a fix brief: the dread-aura
+  doc named the wrong behaviour as the one that turns panic into a rout because the brief copied a lens's claim
+  unopened.
+- **Source:** 1.5.x `rca-fords-of-war-2026-10-31.md` findings D2, D6, D7, D17, P3, R7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A moved comment's engine claims are re-verified at the move: byte parity proves the code, not the comment (#737, 2026-10-05)
+- **Why missed:** the #737 parity check proved every moved block byte-identical, and that was read as proof the move was right. Five comments that came along were wrong or stale on 1.5.x: "per missile spawn" (the engine asks per missile hit, `Mission.MissileHitCallback`), a v1.4.6 line citation, a value said to feed a context that has no such field, "every decision stays in the services" after two gates moved into the facade, and a factory naming one of its two callers. A new summary written from a switch's two arms also missed vanilla's third party-carrying origin, `SimpleAgentOrigin`.
+- **Prevent:** when a refactor moves or rewrites a comment that states engine behaviour, check each claim against the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>`) as if it were new text, and list an interface's implementers before writing "only".
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F4, F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A battle mount has no Origin and no Character: route every identity read, and every per-charge property, through the mount/rider pair on purpose
+`Mission.CreateHorseAgentFromRosterElements` builds the horse with `CreateAgent(..., characterObject: null)` (v1.4.8 `Mission.cs:4540`) and no `Origin`, so `mount.Character`, `mount.Origin`, and everything hanging off them (`Culture`, `HeroObject`) are null on every battle mount. Vanilla's own `UpdateHorseStats` reads `agent.RiderAgent.Character` for the Riding skill for exactly this reason. The inverse holds for the charge property: the engine reads `MountChargeDamage` off the MOUNT per hit (`AttackInformation.cs:335`, and `ChargeDamageCallback`'s attacker is the horse, `Mission.cs:6034`), so a multiplier written onto the rider's driven properties is never read. #610 shipped the per-culture charge multiplier keyed on the mount's `Character` (always 1.0) with a comment and a doc asserting the mount's Character was its rider's; the same rule, for `Origin`, had been written on 2026-06-26.
+- **Why missed:** an engine identity fact was stated from memory into a comment and a doc, never against the constructor path; the same file's `GetEffectiveMaxHealth` already hopped `RiderAgent`, and the tests passed strings to the service so no test could reach the sealed `Agent`. Second occurrence of the class.
+- **Prevent:** for any read on an agent that may be a mount, decide which half of the (mount, rider) pair holds the value by decompiling the ENGINE'S consumer or constructor, write that decision in the code comment with the line, and pin the hop at the IL level (`IlCallScanner`: `get_RiderAgent` must appear) since `Agent` is sealed. Treat "returns null for a mount" as the universal case in the tests, not an edge case.
+- **Source:** 1.5.x `docs/reviews/rca-cavalry-charge-2026-09-17.md` findings 1 and 8, #610; `rca-career-phantom-passives-2026-06-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before stating an engine call has no limit or fallback, read its native side (2026-10-15)
+
+`Mission.GetNearbyEnemyAgents` decompiles to plain native paging, and the Dread Aura's design read that as "no
+proximity-map fallback". The branch is inside the native function: `IMBMission.GetNearbyAgentsAux` searches its
+proximity grid only up to `ProximityMapMaxSearchRadius` (15.0 on the 1.5.x binary) and walks every
+agent in the mission beyond it. A radius ceiling of 30 m let every pulse from 15 to 30 m scan the whole battle,
+and the claim lived in a code comment, the feature doc and the MCM hint for two months.
+- **Why missed:** an ILSpy decompile ends at the `[EngineMethod]` call, so the managed read looked complete. A later
+  rewrite of the hint kept the clause, and two review lenses sided with the code comment; the two that ran
+  `native_decompile.py` found the branch.
+- **Prevent:** a claim that an engine call has no limit, no fallback or no cost past some size needs
+  `python tools/native_decompile.py --engine-method <Interface.Method>` on the native side, quoted beside the claim.
+  A line rewritten for another reason re-asserts every engine fact it keeps: re-verify it or drop it.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` F1; `docs/features/dread-aura.md` "Rejected seams", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine field you write must have a reader (2026-10-20)
+
+Hard Questions and Lord Courtesies "marked a lord's holdings on the map" by setting `Settlement.HasVisited`. In the v1.4.8 dump the only writer is `PlayerTownVisitCampaignBehavior` (`:1461`) and nothing reads it but the save system, in any assembly, so the reveal
+changed nothing the player could see while its line promised map marks. The engine's real map mark is
+`Campaign.Current.VisualTrackerManager.RegisterObject` (a tracked settlement's nameplate reads `CheckTracked`), and a
+tracked plate is drawn every map frame outside the cull, so mark few.
+- **Why missed:** the research confirmed the setter exists and is public; it never asked who reads the field.
+- **Prevent:** before a feature writes an engine field or property for an effect the player should see, find its
+  reader (grep the decompile dump for the member name across all assemblies) and name it in the plan. No reader means
+  no effect: use the mechanism the UI actually reads.
+- **Source:** 1.5.x `docs/reviews/rca-lord-courtesies-2026-10-20.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the body of an engine action before a plan relies on what it does (2026-10-19)
+
+The Hard Questions plan named two engine helpers from their signatures alone. It read
+`ChangeRelationAction.ApplyPlayerRelation(Hero, int, bool affectRelatives = true, bool)` and wrote that the
+default "doubles family hits", and it read `EquipmentHelper.AssignHeroEquipmentFromEquipment(Hero, Equipment)`
+as "fill the lord with the kit". In v1.4.8 the first body never reads `affectRelatives` (`ChangeRelationAction.cs:30`), and the second copies
+all 12 slots, empty kit slots included, so the release kit deleted the named pieces the strip had kept.
+`Hero.MakeWounded()` (clears an existing DeathMark) and `KillCharacterAction.ApplyByWounds` (returns early on a
+veto or a map event) had the same gap.
+- **Why missed:** the research rule sends a builder to the installed DLLs for signatures, and a signature reads
+  like a contract. Every one of these bodies is under 20 lines.
+- **Prevent:** for every engine action or helper a plan relies on for an effect (not only a type), read its body
+  in the `taom-src` decompile and write the effect into the plan with its file:line. A parameter name or a
+  caller's usage is not evidence of what the body does.
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H1, H2, L5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The player's relation with a clan member lives on his clan leader (2026-10-19)
+
+`ChangeRelationAction.ApplyInternal` (v1.4.8 `ChangeRelationAction.cs:22`) writes every change to the pair returned by
+`DiplomacyModel.GetHeroesForEffectiveRelation` (`DefaultDiplomacyModel.cs:871`): each hero's clan leader,
+unless both map to the same leader or one is the player's companion. `Hero.GetRelation` reads through the same
+mapping. So a "-20 to each of his relatives" penalty sums on one number per clan and clamps at -100.
+- **Why missed:** the per-lord penalty list was deduped by hero id, and the fake adapter recorded per-hero calls,
+  so the tests agreed with the wrong model.
+- **Prevent:** a feature that charges relations to many heroes keys its dedupe on the relation owner the engine
+  uses (ask `GetHeroesForEffectiveRelation(Hero.MainHero, hero, ...)`), keeps the strongest delta per owner and
+  calls the action once per owner, as vanilla's execution loop charges one delta per clan leader.
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H2, on `origin/bannerlord-1.5.x` (ported by WP142).

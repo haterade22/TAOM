@@ -1433,3 +1433,353 @@ Taking troop files verbatim from `bannerlord-1.5.x` onto the 1.4.x line (#697) b
 - **Why missed:** reference validation answers "does every id the data names exist?", not "does the target branch have what this data relies on?". The desktop (1.5.3 only) cannot compile the 1.4.x line, so the first test run happened on the laptop after the commit.
 - **Prevent:** for a cross-branch data port, run `git log <base>..<source> -- <ported paths>`, then `git show --stat` on each commit, and classify every file it changed outside the ported set as ported, unneeded, or a dependency the target lacks. Remove or revert the rows that depend on the missing code, and build and test on an install of the target engine before the port merges.
 - **Source:** `docs/reviews/rca-public-armory-ids-2026-09-30.md` findings 1, 2 and 4; #697.
+
+### A troop joining a tree is read by every consumer that selects troops by role, not only by its recruiters (2026-09-29)
+The goblin tree's two mountain spider riders were planned through their recruitment and their upgrade from the Lurker.
+They were also the first Cavalry troops in the tree Goblin-town, the Misty Mountain Orcs and Blue Craig share, and
+five consumers picked them up with no code change: the AI upgrade weighting (a lord commits each branch at 9999:1),
+notable slot growth, the garrison culture swap (captured cavalry started mapping onto spiders), the enlistment roster
+generator (goblin "cavalry" kits from spider-rider gear, on foot) and the skill rebaseliner (+94 and +244 points).
+- **Why missed:** the plan traced the new ids inward (who recruits them) and never outward (who selects troops by
+  `default_group`, formation or upgrade graph).
+- **Prevent:** when a troop joins a tree, grep `DefaultFormationClass`, `default_group`, `UpgradeTargets`
+  and every `troops_*.xml` reader under `tools/`, and decide for each consumer whether the new troop belongs.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F1 to F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A port that touches troop files diffs the whole warning set against HEAD, not only the errors (#805, 2026-10-15)
+Porting KEYforce's Harad weapons, the first bow fix put six regular archers on their tier's ladder cell. The validator
+reported 0 errors and the port moved on, while its warnings showed the Serpent archers one tier up now out-shot by the
+regulars, and the in-line Harad inversions rose. The same port left the 29 Shaghana and Abanissa enlistment kits on
+their old donors' weapons, because the enlistment generator has no `--verify` and the commit hook never runs it.
+- **Why missed:** the commit hook surfaces only errors, every ladder rule is a warning, and the property ("no lower
+  tier beats a higher one in the line") was not measured; the previous port's lesson above says the same.
+- **Prevent:** before committing any troop change, run `python tools/validate_moduledata.py` on HEAD and on the
+  working tree and diff the warning lists for every troop file touched; a new warning is the change's to fix or to
+  record. Then dry-run every generator that derives from troops, the ones without `--verify` included
+  (`generate_enlistment_rosters.py --culture <c>`), and read what it would change.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-port-2026-10-15.md` findings 1 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A baseline run proves it read the baseline; check one value you know changed (03320a65, 2026-10-16)
+Porting KEYforce's javelins and maces on the 1.5.x line, the "before" warning set came from a validator run on an
+export of the commit before his. One pass ignored the data-root flag and read the repo's troops, so the "before" was the
+new troops priced on the old Armory; the reported delta was wrong and hid two troops that flipped.
+- **Why missed:** the #805 lesson above says to diff the warning set, and the diff was run; nothing checked that each
+  pass read the tree it was given. The scratch diff cut paths down to file names, which erased the only clue: that pass's
+  rows alone carried absolute repo paths.
+- **Prevent:** before trusting a baseline, find one troop the change is known to alter and confirm its warning differs
+  between the two runs; when a tool takes a data-root flag, read where each pass loads its input.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the decision record before calling data hand-authored, generated or stale (03320a65, 2026-10-16)
+The port's doc called the ten Aserai enlistment kits "hand-authored, not generated" from how they looked. Git says the
+generator wrote them on 2026-09-01 and Erkam rewrote them on 2026-10-10; two reviewers then proposed reseeding them,
+missing that Mike had kept them by decision D3 the day before.
+- **Why missed:** the builder skipped `git log` (`evidence-over-claims.md` C1); the reviewers read the issue that
+  cited the decision, not the RCA decision table that holds it.
+- **Prevent:** before writing who made a data block or whether it should be regenerated, run `git log -S'<id>' --
+  <file>` and grep `docs/reviews/rca-*.md` decision tables for the file; cite the decision in the doc and in the file.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### On 1.4.8 skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
+`BasicCharacterObject.Deserialize` (v1.4.8 `BasicCharacterObject.cs:337-357`) resolves
+`skill_template` first and only calls `DefaultCharacterSkills.Init(childNode)` when that reference
+came back **null**. So a character declaring both is asserting two different skill sets and the
+engine silently takes the template. 44 militia troops shipped that way, pointing at vanilla
+Calradian SkillSets: `rivendell_militia_spearman` was authored at 850 total and delivered 215. The
+whole "militia take the level-21 baseline so sieges stay costly" doctrine was inert for every one
+of them, and 17 prison guards had the same shape.
+- **Why missed:** nothing in the pipeline knows the attribute exists. `rebalance_troops.py` writes
+  the inline block, `analyze_troop_balance.py` reports it as the troop's actual skills, the feature
+  doc documents it as live behaviour, and the schema has no rule that the two fields conflict. An
+  earlier exploration did notice the pairing and recorded it as "vestigial `skill_template`
+  attributes... worth confirming which wins". It wins.
+- **Prevent:** `SKILL_TEMPLATE_SHADOWS_SKILLS` errors on any character declaring both, in the
+  validator and in `TroopUpgradeSkillMonotonicityTests`. Generalisation: when two fields can both
+  supply the same value, find the engine's precedence rule and gate the contradiction, because a
+  silent winner means every tool downstream can be reading the loser. "Vestigial" is a hypothesis,
+  not a finding.
+- **Source:** 1.5.x #523, found while widening the #522 gate to cover upgrade sources outside `troops/`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When the governing rule changes mid-task, re-derive every decision made under the old one
+
+#629's rule changed twice in one session ("replace vanilla", then "never better than regular gear", then
+"the lowest troops' own equipment, nothing new"). The orc careers' borrowed Isengard arrows were the right
+answer to the first rule and wrong under the last (40 x 3 against the orcs' own 20 to 27 at 0 to 2), and
+the retention design was built for a scan that the later rules made fragile. Neither was revisited.
+
+**Why missed:** each new directive was applied to the next piece of work, not replayed over the earlier
+answers and code.
+
+**Prevent:** when the user restates the principle, list the decisions already taken and re-check each
+against the new wording before building further.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` findings 2 and 4 (2026-09-19).
+- **Source:** 1.5.x the 1.5.x lessons file at `925db38d1`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change that supersedes a generator deletes or disarms every writer of that file
+
+After #629 two scripts could still rewrite `taom_career_starting_equipment.xml` with the pre-#629 kits,
+and every validator would have stayed green. One was marked "do not run" in the README; the other, a
+one-off, was listed nowhere but a generator-ref registry.
+
+**Why missed:** the sweep searched the docs for descriptions of the old behaviour instead of the code for
+anything that can still write the file.
+
+**Prevent:** `grep -rn <file name> tools/` for every writer of a file the change takes over, and delete it
+(or make `main()` refuse, never a module-level exit, because `check_generator_item_refs.py` imports these
+modules) in the same change.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` finding 3 (2026-09-19).
+- **Source:** 1.5.x the 1.5.x lessons file at `925db38d1`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A CustomGame-only troop is not hidden: the Custom Battle picker lists every Soldier of a culture (#646, 2026-09-23)
+The two `taom_test_*` riders were registered for CustomGame only and read as private test data, but
+`ArmyCompositionGroupVM` lists every `IsSoldier && !IsObsolete` character, and TAOM offers every settled culture, so
+both appeared in every player's Mirkwood cavalry picker, in English in every language.
+- **Why missed:** "CustomGame only" answers where a troop loads, not who sees it.
+- **Prevent:** a test troop is either `is_obsolete="true"` (hidden from the picker, still spawnable by
+  `taom.spawn_troops`) or on the release checklist to delete; say which in the file's header.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Trace an availability claim through TAOM's own market, and quote Mike before calling it his decision (#646, 2026-09-23)
+Six texts said "the moose is not sold" because the item is `is_merchandise="false"`. TAOM's CultureMarketplace never
+reads that flag: `ItemPoolAdapter.GetAllItems` takes every item, `CultureItemPoolService.BuildPools` groups them by
+culture, and the daily draw put the `Culture.mirkwood` moose in a Mirkwood town about once a fortnight. The review
+scope then recorded "the moose is not sold" as Mike's standing decision; he had asked only that the starting elk be
+sold. Asked, he chose to let the moose appear.
+- **Why missed:** a vanilla flag was read as the whole story, and a session's own wording was promoted to a decision.
+- **Prevent:** before writing that an item is or is not sold, dropped or looted, follow it through TAOM's systems (the
+  CultureMarketplace pool and routing, loot and reward models), not only the vanilla flag. A decision attributed to
+  Mike carries his words or the question he answered; anything else is the session's wording, and says so.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a feature moves where a value lives, grep every doc that tells a reader where to change it (#646, 2026-09-23)
+The size moved from the Horse item onto the Monster, and the feature docs followed, but the modding handbook's
+"Resize a mount" recipe still said to edit the item's `body_length`, "the only scale knob a mount has". For the three
+sized mounts that edit is undone at every game init and fails the data tests; and the handbook is the no-C#
+audience's only guide.
+- **Why missed:** the doc sweep followed links from the feature, and the handbook recipe does not link to it.
+- **Prevent:** when the place a value lives changes, grep the repo for the old place's name (the attribute, the file,
+  "resize") and fix every how-to, the handbook and doc-lookup included, in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A data change carries the allowlist reasons and docs that describe it (2026-10-04)
+The Uruk-hai Champion and Berserker kept the Berserker Skirt in the cape slot for four and a half months,
+and the validator's bare-chested allowlist, two fixers and two feature docs explained their exemption by
+that placement ("the skirt sits in the Cape slot as the chest stand-in"). When the skirt moved to the body
+slot (#729), seven sentences became false at once, and three of four review lenses read the allowlist
+entry as dead data.
+- **Why missed:** each reason restated a data fact (which slot an item sits in) instead of the rule it
+  serves, so nothing tied it to the data it described.
+- **Prevent:** write an allowlist reason or a doc sentence as the rule (why the troop is exempt), not as
+  the current placement; when a data change touches a troop or an item, grep the allowlists
+  (`_BODYLESS_BY_DESIGN`, `_ARMOUR_LADDER_EXEMPT` and the fixers' copies) and the docs for its id in the
+  same commit, and check the counts they state as well as the phrases.
+- **Source:** 1.5.x `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md` S1, S2 and C3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An empty body slot draws the race's underwear mesh: read skins.xml before describing a look change (2026-10-04)
+The planned release note for the skirt fix said the skirt had never shown on the Berserker. It had: his
+race's skin in the Armory's `skins.xml` names `sk_uruk_hai_skirt_a1` as its `underwear_bottom_mesh`, which
+the engine draws while no body item is worn (`Equipment.GetUnderwearType`). Only the Champion, of the
+Uruk-hai race, changes look.
+- **Why missed:** the look was judged from the item's flags (`covers_body`) and the slot, not from the
+  troop's race.
+- **Prevent:** before a release note or an in-game check describes how a troop's look changes, read its
+  race's skin in `skins.xml` (`underwear_top_mesh`, `underwear_bottom_mesh`) for what an empty slot
+  shows, and aim the check at the troop whose look actually changes.
+- **Source:** 1.5.x `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md` S3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A realm's look has five owners: change them together (banner packing, 2026-10-28)
+Cardolan's banner went green and white while its clans kept brown `color`/`color2`, so Patch23 dressed its troops brown; `factions.json` and the culture colours kept the old Lindon and Cardolan colours, and two tool tables would have written them back.
+- **Why missed:** the change was made and reviewed where banners are defined.
+- **Prevent:** when a realm's banner or colours change, update in one change the kingdom banner key and colours, the clans' `color`/`color2` (Patch23 tint), the culture `color`/`color2`, the `factionmap/factions.json` colour, and every tool table that writes them (`generate_new_faction_kingdoms.py`, `promote_borrowed_cultures.py`, `make_new_factions_playable.py`).
+- **Source:** 1.5.x `rca-banner-packing-2026-10-28.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Check a culture-keyed config against the cultures the troops carry, after roster sharing (Race Abilities, 2026-10-04)
+Race Abilities keyed its men's profiles on culture ids and proved each id exists. Khand's `spcultures.xslt` block binds Rhun's roster, and those troops carry `Culture.khuzait`, so the `battania` profile reached only Khand's lords and town guard while Khand's soldiers fired Rhun's ability; Umbar likewise fields Harad's levies. The commit body promised "Khand's Variags fight savage".
+- **Why missed:** existence was checked, reach was not. A culture's definition says nothing about which troops carry it once the XSLT shares rosters between kingdoms.
+- **Prevent:** for every culture key, list the troops whose own `culture=` is that id (the troop files, and the XSLT bindings that feed recruitment and garrisons). A key whose culture fields no soldiers is a design question to raise, not a row to ship.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R17 (lens 7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A default_group fix is a retag and a restat, and its gate must check both directions (#953, 2026-10-20)
+The bow-only Dunland Hunter was tagged `Infantry` and three Falcon horse archers `Cavalry`, so they
+fought as melee troops, and the Falcons fought sieges as infantry. Retagging them left their skills on
+the old curves (Falcon Polearm 250 with no polearm), because `rebalance_troops.py` picks the curve from
+the same attribute.
+- **Why missed:** `default_group` fails soft and has many readers: the engine, TAOM features and two
+  offline generators. The gate planned after #522 and #554 (#555 item 3) checked only Ranged troops that
+  carry no launcher, the opposite direction of this bug.
+- **Prevent:** when you change a troop's group, run `rebalance_troops.py --fix-monotonicity --restat <ids>`
+  in the same change. A group gate uses the engine's hero rule (horse crossed with launcher) in both
+  directions, and it reads troop-level `<equipment>`, where the Falcons carry their horse.
+- **Source:** 1.5.x `docs/reviews/rca-dunland-formation-groups-2026-10-20.md`; #555 item 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live Armory edit is not shipped until a release channel carries it (2026-10-02)
+The troll-gear lockout edited the dev install's Armory and called it done; the XML lens ran the new gate against `E:\LOTRAOM_Releases\testing\Modules` and got the same 15 findings as before the edit. Players get the Armory from the releases folder after Mike's next editor package, and the gate and commit hook read only `BANNERLORD_GAME_DIR`.
+- **Why missed:** "live" was read as "what players run"; the three-part guard for a live edit (a replay script in `tools/`, a gate, a snapshot README "APPLIED EDIT" block) was applied one part in three, with the script left in the scratchpad.
+- **Prevent:** every live Armory or TAOM_Map edit ships with a `tools/` replay script that takes a `--modules` root, its "APPLIED EDIT" block, and a gate run with `--game-modules` against each release channel; the doc says which channels carry it.
+- **Source:** 1.5.x `docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A cloned wanderer block brings no backstory strings (wanderer ERROR text, 2026-10-08)
+Five cultures (goblin, mistymountainorcs, bluecraig, lindon, arthedain; 53 wanderers) copied a donor's `NPCCharacter` blocks into `taom_wanderers.xml` but never added rows to `taom_wanderer_strings.xml`, so their conversations printed "ERROR: Text with id backstory_c doesn't exist!". The 2026-09-05 handbook measured the gap at 40 and recorded it as a gotcha, and Arthedain still added 13 more, because a measured gap with no gate does not stop the next culture.
+- **Why missed:** the engine reads those rows with `GameTexts.FindText`, which renders a missing id as text rather than failing load, and no test read the strings file against the wanderer list. #257 had fixed the same gap for Âbanissa and Shaghâna by hand on 2026-05-31 with no test, and it came back three times: goblin and mistymountainorcs (2026-06-02), bluecraig and lindon (2026-08-11), arthedain (2026-10-08). `tools/promote_borrowed_cultures.py` copies wanderer blocks and never touches the strings file.
+- **Prevent:** `WandererBackstoryCoverageTests` reads both files and fails on any wanderer missing one of the seven required rows; the culture and kingdom recipes now name the strings file. This is the rule of "A safety barrier that rests on shipped data needs a test, not a doc paragraph" above, applied late.
+- **Source:** 1.5.x #757, #257; `docs/reviews/rca-wanderer-backstory-strings-2026-10-08.md`; wanderers-and-named-companions.md "Gotchas", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A troop in a culture's hero party template reaches no lord whose clan binds its own (2026-09-25)
+Both trolls sit only in `kingdom_hero_party_mordor_template`, the Mordor culture's default. A lord's roster comes from
+`Clan.DefaultPartyTemplate`, which falls back to the culture's template only when the clan names none, and all 15 Mordor
+clans name their own (9 in `spclans.xslt`, 6 in `characters/clans.xml`). So no AI lord fields a troll, and a comment
+saying the troll "spawns via the Mordor hero party template" had carried the error since the cave troll's return.
+- **Why missed:** the hill troll copied the cave troll's placement and comment without tracing `LordPartyComponent`.
+- **Prevent:** before writing "spawns via template X", grep which clans and lords reference X; a culture template is a
+  fallback, not a roster.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A culture's lord template is not unused because every shipped clan binds its own (2026-09-25)
+The review called Mordor's culture template unused because all 15 Mordor clans bind a template. A companion
+made a lord gets a clan with the settlement's culture and no template (`Clan.CreateCompanionToLordClan`), so
+`Clan.DefaultPartyTemplate` falls back to the culture's, and `Campaign.CalculateAverageWage` reads every main
+culture's template too.
+- **Why missed:** the claim was built from the shipped data, not from the callers of `DefaultPartyTemplate`.
+- **Prevent:** before calling a template, list or setting unused, list every engine caller that can reach it.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 46, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cloning a sibling clones its unverified claims: re-verify every engine statement in the copied text
+
+The great elk (#636) was built by copying the war ram, and three statements arrived word for word that the ram's
+own files make without evidence: that the engine derives `as_war_ram_town_and_village` by suffix (only `_map` is
+looked up, by the party icon), that the behavior's `: MissionLogic` base is pinned by a test (the test pinned only
+`BehaviorTreeMissionLogic`), and a translation step that cannot work until the names are registered in the
+Armory's English `Languages/loc_*.xml`. An older test idiom (a four-level path climb) came along too.
+
+**Why missed:** a clone's CODE is proven by the donor's tests, which made the whole copy feel proven. Its prose,
+comments and ledger steps are proven by nothing, and copying them reads as agreement.
+
+**Prevent:** when cloning a feature, treat every engine claim, "pinned by" line and redo or owed step in the copied
+comments and docs as new text you are asserting: verify each against the installed DLLs (`taom-src`) or the named
+test, or drop it. Fix the donor's copy too, or file it.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_war_ram_town_and_village` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-elk-2026-09-22.md` findings F4, F5, F6 and F11 (2026-09-22). **Recurred 2026-09-23 (`docs/reviews/rca-elk-delta-2026-09-23.md` F4), from the template itself:** four statements said a mount agent's Character is its rider: `creature-mount-authoring.md`'s Phase 7 table and the elk, ram and mumakil mission behaviors cloned from it. The engine builds a mount agent with a null character (v1.4.8 `Mission.cs:4540`, the last `CreateAgent` argument), which #610 had recorded in `TaomAgentStatCalculateModel` on 2026-09-17. A fact established later does not flow back by itself: when you establish an engine fact, grep for the claim it contradicts (here `Character is the`) and fix the template first, since every clone copies it, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A player-facing allow-list is checked against what a player can BE, and a fail-closed gate on editable data says when nothing can match
+Field Commission shipped `allowedRaceNames` as `human`/`dwarf`/`elf` on the #376 premise of a Free Peoples player. `charactercreation/cultures.json` offers seven evil races across six cultures, so for every one of those campaigns the feature was inert from the day it shipped: merit banked, `CanPromote` failed every troop, nothing logged (#612, found by a player). The same quiet outcome follows a typo in the list, because an unknown name never matches a troop.
+- **Why missed:** the design brief recorded the intent (creatures unpromotable) and the mechanism (a race allow-list) but not the enumeration the list had to be checked against, so it encoded the author's campaign. Fail-closed is right for an unknown race id, and it means a short list, a misspelt list and a working list are indistinguishable from outside; no test asserted the default's relation to anything, only its value.
+- **Prevent:** before shipping an allow-list a player can hit, diff it against the set of things the player can be or field (here the union of `cultures.json` races), and pin the copies of the default to each other and to the engine's enumeration (`ShippedJson_AllowedRaceNames_*`). Where the gate fails closed on user-editable data, have the consumer warn once when an entry can match nothing (`FieldCommissionMeritService.WarnUnknownRaceNamesOnce`); the config-validation rule's "string the consumer branches on" case includes list membership, not only switch-with-default.
+- **Source:** 1.5.x `docs/reviews/rca-field-commission-races-2026-09-17.md`, issue #612, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A template that other cultures also list must be cloned, not retagged (#957, 2026-10-20)
+The four minor clans' leader templates (`spc_legion_of_the_betrayed_leader_*` and the rest) looked like clan-private data, so the first fix retagged their culture to the clan's side. `spcultures.xslt` passes the same 16 templates through as the `lord_templates` and `rebellion_hero_templates` of the `empire` (Dunland) and `vlandia` (Rohan) cultures, and a hero keeps its template's culture, so the retag would have spawned Arthedain, Umbar, Dunland or Beorning heroes for Dunland and Rohan companion clans and rebellions.
+- **Why missed:** the clan files name the templates and nothing in the clan files names who else uses them; the user of a template is found in the culture files.
+- **Prevent:** before retagging a shared `NPCCharacter`, grep every module's culture XML for its id (`lord_templates`, `rebellion_hero_templates`, `notable_templates`). A template with a second user is cloned under a new id (`taom_` plus the original), the owner is pointed at the clone, and the original stays vanilla. Pin it: the clone equals the original except id and culture, and the original is unchanged (`LeaderClones_AreTheOriginalsWithOnlyTheIdAndCultureChanged`). Never rename or remove the clone: a save holds it by id in the clan's list and in each leader's origin character.
+- **On this tree:** This incident ran on the 1.5.x line, and `spc_legion_of_the_betrayed_leader_`, `LeaderClones_AreTheOriginalsWithOnlyTheIdAndCultureChanged` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 1, minor-clan cultures, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A vanilla pick of another settlement of my culture can come back empty (Bard Town Guard, 2026-10-19)
+The tavern musician's condition (`TavernEmployeesCampaignBehavior.conversation_talk_bard_on_condition`, v1.4.8 `:413-419`) picks a random town of the current town's culture other than the current one and reads its `.Name`.
+Six TAOM cultures own one town, so the pick is null and the conversation throws, and culture conversion can make
+more such towns at runtime. It is the same family as the landless-culture CTD above: vanilla code written for six
+big cultures assumes "another settlement of my culture" exists.
+- **Why missed:** nobody had swept vanilla for culture-filtered settlement picks; the landless fix covered one site.
+- **Prevent:** when a TAOM culture owns one town (or none), or a feature moves settlements between cultures, sweep
+  the engine for picks that filter `Settlement.All` (or `Town.AllTowns`) by culture and dereference the result. The
+  2026-10-19 sweep of 1.5.x found seven `GetRandomElementWithPredicate` sites; only the musician's was live (the
+  RCA lists the other six). Fix the one live site by keeping the engine's pick and adding a fallback, never by skipping vanilla.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-bard-town-guard-2026-10-19.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An item handed to the player must pass the engine's equip gate, not just its stats
+
+#629 moved the career kits onto real troop items and compared them on level, mesh, damage, hit points and
+armour. The Bow skill a ladder bow demands (`difficulty`, up to 100) was never looked at: troops ignore it,
+but `CharacterHelper.CanUseItem` refuses a player whose skill is lower, so a new character could shoot the
+bow it started with and never put it back on once removed. The twins it replaced asked 0.
+
+**Why missed:** the rule was written in the terms of the question (vanilla or not, lowest tier); the
+engine's per-hero requirements live in a different place from the stats being compared.
+
+**Prevent:** before handing the player any item, read `difficulty` (and the gender flags) against what a
+new character holds. `tools/generate_career_kits.py` picks bows by lowest requirement first.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/generate_career_kits.py` exists only there; the rule holds here.
+- **Source:** 1.5.x issue #629 deep review, `docs/reviews/rca-career-kits-2026-09-19.md` finding 1 (2026-09-19), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A texture's canvas shape is not evidence, and the kit copy on disk may be a year stale
+Mike read `t_rohan_ws_set1_n` showing 1024x512 in the Kit as a downsizing bug. A full header audit of both
+texture passes (2,360 Armoury files, 487 TAOM_Map) found zero aspect changes, zero alpha drops and zero
+bit-depth changes, so the shape was faithful. Chasing it further found a 2025-07-28 copy of the artist kit at
+`E:\LOTRAOMAssets\Solus\wm_rohan_ws_1` whose 2048x2048 sheet contained the integrated 2048x1024 file as a
+pixel-exact bottom-half crop, which read as proof the Armoury copy had been cropped at integration. Restoring
+from it was wrong: the artist's delivery that morning scored RMSE 0.018 against the integrated file stretched
+to square and 0.187 against the 2025 sheet downscaled. The 2025 layout sat in half its canvas with the rest as
+padding, so it would have mapped every Rohan blade wrong on the shipped mesh.
+- **Why missed:** UVs are normalized, so canvas aspect carries no information either way, and an audit that
+  compares shapes cannot see a layout change. The older kit folder looked authoritative because it was larger
+  and square, and nothing on disk dates a delivery against the integrated file.
+- **Prevent:** never treat a non-square texture as a defect on its own, and never restore one from a copy found
+  on disk without first running
+  `magick compare -metric RMSE "(" integrated.png -resize "WxH!" ")" "(" candidate.png -alpha off ")" null:`
+  against what is already in `AssetSources/`. Near zero is the same layout on a different canvas and is safe;
+  a large value means the mesh moved with it, so ask the artist which delivery is current rather than taking
+  the larger file. Sweeping all 64 `wm_*` kits this way matched 151 textures and found one discrepancy.
+- **On this tree:** This incident ran on the 1.5.x line, and `t_rohan_ws_set1_n`, `wm_rohan_ws_1` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/modding/module-armory.md` "A texture's canvas shape proves nothing" (Rohan set1, 2026-09-29), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### XSLT cultures no longer inherit vanilla's lord, teen and ruler templates (generated lord kits, 2026-10-06)
+- **Why missed:** the entry above says custom cultures inherit none of the templates and XSLT cultures get them for free. Since `lord_template_rosters.xslt`, the six renamed cultures' adult lord, teen and ruler pools hold only TAOM's `taom_*` rosters; only child templates still come from vanilla. A generated Dunland lord had drawn vanilla Empire gear 26 times in 27.
+- **Prevent:** treat `taom_lord_template_equipment.xml` as the only lord, teen and ruler pool for all eighteen TAOM cultures. A roster it loses empties a pool (null equipment, NRE in four engine callers). Never rerun its generator whole (#637); hand-port. `LordTemplateRosterTests` checks every pool the engine requests.
+- **Source:** 1.5.x `docs/reviews/rca-generated-lord-kits-2026-10-06.md`, generated-lord-kits.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new reference into the unversioned Armory lands with a gate that reads the live file (#644, 2026-09-23)
+
+`race="nazghul"` names a race only the live `LOTRLOME_Armory/ModuleData/skins.xml` registers, and
+`FaceGen.GetRaceOrDefault` is a plain dictionary index despite its name (`TaleWorlds.MountAndBlade.FaceGen.cs`), so an install without the race throws out of the
+NPCCharacters load on every campaign start. The #644 plan checked the Armory by reading it once; a
+reinstall or a rename there would have left every repo gate green.
+
+- **Why missed:** the "Unversioned modules" trap is phrased for a FIX landed in the Armory. A new
+  REFERENCE into it reads as ordinary repo data.
+- **Prevent:** `CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace` checks every
+  `race` in ModuleData XML and XSLT against the installed skins, Inconclusive without the install.
+  Give any new kind of reference into the Armory the same shape of gate in the same change: it reads
+  the live file and skips, never fails, when the file is absent.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 2 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Hold a new culture's coverage with tests that read the data, not with a sweep (Arthedain, 2026-10-07)
+The #749 lesson asked for a grep sweep of every table keyed on the scaffold culture. Arthedain's sweep covered ModuleData and still missed a C# map keyed on career ids (`CareerSystemIoC`, so all three careers' abilities were no-ops), a compound JSON key (`"gondor,gondor_soldiers"` in `race_abilities.json`), and both armour quests, excluded on a misread test. Each is now a test that reads the data: every career has an archetype, every character-creation culture has a commission row and a Deep Seam row, compiled defaults equal the shipped JSON, and the custom-battle culture set equals the playable cultures (`CultureDataFixture.MainCultureIds()`).
+- **Why missed:** a grep for a culture id cannot see a table keyed on something else, and a hand list that "mirrors" another is checked by nobody.
+- **Prevent:** when a table must cover every culture, write the test that reads the cultures from the data and fails on a missing one; a named known-gap set is allowed only with a reason and a test that it only shrinks. The recipe's "C# a kingdom touches" table lists every compiled list and its guard.
+- **On this tree:** This incident ran on the 1.5.x line, and `race_abilities.json`, `MainCultureIds` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-arthedain-2026-10-07.md` findings 2 to 4, 9 and 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mount item's speed has consumers outside the item: the charge formula squares it and creature configs threshold it
+
+A retune of `speed` and `charge_damage` on the ten creature mounts (#615) was planned as "data only,
+no C# moves", which was true, and the plan stopped there. The review's consumer trace then found
+that the engine's charge blow is `(closing speed x dot)^2 x dot x MountChargeDamage`
+(v1.4.8 `MissionCombatMechanicsHelper.cs:703-704`), so raising both on one item compounds (a brown warg about
+3.2x its old magnitude at the same angle), and that `WargConfig.SpeedForMaxDamage`,
+`SpiderConfig.SpeedForMaxDamage` and `SpiderConfig.ChargeVelocityThreshold` read the mount's live
+velocity against fixed m/s caps (the spider now sits at its cap).
+
+**Why missed:** the plan priced the change by the two attributes it edited and never opened the
+formula or grepped the creature configs; nothing in the item file points at either.
+
+**Prevent:** before retuning a mount item's `speed` or `charge_damage`, quote the charge formula,
+grep `Main/Features/<Creature>/*Config.cs` for `SpeedForMaxDamage` / `*VelocityThreshold`, and
+state the compounded charge effect in the plan. `MountSpeed = env x 0.22 x (speed + 2)` m/s is the
+conversion (`SandboxAgentStatCalculateModel.UpdateHorseStats`).
+- **Source:** 1.5.x `docs/reviews/rca-creature-mount-retune-2026-09-17.md` (#615, 2026-09-17), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A culture promotion drops every table keyed on the host culture or its troop ids (#749, 2026-10-06)
+`cc1713eb3` (2026-08-11) moved Lindon off `Culture.rivendell` onto its own culture with a cloned `lindon_*` tree. Nothing re-keyed the balance tables, so for two months Lindon troops weighed 1.0 against their Rivendell twins' 2.0 and 3.0, and Lindon parties had no survival bonus. A player found it.
+- **Why missed:** `tools/promote_borrowed_cultures.py` writes the culture and the tree, `tools/retag_promoted_cultures.py` the retag, and neither writes or lists a keyed balance table. The #585 level-band test checks only troops that already have a weight row, so a tree with no rows passed it.
+- **Prevent:** after a promotion, grep ModuleData and `Main/Features` for the host culture id and for the host tree's troop ids, and decide each hit (mirror, or exempt with a reason). Pin a cloned tree with a parity test against its source, like `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin`. Still open for Lindon on 2026-10-06: clan party templates, Elven Wine, troop resource costs, Elite Emissary, banner bearers.
+- **On this tree:** This incident ran on the 1.5.x line, and `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-lindon-balance-tables-2026-10-06.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live A/B test edit left applied becomes the shipped data (2026-10-02)
+The 09-29 brow investigation ran two separating tests on the adult female dwarf in the live Armory `skins.xml`. The first (`brow_swap.py`) was restored and written up. The second (`head_swap.py`) swapped her head to vanilla `head_female_a` and her brows to `female_eyebrow_2`, was never restored and never mentioned in the handoff, and reached all three release channels. Three days later Mike saw every adult female dwarf with a blank human head floating above her helmet.
+- **Why missed:** the handoff doc listed only the test that was restored; a test script with a `--restore` flag reads as safe, but nothing tracks whether anyone ran it.
+- **Prevent:** a live-module test edit is restored in the same session, or the handoff doc names it under "applied, not restored" with its backup path until someone restores it. Before a release package, diff the live `skins.xml` against the repo snapshot.
+- **On this tree:** This incident ran on the 1.5.x line, and `brow_swap.py`, `head_swap.py`, `female_eyebrow_2` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/investigations/upper-mesh-mapping-2026-09-29.md` "The head swap test", on `origin/bannerlord-1.5.x` (ported by WP142).

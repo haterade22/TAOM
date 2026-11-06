@@ -149,7 +149,7 @@ Three further bandit cultures themed as renegade offshoots of heroic factions. F
 
 Hideout `scene_name` = the matching scene id created in the map editor (`hideout_gondor_1` etc.). The clans were authored only after the 10 hideouts of each culture existed (so `_hideouts[culture]` is populated before `GetInfestedHideoutCount` runs — the inert-until-hideouts-exist ordering avoids the new-game KNFE).
 
-Two existing ranges were also expanded via `tools/add_bandit_hideouts.py`: `hideout_desert_30`–`43` → `harad_raiders`, `hideout_seaside_30`–`45` → `umbar_corsairs` (existing cultures+clans, functional immediately).
+Two existing ranges were also expanded via `tools/oneoff/add_bandit_hideouts.py`: `hideout_desert_30` to `43` → `harad_raiders`, `hideout_seaside_30` to `45` → `umbar_corsairs` (existing cultures+clans, functional immediately).
 
 ### Raider-tier troop roster per culture
 
@@ -178,7 +178,7 @@ These are dedicated troops (not edited in place) because the original `bandit_bo
 
 The 99 existing hideouts in `TAOM_Map/ModuleData/settlements.xml` (external module) had their `culture=` attribute swapped to the new LOTR cultures and their display names rewritten from "Hideout" to "Dunlending Raider's Camp" / "Gundabad Orc Raider's Camp" / "Haradrim Raider's Camp" / "Rhûn Raider's Camp" / "Corsair's Cove". Settlement IDs (`hideout_forest_N`, etc.) were intentionally **left unchanged** to preserve save compatibility — a save started before this migration will load fine and just see the renamed hideouts.
 
-Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Safe to re-run idempotently. `--backup` flag writes `.bak` copies of each modified file before overwriting.
+Migration is driven by [`tools/oneoff/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Safe to re-run idempotently. `--backup` flag writes `.bak` copies of each modified file before overwriting.
 
 ### Hideout scenes (scene_name) — must exist on disk
 
@@ -251,7 +251,7 @@ A bandit clan is in TAOM's `characters/clans.xml` and the hideouts of its cultur
 | [`Main/_Module/ModuleData/taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml) | 8 LOTR bandit culture entries (5 on 2026-05-27, 3 wave-2 offshoots on 2026-05-28) |
 | [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 16 party templates: one raider and one boss per bandit culture. A boss template is one `1/1` boss stack plus soldier stacks summing to min 3 / max 4 (#564) |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
-| [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
+| [`tools/oneoff/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
 | [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | unit tests (scaling service, settings provider, density-model helpers, hideout descriptions, boss-fight service, Patch86 bindings) |
 | [`TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs`](../../TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs) | Shipped-data gate on the eight boss templates: one pinned boss stack matching the culture's `bandit_boss`, soldier stacks summing to min 3 / max 4 |
 
@@ -332,7 +332,7 @@ The GameModel properties (`NumberOfMaximumHideoutsAtEachBanditFaction` etc.) are
 
 Culture display names, male/female names, and the hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically. **Coverage gap (measured 2026-09-11):** `HideoutDescriptionService` maps 6 of the 8 bandit cultures (the five originals plus `erebor_warriors`); `gondor_soldiers` and `mirkwood_stalkers` have no `taom_hideout_desc_*` string, so their hideouts still show vanilla's "(Undefined hideout type)" placeholder. Two strings and two dictionary rows close it.
 
-The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
+The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/oneoff/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
 
 ## Save Compatibility
 

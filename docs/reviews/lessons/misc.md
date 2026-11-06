@@ -155,3 +155,397 @@ a VBR clip can measure SHORT, the unsafe direction for a length gate) and a doc 
   not worth stating: cut it, or attribute it as unverified. Comments that justify a design choice
   are load-bearing precisely because the next reader will not re-derive them.
 - **Source:** docs/reviews/rca-dwarf-voices-2026-09-06.md (2026-09-06 deep review)
+
+### A staged feature re-checks its inherited claims at every stage: summary rows, "live" settings, "every X"
+Plan 040 landed in three stages. The feature-map row kept describing stage A; the toggle was documented
+as read live with no restart, though a once-per-process guard in `SubModule.cs` decides the per-category
+lines; and "every campaign handler of a loaded save" missed the `OnGameLoadFinished` fan-out that
+`SandBoxGameManager`, not `Campaign`, dispatches.
+- **Why missed:** each stage followed its own plan steps, which did not list the earlier summary text,
+  and the claims were written once from the design rather than re-read against the guards and
+  dispatchers that bound them.
+- **Prevent:** at each stage's end, grep the feature's name across `feature-map.md`, the registry and
+  the MCM hint and re-read every "every", "always" and "live" claim against the code that bounds it
+  (the guard, the dispatcher list), not against the plan.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 4, 6 and 7 (Data flow, Completeness), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An aggregate that replaces per-event log lines keeps bad values out of its sums and says when it is written (plan 030, 2026-10-02)
+Plan 030 replaced per-hit `[CareerPerks]` DEBUG lines with one line per combination plus a mission-end INFO tally. The tally added every hit's base and result unchecked, so one NaN hit turned the combination's damage totals into NaN, and it is written only at mission teardown, so a crash mid-battle loses the counts the per-hit lines used to leave on disk within 50 ms.
+- **Why missed:** "keep the information as an aggregate" was checked for presence on clean, finite input.
+- **Prevent:** an aggregate counts a non-finite event apart and keeps it out of every sum and range; its doc says when it is written and what a crash before then loses, and any claim that "nothing is dropped" is checked against that write point.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R4, R5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A deletion's doc sweep greps the deleted members' targets, categories and counts, not only their names (recurrence of #644, plan 030, 2026-10-02)
+Plan 030 deleted Patch23's `EquipItemsFromSpawnEquipment` prefix and Patch35's `Mission.OnTick` postfix and grepped for the class names. A code comment and `battle-load-diagnostics.md` still said Patch23 patches `EquipItemsFromSpawnEquipment` (they named the category and the method), and `companion-tactics.md` still counted 5 FormationPresets hooks.
+- **Why missed:** the plan's done-criteria grep matched class names only.
+- **Prevent:** for a deleted patch, also grep its target method, its category paired with that method, and every count of its folder or category.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R7, R8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An aggregate's doc names what it keeps and what it drops, with a counterexample (plan 030 Codex round, 2026-10-03)
+Plan 030's wording said the per-mission hit summary left nothing the per-hit lines showed lost. It keeps a count, a multiplier range and damage sums; hits of damage 10, 20 and 70 and of 10, 40 and 50 under one multiplier read the same, and the order, each hit's own numbers and a leaderless victim's agent are gone.
+- **Why missed:** "aggregate, never drop" was checked as "an aggregate exists".
+- **Prevent:** the doc for any aggregate that replaces per-event lines lists the statistics it keeps and the detail it drops, with one pair of inputs it cannot tell apart; "nothing is lost" is never written about one.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change to a list's membership re-reads every text that describes the list: counts, "left out" examples and player-facing hints
+D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left the MCM hint describing only the original six ("character tableau callbacks", no combat), two reference-doc lines saying "six", and an owed in-game probe whose example of a *dropped* callback (`OnAgentRemoved`) was one of the entries just added, so the probe could no longer fail. This repeats the 2026-09-23 lesson above ("A change that deletes or moves data invalidates numbers and line refs elsewhere"), this time for additions.
+- **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
+- **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cap a per-event diagnostic per run, and count what the cap drops (2026-10-02)
+The plan 028 tick profiler wrote one `[Hitch]` line at INFO, a synchronous flush on the main thread, for every frame
+at or above its threshold. The rate was bounded (1000/threshold lines a second) but the count was not: at the MCM floor
+of 50 ms, a battle running under 20 fps wrote a per-frame INFO line for its whole length, which D6 rule 5 forbids, and
+plan 041 turns the profiler on for every player.
+- **Why missed:** the plan priced the stream at the default threshold only and deferred a cap before D6 existed; two of
+  six review lenses judged it bounded because nothing was dropped.
+- **Prevent:** any line written per event (frame, agent, hit) at INFO gets a per-run cap that keeps the first occurrences
+  in full, one line where the cap starts, and a count of every event in the run's summary
+  (`MissionTickProfiler.MaxHitchLinesPerMission`). Price a stream at its setting's floor, not its default.
+- **Source:** 1.5.x `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Text that promises a switch "takes effect immediately" names every side effect the switch cannot undo
+Plan 006 made the crash-capture master toggle live and rewrote the hint and how-to to say the game's handler "(or BUTR)" takes over without a restart. `CrashReportService` calls ButterLib's `Disable()` on every capture while Suspend BUTR is on, and TAOM has no path that re-enables it, so after any capture in the session BUTR stays off until the player re-enables it on ButterLib's page or restarts. The old text ("Restart the game") had been true by accident.
+- **Why missed:** the rewrite traced the toggle's own reads, not the state earlier captures had already changed.
+- **Prevent:** before writing "live" or "no restart" for a toggle, list what the feature did while the toggle was on (suspended handlers, installed hooks, persisted state) and say which of those turning it off does not reverse.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a second measurer joins, re-read every "not measuring" line of the first (2026-10-02)
+Plan 041 made Patch98's hitch probe measure every mission by default and left plan 028's tick profiler reason lines as
+they were. On the default path, a player turning the profiler on mid-session got "no patches are installed and nothing
+is measured" in a mission that then wrote `[TickProfile]`, `[Hitch]` and `[HitchDetail]`; the same held for the failed
+install and switched-off lines, and the transpiler fallbacks still said "no mission is measured". The plan limited the
+older file to one line, so the executor fixed that line and left its siblings.
+- **Why missed:** the change was checked where it was edited; the older lines live in a file the plan froze, and their
+  claim became false without any edit to them.
+- **Prevent:** when a change adds a second instrument, grep the first one's status lines for "nothing", "not measuring",
+  "no mission" and similar consequences, and choose each by what still measures (`HitchProbeLines.ProfilerNotTimingLine`,
+  `BuildProfilerOffLine`). A scope limit on a file is not a reason to leave a line in it false; say so to the
+  orchestrator instead.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R3, R9 and R10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A benchmark's baseline arm runs in the state players had before the change, and its figure names what it stubbed (2026-10-02)
+Plan 041's overhead benchmark installed the measuring profiler before timing its unpatched arm, so Patch91's agent-tick
+pair did its measuring work in both arms and its cost cancelled out, though before plan 041 a default player's profiler
+was null and the pair returned at once. The same figure, 0.43 us per frame, was quoted as the probe's cost while the
+native clip-loading call was a stub returning false.
+- **Why missed:** the baseline was set up in the patched arm's state for convenience, and "the benchmark" was read as
+  covering everything a frame pays.
+- **Prevent:** set the baseline arm to what players ran before the change (here, no profiler), and write every cost claim
+  as "the managed part, X us; the stubbed call's cost is the line that measures it". Corrected figure: 0.477 and
+  0.470 us.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R13 and R15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a decision reverses an invariant, grep its old words across code comments, config headers, MCM hints and the lessons
+The weapon rung began awarding the named hero weapons, but "never change hands" (the MCM master hint) and "never
+sold, looted or awarded" (a config comment and the config header) stayed, beside the feature doc's corrected table.
+The same happened to the lessons: decision D13 (2026-10-03) reversed the per-frame PatchShield exclusion, and the
+2026-09-26 and 2026-09-28 Prevent bullets in `harmony-il.md` still told the next patch author to exclude per-frame
+targets, because D13's update went under one lesson only. A pass on the same decision then corrected two comments the
+same way, one in `Dependencies/Foundation/PatchShieldPolicy.cs` and one in a test under `TAOM.Tests/`, folders this
+lesson did not yet name.
+- **Why missed:** only the doc's own table was rewritten; the invariant's other statements were not searched for.
+- **Prevent:** grep the old invariant's key words across `Main/`, `Dependencies/`, ModuleData comments,
+  `TaomSettings.cs`, the comments in `TAOM.Tests/` and `docs/reviews/lessons/*.md` (a Prevent bullet restates the
+  invariant, and it is what the next author reads) before calling a reversed decision done. A repeat of RCA 2026-09-27
+  row 19.
+- **Source:** 1.5.x `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 6 (Data flow A); `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row F4 (D13 and the `harmony-il.md` Prevent bullets) and row G2 (the two comments, in `PatchShieldPolicy.cs` and `MissionTickProfilerBindingTests.cs`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fault latch records its key before anything that can throw, and a fault keeps what was already measured (2026-10-02)
+The plan 039 map profiler stopped measuring on a fault and relied on its session (`_session`, the campaign) to keep
+the next frame from retrying. `OpenSession` stored the session after the provider reads, so a throwing read left no
+session and every later frame opened it again and threw again. A guard added to log the fault once per session keyed
+on a session number that only `BeginSession` advanced, so it muted the repeated throws instead of stopping them, and a
+second campaign's identical fault logged nothing. The fault also dropped every frame already closed in the session,
+against D6's per-session summary. Separately, a failed install warned that nothing would be measured only at the next
+game init, which a one-campaign process never reaches.
+- **Why missed:** the fault design was written for faults inside a measuring session; the open path's own failure was
+  not walked, and a log guard was chosen where the latch was wrong.
+- **Prevent:** a fault handler sets the state that stops the retry itself (here `Fault` takes the campaign and makes it
+  the session) rather than relying on code that runs after the throw. Test the fault in the open path with a throwing
+  substitute and `Received(1)` on the read (`Step_SessionOpenThrows_FaultsOnceAndDoesNotRetryTheSameCampaign`). A
+  stop on fault writes the summary so far with `reason=fault`. A reason line is written at the event that causes it,
+  not at the next opportunity to report.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R8, R10 and R11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A windowed diagnostic flushes its partial window before the summary (2026-10-02)
+The `[AnimMem]` session wrote one line per 5 s window and a mission summary. Samples after the last 5 s line reached the log only through the summary, which has no minimum, so a partial window's low point was lost, against D6's "aggregate or sample, never drop".
+- **Why missed:** the plan said "a summary at mission end", and nobody compared the summary's fields with the periodic line's to find the fields only the periodic line carries.
+- **Prevent:** for any instrument with periodic and summary lines, write the partial window at the end whenever it holds samples, and pin it with a test that ends the session between two periodic lines.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write a provenance claim from a comparison against the source, not from memory (2026-10-06)
+The register said "No code was copied" for the stuck-battle guard, while its adapter mirrored the player's module:
+a detach loop with the same read-back check and `-1` sentinel, a predicate's name and first condition, a fallback string,
+the order of work, and the module Id. The builder had read the source while planning and listed what was "taken" from
+memory of the ideas, not of the code.
+- **Why missed:** reading a source while writing reproduces its details below the level of ideas, and a register entry
+  written afterwards records the intent, not the result.
+- **Prevent:** before writing a `behavioural-port` row, diff the new files against the source (names, string literals,
+  loop shapes, ids) and either rewrite each match from a TAOM spec or relabel it `verbatim-port`.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 6 (Completeness lens), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's stale-claim grep is a floor: search the whole repo, tests included, by distinctive words (plan 014, 2026-09-24)
+
+Plan 014 rewrote the claim "ResetSessionCaches is wired to OnGameLoaded only" and its Step 7 gate
+grepped `EnlistmentReconciler.cs` for it. The executor ran the gate as written and it passed, while
+the same claim sat in `EnlistmentReconcilerTests.cs`, split across two lines so no phrase
+grep could have matched it. Four review lenses caught it; Codex, which checked the same file the
+plan named, did not.
+
+- **Why missed:** the gate was scoped to the file the plan changed, and it searched for a phrase. A
+  test comment is a copy of the claim too, and a line break splits a phrase.
+- **Prevent:** after rewriting a claim, grep the whole repo (`Main`, `TAOM.Tests`, `docs`) for one or
+  two of its distinctive words (`OnGameLoaded only`, `wired to`), never for the full sentence, and
+  treat a plan's narrower grep as the minimum, not the check. Recurrence of the #644 and #645 lesson
+  above.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's RED step builds the project that holds the test, and names the test filter (plan 001, 2026-09-24)
+Plan 001 said building `Main/TAOM.csproj` would fail because a new test calls a missing handler, and
+called that compile failure the RED state. The test lives in `TAOM.Tests`, which references `Main`, not
+the other way round, so that build cannot see the test at all.
+- **Why missed:** the plan reasoned from "the method is missing" without asking which project compiles
+  the call.
+- **Prevent:** a handoff plan's RED step runs
+  `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
+  and states the expected failure (a CS error in the test project, or a named failing assertion).
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A check inside a shared hook registration gets the time that is left, not a bound of its own (2026-10-16)
+The session-start hook's new upstream check had its own 8 s bound, after two 4 s checks, inside one 10 s registration. A
+slow GitHub could push the hook past 10 s, and the harness then discards every line the hook printed, the game-version
+and Armory drift banners included.
+- **Why missed:** the fast path was timed (3.1 s cold), not the slow one, and `tools/test_hooks.sh` reads only a hook's
+  first bound and never reached the new block.
+- **Prevent:** count a budget from the hook's first command and give each check what is left (the `validate-push.sh`
+  form), and run that check last: a deadline bounds nothing that runs after it, and the kill grace counts too. Test the
+  block with a stub that hangs. A check that needs the network is better in a registration of its own.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 1 and 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool that writes a tracked file validates every value it stores (2026-10-16)
+`tools/upstream_watch.py advance` checked a SHA's format and that the record file existed, then stored any existing path,
+one outside the repo included, in the tracked state file.
+- **Why missed:** the validation covered the value the tool computes with, not the value it writes.
+- **Prevent:** before a tool writes a tracked file, check each stored value against what a reader of that file expects
+  (inside the repo, relative, the right shape), and test the rejections.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that judges a commit reads the commit's own repository, never `$CLAUDE_PROJECT_DIR` alone (2026-10-16)
+`check-claude-files-tracked.sh` ran `cd "$CLAUDE_PROJECT_DIR"`, which stays at the main checkout after a session enters a
+worktree. Another session's untracked skill in the main checkout then denied every commit in a clean worktree, and
+entering the worktree did not help.
+- **Why missed:** the hook was written when every commit ran in the main checkout, and its tests ran with the commit's
+  repository and the project root as one directory.
+- **Prevent:** take the repository from the command (`git -C <dir>` on that git call, an earlier `cd <dir>`), then the
+  payload's `cwd`, then the project root, and resolve it to the work tree's top level: every gate reads root-relative
+  paths, so a subdirectory makes them all pass in silence. One resolver for every gate (`_pybin.sh` `taom_git_repo_dir`
+  over `_shellwords.py git-repo`); a second, simpler copy written beside the first lost a `cd` to one unbalanced quote.
+  Test a call whose repository differs from `$CLAUDE_PROJECT_DIR`, and one from a subdirectory. The same fix went into
+  `check-moduledata-validation.sh`, `check-doc-config-drift.sh`, `check-commit-subject-version.sh` and
+  `block-broad-git-add.sh`.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 12, 16 and 17, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Restate an upstream fact with its hedge and its evidence kind, in the same sentence (2026-10-15)
+The 2026-10-06 knowledge-base review found 17 findings, all one class: an upstream inference or hedge restated as a
+flat fact. The 2026-10-15 batch, written under a brief that said "an upstream hedge stays a hedge", still had six: "not
+on troop or level" for "explain almost nothing", "must carry all 8 variants" for a layout description, decision state 6
+named the defend state where the decompile says [Likely], a "pool-1 guard" the source never names, a mod-list setting
+inferred as observed, and "nothing ticks such a skeleton" from a lab that only ticked its own.
+- **Why missed:** the writer summarises the source's conclusion, and the qualifier sits in another sentence or in a
+  table footnote that the summary drops. A brief rule cannot see the dropped word; only a side-by-side read can.
+- **Prevent:** write each restated fact with the source's qualifier word for word ("almost", "likely", "in this run",
+  "not checked") and its evidence kind (measured, decompile, code reading, inference) inside the same sentence; when
+  TAOM adds its own reading, tag it "(TAOM's reading)". The fidelity finder of the doc review reads every restated
+  sentence beside its cited source line.
+- **Source:** 1.5.x `docs/reviews/adopt-yotthani-2026-10-15.md` "The doc review"; the 2026-10-06 review in `b5e1d0b3d`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A value two processes compare is hashed from its bits, not from runtime-formatted text (B8, 2026-10-23)
+The co-op settings fingerprint rendered floats with `G9`. A net472 client prints `1.001953125f` as `1.00195313` and
+a .NET Core 3.0 or later runtime (the dedicated server runs .NET 6) prints `1.00195312`, so identical settings could
+hash differently. The code comment said "both peers run the same framework", which held only until a server existed.
+- **Why missed:** the formatter was checked on one runtime; the premise behind its comment was never re-read when a
+  second runtime joined.
+- **Prevent:** hash floats and doubles as their IEEE bit patterns (fold -0 into 0) whenever the value is compared
+  across processes, and pin a vector test with a value whose decimal text differs between runtimes.
+- **Source:** 1.5.x `rca-b8-server-settings-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A crash path reads only what TAOM owns: list what a read executes and publishes first (#982, 2026-10-23)
+The first #982 fix made the crash-bundle collector invoke MCM's inherited `GlobalSettings<T>.Instance` for
+third-party settings classes. That getter runs `new T()` on a cold cache, so another mod's constructor and getters
+ran inside crash handling (Codex reproduced a blocked `Collect()`), and that mod's free-text settings went into a
+bundle players upload.
+- **Why missed:** the issue was framed as reflection correctness, and the fix was judged by what it finds.
+- **Prevent:** before a crash or diagnostic path reads through another mod's API, write down the code that read
+  executes and the data it publishes. Read only TAOM's own objects there; anything else is snapshotted on the main
+  thread at a normal moment, filtered, or left out.
+- **Source:** 1.5.x `rca-982-collector-instance-2026-10-23.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A scope word in a claim is checked by a grep over that scope; a behaviour difference is stated as the condition the code tests (plan 015 decisions, 2026-09-24)
+The decisions commit said "no node is a service locator" while the same `BuildTree` built three `LogTask`s that resolve per Execute (the first review had already corrected the same `LogTask` overclaim in the feature doc). It also said a skeleton missing during the wind-up "ends the bite when the hit window opens", but the code tests the skeleton at the first in-window tick, so one that is back by then lets the bite go on and hit.
+- **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
+- **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change that deletes or moves data invalidates numbers and line refs elsewhere: grep for those too (#644, 2026-09-23)
+
+#644 deleted three `characters/lords.xml` rows and inserted nine `lords.xslt` lines. The stale-text
+sweep grepped for how docs PHRASE the old facts and fixed those, but the completeness lens still found
+row counts (1184, 179 in both files, uruk 59 and 163), a line citation (`lords.xslt`), a
+paraphrase the grep missed ("NOT reachable by race") and a how-to that now advised the opposite of the
+new rule, across eleven files.
+
+- **Why missed:** the sweep looked for the old facts' wording, not for the measurements a deletion
+  changes, and it covered the docs that mention the subject rather than the docs that own the changed
+  code and data.
+- **Prevent:** after a data change, grep the docs for the old counts and every `file:line` citation
+  into the edited files, open the owning feature doc of each changed class, and re-measure a count
+  with the command its doc prints rather than subtracting by hand.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 5 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's RED check names the diagnostics it needs, never the compiler's exact output (plan 026, 2026-09-24)
+Plan 026's three RED checks required "exactly two lines" of normalized diagnostics, one of them
+`CS0122` (the method under test still `protected`). The retained logs of all three runs contain only
+the intended `CS0115` missing-override errors, so an executor following the plan literally could not
+confirm RED, although the failures were exactly the ones the step wanted.
+- **Why missed:** the plan predicted the compiler's full diagnostic set instead of stating what
+  proves the test is RED.
+- **Prevent:** a RED check requires a nonzero exit, at least the intended diagnostic codes, and only
+  in the named test file; it permits other codes the same edit can cause and rejects any other file.
+  This extends the plan 001 lesson above (build the project that holds the test).
+- **Source:** 1.5.x `docs/reviews/rca-seam-decision-logic-2026-09-24.md` X1 (Codex P3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new permitted case amends every general rule it is an exception to, in the same change (plan 021, 2026-09-24)
+
+Plan 021 made the hook interface conditional ("only when the patch needs a narrow seam or a test
+fake") in AGENTS.md and three rule files, and in a separate step rewrote the always-loaded
+`think-before-coding.md` to allow an interface only for an adapter, a fake or a second
+implementation. The rule's own example hook has one implementation and no fake, so the general rule
+forbade what the specific rules allowed. The same shape recurred four times in one change: ADR-008's
+exception allowed "a static read" where ADR-007 allowed engine calls, the Standards lens said "One
+exception" beside an ADR that has two, ADR-007 kept `CampaignTime` in its list of sealed classes
+needing adapters while its new condition allows it, and the ADR-008 and ADR-002 checklists kept the
+absolute wording their amended rules had just qualified.
+
+- **Why missed:** each sentence was prescribed and checked on its own, by a substring gate that proves
+  the sentence is present, never that two sentences agree.
+- **Prevent:** when a change adds an exception or a permitted case, grep for every rule it qualifies
+  (the general rule, sibling ADRs, checklists, severity tables, the section it sits in) and read each
+  one against the new case, using the rule's own example as the test input: would a reader following
+  that line reject the example? Fix or list each before committing.
+- **Source:** 1.5.x `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` C1, C2, O3, O5, O6; Codex P2 1 and P2 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Check a rule's cited exemplars against every condition the rule states (plan 021, 2026-09-24)
+
+ADR-007's new boundary-seam exception names four services as users of the pattern, under four
+conditions. The services factor seam bodies into private helpers that return `MobileParty`, `Hero`
+and `CharacterObject` (outside the `protected virtual` members the exception covers), and several
+seams carry TAOM decision logic (`SupplyOrderService.ChargePlayer` splits and routes the payment,
+`RefugeService.FindNearestHostile` filters and picks a target), which condition 2 forbids. Read as
+written, the next Standards pass would flag the exemplars the exception was written to legalise.
+
+- **Why missed:** the Step 0 note that offered the looser wording checked one service's seam
+  signatures, not the other three services and not what the seams call.
+- **Prevent:** before an ADR or rule cites code as its exemplar, apply each condition to every cited
+  class, including the private members its qualifying members call, and either narrow the claim to
+  what passes or record the rest as known debt in the same text.
+- **Source:** 1.5.x `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` O1, O2 (Agents 1 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A creature behaviour extended to a second Monster: compare the Monsters' size fields, not only the sets (2026-09-25)
+The Brute Force tree scales its trigger range and ring by `AgentScale` only. The engine's reach is `Monster.ArmLength`
+times `AgentScale`: the cave troll's `arm_length` 0.9 at scale 1.9, the hill troll's 2.79 at 1.09, three times the reach
+per unit of scale, so one set of constants cannot fit both.
+- **Why missed:** the extension checked Monster ids, action sets and clips, not the fields the engine sizes a body by.
+- **Prevent:** when a tree or service gains a Monster, table `arm_length`, capsules, eye heights and the skin's scale
+  for every Monster it serves, and scale distances by what the engine scales reach by.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A diagnostic's "nothing happened" line is written on the exact complement of its summary's condition (plan 030, 2026-10-02)
+Plan 030 added a `no-creatures` INFO line for a mission whose creature diagnostics stayed silent. Its condition was the callbacks' gate (`AnyRegistered`), but a declined creature troop writes `spawn-declined` lines and makes the summary print without registering a creature, so the log ended with the summary and then a line saying no diag line was written.
+- **Why missed:** the line was tested on the empty mission it was written for; nobody listed the other states that leave the gate false.
+- **Prevent:** derive a skip or reason line's condition from the condition of the line it stands in for (here `WriteSummary`'s), so each mission ends with exactly one of them, and test the boundary case (a decline, an attempt) as well as the empty one. Prefer a count over an absolute claim ("no line was written").
+- **On this tree:** This incident ran on the 1.5.x line, and `AnyRegistered` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mission-scoped write or reset is chosen from every way the engine leaves the mission (plan 030 Codex round, 2026-10-03)
+Plan 030 wrote the career hit summary from `CareerPerkMissionBehavior.OnEndMission`. That callback runs only through `Mission.EndMission`; `GameStateManager.CleanStates` finalises a mission state with no `EndMission` first (the application shutting down, if a window close reaches the engine's shutdown callback, unverified; or a mod that loads a save mid-mission), so those exits lost the counts, and the stat service being a singleton, the dead mission's tally rode into the next one. The first wording named "a save loaded mid-battle" as a vanilla exit; it is not one, because only the map's escape menu and the main menu open the load screen.
+- **Why missed:** the earlier review framed the limit as "a clean teardown versus a crash" and every lens took `OnEndMission` for every end.
+- **Prevent:** before choosing where a mission-scoped write or reset lives, list the engine's exits from the decompile (`docs/reference/engine/mission-and-missionbehavior-lifecycle.md`, "Teardown paths"). Write from `OnEndMission` and `OnRemoveBehavior` when it must survive all of them (the second is a no-op after a normal end), and test the path that skips `EndMission`. Then check each listed exit from the caller side: a `CleanStates` caller on a load path counts only when some screen can open it while a mission is live (`SandBoxViewCreator.CreateSaveLoadScreen` has two callers, the main menu and the map).
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A "no cost" or "no change" claim for a gated path is proven on that path (plan 030 Codex round, 2026-10-03)
+Two claims held for the formula and not for the path they named. A refused creature event line "costs no string", but `WriteEvent` built its thread label above the budget check (88 bytes per refused event). A first-troll gate "changes nothing once a troll exists", but it starts the spacing tracker's self-throttled 0.5 s clock at the first troll tick, so a late troll is counted up to 0.5 s sooner and every later scan keeps the shifted phase, which lands a later re-space up to about 0.5 s sooner or later. The first fix wrote "never later", which held for the first scan only.
+- **Why missed:** each claim was reasoned from the line or the formula it was written for, not from the consumer's own clock or the code above the guard.
+- **Prevent:** prove the claim on that path. For "costs no string", an allocation count (`GC.GetAllocatedBytesForCurrentThread`, reached by reflection on net472) over every event kind on the refused path; for a gate in front of a self-throttled consumer, say where the consumer's clock now starts and bound the shift on every later scan, not only the first (a short simulation of the old and new call patterns does it).
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X3, X4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An outside defect register is a list of hypotheses: check each premise against TAOM's RCAs and the installed engine before planning a fix (co-op safety nets, 2026-10-21)
+The co-op gap ledger copied rows from a compat register written against Bannerlord 1.4.8 and TAOM 2.0.29.5. The
+sweep confirmed that our code matched each claim's description, not that each claim's premise held. Three premises
+failed on 1.5.x (R1 bind timing, R5 divergence, R9 module-list timing), and R9's had been refuted by a TAOM RCA two
+months earlier, while two stale code comments still stated it.
+- **Why missed:** the sweep read code and comments, not `docs/reviews/rca-*.md`, and took the register's rationale as
+  verified input.
+- **Prevent:** for every row taken from an outside source, grep the RCAs for the premise and confirm it in the
+  installed engine or the other mod's source before the row gets an action. Record the evidence in the row.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-coop-safety-nets-2026-10-21.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A performance claim names the machine that measured it, and the player figure when one exists
+Plan 006's CHANGELOG line said crash capture "no longer costs about 30 s of every boot". The 30 s was the maintainer's desktop (about 186 ms per Harmony attach there); the audit committed in the same range measured the same 247-attach sweep at 0 to 1 s on 11 player processes. The CHANGELOG feeds the player-facing release post, so the overclaim would have reached players.
+- **Why missed:** the plan quoted desktop log gaps as "every launch", and the comment, test message, feature doc and CHANGELOG each copied the number without its scope.
+- **Prevent:** a measured cost or saving in a CHANGELOG, comment or doc says where it was measured; when the machine is known to be atypical (`plans/_audit/2026-09-23-opus/followup-patch-tax.md`), give the player figure next to it or leave the number out of player-facing text.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sweep over "every provider of kind X" is only as complete as its list: derive the list, never pick it (#745, #746, 2026-10-06)
+Plans 031 and 037 moved the hot-path settings providers onto a cached MCM reference and pinned each in a gate. Both gates list their providers by hand. Five hot readers were never on the list: `RefugeSettingsProvider` (per refuge hit), `SignatureStrikesSettingsProvider` (per signature hit), the static `CreatureBanditTuning` (per creature hit, and it built a whole tuning each time), `SupplyLinesSettingsProvider` (per campaign frame) and `CampSettingsProvider` (per campaign frame while a camp stands). Race Abilities' R23 was the same miss two days earlier.
+- **Why missed:** the sweeps found their targets by name and memory, and a gate whose rows are typed in by hand cannot fail for a provider nobody typed. Nothing told the author of a new hot reader the gates existed.
+- **Prevent:** a rule line (`csharp-architecture.md` "Config Providers MUST Validate", item 9) now sends every new hot-path provider to its gate in the same commit. The structural fix is still owed: a ratchet test that scans every `TaomSettings.Instance` reader outside a lazy accessor, with the known per-event readers as its baseline. Not yet filed as an issue or plan.
+- **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesSettingsProvider`, `CreatureBanditTuning` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` follow-ups; #745, #746 review (lens 4, C7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A feature that schedules into a shared per-frame host scales the host's cost: re-check the host's per-frame path (Race Abilities, 2026-10-04)
+`BehaviorTreeMissionLogic.OnMissionTick` snapshots its tree schedule every frame with `List.AddRange`, which on .NET Framework allocates a temporary array the size of the list. With a dozen creature trees that cost nothing; Race Abilities put every profiled soldier on the schedule, about 8 KB of garbage a frame at 1,000 trees. In the same feature, the sensor scanned 30 to 40 m for soldiers whose own state ruled the ability out, the report clock summed the telemetry every frame, and the settings provider resolved MCM on every read.
+- **Why missed:** the design weighed the new tree's own once-a-second decision, not the shared host's per-frame work that now ran at a hundred times its old n, nor the per-frame and per-decision calls the feature itself added.
+- **Prevent:** when a feature multiplies what a shared host iterates every frame, read the host's per-frame path at the new n for allocations and O(n) work, and pin an allocation-free copy with an IL test. In the feature, gate each per-frame or per-decision cost on whether its answer can matter yet (`RaceAbilityReportClock.IsDue`, `RaceAbilityService.PlanScan`), and give a hot-path settings provider the cached accessor and a row in `HotPathSettingsProvidersTests`.
+- **On this tree:** This incident ran on the 1.5.x line, and `RaceAbilityReportClock`, `RaceAbilityService`, `PlanScan` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R20, R21, R23, R24 (lens 3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
+
+Twice in one session a correction reached one surface and missed the others. The #648 count was
+corrected to 176 in the issue while the #644 CHANGELOG entry kept "the other 173", a hand subtraction
+from 179 that was wrong from the start (the #644 lesson above forbids subtracting by hand). And
+checking a lesson's wording showed that the spider AV `CustomAttacksUtils` guards against was later
+traced to `HandleBlowAux`; the RCA row and the lesson were corrected, but the same claim already sat
+in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
+
+- **Why missed:** each correction was made where the error was noticed, and the fix felt complete
+  because the surface being edited was now right. Nothing prompted a search for the other copies.
+- **Prevent:** when a claim turns out wrong, grep the whole change (committed files, the scratch
+  drafts of the CHANGELOG, issue and commit text, and memory) for the claim's distinctive words or
+  number, and fix every hit in the same edit.
+- **On this tree:** This incident ran on the 1.5.x line, and `StrikeSoundPlayer`, `signature-strikes.md` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex review 130 (the S4 cross-check); `docs/reviews/rca-nazgul-race-2026-09-23.md` and `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A handoff plan's prescribed sentence is a draft: re-derive its history and engine claims before committing it (plan 025, 2026-09-24)
+
+Plan 025 prescribed its doc and CHANGELOG text word for word, and the executor copied it. Four of
+those claims were wrong: the binding row's recovery commit (`6a80bac6`; `git log -S` finds
+`41258657`), "never in the shipped JSON" (the shipped config carried both keys from `6a80bac6` until
+`b5cb3018`), Phase 1 paths being reusable in Phase 2 (1.5.x keeps the path local, and Phase 2
+pathfinds with a different cost multiplier), and a citation said to end "one line further off" that
+the deletion made exact. Its "keep the rest of the line unchanged" also left "That alone is a 2-3x
+win" pointing at the deleted scaffold, and Codex found its Step 6 sentence contradicted its own done
+check.
+
+- **Why missed:** the plan was specific and cited commits, so its text read as verified; the
+  executor re-checked code facts but not the history and engine claims inside the prose.
+- **Prevent:** when executing a plan, treat each prescribed sentence as a new claim. Run
+  `git log -S` for every commit it names as an item's origin, `git log` the file behind any "never"
+  about history, check an engine claim against the installed DLL, and re-read the neighbouring
+  sentence once the edit lands. A plan author (`/improve`) cites the evidence for each claim it
+  prescribes, or marks the sentence as a draft.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F1, F2, F5, F7, on `origin/bannerlord-1.5.x` (ported by WP142).

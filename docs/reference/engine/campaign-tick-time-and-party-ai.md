@@ -96,7 +96,7 @@ is a lazy recompute: parties only re-decide when something changed, not every fr
 - **Don't fight `DefaultBehaviorNeedsUpdate`** — setting `DefaultBehavior`/`TargetSettlement` every frame thrashes the
   AI; set once and let the engine recompute on its next AI tick.
 - **`CampaignVec2` targets lazy-resolve via the map scene** — prefer raw accessors in editor mode
-  (`feedback_campaign_coupled_property_in_editor`).
+  ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Never dereference `Campaign.Current` in editor-mode code paths").
 - **Listeners run newest first** (v1.4.8 taom-src `MbEvent.cs:24-30`, `:32-44`): `AddNonSerializedListener` puts each new
   record at the head of the list and `Invoke` walks from the head, so a listener added after the engine's own runs
   BEFORE it on the same event. (yotthani's CampaignProbe README observed the same on 1.5.5.)
@@ -152,7 +152,7 @@ battle the player watches actually loads.
 - `CampaignTime.cs`:11 (`struct : IComparable`), :56 (`_numTicks`), :70 (`Now`), :93 (`CurrentHourInDay`), :138-144 (`ToHours`..`ToSeasons`).
 - `CampaignEventDispatcher.cs`:1251 (`HourlyTickParty` → :1256 fan-out).
 - `MobilePartyAi.cs`:17 (`class`), :101 (`DefaultBehaviorNeedsUpdate`), :311 (`Tick`), :468 (`CheckPartyNeedsUpdate`), :479 (`bestAiBehavior`). `MobileParty.cs`:724 (`DefaultBehavior`), :419 (`ShortTermBehavior`), :741 (`TargetSettlement`), :341 (`AiBehaviorTarget` CampaignVec2).
-- Linked: campaignevents-and-campaignbehavior.md (Phase 9, the events fired here), campaign-object-graph.md (Phase 16, the parties moved), campaign-to-mission-bridge.md (Phase 17, the encounter this produces). Gotcha: `feedback_campaign_coupled_property_in_editor`; CastleRecruitment Patch42 (CLAUDE.md).
+- Linked: campaignevents-and-campaignbehavior.md (Phase 9, the events fired here), campaign-object-graph.md (Phase 16, the parties moved), campaign-to-mission-bridge.md (Phase 17, the encounter this produces). Gotcha: the editor-mode lesson in `docs/reviews/lessons/gamemodels-services.md`; CastleRecruitment Patch42 (`docs/reference/harmony-patch-registry.md`).
 
 ---
 

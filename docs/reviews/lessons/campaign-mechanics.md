@@ -485,3 +485,233 @@ Addendum, same review: the fix above keyed four new consumers on `EnlistmentStat
 - **Prevent:** treat the owner event as a fast path, and re-check the owner of every watched settlement in the
   daily step, or also listen to `OnClanChangedKingdom`.
 - **Source:** 1.5.x `e8504a62b` (fixed there in `7e8451555`); re-checked on the installed v1.4.8 DLLs.
+
+### A resume path must reuse the start path's availability checks (2026-10-14)
+The Eye of Sauron hunt's stand-off (the player rides in another lord's army) released the hunter and re-pinned
+him an hour after the player left. The start path refused a hunter in an army, a battle, a siege or a town, or
+under another order; the resume path checked only for a map event, so a hunter whose own AI led or joined an army
+meanwhile was claimed and recorded as hunting while attached (vanilla attached members skip path movement and
+the speed model). The save-load side repeated it: a stand-off save loaded into co-op released a pin the hunt no
+longer owned.
+- **Why missed:** the decision that added the second way into the state (resume) was tested from the player's
+  side only, and the hunter's side was assumed to be as the stand-off left it.
+- **Prevent:** a path that re-enters a state calls the same availability check as the path that first enters it,
+  one method, not a copy. A release reads the live engine flag (the pin) before acting, not a flag the feature
+  set earlier. After a maintainer decision adds a transition, re-run the lens that reads state transitions.
+- **Source:** 1.5.x `docs/reviews/rca-eye-of-sauron-2026-10-14.md` F1 and F3 (Codex), fixed in `2d17ceba3`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mercenary contract sets `Clan.Kingdom`, so a hired company is not kingdomless (#957, 2026-10-20)
+Comments and docs called a mercenary player or a hired minor clan "kingdomless" and said its row in `alignment.json` decides. `StartMercenaryServiceAction.ApplyStart` sets `clan.Kingdom` to the employer, so a hired company's map faction is the employer and its heroes side by the employer's pair. Only an independent clan, and an enlisted player (enlistment deliberately does not join the commander's kingdom), have no kingdom.
+- **Why missed:** "mercenary" reads as "serves no kingdom" and nobody opened the action.
+- **Prevent:** read the action (`pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Actions.StartMercenaryServiceAction`) before writing what a status does to `Clan.Kingdom`. A minor clan's own row applies only while it serves no kingdom.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 1, comments, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A war veto gates where the engine prices or offers the war, not only where it declares it (#818, 2026-10-18)
+The War of the Ring phase rule first sat only on `DeclareWarAction.ApplyInternal`. The engine charges before that:
+`Kingdom.AddDecision` takes 200 influence from an AI proposer before `IsAllowed` cancels the decision, a declined
+call-to-war offer costs 50 relation, a one-clan player kingdom gets a map notice without `IsAllowed`, and
+`ChangeCrimeRatingAction` takes 10 relation before each refused declaration, every day the rating stays high. The war
+never started, and every cost was still paid.
+- **Why missed:** the design traced where wars start, not what each path costs before the start.
+- **Prevent:** when you add a veto on an engine action, walk back from the action to every stage that charges a cost or
+  shows the action to the player, and gate the earliest one: the score model for AI proposals
+  (`GetScoreOfDeclaringWar`), `IsAllowed` for decisions, the notice itself for direct offers. Keep the action prefix as
+  the backstop.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` findings 4 to 6 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sweep that decides other parties' outcomes asks who controls each one, not only whether this peer may tick (2026-10-06)
+The stuck-battle sweep copied its siblings' `IsAuthority` gate, true on a BannerlordCoop host. But Coop's
+`MapEvent.Update` prefix never runs vanilla for a non-raid event holding a party this instance does not control, and the
+sweep's player-battle test saw only the local player, so on a host it would award a remote player's battle that then
+never finishes. `IsAuthority` also fails open under BannerlordTogether.
+- **Why missed:** `IsAuthority` answers "may this peer run campaign logic", the question the sibling hourly behaviors
+  face (double-running on clients). Deciding a battle's winner is a decision about other players' parties.
+- **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
+  entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the co-op predicate table before gating a world mutation, not the nearest precedent (career quests, 2026-10-27)
+A repeat of "Presence is not authority" above. A sweep that cancels a former player hero's career quest gated on
+`ICoopPresenceProvider.IsCoopActive`, so a solo player with the Coop module enabled never got the fix, and a dedicated
+server was protected only by the presence probe. The single-player predicate is `CoopSessionPolicy.IsSinglePlayerAuthority`.
+- **Why missed:** the gate was copied from `PlayerPossessionService`, whose presence check is a documented heir
+  discriminator, not an authority decision; neither this lesson nor the coop-interop "four questions" table was read.
+- **Prevent:** before a co-op gate on code that changes the world, read `docs/features/coop-interop.md` "Which predicate
+  to use" and pick by what the code decides; a precedent's predicate answers that precedent's question.
+- **Source:** 1.5.x `rca-career-quest-owner-change-2026-10-27.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the raise path before you add a co-op authority gate; a per-entity periodic tick needs none (#886, 2026-10-18)
+The castle recruitment listener on `HourlyTickPartyEvent` was built with `ICoopSessionProvider.IsAuthority` as its
+first check, on a plan claim that the old `HourlyTickParty` postfix had run on co-op clients. The event is raised only
+from `CampaignPeriodicEventManager.TickPeriodicEvents`, which BannerlordCoop's `PartyTickPatch` skips on a client, so
+the gate was always true where it ran. Under an enabled co-op module it allocated and invoked by reflection for every
+party every in-game hour.
+- **Why missed:** the claim came from Harmony semantics (a postfix runs after a skipping prefix), not from the raise
+  site. The lesson above ("enumerate EVERY handler and gate it") has no counterweight for handlers a client never runs.
+- **Prevent:** before you add an authority gate, find the event's raise site in the installed engine and check what
+  the co-op mod skips on that path (`docs/research/bannerlordcoop-internals.md`, `docs/features/coop-interop.md`). A
+  per-entity periodic tick (`HourlyTickPartyEvent`, `DailyTickSettlementEvent` and their kind) gets no gate; say so in a
+  comment next to the sibling handlers' co-op note. On any hot path, put a needed authority check after the cheap guards.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A toggle that says "AI stops doing X" must cover every engine consumer of the resource (#886, 2026-10-18)
+"AI Recruits From Castles" gates TAOM's scoring gate and hourly listener, but vanilla's `OnBeforeSettlementEntered`
+recruits from castle notables on every entry and `GarrisonRecruitmentCampaignBehavior` takes slot 0 daily, so AI keeps
+taking castle volunteers with the toggle off. New docs in the same change also claimed a bind miss stops AI castle
+recruiting.
+- **Why missed:** the 2026-05-31 design listed the vanilla gates that block castles, not every reader and writer of a
+  castle notable's `VolunteerTypes`. The model held only the path TAOM changed.
+- **Prevent:** before a toggle, a hint or a doc says what the AI does or stops doing, list every engine consumer of
+  the resource (grep the installed engine source for the field, for example `VolunteerTypes`), and either gate each one
+  or word the promise to the paths actually gated.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before hiding a menu exit, check each remaining option is ENABLED, not just shown (#827, 2026-10-18)
+Enlistment hid vanilla 'Leave' and 'Abandon army' in the commander's battle on the claim that 'Send troops' always
+remains. 'Send troops' is shown whenever a healthy troop stands on the soldier's side, and it does not read the
+hooked predicate, so both checks passed. But `MenuHelper.CheckEnemyAttackableHonorably` disables it, and 'Attack',
+for a player outside an army who holds a safe-passage truce with the enemy faction. The no-army soldier was left with
+two greyed options, and the player's own map event advances only through that menu, so the battle could never end.
+- **Why missed:** the remaining options were walked for visibility and for whether they read the patched predicate,
+  never for the paths that set `args.IsEnabled = false`. The #567 lesson above says to walk every option on the menu;
+  this change walked them on one axis only.
+- **Prevent:** when a change hides or disables a menu option, list every other option on that menu id with both its
+  visibility condition and every `IsEnabled = false` path in it (honour, morale, raft, wounded), and name the one that
+  stays enabled in each state the change can reach. If none is guaranteed, release the hidden option in the states
+  where nothing else is enabled, and ask vanilla's own check rather than copy its conditions.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-battle-exit-2026-10-18.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event's type is not its fight: trace every way a party enters a running event (#831, 2026-10-20)
+Enlistment first skipped any Raid event its commander led as attacker, on the reasoning that a raid is
+looting, not a battle. The engine reuses one Raid event for the militia fight, for a lord who comes to
+relieve the village (`StartBattleAction.Apply` keeps the type `Raid` and adds the relief lord to the
+running event) and for the looting, so the soldier would sit out a real lord battle.
+- **Why missed:** the plan traced how a raid starts (`ApplyStartRaid`), not how other parties join a
+  running one; the event type was read as a description of what is happening inside it.
+- **Prevent:** before a rule keys on `MapEvent.EventType` or a side, grep every caller that adds a
+  party to an existing event (`StartBattleAction.ApplyInternal`, `MapEventSide` setters) and list each
+  fight shape the event can hold. State in the doc which shapes the rule covers and which are a known
+  gap; test each listed shape.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-village-raids-2026-10-20.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Act on diplomacy from a tick, not from inside the war and peace events (#832, 2026-10-20)
+Enlistment first followed the commander's wars from `WarDeclared`, `MakePeace` and
+`OnClanChangedKingdomEvent`. Those events fire inside `ChangeKingdomAction`, which clears a clan's
+kingdom and then re-declares the old wars one event at a time, so each handler saw a half-built
+enemy list: the soldier made peace with every mirrored faction and declared war again, and a
+declaration against the kingdom whose war list the engine was iterating could throw.
+- **Why missed:** the plan checked that each event fires after its own state change, not what the
+  enclosing action does around it.
+- **Prevent:** a TAOM rule that declares war or makes peace in answer to world diplomacy runs from a
+  campaign tick (hourly or daily) and reads settled state; never from an engine war, peace or kingdom
+  event. Bridge the lag where it matters (here a join-time top-up). Keep such steps off the load path,
+  which runs before `MapEventManager.OnAfterLoad`. No gate enforces the 150-line entry-point limit
+  (ADR-002); check `wc -l` against HEAD when a behavior grows.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-wars-during-service-2026-10-20.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Decide "did he fight" from one owner, and let every other signal only narrow it (#830, 2026-10-19)
+Enlistment's sit-out gate first paid a battle as fought whenever a merit sample existed and as sat out
+whenever the simulation flag was set and a one-slot ledger was empty or held any verdict. Clicking Attack,
+retreating at once and then letting the others fight left a sample, so the soldier kept renown and paid no
+trust; an empty ledger was read as "forced open", so a battle he led could be paid as a sit-out.
+- **Why missed:** three signals (mission sample, `MapEvent.IsPlayerSimulation`, the ledger) each answered a
+  slightly different question, and the payout combined them without naming which one owns the answer.
+- **Prevent:** when a reward depends on what the player chose, record the choice at the moment he makes it (the
+  verdict on the option he clicked), give "nothing recorded" no meaning beyond "no choice", and make every other
+  signal a narrowing of that record. Test the walkout and the led-battle paths explicitly.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-sit-out-2026-10-19.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving work to another caller moves it in the engine's frame: check the frame order, not only the rate (#841, 2026-10-24)
+The service upkeep had two feeders, the campaign tick and the wait-menu tick. Removing the menu feed while
+time ran was judged by cost alone, but it also moved every join the upkeep raised on a running menu from
+before the frame's time advance to inside it, where `MapEventManager.Tick` still updates a raid that is the
+player's own event (`MapEventManager.cs`, `Campaign.cs`).
+- **Why missed:** both feeders were treated as interchangeable sources of one budget; the raid window was
+  already in the feature doc, but nobody tied it to which feeder runs.
+- **Prevent:** when a change moves an action from one engine callback to another (a menu tick, `TickEvent`,
+  an hourly or daily event, a mission tick), read the engine's frame order for both and list what runs
+  between them; an action that joins, starts or ends a map event belongs where time does not advance first.
+- **Source:** 1.5.x `rca-enlistment-trace-and-pump-clock-2026-10-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event with a winner is not always a battle, and RaidCompleted is not always a loot
+A looting raid ends as an attacker victory, so `OnMapEventEnded` paid the battle credit on every raid;
+`RaidCompleted` reports the attacker as winner for a won militia fight too, so a resisted raid paid
+`per_raid` twice. The first fix keyed the credit on the event type and then zeroed real lord fights the
+engine folds into raid and extortion events.
+- **Why missed:** each handler trusted its event's name. War of the Ring momentum trusts the same event
+  (#774).
+- **Prevent:** key payouts on the engine's own verdict (`Village.VillageState == Looted`, set just
+  before `RaidCompleted`) and on who was beaten (a field party with healthy men at the start), not on
+  the event type; when an event turns out to mean more than its name, grep every listener of it.
+- **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (#770, #774), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before you claim a co-op hazard in TAOM code, read the co-op mod's patches on the engine method TAOM calls (#920, 2026-10-20)
+A review found that TAOM's hourly castle recruit excludes only `MobileParty.MainParty`, and an issue was filed saying a
+remote player's party could recruit on a BannerlordCoop host. It could not: BannerlordCoop prefixes
+`RecruitmentCampaignBehavior.CheckRecruiting` with `!mobileParty.IsPlayerParty()`, and a Harmony prefix runs for any call
+of the patched method, TAOM's bound delegate included.
+- **Why missed:** the claim was marked `[Likely]` and filed as fact; the check covered TAOM's guard, not the co-op mod's
+  patches on the method TAOM calls.
+- **Prevent:** before you file or fix a co-op hazard, grep the co-op mod's source (`E:\repos\BannerlordCoop`) for the
+  engine method TAOM calls, not only for the TAOM caller. A delegate bound with `Delegate.CreateDelegate` or a reflective
+  call goes through every Harmony patch on that method. Verify a `[Likely]` finding before it becomes an issue.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new-game pass over heroes runs after the follow-ups, at adult age (#952, 2026-10-20)
+The face pass first ran on `OnNewGameCreatedEvent` and rolled each hero at the hero's own age. Initial children are cloned after that event (follow-up 0), so they copied the shared faces, and the native roll picks its face table by age, so young heroes had hair and beard reset to `Bald` and `Cleanshaven`.
+- **Why missed:** the design copied vanilla's roll call but not its input (vanilla always rolls an adult range) or its timing.
+- **Prevent:** hook a pass that must see every new-game hero to `OnNewGameCreatedPartialFollowUpEndEvent`, and roll faces at `BodyProperties.DefaultAge` (30).
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A TAOM action beside a vanilla one applies the vanilla action's own gate (#910, 2026-10-26)
+Make Tools let a player press at stamina 6 to 10, where the vanilla Refine button beside it is greyed with "You must rest":
+every smithy action needs stamina above 10 (`CraftingVM.cs`), and the co-op host refuses at 10 or less.
+- **Why missed:** the plan derived the rule from the cost model (stamina at least the cost) and never read the screen's
+  enable rule.
+- **Prevent:** before a new action goes on a vanilla screen, read the enable rule of the vanilla action next to it
+  (`RefreshEnableMainAction` here) and apply the same conditions, then add the action's own.
+- **Source:** 1.5.x `rca-smiths-measure-2026-10-26.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A join seeded from inside the raided village is interrupted by the engine, so read the trace before opening a fix (#1019, 2026-10-26)
+A review worried that a raid reaching the village an enlisted soldier stands in could leave him stranded. The 1.5.x trace says it cannot: `EncounterManager.StartSettlementEncounter` finishes his encounter and starts the raid, TAOM's battle-start join seeds an encounter, and `StartBattleAction.ApplyInternal` interrupts it unless the event is a sally-out: `InterruptEncounter` leaves the battle and opens `encounter_interrupted`. For the raid itself, `StartSettlementEncounter` then, when he shares the village's faction, calls `PlayerEncounter.Start()` (which only creates the encounter) and `Current.Init(...)`, which joins the defender side; otherwise it walks him out of the village with `LeaveSettlementAction.ApplyForParty`.
+- **Why missed:** the review read the seeding call and not the engine call that runs after it.
+- **Prevent:** before a fix for an encounter or menu hazard, follow the engine call that runs after TAOM's seam; log the case (here one ungated INFO line in `EnsureEncounterAgainst`) and let a run decide.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x enlistment.md, "Inside the raided village (#1019)", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A save keeps `Clan.Culture` and the template list, and the Factions file does not reload on a load (#957, 2026-10-20)
+`Clan.Culture` is a `SaveableProperty` and `Clan._minorFactionCharacterTemplates` a `SaveableField` (v1.4.8 `Clan.cs:108`, `:31`). `SandBoxManager.InitializeSandboxXMLs(isSavedCampaign: true)` skips the Kingdoms and Factions files (`SandBoxManager.cs:360-373`), while `NPCCharacters` always reloads. So an XSLT change to a clan's culture or templates reaches a new campaign only, and an old save pairs retagged troops with a clan on its old culture: the Grey Company (clan culture `empire`, Evil) preferred Dunland contracts while its `arthedain` troops deserted under Dunland.
+- **Why missed:** the first doc said "the clan's own culture is part of its definition and also changes at once", which is true of a new campaign and false of every save.
+- **Prevent:** for any data edit to a saved object (a clan, a hero, a settlement), name which fields the save holds and which file the load skips; a data-only change to a saved field needs a load migration or a documented new-campaign-only limit. `MinorClanMigration` is the pattern: a pure service decides from raw facts, an adapter applies, a behavior runs it on `OnGameLoadedEvent`, and a test pins its targets to the shipped data.
+- **On this tree:** This incident ran on the 1.5.x line, and `MinorClanMigration` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 2, finding D1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event that cannot reach a round never picks a winner (2026-10-06)
+`MapEvent.Update` (v1.4.8 `MapEvent.cs:995`) simulates a round only while both sides have healthy troops, and sets `BattleState` only inside a round, so a side that reaches 0 healthy between rounds leaves the event open for good. A destroyed party left attached adds a second lock: `CanPartyJoinBattle` refuses every joiner while any party is inactive. A player hit both in two campaigns and found the cause before TAOM did.
+- **Why missed:** nothing in TAOM watched map events for age, and code that removes troops from a party (daily desertion, for one) never asks whether that party is in a battle.
+- **Prevent:** the hourly `StuckBattleModule` sweep is the backstop. Code that removes or wounds a party's troops outside a mission should ask whether the party is in a map event before it runs.
+- **Source:** 1.5.x player report "NPC battle that appears to be stuck" (#748, follow-up #750); map-event-guard.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A menu consequence that can fail part way must know what menu state each earlier step left (#828, 2026-10-19)
+Enlistment's "Go on your way" exit (an isLeave option on the service wait menu) first treated "return" and
+"exit to the map" as neutral on every failure branch. They were not: the engine calls `EndWait()` before an
+isLeave consequence on a wait menu (v1.4.8 `GameMenu.cs:274-277`), so a branch that keeps the menu must re-enter
+it; `PlayerEncounter.Finish` exits the menu itself when a context exists, so a later "keep the menu" must re-open
+it; `ExitToLast` without a context does nothing. The owed in-game check made the same mistake one level up: it
+expected the service menu after a load in a town, but the load-time discharge's own `Finish(true)` clears
+`MapStateData.GameMenuId` when no menu context exists (`PlayerEncounter.cs:1019-1025`).
+- **Why missed:** the plan reasoned forward from the defect report and listed the happy path; nobody wrote down
+  the menu state after each engine call on each failure branch, or walked the discharge's own release branch
+  during `OnGameLoaded`.
+- **Prevent:** for every menu consequence with more than one branch, write the menu and wait state after each
+  engine call it makes (EndWait, Finish, ExitToLast, SwitchTo) and end every branch in a stated state: a re-entered
+  menu, an opened menu, or the map with no live encounter. Write an in-game check only after tracing what the load
+  path does to the saved menu id for that exact save shape.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-discharged-menu-2026-10-19.md` F1 to F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard justified by engine ordering cites the decompiled lines, and its fixtures come from them (#796, 2026-10-26)
+An engine-ordering claim (`MapEventSide.Clear()` nulls the main party's map event before the encounter closes) was copied between comments until it became a rule, R1b, that nobody tested against the engine. In 1.5.x the main party stays in its map event through the loot and aftermath screens; on that path vanilla removes it inside `PlayerEncounter.Finish` (`MapEvent.cs`, `MapEventSide.cs`). Other exits remove it with the encounter still open: a defender's repulsed assault (`SiegeAssaultEventComponent.OnPlayerEncounterContinueBattle`), an army leader leaving the event (`PartyBase.cs`), and `LeaveBattle`. The rule was redundant where it was meant to act and harmful had it acted (it never ran).
+- **Why missed:** every test built the snapshot by hand with the claimed shape, so no test could disagree with the engine.
+- **Prevent:** a guard justified by engine ordering cites the decompiled lines, and its test fixtures are built from the shapes those lines produce.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-enlistment-battle-encounter-rule-2026-10-26.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -64,7 +64,7 @@ idle, for perf).
   name**, attached via prefabs/scenes authored in the Kit. No registration needed beyond defining the class.
 - **`[EditableScriptComponentVariable]` fields ARE config** — the map author/player edits them in the editor. They
   must be **validated** (NaN/range/finite) before use, exactly like JSON/MCM config. This is the recurring NaN-gate
-  bug class (`.claude/rules/csharp-architecture.md` "Config Providers MUST Validate" category 3; `feedback_editor_fields_are_config`
+  bug class (`.claude/rules/csharp-architecture.md` "Config Providers MUST Validate" category 3; [lesson](../../reviews/lessons/gamemodels-services.md)
   — shipped 3×: Career #31, EditorCacheRebuild #38, CS_Road 2026-05-13). Use `FiniteFloatValidator`.
 - **A howdah (future)** would be `ScriptComponentBehavior` subclasses + a prefab, instantiated per-elephant via
   `GameEntity.Instantiate(scene, "<howdah_prefab>", …)` and frame-glued via `SetFrame` each tick (the howdah doc).
@@ -83,7 +83,7 @@ half: the engine (native scene driver) calls back into the C# virtuals (`[Engine
 ## Evidence (file:line, v1.4.5)
 - `TaleWorlds.Engine/GameEntity.cs`:10 (`sealed : NativeObject`), 379/398/403 (`Instantiate` overloads), 504/516/529 (`GetFirstScriptOfType[Recursive/InFamily]`).
 - `TaleWorlds.Engine/ScriptComponentBehavior.cs`:9 (`abstract : DotNetObject`), 11-22 (`TickRequirement`), 78 (`CacheEditableFieldsForAllScriptComponents`), 82 (`Construct`), 174 (`SetScene`), 180 (`OnInit` `[EngineCallback]`), 185/191 (`HandleOnRemoved`/`OnRemoved`), 38/54 (`GameEntity`/`Scene`).
-- TAOM: `Main/SceneScripts/` (CS_Road), `docs/features/scene-scripts.md`, `feedback_editor_fields_are_config`; the howdah prefab pattern in [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md).
+- TAOM: `Main/SceneScripts/` (CS_Road), `docs/features/scene-scripts.md`, [lesson](../../reviews/lessons/gamemodels-services.md); the howdah prefab pattern in [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md).
 
 ---
 

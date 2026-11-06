@@ -13,6 +13,14 @@ paths:
   - "tools/taom_schema.py"
 ---
 
+## Reading what a troop carries? Model the deserializer, not the markup
+
+A script or test that decides what a troop wears or rides builds each battle set the way
+`BasicCharacterObject.Deserialize` does: a roster's own slots, then every `<equipment>` written directly under
+`<Equipments>` laid over that slot in every set, civilian included (an empty id clears it), with any battle set able
+to supply any slot. Reading only `EquipmentRoster` children, or only the first one, misses the troops mounted that way
+([lesson](../../docs/reviews/lessons/xslt-moduledata.md), "Troop-level `<equipment>` overrides beat roster slots").
+
 # Validate ModuleData cross-references before committing
 
 When you add, edit, or restructure **troops, characters, lords, cultures, equipment rosters, party templates, or the validator schemas**, run the schema-driven validator before committing:

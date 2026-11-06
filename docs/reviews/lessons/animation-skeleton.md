@@ -591,3 +591,212 @@ is exactly the shape that produces a lookup miss.
 not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view transform to `Standard`
 with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
 creature with subtly wrong lighting that nobody can explain later.
+
+### A crash tied to one mesh is not a rule for the next: KEYforce's whole spider meshes rendered first time (2026-09-29)
+In June one un-split 58-bone spider mesh AV'd in `PreloadForRendering`, so the spider shipped on L/R split halves.
+The per-mesh bone cap offered as the cause was refuted on 2026-06-13 and the real cause was never found, yet the #616
+issue, `spider.md` and the Armory ledger went on saying the un-split mesh "must not ship", as though that were a
+rule. KEYforce's whole re-export on the same `spider_skeleton` loaded, rendered and fought in battle on the first try:
+one item swapped first, then all five.
+- **Why missed:** an unexplained crash hardened into a standing prohibition by repetition, each doc citing the last.
+- **Prevent:** record an unexplained crash against the exact asset that produced it (package, mesh name, date), and
+  test a new asset with a one-item swap and a battle before rebuilding the old workaround for it.
+- **Source:** the 1.5.x `docs/features/spider.md` and spider-mount ledger entries of 2026-09-29, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Size a broad creature from its mesh, not from a scaled human (2026-09-26)
+The hill troll's movement capsule (radius 0.82) and its first formation width (1.78 m) were the human's scaled by
+height. KEYForce's troll is about twice as broad for its height: 2.43 m across the shoulders at scale 1, 2.7 m in
+game, so neighbours stood inside each other. The capsule is now 1.2 (half the measured shoulders, same vertical
+extent) and the formation width the measured shoulders times `AgentScale`.
+- **Why missed:** the height ratio was the only number measured; width was assumed to follow it.
+- **Prevent:** for any creature whose silhouette is not human, measure the LOD0 mesh's width in height bands
+  (shoulders, hips) and size the capsule, formation width and reach from those.
+- **Source:** 1.5.x `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A creature's hit capsules are the Kit's defaults until someone fits them to the mesh
+Players reported the war elephant's collision as too small (2026-09-18). A creature has three collision layers: the
+Monster's `body_capsule` (what agents bump into), a hit capsule per bone (what blows and missiles strike) and a ragdoll
+capsule per bone (the corpse). 41 of the elephant's 60 hit capsules were still the Kit's defaults, thin rods along each
+bone with a radius about a ninth of the capsule's length: the neck was 0.03 to 0.05 m wide inside 0.6 m of neck and
+only 48% of the skin sat inside any hit capsule. The chariot (57 of 60) and the spider (40 of 62) carry the same
+defaults. Fitted to the skinned mesh the elephant reaches 98%.
+- **Why missed:** the creature renders, animates and takes damage, so nothing looks broken; the Kit shows the capsules
+  only in its skeleton editor and no gate reads them. The first answer to "too small" went to the body capsule, a
+  different layer, and a doubled radius would have enclosed the howdah's physics floor, the known slide cause.
+- **Prevent:** once a creature's skeleton and mesh are final, run `python tools/skeleton_hit_capsules.py show --tpac
+  <geo.tpac>` and fit what is still default (`fit`, then `patch --apply`, then a Kit load). Before changing any
+  collision, name the layer the complaint is about: bumping is the body capsule, blows passing through are the hit
+  capsules, a corpse is the ragdoll.
+- **Source:** 1.5.x `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules", `docs/features/elephant.md` "Collision", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand-built tpac package is invisible to the game until the Modding Kit has cooked its RuntimeDataCache entry
+
+**2026-09-17, spider skin variants (#616).** A tool cloned the proven split spider meshes under new
+names with a different material: geometry verbatim, names and material GUID rewritten, fresh item,
+segment and package GUIDs. Every validator passed, the catalogue parsed the clones, the engine logged
+no `Unable to find` and no dependency error, and the inventory tableau drew nothing. Two rounds of
+file-level suspicion followed (the item checksum and the per-segment hash, both cracked as xxHash64
+seed 0, both recomputed, both irrelevant to the symptom) before a probe package that redefined the
+live `sk_spider_forest_c` produced no `Overriding item` line. The client had never registered a
+single item from either hand-built package. The August native-commit audit had already settled why:
+the shipping client renders from `<module>/RuntimeDataCache/<package GUID>.rdc` and carries no code
+to write one; every write string lives in the editor binary. A census made it concrete: of 526
+mesh-bearing Armoury packages, the only two without an entry were the hand-built ones. Opening the
+Armoury in the Modding Kit and saving cooked the entry and the meshes appeared.
+
+- **Why missed:** every validator read the file, none read the cook, and a skipped package writes no
+  log line, so it looked exactly like broken bytes and the search went to the bytes.
+- **Prevent:** a tpac written or patched outside the Kit is not done until the Kit has saved the module
+  and `RuntimeDataCache/<package GUID>.rdc` exists for it (`python tools/check_rdc_entries.py`); check the
+  entry by name before any in-game test. The package GUID is the key, so a rebuild under a fresh GUID needs
+  a fresh cook. Ship the entry with the module. And when a hand-built package fails, probe the loader before
+  the bytes: redefine an existing item name in a throwaway package and look for `Overriding item` in
+  `rgl_log`; its absence means the package was skipped whole, and no amount of byte work will change
+  that.
+- **Format facts, still true:** each segment entry carries xxHash64 (seed 0) of its decompressed payload at
+  offset 56, and the item checksum is xxHash64 over the int64 metadata length plus the metadata. The
+  2026-06-11 byte-patched clips with copied hashes loaded because their packages already had cache entries
+  from the Kit; that precedent says nothing about hash validation either way.
+- **Source:** 1.5.x the 1.5.x lessons file at `5ccde2771`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that runs after the fix it checks can never fail (2026-09-26)
+`transfer_hand_morphs.py` pins the wrist seam (every seam vertex that moves gets weight 0, and only moving vertices
+are written), then its seam gate reads the seam back from the written keys. Every seam vertex is either unwritten
+or written at weight 0, so the gate reads 0.0 for any reference: fed the torn Isengard run's numbers (seam 0.089,
+peak 0.552), it passed. The live report's "seam max 0.0 against the limit 0.01035" was quoted in three docs as
+proof of a clean wrist; the real guard was the `--preview` render and Mike's look.
+- **Why missed:** the hand-channel lesson's own rule, "gate it from the keys actually written", is what emptied the
+  gate once the pin ran before it; the gate's unit test fed the gate function numbers the pipeline can no longer
+  produce, so it stayed green.
+- **Prevent:** gate the quantity the fault changes, before the step that masks it (here the raw seam movement of the
+  smoothed field, before the pin), and check the masking step separately (the pin held: written seam offsets 0).
+  Test a gate by running the real pipeline on a known-bad input and watching it fail, not by feeding the gate
+  function a number.
+- **On this tree:** This incident ran on the 1.5.x line, and `transfer_hand_morphs.py` exists only there; the rule holds here.
+- **Source:** 1.5.x tools review 2026-09-26 (Blender tooling lens, M1); `tools/blender/transfer_hand_morphs.py` `seam_weights`, `seam_offsets`, `seam_gate`; `docs/features/troll-race.md` "Hand pose morphs", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The Kit stores bone tracks in FBX node order and the engine reads the skeleton's list order
+
+**Context (2026-09-18, the war ram).** The troll procedure, run on `horse_skeleton`, stood the ram on its head
+with its hind legs in the air while the pelvis and spine were right. Read-back of the compiled master against
+two vanilla horse masters (`anim_horse_stand_4`, `horse_dash_forward`) showed the cause: the Kit writes a
+master's bone tracks in FBX node order (Blender exports depth-first) and never remaps them by name; the engine
+reads slot i as bone i of the skeleton's own list; `horse_skeleton` lists the rear legs and tail before the
+neck. Slots 16 to 31 were scrambled: the neck played the tail, the hind legs the neck. `human_skeleton`'s
+list IS depth-first, which is why the troll measurement said "verbatim" and saw nothing.
+
+**Why missed:** TaleWorlds' own horse FBX hangs `horseneck1` off `horsetail3`; the
+August work read that as a rig error and "fixed" it, which moved the neck's tracks into other bones' slots.
+The one hierarchy that looked wrong was the one that kept the order right.
+
+**Prevent:** A measurement made on one skeleton proves the rule for that skeleton's coincidences too. On EVERY
+new skeleton, read the compiled master back and check slot i against file-order bone i at frame 0 before
+trusting the viewer. When the list order is not a depth-first walk of the hierarchy, export from a hierarchy
+that makes it one, node locals kept engine-parent-relative. And keep the FBX take name stable: it is the master's name, and a reimport keeps the
+master's GUID only while the name matches (a Blender `.001` collision created `act_war_ram_butt.001`, a new
+GUID, an empty skeleton and an orphaned clip).
+- **Source:** 1.5.x the 1.5.x lessons file at `4520af802`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mount's clip needs a priority and `enforce_lowerbody`: the Kit's default clip plays in the viewer and not in battle
+
+**Context (2026-09-18, the war ram).** The head-butt played correctly in the Kit viewer and the TAOM log recorded it
+firing 1,300 times in a Custom Battle, yet Mike never saw the head drop. The clip carried the Kit's defaults, priority
+0 and no flags. At priority 34 it was still not visible (1,005 butts, next battle). Every vanilla horse clip read
+(`horse_kick` 34, `horse_rear` 74, even the hit reaction `horse_hit_from_front` at priority 2) carries
+`enforce_lowerbody`, and `horse_kick` and the warg's `warg_attack_stand` share priority 34 + `enforce_lowerbody` +
+`enforce_all` + blends 0.2 / 0.4; the ram now carries that recipe, in-game result pending.
+
+**Why missed:** The viewer plays a clip alone, with nothing competing for channel 0; a battle is the first place
+locomotion does. And the damage count proved nothing: the attack task plays the action and applies damage in the
+same tick, so damage lands whether or not the animation survives.
+
+**Prevent:** Give a mount's action clip the recipe of the nearest vanilla clip of its kind, read from the tpac (table in
+`docs/reference/bannerlord-animation-clip-flags.md`), and judge it in battle, never in the viewer.
+- **On this tree:** This incident ran on the 1.5.x line, and `warg_attack_stand` exists only there; the rule holds here.
+- **Source:** 1.5.x the 1.5.x lessons file at `4520af802`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A missing action set's visible effect is read from the set that holds the action (#956, 2026-10-20)
+Sauron had no `as_sauron_facegen`, and the plan expected the fix to change his coronation pose. The scene's pose action
+`act_main_story_become_king` lives only in `as_human_warrior`, which is both the engine's fallback set 0 for a missing
+set and the new set's `base_set`, so the only effect was the missing-set log line.
+- **Why missed:** the plan inferred the effect from the missing set's name.
+- **Prevent:** before promising what an action-set fix changes, find which set declares the action the scene plays
+  (the spawn point's `InitialAction`, the clip in use) and what the engine falls back to; state the log line as the
+  check when nothing visible changes.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_sauron_facegen` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-coronation-fixes-2026-10-20.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A clip reused on an action vanilla loops must loop too, or the screen falls to bind pose (2026-10-02)
+
+The hill troll's action set reused its Fab idles (5.4 s and 4.57 s one-shots) for the inventory, conversation and
+cheer codes. Vanilla's clips behind those codes are `cyclic` or continue into one that is, and the party screen,
+encyclopedia, map conversation and victory logic set the action once. When the troll clip ended nothing followed,
+and about five seconds in the troll lay flat in bind pose. Battles hid it, because the mission re-issues stand idles
+and vanilla's own `troop_stand_*` clips are one-shots.
+- **Why missed:** the bind checked that each code resolves to a clip that exists, not that the clip keeps playing
+  the way the replaced clip did. A clip's loop and continue-to live in its `AnimationClip` definition (the `_anm.tpac`
+  or `animation_clips.tpac`), which no action-set audit reads. The gap was even written down as an OPEN item and
+  waited a week for a player report.
+- **Prevent:** when a clip replaces a vanilla clip for an action code, copy the vanilla clip's `cyclic` flag and
+  `ContinueWithAction` too (read both with `TpacTool`'s `AnimationClip`), and look at every screen, conversation or
+  cheer code for at least one clip length in game before calling the bind done.
+- **Source:** 1.5.x `docs/features/troll-race.md` Track 1, "The party-screen bind pose, the reused idles made cyclic", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before calling an action set's inherited clips "rarely played", list the engine's other consumers (2026-09-25)
+The hill troll's set left 4,049 codes on human clips, called "rarely played" because the names looked like swimming,
+ladders and cutscenes. The engine also plays that set off the battlefield: `CharacterTableau` idles party-screen,
+encyclopedia and inventory previews on `act_inventory_idle*`, `ConversationMissionLogic` spawns the two highest-level
+troops as map-conversation bodyguards on the `_poses` set, and `AgentVictoryLogic` plays `act_cheer_*` after a won
+battle. On a hunched rig each shows the human rest relations (head up, wrists twisted). 49 derived `as_hill_troll_*`
+sets also carried 2,376 overrides of their own, all human clips.
+- **Why missed:** frequency was judged from code names, not from the engine's callers of the set or the derived sets.
+- **Prevent:** before binding a race's set, grep the installed engine for `GetActionSetWithSuffix` and the idle and
+  victory actions, list the derived `<race>_*` sets that override, and retarget what those paths play.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_hill_troll_` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A clip reused for another code must carry the flags that code's consumers rely on (2026-09-25)
+The hill troll's Fab idles were bound to 172 inventory, conversation, pose and cheer codes. The idles are
+priority 1 with no `cyclic` flag; the vanilla clips behind those codes are `cyclic`, some continue into a loop
+code, the cheers are priority 64, and the party screen, the map conversation and the victory logic set the
+action once, so the reused clip plays five seconds and stops.
+- **Why missed:** the reuse was judged by motion (an idle for an idle), not by the clip definition the engine
+  reads.
+- **Prevent:** before binding one clip to another code, read the code's vanilla clip (flags, priority,
+  `ContinueWithAction`) and the consumer that plays it; where they differ, clone the code's own vanilla clip onto
+  the reused master, as `gen_troll_anim_clips.ps1 -CloneByName` does.
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_troll_anim_clips`, `CloneByName` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 45, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Trace the load path before calling an asset shipped: the camp props rendered nowhere for five weeks (2026-09-29)
+The four field camp and refuge props in `Main/_Module/AssetPackages/` are fetched by name with
+`MetaMesh.GetCopy(..., mayReturnNull: true)`, and a miss draws the vanilla siege-camp layout with only an entity count
+in the debug log. From their commit on 2026-08-22 until this review the docs called them shipped, cooked packs read by
+players. Neither held: TAOM has a loose `Assets/` tree, so the dev install never reads `AssetPackages/`
+(`rgl_log_73032.txt:203`), and the editor-built releases carry only `pack0.tpac`, which holds none of them. The first
+draft of this adoption repeated the mistake: it gated the mesh names and wrote that the #506 smoke would settle the
+RDC question, when the folder is not read at all.
+- **Why missed:** the fallback hid every failure, the feature doc recorded where the files sit rather than what loads
+  them, and nobody read a client log or a release folder; the smoke that would have shown it stayed owed after #506
+  closed without `triage-needs-ingame`.
+- **Prevent:** before writing that an asset ships or loads, read the evidence at both ends: the client log's
+  `Loading packages` line for its module (which tree loads) and the release folder or launcher manifest (what
+  players get). A name gate (`tools/tests/test_prefab_asset_packages.py`) keeps code and packages in step but cannot
+  see delivery; for a silent fallback, give the smoke an objective signal (`[FieldCamp] placed N`).
+- **On this tree:** This incident ran on the 1.5.x line, and `rgl_log_73032` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-mithrilforge-adoption-2026-09-29.md`; `docs/reference/tpac-static-prop-authoring.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Measure a clip only over the frames it plays, and decode what was written, not what was asked (2026-09-29)
+From MithrilForge's DualWield work (Bannerlord 1.4.6, `docs/anim-findings.md` sections 3.4, 3.5 and 3.1), three
+measurement faults that each cost its author days: a per-clip error taken over frames 50 to 120 read 0.95 m on a
+21-frame flail clip whose real error was 0.04 m, because outside the clip's key window the pose holds its end key
+while the target keeps moving; an encoder handed a correct target wrote a key up to 147 degrees off on a block with
+one real key, which only decoding the written bytes showed; and a blade "correction" that made every offline number
+perfect turned the weapon twice in game, because the engine attaches an off-hand weapon to another bone and the
+constant offset was its own compensation.
+- **Why missed:** each metric was right about what it measured and wrong about what plays.
+- **Prevent:** bound every animation measurement by the clip's play window (first to last key of any bone), audit
+  the written package by decoding it, and when a correction makes numbers perfect against a mirrored or derived
+  reference, look in game before shipping it.
+- **On this tree:** This incident ran on the 1.5.x line, and `docs/anim-findings.md` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/adopt-mithrilforge-2026-09-29.md`; MithrilForge `docs/anim-findings.md` (private repo, read at `91149e11`), on `origin/bannerlord-1.5.x` (ported by WP142).

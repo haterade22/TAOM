@@ -33,3 +33,69 @@ When porting a native hook target to a new engine build, a structural body-match
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### A native pin table fails the engine-bump gate on a build it does not list (2026-10-15)
+- **Why missed:** the v1.5.5 bump added a row to the clip-budget pin table and none to
+  `SkeletonBufferInstalledBinaryTests.KnownBuilds`. Both classes were tagged `LiveInstall` only, so a build with no row
+  returned Inconclusive, which the test run reports as skipped with exit code 0, and neither class ran in the binding
+  gate. The engine-bump skill named both tables; nothing could fail when one was missed.
+- **Prevent:** every `KnownBuilds` table is tagged `BindingVerification`, so the gate (`MapInconclusiveToFailed`)
+  fails on an unlisted build; `NativePinGateTests` keeps each table tagged and named in the skill. A Python pin table
+  still skips without `TAOM_GHIDRA_IT=1`: read its skip count, never its exit code.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.5-2026-10-14.md` F10, issue #806, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A figure copied into a reference doc takes its source tag and build with it (2026-10-15)
+- **Why missed:** on the 1.5.x line a new `cameraMs` row in the frame-cost table gave yotthani's 1.1 to 3 ms PreDisplay cost
+  under the table's `[TAOM-verified]` tag: the implementer copied the figure from the issue body, which names yotthani, and
+  left the name behind. The fix then added TAOM's own address to a table whose legend pins every native offset to one
+  other build.
+- **Prevent:** copy the source's tag with the figure, in the same edit. Before a figure or an address goes into a reference
+  doc, read that doc's tag legend and name the build in the clause.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-review-2026-10-15.md` finding 5 and second review S3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native guard covers every reservation of the same shape in the function, not only the one upstream named (2026-10-08)
+- **Why missed:** the skeleton-buffer guard was ported from yotthani's fix for one `lock xadd` reservation
+  (`0x69D1C`). TAOM re-derived that site's missing bound with Ghidra and stopped there; the same function first
+  reserves from a second pool (`0x6AF58`, 262,144 entries) with the identical flaw, which the review's engine lens
+  found by disassembling the whole function.
+- **Prevent:** before guarding or documenting a native defect, list every instruction of the same shape in the
+  function (and in the callees it shares data with), not only the site the source named; record each as guarded,
+  watched or out of scope.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 1. - **Recurrence (2026-10-08, the same day):** the fix round's survey found that the pool belongs to an allocator: the global `0xD9D160` holds at least eleven pools with the same missing bound, two more on the same draw path. Survey the allocator the pool belongs to, not only the function (finding 23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native call's side effects decide when it may run: read what the engine checks next on that path (2026-10-08)
+- **Why missed:** the map-view release was ported with upstream's timing, on the cover. Nobody read what
+  `SceneView.ClearAll` writes besides freeing memory: it zeroes the view's ready word (`0x34B769`), and
+  `MapScreen.OnPause`, which runs right after the layers deactivate, reads that word and raises the global loading
+  window over the covering screen. The feature doc's own in-game step had flagged the effect as unverified.
+- **Prevent:** before calling an engine method from an event, list the state it writes (decompile the native body for
+  an engine call) and read the code that runs next on the same path; an effect a doc marks "unverified" is checked
+  before the change is called done.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 19, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A count in a reference doc names its method and is taken two ways (2026-10-08)
+- **Why missed:** a byte scan for RIP-relative references to `0xD9D160` tried every offset with three instruction
+  lengths and counted each reference three times (630 instead of 210); the number went into the engine doc straight
+  from the script.
+- **Prevent:** take a count two independent ways (a disassembler sweep with skipdata and a raw displacement scan)
+  and write the method beside the number; a single ad hoc scan is a lead, not a fact.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 12. - **Recurrence (2026-10-08, fix round):** the cull's MCM hint gave yotthani's 1,002 settlements as TAOM's count (the live `TAOM_Map` file holds 1,040), and both map-view hints stated his measurements as fact. Player-facing text carries only counts TAOM took, with their basis, or attributes the figure (finding 26), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A diagnostic meant to decide a lever lists what it cannot see (2026-10-03)
+The `[AnimMem]` docs and plan said a total far below 12 MiB "rules out" both clip levers. It speaks to the budget lever only. A type 2 clip starts unloaded and loads on its first sample whatever the total (the acquire path, `0x474140`, never reads the counter), and the probe samples once a second in `OnMissionTick`, after the frame's `WaitTickCompletion`, so a load that delayed a frame has ended before `loadingNow` is read.
+- **Why missed:** every native claim was checked for truth and none for what the measurement can reject; the stated purpose ("decides between the levers") was copied into the reading guide.
+- **Prevent:** when a log is meant to choose between levers, write per lever the observation that would reject it, and mark each lever the log cannot reject. Say where the sample sits in the frame (the engine's tick order): a point sample misses a wait that ended before it.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A safety comment names what is checked, what is trusted and what is outside the checks (2026-10-03)
+The probe's summary said every address is proven inside a mapped section before any read. Only the two targets are checked against the section table; the header page and the code copy are read on trust; the module is assumed to stay mapped; and `IsAnyAnimationLoadingFromDisk` walks a native list with no lock, outside every check (`0x6EAAE0` holds no call, lock-prefixed instruction or thread check; what can grow the list was not traced).
+- **Why missed:** the comment was written for the arming path, which the reviews read closely, and it covered a class that also forwards an engine call nobody traced; the rollout cost sat in the review record and not in the doc that ships the default.
+- **Prevent:** write a safety comment as three lists (checked, trusted, outside the checks) and give each forwarded engine call its own entry. A doc that ships a diagnostic on by default says what was not measured and how to measure it.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Name a native budget's trigger and its target separately (2026-10-02)
+The engine's on-demand clip budget float is 12 MiB, and the feature doc said the engine holds 12 MiB before evicting. The loader compares the total with `0xF00000` (15 MiB) and only then schedules the eviction pass, so totals between 100% and 125% are normal. The review's fix then said each pass trims the total to 12 MiB or less, which the binary does not guarantee: the pass (`FUN_18021dea0`, entry `0x21DEA0`) measures the excess over the budget once, when it starts, and evicts only idle loaded clips (state 2, no users) until it has freed that much. Clips in use, and loads that finish during the pass, can leave the total above 12 MiB.
+- **Why missed:** the doc was written from the constant the eviction pass reads, not from the compare that schedules it, although the engine note recorded both; the correction read the target from the subtraction and did not read the loop's exit and skip conditions.
+- **Prevent:** for any native limit, record every constant compared with the same counter (trigger, target, hysteresis) before stating what the limit means to a reader, and state what the enforcing loop skips and when it stops before calling the target a guarantee.
+- **On this tree:** This incident ran on the 1.5.x line, and `FUN_18021dea0` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C4, on `origin/bannerlord-1.5.x` (ported by WP142).

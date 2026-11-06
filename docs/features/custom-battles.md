@@ -127,7 +127,7 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_RefreshValues_Patch.cs` | Harmony postfix — defensive re-filter for refresh events |
 | `Main/Features/CustomBattles/Hooks/ISideCommanderFilter.cs` | Hook interface — resolves commanders for a culture |
 | `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` | Hook impl — calls service with `MaxCommandersPerCulture = 3`; warns + skips any commander id that fails to resolve |
-| `Main/Features/CustomBattles/Config/custom_battle_commanders.json` *(in `Main/_Module/ModuleData/custom_battle/`)* | Curated per-faction commander lists (faction culture id → ordered lord ids) |
+| `Main/_Module/ModuleData/custom_battle/custom_battle_commanders.json` | Curated per-faction commander lists (faction culture id → ordered lord ids) |
 | `Main/Features/CustomBattles/Config/CustomBattleCommandersConfig.cs` | DTO for the curated config (`Dictionary<string, List<string>> Factions`) |
 | `Main/Features/CustomBattles/Config/ICustomBattleCommandersProvider.cs` | Provider interface — `HasCuratedEntry` (validate-before-lookup gate) + `GetCuratedCommanderIds` |
 | `Main/Features/CustomBattles/Config/CustomBattleCommandersProvider.cs` | Validating `Lazy` singleton provider (mirrors `CultureConversionConfigProvider`) |
@@ -137,7 +137,7 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `Main/Adapters/ObjectManagerAdapter.cs` | ObjectManager bridge implementation; in a Custom Battle it reads culture troops from the merged SPCultures XML |
 | `Main/Adapters/CultureTroopIdReader.cs` | Pure parser: culture id to troop ids from a merged SPCultures document |
 | `Main/_Module/ModuleData/characters/custom_battle_lords.xml` | CustomGame-only stubs that `lords.xslt` rebuilds into the curated vanilla-derived commanders |
-| `Main/_Module/GUI/Prefabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |
+| `Main/_Module/GUI/PreFabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |
 
 ## Dependencies
 

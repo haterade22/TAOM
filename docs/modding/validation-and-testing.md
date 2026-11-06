@@ -351,7 +351,7 @@ These cannot be checked with the tools above and are not a data modder's job to 
 
 | Situation | Why it needs a developer |
 |---|---|
-| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | `python tools/validate_xml_schemas.py` has modelled it since 2026-09-18 (the `SCHEMA_INVALID` pass in `validate_moduledata.py` runs it, and `characters/clans.xml` is checked against the engine's `Factions` schema), so a missing required attribute or an undeclared one is caught for every registered file the engine ships an XSD for. What stays here is a registration with no XSD (the Armory's `ModuleSounds` prints NO SCHEMA), a file no `<XmlName>` loads, and an XSD that lags the deserializer. This is how `clan_umbar_3` shipped with no home settlement |
+| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | `python tools/validate_xml_schemas.py` has modelled it since 2026-11-05 (the `SCHEMA_INVALID` pass in `validate_moduledata.py` runs it, and `characters/clans.xml` is checked against the engine's `Factions` schema), so a missing required attribute or an undeclared one is caught for every registered file the engine ships an XSD for. What stays here is a registration with no XSD (the Armory's `ModuleSounds` prints NO SCHEMA), a file no `<XmlName>` loads, and an XSD that lags the deserializer. This is how `clan_umbar_3` shipped with no home settlement |
 | Anything a stylesheet does | no gate interprets XSLT. `spcultures.xslt` rewriting a vanilla culture in place is invisible to every check here; `CulturePartyTemplateTests` is the only detector and it is a C# test |
 | A culture fielding another faction's troops | the ref sweep proves an id resolves, never that it points at the right faction. That gap hid nine cultures' worth of Calradian troops for months |
 | A lord with the wrong name or sex for his body | free text behind a localization key; `LordNameAndSexConsistencyTests` owns it |
@@ -432,8 +432,9 @@ culture troop XMLs" is wrong on both numbers.
 - [Troubleshooting](troubleshooting.md) for symptom-first diagnosis once a check has failed.
 - [`docs/features/moduledata-validation.md`](../features/moduledata-validation.md) for the validator's
   design, the schema model and the full coverage boundary.
-- [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md) for the
-  issue-code table and the per-module matrix in rule form.
+- [`docs/reference/moduledata-validator-codes.md`](../reference/moduledata-validator-codes.md) for the
+  issue-code table, and [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md) for the
+  per-module matrix in rule form.
 - [`tools/README.md`](../../tools/README.md) for every script, and its mandatory XML I/O convention
   at the top before you write or modify one.
 - [`docs/reference/hooks-catalog.md`](../reference/hooks-catalog.md) for what each hook does.

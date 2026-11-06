@@ -12,11 +12,8 @@ spiders, wargs), race-specific lifespans, alignment-driven diplomacy, a full car
 system, per-kingdom special resources, and dozens of other systems. Every kingdom, clan, lord, and
 troop has been replaced or rewritten to fit Tolkien's world.
 
-**By the numbers:** 58 feature modules · 39 GameModel overrides · 30+ Harmony patch categories ·
-50 careers across 16 cultures · 11 special resources across 18 kingdoms · 800+ troop definitions ·
-2,600+ unit tests · 90 feature docs.
-
-> The active development branch (and the GitHub default) is **`bannerlord-1.4.5`**.
+> This branch, **`bannerlord-1.4.5`**, is the Bannerlord v1.4.8 line. The Bannerlord 1.5 line,
+> **`bannerlord-1.5.x`**, is the GitHub default branch and carries its own README.
 
 ## Working with AI
 
@@ -49,13 +46,13 @@ commands in the developer quick start below.
 **Build & test**
 
 ```powershell
-git clone https://github.com/haterade22/TAOM      # lands on bannerlord-1.4.5
+git clone -b bannerlord-1.4.5 https://github.com/haterade22/TAOM
 cd TAOM
 
-.\setup-dev-env.ps1        # configure BANNERLORD_GAME_DIR + dependencies
+.\setup-dev-env.ps1        # set BANNERLORD_GAME_DIR (asks for your install path)
 .\build.ps1                # build the mod
 .\build.ps1 -RunTests      # build + run the test suite
-dotnet test TAOM.Tests     # tests only
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=   # tests only, no deploy
 ```
 
 A successful build deploys the module into your game's `Modules/` folder. Enable **TAOM** in the
@@ -69,14 +66,14 @@ NSubstitute. Shared build settings live in [`Directory.Build.props`](Directory.B
 ```
 TAOM/
 ├── Main/                     # Mod source (.NET Framework 4.7.2)
-│   ├── Features/             # 58 feature modules (CareerSystem, SpecialResources, LotrIssues, Elephant, …)
+│   ├── Features/             # Feature modules (CareerSystem, SpecialResources, LotrIssues, Elephant, …)
 │   ├── Core/                 # Core infrastructure + IoC
 │   ├── Adapters/             # Sealed-type adapters (IHeroAdapter, etc.)
 │   └── _Module/              # Bannerlord module files (SubModule.xml, ModuleData, GUI)
-├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute, 2,600+ tests)
+├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute)
 ├── docs/
-│   ├── adrs/                 # Architecture Decision Records (11)
-│   ├── features/             # Feature documentation (90 files)
+│   ├── adrs/                 # Architecture Decision Records
+│   ├── features/             # Feature documentation
 │   └── migration/            # Bannerlord version-migration tracking
 ├── tools/                    # Rebalancing + localization scripts
 ├── .ai/                      # Shared AI policy, roles, scope and review packets
@@ -122,7 +119,7 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 
 ### Headline systems
 
-- **Career System** — 50 careers across 16 cultures; pick one at character creation, progress a
+- **Career System**: culture-specific careers; pick one at character creation, progress a
   tiered choice tree, unlock passive bonuses + an active battlefield ability (press **V**).
 - **Legendary War Beasts** — ride wargs, Harad **war elephants** (trample + tusk auto-attacks), and
   Dol Guldur **giant spiders** (auto-bite); each driven by behavior-tree AI and fielded as cavalry.
@@ -146,38 +143,39 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 …and dozens more systems (castle recruitment, culture marketplace, troop-weight balancing,
 messengers, quick-action inventory, banner color persistence, settlement guards, custom battles,
 siege defense, tournament armor, shader precompilation, and more). Each is documented under
-[`docs/features/`](docs/features/). LOTR rules are enforced through **39 GameModel overrides** and
-**30+ Harmony patch categories** — both registries are catalogued in [CLAUDE.md](CLAUDE.md).
+[`docs/features/`](docs/features/). LOTR rules are enforced through GameModel overrides and Harmony patches, both catalogued in [harmony-patch-registry.md](docs/reference/harmony-patch-registry.md) and [gamemodel-registry.md](docs/reference/gamemodel-registry.md).
 
 ## How It's Built (AI-assisted pipeline)
 
 TAOM is developed with a structured, AI-assisted engineering pipeline.
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** is integrated as more than a
-  code generator: 41 custom slash-command skills, 5 specialized agents, 22 automated hooks,
-  18 path-scoped rule files, persistent cross-session memory, and 7 MCP servers (symbolic code
-  navigation, decompilation, git, GitHub). [CLAUDE.md](CLAUDE.md) is the authoritative reference
-  every session loads.
-- **Codex** (OpenAI) runs as an *independent adversarial reviewer* — it shares no session context
-  with Claude, so it provides a genuine second opinion. 40+ reviews completed to date; review
-  instructions live in [AGENTS.md](AGENTS.md).
+  code generator: custom slash-command skills, specialized agents, automated hooks, path-scoped
+  rule files, persistent cross-session memory, and project MCP servers (symbolic code navigation,
+  decompilation). [AGENTS.md](AGENTS.md), with Claude's [CLAUDE.md](CLAUDE.md) layer, is the
+  authoritative reference every session loads.
+- **Codex** (OpenAI) runs as an *independent adversarial reviewer*: it shares no session context
+  with Claude, so it provides a genuine second opinion. Review instructions live in
+  [AGENTS.md](AGENTS.md).
 - **Mandatory completion workflow** — every C# feature passes a 4-phase gate before merge:
   build + internal `/deep-review` → Codex adversarial review → self-review of the fixes →
   closeout (issue, feature doc, commit body as the changelog entry).
 
 ## Installing to Play (non-developers)
 
-TAOM ships as a set of modules. Required alongside the core `TAOM` module:
+TAOM ships as four modules: `TAOM`, `TAOM.Dependencies`, `TAOM_Map` and `LOTRLOME_Armory`.
+`TAOM.Dependencies` carries Harmony, ButterLib, UIExtenderEx and Mod Configuration Menu (MCM)
+inside it, so none of those is installed separately: a standalone Workshop or Nexus copy of any of
+them must be removed before TAOM is enabled.
 
-- Companion modules: **TAOM_Map**, **LOTRLOME_Armory**, **TAOM.Dependencies**
-- BUTR dependencies: **Harmony** and **Mod Configuration Menu (MCM)**
-
-Place all modules in your Bannerlord `Modules/` directory, enable them in the launcher, and start a
-**new campaign** — existing saves are not supported.
+Bannerlord **v1.4.8** is required. Place the four modules in your Bannerlord `Modules/` directory,
+enable them in the launcher, and start a **new campaign**: existing saves are not supported.
 
 ## Contributing
 
-1. Read [CLAUDE.md](CLAUDE.md) for coding standards and conventions
+Pull requests go to `bannerlord-1.4.5` for Bannerlord 1.4.8 fixes, or to `bannerlord-1.5.x` for the 1.5 line. [CONTRIBUTING.md](CONTRIBUTING.md) covers the route, what a PR needs and the checks every PR goes through.
+
+1. Read [AGENTS.md](AGENTS.md) for coding standards and conventions
 2. Write tests first — TDD is mandatory
 3. Use the adapter pattern for any TaleWorlds sealed type
 4. Keep Harmony patches and entry points thin (< 150 lines); delegate to services

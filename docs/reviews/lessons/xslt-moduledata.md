@@ -377,3 +377,113 @@ do not.
   `SubModule.xml`.
 - **Source:** docs/reference/lotrlome-soln-id-fix.md. No issue filed; found while auditing a
   cross-session report on 2026-08-28.
+
+### Troop-level `<equipment>` overrides beat roster slots and reach every set, civilian included (1.5.x #636, ported 2026-11)
+In `troops_*.xml`, an `<equipment>` written directly under `<Equipments>` is not a default a roster can
+override: `BasicCharacterObject.Deserialize` adds the troop's rosters first, then
+`MBEquipmentRoster.AddOverriddenEquipments` deserializes each such node into every equipment the troop has,
+battle and civilian (v1.4.8 `BasicCharacterObject.cs:412`, `MBEquipmentRoster.cs:121-136`); an empty id
+clears the slot (`Equipment.cs:204-221`, `IsItemFitsToSlot` :445-451). 88 troops in `troops_*.xml` get
+their mount this way (2026-11-06).
+- **Why missed:** on the 1.5.x line a wiring test and two tools were written from the markup, reading the
+  roster's slot first as the more specific scope (#636, #641, #696).
+- **Prevent:** a check of what a troop carries reads the `<Equipments>`-level override first and the roster
+  slot only as the fallback, and treats it as present in the civilian set too. Read the deserializer
+  (`pwsh tools/taom-src.ps1 path TaleWorlds.Core.BasicCharacterObject`) before modelling precedence from XML
+  shape; `.claude/rules/moduledata-validation.md` states the rule for scripts under `tools/`.
+- **Source:** 1.5.x `docs/reviews/rca-elk-2026-09-22.md` finding F3 and `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` fix review R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An artist's rows inside a TAOM tool's marker block belong to the tool; check who owns the region a merge lands in (03320a65, 2026-10-16)
+KEYforce added his javelin pieces inside `OneHandedPolearm_JavelinAlternative`, a template `generate_starter_kit.py`
+had created and wrapped whole in `TAOM-STARTER-KIT` markers. The three-way merge kept them, every gate passed, and the
+tool's next `--apply` would have rewritten the block to its own three rows (`--revert` deletes it), leaving the javelins
+throw-only while its `--verify` stayed green.
+- **Why missed:** a merge is checked for "his additions plus our edits present", which says nothing about which tool
+  rewrites that text later; a presence-only `--verify` cannot fail on a row it never wrote.
+- **Prevent:** after merging an artist's XSLT, list the TAOM marker blocks (`TAOM-*:START`) his hunks fall inside. Move
+  the markers so they fence only the tool's own rows (the tool then takes its in-template path and reports `noop`),
+  and gate the artist's rows with the tool's blocks set aside.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An art drop synced into the live Armory is an edit nothing gates, so a body-ref audit is part of the sync, not a follow-up
+An Armory art drop that re-exports meshes under new names (`wm_elven_bow_v1..v4` to `wm_elven_bow_a01..a04`, bodies alike, 2026-09-11) breaks every `body_name` that still holds the old name, and a missing BODY is the #352 infinite load: `PreloadHelper.WaitForMeshesToBeLoaded` counts each unresolvable `PhysicsShape.GetFromResource` on every pass. The player character is always first in `FightTournamentGame.GetParticipantCharacters`, so the player's own kit is in every arena and tournament preload set; that is why an elf start hung on the Rivendell tournament while a human in the same process played it (#599).
+- **Why missed:** the Armory is unversioned here, so the sync (a plain file copy plus one mirror commit) touches nothing the commit hook or CI can see, and `tools/validate_mesh_refs.py --scan-bodies` was never run after it. Worse, a session HAD run it on 2026-09-13, got the exact 18 MISSING_BODY / 14 MISSING_MESH inventory, and wrote it into a memory note as a diagnosis; a diagnosis that is not an issue and not a fix is a two-day-old hang waiting for the next player. The catalogue's `--diff` also kept reporting "18 REFERENCED, will break" after the refs were repaired, because the flag on a deleted row is the committed 09-01 flag, not today's.
+- **Prevent:** after ANY Armory sync (a KEYforce pull, a "TAOM Update" commit on the mirror, an editor re-import), run `python tools/validate_mesh_refs.py --items <Armory>/ModuleData --scan-bodies --no-rgl-log` and `python tools/generate_armory_catalogue.py --diff`, and treat every MISSING_BODY as a hang, not a warning. Repoint the refs to the art that ships (no tpac restores) and regenerate the catalogue in the same change; `--diff` is only trustworthy against a catalogue regenerated after the last repair. When a diagnosis lands in a memory note, file the issue the same session.
+- **Source:** 1.5.x #599 (dump-confirmed, `E:\taom-hang-2026-09-15\windbg_stack.txt`); #352 for the mechanism; memory `features/shader-precompilation.md` for the 2026-09-13 sighting, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A collision body that resolves can still be borrowed, and no "does it resolve" gate can tell (#633, 2026-09-21)
+Three Rhun longbow meshes had no `bo_` twin and carried the elven bow's `bo_wm_elven_bow_a03`. The name resolves, so `MISSING_COLLISION_BODY` and `audit_armory_refs.py` both read CLEAN (2026-09-20) while a player narrowed a hanging battle down to the four ids by hand. `weapon-creation-workflow.md` already stated the rule (`bo_` plus the exact mesh id, in the mesh's own FBX) and already called a borrow a placeholder; the placeholder shipped, six generated `ladder_*` clones inherited it by `copy.deepcopy`, and nothing watched for it. A borrow is a dependency on art the borrower does not own: the same body had been renamed by the 2026-09-11 art drop (#599) once already.
+- **Why missed:** every gate asked whether a name resolves, and a borrowed name does. The version history misdirected too: #617 renamed the items and #599 repaired these very refs, so both looked like they had covered it, and neither touched the pairing. "The last change touched this file" is not evidence it addressed this defect.
+- **Prevent:** `COLLISION_BODY_BORROWED` in `validate_moduledata.py` errors on a body that is provably another kit's twin (`bo_<M2>` for a shipped mesh M2 that is not the item's own); same-kit sharing (recolours, `_a2` on `_a`) is design, authorised cross-kit shares live in `_SHARED_BODY_BY_DESIGN` with a reason, vanilla bodies and shields are exempt. Pairing a body with its owner's mesh needed `validate_mesh_refs._ITEM_OPEN_RE` to learn `<CraftingPiece>`; before that every piece ref carried item id `""`. Fix by authoring the twin (`tools/blender/add_collision_body.py`, then a Kit import), never by repointing the borrow.
+- **Also, the mechanism first written down for this was wrong, and the review caught it before commit.** The first gate compared owning tpacs on the theory that the release cook strands a body cooked apart from its mesh. The shipped patreon tree refutes it: every Armory body cooks into `pack0`/`pack1`, every mesh elsewhere, the working elven bow is split identically, and the borrowed body is present in that tree's `pack0`. Three review lenses found it independently; my byte-grep "evidence" had matched `wm_elven_bow_a03` inside `bo_wm_elven_bow_a03`. So why the player's build hung is still open (leading hypothesis: packs that predate the 2026-09-11 art drop under post-#599 XML), and it was written as fact in eleven places before the review. A substring grep is not a TOC read; `validate_mesh_refs.scan_tpac_metameshes` reads cooked packs and should have been the first tool, not the last.
+- **Source:** 1.5.x player report on the September Nexus build, #633; `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A negative relationship `value` declares war whatever `isAtWar` says (#818, 2026-10-18)
+To remove the start wars, five kingdom rows were set to `isAtWar="false"` and kept `value="-1"`. `Kingdom.Deserialize`
+(v1.4.8 `Kingdom.cs:780-795`) calls `DeclareWar` for any `value` below 0 and reads `isAtWar` only to add a war, so a new
+game still opened with five wars. `Clan.Deserialize` does the same for clan rows.
+- **Why missed:** the attribute name was read as its meaning; `docs/modding/kingdoms.md` already said `isAtWar="false"`
+  does nothing.
+- **Prevent:** read the deserializer before editing an attribute whose effect you infer from its name.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A roster edit reaches the files generated FROM it; find them before calling the change done (#636, 2026-09-22)
+The great elk was wired into `mirkwood_bat_template_medium_a..e` and Thranduil's roster, and the review found the four Mirkwood lord and ruler battle rosters in `equipmentsets/taom_lord_template_equipment.xml` still on `charger`. That file is generated: `tools/generate_lord_template_equipment.py` copies each culture's FIRST `bat_template` roster into its `IsLordTemplate` / `IsKingdomRulerTemplate` rosters, which the engine hands to a hero coming of age, a new ruler, a companion made lord and the culture's `spc_<culture>_lord_*` lord and rebel templates. Its header says to regenerate after a source change; doing so today would delete 40 rosters and re-equip 78 more (#637).
+- **Why missed:** the scope was read off `lords.xml` (which rosters do the lords name), a forward trace from the change. Nothing asked the backward question: which files copy the rosters I just edited.
+- **Prevent:** after editing any roster, template or item a generator reads, `grep -rn "<source id or file name>" tools/` and grep ModuleData for "Generated by" headers that name the source; update each generated copy (by generator when it is safe, by hand with a dry-run diff when it is not) and pin it in a data test. `ElkMountWiringTests.GeneratedMirkwoodLordAndRulerTemplates_RideTheElkWithItsSaddle` is the example.
+- **On this tree:** This incident ran on the 1.5.x line, and `ElkMountWiringTests`, `GeneratedMirkwoodLordAndRulerTemplates_RideTheElkWithItsSaddle` exist only there; the rule holds here.
+- **Source:** 1.5.x #636 deep review, `docs/reviews/rca-elk-2026-09-22.md` finding F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Record a shared resource's dependents at the SOURCE, not only at the consumer (#636, 2026-09-22)
+The elk names the war ram's action set `as_war_ram` and plays its `act_war_ram_butt`. The elk's docs explained this thoroughly; the ram's feature doc, ledger and `WarRamConfig` said nothing, so the next person to roll back, rename or re-cut the ram's set would have taken the elk down with no signal where they were reading, and a missing `as_war_ram_map` throws on every campaign-map icon carrying either mount.
+- **Why missed:** documenting the coupling on the new side reads as "documented". The reader who can break it is the one editing the shared thing, and they read the donor's files.
+- **Prevent:** when a new feature borrows a set, clip, prefab, roster or config another feature owns, add one line to the OWNER's feature doc, its ledger (next to any rollback or redo recipe) and its config comment naming the dependent and what breaks.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_war_ram`, `as_war_ram_map` exist only there; the rule holds here.
+- **Source:** 1.5.x #636 deep review, `docs/reviews/rca-elk-2026-09-22.md` finding F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a lesson refutes a claim, grep `docs/` for the claim's words, or the doc keeps teaching it
+`docs/features/moduledata-validation.md` "Coverage boundary" told readers to KEEP `family_type` on `<Horse>` as a real attribute the XSD failed to declare. The #364 lesson above had already established the opposite (`HorseComponent.Deserialize` never reads it; mount family comes from the `Monster`), so for months the feature doc and the lessons file disagreed, and the doc was the one a validator author reads. The 2026-09-18 XSD gate flagged the three `<Horse family_type>` in the Armory's `LOTRAOM_horses.xml`, and the doc's advice would have waved them through as XSD lag.
+- **Why missed:** the #364 fix corrected the code comment it was looking at and recorded the lesson; nobody searched the feature docs for the same claim in other words.
+- **Prevent:** when a lesson or RCA overturns a statement, grep `docs/` and `.claude/` for the claim's vocabulary (here `family_type` beside `Horse`), and correct or mark every hit in the same change. Same shape as the #618 "grep the old VALUE" lesson in `build-tooling-workflow.md`.
+- **Source:** 1.5.x `/deep-review` overhaul review, 2026-09-18, `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`; #364, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A `*.xml` folder glob matches `foo.xmlbak` only on a volume with 8.3 short names
+The engine loads a folder registration with .NET Framework's `DirectoryInfo.GetFiles("*.xml")`. Win32 matches that pattern against short names too, so a `foo.xmlbak` (short name `FOO~1.XML`) loads on a volume that generates 8.3 names, which Windows system volumes do by default. Measured 2026-09-18: on C: the glob returned `foo.xml`, `foo.xmlbak`, `foo.xmla` and `bar.xmlx`; on this machine's E: (game, Armory, TAOM_Map, repo; no short names) it returned only exact `.xml`; .NET 10 returned only `foo.xml` everywhere. A `foo.xml.bak` never loads.
+- **Why missed:** the first docstring of `tools/validate_xml_schemas.py` stated the "extension starting with xml" rule as unconditional engine behaviour, from the documented .NET quirk, without measuring it on the drive the game runs from.
+- **Prevent:** measure a filesystem claim on the volume that matters and say which volumes it holds on. Tools keep matching the union (`suffix.startswith(".xml")`), because a backup that loads on a player's 8.3 volume must never be missed; backups still never carry an `.xml`-prefixed extension in a globbed folder.
+- **Source:** 1.5.x `/deep-review` overhaul review (engine-claims lens), 2026-09-18, `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A moving prefab: every body `moveable`, `bo_barrier` scaled on (x, z), and a fit checked pairwise (#627, 2026-09-19)
+The ADOD_Beasts-derived howdah cage was re-framed onto the elephant every tick with no body flagged `moveable`, and its walls scaled `bo_barrier` 20x on y, the plane's zero-thickness axis, so they were 1 m tall and solid to arrows for three months. The rebuild then claimed four 0.37 m crew capsules "just fit" a 1.4 m deck after checking each against the rails and not against each other (side by side they are 0.70 m apart where 0.74 m is needed).
+- **Why missed:** the port copied the donor's numbers without reading the shapes (`bo_barrier` is x[-0.5, 0.5], y 0, z[-0.06, 0.94] in `Native/AssetPackages/core_game.tpac`), and the fit check looked at boundaries only.
+- **Prevent:** follow the vanilla moving platform (`Native/Prefabs/props_siege_siegetowers.xml`): every body on a re-framed entity is `moveable`; scale `bo_barrier` (width, 1, height) and flag it `barrier` so agents are held and missiles pass. Measure a shape before scaling it, and check a fit pairwise as well as against the walls. `HowdahPrefabTests` pins all three for the howdah.
+- **On this tree:** This incident ran on the 1.5.x line, and `HowdahPrefabTests` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A vanilla lord in both `lords.xslt` and `characters/lords.xml` is two definitions merged, not an override (#644, 2026-09-23)
+
+The engine merges every file of one XML id: the later `characters/lords.xml` row wins each attribute
+it states, and `<Equipments>` is `AlwaysPreferMerge` with `EquipmentSet` unique on id + civilian +
+stealth, so a set whose id differs is ADDED and `Hero.SetInitialValuesFromCharacter` then picks one at
+random per campaign . Three of the Nine wore the
+Nazgul kit or a generic Mordor kit by coin flip, and their age of 20 came only from the row (the
+templates carried the vanilla children's ages, 9 and 11). 176 vanilla ids still have both, 113 of them
+with differing kits (#648).
+
+- **Why missed:** the #644 plan read "three are race uruk in characters/lords.xml" from a doc, grepped
+  `lords.xslt` only for the six ids it expected there, and edited the row. Either file alone looks
+  complete, and no gate compares the two.
+- **Prevent:** before editing a lord, grep BOTH files for its id. Mike's rule (2026-09-23): vanilla
+  lords live only in `lords.xslt`, new ones only in `characters/lords.xml`. Moving one means folding
+  every value the row wins into the template, checked by transforming the installed vanilla file
+  (the #644 shape), then deleting the row. `NazgulRaceDataTests.LordsXml_DefinesNoneOfTheNine` pins
+  the Nine; #648 carries the general gate.
+- **On this tree:** This incident ran on the 1.5.x line, and `NazgulRaceDataTests`, `LordsXml_DefinesNoneOfTheNine` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 1 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A module's stylesheet runs over the EARLIER modules' merged file, never its own: coverage is the union, and a template on your own id is dead
+`MBObjectManager.CreateMergedXmlFile` walks the registered files of one XML id in module load order; for module i it applies module i's stylesheet to the document accumulated from modules 0..i-1 and only then merges module i's own XML. Two consequences a per-file reading gets wrong. First, a template's input is the UNION of every earlier module's file of that name (`Native`, `SandBox` and `StoryMode` all ship a `module_strings.xml`), so a coverage check that evaluates each file separately reports a template that hits one file as dead in the others: the first draft of `XsltTemplateCoverageTests` printed 156 dead templates, 140 of them false. Second, a template matching an id the module itself defines can never fire: three `heroes.xslt` templates on `lord_1_9_5`, `lord_1_52_4` and `lord_1_71_1` (TAOM heroes from `characters/heroes.xml`) had matched nothing on every engine version, and the sixteen `str_adjective_for_faction.*` / `str_short_term_for_faction.*` suppressions went dead when 1.5.x stopped reading those ids.
+- **Why missed:** the well-formedness gate passes a stylesheet that matches nothing, and the transform "runs" without error; the only symptom is the vanilla value shipping. The Python prototype had the same per-file loop and truncated its own output to twelve misses per file, which hid the false positives.
+- **Prevent:** `XsltTemplateCoverageTests` (BindingVerification) sums hits across every installed vanilla file of the stylesheet's basename and fails a template that selects nothing in the union. Put attributes for a hero, culture or string the module itself defines in the module's own XML, never in its stylesheet. `SubModule.xml` registering `path="heroes"` (stylesheet carrier, no XML) before `path="characters/heroes"` is what makes this order visible; keep that shape.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-v1.5.2-bodydiff-2026-09-14.md` finding 2; `TaleWorlds.ObjectSystem.MBObjectManager.CreateMergedXmlFile` (v1.5.2), on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -580,3 +580,566 @@ Patch90 prefixes `PreloadHelper.WaitForMeshesToBeLoaded`, which has six callers.
 - **Why missed:** the caller list came from a grep of the decompile for the method name, answering "does the patch attach" and not "what does each caller do around the call". The lesson "grep every call site before documenting when a patch runs" was applied to the grep and not to the read.
 - **Prevent:** for every caller of a patched method, read the statement that makes the call and the condition that gates it, and describe the guard's coverage in those terms (once per mission, once per screen, every frame). A prefix guards exactly the calls that would have reached vanilla; anything vanilla does not call is outside the guard by construction and the doc should say so.
 - **Source:** `docs/reviews/rca-preload-body-guard-2026-09-15.md` finding 3, #601.
+
+### A patch category fails as one unit: read what its caller turns off before you add a class (2026-10-15)
+- **Why missed:** the camera bracket went in as the last class of `Patch98_HitchProbe`, on the reasoning that Harmony
+  keeps the classes it already patched. That is true, but `PatchCategoryIndex.Apply` throws at the first class that
+  fails, `SubModule.TryPatchCategory` returns false, and `HitchProbeInstaller` reads false as "no probe": it switches
+  off the probe and the full tick profiler for the session. The design traced Harmony, not the installer's flags.
+- **Prevent:** before you add a class to an existing category, read what the category's caller does with a failed
+  apply. An optional target that must not take the category down goes in a category of its own, applied after the one
+  it extends, with its own status line. The same check applies to a guard in a tool: list what it protects before it
+  ships (the same review's `perf_runs.py compare` refusal protected no metric that `compare` prints).
+- **Second instance:** "applied" is not "patched" either. `PatchCategoryIndex` skips a class whose attributes cannot be
+  read (a `typeof` the engine no longer has), and a category left with no class applies nothing and returns true. Before an
+  ON line trusts a category's result, check whether the category can be empty.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-review-2026-10-15.md` findings 1 and 3, second review S7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A pass that enumerates "everything patched" covers only what was patched before it ran
+
+PatchShield shields `Harmony.GetAllPatchedMethods()` at two moments: pass 1 in TAOM.Dependencies' `OnSubModuleLoad`, pass 2 in its `OnGameInitializationFinished`. The engine calls `OnGameInitializationFinished` per module in load order, and TAOM depends on TAOM.Dependencies, so TAOM's own late-batch categories (applied once per process in TAOM's `OnGameInitializationFinished`: `Patch65`, `Patch88`, `Patch69`, `Patch77`, `Patch56`, `Patch20`, `Patch50`, `Patch43`, `Patch13` and more) are patched AFTER pass 2 on the first game and stay unshielded for that whole game. Pass 2 has no once-guard, so the second game init of the process shields them. A statement like "PatchShield covers every patched method" is true only from the second game on.
+- **Why missed:** the shield's coverage was reasoned from what it enumerates, not from when it enumerates relative to the patching it is meant to cover. The sibling entry "Apply a patch's category at a lifecycle point that PRECEDES the earliest render" is the same shape from the patch's side; this is it from the enumerator's side. It surfaced only because two deep-review lenses read `Dependencies/SubModule.cs` and the engine's module dispatch in one pass, and the player bundle then showed the shield on `MapState.OnTick_Patch2` in a session that had reloaded a save.
+- **Prevent:** for any mechanism that acts on "all X that exist" (all patched methods, all loaded types, all registered behaviours), write down when it runs and list what is created after that moment on the first run, in the same sentence as the coverage claim. For PatchShield specifically: a crash in the first game of a process may still carry a truncated trace from a TAOM late-batch finalizer, and that is expected until those finalizers preserve their own rethrows.
+- **Source:** 1.5.x `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md` (deep review findings 2 and 9), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `Harmony.PatchCategory` is neither atomic nor category-local (plan 009, 2026-09-24)
+In Lib.Harmony 2.4.2, `PatchCategory(Assembly, string)` runs `CreateClassProcessor(type).Patch()` for each class of the category in turn with no catch and no rollback, so the classes before a failing one stay patched. Before that it builds the category index once per assembly (`BuildCategoryCache`), reading `GetCustomAttributes(inherit: true)` on every type; a throwing factory is never cached, so one attribute naming a type the engine no longer has makes every category call throw. Plan 009's summary told the player a failed group was off, and its docs said a failure costs one category.
+- **Why missed:** the plan quoted the throw (`Undefined target method`) and not the loop around it or the index built before it.
+- **Prevent:** say a failed category "stops at its failing class" and name the assembly-wide index case wherever a doc claims category isolation. Read the whole Harmony entry point, not the line that throws, before describing what a failure leaves behind.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A callback's thread is native's choice: a table row saying "main thread" is a claim until a log line backs it
+
+The #595 audit classified `Mission.OnAgentRemoved` and `OnAgentDeleted` as main-thread callbacks because the thread-map row said so, and reviewed every TAOM `OnAgentRemoved` handler under that assumption. Both are `[MBCallback]`s with no managed caller, so no decompile can show their thread. A v1.4.8 player log from the guard that audit added caught `OnAgentRemoved`, `OnObjectUsed`, `OnObjectStoppedBeingUsed`, `OnAgentShootMissile`, `OnAgentDismount` and `OnAgentAlarmedStateChanged` on worker threads, leaving `BehaviorTreeAgentComponent.OnAgentRemoved` and `MountDespawnMissionBehavior.OnAgentRemoved` writing main-thread collections unsynchronised.
+- **Why missed:** the row was written from reasoning ("native combat processing, on the main thread"), then treated as verified because it sat in a table titled "verified on v1.4.8". The one callback proven off-thread (`OnAgentPanicked`) was proven through a managed route; the absence of a managed route for the others was read as evidence of main-thread delivery instead of as "unknown".
+- **Prevent:** for a native-raised callback, the thread column says "native decides" unless a runtime observation (a `MissionThreadGuard` report, a hang-dump stack) pins it. Any mission-time state an engine callback writes goes through `DeferredCallbackQueue.RunOrDefer` or a lock by default, not only when a route to a worker has been found. And when a tripwire is added, the first player log it produces gets read against the table it was meant to confirm. The correction states only what the evidence shows: the #634 fix first wrote "on a worker" (the thread ids cannot say which off-main thread) and "native serialises these with the agent tick" (an inference from unlocked vanilla handlers) as facts, in the same table it was correcting, and the deep review had to take both back out.
+- **Source:** 1.5.x `docs/reviews/rca-offthread-agent-removed-2026-09-22.md`, #634, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Hardening a defect class covers every member of the class, not only the members that could produce the symptom
+
+The #634 audit listed `CareerPerkMissionBehavior.OnAgentRemoved` (clears a `List` the mission tick walks, recomputes other agents' stats) and set it aside because "a List cannot spin", the freeze's suspected mechanism. The deep review then found four more writers of the same class the change had not hardened: `SpatialGrid.Remove` from `OnAgentDeleted`, the SignatureStrikes roster, the Enlistment kill count, and the Warg dismount reset, the last on a callback the player's log had already proven off-thread. The RCA and CHANGELOG had shipped "three writers".
+- **Why missed:** the census was filtered by the incident's mechanism (what could corrupt a `Dictionary` into a spin) instead of by the defect class the fix was defining (engine-callback state written off the main thread). And the census predated the thread-map change: once `OnAgentDeleted`, `OnAgentDismount` and `OnAgentHit` moved to "native decides", their handlers were never re-enumerated.
+- **Prevent:** when a change defines a rule ("route engine-callback writes through `RunOrDefer`, a lock or a concurrent collection"; and before swapping a `Dictionary` for a `ConcurrentDictionary`, check whether any reader depends on insertion order, a stable sort's tie-break included), apply it to every handler the rule covers in the same change, or list the ones deferred with a reason. After moving any row of the thread map, re-run the handler census for every callback whose row moved: `override void On(Agent|Object|Score|Melee|Missile)` across `Main/`.
+- **Source:** 1.5.x `docs/reviews/rca-offthread-agent-removed-2026-09-22.md` findings 1-2, #634, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A stall probe brackets the caller that owns the whole frame, and keys its quiet period on engine state, not on a TAOM latch
+
+Patch91 first bracketed `Mission.OnTick`, the managed tick TAOM knows. Its caller, `MissionState.TickMissionAux`, runs the native `Mission.Tick` first, and that is where `OnPreTick`'s wait and every native-raised agent callback execute on the main thread, so a handler spinning there would have produced no `[MissionStall]` line. And a mission's teardown runs inside `Mission.OnTick`, so the probe stood in flight through every exit; the stand-down was keyed on the exit-window latch, whose opener fires only for campaign missions with the master toggle on. Custom Battles and master-off campaigns would have logged a long exit as a frozen battle.
+- **Why missed:** the probe site was chosen from the method name, without reading the caller that makes it one step of a frame; the quiet period reused the nearest existing latch without checking its opener coverage, the exact failure mode of the "Latches & Toggle Gates" rule's first point.
+- **Prevent:** before bracketing a tick, open its caller and bracket the call that owns the whole unit of work; list what runs inside it that is not the tick itself (teardown, loading) and gate those out on the engine's own state (`CurrentState == Continuing`), which every mission type sets, rather than on a TAOM latch with a conditional opener.
+- **Source:** 1.5.x `docs/reviews/rca-offthread-agent-removed-2026-09-22.md` findings 3-4, #634, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A report delegate runs on the thread that raised the event: send it to the locked file log, never to an on-screen logger
+
+`MissionThreadGuard.NoteCall` invokes its report synchronously, on the off-main thread it is reporting. `BehaviorTreeMissionLogic` passed `BTRegister.Logger.LogMessage`, and `BTRegister.Logger` is whichever logger won an initialisation race: `BehaviorTreeBannerlordWrapper.Instance` installs `BannerlordLogger` (`InformationManager.DisplayMessage`, a UI call) on first access, and only `WargMissionBehavior` and the creature behaviors install the file-backed `TaomBTLogger`. A battle without them would have posted a UI message from a worker thread for every parked callback site.
+- **Why missed:** the reporter was chosen for where its text lands (the player's log in the sessions that were read), not for which thread calls it; the logger slot's value depends on behavior order, which no test pins.
+- **Prevent:** any callback that can run off the main thread reports through `IModLogger` (`FileLogger` takes a lock) at WARNING, wrapped so a reporting failure can never throw into an engine callback. Never pass an on-screen or UI-backed logger as a report delegate.
+- **Source:** 1.5.x `docs/reviews/rca-offthread-agent-removed-2026-09-22.md` finding 7, #634, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### PatchShield wraps TAOM's own patch on an engine method: exclude a hot target in the same change (2026-09-26)
+Patch92 patches `Formation.get_UnitDiameter`, which runs per unit per formation-positioning query (the AI thread and
+the TWParallel workers included), and the layout calls `GetUnitPositionWithIndexAccordingToNewOrder` (three overloads)
+and `GetUnitSpawnFrameWithIndex`, which walk every unit of a formation. PatchShield's second pass
+(`OnGameInitializationFinished`) attaches a finalizer to every method patched by then, and its "don't shield our own
+methods" skip reads the declaring assembly of the TARGET, here `TaleWorlds.MountAndBlade`, not the patch's owner. So
+on any run where PatchShield installs, all five TAOM-patched members (the getter, the three overloads, the spawn-frame
+method) took its finalizer, which binds `__originalMethod`: a `MethodBase.GetMethodFromHandle` plus a try/catch on
+every call. The 2026-09-26 review found it; `PatchShieldPolicy.ExcludedTargetMethods` now lists
+the three names and `PatchShield.IsExcludedTarget` checks it beside the namespace list.
+- **Why missed:** a recurrence of the #331 per-call tax (this file's first lesson, "Blanket-patching infrastructure must
+  cost its per-call overhead against the hottest conceivable target", and its co-op sequel), and the second time on a TAOM
+  patch's own target: Patch38's `SettlementNameplateWidget.DetermineTargetAlphaValue` paid it every frame until the
+  2026-07-10 compat review, which fixed it by namespace and recorded it only in a `PatchShieldPolicy` comment, so no
+  lesson reached the next patch author. Both of those lessons frame the tax as other mods' patches or hot
+  namespaces; `TaleWorlds.MountAndBlade` is far too broad to exclude by namespace.
+- **Prevent:** when a TAOM patch targets an engine method called per unit, per agent or per frame, add
+  `<FullTypeName>.<MethodName>` to `PatchShieldPolicy.ExcludedTargetMethods` in the same change (one entry covers every
+  overload) and a `BindingVerification` test that walks the patch's real targets through `IsExcludedTargetMethod`, so
+  a renamed or added target cannot slip off the list; exclude by namespace only when the whole namespace is hot.
+- **Source:** 1.5.x `Dependencies/Foundation/PatchShieldPolicy.cs` `ExcludedTargetMethods`; `Dependencies/Foundation/PatchShield.cs` `Install`; `Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Carry a thread-safety verdict as a parameter the service must receive, never as a best-effort mark on the exception
+Plan 006's D43 and D47 made the Native2Managed bridge tell `CrashReportService` about an off-main-thread capture the way the AppDomain hook already did: by writing `ex.Data["TAOM.CrashReport.OffMainThread"] = true` inside `try { } catch { }`. The service read an absent or unreadable mark as "main thread". `Exception.Data` is virtual, and the runtime's preallocated agile exceptions (out of memory, stack overflow) return a read-only dictionary from it (installed mscorlib), so for exactly those exceptions the write failed silently and a worker-thread capture ran the Mission and Campaign collectors and `InformationManager.ShowInquiry` on the worker. The verdict now travels as `ICrashReportService.HandleException(..., bool offMainThread)` from both the bridge and the hook, through one `AppDomainExceptionHook.IsOffMainThread`.
+- **Why missed:** the new capture source copied the existing source's mechanism, and the catch around the write was read as "tolerating" a read-only `Data` rather than as the place the safety decision was lost. Every test used a writable `Data` and an unreachable service, so none observed what the service was told.
+- **Prevent:** when a caller decides something the callee must obey for safety (thread, authority, reduced mode), pass it as a parameter the callee cannot miss; an annotation on a shared object is diagnostic only. A catch that swallows the failure to record a safety decision fails in the unsafe direction by construction: make the fallback the safe path or remove the side channel. Every capture source that can run off the main thread passes the verdict (`BattleLoadStallWatchdog` still does not: follow-up).
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F1 (Codex P2, 2026-09-24; the mark dates from Codex review #46 MED-03, `rca-crash-report-codex-2026-05-25.md` C-M3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Name every patch target a shield or gate skips, and list every per-frame target before claiming a frame is free of a cost (2026-10-02)
+Plan 028 put `Mission.OnTick`, `Mission.OnPreTick` and `Mission.TickAgentsAndTeamsImp` on PatchShield's
+`ExcludedTargetMethods` for every player. PatchShield recorded the skip as one more `skipped` count, so no log said a
+patch on those methods ran unshielded. The docs then claimed no shield finalizer ran inside a frame, while
+`Mission.Tick` (Patch37), `MissionState.TickMissionAux` (Patch91) and `MissionState.OnTick` (Patch43) still carried one
+per frame, and that any throwing patch lost its rescue, while PatchShield only ever swallowed the missing-API trinity.
+The first correction then overstated the remaining cover: a throw from `Mission.OnTick` is swallowed one frame up only
+from a process's second game start, when pass 2 has shielded Patch91's `TickMissionAux` (and that rescue strips
+Patch91's own prefix); in a process's first game it reaches Patch37's crash-report finalizer on `Module.OnApplicationTick`.
+The second convergence round found that still too narrow: the throw unwinds the whole application tick (every module's
+`OnApplicationTick`, `JobManager.OnTick` and the game handlers are skipped that frame), and a postfix that throws after
+`Mission.OnTick` has ended the mission stops `MissionState.OnTick` from popping it every frame, so the battle never closes.
+- **Why missed:** the skip lives in `PatchShield.cs`, outside the diff, and the claim was written from the three methods
+  the plan touched; the comment tied all three entries to the profiler, though two serve Patch35 and Patch91.
+- **Prevent:** a skip list writes one log line per skipped target, once, naming it, its owners and what is given up
+  (`PatchShieldPolicy.FormatHotMethodSkip`). Before writing "no X runs inside a frame", list every per-frame target that
+  carries X (the frame's whole call chain, not the methods you patch). A list entry's comment names every consumer.
+  Before claiming a caller's shield still covers a skipped method, check when that shield is attached (which
+  PatchShield pass, first or second game start), not only that it exists. When a change removes or narrows a catch,
+  follow the exception to its next catch and read each unwound caller's code after the call: list what one throw
+  skips, including transitions that run only after a call returns (a state pop, a completion flag, a save).
+- **Later change (2026-10-03, maintainer decision D13):** `Mission.OnTick` and `Mission.OnPreTick` came off
+  `ExcludedTargetMethods`; only `Mission.TickAgentsAndTeamsImp` stays, so that a swallow at the agent tick cannot skip
+  `tickCompleted = true`. Plan 034 takes the per-call lookup off the shield's no-exception path, and left unshielded a
+  foreign patch's missing-API throw on `Mission.OnTick` unwinds the application tick in a process's first game. The cost
+  is that a strip on `Mission.OnTick` is not culprit-only and takes TAOM's own Patch35 and Patch97 with it (FOLLOW-UP L1
+  in the review record). The per-frame trigger in the two Prevent lines of the 2026-09-26 and 2026-09-28 lessons is
+  narrowed to match. TAOM patches `Mission.OnPreTick` only through Patch97; any patch on it attaches the shield.
+- **A hazard no exclusion fixes (Codex review, 2026-10-03; older than the profiler):** `Mission.OnTick` clears
+  `tickCompleted` (`Mission.cs`) before its `OnMissionTick` loop and only `TickAgentsAndTeamsImp` sets it again. An exception that escapes between the two and is swallowed above it, by PatchShield's finalizer on
+  `Mission.OnTick` or by Patch37's crash capture on `Module.OnApplicationTick`, leaves the next `WaitTickCompletion`
+  spinning forever, whether `Mission.OnTick` is shielded or not. The `TickAgentsAndTeamsImp` exclusion does not change
+  that for the inline call (fast-forward), which reaches `Mission.OnTick`; the texts that called it "a fix for the
+  hang" said more than it does. The PatchShield follow-up plan takes it, and takes a second hazard of the same kind: a
+  swallowed foreign prefix throw on `Mission.OnPreTick` skips the whole body, whose first call is `WaitTickCompletion`,
+  so that frame's `OnTick` can run while the previous agent tick still runs (consequence UNVERIFIED; trunk shields a
+  foreign patch on it the same way). **Prevent:** before claiming a shield, or its
+  absence, keeps a flow alive, list the completion flag the flow depends on and every write to it, then place each throw
+  position (before the clear, between the clear and the launch, after the launch) against them.
+- **Source:** 1.5.x `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` rows R2 and R3; convergence rounds 1 and 2 in `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An install flag is a startup fact: read the health of patches that can change where they are used (2026-10-03)
+Plan 028's tick profiler set `Installed` once at game start (the category applied and both `Mission.OnTick` calls swapped)
+and every mission gated on it. Harmony patches change after that. Another mod's transpiler that runs earlier can take an
+anchor, after which Patch97's rewrite finds none, returns its input and lowers `OnTickSites` while its warning says no
+mission is measured; PatchShield strips every unprotected owner's patches on a method it rescues, TAOM's own included;
+the strip removes Patch97's transpiler, so nothing rewrites `OnTickSites` afterwards and even the counter stays stale.
+The profiler kept measuring: behaviour time vanished into `otherMs`,
+and a stripped frame-boundary prefix left empty windows. The first fix (RCA R7) printed the live counts in the mission
+header, which only reports.
+- **Why missed:** `Installed` was reviewed as the right gate for a once-per-process install, and the transpiler's own
+  warning was read as the safety net. Neither is checked where the data is produced, and the tests covered the install
+  decision and the status lines, not an install followed by a change.
+- **Prevent:** a gate on patches that can change is evaluated where it is used: at each mission start, from
+  `Harmony.GetPatchInfo` for the patch methods the feature needs plus the transpiler's own site counts, and on every tick
+  for what costs nothing to read (the site count). Price a read before putting it on a cadence: `GetPatchInfo`
+  deserializes on every call and each `Patch.PatchMethod` resolves by scanning the loaded assemblies, so patch info
+  stays at the mission start, off the clock of the measurement. A loss is one aggregated reason line and a stop, never
+  a counter left to be read. Test it as install, then change: a zero-site rewrite, then each required patch removed by
+  the call PatchShield makes (`Unpatch` by type, and by method for a finalizer).
+- **Source:** 1.5.x `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md`, fix pass 3 (Codex finding 2); `HookHealth`, `MissionTickProfilerHealth`, `HookHealthTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A finalizer on a base virtual never runs for an override: patch the non-virtual dispatcher
+Four Patch37 crash finalizers sat on `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`, `MissionView.OnMissionScreenTick` and `ScriptComponentBehavior.OnTick`, base virtuals with empty or assert-only bodies. Harmony rewrites the exact method it is given, and an override is a different method, so these ran only when an override called `base.X()`; they could never capture the throws they were written for. The old feature doc claimed Harmony "patches all overrides at JIT time".
+- **Why missed:** the target list was borrowed from BetterExceptionWindow's design and never checked for virtuality; nothing enforced a shape on category targets.
+- **Prevent:** a capture, timing or guard patch meant to cover every implementation targets the non-virtual caller that dispatches them (`Mission.OnTick`, `ManagedScriptHolder.TickComponents`, `ScreenManager.Tick`). `Patch37TargetShapeTests` refuses an overridable virtual in the crash category; copy it for any other category whose intent is "all overrides".
+- **Source:** 1.5.x plan 006 (`plans/006-crash-capture-boot-cost.md`), `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand-attached patch's priority is its own attribute's, not its category's
+Plan 006 rewrote two docs to say every crash finalizer runs at priority 800. The five Patch37 finalizers carry `[HarmonyPriority(800)]`; the Native2Managed bridge is attached with `new HarmonyMethod(bridge)` and carries none, and Harmony 2.4.2's `HarmonyMethod(MethodInfo)` imports only that method's own attributes, so `Patch` maps its -1 to 400. `RethrowStackPreserver.cs` already said so; the docs contradicted it.
+- **Why missed:** the sentence was carried over from the text describing the attribute-applied category, and both the plan and the implementation repeated it.
+- **Prevent:** when a doc states a patch's priority or ordering, read the attribute on the exact patch method (or the `priority:` argument at the `harmony.Patch` call). A hand-attached patch never inherits a category's priority.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F7 (Codex finding 3 and lenses 1, 2, 4, 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A namespace-prefix exclusion excludes every type in the namespace: list the namespace in the installed DLLs, and every other patcher of it, before justifying the entry
+
+Plan 007 added `"ManagedCallbacks"` to PatchShield's hot-layer exclusion list to skip the engine's three `*CallbacksGenerated` shims, which Native2Managed crash capture already wraps. The comment, the CHANGELOG, the maintenance doc and the plan's "Coverage given up" note all described three types. `ilspycmd -l c` on the three installed AutoGenerated DLLs lists 88 classes in that namespace: the 3 shims, 79 managed-to-native `ScriptingInterfaceOf*` wrappers, 3 `CallbackManager` and 3 `ScriptingInterfaceObjects`, none of which Native2Managed wraps. The same comment said the shims "carry only finalizers"; the vendored ButterLib's `BEWPatch.Enable` puts a blank transpiler on three of them.
+- **Why missed:** the entry was justified from the types the plan was about. The reach of an ordinal prefix match is a property of the installed assemblies, and nobody listed them; the other patchers of the targets are a property of every loaded mod, and nobody grepped the vendored DLLs for the namespace.
+- **Prevent:** before adding or widening a target-exclusion (or target-inclusion) prefix in any blanket-patching component, run `ilspycmd -l c` on every assembly that declares the namespace and count what it matches, and grep the vendored and installed mod DLLs for the namespace string to list who else patches it. Write the count and the other patchers into the comment beside the entry. If the prefix reaches more than the types the reasoning covers, either narrow it or state why the reasoning holds for the rest.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` findings 2 and 4 (plan 007), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Removing one of two finalizers on a method: the one that stays must cover every guarantee the removed one gave, on every return path, not only its normal one
+
+Plan 007 stopped PatchShield shielding the callback shims because Native2Managed's finalizer "swallows every exception". `CrashReportPatchHelper.HandleAndSwallow` returns `null` only on its normal path; it hands the exception back when capture is off, on re-entry, and when the crash service is unresolved or throws. The bridge is non-void, so Harmony rethrows with `throw`, which resets the stack trace. PatchShield's finalizer on the same method had swallowed the missing-API trinity and preserved the stack on exactly those paths. Nothing on a shim does either now.
+- **Why missed:** the redundancy argument read one `return` statement of the finalizer that stays. The 2026-09-22 RCA had listed these fallback paths as unpreserved; the plan did not cross-read it.
+- **Prevent:** when a change removes a layer because "the other layer already covers it", list every return statement of the layer that stays and, for each, what the removed layer did on that path (swallow set, stack preservation, logging). State the uncovered paths in the change's coverage note, or close them in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` finding 3 (plan 007); Codex P3 on the same branch, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A per-call cost needs a per-call measurement; an incident's average is not one (2026-10)
+From #331's round-2 fix (July 2026) until plan 034, PatchShield's comments, two lessons and three docs priced binding `__originalMethod` at about fifty microseconds per call. That figure was #331's 104 to 109 s tournament-exit stall divided by an estimated call count, on a workload that also ran 8,276 gen0 collections. A benchmark on .NET Framework 4.8.1 with Harmony 2.4.2 (plan 034) measured the binding at about 63 ns per call over a finalizer that takes only `__exception`, 1,145 ns with 8 threads contending, and 241 bytes per call (5,355 gen0 collections over 140 million calls). At the isolated single-threaded cost two million calls take about 0.13 s, so the stall's size came from something the average hid; the allocation is the likelier multiplier, unmeasured in game. PatchShield's finalizers now take only `__exception` and find the shielded method from the stack after a throw (`PatchShield.ResolveShieldedOriginal`). A stand-in finalizer of that shape added about 3.5 ns per call in the Debug benchmark (5.4 against 1.9 ns for a postfix-only patched method; 0.6 ns optimized); the shipped finalizers were not benchmarked themselves.
+- **Why missed:** the number came from the RCA that found the mechanism, and every later document copied it as a per-call constant.
+- **Prevent:** a cost figure that justifies a design choice says how it was measured. A Harmony patch that needs the original method only on a rare path finds it there with `Harmony.GetOriginalMethodFromStackframe`, judging only the frame that called the patch method and never climbing to an outer one, instead of binding `__originalMethod` for every call. Measure contended as well as single-threaded: the reflection lookup cost 18 times more with 8 threads calling at once.
+- **Source:** 1.5.x plan 034 (benchmark in its commit body); `PatchShieldFinalizerTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Quote a per-call cost for the build players run: TAOM ships Debug (2026-10-02)
+Plan 034's benchmark gave a stand-in for PatchShield's new finalizer 1.3 ns for the whole patched call, and ten comments and docs repeated it as the finalizer's cost. The benchmark was a Release build; the deployed TAOM.Dependencies.dll has the JIT optimizer disabled (`build.ps1` defaults to Debug, on purpose). The same harness built Debug measured 5.37 ns, against 1.85 ns for a postfix-only patched method; the 63 ns saving held either way.
+- **Why missed:** the benchmark's header printed "JIT optimizer disabled: False" and every reader took it as the cost, without asking which configuration ships.
+- **Prevent:** a benchmark quoted for TAOM.Dependencies or Main runs in the shipped configuration, or quotes both and says which is which. Check the deployed DLL's `DebuggableAttribute.IsJITOptimizerDisabled` when in doubt.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-per-call-cost-2026-10-02.md` row 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "No shield finalizer inside the bracket" covers the bracketed methods only: list the shielded methods they call (2026-10-02)
+A recurrence of the plan 028 rule above. Plan 041 put `Mission.WaitTickCompletion`, `Mission.SpawnAgent` and
+`ManagedScriptHolder.TickComponents` on `ExcludedTargetMethods` and wrote that no shield finalizer sits inside the
+measurement. `SpawnAgent` calls `BuildAgent`, which calls `Agent.EquipItemsFromSpawnEquipment`, patched by Patch23 and
+Patch43 and still shielded, so a shield finalizer runs inside every spawn bracket.
+- **Why missed:** the claim was written from the five bracketed methods, as plan 028's was from its three.
+- **Prevent:** before writing that a cost is absent from a bracket, list the patched methods the bracketed method calls
+  (the decompile's call graph, one level per patched callee) and state the claim for the bracketed methods only.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R12; the plan 028 lesson above, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A shield exclusion kept for an unmeasured cost loses the rescue for nothing, and a bracket must survive its prefix being stripped (2026-10-03)
+Plans 028 and 041 put `Mission.OnTick`, `Mission.OnPreTick` and `Mission.SpawnAgent` on PatchShield's
+`ExcludedTargetMethods` under the per-agent house rule of the 2026-09-26 and 2026-09-28 lessons, on a per-call price that
+plan 034 found was never measured (#331's whole stall divided by an estimated call count). Plan 034 measured the shield's
+finalizer at about 5 ns per call once its change is in (64 ns and 241 bytes of garbage per call as the finalizer ships
+without it, 1,146 ns with eight threads contending), and maintainer decision D13 (2026-10-03) took the three entries
+off. What the exclusion had given up was the rescue from a broken patch on those methods. The rescue classifies by
+exception type only, so it also swallows a mission behaviour's missing-API exception, and it strips every unprotected
+owner's patches on the method, TAOM's own included. The entries that stay (`TickAgentsAndTeamsImp`,
+`WaitTickCompletion`) are there because a swallow would skip a body the frame needs, but they stop a swallow only at
+their own method: both callers are shielded, so the exception is swallowed one level up, and the `tickCompleted` hang is
+not prevented by shielding `Mission.OnTick` (the feature doc says so; the remedy belongs to the PatchShield follow-up
+plan). `TickComponents` stays as built.
+Shielding the methods again exposed a second gap: the rescue strips the prefixes, postfixes and transpilers of every
+unprotected owner on the method, and TAOM's `com.taom.mod` is unprotected (FOLLOW-UP L1), so Patch98's prefix can go
+while its finalizer, which the rescue never strips, stays. The first guard counted prefixes in per thread and let a
+finalizer that found no count warn once. Its review found that it answered "is some prefix outstanding on this thread",
+not "did this call's prefix run": a nested call that lost its prefix consumed the outer call's count and closed the
+outer bracket early, because the rescue strips from inside the call that threw while the outer call keeps running its
+old replacement, and Harmony's rerun of every finalizer after a later one throws read as a missing prefix. Each call now
+carries its own state in Harmony's `__state` (one local per call, started at 0), and the lone finalizers are counted and
+reported at each mission's end, not only warned about once.
+- **Why missed:** a cost figure that was a derived average was carried into per-frame targets as if measured, and the
+  deep review of plan 028 named the exclusion "a cost for the maintainer to weigh" without a number to weigh it with. A
+  prefix and finalizer pair was reviewed as a pair, not as a finalizer that can run alone; and the guard was tested with
+  hand-called enters and exits and a strip between top-level calls, never a strip inside a running outer call or a
+  finalizer rerun, which only real Harmony produces.
+- **Prevent:** write the call rate and the measured per-call cost beside any `ExcludedTargetMethods` entry kept for
+  cost, naming the change the figure depends on when it is not in the branch, and say what a swallow would break beside
+  any kept for correctness, including the callers that stay shielded. Pair a prefix with its finalizer through Harmony's
+  `__state` (one local per call, default 0, set by the prefix before any code that can throw or return early, closed by the finalizer), never a
+  count, a depth or a thread-keyed flag, and test the guard through real Harmony: the prefix stripped inside an outer call
+  and a later finalizer that throws. PatchShield strips prefixes and never finalizers. This lesson replaces the per-frame
+  half of the 2026-09-26 and 2026-09-28 Prevent lines: exclude a per-frame or per-spawn target only where a swallow is
+  unsafe, and keep the per-unit and worker-thread per-agent entries until they are re-measured.
+- **Source:** 1.5.x maintainer decision D13 (2026-10-03); `plans/034-patchshield-per-call-cost.md`; `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md` ("A cost for the maintainer to weigh"); `HitchProbeHooksTests.StrippedPrefix_FinalizerRunsAlone_WarnsOnceAndRecordsNothing`; `HitchProbePrefixGuardTests` and the fix pass in `docs/reviews/deep-review-041-profiler-extensions-and-hitch-probe-2026-10-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Recurrence: a new patch on a shielded method also needs its loss noticed (2026-10-08)
+- **Why missed:** Patch103 (the mission-start guard) shares `Mission.AfterStart` with Patch43 and PatchShield; from
+  the second game start a swallowed MissingMethod, MissingField or TypeLoad throw there strips TAOM's prefix and
+  transpiler (owner `com.taom.mod` is not protected), and the module had logged "ON" once at install. The
+  2026-10-03 lesson above already said to look again where each measurement starts; the builder brief did not
+  carry it.
+- **Prevent:** when the patch has a finalizer, use the cheaper canary: PatchShield never strips finalizers, so the
+  finalizer can check that the same call's prefix ran (and that a transpiler's live swap count is whole) and warn
+  once per process. Carry this lesson in every brief for a patch on a method PatchShield wraps.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard that turns a throw into survival keeps the code after the throw that cannot be skipped (2026-10-08)
+- **Why missed:** Patch103 wraps every submodule's `OnMissionBehaviorInitialize`, TAOM's own included. A throw in
+  TAOM's registrations used to loop the load; survived, it skipped the BattleLoad loading window's only closer,
+  registered near the end, so the window stayed open for the battle and the stall watchdog would bundle a running
+  battle. The design took "TAOM's behaviours guard themselves" (#699) as given and never asked what the cut-short
+  method still had to do.
+- **Prevent:** when a change makes a throw survivable, list what the code after each wrapped call is responsible for
+  (closers, counters, registrations) and put the part that cannot be skipped in a `finally` around all of that work;
+  pin it with a source test. Moving it ahead of the registrations was the first fix here, and it fell short twice: a
+  throw in the work before it still skipped it (Codex), and the move reversed its tick order (a convergence lens).
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 20, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An install line claims only what was checked (2026-10-08)
+- **Why missed:** `ModuleRunner.RunPhase` calls a module's `OnPhase` whether or not its patch category applied, and
+  Patch103's and Patch104's ON lines were written there; Patch103's swap count is set by its transpiler, which runs
+  before Harmony can still fail and register nothing.
+- **Prevent:** derive an ON line from the applied state: `Harmony.GetPatchInfo` lists the patch (the
+  `MapFrameProfilerInstaller` precedent), or a `[HarmonyCleanup]` method resets a transpiler's count when the apply
+  fails.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 22, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook verified once at install can be stripped later by PatchShield: look again where each measurement starts (2026-10-03)
+Plan 039's installer checked at the first game start that all six Patch101 targets carried a profiler patch, then trusted
+that for the process. PatchShield strips by owner: after a swallowed MissingMethod, MissingField or TypeLoad throw on a
+shielded method it unpatches every non-protected owner's prefixes, postfixes and transpilers on that method, and
+`com.taom.mod` is not protected, so Patch101's pair on `Campaign.RealTick`, `MapScreen.OnFrameTick` or `MapState.OnTick`
+goes with the rest and nothing reinstalls it. The profiler kept writing windows whose `realTickMs` read 0.00 and looked
+measured (Codex adversarial review, 2026-10-03). The first docs called that "silently ends that measurement" and
+accepted it as a cost of option B.
+- **Why missed:** the install check answered "did the apply work", and the shield's strip was analysed for what it does
+  to the swallowed method's callers, not to the profiler's own patches sharing that method. Accepting a silent end of
+  the measurement skipped the cheaper question of whether the profiler could notice it.
+- **Prevent:** a diagnostic whose patches share a method with a shield re-runs its installed check at its natural
+  cadence (a session start, a window start, a session end; never per call or per frame) and on a loss stops behind one
+  aggregated warning that names every lost hook, keeping what it already measured (D6). It never reinstalls what the
+  shield removed. List which of its hooks the shield can reach (the declaring assembly decides: TAOM's own methods are
+  never shielded) and which hook carries the check: a strip of the hook that runs the check cannot be reported by it, so
+  say so, and let the end of the run, which a TAOM method drives, look once more before it writes its summary. Say where
+  each look's cost lands: one at a window or session start runs after the boundary's stamp, so its time and allocation
+  fall in the next frame (`otherMs`, `maxFrameMs`, `allocKB`), and the feature doc names it beside the line write. A
+  patch-info read is a `BinaryFormatter` deserialization plus a scan of the loaded modules for each patch inspected, and
+  stays UNVERIFIED until timed; plan 028 ran its check at a mission start, off its measurement's clock, for that reason.
+- **Update (2026-10-03, convergence round):** the first fix looked at each start and not before the summary the session
+  ends with, so a strip after the last window start put frames with a zero phase into that summary unflagged, and a
+  strip on `MapState.OnTick` left the other hooks measuring with nothing in the output to say so. A measuring session's
+  end (`SubModule.OnGameEnd`, or a new campaign) now looks first, and a lost hook turns the summary into
+  `reason=hooksLost`.
+- **Source:** 1.5.x `docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md` (review follow-up); `MapSessionHooks.LostHooks`, `MapFrameProfilerHooksTests.Step_HooksLostAtWindowStart_WritesTheWindowThenOneWarningThenTheSummaryAndStops`, `MapFrameProfilerHooksTests.EndSession_HooksLostSinceTheLastLook_WarnsForThatSessionAndWritesTheSummaryAsHooksLost`, `MapFrameProfilerInstallerTests.IsPatchedByThisProfiler_AfterThePatchShieldStripCalls_False`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a shield exclusion is justified, trace where the unshielded exception lands (#1019, 2026-10-27)
+The map profiler's menu probe on `GameMenuVM.OnFrameTick` was excluded from PatchShield with the reason "a swallowed exception would skip the rest of the tick and the probe would vanish". The exclusion does the opposite: a missing-API error inside the method is no longer caught there, and it leaves through `GauntletMenuBaseView.OnFrameTick` and `MenuViewContext.OnFrameTick` (neither catches) into `MapScreen.OnFrameTick`, which is shielded. That catch skips the rest of the map screen frame and strips Patch36, Patch89 and Patch101, so profiling stops. The honest reason is parity: with the profiler off nothing TAOM patches the method, so the same escape happens. Another mod's patch on it loses the shield either way.
+- **Why missed:** the exclusion was copied from the earlier profiler-only targets, and its stated reason was never checked against the callers.
+- **Prevent:** when a shield exclusion is justified, trace where an unshielded exception lands, and write that path and the parity reason in the feature doc's per-target table (the 2026-10-02 per-target table rule). A method that stays shielded beside it gets its own row, naming which patches a strip removes.
+- **Source:** 1.5.x #1019; `rca-enlistment-board-render-and-probes-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A finalizer cannot tell a vanilla NRE from a foreign one: guard the read with a prefix (Patch123, 2026-10-26)
+Patch123 first contained vanilla `HeroHelper.GetLastSeenText`'s missing-leader `NullReferenceException` with a
+finalizer that judged by exception type. Codex proved it swallowed an NRE from another owner's throwing prefix. The
+fix added an origin check (frame 0 of the exception maps to the target through
+`Harmony.GetOriginalMethodFromStackframe`) plus a hero-state check, and Codex proved that one wrong too: a small
+dereferencing foreign prefix the JIT inlined, a foreign transpiler's inserted throw and an NRE inside the inlined
+`GameTexts.FindText` all threw in the same replacement frame and passed. Exception type, frame and coincident state
+cannot name the failing instruction. The shipped guard is a prefix: it reads the state that reaches the unguarded
+read, returns the safe result and skips the original only there, and swallows nothing.
+- **Why missed:** the "swallow only the exception class it exists for" entry above was followed to the letter. For
+  a class as generic as `NullReferenceException`, on a method another mod can patch, the class identifies nothing,
+  and the first fix narrowed the check without asking what else shares the replacement frame.
+- **Prevent:** to contain a vanilla NRE from a known unguarded read, write a prefix on the state that reaches the
+  read (repeat any vanilla write the skipped body makes before it, and classify the bool prefix in
+  `CoopVetoClassificationTests`). Keep a finalizer only for an exception no prefix can predict, scope it to the
+  narrowest type, and write down what else can throw it inside the replacement: other owners' prefixes, postfixes
+  and transpilers, and every callee the JIT can inline.
+- **Source:** 1.5.x `rca-lastseen-guard-2026-10-26.md`; Codex outputs `docs/reviews/raw/codex-prereview-lastseen-guard-2026-10-26.md` and `codex-fixreview-lastseen-guard-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new patch on an engine method also gets PatchShield's finalizer: describe the target's whole finalizer set (2026-10-02)
+Patch99's comment, feature doc and registry row said its `void` finalizer keeps Harmony on `rethrow`. PatchShield's
+second pass (at the first game init) gives every patched method declared outside TAOM, and not on its exclusion lists,
+a value-returning finalizer, so `CreateMergedXmlFile` ends in `throw` from then on; only `RethrowStackPreserver` keeps
+the engine's trace. The same finalizer swallows the missing-API trinity into a null result, which a method that was
+never patched before did not do.
+- **Why missed:** the 2026-09-22 Prevent line above ("a finalizer that only observes should be void, which leaves
+  Harmony on rethrow") reads as unconditional, and nobody asked which other finalizers the new patch would bring onto
+  the target.
+- **Prevent:** when a patch targets an engine method that had no patch before, write down the target's full finalizer
+  list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
+  that list, not for TAOM's own finalizer alone.
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a postfix sees the same state after a real call and a no-op, capture the pre-call value in a Prefix through `__state`
+`LoadingWindow.DisableGlobalLoadingWindow()` sets `IsLoadingWindowActive = false` whenever a
+manager exists, whether or not the window was up, and the engine calls it every frame from most
+full-screen menus. A postfix alone therefore sees `false` after both a real lower and a no-op, and
+the v2.0.29 trace wrote one stack walk and one flushed line per rendered frame (84 MB in 35
+minutes, 1.16 GB in three hours on the main menu).
+- **Why missed:** the patch was written for "a handful" of transitions and assumed the target was
+  called only on transitions; nobody enumerated its callers or read that the clear sits outside
+  the `IsLoadingWindowActive` branch.
+- **Prevent:** before logging from a postfix on an engine setter-like method, read whether the
+  method writes its state unconditionally and list its per-frame callers. If it does, capture the
+  pre-call value with `Prefix(out T __state)` and decide in the Postfix from (before, after). Keep
+  the decision in a pure gate so the unreachable cells (a null manager, a skipped original) are
+  unit-testable, and keep the trace call directly in the Postfix when a tracer skips frames.
+- **Source:** 1.5.x plan 012, `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`, `LoadingWindowDisablePatchTests`, `LoadingWindowTraceGateTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When one patch compensates for another's effect, apply the compensator first and gate the other on it
+- **Why missed:** the Siege Forces design treated its two prefixes as one unit. `PatchCategoryIndex` applies a category's classes in assembly order, and a class that throws stops the category while earlier classes stay patched, so the picker (declared first) could be live with the spawn-total fit absent, which stalls deployment.
+- **Prevent:** declare the compensating patch class first and pin the order in a wiring test against `PatchCategoryIndex`'s own enumeration; before the dependent patch acts, confirm the compensator is attached (`Harmony.GetPatchInfo` owner check through the adapter) and refuse the behaviour if it is not.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Deleting a patch drops its engine-bump tracking: pin the vanilla logic you still copy (#886, 2026-10-18)
+The castle recruitment postfix on `RecruitmentCampaignBehavior.HourlyTickParty` became an event listener. Its
+`patch-targets.md` row went with it, and that row was how `engine_body_diff.py` diffed `HourlyTickParty` at a bump. The
+new dispatcher still copies that method's guards, and its "no double recruit" claim depends on vanilla still skipping
+castles there. The scan's slot count mirrors a private estimate that was never tracked at all.
+- **Why missed:** the deletion was read as pure removal. Nobody listed what the snapshot row protected.
+- **Prevent:** when you delete a patch or reflection site but keep code that copies or depends on the vanilla method,
+  add an IL pin in `TAOM.Tests/Migration/` (`RequiresGameIL`, `BindingVerification`) that asserts the property you rely
+  on: the call it must not make, the constant it must load, the delegate shape it must bind. Prove it can fail by
+  flipping the assertion once.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` finding 2; `TAOM.Tests/Migration/CastleRecruitmentEngineMirrorTests.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### To fill what vanilla sets only for some cases, pre-set it in a prefix and let vanilla overwrite (#937, 2026-10-19)
+The tavern maid's condition sets the `DRINK` and `FOOD` text variables for seven culture ids and returns true for
+all, so TAOM-culture towns showed stale dishes. The first fix was a postfix that tested the culture against a copy
+of vanilla's seven ids, with a rule class, rule tests and an IL test to keep the copy honest. Every one of vanilla's
+branches sets both variables, so a void prefix that sets the TAOM defaults first gets overwritten for exactly
+vanilla's ids and needs no list at all.
+- **Why missed:** the plan read the method's culture checks and wrote their complement, without asking whether
+  vanilla overwrites what a prefix sets.
+- **Prevent:** before copying vanilla's case list into a postfix, check in the installed IL whether every case
+  writes the value. If it does, pre-set the fallback in a prefix. A copied list drifts on the next engine update.
+- **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A helper type a patch needs lives in its own file; a comment pinning where code must sit to satisfy a source scan is the tell (plan 031, 2026-10-02)
+Plan 031 keyed the English override table by a string slice and nested the slice struct and its FNV-1a comparer inside `MBTextManager_GetLocalizedText_Patch`. The plan review then found that `CoopVetoClassificationTests` names a bool prefix's owner after the last class declared above it, so a nested class above `Prefix` would take it over, and fixed that by keeping both types below `Prefix` with a comment saying so. The hash and equality were an algorithm in an entry point (ADR-002), and the comment was a rule nobody could see from the type.
+- **Why missed:** the scan collision was solved where it surfaced (placement) instead of asking why a patch file held a second class at all.
+- **Prevent:** give a key type, comparer or other helper a patch needs its own file beside the feature (`Main/Features/LocalizationOverride/IdSlice.cs`) with its own tests; prefer one `IEquatable<T>` struct over a struct plus a comparer class. When a source-scan gate forces where code must sit, move the code out rather than documenting the position.
+- **Source:** 1.5.x `docs/reviews/rca-settings-reads-off-hot-paths-2026-10-02.md` C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A check over a cached engine field sees only the writers that update the cache (2026-10-17)
+- **Why missed:** the main-roster loss watchdog compared `TroopRoster.TotalRegulars` to catch the writes that bypass
+  `AddToCountsAtIndex`. `TotalRegulars` reads `_totalRegulars`, which only `AddToCountsAtIndex` and the load-time
+  recompute write; `SetElementNumber` changes the slot and leaves the cache alone. The plan listed the bypassing
+  METHODS and never listed the writers of the FIELD it compared.
+- **Prevent:** before a diagnostic or gate claims to detect a write through a derived or cached value, list every
+  writer of the backing field (`stfld` in the installed IL, or a grep of the decompile for the field name) and check
+  that each one the claim covers updates it. Prefer patching the bypassing method itself.
+- **Source:** 1.5.x `docs/reviews/rca-main-roster-loss-diag-2026-10-17.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An observe-only removal log on a live roster must expect rebuild in place (2026-10-17)
+- **Why missed:** the diagnostic raised LARGE LOSS when one campaign hour removed 10 regulars. Vanilla's party screen
+  binds the live main roster, and every Esc/Cancel runs `PartyScreenData.ResetUsing` (Clear, then re-add every row);
+  `PartyScreenLogic.UpgradeTroop` removes before it adds. Each produced "every regular removed, heroes kept", the
+  exact shape of the report, and campaign time is frozen on that screen, so the hourly latch could hide a real loss.
+- **Prevent:** before judging "loss" at removal time, read what vanilla does to the same object when nothing is lost
+  (screens that edit the live roster, upgrades, battles). Judge on the net change once it is known, or record facts
+  with their caller and leave the judgement to the reader with a list of the benign sources. Never filter a vanilla
+  rebuild by caller name: a rebuild from a stale snapshot is itself a candidate cause.
+- **Source:** 1.5.x `docs/reviews/rca-main-roster-loss-diag-2026-10-17.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Caller-chain frames use `DeclaringType.FullName` (2026-10-17, second occurrence)
+- **Why missed:** the roster-loss diagnostic formatted frames as `DeclaringType.Name + "." + Name`, which drops the
+  namespace, so its `System.` filter never matched and the chain could not say whether TaleWorlds, TAOM or another mod
+  made the call. Its test fed namespaced strings production never produces. The same defect is recorded in
+  `SpawnOriginFormatter.cs` and the #372 changelog entry, but not in a lesson, so nothing loaded it.
+- **Prevent:** format a frame as `DeclaringType?.FullName + "." + Name` (fall back to `Name` when the type is null, as
+  for Harmony's replacement method), filter by namespace prefix, and feed tests the production shape.
+- **Source:** 1.5.x `docs/reviews/rca-main-roster-loss-diag-2026-10-17.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A patch's fallback log is a sample plus a count, owned by a service that resets per mission (2026-10-02)
+Patch30's catch, added to satisfy the D6 logging rule, logged its first throw through a `static int` latch commented "once per session" and dropped every later throw. The latch never re-armed, so it was once per process: a different fault in the next battle wrote nothing, and the log could not tell one failed unit from every unit for the rest of the session.
+- **Why missed:** the line was written as logging, not as state, so the static-latch lesson in `lessons/state-lifecycle-save.md` (four earlier recurrences) was not read; the sample alone was taken to meet "aggregate or sample, never drop".
+- **Prevent:** a catch on a hot or worker-thread patch hands the exception to its service (`FormationLayoutService.NoteFallback`): count every throw with `Interlocked.Increment` on the exception path only, log the first per mission in full, write the count at mission end and re-arm there. Pin both lines literally, and pin that the prefix calls the service with an IL presence check (`Prefix_ReportsAThrowToTheService`). A presence check does not show that the call sits in the catch, so verify that in game, or assert that the call's IL offset falls inside a `MethodBody.ExceptionHandlingClauses` handler range (`IlCallScanner` returns no offsets, so that needs a scanner that does).
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A bool prefix that returns false does not stop the postfixes (Shadowfax Screens 2026-10-19)
+The clan fast path skipped `ClanPartiesVM.RefreshPartiesList` with a false prefix, and its comment,
+registry entry and feature doc said Refuge's postfix on that method therefore "runs only for a build
+that runs". Harmony 2.4.2 emits the postfixes after the skip label (`MethodCreator`), so every
+postfix ran on every skipped call too. It was harmless only because Refuge skips a party it already
+listed.
+- **Why missed:** the claim was reasoned from what the prefix intends, not from Harmony's emitted IL.
+- **Prevent:** when a prefix skips a method that other patches postfix, assume every postfix still runs
+  and check each one is idempotent over the unchanged state; to skip one call site without running the
+  method's postfixes, swap that call site with a transpiler instead (the fix here). Add a real-Harmony
+  test with a counting postfix on the skipped method.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pick a new patch number against every open worktree, not only trunk (#887, 2026-10-23)
+#887 took Patch114 as "highest on trunk plus one". The uncommitted B08 worktree had already claimed Patch114 for
+Messengers. `PatchCategoryNumberTests` passes on each branch alone and fails on whichever merges second. The batch notes
+record the same clash for Patch105 and Patch106.
+- **Why missed:** the check read trunk and the registry; parallel batch sessions write their numbers into uncommitted
+  worktrees that neither shows.
+- **Prevent:** before you choose a number, grep every worktree (`git worktree list`, then `grep -rhoE "Patch1[0-9]{2}_"`
+  in each `Main/`) and every remote branch, and take the next number free in all of them. Keep the number out of test
+  method names so a renumber at merge stays small, and run `PatchCategoryNumberTests` after every rebase.
+- **Source:** 1.5.x `docs/reviews/rca-alignment-scoring-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A value-returning finalizer that hands back its exception erases the throw site
+
+When any finalizer on a method returns a value, Harmony 2.4.2's wrapper stores it in the one shared exception slot and ends with the `throw` opcode; only a method whose finalizers are ALL `void` gets `rethrow`, which keeps the trace (`MethodCreator.CreateReplacement` / `AddFinalizers`). Throwing an existing exception object replaces its stack trace with the frames from that point outward, so every frame between the real throw site and the patched method is gone by the time anything upstream reads it. PatchShield hands every non-trinity exception back this way on every patched method in the process (1,476 in player bundle `2d446100`), so a childbirth failure several calls inside the daily pregnancy tick reached the crash report as five frames ending at `MapState.OnTick_Patch2`, and the throw site could not be named. The same collapse merged distinct crashes: the signature hashes `new StackTrace(ex)`, which sees only the segment after the last throw, so three NullReferenceExceptions through that frame shared bundle `40de8e64` and two were suppressed unread.
+- **Why missed:** the reset was known and written down twice (`PatchShield.cs` for #354, `SaveShield.cs` for its attribute-once rule), and both times it was fixed only for the case in hand: #354 stopped unwrapping `TargetInvocationException`, which rescues the INNER exception's stack and leaves a plain exception's own frames exactly as exposed as before. A limitation recorded as a comment reads as handled.
+- **Prevent:** a finalizer that only observes should be `void`, which leaves Harmony on `rethrow`. One that returns an exception writes `return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);` (or `null` for the method on a hot target, rather than binding `__originalMethod` per call). The helper moves the trace into `_remoteStackTraceString` (what .NET's `InternalPreserveStackTrace` does), prints a marker line naming the rethrowing method, records the original frames under `Exception.Data["TAOM.ThrowSite"]` for frame-based consumers, returns the same instance, and is idempotent per rethrow. PatchShield and SaveShield do this. Ten TAOM feature finalizers do not yet (plus the crash reporter's ten on their fallback paths), and PatchShield does not cover the late-batch ones on a process's first game (see the next entry). `RethrowStackPreserverTests` pins the premise with a real Harmony patch, so a Harmony upgrade that starts preserving turns it red instead of double-printing.
+- **Source:** 1.5.x `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md`, player bundle `2d446100`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A lookup that derives the original method from the stack must skip a patched patch method and let Harmony judge frames with no method (2026-10-02)
+Plan 034 replaced PatchShield's injected `__originalMethod` with `PatchShield.ResolveShieldedOriginal`, which skips the finalizer's frames by declaring type and maps the next frame through `Harmony.GetOriginalMethodFromStackframe`. Two cases the injected value never got wrong slipped through. When another owner Harmony-patches the finalizer, its body runs in a dynamic method with no declaring type that Harmony maps back to the finalizer, so the lookup named PatchShield's own finalizer as the shielded method, and the swallow path would have stripped that owner's patch from PatchShield while leaving the real offender patched (proven by a test that failed on the reviewed code). And the lookup stopped on a frame whose `GetMethod()` is null before asking Harmony, whose `GetStackFrameMethod` maps exactly such frames by address on Mono.
+- **Why missed:** the frames above the finalizer were enumerated (outer shielded methods, recursion, inlining, unknown dynamic methods), but not the finalizer itself being patched; and the Harmony call was read as a map lookup on `frame.GetMethod()`, not through to its Mono branch.
+- **Prevent:** when a change derives from runtime state a value Harmony used to inject, list the ways the runtime state differs from the injection: the patch method detoured by another owner, frames reported without a method, a replacement from another Harmony copy, an unmapped window. Skip any frame whose Harmony original is the patch method's own type, and hand every frame to Harmony rather than pre-filtering it.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-per-call-cost-2026-10-02.md` rows 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Follow an escaping exception through every return branch of each finalizer at its next catch, as a per-target table (repeat, 2026-10-02)
+Plan 039 put five campaign-map methods on PatchShield's `ExcludedTargetMethods` and wrote the trade-off the maintainer
+decides from. It followed an escaping MissingMethod exception to Patch37's crash-capture finalizer on
+`Module.OnApplicationTick` and stopped there, calling the order of the two finalizers on that method UNVERIFIED. Patch37
+(priority 800) runs before PatchShield's finalizer (no attribute, filed as 400; Harmony 2.4.2 runs finalizers highest
+priority first against one shared exception slot), and it hands the exception back when crash capture is off, on
+re-entry or with its service unresolved; PatchShield's finalizer there then swallows it and strips the outer method's
+non-protected patches, TAOM's own included, never the culprit. The text also listed the unwound calls by name without
+reading them: the skipped `MapScreen.OnPostFrameTick` is what starts the party AI task. It also repeated plan 028's
+"no finalizer runs inside the measured phases", though Harmony emits finalizers after postfixes, so a finalizer always
+runs in the bracket that encloses its method.
+- **Why missed:** the 2026-10-02 rule above ("follow the exception to its next catch and read each unwound caller")
+  existed as prose; the executor of the next plan, a day later, produced none of the evidence it asks for.
+- **Prevent:** any change that adds or removes a shield, catch or finalizer carries a per-target table in its feature
+  doc: target, from which PatchShield pass it is shielded today, what a swallow does there, what an escape skips per
+  throw position (before and after the method's first state change), the next catcher, and that catcher's finalizers
+  in Harmony order (priority, then registration) with what each returns on every branch. Read the priority from the
+  attribute and the order from `PatchInfoSerialization.PriorityComparer`, never mark it UNVERIFIED when the Harmony
+  DLL is on disk. For each skipped call, read its body for what it starts or completes (a task, a pop, a save).
+- **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R1, R2 and R4. - **Update (2026-10-03):** the maintainer chose option B (decision D13): `MapState.OnTick`, `Campaign.RealTick` and `MapScreen.OnFrameTick` stay shielded and only `Campaign.Tick` and `CampaignEvents.Tick` are excluded. The first paragraph describes the first build (option A); the per-target table this lesson asks for is now in `docs/features/map-perf-profiler.md`. - **Update (2026-10-03, review follow-up):** the D13 text called the `Mission.TickAgentsAndTeamsImp` exclusion "a fix" for the freeze that a swallowed throw leaves (`tickCompleted` never set). It holds for the asynchronous agent tick only. In fast-forward `MissionState` passes `asyncAITick: false`, `Mission.OnTick` runs the agent tick inline, and the exception lands in `Mission.OnTick`, where PatchShield's finalizer (a missing-API exception, from a process's second game start) or, above it, Patch37's crash capture on `Module.OnApplicationTick` (any exception, while capture is on) or, for what Patch37 hands back, PatchShield's own finalizer there (a missing-API exception, from the first game start) swallows it: flag still false, same freeze. A claim that an exclusion prevents a hang follows the throw from every path that can run the method (asynchronous, inline) to its next catch, and says which path it covers. - **Update (2026-10-03, convergence round):** that follow-up named the shield as the only swallower of the `tickCompleted` hazard and sent it to a PatchShield plan. Patch37's finalizer on `Module.OnApplicationTick` swallows any exception while crash capture is on (the default), and no vanilla frame between `Mission.OnTick` and it catches, so an ordinary exception after `Mission.cs` freezes the next frame in any game, and a missing-API throw in a process's first game does too. With capture off, on re-entry or with the service unresolved or throwing, Patch37 hands the exception back and PatchShield's own finalizer on that method, attached by the first game start's pass 2, swallows a missing-API throw (the residual review of 2026-10-04 found this third catcher missing from the first rewrite). A plan built on PatchShield's culprit-only strip changes neither path; a completion-aware recovery on `Mission.OnTick` does, and its tests carry a crash-capture-off case. Name every catcher between the throw and the engine, the default-on crash capture included, and follow each one's hand-back branches to the next finalizer on the same method, before sizing the follow-up, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The PatchShield exclusion covers every per-agent target of a patch category, not only the obvious ones (2026-09-28)
+Patch93 excluded its three weapon guards (`Agent.GetPrimaryWieldedItemIndex` and its two siblings) from PatchShield,
+as the 2026-09-26 lesson above says, but not its rout postfix on `Mission.CanAgentRout`, which
+`CommonAIComponent.OnTickParallel` calls for every AI agent, horses included, every 0.5 to 0.6 s on the TWParallel
+workers. Each call paid the `__originalMethod` finalizer's reflection-cache lock, about 700 calls a second at 400
+agents.
+- **Why missed:** the guards were known hot (they sit under `WieldedWeapon`), so they were excluded; the rout
+  postfix looked like a rare event and nobody read its caller. Third instance of the per-call tax on TAOM's own
+  targets (Patch38 2026-07-10, Patch92 2026-09-26).
+- **Prevent:** for every target in a new patch category, read the engine caller (not the method name) and write its
+  call rate down; any target reached from an agent tick, a parallel tick or a per-frame path goes on
+  `ExcludedTargetMethods`, and the category's binding test walks all of them
+  (`CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList`).
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditsWiringTests`, `HotCreatureTargets_AreOnPatchShieldsExclusionList` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A pair that must load together across modules or a save needs a guard on every engine lookup between them (#1063, 2026-10-29)
+A TAOM bandit clan lives in TAOM's `clans.xml` and the hideouts of its culture in TAOM_Map's `settlements.xml`; a saved
+campaign reloads settlements but not clans (`SandBoxManager.InitializeSandboxXMLs`). So the pair can arrive half: a clan
+with no dens (TAOM with an older map) and vanilla `GetInfestedHideoutCount` throws on every new game; dens with no clan
+(a save made before the clan) and `AddBanditToHideout` dereferences a null clan from the Gold Rush incident.
+- **Why missed:** "author the dens before the clan" was written as an authoring order on one machine, never as a load
+  invariant. Every earlier bandit faction had the same exposure; the Feral Orcs were the first pair added after a release.
+  The data-flow lens traced the load to "no crash on load" and stopped one class short of the incident caller.
+- **Prevent:** when a feature adds an object whose engine consumer looks up a partner in another module or across the
+  save boundary, list each lookup and guard the missing-partner state at the engine seam (`Patch125_HideoutClanGuard`,
+  as Patch65 does for a lord's landless culture), and add a release check in both directions. For a saved campaign, read
+  which XML the load path re-reads before writing "new campaigns only".
+- **Source:** 1.5.x `rca-feral-orcs-2026-10-29.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A UIExtenderEx mixin compiles vanilla code at Register: register after a game exists
+`UIExtender.Register` patches each mixin target's constructors, `OnFinalize` and refresh method at once
+(UIExtenderEx 2.13.3 `ViewModelWithMixinPatch.Patch`), and the patch compiles the vanilla IL. The .NET Framework
+JIT may then run the static initializer of a `beforefieldinit` type whose static field that IL reads, directly
+or through a small method it inlines; on this machine it did. `ClanLordItemVM.UpdateProperties` and
+`EncyclopediaHeroPageVM.Refresh` read `CampaignUIHelper.SkillObjectComparerInstance`, and `CampaignUIHelper`'s
+initializer calls `GameTexts.FindText` (v1.4.8 dump `CampaignUIHelper.cs:210`). `GameTexts` is null
+until `Game.Initialize` sets it (v1.4.8 dump `Game.cs:300`), so registered from `OnSubModuleLoad` the initializer threw. The
+runtime swallows the throw at JIT time and keeps the type failed: a net472 console repro showed every later use
+throwing `TypeInitializationException`. The symptom varied between two launches of one build: at 16:37
+`Patch17_TroopWeight`, `Patch23_BannerColorPersistence` and `Patch105_HiddenHosts` failed to apply, while at
+16:34 every patch category applied (`failed=0`). Both launches crashed when character creation opened the first
+narrative stage.
+- **Why missed:** the registration point predated the mixins that read `CampaignUIHelper` statics (Lines of
+  Descent and Hearth Roll on 2026-10-23, Encyclopedia on 2026-10-26). Nothing failed loudly: the NRE was
+  first-chance and swallowed, the debugger showed it only with "break when thrown" on, and failed patch
+  categories are not a reliable sign. The `MovementOrder` lesson above has the same mechanism, but it was
+  written for TAOM's own patch categories, not for UIExtenderEx's.
+- **Prevent:** The 1.5.x line registers in its first `OnGameStart`. Every game type calls it from inside
+  `Game.Initialize`, after `GameTexts.Initialize` (`Game.cs`, `Campaign.cs`, `CustomGame.cs`),
+  but before the models (`Campaign.cs`) and default objects such as `DefaultSkills` (`Game.cs`)
+  exist. A mixin whose target IL reaches an initializer that reads those needs a later hook.
+  Before you add a mixin target or move any Harmony or UIExtenderEx registration earlier, read the
+  initializers of every type whose static field the patched methods read, directly or through a small method
+  the JIT can inline (a static getter such as `Campaign.Current`). This tree still registers from `OnSubModuleLoad` (`Main/SubModule.cs:248-250`) and has a mixin on `EncyclopediaHeroPageVM` (`Main/Features/Messengers/UI/MessengerEncyclopediaMixin.cs`); nobody has checked whether that target's v1.4.8 IL reaches the initializer.
+- **Source:** 1.5.x `rca-uiextender-ongamestart-2026-10-26.md`; TAOM logs `taom_debug_2026-10-26_16-34-58.log` (lines 201, 394-411) and `taom_debug_2026-10-26_16-37-09.log` (lines 197, 209, 226, 436-455), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mixin whose target declares no OnFinalize stacks a hook on every view model's OnFinalize
+
+UIExtenderEx 2.13.3 patches the target's own `OnFinalize` for its mixin teardown; when the target declares none,
+it patches the base `ViewModel.OnFinalize` instead (`ViewModelWithMixinPatch`). Harmony keeps every such patch, so
+each target of this kind adds one more hook that runs on every view model teardown in the game, builds a runtime
+list and does a table lookup; a mixin that overrides `OnFinalize` then runs once more per stacked hook. TAOM has
+three such targets (`MapInfoVM`, `EncyclopediaUnitVM`, `TownManagementReserveControlVM`).
+- **Why missed:** the hook is invisible in the mixin's code; it shows only in the UIExtenderEx decompile.
+- **Prevent:** before adding a mixin, check whether its target declares `OnFinalize`; if not, prefer a target that
+  does, or accept the stacked hook knowingly and keep mixin `OnFinalize` overrides empty or idempotent.
+- **Source:** 1.5.x `docs/reviews/rca-reeves-ledger-2026-10-19.md` "Not applied", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An invariant lives in the feature's pure rule, never only in a prefix that falls through to vanilla (#742, 2026-10-06)
+- **Why missed:** creature bandits are enemies at all times, but the only thing enforcing it was `Patch93_CreatureBanditSpawn` declining the player's side, and a declined troop falls through to the vanilla `SpawnTroop`. `taom.spawn_troops <creature> <n> ally` named the side itself, so the creature landed on the player's team as a husk on its mount.
+- **Prevent:** state the invariant as a pure rule in the owning feature (`CreatureBanditRules.SpawnsOnPlayerSide`) and audit every path that can name the state, console commands included, so each asks the rule before it acts. A prefix that declines and falls through enforces nothing for the case it declines.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditRules`, `SpawnsOnPlayerSide` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` (#742, "An invariant lived in a fall-through prefix"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Patch the method that writes the value, not one of its callers (Banner Color Persistence, #973, 2026-10-23)
+The inventory doll's clan colours lived in a postfix on `SPInventoryVM.UpdateCurrentCharacterIfPossible`, one of
+five callers of `UpdateRightCharacter`, which reaches the private colour writer `UpdateCharacterArmorColor`. Opening the screen, the outfit toggle, Reset, and TAOM's own panel refresh (#917, #924) all
+repainted the doll in the map faction's colours, so a vassal saw the kingdom's colours after nearly every refresh.
+The same postfix also wrote clan colours over vanilla's fixed stealth colour after a character switch, because
+the caller it hooked had no stealth check. Moving it onto `UpdateCharacterArmorColor` covers every caller and lets
+the guard mirror vanilla's own branch.
+- **Why missed:** the patch was written for the one trigger the author tested (a character switch); nobody listed
+  the callers of the method that actually writes `ArmorColor1/2`. Two later TAOM features then added callers.
+- **Prevent:** when a patch overrides a value the engine writes, find the writer first (grep the decompile for the
+  assignment), list every caller of the writer, and patch the writer unless a caller needs different behaviour.
+  Copy the writer's own branches (here, stealth) into the postfix guard.
+- **Source:** 1.5.x issue #973; found by the Data flow review of #924, on `origin/bannerlord-1.5.x` (ported by WP142).

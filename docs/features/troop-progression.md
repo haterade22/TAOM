@@ -18,7 +18,7 @@ The recruitment pool problem is a separate concern: which basic volunteer a sett
 Three GameModel overrides handle the extension points:
 
 - `TaomCharacterStatsModel` — single-line override: `MaxCharacterTier => 10`.
-- `TaomVolunteerModel` — overrides `MaxVolunteerTier` (delegated to `IVolunteerTierService`) and `GetBasicVolunteer` (uses `IVolunteerRecruitmentService` with context from `IVolunteerContextAdapter`).
+- `TaomVolunteerModel`: overrides `MaxVolunteerTier` (delegated to `IVolunteerTierService`), `GetBasicVolunteer` (uses `IVolunteerRecruitmentService` with context from `IVolunteerContextAdapter`), `MaximumIndexHeroCanRecruitFromHero` (alignment-gated recruitment, `IRecruitmentAlignmentService`) and `GetDailyVolunteerProductionProbability` (vanilla's value with the owner culture's respawn feats applied, clamped to 0 to 1).
 - `TaomPartyWageModel` — overrides `GetCharacterWage` (tier-to-wage table via `ITroopCostService`), `GetTroopRecruitmentCost` (level-based cost table + horse cost), and `GetTotalWage` (applies cultural feat bonuses for Gondor, Erebor, Lothlorien, Isengard, Gundabad, Umbar, Mordor, Rohan).
 
 `VolunteerRecruitmentService` holds three static dictionaries (SettlementMap, ClanMap, CultureMap) initialized at class-load time. `GetVolunteerTroopId` resolves by settlement id first, then bound-settlement id, then owner clan id, then culture id (fallback), then picks a weighted random troop from the pool. The context object (`VolunteerContext`) carries these four string keys and is built by `IVolunteerContextAdapter` from the live `Hero` object — keeping the service free of TaleWorlds sealed types.
@@ -51,7 +51,7 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 | File | Purpose |
 |------|---------|
 | `Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs` | Sets `MaxCharacterTier = 10` |
-| `Main/Features/TroopProgression/Models/TaomVolunteerModel.cs` | Overrides `MaxVolunteerTier` and `GetBasicVolunteer` |
+| `Main/Features/TroopProgression/Models/TaomVolunteerModel.cs` | Overrides `MaxVolunteerTier`, `GetBasicVolunteer`, `MaximumIndexHeroCanRecruitFromHero` and `GetDailyVolunteerProductionProbability` |
 | `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs` | Overrides `GetCharacterWage`, `GetTroopRecruitmentCost`, `GetTotalWage` |
 | `Main/Features/TroopProgression/TroopCostService.cs` | Tier-to-wage table (T0–T10) and level-to-recruitment-cost table |
 | `Main/Features/TroopProgression/VolunteerTierService.cs` | `MaxVolunteerTier = 6` |

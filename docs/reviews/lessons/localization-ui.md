@@ -671,3 +671,353 @@ Patch51 greyed the recruit screen's Done button (`IsDoneEnabled = false` from a 
 - **Why missed:** the patch copied the flag vanilla's gate sets and stopped where vanilla's gate stopped, without reading where vanilla enforces the same requirement a second time or what else calls the commit method; six deep-review agents read the VM and the patch and none opened the view that owns the hotkey.
 - **Prevent:** when mirroring a vanilla UI gate, find the commit method (the one that mutates state and raises events) and gate THERE, as a prefix that returns false, with the disabled control as presentation only; list every caller of that method (button command, hotkey handler, inquiry callback, quit flow) from the installed decompile and state which are covered. `RecruitmentVM_ExecuteDone_Patch` is the shape; `RecruitGatePatchTests` pins its category and target.
 - **Source:** Codex review 112 (GPT-6-Astra ultra) of #600, `docs/reviews/rca-gondor-castar-costs-2026-09-15.md` finding 5.
+
+### Translate a fragment that fills a sentence variable with the sentence, and read the rendered result (plan 009, 2026-09-24)
+The patch-failure notice builds "... during {PHASE} ..." and fills `{PHASE}` with a separately translated phase name. Translated alone, the fragments broke three languages: German "während Start" (no genitive article), French "lors de le démarrage" (must contract to "du"), Japanese "起動時中に" (時 and 中 stacked). Polish and Russian happened to store genitive forms and read correctly.
+- **Why missed:** each key went to the translator on its own, and the check was that `{PHASE}` and `{GROUPS}` survived, not that the filled sentence reads.
+- **Prevent:** when a key's text is a fragment for another key's variable, send both to the translator together with the host sentence as context, and read the rendered sentence once per language for each fragment. Where the grammar cannot be made to agree, use one whole-sentence key per case. A hand fix goes into both the XML row and `tools/translation_cache/<lang>.json`: the translator re-translates only a row that still equals the English, so a fixed row stays fixed.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Nothing receives a chat message before the initial screen; report a startup problem in an inquiry (plan 009, 2026-09-24)
+`InformationManager.DisplayMessage` is `DisplayMessageInternal?.Invoke(message)` with no queue. Its only single-player subscriber, `MPChatVM`, is built by `GauntletChatLogView.Initialize()` in Native's `OnBeforeInitialModuleScreenSetAsRoot`, after every module's `OnSubModuleLoad`. So a message sent from `OnSubModuleLoad` goes nowhere, silently. A message sent from the first `OnBeforeInitialModuleScreenSetAsRoot` does reach the chat log, but on first launch the splash video hides it and `GauntletInitialScreen.OnInitialize` then calls `ClearAllMessages()`. Plan 009's failure notice for 28 module-load patch categories was sent from `OnSubModuleLoad` and cleared its list as it did, and the green "TAOM loaded successfully!" line beside it has never displayed.
+- **Why missed:** the plan took the existing green line as precedent and never asked who subscribes to the event, or when; `DisplayMessage` compiles and never throws, so nothing failed.
+- **Prevent:** a notice raised during startup waits for TAOM's `OnBeforeInitialModuleScreenSetAsRoot` (Native's runs first) and goes through `InformationManager.ShowInquiry`, which `GauntletQueryManager` queues and the initial screen does not clear (precedent: `StallReportNotifier`). Gate: `PatchCategoryApplierTests.SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures`. For any on-screen notice, trace the event to its subscriber and to whatever clears it before the player looks.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Flattening a TextObject to a string freezes every global it reads at that moment (#1019, 2026-10-27)
+The enlistment board was turned into a plain string once per status change so the wait menu would not rebuild a nested text every frame. The board and its nested lines use `{NEWLINE}`, a global TAOM never sets: the engine sets it (`GameTexts.SetVariable("NEWLINE", "\n")`) lazily inside its UI builders, and ending a campaign clears all globals. Rendered every frame, the board picked `NEWLINE` up whenever the engine set it. Flattened once, a board written while it was unset kept its lines run together until the next status change.
+- **Why missed:** before the flatten the board re-rendered every frame and picked `NEWLINE` up later, so the unset state had no visible effect, and the render test never started from it.
+- **Prevent:** before `TextObject.ToString()` freezes a text, set every global the text reads (here `MBTextManager.SetTextVariable("NEWLINE", "\n")`), and test the frozen result with those globals removed first.
+- **Source:** 1.5.x #1019; `rca-enlistment-board-render-and-probes-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A result message states what the action did on every branch, not what was recommended (2026-10-01)
+The #701 advisor told every player "saved: Number of Ragdolls 5, Number of Corpses Low", but Apply only lowers each
+option (`Math.Min`), so a player already below the recommendation was told a value that was never written.
+- **Why missed:** the never-raise rule was added to the code after the text was written from the recommendation;
+  nothing compared the message with each branch of the action it reports.
+- **Prevent:** before registering a result or confirmation string, list the action's branches and check the text
+  is true on each; when it can only be true on some, make it value-neutral or format in the values written. Name
+  vanilla's options through vanilla's own keys (`{=1awQTVqN}Number Of Ragdolls`), so a translation matches the
+  Options screen.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never put `\n` in a `{=KEY}` default; use `{newline}` (2026-10-01)
+`harvest_literal_loc_keys.py` writes a C# `\n` into the XML `text` attribute as a raw line break, which XML parses
+back as a space, so the registered English silently differs from the inline default and
+`LocalizationKeyConsistencyTests` fails far from the cause (#702).
+- **Why missed:** a two-paragraph inquiry body was written with `\n\n`, the C# habit; the house idiom
+  (`taom_precompile_inquiry_body`) was not looked up.
+- **Prevent:** one paragraph, or `{newline}`. Until #702 lands, read the harvested row back before translating.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timing or effect claim about prefab XML comes from the engine method that reads it (Shadowfax Screens, 2026-10-18)
+The feature's comment, doc and issue said the character screen's top extension "waits 0.7 s and then slides for
+0.3 s, about 1 s". The values were read correctly from the installed prefab, but `Widget.UpdateVisualDefinitions`
+counts `DelayOnBegin` inside `TransitionDuration` and snaps at the duration, so that definition could never slide,
+and no widget uses it. The same assumption kept dead `DelayOnBegin` handling in the code.
+- **Why missed:** reading attribute values felt like verification; the method that interprets them was not read.
+- **Prevent:** before writing what a GUI attribute does (a duration, a delay, an alignment), read its consumer in the
+  installed DLL (`pwsh tools/taom-src.ps1 path Widget`) and grep for a widget that uses the definition; state the
+  engine version and the method in the doc.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-2026-10-18.md` F2, F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An unknown brush name draws the default brush with no log: check names against the loaded brushes (#989, 2026-10-24)
+The Messengers hero-page button named two brushes no module defines. `BrushFactory.GetBrush` returns null and
+`BrushWidget` falls back to the UI's default brush, so the button drew with no art and no state looks, and nothing was
+logged. Separately, a `ButtonWidget` passes its enabled, hover and disabled state to child widgets only with
+`UpdateChildrenStates="true"`; without it the label keeps full brightness on a disabled button.
+- **Why missed:** a wrong brush name or a missing state attribute draws something plausible, so no run fails.
+- **Prevent:** `PrefabExtensionBrushTests` checks every brush-typed attribute in a PrefabExtension against the
+  brushes the engine loads; a button whose label should follow its state sets `UpdateChildrenStates="true"`, as vanilla
+  and the Family Tree buttons do.
+- **Source:** 1.5.x `rca-messengers-brushes-2026-10-24.md` findings 0 and 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never register a vanilla key a stylesheet keeps; vanilla's translation is the better one (2026-10-02)
+The 2026-10-01 run registered 36 keys `comment_strings.xslt` and `action_strings.xslt` write, believing them TAOM's own.
+They were SandBox's: the stylesheets keep each key and only drop "the". TAOM's language files load after SandBox's and
+`LocalizedTextManager.DeserializeStrings` keeps the last row for an id, so 432 machine rows replaced TaleWorlds' curated
+ones, which carry the engine's grammar tokens: Turkish lost `'{.e}`/`'{.den}` (players would read "Gondor'e"), and in
+DE, FR, BR and IT a male player read "meine mein Herr". Reverted on 2026-10-02.
+- **Why missed:** the registration script filtered on "no TAOM English row", never on "vanilla defines it", and the
+  research agent that judged the keys TAOM-authored had searched `SandBoxCore`, while the strings live in `SandBox`.
+- **Prevent:** `VanillaKeyOverrideTests` (LiveInstall) fails on any TAOM language row whose id vanilla's English data
+  declares, outside an allowlist with reasons. A stylesheet that keeps a vanilla key and its meaning registers nothing;
+  a change of meaning takes a TAOM key (`TAOM_liege_*`).
+- **Source:** 1.5.x `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A delegated search's "not found" is checked against the module list before it is relayed (2026-10-02)
+The same run's planning relayed an agent's claim that the 36 XSLT keys were "absent from vanilla" after checking two
+other claims by hand. The agent had grepped one of the three vanilla modules that ship ModuleData. Two lenses of the
+deep review found the error in minutes by searching all of them.
+- **Why missed:** the spot-check covered the claims that looked load-bearing for scope (a dead file, a shared key),
+  not the one that decided whether to register 36 keys.
+- **Prevent:** a negative finding ("X does not exist in vanilla") is relayed only with the paths it searched; check
+  them against Native, SandBoxCore, SandBox, StoryMode and CustomBattle (and the DLC modules) before acting on it.
+- **Source:** 1.5.x `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A language row kept identical to the English is rewritten from the cache on every run: pin it in the overrides (hill troll, 2026-09-25)
+The Italian editions keep `Dale` untranslated, and the IT row for `taom_aso_kingdom.sturgia` held `Dale` by hand.
+`translate_with_claude.py` discovers a row when `cur_text == eng_text`, so that row counted as untranslated on the
+hill troll's translator run and was rewritten from the cache, which held `Valle`. Nothing in the run's output
+distinguished it from the 26 rows the run was meant to fill.
+- **Why missed:** the discovery gate cannot tell "not yet translated" from "translated as the English word"; the
+  guide documented the stale-English direction of this trap, not its mirror image.
+- **Prevent:** a canonical rendering that equals the English goes in `tools/translation_overrides/<lang>.json`, and
+  the cache gets the same text (`it.json` now pins `Dale`). After any translator run, diff the changed rows against
+  HEAD by id, not by line, and read every row that changed from a non-English value.
+- **Source:** 1.5.x the hill troll translator run, 2026-09-25 (`docs/localization/TRANSLATOR_GUIDE.md` "mirror-image trap"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A documented checklist did not stop 351 keys going stale: sweep the history, then gate it (2026-09-25)
+The TRANSLATOR_GUIDE had described the stale-English trap since #388 (2026-08-06). A sweep on
+2026-09-25 still found 351 keys whose English had changed while every language kept the old text:
+renamed lords, 249 career tooltips with old numbers, rewritten faction lore, an empty promotion offer.
+- **Why missed:** nothing reports it. Discovery skips any row that differs from the English, so a
+  run over a stale file prints "0 untranslated" exactly like a clean one; the checklist relies on the
+  author of the English edit remembering 12 other files.
+- **Prevent:** after an English edit, reset the rows and the cache in the same change. Periodically,
+  walk each English source's `git log`, find each key's last text change, and flag rows byte-identical
+  to their value at that commit's parent (the method in the guide). Follow-up: turn that sweep into a
+  `tools/` check so the count is computed, not discovered.
+- **Source:** 1.5.x the 2026-09-25 localization sweep (CHANGELOG `fix(loc)`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A character copied with its localization key shows the original's name in every other language (2026-09-25)
+Lindon's 21 troops were copied from Rivendell's and kept the Rivendell `{=KEY}`s with new English
+defaults; six Umbar clans shared one key; two quest templates reused a third's fallback keys. English
+looked right everywhere, because English reads the inline default. The other 12 languages look up the
+key alone, so they showed one text for both.
+- **Why missed:** no gate compares the inline defaults of one key across files, and every English
+  surface a reviewer checks renders correctly.
+- **Prevent:** a character's name key is `aom_<id>_name`, changed whenever the character is copied;
+  a C# fallback key belongs to one class. When splitting a shared key, give the copy the new key, carry
+  the existing translations onto it, and translate only the reset original.
+- **Source:** 1.5.x the 2026-09-25 localization sweep (TRANSLATOR_GUIDE "One key, one character"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An override is a translation of one English text and goes stale with it (2026-09-25)
+`tools/translation_overrides/ru.json` pinned `taom_precompile_hint` to a translation of its July
+English. The English was rewritten for #560; the override outranked the cache and the re-translation,
+so Russian kept describing the old behaviour.
+- **Why missed:** overrides are written for names that never change, and nothing flags an override
+  whose key's English moved afterwards.
+- **Prevent:** keep sentences out of the override files; when editing English, grep the override
+  files for the key (TRANSLATOR_GUIDE checklist step 5).
+- **Source:** 1.5.x the 2026-09-25 localization sweep, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Seed a translation row by ownership: a second row for the same id in one language replaces the first (2026-09-25)
+`global_strings.xml` declares 26 `taom_aso_*` keys, 23 of them also in `taom_module_strings.xml`, and the translator maps it to the
+keybind file, so a `--sync-ids` run seeded all 26 into every keybind file. The engine keeps the row a language loads
+last (`LocalizedTextManager.DeserializeStrings` assigns by indexer; files load in `language_data.xml` order), and the
+keybind file loads after the module file: 22 copies replaced curated rows in 11 languages, the Italian "Dale" among them.
+- **Why missed:** the run printed "26 ids seeded" and nobody asked whether those ids already lived in another file of
+  the language; every check read one file at a time.
+- **Prevent:** `translate_with_claude.py` now skips a key another English source owns (`key_owners`) or another file
+  of the language carries (`skip_ids_for`); `LocalizationKeyConsistencyTests` fails on one id with two texts in one
+  language. When two English sources declare a key, treat that as a smell, not a feature.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the script a translation is written in: the model returns words from other languages (2026-09-25)
+Korean 돌진 and Chinese 氏族 inside Turkish sentences, "[Ривенделл]新obranец" and Latin look-alike letters inside
+Russian words ("Брандa", "Бûрзгâш"), katakana in the Korean "Imladris", "黑numenor" in Chinese: about 120 rows across
+nine languages, each also in the cache, so every re-run served it back. The placeholder gate passed all of them.
+- **Why missed:** every check on translator output compared ids, counts and placeholders, never the characters.
+- **Prevent:** `LanguageTextIntegrityTests.NoTranslatedString_MixesWritingSystems` (per-language allowed scripts, no
+  word gluing two scripts in Russian, no lowercase Latin run glued to CJK or Hangul). Repair a flagged row and its cache
+  entry together: a letter map for Latin look-alikes in Cyrillic, a reset plus re-run for the rest.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The seeding terminator bug came back: fix the tool the first time a lesson names it (2026-09-25)
+Plan 022's lesson (2026-09-24, above) named `sync_missing_ids` giving seeded rows the wrong terminator in `\r\r\n`
+files and left the fix as a follow-up. A day later the hill troll's translator runs seeded 384 more such rows (156 in
+the repo, 228 in the live Armory), and the builder had written that the translator preserved terminators, having
+checked `write_back` only.
+- **Why missed:** a follow-up with no owner and no failing test is a note, not a fix.
+- **Prevent:** `sync_missing_ids` now keeps each line's own terminator, with a `\r\r\n` test. A lesson that ends in
+  "follow-up" gets an issue or a failing test the same day.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Gate the translation cache, not only the rows (2026-09-25)
+The writing-system gate read the repo's language files, but `tools/translation_cache/<lang>.json` holds the
+translator's output for all three modules, the unversioned Armory and TAOM_Map included, and a re-run writes
+its values back. Damage fixed in the rows but left in the cache returns on the next run.
+- **Why missed:** the gate was written against the files the repo ships, and the cache is not shipped.
+- **Prevent:** a content rule on translations runs over the cache too
+  (`NoCachedTranslation_MixesWritingSystems`); a word rule judges each hyphen-separated part of a name, so
+  "Bahr al-Yeshm" and "Cigfran-lûth" stay clean.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 36, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rule written from a crash states the engine version it was checked against (2026-09-04)
+The old gui-ui rule said that adding to `MapInfoVM.SecondaryInfoItems` threw an `IndexOutOfRangeException` in `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` through hardcoded positional indexing. That does not reproduce on the installed v1.4.8: the method holds six `IsGameKeyReleased` branches dispatching to `MapNavigationExtensions.Open*` and never touches `SecondaryInfoItems`, which appears only in `MapInfoVM` across every 1.4.5, 1.4.7 and 1.4.8 dump on the desktop. The claim was read as fact and nearly drove a rewrite of a working feature (five hand-built change-notifying properties, the `IntValue` and `FloatValue` coupling behind `MapBarCustomValueTextWidget`'s value flash, the item layout, the gamepad navigation scope). The exception the comment at the top of `GauntletCareerScreen.cs` refers to was never re-verified after the engine bump and may have come from another mechanism or an older version.
+- **Why missed:** a crash explanation was promoted to a rule without a decompile on the then-installed engine.
+- **Prevent:** state the engine version you verified against when writing a rule from a crash; `/investigate` finds a real root cause for the `GauntletCareerScreen` comment if it matters.
+- **Source:** 1.5.x the "Discouraged, on ownership grounds" paragraph in `.claude/rules/gui-ui.md`, which keeps the shape of the hazard and the dormant-in-practice finding, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Player text names game things as the game shows them, not by their code ids (#910, 2026-10-26)
+Make Tools said "Crafting experience", "the Refinement tab" and "one iron". The game shows the skill as Smithing
+(`DefaultSkills.cs`), the tab as Refine, and the recipe takes one grade, named Iron, of six iron grades. A player
+holding Steel was told to get iron. It also added its own "too tired" line where vanilla's translated one says the same.
+- **Why missed:** the strings were written from `DefaultSkills.Crafting`, `IsInRefinementMode` and `CraftingMaterials.Iron3`.
+- **Prevent:** before writing a string that names a skill, tab, item or rule, find the game's own text for it (the
+  `{=key}` in the engine source or the vanilla prefab) and use that name; if vanilla already has a translated line for
+  the same message on the same screen, use its key and register nothing.
+- **Source:** 1.5.x `rca-smiths-measure-2026-10-26.md` findings 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab gate resolves names the way the engine does: on the runtime type, and for every element kind it reads (#1024, 2026-10-26)
+Gauntlet resolves `A.B` on the runtime value of `A`, so a gate that judged `B` on `A`'s declared type had to skip
+interface-typed `LayoutImp` and accepted any misspelled suffix there. The gate also skipped `VisualDefinition` elements,
+whose loader reads only five attribute names, so four dead `EaseIn` attributes passed.
+- **Why missed:** "not judged" and "structural" looked safe, but each is an unchecked hole, not a pass.
+- **Prevent:** map a known interface property to the type the widget's constructor assigns, fail any other unknown, and
+  check every element kind against the loader that reads it.
+- **Source:** 1.5.x `rca-prefab-attribute-gate-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### List a shared key's readers before re-keying it (map-tool follow-ups, 2026-10-27)
+16 villages borrowed another village's description key (`castle_village_EN3_2` read
+`Settlements.Settlement.text.village_EN1_4`). The #1042 one-off gave each its own key and left the borrowed rows "for
+the village that owns them", but 15 of the 16 owners either were not on the map or had no `text=`, so 180 rows in 12
+languages lost their last reader and would have been paid for in the translation backlog. Four Dunland fortifications
+outside the renamer's table had the same stale names as the villages and were left out because the repair took its
+ids from that table.
+- **Why missed:** the owner of a borrowed key was assumed, and the repair was scoped by the tool that caused most of
+  the defect rather than by the defect's signature across the whole file.
+- **Prevent:** before moving a settlement off a shared key, list every master row that reads the key and every row
+  that defines it; delete the rows no settlement reads (and refuse while one still does). Scope a data repair by
+  scanning every row for the defect, then name the extra ids in the tool.
+- **Source:** 1.5.x `docs/reviews/rca-map-tool-followups-2026-10-27.md` findings 6 and 7; #1042, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rename must evict the translation cache; the bulk settlement renamer did not until #1042 (Lindon expansion, 2026-10-27)
+`tools/Apply-MapVillageNames.py` rewrote all 438 of its `NAMES` in the master and in all 12 `loc_settlements.xml`, with
+no dry run, no backup and no cache eviction. The translation cache keys on the string id alone, so the next translator run
+wrote the old wording back: on 2026-10-27, 421 to 438 rows per language (PL: 5) showed pre-rename text, for example DE
+"Dorf E2_1" where the master says Linenhold. The Tharbad RCA (row 7) called the script safe after comparing only the
+master file, and this session first misread those rows as good translations.
+- **Why missed:** each check measured one output file, and a row that differs from the English was taken for a translation
+  without reading what it says.
+- **Prevent:** after any rename, remove the renamed ids from `tools/translation_cache/<lang>.json`, and read a sample of
+  every output file a writer touches before calling it safe or unsafe.
+- **Fixed (#1042):** the renamer now writes only the ids whose English changed and evicts them from the cache.
+- **Source:** 1.5.x #1039, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Check a translated row where the engine reads it, not by its presence in the file (plan 009, 2026-09-24)
+`LocalizedTextManager.LoadLanguage` (v1.4.8 `LocalizedTextManager.cs:245-251`) reads only `<string>` children of a `<strings>` child of the root, and skips any other `<string>` without a log line, so the player sees the English default. Plan 009 seeded five keys into the 12 `std_taom_module_strings_*.xml` files with `tools/translate_with_claude.py` `sync_missing_ids`, which wrote all 60 rows after `</strings>`: it detects CRLF because `"\r\n" in raw` is also true of these files' `\r\r\n` endings, their bare-LF tail rows and `</strings>` then split as one line, and the insert lands after it. The CHANGELOG said the notice was translated into 12 languages; in game it was translated into none.
+- **Why missed:** every check measured presence. `LanguageFileCoverageTests`, `LanguageTextIntegrityTests` and the translator's own `tree.iter("string")` all walk descendants, so a row at any depth counted as translated, and the builder quoted the green coverage test as proof of delivery.
+- **Prevent:** gate `LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` fails any row outside `<base>/<strings>`. A test that proves text reaches the player reads it along the engine's load path, not with `Descendants()`. Until `sync_missing_ids` anchors on the `</strings>` line, check a seeded language file with that gate before committing it.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hint on a disabled button needs an enabled parent
+
+Gauntlet only hovers enabled widgets: `EventManager.CollectEnableWidgetsAt` returns early for a widget whose
+`IsEnabled` is false and skips its disabled children, and a `HintWidget` has no hover of its own (it relays its
+parent's `HoverBegin`). So a `HintWidget` inside a `ButtonWidget` with a bound `IsEnabled` shows its hint only
+while the button is enabled; a "why is this greyed out" hint there can never appear. Vanilla's governor button
+(SandBox `TownManagement.xml`) puts the disabled-state hint on an always-enabled wrapper around the button.
+- **Why missed:** Reeve's Ledger copied an existing button's shape, and its comment claimed that shape shows a hint
+  when disabled; nobody read the hover path. TAOM's own prefabs hold many vanilla clones with the inner-hint shape,
+  so a repo-wide scan would be noisy.
+- **Prevent:** when a hint must explain a disabled state, wrap the button in a plain, enabled widget that carries
+  the hint, keep the button's inner hint for the enabled state, and pin the shape with a structural test (the hint's
+  parent has no `IsEnabled` binding). Check the hover in game with the button disabled.
+- **Source:** 1.5.x `docs/reviews/rca-reeves-ledger-2026-10-19.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A registered key does not reach English: the inline text after `{=key}` is what English players read (#845, 2026-10-26)
+Field duties composed `{=taom_enlist_duty_<id>_title}a task for the company` from the row id. The key was
+registered and translated, so every gate passed, yet English players read the generic inline text for every
+duty: for English, `MBTextManager.GetLocalizedText` returns the inline text and never looks the key up
+(v1.4.8 `MBTextManager.cs:264`, the lookup is on the non-English branch).
+- **Why missed:** the localization gates check that a key has a row and a translation, not that the inline
+  English at the call site is the row's English.
+- **Prevent:** a composed key must carry the row's own English inline (read it from the data that owns it);
+  a generic inline fallback is for a row that no longer exists, never the normal path. Test the English
+  path by asserting the source string, not only the key.
+- **Source:** 1.5.x `rca-enlistment-duty-text-2026-10-26.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Follow a UI value to what renders it before you write it (#993, #994, 2026-10-24; repeat of #591)
+Five BannerColorPersistence patches set `Color1` and `Color2` on a `CharacterCode` after
+`CreateFrom` had built its `Code` string. `Code` has a private setter (v1.4.8 `CharacterCode.cs:18`) and is the only field the
+portrait pipeline keeps and parses, so no clan colour reached a portrait since the feature shipped,
+and the feature doc told the next author to do the same. In the same review, Refuge wrote a "zero
+wage" line that no 1.5.x prefab binds, and decorated clan rows at list build when every row's own
+refresh reset the name a moment later.
+- **Why missed:** each write looked correct against the property it set; nobody traced the value to
+  the widget binding or the renderer's input, and nothing in game or in a test compared the result.
+  This is the class of the nameplate redesign that lost relation colour for five months (#591).
+- **Prevent:** before writing a UI value, find who reads it on the installed version (the prefab's
+  `@Binding`, or the method that builds the renderer's input) and when that reader runs; list every
+  place the engine builds the object (a constructor can bypass the method you patch). For a built
+  value object such as `CharacterCode`, rebuild it, never mutate a field the builder already
+  consumed. Pin the chain with a test, and a gate where a pattern is known bad (here a source scan for
+  `.Color1 =` in the BannerColorPersistence hooks).
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-banner-colors-refuge-rows-2026-10-24.md` findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A language_data.xml with a name and no text_processor resets the language's grammar processor (#1026, 2026-10-26)
+`LanguageData.Deserialize` (v1.4.8 `LanguageData.cs:107-111`) assigns `TextProcessor` whenever `name` is non-empty, and takes it from the `text_processor`
+attribute, which is null when absent. The live `TAOM_Map` and `LOTRLOME_Armory` files carried `name` and no processor, so
+wherever one of them loads after Native it resets the language to the default processor, whose `ProcessToken` prints
+nothing. Eight languages were affected: English (lords' parties read "Aragorn Party" for "Aragorn's Party", from the live
+Armory root file), and Italian `{.di}` and `{.a}`, French `{.cl}`, Turkish `'{.e}`, German, Polish, Russian and Spanish.
+TAOM's own files had only `id`, so nothing restored it. TAOM's `SubModule.xml` pins no load order against these modules, but TAOM_Map's `SubModule.xml` pins TAOM before TAOM_Map
+(`id="TAOM" order="LoadBeforeThis"`), so the
+rule is not "TAOM loads last": every module's file with a `name` must carry the processor. `TAOM.Dependencies` is the one exemption: its install-only files carry a `name` and no processor, and are safe only because its `SubModule.xml` lists Native in `ModulesToLoadAfterThis`, so it always sorts before Native.
+- **Why missed:** `strings-and-localization.md` said an absent `text_processor` keeps whatever another module set, and no
+  test read the attribute. The missing words only show in a running game.
+- **Prevent:** give every `language_data.xml` that has a `name`, the root English file included, the `text_processor`
+  Native declares for that id, and none where Native declares none. `LanguageProcessorTests` checks TAOM's files, and
+  `tools/check_external_loc_coverage.py` fails on a live `TAOM_Map` or `LOTRLOME_Armory` file (root or per language)
+  that has a `name` and a processor different from Native's. Players get the fix only from a release with new TAOM_Map and Armory packages. Read the engine's `Deserialize` before writing a rule about an absent
+  attribute.
+- **Source:** 1.5.x issue #1026. Known effects, not fixed here: an untagged TAOM name can take the gender of a word tagged earlier in the same text in IT, SP, DE, PL and RU (Spanish "en el Minas Tirith"), which is #1023's work; French `{.dl}`/`{.cl}` put a bare "de" or "à" before an untagged name ("de Le Poing de Fer"), also #1023; Turkish `{._}` lowercases with Turkish rules ("ısengard"), as the engine's processor does for vanilla names, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A line a hostile NPC says to the player must not name the player's people (Bandit Voices, #900, 2026-10-26)
+The Blacklocks dwarves called the player "tall-folk", Gundabad orcs called them "softskin", and Dunlendings
+"lowlander". A TAOM player can be a dwarf or an orc, robbed by the bandits of their own people, and every such line then
+reads wrong. Vanilla's robbery lines never name the listener's people.
+- **Why missed:** each line was written in the speaker's voice, with a Man of the West in mind as the listener.
+- **Prevent:** write a line spoken to the player in the speaker's voice, but name the player only in words that fit
+  every playable race and gender ("stranger", "traveller", an insult that names no people). Add a pattern test over
+  the strings file for listener names and gendered words, as `BanditVoicesDataTests` does.
+- **On this tree:** This incident ran on the 1.5.x line, and `BanditVoicesDataTests` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-bandit-voices-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before deleting a translation row as redundant, render the vanilla row it falls back to (2026-10-26)
+TAOM's language rows for 177 vanilla keys looked redundant: each only reworded vanilla's English, and the rule says a
+rewording takes no TAOM row. Deleting them all would have shown blank kingdom names and gold amounts in 35 pairs, where
+vanilla's own translation uses a variable the game never sets, and wrong articles or dropped prepositions in 334 more, where vanilla's
+grammar functions need a gender tag or a `{@Type}` attribute that TAOM's names lack.
+- **Why missed:** the triage compared English text and meaning, not what each language's vanilla row renders with
+  TAOM's data.
+- **Prevent:** for each (language, id) a deletion hands back to vanilla, check every variable in vanilla's row against
+  what the 1.5.x call site sets, and every grammar function or token (`{#GENDER}`, `{#TYPE}`, `{.cl}`, Italian `{.di}`/`{.a}`/`{.da}`) against the tags
+  on TAOM's names. Keep TAOM's row where vanilla's would render wrong, and record the pair with its reason in
+  `kept-vanilla-key-rows.txt`. Decode vanilla's language files by their BOM: the TR files declare utf-16 but are UTF-8.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab clone inherits nothing: pin it to the vanilla file it hides (1.5.x, 2026-09-15)
+Bannerlord 1.5.x added ship-banner widgets to the party nameplate prefabs and `PartyNameplateWidget.OnUpdate` dereferences `ShipBannerContainerWidget` on its first frame, unguarded. TAOM's two nameplate clones, re-based on 1.5.x the day before, replace the vanilla files outright, so the property stayed null and every nameplate threw on the campaign map. The same failure shipped on 1.5.x with `BloodFeudIconWidget`, and the clone carried a comment saying so.
+- **Why missed:** every other layered surface inherits engine additions (an additive model calls `base`, a stylesheet sees the merged document, a postfix runs after the new body); a cloned prefab is the one full replacement, and the three prefab gates checked element types, extension XPaths and the snapshot, never the clone against the file it hides. The 1.5.x lesson went into a comment, not a test.
+- **Prevent:** `PrefabCloneWidgetReferenceTests` pairs each TAOM prefab with the vanilla prefab of the same basename and requires every attribute that names a Widget-typed property on the element's widget class to survive in the clone; value attributes TAOM changes on purpose are ignored. When a bump touches a vanilla prefab TAOM clones, re-base the clone on the installed file and re-apply TAOM's edits, never hand-merge the attribute you noticed.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-v1.5.3-nameplate-clone-2026-09-15.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pin a GUI prefab copy to the vanilla file it replaces (#1031, 2026-10-27)
+TAOM's copy of `PartyTroopTuple.xml` replaces vanilla's by file name, so a widget that vanilla adds after TAOM's last re-sync
+never reaches players. The Execute button lost vanilla 1.5.x's blood-feud mark this way, and kept a 1.3-era `ValueFactor`.
+The 1.5.x changeset listed the file as changed, but that bump re-based only `PartyScreen.xml` and the nameplates, and
+`PrefabCloneWidgetReferenceTests` checks only reference attributes, so a missing decorative widget passed every gate.
+- **Why missed:** no gate compares a whole TAOM copy with the vanilla file it hides, and the engine-bump step re-based only
+  the copies someone remembered.
+- **Prevent:** give every TAOM copy of a vanilla prefab a LiveInstall test that compares it with the installed file element
+  for element, excluding only TAOM's documented edits (`PartyTupleVanillaParityTests` is the model). A copy with no TAOM
+  edit should not exist: delete it and let vanilla load.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-tuple-blood-feud-2026-10-27.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab element is live only if its consumer is: trace who reads it before you edit it (#1027, 2026-10-26)
+A recommendation to ease the character selection screen's `LeftPanel` panel rested on its `VisualDefinition`, but no
+widget in that prefab names it, and Gauntlet resolves a definition only from a widget in the same prefab, so the edit
+changed nothing. The file is a clone of vanilla `ClanMembers.xml` whose panel widget dropped `VisualDefinition="LeftPanel"`.
+The same shape sat behind the dead prefabs of #1022 and #1024.
+- **Why missed:** the definition looked complete, and nothing checks that a definition is used.
+- **Prevent:** before changing a definition, constant, brush or prefab, find the element or code that consumes it (a
+  `VisualDefinition="X"` attribute, a `!Constant` reference, a tag, a movie load); if there is none, delete it instead.
+- **On this tree:** This incident ran on the 1.5.x line, and `LeftPanel` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-panel-ease-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

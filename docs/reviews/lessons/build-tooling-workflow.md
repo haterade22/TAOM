@@ -1792,7 +1792,7 @@ those tools, so the documented happy path was the bypass.
   a claim about the set of routes to an effect, and that set grows silently as tools are added.
 - **Prevent:** when a hook guards an EFFECT (a commit, a file write, a push), enumerate every
   tool that can produce it, not just the one you had in mind. Deny the alternatives you do not
-  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json`,
+  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json` (untracked since WP142; the git and filesystem servers left `.mcp.json` with WP116),
   and the read-only ones are untouched.
 - **Source:** 2026-08-31 audit, `docs/reviews/rca-hook-harness-hang-2026-08-31.md`.
 
@@ -2111,3 +2111,1693 @@ the total. The tool's tests assert behaviour, so they stayed green.
 - **Why missed:** each pair had a genuinely shared symbol, and the sentence claiming agreement was written about that symbol. Neither test suite ran the two consumers on one fixture where the precedence or the routing around the shared symbol would give different answers, so nothing could fail.
 - **Prevent:** when a doc or docstring says two tools cannot disagree, write the test that would make them disagree: one fixture, both consumers, an input chosen so the logic AROUND the shared symbol (precedence, routing, scaling granularity) is what decides. If the second consumer needs data the first has and it lacks (the validator had no item folders), add the data rather than approximating (culture for folder).
 - **Source:** #583 deep review, 2026-09-13, `docs/reviews/rca-kingdom-cap-curve-2026-09-13.md` findings 1 and 2.
+
+### When a fact moves, grep every statement of it (plan 016, 2026-09-24)
+Plan 016 moved the MCP deny list into the tracked `.claude/settings.json` and pinned four servers
+in `.mcp.json` and `.codex/config.toml` on the 1.5.x line. The files the plan listed were right; four other places
+stayed stale: `.vscode/mcp.json.example` and a `.mcp.json` snippet in `kingdom-voices.md` kept the
+unpinned launch strings, a lesson's **Prevent:** still sent deny edits to the untracked file, and
+the ModuleData activation step still said the server was enabled for every clone.
+- **Why missed:** the plan's scope list was treated as the complete set of places the fact lives.
+  The audit reads only `.mcp.json`, so no gate saw the other copies.
+- **Prevent:** before committing a change that moves a file, renames a setting or pins a value,
+  `git grep` the old location and the old value across the repo (docs, lessons, templates,
+  examples) and fix or consciously leave each hit. A recount ("Three things" to "Two things")
+  re-derives the list rather than deleting one item.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D5, D6, D7, D10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Give the command that writes the file itself (plan 016, 2026-09-24)
+The migration note told developers to restore their settings with
+`git show <sha>:<path> > <path>`. In Windows PowerShell 5.1 (installed on the desktop) `>` is
+`Out-File`, which wrote `FF FE` plus UTF-16LE; Git Bash and pwsh 7 write the bytes unchanged.
+- **Why missed:** the command was written and tested in Git Bash and read as portable.
+- **Prevent:** in a documented command that recreates a file, let the tool write it
+  (`git restore --source=<sha> -- <path>` writes the working tree only and leaves an ignored path
+  unstaged), or name the shell. Never rely on a shell redirect for a file another program parses.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Untracking a file another live branch tracks changes every switch and every new worktree (plan 016, 2026-09-24)
+Plan 016 untracked `.claude/settings.local.json` on `bannerlord-1.5.x` only. Its note covered merge
+and pull, but `bannerlord-1.4.5` still tracks the file: git silently overwrites an ignored file
+when a switch brings in a tracked one, and removes it on the way back. A worktree created after
+the untrack starts with no copy at all. This line untracked it in WP142; `1b00d1acd` and older still track it.
+- **Why missed:** the note traced one transition (merge or pull on one branch), not every way a
+  checkout's tree changes.
+- **Prevent:** when untracking a per-user file, list each live branch that still tracks it and
+  state in the migration note what a switch, a new worktree and a fresh clone do to the user's copy.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A Visual Studio launch deploys the whole working tree, refs to held-back Armory items included (2026-09-29)
+To keep a load test to two Armory mesh swaps, four new items were held out of the live Armory while the repo already
+named them. The launch came from Visual Studio, which builds and deploys the working tree (MSBuild 19:22:05,
+`TAOM.dll` 19:22:11, the game 19:22:23), so the deployed `harad_elephant_rider` rolled two rosters whose HorseHarness
+named nothing: 14 of 29 elephants spawned bare, with no platform and no crew (`wears harness 'none'`). An earlier
+session under that debugger ended with no crash log and no Windows error event; whether the debugger caught a native
+crash is unestablished (the repo's default Visual Studio profile, `Main/Properties/launchSettings.json`, debugs managed
+code only).
+- **Why missed:** "nothing deploys until a build" was reasoned about the session's own build commands, while the
+  maintainer's launch path is itself a build.
+- **Prevent:** land Armory items before any repo data that names them (a `BROKEN_ITEM_REF` means the tree is not
+  launchable), and when a session ends with no crash record, ask whether a debugger was attached, and what it showed,
+  before reading the silence as a clean exit.
+- **Source:** 1.5.x TAOM logs `taom_debug_2026-09-29_19-22-43.log` and `_19-29-26.log`, and `docs/features/elephant.md` "Package the Armory", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A subagent's issue number is a claim: check it against the tracker (2026-09-29)
+A builder subagent tagged the elephant change "#694" in five comments across code and tests. #694 is the troll
+bandits, and no issue existed for the work; every other `#694` in the tree was the trolls'.
+- **Why missed:** the brief named no issue, and the agent filled the gap with the most recent number in its context.
+- **Prevent:** brief a subagent with the issue number or say there is none, and grep its diff for `#[0-9]+` before
+  accepting it.
+- **Source:** the 1.5.x KEYforce art session, 2026-09-29 (`Main/Features/Elephant/`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A backup written beside a live module file ships with it: write it to the quarantine (2026-09-29)
+The 14 backups for the KEYforce wiring went in as `*.bak-keyforce-2026-09-29` beside the live Armory files, and
+`.bak` breaks the Cloudflare distribution ([module-backup-sweep.md](../../reference/module-backup-sweep.md)). They were
+moved to `E:\Bannerlord_Backups\module_bak_sweep_2026-09-29\` with their hashes checked, before any package.
+- **Why missed:** the XML I/O convention says to back up before a destructive write and never with an `.xml`
+  extension, but not where; the sweep doc says where, and nothing links the two.
+- **Prevent:** write a live-module backup straight to `E:\Bannerlord_Backups\module_bak_sweep_<date>\<Module>\<same
+  relative path>`, or run `pwsh tools/sweep_module_backups.ps1 -Apply` before a package.
+- **Source:** 1.5.x `docs/reference/lotrlome-spider-mount-changes.md` "2026-09-29", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before hand-editing a data file, check who writes it; an owned file goes through its owner (2026-09-29)
+A one-off translation script inserted rows by cloning an anchor line. Two of its targets are generated:
+`taom_troop_name_strings.xml` (its header says "Do not hand-edit; re-run the generator") and the 12
+`tools/translation_cache/*.json` (sorted on every save by `translate_with_claude.py`). The content was right and the
+order was not, so the next save by either owner would have landed a reorder hunk in an unrelated commit. The same
+session rewrote one sentence of the 1.5.x `/armory-audit` skill to forbid editing the mirror and left the file's second
+mention of the mirror in place.
+- **Why missed:** the script checked bytes and parse, not ownership; the skill fix edited the sentence that misled,
+  not the rule.
+- **Prevent:** read a file's header and `tools/README.md` for a generator before editing it, and run the owner
+  (`generate_name_localization_strings.py --apply --category troop`, `translate_with_claude.save_cache`). When changing
+  a policy sentence, grep the same file for its other mentions.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F7 and F8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A memory card's "UNCOMMITTED" is a claim about the past: grep the release commit before saying what ships (v2.0.33, 2026-10-04)
+Before the v2.0.33 cut this session told Mike that nine untranslated `taom_tr_*` strings were unused by shipped
+code. The Tournament Rewards memory card said "UNCOMMITTED, review owed"; in fact Mike's mixed commit `9e2a39f4` had
+carried the whole feature to trunk two days earlier, registered in `FeatureModules.cs:23`, with no review.
+- **Why missed:** the card was read as current state; nothing in git flags a feature that reached trunk without a
+  review record.
+- **Prevent:** before telling Mike what a release contains, grep the code at the commit being released (`git grep
+  -n <key> <sha> -- Main`), and for each feature in the range check that a review record exists
+  (`docs/reviews/rca-*`). A card that says UNCOMMITTED for files `git log` shows on trunk is stale: update it.
+- **Source:** 1.5.x `docs/reviews/rca-tournament-rewards-2026-10-04.md`, "How it shipped unreviewed"; the Mouth of Sauron's gear went the same way (`docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pick a release number no channel already carries (v2.0.33 renumbered as v2.0.34, 2026-10-04)
+v2.0.33 was tagged and pushed while the testing channel already held an untagged v2.0.33 build of 2026-10-02
+(`bc39f6e4` plus uncommitted work, by its DLL stamp), so a tester's "v2.0.33" was not the tagged code. Mike asked for
+v2.0.34; the same happened with v2.0.31 on 2026-09-26.
+- **Why missed:** the release pre-flight checked git tags only; an untagged channel build is invisible to git.
+- **Prevent:** `/release` Phase 1 item 4b reads the `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM`
+  before choosing the number; on a machine without that folder, it asks Mike.
+- **Source:** the 1.5.x v2.0.34 release commit `18a4e402`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Commit a single path with `git commit -- <path>` when anything else is staged (B4a, 2026-10-22)
+A docs commit ran `git add <skill file> && git commit`, and `git commit` with no path commits the whole index. The index
+already held 15 staged `git mv` renames of an unfinished batch, so the pushed docs commit (1.5.x `0a8d61a4e`) moved the files
+without the core changes and did not build on its own until the batch commit (1.5.x `10f1f0b80`) landed.
+- **Why missed:** the subagent's report said the renames were staged; the commit step checked the working tree, not the
+  index.
+- **Prevent:** run `git diff --cached --name-only` before every commit and compare it with the paths you meant to commit.
+  When the index holds anything else, commit with `git commit -- <path>`, which commits only that path. Never push a commit
+  whose file list you did not read.
+- **Source:** 1.5.x commits `0a8d61a4e` and `10f1f0b80`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator that pastes free text into a file it later parses must escape that text's delimiters (plan 020, 2026-09-24)
+`tools/changelog_from_commits.py` copied commit bodies verbatim into `CHANGELOG.md` and then, on the
+next release, searched the whole file with `^## v…` to refuse a duplicate. A body that showed an
+example heading (`## v2.0.32 (2026-11-01)`, even inside a code fence) made the v2.0.32 run refuse,
+and any heading-shaped body line added structure to the file. Codex found it; six lenses did not.
+- **Why missed:** every fixture body was plain prose and every test ran one release. The design
+  lens dismissed escaping because none of 916 past bodies had a heading, which judges the defect
+  by history when the input is bodies not yet written.
+- **Prevent:** when a tool embeds text it does not control inside a format it will parse again,
+  escape the format's delimiters on the way in (here, lines CommonMark reads as ATX headings, which
+  leaves `#622:` alone) and write a test that runs the tool twice, the second run reading the
+  first run's output.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Retiring a duty: search for the duty, not for its phrases in the folders you expect (plan 020, 2026-09-24)
+Plan 020 retired the hand-written CHANGELOG. Its sweep grepped a fixed list of folders for fixed
+phrases, so eleven live instructions survived (`docs/features/` recipes, the feature-doc template,
+the `commit-split` routing row, two lens prompts), a rule still said a deleted hook enforced the
+duty, and `release-process.md` kept the old step order that `/release` had just reversed. The
+executor wrappers under `plans/` still ordered hand entries.
+- **Why missed:** a list of places is a guess about where the duty is written. Reworded
+  instructions ("Update CHANGELOG", "Add to CHANGELOG", "the CHANGELOG `Not-tested:` line") pass a
+  phrase grep. Repeat of "A structural refactor's leftover-reference sweep must cover living docs"
+  (2026-07-01).
+- **Prevent:** grep the whole repo, case-insensitive, for the artifact's name (`changelog`) with no
+  folder filter, then classify each hit as history (leave it) or instruction (fix it). When a skill
+  changes its step order, re-read the doc it calls its "Full contract" in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C5, C6, C13, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Anchor "was X changed" checks and release ranges to a fixed commit, not HEAD (plan 020, 2026-09-24)
+Two defects in one change. The completeness lens checked for a hand edit with
+`git diff --name-only HEAD -- CHANGELOG.md`, which sees only uncommitted edits, so on a branch
+that had rewritten the file it printed nothing. And `/release` generated the section from `HEAD`,
+then tagged `HEAD` phases later, so a commit landing in between was in the tag and in no section.
+- **Why missed:** each check was right at the moment its author pictured (`/verify` before a
+  commit; a single session cutting a release) and was reused where `HEAD` means something else.
+- **Prevent:** a review check diffs against the review's base (`HEAD` only for uncommitted work).
+  A multi-step procedure that reads a range resolves the end to a SHA once, prints it, checks it
+  before committing, and tags by SHA.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `ReadAllText` strips the BOM, so a "keep the BOM if present" check on its result can never fire
+A one-number edit to `docs/reviews/LESSONS-LEARNED.md` was made with PowerShell `[IO.File]::ReadAllText` then `WriteAllText(..., new UTF8Encoding($raw.StartsWith([char]0xFEFF)))`. `ReadAllText` detects the BOM and removes it from the string it returns, so `StartsWith(0xFEFF)` was always false and the write dropped the file's `EF BB BF`, a hunk nobody asked for in a file two sessions were editing.
+- **Why missed:** the check read as a preservation guard and was never run against a file known to have a BOM; its input had already lost the thing it was testing for.
+- **Prevent:** decide the BOM from bytes (`[IO.File]::ReadAllBytes(p)[0..2]`), or edit with the Edit tool, which keeps the file's encoding. After any scripted rewrite of a tracked file, `git diff --stat` it: a line-1 hunk you did not intend is the tell.
+- **Source:** 1.5.x `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md` deep review finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A PreToolUse gate's decision counts only under `hookSpecificOutput`; prove a gate live (#647, 2026-09-23)
+Nine TAOM gates printed `{"permissionDecision": "deny", ...}` at the top level of their JSON, and Claude Code ignores that form, so no deny or ask they returned was ever honoured: the destructive-git prompt, `/freeze`, the commit-label, CHANGELOG, ModuleData and doc-drift gates. A debug dump showed the label gate returning a deny in 0.25 s while the commit ran.
+- **Why missed:** `harness-facts.md` stated the top-level form as the contract, and `tools/test_hooks.sh` judged a decision by matching the text `"permissionDecision":"deny"`, which the nested form contains too. Every test ran a gate through bash; none ran a tool call through the harness. The hooks catalog's "Hard-blocks" lines described the source, not an observed refusal.
+- **Prevent:** print `{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":...,"permissionDecisionReason":...}}` or exit 2. `test_hooks.sh` 5c fails the top-level form statically, and section 4 reads decisions the way the harness does. A gate is done when a live tool call it must stop has been shown refused (`hook-authoring.md` "Prove a gate live").
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Hook Python reads stdin in the ANSI code page: one character outside it blinded every gate (#647, 2026-09-23)
+On Windows a piped stdin and stdout default to cp1252. A command holding a character outside it made the hooks' extraction `print(command)` raise inside `except: pass`, the command came back empty, and each gate treated it as nothing to check. With the old `_pybin.sh`, `NOTE=→ git push --force origin bannerlord-1.4.5` passed the force-push block.
+- **Why missed:** every test payload was ASCII, and the bare `except` turned an encoding error into the gate's "not my command" path, which is silent by design.
+- **Prevent:** `_pybin.sh` exports `PYTHONIOENCODING=utf-8` for every hook that sources it. Test a gate with a non-ASCII command as raw and as escaped JSON; a new gate copies those cases.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a shell command, Markdown or YAML with its parser, not a line regex (#647, 2026-09-23)
+Three gates approximated a language with regexes and each broke on valid input. The commit gate missed `$'...'` quoting, attached `-m"..."` and concatenated words, and took option-shaped prose inside a message for a real option. The import scan closed a four-backtick fence on a three-backtick line and read a code span across lines as prose. The budget took a rule with unparseable frontmatter for path-scoped.
+- **Why missed:** each regex matched the forms seen so far, and every test used those forms.
+- **Prevent:** tokenize shell with `shlex` (decode `$'...'` first, split at `;`, `&&`, `|` and unquoted newlines) and read each command's own options; scan Markdown by its documented rules (fence character and length, spans across lines inside a paragraph); parse YAML with `yaml.safe_load`. Test the unusual forms the language allows, not only the usual ones.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` C2 to C6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timeout check that picks hooks by what they launch misses the one slow for another reason (#647, 2026-09-23)
+`check-claude-files-tracked.sh` asked git two or three times per file, took 6 s against its 5 s registration, and was killed on every commit, which reads as a pass. `test_hooks.sh` check 3 times only hooks that launch a `tools/*.py`, so it never looked at this one: the 2026-08-31 "measure the slow path" lesson, missed a second time by how the check chose its hooks.
+- **Why missed:** the check discovered hooks by their external tool, not by being a gate.
+- **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A here-string of 65,537 to 65,664 bytes hangs Git Bash forever, and a killed gate fails open (#681, 2026-09-26)
+On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose text is 65,537 to 65,664 bytes never
+returns: up to 65,536 bytes bash feeds it through a pipe, from 65,665 through a temp file, and in between it blocks
+writing into its own pipe before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
+`mapfile <<<`, an expanding `<<EOF`, even `: <<<` with no reader). Ten hook sites fed a payload or a git name list
+through `<<<`, so a force push to a trunk, a `reset --hard` or a broad `add` padded into the window hung
+`validate-push.sh`, `block-dangerous-git.sh` and `block-broad-git-add.sh` until the harness killed them, and a killed
+gate allows. The staged-name sites are reachable too: four commits in TAOM history list over 64 KiB of paths. The
+issue proposed `done < <(printf '%s\n' "$X")`, which never hangs but forks on every call (22 ms each) and makes bash
+read a pipe one byte at a time: 2,155 ms for a 400 KB loop against 585 ms for the here-string and 22 ms for an
+array split, which would have pushed `validate-push.sh` past its 5 s registration on a large command (#680).
+- **Why missed:** a here-string reads as an in-memory string, so nobody sized it, and every test payload was either
+  small or far above the window; a hang only 128 bytes wide is invisible to a test that doesn't aim for it.
+- **Prevent:** split hook text without a redirection: `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for`
+  loop (no fork, empty lines dropped, variables set in the loop stay visible), or `set -f; T=($X); set +f` for words;
+  keep `set -f`, `set +f` and the IFS restore on one line. `tools/test_hooks.sh` 4e refuses a here-string or an
+  expanding here-document in any script a hook registration runs, and 7h sends payloads sized into the window
+  through the gates. Measure an alternative's cost on large text before proposing it as a fix.
+- **Source:** 1.5.x issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`, `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`, `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate's suite passed a mutant that switched off its no-Python answer (#680 review, 2026-09-27)
+The #680 review changed `validate-push.sh`'s degraded branch from `&& coarse "no safe python"` to `&& exit 0`, and
+the whole hook suite stayed green: the starved-environment row checks only that a gate fails open and says so, and
+the mutant still printed its note while it allowed every push. Three more tests proved less than they claimed. The
+bytecode check passed whenever an earlier run had left `_pushjudge.cpython-*.pyc` in `.claude/hooks/__pycache__`.
+With a global `push.default=matching`, four 7c rows and two unit rows failed on a correct hook, since they read
+this machine's git config. And 4e skipped every line that opens with `#`, so a here-string on a line continuing a
+quoted string went unseen, as did one after a quoted `<< "Z"` inside a string, one in a `bash -s <<'SH'` body that a
+child shell runs, and any registration naming a script outside `.claude/`.
+- **Why missed:** each test was checked by passing on a correct hook, never by failing on a broken one, and each
+  leaned on the machine it ran on: a Python on PATH, a warm cache, an unset global setting.
+- **Prevent:** give every branch of a gate a row that runs on any machine (a sandbox copy of the hooks with
+  `PYBIN=""` appended to `_pybin.sh` takes Python away portably); run each new test against a mutant of the code it
+  guards and watch it fail; build a test's inputs fresh (a temp copy of the modules, a scratch repository whose
+  local config sets what the code reads); and make a scan assert that it covered what it claims (4e now fails a
+  registration naming a script it cannot find).
+- **Source:** 1.5.x the #680 and #681 review, 2026-09-26 (mutant H10; the 4e probes); `tools/test_hooks.sh` 4e, 7c and 7e; `tools/tests/test_pushjudge.py` (`CliTests`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook registered by a relative path stops running after a cd (#690, 2026-09-26)
+All 27 `settings.json` registrations named their script as `.claude/hooks/<name>.sh`. Claude Code runs a hook
+command in the session's current directory, and a Bash `cd` into a project subdirectory persists across tool
+calls, so after `cd tools` every hook failed to start with "No such file or directory". The harness treats that
+as a non-blocking error: the call ran with no force-push guard, no commit gates and no confirm prompts. The #680
+review proved it live (a trunk force push reached git after `cd tools`; 33 such lines in the session's debug
+log) and in a sandbox where the anchored form refused from the subdirectory. The skill-frontmatter hooks of
+`/freeze` and `/investigate` had always anchored on `${CLAUDE_PROJECT_DIR}` and kept working.
+- **Why missed:** every test ran hooks from the repo root, and the catalog recorded "cwd = the MAIN tree
+  regardless", which holds for a `cd` inside the same command, not for one that persists.
+- **Prevent:** register every hook as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`, and test a gate the way
+  the harness runs it: the registered command string through `bash -c`, from a subdirectory
+  (`tools/test_hooks.sh` 7j).
+- **Source:** 1.5.x issue #690; `docs/reference/hooks-catalog.md`; the review evidence in `E:\repos\taom-improve\scratch\680\review\bash\` (desktop), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The dirty-flag pathspec lists every compiled project root
+The build stamp marks a DLL `.dirty` when the tree has uncommitted changes under the compiled roots. A new project root
+absent from that pathspec leaves a stamp that reads clean while its sources are modified.
+- **Why missed:** nothing ties the pathspec to the list of compiled projects.
+- **Prevent:** when a project joins the module, add its root to the pathspec in `Directory.Build.props` in the same
+  change and pin it with a test.
+- **Source:** 1.5.x B3 review, 2026-10-22, ADR-013, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Renaming a convention or deleting a log line: grep the review harness and the tools for the old text (plan 009, 2026-09-24)
+Plan 009 replaced every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` and collapsed nine catch blocks. The Data Flow lens (`lenses/5-data-flow.md`) and the Harmony lesson still told reviewers to grep for the old spelling and flag its absence HIGH, so every later patch review would raise a false HIGH. `tools/triage_battle_load.py` and `battle-load-diagnostics.md` still sent triagers to the deleted "Patch43 diagnostics failed to apply" warning.
+- **Why missed:** the plan's maintenance notes named the one rule line it knew about; nobody grepped `.claude/`, `docs/reviews/lessons/` and `tools/` for the old text, and no build or test reads them.
+- **Prevent:** when a change renames a call convention or deletes a log message, grep the whole repo for the old literal (code, `.claude/`, `docs/reviews/lessons/`, `tools/`, feature docs) and update every consumer that acts on it in the same change; list the rest as follow-ups.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timing stamp reads its clock outside its own work: start after its setup, end before its lines
+The `[Lifecycle]` dispatch line (plan 040) started its clock before the stamp swapped every listener by
+reflection and read the end only after it had written every handler and event line, each a synchronous
+INFO flush. Three texts then called `ms - listeners_ms` the engine's receivers. The sibling `[LoadXml]`
+path read its end tick before logging and was right.
+- **Why missed:** the stamp was reviewed for having its lines and totals, not for what each window
+  contains; the oracle's fake clock never advanced while logging, so no test could see it.
+- **Prevent:** in a stamp, take the end tick first in the closing call and start the window after any
+  setup the stamp itself does; pin it with a test whose logger (and adapter) advance the fake clock. A
+  sentence that says what a difference of two numbers is cites the clock reads that bound it.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` row 1 (Standards, Engine, Efficiency, Data flow), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A once-only reason line has one latch per reason, and every path that writes it does what it says
+`[Lifecycle] per-handler timing off for this session` was written by a gate, clock, logging or restore
+fault that turned nothing off, and those faults spent the line's single latch, so a later real
+switch-off logged no reason. The settings gate beside it returned "off" from a catch with no line at all.
+- **Why missed:** D6 was checked for the existence of once-only reason lines; nobody listed each caller
+  of the line and checked the consequence it states, and a catch returning the off value was read as
+  fail-safe rather than as a disable path.
+- **Prevent:** for each reason line, list every writer and confirm each one does what the text says;
+  give unrelated faults their own line and latch (the X3 and C5 "stamp fault" shape); a catch that
+  returns the off value logs why, once or on change. Pin each with a test that a second reason still
+  logs after the first.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 2 and 3 (all six lenses), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### No Windows dump while a debugger holds the game: Visual Studio, or TaleWorlds' own Watchdog (2026-09-26)
+Three troll crashes in a row left no Event Log entry and no dump: Visual Studio was attached, so the access
+violation stopped in the debugger, and ending the session killed the process before Windows saw it. procdump
+`-e -w` then refused with "The process is already being debugged": the launcher starts `Watchdog.exe -p <pid> -dd
+...\crashes`, TaleWorlds' crash catcher, which attaches as a debugger itself.
+- **Why missed:** the earlier crashes of the day had produced dumps, so their absence read as a different crash
+  rather than a changed setup.
+- **Prevent:** reproduce a native crash with no debugger attached; if Visual Studio is attached, Detach All at the
+  exception, never Stop. Only one debugger can hold the process, so procdump cannot attach while the Watchdog runs;
+  a debugger's `$exception` still gives `_ip` and `_target`, enough to match the fault offset.
+- **Source:** 1.5.x `docs/features/troll-race.md` "The swing CTD", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native hash-map miss names its missing key in a register: read it from the dump, resolve it in game (2026-09-25)
+The +0x6590B9 crash was a chained hash lookup whose miss left a null row. The missing key stayed in `r9` in the
+exception context of all three dumps (6511, 6511, 6462); a one-off in-game scan of every action's clip index named
+it `anim_hill_troll_release_overswing_2h`. After that, reading the table's builder in the disassembly (RTTI named the
+owning class, the insert call named the rule) replaced three rounds of guessing the scope from crashes.
+- **Why missed:** the crash had been treated as unreadable because the dump holds no heap; the register needed no
+  heap.
+- **Prevent:** `python tools/native_crash_triage.py --dump <dmp>` now prints the faulting thread's registers; for a
+  lookup miss, find which register holds the key in the disassembly, then name it in game. Before widening a data
+  rule to dodge a native crash, find the code that fills the table.
+- **Source:** 1.5.x `docs/features/troll-race.md` "The swing CTD"; `tools/native_crash_triage.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Test a stated cause against the failures before fixing it (Bash tool length, 2026-10-21)
+CLAUDE.md said Bash heredocs "mangle backslashes and quotes", and agents kept hitting "unexpected EOF
+while looking for matching" anyway: 151 times in 51 session rows across every agent type. Measured
+over the whole history, the cause was length: `bash -n` accepts 58 of 61 of the failing commands,
+140 of 142 Bash calls at 8,000 or more characters (each ' counted as 4) failed, and none under 7,000
+did. A short heredoc full of quotes runs fine; the backslash half of the old rule is real (the tool
+halves `\\`). `check-bash-length.sh` now refuses the long commands with the fix in its reason.
+- **Why missed:** the rule was written from the symptom (a quote error, seen in heredocs that held
+  quotes), and every failing example also happened to be long, so nothing contradicted it.
+- **Prevent:** before writing a rule or gate against a recurring error, split the calls that fail
+  from the ones that pass on the suspected cause and on size; a cause that does not separate them is
+  not the cause.
+- **Source:** 1.5.x harness-retro-2026-10-21.md, proposal P3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change's sweep has two halves: readers of what changed, and text that states it (plan 007, 2026-09-24)
+The plan 007 decisions commit renamed a local (`alreadyShielded` to `alreadySeen`), added a class to `Dependencies/Foundation/` and wrote a "reword when plan 006 lands" list. Its sweep grepped for code that reads the old log format and the removed `ShieldedCount` (both clean) and stopped. A test comment kept the old local's name, two docs kept the folder's old class count (18, now 19), and the reword list missed a line on the same branch that makes the same claim. Two of the three repeat lessons above ("After a whole-word identifier rename sweep", "When a change alters what an artifact CONTAINS").
+- **Why missed:** "who reads this?" was answered; "what text describes this?" was never asked. A reword list written from memory of the decision covers the files the decision touched, not every file that states the claim.
+- **Prevent:** before the commit, `git grep -n <old identifier>` over the whole repo for every rename, comments included; `git grep -n -e "<N> classes" -e "<N>-class"` (or the folder name) for every file added to or removed from a folder a doc counts; and build any "reword when X lands" list by grepping the claim's own words (here "preserves the stack", "fallback paths") across `docs/`, `CHANGELOG.md` and the code comments, then list every hit.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md` findings 1, 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A dry run and the patch that adds it are chained with `&&` (2026-10-08)
+- **Why missed:** a heredoc patch meant to add a `--dry` flag to a doc-fix script failed on mangled backslashes (the
+  known heredoc trap), and the next command on the same shell line ran the unpatched script, which ignored `--dry`
+  and wrote 13 docs while review agents were still reading them.
+- **Prevent:** write scripts with the Write tool and give a script its dry-run mode when it is written; chain
+  dependent shell steps with `&&` so a failed step stops the rest.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 28, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A merge of parallel branches drops text and doubles tests without a conflict: replay every branch's additions and the merged test set (2026-10-04)
+The perf programme's integration trial merged 18 reviewed branches. Three passages a branch had added were gone (plan
+039's narrowing of a PatchShield lesson, plan 028's crash-capture facts, plan 039's per-target PatchShield table), and
+git auto-merged two overlapping tests from plans 028 and 041 into one class, one a subset of the other with a stale
+comment. A conflict resolved by keeping one side's paragraph leaves no marker for the other side's facts, and two tests
+added at different places in a file merge cleanly.
+- **Why missed:** the trial's lost-hunk check recorded the table's drop but did not raise it, because its rows named a
+  patch another branch had deleted and so read as obsolete; it compared lost lines, not doubled tests; and the fixups
+  swept for one deleted patch by name, not for every member the deleting branch removed.
+- **Prevent:** after an integration merge, replay every branch's added lines against the merged tree and raise every
+  drop; stale-looking content is rewritten for the merged tree, not dismissed. For each test file more than one branch
+  touched, list the merged tests and compare their assertions for one that is a subset of another. For each member a
+  merged branch deleted, grep the whole tree for its name.
+- **Source:** 1.5.x `docs/reviews/rca-perf-integration-fixups-2026-10-04.md` F2, F3 and F4; `plans/_audit/2026-10-02-perf/evidence/merge-map.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a change alters what an artifact CONTAINS, grep the docs for that artifact's inventory
+The crash bundle's file list is stated in four places: the header comment in `CrashBundleWriter.cs`, the `TryCopyFile` calls, `BuildManifest`, and `docs/features/crash-report.md`. Adding `diag.log` to the ZIP updated the three that live inside the writer, because editing that file makes them impossible to miss, and left the doc claiming a five-file bundle. The stale neighbour on the same table row (the Logs section still describing the RGL log as coming from `Documents`, months after the collector started probing `%ProgramData%` first) showed the whole section had gone unverified for just as long.
+- **Why missed:** the change was framed as "add a file to the ZIP", which is a code-shaped framing, and three of the four inventory copies are code. Nothing in the repo gates this: `lint_docs.py` checks version refs, orphan docs, config drift and dashes, and cannot know that a prose sentence enumerates a ZIP's entries. Teaching it to parse prose inventories is not worth building, so the discipline has to be the author's.
+- **Prevent:** before committing a change to what an artifact contains (a bundle, a report, a config schema, a package manifest, an export), grep `docs/` for the artifact's current inventory and update every enumeration. Treat a stale claim found next to the one you are fixing as evidence the surrounding section is unverified, and read the rest of it rather than fixing only your line.
+- **Source:** 1.5.x docs/reviews/rca-crash-log-readability-2026-08-19.md findings #1 and #2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release gate reads what the packager ships, and fails closed on every input it did not see (plan 017, 2026-09-24)
+`package_release.py --require-build` read one fixed path per module (`bin/Win64_Shipping_Client/<dll>`) while the
+packager copies every `bin/*/` DLL, so the Game Pass, server and Modding Kit copies shipped unread; the real patreon
+package's Dependencies server copy came from a third commit. The same gate skipped a module named `taom` (case), ran
+no check at all for `--require-build ""`, and certified the set after planning had silently dropped a requested module.
+- **Why missed:** the plan designed the gate from its inputs (a module name, a path, a rev string) and the tests built
+  only the one folder the gate expected. Nobody put the gate's read set beside the packager's copy set.
+- **Prevent:** derive a gate's input from the exact list the tool will act on (here `_copy_list`), validate the
+  requested set before any filtering drops members, casefold names that come from a Windows path, test an option with
+  `is not None`, and write one test per way the input can be smaller than what ships.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A missing marker proves nothing unless the producer could have written it (plan 017, 2026-09-24)
+The gate read "no `.dirty` suffix" as "built from a clean tree". A DLL built at a commit whose `Directory.Build.props`
+has no `TaomStampWorkingTreeState` target (the whole 1.4.5 line, every tag before plan 017) never writes the suffix, so
+a dirty build there passed as clean.
+- **Why missed:** the check tested for the bad marker and treated its absence as the good one.
+- **Prevent:** when a verdict rests on a marker being absent, first prove the producer at that revision could have
+  emitted it (here `git show <sha>:Directory.Build.props` contains the target), and refuse otherwise.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A JVM left with a non-daemon thread keeps its Python host alive after the traceback (2026-09-26)
+The failed first run above printed its Python traceback and then never exited: it sat at 1.5 GB until killed, and
+its background task never reported. A `jstack` dump showed one non-daemon Java thread besides `main`,
+`FelixDispatchQueue`, left by the half-started OSGi framework, and the JVM will not let the process end while one
+lives. A run that succeeds releases the bundle host and exits normally, so only the failure path hangs.
+- **Why missed:** a traceback reads as "the process ended". Only the missing `exit=` line from the wrapper showed it
+  had not.
+- **Prevent:** a tool that starts a JVM in-process leaves through `os._exit` once the JVM is up, after closing
+  what it opened (`tools/native_decompile.py` `exit_process`, tested both ways). When a run prints a traceback but its
+  task never completes, take a thread dump before killing it: the non-daemon threads name the culprit.
+- **Source:** 1.5.x #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test fake returns the text shape you imagine; Ghidra's C carries CRLF on Windows (2026-09-26)
+`native_decompile.py` printed every decompiled line ending in CR CR LF: Ghidra's `getC()` already uses CRLF on
+Windows, and Python's text-mode stdout added a CR to each LF. Redirected to a file the output doubled its line count
+(3,781 lines for about 1,900), and viewers show a blank line under every line of C. The 22 unit tests stayed green,
+because their fake backend returns `\n` text.
+- **Why missed:** the fake encoded the shape the author expected rather than the one the real API returns, the same
+  blind spot as the fixture lesson at the top of this file.
+- **Prevent:** normalise line endings where text crosses from a foreign runtime into Python's stdout, and assert on
+  the raw bytes in the integration test (`assertNotIn(b"\r\r\n", ...)`), where universal newlines cannot hide it.
+- **Source:** 1.5.x #688; `tools/tests/test_native_decompile.py` `GhidraIntegrationTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mute that greps for a token nothing writes is dead, and reads as working
+`check-deep-review.sh` muted its Stop reminder by grepping `agent-audit.log` for `deep-review|Standards Compliance|Efficiency.*Performance|...`, the review's lens titles. `log-agent.sh` writes only `[TS] agent_type=<type> agent_id=<id>`, and the reviewers ran as `Explore` and `taleworlds-researcher`, so across both log generations the mute matched 0 lines and never fired. The lesson above held it up as the muting example to copy.
+- **Why missed:** the consumer was written against what the author expected the log to hold, not against a line the writer had produced. Every run of the hook looked fine because a reminder that always fires is indistinguishable from one that fires correctly.
+- **Prevent:** a hook that reads another hook's output (a log line, a state file) gets a two-direction case in `tools/test_hooks.sh` that drives the REAL writer and the REAL reader together: without the event it must fire, after the writer logs it it must not. Section 7 does this for the deep-review mute; the pattern now names `agent_type=deep-reviewer`, the one token the writer emits.
+- **Source:** 1.5.x `/deep-review` overhaul review, 2026-09-18, `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate checked only against the case it was written for misses the history it guards (#1017, 2026-10-26)
+
+The first `check_mcm_default_flips.py` compared the settings against one release tag, so every flip that had shipped earlier was invisible, and it compared constant defaults as text, so a changed constant passed. Rebuilt to compare against every reachable release tag and to resolve constants, it found nine more settings.
+
+- **Why missed:** one base tag, constants compared as text, and silent OK paths (no tag, no settings found, a failed read, a partial class) that printed a pass.
+- **Prevent:** compare against every release the trap can reach; make every degenerate input fail loudly; prove the gate on the commit before the fix (it must fail there) before trusting a green run.
+- **Source:** 1.5.x `rca-settings-default-flips-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan item dropped mid-build is struck from the issue that promised it, in the same step (2026-10-01)
+#701 was filed before implementation and promised a `[MissionPerf] corpses=` field and a campaign-map advisor. The
+field was dropped (it duplicates `agents` minus `active`) and the advisor moved to the main menu, both for good
+reasons recorded only in chat; the issue kept promising them, and whoever closed it would have looked for a field
+that does not exist.
+- **Why missed:** the departure was a simplicity call made mid-build, and the issue, written first, was not on the
+  list of things to update.
+- **Prevent:** when a planned item is dropped or moved, edit the issue body (and the feature doc's departures)
+  in the same step, not at close.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A performance stage carries a measured cost, and is re-weighed after the stages before it land (2026-10-02)
+Plan 037 Stage D added a transpiler, a thread-static hand-off, a fallback and four log formats to skip one
+cache-backed distance read per positively scored town on a caravan's infrequent re-think, reversing a reviewed
+"cheap enough" decision (`rca-caravan-trade-2026-07-04.md` row 2) on a call count, not a time. Stage B1
+reordered two MCM toggle reads that Stage A, one commit earlier, had already made a cached field read. Six
+review lenses rejected D under the simplicity criterion and B1 bought nothing; both were removed.
+- **Why missed:** the plan costed each call site in isolation and before the earlier stages existed, and the
+  build step's contract asked for parity, not for a fresh simplicity verdict once the code was written.
+- **Prevent:** a performance stage states its win as a measured or bounded time (a profile, or the callee's
+  cost times its real frequency), never a call count multiplied out. A stage that reverses a reviewed
+  decision needs new evidence the review lacked. Before building stage N, re-state stage N's win against the
+  code as stages 1 to N-1 left it; drop the stage when the win no longer dominates its cost.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Reversing a toggle again: sweep every commit since the template, and re-verify its claims (2026-09-25)
+Shader Pre-compilation was parked (`5ae02f08`), re-enabled (`1e654021` and `1700156b`, #560) and
+parked again. The second park replayed the first one's file list and comments. Docs the re-enable
+commits had rewritten as live were not on that list, and a copied comment said the Patch21 postfix
+ran "per loading-screen frame"; vanilla calls `LoadingWindowViewModel.Update` every frame from a
+global layer.
+- **Why missed:** the older template looked complete because it once was; everything changed
+  between it and today was invisible to a replay.
+- **Prevent:** when undoing a change that was itself an undo, list files from every commit since
+  the template (`git log --stat <template>..HEAD --grep='#<issue>'`, not just the headline commit),
+  then grep the whole repo for the feature doc's slug and issue number and classify each hit as
+  history or living text (the "Retiring a duty" lesson above prescribes the same sweep). Re-check
+  every engine or library claim the template's comments make before copying them.
+- **Source:** 1.5.x `docs/reviews/rca-shader-precompile-repark-2026-09-25.md`, findings 1 to 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving a file out of a module does not remove it from installs: rename what a stale copy would still answer to (#627, 2026-09-19)
+The howdah prefab moved from `Main/_Module/Prefabs/` to `LOTRLOME_Armory/Prefabs` under the same name. The repo and the dev install were cleaned, but every release from v2.0.22 to v2.0.30 had shipped `Modules/TAOM/Prefabs/taom_howdah_agent.xml`, an in-place update keeps it, and the release channel folder is itself updated in place. Players would load two prefabs of one name, and which one the engine instantiates is native and undefined.
+- **Why missed:** "the deploy never deletes" was already a lesson (above), but it was read as a dev-machine fact. The move checked the dev install and not the installs players already have.
+- **Prevent:** when a file leaves a module and something is looked up by its name (a prefab, a string id, an XML id), rename the identifier so a stale copy is dead data, and pin the name the code asks for in a test. Deletion steps in the packager cannot reach installs already in players' hands.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Re-enabled parked code is new code: review the path the flag switches on, not the flag (#627, 2026-09-19)
+Howdah crew spawn sat behind a commented-out call from June to September. Turning it back on was a one-line change; the path behind it had drifted (the crew's formation comments still said HorseArcher, the rider had been Cavalry since June 29), carried a port deviation that booked crew deaths as the rider's (see adapters-taleworlds-api.md), and missed vanilla spawn parity. A seven-lens delta review found one HIGH and a dozen LOW in code that "already worked in June".
+- **Why missed:** "re-enable X" reads as a toggle, and the June code had once run, which read as proof.
+- **Prevent:** when a parked path comes back, review it as if newly written: trace it end to end against today's data and engine, and compare it with the reference it was ported from. Also: a validator described as read-only may write (`audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` on every run); re-run such a tool just before staging its output.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A scratch tool rebuilt at every bump needs a parse count, or "0 unresolved" means "0 of what I read" (2026-10-05)
+The bound-member body diff, rebuilt per bump as "forty lines", parsed snapshot rows with a regex that
+skipped every target carrying a generic-arity backtick: 27 of 292 rows, one a real change, while it still
+reported 0 unresolved. It also ran before the snapshot was regenerated.
+- **Why missed:** the tool counted what it compared, never what it skipped, and the skill told each bump
+  to rewrite it.
+- **Prevent:** regenerate the API snapshot first, then run the archived script and require its
+  `unparsed=0` (`/engine-bump` Phase 3). Promoting it into `tools/` with a row-count test is a follow-up
+  on #736.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A report a tool promises never changes the exit code is still on the exit-code path (plan 035, 2026-10-02)
+The release packager's new scene listing printed every shipped scene folder name. Under a piped stdout, which is
+cp1252 on Windows, a name outside the code page raised `UnicodeEncodeError` out of `main`: a clean dry run exited 1,
+and a real run stopped before the copy, although the change and its docs promised the report never changes the exit
+code. This is the third cp1252 stdout crash in TAOM tools, after `rebalance_troops.py`'s delta glyph and the #647
+hook extraction (both earlier in this file).
+- **Why missed:** "never changes the exit code" was checked as "adds no `return` or `raise`"; a print of a name the
+  tool did not write is a way out of `main` too. Every scene name on disk is ASCII, so no real run showed it.
+- **Prevent:** a tool that prints names it reads from disk calls
+  `sys.stdout.reconfigure(errors="backslashreplace")` (and stderr) at the top of `main`, guarded with
+  `hasattr(stream, "reconfigure")` for in-process tests. A section promised to be report-only runs inside its own
+  `try/except Exception` that prints the failure and goes on. Test both: a child run with
+  `PYTHONIOENCODING=cp1252` and a non-ASCII name, and a report patched to raise
+  (`tools/tests/test_package_release.py`, `TestSceneShaderCacheCli`).
+- **Source:** 1.5.x `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release blocker goes in the /release pre-flight, not only in a feature doc (#646, 2026-09-23)
+Mike kept the Custom-Battle test riders visible until release (D1), and the blocker was written in the feature doc,
+the workflow doc and the CHANGELOG, none of which `/release` reads.
+- **Why missed:** writing it down felt like tracking it.
+- **Prevent:** a "must happen before a release" item becomes a mechanical pre-flight line in
+  `.claude/skills/release/SKILL.md` (here `git grep -l taom_test_ -- Main/_Module` prints nothing).
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that checks less on a parsed reading falls back to the old check when the reading resolves nothing (#987, 2026-10-26)
+
+To judge `--amend` and path commits, the doc-drift commit hook began asking `_shellwords.py commit-plan` for the
+paths after `git commit` and checking only those. The reader took `2>&1` as the paths `2`, `>&`, `1`; the hook found
+no relevant file among them and allowed the commit without running the linter, on half the commit calls in recent
+transcripts. A path commit typed from a subdirectory and the `>|` form failed the same way. Before the change the hook
+judged the index for every commit, so a misread command could not shrink the check; after it, any misread path list
+narrowed it to nothing. The same review found the audit's new INERT-ROW exemption written from the brief's example
+(any `<XmlName>` registering the file) instead of the engine's condition for a load (an exact requested id).
+- **Why missed:** the reader was tested on the command shapes the brief listed, not replayed on real commands; the
+  #985 lesson (wrapped and grammar forms in every gate's test rows) was not applied to a reader that narrows a gate.
+- **Prevent:** when a parsed reading makes a gate check less (a narrower path set, a downgrade to a warning), keep a
+  fallback to the old check when the reading resolves nothing, and replay the gate on real inputs (the local
+  transcripts, the live install) against the base version before review.
+- **Source:** 1.5.x `docs/reviews/rca-tool-987-2026-10-26.md` findings 1 to 3 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Removing an MCP server means every scope that declares it (2026-09-29)
+Deleting the `github` entry from `.mcp.json` left the server loaded: the `github@claude-plugins-official`
+plugin, enabled in `.claude/settings.json`, ships a `.mcp.json` declaring the same server. The other way
+round, the `blender` and `substance-painter` servers existed but never loaded: `claude mcp add --scope
+local` had stored them under the repo's old `C:` path in `~/.claude.json`, and the repo moved to `E:`.
+- **Why missed:** a server's identity was read from one file, while Claude Code assembles it from the
+  project `.mcp.json`, every enabled plugin, and the user and local scopes keyed by project path.
+- **Prevent:** to add or remove a server, grep the plugin caches for its name as well as `.mcp.json`, and
+  prove the result from inside a restarted session with `/mcp`, not from a shell in another folder.
+- **Source:** 1.5.x `docs/reviews/adopt-ecc-2026-09-29.md` Step 4 and Step 6; `docs/reference/mcp-servers.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test oracle must not sit downstream of anything the code under test can swap out (plan 013, 2026-09-24)
+`tools/test_hooks.sh` 4c proved "this hook starts no Python" by counting starts of a fake interpreter pinned through `TAOM_PYBIN`. `_pybin.sh` probes the pin under a 0.8 s timeout and silently falls back to the real `python` when it misses, which counts nothing. Under load the check read 0 starts and blamed a prefilter byte-identical to seven that passed; the same fallback could pass a hook that does start Python. The builder saw the false failure, reran, got green, and did not record it.
+- **Why missed:** the counter was designed without reading the resolver's fallback, and its premise check ran once, before the rows, so it could not see a later probe miss. A zero count looks exactly like success (repeat of "A zero you did not prove is not a zero", above).
+- **Prevent:** observe the decision itself, not a side effect behind a timed or fallible step: 4c reads a `bash -x` trace for the `source` of `_pybin.sh`. When a test flakes once, find the mechanism before rerunning; a green rerun is not evidence the red one was noise.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
+Eleven gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+- **Why missed:** the plan's caveat did not reach the comment text it prescribed.
+- **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a before-case against the committed base, not the RED intermediate (plan 013 decisions, 2026-09-24)
+The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subject gate before the change. It passed only in the builder's intermediate tree (D39 applied, D40 not yet); the committed base, still filtering on `git`, denied it. The real base hole was `\u0067it commit`. The same entry reused a "240 cases, no changed decision" parity sentence whose script held no escaped payload, next to a bullet describing a changed decision, and two docs said 4d covers "each blocking gate" when its table has five rows.
+- **Why missed:** the example came from the nearest RED log, not from a run on the base commit, and the counts came from intent, not from the table or the run.
+- **Prevent:** for any "before the change, X happened" claim, run X on the parent commit's file (`git show <base>:<path>`) and quote that result. When a claim is reused after a further change, restate it against what the evidence can see. Count the rows before writing "each" or "every".
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither.
+- **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
+- **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate change that refuses less anywhere must be run against the old gate, not argued from examples (plan 027, 2026-09-24)
+Plan 027 made `validate-push.sh` refuse less on purpose in two places: a trunk named only in a
+trailing `#` comment, and an option value (`-o ci.skip`) taken for the remote. Each relaxation
+consumed text that another stage had already reinterpreted. The comment strip ran on the
+quote-blind split, so a quoted ` #` after a heredoc line holding one quote, or inside PowerShell's
+typographic quotes, hid the push. The value skip ran on quote-flattened tokens, so a lost empty
+value (`-o ""`) made it skip the remote. Eight shapes the old hook refused passed, under a comment
+that promised the gate "never refuses less than before".
+- **Why missed:** the plan and both cold reviews checked the named examples and wrote the promise
+  as a property; no test fed the old hook and the new one the same inputs.
+- **Prevent:** before merging any gate change that relaxes a shape, run a differential sweep: the
+  old hook from `git show <base>:<path>` beside the new one over prefixes (heredoc lines with one
+  quote, comments, `cd x;`), bodies and suffixes, under both tool names and on a trunk and a
+  feature branch, and treat every refused-then-allowed row as blocking unless it is the named
+  relaxation. A stage that drops or skips text must do it where the quotes and argument boundaries
+  are still known, or judge both readings (with and without the drop) and block if either does.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A translator between two shells must cover the target grammar's statement forms, checked with its own parser (plan 027, 2026-09-24)
+`_shellwords.py` read every PowerShell form in the plan's parser table and none outside it: an
+assignment (`$r = git commit ...`), the `.` operator, `${env:X}`, the typographic quotes, a quoted
+word closing its token, and a string or variable standing alone as a value. The assignment alone
+let an unlabelled commit and an unconfirmed `reset --hard` through two gates. The same loss of the
+literal-versus-command distinction made the commit gate read `pbpaste` as a commit subject.
+- **Why missed:** the reader was written from a list of forms to support, not from the grammar of
+  where a command can start; `[System.Management.Automation.Language.Parser]::ParseInput` was run
+  only on the listed inputs.
+- **Prevent:** for a reader that decides "is this a command", list every statement head the shell
+  has (assignment, call operators, value statements, pipelines, blocks) and pin each with the
+  shell's own parser output in the unit tests. Interpret a producer's output only when it can be
+  computed (a literal echo, `printf '%s'`); anything else stays unknown, as before.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 5 to 7 and 11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Time a hook on one long segment and on a 1 MB payload, not only on many short ones (plan 027, 2026-09-24)
+The fork-free quote strip in `block-broad-git-add.sh` beat `sed` on 100 short segments and lost
+badly on one 100 KB segment (2.5 s, quadratic). `validate-push.sh` started Python three times and
+ran a bash split over the raw text twice, which took a 1 MB PowerShell command to 3.5 to 4.8 s of
+its 5 s registration; a killed gate fails open.
+- **Why missed:** the timing rows measured the shape the change optimised for.
+- **Prevent:** a hook's timing rows cover many short segments, one long segment and a 1 MB payload
+  under each tool, and a text transform in bash names its complexity in a comment.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 8 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A differential sweep proves only the classes in its corpus; seed it from the fix's own mechanism (plan 027 convergence, 2026-09-26)
+The review fix for the quoted ` #` checked for a quote only inside each piece of the quote-blind
+split, and a 5,896-shape sweep came back clean. The convergence pass then put the separator inside
+the quoted value (`X="a;b #c" git push --force origin <trunk>` after a heredoc line holding one
+quote): the split cut inside the value, the piece holding the push began at the `#`, and its
+opening quote sat in the piece before. 28 of 612 shapes the base gate refused passed. The same pass
+found the assignment fix covered two left-side spellings of the five `ParseInput` accepts.
+- **Why missed:** the sweep's bodies came from the findings being fixed, so it tested the fix's
+  examples; nothing in it attacked the fix's own assumption (that a piece holds its own quotes).
+- **Prevent:** after a fix, name the assumption it rests on and add sweep bodies that break it (for
+  a split, put every separator inside a quoted value on both sides of the checked character); for a
+  grammar fix, list every form the parser's AST type admits (Variable, Convert, Member, Index,
+  ArrayLiteral) and pin each.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 16 and 18, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A bash judge ported to Python reads a line differently at every natural Python choice (#680, 2026-09-26)
+`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so a trunk force push
+carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed gate fails open.
+Plan 027's review had seen the cost and answered it with an order (lines that could force first, shortest first),
+which a message holding a force-like word beats. The fix moved the judge into Python (`_pushjudge.py`, run by
+`_shellwords.py verdict` in the reader's own start) under a 3.0 s deadline that asks on an overrun: the slowest
+2 MB shape now answers in under a second. A security gate's port must give every verdict bash gave, and each
+natural Python spelling of a bash step changes some. The #680 design audit judged 37,986 lines under three
+current branches against the bash judge and counted:
+
+| Natural Python choice | What bash does | Judgements that differ |
+|---|---|---|
+| `str.split()` | splits at space, tab and newline only (IFS) | 12,320 |
+| `str.lower()`, or bash under a named UTF-8 locale | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 99 each |
+| `str.isdigit()` for an fd number | `^[0-9]+$` takes ASCII digits only | 14 |
+| `fnmatch` for a refspec pattern | `[[ == ]]` pattern matching | 38 |
+
+The split is the dangerous one: the reader writes `\x1f` and `\x1e` inside a word to keep an argument whole, and a
+naive port let 546 refused hook runs through, the 7c row `git push --force -o "ci variable" origin` on a trunk
+among them. Two more sit outside the judge: bash's `$( )` dropped every NUL and saw a lone surrogate as `?`, so a
+line is judged as bash received it, and `str.splitlines()` on the candidate list breaks at an empty argument's
+`\x1e`. The port reads a `*`-only pattern exactly and takes one holding any other glob character as matching every
+protected name, which can only refuse more (git refuses such a refspec), instead of porting bash's bracket matcher.
+- **Why missed:** the per-word cost was measured in plan 027's review and treated with an order, which any content
+  can beat, rather than removed; and a bash judge's reading lives in bash's defaults (IFS, the locale, `$( )`),
+  which no line of the script spells out, so a port written from the script's text passes every ASCII test.
+- **Prevent:** pin each divergence with a line whose verdict was read from the bash judge's own functions
+  (`tools/tests/test_pushjudge.py`: 99 pins, and every 7c command with the target bash named), prove the pins bite
+  by mutating each choice back to the natural one, and switch only after a hook-level differential sweep against
+  the old hook shows zero refused-then-allowed rows (1,035 commands, 4,140 runs per hook). Delete the old judge
+  rather than keep it as a fallback: two readings drift. With no verdict, a coarse ask on a force marker in the
+  raw payload stands in for it.
+- **Source:** 1.5.x issue #680; `.claude/hooks/_pushjudge.py`, `.claude/hooks/_shellwords.py` (`verdict`), `.claude/hooks/validate-push.sh`; `tools/tests/test_pushjudge.py`; `tools/test_hooks.sh` 7e and 7i, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that matches full option spellings misses what git accepts (#689, 2026-09-26)
+`validate-push.sh` matched git's long force options by their full spelling, so every shorter spelling git accepts
+read as an ignored option. git takes an unambiguous prefix of a long option as that option: on a local bare
+repository with `--dry-run --porcelain` (a `+` line is a forced update), git 2.55 ran `--force-w` and `--force-with`
+as `--force-with-lease`, `--mir` and even `--m` as `--mirror`, and `-f --al` and `-f --b` as a forced `--all`, each
+force-updating both trunks from a feature checkout. The #680 design review found two more readings of the same
+kind: the refspec `:` (every branch the remote also has, forced by a flag or written `+:`) was read as an empty
+destination, that is the current branch, and so was a forced push with no refspec under `push.default=matching`,
+which pushes every matching branch. The judge now compares a long option's name before any `=` as a prefix of each
+option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`), so counting one as force
+refuses nothing git would run. A forced `:` or `+:`, and a forced push with no refspec under
+`push.default=matching` from `-c` or from `git config`, are refused as every matching branch. A differential sweep
+against the port (1,648 commands, 555 of them seeded from these rules; 8,240 runs per hook under both shell tools,
+on a trunk, a feature checkout and one set to `matching`) found 0 pushes refused before and allowed now; its 1,027
+exit-code differences and 275 renamed targets are all these shapes.
+- **Why missed:** the option table was written from the documented spellings and every test used them; the #680
+  port then pinned the bash verdicts, this gap among them (a pin read `--force-w` as a plain push), because a port
+  must change nothing; and "no refspec" was read as "the current branch", which holds only under the default
+  `push.default`.
+- **Prevent:** read an option the way the tool's own parser reads it, not the way its manual spells it: for git, a
+  prefix match on the name before `=`, counting an ambiguous prefix as the dangerous option. Before trusting a
+  gate's table, run each shorter spelling and each empty or default argument against a scratch repository and read
+  what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
+  read it.
+- **Source:** 1.5.x issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`, `PushDefaultTests`); `tools/test_hooks.sh` 7c, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Evidence for a flag comes from the same parse that raised it (2026-10-02)
+`perf_runs.py` raised `MEMORY_PRESSURE` from `triage_battle_load.py`'s strict `[MemSample]` parser but chose the line to show with its own looser `memLoad=(\d+)%` scan, so the cited line could be one the flag never read; its docstring said `[MemSample]` was never re-implemented.
+- **Why missed:** the evidence was added later as "find the line to print", a separate small scan beside the parse that decides the flag.
+- **Prevent:** derive a flag's evidence from the parsed records that raised it (or from the same parser, line by line); a second regex for one fact is a fork that drifts.
+- **Source:** 1.5.x `docs/reviews/rca-perf-runs-parser-2026-10-02.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A parser rule change prints its diff per tag over the real corpus, not only for the tag that motivated it (2026-10-02)
+`perf_runs.py`'s new value rule (a value runs to the next space-led `key=` outside brackets) was written for `[Doctrine]`'s lists and checked over the 30 installed logs as "rows identical outside extra_tags, 489 values kept whole". The same rule also folded `[MapLoad]`'s seven per-kind party counts into `parties` (92 values, 644 keys) and would fold `[EnlistDiag]`'s presence snapshot into `verdict`; neither the commit, the doc nor the review record said so.
+- **Why missed:** the comparison counted the change where it was expected and summed the rest into "identical rows"; nothing printed which other tags' fields moved.
+- **Prevent:** when a parsing rule changes, run the old and new parser over the real corpus and print values changed, keys dropped and keys added per tag and key; every tag in that list is either intended (and pinned by a test on its real line) or a bug. Check producers on unmerged branches too when the rule is generic (plan 040's `phase=GameInit total`).
+- **Source:** 1.5.x `docs/reviews/rca-perf-runs-parser-2026-10-02.md` R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Every branch where an audit tool degrades writes a reason row, and a STOP check reads the whole output (2026-10-02)
+Plan 038's battle equipment audit had a reason-code table, a run-log line per code and a test that every code it emits has a consequence, yet 82 loose textures counted 0 bytes with no line: the size fallbacks it inherited from the map tool set only flags (`HEADER_UNDECODED`, `NO_PIXEL_DATA`) in one TSV column. An empty selection exited 0 the same way, and a troops-file error crashed before `run.log` said why. The plan had made an undecoded loose header a STOP; the executor checked it on one sampled row.
+- **Why missed:** the consequence test proves the table covers the codes the source emits; it cannot see a branch that emits none. A flag reads like reporting but never reaches the log, and a sampled STOP check passes whenever the sample is a good row.
+- **Prevent:** list every branch where the tool substitutes, skips or sizes by formula, and every input that can come out empty or unreadable, and give each a reason row or an abort line with exit 2 (`TEXTURE_SIZE_FROM_HEADER`, `TEXTURE_SIZE_UNKNOWN`, `abort reason=NO_TROOPS_SELECTED`). Run a plan's STOP condition as a query over the whole output (`awk` over the TSV's flags column), not on an example row.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R1, R4, R7, R15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When one index keeps two maps over the same items, every consumer resolves through the map that carries the precedence rule (2026-10-02)
+`AssetIndex.add_item` swaps its name map to the `EmAssetPackages` copy of a Native texture that holds the pixels, but its guid map keeps the first copy it saw, the `AssetPackages` stub with the same guid. The map tool resolves textures by name; the battle tool resolved them by guid through a material, so 338 textures named the stub's pack and carried a false `PIXELS_NOT_IN_PACKS`. Every byte check passed, because the header formula equals the pixel segment.
+- **Why missed:** the replacement rule lives in one map; the second consumer reused the other map, and a byte oracle cannot see a wrong source that yields the right number.
+- **Prevent:** when a shared index holds two lookups over one item set, read `add_item` (or its equivalent) for any rule that touches only one of them, and resolve through that one, or re-resolve (`index.get(kind, item.name)` when the guid matches). Check metadata columns (pack, flags), not only bytes, against a second reader.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool that writes into a folder it may reuse deletes its own previous outputs first (2026-10-03)
+Plan 038's audit wrote seven files into one folder, `sides.tsv` only when sides were given. A run without sides left the previous run's `sides.tsv` beside fresh tables, and a run that aborted left the whole earlier set beside a `run.log` that said it had failed. The report and the log described the current invocation correctly, so a careful reader was safe; anything that read a TSV alone read another run's numbers. Every test built its fixture in a fresh folder.
+- **Why missed:** a first-run test cannot see a stale file, and the optional output (`sides.tsv`) and the abort path were each tested only for the transition from nothing.
+- **Prevent:** for every tool that writes into a configurable folder, delete the tool's own previous outputs by name after the refusal checks and before the log opens (never the folder's other files; `_remove_previous_outputs`), and test the second run: one with fewer outputs and one that aborts, the second also checking the log holds only its own run.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's precedence choice is checked against the repository's engine record, and models the engine's unit of choice (2026-10-03)
+Plan 038 specified packed-first for `--loose-assets` (the `AssetPackages` copy wins, the loose one is listed as also-in), and the executor built and tested exactly that. `docs/reference/armory-guide.md` had recorded since 2026-09-01, from the engine's own log, that the engine loads a module's `Assets` tree and ignores the cooked packs it also ships, and that art deleted from `Assets` is broken in game whatever a stale pack holds. The first review filed the conflict as a LOW decision for the maintainer, Codex raised it again, and the decision settled on the engine. Reversing the iteration order would not have been enough: it would still have kept names only a stale pack holds. The engine chooses per module tree, so the index now does too.
+- **Why missed:** a plan choice reads as a requirement to the executor and as a decision to the reviewer, and nobody grepped the guide for the rule it contradicted.
+- **Prevent:** when a plan fixes a precedence or fallback order for an offline model of the engine, grep `docs/reference` and the lessons for that rule before building, and name in the plan the source that settles it. Model the engine's unit of choice (a module's tree), then record what the model skipped as a reason row (`COOKED_TREE_NOT_READ`).
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator that touches a hand-edited file may only add to it, and the proof is a byte comparison (#959, 2026-10-21)
+`tools/complete_lords_xslt.py --apply` rebuilt `lords.xslt` from vanilla and what it parsed back, and the result was not the
+shipped file: 389 `<Equipments>` blocks and 19 `race` attributes dropped, five skills and Traits blocks in three lords reflowed,
+one attribute reordered, an explicit `is_female="false"` removed, and the BOM and the final newline lost. The tools that wrote the
+Equipments blocks (`assign_xslt_lord_equipment.py`) were retired in `19b5d77c5`, so the blocks had become hand-owned data the
+generator never read. #758 and #957 each fixed only the block they had just added. The symptom (`race`) was named in two docs
+(`lords-and-heroes.md`, `lord-identity-reconciliation.md`), never in a lesson.
+- **Why missed:** each fix checked its own block (`assertIn` of a constant) and never asked whether the whole regeneration equals
+  the file. A first answer, a generator that read every unmodelled part back, grew a refusal guard and a parse-back of each shape
+  of hand data, and still needed a new case for every shape nobody had modelled.
+- **Prevent:** a tool that touches a hand-edited file only adds to it. `--apply` inserts a template for each vanilla lord the file
+  lacks, after its section's last template, and never rewrites a byte that is already there; it keeps the BOM and the dominant
+  line ending (a file with mixed line endings comes back with its dominant one) and parses before writing. A hand block in the file is therefore safe without a copy in the generator. Prove an
+  `--apply` by reading the file and `git show HEAD:<path>` as bytes (converted to the worktree's line endings) and comparing
+  them: `git hash-object` and `git diff --stat` cannot see line endings under `core.autocrlf`. Contract: `tools/README.md`.
+- **Source:** 1.5.x issue #959; `tools/tests/test_complete_lords_xslt.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Explain a generator's unexpected diff before you discard its output (#886, 2026-10-18)
+`tools/snapshot_api_surface.ps1` regenerated `patch-targets.md` with one row nobody expected, so its output was thrown
+away and the header was set by arithmetic. The row was a real omission: commit `2410aec51` added two Diplomacy patch
+classes but only one row, which also kept that target out of engine-bump body diffs.
+- **Why missed:** an unexpected line in generated output was read as generator noise.
+- **Prevent:** when a generator's output differs from what you expected, find the cause of each extra or missing line
+  before you discard it (grep the code for the class, `git log -S` for the commit). Take the generated content when it is
+  right, and restore only what the generator does not own (for example the backlinks footer).
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` finding 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
+Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
+- **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
+- **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a gate on the states it will meet, not the one it was written in
+
+The five #1020 gates all passed on the worktree that built them and failed on states a later run
+meets. A ShellCheck rc file written LF became CRLF on checkout (the third LF-only-by-accident file,
+after the hooks and the Howdah snapshot), a new script was not linted until staged, a new Python
+folder escaped a hand-kept list, an unchanged checkout skipped the NuGet audit, and a history scan
+run from a subfolder or outside the repo reported "no leaks" with exit 0.
+- **Why missed:** each gate was run once, on its author's state: every file tracked, LF and in a
+  known folder, a full restore, the repo root as working directory.
+- **Prevent:** before review, run a new gate on a fresh checkout (`git check-attr text eol` on each
+  file its tool reads), an untracked new file, a file deleted but not removed, a non-ASCII path, a
+  run from a subfolder, a missing tool, and an empty input (a tool that finds nothing to check must
+  not read as a pass). Prefer passing a tool's options on the command line over a tracked config
+  file that a CR-intolerant tool reads.
+- **Source:** 1.5.x `docs/reviews/rca-quality-gates-2026-10-26.md` findings 1 to 4, 6 and 11 (#1020), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A review round is every lens in scope; stopping after the first wave is a partial review (Race Abilities, 2026-10-04)
+Round 1 of the Race Abilities review ran the defect wave (standards, engine compatibility, data flow, XML) and stopped. Efficiency, completeness and design never looked, and round 2's efficiency lens then found a HIGH per-frame allocation and four MEDIUM hot-path costs in code round 1 had passed.
+- **Why missed:** the first wave's findings were fixed and the round was treated as done; the deep-review table runs completeness and design always and efficiency whenever C# changed.
+- **Prevent:** run every lens the table puts in scope, in waves of four. When a round must stop early (a usage limit, Mike's call), its RCA names the lenses that did not run, and the next round starts with them.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R20 to R24, "Root-cause pattern 2", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Count a scripted attack by a unique blow fingerprint; a landed blow never proves its animation played
+`[BlowDiag]` lines carry only `attackerIdx`, and the war ram's attack task applies damage in the same tick it plays
+the action. The ram's `AttackBlowMagnitude` (35) is the only such constant in `Main/`, so `mag=35 missile=False` counted
+every head-butt (1,300 in one test, 1,005 in the next) and, grouped by attacker and second, the victims per butt.
+- **Why missed:** "it fired" and "it played" were read as the same fact; the head never dropped in 2,305 firings.
+- **Prevent:** before reading a count, grep the source for the constant to prove the fingerprint is unique. A log keeps
+  growing while the battle runs, so rerun every count on the same snapshot before comparing two of them. Attribute an
+  engine warning by its timestamp against the edit and import times: `rgl_log_<pid>.txt` accumulates a whole session.
+- **Source:** 1.5.x #618, 2026-09-18 (`docs/features/war-ram.md` "Verifying from the logs"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `r.pos += r.take(...)` drops the advance that `take` itself makes
+A tpac header parser skipped each item's metadata with `r.pos += r.take("<Q")`. Python evaluates the attribute on the
+left of an augmented assignment before it calls the right side, so the stored position was the old one plus the
+length: the 8 bytes `take` had just consumed were lost and every later field read shifted. The unit tests over a
+synthetic package failed on their first run; the scratch prototype had used a local variable and never showed it.
+- **Why missed:** the line reads as "skip the length-prefixed block", and nothing about it looks order-dependent.
+- **Prevent:** read a length into a local first (`n = r.take(...)`, then `r.pos += n`); never put a call that moves
+  a cursor on the right of an augmented assignment to that same cursor. Better still, reuse the tested container code:
+  `tools/tpac_clone_metamesh.py`'s `parse` and `serialize` round-trip a real package byte for byte, and the new tool
+  moved onto them the same day instead of carrying another tpac parser in `tools/`.
+- **Source:** 1.5.x `tools/skeleton_hit_capsules.py`, `tools/tests/test_skeleton_hit_capsules.py` (2026-09-18), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Parallel builders: pin the conventions, not only the shared API (repeat, Shadowfax Screens 2026-10-19)
+Four builders built four screens from one plan that pinned the timer API, the settings provider, the
+module and the MCM group. Each was correct against that plan, and they still diverged on six
+conventions: test category tags (five IL tests untagged in two screens), the policy for an unreadable
+setting (on in two places, off in two), one category constant (15+ repeated literals), the open line
+format, what the timer window spans (two screens included the movie load), and the wiring test setup
+(four copies, one of them leaking a facade).
+- **Why missed:** the 2026-07-02 rule covers shared sub-problems such as id normalisation; conventions
+  did not look like sub-problems, so the brief did not list them.
+- **Prevent:** the pre-dispatch checklist in `docs/ai-includes/agent-teams.md` now names conventions.
+  Before dispatch, write in the brief the failure policy, the test tags, the constant, the log formats,
+  the timing span and the wiring-test shape every sibling uses.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` findings 1, 2, 11, 13, 16; earlier `rca-combat-mechanics-2026-07-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Price a per-call cache with a micro-benchmark before you build it (Shadowfax Screens 2026-10-19)
+The plan called two caches "clean wins": a memo for two concept lookups per inventory row and a count
+cache for the party screen's item-category walk. Measured on the game's runtime afterwards, they saved
+about 0.7 microseconds per row and 0.1 to 1 ms per open, against a 16 ms keep rule, and carried a
+transpiler, a window protocol and about 500 lines with tests. Both were deleted.
+- **Why missed:** the plan reasoned from "vanilla repeats this work" without the cost of one repeat.
+- **Prevent:** before a cache or memo goes into a plan, time one vanilla call and one cache hit on the
+  game's runtime (a 20-line benchmark in the scratchpad) and multiply by the calls per action; keep it
+  only if the product can clear the feature's own threshold.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` findings 4, 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool's regression test covers the boundary shapes and compares whole output (harvest tool, 2026-10-19)
+`harvest_literal_loc_keys.py` added one blank line before `</strings>` per run. The first regression test started
+every case with exactly one blank line, the one shape where a wrong fix that overwrites the row above `</strings>`
+behaves like the right one, and it checked a few properties instead of the text. The same bug was also filed three
+times (#781, #919, #922), twice in one afternoon by two sessions.
+- **Why missed:** the test was written from the bug report's single example; nothing told `/issue` to look for an
+  existing issue first.
+- **Prevent:** a tool test runs each boundary of the input (none, one, many; LF and CRLF; every real file shape) and
+  asserts the whole expected output, and is shown to fail on the old code and on one plausible wrong fix. Before
+  filing an issue, search open issues for the file and symptom (`gh issue list --search "<file> in:title,body"`).
+- **Source:** 1.5.x `docs/reviews/rca-harvest-blank-line-2026-10-19.md` rows 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A finding that repeats a lesson means the brief did not carry it (#769 E8 to E10, 2026-10-14)
+The E8 to E10 review found seven defects that match lessons already on file: a service locator in a hook, an
+outcome keyed on one path, an owed in-game check with no log line, one predicate made to answer a second
+question, a new filter that an old reader missed, a sentence built from fragment keys, and tests that could
+not fail. The builder had not read
+the lesson files, and the orchestrator's brief had not named them.
+- **Why missed:** a brief names files, steps and seams. The lessons live in 13 cross-cutting category files
+  (the five this change repeated hold about 8,000 lines), and nothing in the spawn path opens them.
+- **Prevent:** the Feature Developer template (`docs/ai-includes/agent-teams.md`) has a `Lessons:` slot. The
+  lead fills it with the lesson headings that apply, by name and file, and the builder's report says what it
+  did about each. A review that finds a repeat checks the brief first.
+- **Source:** 1.5.x `docs/reviews/rca-career-e8e10-2026-10-14.md` pattern 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix that removes a false positive must keep what the old code caught by accident (#947, 2026-10-23)
+`generate_new_faction_kingdoms.py` deleted every copy of its marker region and re-appended one, so a block added after it read as drift. The first in-place fix replaced only the first region, and that also silenced the case the strip-all code had caught: a stale second copy, which the engine loads last and so wins. Two more re-reviews found the same hole in other shapes (an orphan END, a missing closing tag).
+- **Why missed:** the fix was tested against the one false positive it removed, not against the damage the old behaviour happened to report.
+- **Prevent:** before you narrow what a gate or a writer matches, list every input the old code rejected or changed, and keep a test that each one still fails. For a marker region, count BEGIN and END and refuse anything but zero or one complete region.
+- **Source:** 1.5.x `rca-ui-data-sweep-2026-10-23.md` findings 1 to 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Count the change before you call the cause (Carn Dûm map icon, 2026-10-16)
+A 47k-triangle candidate had 943 UV charts; the guess was split vertices on its Tripo seams (27,675 vertices against an
+expected 23,600), and a weld was added. It merged 0 of 27,675 vertices there and 24 of 930,709 on the other mesh.
+- **Why missed:** the vertex-to-triangle ratio of a single closed shell was applied to a mesh made of many shells.
+- **Prevent:** log the before and after count of any repair and remove it when it changes nothing; the weld was
+  deleted in the same session.
+- **Source:** 1.5.x the prep log lines `[weld] verts 27675 -> 27675` and `930709 -> 930685`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A preview must not assume every optional bake exists (Carn Dûm map icon, 2026-10-16)
+`blender_prep_tripo_prop.py` crashed in its preview after a successful export, because a basecolor-only Tripo source
+skips the roughness and metallic bakes and the preview loaded them unconditionally.
+- **Why missed:** every earlier source shipped all four Tripo maps.
+- **Prevent:** a consumer of optional outputs checks each one exists; the preview now skips what was not baked.
+- **Source:** 1.5.x `build_preview_material` in `tools/oneoff/blender_prep_tripo_prop.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Scratchpad scripts are not a workflow (Carn Dûm map icon, 2026-10-16)
+The first Painter pass ran from session-scratchpad scripts with one asset's paths written in, so nobody could repeat it.
+- **Why missed:** each script began as a probe and grew into a step.
+- **Prevent:** once a probe becomes a step, move it into `tools/` with its inputs as arguments, then re-run the whole
+  chain from the repo copies and diff the output against the scratch run (here a mean difference under 0.25 of 255).
+- **Source:** 1.5.x `tools/painter/`, `tools/blender/probe_fbx.py`, `render_pbr_preview.py`, `compare_prop_candidates.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Calibrate a scripted colour against its export (Carn Dûm map icon, 2026-10-16)
+Four paint rounds came out lighter than written. A Painter fill takes the numbers as linear values whatever the
+`Color`'s tag says, so 0.11 stone exported at about 0.37.
+- **Why missed:** the `Color` object reported a correct conversion, and Blender's tone mapping and a broken normal map
+  hid the albedo, so each round changed the recipe instead of testing the value.
+- **Prevent:** before tuning colours, export one flat fill of a known value and read the PNG (0.2 came back 0.486,
+  which is sRGB(0.2)). Judge paint by the exported albedo, measured or rendered emission-only, never by a lit render
+  alone. Label a measurement by its colour space: `image.pixels` of an 8-bit PNG is sRGB, not linear.
+- **Source:** 1.5.x `tools/painter/painter_stack_angmar_fortress.py` `rgb()`; the traps table in `docs/reference/substance-painter-mcp-setup.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Margins, not distortion, limit a hard-surface UV layout (Carn Dûm map icon, 2026-10-16)
+Smart UV Project cut the icon's towers set into about 5,000 islands a few pixels wide; with their margins they covered
+5% of the tile. One island per part (a box as a cross, a spike as one strip) covered 51%.
+- **Why missed:** one run's stat counted the stacked hidden islands at full size and showed coverage above 1.0, which
+  read as overlap, not as margin waste.
+- **Prevent:** report visible islands and visible px/m per set, and read the layout image before tuning anything else.
+- **Source:** 1.5.x `tools/blender/unwrap_texture_sets.py` `net_seams`; the table in the pipeline doc's rebuild variant, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Stage a file two sessions append to by hunk, and read the staged diff before committing (2026-10-16)
+A port's lessons commit staged `docs/reviews/lessons/data-content-cultures.md` whole. A concurrent session had appended
+its own lesson (Erebor dresses) to the same file, so that lesson went to origin with a gate its session had not yet
+committed.
+- **Why missed:** `git add <file>` is right for a file only one session touches; lesson files, `tools/README.md` and
+  `docs/INDEX.md` are appended by every session. The staged diff was not read before `git commit`.
+- **Prevent:** for a shared file, stage only your hunks (build the index blob from `HEAD` plus your edit and
+  `git update-index --cacheinfo`, since `git add -p` is interactive), then read `git diff --cached` for every staged
+  file before committing. A heading that is not yours in that diff stops the commit.
+- **Source:** 1.5.x `rca-keyforce-harad-javelins-2026-10-16.md` second review, finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard that refuses must run before the first write, and cover every block the tool rewrites (2026-10-16)
+`generate_starter_kit.py` gained a refusal for marker blocks holding another author's rows. It ran inside the
+stylesheet step, after the item files and the pieces block were already written (a refused revert had deleted both
+`starter_kit.xml` files), and it did not cover the pieces block at all.
+- **Why missed:** the guard was added where the reported block is rewritten, and only for the kind of block that
+  had gone wrong; the tool's older shrink guard, a pre-flight, was the pattern to follow.
+- **Prevent:** a tool that writes several files computes and parses every new text first and writes last; a new
+  refusal goes into that pre-flight. List every block the tool rewrites or deletes and test the guard on each, with
+  a byte snapshot of the whole tree after the refusal.
+- **Source:** 1.5.x `rca-keyforce-harad-javelins-2026-10-16.md` second review, findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A cap of zero must be a cap, most of all on paid calls (2026-10-16)
+`translate_with_claude.py --max-entries 0` meant "no cap" (`if args.max_entries and ...`), and a negative value
+sliced all but one entry into the paid phase. Someone deferring translation would reach for exactly those values.
+- **Why missed:** a truthiness test on an int treats 0 as unset; no test covered the boundary.
+- **Prevent:** test a limit with `is not None`, reject negatives, and pin 0 and -1 with tests that patch the provider
+  call to raise. For "do the free half only", add a flag that returns before the paid phase (`--seed-only`).
+- **Source:** 1.5.x `rca-keyforce-harad-javelins-2026-10-16.md` (D6 and the second review), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a gate on a tree it cannot read, not only on the fault it was built for (#1026, 2026-10-26)
+
+The text-processor gate skipped a file it could not parse, passed when it found no Native files, passed a release channel when the path was wrong, and its tests stayed green when the UTF-16 path or the exit code was deleted. This is the third gate on 2026-10-26 to pass on input it never read (after #1020 and #1017).
+
+- **Why missed:** the gate was proven on the live install that showed the fault, and its pass test for the release step was the absence of a FAIL line, which a run that never starts also meets.
+- **Prevent:** read inputs the way the consumer (the engine) reads them; exit 2 on an unreadable file, an empty reference set or zero files checked; give a release check a PASS line and an exit code with one meaning; kill a mutant of each guard (skip the parse, drop the exit code) before trusting the tests.
+- **Source:** 1.5.x `rca-text-processors-2026-10-26.md` findings 3 to 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Run the docs lint in the mode the hook runs: --fail-on-drift (2026-09-25)
+A new trap row was 197 characters (cap 180). `python tools/lint_docs.py` in report mode printed it among eight
+context-budget lines while the builder read only the dash count; `--fail-on-drift`, which the commit hook and CI run,
+exits 1 on it.
+- **Why missed:** the report mode exits 0 whatever it finds.
+- **Prevent:** before a commit that touches docs, run `python tools/lint_docs.py --fail-on-drift` and read the exit code.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Regenerating a generated file encodes every input's working-tree state, another session's included (2026-09-25)
+`generate_name_localization_strings.py --apply` rebuilt `taom_troop_name_strings.xml` from `troops/*.xml` as they stood
+on disk, so the file picked up another session's uncommitted Gondor renames and dropped a troop that session deleted;
+the translator then re-translated 75 language rows to those names. Committed alone, 11 languages would name troops the
+committed English does not.
+- **Why missed:** the regeneration's own diff looked right, and its inputs were not compared with HEAD.
+- **Prevent:** before regenerating a shared generated file, `git status` its inputs; if another session has them
+  modified, commit the regenerated file with that session's work or `/commit-split` the hunks.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a finding reverses a documented claim, grep the claim's key terms, not one phrasing (2026-09-24/25)
+On 2026-09-24 the builder corrected "the human set plays on the re-framed rig" in eight docs and missed a ninth,
+`troll-race.md`'s recipe step "Human clips need no retarget on a re-framed rig", worded differently.
+- **Why missed:** the sweep searched for the sentence as first written.
+- **Prevent:** grep the nouns of the claim together (here `re-framed` with `human clip`, `retarget`, `no retarget`)
+  across `docs/`, the CHANGELOG and tool docstrings, and read every hit.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator reads every fact the runtime owns from the runtime's source (#769 C1, 2026-10-15)
+The career forks generator parsed the effect enum from C#, but kept hand copies of which types are flat,
+class-filtered and mask-gated, which sign helps the player, and which troops pay upkeep. Each copy was wrong
+or drifted while it was under review: TroopMorale priced as a count, penalties priced as perks, a new
+class-filtered type refused, and upkeep counted by a field the runtime calls documentation only.
+- **Why missed:** a rules file feels like configuration, so facts the code decides were typed into it.
+- **Prevent:** before a generator writes a rule into its own config, ask who decides it at run time; if the
+  answer is C# or data, parse that source at run time and fail with exit 2 when it cannot be found. Keep only
+  design choices (units, budgets, caps, bans) in the rules file.
+- **Source:** 1.5.x `docs/reviews/rca-career-forks-generator-2026-10-15.md` pattern 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A data rule enforced in one writer is not enforced: list every tool that writes the file (2026-10-26)
+The fix taught `translate_with_claude.py` to skip English-only overrides. `rebuild_translation_files.py` and
+`generate_translation_template.py` also write the language files, and the translator guide prescribes both; each wrote
+all 177 deleted rows back, from the cache or as English that the translator then filled.
+- **Why missed:** the fix was tested against the tool it changed, not against the file it protects.
+- **Prevent:** before relying on a rule about what a data file may hold, grep `tools/` for every writer of that file
+  and route all of them through one shared function, with a test per writer that runs on a synthetic tree. Prune any
+  cache that would let a bypassing writer restore the data for free.
+- **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A validator states an engine verdict only from the engine's own read path
+
+`tools/validate_xml_schemas.py` was written to say how the engine loads a file. Its first NATIVE line said "loaded
+through project.mbproj row X" for any row, but the engine loads a row only when a caller requests its exact id
+(managed `GetMergedXmlForNative`) or when native code reads its `type`; a dead id printed "loaded". Its first
+unloadable-manifest check said "the engine throws at startup" whenever Python failed to parse the file, but the engine
+reads `project.mbproj` and `language_data.xml` as decoded text and ignores the declared encoding, so a file the tool
+called fatal loads in the game. Both repeat the class #980 was opened for: the tool described a load from the data's
+shape or from its own parser instead of from the engine's consumer.
+- **Why missed:** the brief described one loader, and the builder verified the parsing it wrote, not the engine call
+  that decides whether anything is read; "Python cannot parse it" was taken as "the engine cannot".
+- **Prevent:** before a tool prints that the engine loads, ignores or rejects a file, name the engine method that
+  decides it and read it (`pwsh tools/taom-src.ps1 path <Type>`); when the tool's parser is stricter or looser than
+  the engine's, either parse the way the engine does or word the line as the tool's own verdict. Replay one edge case
+  on the engine's real reader when the two might differ.
+- **Source:** 1.5.x `docs/reviews/rca-schema-check-2026-10-23.md` finding 1 and C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate is tested through the thing that runs it, not only as a function (#984, 2026-10-23)
+
+The RCA FOLLOW-UP check in `lint_docs.py` was built test first and passed every test, but the commit hook that runs
+`--drift-only` only starts the linter when a staged path is on its trigger list, and `docs/reviews/` was not; an RCA-only
+commit (9 of the last 60 RCA commits) never reached the check. The hook also judged the working tree, so another
+session's untracked draft could block a commit, and its deny message extracted named sections only, so the new failure
+came with no detail.
+- **Why missed:** the brief named the linter, not its consumer; `tools/test_hooks.sh` section 5d (the trigger list
+  covers what the gate checks) exists for exactly this, after the #647 review, and was not extended.
+- **Prevent:** a brief for a new gate names every consumer (the hook, the skill step, `/verify`) and asks for one test
+  through each: the hook fires for the gate's own file paths, judges what the commit records, and quotes the failure.
+- **Source:** 1.5.x `docs/reviews/rca-review-followups-2026-10-23.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Give a scratch transform a timeout (2026-10-20)
+A read-only XSLT transform a review agent started hung for more than four hours and held `spclans.xslt` open, which blocked a later data fix with `PermissionError`.
+- **Why missed:** the script had no time limit and nothing reported it as stuck.
+- **Prevent:** run scratch transforms through `timeout` (or `Start-Process` with a wait limit), and when a repo file will not open for writing, look for this session's own stale processes first.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md`, process note, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before you add a gate, prove no gate already catches the case (#974, 2026-10-23)
+A review said nothing caught a repeated clan, hero or kingdom id, and the claim went into an RCA, a lesson, two docs and an issue, then three new duplicate-id schemas. The next review showed `SCHEMA_INVALID` already blocked it at commit: the engine XSDs declare those ids unique (`xs:unique`), and the hook validates the registered files against them. The schemas only reported each duplicate twice and were removed.
+- **Why missed:** the claim was relayed from a reviewer without a probe; the schema JSON files looked like the only duplicate-id source.
+- **Prevent:** before writing a new check, break a copy of the real file the way the check targets and run the existing gate (`validate_moduledata.py`, which includes the engine XSD layer). Write the gate only if that run passes. Pin an existing protection with a test instead (`EngineIdUniquenessTests`).
+- **Source:** 1.5.x `rca-ui-data-sweep-2026-10-23.md` follow-up batch, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An absence check must run where the thing lives, in the form it is stored (plan 005, 2026-09-24)
+Plan 005's port reported a vendored BUTR credential "already gone from disk" after
+`grep -rln packageSourceCredentials Dependencies/` found nothing. The grep ran in a worktree, where
+the gitignored `Dependencies/.vendor-source/` does not exist, and grep cannot read inside the
+`.tar.gz` archives that folder actually holds; three of them still carry the block. The new
+checklist line shipped with the same blind spot.
+- **Why missed:** a "no match" was read as proof of absence, although the check could not have
+  matched: wrong tree, wrong file form. The sprint record (`plans/README.md`) already named the
+  three tarballs.
+- **Prevent:** before claiming something is absent, prove the check can see it: run it where the data
+  lives (the main checkout or the live install, not a worktree, for anything gitignored) and on the
+  stored form (`tar -xzOf <a> | grep`, `zgrep`, or extract a `.zip`/`.nupkg`). Seed a known hit when
+  you can. Cross-check the claim against the plan's own status row before writing it.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Code carried in a string is only tested by running it (plan 005, 2026-09-24)
+`tools/process_faction_map.py` runs two child programs held in `"""..."""` literals. Plan 005
+verified its injection fix with `python -m py_compile`, which parses the outer file and never the
+children, and called a behaviour test "structurally untestable". A short stdlib test (a synthetic
+PNG under folders named `it's here` and `a'+...+'`) fails on the old tool and passes on the fix.
+- **Why missed:** "it deploys assets" was taken for the whole tool; the helpers write only to paths
+  they are given, so a temp folder isolates them.
+- **Prevent:** when a fix touches code built as a string (`python -c`, `eval`, templated SQL or
+  XSLT), the proof is a test that runs it, including the hostile input the fix targets. Before
+  writing "untestable" in a plan or a `Not-tested:` trailer, name the side effect that prevents a
+  temp-folder test.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write a documented search pattern in `-E` form (plan 005, 2026-09-24)
+The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the Grep tool) reads
+`\|` as a literal pipe, so the same pattern pasted there reports a clean tree.
+- **Why missed:** the command was written for one tool and read as portable.
+- **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
+  and the Grep tool read the same way.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A transcript count needs the unit its claim is about, read from real records (harness retro, 2026-10-21)
+`tools/harness_retro.py` called three failed results in a row a "runaway retry", and called a gate
+with no deny "no fires, check before removing". Both were wrong on real data: the results of one
+assistant message's parallel calls sit in consecutive records, so six Edits sent at once read as a
+loop of six (18 runaways became 3), and three gates can only ask, which leaves no trace when
+approved, so they could never count as firing. The schema had been pinned record type by record
+type, and every test passed on fixtures that had one call per message.
+- **Why missed:** the fixtures modelled each record's shape, not how records group into the event
+  the signal claims (a retry is a new message; a fire is any decision, not just a deny).
+- **Prevent:** before a transcript signal backs a proposal, read three real instances behind it
+  and name the unit it counts (message, tool call, session); a gate's "no fires" counts only when
+  its code can deny or block.
+- **Source:** 1.5.x harness-retro-2026-10-21.md, code review findings, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A first-word anchor is not a command reader: wrappers and shell grammar hide the call (#985, 2026-10-23)
+`block-dangerous-git.sh` and `block-broad-git-add.sh` allowed `timeout 60 git reset --hard`, `{ git reset --hard; }`, `! git ...`, `then git ...` and seven more forms; `check-commit-subject-version.sh` allowed a wrapped unlabeled commit; `mark-verification-run.sh` never marked `timeout 600 dotnet test`, a form the local transcripts hold 372 times. Each hook found the command by its segment's first word after skipping `VAR=value`, each with its own loop (D41 was the same bug in the marker's copy). Found while reading rtk-ai/rtk's permission matcher, which reads past wrappers and grammar.
+- **Why missed:** plan 027 gave every gate one reader for the command text, but each gate still found the command word itself, and the test rows only held bare `git` forms.
+- **Prevent:** a gate reads segments from `_shellwords.py commands` and a parsed call through `_git_call`, which share `command_index`. A new gate's test rows include a wrapped form and a grammar form for each case it gates (`hook-authoring.md` forms table).
+- **Source:** 1.5.x adopt-rtk-2026-10-23.md; issue #985, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving work to a branch by patch carries other sessions' hunks (2026-10-24)
+
+Work done in the main checkout was moved to a new worktree with `git diff -- <paths>`, applied there and
+reverse-applied in the main checkout. A second session was editing the same checkout, and one of the named files
+(`.claude/skills/improve/references/run-protocol.md`) held three of its lines. `git diff` takes every change in a
+file, so those lines moved to the wrong branch and left the main checkout. A per-file read of the moved diff found
+them, and they were put back by hand.
+- **Why missed:** the move script checked that the files were this session's, not that each hunk was.
+- **Prevent:** before a patch move, list each named file's changed lines (`git diff -U0 -- <file>`) and compare them
+  with what this session wrote; a file with a foreign hunk moves by hand edit, never by whole-file patch. Better:
+  start work that may need its own branch in a worktree from the first edit.
+- **Source:** 1.5.x adopt-pstack-2026-10-24.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A skill that wraps a script the model already runs is a description tax that rots (2026-10-08)
+Over seven weeks of transcripts, 21 of 45 skills had no call: the model ran `taom-src.ps1` about 5,100
+times and `lint_docs.py` about 2,100 times directly, and fixed 301 build errors without `/build-fix`.
+Several unused skills had drifted into wrong instructions (`xslt-check` mapped five vanilla files to a
+module that lacks them; `lord-skills` called a merged XSLT lord dead code). The recurring mistakes were
+caught by gates, never by skill text.
+- **Why missed:** skills were added per workflow and never measured, and an unused skill fails silently.
+- **Prevent:** before adding a skill, check whether the model already does the job by running the script;
+  measure Skill-tool calls in the transcripts before keeping one. A gate beats skill text.
+- **Source:** 1.5.x `docs/reviews/skill-usage-audit-2026-10-08.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Compare a repo path from the disk without case
+
+The Gauntlet stretch gate looked up a path from `Directory.EnumerateFiles` in a literal baseline with
+an ordinal comparer. Git tracks `GUI/PreFabs`, the main checkout holds `GUI/Prefabs`, and the worktrees
+hold `GUI/PreFabs`, so the gate passed in a worktree and failed on the main checkout with five false
+offenders. `core.ignorecase` is true, so `git status` shows nothing.
+- **Why missed:** the state list in the lesson above names line endings, new and deleted files, a
+  non-ASCII path, a subfolder, a missing tool and an empty input, but not path case.
+- **Prevent:** a key built from a disk path compares with `OrdinalIgnoreCase`. Run a new path-keyed
+  gate on the main checkout as well as in a worktree.
+- **Source:** 1.5.x `rca-gauntlet-ratchet-case-2026-11-03.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write last the file a re-run reads to decide what is left (map-tool follow-ups, 2026-10-27)
+`Apply-MapVillageNames.py` decided what to rename from the master alone, wrote the master first and evicted the
+translation cache last. A run that failed on the fourth language left a master that matched its table, so the re-run
+printed "nothing to do" with nine languages and the whole cache still stale; the reset one-off did the same with
+its German witness file. Separately, both new one-offs called themselves idempotent, but a re-run after the
+translation backlog (#763) would turn every translated row back into English, the same missing `--rerun-retired`
+guard the Lindon RCA named that morning. And the map-wide name check went to the two writers the issue named, not
+to the renamer, the third writer of settlement names.
+- **Why missed:** each writer was checked against the state right after its own first run, not against a failed
+  run, a later legitimate writer or a reinstall; and the check was scoped by the issue title, not by the field.
+- **Prevent:** write the decision file last and evict caches first, and test it by making one output read-only and
+  proving the re-run finishes; a finished one-off whose re-run would undo later work refuses without
+  `--rerun-retired` from its first commit, with a test that it refuses before reading anything; before adding a
+  check to one writer, grep every writer of that field and add it to each.
+- **Source:** 1.5.x `docs/reviews/rca-map-tool-followups-2026-10-27.md` findings 1 to 4; #1042, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool's default output never points into a live module (Carn Dûm map icon, 2026-10-16)
+`convert_tripo_prop_textures.py` defaulted `--dst` to the live `TAOM_Map\AssetSources\Scenes\Mordor\textures` and
+replaced files there with no backup, so a run without `--dst` wrote into an unversioned module.
+- **Why missed:** the default came from the first prop's run, and the script was extended twice without a read of its
+  defaults.
+- **Prevent:** a path into the game install is a required argument, never a default, and an existing file is replaced
+  only with `--force`. Before you extend a script, read its argument defaults.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #1; `tools/tests/test_convert_tripo_prop_textures.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A step written for one item refuses many (Carn Dûm map icon, 2026-10-16)
+The rebuild route exports 7 texture sets. The converter, written for one, took the alphabetically first set (the
+256 px openings) under the mesh's name, dropped the other six and exited 0.
+- **Why missed:** the converter and the skill's handoff predate the route that sends many sets into them.
+- **Prevent:** a step that takes one item from a folder counts its matches and fails on zero or several, unless it
+  handles each one. Here each set becomes `t_<set>`, and `--stem` must match exactly one set.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A last-resort path errs toward refusing
+
+`8afe46d39` stopped `block-no-verify`'s raw fallback from over-blocking a message that named a flag, and lost eight refusals, among them `bash -c`. That path runs only past the reader's limit, on a reader crash or on an overrun, so a false refusal costs one retry and a missed one skips a gate.
+- **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
+- **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 18, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `\b` is not a separator in snake_case: `\bao\b` never matches `elk_m_ao`
+`convert_tripo_prop_textures.py` found its AO map by `\bao\b`. `_` is a word character, so there is no boundary between `m_` and `ao` and a map named `Elk_M_AO.tga` was skipped; the converter then used a constant 1.0 and said so in one line. The throne's bake staging names its map plain `ao.png`, which matched, so no shipped texture lost its AO; the Animalia packs (#646) would have.
+- **Why missed:** the pattern was written against the one staging layout it first met, and the fallback to a constant is quiet by design.
+- **Prevent:** match a token inside snake_case names with explicit separators, `(^|[^a-z])ao([^a-z]|$)`, and try every role pattern against the real file names of a new source before the run (the converter prints `maps found`: read it).
+- **On this tree:** This incident ran on the 1.5.x line, and `elk_m_ao`, `Elk_M_AO` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/oneoff/convert_tripo_prop_textures.py` (fixed 2026-09-23), `docs/features/animalia-elk-moose.md` "Textures", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### PowerShell variable names are case-insensitive: `$M` and `$m` are the same variable
+A two-run PowerShell line kept the bone-map path in `$M` and then set `$m` to the moose output folder. The second Blender run was handed the folder as `--map` and failed with `Permission denied` on opening it; the first run, made before the reassignment, was fine.
+- **Why missed:** the names look distinct to anyone reading them with Bash or Python habits.
+- **Prevent:** in PowerShell, give variables names that differ by more than case (`$mapPath`, `$mooseOut`). The commonest shape is a lookup table named in capitals and its loop variable in lower case: it struck again the same afternoon, after this lesson was written, when `$role = $PLAN[...]` in `gen_animalia_anim_clips.ps1` overwrote the `$ROLE` template table and the next `$ROLE[$r]` threw a null-index error. Name the table for what it holds (`$TEMPLATE_OF`) and the item for what it is (`$clipRole`).
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_animalia_anim_clips.ps1`, `TEMPLATE_OF` exist only there; the rule holds here.
+- **Source:** 1.5.x #646 moose reskin run and `tools/gen_animalia_anim_clips.ps1`, 2026-09-23, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that prefers a cooked asset tree reads stale art (2026-09-26)
+A cook at 07:36 on 2026-09-26 wrote the Armory's `AssetPackages/pack0-9.tpac`. `validate_mesh_refs.py`,
+`validate_moduledata.py` (`MISSING_COLLISION_BODY`) and `audit_armory_refs.py` preferred a cooked tree wherever one
+existed, so from 07:36 they read those packs: the hill troll hammer, saved in the Kit at 11:39, read MISSING and would
+have blocked the commit hook, and art deleted from `Assets/` would have passed. The game never read that tree: the
+08:41 session still logged `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`.
+- **Why missed:** a recurrence of "A mesh validator that resolves against cooked packs cannot see art deleted after
+  the last cook" (`data-content-cultures.md`, 2026-08-28). The 2026-09-01 correction in `armory-guide.md` proved from
+  the engine log that the loose tree wins, then called the stale-pack trap unreachable because the Armory had no
+  cooked tree, and the tools kept their cooked-first order. The first cook made the trap live again.
+- **Prevent:** a gate reads the tree the engine's own `Loading packages` line names, never the one that looks more
+  final. The mesh and body gates (`validate_mesh_refs`, `validate_moduledata`, `audit_armory_refs`,
+  `audit_gender_variation_flags`) take their present-set from `validate_mesh_refs.tpac_paths_for_modules` (a module's loose
+  `Assets/**` when it has one, cooked packs only for a module without one, Native), pinned by
+  `test_loose_assets_win_when_both_trees_exist`. When a doc calls a trap unreachable because of how the data happens
+  to look today, fix the code anyway or add a check that fails when the data changes.
+- **Source:** 1.5.x `docs/reference/armory-guide.md` "Two asset trees, and why a clean validator run can lie"; `tools/validate_mesh_refs.py` `tpac_paths_for_modules`; `tools/tests/test_validate_mesh_refs.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A line anchor ending in `.*` splits a CRLF line: the insert lands between `\r` and `\n` (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` found its anchor with `^([ \t]*).*anchor.*$` under `re.M` and inserted
+at the match end. On a CRLF line `.*` takes the `\r` and `$` stops before the `\n`, so the hammer lines went in
+between the two: three live Armory files (`weapon_descriptions.xslt`, `crafting_templates.xslt`,
+`Languages/loc_LOTRAOM_weapons.xml`) gained one `\r\r\n` and one bare `\n`, and the tracked snapshot copy of
+`weapon_descriptions.xslt` inherited them. Every gate passed, because the files still parse; the docs-pass checker
+found it by counting terminators.
+- **Why missed:** the tool detected the file's terminator and emitted it for every line it wrote, and read that as
+  byte-faithful. The parse-before-write check, which the XML I/O convention mandates, cannot see a terminator. No
+  test covered the insert helper on CRLF text.
+- **Prevent:** match a line body with `[^\r\n]*` and end it with `(?=\r?\n|\Z)`, never `.*$`. Give any helper that
+  splices text into a file a CRLF test case (`tools/tests/test_add_hill_troll_hammer_items.py`). When checking a
+  write, compare the counts of `\r\r\n` and bare `\n` before and after, as well as parsing.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/oneoff/add_hill_troll_hammer_items.py`, `tools/tests/test_add_hill_troll_hammer_items.py` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/oneoff/add_hill_troll_hammer_items.py` `insert_after_line`; `tools/README.md` "XML I/O convention"; `docs/reference/lotrlome-hill-troll-changes.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A path gate written with forward slashes never fires on Windows (2026-09-26)
+`config-protection.sh` guarded ADRs with `[[ "$FILE_PATH" == *"/docs/adrs/"* ]]`, but the Edit and Write tools
+pass `E:\repos\TAOM\docs\adrs\x.md`. The pattern never matched, so the ADR guard was dead on the only machine it
+runs on: ADR-012 was created and ADR-010 and the ADR index edited on 2026-09-26 without a challenge (#677), while
+the same hook's `settings.json` check fired, because that one compared `basename`, which splits on both
+separators. An earlier pass had fixed this hook's JSON decoding of Windows paths and left the pattern alone.
+- **Why missed:** the guard was never tested with the path the harness actually sends; every mental check used a
+  forward-slash repo path. A guard that allows is indistinguishable from one that looked and found nothing.
+- **Prevent:** normalise a path before any pattern match in a hook (`${p//\\//}`, then `${p,,}` because NTFS
+  ignores case), and cover the backslash, forward-slash, MSYS, relative and mixed-case spellings in a test
+  (`tools/test_hooks.sh` 7f). Prove a path gate live with a real Edit or Write the harness must refuse.
+- **Source:** 1.5.x `.claude/hooks/config-protection.sh`; `docs/reference/hooks-catalog.md`; `.claude/rules/hook-authoring.md` "Prove a gate live", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A package check by substring passes the wrong art: the head mesh name is inside the body name (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` refuses `--apply` until the hammer's package holds its three names, and
+it tested each one with `name.encode() in blob`. `wm_hill_troll_2h_hammer_head` is a substring of
+`bo_wm_hill_troll_2h_hammer_head`, so the head check passes whenever the body is there, and a body exported as
+`bo_wm_hill_troll_2h_hammer_head_a` passes the body check as well: a package holding only that body and the handle
+clears all three. A `body_name` no package ships is the #352 infinite mission load, the failure the check exists to
+stop. Nothing shipped wrong: the tool ran against a package with the exact names, and `validate_moduledata.py` and
+`audit_armory_refs.py` report a missing body as an ERROR.
+- **Why missed:** a recurrence. `.claude/rules/moduledata-validation.md` already requires "exact-token comparison
+  rather than substring containment" for a script that writes outside the repo, and "Substring keyword matching on
+  names false-matches" is an earlier lesson in this file. The rule is worded for deriving a target set from a report
+  or index, and a presence check on a binary package did not read as the same question. TAOM's art names nest by
+  construction (a body is `bo_` plus its mesh name, LODs add `.lodN`, variants add `_a`), so a substring presence test
+  over them passes on a neighbour.
+- **Prevent:** check a package through its table of contents, by exact name: `validate_mesh_refs.scan_tpac_metameshes`
+  returns the metamesh and physics-shape name sets (on the real hammer package, the head and handle meshes and the one
+  `bo_` body). Test such a check with a package holding only the near-miss name (`bo_..._head_a`), which it must refuse.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/oneoff/add_hill_troll_hammer_items.py`, `wm_hill_troll_2h_hammer_head`, `bo_wm_hill_troll_2h_hammer_head`, `bo_wm_hill_troll_2h_hammer_head_a` exist only there; the rule holds here.
+- **Source:** 1.5.x 2026-09-26 tooling review, finding F1; `tools/oneoff/add_hill_troll_hammer_items.py` package check; `tools/validate_mesh_refs.py` `scan_tpac_metameshes`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The Write and Edit tools decode `\uXXXX`; a source file that needs a literal backslash-u escape is built from char codes
+A C# regex written as `"[\u2013\u2014]"` through the Write tool landed in the file as the two dash characters themselves, because the tool decodes the escape in its parameter. The Edit tool did the same and refused the fix as "no change". The Bash heredoc has the opposite defect (it eats one backslash round), so a Python heredoc carrying the same escape failed to parse. The only reliable shape was a script FILE composing `chr(92) + "u2013"`.
+- **Why missed:** the file compiled and the test passed either way (a literal dash inside a regex character class matches the same text), so only the output-style dash scan noticed, and it noticed a `.cs` file the markdown linter does not read.
+- **Prevent:** when a source file must contain a literal `\u` escape (or any backslash sequence the tools interpret), write it via a script file that builds the backslash from `chr(92)`, then grep the file for the characters you did NOT want. Run the dash scan over changed `.cs` and `.json` files too, not only markdown.
+- **Source:** 1.5.x `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read engine types only from vanilla modules: a third-party mod can bundle engine DLLs (2026-10-14)
+The first 1.5.x body diff reported 509 changed members. The installed Coop module ships 40 1.5.x
+`TaleWorlds` and `SandBox` DLLs of its own, `tools/decompile_bannerlord.ps1` decompiles every module's
+bin, and so `_modules_build` held a second, stale copy of every engine type. The new side indexed two
+definitions of each type, and the tool joined both bodies, so every member compared one body against two.
+- **Why missed:** the decompile and the lookup tools treated "a file under `_modules_build`" as "engine
+  source", and the calibration run (1.5.x to 1.5.x) predated the Coop module.
+- **Prevent:** `engine_body_diff.py` and `check_engine_member_refs.ps1` read engine assemblies only from
+  vanilla modules (`test_third_party_engine_copy_is_ignored`). `decompile_bannerlord.ps1` and
+  `taom-src.ps1` do not yet: `taom-src` probes module bins in name order, so `Coop` wins lookups before
+  `SandBox` and `StoryMode` (follow-up in `rca-engine-bump-1.5.x-2026-10-14.md`). Never quote an engine
+  type from a non-vanilla `_modules_build` file or a `taom-src` hit under `Modules\Coop`.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump, 509 false CHANGED rows, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Installed" is not "effective": prove a guard can see the failure it targets (2026-10-14)
+`SubModuleConstructionGuard` put a Harmony finalizer on `MBSubModuleBase` constructors and
+`Module.AddSubModule` to swallow a third-party SubModule constructor failure. It logged "installed" on
+every launch: 526 installs since 2026-05-27, 0 logged swallows. It could never fire. `Install()` ran from
+`OnSubModuleLoad`, after `Module.LoadSubModules` had constructed every SubModule, and on 1.5.x the only
+`MBSubModuleBase` constructor is 7 bytes with no fields, so a derived class's initialiser exceptions never
+reach it. The class was deleted in the 1.5.x bump.
+- **Why missed:** a clean log read as proof of safety, and no test or log line could tell "nothing
+  threw" from "the guard was never in position".
+- **Prevent:** a guard needs proof it can see the failure it targets: the patched method can actually
+  throw, and the install precedes the guarded event. Install time against the event's time is the first
+  check; a deliberately failing fixture is the second. Count swallows against installs over a long
+  window before keeping one.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump deep review, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A check must fail on inputs it could not read, never report 0 of what it read as clean (2026-10-14)
+The 1.5.x deep review found the new tools passing in states where they had checked nothing:
+`check_engine_member_refs` and `engine_body_diff` could report clean on a missing directory, on an
+assembly that was never indexed, or when the "old" baseline was the same build as the new one.
+- **Why missed:** each tool counted hits against what it did read, so an empty or unreadable input gave
+  0 hits and a green result.
+- **Prevent:** every check reports how many inputs it read against how many it expected, and exits
+  non-zero on a missing directory, an unindexed assembly or a same-build baseline. A positive control
+  (a build known to miss) and a negative control (a fresh build) sit beside it.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump deep review (`check_engine_member_refs`, `engine_body_diff`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Temporary diagnostics stay strippable: no rule, no logger and no sealed-type unwrap lives in them (2026-09-28)
+The Creature Bandits playtest diagnostics were meant to be deleted after sign-off, but by review time the folder owned
+the "creatures are never prisoners" decision, the spawner's only error logger, a `[diag]` WARNING the spawn fallback
+depended on, and a sealed `Agent` unwrap inside `SpiderAttackService`; its lines had also pushed the brood behaviour
+to 218 lines. Following the written strip recipe would have deleted the prisoner rule or left dangling references.
+- **Why missed:** each piece was added during a live spike where the diag facade was the nearest place with the data
+  or a static logger. The "log comprehensively, then strip" lesson says what to log, not where the code may live.
+- **Prevent:** a decision the game needs lives in the feature's rules or hooks, and only its counter goes to the diag
+  folder (`CreatureBanditAgents.RefusesPrisoner` calls `CreatureBroodCampaignDiag.NotePrisonerRefused`). Error logs go
+  through a logger outside the folder (`CreatureBanditLog`). Diagnostics are called from boundary code that already
+  holds the engine object, never from a service. The feature doc keeps a "Stripping the diagnostics" list of every
+  call site outside the folder, updated with each new call.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditAgents`, `RefusesPrisoner`, `CreatureBroodCampaignDiag`, `NotePrisonerRefused`, `CreatureBanditLog` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 3, 4, 5 and 15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pin every git option a gate's answer depends on (plan 017, 2026-09-24)
+The build stamp's `git status --porcelain` lists untracked files only under the default `status.showUntrackedFiles`.
+With that set to `no` (a common speed-up), a new untracked `.cs` under `Main` compiles into the DLL and stamps clean:
+reproduced with `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=status.showUntrackedFiles GIT_CONFIG_VALUE_0=no`.
+- **Why missed:** `--porcelain` was read as a fixed format. It fixes the output shape, not which paths appear.
+- **Prevent:** a script or build step whose verdict comes from git output passes every option the verdict depends on
+  explicitly (`--untracked-files=normal`, `--no-optional-locks`), and its test runs once under a hostile config through
+  the `GIT_CONFIG_*` environment variables.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A JVM hosted inside the Microsoft Store Python writes into the Store's sandbox, not AppData (2026-09-26)
+PyGhidra runs Ghidra's JVM inside the Python process through JPype. The only Python 3.13 on the desktop is the Store
+build, which redirects writes under `AppData` into
+`AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_...\LocalCache\`, and that redirection applies to the
+JVM as well. Ghidra's settings and cache landed there, and its OSGi bundle host (Felix) then refused its own data
+file ("The data file must be inside the data dir") and threw a `NullPointerException` on the first analysis. A bare
+`pyghidra.start()` had passed, because it never touches the bundle host.
+- **Why missed:** the Store build looks like any other CPython (`py -3.13` runs it), and nothing in the error names
+  the redirection. Only a listing of the Store package folder showed where the files had gone.
+- **Prevent:** give any in-process runtime that keeps state (a JVM, an embedded database) absolute directories
+  outside `AppData`; for Ghidra, the `application.settingsdir`, `cachedir` and `tempdir` `VMARGS` in
+  `support\launch.properties`, now `E:\ghidra\user\`. Smoke a new install with the call that does the real work
+  (an analysis), not only the start-up call.
+- **Source:** 1.5.x #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 2; `docs/reference/development-machines.md` "Ghidra, desktop only", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Stage part of a shared generated file by building and parsing the blob, never with a zero-context patch (#1063, 2026-10-29)
+To commit two lines of `tools/translation_name_tags.json` while another session's lines sat in the same file, the
+orchestrator staged a `git diff -U0` filtered to its hunks with `git apply --cached --unidiff-zero`. With no context
+lines the hunks applied at the wrong offsets: one tag landed in another section and the other after the closing
+brace. Two pushed commits held invalid JSON, and every local run passed because the working copy was valid.
+- **Why missed:** the staged blob was never read back. Local gates read the working tree, not the index.
+- **Prevent:** for a generated or structured file shared with another session, load the working copy, remove the
+  other session's entries, write it with the generator's own writer, parse it, and stage that blob with
+  `git hash-object -w --path <file>` and `git update-index --cacheinfo`. Then parse `git show :<file>` before the
+  commit. Never `--unidiff-zero` a structured file.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/translation_name_tags.json` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-feral-orcs-2026-10-29.md` finding 12, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate's hook trigger must cover every file kind its scope names (#626, 2026-09-19)
+`SKILL_TEMPLATE_MISMATCH` judges every XML and XSLT file of the repo module, `lords.xslt` included
+(364 of its 1,528 templated blocks), and its docs said the commit hook ran it. The hook ran the
+validator only when a commit staged `Main/_Module/ModuleData/*.xml`, so a commit touching only
+`lords.xslt` ran nothing.
+- **Why missed:** `CommitGateCoverageTests` pins the hook's `--code` list against the validator's codes,
+  which is one of the two statements of what a gate covers. The other, the path pattern that decides
+  whether the hook runs at all, has no test and nobody read it when the new code's scope went wider.
+- **Prevent:** when a gate's scope gains a file kind, read the hook's trigger pattern in the same
+  change and widen it, and run the pattern against one path of each kind. The trigger was widened to
+  `*.xml|*.xslt` with #626.
+- **On this tree:** This incident ran on the 1.5.x line, and `SKILL_TEMPLATE_MISMATCH` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-skill-template-parity-2026-09-19.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### At an engine bump, resolve the RELEASED TAOM.dll against the new engine, not only a fresh build (1.5.x, 2026-10-05)
+1.5.x replaced a five-parameter `TooltipProperty` constructor with a six-parameter twin. The source
+compiled, every binding gate passed and the fresh build resolved, while the testing channel's v2.0.33
+`TAOM.dll` still called the removed member on 21 tooltip sites.
+- **Why missed:** each bump gate checks source or the fresh build. A compile binds whatever overload the
+  new engine offers, and the binding tests resolve TAOM's patch targets, not its call sites.
+- **Prevent:** `/engine-bump` Phase 1 step 5. Read every engine `MemberRef` of each channel's released
+  `TAOM.dll` with System.Reflection.Metadata, resolve it by name and full signature against the installed
+  assemblies, and use a fresh build as the negative control. Check a claim about what a binary calls
+  against its metadata, never a decompile of it: optional parameters are invisible in source, which is how
+  a review lens blamed the wrong build.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F1 and "The false positive"; #736, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A removed binary lives on in the install and every channel folder until something refuses it (2026-10-05)
+Removing NativeSkinFixes deleted `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` from the repo, but
+copies stayed in the dev install's Client, Server and wEditor bin folders and in all three release
+channels, and the packager classified them COPY. The next package would have shipped MinHook without the
+BSD-2 notice the same change removed. `BehaviorTreeWrapper.dll` went the same way on 2026-05-24.
+- **Why missed:** deploys never delete, the removal edited only the repo, and the only defence was a
+  manual prune step whose keep-list still counted the deleted files.
+- **Prevent:** add any binary the repo stops shipping to `RETIRED_BINARIES` in `tools/package_release.py`,
+  which refuses it (dry runs included), and sweep the install and the channel folders as part of the
+  removal, with a backup.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Blocked on an upstream publish" is a check with a time stamp, not a state (2026-10-05)
+At 08:2x NuGet had no 1.5.x BUTR reference assemblies, and the bump wrote the red test off as blocked.
+BUTR published `1.5.4.123627-beta` for all five packages later the same day; the review found it.
+- **Why missed:** the note recorded a state, with no time stamp and no step that looked again.
+- **Prevent:** re-check the NuGet flat-container index before writing "blocked" into a doc or a commit.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand edit to live data is done when its replay script, snapshot and ledger say the same (#646, 2026-09-23)
+Mike resized the moose to 150 by hand in the live Armory; `tools/apply_animalia_armory.py`, the ledger's reinstall
+recipe, still wrote 100, and its verification step ran no size test, so a reinstall would have reverted the moose
+silently with a 1.5x reach left on a 1.0x body. The same evening's Animalia sets and antler actions never reached the
+in-repo snapshot whose README is the restore path.
+- **Why missed:** the live edit was the visible deliverable; the replay script and the snapshot are read only after
+  a loss, so nothing failed while they drifted.
+- **Prevent:** when you edit live Armory or TAOM_Map data by hand, update in the same change the script that replays
+  it, the ledger's redo steps (with a test filter that covers the edited value) and, for a file under
+  `docs/reference/lotrlome-armory-snapshot/`, the snapshot copy.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/apply_animalia_armory.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` rows 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix that removes a parameter removes what it rejected: name the rejection first (#646, 2026-09-23)
+The first review's tooling round removed `wire_anim_master_skeletons.ps1`'s `-BoneCount` parameter as a nuisance
+("a mixed-rig folder had no way to get that right") and read each master's own bone count instead. The parameter had
+been the script's only rig check: an EMPTY master of another rig found no patch offset and failed. Afterwards any
+EMPTY master could be re-pointed at `horse_skeleton`, and the live warg folder held one (`Warg_Taunt2_geo.tpac`, 50
+bones). The convergence pass and every re-run used the elk folder, one rig, where the change is invisible.
+- **Why missed:** the fix was judged on the input it was written for; nobody asked what the removed value refused.
+- **Prevent:** before deleting a parameter, a check or a flag in a fix, write down what input it made the tool reject,
+  and run the fixed tool on such an input (here a mixed folder: warg, elephant or chariot animations). The tooling
+  lens asks this of every removal.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_anim_master_skeletons.ps1`, `Warg_Taunt2_geo.tpac` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A consumer of a JSON report rejects its error records, not only its missing keys (#646, 2026-09-23)
+`measure_animalia_clips.py` stores a clip that failed as `{"error": ...}` so the rest still measure, and its `.DONE`
+said "ok" unless the whole run failed. `gen_animalia_anim_clips.ps1` checked only for a missing key; PowerShell reads
+an error record's absent `loop_displacement_m` and `plants_sorted` as `$null`, and `[float]$null` is 0, so a failed
+measurement would have been written into the live Armory as a gait that covers no ground, with every check passing.
+- **Why missed:** the committed measurements are clean, so the path never ran; a null check reads as validation.
+- **Prevent:** a tool that consumes another tool's report validates each record's meaning (a loop above 0, enough
+  plants, a fraction inside its range, no error key) before use, and a producer's completion flag fails when any
+  record failed. Prove it with a deliberately broken report.
+- **On this tree:** This incident ran on the 1.5.x line, and `measure_animalia_clips.py`, `gen_animalia_anim_clips.ps1`, `loop_displacement_m`, `plants_sorted` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live-data edit that needs new code changes the installed game when it is written (#646, 2026-09-23)
+Moving the sizes onto the Monsters edited the live Armory at once (the items to the placeholder 100), while the code
+that reads the new attribute waited for a deploy. The installed `TAOM.dll` had no size pass and still baked the old
+reach, so every in-game check in between would have read 1.0x bodies with 1.5x reach; and HEAD's committed tests
+(`ElkConfigTests`, `AnimaliaMountWiringTests`) failed against the live install until the new tests were committed.
+Another session recorded those two failures in its own commit.
+- **Why missed:** the "Unversioned modules" trap is about a reinstall reverting a live edit; here the live edit ran
+  ahead of the code instead, and nothing ties a live edit to the deploy it depends on.
+- **Prevent:** when a live edit depends on unshipped code, say so in the feature doc's state line ("smokes only after
+  a deploy"), and commit the code, the tests that read the live data and the ledger together, so HEAD is never red
+  against the live install.
+- **On this tree:** This incident ran on the 1.5.x line, and `ElkConfigTests`, `AnimaliaMountWiringTests` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool kept in two places drifts: keep one canonical copy and make the other forward to it (2026-09-29)
+The creature-animation toolkit lived twice: `tools/blender/harness.py` in the repo and
+`E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py`, which the skill told agents to exec. On 2026-06-13
+`add_ear_flap()` was added to the live copy only, so the repo copy, the one under review and test, was
+missing a function the elephant idle depends on, and nothing noticed for three and a half months.
+- **Why missed:** both copies were "the toolkit"; the doc named the live path, the repo kept the
+  reviewed one, and no check compared them.
+- **Prevent:** one copy is canonical (the repo, where review and tests run); any other location holds
+  a one-line forwarder (`exec(open(<canonical>).read(), globals())`, or `runpy.run_path` for a CLI)
+  and the original as a backup, and the docs name only the canonical path.
+- **On this tree:** This incident ran on the 1.5.x line, and `E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/adopt-ecc-2026-09-29.md` Step 6; `tools/tests/test_blender_harness_gait.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An early exit moves every existing test off the path behind it: re-point the payloads and give each filter arm a row (plan 013, 2026-09-24)
+After the prefilter landed, none of section 4's contract payloads held `git`, `dotnet` or `build.ps1`, so the exit-code and JSON contract stopped at every Bash hook's first line, and nine hooks had no committed check on their parse path. 4c's positive rows also covered one arm of `suggest-compact.sh`'s three-arm filter. A planted `exit 3` after the `source` and a deleted filter arm both kept the suite green.
+- **Why missed:** the plan listed section 4 as "must stay green" and it did; nobody asked which path its payloads now reached. Rows were chosen per event, not per filter arm.
+- **Prevent:** when a change adds a fast path, list which existing tests now take it and add a payload that reaches the slow path. Give every alternative of a filter its own trigger row, and prove each row by deleting the arm it covers.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a fix removes a premise, retire it from the argument (plan 013 decisions, 2026-09-24)
+Superseded in part: "State a payload premise as the producer's behaviour" above. After D39 only the two confirm gates filter on `git`, and after D40 a payload holding any `\u` escape takes the full parse, so the prefilters are safe under any JSON writer: JSON writes a letter literally or as `\uXXXX`. The catalog still argued safety from Claude Code's writer, and the twelve hook comments called the escape arm "fail open", the house term for allow.
+- **Why missed:** D40 was added as one more arm; the surrounding prose was edited around it, not re-derived.
+- **Prevent:** when a change closes the hole a premise guarded, rewrite the argument from the new rule and move the premise to what it still affects (here: cost, and `suggest-compact.sh` until plan 011 deletes it).
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R6, R9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that parses a shell command judges each command, in the shell's own grammar, against the shapes Claude sends (plan 011, 2026-09-25)
+`validate-push.sh` took the last word of a line as the refspec, so
+`git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed, as did `&& echo done`, a second
+refspec, and `--force --all`. It was the only force-push guard (D29). The ADR-011 batch 1 RCA had
+already recorded the trailing-comment form of this bypass on 2026-09-23; plan 011 rewrote that same
+function and claimed the trunks were guarded. Separately, `mark-verification-run.sh` applied Bash
+escaping to PowerShell text, so ``Write-Output "x`"; dotnet test"`` marked a build that never ran.
+Both hooks also missed a command on a non-final line, because Python's `print` writes CRLF on
+Windows.
+- **Why missed:** the plan called `;` and `&` "harmless tokens", and the tests fed each hook the
+  executor's own idea of a command: pushes that end their line, and Bash strings under a PowerShell
+  tool name. The 2026-09-23 follow-up stayed as prose, not a failing test.
+- **Prevent:** before registering a command-parsing hook for a shell, test it with that shell's
+  real shapes: a trailing `2>&1 | tail -5` or `| Out-Null`, `;` and `&&` chains, two refspecs or
+  arguments, a quoted path ending in the shell's escape, and the command on a middle line. Split a
+  line into commands before judging it. Choose the escape from `tool_name`. For a gate, over-block
+  quoted text rather than open a `bash -c` bypass. A known bypass recorded as a follow-up gets a
+  failing test row the day it is found.
+- **Source:** 1.5.x `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F1, F3, F7, F9 (repeat of `docs/reviews/rca-adr011-batch1-2026-09-23.md`, "Follow-ups not taken"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An order added for speed also chose which target a message names (#680, 2026-09-26)
+`_shellwords.py push_candidates` sorted validate-push's candidate lines (lines that could force first, shortest
+first within each group) so the slow bash judge reached a short force push before a long message holding `push`.
+Once the judge ran in Python under a deadline, the order had no purpose left, and it was deleted with its
+`FORCE_HINT` pattern and the four tests that pinned it; the lines now come back in the order they are produced.
+No verdict depended on the order, since every line is judged until one refuses. What it did decide was the
+message: the judge stops at the first refused line and a warning is last-write-wins, so the order picked which
+trunk the BLOCKED or WARNING line names. A sweep of 1,093 commands (4,372 runs per hook, both shell tools, a trunk
+and a feature checkout) against the ordered hook gave 0 exit-code differences and 349 message-only ones: 319
+BLOCKED and 30 WARNING lines now name a different target, chosen by where each line is produced from the
+command rather than by a force hint and line length.
+- **Why missed:** the order went in as a speed-up, and its tests pinned the mechanism (line lengths, a force
+  hint), not an outcome, so nothing recorded that it also chose the named target until the reason for it was gone.
+- **Prevent:** when the cause of a performance workaround is removed, delete the workaround and the tests that pin
+  it in the same arc, and diff the hook's whole output (rc, stdout and stderr) against the previous commit, so a
+  change in a message shows up as a counted difference rather than a surprise.
+- **On this tree:** This incident ran on the 1.5.x line, and `FORCE_HINT` exists only there; the rule holds here.
+- **Source:** 1.5.x issue #680; `.claude/hooks/_shellwords.py` (`push_candidates`); `tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7i, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A source-text gate must fail on the wrong code, not only on missing code (B4c, 2026-10-22)
+Two B4c gates went RED before the change and green after it, yet passed on a wrong implementation: `SubModuleMissionServerGuardTests` matched the word `IsDedicatedServer`, so an inverted condition passed, and `WargControllerSwapTests` compared two `IndexOf` results, so a deleted call (`-1`) still came "before" the other.
+- **Why missed:** a RED run proves the test sees the missing code. It does not show what wrong code the test accepts.
+- **Prevent:** for every source-text gate, name one plausible wrong edit (an inverted condition, a deleted or swapped call) and make sure the assertion rejects it. Pin exact condition text, require every `IndexOf` to be at least 0 before comparing positions, or compare one whitespace-collapsed sequence.
+- **On this tree:** This incident ran on the 1.5.x line, and `SubModuleMissionServerGuardTests`, `WargControllerSwapTests` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex B4c review F1 and F2; `rca-taom-client-b4c-2026-10-22.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool the docs tell people to run again is a standing tool: give it re-run safety on day one (banner packing, 2026-10-28)
+`pack_banner_sheets.py` was written for one merge. Its doc already said the next emblem goes into a free packed cell, yet a second `--apply` reused the packed sheet names, wrote over two full sheets and moved 70 rows onto used cells. Its gate predicate disagreed with its own planner, and no test drove a finding red.
+- **Why missed:** the tool, its refusals and its gate were judged on the one fresh tree they first ran on.
+- **Prevent:** when a doc describes a repeat use, test that use before the first run: the second run on the tool's own output must be a no-op, the gate's "something to do" must be the fixer's own plan, and each finding kind needs a test that turns it red.
+- **On this tree:** This incident ran on the 1.5.x line, and `pack_banner_sheets.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-banner-packing-2026-10-28.md` findings 1 to 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An advisory hook's output must reach Claude: test the channel, not the text (plan 008, 2026-09-24)
+Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
+- **Why missed:** the plan specified stderr, and `hook-authoring.md` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
+- **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
+- **On this tree:** This incident ran on the 1.5.x line, and `notify-test-results.sh` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A whole-file revert reverts every fix in the file: re-record each finding it touched (plan 008, 2026-09-25)
+Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-results.sh` byte for byte to its state before the plan. The records then said only F11 lapsed. The same revert also undid F2 (the all-skipped normal-verbosity case), the convergence fix D1, and F1's correction to the hook header, which went back to "summarize dotnet test results prominently" beside a catalog row saying nobody sees the output. The same records called the CI `if:` "still open", while #652's Decisions section, written before the commit, called it moot.
+- **Why missed:** the resolution was written from the decision's headline ("drop the banner") and from the session's memory of the answers, not from the list of findings the file carried or from the issue where the decisions were written down.
+- **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
+- **On this tree:** This incident ran on the 1.5.x line, and `notify-test-results.sh` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `dotnet test` is not the full suite: run the whole `/verify` before a review closes (Fords of War, 2026-10-31)
+Fords of War closed a tier 1 review on "suite 30216/0" from `dotnet test` alone. `/verify` before the commit
+then ran the Python tool tests, and `ShippedModuleStringsPinTests` refused all 81 text keys: they were
+`FOW_*`, and TAOM keys start with `taom_`, `TAOM_` or `aom_`. The rename touched 32 files after the review.
+- **Why missed:** the build and review cadence named `dotnet test` as the full suite. The Python tool tests
+  (`tools/tests`, about four minutes) hold the gates for strings, generators and docs, and only `/verify`
+  Step 2b runs them.
+- **Prevent:** before a review closes, and before any "ready to commit" claim, run the whole `/verify`, Step 2b
+  included. A new string key takes the `TAOM_<FEATURE>_` prefix.
+- **Source:** 1.5.x `docs/reviews/rca-fords-of-war-2026-10-31.md` row V1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A docs sweep for a changed value greps the old VALUE, not the new symbol
+The war ram's Monster moved from `action_set="as_horse"` to `"as_war_ram"`. The "update all documentation" pass searched by the new names and by `act_horse_kick`, and reported done; seven docs still showed the ram on `as_horse` with nothing authored, two of them in `<!-- example file=... -->` blocks naming the live file.
+- **Why missed:** a search written in the vocabulary of the new state cannot find text written in the old one. `check_handbook_attributes.py` validates marker attribute NAMES against the engine dump, not VALUES against the file a marker names, so it printed 0 findings.
+- **Prevent:** before claiming a docs sweep is done, grep the literal old value (`attr="old"`, the old id, the old number) across `docs/`, `Main/` comments and the external modules' comments, and classify every hit as fixed, historical (marked superseded) or generic advice that is still true.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_war_ram` exists only there; the rule holds here.
+- **Source:** 1.5.x #618 deep review, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Verify a re-serialised binary against the original bytes, not the fields its own library reads back
+`wire_anim_master_clip.ps1` re-saves a Kit-written clip tpac through TpacTool and verified the result by reading its fields back through TpacTool. The file came back 48 bytes shorter: the item version word 6 became 5 and the Kit's dependency tail (the master's GUID) was gone. The field read-back showed only the two intended changes.
+- **Why missed:** a round trip through one parser cannot see what that parser does not model.
+- **Prevent:** after any re-serialisation of a file another tool wrote, compare size and a byte diff against the original, and explain every difference before trusting it. Here each was then measured closed against shipping data (68 clips at version 5 and 48 without the tail all play in game) and written into the tool's docstring.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_anim_master_clip.ps1` exists only there; the rule holds here.
+- **Source:** 1.5.x #618, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before an in-game test, prove the running process loaded the change
+`dotnet test ... -p:DisableModuleCopy=true` builds without deploying, and a game started before the deploy keeps the
+old DLL. On 2026-09-18 the check was three facts: the deployed `TAOM.dll` contains the new string (a UTF-16 search for
+`act_war_ram_butt`), the game process started after the DLL's write time (15:06:44 against 15:06:35), and every
+on-disk tpac edit predates a Kit load (the Kit re-cooks a changed package's `.rdc` on load).
+- **Why missed:** nothing missed yet; without it the ram would have kept its old kick and read as a failed clip.
+- **Prevent:** run the three checks before asking for an in-game test, and say which build the test will run.
+- **Source:** 1.5.x #618, 2026-09-18, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan proved against one trunk is re-checked when the base moves (2026-10-20)
+
+With six batch sessions merging into `bannerlord-1.5.x` in two days, two B08 changes went wrong the same way. Hard
+Questions deleted two relation pairs because, under the engine's clan-leader rule of the day, they could never win;
+Personal Relations then merged and made each lord his own relation owner, so those lords were charged nothing. Lord
+Courtesies was planned on `328ef9fc1` ("no TAOM code rewards troop gifts") and built on `227212a01`, where Bonds of
+Battle's troop hand-over, the shared relation seam and Personal Relations had landed; the review found two reward
+rules for one act and a GroupOrder already taken.
+- **Why missed:** the overlap research is a snapshot of the trunk when the plan was written, and the fast-forward
+  before the build did not trigger a second look.
+- **Prevent:** whenever a branch moves to a newer trunk before or during a build (fast-forward or rebase), run
+  `git log --stat <old>..<new>` and re-run the plan's overlap check for every seam the plan names (relation calls,
+  party screens, MCM GroupOrder, settings counts, shared adapters). A deletion or simplification justified by an
+  engine or TAOM rule gets a test that pins that rule's assumption, so a parallel change to the rule fails it.
+- **Source:** 1.5.x `docs/reviews/rca-lord-courtesies-2026-10-20.md` (root-cause pattern); `rca-hard-questions-2026-10-19.md` round 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Deleting a GUI or data file from the repo does not delete it from the install (#1022, 2026-10-26)
+A deploy copies files into `Modules/TAOM` and never removes one, so `EventXml.xml` (deleted in #1005) and
+`PreviewPanel.xml` (deleted in #1022) stayed in the installed `GUI/Prefabs` folder. A stale prefab, brush or data file
+there still loads (a prefab by its bare file name, a brush file by name), so a deletion meant to stop it can silently fail.
+- **Why missed:** the repo tree was the only thing checked; nothing compares the installed module with it.
+- **Prevent:** when a change deletes a file under `Main/_Module/`, delete the installed copy too after a byte comparison
+  with its git blob, and say so in the commit body; the deploy guard is tracked in #1024.
+- **On this tree:** This incident ran on the 1.5.x line, and `EventXml.xml`, `PreviewPanel.xml` exist only there; the rule holds here.
+- **Source:** 1.5.x `rca-previewpanel-dead-prefab-2026-10-26.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A binder takes clip availability from the files on disk, never from the plan that promised them (2026-09-25)
+`bind_hill_troll_action_set.py` read its available clips from the retarget index, and the clip generator, fed the
+same index, refused one clip whose vanilla range ran a frame past its master (`aserai_mp_guard_idle_2hperk`). The
+set then named a clip that did not exist; an in-game hit on that code would have played nothing. A post-bind check
+(every `animation="anim_hill_troll_*"` in the set against the `_anm.tpac` names in the folder) caught it.
+- **Why missed:** the index and the clips came out of the same pipeline in the same hour, so "in the index" read as
+  "on disk"; one refusal downstream broke that equality.
+- **Prevent:** `--clips-dir`: a clip is bound only if its file is there; and after any bind, list the bound names
+  against the folder before the parity audit.
+- **On this tree:** This incident ran on the 1.5.x line, and `bind_hill_troll_action_set.py`, `aserai_mp_guard_idle_2hperk`, `anim_hill_troll_` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/bind_hill_troll_action_set.py` `available_clips`; `docs/features/troll-race.md` "Human clips for the hill troll", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live-install fix ships with a check mode, not only a read-back (2026-09-25)
+`wire_hill_troll_race.py` verified its own writes, yet nothing could tell, after an Armory reinstall, that the hill
+troll's skins, Monster and standalone set had reverted: the trap index row "Unversioned modules" already asked for an
+in-repo gate and it was not written.
+- **Why missed:** a read-back that runs only inside `--apply` is not a gate anyone can run later.
+- **Prevent:** a tool that edits the live Armory or `TAOM_Map` gets a `--check` mode (exit 1 on drift, 2 on a missing
+  file, never writes) in the same change; `wire_hill_troll_race.py --check` is the template.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_hill_troll_race.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The safe invocation is the default invocation (2026-09-25)
+Two hill troll tools had four defaults that were safe only when called the way their author called them: the binder bound a clip
+that was never written unless `--clips-dir` was passed, the clip generator's default skeleton GUID would wire a
+re-imported troll master to the human rig, the binder's own process check failed open, and the clip generator's
+clone path skipped the checksum fix silently when python was missing.
+- **Why missed:** each live run passed the flag and ran on a machine where the defaults never fired, and the
+  docstring's usage line, the one a later reader copies, omitted the flag.
+- **Prevent:** give every writer a default that is safe on its own (the install's folder, the shared
+  fail-closed `_gamedir.game_or_kit_running`), refuse where no default is safe (a folder whose masters name
+  another skeleton), and run the docstring's own usage line once before calling the tool done.
+- **On this tree:** This incident ran on the 1.5.x line, and `game_or_kit_running` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` findings 20, 22, 29 and 33, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A verify mode that fails on the correct state is a dead gate (2026-09-25)
+`gen_troll_anim_clips.ps1 -CloneByName -Verify` counted the one clip the generator refuses by design as
+missing and exited 1 on the correct live folder, while troll-race.md recorded both verify modes as clean.
+- **Why missed:** "clean" was read off the printed counts (`ok=428 bad=0`), not the exit status, so a gate
+  that could never pass looked like a pass.
+- **Prevent:** a verify mode lists deliberate refusals under their own name and does not count them as missing;
+  write "clean" in a doc only with the exit code in hand (`refused-by-design=1`, exit 0 now).
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_troll_anim_clips`, `CloneByName` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 21, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A cache keyed on the version string serves old sources after a hotfix (engine bump, 2026-11-04)
+
+Steam moved the game from changeset 125053 to 125270 and kept the version string 1.5.x. `taom-src` keyed its cache on that string and returned any cached file, so it served the old build's sources for over half an hour, while agents cited them as "decompiled from the installed DLLs". The drift banner compares the same string, so it stayed silent too. Only `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` noticed, because the changeset is compiled in.
+
+- **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
+- **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string.
+- **On this tree:** This incident ran on the 1.5.x line, and `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.6-impact.md, "Hotfix: changeset 125270", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A decompiler's auto-analysis misses functions reached only through a registration table (2026-09-26)
+Ghidra's analysis of the 1.5.x client found no function at 947 of the 2,093 addresses the engine registers for its
+2,282 `[EngineMethod]` implementations, `get_current_action_type` at `0x6E19B0` among them. Nothing calls them directly:
+the only reference is a `lea` in the registration function, handed to managed code as a pointer. So
+`native_decompile.py --rva` inside one of them failed with "not inside any function", and those are exactly the
+engine calls TAOM makes. A byte pattern for the registration sites had the same kind of hole: it read 2,278 of the
+2,282, missing the site where `mov rcx,rbx` sits between the `lea` and the id, both tail calls, and DotNet's id 0.
+- **Why missed:** the first tests used addresses Ghidra already knew (crash sites with `.pdata`, a leaf it found
+  through a call). A green decompile of one function says nothing about the functions analysis never created.
+- **Prevent:** when a tool depends on a function table the binary builds at run time, enumerate the table and create
+  the functions from it (`GhidraBackend._seed`), then pin one table-only address in an integration test
+  (`test_a_site_inside_a_registered_only_function_decompiles`). Read instruction sequences with a register-tracking
+  sweep, not a byte pattern, and check the count against the other side (688, 1,561 and 33 managed ids).
+- **Second trap, same table:** 33 of those addresses are shared (one `return false` stub serves 35 methods, another
+  108), so naming a shared address after any one method mislabels every caller of the stub, and a seeded name is
+  never revisited. Name only addresses one method owns, and seed only from a map with no one-sided ids: the first
+  join ranked candidates by shared ids, and Engine's function, which holds every MountAndBlade id, would have taken
+  MountAndBlade's place after a single missed site (about 1,400 wrong answers, exit 0).
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x #688; `tools/native_engine_methods.py` `registration_sites`, `assign`; `tools/native_decompile.py` `_seed`, `seed_names`; the 2026-09-26 deep review findings F1 and F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Read the rules" sends an agent to a rule its `paths:` trigger already loaded (#1003, 2026-10-26)
+Since 2026-10-01, `deep-reviewer` agents read `csharp-architecture.md` (29 KB) whole 142 times and `moduledata-validation.md` (41 KB) 127 times; in 131 of the C# reads the agent had already read a `.cs` file, which loads that rule by itself. AGENTS.md step 3 ("read the relevant linked rules") is written for every AI client, and Codex gets no path rules, so a Claude agent followed it literally. The data-flow lens was 2.1% of all Read output on its own, mostly incident history that already had a committed record, and its check 10 still demanded the `<DependedModule>` rows the maintainer decided against on 2026-09-21.
+- **Why missed:** nothing measured which files agents read until section 9 of `tools/harness_retro.py` gained its "Top files read" table (#1002); a lens grows one "Why this rule exists" paragraph per incident and nothing pushes back.
+- **Prevent:** an agent definition or lens says "make sure you have the rule", never "read it": Read a `paths:` rule only if it has not arrived, and then only its section (`deep-reviewer.md`, agent operating manual item 6). A lens keeps the check and one `Source:` pointer; the history stays in the RCA or lessons file. The weekly retro's file growth table shows a regression.
+- **Source:** 1.5.x adopt-context-mode-2026-10-26.md; issue #1003, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix that refutes a claim sweeps the claim's words, not a file list (2026-10-29)
+The 2026-09-30 review proved that `MBGlobals.GetActionSet` does not throw on a missing action set, and listed the
+eleven files that said it did. The issue written from it (#1065) named two docs to correct, so its fix was complete
+against the issue and left the claim in nine live docs, four community guides and two test comments; a doc review of
+the same batch found them. A separate lens found four more call sites with the same dead `IsValid` check.
+- **Why missed:** a file list is one search's snapshot, and an issue body that copies it narrows the sweep to it.
+  Claims also live in code comments and tests, which a docs-only list never names.
+- **Prevent:** when a fix refutes a claim, put the claim's words in the issue (here "throws on a miss" and
+  `!...IsValid` after `GetActionSet`), grep them over `docs/`, `Main/` and `TAOM.Tests/` before the
+  commit, and treat each hit as fix, history (reviews, changelog archive, snapshots) or follow-up with an issue.
+  The rename-sweep lesson above is the same miss for identifiers.
+- **Source:** 1.5.x `rca-actionset-guard-popup-2026-10-29.md` findings 2, 3 and 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release gate runs on more than one folder shape: test each one it will meet (#1024, 2026-10-26)
+The new packager check refused untracked files in the TAOM module. It was designed and tested on the dev install, but the
+release flow runs the same `--require-build` gate again on Mike's editor-published channel folder, which has no loose
+`Assets/` and one `AssetPackages/pack0.tpac` holding TAOM's packed UI. The check refused that file and told the reader
+to prune it, which would ship TAOM without its sprites.
+- **Why missed:** the never-delete-pack0 rule lived only in local memory, and the tests used one module shape.
+- **Prevent:** list every folder a release gate is run on (the dev install, each channel folder) and give each shape a
+  test; run the gate read-only on the real folders before merging. Keep any rule about what a folder must keep in the
+  release doc, not only in memory.
+- **Source:** 1.5.x `rca-prefab-attribute-gate-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Label an estimate as an estimate, with its inputs (Carn Dûm map icon, 2026-10-16)
+The docs said 10 to 15 px per metre "is what the map shows at full zoom". By `MapCameraView` that density matches the
+default camera distance, and full zoom needs about 50. Two more engine claims (the `_s` AO, back-face culling) came
+from memory and were wrong.
+- **Why missed:** the density was arithmetic on a guessed camera distance, and nothing marked it as a guess.
+- **Prevent:** a number derived from assumptions says "estimate" and gives its inputs (here the camera constants and
+  the 0.15 icon scale), so the next reader can check it. An engine claim cites the code or the shader
+  (`evidence-over-claims.md`).
+- **On this tree:** This incident ran on the 1.5.x line, and `MapCameraView` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #6 to #8; `docs/kitbash/map-icons.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Run the whole tools suite at each work item, and prove a gate on a neighbour of its fault
+
+A scene refusal broke `test_live_map_writers_main` for hours, because each builder ran its own tool's tests. `dump_crash`'s tests faked `returncode=0`, so a real procdump, which exits 0xFFFFFFFE after a good dump, read as a failure. Three new gates passed with a fault one step from the one they were written for.
+- **Why missed:** scoped test runs read as verification, and each gate's red step used its own example.
+- **Prevent:** `python -m unittest discover -s tools/tests -t .` before each block leaves a worktree. Run an external tool once for real before you fake its result. After a gate's first red, try one other spelling of the fault (another attribute order, element text in place of an attribute, a sibling element).
+- **On this tree:** This incident ran on the 1.5.x line, and `test_live_map_writers_main`, `dump_crash` exist only there; the rule holds here.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` findings 5, 11, 13, 14, 17, 19, on `origin/bannerlord-1.5.x` (ported by WP142).

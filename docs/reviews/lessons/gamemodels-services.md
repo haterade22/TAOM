@@ -3,7 +3,7 @@
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new GameModels & Services lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
 ### A single SyncData string must stay at or under 32,763 UTF-8 bytes: chunk any unbounded or growing string payload
-The engine's `ArchiveSerializer.SerializeEntry` (v1.4.6) writes each save-archive entry's byte length as `WriteShort((short)Data.Length)` (a signed int16 truncation), then writes the data in full. So **any single `SyncData` string whose UTF-8 payload exceeds 32,763 bytes (the entry stores 4 plus the UTF-8 bytes as a signed short; v1.4.8 `SaveContext.SaveStringTo`, `GetStringSizeInBytes`, `SaveContext.cs:308-321`) is written with a wrong length and CORRUPTS THE SAVE at write time** (unloadable next launch: `ArgumentException: Source array was not long enough` inside `ArchiveDeserializer.LoadFrom` for >65,535 B, or `OverflowException` for the 32,768 to 65,535 B negative-int16 range). WarOfTheRingMomentum (#327) serialized its whole event log (up to 100 events/type × 6 types × 2 sides, each with a full localized description) as ONE `SyncData` string; it crossed 32 KB around day ~50 and every subsequent save was bricked. The fix (`MomentumSyncChunker`) splits the JSON across N chunk keys ≤10,000 chars each; the per-chunk cap makes corruption impossible regardless of log size, with no data or gameplay change.
+The engine's `ArchiveSerializer.SerializeEntry` (v1.4.6) writes each save-archive entry's byte length as `WriteShort((short)Data.Length)` (a signed int16 truncation), then writes the data in full. So **any single `SyncData` string whose UTF-8 payload exceeds 32,763 bytes (the entry stores 4 plus the UTF-8 bytes as a signed short; v1.4.8 `SaveContext.SaveStringTo`, `GetStringSizeInBytes`, `SaveContext.cs:308-321`) is written with a wrong length and CORRUPTS THE SAVE at write time** (unloadable next launch: `ArgumentException: Source array was not long enough` inside `ArchiveDeserializer.LoadFrom` for >65,535 B, or `OverflowException` for the 32,768 to 65,535 B negative-int16 range). WarOfTheRingMomentum (#327) serialized its whole event log (up to 100 events/type × 6 types × 2 sides, each with a full localized description) as ONE `SyncData` string; it crossed 32 KB around day ~50 and every subsequent save was bricked. The fix (`MomentumSyncChunker`, now `SyncDataChunker.SyncChunks` in `Main/Core/Persistence`) splits the JSON across N chunk keys ≤10,000 chars each; the per-chunk cap makes corruption impossible regardless of log size, with no data or gameplay change.
 - **Why missed:** the #327 deep-review + Codex passes verified persistence *round-trip fidelity* (does the state survive save/load?) and never checked the *byte size* of any single synced string against the archive-entry limit. The single-string transport was itself a fix for a `Dictionary<string,string>` container that didn't round-trip `IDataStore` at ~1,000 entries — it was reviewed as a fix, not as a new risk, and traded a data-loss bug for a worse save-corruption bug. The limit is undocumented and only bites at scale, so nothing in the suite surfaced it.
 - **Prevent:** never sync an unbounded or growing string via a single `SyncData` key. Chunk it (count key + `_{i}` chunk keys, each capped so worst-case UTF-8 ≤ 32,763 B: 10,000 UTF-16 chars × 3 B/char = 30,000 B), or use proper saveable containers of small entries (the engine handles many small entries fine; only a *single* string over 32,763 B is fatal). Add a test that builds the realistic MAX state, asserts it exceeds the limit as one string, and asserts every chunk stays under it. `SaveLoadDiagnostics` (Patch61) stamps `[SaveLoad] GraphFault kind=archiveParse` at this exact site; `tools/inspect_sav.py` / `repair_sav_strings.py` triage + recover already-bricked saves offline.
 - **Source:** docs/reviews/rca-momentum-save-corruption-2026-07-07.md (multi-user v2.0.9 "A problem occured while trying to load the saved game."; engine `ArchiveSerializer.cs:27`).
@@ -851,3 +851,264 @@ A heap release was built on `ScreenManager.OnPopScreen` for the inventory, party
 - **Why missed:** the callers of `MemoryCleanupGC` were grepped and the `GameStateManager` hits were in the list; only the `ScreenManager` one was opened because the class subscribed to a `ScreenManager` event. The review agents were briefed with the conclusion as a premise, so none opened the screens' close paths; Codex did (`InventoryManager.CloseInventoryPresentation`, `PartyScreenHelper.CloseScreen`, `GauntletCharacterDeveloperScreen.CloseCharacterDeveloperScreen`, all down to `PopState`).
 - **Prevent:** for any side effect added at an engine event (a GC, a cache clear, a flush, a re-read), trace the concrete operation being reacted to from its user-facing entry point down through every manager layer, and list where the engine already performs the same side effect on that chain. Brief reviewers with the question, never the answer. A grep hit you did not open is not evidence.
 - **Source:** Codex adversarial pass on the memory instruments, 2026-09-12, P2; `docs/reviews/rca-memory-instruments-2026-09-12.md` finding 3.
+
+### A second check on the same engine float uses the same positive polarity as the first (plan 030, 2026-10-02)
+`MissionDiagnosticBehavior` gated its census window on `_actionSetWindowSecondsLeft > 0f` and closed it on `<= 0f` two lines later. A NaN frame time makes the remainder NaN, which fails both, so the window stopped without its "census closed" summary. Another instance of the NaN-gate class this file already counts.
+- **Why missed:** the close check read as the natural "ran out" test and sat beside two correct positive checks on the same field.
+- **Prevent:** when a field is gated positively in one place (`x > 0f`), write every other decision on it as the negation of that requirement (`!(x > 0f)`), never as the complementary comparison, and pin the NaN case in a test.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A campaign-only GameModel leaves Custom Battle on the vanilla model (2026-09-26)
+`TaomBattleBannerBearersModel`, which keeps trolls from carrying standards, was added on the campaign starter only;
+Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so the vanilla gate alone ran there
+and hill trolls raised banners in every troll smoke. The registration comment even said "Custom Battle ... is
+unaffected", which was true of the density policy and false of the race gate.
+- **Why missed:** the model was written for the campaign policy, and the race gate rode along without anyone asking
+  which game types it had to cover.
+- **Prevent:** for every model rule, ask whether it must hold in Custom Battle too; if it must, add a Custom Battle
+  subclass in `SubModule.RegisterCustomBattleModels` (the morale, agent-stat and now banner models are the shape),
+  carrying only that rule.
+- **Source:** 1.5.x `docs/features/banner-bearers.md` "Race gate", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A Custom Battle twin must be hand-wired, and must not extend the Sandbox model (#788, 2026-10-09)
+The Combat Mechanics damage rules (crush-through, cleave, stagger, charge knockdown, Signature Strikes knockdown) lived only in `TaomCombatMechanicsModel`, so Custom Battle ran vanilla for all of them. The Custom Battle damage slot was already taken by a model a feature module declared, and the docs recorded the gap as a fact ("the rest of Combat Mechanics stays campaign-only") instead of a decision.
+- **Why missed:** the module-declared model looked like the Custom Battle model, so nobody asked what the campaign model carried that it did not. Registering the campaign model there is not an option: it derives from `SandboxAgentApplyDamageModel`, which reads `Campaign.Current` on the first mounted hit and throws.
+- **Prevent:** a Custom Battle twin extends the engine's Custom Battle base and is added in `RegisterCustomBattleModels`; a module may not declare a slot that method fills (the module step runs after it, the last model added wins, and a module fault drops the model for the session; `FeatureModulesTests` pins it). When you mirror a campaign model, pin the twin's hook call order against the campaign model's IL, and document each place the Custom Battle base answers differently from Sandbox's. A doc line that says a rule is campaign-only needs a named reason, or it is a gap. When a mode's behaviour changes, sweep the docs by the mode name ("Custom Battle") together with the mechanics' names, not only by type name.
+- **Source:** 1.5.x `docs/features/combat-mechanics.md` "Custom Battle", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard on a lazily parsed parameter is not the service-exit gate (plan 002, 2026-09-24)
+Career mutation attributes are copied into a string dictionary at load (`CareerConfigProvider.ParseChoice`) and parsed only when an ability fires (`MutationParams.GetFloat`), so issue #128's loader-side NaN sweep never saw them. Plan 002 guarded `GetFloat` and called it "the single chokepoint", but a finite parameter still overflows inside a calculator (`multiply` by `1e38` gives +Infinity) and `MutationService.ApplyMutation` writes the result unchecked. The same plan ruled out the rule-5 warning because the accessor has no logger, without looking at the two layers that do.
+- **Why missed:** the fix was judged at the accessor alone; "chokepoint" was true for the parse and false for the value finally written.
+- **Prevent:** when a NaN sweep audits loaders, also grep for values stored raw and parsed at use (`Dictionary<string, string>` params, `GetFloat`-style accessors). Guard the parse, then gate the calculated result where the service writes it (`if (!FiniteFloatValidator.IsFinite(result)) { warn; keep current; }`, per `csharp-architecture.md` "gate the service's own EXIT"); the writer usually holds the logger and context the accessor lacks.
+- **Source:** 1.5.x `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 5 and the root-cause pattern; the exit gate is open, awaiting Mike, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A skip gate in front of a service call calls that service's own predicate, never a copy (2026-10-02)
+Plan 037 let `TaomPartySpeedModel` skip the roster walk when `ICulturalFeatsService.NeedsMountedCount` says the
+Rohan infantry penalty cannot apply, passing (0, 0) instead. `NeedsMountedCount` re-derived the penalty's feat
+test rather than the penalty using it, so a second trigger feat added to the penalty alone would have left the
+model skipping the walk for that culture and the penalty silently off; the parity test enumerated only
+today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with two callers) was built right.
+- **Why missed:** the skip-gate was written as a sibling of the decision it guards, and a parity matrix over
+  the current data cannot see a predicate that drifts later.
+- **Prevent:** when a caller skips work because a service would ignore it, the service's decision method
+  calls the same predicate the skip uses (`if (totalCount <= 0 || !NeedsMountedCount(culture)) return;`), so
+  the two cannot disagree. Review a new "needs X" member by finding the decision it mirrors and checking the
+  decision calls it.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A damage-model stage value is not the final damage
+- **Why missed:** the creature gate-blow log printed `hitPoint - scaled` from `ApplyDamageScaling`, but reductions, general modifiers (campaign damage bonuses, career buffs) and rounding run after that stage, so the logged "after" HP overstated what was left in the campaign while matching Custom Battle.
+- **Prevent:** log only values the stage owns; read the outcome from the next observation (the following blow's "before" HP) and say in tuning docs which later stages change the number per game mode.
+- **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Splitting a captured-once guard into per-call seams keeps its fail direction in every seam (plan 026, 2026-09-24)
+The old `RefugeService.ReleasePeacePrisoners` read the refuge's faction once and returned before
+the walk without one, so a missing faction released nobody. Plan 026 split it into a count seam
+(0 rows without a faction) and a per-row war-check seam that re-read the faction and answered
+`false`, which the service reads as "release", when it was missing. Unreachable today, but the rule
+that protects an irreversible action then lived only in the start-of-walk guard, and a later edit
+to that seam alone would have released every prisoner. The plan's maintenance note recorded the
+flip and accepted it as unreachable.
+- **Why missed:** parity was judged on the states the plan could reach; nobody asked which way each
+  new seam's missing-input default fails.
+- **Prevent:** when a refactor moves a guard that was checked once before a loop into a seam called
+  per item, write down what the old early return meant (usually "do nothing") and make every new
+  seam's missing-input answer mean the same thing to its caller. A predicate that gates an
+  irreversible write answers the safe way (keep, skip) when its context is missing.
+- **Source:** 1.5.x `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S1 (Agents 1, 4 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rule exception lives in a recorded catalogue, never only in a comment in the code it excuses (#737, 2026-10-05)
+- **Why missed:** `TaomCombatMechanicsModel` kept two `if (IsHorseCharge)` routing guards, which gamemodels.md rule 4 forbids in an override body, because its own header called them "the parent's accepted idiom". No ADR and no `.ai/review-reference.md` "Intentional Patterns" entry records that idiom; the claim outlived several reviews and the #737 plan because each reader took the file's account of itself.
+- **Prevent:** before keeping code a rule forbids, find its exception in `.ai/review-reference.md` "Intentional Patterns" or an ADR. With none, fix the code (here each facade declines the hits it does not own, so the override is a `??` chain) or record the exception with its reason; either way the excusing comment goes.
+- **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cap what a model call returns, not what you send it; read the body before trusting its name (#834, 2026-10-23)
+Enlistment's personal spoils first chose the three highest-value kills and then asked the loot model
+for one item each. The model often returns nothing (it skips non-merchandise gear and accepts each
+item with a chance of at most 0.325), and the highest-value kills (trolls) carry only non-merchandise
+gear, so a battle full of kills could pay nothing. The same feature attributed kills to
+`Mission.MainAgent`, which moves to a soldier the player takes control of after his hero falls.
+- **Why missed:** "a loot roll" and "the main agent" were read as names, not as the decompiled bodies.
+- **Prevent:** when a cap or a count governs what an engine call yields, apply it to the results that
+  landed, not to the inputs. Identify the player's own actions by `CharacterObject.PlayerCharacter`, not
+  by `Mission.MainAgent` or `IsMainAgent`.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-personal-spoils-2026-10-23.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A deletion is not done until nothing it orphaned is left, and a kept safety branch has a real caller (#844, 2026-10-26)
+The enlistment dead-surface cleanup deleted each listed member after checking it had no reader, but left what
+those deletions orphaned (an hour parameter through five signatures, a probe field, a counter, an adapter
+method, a one-caller clamp class), and kept a petition rollback whose only caller could never reach it.
+- **Why missed:** the check was per member ("does it have a reader?"), never per deletion ("what lost its last
+  reader because of this?"), and the kept branch was justified by a note, not by tracing its caller.
+- **Prevent:** after deleting a member, grep every value it read and every member that fed it, and delete what
+  has no reader left; before keeping code "for safety", trace its callers and show one that reaches it.
+- **Source:** 1.5.x `rca-enlistment-dead-surface-2026-10-26.md` F1, F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A number shown to the player comes from the code that pays it, at the moment he decides (#839, 2026-10-24)
+The retinue cost line first read the rank wage table beside the payout, so the board promised pay on days the
+daily tick pays nothing, and it showed in a message after the oath, where the issue asked for the decision point.
+- **Why missed:** the builder implemented the plan's words ("on the oath line", "service pays M") and never
+  checked them against the reason the issue gave.
+- **Prevent:** for any figure on a board, tooltip or dialog, read it through the service that moves the money
+  (`IEnlistmentWagePreview`), not its table; put a cost the player weighs on the line where he can still decline,
+  and quote a value the following step grants from the same method that grants it.
+- **Source:** 1.5.x `rca-enlistment-retinue-cost-2026-10-24.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A flat ApplyFlat term goes after the last AddFactor
+`ApplyFlat` divides out only the factors already on the number. The career party-size count ran before
+the AI lord scaling added its factor, so "+4 party size" became about +12 under a 3x host setting.
+- **Why missed:** the helper's comment promised it worked whatever the call order.
+- **Prevent:** call `ApplyFlat` after every `AddFactor` in the model, and pin the order with a
+  call-token test.
+- **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (WIRE-02), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `Enum.TryParse` is not a name check: it takes padding, numbers and comma lists (2026-09-23)
+
+`BannerBearerConfigProvider.ValidateFormationGroups` kept any `AllowedFormationGroups` entry
+`Enum.TryParse<FormationClass>` accepted, as typed. That includes `" Infantry "`, `"2"` and
+`"Infantry, Ranged"`, and `Enum.IsDefined` passes any defined number. `BannerBearerService` compares
+the stored string with `FormationClass.ToString()`, so such an entry loaded clean, logged "Loaded",
+and as the only entry switched every banner bearer off. SignatureStrikes had the same bug a week
+earlier (Codex review 114 F2) and fixed it with a private name-only parser nobody else could find.
+
+- **Why missed:** `TryParse` reads as "is this a member name", and the one test sent a typo
+  (`Infntry`), which it does reject.
+- **Prevent:** parse config enum strings with `TAOM.Core.Validation.EnumNames.TryParse` (declared
+  names only, trimmed, case-insensitive), and when a consumer compares strings, store the value as
+  the enum prints it: `FormationClass` declares three values twice. Test a padded name, a number and
+  a comma list, not only a typo.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Follow-ups to Review 130" F2; `rca-signature-strikes-2026-09-16.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fallback reads the compiled default, never restates its literal (Dread Aura, 2026-10-15)
+The Dread Aura's morale floor moved from 0 to 10 in the compiled `DreadProfileConfig`, the shipped JSON and the
+tests, and `DreadAuraService.ComputeDrain` still fell back to `_config.Profile?.MoraleFloor ?? 0f`: a third copy of
+the old default, and the one value that lets the aura rout troops by itself. The provider never returns a null
+profile today, so nothing failed; a future path that did would have silently restored the behaviour the change
+removed.
+- **Why missed:** the plan named the default's homes (the compiled initializer, the JSON, the MCM initializer) and
+  nobody searched for a literal fallback of the same field. The sibling getters in `DreadAuraSettingsProvider`
+  already read `new DreadProfileConfig().X`.
+- **Prevent:** a null-coalescing fallback for a config field reads the compiled default
+  (`?? new XConfig().Field`), so one initializer holds the value. When a default moves, search the field name for
+  `??` and for its old literal before calling the change done.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Code written into a fix brief is held to the same rules as the code (#918, 2026-10-20)
+The #918 brief told the implementer to add `if (...BlocksAiRecruitAtCastle(...)) return -1;` to the top of
+`TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero`. The implementer followed it, and the standards lens flagged an
+inline `if` in a GameModel override body, which gamemodels.md rule 4 forbids and #737 already ruled a defect.
+- **Why missed:** the brief was written as a recipe for a quick fix; nobody checked the snippet against the rules for
+  the file it targets, and the implementer treats a pinned snippet as decided.
+- **Prevent:** before a brief pins a snippet, check it against the path rules for the target file (gamemodels.md for a
+  `Taom*Model`, csharp-architecture.md for a service). For a model override, compose the decisions in one expression with
+  base fall-through (`a || b ? -1 : base(...)`), as `TaomMarriageModel` does.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A call's arguments run before its guards
+
+`TaomPregnancyModel` moved its immortal and fertility guards into one service call, and the arguments of that call read `hero.Clan`. A clanless hero outside the window went from 0 to a throw. The extraction was described as behaviour-preserving, and its tests covered the service.
+- **Why missed:** moving a guard behind a call looks like moving text, but the order of reads changes. A sealed-type model has no unit seam to show it.
+- **Prevent:** when guards protect later reads of a sealed type, keep them in a call of their own (`CanConceive`) before the reads. Compare old and new for each input, the negative and null ones included, before you write "behaviour-preserving".
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sub-group under a master toggle inherits its promise: fold the master into every read, or make the group top-level (2026-09-28)
+MCM splits a group path on `/`, so options in "Combat Mechanics/Creature Bandits" render inside Combat Mechanics,
+whose master toggle's hint says "When off, everything below is inert". Every existing Combat Mechanics read folds
+that switch through `CombatMechanicsSettingsProvider`; the 14 creature options were read by
+`CreatureBanditTuning.Current` straight from `TaomSettings`, so with Combat Mechanics off the spiders kept their tuned
+HP, strike caps and 50% missile damage.
+- **Why missed:** the group path was picked for where the options read naturally, and a group path does not look
+  like behaviour. It is: it places the option under a hint that promises something. Third instance of the
+  master-toggle class (CombatMechanics `GetHorseChargePenetration` 2026-07-02, WotR Momentum 2026-07-03).
+- **Prevent:** before adding a property under an existing group path, read that group's master hint. Either every
+  read of the new property folds the master (through the group's settings provider), or the group moves to the top
+  level. Pin the choice with a test that reads the `SettingPropertyGroupAttribute` by name
+  (`CreatureBanditTuningTests.McmGroup_IsTopLevel_OutsideTheCombatMechanicsMasterToggle`).
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditTuning`, `CreatureBanditTuningTests`, `McmGroup_IsTopLevel_OutsideTheCombatMechanicsMasterToggle` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Guard an action by the stored state it writes, not by a model-aware query (#772, 2026-10-08)
+A TAOM `DiplomacyModel` override makes `Kingdom.IsAtWarWith` answer "at war" for pairs whose stance link is still neutral (`TaomDiplomacyModel.IsAtConstantWar`: every Hostile pair at Full War). A guard of the form `if (!AreAtWar(a, b)) DeclareWar(a, b)` then skips exactly the declarations the feature exists to make: Phase 2 of the War of the Ring declared none, so no `OnWarDeclared` fired and the stance links stayed neutral. `DeclareWarAction` itself consults only the shallow stance (v1.4.8 `FactionManager.cs:119-125`), so the guard added a refusal the engine never had. `Kingdom.GetStanceWith` is not a pure read either: it creates a missing link typed from `GetDefaultDiplomaticStance`, which is War whenever `IsAtConstantWar` is true.
+- **Why missed:** every test faked `AreAtWar` as a constant, independent of the phase, so the feedback loop through the model could not show; the #764 Codex review found it by reading the engine, one change away from where it lived. The first M0b cut also left the phase flip after the declarations, and nobody asked what else listens to `OnWarDeclared` in between (F01).
+- **Prevent:** guard a declaration with the stored link the action itself writes (`IAllianceAdapter.HasDeclaredWar`) and keep `AreAtWar` for questions about the model; document on the adapter member that it must not guard a declaration. Fake the model-aware query in tests the way the override answers it (following the phase), in every test of the path, not one. Count a war only after re-reading the stance, since the veto prefix and unknown ids make `DeclareWar` a silent no-op. Set the phase before declaring, so vanilla's `OnWarDeclared` listeners (call to war) already see the constant war.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-phase2-wars-2026-10-08.md` (#772), findings F01 to F04, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Fill a gap with the engine's own pick on a TAOM pool, never a copy of the pick (#933, 2026-10-19)
+Twice on one day a fallback re-implemented the engine's random pick: Bard Town Guard's service copied
+`GetRandomElementWithPredicate` over a flags array, and the vassal reward's `PickReward` copied `GetRandomElement`
+with an index clamp that can never fire (`MBRandom.RandomInt(n)` is always below n). Each copy carried its own
+tests, and neither did anything the engine call does not.
+- **Why missed:** the habit of putting every decision in a pure service, even when the decision is "pick one at
+  random", which the engine already does with the same single draw.
+- **Prevent:** build the pool in TAOM (a service such as `LordBannerService.Allowed`), then call
+  `GetRandomElement` or `GetRandomElementWithPredicate` on it at the boundary. Test the pool; pin the call order
+  with an IL test.
+- **On this tree:** This incident ran on the 1.5.x line, and `PickReward`, `LordBannerService` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F6; `rca-bard-town-guard-2026-10-19.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a source that returned null starts returning an object, diff every reader's old fallback (B8, 2026-10-23)
+B8 made `TaomSettings.Instance` and its three siblings return fresh compiled-default objects on a dedicated
+server, where MCM had returned null. Every `X.Instance?.Prop ?? fallback` reader switched from its fallback to the
+property initializer. One differed: the hitch probe's `?? false` against a compiled `true`, so Patch98 began
+installing on every server boot, against the provider's own fail-closed contract. Config-backed fallbacks went
+dead the same way.
+- **Why missed:** the plan checked the readers that test for null, not the value every reader got before and after.
+- **Prevent:** before a null source becomes an object, script a comparison of every `?? fallback`, clamp default and
+  config-backed fallback against the new object's value (lens 5's `compare.py` did 285 rows in one run), and either
+  match the old value in the new object or document each change.
+- **On this tree:** This incident ran on the 1.5.x line, and `compare.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-b8-server-settings-2026-10-23.md` findings 2 and 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A config list is validated entry by entry: a null or blank entry passes a count check (#645, 2026-09-23)
+
+`SignatureStrikesConfigProvider` reverted a `null` identity list and dropped a signature whose three
+lists were all empty ("matches nobody"), but it returned any non-null list as it was. `"heroIds":
+[null]` or `[""]` therefore counted as one identity, the signature loaded as valid, and the registry
+skipped the entry without a word, so it matched nobody while the log said Loaded. Codex found it with
+a one-signature JSON input.
+
+- **Why missed:** the provider's tests covered the list's two states (`null`, `[]`) and not its
+  entries; the "matches nobody" rule read `Count`, which a null entry satisfies. The registry's own
+  blank-entry skip hid the problem downstream instead of reporting it.
+- **Prevent:** for every list a provider accepts, validate each entry as a field of its own (remove
+  a null or blank entry with a warning, trim a padded one the way the provider's other names are
+  trimmed) before any rule that reads the list's size, and give each entry rule its own test
+  (`GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`,
+  `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`,
+  `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped`). Fix the class, not the input
+  the reviewer sent: the first cut removed `[null]` and `[""]` and still let `" lord_1_17 "` match
+  nobody.
+- **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesConfigProvider`, `GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`, `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`, `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex review 130 (O1); `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A model slot registered from two starters gets every new rule in both, and a binding test pins both
+`AgentStatCalculateModel` is added twice: `TaomAgentStatCalculateModel` from the campaign starter and `TaomCustomBattleAgentStatCalculateModel` from `RegisterCustomBattleModels`. #610 wired the charge multiplier into the campaign one only, so the cheapest smoke route (Custom Battle cavalry) would have shown nothing even after the lookup bug was fixed.
+- **Why missed:** the feature was written against the slot it found first; the second registration had landed the same day from another feature and nobody enumerated `AddModel<AgentStatCalculateModel>` call sites.
+- **Prevent:** before adding a rule to a `Taom*Model`, grep `AddModel<TheBaseModel>` in `SubModule.cs` and give every registration the rule (a shared static applier keeps the logic in one place); the binding test resolves both model types by name and asserts both call it. And place the rule per BASE model, not per copy: `SandboxAgentStatCalculateModel` rewrites `MountChargeDamage` on every `UpdateAgentStats` while `CustomBattleAgentStatCalculateModel` writes it once in `InitializeAgentStats`, so the same `*=` post-pass is idempotent in the campaign model and compounds in the Custom Battle one. Read the base's write site for the property before choosing the override that carries a multiply, and pin the placement (the Custom Battle test asserts `InitializeAgentStats` calls the applier and `UpdateAgentStats` does not).
+- **On this tree:** This incident ran on the 1.5.x line, and `TaomCustomBattleAgentStatCalculateModel` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-cavalry-charge-2026-09-17.md` findings 2 and 6, #610, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A penalty on a shared engine limit reaches every party kind and every reader of that limit (garrisons, 2026-10-16)
+The troop-weight penalty deflated `GetPartyMemberSizeLimit` for every party, garrisons and patrols included. Vanilla
+desertion removes a quarter of a garrison's excess over that limit every day, its morale falls with the excess, and lords
+refill garrisons to the unweighted `CalculateGarrisonPartySizeLimit`, so elite garrisons deserted without end (yotthani's
+campaign run counted about 20.6 k deserters in the whole free block, 19.6 k of them in four elven realms; the cause is
+yotthani's reading). Patrols, which nothing trims, sat over their deflated limit under vanilla's speed penalty. TAOM's doc
+said vanilla never enforces the garrison limit; the shed's leaderless guard hid the gap. The first fix exempted the
+penalty only, and the capacity displays kept showing the weighted count over the now unweighted limit.
+- **Why missed:** the 2026-07-11 rework moved the penalty from the count to the limit and checked the readers TAOM
+  owns (the shed, the tooltips), not the engine's own readers of `PartySizeLimit` per party kind.
+- **Prevent:** before a model override changes a limit, list the party kinds its base branches on (in 1.5.x: garrison,
+  patrol, a leader with a clan, caravan, villager; the rest take the flat 20) and the engine readers of the result
+  (desertion, morale, recruitment room, AI transfers, speed), and exempt or test each kind. Put an exemption in one
+  predicate that enforcement and every display read (`TroopWeightPenaltyScope`). A guard that keeps TAOM's own code
+  away from a kind does not keep the engine away.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/adopt-yotthani-2026-10-16.md`; `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 13 and 14, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A full-replacement GameModel override is a frozen copy of a vanilla body: name the copy, and diff it on every engine bump
+`TaomPartyWageModel.GetTroopRecruitmentCost` replaces vanilla wholesale and re-implemented the v1.4.8 shape of the buyer-perk discounts (each on the BUYER's own perks, `Frugal` gated on `IsPartyLeader`). 1.5.x moved the seven secondary-role discounts to `PerkHelper.AddPerkBonusForParty` on the buyer's party, where every one of them has `SecondaryRole PartyLeader`: the party LEADER's perks, none for a buyer without a party, no leader gate, and `LimitMin(1f)` outside the null check. The signature never moved, so the build, `HarmonyPatchBindingTests` and the API snapshot all stayed green through a body that no longer matched the engine.
+- **Why missed:** every gate TAOM has compares signatures against the installed DLLs and re-derives on each run; a copied body has no equivalent. The entry that introduced the copy records the v1.4.5 body it was verified against and nothing marks it as a copy to be re-diffed. An additive override (`base.` first, TAOM layered on top) inherits an engine change for free; a replacement inherits nothing, and the two look the same to a signature gate.
+- **Prevent:** an engine bump includes a member-level body diff of every bound member (`bodydiff.py` shape: decompile both versions, diff each bound method's body, rank full-replacement overrides first because they are the only ones that can drift silently). When writing a replacement override, say in its comment which vanilla body it copies and at which version, so the next diff can find it by grep. Prefer the additive shape wherever the engine's own terms are wanted: the 28 additive overrides in this pass needed no change against a `BattleEnvironment` rework and a new personality-trait system.
+- **On this tree:** This incident ran on the 1.5.x line, and `bodydiff.py` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-v1.5.2-bodydiff-2026-09-14.md` finding 1; the v1.5.2 body-diff pass (2026-09-14), 62 members, one drift, on `origin/bannerlord-1.5.x` (ported by WP142).
