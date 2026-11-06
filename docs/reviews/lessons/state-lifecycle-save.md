@@ -968,3 +968,10 @@ Enlistment kept a defender's encounter inside the commander's town after a repul
 - **Why missed:** the plan checked that the object could be reused, not what it still held, and the guard was placed by reading the step list, not by asking which earlier step removes its condition.
 - **Prevent:** before reusing an engine object, list its saved fields and clear or verify each one; before placing a guard, list the steps that run ahead of it and check whether any of them removes the state the guard tests. Test with a merged soldier, not only an unmerged one.
 - **Source:** 1.5.x #1021, `docs/reviews/rca-enlistment-encounter-exits-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### List a state machine's whole lifecycle before you fix one of its orders
+
+The warg rage stores a rider and a formation, and four things can end it. A follow-up named one order, a rider who leaves a living warg, and its fix passed. A review then found a dead hitter that stopped the tree, a second rage that stored null, a rage with no enemy near that never closed, and a new rider who took the wrong formation. The re-review found that the fix for the last one was also wrong.
+- **Why missed:** the brief was the line, and the line named one order. Two game logs already held the tree exception, and nobody read them, because check 12 counted those rages as restored.
+- **Prevent:** before the first edit on a stored-state fix, write down each state, each event that can arrive in it and who owns the record. A record with one owner ends when its owner changes. Read the logs of the runs you have, not only the verdict line.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).

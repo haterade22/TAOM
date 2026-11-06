@@ -628,3 +628,29 @@ defaults. Fitted to the skinned mesh the elephant reaches 98%.
   collision, name the layer the complaint is about: bumping is the body capsule, blows passing through are the hit
   capsules, a corpse is the ragdoll.
 - **Source:** 1.5.x `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules", `docs/features/elephant.md` "Collision", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The two hash fields in a tpac are xxHash64, and a stale one renders a clone invisible
+
+**2026-09-17, spider skin variants (#616).** A tool cloned the proven split spider meshes under new
+names with a different material: geometry verbatim, names and material GUID rewritten, fresh item
+and segment GUIDs. Every validator passed, the catalogue parsed the clones, the engine logged no
+`Unable to find` and no dependency error, and the inventory tableau drew nothing. The clone had
+kept the source's 8-byte per-segment field on the rewritten binding segment and the source's item
+checksum. Both are xxHash64 (seed 0): the segment field over the DECOMPRESSED payload (entry offset
+56; 16 of 17 live segments match, the skeleton's user-data segment being the odd one) and the item
+checksum over the int64 metadata length plus the metadata (all four live items match). Recomputing
+both is the fix under test; the reading below is what the evidence supports.
+
+**Rule.** Any tool that rewrites bytes inside a tpac segment recomputes that segment's xxHash64, and
+any tool that rewrites item metadata recomputes the item checksum, then re-parses its output and
+asserts both formulas hold; `tools/tpac_clone_metamesh.py` and its test carry the reference
+implementation. A silent render (no log line, no crash, nothing on screen) is the symptom of a stale
+hash, and no gate that reads the file rather than the renderer can catch it. The mechanism that fits
+both observations is a content-keyed lookup rather than validation: the 2026-06-11 byte-patched
+clips carry stale hashes that collide with nothing and load, while the clone's stale hash equalled
+a segment already loaded from the source bundle and resolved to that one. The in-game retest of the
+rebuilt tpac is what proves it; until then this is the best-supported reading, not a verified one.
+- **Source:** 1.5.x the 1.5.x lessons file at `426f0dc88`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand-built tpac package is invisible to the game until the Modding Kit has cooked its RuntimeDataCache entry
+- **Source:** 1.5.x the 1.5.x lessons file at `5ccde2771`, on `origin/bannerlord-1.5.x` (ported by WP142).

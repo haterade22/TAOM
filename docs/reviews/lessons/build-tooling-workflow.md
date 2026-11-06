@@ -3202,3 +3202,43 @@ offenders. `core.ignorecase` is true, so `git status` shows nothing.
 - **Prevent:** a key built from a disk path compares with `OrdinalIgnoreCase`. Run a new path-keyed
   gate on the main checkout as well as in a worktree.
 - **Source:** 1.5.x `rca-gauntlet-ratchet-case-2026-11-03.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write last the file a re-run reads to decide what is left (map-tool follow-ups, 2026-10-27)
+`Apply-MapVillageNames.py` decided what to rename from the master alone, wrote the master first and evicted the
+translation cache last. A run that failed on the fourth language left a master that matched its table, so the re-run
+printed "nothing to do" with nine languages and the whole cache still stale; the reset one-off did the same with
+its German witness file. Separately, both new one-offs called themselves idempotent, but a re-run after the
+translation backlog (#763) would turn every translated row back into English, the same missing `--rerun-retired`
+guard the Lindon RCA named that morning. And the map-wide name check went to the two writers the issue named, not
+to the renamer, the third writer of settlement names.
+- **Why missed:** each writer was checked against the state right after its own first run, not against a failed
+  run, a later legitimate writer or a reinstall; and the check was scoped by the issue title, not by the field.
+- **Prevent:** write the decision file last and evict caches first, and test it by making one output read-only and
+  proving the re-run finishes; a finished one-off whose re-run would undo later work refuses without
+  `--rerun-retired` from its first commit, with a test that it refuses before reading anything; before adding a
+  check to one writer, grep every writer of that field and add it to each.
+- **Source:** 1.5.x `docs/reviews/rca-map-tool-followups-2026-10-27.md` findings 1 to 4; #1042, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool's default output never points into a live module (Carn Dûm map icon, 2026-10-16)
+`convert_tripo_prop_textures.py` defaulted `--dst` to the live `TAOM_Map\AssetSources\Scenes\Mordor\textures` and
+replaced files there with no backup, so a run without `--dst` wrote into an unversioned module.
+- **Why missed:** the default came from the first prop's run, and the script was extended twice without a read of its
+  defaults.
+- **Prevent:** a path into the game install is a required argument, never a default, and an existing file is replaced
+  only with `--force`. Before you extend a script, read its argument defaults.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #1; `tools/tests/test_convert_tripo_prop_textures.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A step written for one item refuses many (Carn Dûm map icon, 2026-10-16)
+The rebuild route exports 7 texture sets. The converter, written for one, took the alphabetically first set (the
+256 px openings) under the mesh's name, dropped the other six and exited 0.
+- **Why missed:** the converter and the skill's handoff predate the route that sends many sets into them.
+- **Prevent:** a step that takes one item from a folder counts its matches and fails on zero or several, unless it
+  handles each one. Here each set becomes `t_<set>`, and `--stem` must match exactly one set.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A last-resort path errs toward refusing
+
+`8afe46d39` stopped `block-no-verify`'s raw fallback from over-blocking a message that named a flag, and lost eight refusals, among them `bash -c`. That path runs only past the reader's limit, on a reader crash or on an overrun, so a false refusal costs one retry and a missed one skips a gate.
+- **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
+- **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 18, on `origin/bannerlord-1.5.x` (ported by WP142).

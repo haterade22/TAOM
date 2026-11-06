@@ -1003,3 +1003,10 @@ inline `if` in a GameModel override body, which gamemodels.md rule 4 forbids and
   `Taom*Model`, csharp-architecture.md for a service). For a model override, compose the decisions in one expression with
   base fall-through (`a || b ? -1 : base(...)`), as `TaomMarriageModel` does.
 - **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A call's arguments run before its guards
+
+`TaomPregnancyModel` moved its immortal and fertility guards into one service call, and the arguments of that call read `hero.Clan`. A clanless hero outside the window went from 0 to a throw. The extraction was described as behaviour-preserving, and its tests covered the service.
+- **Why missed:** moving a guard behind a call looks like moving text, but the order of reads changes. A sealed-type model has no unit seam to show it.
+- **Prevent:** when guards protect later reads of a sealed type, keep them in a call of their own (`CanConceive`) before the reads. Compare old and new for each input, the negative and null ones included, before you write "behaviour-preserving".
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 7, on `origin/bannerlord-1.5.x` (ported by WP142).

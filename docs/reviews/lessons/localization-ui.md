@@ -868,3 +868,21 @@ whose loader reads only five attribute names, so four dead `EaseIn` attributes p
 - **Prevent:** map a known interface property to the type the widget's constructor assigns, fail any other unknown, and
   check every element kind against the loader that reads it.
 - **Source:** 1.5.x `rca-prefab-attribute-gate-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### List a shared key's readers before re-keying it (map-tool follow-ups, 2026-10-27)
+16 villages borrowed another village's description key (`castle_village_EN3_2` read
+`Settlements.Settlement.text.village_EN1_4`). The #1042 one-off gave each its own key and left the borrowed rows "for
+the village that owns them", but 15 of the 16 owners either were not on the map or had no `text=`, so 180 rows in 12
+languages lost their last reader and would have been paid for in the translation backlog. Four Dunland fortifications
+outside the renamer's table had the same stale names as the villages and were left out because the repair took its
+ids from that table.
+- **Why missed:** the owner of a borrowed key was assumed, and the repair was scoped by the tool that caused most of
+  the defect rather than by the defect's signature across the whole file.
+- **Prevent:** before moving a settlement off a shared key, list every master row that reads the key and every row
+  that defines it; delete the rows no settlement reads (and refuse while one still does). Scope a data repair by
+  scanning every row for the defect, then name the extra ids in the tool.
+- **Source:** 1.5.x `docs/reviews/rca-map-tool-followups-2026-10-27.md` findings 6 and 7; #1042, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rename must evict the translation cache; the bulk settlement renamer did not until #1042 (Lindon expansion, 2026-10-27)
+`tools/Apply-MapVillageNames.py` rewrote all 438 of its `NAMES` in the master and in all 12 `loc_settlements.xml`, with
+- **Source:** 1.5.x the 1.5.x lessons file at `af2b198e4`, on `origin/bannerlord-1.5.x` (ported by WP142).
