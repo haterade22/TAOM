@@ -781,3 +781,18 @@ test passed.
 - **Why missed:** every earlier list in that config defaulted to empty, where Auto and Replace agree.
 - **Prevent:** deserialize every config with `ObjectCreationHandling.Replace` (this line's providers already use `Replace`: `git grep -l "ObjectCreationHandling.Replace" -- Main`), and test a non-default list value through the real provider, not a hand-built object.
 - **Source:** 1.5.x `docs/reviews/rca-hold-the-walls-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fail-closed rule is checked on every exit path, and traced through TAOM's own finalizers
+`ModuleRunner.Run` had two correct rules on the same state: a faulted module is skipped for the session, and a module that owns save data throws in the steps that decide whether its `SyncData` runs. The skip came first (`if (_faulted.Contains(module.Id)) continue;`), so a save owner that faulted in a fail-open step (a main-menu phase, a mission start) or on a retried campaign start was skipped silently, and the campaign's next save would have dropped its data (`CampaignBehaviorManager` saves only the behaviors present). Each rule had its own test; the only test of the campaign-start step passed `failClosed: false`, which production never does. A second layer defeats the throw anyway: TAOM's `Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows it while crash capture is on, and `GameLoadingState` re-runs the loading step on the next tick.
+- **Why missed:** the rules were written and tested one at a time, and the rethrow was traced up the engine's call chain to "no managed catch" without asking whether TAOM patches a frame on that chain.
+- **Prevent:** when a guard can both skip and throw, test the SEQUENCE where both apply (fault in step A, then the fail-closed step B, then a retry of B), and let the class that documents the rule own the flag rather than a literal at the call site. Before relying on an exception to stop the game, grep `harmony-patch-registry.md` for a finalizer on every TAOM-reachable frame above the throw (`Module.OnApplicationTick`, `ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`).
+- **Source:** 1.5.x `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 1, 2 and 12; Codex P2 and lenses 2, 5 and 6 (plan 018), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mission.Mode is Deployment at screen init in a field battle (#970, 2026-10-22)
+`DeploymentHandler.AfterStart` saves the mode and sets `Deployment` (`DeploymentHandler.cs`); `Battle` returns only
+when the handler is removed. A gate on `Mission.Mode == Battle` at `OnMissionScreenInitialize` is therefore false in every
+campaign and custom field battle.
+- **Why missed:** the gate read plausibly and the view never ran, so nothing exercised it.
+- **Prevent:** decide "field battle" with `Mission.IsFieldBattle` (set in `MissionCombatantsLogic.EarlyStart`), and attach on
+  the first screen tick whose mode is Battle (`BattleActionBarMissionView.ShouldAttach`).
+- **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).

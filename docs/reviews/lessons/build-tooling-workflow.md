@@ -2348,3 +2348,42 @@ log) and in a sandbox where the anchored form refused from the subdirectory. The
   the harness runs it: the registered command string through `bash -c`, from a subdirectory
   (`tools/test_hooks.sh` 7j).
 - **Source:** 1.5.x issue #690; `docs/reference/hooks-catalog.md`; the review evidence in `E:\repos\taom-improve\scratch\680\review\bash\` (desktop), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The dirty-flag pathspec lists every compiled project root
+The build stamp marks a DLL `.dirty` when the tree has uncommitted changes under the compiled roots. A new project root
+absent from that pathspec leaves a stamp that reads clean while its sources are modified.
+- **Why missed:** nothing ties the pathspec to the list of compiled projects.
+- **Prevent:** when a project joins the module, add its root to the pathspec in `Directory.Build.props` in the same
+  change and pin it with a test.
+- **Source:** 1.5.x B3 review, 2026-10-22, ADR-013, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Renaming a convention or deleting a log line: grep the review harness and the tools for the old text (plan 009, 2026-09-24)
+Plan 009 replaced every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` and collapsed nine catch blocks. The Data Flow lens (`lenses/5-data-flow.md`) and the Harmony lesson still told reviewers to grep for the old spelling and flag its absence HIGH, so every later patch review would raise a false HIGH. `tools/triage_battle_load.py` and `battle-load-diagnostics.md` still sent triagers to the deleted "Patch43 diagnostics failed to apply" warning.
+- **Why missed:** the plan's maintenance notes named the one rule line it knew about; nobody grepped `.claude/`, `docs/reviews/lessons/` and `tools/` for the old text, and no build or test reads them.
+- **Prevent:** when a change renames a call convention or deletes a log message, grep the whole repo for the old literal (code, `.claude/`, `docs/reviews/lessons/`, `tools/`, feature docs) and update every consumer that acts on it in the same change; list the rest as follow-ups.
+- **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timing stamp reads its clock outside its own work: start after its setup, end before its lines
+The `[Lifecycle]` dispatch line (plan 040) started its clock before the stamp swapped every listener by
+reflection and read the end only after it had written every handler and event line, each a synchronous
+INFO flush. Three texts then called `ms - listeners_ms` the engine's receivers. The sibling `[LoadXml]`
+path read its end tick before logging and was right.
+- **Why missed:** the stamp was reviewed for having its lines and totals, not for what each window
+  contains; the oracle's fake clock never advanced while logging, so no test could see it.
+- **Prevent:** in a stamp, take the end tick first in the closing call and start the window after any
+  setup the stamp itself does; pin it with a test whose logger (and adapter) advance the fake clock. A
+  sentence that says what a difference of two numbers is cites the clock reads that bound it.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` row 1 (Standards, Engine, Efficiency, Data flow), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A once-only reason line has one latch per reason, and every path that writes it does what it says
+`[Lifecycle] per-handler timing off for this session` was written by a gate, clock, logging or restore
+fault that turned nothing off, and those faults spent the line's single latch, so a later real
+switch-off logged no reason. The settings gate beside it returned "off" from a catch with no line at all.
+- **Why missed:** D6 was checked for the existence of once-only reason lines; nobody listed each caller
+  of the line and checked the consequence it states, and a catch returning the off value was read as
+  fail-safe rather than as a disable path.
+- **Prevent:** for each reason line, list every writer and confirm each one does what the text says;
+  give unrelated faults their own line and latch (the X3 and C5 "stamp fault" shape); a catch that
+  returns the off value logs why, once or on change. Pin each with a test that a second reason still
+  logs after the first.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 2 and 3 (all six lenses), on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -155,3 +155,34 @@ a VBR clip can measure SHORT, the unsafe direction for a length gate) and a doc 
   not worth stating: cut it, or attribute it as unverified. Comments that justify a design choice
   are load-bearing precisely because the next reader will not re-derive them.
 - **Source:** docs/reviews/rca-dwarf-voices-2026-09-06.md (2026-09-06 deep review)
+
+### A staged feature re-checks its inherited claims at every stage: summary rows, "live" settings, "every X"
+Plan 040 landed in three stages. The feature-map row kept describing stage A; the toggle was documented
+as read live with no restart, though a once-per-process guard in `SubModule.cs` decides the per-category
+lines; and "every campaign handler of a loaded save" missed the `OnGameLoadFinished` fan-out that
+`SandBoxGameManager`, not `Campaign`, dispatches.
+- **Why missed:** each stage followed its own plan steps, which did not list the earlier summary text,
+  and the claims were written once from the design rather than re-read against the guards and
+  dispatchers that bound them.
+- **Prevent:** at each stage's end, grep the feature's name across `feature-map.md`, the registry and
+  the MCM hint and re-read every "every", "always" and "live" claim against the code that bounds it
+  (the guard, the dispatcher list), not against the plan.
+- **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 4, 6 and 7 (Data flow, Completeness), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An aggregate that replaces per-event log lines keeps bad values out of its sums and says when it is written (plan 030, 2026-10-02)
+Plan 030 replaced per-hit `[CareerPerks]` DEBUG lines with one line per combination plus a mission-end INFO tally. The tally added every hit's base and result unchecked, so one NaN hit turned the combination's damage totals into NaN, and it is written only at mission teardown, so a crash mid-battle loses the counts the per-hit lines used to leave on disk within 50 ms.
+- **Why missed:** "keep the information as an aggregate" was checked for presence on clean, finite input.
+- **Prevent:** an aggregate counts a non-finite event apart and keeps it out of every sum and range; its doc says when it is written and what a crash before then loses, and any claim that "nothing is dropped" is checked against that write point.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R4, R5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A deletion's doc sweep greps the deleted members' targets, categories and counts, not only their names (recurrence of #644, plan 030, 2026-10-02)
+Plan 030 deleted Patch23's `EquipItemsFromSpawnEquipment` prefix and Patch35's `Mission.OnTick` postfix and grepped for the class names. A code comment and `battle-load-diagnostics.md` still said Patch23 patches `EquipItemsFromSpawnEquipment` (they named the category and the method), and `companion-tactics.md` still counted 5 FormationPresets hooks.
+- **Why missed:** the plan's done-criteria grep matched class names only.
+- **Prevent:** for a deleted patch, also grep its target method, its category paired with that method, and every count of its folder or category.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R7, R8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An aggregate's doc names what it keeps and what it drops, with a counterexample (plan 030 Codex round, 2026-10-03)
+Plan 030's wording said the per-mission hit summary left nothing the per-hit lines showed lost. It keeps a count, a multiplier range and damage sums; hits of damage 10, 20 and 70 and of 10, 40 and 50 under one multiplier read the same, and the order, each hit's own numbers and a leaderless victim's agent are gone.
+- **Why missed:** "aggregate, never drop" was checked as "an aggregate exists".
+- **Prevent:** the doc for any aggregate that replaces per-event lines lists the statistics it keeps and the detail it drops, with one pair of inputs it cannot tell apart; "nothing is lost" is never written about one.
+- **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X2, on `origin/bannerlord-1.5.x` (ported by WP142).
