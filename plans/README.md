@@ -80,8 +80,7 @@ the maintainer can veto any of them before the WP that applies it runs.
 **Planning state:** reviewed. **Overnight run (D25):** the public Armory is not on the laptop and `settings.json` needs
 the maintainer, so WP101 ran with a provisional data baseline and later WPs land on local `port148/overnight`, not on
 the trunk. Item and roster data is deferred. D26, D27 and D29 then released most of the holds, and the status column
-below is the current record. Still held: 102, 103, 116, 138, 142 and 143 whole, and WP108 Step B4, WP127 Parts C and M and
-WP145 Parts E to G. D25 to D29 are in the
+below is the current record. D31 releases the protected-file lane; WP121's Kit parts and every data step stay deferred. D25 to D31 are in the
 [decisions brief](_audit/2026-11-04-port148/data/brief-workflow3-decisions.md). Details:
 [`_audit/2026-11-04-port148/PROGRESS.md`](_audit/2026-11-04-port148/PROGRESS.md).
 
@@ -185,7 +184,7 @@ WP145 Parts E to G. D25 to D29 are in the
 Status values: TODO | IN PROGRESS | DONE (date, merge sha) | BLOCKED (one-line reason) | REJECTED (one-line
 rationale). DONE means merged into `bannerlord-1.4.5` by the integrator with the full suite green.
 
-### Decisions D1 to D30
+### Decisions D1 to D31
 
 Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audit/2026-11-04-port148/data/brief-workflow3-decisions.md).
 
@@ -230,6 +229,7 @@ Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audi
 - **D28** WP122's GA-SAME check is waived for one comment line, and A1.2 applies a diff instead of overwriting. See the decisions brief.
 - **D29** WP145 Parts A to D run; E, F and G stay held. See the decisions brief.
 - **D30** WP108 B4, WP136's remaining B steps and WP102 Step 2 run; the harness lane stays held. See the decisions brief.
+- **D31** The maintainer chose the override: the protected-file lane runs. See the decisions brief.
 
 ### Plans 001 to 005 and this programme
 

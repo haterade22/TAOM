@@ -340,3 +340,31 @@ still stands. Three held pieces need no protected file, and WP108's own hand-off
 4. **Still held:** WP102 Step 3 onward, 103, 116, 138, 142, 143, 145 E to G, 127 C and M, 115 B1 to B3, 140 D, 122 C4. The harness lane runs in plan
    order or not at all: its end-state copies check that their pre-images are unchanged, so running a later plan first breaks an earlier one.
 5. `CHANGELOG.md` is still never staged (D1).
+
+## D31: the protected-file lane (2026-11-05, maintainer's choice)
+
+Asked whether to create the session override so agents can make the protected edits, the maintainer chose "Use the override". This
+lifts D25 rule 6's hold on the harness lane and D30 rule 4. It runs in the order the workflow script fixes, each piece with an executor and a
+cold review. Nothing is pushed, tagged or merged to the trunk.
+
+1. **The override.** `config-protection.sh` reads `/tmp/claude-config-override-${CLAUDE_SESSION_ID:-none}`. Hooks do not receive that variable, so the
+   file that works is `/tmp/claude-config-override-none` (tested: blocked without it, allowed with it). That name is not tied to one session, the gap
+   WP116 Step B3 closes. The orchestrator deletes the file when the lane ends. No agent creates, moves or deletes it.
+2. **What agents may now edit:** in their own worktree, exactly the changes a plan prints for `.claude/settings.json`, `.claude/settings.local.json`,
+   `Directory.Build.props` and `docs/adrs`, including steps labelled Maintainer. Nothing else in those files. The reviewer compares each diff with the plan's
+   text, and any other change is a BLOCKER.
+3. **Still the maintainer's, by any route:** `git config core.hooksPath`, anything in the main checkout (reading it for a backup is fine), the user's
+   `~/.claude` settings, GitHub issues, paid translation, in-game checks, pushing, tagging, merging to the trunk, release pins (WP115 M3), deleting folders
+   in installs (WP115 M2), Ruff, ShellCheck and Gitleaks installs, and copying the local settings back after a trunk merge (WP142 M2). Agents run
+   `python tools/audit_claude_config.py --min HIGH` in place of `/security-scan` and report the result.
+4. **Optional steps that change the maintainer's own setup are not taken.** WP138 M1's `enabledPlugins` block stays out and is listed for the maintainer.
+5. **A check that fails only because an earlier port148 WP moved the text is not a STOP.** That covers pre-image, SAME, drift, line-number and "no part of
+   this plan exists yet" checks, and a failed `git apply` on such a file. Never overwrite a changed file with an end-state copy: three-way merge with
+   `git merge-file` (base the plan's pre-image, ours the worktree, theirs the pinned end state), keep both sides, and report each adaptation. Any other STOP stands.
+6. **WP102.** Step 2 has landed (`13c6d7ee0`), so skip it; "generator PRESENT" at Step 1 item 6 is expected, and the plan's commit and `Ported-from` counts span
+   that commit plus this run's. `.claude/rules/gui-ui.md` and `docs/features/gui-sprite-system.md` are the two known DIFF files: rule 5 applies. Step 5 is the one
+   exception to D1, so that commit may stage `CHANGELOG.md`.
+7. **WP103.** The Step 0 ModuleData gate's non-zero exit on the `v2.0.26` Armory is void, not a STOP: record it. Once the hooks reach the trunk, ModuleData commits
+   on this laptop are denied until the public Armory is installed, and the report must say so. CLAUDE.md between 45,600 and the linter's 46,000 cap is not a
+   STOP. Above 46,000, cut only text that a linked doc already holds and list each cut.
+8. **D25 rule 2 and D20 stand.** No step stages item, roster, equipment, troop or mesh data, and any count measured on the `v2.0.26` Armory is void.
