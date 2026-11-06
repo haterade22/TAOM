@@ -42,6 +42,7 @@ Moved from `.claude/rules/moduledata-validation.md`: every finding of `python to
 | `MISSING_HARNESS_FAMILY_TYPE` (error) | a `HorseHarness` item with no `<Armor family_type>`. It defaults to 0 (human), so the inventory refuses it on every mount. Set it to the mount's `Monster.family_type` (1 for horses) |
 | `RANGED_MOUNT_USAGE` (warn) | a mounted troop carrying a launcher whose `item_usage` is flagged `requires_no_mount` in Native's `item_usage_sets.xml`, so it spawns on the horse holding a bow it never draws. Give the line a `usage` override in `tools/ranged_ladders.json`, or a donor with a mounted usage |
 | `UPGRADE_SKILL_REGRESSION` (error) | an upgrade edge whose target has a lower skill value than its source in any skill; an omitted `<skill>` reads as 0, so it counts as a drop. Only militia to militia is exempt, keyed off what a culture binds. Repair: `python tools/rebalance_troops.py --fix-monotonicity` |
+| `SKILL_TEMPLATE_SHADOWS_SKILLS` (error) | a character carrying inline <skill> values and skill_template together: the engine reads the template and discards the inline block (v1.4.8 BasicCharacterObject.cs:337-358); an empty <skills> block beside a template is legitimate (#523) |
 
 ## What actually gets scanned: three modules, not one
 
