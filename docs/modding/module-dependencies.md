@@ -76,7 +76,7 @@ and skips the folder when the file is absent (`ModuleHelper.cs:319-331`). It the
 `ModuleInfo.LoadWithFullPath`, which parses exactly the elements in the first table. There is no
 branch for `<DependedModuleMetadatas>`: a search for `DependedModuleMetadata` across the whole v1.4.8
 managed decompile returns nothing. That element is vocabulary for the BUTR/BLSE launchers only, and
-both TAOM manifests say so in their comments (`Main/_Module/SubModule.xml:20-22, 32-37`).
+both TAOM manifests say so in their comments (`Main/_Module/SubModule.xml:17-18, 36-39`).
 
 <!-- engine-table type="TaleWorlds.ModuleManager.ModuleInfo" file="Platform/TaleWorlds.ModuleManager/TaleWorlds.ModuleManager/ModuleInfo.cs" method="LoadWithFullPath" inert="RequiredBaseVersion" -->
 
@@ -136,7 +136,7 @@ decompile tree, so that half is cited from [dr3-maintenance.md](../migration/dr3
 Issue #371 is the release that shipped bind-posed characters. `Main/TAOM.csproj:89-91` resolves
 Harmony and UIExtenderEx through `TAOM.Dependencies.dll`, so a new `TAOM.dll` run against a stale
 `TAOM.Dependencies.dll` fails at the member level while patches apply, the HeroRace preview patches
-never attach, and every character renders in bind pose (`Main/_Module/SubModule.xml:15-22`,
+never attach, and every character renders in bind pose (`Main/_Module/SubModule.xml:11-20`,
 [release-process.md](../reference/release-process.md) lines 53-57). The root cause was that both
 assemblies carried a frozen `AssemblyVersion` on every build (`TAOM 2.0.0.0`,
 `TAOM.Dependencies 0.1.0.0`), so .NET bound any pair without complaint (`Directory.Build.props:8-16`).
@@ -153,29 +153,15 @@ three fields:
 | `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | only when the Dependencies assembly changed |
 | `Main/_Module/SubModule.xml` | `<DependedModuleMetadata id="TAOM.Dependencies" ... version="v2.0.Y" />` | must equal the line above |
 
-**The third field is not in the file today.** `rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml`
-returns one hit, line 15, inside a comment. <!-- measured: rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml 2026-09-05 -->
-`git show cc1713eb -- Main/_Module/SubModule.xml` shows that commit (2026-08-11, a cultures commit
-whose message does not mention it) removed these two lines:
-
-```xml
-    <DependedModule Id="TAOM.Dependencies" />
-    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.6" />
-```
-
-The #371 comment that introduced them survives at `Main/_Module/SubModule.xml:15-22` and still says
-"`<DependedModule>` is the engine-honoured element ... so this is what actually blocks a broken
-pairing", describing an element that is no longer below it. The `/release` skill's gate
-(`.claude/skills/release/SKILL.md:51-57`) greps for `id="TAOM.Dependencies"[^>]*version=` in that file
-and so matches nothing. As shipped, neither manifest blocks a mismatched TAOM and TAOM.Dependencies
-pair. Whether the deletion was intended is an open question for the orchestrator (recorded at the end
-of this chapter); a modder following the release rule should restore both lines, then cut the release
-with `/release`, which is the named tool for the bump and is not run from this chapter.
+**All three fields are in the files.** `cc1713eb` (2026-08-11, a cultures commit) removed
+`<DependedModule Id="TAOM.Dependencies" />` and its `<DependedModuleMetadata>` mirror, and `95085de30`
+(2026-09-14) restored both. The element is at `Main/_Module/SubModule.xml:21`, first in `<DependedModules>`
+under the #371 comment at lines 11-20, and the mirror is at line 31 with `version="v2.0.6"`, the value
+the `/release` gate (`.claude/skills/release/SKILL.md`) reads.
+<!-- measured: rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml 2026-11-06 -->
 
 Two facts about the numbers. The Dependencies `<Version>` is `v2.0.6` (`Dependencies/_Module/SubModule.xml:6`)
-while Main's is `v2.0.28` (`Main/_Module/SubModule.xml:6`); the two are not meant to match, and
-`v2.0.6` is not a phantom Main version ([release-process.md](../reference/release-process.md) line
-152). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
+while Main's is `v2.0.28` (`Main/_Module/SubModule.xml:6`); they differ until the first release from v2.4.0 on, which moves both to the release number ([release-process.md](../reference/release-process.md)). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
 Main's `<DependedModuleMetadata id="Native" version="v1.4.8.*" />` equals
 `.claude/pinned-game-version.txt` plus `.*`
 (`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:200-224`); the pin file

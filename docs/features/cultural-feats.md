@@ -20,14 +20,14 @@ On top of the base feats, **terrain movement-speed feats** give 18 cultures a fl
 
 ### Solution Approach
 
-1. **Harmony postfix** on `Campaign.InitializeDefaultCampaignObjects()` — registers 30 custom `FeatObject` instances right after vanilla feats
+1. **Harmony postfix** on `Campaign.InitializeDefaultCampaignObjects()`: registers 130 custom `FeatObject` instances right after vanilla feats
 2. **GameModel overrides** — 9 new thin models + 2 extended existing models check `culture.HasFeat()` for custom feats
 3. **XML assignment** — each culture's `<cultural_feats>` block references the custom feat string IDs
 
 ### Component Diagram
 
 ```
-TaomCulturalFeats.cs (static singleton, 30 FeatObject instances)
+TaomCulturalFeats.cs (static singleton, 130 FeatObject instances)
         |
 Harmony Postfix: Campaign.InitializeDefaultCampaignObjects()
         |
@@ -57,7 +57,7 @@ party.LeaderHero?.Culture
 
 ### Config: `Main/_Module/ModuleData/taom_spcultures.xml`
 
-Each culture has a `<cultural_feats>` block with 3 feat IDs:
+Each culture has a `<cultural_feats>` block; the number of feat IDs varies by culture (1 to 13). Erebor's begins:
 
 ```xml
 <cultural_feats>
@@ -219,7 +219,7 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CulturalFeats/TaomCulturalFeats.cs` | Feat registration + static accessors (77 feats) |
+| `Main/Features/CulturalFeats/TaomCulturalFeats.cs` | Feat registration + static accessors (130 feats) |
 | `Main/Features/CulturalFeats/TerrainKind.cs` | TAOM-owned terrain enum (boundary type for the speed model → service, ADR-007) |
 | `Main/Features/CulturalFeats/ICulturalFeatsService.cs` / `CulturalFeatsService.cs` | Per-feat dispatch incl. `ApplyTerrainSpeedFeats` |
 | `Main/Features/CulturalFeats/Hooks/Campaign_InitializeDefaultCampaignObjects_Patch.cs` | Harmony postfix for registration timing |
@@ -337,7 +337,7 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 3. Add it to `GetAllFeats()` yield return list
 4. Add the feat ID to the culture's `<cultural_feats>` block in `taom_spcultures.xml` (custom cultures) or `spcultures.xslt` (vanilla-wrapped cultures)
 5. Add the `HasFeat()` check in the appropriate GameModel override / service method
-6. Update the feat count in `AllFeatProperties_ReturnFeatObject_CountIs77`, `RegisterAll_UsesCorrectStringIds`, and `GetAllFeats_YieldsZeroOrFullSet`; add a `[DataRow]` to `FeatProperty_Exists_IsPublicStatic`; bump the culture entry in `EachCulture_HasExpectedFeatCount`. If the feat sets an `EffectBonus` read in a service test, add it to the reflection table in `CulturalFeatsServiceTests.EnsureFeatsInitialised`.
+6. Update the feat count in `AllFeatProperties_ReturnFeatObject_CountIs130`, `RegisterAll_UsesCorrectStringIds`, and `GetAllFeats_YieldsZeroOrFullSet`; add a `[DataRow]` to `FeatProperty_Exists_IsPublicStatic`; bump the culture entry in `EachCulture_HasExpectedFeatCount`. If the feat sets an `EffectBonus` read in a service test, add it to the reflection table in `CulturalFeatsServiceTests.EnsureFeatsInitialised`.
 7. **Update the CC faction-map page.** Edit the matching faction's entry in [`Main/_Module/ModuleData/factionmap/factions.json`](../../Main/_Module/ModuleData/factionmap/factions.json) — add the feat to `perks[]` (lore-named flagship positives), `bonuses[]` (concrete game-effect line with the correct `positive: true|false` flag), and `weaknesses[]` (if it's a real negative — Rohan infantry penalty, Isengard relationship +25%, Mordor wages +20%, etc.). Without this, the player's starting-culture page in CC silently lies about what shipped. Standing instruction per `feedback_faction_map_update_with_cultural_feats.md`. The JSON ↔ culture-StringId mapping is in that memory file (e.g., `stewardship_of_gondor` → `gondor`, `kingdom_of_rohan` → `vlandia`).
 
 ### Add a new terrain movement-speed feat
