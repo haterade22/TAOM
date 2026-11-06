@@ -8,7 +8,7 @@
 ## WHAT it is
 
 Bannerlord UI is **MVVM over Gauntlet**: a **`ViewModel`** holds the data (`[DataSourceProperty]` values + `Execute…`
-commands); a **movie** (a `.xml` widget tree in `GUI/Prefabs/`) is the view; **`GauntletLayer.LoadMovie(movieName,
+commands); a **movie** (a `.xml` widget tree in `GUI/PreFabs/`) is the view; **`GauntletLayer.LoadMovie(movieName,
 vm)`** binds them. A full custom window is a **`GameState`** + a **`GameStateScreen`** (which renders it via Gauntlet
 layers). Mods either build their own VM+movie+state, or **extend vanilla UI** with **UIExtenderEx** (mixins +
 prefab-extensions). TAOM does both.
@@ -23,7 +23,7 @@ The data source. You expose **`[DataSourceProperty]`** properties (the widget tr
 TAOM VMs (career, messengers, quick actions) subclass `ViewModel`.
 
 ### `GauntletLayer.LoadMovie(string movieName, ViewModel dataSource)` (Engine.GauntletUI/GauntletLayer.cs:119)
-Instantiates the named movie (a `.xml` UI prefab under `GUI/Prefabs/`) bound to the VM. The widget tree reads the
+Instantiates the named movie (a `.xml` UI prefab under `GUI/PreFabs/`) bound to the VM. The widget tree reads the
 VM's `[DataSourceProperty]` values by name and routes `Command.Click="ExecuteFoo"` to the VM method. A `GauntletLayer`
 is a `ScreenLayer` added to a `ScreenBase`/`MissionView`.
 

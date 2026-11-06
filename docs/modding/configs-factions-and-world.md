@@ -207,8 +207,6 @@ The kingdom set the first test reads is derived from data, not hardcoded: 14 `<K
 `Main/_Module/ModuleData/taom_spkingdoms.xml` plus 8 vanilla kingdoms retagged by
 `Main/_Module/ModuleData/spkingdoms.xslt`, so **22** ids.
 <!-- measured: python -c "import xml.etree.ElementTree as ET,re;k=set(x.get('id') for x in ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom'));k|=set(re.findall(r\"Kingdom\[@id='([a-z_]+)'\]\",open('Main/_Module/ModuleData/spkingdoms.xslt').read()));print(len(k))" 2026-09-05 -->
-Note that `kingdom-creation.md` spells the first file `TAOM_spkingdoms.xml`; the file on disk is all
-lowercase, and NTFS hides the difference until something case-sensitive reads it.
 
 ## Child elements
 

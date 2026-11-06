@@ -119,7 +119,7 @@ The trade-off: with the toggle off, you can't view stats remotely either. The cl
 
 ## Orphaned XML prefabs (NOT copied to TAOM)
 
-The original 1.2.x module ships three XML prefabs in `GUI/Prefabs/`:
+The original 1.2.x module ships three XML prefabs in `GUI/PreFabs/`:
 
 - `FiefHub.xml`
 - `FiefManagement.xml`

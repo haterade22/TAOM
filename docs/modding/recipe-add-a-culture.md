@@ -81,8 +81,7 @@ filing order that follows from it:
 1. Pick the ids: culture id, kingdom id (same value), 2-character lord prefix, capital settlement id.
 2. Module strings ([strings-and-localization.md](strings-and-localization.md)).
 3. `taom_spcultures.xml`.
-4. `taom_spkingdoms.xml` ([kingdoms.md](kingdoms.md)). The file on disk is lowercase; the
-   capitalised `TAOM_spkingdoms.xml` in `kingdom-creation.md` is a documentation error.
+4. `taom_spkingdoms.xml` ([kingdoms.md](kingdoms.md)); the file name is all lowercase.
 5. `characters/clans.xml`, tier 6 first ([clans.md](clans.md)).
 6. `characters/lords.xml` ([lords-and-heroes.md](lords-and-heroes.md)).
 7. `characters/heroes.xml`, one `<Hero>` per lord. Skipping it is the startup NRE below.

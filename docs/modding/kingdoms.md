@@ -15,7 +15,7 @@ A kingdom is the map faction a clan swears to: the thing that owns fiefs, declar
 | Per entry | `<Kingdom>` |
 | Engine class | `TaleWorlds.CampaignSystem.Kingdom`, registered as `RegisterType<Kingdom>("Kingdom", "Kingdoms", 20u, ...)` (`Campaign.cs:1545`) |
 
-The lowercase name is the real one. `taom_spkingdoms.xml` is what is on disk and what line 130 registers; `docs/features/kingdom-creation.md` writes `TAOM_spkingdoms.xml` on eight lines, which works on Windows and is still wrong as a path. <!-- measured: rg -c 'TAOM_spkingdoms' docs/features/kingdom-creation.md 2026-09-05 -->
+The lowercase name is the real one. `taom_spkingdoms.xml` is what is on disk and what line 144 registers.
 
 The XSLT does not add kingdoms. It rewrites the 8 entries in `SandBox/ModuleData/spkingdoms.xml` (the vanilla file: `empire`, `empire_w`, `empire_s`, `sturgia`, `aserai`, `vlandia`, `battania`, `khuzait`) into Dunland, Gondor, Mordor, Dale, Harad, Rohan, Khand and Rhun. That file lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix. TAOM never edits it: the XSLT sits in this repo and is applied at load. `TAOM_Map/ModuleData/spkingdoms.xml` exists too but is an empty `<Kingdoms/>` stub, so nothing kingdom-shaped lives in the map module.
 
@@ -234,7 +234,6 @@ All measured 2026-09-05, from the repo at `bannerlord-1.4.5`.
 - **14** `<relationship>` rows and **2** `<policy>` rows on the Erebor entry alone: `python -c "import xml.etree.ElementTree as ET;e=ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0];print(len(e.find('relationships')),len(e.find('policies')))"` <!-- measured 2026-11-04 -->
 - **13** of the 14 `owner=` heroes are declared in `characters/heroes.xml`; Dol Guldur's `lord_1_48` is not, and is matched instead by `rg -n "lord_1_48" Main/_Module/ModuleData/heroes.xslt`. <!-- measured 2026-09-05 -->
 - **12** of the 14 kingdoms have no registered string at all, and **12** language folders carry the XSLT keys: `ls Main/_Module/ModuleData/Languages/*/std_taom_xslt_strings_*.xml` and `rg -l 'TAOM_dunland"' Main/_Module/ModuleData/Languages/*/*.xml`, both 12. <!-- measured 2026-09-05 -->
-- **8** lines of `docs/features/kingdom-creation.md` spell the file `TAOM_spkingdoms.xml`: `rg -c 'TAOM_spkingdoms' docs/features/kingdom-creation.md` <!-- measured 2026-09-05 -->
 - **Day 30** and **day 44** are the shipped phase triggers, with **2** wars listed in phase 1 and **0** in phase 2: `python -c "import json;w=json.load(open('Main/_Module/ModuleData/diplomacy/war_of_the_ring.json',encoding='utf-8-sig'));print(w['phase1']['triggerDay'],len(w['phase1']['wars']),w['phase2']['triggerDay'],len(w['phase2']['wars']))"` <!-- measured 2026-09-05 -->
 - **PASS**, no issues, from `python tools/validate_moduledata.py --code LANDLESS_CULTURE` against the tree as shipped. <!-- measured 2026-09-05 -->
 

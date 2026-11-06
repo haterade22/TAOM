@@ -29,10 +29,7 @@ culture is `gondor` and its kingdom is `empire_w`; Mordor's culture is `mordor` 
 `empire_s`. Writing `gondor` where a kingdom id belongs produces a key that resolves to nothing and
 logs nothing. The id lists live in [id-cheatsheet](id-cheatsheet.md).
 
-**Two spelling corrections to the older docs.** The file on disk is `taom_spkingdoms.xml`, all
-lowercase, and `Main/_Module/SubModule.xml:130` registers it as
-`<XmlName id="Kingdoms" path="taom_spkingdoms"/>`. `docs/features/kingdom-creation.md` writes
-`TAOM_spkingdoms.xml` at its lines 27, 54 and 206. Harmless on Windows, wrong as documentation.
+**The kingdoms file name is all lowercase.** The file on disk is `taom_spkingdoms.xml`, and `Main/_Module/SubModule.xml` registers it as `<XmlName id="Kingdoms" path="taom_spkingdoms"/>` (line 144).
 
 ## Filing order
 

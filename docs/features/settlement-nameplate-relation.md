@@ -159,7 +159,7 @@ vanilla's own-faction level for every coloured plate.
 | `Main/Features/TaomSettings.cs` | The four `Map UI/Settlement Nameplates` properties (#596) |
 | `Main/Features/SettlementNameplateRelation/NameplateRelationIoC.cs` | DryIoc registration |
 | `Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs` | Patch38 postfix: relation floor, then distance fade |
-| `Main/_Module/GUI/Prefabs/Nameplate/SettlementNameplateItem{Large,Medium,Small}.xml` | The `SettlementNameplateLayout` element is the custom widget |
+| `Main/_Module/GUI/PreFabs/Nameplate/SettlementNameplateItem{Large,Medium,Small}.xml` | The `SettlementNameplateLayout` element is the custom widget |
 | `Main/IoC.cs`, `Main/SubModule.cs` | Registration; `Initialize(fade, relationAlpha)` before `Patch38_SettlementNameplateFade` applies |
 
 ## Dependencies

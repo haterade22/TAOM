@@ -8,7 +8,7 @@ Repairs the MCM (Mod Configuration Menu) options screen, which rendered every mo
 
 ## Why This Exists
 
-- **Vanilla/engine behavior:** Bannerlord v1.4.0 fixed a long-standing engine bug where `LayoutMethod="VerticalBottomToTop"` actually rendered top-to-bottom (`McmLayoutRewriter.cs:10-12`). TAOM's own loose prefabs were mass-flipped for this regression in `ad836d1`, but that pass grepped only `Main/_Module/GUI/Prefabs/` (changelog archive, 2026-05-29 entry).
+- **Vanilla/engine behavior:** Bannerlord v1.4.0 fixed a long-standing engine bug where `LayoutMethod="VerticalBottomToTop"` actually rendered top-to-bottom (`McmLayoutRewriter.cs:10-12`). TAOM's own loose prefabs were mass-flipped for this regression in `ad836d1`, but that pass grepped only `Main/_Module/GUI/PreFabs/` (changelog archive, 2026-05-29 entry).
 - **The gap:** MCM v5.11.4's options-screen prefabs (`SettingsView`, `SettingsPropertyGroupView`, `ModOptionsView`, `ModOptionsPageView`) are authored against the old engine and still carry `LayoutImp.LayoutMethod="VerticalBottomToTop"` — but they ship as **embedded resources** inside `Bannerlord.MBOptionScreen.v1.4.x.dll`, not as loose XML TAOM could patch on disk (`McmLayoutRewriter.cs:12-19`).
 - **Without this feature:** the entire settings list renders inverted for every mod's MCM page — headers under members, reversed ordering (`McmLayoutRewriter.cs:14-16`).
 
