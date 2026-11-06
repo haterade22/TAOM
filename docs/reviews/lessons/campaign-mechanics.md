@@ -644,3 +644,15 @@ engine folds into raid and extortion events.
   before `RaidCompleted`) and on who was beaten (a field party with healthy men at the start), not on
   the event type; when an event turns out to mean more than its name, grep every listener of it.
 - **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (#770, #774), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before you claim a co-op hazard in TAOM code, read the co-op mod's patches on the engine method TAOM calls (#920, 2026-10-20)
+A review found that TAOM's hourly castle recruit excludes only `MobileParty.MainParty`, and an issue was filed saying a
+remote player's party could recruit on a BannerlordCoop host. It could not: BannerlordCoop prefixes
+`RecruitmentCampaignBehavior.CheckRecruiting` with `!mobileParty.IsPlayerParty()`, and a Harmony prefix runs for any call
+of the patched method, TAOM's bound delegate included.
+- **Why missed:** the claim was marked `[Likely]` and filed as fact; the check covered TAOM's guard, not the co-op mod's
+  patches on the method TAOM calls.
+- **Prevent:** before you file or fix a co-op hazard, grep the co-op mod's source (`E:\repos\BannerlordCoop`) for the
+  engine method TAOM calls, not only for the TAOM caller. A delegate bound with `Delegate.CreateDelegate` or a reflective
+  call goes through every Harmony patch on that method. Verify a `[Likely]` finding before it becomes an issue.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A2, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -720,3 +720,14 @@ and no widget uses it. The same assumption kept dead `DelayOnBegin` handling in 
   installed DLL (`pwsh tools/taom-src.ps1 path Widget`) and grep for a widget that uses the definition; state the
   engine version and the method in the doc.
 - **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-2026-10-18.md` F2, F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An unknown brush name draws the default brush with no log: check names against the loaded brushes (#989, 2026-10-24)
+The Messengers hero-page button named two brushes no module defines. `BrushFactory.GetBrush` returns null and
+`BrushWidget` falls back to the UI's default brush, so the button drew with no art and no state looks, and nothing was
+logged. Separately, a `ButtonWidget` passes its enabled, hover and disabled state to child widgets only with
+`UpdateChildrenStates="true"`; without it the label keeps full brightness on a disabled button.
+- **Why missed:** a wrong brush name or a missing state attribute draws something plausible, so no run fails.
+- **Prevent:** `PrefabExtensionBrushTests` checks every brush-typed attribute in a PrefabExtension against the
+  brushes the engine loads; a button whose label should follow its state sets `UpdateChildrenStates="true"`, as vanilla
+  and the Family Tree buttons do.
+- **Source:** 1.5.x `rca-messengers-brushes-2026-10-24.md` findings 0 and 1, on `origin/bannerlord-1.5.x` (ported by WP142).

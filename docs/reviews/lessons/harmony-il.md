@@ -1009,3 +1009,14 @@ listed.
   method's postfixes, swap that call site with a transpiler instead (the fix here). Add a real-Harmony
   test with a counting postfix on the skipped method.
 - **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pick a new patch number against every open worktree, not only trunk (#887, 2026-10-23)
+#887 took Patch114 as "highest on trunk plus one". The uncommitted B08 worktree had already claimed Patch114 for
+Messengers. `PatchCategoryNumberTests` passes on each branch alone and fails on whichever merges second. The batch notes
+record the same clash for Patch105 and Patch106.
+- **Why missed:** the check read trunk and the registry; parallel batch sessions write their numbers into uncommitted
+  worktrees that neither shows.
+- **Prevent:** before you choose a number, grep every worktree (`git worktree list`, then `grep -rhoE "Patch1[0-9]{2}_"`
+  in each `Main/`) and every remote branch, and take the next number free in all of them. Keep the number out of test
+  method names so a renumber at merge stays small, and run `PatchCategoryNumberTests` after every rebase.
+- **Source:** 1.5.x `docs/reviews/rca-alignment-scoring-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

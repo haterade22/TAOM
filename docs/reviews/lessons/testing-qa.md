@@ -1462,3 +1462,26 @@ field set, and the one click test drove an unbound method instead of the command
   that the field is populated, and drive behaviour tests through the command the UI binds
   (`Command.Click`), never a sibling method.
 - **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (#766, W1-01), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A setting with an MCM default and a JSON default gets a test that the two are equal (Dread Aura, 2026-10-15)
+With MCM loaded, the MCM property's initializer is the value players get, and the JSON value is only the fallback.
+The Dread Aura's radius moved from 12 to 5 m in both, and the only tests pinned the JSON side
+(`ShippedConfig_BalanceValuesMatchTheDocumentedTable`) or overwrote the MCM value before asserting. A later edit to
+one initializer would have shipped a different aura from the one the docs and the balance tests describe.
+- **Why missed:** the change's tests covered the changed values, not the invariant between the two homes of one
+  default. `CombatMechanicsSettingsProviderTests` and `FieldCommissionSettingsProviderTests` already carry the
+  check; nothing names it as a convention.
+- **Prevent:** a settings provider that merges MCM over JSON gets one test comparing `new TaomSettings().<Knob>`
+  with the compiled config default for every knob both sides define
+  (`DreadAuraSettingsProviderTests.McmDefaults_MatchTheCompiledProfileDefaults`).
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate over engine resources models what the engine loads, not what is on disk (#989, 2026-10-24)
+The first brush gate collected every brush file of every installed module, about 200 names more than the engine loads
+for TAOM: modules TAOM does not depend on, files in subfolders, and vanilla files a same-named TAOM file replaces. A
+brush that draws unstyled in game could have passed.
+- **Why missed:** the test was written from the file system; the sibling `PrefabExtensionBindingTests` already states
+  the loader's rules (dependency modules in order, last same-named file wins, read the repo copy).
+- **Prevent:** before writing a gate over engine resources, read the loader (`UIResourceManager`, `ResourceDepot`,
+  `BrushFactory` here) and the nearest sibling gate, model the same set, and pin one name the model must exclude.
+- **Source:** 1.5.x `rca-messengers-brushes-2026-10-24.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -961,3 +961,45 @@ the AI lord scaling added its factor, so "+4 party size" became about +12 under 
 - **Prevent:** call `ApplyFlat` after every `AddFactor` in the model, and pin the order with a
   call-token test.
 - **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (WIRE-02), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `Enum.TryParse` is not a name check: it takes padding, numbers and comma lists (2026-09-23)
+
+`BannerBearerConfigProvider.ValidateFormationGroups` kept any `AllowedFormationGroups` entry
+`Enum.TryParse<FormationClass>` accepted, as typed. That includes `" Infantry "`, `"2"` and
+`"Infantry, Ranged"`, and `Enum.IsDefined` passes any defined number. `BannerBearerService` compares
+the stored string with `FormationClass.ToString()`, so such an entry loaded clean, logged "Loaded",
+and as the only entry switched every banner bearer off. SignatureStrikes had the same bug a week
+earlier (Codex review 114 F2) and fixed it with a private name-only parser nobody else could find.
+
+- **Why missed:** `TryParse` reads as "is this a member name", and the one test sent a typo
+  (`Infntry`), which it does reject.
+- **Prevent:** parse config enum strings with `TAOM.Core.Validation.EnumNames.TryParse` (declared
+  names only, trimmed, case-insensitive), and when a consumer compares strings, store the value as
+  the enum prints it: `FormationClass` declares three values twice. Test a padded name, a number and
+  a comma list, not only a typo.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Follow-ups to Review 130" F2; `rca-signature-strikes-2026-09-16.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fallback reads the compiled default, never restates its literal (Dread Aura, 2026-10-15)
+The Dread Aura's morale floor moved from 0 to 10 in the compiled `DreadProfileConfig`, the shipped JSON and the
+tests, and `DreadAuraService.ComputeDrain` still fell back to `_config.Profile?.MoraleFloor ?? 0f`: a third copy of
+the old default, and the one value that lets the aura rout troops by itself. The provider never returns a null
+profile today, so nothing failed; a future path that did would have silently restored the behaviour the change
+removed.
+- **Why missed:** the plan named the default's homes (the compiled initializer, the JSON, the MCM initializer) and
+  nobody searched for a literal fallback of the same field. The sibling getters in `DreadAuraSettingsProvider`
+  already read `new DreadProfileConfig().X`.
+- **Prevent:** a null-coalescing fallback for a config field reads the compiled default
+  (`?? new XConfig().Field`), so one initializer holds the value. When a default moves, search the field name for
+  `??` and for its old literal before calling the change done.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Code written into a fix brief is held to the same rules as the code (#918, 2026-10-20)
+The #918 brief told the implementer to add `if (...BlocksAiRecruitAtCastle(...)) return -1;` to the top of
+`TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero`. The implementer followed it, and the standards lens flagged an
+inline `if` in a GameModel override body, which gamemodels.md rule 4 forbids and #737 already ruled a defect.
+- **Why missed:** the brief was written as a recipe for a quick fix; nobody checked the snippet against the rules for
+  the file it targets, and the implementer treats a pinned snippet as decided.
+- **Prevent:** before a brief pins a snippet, check it against the path rules for the target file (gamemodels.md for a
+  `Taom*Model`, csharp-architecture.md for a service). For a model override, compose the decisions in one expression with
+  base fall-through (`a || b ? -1 : base(...)`), as `TaomMarriageModel` does.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A1, on `origin/bannerlord-1.5.x` (ported by WP142).

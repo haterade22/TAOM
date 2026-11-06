@@ -692,3 +692,47 @@ added a second call and doubled the sound.
   level into callbacks, before adding X. An in-game check on the old build settles it in seconds; ask for one when the
   trace is not conclusive.
 - **Source:** 1.5.x `rca-career-click-sound-971-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Promote a rule from its lesson's Prevent line, every branch kept (2026-10-16)
+
+The morale lesson's Prevent has two branches: floor the morale, or say in the feature doc that its routs spread.
+The one-line rule promoted into `.claude/rules/csharp-patterns.md` kept only the first, so it read as condemning
+three shipped fear writes that the maintainer had chosen to keep unfloored. It was the second time in two days
+that a relay dropped a condition (the first was the contagion's "when fewer than 10 stand within 4 m").
+- **Why missed:** the line was copied from the RCA's proposal, a summary that had already lost the branch, not
+  from the lesson.
+- **Prevent:** write a promoted rule from the lesson's own Prevent text, keep every branch and condition, and
+  check the rule against the code it will load on: a rule that flags shipped, accepted code is wrong or the code
+  is.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` S1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A morale effect that routs a troop is not local (2026-10-15)
+
+A troop that routs raises `AgentMoraleInteractionLogic.OnAgentFleeing`, and vanilla gives the morale loss
+to up to 10 allies: those within 4 m first, then, for every slot still empty, random members of the fleeing
+agent's whole formation at any distance. So a rout in a thinned or loose formation reaches past any radius
+the effect was written with, and in a dense block it lowers the neighbours' morale, so they break sooner.
+- **Why missed:** the Dread Aura design welcomed the contagion ("vanilla's own contagion carries the rout
+  outward") without tracing how far it reaches. The formation fill was never read, and Mike then saw dread
+  act "across the whole battlefield".
+- **Prevent:** a TAOM effect meant to stay local lowers morale to a floor above 0.01 and leaves the rout to
+  combat, or it accepts the formation-wide spread in its doc. Before claiming a radius for any morale write,
+  read `ApplyMoraleEffectOnAgentIncapacitated` to its end.
+- **Source:** 1.5.x `docs/features/dread-aura.md` "Why the aura does not rout by itself"; v1.5.5 `AgentMoraleInteractionLogic.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A remote conversation is an encounter: audit its setup as well as its lines (2026-10-23)
+
+The messenger session rules hid every dialog line that moves a party, and the review then found that Messengers'
+own setup moved one. For a target in a settlement it calls `PlayerEncounter.EnterSettlement`, and
+`EnterSettlementAction.ApplyForParty` attaches a main party that is in an army it does not lead to that army when the
+leader is in the settlement; `PlayerEncounter.Finish(true)` then leaves the attached party in place. No dialog line was
+involved. The same pass found three more lines that hand things over or move a hero with no presence check (clan
+troop and inventory exchange, companion recall, a gift line).
+- **Why missed:** the plan listed the dialog consequences that move a party and treated the encounter the
+  conversation runs in as neutral.
+- **Prevent:** before a feature opens a conversation the player is not physically part of (a messenger, a remote
+  hail), list what its encounter setup does (`PlayerEncounter.Start`, `SetupFields`, `EnterSettlement`, the
+  mission it opens and `Finish`), read each engine body for party, army, position and roster writes, and then sweep
+  every reachable dialog consequence for the same writes. Gate the feature's lines on one shared "remote
+  conversation" flag rather than one check per feature.
+- **Source:** 1.5.x `docs/reviews/rca-messenger-session-rules-2026-10-23.md` findings 1 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).

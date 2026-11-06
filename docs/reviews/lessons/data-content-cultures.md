@@ -1583,3 +1583,16 @@ Race Abilities keyed its men's profiles on culture ids and proved each id exists
 - **Why missed:** existence was checked, reach was not. A culture's definition says nothing about which troops carry it once the XSLT shares rosters between kingdoms.
 - **Prevent:** for every culture key, list the troops whose own `culture=` is that id (the troop files, and the XSLT bindings that feed recruitment and garrisons). A key whose culture fields no soldiers is a design question to raise, not a row to ship.
 - **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R17 (lens 7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A default_group fix is a retag and a restat, and its gate must check both directions (#953, 2026-10-20)
+The bow-only Dunland Hunter was tagged `Infantry` and three Falcon horse archers `Cavalry`, so they
+fought as melee troops, and the Falcons fought sieges as infantry. Retagging them left their skills on
+the old curves (Falcon Polearm 250 with no polearm), because `rebalance_troops.py` picks the curve from
+the same attribute.
+- **Why missed:** `default_group` fails soft and has many readers: the engine, TAOM features and two
+  offline generators. The gate planned after #522 and #554 (#555 item 3) checked only Ranged troops that
+  carry no launcher, the opposite direction of this bug.
+- **Prevent:** when you change a troop's group, run `rebalance_troops.py --fix-monotonicity --restat <ids>`
+  in the same change. A group gate uses the engine's hero rule (horse crossed with launcher) in both
+  directions, and it reads troop-level `<equipment>`, where the Falcons carry their horse.
+- **Source:** 1.5.x `docs/reviews/rca-dunland-formation-groups-2026-10-20.md`; #555 item 3, on `origin/bannerlord-1.5.x` (ported by WP142).
