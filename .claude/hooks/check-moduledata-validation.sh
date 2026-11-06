@@ -68,11 +68,15 @@ esac
 
 # Only run when the commit touches ModuleData XML (the validator's scope).
 HAS_MD=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         Main/_Module/ModuleData/*.xml) HAS_MD=1; break ;;
     esac
-done <<< "$STAGED"
+done
 [[ $HAS_MD -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).

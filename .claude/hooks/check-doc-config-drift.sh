@@ -67,7 +67,11 @@ esac
 # Only run when the commit touches a surface the drift checks care about:
 # a feature doc, a shipped ModuleData JSON, or a version marker.
 RELEVANT=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         docs/features/*.md) RELEVANT=1; break ;;
         Main/_Module/ModuleData/*.json) RELEVANT=1; break ;;
@@ -75,7 +79,7 @@ while IFS= read -r f; do
         CLAUDE.md) RELEVANT=1; break ;;
         docs/reference/taleworlds-api-snapshot/*.md) RELEVANT=1; break ;;
     esac
-done <<< "$STAGED"
+done
 [[ $RELEVANT -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).

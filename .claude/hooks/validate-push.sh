@@ -45,7 +45,10 @@ fi
 # still tokenises; that also preserves the old behaviour of matching a quoted mention.
 CLEAN=${COMMAND//\"/ }
 CLEAN=${CLEAN//\'/ }
-read -r -a TOKENS <<< "$CLEAN"
+# A word split under set -f, never a here-string (#681). Only the first line is judged, as
+# read -a did; set -f keeps a refspec glob such as refs/heads/* whole.
+CLEAN=${CLEAN%%$'\n'*}
+set -f; TOKENS=($CLEAN); set +f
 
 PUSH_IDX=-1
 for i in "${!TOKENS[@]}"; do
