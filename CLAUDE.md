@@ -85,6 +85,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "clean up this AI slop", over-engineered code, clearly redundant abstractions | **`/deslop`** | **Only if the code is clearly redundant (multiple similar abstractions, dead helpers).** `/deslop` is deletion-first — could remove code the user wants to keep. Default to asking first. |
 | "add an ADR for", architectural decision being made | **`/new-adr`** | None — always |
 | "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** | None — but skip when the user is in the middle of an unrelated task |
+| HARNESS RETRO DUE banner; "did that rule help" | **`/harness-retro`** | |
 | "save my work", "save state", "save progress", "context save", before stepping away or before `/compact` | **`/context-save`** | None — always |
 | "where was I", "resume", "pick up where I left off", "restore context" | **`/context-restore`** | None — always |
 | Bash script bug, build infra issue, MCP server error, hook script crash — anything outside TAOM C# | **`debugger` agent** (Task tool) | None — but route TAOM C# bugs to `/investigate` instead |

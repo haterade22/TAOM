@@ -155,6 +155,36 @@ if [[ -f "$SUBMODULE_XML" ]]; then
   fi
 fi
 
+# Harness retro cadence (#962). /harness-retro measures the harness from the session transcripts
+# (docs/ai-includes/harness-retro.md), and a measurement nobody reads is no measurement, so this asks
+# for one once the newest retro record is seven days old. One glob and one `date` call, no transcript
+# scan. Fail open, never silent: a record whose
+# date will not parse says UNCHECKED rather than nothing.
+RETRO_LAST=""
+for RETRO_F in docs/reviews/harness-retro-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md; do
+  [[ -f "$RETRO_F" ]] && RETRO_LAST=$RETRO_F
+done
+if [[ -z "$RETRO_LAST" ]]; then
+  echo ""
+  echo "HARNESS RETRO DUE: no retro on record; run /harness-retro."
+else
+  RETRO_DATE=${RETRO_LAST#docs/reviews/harness-retro-}
+  RETRO_DATE=${RETRO_DATE%.md}
+  RETRO_EPOCH=$(date -d "$RETRO_DATE" +%s 2>/dev/null)
+  printf -v RETRO_NOW '%(%s)T' -1 2>/dev/null
+  if [[ -z "$RETRO_EPOCH" || -z "$RETRO_NOW" ]]; then
+    echo ""
+    echo "NOTE: harness retro cadence UNCHECKED this session (could not read the date of $RETRO_LAST)."
+  elif (( RETRO_EPOCH > RETRO_NOW )); then
+    # A typo such as 2062 would otherwise silence the banner for decades.
+    echo ""
+    echo "NOTE: harness retro cadence UNCHECKED this session ($RETRO_LAST is dated in the future)."
+  elif (( (RETRO_NOW - RETRO_EPOCH) / 86400 >= 7 )); then
+    echo ""
+    echo "HARNESS RETRO DUE: last retro $RETRO_DATE ($(( (RETRO_NOW - RETRO_EPOCH) / 86400 )) days ago); run /harness-retro."
+  fi
+fi
+
 # Last 5 commits
 echo ""
 echo "Recent commits:"

@@ -97,6 +97,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
 | TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 | Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and, once the `/release` edits land, `/release` Phase 1 (owed in-game checks) and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
+| Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
+| rtk (Rust Token Killer) | `rtk` `rtk-ai/rtk` `Rust Token Killer` | Apache-2.0 (the CLI in `src/`; `engine/` and `proxy/` are BUSL-1.1 and nothing derives from them) | behavioural-port | `.claude/hooks/_shellwords.py` (`command_index`, `peel`); `tools/harness_retro.py` (`command_family`, report section 9) | cleared |
+| Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -583,6 +586,30 @@ creative work, TAOM derives nothing from it, and the lexicon carries a standing 
 import. There is no row for it because there is nothing to declare, and that is the intended state.
 
 ---
+
+### Harness² (Google Research)
+
+Upstream: https://github.com/google-research/harness2 · Apache-2.0 (paper: arXiv 2610.14224). Its
+reflector and editor prompts (`harness2/core/prompts.py`) were read while writing TAOM's retro
+procedure, so the derivation is a behavioural port. Taken from them, in TAOM's own words: the
+per-change verdicts (helped, hurt, no observed effect, confounded) and the preference for
+confounded over a guessed attribution; the rule that a proposed edit names the moment in a session
+behind it; the order of preference for the form of a change, always-on text last; and "no change"
+as a valid outcome. No upstream file or text was copied, so no Apache-2.0 notice is carried.
+`tools/harness_retro.py` (the transcript miner) has no counterpart upstream and is TAOM original.
+Nothing was installed. Record: [`docs/reviews/adopt-harness2-2026-10-21.md`](../reviews/adopt-harness2-2026-10-21.md).
+
+### rtk (Rust Token Killer)
+
+Upstream: https://github.com/rtk-ai/rtk, branch `develop` at `32b2ec4`. Two ideas were taken after
+reading its source, so the derivation is a behavioural port. From `src/hooks/permissions.rs`: a
+command is judged from its command word, read past assignments, wrapper words and the grammar a
+segment split leaves behind; TAOM's `command_index` and `peel` are written from TAOM's own design
+and tests (#985). From `rtk discover`: measuring which commands produce the most output in Claude
+Code transcripts, which became section 9 of `tools/harness_retro.py`. No rtk code or text was
+copied, so no Apache-2.0 notice is carried. The rtk v1.0.1 binary was run once, offline, on
+2026-10-23 to measure it (Mike's explicit trial decision): checksum-verified, never initialised,
+never in a hook or on PATH, then deleted. Record: [`docs/reviews/adopt-rtk-2026-10-23.md`](../reviews/adopt-rtk-2026-10-23.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
