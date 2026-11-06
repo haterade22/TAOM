@@ -43,6 +43,8 @@ using the installed client's documented status command before an authorized
 dispatch; never log in, expose tokens, or rewrite configuration on the user's
 behalf without authority.
 
+Each review passes `-c model_reasoning_effort="<level>"` sized to the change (`ultra` is the config's default and ceiling).
+
 The project [Codex README](../../.codex/README.md) describes the existing settings
 and their limits. [Verification](../../.ai/verification.md) supplies non-deploying
 checks. Paid-provider wrappers, authenticated report ingestion and remote merge

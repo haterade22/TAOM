@@ -331,7 +331,7 @@ dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filte
 /verify quick           # build + git status
 /deep-review <culture>  # 5 parallel agents: Standards, API Compat, Efficiency, Completeness, Data Flow
                         # Fix all HIGH findings in-session (per .claude/skills/deep-review)
-/review-codex <culture> # Codex adversarial review — ~10–45 min in background
+/review-codex <culture> # Codex adversarial review in the background; its effort (and run time) sized to the change
                         # Auto-resume on notification; verify each finding by reading source
 ```
 
