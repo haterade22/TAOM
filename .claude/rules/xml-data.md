@@ -34,7 +34,7 @@ The same applies to additional Preachers, Headmen, or any new notable beyond the
 Culture XML attributes (`merchant_notary`, `artisan_notary`, etc.) must reference the FIRST NPC of each occupation type.
 
 ## Region Codes
-EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=Dale/North, DG=Dol Guldur, E=Erebor, G=Gundabad, I=Isengard, L=Lothlorien, M=Mirkwood, R=Rivendell, RU=Rhun, U=Umbar, MM=Misty Mountain Orcs, GT=Goblins (Goblin-town, settlements), LN=Lindon
+Settlement prefixes, measured from the live map in [id-cheatsheet](../../docs/modding/id-cheatsheet.md) "Region prefixes": A=Khand and Harad (Aserai-mapped), DG=Dol Guldur, E=Erebor, EN=Dunland, ES=Mordor, EW=Gondor, FH=Far Harad, G=Gundabad, GBC=Blue Craig, GT=Goblin-town, I=Isengard, K=Khand (Variag), L=Lothlorien, LN=Lindon, M=Mirkwood, MM=Misty Mountains, R=Rivendell, RU=Rhun, S=Dale, U=Umbar, V=Rohan
 
 **Lord/hero id region prefixes** (`lord_<CODE><clanN>_<lordN>`) differ from settlement codes for the new orc kingdoms: Misty Mountain Orcs lords use `MM`, **Goblin lords use `GB`** (settlements use `GT`), Lindon lords use `LN`. Goblin's settlement code (`GT`) and lord code (`GB`) are independent id-spaces.
 
