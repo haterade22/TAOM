@@ -1450,3 +1450,15 @@ event subscription and a service dependency on the presentation layer.
   prevents through the real producer (or a cited code path that can produce it). If no such path exists,
   delete the guard and say why in the doc.
 - **Source:** 1.5.x `docs/reviews/rca-enlistment-promotion-notice-2026-10-23.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rule that reads a parsed field needs a shipped-data test that the field is populated
+`CareerChoiceDefinition.GroupId` was empty for all 2,100 shipped group choices because the loader read
+it from an attribute no nested choice carries. The tier gate, the keystone rule and the foreign-choice
+repair all keyed on it and silently did nothing; every test built the definitions by hand with the
+field set, and the one click test drove an unbound method instead of the command the prefab binds.
+- **Why missed:** the tests encoded the author's belief about the data, not the parser's output. Second
+  occurrence of the stubbed-collaborator lesson in `state-lifecycle-save.md`.
+- **Prevent:** for every rule that reads a field the loader fills, add one test over the SHIPPED data
+  that the field is populated, and drive behaviour tests through the command the UI binds
+  (`Command.Click`), never a sibling method.
+- **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (#766, W1-01), on `origin/bannerlord-1.5.x` (ported by WP142).
