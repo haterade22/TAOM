@@ -1,0 +1,14 @@
+<Brushes>
+  <Brush Name="TAOM.Muster.HitArea"><Layers><BrushLayer Name="Default" /></Layers></Brush>
+  <Brush Name="TAOM.Muster.Cloth"><Layers><BrushLayer Name="Default" Sprite="cb_muster_cloth" /></Layers></Brush>
+  <Brush Name="TAOM.Muster.Hem"><Layers><BrushLayer Name="Default" Sprite="cb_muster_cloth" Color="#C6A658FF" ColorFactor="1.8" /></Layers></Brush>
+  <Brush Name="TAOM.Muster.Frame" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_muster_frame" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.88" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.7" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" ColorFactor="0.45" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

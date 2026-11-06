@@ -1,0 +1,217 @@
+<Brushes>
+  <Brush Name="TAOM.Encyclopedia.Title" Font="FS_CinzelWide" FontSize="29" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E8DFC6FF" TextOutlineAmount="0" TextGlowRadius="0" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.CategoryText" Font="FS_Garamond" FontSize="25" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F6D48CFF" />
+      <Style Name="Pressed" FontColor="#C6A65FFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Path" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#D7CCAEFF" TextOutlineAmount="0" />
+      <Style Name="Hovered" FontColor="#F1CC7DFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.SearchText" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#D7CCAEFF" TextOutlineAmount="0" />
+      <Style Name="Hovered" FontColor="#F1CC7DFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Category" TransitionDuration="0.12">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_window_settlements" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="1" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.08" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.86" />
+      </Style>
+    </Styles>
+    <SoundProperties>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="default" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Previous">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_previous" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.3" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" AlphaFactor="0.3" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Next">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_next" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.3" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" AlphaFactor="0.3" />
+      </Style>
+    </Styles>
+  </Brush>
+  <!--Kingdom gallery arrows: the 14x24 gold arrow inside a 36x56 button that passes its state down.-->
+  <Brush Name="TAOM.Encyclopedia.GalleryArrowLeft">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_gallery_arrow_l" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.3" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" AlphaFactor="0.3" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.GalleryArrowRight">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_gallery_arrow_r" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.3" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" AlphaFactor="0.3" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Close">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_close" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.4" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.75" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.SearchResult">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#D0AC60FF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" AlphaFactor="0" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" AlphaFactor="0.12" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.ListHeading" Font="FS_Garamond" FontSize="32" TextHorizontalAlignment="Left" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.FilterHeading" Font="FS_Garamond" FontSize="27" TextHorizontalAlignment="Left" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#CBA45CFF" TextOutlineAmount="0" /><Style Name="Hovered" FontColor="#F2D28FFF" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.ListText" Font="FS_Garamond" FontSize="25" TextHorizontalAlignment="Left" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" /><Style Name="Hovered" FontColor="#F5D58EFF" /><Style Name="Selected" FontColor="#F5D58EFF" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.ListValue" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Right" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.ListMutedCentered" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.ListActionText" Font="FS_Garamond" FontSize="23" TextHorizontalAlignment="Center" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#CBA45CFF" TextOutlineAmount="0" /><Style Name="Hovered" FontColor="#F2D28FFF" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.PreviewName" Font="FS_Garamond" FontSize="31" TextHorizontalAlignment="Center" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.TextButton"><Styles><Style Name="Default" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.ResetIcon"><Layers><BrushLayer Name="Default" Sprite="cc_g_reset" ColorFactor="1.35" /></Layers></Brush>
+  <Brush Name="TAOM.Encyclopedia.ListRow" TransitionDuration="0.1"><Layers><BrushLayer Name="Fill" Sprite="BlankWhiteSquare" Color="#BB9345FF" /></Layers><Styles><Style Name="Default"><BrushLayer Name="Fill" AlphaFactor="0" /></Style><Style Name="Hovered"><BrushLayer Name="Fill" AlphaFactor="0.08" /></Style><Style Name="Selected"><BrushLayer Name="Fill" AlphaFactor="0.18" /></Style><Style Name="SelectedHovered"><BrushLayer Name="Fill" AlphaFactor="0.22" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.RowBullet" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cs_scroll_thumb" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.75" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.35" SaturationFactor="-60" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.RowSelectedDiamond" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#D8B468FF" Rotation="45" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.RowSelectionAccent" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#CDA85EFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.RowHoverRule" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#CDA85EFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.RowText" Font="FS_Garamond" FontSize="25" TextHorizontalAlignment="Left" TextVerticalAlignment="Center" TransitionDuration="0.12">
+    <Styles>
+      <Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5E7C5FF" />
+      <Style Name="Pressed" FontColor="#E5BF71FF" />
+      <Style Name="Selected" FontColor="#E5BF71FF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Rule"><Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#AD8849FF" /></Layers></Brush>
+  <Brush Name="TAOM.Encyclopedia.Checkbox"><Layers><BrushLayer Name="Box" Sprite="ec_list_checkbox" /><BrushLayer Name="Tick" Sprite="ec_list_tick" /></Layers><Styles><Style Name="Default"><BrushLayer Name="Tick" AlphaFactor="0" /></Style><Style Name="Selected"><BrushLayer Name="Tick" AlphaFactor="1" /></Style><Style Name="SelectedHovered"><BrushLayer Name="Tick" AlphaFactor="1" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.SortButton"><Layers><BrushLayer Name="Default" Sprite="ec_list_sort" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.OpenEntry"><Layers><BrushLayer Name="Default" Sprite="cs_tab_rail_9" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.25" /></Style><Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.OpenEntryText" Font="FS_Garamond" FontSize="25" TextHorizontalAlignment="Center" TextVerticalAlignment="Center"><Styles><Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" /><Style Name="Hovered" FontColor="#F5D58EFF" /></Styles></Brush>
+  <Brush Name="TAOM.Encyclopedia.HeroFriendMask">
+    <Layers><BrushLayer Name="Default" Sprite="ec_hero_friend_mask" UseOverlayAlphaAsMask="true" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.HeroEnemyMask">
+    <Layers><BrushLayer Name="Default" Sprite="ec_hero_enemy_mask" UseOverlayAlphaAsMask="true" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.ClanMemberMask">
+    <Layers><BrushLayer Name="Default" Sprite="ec_panel_mask_9" UseOverlayAlphaAsMask="true" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.HeroClanMask">
+    <Layers><BrushLayer Name="Default" Sprite="ec_hero_clan_mask" UseOverlayAlphaAsMask="true" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.Messenger">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="ec_messenger_dispatch" />
+    </Layers>
+    <Styles>
+      <Style Name="Default" />
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" SaturationFactor="-100" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="default" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.Encyclopedia.TroopCardMask">
+    <Layers><BrushLayer Name="Default" Sprite="ec_troop_card_mask" UseOverlayAlphaAsMask="true" /></Layers>
+  </Brush>
+</Brushes>

@@ -1,0 +1,71 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#00000099">
+      <Children>
+        <Widget Id="EncyclopediaFrame" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaStonePanelWidget Id="EncyclopediaHeader" WidthSizePolicy="StretchToParent" SuggestedHeight="60" PositionYOffset="12" Sprite="ec_header" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="146" SuggestedHeight="2" PositionXOffset="1068" PositionYOffset="42" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="14" SuggestedHeight="14" PositionXOffset="1052" PositionYOffset="36" Sprite="cs_scroll_thumb" DoNotAcceptEvents="true" />
+            <NavigationForcedScopeCollectionTargeter CollectionID="EncyclopediaForcedScopeCollection" UseRootAsTarget="true" />
+            <ButtonWidget Id="HistoryBack" SuggestedWidth="46.8" SuggestedHeight="36" PositionXOffset="42" PositionYOffset="24" Brush="TAOM.Encyclopedia.TextButton" IsEnabled="@IsBackEnabled" Command.Click="ExecuteBack" UpdateChildrenStates="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="15" SuggestedHeight="24" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowLeft" DoNotAcceptEvents="true" />
+                <InputKeyVisualWidget DataSource="{PreviousPageInputKey}" SuggestedWidth="36" SuggestedHeight="36" PositionYOffset="-27" KeyID="@KeyID" IsVisible="@IsVisible" DoNotAcceptEvents="true" />
+              </Children>
+            </ButtonWidget>
+            <ButtonWidget Id="HistoryForward" SuggestedWidth="46.8" SuggestedHeight="36" PositionXOffset="100" PositionYOffset="24" Brush="TAOM.Encyclopedia.TextButton" IsEnabled="@IsForwardEnabled" Command.Click="ExecuteForward" UpdateChildrenStates="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="15" SuggestedHeight="24" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowRight" DoNotAcceptEvents="true" />
+                <InputKeyVisualWidget DataSource="{NextPageInputKey}" SuggestedWidth="36" SuggestedHeight="36" PositionYOffset="-27" KeyID="@KeyID" IsVisible="@IsVisible" DoNotAcceptEvents="true" />
+              </Children>
+            </ButtonWidget>
+            <TextWidget Id="EncyclopediaTitle" SuggestedWidth="378" SuggestedHeight="48" HorizontalAlignment="Center" PositionYOffset="18" Text="@PageName" Brush="TAOM.Encyclopedia.Title" DoNotAcceptEvents="true" />
+            <!--Breadcrumb inside the header, left of the title (162..652): long paths clip in their own area, clear of the arrows, title and search.-->
+            <Widget Id="PathBar" SuggestedWidth="490" SuggestedHeight="36" PositionXOffset="162" PositionYOffset="24" ClipContents="true" DoNotAcceptEvents="true">
+              <Children>
+                <RichTextWidget Id="PathBarTextWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" Text="@NavBarString" Command.LinkClick="ExecuteBarLink" Brush="TAOM.Encyclopedia.Path" Brush.FontSize="18" Brush.TextVerticalAlignment="Center" />
+              </Children>
+            </Widget>
+            <EncyclopediaSearchBarBrushWidget Id="SearchButton" SuggestedWidth="266.4" SuggestedHeight="36" PositionXOffset="1354" PositionYOffset="24" Sprite="ec_search_box" SearchResultPanel="..\SearchResults" SearchInputWidget="SearchInputWidget" MinCharAmountToShowResults="@MinCharAmountToShowResults" ShowResults="@IsSearchResultsShown" Command.SearchBarClick="ExecuteOnSearchActivated" DoNotAcceptEvents="true">
+              <Children>
+                <Widget SuggestedWidth="19.8" SuggestedHeight="19.8" PositionXOffset="9" VerticalAlignment="Center" Sprite="ec_search_icon" DoNotAcceptEvents="true" />
+                <EditableTextWidget Id="SearchInputWidget" SuggestedWidth="221.4" SuggestedHeight="32.4" PositionXOffset="36" PositionYOffset="0.9" DefaultSearchText="Search..." Text="@SearchText" Brush="TAOM.Encyclopedia.SearchText" GamepadNavigationIndex="0" />
+              </Children>
+            </EncyclopediaSearchBarBrushWidget>
+            <ScrollbarWidget Id="SearchResultListScrollbar" SuggestedWidth="10.8" SuggestedHeight="48.6" PositionXOffset="1564.2" PositionYOffset="66.6" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="SearchResultListScrollbarHandle" IsVisible="false" IsEnabled="false">
+              <Children>
+                <ImageWidget Id="SearchResultListScrollbarHandle" WidthSizePolicy="StretchToParent" SuggestedHeight="21.6" Sprite="cs_scroll_thumb" />
+              </Children>
+            </ScrollbarWidget>
+            <!-- Keep results in the header gap so the later native page movie cannot cover them. -->
+            <ScrollablePanel Id="SearchResults" SuggestedWidth="266.4" SuggestedHeight="52.2" PositionXOffset="1354" PositionYOffset="66" InnerPanel="SearchClip\SearchResultList" ClipRect="SearchClip" VerticalScrollbar="..\SearchResultListScrollbar" MouseScrollAxis="Vertical" AutoHideScrollBars="true" AutoHideScrollBarHandle="true" Sprite="ec_search_results" IsVisible="false">
+              <Children>
+                <Widget Id="SearchClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="9" MarginRight="10.8" MarginTop="3.6" MarginBottom="3.6" ClipContents="true">
+                  <Children>
+                    <NavigationForcedScopeCollectionTargeter CollectionID="EncyclopediaSearchResultsCollection" CollectionParent="..\." CollectionOrder="999" />
+                    <NavigationScopeTargeter ScopeID="EncyclopediaSearchResultsScope" ScopeParent="..\SearchResultList" ScopeMovements="Vertical" />
+                    <NavigatableListPanel Id="SearchResultList" DataSource="{SearchResults}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <ButtonWidget Id="SearchItemButtonWidget" WidthSizePolicy="StretchToParent" SuggestedHeight="21.6" Brush="TAOM.Encyclopedia.SearchResult" Command.Click="Execute" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="21.6" Text="@NameText" Brush="TAOM.Encyclopedia.SearchText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </NavigatableListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ButtonWidget Id="CloseEncyclopedia" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="1650" PositionYOffset="24" Brush="TAOM.Encyclopedia.Close" Command.Click="ExecuteCloseEncyclopedia" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+              <Children>
+                <InputKeyVisualWidget DataSource="{CancelInputKey}" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="-37.8" KeyID="@KeyID" IsVisible="@IsVisible" DoNotAcceptEvents="true" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

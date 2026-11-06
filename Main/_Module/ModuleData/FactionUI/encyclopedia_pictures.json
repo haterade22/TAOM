@@ -1,0 +1,42 @@
+{
+    "default":  "generic_settlement.png",
+    "settlements":  {
+                        "town_EW1":  "minas_tirith.png",
+                        "town_AN1":  "annuminas.png",
+                        "town_V3":  "aldburg.png",
+                        "town_EW5":  "dol-amroth.png",
+                        "town_EW4":  "pelargir.png",
+                        "castle_EW4":  "cair-andros.png",
+                        "town_V2":  "helms-deep.png",
+                        "castle_ES1":  "black-gate.png",
+                        "town_ES2":  "minas-morgul.png",
+                        "town_DG1":  "dol-guldur.png",
+                        "town_E1":  "erebor.png",
+                        "town_ES1":  "barad-dur.png",
+                        "town_V1":  "edoras.png",
+                        "town_isengard":  "orthanc.png",
+                        "castle_ES3":  "cirith-ungol.png",
+                        "town_S1":  "dale.png",
+                        "town_G1":  "gundabad.png",
+                        "town_M1":  "thranduils-halls.png",
+                        "town_L1":  "caras-galadhon.png",
+                        "town_GT1":  "goblin-town.png",
+                        "town_MM1":  "eastern-moria.png",
+                        "town_MM2":  "western-moria.png",
+                        "town_AN3":  "bree.png",
+                        "castle_AN4":  "weathertop.png",
+                        "town_AV1":  "beorns-hall.png",
+                        "town_LN1":  "grey-havens.png",
+                        "village_EW3_2":  "henneth-annun.png",
+                        "town_EW2":  "west-osgiliath.png",
+                        "town_EW3":  "east-osgiliath.png",
+                        "castle_orthanc_gate":  "orthanc.png",
+                        "village_V2_2":  "aecertun-panorama.png"
+                    },
+    "cultures":  {
+
+                 },
+    "types":  {
+
+              }
+}

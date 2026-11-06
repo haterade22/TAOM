@@ -1,0 +1,243 @@
+<Prefab>
+  <Window>
+    <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
+      <Children>
+        <Widget Id="SettlementFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+                
+              </Children>
+            </EncyclopediaStonePanelWidget>
+            <!--Panorama, folio x 32 to 1696, y 16 to 216: the settlement picture cropped to cover (BlankWhiteSquare is an opaque rectangular mask,
+                so the picture keeps its proportions). FrameFocusY 0.3 keeps the longhouse roof and its horse head in the 200 px band.-->
+            <Widget Id="SettlementPanorama" SuggestedWidth="1664" SuggestedHeight="200" HorizontalAlignment="Center" PositionYOffset="16" ClipContents="true" DoNotAcceptEvents="true">
+              <Children>
+                <EncyclopediaPictureWidget Id="SettlementIllustration" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" FrameMask="BlankWhiteSquare" FrameZoom="1.06" FrameFocusY="0.3" DoNotAcceptEvents="true" />
+                <!--Title block, lower left: a local soft shadow (580 by 150, panorama x 0 to 580, y 50 to 200), the live name and the gold leaf rule.-->
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="580" SuggestedHeight="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Sprite="ec_settlement_title_shadow" Brush.Color="#000000FF" DoNotAcceptEvents="true" />
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Bottom" MarginLeft="44" MarginBottom="30" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <RichTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="500" Text="@SettlementName" Brush="TAOM.Encyclopedia.Title" Brush.FontSize="48" Brush.TextHorizontalAlignment="Left" DoNotAcceptEvents="true" />
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="260" SuggestedHeight="22" MarginTop="6" Sprite="ec_settlement_title_ornament" DoNotAcceptEvents="true" />
+                  </Children>
+                </ListPanel>
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+            <!--Facts bar, folio x 32 to 1696, y 220 to 280, no scrolling. Bar x: culture 0 to 270, bound settlement link 271 to 601,
+                native stats 612 to 1516 (one centred row: both native collections side by side, 120 px per value, a 16 px gap between them),
+                then the Bookmark star (1546 to 1580) and the Track circle (1592 to 1626), 34 px icon-only buttons.-->
+            <Widget Id="SettlementFacts" SuggestedWidth="1664" SuggestedHeight="60" HorizontalAlignment="Center" PositionYOffset="220" DoNotAcceptEvents="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="StretchToParent" SuggestedHeight="1" VerticalAlignment="Top" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+                <Widget Id="SettlementCultureGroup" SuggestedWidth="270" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="14" MarginRight="14" Text="@CultureText" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+                <ImageWidget SuggestedWidth="1" SuggestedHeight="24" PositionXOffset="270" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.6" DoNotAcceptEvents="true" />
+                <Widget Id="SettlementBoundGroup" SuggestedWidth="330" HeightSizePolicy="StretchToParent" PositionXOffset="271" DoNotAcceptEvents="true">
+                  <Children>
+                    <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="14" MarginRight="14" IsVisible="@HasBoundSettlement" Command.LinkClick="ExecuteBoundSettlementLink" Text="@BoundSettlementText" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Center" />
+                  </Children>
+                </Widget>
+                <ImageWidget SuggestedWidth="1" SuggestedHeight="24" PositionXOffset="601" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.6" DoNotAcceptEvents="true" />
+                <Widget Id="SettlementStats" SuggestedWidth="904" HeightSizePolicy="StretchToParent" PositionXOffset="612" DoNotAcceptEvents="true">
+                  <Children>
+                    <NavigationScopeTargeter ScopeID="EncyclopediaSettlementPropertiesScope" ScopeParent="..\Properties" ScopeMovements="Horizontal" />
+                    <TAOMEncyclopediaSettlementFactStats Id="Properties" />
+                  </Children>
+                </Widget>
+                <ImageWidget SuggestedWidth="1" SuggestedHeight="24" PositionXOffset="1528" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.6" DoNotAcceptEvents="true" />
+                <!--Bookmark Button: the native star, icon only-->
+                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementBookmarkButtonScope" ScopeParent="..\BookmarkButton" />
+                <ButtonWidget Id="BookmarkButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" PositionXOffset="1546" VerticalAlignment="Center" Brush="Encyclopedia.Bookmark.Button" Command.Click="ExecuteSwitchBookmarkedState" IsSelected="@IsBookmarked" GamepadNavigationIndex="0">
+                  <Children>
+                    <HintWidget DataSource="{BookmarkHint}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </ButtonWidget>
+                <!--Tracker Button: the native circle with its tracked ring, icon only-->
+                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementTrackButtonScope" ScopeParent="..\TrackButton" />
+                <Widget Id="TrackButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" PositionXOffset="1592" VerticalAlignment="Center">
+                  <Children>
+                    <ButtonWidget Id="EncyclopediaItemTrackButton" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Settlement.TrackButton" Command.Click="ExecuteTrack" GamepadNavigationIndex="1" />
+                    <Widget Id="ToggleIndicator" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="SPGeneral\Nameplates\tracked_ring" IsDisabled="true" IsVisible="@IsVisualTrackerSelected" DoNotAcceptEvents="true" />
+                    <TutorialHighlightItemBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="48" SuggestedHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TutorialHighlightBrush" IsEnabled="false" IsHighlightEnabled="@IsTrackerButtonHighlightEnabled" IsVisible="false" />
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+            <ImageWidget SuggestedWidth="1640" SuggestedHeight="3" HorizontalAlignment="Center" PositionYOffset="282" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+            <!--Main body, folio x 32 to 1682, y 288 to 712 (424 high). SettlementMain is at least that tall, so owner, notables and villages fit without
+                scrolling; only the optional history after it, or more than 20 notables or 6 villages, makes the panel scroll.-->
+            <ScrollablePanel Id="RightSideScrollablePanel" SuggestedWidth="1650" SuggestedHeight="424" PositionXOffset="32" PositionYOffset="288" ClipRect="RightSideRect" InnerPanel="RightSideRect\RightSideList" MouseScrollAxis="Vertical" VerticalScrollbar="..\RightSideScrollbar" AutoHideScrollBars="true">
+              <Children>
+                <Widget Id="RightSideRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel Id="RightSideList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                      <Children>
+                        <!--Main information, panel coordinates (folio = panel + 32 x, + 288 y). SettlementMain is at least the 424 px viewport;
+                            every section is placed by margins inside it, so the description cannot push the sections down.-->
+                        <Widget Id="SettlementMain" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MinHeight="424" DoNotAcceptEvents="true">
+                          <Children>
+                            <!--Settlement Info Text, short preview: panel x 12 to 1432 (folio 44 to 1464), y 0 to 64 (folio 288 to 352), clipped to about
+                                three lines at 20 pt. The full @InformationText is in SettlementDescriptionOverlay, opened by OpenDescriptionButton.-->
+                            <Widget Id="SettlementDescriptionPreview" SuggestedWidth="1420" SuggestedHeight="64" MarginLeft="12" ClipContents="true" DoNotAcceptEvents="true">
+                              <Children>
+                                <RichTextWidget Id="SettlementDescriptionText" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Text="@InformationText" DoNotAcceptEvents="true" />
+                              </Children>
+                            </Widget>
+                            <!--Ownership: x 0 to 480, from y 80. Owner slot 160 wide (116 px portrait), 12 px gap, clan pennant 297 by 153.-->
+                            <ListPanel Id="OwnershipColumn" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="480" MarginTop="80" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                              <Children>
+                                <!--Owner Divider-->
+                                <TAOMEncyclopediaSettlementDivider Id="OwnerDivider" Parameter.Title="@OwnerText" Parameter.ItemList="..\OwnerList" GamepadNavigationIndex="0" />
+                                <!--Owner, Owner Banner-->
+                                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementOwnerListScope" ScopeParent="..\OwnerList" ScopeMovements="Horizontal" />
+                                <ListPanel Id="OwnerList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="4" MarginTop="6">
+                                  <Children>
+                                    <TAOMEncyclopediaSettlementPortrait DataSource="{Owner}" Parameter.ContentWidth="160" Parameter.PortraitSize="116" Parameter.BabyWidth="86" Parameter.BabyHeight="66" Parameter.CrownWidth="19" Parameter.CrownHeight="17" Parameter.CrownX="83" Parameter.CrownY="25" Parameter.NameFontSize="20" GamepadNavigationIndex="0" />
+                                    <!--Owner Banner: the Hero page clan stack, every dimension scaled by 0.86-->
+                                    <Widget SuggestedWidth="297" SuggestedHeight="153" MarginLeft="12" VerticalAlignment="Top">
+                                      <Children>
+                                        <ButtonWidget Id="ClanBanner" DataSource="{OwnerBanner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="1">
+                                          <Children>
+                                            <ImageWidget SuggestedWidth="237" SuggestedHeight="57" PositionXOffset="52" VerticalAlignment="Center" Sprite="ec_hero_nameplate_rim" DoNotAcceptEvents="true" />
+                                            <TextWidget SuggestedWidth="184" SuggestedHeight="57" PositionXOffset="96" VerticalAlignment="Center" Text="@NameText" Brush="TAOM.Encyclopedia.ListMutedCentered" Brush.FontSize="19" DoNotAcceptEvents="true" />
+                                            <Widget SuggestedWidth="88" SuggestedHeight="143" VerticalAlignment="Center" DoNotAcceptEvents="true">
+                                              <Children>
+                                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDestroyed" DoNotAcceptEvents="true" ClipContents="true">
+                                                  <Children>
+                                                    <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35" />
+                                                  </Children>
+                                                </Widget>
+                                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDestroyed" DoNotAcceptEvents="true" ClipContents="true">
+                                                  <Children>
+                                                    <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35" />
+                                                  </Children>
+                                                </Widget>
+                                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true" />
+                                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true" />
+                                              </Children>
+                                            </Widget>
+                                            <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                          </Children>
+                                        </ButtonWidget>
+                                      </Children>
+                                    </Widget>
+                                  </Children>
+                                </ListPanel>
+                              </Children>
+                            </ListPanel>
+                            <ImageWidget SuggestedWidth="1" SuggestedHeight="320" MarginLeft="492" MarginTop="88" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+                            <!--Notables: x 504 to 1344, from y 80. Four 210 px columns, 58 px rows: five rows (290 px) hold the 20 notables TAOM configures for
+                                Isengard and Dol Guldur, ending at panel y 80 + heading (about 34 at 28 pt) + 8 + 290 = about 412, folio about 700.-->
+                            <ListPanel Id="NotablesColumn" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="840" MarginLeft="504" MarginTop="80" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                              <Children>
+                                <!--Notables Divider-->
+                                <TAOMEncyclopediaSettlementDivider Id="NotablesDivider" Parameter.Title="@NotableCharactersText" Parameter.ItemList="..\NotablesGrid" GamepadNavigationIndex="0" />
+                                <!--Notables Grid-->
+                                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementNotablesGridScope" ScopeParent="..\NotablesGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="4" />
+                                <NavigatableGridWidget Id="NotablesGrid" DataSource="{NotableCharacters}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" MarginTop="8" DefaultCellWidth="210" DefaultCellHeight="58" ColumnCount="4">
+                                  <ItemTemplate>
+                                    <!--Notable: compact card, 48 px Hero frame and the name beside it-->
+                                    <TAOMEncyclopediaSettlementNotableRow />
+                                  </ItemTemplate>
+                                </NavigatableGridWidget>
+                              </Children>
+                            </ListPanel>
+                            <ImageWidget SuggestedWidth="1" SuggestedHeight="320" MarginLeft="1356" MarginTop="88" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+                            <!--Villages: x 1364 to 1650, from y 80. One column of 48 px rows with a 36 px thumbnail: six rows end at about y 412.-->
+                            <ListPanel Id="SettlementsColumn" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="286" MarginLeft="1364" MarginTop="80" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                              <Children>
+                                <!--Settlements Divider-->
+                                <TAOMEncyclopediaSettlementDivider Id="SettlementsDivider" Parameter.Title="@SettlementsText" Parameter.ItemList="..\SettlementsGrid" GamepadNavigationIndex="0" />
+                                <!--Settlements Grid-->
+                                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementSettlementsGridScope" ScopeParent="..\SettlementsGrid" ScopeMovements="Vertical" />
+                                <NavigatableGridWidget Id="SettlementsGrid" DataSource="{Settlements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" MarginTop="6" DefaultCellWidth="286" DefaultCellHeight="48" ColumnCount="1">
+                                  <ItemTemplate>
+                                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="286" SuggestedHeight="46" Brush="TAOM.Encyclopedia.ListRow" Command.Click="ExecuteLink" UpdateChildrenStates="true">
+                                      <Children>
+                                        <DefaultLayerSpriteChangerBrushWidget Id="VillageImage" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" MarginLeft="6" VerticalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Settlement.ButtonBrush" SpriteBrush="Encyclopedia.SubPage.Element.Settlement.SpriteBrush" SpriteBrushLayerName="@FileName" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="52" MarginRight="6" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Left" Text="@NameText" />
+                                        <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                      </Children>
+                                    </ButtonWidget>
+                                  </ItemTemplate>
+                                </NavigatableGridWidget>
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </Widget>
+                        <ListPanel DataSource="{History}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="0" MarginRight="10" MarginTop="0" MarginBottom="0" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <EncyclopediaSubPageHistoryElement />
+                          </ItemTemplate>
+                        </ListPanel>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="RightSideScrollbar" SuggestedWidth="8" SuggestedHeight="416" PositionXOffset="1691" PositionYOffset="292" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+              <Children>
+                <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="50" Sprite="ec_list_scroll" />
+              </Children>
+            </ScrollbarWidget>
+            <!--Read full description: folio x 1490 to 1680, y 298 to 346, beside the preview. Native EncyclopediaDividerButtonWidget: a click flips the
+                IsVisible of its ItemListWidget, here the overlay (installed IL, UpdateItemListVisibility). It stays visible because the overlay has children.-->
+            <NavigationScopeTargeter ScopeID="EncyclopediaSettlementOpenDescriptionScope" ScopeParent="..\OpenDescriptionButton" />
+            <EncyclopediaDividerButtonWidget Id="OpenDescriptionButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="190" SuggestedHeight="48" PositionXOffset="1490" PositionYOffset="298" Brush="TAOM.Encyclopedia.TextButton" ItemListWidget="..\SettlementDescriptionOverlay" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Center" LocalizedText="{=taom_fui_ency_read_description}Read full description" DoNotAcceptEvents="true" />
+              </Children>
+            </EncyclopediaDividerButtonWidget>
+            <ImageWidget SuggestedWidth="1640" SuggestedHeight="3" HorizontalAlignment="Center" PositionYOffset="721" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+            <!--Full description panel: the last child of the folio, so it draws above all page content. Hidden until OpenDescriptionButton shows it;
+                CloseDescriptionButton (ItemListWidget "..\.", the parent itself; a bare ".." does not resolve and leaves a null target) hides it again. The dim backdrop accepts events, so clicks never reach the page beneath.
+                Stone reading panel folio x 74 to 1654, y 80 to 700; the full text scrolls only inside its 1450 by 480 area.-->
+            <Widget Id="SettlementDescriptionOverlay" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="false">
+              <Children>
+                <Widget Id="SettlementDescriptionBackdrop" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#000000B8" />
+                <EncyclopediaStonePanelWidget SuggestedWidth="1580" SuggestedHeight="620" PositionXOffset="74" PositionYOffset="80" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+                  <Children>
+                  </Children>
+                </EncyclopediaStonePanelWidget>
+                <RichTextWidget SuggestedWidth="1380" SuggestedHeight="48" PositionXOffset="114" PositionYOffset="100" Text="@SettlementName" Brush="TAOM.Encyclopedia.Title" Brush.FontSize="32" Brush.TextHorizontalAlignment="Left" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="1500" SuggestedHeight="3" PositionXOffset="114" PositionYOffset="152" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+                <ScrollablePanel Id="SettlementDescriptionFullScroll" SuggestedWidth="1450" SuggestedHeight="480" PositionXOffset="139" PositionYOffset="166" ClipRect="SettlementDescriptionFullRect" InnerPanel="SettlementDescriptionFullRect\SettlementDescriptionFullText" MouseScrollAxis="Vertical" VerticalScrollbar="..\SettlementDescriptionFullScrollbar" AutoHideScrollBars="true">
+                  <Children>
+                    <Widget Id="SettlementDescriptionFullRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                      <Children>
+                        <RichTextWidget Id="SettlementDescriptionFullText" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="23" Text="@InformationText" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+                <ScrollbarWidget Id="SettlementDescriptionFullScrollbar" SuggestedWidth="8" SuggestedHeight="472" PositionXOffset="1597" PositionYOffset="170" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="50" Sprite="ec_list_scroll" />
+                  </Children>
+                </ScrollbarWidget>
+                <!--Close: folio x 1510 to 1622, y 94 to 132, at the reading panel's top right; flips its parent overlay back to hidden.-->
+                <NavigationScopeTargeter ScopeID="EncyclopediaSettlementCloseDescriptionScope" ScopeParent="..\CloseDescriptionButton" />
+                <EncyclopediaDividerButtonWidget Id="CloseDescriptionButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="112" SuggestedHeight="38" PositionXOffset="1510" PositionYOffset="94" Brush="TAOM.Encyclopedia.TextButton" ItemListWidget="..\." DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+                  <Children>
+                    <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Center" LocalizedText="{=taom_fui_ency_close_description}Close" DoNotAcceptEvents="true" />
+                  </Children>
+                </EncyclopediaDividerButtonWidget>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+        <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
+        <TAOMEncyclopediaPageNavigation />
+      </Children>
+    </BrushWidget>
+  </Window>
+</Prefab>

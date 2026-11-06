@@ -1,0 +1,63 @@
+<Prefab>
+  <Variables>
+  </Variables>
+  <Constants>
+
+    <Constant Name="MapBar.GatherArmy.Icon.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Icon" BrushValueType="Width" />
+    <Constant Name="MapBar.GatherArmy.Icon.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Icon" BrushValueType="Height" />
+
+    <Constant Name="MapBar.GatherArmy.Background.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Background" BrushValueType="Width" />
+    <Constant Name="MapBar.GatherArmy.Background.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Background" BrushValueType="Height" />
+
+    <Constant Name="MapBar.GatherArmy.Button.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Button" BrushValueType="Width" />
+    <Constant Name="MapBar.GatherArmy.Button.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Button" BrushValueType="Height" />
+
+    <Constant Name="NormalMapBarTextColor" Value="#F4E1C4FF" />
+    <Constant Name="WarningMapBarTextColor" Value="#DB0808FF" />
+    <Constant Name="MapBar.Notification.Size" Value="20" />
+
+    <Constant Name="MapBar.Buttons.HorizonalSpacing" Value="2" />
+
+    <Constant Name="MapBar.ButtonIcon.XOffset" Value="0" />
+    <Constant Name="MapBar.ButtonIcon.YOffset" Value="1" />
+
+  </Constants>
+  <VisualDefinitions>
+<VisualDefinition Name="CenterPanel" TransitionDuration="0.45" EaseType="EaseOut" EaseFunction="Quint">
+      <VisualState PositionYOffset="6" State="Default" />
+      <VisualState PositionYOffset="100" State="Disabled" />
+    </VisualDefinition>
+<VisualDefinition Name="ResetButton" TransitionDuration="0.45" EaseType="EaseOut" EaseFunction="Quint">
+      <VisualState PositionYOffset="0" State="Default" />
+      <VisualState PositionYOffset="0" State="Hovered" />
+      <VisualState PositionYOffset="0" State="Pressed" />
+      <VisualState PositionYOffset="100" State="Disabled" />
+    </VisualDefinition>
+  </VisualDefinitions>
+  <Window>
+    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsEnabled">
+      <Children>
+
+        <NavigationScopeTargeter DataSource="{MapTimeControl}" ScopeID="MapBarScreenCenterScope" ScopeParent="..\MapBarScreenCenterScopeTarget" IsScopeEnabled="@IsCenterPanelEnabled" ExtendDiscoveryAreaLeft="350" ExtendDiscoveryAreaRight="550" ExtendDiscoveryAreaTop="200" ExtendDiscoveryAreaBottom="200"/>
+        <Widget DoNotAcceptEvents="true" Id="MapBarScreenCenterScopeTarget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Center" GamepadNavigationIndex="0" />
+
+        <!--Tutorial Notification Frame-->
+        <ElementNotificationWidget DataSource="{TutorialNotification}" ElementID="@ElementID" TutorialFrameWidget="TutorialFrameWidget">
+          <Children>
+            <TutorialHighlightItemBrushWidget Id="TutorialFrameWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsDisabled="true" IsVisible="false" />
+          </Children>
+        </ElementNotificationWidget>
+
+        <TextWidget DoNotAcceptEvents="true" DataSource="{MapTimeControl}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150" Brush="Map.Paused.Text" Text="@PausedText" AutoHideIfEmpty="true" />
+
+        <!-- TAOM illustrated navigation; the native time and information panels remain below. -->
+        <TAOMCampaignNavigation DataSource="{MapNavigation}" />
+
+        <!-- TAOM time controls keep the native MapTimeControl VM and commands. -->
+        <TAOMCampaignTime DataSource="{MapTimeControl}" />
+        <TAOMCampaignStats Id="InfoBarWidget" DataSource="{MapInfo}" />
+        <TAOMCampaignMuster Id="MapGatherArmyButton" />
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

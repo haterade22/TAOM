@@ -1,0 +1,34 @@
+<Brushes>
+  <Brush Name="TAOM.Stats.Upper"><Layers><BrushLayer Name="Default" Sprite="cb_stats_upper" ImageFit.Type="Contain" ColorFactor="0.88" /></Layers></Brush>
+  <Brush Name="TAOM.Stats.Lower"><Layers><BrushLayer Name="Default" Sprite="cb_stats_lower_join_fixed" ImageFit.Type="Contain" ColorFactor="0.88" /></Layers></Brush>
+  <Brush Name="TAOM.Stats.Icons">
+    <Layers>
+      <BrushLayer Name="gold" Sprite="cb_stats_gold" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="speed" Sprite="cb_stats_speed" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="speed_at_sea" Sprite="cb_stats_speed" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="hit_points" Sprite="cb_stats_health" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="hit_points_sick" Sprite="cb_stats_health" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="troops" Sprite="cb_stats_troops" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="food" Sprite="cb_stats_food" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="morale" Sprite="cb_stats_morale" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="influence" Sprite="cb_stats_influence" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="view_distance" Sprite="cb_stats_view_distance" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+      <BrushLayer Name="troop_wage" Sprite="cb_stats_troop_wage" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+    </Layers>
+  </Brush>
+  <Brush Name="TAOM.Stats.Value" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E6DDC2FF" />
+      <Style Name="Positive" FontColor="#E6DDC2FF" />
+      <Style Name="Negative" FontColor="#E6DDC2FF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Stats.Expand" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_stats_toggle_closed" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.25" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.65" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

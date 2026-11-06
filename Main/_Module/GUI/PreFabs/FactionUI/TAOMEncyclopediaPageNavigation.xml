@@ -1,0 +1,35 @@
+<Prefab>
+  <Window>
+    <!--Shared Previous Page / Next Page row for every encyclopedia detail page. Each page includes it once in its full-window root, after the 1728x780 page canvas, so the row is detached from the panels: at a 1080 logical viewport it sits at y 1010..1058, 46 below the tallest panel end (184 + 780 = 964), centred on the same 1728 column. Two 190x48 hit boxes with a 16 gap; native commands, labels, hints and disabled states.-->
+    <Widget Id="PageNavigation" WidthSizePolicy="Fixed" SuggestedWidth="1728" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="48" VerticalAlignment="Bottom" MarginBottom="22" DoNotAcceptEvents="true">
+      <Children>
+        <ListPanel Id="PageNavigationRow" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+          <Children>
+            <ButtonWidget Id="PreviousPageButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="190" SuggestedHeight="48" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteGoToPreviousItem" IsEnabled="@IsPreviousButtonEnabled" UpdateChildrenStates="true">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="41" SuggestedHeight="48" DoNotAcceptEvents="true" UpdateChildrenStates="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="15" SuggestedHeight="24" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowLeft" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="46" MarginRight="4" Brush="Encyclopedia.QuickNavigation.Button.Text" Brush.FontSize="22" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" Text="@PreviousButtonLabel" DoNotAcceptEvents="true" />
+                <HintWidget DoNotAcceptEvents="true" DataSource="{PreviousButtonHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              </Children>
+            </ButtonWidget>
+            <ButtonWidget Id="NextPageButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="190" SuggestedHeight="48" MarginLeft="16" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteGoToNextItem" IsEnabled="@IsNextButtonEnabled" UpdateChildrenStates="true">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="4" MarginRight="46" Brush="Encyclopedia.QuickNavigation.Button.Text" Brush.FontSize="22" Brush.TextHorizontalAlignment="Right" Brush.TextVerticalAlignment="Center" Text="@NextButtonLabel" DoNotAcceptEvents="true" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="41" SuggestedHeight="48" HorizontalAlignment="Right" DoNotAcceptEvents="true" UpdateChildrenStates="true">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="15" SuggestedHeight="24" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowRight" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+                <HintWidget DoNotAcceptEvents="true" DataSource="{NextButtonHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </ListPanel>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

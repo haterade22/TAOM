@@ -1,0 +1,39 @@
+<Prefab>
+  <Window>
+    <!--Settlement-only compact notable card, 206 by 56 in a 210 by 58 grid cell: the Hero page ally frame stack (HeroFriendMask, ec_hero_friend_rim,
+        desaturated dead branch, baby and crown) as a 48 px square at the left, scaled from the 84 px gallery (0.571), and the live name at x 56,
+        150 wide, 18 pt, wrapping and centred vertically. The whole card is the link and the hover target.-->
+    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="206" SuggestedHeight="56" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteLink" UpdateChildrenStates="true">
+      <Children>
+        <Widget Id="Portrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="48" SuggestedHeight="48" MarginLeft="2" VerticalAlignment="Center" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsChild" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                  <Children>
+                    <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                  </Children>
+                </Widget>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                  <Children>
+                    <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_mask" Brush.Color="#211D19FF" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="35" SuggestedHeight="27" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="Encyclopedia\portrait_baby" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_rim" DoNotAcceptEvents="true" />
+            <Widget SuggestedWidth="8" SuggestedHeight="7" PositionXOffset="34" PositionYOffset="10" Sprite="SPGeneral\SPScoreboard\leader_crown_icon" IsVisible="@IsKingdomLeader" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+
+        <!--Element Name-->
+        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="150" PositionXOffset="56" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" Text="@NameText" DoNotAcceptEvents="true" />
+
+        <!--Element Hint: relays the card's hover-->
+        <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

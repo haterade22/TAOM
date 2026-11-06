@@ -1,7 +1,9 @@
 using System.Linq;
 using SandBox.View.Map;
+using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.FieldCamp.Hooks;
@@ -16,8 +18,9 @@ namespace TAOM.Features.FieldCamp.UI;
 /// here - the sanctioned engine-instantiated-boundary exception (GauntletCareerScreen precedent).
 /// The overlay must NOT steal map input: SetInputRestrictions(false, mouse+keys) and no
 /// IsFocusLayer (gui-ui.md); the prefab's root is DoNotAcceptEvents so only the button is
-/// hit-testable. No sprite categories are loaded (vanilla brushes only), so there is no OnResume
-/// reload to do.
+/// hit-testable. This view loads no sprite categories itself: the original prefab uses vanilla
+/// brushes, and when the FactionUI theme swaps in TAOMFieldCampOverlay (the Camp icon beside the
+/// clock), FrontEndMovieService registers and holds that icon's images for the movie's lifetime.
 /// </summary>
 public class FieldCampMapView : MapView
 {
@@ -43,10 +46,17 @@ public class FieldCampMapView : MapView
             IoC.Resolve<IGameMenuAdapter>(),
             new MapScreenCampMenuActivationQuery(IoC.Resolve<ICoopSessionProvider>()),
             IoC.ResolveAll<ICampOverlayContributor>().ToList(),
-            camp => camp.BuildProgress());
+            camp => camp.BuildProgress(),
+            // The themed overlay's icon-only Camp button shows the caption on hover. The caption is
+            // already localized, so {=!} keeps it from being looked up again.
+            caption => new HintViewModel(new TextObject("{=!}" + caption)));
         _vm.Refresh();
 
-        Layer = new GauntletLayer("TaomFieldCampOverlay", 95);
+        // ScreenManager draws screen and global layers in ascending order. Installed v1.5.6 orders:
+        // MapBar 202, MapIncidents 203, MapConversation 205. At 204 the Camp icon beside the clock
+        // draws over the map bar (at 95 it was hidden under it), on its own order, and stays under
+        // conversations. A literal so FieldCampLayerOrderTests can read it from the IL.
+        Layer = new GauntletLayer("TaomFieldCampOverlay", 204);
         _layerAsGauntletLayer = (GauntletLayer)Layer;
         _movie = _layerAsGauntletLayer.LoadMovie("TaomFieldCampOverlay", _vm);
         Layer.InputRestrictions.SetInputRestrictions(false, InputUsageMask.MouseButtons | InputUsageMask.Keyboardkeys);

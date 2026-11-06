@@ -1,0 +1,36 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="Title" DefaultValue="title" />
+    <Parameter Name="ItemList" DefaultValue=".." />
+    <Parameter Name="FontSize" DefaultValue="28" />
+  </Parameters>
+  <Constants>
+  </Constants>
+  <Window>
+    <!--Settlement-only clone of native EncyclopediaDivider (SandBox): same collapse button, indicator, header brush and rule, but the header text
+        size is a parameter (28 by default instead of the brush's 38) so the settlement page's three sections fit above the footer.-->
+    <EncyclopediaDividerButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" CollapseIndicator="PlacementListPanel\CollapseIndicator" ItemListWidget="*ItemList" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" ExtendCursorAreaLeft="5" ExtendCursorAreaRight="5" ExtendCursorAreaTop="5" ExtendCursorAreaBottom="5" GamepadNavigationIndex="0">
+      <Children>
+
+        <NavigationScopeTargeter ScopeID="EncyclopediaDividerScope" ScopeParent="..\." NavigateFromScopeEdges="true" UseDiscoveryAreaAsScopeEdges="true" />
+        <NavigationAutoScrollWidget TrackedWidget="..\." AutoScrollTopOffset="35" AutoScrollBottomOffset="35" />
+
+        <ListPanel Id="PlacementListPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" UpdateChildrenStates="true">
+          <Children>
+
+            <!--Collapse Indicator Widget-->
+            <BrushWidget Id="CollapseIndicator" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="19" SuggestedWidth="19" VerticalAlignment="Center" PositionYOffset="-3" Brush="SPOptions.GameKeysgroup.ExpandIndicator" />
+
+            <!--Header Text-->
+            <TextWidget Id="Text" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.SubPage.Header.Text" Brush.FontSize="*FontSize" Text="*Title" MarginLeft="10" />
+
+            <!--Divider-->
+            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Center" HorizontalAlignment="Left" MarginLeft="15" Brush="SPOptions.CollapserLine" />
+
+          </Children>
+        </ListPanel>
+
+      </Children>
+    </EncyclopediaDividerButtonWidget>
+  </Window>
+</Prefab>
