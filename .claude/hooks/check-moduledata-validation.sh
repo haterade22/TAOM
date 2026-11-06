@@ -69,11 +69,11 @@ taom_is_project_repo "$COMMIT_REPO" || { echo '{}'; exit 0; }
 
 # Files in the commit. No blanket --amend skip (amend is commonly "oops, add a
 # file" -- exactly the case to catch); include HEAD's files on amend.
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$(git -c core.quotePath=false diff --cached --name-only --no-renames 2>/dev/null)
 case "$COMMAND" in
     *"--amend"*)
         STAGED=$(printf '%s\n%s\n' "$STAGED" \
-            "$(git show HEAD --name-only --pretty=format: 2>/dev/null)" | sort -u)
+            "$(git -c core.quotePath=false show HEAD --name-only --no-renames --pretty=format: 2>/dev/null)" | sort -u)
         ;;
 esac
 
@@ -162,14 +162,22 @@ fi
 
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
+# Exit 1 with no finding to quote: the validator died while it loaded. Allow, and say so.
+if [[ -z "${OUT//[[:space:]]/}" ]]; then
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"[check-moduledata-validation] tools/validate_moduledata.py exited 1 with no findings, so this commit is UNCHECKED by it. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
+    exit 0
+fi
+
 # Build a JSON-escaped deny message with the validator's findings (bounded).
 MSG=$(printf '%s' "$OUT" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][-30:]
 print(json.dumps(
     "[check-moduledata-validation] git commit BLOCKED: tools/validate_moduledata.py "
-    "found ERROR-severity issues in staged ModuleData XML (broken Item/NPCCharacter "
-    "ref, unknown culture, or duplicate id). Fix them and re-stage. See details: "
+    "found ERROR-severity issues (broken Item/NPCCharacter ref, unknown culture or duplicate id). "
+    "The findings may sit in the live TAOM_Map or LOTRLOME_Armory install, which the validator also "
+    "reads, rather than in the staged files. Either fix them, or ask the owner of that live edit; "
+    "never bypass this hook. See details: "
     "python tools/validate_moduledata.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }

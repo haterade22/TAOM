@@ -62,6 +62,10 @@ if [[ -z "${PYBIN:-}" ]]; then
     echo "    Check that a real python precedes the WindowsApps aliases on PATH."
     echo "    Diagnose: bash tools/test_hooks.sh"
 fi
+# The tracked commit-msg hook runs only when core.hooksPath names .githooks (a clone sets it once).
+# Silent when it does; a relative value reads from the project root, where this hook has cd'd.
+P=$(git config core.hooksPath 2>/dev/null)
+[[ -n "$P" && -f "$P/commit-msg" ]] || echo "NOTE: core.hooksPath does not name .githooks, so commit-msg is NOT running. Run: git config core.hooksPath .githooks"
 # A WindowsApps interpreter winning the PATH race is the trap itself, not just a nuisance.
 _wa=$(command -v python 2>/dev/null || true)
 case "$_wa" in
@@ -157,19 +161,14 @@ fi
 # Untagged module version. SubModule.xml's <Version> is what IdentityCollector stamps into every
 # crash bundle as TaomVersion, so an untagged version cannot be resolved back to a commit -- that is
 # how v2.0.11/.12/.14/.16/.17 became permanently unresolvable, with two crash reports citing v2.0.12.
-#
-# check-version-tagged.sh (Stop) already catches the bump itself, but it mutes per-VERSION via an
-# on-disk marker, so it warns exactly once and then stays silent across every later session. On
-# 2026-08-09 it fired 60s after the v2.0.20 bump, wrote .claude/logs/.version-tag-reminded, and went
-# quiet for 33 commits while the tag was never created. Same invisible-across-sessions shape as the
-# unpopped auto-stash above, so it gets the same treatment: re-asserted every startup, never muted.
+# Same invisible-across-sessions shape as the unpopped auto-stash above, so the check is
+# re-asserted every startup, never muted.
 #
 # Read-only, no network (git ls-remote at startup would be slow and fail offline), fail-open. The
 # push half is named in the message instead, because `git push` does NOT push tags.
 SUBMODULE_XML="Main/_Module/SubModule.xml"
 if [[ -f "$SUBMODULE_XML" ]]; then
   # Anchored on `<Version value=` so DependedModuleMetadata's version="..." cannot match.
-  # Same expression as check-version-tagged.sh, so the two can never disagree about the version.
   MODULE_VERSION=$(grep -o '<Version value="[^"]*"' "$SUBMODULE_XML" 2>/dev/null \
                    | head -1 | sed 's/.*"\(.*\)"/\1/')
   if [[ -z "$MODULE_VERSION" ]]; then
@@ -210,7 +209,7 @@ else
     echo "NOTE: harness retro cadence UNCHECKED this session ($RETRO_LAST is dated in the future)."
   elif (( (RETRO_NOW - RETRO_EPOCH) / 86400 >= 7 )); then
     echo ""
-    echo "HARNESS RETRO DUE: last retro $RETRO_DATE ($(( (RETRO_NOW - RETRO_EPOCH) / 86400 )) days ago); run /harness-retro."
+    echo "HARNESS RETRO DUE: last retro $RETRO_DATE ($(( (RETRO_NOW - RETRO_EPOCH) / 86400 )) days ago). Tell the maintainer once in your first reply and ask whether to run /harness-retro."
   fi
 fi
 
@@ -225,12 +224,6 @@ UNSTAGED=$(git diff --name-only 2>/dev/null | wc -l | tr -d ' ')
 UNTRACKED=$(git ls-files --others --exclude-standard 2>/dev/null | wc -l | tr -d ' ')
 echo ""
 echo "Uncommitted: ${STAGED} staged, ${UNSTAGED} unstaged, ${UNTRACKED} untracked"
-
-# TODO/FIXME count in Main/
-if [[ -d Main ]]; then
-  TODO_COUNT=$(grep -rE 'TODO|FIXME' Main/ --include='*.cs' 2>/dev/null | wc -l | tr -d ' ')
-  echo "TODO/FIXME in Main/: ${TODO_COUNT}"
-fi
 
 echo "==========================="
 exit 0

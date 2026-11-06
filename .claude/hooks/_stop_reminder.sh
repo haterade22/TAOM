@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# _stop_reminder.sh: sourced by the three Stop reminder hooks. Never registered itself.
+# _stop_reminder.sh: sourced by the Stop reminder hooks. Never registered itself.
 #
 # WHY THIS EXISTS
 # Claude Code sends a Stop hook's stderr (on exit 0) and its plain stdout to the debug log only;
