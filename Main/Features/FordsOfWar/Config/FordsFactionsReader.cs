@@ -86,8 +86,31 @@ internal static class FordsFactionsReader
 
         name = FordsConfigScope.Text(f["name"]) ?? id;
         faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
-            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s));
+            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s),
+            ReadHeroGuard(id, f["heroGuard"], s));
         return true;
+    }
+
+    /// <summary>The troops that take the field with each hero: a troop id, a count of 1 to 20 and a role other than Hero.</summary>
+    private static HeroGuard? ReadHeroGuard(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+
+        var troop = token is JObject o ? FordsConfigScope.Text(o["troop"]) : null;
+        if (troop == null)
+        {
+            s.Warn($"faction '{faction}': 'heroGuard' needs an object with 'troop'; ignored");
+            return null;
+        }
+
+        if (!FordsConfigScope.TryInt(token["count"], 1, 20, out var count, out var why) || !TryReadRole(token["role"], out var role, out why))
+        {
+            s.Warn($"faction '{faction}' heroGuard '{troop}' {why}; ignored");
+            return null;
+        }
+
+        return new HeroGuard(troop, count, role);
     }
 
     private static Dictionary<string, float>? ReadUpgradeCost(string faction, JToken? token, FordsConfigScope s)

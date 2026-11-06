@@ -141,6 +141,7 @@
           }
         ]
       },
+      "heroGuard": { "troop": "fow_gondor_mt_fountain_guard", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_1_9", "price": 1000 },
         { "id": "lord_1_75", "price": 900 },
@@ -195,6 +196,7 @@
         { "id": "militia", "troop": "fow_rohan_westfold_militiaman", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.7 },
         { "id": "yeomen", "troop": "fow_rohan_eastfold_skirmisher", "role": "Ranged", "packSize": 10, "level": 11, "eliteWeight": 0.7 }
       ],
+      "heroGuard": { "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "count": 4, "role": "Cavalry" },
       "heroes": [
         { "id": "lord_4_1", "price": 1000 },
         { "id": "lord_4_3_1", "price": 900 },
@@ -257,6 +259,7 @@
           { "id": "cave_troll", "troop": "fow_cave_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 3.0 }
         ]
       },
+      "heroGuard": { "troop": "fow_mordor_uruk_baraddurguard", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_1_17", "price": 2400 },
         { "id": "lord_1_15", "price": 1600 },
@@ -310,6 +313,7 @@
         { "id": "warg_riders", "troop": "fow_orc_warg_enforcer", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 2.0 },
         { "id": "hill_troll", "troop": "fow_hill_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 4.0 }
       ],
+      "heroGuard": { "troop": "fow_urukhai_berserker", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_I1_0", "price": 2000 },
         { "id": "lord_I4_1", "price": 1000 },
@@ -377,6 +381,7 @@
         { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.25 },
         { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.25 }
       ],
+      "heroGuard": { "troop": "fow_imladris_blademaster", "count": 3, "role": "Infantry" },
       "heroes": [
         { "id": "lord_R1_1", "price": 2400 },
         { "id": "lord_R2_1", "price": 1800 },
@@ -427,6 +432,7 @@
         { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.2 },
         { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.2 }
       ],
+      "heroGuard": { "troop": "fow_erebor_noble_royal_warden", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_E1_1", "price": 2000 },
         { "id": "lord_E1_2", "price": 1200 },
@@ -488,6 +494,7 @@
           { "id": "mumak", "troop": "fow_harad_mumakil_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 6.35 }
         ]
       },
+      "heroGuard": { "troop": "fow_harad_serp_guard", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_A9_u", "price": 1400 },
         { "id": "lord_3_3_1", "price": 1000 },
@@ -541,6 +548,7 @@
         { "id": "wolf_riders", "troop": "fow_gundabad_warg_tamer", "role": "Cavalry", "packSize": 4, "level": 31, "eliteWeight": 0.75 },
         { "id": "bone_breakers", "troop": "fow_gundabad_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 0.75 }
       ],
+      "heroGuard": { "troop": "fow_gundabad_berserker", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_G1_1", "price": 1400 },
         { "id": "lord_G1_2", "price": 1000 },
@@ -578,6 +586,7 @@
         { "id": "black_arrows", "troop": "fow_dale_black_arrow_marksman", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
         { "id": "hearthguard", "troop": "fow_dale_lake_town_hearthguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 }
       ],
+      "heroGuard": { "troop": "fow_dale_lake_town_hearthguard", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_2_7_1", "price": 1400 },
         { "id": "lord_S9_u", "price": 1000 },
@@ -642,6 +651,7 @@
           { "id": "fell_wargs", "troop": "fow_dg_fell_warg_rider", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 1.2 }
         ]
       },
+      "heroGuard": { "troop": "fow_dg_khamul_shadow_guard", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_D1_2", "price": 1400 },
         { "id": "lord_D1_4", "price": 1000 },
@@ -694,6 +704,7 @@
         { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
         { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.0 }
       ],
+      "heroGuard": { "troop": "fow_dragon_wrath_infantry", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_K8_u", "price": 1400 },
         { "id": "lord_K9_l", "price": 1000 },
@@ -747,6 +758,7 @@
         { "id": "guards", "troop": "fow_umbar_elite_root0000", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
         { "id": "knights", "troop": "fow_umbar_elite_root0001", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 1.0 }
       ],
+      "heroGuard": { "troop": "fow_umbar_elite_root0000", "count": 4, "role": "Infantry" },
       "heroes": [
         { "id": "lord_U1_1", "price": 1400 },
         { "id": "lord_U2_1", "price": 1000 },
@@ -798,6 +810,7 @@
         { "id": "borderwardens", "troop": "fow_mirkwood_borderwardens", "role": "Ranged", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
         { "id": "thingols_heirs", "troop": "fow_mirkwood_thingolheir", "role": "Ranged", "packSize": 2, "level": 51, "eliteWeight": 1.0 }
       ],
+      "heroGuard": { "troop": "fow_mirkwood_sentinels", "count": 3, "role": "Ranged" },
       "heroes": [
         { "id": "lord_M1_1", "price": 2200 },
         { "id": "lord_M1_11", "price": 1600 },

@@ -38,14 +38,16 @@ internal sealed class FordsDirectorFixture
     private int _nextKey;
 
     public static FordsDirectorFixture Create(Func<FordsMatchConfig, FordsMatchConfig>? tweak = null,
-        MapLayoutMode mode = MapLayoutMode.Generated, int lanes = 3, float towerHalfWidth = 0f, LaneFaceBars? laneBars = null)
+        MapLayoutMode mode = MapLayoutMode.Generated, int lanes = 3, float towerHalfWidth = 0f, LaneFaceBars? laneBars = null,
+        Func<IReadOnlyDictionary<MatchSide, FactionCatalog>, IReadOnlyDictionary<MatchSide, FactionCatalog>>? factions = null)
     {
         var fixture = new FordsDirectorFixture();
-        fixture.Build(tweak, mode, lanes, towerHalfWidth, laneBars);
+        fixture.Build(tweak, mode, lanes, towerHalfWidth, laneBars, factions);
         return fixture;
     }
 
-    private void Build(Func<FordsMatchConfig, FordsMatchConfig>? tweak, MapLayoutMode mode, int lanes, float towerHalfWidth, LaneFaceBars? laneBars)
+    private void Build(Func<FordsMatchConfig, FordsMatchConfig>? tweak, MapLayoutMode mode, int lanes, float towerHalfWidth, LaneFaceBars? laneBars,
+        Func<IReadOnlyDictionary<MatchSide, FactionCatalog>, IReadOnlyDictionary<MatchSide, FactionCatalog>>? factions)
     {
         var d = FordsMatchConfig.Default;
         var config = d with
@@ -59,7 +61,7 @@ internal sealed class FordsDirectorFixture
 
         var map = new MapEntry("test_scene", "Test", mode, new LayoutOptions(LaneCount: lanes),
             TowerPrefab.DefaultTower, TowerPrefab.DefaultKeep, CampDefaults.Default, towerHalfWidth, laneBars);
-        Plan = new FordsMatchPlan(config, map, FordsMatchFixture.Factions(), "hard", lanes);
+        Plan = new FordsMatchPlan(config, map, factions?.Invoke(FordsMatchFixture.Factions()) ?? FordsMatchFixture.Factions(), "hard", lanes);
 
         Report = new FordsRunReport(Logger);
         Report.BeginRun("console", new FordsMatchSetup(map.SceneId, "west", "east", "hard", lanes));

@@ -14,13 +14,14 @@ internal sealed class WaveScheduler
 {
     private sealed class Batch
     {
-        public Batch(string troopId, UnitRole role, int remaining, int ownerSlot, UnitOffer? bought = null)
+        public Batch(string troopId, UnitRole role, int remaining, int ownerSlot, UnitOffer? bought = null, bool isGuard = false)
         {
             TroopId = troopId;
             Role = role;
             Remaining = remaining;
             OwnerSlot = ownerSlot;
             Bought = bought;
+            IsGuard = isGuard;
         }
 
         public string TroopId { get; }
@@ -28,11 +29,13 @@ internal sealed class WaveScheduler
         public int Remaining { get; set; }
         public int OwnerSlot { get; }
         public UnitOffer? Bought { get; }
+        public bool IsGuard { get; }
     }
 
     private sealed class Stream
     {
         public float Timer;
+        public readonly List<Batch> Guards = new();
         public readonly List<Batch> Packs = new();
         public readonly List<Batch> FreeWave = new();
     }
@@ -92,6 +95,18 @@ internal sealed class WaveScheduler
 
         stream.Packs.Add(new Batch(offer.TroopId, offer.Role, offer.PackSize, ownerSlot, offer));
         return CommandResult.Ok;
+    }
+
+    /// <summary>
+    /// Queues a hero's guard (Mike, 2026-11-05). It goes out before the lane's packs, within the same caps, charges nobody and holds no pack
+    /// queue place, so it never blocks a purchase.
+    /// </summary>
+    public void QueueGuard(MatchSide side, int lane, int ownerSlot, HeroGuard guard)
+    {
+        if (lane < 0 || lane >= _laneCount || guard.Count <= 0)
+            return;
+
+        StreamOf(side, lane).Guards.Add(new Batch(guard.TroopId, guard.Role, guard.Count, ownerSlot, isGuard: true));
     }
 
     /// <summary>
@@ -184,7 +199,9 @@ internal sealed class WaveScheduler
 
     private int Emit(MatchSide side, int lane, Stream stream, int room, List<SpawnRequest> requests)
     {
-        var sent = Drain(side, lane, stream.Packs, room, requests, null);
+        var sent = Drain(side, lane, stream.Guards, room, requests, null);
+        if (sent < room)
+            sent += Drain(side, lane, stream.Packs, room - sent, requests, null);
         if (sent < room)
             sent += Drain(side, lane, stream.FreeWave, room - sent, requests, _laneOwner(side, lane));
         return sent;
@@ -198,7 +215,7 @@ internal sealed class WaveScheduler
             var batch = batches[0];
             var count = Math.Min(batch.Remaining, room - sent);
             var request = new SpawnRequest(NextRequestId(), side, lane, batch.TroopId, count,
-                ownerOverride ?? batch.OwnerSlot, batch.Role, false);
+                ownerOverride ?? batch.OwnerSlot, batch.Role, false, batch.IsGuard);
             requests.Add(request);
             if (batch.Bought != null)
                 _packRequests[request.RequestId] = batch.Bought;

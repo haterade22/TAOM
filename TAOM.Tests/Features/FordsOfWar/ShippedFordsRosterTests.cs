@@ -136,6 +136,24 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void EveryFaction_GuardsItsHeroesWithThreeToSixOfItsOwnEliteTroops()
+    {
+        // Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."
+        var groups = Roster().ToDictionary(t => (string)t.Attribute("id")!, t => (string?)t.Attribute("default_group") ?? "Infantry");
+        foreach (var faction in Catalog().Factions)
+        {
+            var guard = faction.HeroGuard;
+            Assert.IsNotNull(guard, faction.FactionId);
+            Assert.IsTrue(guard!.Count >= 3 && guard.Count <= 6, $"{faction.FactionId}: {guard.Count}");
+            var offer = faction.AllOffers.FirstOrDefault(o => o.TroopId == guard.TroopId);
+            Assert.IsNotNull(offer, $"{faction.FactionId}: the guard is one of the faction's own offers");
+            Assert.AreEqual(offer!.Role, guard.Role, faction.FactionId);
+            var group = guard.Role switch { UnitRole.Ranged => "Ranged", UnitRole.Cavalry => "Cavalry", UnitRole.HorseArcher => "HorseArcher", _ => "Infantry" };
+            Assert.AreEqual(groups[guard.TroopId], group, faction.FactionId);
+        }
+    }
+
+    [TestMethod]
     public void EveryFreeWaveTroop_SpawnsInTheRoleItsTroopDeclares()
     {
         // WaveScheduler takes a wave unit's role from the entry, else from an offer of the same troop, else Infantry; an archer with neither

@@ -117,3 +117,15 @@ No CRITICAL or HIGH. Applied:
 
 Not applied: the new troop copies keep their attributes on one line (Lens 7, style only; the engine reads attributes by name), and a
 spawn failure still moves later offers up one key (Lens 5, pre-existing, no shipped troop fails).
+
+## Addendum: hero guards (2026-11-05, evening)
+
+Tier 2 (domain and data): Lens 5 Data flow at `high` and Codex at `xhigh`. No CRITICAL or HIGH. Applied:
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | MED | The guard request went straight to the spawn list past the lane and side caps, as a hero does; guards outlive their hero, so repeated respawns could pile them over the caps while packs and free waves waited (Codex, reproduced in memory). | The guard was modelled on the hero's path, which is allowed past the caps for one unit. | Guards queue in the wave scheduler (`QueueGuard`), first in their lane but within the caps; `AGuard_NeverTakesTheLanePastItsCap_AndComesWhenRoomOpens`. |
+| 2 | MED | The doc's in-game proof counted spawns by troop, which every guard shares with a bought pack (Lens 5, Codex). | The proof was written before checking that guards are also offers. | `SpawnRequest.IsGuard` and one `[FordsOfWar][Hero] guard` line per request, pinned by a director test. |
+| 3 | LOW | The balance log said a killed guard pays its unit value; it pays the usual bounty fraction. | Wording. | Fixed. |
+
+Not applied: a hero whose own spawn fails is refunded while its guard still comes (Lens 5, needs a hero troop the preflight already checks).

@@ -282,7 +282,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.** The change lands after the round robin on `92973f27a`, so that round's data stays on one build. More Rohan horses can also mean more riderless mounts; the native crash at `0x6B716E` struck two Rohan matches of three (see the feature doc), so watch the crash rate.
 
-### Dol Guldur's uruk army (this change)
+### Dol Guldur's uruk army
 
 **Why:** Mike, 2026-11-05: Dol Guldur should field many more Dol Guldur uruks in place of goblins, with one or two goblins for a swarm; it has good troop lines, so three rows of troops; it also has Khamul's cavalry and spider riders. Dol Guldur was the weakest faction in the night survey (trade 0.34 before its price pass) and took no tower in the 2026-11-04 wear runs.
 
@@ -295,6 +295,14 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 - Spider riders cost 120 a pack of 3 with no timer (weight 1.5); Mordor's call costs 205 behind a 30 s timer.
 - Every faction: 27 free-wave archer entries (25 troops) spawned with the role Infantry, because WaveScheduler falls back to Infantry when neither the entry nor an offer names a role. They now say Ranged, so the field probe and check 09 no longer count them as melee; a test holds every wave troop to its declared class.
 - Five new copies in `fords_troops.xml` (uruk warrior, swordsman, skirmisher, bowman, Khamul veiled knight); six goblin and orc copies that nothing fields any more are gone.
+
+**Result: not measured.** It lands after the round robin on `92973f27a`.
+
+### Hero guards (this change)
+
+**Why:** Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."
+
+**Changed:** each hero arrival brings its faction's guard at no extra price: 4 of the faction's elite foot (Gondor Fountain Guard, Mordor Barad-dur Guard, Isengard berserkers, Erebor royal wardens and so on), Rohan's King's Knights mounted, and 3 for the two elf factions (Imladris blademasters; Mirkwood sentinels, archers, since Mirkwood has no elite foot). Hero prices are unchanged, so a hero is now worth more for the same gold, and a killed guard pays the enemy the usual kill bounty on its unit value.
 
 **Result: not measured.** It lands after the round robin on `92973f27a`.
 
