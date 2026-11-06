@@ -468,6 +468,28 @@ SandBoxCore, SandBox, the live Armory and the repo's TAOM module, and reports ev
 refusals. An item id no module defines is left to `BROKEN_ITEM_REF`; a module folder that is
 missing is a WARNING that the slot fit was not verified. Cost on the laptop: about 0.6 s of a 19 s full run (2026-11-05).
 
+## Shipped troops and half-armed kits (`TROOP_ID_REMOVED`, `INCONSISTENT_WEAPON_SLOT`, `TOWNSFOLK_WITHOUT_BATTLE_ROSTER`)
+
+**`TROOP_ID_REMOVED` (ERROR).** A troop id in `tools/shipped_troop_ids.txt` that no `troops/troops_*.xml`
+defines. A save holding it keeps a hollow `CharacterObject` whose null `UpgradeTargets` the engine's
+daily ticks read unguarded (#670). A missing or empty baseline is one ERROR, never a silent pass. The
+pass runs only for the repo's own ModuleData. The baseline is read with `git show`, so it names what a
+ref held and no Armory is involved; this line's first seed is the 857 ids of branch `bannerlord-1.4.5`,
+because the `v2.0.28` tag lacks `ironpass_ram_herder` and `ironpass_ram_marshal`. Reseed it after a
+release: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids <tag>`. `[exceptions]` rows
+(`id | reason`) survive a reseed.
+
+**`INCONSISTENT_WEAPON_SLOT` (WARNING).** A non-hero troop whose battle sets disagree: a launcher in a
+slot of some sets only, or no weapon slot index filled in every set. Slots draw independently, so that
+ships a bow the troop never draws or an unarmed draw (#529). The launcher half needs the install's item
+index, so its count on the `v2.0.26` Armory is void (D20, D25). The 1.5.x ammo half is not ported: it
+reads `item_trade`, built for a code this line does not have.
+
+**`TOWNSFOLK_WITHOUT_BATTLE_ROSTER` (WARNING).** A `characters/npcs_*.xml` character whose inline
+equipment is civilian only. It has no battle set (`BasicCharacterObject.FirstBattleEquipment` is null,
+v1.4.8 `:108`), so the arena stands spawn it naked (#295's in-game log; the spawner was not found in
+managed code). Repair: `python tools/add_townsfolk_battle_rosters.py --apply`.
+
 ## Upgrade armour regression (`UPGRADE_ARMOUR_REGRESSION`)
 
 **WARNING.** The equipment half of the ladder rule (#541). For every upgrade edge the validator
@@ -675,6 +697,7 @@ The engine validates a file against its XSD on load, but `MBObjectManager.Valida
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
 | `tools/tests/test_validate_moduledata.py` | 144 unittest cases (validator; counted 2026-09-12) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
+| `tools/shipped_troop_ids.txt` | baseline of `TROOP_ID_REMOVED`: one id per line, then `[exceptions]` as `id \| reason` |
 | `tools/validate_xml_schemas.py` | the engine-XSD layer: file and schema resolution mirrored from the engine, the `SCHEMA_INVALID` pass and the `--live` command |
 | `tools/tests/test_validate_xml_schemas.py` | unittest cases for it, including `UndeclaredAttributeIsReportedTests` (D15) |
 | `tools/validate_mesh_refs.py` | engine of the three collision-body and mesh codes: `extract_refs`, `module_tpacs`, `build_present_set`, `classify` |
@@ -874,6 +897,8 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `TROOP_ID_REMOVED` (error, in the commit hook), `INCONSISTENT_WEAPON_SLOT` and
+  `TOWNSFOLK_WITHOUT_BATTLE_ROSTER` (warnings) ported (#295, #529, #670; WP136), without the ammo half.
 - 2026-11-05: `ITEM_SLOT_REJECTED` (error, in the commit hook) ported (#729; WP136).
 - 2026-11-05: `BROKEN_FACTION_REF` (error, in the commit hook) ported (#949; WP136): a `Faction.X` ref
   must resolve to a clan in `characters/clans.xml` or vanilla `spclans.xml` that `spclans.xslt` does

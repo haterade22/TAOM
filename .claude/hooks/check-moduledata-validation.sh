@@ -112,7 +112,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
         --code COLLISION_BODY_BORROWED --code SCHEMA_INVALID --code BROKEN_FACTION_REF \
-        --code ITEM_SLOT_REJECTED \
+        --code ITEM_SLOT_REJECTED --code TROOP_ID_REMOVED \
         2>"$ERR_FILE")
 RC=$?
 

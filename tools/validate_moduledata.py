@@ -52,6 +52,12 @@ Checks (each maps to a recurring TAOM bug class):
   ITEM_SLOT_REJECTED         an equipment row whose item type the engine will not put in that
                              slot: Equipment.DeserializeNode asserts and leaves it empty, so
                              the troop never wears the item (#729; needs the install)
+  TROOP_ID_REMOVED           a troop id in tools/shipped_troop_ids.txt that no troops/troops_*.xml
+                             defines: a save holding it keeps a hollow CharacterObject (#670)
+  INCONSISTENT_WEAPON_SLOT   a non-hero troop whose battle sets disagree: a launcher in a slot of
+                             some sets only, or no weapon slot filled in every set (warning)
+  TOWNSFOLK_WITHOUT_BATTLE_ROSTER  a characters/npcs_*.xml character with civilian rosters only:
+                             it stands naked in the arena stands (#295, warning)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -82,6 +88,7 @@ try:
     REPO_ROOT = Path(__file__).resolve().parent.parent
     MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
     SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
 
     # The commit hook runs this with no --game-modules, so the default is what it
     # gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
@@ -487,6 +494,32 @@ def slot_rejection_issues(game_modules, moduledata) -> list:
     return issues
 
 
+def regenerate_shipped_troop_ids(tag: str = "") -> int:
+    """Rewrite tools/shipped_troop_ids.txt from a release tag's or a branch's troop files, read with
+    `git show` so today's tree never leaks in. No tag means the newest tag reachable from HEAD. The
+    [exceptions] section is kept as it stands."""
+    import subprocess
+
+    def git(*args):
+        return subprocess.run(["git", "-C", str(REPO_ROOT), *args], capture_output=True, check=True).stdout
+
+    tag = tag or git("describe", "--tags", "--abbrev=0").decode("utf-8").strip()
+    folder = "Main/_Module/ModuleData/troops/"
+    names = [n for n in git("ls-tree", "--name-only", tag, folder).decode("utf-8").split()
+             if re.search(r"/troops_[^/]*\.xml$", n)]
+    ids = set()
+    for name in names:
+        text = re.sub(r"<!--.*?-->", "", git("show", f"{tag}:{name}").decode("utf-8-sig", "ignore"), flags=re.S)
+        ids |= set(re.findall(r'<NPCCharacter\b[^>]*?\bid="([^"]+)"', text))
+    if not ids:
+        print(f"ERROR: no troop ids found in {tag}:{folder}", file=sys.stderr)
+        return 2
+    exceptions = ts.read_shipped_troop_ids(SHIPPED_TROOP_IDS)[1] if SHIPPED_TROOP_IDS.is_file() else {}
+    ts.write_shipped_troop_ids(SHIPPED_TROOP_IDS, tag, ids, exceptions)
+    print(f"Wrote {len(ids)} troop ids from {tag} ({len(names)} files) to {SHIPPED_TROOP_IDS}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -500,7 +533,14 @@ def main() -> int:
                     help="Exit non-zero if any WARNING is found, not just ERROR")
     ap.add_argument("--code", action="append", default=None,
                     help="Only report this issue code (repeatable)")
+    ap.add_argument("--regenerate-shipped-troop-ids", nargs="?", const="", metavar="TAG", default=None,
+                    help="Rewrite tools/shipped_troop_ids.txt (the TROOP_ID_REMOVED baseline) from a "
+                         "release tag's or branch's troop files (default: the newest tag reachable "
+                         "from HEAD), then exit")
     args = ap.parse_args()
+
+    if args.regenerate_shipped_troop_ids is not None:
+        return regenerate_shipped_troop_ids(args.regenerate_shipped_troop_ids)
 
     moduledata = Path(args.moduledata)
     game_modules = Path(args.game_modules)
@@ -536,7 +576,10 @@ def main() -> int:
 
     extra_roots = build_extra_ref_roots(game_modules)
 
-    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
+    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
+    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
+    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
+                             shipped_troop_ids_file=shipped_ids)
     for root in validator.extra_ref_roots:
         print(f"Also sweeping refs in: {root} [{module_vintage(root)}]", file=sys.stderr)
     # Never let a vanished root pass as a clean run. Silence here would revert the
