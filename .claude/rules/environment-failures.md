@@ -1,7 +1,3 @@
----
-description: Environment failures are reported, not fixed. The agent works within infra; the user controls infra.
----
-
 <!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Environment failures: report, don't fix

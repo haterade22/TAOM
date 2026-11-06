@@ -88,10 +88,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | HARNESS RETRO DUE banner; "did that rule help" | **`/harness-retro`** | |
 | "save my work", "save state", "save progress", "context save", before stepping away or before `/compact` | **`/context-save`** | None — always |
 | "where was I", "resume", "pick up where I left off", "restore context" | **`/context-restore`** | None — always |
-| Bash script bug, build infra issue, MCP server error, hook script crash — anything outside TAOM C# | **`debugger` agent** (Task tool) | None — but route TAOM C# bugs to `/investigate` instead |
 | Agent loop / drift, repeated retries with no progress, context degradation | **`/agent-introspection-debugging`** | None — always |
-| Multiple seemingly-unrelated bugs in same session/save, suspect shared root | **`error-detective` agent** (Task tool) | None — always |
-| "this method is too long", "this class needs to be split", structural cleanup without behavior change | **`refactoring-specialist` agent** (Task tool) | Tests must be green BEFORE invoking. Tests must remain green AFTER. |
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 | User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
 | Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
@@ -267,7 +264,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 - **The commit body is the changelog entry** (`/release` writes `CHANGELOG.md`). ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
 - **CLAUDE.md:** new features add their row to `docs/reference/feature-map.md`, NOT here — here only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget).
-- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md) — detailed enough that a future session needs ZERO re-decompilation.
+- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. The maintainer may waive the issue for a piece of work; filing one is public, so without a standing word ask once, and record a waiver or decline in the commit body. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md): detailed enough that a future session needs ZERO re-decompilation.
 - **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
 
 ## Commits
@@ -375,19 +372,17 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 | Hook | Expected Response |
 |------|------------------|
-| `post-compact.sh` | Immediately `Read` MEMORY.md and each file listed under "Files in flight" before resuming work. Do not continue from transcript memory alone — the file is the source of truth. |
 | `session-start.sh` ("GAME VERSION DRIFT" warning) | Surface the drift to the user FIRST and invoke `/engine-bump` before any build/test/crash-attribution work. Do not dismiss it — every test run on an unacknowledged engine bump produces misattributable evidence (the 1.4.6 lesson). |
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
 | `check-verification-evidence.sh` | A Stop block reason, once per streak. Run `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
-| `check-version-tagged.sh` | Ask the user before tagging and pushing; both are the maintainer's. An untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
 
 ## Notes
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- No git actions unless explicitly asked
+- No git action that changes a ref, the index or the working tree unless asked; reads are free
 - Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 
 ## Equipment & Armory

@@ -1,7 +1,3 @@
----
-description: Fork discipline, autonomous-loop stewardship, TodoWrite quality bar, edit-scope discipline — the always-on working conventions moved out of CLAUDE.md (2026-08-05).
----
-
 <!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Working Discipline
