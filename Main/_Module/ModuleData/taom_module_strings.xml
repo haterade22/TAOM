@@ -3166,6 +3166,7 @@
 	<string id="taom_lm_khuzait" text="{=taom_lm_khuzait}Rhûnic Gilt-bronze" />
 	<string id="taom_lm_aserai" text="{=taom_lm_aserai}Haradric Bronze" />
 	<string id="taom_lm_empire" text="{=taom_lm_empire}Dunland Bog-iron" />
+	<string id="taom_lm_lothlorien" text="{=taom_lm_lothlorien}Lórien Mallorn-silver" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- ArmourAcquisition -->
 	<string id="taom_lg_piece_hands" text="{=taom_lg_piece_hands}lord's gauntlets" />

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Generate the missing v1.4.3 mandatory equipment rosters across TAOM's 12 cultures.
 
+WARNING: --apply rewrites the whole shipped file from the per-culture equipment files. Against the shipped data it
+deletes the rosters of cultures this script no longer lists and re-equips others (issue #637). Print a dry run and
+copy one culture's blocks by hand.
+
 Per the v1.4.3 dev spec, every culture must provide at minimum 8 rosters with
 specific Flags combinations:
     1. IsLordTemplate                          Battle      (male lord battle)

@@ -160,6 +160,14 @@
   <Troop id="rivendell_royal_knight" resource_id="elven_wine" merchant_cost="28" />
   <Troop id="rider_of_himring" resource_id="elven_wine" merchant_cost="28" />
   <Troop id="imladris_blademaster" resource_id="elven_wine" merchant_cost="18" />
+  <!-- Lothlorien (Elven Wine): the Galadhrim terminal troops (level 46) and the Marchwarden terminal troops (level 41),
+       priced on the same level scale as the Rivendell and Mirkwood offers. -->
+  <Troop id="lorien_gl_highblade" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="lorien_gl_mallorn_defender" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="lorien_gl_bowmaster" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="lorien_mw_high_ranger" resource_id="elven_wine" merchant_cost="18" />
+  <Troop id="lorien_mw_dawnrider" resource_id="elven_wine" merchant_cost="18" />
+  <Troop id="lorien_mw_waystalker" resource_id="elven_wine" merchant_cost="18" />
 
   <!-- Rohan (Marks) -->
   <Troop id="rohan_edoras_golden_hall_supreme_rider" resource_id="marks" merchant_cost="18" />

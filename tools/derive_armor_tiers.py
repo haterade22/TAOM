@@ -216,7 +216,9 @@ def derive():
         target = ra._get_primary_stat(ra.calculate_stats(tier, slot, culture, item_id=item_id), slot) if tier else None
         current = info['primary']
         delta = (current - target) if (current is not None and target is not None) else None
-        if delta is None:
+        if ra.is_generator_owned(item_id):
+            status = 'generator-owned'                   # the restat skips it, so under/over would mislead
+        elif delta is None:
             status = 'unworn' if anchor is None else 'no-target'
         elif abs(delta) <= 2:
             status = 'match'

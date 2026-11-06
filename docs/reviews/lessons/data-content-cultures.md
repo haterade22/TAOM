@@ -2295,7 +2295,7 @@ Lothlorien got its own tree, and the tree loaded, validated and passed every tes
 
 ### Check the art cache entries before saying new Armory art works (Lothlorien, 2026-11-05)
 
-The Lorien armour pack arrived in the live Armory with every item, mesh name and collision reference correct and no `RuntimeDataCache` entry for any of its 23 packages. The client skips such a package whole and logs nothing.
+The Lorien armour pack arrived in the live Armory with every item, mesh name and collision reference correct and no `RuntimeDataCache` entry for any of its 23 packages. The client skips a mesh package that has no entry and logs nothing (observed; the native code that decides it is not traced, and material packages load without one).
 
 - **Why missed:** the armory audit and the validator check names and references, which pass without the entry. The contributor's notes said the check could not run on his machine.
 - **Prevent:** after any art drop, run `python tools/check_rdc_entries.py --under <the new folder>` and read `without-rdc`. The lotraom-assets mirror tracks the entries; copy the missing ones, or open the Armory in the Kit and save. See also `docs/reviews/lessons/animation-skeleton.md`.
@@ -2319,7 +2319,7 @@ The Evendim Warden carried a poleaxe in Item0 on the generator's `twohand` curve
 
 ### Compare every attribute of a generated item family with a sibling's same-slot items (Lorien leg armour, 2026-11-06)
 
-The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces, so every greave drew with the bare shin showing through. The deep review of 2026-11-05 had read the same generator and fixed `has_gender_variations` and the lord-only flag, because those were the attributes it already suspected. It never listed the others.
+The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces, so the leg skin mesh was drawn under every greave (whether the shin showed depends on each mesh, and no in-game sighting is cited). The deep review of 2026-11-05 had read the same generator and fixed `has_gender_variations` and the lord-only flag, because those were the attributes it already suspected. It never listed the others.
 
 - **Why missed:** the review checked the attributes it expected to be wrong. No gate reads `covers_legs` ([moduledata-validation.md](../../features/moduledata-validation.md) lists it as a coverage gap), and [items-armor.md](../../modding/items-armor.md) rule 5 states the convention but nothing enforces it.
 - **Prevent:** before the first `--apply` of an item generator, list the attributes it writes for each slot and diff that set against a sibling culture's items of the same slot. `tools/tests/test_generate_lothlorien_armor.py` pins `covers_legs` for Lorien. Shoes that leave the shin bare stay `false` on purpose (Mike, 2026-11-06).
@@ -2330,7 +2330,7 @@ The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces,
 The first review report said the Lorien armour was in no repo and would break a clean checkout. The items and art are in the lotraom-assets repo (`E:\repos\lotraom-assets`), which the maintainer syncs into the live Armory by hand.
 
 - **Why missed:** the trap index says the Armory is unversioned, and the report stopped there instead of looking for the source repo.
-- **Prevent:** before reporting a risk about an unversioned module, check lotraom-assets (`git log -- <path>`) and the mirror's `RuntimeDataCache` folder. A session never edits the mirror: it is the maintainer's to sync.
+- **Prevent:** before reporting a risk about an unversioned module, check lotraom-assets (`git log -- <path>`) and the mirror's `RuntimeDataCache` folder. A session never edits the mirror: it is the maintainer's to sync. The same assumption came back for the Snow Orc armour on 2026-11-06 ("exists only in the live Armory"; the mirror held it, byte-equal, since commit `274f7c18f`): check each file, not the folder.
 - **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R1.
 
 ### Run dependent generators in order, and scope each to one culture (Lorien enlistment, 2026-11-05)
@@ -2340,3 +2340,19 @@ The Lorien enlistment rosters were seeded before the militia troops existed, so 
 - **Why missed:** the order troops, then skills, then enlistment was kept in the session's head. The enlistment generator has no `--check`, so no command compared its output with the shipped file.
 - **Prevent:** follow the order in [new-culture-authoring.md](../../ai-includes/new-culture-authoring.md) 3d, always pass `--culture`, and diff a generator without `--check` against a scratch copy. Adding `--check` to the troop and enlistment generators is a standing follow-up.
 - **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F3 and round 2, R3.
+
+### A file generated from a hand-edited source is a consumer: regenerate it or hand-port it in the same change (Lorien lord templates, 2026-11-06)
+
+Five Lorien lord battle templates were rewritten into Lorien armour and the lords were declared done. `taom_lord_template_equipment.xml` is generated from the first battle set of each culture's equipment file, and its Lorien lord and ruler battle rosters kept Rivendell gold. The engine picks those rosters for a new ruler, for a rebel lord and for a woman who comes of age as a lord. Regenerating is not safe either: the generator's dry run renders 186 rosters against the 306 shipped, so `--apply` deletes 120 and re-equips 78 (issue #637).
+
+- **Why missed:** the consumer checklist was written from the troop side and named no file derived from a hand-edited source. The generator has no `--check`, and the file is in neither commit, so a review scoped by the diff could not list it. Codex, the Data flow lens and the Engine lens found it by reading the generator and following the file forward.
+- **Prevent:** when you change a source file, grep the repo for the tools that read it (`grep -rn "taom_equipment_sets_" tools/`) and list every derived file before you call the change done. A derived file that cannot be regenerated safely is hand-ported, and a data test pins the result (`LothlorienGeneratedLordAndRulerBattleRosters_WearLorienArmourOnEveryArmourSlot`). The consumer table is in [new-culture-authoring.md](../../ai-includes/new-culture-authoring.md) 3d.
+- **Source:** [rca-lothlorien-round2-2026-11-06.md](../rca-lothlorien-round2-2026-11-06.md) finding F1.
+
+### Restore a decision by the property behind it, and assert a guard or delete it (Isengard starter boots, 2026-11-06)
+
+The maintainer decided that the Uruk-hai shoes show the shin. A one-off script flipped every false in the Isengard starter file to true, and a second script restored the two items whose ids said "shoes". Three starter boots that draw the same shoe mesh stayed true. The first script also built a list meant to prove every changed item was a leg piece, and never asserted it.
+
+- **Why missed:** both scripts selected items by id, and the decision was about a mesh. Neither defaulted to a dry run, and an unchecked guard looks like a check.
+- **Prevent:** select by the property the decision names (here the mesh), assert the expected count, default to a dry run, and delete a computed guard that nothing asserts. `tools/audit_leg_cover_flags.py` (a `data_gates` row) now enforces the leg rule and reports all three boots on the pre-fix file.
+- **Source:** [rca-lothlorien-round2-2026-11-06.md](../rca-lothlorien-round2-2026-11-06.md) finding F2.

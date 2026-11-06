@@ -7731,6 +7731,7 @@
     <string id="TAOM_LD_Fort_TowersFull" text="Fully manned" />
     <string id="TAOM_LD_Notice_TowersFull" text="The high towers are fully manned." />
     <string id="TAOM_LD_Fort_TowersVolleyDetail" text="Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them." />
+    <string id="taom_lm_lothlorien" text="Lórien Mallorn-silver" />
   </strings>
 
 </base>

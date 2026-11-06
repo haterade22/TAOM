@@ -280,7 +280,7 @@ ships, the faction is on the map, and character creation is blank.
 5. Add the `startup_resources_config.xml` row, or the player starts on 0 denars.
 6. Give it careers: `python tools/insert_new_faction_careers.py --apply` clones an existing culture's.
 7. Add enlistment rosters, the child, teen, lord and education templates, and the recruitment pool.
-   `python tools/generate_lord_template_equipment.py` fills the mandatory 8-roster matrix.
+   A dry run of `python tools/generate_lord_template_equipment.py` prints the mandatory 8-roster matrix; copy your culture's blocks by hand and never `--apply` it to the shipped file (issue #637).
 8. Remove the culture from every `documentedExceptions` list in `TAOM.Tests/` that names it; a fixed
    culture left in a suppression list is a permanent blind spot.
 

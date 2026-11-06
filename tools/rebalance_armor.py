@@ -463,15 +463,27 @@ EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_
 HERO_NAME_FALSE_POSITIVE_PREFIXES = ('sk_dg_khml_',)
 
 
-# Items whose numbers belong to their own generator, never to a restat. tools/generate_lothlorien_armor.py
-# prices a Mallorn piece one band above its id token (KEYforce's values); a roster-first restat would
-# re-band 56 of the 97 Lorien items by their lowest wearer and undo that.
-GENERATOR_OWNED_ID_PREFIXES = ('sk_ll_',)
+# Items whose numbers belong to their own generator, never to a restat (Mike, 2026-11-06). tools/generate_lothlorien_armor.py
+# prices a Mallorn piece one band above its id token (KEYforce's values), and tools/generate_snow_orc_armor.py prices each
+# Snow Orc item at the band its id names. A roster-first restat would re-band items of both kits by their lowest wearer and
+# undo that, and the next generator run would undo the restat. To see how many, run
+# `python tools/rebalance_armor.py --dry-run --cultures lothlorien,gundabad_snow --tier-source roster-first` with this
+# prefix list emptied. `sk_ll_` is the 77 Lorien items and `sk_gb_orc_` the 20 Snow Orc items: no other id starts with either.
+GENERATOR_OWNED_ID_PREFIXES = ('sk_ll_', 'sk_gb_orc_')
 
 
 def is_generator_owned(item_id):
     """True for an item that process_file must leave alone because its generator sets the values."""
     return (item_id or '').lower().startswith(GENERATOR_OWNED_ID_PREFIXES)
+
+
+def count_generator_owned(filepath):
+    """How many items of one armour file process_file leaves to their generator (it reports none of them)."""
+    try:
+        root = ET.parse(filepath).getroot()
+    except (ET.ParseError, OSError):
+        return 0
+    return sum(1 for item in root.findall('.//Item') if is_generator_owned(item.get('id', '')))
 
 
 def is_excluded(item_id, display_name):
@@ -1378,6 +1390,7 @@ def main():
 
     all_changes = []
     files_processed = 0
+    generator_owned = 0
 
     for culture_dir in culture_dirs:
         culture_path = os.path.join(armory_dir, culture_dir)
@@ -1400,8 +1413,12 @@ def main():
                                     backup_tag=args.backup_tag or None)
             all_changes.extend(changes)
             files_processed += 1
+            generator_owned += count_generator_owned(filepath)
 
     print_report(all_changes)
+    if generator_owned:
+        print(f"\nLeft {generator_owned} generator-owned item(s) (ids starting "
+              f"{', '.join(GENERATOR_OWNED_ID_PREFIXES)}) to their generator; the report above does not list them.")
 
     if args.export_csv:
         csv_path = os.path.join(os.path.dirname(__file__), 'armor_rebalance.csv')

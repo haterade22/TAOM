@@ -238,8 +238,9 @@ def render(slot, items):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("--apply", action="store_true", help="write the files (default: dry run)")
-    p.add_argument("--check", action="store_true", help="write nothing; exit 1 when the Armory differs from the render")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true", help="write the files (default: dry run)")
+    mode.add_argument("--check", action="store_true", help="write nothing; exit 1 when the Armory differs from the render")
     p.add_argument("--armory", help="LOTRLOME_Armory folder (default: <game>/Modules/LOTRLOME_Armory)")
     args = p.parse_args()
 

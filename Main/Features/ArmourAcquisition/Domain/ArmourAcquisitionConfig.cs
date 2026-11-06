@@ -162,7 +162,7 @@ public sealed class ArmourAcquisitionConfig
         };
         var materials = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var culture in new[] { "gondor", "vlandia", "erebor", "sturgia", "rivendell", "mirkwood", "mordor",
-                     "isengard", "dolguldur", "gundabad", "khuzait", "aserai", "empire" })
+                     "isengard", "dolguldur", "gundabad", "khuzait", "aserai", "empire", "lothlorien" })
             materials[culture] = "taom_lords_material_" + culture;
         var weapons = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
         {

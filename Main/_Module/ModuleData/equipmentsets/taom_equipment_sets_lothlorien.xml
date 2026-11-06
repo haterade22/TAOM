@@ -154,7 +154,7 @@
 			<Equipment slot="Head" id="Item.sk_ll_gl_galad_crown_a" />
 			<Equipment slot="Body" id="Item.sk_ll_gl_galad_chest_a" />
 			<Equipment slot="Gloves" id="Item.sk_ll_gl_galad_bracer_a" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.sk_ll_gl_grvs_heavy_a" />
 			<Equipment slot="Cape" id="Item.sk_ll_gl_galad_pauld_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />

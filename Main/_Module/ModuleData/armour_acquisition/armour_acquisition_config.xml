@@ -147,6 +147,7 @@
     <Material culture="sturgia" item="taom_lords_material_sturgia" />
     <Material culture="rivendell" item="taom_lords_material_rivendell" />
     <Material culture="mirkwood" item="taom_lords_material_mirkwood" />
+    <Material culture="lothlorien" item="taom_lords_material_lothlorien" />
     <Material culture="mordor" item="taom_lords_material_mordor" />
     <Material culture="isengard" item="taom_lords_material_isengard" />
     <Material culture="dolguldur" item="taom_lords_material_dolguldur" />

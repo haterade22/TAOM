@@ -251,9 +251,9 @@ public class LotrIssueConfigProviderTests
         Assert.IsTrue(File.Exists(path), $"shipped config not found at {path}");
 
         var list = _sut.ParseIssues(XDocument.Load(path));
-        // 43 LOTR issues + 26 "Armourer's Commission" rows (armour acquisition, one per culture group;
-        // Arthedain's since 2026-10-07, Cardolan's and Rhudaur's since 2026-10-23, #978, Ered Luin's since 2026-10-27, Anduin Vale's and Angaladh's since 2026-10-28, Dorwinion's and South Rhovanion's since 2026-10-29) + 13 "Deep Seam" rows (the lord's gear ladder's materials, one per culture that owns armour, #693).
-        Assert.AreEqual(82, list.Count, "every shipped issue must pass validation (none silently dropped)");
+        // 43 LOTR issues + 27 "Armourer's Commission" rows (armour acquisition, one per culture group;
+        // Arthedain's since 2026-10-07, Cardolan's and Rhudaur's since 2026-10-23, #978, Ered Luin's since 2026-10-27, Anduin Vale's and Angaladh's since 2026-10-28, Dorwinion's and South Rhovanion's since 2026-10-29, Lothlorien's since 2026-11-06) + 14 "Deep Seam" rows (the lord's gear ladder's materials, one per culture that owns armour, #693).
+        Assert.AreEqual(84, list.Count, "every shipped issue must pass validation (none silently dropped)"); // +2 on 2026-11-06: the Lothlorien Deep Seam and Armourer's Commission rows
         foreach (var d in list)
         {
             Assert.IsTrue(
