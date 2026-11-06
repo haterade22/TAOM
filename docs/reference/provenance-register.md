@@ -100,6 +100,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | rtk (Rust Token Killer) | `rtk` `rtk-ai/rtk` `Rust Token Killer` | Apache-2.0 (the CLI in `src/`; `engine/` and `proxy/` are BUSL-1.1 and nothing derives from them) | behavioural-port | `.claude/hooks/_shellwords.py` (`command_index`, `peel`); `tools/harness_retro.py` (`command_family`, report section 9) | cleared |
 | Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
 | claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
+| Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -609,6 +610,14 @@ Code transcripts, which became section 9 of `tools/harness_retro.py`. No rtk cod
 copied, so no Apache-2.0 notice is carried. The rtk v1.0.1 binary was run once, offline, on
 2026-10-23 to measure it (Mike's explicit trial decision): checksum-verified, never initialised,
 never in a hook or on PATH, then deleted. Record: [`docs/reviews/adopt-rtk-2026-10-23.md`](../reviews/adopt-rtk-2026-10-23.md).
+
+### Headroom
+
+Upstream: https://github.com/headroomlabs-ai/headroom, `main` at `7e0094d`. TAOM took nothing from it:
+no code, text or idea, so no Apache-2.0 notice is carried. The 0.42.0 wheel and its Kompress model were
+run offline on 2026-11-03 to measure it (Mike's explicit trial decision): in an isolated venv, never
+wrapped around Claude Code, never in a hook or an MCP entry, then deleted. Record:
+[`docs/reviews/adopt-headroom-2026-11-03.md`](../reviews/adopt-headroom-2026-11-03.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
