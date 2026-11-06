@@ -69,23 +69,49 @@ internal static class LongDefeatCommands
             : $"Starting The Long Defeat at {fortress.Id}, until it is lost.";
     }
 
+    private const string ClearWord = "clear";
+
     internal static readonly string RecordUsage =
-        "Format is \"taom.ld_record <keep|muster_foot|muster_archers|sally> [radius]\".\n"
-        + "Appends the main agent's position and look to long_defeat_records.jsonl in Documents\\Mount and Blade II Bannerlord\\TAOM. "
-        + $"A radius ({FortressesReader.KeepRadiusMin:0} to {FortressesReader.KeepRadiusMax:0}) applies to keep only; without one the rules' keepRadius stays in charge. "
-        + "A sally is where a mounted class rides out to at each wave's start: stand outside the walls but inside the play area, face the way the rider should face, and record it. It is optional, "
-        + "and the next boot line says whether the point has a navmesh and lies inside the boundary. taom.ld_export folds the newest records of this scene into long_defeat_<scene>.json.";
+        "Format is \"taom.ld_record <kind> [word]\" or \"taom.ld_record clear <kind> [tower]\".\n"
+        + "Appends the main agent's position and look to long_defeat_records.jsonl in Documents\\Mount and Blade II Bannerlord\\TAOM. The kinds, with an example each:\n"
+        + $"  keep [radius]: taom.ld_record keep 12. The zone attackers must hold. A radius ({FortressesReader.KeepRadiusMin:0} to {FortressesReader.KeepRadiusMax:0}) applies to keep only; without one the rules' keepRadius stays in charge.\n"
+        + "  muster_foot: taom.ld_record muster_foot. Where new foot defenders appear; face the way the line should face.\n"
+        + "  muster_archers: taom.ld_record muster_archers. The same for the archers.\n"
+        + "  sally: taom.ld_record sally. Where a mounted class rides out to at each wave's start: stand outside the walls but inside the play area, and face the way the rider should face. It is optional, "
+        + "and the next boot line says whether the point has a navmesh and lies inside the boundary.\n"
+        + "  post <tower>: taom.ld_record post hornburg. One spot where an archer should hold on a tower top; face out over the approach. Record one per archer, about 8 a tower.\n"
+        + "  tower_volley <tower>: taom.ld_record tower_volley hornburg. A spot behind that tower's parapet that its volley looses from; no facing is kept. About 2 a tower.\n"
+        + "  volley: taom.ld_record volley. A spot behind the parapet along the wall walk that the Elven Volley looses from; no facing is kept. About 6, spread along the wall.\n"
+        + "  clear <kind> [tower]: taom.ld_record clear post hornburg, or taom.ld_record clear volley. Removes this scene's records of that kind (only that tower's when one is named) so a spot can be done again.\n"
+        + "A <tower> is a name of lowercase letters and underscores that you choose and repeat for every record of that tower (hornburg, deeping_wall). "
+        + "taom.ld_export folds this scene's records into long_defeat_<scene>.json, prints the counts per kind and per tower, and prints one block to paste for each of the keep, the muster, the sally, the towers and the volley that is recorded.";
+
+    /// <summary>True when the first word is <c>clear</c>, which reads only the scene, so the console asks for no controlled soldier.</summary>
+    internal static bool IsClear(IReadOnlyList<string> args) => args.Count > 0 && string.Equals(args[0], ClearWord, StringComparison.OrdinalIgnoreCase);
 
     /// <summary>The body of <c>taom.ld_record</c>: <paramref name="args"/> are the words after the command name.</summary>
     internal static string Record(IReadOnlyList<string> args, LongDefeatRecorder recorder, LdSpot spot)
     {
         var kind = args.Count == 0 ? "" : args[0].ToLowerInvariant();
+        if (IsClear(args))
+            return Clear(args, recorder, spot.Scene);
         if (!LongDefeatRecorder.IsKind(kind))
-            return "Expected a kind: keep, muster_foot, muster_archers or sally.\n" + RecordUsage;
+            return $"Expected a kind: {string.Join(", ", LongDefeatRecorder.AllKinds)}, or clear.\n" + RecordUsage;
 
         float? radius = null;
-        if (args.Count > 1)
+        string? tower = null;
+        if (LongDefeatRecorder.IsTowerKind(kind))
         {
+            var towerRefusal = ParseTower(args, 1, kind, out tower);
+            if (towerRefusal != null)
+                return towerRefusal;
+            if (args.Count > 2)
+                return $"A {kind} record takes a tower only, no radius.";
+        }
+        else if (args.Count > 1)
+        {
+            if (kind == LongDefeatRecorder.VolleyKind)
+                return "A volley record takes no tower or radius: its origins are one list for the whole wall.";
             if (kind != LongDefeatRecorder.KeepKind)
                 return "Only a keep record takes a radius.";
             var refusal = LongDefeatRecorder.ParseRadius(args[1], out radius);
@@ -97,12 +123,52 @@ internal static class LongDefeatCommands
             && Math.Abs(spot.Z) <= FortressesReader.MaxCoordinate))
             return "The main agent's position is not a usable coordinate.";
 
+        // A keep, a volley origin and a tower's volley spot read no facing, so a steep look still records their point.
         var lookRefusal = LongDefeatRecorder.NormalizeLook(spot.LookX, spot.LookY, out var fx, out var fy);
-        if (lookRefusal != null && kind != LongDefeatRecorder.KeepKind)
+        var readsFacing = kind != LongDefeatRecorder.KeepKind && kind != LongDefeatRecorder.VolleyKind && kind != LongDefeatRecorder.TowerVolleyKind;
+        if (lookRefusal != null && readsFacing)
             return lookRefusal;
 
-        var line = recorder.Append(spot.Scene, kind, spot.X, spot.Y, spot.Z, fx, fy, radius);
+        var line = recorder.Append(spot.Scene, kind, spot.X, spot.Y, spot.Z, fx, fy, radius, tower);
         return $"Appended to {recorder.FilePath}\n{line}";
+    }
+
+    // The tower word after a post or tower_volley kind, lower-cased; the refusal sentence (with the usage when the word is missing), or null.
+    private static string? ParseTower(IReadOnlyList<string> args, int index, string kind, out string? tower)
+    {
+        tower = null;
+        if (args.Count <= index)
+            return $"A {kind} record needs the tower it belongs to, for example \"taom.ld_record {kind} hornburg\".\n" + RecordUsage;
+        var word = args[index].ToLowerInvariant();
+        if (!FortressesReader.IsTowerId(word))
+            return $"A tower name is lowercase letters and underscores only (hornburg, deeping_wall), not \"{args[index]}\".";
+        tower = word;
+        return null;
+    }
+
+    private static string Clear(IReadOnlyList<string> args, LongDefeatRecorder recorder, string scene)
+    {
+        var kind = args.Count > 1 ? args[1].ToLowerInvariant() : "";
+        if (!LongDefeatRecorder.IsKind(kind))
+            return $"Expected a kind to clear: {string.Join(", ", LongDefeatRecorder.AllKinds)}.\n" + RecordUsage;
+        if (args.Count > 3)
+            return "Too many words after clear.\n" + RecordUsage;
+
+        string? tower = null;
+        if (args.Count > 2)
+        {
+            if (!LongDefeatRecorder.IsTowerKind(kind))
+                return $"A {kind} record has no tower to name.\n" + RecordUsage;
+            var refusal = ParseTower(args, 2, kind, out tower);
+            if (refusal != null)
+                return refusal + "\n" + RecordUsage;
+        }
+
+        var what = tower == null ? kind : $"{kind} {tower}";
+        var removed = recorder.Clear(scene, kind, tower);
+        return removed == 0
+            ? $"Nothing to clear: no {what} record for {scene}."
+            : $"Cleared {removed} {what} record(s) for {scene} from {recorder.FilePath}.";
     }
 
     /// <summary>The body of <c>taom.ld_export</c>.</summary>
@@ -110,15 +176,8 @@ internal static class LongDefeatCommands
     {
         var export = recorder.Export(scene, out var path);
         var head = export.IsComplete ? $"Wrote the complete block for {scene} to {path}." : $"Wrote {path}.";
-        // The sally has its own reader, so a recorded one is worth pasting whether or not a keep is in the block.
-        var pieces = new List<string>();
-        if (!export.Missing.Contains(LongDefeatRecorder.KeepKind))
-            pieces.Add("keep");
-        if (export.HasSally)
-            pieces.Add("sally");
-        var paste = pieces.Count == 0 ? "" : $" Paste its {string.Join(" and its ", pieces)} into this fortress's row in fortresses.json; a game restart loads it.";
         var gaps = export.IsComplete ? "" : $" These pieces have no record yet: {string.Join(", ", export.Missing)}.";
-        return head + paste + gaps;
+        return head + gaps + LongDefeatExportText.Details(export, scene);
     }
 }
 

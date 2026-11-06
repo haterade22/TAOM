@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using TAOM.Features.LongDefeat;
 
 namespace TAOM.Tests.Features.LongDefeat;
@@ -194,19 +195,308 @@ public class LongDefeatRecordCommandsTests
 
         var reply = LongDefeatCommands.Export(_recorder, Scene);
 
-        StringAssert.Contains(reply, "Paste its sally into");
+        StringAssert.Contains(reply, "Paste as the \"sally\" field");
         StringAssert.Contains(reply, "fortresses.json");
-        Assert.IsFalse(reply.Contains("Paste its keep"), reply);
+        Assert.IsFalse(reply.Contains("Paste as the \"keep\" field"), reply);
+        Assert.IsFalse(reply.Contains("Paste its"), "the sally is offered once, as a block, not also in the first sentence: " + reply);
     }
 
     [TestMethod]
-    public void Export_WithNoKeepRecorded_DoesNotTellThePlayerToPasteOne()
+    public void Export_WithOnlyAMusterRecorded_PrintsTheMusterBlock_AndNoKeepBlock_AndNamesTheKeepAsMissing()
     {
         Record(Spot(), "muster_foot");
 
         var reply = LongDefeatCommands.Export(_recorder, Scene);
 
-        Assert.IsFalse(reply.Contains("fortresses.json"), reply);
-        StringAssert.Contains(reply, "keep");
+        StringAssert.Contains(reply, "Paste as the \"muster\" field");
+        Assert.IsFalse(reply.Contains("Paste as the \"keep\" field"), reply);
+        StringAssert.Contains(reply, "no record yet: keep");
+    }
+
+    [TestMethod]
+    public void Export_APlainRecordedKeep_PrintsItsBlockWithTheRadiusWhenTyped()
+    {
+        Record(Spot(x: 7f), "keep", "14");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(reply, "Paste as the \"keep\" field");
+        StringAssert.Contains(reply, "\"keep\": {\"x\":7.0,\"y\":20.0,\"z\":30.0,\"radius\":14.0}");
+    }
+
+    [DataTestMethod]
+    [DataRow("clear", true)]
+    [DataRow("CLEAR", true)]
+    [DataRow("keep", false)]
+    [DataRow("post", false)]
+    public void IsClear_IsTrueForTheClearWordOnly_SoTheConsoleNeedsNoAgentForIt(string first, bool expected)
+    {
+        Assert.AreEqual(expected, LongDefeatCommands.IsClear(new[] { first, "volley" }));
+        Assert.IsFalse(LongDefeatCommands.IsClear(Array.Empty<string>()));
+    }
+
+    [TestMethod]
+    public void Record_Post_StoresTheTowerAndTheNormalizedLook_AndLowerCasesTheTowerWord()
+    {
+        var reply = Record(Spot(x: 1f, y: 2f, z: 3f, lookX: 3f, lookY: 4f), "POST", "Hornburg");
+
+        var record = _recorder.ReadAll(out _).Single();
+        Assert.AreEqual("post", record.Kind);
+        Assert.AreEqual("hornburg", record.Tower);
+        Assert.AreEqual(0.8f, record.Fy, 1e-5f);
+        StringAssert.Contains(reply, _recorder.FilePath);
+    }
+
+    [TestMethod]
+    public void Record_TowerVolley_StoresTheTower()
+    {
+        Record(Spot(), "tower_volley", "wall");
+
+        var record = _recorder.ReadAll(out _).Single();
+        Assert.AreEqual(LongDefeatRecorder.TowerVolleyKind, record.Kind);
+        Assert.AreEqual("wall", record.Tower);
+    }
+
+    [TestMethod]
+    public void Record_Volley_StoresAPlainPoint()
+    {
+        Record(Spot(x: 5f, y: 6f, z: 7f), "volley");
+
+        var record = _recorder.ReadAll(out _).Single();
+        Assert.AreEqual(LongDefeatRecorder.VolleyKind, record.Kind);
+        Assert.AreEqual(7f, record.Z);
+        Assert.IsNull(record.Tower);
+    }
+
+    [DataTestMethod]
+    [DataRow("post")]
+    [DataRow("tower_volley")]
+    public void Record_ATowerKindWithNoTower_IsRefusedWithTheUsage_AndWritesNothing(string kind)
+    {
+        var reply = Record(Spot(), kind);
+
+        StringAssert.Contains(reply, "tower");
+        StringAssert.Contains(reply, "taom.ld_record " + kind + " hornburg");
+        Assert.IsFalse(File.Exists(_recorder.FilePath));
+    }
+
+    [DataTestMethod]
+    [DataRow("post", "tower 1")]
+    [DataRow("post", "tower1")]
+    [DataRow("tower_volley", "a/b")]
+    [DataRow("post", "12")]
+    public void Record_ATowerWordOutsideLettersAndUnderscores_IsRefused(string kind, string tower)
+    {
+        var reply = Record(Spot(), kind, tower);
+
+        StringAssert.Contains(reply, "letters");
+        Assert.IsFalse(File.Exists(_recorder.FilePath));
+    }
+
+    [TestMethod]
+    public void Record_ATowerKindTakesNoRadius_AndVolleyTakesNoTower()
+    {
+        StringAssert.Contains(Record(Spot(), "post", "hornburg", "12"), "radius");
+        StringAssert.Contains(Record(Spot(), "volley", "hornburg"), "tower");
+        Assert.IsFalse(File.Exists(_recorder.FilePath));
+    }
+
+    [TestMethod]
+    public void Record_ASteepLook_IsRefusedForAPost_ButAllowedForAVolleyAndATowerVolley()
+    {
+        var steep = Spot(lookX: 0f, lookY: 0f);
+
+        StringAssert.Contains(Record(steep, "post", "hornburg"), "Look level");
+        Assert.IsFalse(File.Exists(_recorder.FilePath));
+
+        Record(steep, "volley");
+        Record(steep, "tower_volley", "hornburg");
+        Assert.AreEqual(2, _recorder.ReadAll(out _).Count, "an origin has no facing, so a steep look still records its point");
+    }
+
+    [DataTestMethod]
+    [DataRow("keep")]
+    [DataRow("muster_foot")]
+    [DataRow("muster_archers")]
+    [DataRow("sally")]
+    [DataRow("post")]
+    [DataRow("tower_volley")]
+    [DataRow("volley")]
+    [DataRow("clear")]
+    public void TheUsage_NamesEveryKindWithAnExampleCommand(string word)
+    {
+        StringAssert.Contains(LongDefeatCommands.RecordUsage, "taom.ld_record " + word);
+    }
+
+    [TestMethod]
+    public void TheUsage_ExampleLinesForTowerKindsNameATower_AndTheBadKindReplyListsEveryKind()
+    {
+        StringAssert.Contains(LongDefeatCommands.RecordUsage, "taom.ld_record post hornburg");
+        StringAssert.Contains(LongDefeatCommands.RecordUsage, "taom.ld_record tower_volley hornburg");
+        var reply = Record(Spot(), "towers");
+        foreach (var kind in LongDefeatRecorder.AllKinds)
+            StringAssert.Contains(reply, kind);
+        StringAssert.Contains(reply, "clear");
+    }
+
+    [TestMethod]
+    public void Clear_RemovesTheKindForThisScene_AndSaysHowMany()
+    {
+        Record(Spot(), "volley");
+        Record(Spot(), "volley");
+        Record(Spot(), "keep");
+
+        var reply = Record(Spot(), "clear", "volley");
+
+        StringAssert.Contains(reply, "2");
+        CollectionAssert.AreEqual(new[] { "keep" }, _recorder.ReadAll(out _).Select(r => r.Kind).ToArray());
+    }
+
+    [TestMethod]
+    public void Clear_WithATower_RemovesOnlyThatTowers()
+    {
+        Record(Spot(), "post", "hornburg");
+        Record(Spot(), "post", "wall");
+
+        var reply = Record(Spot(), "clear", "post", "Hornburg");
+
+        StringAssert.Contains(reply, "hornburg");
+        Assert.AreEqual("wall", _recorder.ReadAll(out _).Single().Tower);
+    }
+
+    [TestMethod]
+    public void Clear_WorksOnTheOlderKindsToo()
+    {
+        Record(Spot(), "sally");
+
+        Record(Spot(), "clear", "sally");
+
+        Assert.AreEqual(0, _recorder.ReadAll(out _).Count);
+    }
+
+    [TestMethod]
+    public void Clear_WithNothingRecorded_SaysSo()
+    {
+        StringAssert.Contains(Record(Spot(), "clear", "volley"), "Nothing");
+    }
+
+    [DataTestMethod]
+    [DataRow]
+    [DataRow("nothing")]
+    [DataRow("volley", "hornburg")]
+    [DataRow("keep", "hornburg")]
+    [DataRow("post", "tower 1")]
+    [DataRow("post", "hornburg", "extra")]
+    public void Clear_ANoKindABadKindOrABadTower_AnswersTheUsage_AndRemovesNothing(params string[] clearArgs)
+    {
+        Record(Spot(), "volley");
+        Record(Spot(), "post", "hornburg");
+
+        var reply = Record(Spot(), new[] { "clear" }.Concat(clearArgs).ToArray());
+
+        StringAssert.Contains(reply, "taom.ld_record clear");
+        Assert.AreEqual(2, _recorder.ReadAll(out _).Count);
+    }
+
+    [TestMethod]
+    public void Clear_NeedsNoUsablePosition_ButARecordDoes()
+    {
+        Record(Spot(), "volley");
+
+        Record(Spot(x: float.NaN), "clear", "volley");
+
+        Assert.AreEqual(0, _recorder.ReadAll(out _).Count);
+    }
+
+    [TestMethod]
+    public void Export_PrintsOneBlockPerRecordedKindWithAnInstructionLine()
+    {
+        Record(Spot(x: 1f), "sally");
+        Record(Spot(x: 2f), "post", "hornburg");
+        Record(Spot(x: 3f), "tower_volley", "hornburg");
+        Record(Spot(x: 4f), "volley");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(reply, "\"sally\":");
+        StringAssert.Contains(reply, "\"towers\":");
+        StringAssert.Contains(reply, "\"volley\":");
+        Assert.AreEqual(3, reply.Split('\n').Count(l => l.StartsWith("Paste as the ")), reply);
+        foreach (var field in new[] { "sally", "towers", "volley" })
+            StringAssert.Contains(reply, $"Paste as the \"{field}\" field");
+        StringAssert.Contains(reply, "fortresses.json");
+    }
+
+    [TestMethod]
+    public void Export_EachPrintedBlock_IsPasteReadyJson_ThatTheReaderTakes()
+    {
+        Record(Spot(x: 1f), "sally");
+        Record(Spot(x: 2f, lookX: 1f, lookY: 0f), "post", "hornburg");
+        Record(Spot(x: 3f), "tower_volley", "hornburg");
+        Record(Spot(x: 4f), "volley");
+        Record(Spot(x: 5f), "volley");
+        Record(Spot(x: 8f), "keep");
+        Record(Spot(x: 9f), "muster_foot");
+        Record(Spot(x: 10f), "muster_archers");
+
+        var lines = LongDefeatCommands.Export(_recorder, Scene).Split('\n');
+
+        var fields = new JObject();
+        foreach (var field in new[] { "keep", "muster", "sally", "towers", "volley" })
+        {
+            var start = Array.FindIndex(lines, l => l.StartsWith($"Paste as the \"{field}\" field"));
+            Assert.IsTrue(start >= 0, field);
+            var body = lines.Skip(start + 1).TakeWhile(l => l.Length > 0 && !l.StartsWith("Paste as the ")).ToArray();
+            var parsed = JObject.Parse("{" + string.Join("\n", body).TrimEnd().TrimEnd(',') + "}");
+            fields.Merge(parsed);
+        }
+
+        Assert.AreEqual(8f, (float)fields["keep"]!["x"]!);
+        Assert.AreEqual(9f, (float)fields["muster"]!["foot"]!["x"]!);
+        Assert.AreEqual(10f, (float)fields["muster"]!["archers"]!["x"]!);
+        Assert.AreEqual(1f, (float)fields["sally"]!["x"]!);
+        Assert.AreEqual("hornburg", (string?)fields["towers"]![0]!["id"]);
+        Assert.AreEqual(1f, (float)fields["towers"]![0]!["posts"]![0]!["fx"]!);
+        Assert.AreEqual(2, fields["volley"]!["origins"]!.Count());
+        Assert.AreEqual(1, fields["towers"]![0]!["volley"]!.Count());
+    }
+
+    [TestMethod]
+    public void Export_ShowsTheCountsPerKindAndPerTower_SoTheWorkCanBeChecked()
+    {
+        for (var i = 0; i < 3; i++)
+            Record(Spot(x: i), "post", "hornburg");
+        Record(Spot(), "post", "wall");
+        Record(Spot(), "tower_volley", "wall");
+        Record(Spot(), "tower_volley", "wall");
+        Record(Spot(), "volley");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(reply, "post 4 (hornburg 3, wall 1)");
+        StringAssert.Contains(reply, "tower_volley 2 (wall 2)");
+        StringAssert.Contains(reply, "volley 1");
+    }
+
+    [TestMethod]
+    public void Export_NamesTheNewKindsStillUnrecorded_ButNeverTheSally()
+    {
+        Record(Spot(), "volley");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(reply, "No record yet for: post, tower_volley");
+        Assert.IsFalse(reply.Contains("sally"), reply);
+    }
+
+    [TestMethod]
+    public void Export_WithOnlyTheOlderKinds_PrintsNoTowersOrVolleyBlock()
+    {
+        Record(Spot(), "keep");
+
+        var reply = LongDefeatCommands.Export(_recorder, Scene);
+
+        Assert.IsFalse(reply.Contains("\"towers\""), reply);
+        Assert.IsFalse(reply.Contains("\"volley\""), reply);
     }
 }

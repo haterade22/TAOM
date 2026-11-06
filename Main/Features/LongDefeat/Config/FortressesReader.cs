@@ -11,8 +11,9 @@ namespace TAOM.Features.LongDefeat;
 /// A bad <c>keep</c> block is dropped with one warning and the fortress stays, since the director then uses the scene's own frame.
 /// A bad <c>muster</c> block is dropped the same way, whole, and defenders then spawn at the scene's own frames.
 /// An optional <c>sally</c> block (the muster point's shape: x, y, z, fx, fy) is dropped with one warning when bad, and a mounted class then rides from the start with no sally.
+/// The optional <c>towers</c> and <c>volley</c> blocks are read in FortressesReader.Points.cs; a fortress row with neither loads exactly as before.
 /// </summary>
-internal static class FortressesReader
+internal static partial class FortressesReader
 {
     /// <summary>The farthest a recorded keep coordinate may lie from the origin; the recorder refuses a point beyond it.</summary>
     internal const float MaxCoordinate = 100_000f;
@@ -103,7 +104,8 @@ internal static class FortressesReader
 
         seen.Add(id);
         return new FortressEntry(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, defender, attacker, player, garrison, roster, shop,
-            ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s), ReadMuster(o["muster"], id, s), ReadSally(o["sally"], id, s));
+            ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s), ReadMuster(o["muster"], id, s), ReadSally(o["sally"], id, s),
+            ReadTowers(o["towers"], id, s), ReadVolley(o["volley"], id, s));
     }
 
     private static bool IsSceneName(string scene)
