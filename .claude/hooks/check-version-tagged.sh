@@ -2,7 +2,7 @@
 # Stop hook: Warn if the module version in Main/_Module/SubModule.xml has no git tag.
 # This is a soft reminder, not a hard block.
 #
-# Mirrors check-changelog-updated.sh / check-verification-evidence.sh conventions: reads
+# Mirrors check-verification-evidence.sh conventions: reads
 # git state (NOT stdin), emits a soft reminder to stderr, always exits 0 (non-blocking),
 # and mutes itself after one reminder per streak.
 #

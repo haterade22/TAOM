@@ -369,7 +369,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-33 hook registrations: 28 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 29 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted 2026-09-13 after `check-commit-subject-version.sh`). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
+31 hook registrations: 26 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 27 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted when plan 020 retired the two CHANGELOG hooks). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".

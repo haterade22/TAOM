@@ -439,6 +439,32 @@ for name in $BLOCKING_BASH_GATES; do
 done
 
 # ---------------------------------------------------------------------------
+# 5b2. The degraded-toolchain banner names every python-only gate. A gate with no jq
+#      path dies whenever python is missing, and its exit-0 stderr never reaches Claude
+#      (harness-facts.md), so session-start.sh's banner is the only signal. A hand-kept
+#      list there omitted check-commit-subject-version until this check was added.
+# ---------------------------------------------------------------------------
+head2 "5b2. the degraded banner names every python-only gate"
+# Only the call site's third argument marks a jq path (_pybin.sh), and only non-comment lines
+# of session-start.sh print anything: a name in a comment there is not in the banner. Any
+# non-comment call counts, whatever precedes it (`if`, `&&`), and a run that selects no gate
+# fails, so the check cannot pass having checked nothing.
+SS_CODE=$(grep -v '^[[:space:]]*#' .claude/hooks/session-start.sh)
+n5b2=0
+for f in .claude/hooks/*.sh; do
+    name=$(basename "$f" .sh)
+    call=$(grep -v '^[[:space:]]*#' "$f" | grep 'taom_pybin_degraded[[:space:]]') || continue
+    grep -qE 'taom_pybin_degraded +"[^"]*" +"[^"]*" +jq( |$)' <<<"$call" && continue
+    n5b2=$((n5b2+1))
+    if grep -q -- "$name" <<<"$SS_CODE"; then
+        ok "$name is named in the session-start degraded banner"
+    else
+        bad "$name has no jq path, so it fails open without python, but session-start.sh does not name it"
+    fi
+done
+(( n5b2 > 0 )) || bad "5b2 found no python-only gate call site, so it checked nothing"
+
+# ---------------------------------------------------------------------------
 head2 "6. check-commit-subject-version: subject cases against the real SubModule.xml"
 # The gate reads <Version value="..."> from Main/_Module/SubModule.xml, so it runs here
 # against the repo, not the sandbox, and the expected label is read the same way the hook
