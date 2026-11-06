@@ -30,6 +30,7 @@ HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
 | Constructor injection only | No service locator in services |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check — see `adapters.md` |
+| Writers before gates | An engine flag, stat or total a plan or gate relies on lists every writer, vanilla first, with citations, and cites the line that builds it, not only its getter (`docs/reviews/lessons/adapters-taleworlds-api.md`; v1.4.8 `ItemRoster.TotalFood` counts livestock meat, `ItemRoster.cs:449-452`, and `SellItemsAction` prices each unit in a loop, `SellItemsAction.cs:47-51`) |
 
 ## IoC Lifetimes
 
