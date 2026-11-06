@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # block-broad-git-add.sh
-# PreToolUse(Bash) hook: confirm before a git command that stages EVERYTHING in the
+# PreToolUse (Bash and PowerShell) hook: confirm before a git command that stages EVERYTHING in the
 # working tree, rather than the paths you actually touched. Emits permissionDecision
 # "ask" (confirm), NOT "deny" — a deliberate sweep is still possible, you just have to
 # approve it after reading what it would take. Allows everything else with `{}`.
@@ -41,27 +41,29 @@
 
 set -uo pipefail
 
+INPUT=$(cat)
+
+# Prefilter: every decision below needs the text `git` in the command, and Claude Code never
+# escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
+# here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
+# Match the raw text, never a token regex: a newline before `git` arrives as \n.
+# tools/test_hooks.sh 4c checks both directions.
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
+# git in any case (plan 027): the reader reads GIT as git, so the raw test must let it through.
+[[ "$INPUT" == *[Gg][Ii][Tt]* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
+
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-broad-git-add" "blanket git add / commit -a" jq && { echo '{}'; exit 0; }
 
-# Extract tool_input.command. Prefer jq; fall back to python3 for robust JSON
-# (handles escaped quotes). Mirrors block-dangerous-git.sh.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-else
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
-fi
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+COMMAND=$(taom_hook_command posix block-broad-git-add)
 
 # Fail-open: nothing to inspect → allow.
 [[ -z "${COMMAND:-}" ]] && { echo '{}'; exit 0; }
@@ -73,8 +75,8 @@ REASON=""
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
 
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
-# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
-# which is harmless here.
+# 65,536 to 65,663 bytes of text, and a killed gate fails open (#681). An empty segment is dropped,
+# which is harmless: it is no git invocation.
 set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
 for seg in "${SEG_LIST[@]}"; do
   [[ -n "$REASON" ]] && break
@@ -97,7 +99,24 @@ for seg in "${SEG_LIST[@]}"; do
   # Strip quoted spans before looking at flags, so a MESSAGE that contains a flag is
   # never read as one: `git commit -m "fix: add -a flag"` must not trip the -a branch.
   # Segment-splitting alone does not cover this — the quote is inside the segment.
-  rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+  # Without a fork (plan 027): the sed this replaces ran once per git segment, and 100 git
+  # segments took over 5 s on a loaded machine, past the 5 s registration (a killed gate allows).
+  # Same result as sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g": double-quoted spans, then single.
+  # The loop is quadratic in one segment's length (a 100 KB commit message took 2.5 s), so a long
+  # segment takes the one sed instead, which is linear (deep review of plan 027).
+  if (( ${#rest} > 4096 )); then
+    rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+  else
+    for q in '"' "'"; do
+      kept=""
+      while [[ "$rest" == *"$q"*"$q"* ]]; do
+        kept+=${rest%%"$q"*}
+        rest=${rest#*"$q"}
+        rest=${rest#*"$q"}
+      done
+      rest=$kept$rest
+    done
+  fi
 
   if [[ "$rest" =~ ^add([[:space:]]|$) ]]; then
     SUBCMD=add
@@ -127,8 +146,9 @@ done
 [[ -z "$REASON" ]] && { echo '{}'; exit 0; }
 
 # Show what the sweep would actually take. The decision is "is every one of these mine",
-# which the caller cannot make from the flag alone.
-# Listed from the top level of the repository the call runs in (_pybin.sh taom_git_repo_dir).
+# which the caller cannot make from the flag alone. Listed from the top level of the repository
+# the call runs in (_pybin.sh taom_git_repo_dir), not always the project root: in a worktree
+# session the main checkout's dirty files were listed until 2026-10-16.
 MULTI_NOTE=""
 if ! ADD_REPO=$(taom_git_repo_dir "${SUBCMD:-add}"); then
   # The calls reach more than one work tree: list the project root's, and say the list is incomplete.

@@ -26,6 +26,7 @@
 #   source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 #   [ -n "$PYBIN" ] || { echo '{}'; exit 0; }   # fail OPEN, never block
 #   ... | "$PYBIN" -c '...'
+#   COMMAND=$(taom_hook_command posix <gate>)   # a PreToolUse git gate's command, both shells
 #
 # The guard on line 2 of that snippet is the hook's job, not this file's: a helper
 # that exits on the caller's behalf would turn a missing interpreter into a killed
@@ -76,9 +77,10 @@ taom_pybin_is_safe() {
 # ran Python. (This is the same shape as the bug _pybin.sh exists to fix: LOTRAOM's
 # json-lib.sh also trusted an exit status to answer a question exit status cannot answer.)
 #
-# The bound is per candidate and the loop tries three, so the worst case must stay under
-# the smallest registered timeout: 12 of the 27 registrations are 5s. `-k 0.2 0.8` means a
-# SIGTERM-ignoring candidate costs at most 1.0s, so 3 x 1.0 = 3.0s < 5s. -k is essential:
+# The bound is per candidate, and a run tries at most four (the TAOM_PYBIN pin, then python,
+# python3 and py), so the worst case must stay under the smallest registered timeout, which is
+# 5s for most registrations. `-k 0.2 0.8` means a SIGTERM-ignoring candidate costs at most
+# 1.0s, so 4 x 1.0 = 4.0s < 5s. -k is essential:
 # without it GNU timeout sends SIGTERM then WAITS forever on a process that ignores it,
 # which is precisely the hazard being guarded against. Empty stdin so the probe cannot
 # consume the hook's payload. A successful probe measures ~40-80ms here.
@@ -159,6 +161,34 @@ export PYTHONIOENCODING=utf-8
 # directory can still reach the reader. Every hook sources this file by a path with a slash in it.
 TAOM_HOOKS_DIR=${BASH_SOURCE[0]%/*}
 case "$TAOM_HOOKS_DIR" in /* | [A-Za-z]:*) ;; *) TAOM_HOOKS_DIR="$PWD/$TAOM_HOOKS_DIR" ;; esac
+
+# The tool call's command as a gate reads it (plan 027, maintainer decision 61). Every gate was
+# written for Bash text; _shellwords.py hands a PowerShell command back as the Bash text of the same
+# command, and names git `git` wherever it is the command (`GIT`, `git.exe`, a path) in both shells.
+# $1 is the reader's mode (posix), $2 the gate's name for the stderr note; it reads the hook's
+# $INPUT. If the reader fails, the raw command comes back, read as Bash text as every gate read it
+# before plan 027, with a note on stderr (which reaches Claude only from a gate that exits 2). With
+# no Python (a gate that passed taom_pybin_degraded ... jq), jq reads the raw command.
+taom_hook_command() {
+    local out
+    if [ -z "${PYBIN:-}" ]; then
+        printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null
+        return 0
+    fi
+    if out=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" "$1" 2>/dev/null); then
+        printf '%s' "$out"
+        return 0
+    fi
+    printf '%s: _shellwords.py failed, so the command is read as Bash text\n' "${2:-hook}" >&2
+    printf '%s' "$INPUT" | "$PYBIN" -c '
+import sys, json
+try:
+    d = json.loads(sys.stdin.buffer.read().decode("utf-8", "replace"))
+    sys.stdout.buffer.write(str((d.get("tool_input") or {}).get("command") or "").encode("utf-8", "replace"))
+except Exception:
+    pass
+' 2>/dev/null
+}
 
 # The repository a git gate judges (2026-10-16): the top level of the work tree a `git <subcommand>`
 # (default commit) in the hook's $INPUT runs in. Registrations run the main checkout's hooks, and

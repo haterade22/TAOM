@@ -9,33 +9,31 @@
 | Server | Scope | Purpose | Config |
 |--------|-------|---------|--------|
 | **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
-| **GitHub** | Project | PRs, issues, actions, code search (HTTP — needs auth; falls back to `gh` CLI when unauthenticated) | `.mcp.json` |
-| **filesystem** | Project | READ operations across TAOM, Bannerlord Modules, LOTRAOM assets. Its write tools are denied (see "Denied write tools" below); use Edit/Write, which `config-protection.sh` actually guards | `.mcp.json` |
-| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in settings.local.json because the safety hooks match Bash only | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
 | **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
 | **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
 
+**Removed by WP116 (from 1.5.x `fdf9f38cb`): `github`, `git`, `filesystem`.** No TAOM skill, agent or rule called them; each duplicated a tool with gates of its own (`gh`, git through Bash, Read/Glob/Grep). `github@claude-plugins-official` declares the same `github` server, so it is disabled in `.claude/settings.json` too. Record: [adopt-ecc-2026-09-29.md](../reviews/adopt-ecc-2026-09-29.md), Step 4.
+
 ## Denied write tools (2026-08-31)
 
-Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.local.json`:
+Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.local.json`. They name servers that are now gone, so the entries are inert and the maintainer may delete them:
 
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
 
 Sixteen Serena editing tools are denied in `.claude/settings.json` (`permissions.deny`, maintainer decision 2026-11-04): `mcp__serena__` followed by `create_text_file`, `replace_content`, `replace_in_files`, `delete_lines`, `replace_lines`, `insert_at_line`, `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `rename_symbol`, `safe_delete_symbol`, `execute_shell_command`, `jet_brains_move`, `jet_brains_safe_delete`, `jet_brains_rename`, `jet_brains_inline_symbol`. Serena's read tools and its four memory tools stay allowed. The list is the can-edit set the 1.5.x line derived for Serena 7a296833 (7d13adc36); this line runs Serena unpinned, so re-derive it when Serena adds an editing tool.
 
-**Why:** every safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
+**Why:** every git safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
 write tools went straight past the force-push block, the CHANGELOG-staged gate, the
 `.claude/`-tracked-files gate, the ModuleData ref gate and the settings/ADR protection, all
 at once and silently. That was not a theoretical hole: CLAUDE.md's own MCP Usage Guide routed
 git work to those tools.
 
-Read-only tools are untouched: `git_diff`, `git_diff_staged`, `git_diff_unstaged`, `git_log`,
-`git_show`, `git_status`, `git_branch`, and every `filesystem` reader. Stage and commit through
+Stage and commit through
 Bash, and write files through Edit/Write, which is where the gates live.
 
 Note also that `mcp__ilspy__decompile_type` and `mcp__git__git_blame` **do not exist** and never
@@ -64,7 +62,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 ## Configuration
 
-Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata, imagine) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
+Project-level MCP servers (Serena, ilspy, taom-moduledata, imagine, elevenlabs) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
 
 **Project servers are keyed by the folder's spelling.** `~/.claude.json` keeps a project's local
 servers under the path as it was opened, case included: on 2026-10-16 `blender` and
@@ -79,7 +77,7 @@ Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where
 | Job | TAOM route | Overlapping plugin/server |
 |-----|-----------|---------------------------|
 | Pre-commit C# review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review` — kept for `/code-review ultra` cloud review) |
-| GitHub issues/PRs | `gh` CLI (per CLAUDE.md MCP Usage Guide: GitHub MCP when authenticated) | `github` plugin, `github` MCP server |
+| GitHub issues/PRs | `gh` CLI | `github` plugin (disabled) |
 | Redundant-code deletion | `/deslop` | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
 
 ---

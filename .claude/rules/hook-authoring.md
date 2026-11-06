@@ -19,12 +19,13 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
 | **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
+| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011; the polearm gate did the same until 2026-09-29 |
 
 **Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template — same shape as the C++-port hot-path miss (`feedback_native_port_hot_path_audit.md`). The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
 
 ## Git invocation forms hooks must handle
 
-When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch — substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
+When writing a PreToolUse hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch: substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
 
 | Form | Purpose | Handled by `*"git commit"*` substring? |
 |------|---------|----------------------------------------|
@@ -38,7 +39,7 @@ When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate 
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
 
-**Reference pattern** (used by `check-claude-files-tracked.sh` and `suggest-compact.sh`):
+**Reference pattern** (used by `check-claude-files-tracked.sh`):
 
 ```bash
 case "$COMMAND" in
@@ -51,6 +52,15 @@ esac
 ```
 
 **MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
+
+**Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
+read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
+`tool_input.command` alone: it hands PowerShell back as Bash text, so the forms above cover both
+shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
+resolves are listed in `docs/reference/hooks-catalog.md` "Both shell tools" and pinned by
+`tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
+through it. `validate-push.sh` is the one exception: it reads and judges the push in one Python run,
+`_shellwords.py verdict` (#680), and 7e checks that call instead.
 
 When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
 
@@ -125,8 +135,9 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 |---|---|
 | **Time the hook's slow path before you pick a number.** `time <the exact command the hook runs>` | The fast path is the path you will not be debugging. A guess here is a dead gate. |
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
-| **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or write to stderr for an advisory hook | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
+| **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
+| **Count the bound from the script's first command** when the work before it varies (#680) | `validate-push.sh` reads `EPOCHREALTIME` in its first command and gives its judge what is left of 3.0 s, so an overrun asks after about 3.3 s and its 10 s registration is only a backstop; a slow `_pybin.sh` probe asks at once. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
@@ -158,10 +169,11 @@ That is what wedged every JSON-parsing hook, and with no `timeout` on the regist
 Bash call paid a 600 s PreToolUse batch plus a 600 s PostToolUse batch, which is the 20.0-minute
 stall in the transcripts.
 
-**Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` at the TOP, above the
-first `"$PYBIN"` use, then honour `[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`. Putting the
-`source` below the first use is not a style nit: `validate-push.sh` shipped that way on
-2026-08-31 and its force-push block was unreachable.
+**Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` after any raw-payload
+prefilter and above the first `"$PYBIN"` use, then honour
+`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }` (`validate-push.sh` gives its coarse answer instead,
+#680). Below the first use it leaves `PYBIN` empty: `validate-push.sh`'s force-push block was
+unreachable that way on 2026-08-31.
 
 **Outside a hook:** just write `python`. It resolves to real CPython here and is the repo
 convention. A portable candidate list may still include `python3` provided the loop rejects any

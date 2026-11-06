@@ -62,7 +62,7 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-push.sh",
-            "timeout": 5
+            "timeout": 10
           },
           {
             "type": "command",
@@ -115,16 +115,6 @@
         ]
       },
       {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/suggest-compact.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "mcp__.*",
         "hooks": [
           {
@@ -141,11 +131,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify-csharp-edit.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-polearm-shield-parity.sh",
             "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…",
             "timeout": 20
@@ -157,9 +142,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify-test-results.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
             "timeout": 5
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
@@ -175,6 +165,16 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-mark.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
             "timeout": 5
           }
         ]
@@ -255,7 +255,7 @@
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": false,
-    "github@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
