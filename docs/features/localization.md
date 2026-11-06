@@ -117,7 +117,7 @@ Each language dir follows the same 3-file pattern.
 | `AllTranslationFiles_HaveStringsElement` | `<strings>` container is present |
 | `AllTranslationFiles_StringEntries_HaveIdAndTextAttributes` | Any existing entries have both `id` and `text` |
 
-Run with: `dotnet test TAOM.Tests --filter "FullyQualifiedName~LanguageDataXml"`
+Run with: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~LanguageDataXml"`
 
 ## How-To
 

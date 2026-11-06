@@ -1,4 +1,29 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "permissions": {
+    "deny": [
+      "mcp__serena__create_text_file",
+      "mcp__serena__replace_content",
+      "mcp__serena__replace_in_files",
+      "mcp__serena__delete_lines",
+      "mcp__serena__replace_lines",
+      "mcp__serena__insert_at_line",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__insert_before_symbol",
+      "mcp__serena__rename_symbol",
+      "mcp__serena__safe_delete_symbol",
+      "mcp__serena__execute_shell_command",
+      "mcp__serena__jet_brains_move",
+      "mcp__serena__jet_brains_safe_delete",
+      "mcp__serena__jet_brains_rename",
+      "mcp__serena__jet_brains_inline_symbol"
+    ]
+  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"
@@ -14,12 +39,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-start.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/detect-docs-gaps.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/detect-docs-gaps.sh",
             "timeout": 10
           }
         ]
@@ -27,53 +52,53 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-no-verify.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-no-verify.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/validate-push.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-push.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-claude-files-tracked.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-claude-files-tracked.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-commit-subject-version.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-commit-subject-version.sh",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-dangerous-git.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-dangerous-git.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-broad-git-add.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-broad-git-add.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-moduledata-validation.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-moduledata-validation.sh",
             "statusMessage": "Validating ModuleData refs before commit…",
             "timeout": 60
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-native-dll-crt.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-native-dll-crt.sh",
             "statusMessage": "Checking vendored native DLL links a static CRT…",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-doc-config-drift.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-doc-config-drift.sh",
             "statusMessage": "Linting docs for config drift, version, and budget…",
             "timeout": 30
           }
@@ -84,7 +109,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/config-protection.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/config-protection.sh",
             "timeout": 5
           }
         ]
@@ -94,7 +119,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/suggest-compact.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/suggest-compact.sh",
             "timeout": 5
           }
         ]
@@ -104,7 +129,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/mcp-health-check.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-check.sh",
             "timeout": 5
           }
         ]
@@ -116,12 +141,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/notify-csharp-edit.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify-csharp-edit.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-polearm-shield-parity.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-polearm-shield-parity.sh",
             "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…",
             "timeout": 20
           }
@@ -132,12 +157,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/notify-test-results.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify-test-results.sh",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": ".claude/hooks/mark-verification-run.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
             "timeout": 5
           }
         ]
@@ -149,7 +174,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/mcp-health-mark.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-mark.sh",
             "timeout": 5
           }
         ]
@@ -161,7 +186,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/pre-compact.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-compact.sh",
             "timeout": 10
           }
         ]
@@ -173,7 +198,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/post-compact.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact.sh",
             "timeout": 10
           }
         ]
@@ -185,7 +210,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/log-agent.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-agent.sh",
             "timeout": 10
           }
         ]
@@ -197,17 +222,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/check-deep-review.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-deep-review.sh",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-verification-evidence.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-verification-evidence.sh",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-version-tagged.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-version-tagged.sh",
             "timeout": 10
           }
         ]
@@ -219,7 +244,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-stop.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-stop.sh",
             "timeout": 10
           }
         ]

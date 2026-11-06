@@ -254,9 +254,9 @@ None of these is a recipe; they are the checks the recipes in other chapters nam
 |---|---|---|
 | Reference graph and duplicate ids across all three modules | Every `Item.`, `NPCCharacter.`, `Culture.`, `PartyTemplate.` and `BodyProperty.` reference resolves; no landless culture on a lord, clan or kingdom (`LANDLESS_CULTURE`) | `python tools/validate_moduledata.py` |
 | `project.mbproj` rows the engine will actually read | No invented `soln_*` id, no action bound but never declared, a warning for a duplicated id that has an XSD | `python tools/audit_mbproj_registration.py` |
-| Culture party-template bindings after the stylesheet runs | No binding left Calradian by an `spcultures.xslt` block that never named it | `dotnet test TAOM.Tests --filter CulturePartyTemplate` |
-| Lord equipment templates per culture | Every culture's lord template binding resolves | `dotnet test TAOM.Tests --filter CultureLordTemplate` |
-| Recruitment reachability | Every non-militia, non-boss troop is reachable from a recruitment pool root | `dotnet test TAOM.Tests --filter AllNonMilitiaNonBossTroops_AreReachable` |
+| Culture party-template bindings after the stylesheet runs | No binding left Calradian by an `spcultures.xslt` block that never named it | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CulturePartyTemplate` |
+| Lord equipment templates per culture | Every culture's lord template binding resolves | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CultureLordTemplate` |
+| Recruitment reachability | Every non-militia, non-boss troop is reachable from a recruitment pool root | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter AllNonMilitiaNonBossTroops_AreReachable` |
 
 The scope of each gate, and what none of them can see, is in [validation-and-testing](validation-and-testing.md). One limit belongs here because it is a load-order fact: a static gate proves references resolve on disk, not that the engine loaded a new file. A green gate plus a naked troop in game means the file is not registered or the game was not restarted (section A), not that the data is wrong.
 

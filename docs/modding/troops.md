@@ -289,7 +289,7 @@ Adding a rung means one XML entry plus five downstream places that will not tell
 8. **Make it recruitable.** Either put its id in a recruitment pool, or make sure a pool root upgrades into it. Pools live in `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs`, except Gondor, which can be edited as data in [`Main/_Module/ModuleData/recruitment_pools/gondor.json`](../../Main/_Module/ModuleData/recruitment_pools/gondor.json). A clan or settlement pool REPLACES the culture pool rather than merging with it, so re-list the ordinary recruits when you add to one.
 9. **Name it** with the `{=key}English fallback` form. All 857 troop names carry a key, none of them is registered in a strings file, and none is translated, so the inline fallback is the English text. See [strings-and-localization](strings-and-localization.md).
 
-Check: `python tools/validate_moduledata.py` then `python tools/validate_all_troop_refs.py` then `dotnet test TAOM.Tests --filter AllNonMilitiaNonBossTroops_AreReachable`
+Check: `python tools/validate_moduledata.py` then `python tools/validate_all_troop_refs.py` then `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter AllNonMilitiaNonBossTroops_AreReachable`
 Takes effect: full game restart
 Code: Code changes required in `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs`, unless the culture is Gondor or the new rung is reached purely by upgrading an existing pool root
 
@@ -333,7 +333,7 @@ Do not delete a troop. An id is stored in saves and referenced from party templa
 
 `tools/cleanup_deleted_troops_212.py` is the worked pattern for steps 3 and 4 when the retirement is large enough to be worth scripting.
 
-Check: `python tools/validate_moduledata.py` then `dotnet test TAOM.Tests --filter AllNonMilitiaNonBossTroops_AreReachable`
+Check: `python tools/validate_moduledata.py` then `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter AllNonMilitiaNonBossTroops_AreReachable`
 Takes effect: next save load
 Code: Code changes required in `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs` whenever the retired id appears in a pool
 

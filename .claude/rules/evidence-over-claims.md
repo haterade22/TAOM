@@ -23,7 +23,7 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 
 **No completion claim without fresh verification evidence.** Before you say built / passing / fixed / done:
 
-1. Identify the command that proves the claim (`dotnet build`, `dotnet test TAOM.Tests`, the audit script, the repro case).
+1. Identify the command that proves the claim (`dotnet build`, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, the audit script, the repro case).
 2. Run it **now** — not from memory of an earlier run, not "it should still pass."
 3. Read the exit code and the actual output.
 4. State the claim with that evidence, or report the failure with the output.
@@ -37,7 +37,7 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 | When | Run |
 |---|---|
 | After each edit | **Compile**, fast, and it catches the error that actually happens most |
-| While iterating on one component | **Filtered suite**, `dotnet test TAOM.Tests --filter FullyQualifiedName~XxxTests` |
+| While iterating on one component | **Filtered suite**, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~XxxTests` |
 | At each work-item boundary, and once before the review gate | **Full suite**; this is the run you quote, and the only one this rule ever asked for |
 
 Batch engine lookups the same way: related `ilspycmd` / `taom-src` calls go in one command, not one round trip per type. A verification you already ran this turn and haven't invalidated is still evidence; re-running it is not more evidence.

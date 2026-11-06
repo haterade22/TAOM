@@ -184,7 +184,7 @@ from invisible-black-text into one log line naming the cause. **TAOM must load a
 
 ## Testing
 
-`dotnet test TAOM.Tests --filter MenuLinkColors` — 30 tests covering the rewrite for all four link
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter MenuLinkColors`: 30 tests covering the rewrite for all four link
 types, mixed cultures in one string, the `Faction-` clan prefix, every fallback path (unsupported
 culture, unresolvable object, malformed markup, lookup throwing, brush missing the style),
 idempotency, warn-once behaviour, staleness after a culture change, and the XML↔C# coverage,

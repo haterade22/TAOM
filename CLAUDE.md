@@ -54,10 +54,8 @@ RCA: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
 
 ## Skills (Slash Commands)
 
-41 of the 43 skill **descriptions load eagerly** into every conversation (that is the
-skill-listing you see; 2 are `disable-model-invocation: true`) — so a table of them here is a
-second, drifting copy. Invoke a skill with `/name`; the routing table below ("Skill Routing")
-says *when*. Full per-skill workflow lives in each `SKILL.md`.
+Skill **descriptions load eagerly** (that is the skill listing you see), so they are not tabled here.
+Invoke a skill with `/name`; "Skill Routing" below says *when*; each `SKILL.md` holds its workflow.
 
 ### Workflow → Skill convention
 
@@ -119,8 +117,6 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Scoped Rules (auto-loaded by file path)
 
-> **Convention:** A rule with a `paths:` array loads **conditionally** when a matching file is opened. A rule **without** `paths:` (omit the field entirely) loads **at conversation start** for every session. `paths: ["**/*"]` is NOT the same as omitting `paths:` — the former is still conditional under the rule loader.
-
 Full catalog (rule → scope → content, 16 path-scoped + 7 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
 full text is already in context every session; the path-scoped ones load when you open a matching file.
@@ -150,8 +146,6 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 | Lightweight research, documentation, exploration | **Haiku** | 90% of Sonnet capability at 3x cost savings |
 | Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
 | Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
-
-> **Haiku 3 deprecation:** April 19, 2026. The `haiku` alias already maps to `claude-haiku-4-5` — no action needed.
 
 ## Doc Lookup
 
@@ -287,7 +281,10 @@ subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). Why: a cra
 `TaomVersion` from that file and between releases every pushed commit reads as the same version;
 `git log --grep 'v2.0.28 - '` now lists exactly the commits a v2.0.28 build can contain.
 Enforced by `.claude/hooks/check-commit-subject-version.sh` (refuses a subject without the label or
-with the wrong version; amend/fixup/squash forms that bring no new subject pass).
+with the wrong version, and any AI attribution line; amend/fixup/squash forms that bring no new
+subject pass) and, for every committer, by `.githooks/commit-msg` once a clone runs
+`git config core.hooksPath .githooks`. That hook also judges merges, so give a merge a labelled
+message: `git merge --no-ff -m "chore: vX.Y.Z - merge <branch>" <branch>`.
 Subject at most 72 characters (the label costs about 20, so the old 50 no longer fits), body
 wrapped at 72, no AI attribution. Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
@@ -307,9 +304,8 @@ wrapped at 72, no AI attribution. Example: `feat(recruitment): v2.0.28 - Glanhir
 changes **only** in a release commit — which is then tagged `vX.Y.Z` (annotated, `git tag -a`) and
 pushed. `git push` does NOT push tags; the tag needs its own refspec. Never move a pushed tag.
 
-Five versions players actually ran (`v2.0.11/.12/.14/.16/.17`) appear in no commit on any branch and
-are permanently unresolvable — two crash reports cite `v2.0.12`. `/release` runs the full sequence
-including the #371 Dependencies pairing check; contract + backfill record + the phantom-version list:
+`/release` runs the full sequence, including the #371 Dependencies pairing check. The contract, the
+backfill record and the five phantom versions players ran (in no commit on any branch):
 [`docs/reference/release-process.md`](docs/reference/release-process.md).
 
 ### Multi-session git safety (MANDATORY — a rebase can destroy another session's work)
@@ -329,6 +325,7 @@ original bug over its own fix, with a message describing a fix that was no longe
 | **`git stash apply`, never `pop`, when recovering** | Keeps the stash as a safety net until the recovery is verified green |
 | **Verify your own markers survived before committing** | Re-read them from disk before any completion claim, not only after a rebase/stash: another session restoring a path reverts your uncommitted edits with no error and leaves `git status` clean. The tree compiling is NOT proof your change is still in it |
 | **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks. Enforced since 2026-08-09 by `.claude/hooks/block-broad-git-add.sh`, which confirms before `git add -A/-u/.` and `git commit -a/-am` and lists what the sweep would take |
+| **In a shared checkout, commit with a pathspec: `git commit -F <msg> -- <paths>`** | A bare `git commit` takes the whole index, so files another session staged go in too (2026-10-14: a 12-path commit took 10 of them). A pathspec commit takes each named file whole from the working tree |
 | **`git status --porcelain` BEFORE editing a shared file** | An unpopped auto-stash can leave a path `UU` with everything already staged. 2026-08-08: a session appended a CHANGELOG entry into a file carrying live `<<<<<<<` markers and never saw them; a plain `git commit` would have swept both sessions into one commit |
 | **Prove a stash is redundant before trusting the tree — normalise line endings** | `git show stash@{0}:<f>` emits LF against a CRLF worktree, so a raw `diff` calls every line changed and looks like total divergence. Use `diff --strip-trailing-cr`. Doing so turned "35 files diverged" into "the stash is a strict subset, nothing lost" |
 | **Re-read `HEAD` immediately before `--amend`, not before the edit** | If another session commits in between, your amend rewrites THEIR commit. 2026-08-08 a CHANGELOG fix landed inside another session's docs commit. Recovery: `git reset --mixed <their-sha>`, confirm `git diff <their-sha> HEAD` is empty, re-commit yours separately |
@@ -363,13 +360,12 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 
 **Always use `taom-src` first** — authoritative signatures from the installed DLLs. The order:
 **0.** [engine process docs](./docs/reference/engine/) for "how does X work" → **1.** `pwsh tools/taom-src.ps1 path <Type>`
-for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` (shipping-client decompile — editor-only
-types are stripped, "absent" != "doesn't exist") → **3.** ILSpy MCP as fallback.
+for signature verification → **2.** browse `E:\Decompiled_Bannerlord\` → **3.** ILSpy MCP as fallback.
 Full detail (compose examples, dual-build layout, DLL paths, configuration): [`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md).
 
 ## Hooks
 
-31 hook registrations: 26 in `settings.json` across 9 events, plus 5 in `/freeze` and `/investigate` SKILL.md frontmatter (those 5 had NO timeout until 2026-08-31, so they inherited the 600s default). 27 scripts on disk, one of which (`_pybin.sh`) is a sourced helper, not a registration (recounted when plan 020 retired the two CHANGELOG hooks). Gate them with `bash tools/test_hooks.sh`. Full catalog (hook → event → purpose):
+Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Each names its script as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh` (a relative path stopped every gate after a `cd`, #690). Gate them with `bash tools/test_hooks.sh`. Full catalog, with the current counts (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -386,28 +382,15 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
-| `check-verification-evidence.sh` | Run the build/test it names (`./build.ps1 -RunTests`) and read the output before claiming the work is done — don't dismiss the reminder. If the build genuinely can't run (env failure), say so explicitly per `environment-failures.md`; don't silently ignore it. |
+| `check-verification-evidence.sh` | Run `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` and `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
 | `check-version-tagged.sh` | Tag the release commit (`git tag -a <version>`) and push the tag. Don't dismiss it — an untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
-
-## Status Line
-
-`.claude/statusline.sh` renders `ctx: N% | model | branch | Ns/Nu/Nt` (staged/unstaged/untracked counts, omitted when clean). Registered in `settings.json → statusLine`.
 
 ## Notes
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.4.8 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.8 as of 2026-08-10 — `ilspycmd` on the installed 1.4.8 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` — v1.4.8 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved — note `_editor_build_v1.4.5`: the Modding Kit sat three versions behind until 1.4.8 brought it level). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
-- Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
-
-## PowerShell Tool (Windows)
-
-Opt-in preview (v2.1.78+): runs PowerShell natively instead of via Git Bash. Enable with
-`"CLAUDE_CODE_USE_POWERSHELL_TOOL": "1"` in the settings.json env block. Details + the
-`defaultShell` / hook `shell:` / skill `shell:` knobs + limitations:
-[`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md).
+- Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 
 ## Equipment & Armory
 

@@ -1,0 +1,29 @@
+#!/bin/sh
+# Git commit-msg hook (core.hooksPath = .githooks): TAOM's commit rules for every commit, the ones
+# made from a terminal included. The rules live in tools/check_commit_msg.py.
+# Fails open, and says so, when Python or the checker is missing or cannot judge: a broken hook must
+# not block work. Only exit 1 refuses. POSIX sh, and never a Store alias (hook-authoring.md, "Never spell it python3").
+CHECKER="$(git rev-parse --show-toplevel)/tools/check_commit_msg.py"
+if [ ! -f "$CHECKER" ]; then
+    echo "[commit-msg] $CHECKER not found; commit message NOT checked." >&2
+    exit 0
+fi
+for PY in python py; do
+    case "$(command -v "$PY" 2>/dev/null)" in
+        "" | *[Ww]indows[Aa]pps*) continue ;;
+    esac
+    output=$("$PY" -B "$CHECKER" "$1" 2>&1)
+    rc=$?
+    # A checker that dies while it loads also exits 1, opening with the traceback or the bad line.
+    case "$rc:$output" in
+        "1:Traceback (most recent call last):"* | "1:  File "*) ;;
+        0:* | 1:*)
+            [ -z "$output" ] || printf '%s\n' "$output" >&2
+            exit "$rc" ;;
+    esac
+    [ -z "$output" ] || printf '%s\n' "$output" | tail -n 8 >&2
+    echo "[commit-msg] the checker could not judge (exit $rc); commit message NOT checked." >&2
+    exit 0
+done
+echo "[commit-msg] no python on PATH; commit message NOT checked." >&2
+exit 0

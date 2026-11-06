@@ -76,8 +76,8 @@ The facts the executor needs, inlined — never "as discussed" or "see audit":
 
 | Purpose   | Command                                                  | Expected on success |
 |-----------|----------------------------------------------------------|---------------------|
-| Build     | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | exit 0, 0 errors    |
-| Tests     | `dotnet test TAOM.Tests -p:DisableModuleCopy=true`        | all pass            |
+| Build     | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` | exit 0, 0 errors    |
+| Tests     | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`        | all pass            |
 | Data      | `python tools/validate_moduledata.py`                     | 0 ERRORs            |
 
 (Exact commands verified during recon, not guessed. `-p:DisableModuleCopy=true`
@@ -128,14 +128,14 @@ is never broken between steps when possible.)
   "model after `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs`".
 - What is structurally untestable (live Harmony invocation, engine calls) —
   name it for the commit's `Not-tested:` trailer.
-- Verification: `dotnet test TAOM.Tests -p:DisableModuleCopy=true` → all pass, including N new tests.
+- Verification: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` → all pass, including N new tests.
 
 ## Done criteria
 
 Machine-checkable. ALL must hold:
 
-- [ ] `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` exits 0
-- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true` exits 0; new tests for <X> exist and pass
+- [ ] `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` exits 0
+- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` exits 0; new tests for <X> exist and pass
 - [ ] `grep -rn "<old pattern>" Main/` returns no matches
 - [ ] No files outside the in-scope list are modified (`git status`)
 - [ ] `plans/README.md` status row updated

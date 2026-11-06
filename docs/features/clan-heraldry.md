@@ -131,7 +131,7 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
   the emitted `color`/`color2` plus the passthrough attributes. Reading the stylesheet text cannot
   prove passthrough survived, which is the failure mode `/xslt-check` alone would miss.
 - All touched XML/XSLT parse as well-formed (`xml.dom.minidom`).
-- `dotnet build Main/TAOM.csproj` → 0 errors (data-only; C# unaffected).
+- `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` → 0 errors (data-only; C# unaffected).
 - **Human seam (not automatable):** in-game render of the new clan colours, kingdom troop-armor tint,
   and that fiefs/clans field their distinct rosters. Start a campaign and inspect encyclopedia heraldry +
   a few battles.

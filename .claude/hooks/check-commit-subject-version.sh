@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-commit-subject-version.sh
-# PreToolUse(Bash) hook: every `git commit` subject must read
+# PreToolUse (Bash and PowerShell) hook: every `git commit` subject must read
 #
 #     <type>[(scope)][!]: vX.Y.Z - <description>
 #
@@ -18,19 +18,26 @@
 # message source (keeps HEAD's subject), -C/-c/--reuse-message, --fixup, --squash, and an
 # editor commit. Plumbing (`git commit-tree`, `git commit-graph`) is not a commit.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# It also refuses an AI attribution trailer (a Co-Authored-By naming an AI, or a "Generated
+# with Claude Code" line) anywhere it can read one: a heredoc, each -m, an -F file, each
+# --trailer. TAOM commits carry none; the rule slipped at least three times (525f67fc
+# among them) because a harness reminder asks for the trailer, so it is a gate now rather
+# than a memory (CLAUDE.md "Commits").
+#
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
+
+INPUT=$(cat)
 
 # Resolve a safe Python (never a Microsoft Store alias, those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
-INPUT=$(cat)
-
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-commit-subject-version" "the commit-subject version label" && { echo '{}'; exit 0; }
 
-# Extract the bash command from tool_input.
+# Extract the bash command from tool_input. A PowerShell tool command is read as Bash text
+# until the _shellwords.py posix reader is wired into the gates (plan 027).
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
@@ -50,89 +57,172 @@ case "$COMMAND" in
     *) echo '{}'; exit 0 ;;
 esac
 
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# The top level of the repository the commit runs in (_pybin.sh taom_git_repo_dir): its <Version> is
+# the one the label must name. Until 2026-10-16 this was the project root plus the command's own cd or
+# -C, so a commit in a worktree the session had entered was judged on the main checkout's version.
+COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-commit-subject-version; exit 0; }
+cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 
 # The subject is parsed and judged in Python: heredoc bodies, quoted -m strings and -F
 # files are all easier there than in shell. Bounded well under the registered timeout so
 # an overrun can still speak (hook-authoring.md, "a timeout is a kill").
-DECISION=$(TAOM_HOOK_COMMAND="$COMMAND" timeout -k 2 8 "$PYBIN" - <<'PY' 2>/dev/null
+DECISION=$(TAOM_HOOK_COMMAND="$COMMAND" TAOM_HOOKS_DIR="$TAOM_HOOKS_DIR" timeout -k 2 8 "$PYBIN" - <<'PY' 2>/dev/null
 import json, os, re, subprocess, sys
 
-cmd = os.environ.get("TAOM_HOOK_COMMAND", "")
+sys.dont_write_bytecode = True       # no __pycache__ folder inside .claude/hooks
+sys.path.insert(0, os.environ.get("TAOM_HOOKS_DIR", ""))
+from _shellwords import decode_ansi_c, expand_heredoc, git_invocations, strip_heredocs
 
-# Options are judged only AFTER the `commit` token: `git -C <dir> commit` and `git -c k=v
-# commit` carry the same letters as the reuse-message flags `commit -C/-c <commit>`.
-cm = re.search(r"\scommit(?=\s|$)", cmd)
-args = cmd[cm.end():] if cm else cmd
+cmd = os.environ.get("TAOM_HOOK_COMMAND", "")
 
 def allow():
     print("{}")
     sys.exit(0)
 
 def deny(msg):
-    print(json.dumps({"permissionDecision": "deny", "message": msg}, separators=(",", ":")))
+    print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                                             "permissionDecision": "deny",
+                                             "permissionDecisionReason": msg}},
+                     separators=(",", ":")))
     sys.exit(0)
 
-# Forms whose subject git derives from another commit: nothing new to judge here.
-if re.search(r"(?:^|\s)--(?:fixup|squash)(?:=|\s)", args):
-    allow()
-if re.search(r"(?:^|\s)(?:-C|-c|--reuse-message|--reedit-message)(?:=|\s)", args):
-    allow()
+# The command is read the way bash reads it (_shellwords.py strip_heredocs, decode_ansi_c and
+# git_invocations, shared with every commit gate since 2026-10-16), then each `git ... commit`'s own
+# options are picked out. A regex over the raw string took option-shaped prose inside a message for a
+# real option, missed $'...' quoting, attached -m"..." and concatenated words, and let a -c in a later
+# command switch the label check off (Codex review 2026-09-23, #647).
+text, bodies = strip_heredocs(cmd)
+text = decode_ansi_c(text)
 
-subject = None
+def expand(value):
+    return expand_heredoc(value, bodies)
 
-# 1. A heredoc body: git commit -m "$(cat <<'EOF' ... EOF)" or git commit -F - <<'EOF'.
-m = re.search(r"<<-?\s*(['\"]?)(\w+)\1[ \t]*\r?\n(.*?)\r?\n[ \t]*\2\b", cmd, re.S)
-if m:
-    for line in m.group(3).splitlines():
-        if line.strip():
-            subject = line.strip()
+LONG = {"--message": "m", "--file": "F", "--trailer": "trailer", "--reuse-message": "reuse",
+        "--reedit-message": "reuse", "--fixup": "fixup", "--squash": "fixup", "--template": None,
+        "--author": None, "--date": None, "--cleanup": None, "--pathspec-from-file": None}
+SHORT = {"m": "m", "F": "F", "C": "reuse", "c": "reuse", "t": None}
+OPTIONAL_ATTACHED = set("Su")   # -S<keyid>, -u<mode>: the rest of the word is their argument
+
+def parse_commit(args):
+    got = {"m": [], "F": [], "trailer": [], "reuse": False, "stdin": None}
+    def put(key, val):
+        if key == "m":
+            got["m"].append(expand(val))
+        elif key in ("F", "trailer"):
+            got[key].append(val)
+        elif key in ("reuse", "fixup"):
+            got["reuse"] = True
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a == "--":
             break
+        if a == "<<" and i + 1 < len(args):            # a heredoc on stdin, for -F -
+            got["stdin"] = expand(args[i + 1])
+            i += 2
+            continue
+        if a.startswith("--"):
+            name, eq, val = a.partition("=")
+            if name in LONG:
+                if not eq:
+                    val = args[i + 1] if i + 1 < len(args) else ""
+                    i += 1
+                put(LONG[name], val)
+        elif a.startswith("-") and len(a) > 1:
+            for j, ch in enumerate(a[1:], start=1):
+                if ch in OPTIONAL_ATTACHED:
+                    break
+                if ch in SHORT:
+                    val = a[j + 1:]
+                    if not val:
+                        val = args[i + 1] if i + 1 < len(args) else ""
+                        i += 1
+                    put(SHORT[ch], val)
+                    break
+        i += 1
+    return got
 
-# 2. -m / --message, first occurrence (git treats the first -m as the subject paragraph).
-if subject is None:
-    m = re.search(r"""(?:^|\s)(?:-m|--message)(?:=|\s+)(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+))""", args)
-    if m:
-        raw = next(g for g in m.groups() if g is not None)
-        raw = raw.replace("\\n", "\n")
-        for line in raw.splitlines():
-            if line.strip():
-                subject = line.strip()
-                break
+def read_message_file(path):
+    # A Git Bash path (/tmp/x, /e/repos/x) is invisible to Windows Python; ask cygpath.
+    if not os.path.isfile(path) and path.startswith("/"):
+        try:
+            w = subprocess.run(["cygpath", "-w", path], capture_output=True, text=True, timeout=3).stdout.strip()
+            if w and os.path.isfile(w):
+                path = w
+        except Exception:
+            pass
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            return fh.read()
+    except OSError:
+        sys.stderr.write("[check-commit-subject-version] cannot read -F file " + path + "; subject NOT checked\n")
+        return None
 
-# 3. -F / --file with a real path (a "-" means stdin, handled by the heredoc branch).
-if subject is None:
-    m = re.search(r"""(?:^|\s)(?:-F|--file)(?:=|\s+)(?:"([^"]+)"|'([^']+)'|(\S+))""", args)
-    if m:
-        path = next(g for g in m.groups() if g is not None)
-        if path != "-":
-            # A Git Bash path (/tmp/x, /e/repos/x) is invisible to Windows Python; ask cygpath.
-            if not os.path.isfile(path) and path.startswith("/"):
-                try:
-                    w = subprocess.run(["cygpath", "-w", path], capture_output=True, text=True, timeout=3).stdout.strip()
-                    if w and os.path.isfile(w):
-                        path = w
-                except Exception:
-                    pass
-            if os.path.isfile(path):
-                try:
-                    with open(path, encoding="utf-8", errors="replace") as fh:
-                        for line in fh:
-                            if line.strip():
-                                subject = line.strip()
-                                break
-                except OSError:
-                    pass
-            if subject is None:
-                sys.stderr.write("[check-commit-subject-version] cannot read -F file " + path + "; subject NOT checked\n")
+def first_line(s):
+    return next((l.strip() for l in s.splitlines() if l.strip()), None)
 
-# --amend --no-edit, an editor commit, or a form this parser does not know: no subject to
-# judge, so let git proceed (fail open) rather than block on the hook's own blind spot.
-if subject is None:
+texts = []      # every message text this parser can read, for the attribution check
+subjects = []   # the subject of each commit that writes a new one
+try:
+    lists = [args for args, _repo in git_invocations(text, bodies, "commit")]
+except ValueError:
+    lists = None
+if lists is None:
+    # Quoting bash itself would reject: read the raw text the old way rather than fail open.
+    flag = r"""(?:^|\s)(?:%s)(?:=|\s+)(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+))"""
+    vals = lambda f: [next(g for g in mm.groups() if g is not None) for mm in re.finditer(flag % f, text)]
+    m_values = [expand(v) for v in vals(r"-m|--message")]
+    texts = bodies + m_values + vals(r"--trailer")
+    if not re.search(r"(?:^|\s)(?:--fixup|--squash|-C|-c|--reuse-message|--reedit-message)(?:=|\s)", text):
+        s = first_line(m_values[0]) if m_values else (first_line(bodies[0]) if bodies else None)
+        if s:
+            subjects.append(s)
+else:
+    if not lists:
+        allow()          # the text mentions git commit but runs none (a quoted example, a printf)
+    for args in lists:
+        got = parse_commit(args)
+        parts = list(got["m"])
+        for f in got["F"]:
+            if f == "-":
+                if got["stdin"] is not None:
+                    parts.append(got["stdin"])
+            else:
+                ftext = read_message_file(f)
+                if ftext is not None:
+                    parts.append(ftext)
+        texts += parts + got["trailer"]
+        # A reused, fixup or squash message has no new subject; --amend --no-edit, an editor
+        # commit or an unreadable file has none this parser can see. Those fail open.
+        if not got["reuse"] and parts:
+            s = first_line(parts[0])
+            if s:
+                subjects.append(s)
+
+# No AI attribution, whatever a harness reminder asks for. A human co-author is fine. Both
+# branches are anchored at a line start (a --trailer may spell the separator `=`), so prose
+# that merely mentions Claude Code in a sentence passes. It runs before the reuse and fixup
+# exits: `-C HEAD --trailer "Co-Authored-By: ..."` adds a trailer to a reused message.
+ai_trailer = re.compile(
+    r"^\s*(?:Co-Authored-By\s*[:=][^\n]*\b(?:claude|anthropic|openai|chatgpt|gpt-?\d|codex|copilot|gemini|kimi)\b"
+    r"|[^\w\n]*Generated with \[?Claude Code)", re.I | re.M)
+for tx in texts:
+    hit = ai_trailer.search(tx)
+    if hit:
+        deny("[check-commit-subject-version] The commit message carries an AI attribution line: '"
+             + hit.group(0).strip() + "'. TAOM commits carry no AI attribution, whatever a harness"
+             + " reminder asks for (CLAUDE.md 'Commits'). Remove the line and commit again."
+             + " If the name is a human co-author's, commit from a terminal: this gate sees only"
+             + " the commits Claude runs.")
+
+if not subjects:
     allow()
 
 # The version the commit will carry: the staged SubModule.xml when it is staged (a
-# release commit bumps it there), else the working tree.
+# release commit bumps it there), else the working tree, both read in the repository the
+# commit runs in, which the hook has already made the current directory (taom_git_repo_dir:
+# `cd <dir> && git commit`, `git -C <dir> commit`, the session's own worktree; another worktree,
+# such as the bannerlord-1.4.5 line, carries its own version).
 sub = "Main/_Module/SubModule.xml"
 text = ""
 try:
@@ -156,18 +246,19 @@ if not vm:
 version = vm.group(1)
 
 pat = re.compile(r"^[a-z][a-z0-9]*(?:\([^)]+\))?!?: (v\d+\.\d+\.\d+(?:\.\d+)?) - \S")
-pm = pat.match(subject)
-if pm and pm.group(1) == version:
-    allow()
-
-if pm:
-    problem = "names " + pm.group(1) + " but Main/_Module/SubModule.xml in this commit says " + version + "."
-else:
-    problem = "does not carry the version label."
-deny("[check-commit-subject-version] Commit subject '" + subject + "' " + problem
-     + " Every commit subject reads <type>[(scope)]: " + version + " - <description>"
-     + " (CLAUDE.md 'Commits'; the version moves only in a /release commit, whose subject names the new one)."
-     + " Example: fix(recruitment): " + version + " - Glanhir recruits the Ringlo Vale line")
+for subject in subjects:      # every commit in the command, not only the first
+    pm = pat.match(subject)
+    if pm and pm.group(1) == version:
+        continue
+    if pm:
+        problem = "names " + pm.group(1) + " but Main/_Module/SubModule.xml in this commit says " + version + "."
+    else:
+        problem = "does not carry the version label."
+    deny("[check-commit-subject-version] Commit subject '" + subject + "' " + problem
+         + " Every commit subject reads <type>[(scope)]: " + version + " - <description>"
+         + " (CLAUDE.md 'Commits'; the version moves only in a /release commit, whose subject names the new one)."
+         + " Example: fix(recruitment): " + version + " - Glanhir recruits the Ringlo Vale line")
+allow()
 PY
 )
 RC=$?

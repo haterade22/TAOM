@@ -319,8 +319,8 @@ with open('Main/_Module/ModuleData/troops/troops_<culture>.xml') as f:
 "
 
 # 3. C# compile + tests.
-dotnet build Main --no-restore
-dotnet test TAOM.Tests --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
+dotnet build Main -p:DisableModuleCopy=true -p:ModuleId= --no-restore
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
 ```
 
 ---
@@ -349,7 +349,7 @@ Each is now a memory entry; expect Codex to catch similar patterns on your next 
 
 ### Build environment gotcha
 
-`dotnet build Main` may fail with `System.UnauthorizedAccessException: '0Harmony.dll' is denied` — this is the TAOM.Dependencies post-build copy step failing because Bannerlord (or Steam, or a recently-closed game) still has the DLL handle open. The C# compile already succeeded; only the deploy step blocked. Close Bannerlord/Steam and retry. **Do not** authorize sandbox-bypass workarounds; this is an environment issue per `.claude/rules/environment-failures.md`.
+`dotnet build Main` without -p:ModuleId= may fail with `System.UnauthorizedAccessException: '0Harmony.dll' is denied`: this is the TAOM.Dependencies post-build copy step failing because Bannerlord (or Steam, or a recently-closed game) still has the DLL handle open. The C# compile already succeeded; only the deploy step blocked. Close Bannerlord/Steam and retry. **Do not** authorize sandbox-bypass workarounds; this is an environment issue per `.claude/rules/environment-failures.md`.
 
 ---
 
@@ -375,7 +375,7 @@ After every iteration, re-run:
 ```bash
 python tools/generate_<culture>_troops.py --apply
 python tools/validate_all_troop_refs.py
-dotnet test TAOM.Tests --no-build --filter "<Culture>Culture"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture"
 ```
 
 Each iteration that touches the `VolunteerRecruitmentService` pool **must update the corresponding tests** — the roll-index → troop mapping is sensitive to entry order + cumulative weights. Failing to update tests after a pool change is the most common iteration regression.

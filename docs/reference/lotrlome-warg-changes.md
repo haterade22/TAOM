@@ -737,7 +737,7 @@ wargs so a heavier mount does not reach level 21 scouts.
 | `python tools/validate_mesh_refs.py` | 10 errors, the same 10 that were there before the change (8 `taom_ram_barding_*`, 2 `sk_rh_khml_barding_*`, none yet cooked). Zero warg entries |
 | `python tools/audit_mount_parity.py` | Reads the new LOTRLOME locations; "warg: every usage-set action is bound in its action_set" passes |
 | Animation-target sweep | All **75** warg-side `animation=` targets, including the spider's 12 borrowed `rider_warg_*` clips, resolve against LOTRLOME's packs plus vanilla `animation_clips.tpac`. **Zero** require `Alliance.Wargs` |
-| `dotnet test TAOM.Tests` | 7,716 passed, 0 failed, 2 skipped |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | 7,716 passed, 0 failed, 2 skipped |
 | XML parse of every edited and new file | PASS |
 
 **Still owed: the in-game ladder.** Nothing here has been run in the game yet. In order: main menu

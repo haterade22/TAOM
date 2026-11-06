@@ -177,7 +177,7 @@ vanilla's own-faction level for every coloured plate.
 - `NameplateRelationPrefabTests.cs`: 6 tests over the three prefabs, one widget with the right Id and binding, every widget path (bar, text, frame, banner, tracked ring) resolves by Id, colour attributes well formed, the item widget's own paths intact, the item widget within the ancestor depth the widget walks, no state cascade on the capsule.
 - `NameplateRelationBindingTests.cs`: 6 tests, engine members pinned against the installed DLLs (`BindingVerification`), widget constructor and simple-name uniqueness.
 
-76 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
+76 tests in the feature; `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~SettlementNameplateRelation`.
 The four MCM properties also move the settings fingerprint pin (`SettingsFingerprintTests`, 229 in
 `TaomSettings`) and sit in `CoopSettingsRelevance`'s presentation list.
 

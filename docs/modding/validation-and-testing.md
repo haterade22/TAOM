@@ -354,7 +354,7 @@ These cannot be checked with the tools above and are not a data modder's job to 
 | Anything a stylesheet does | no gate interprets XSLT. `spcultures.xslt` rewriting a vanilla culture in place is invisible to every check here; `CulturePartyTemplateTests` is the only detector and it is a C# test |
 | A culture fielding another faction's troops | the ref sweep proves an id resolves, never that it points at the right faction. That gap hid nine cultures' worth of Calradian troops for months |
 | A lord with the wrong name or sex for his body | free text behind a localization key; `LordNameAndSexConsistencyTests` owns it |
-| The C# suite | `dotnet test TAOM.Tests` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
+| The C# suite | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
 | Harmony patches, GameModels, MissionLogics, CampaignBehaviors | cannot be unit tested at all; they need a running game (`testing-guide.md` "What Cannot Be Unit Tested") |
 | Deploying your repo edit into the install | the copy happens during a build, not on save |
 
@@ -366,7 +366,7 @@ Run these in order. Each one is cheap; the expensive step is the campaign at the
 2. The category tables above, for the thing you actually touched.
 3. `python tools/check_external_xslt.py` if any `.xslt` changed.
 4. `python tools/audit_mbproj_registration.py` if you added a file.
-5. Ask a developer for `dotnet test TAOM.Tests` if you touched cultures, party templates or lords.
+5. Ask a developer for `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` if you touched cultures, party templates or lords.
 6. Full game restart, new campaign, the in-game smoke above.
 
 For a targeted question mid-edit rather than a full run, the `taom-moduledata` MCP server exposes the

@@ -735,7 +735,7 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
     lines 138-157 of that doc: launch, confirm only `TAOM` and `TAOM.Dependencies` are needed,
     confirm a **Mod Options** tab exists and a changed value persists.
 
-Check: `dotnet test TAOM.Tests --filter BundledDependencyManifest`
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter BundledDependencyManifest`
 Takes effect: full game restart
 Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAOM.Dependencies.csproj`
 
@@ -802,7 +802,7 @@ Code: No code changes needed
    not read it (first engine table).
 8. **Never ship a binary under `_Module/bin/` without its notice paragraph** ([provenance rule](../../.claude/rules/provenance.md)).
 
-Check: `dotnet test TAOM.Tests --filter BundledDependencyManifest`
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter BundledDependencyManifest`
 Takes effect: full game restart
 Code: No code changes needed
 

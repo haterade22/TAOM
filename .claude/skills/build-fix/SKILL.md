@@ -11,7 +11,7 @@ Incrementally fix build errors with minimal, safe changes. Fix the error, not th
 ## Step 1: Run the Build
 
 ```bash
-dotnet build Main --no-restore 2>&1
+dotnet build Main -p:DisableModuleCopy=true -p:ModuleId= --no-restore 2>&1
 ```
 
 Capture the full output. If build succeeds, report success and stop.
@@ -30,7 +30,7 @@ For each error:
 1. **Read the file** — Use Read tool to see 10 lines around the error line
 2. **Diagnose** — Identify root cause (missing using, wrong type, missing member, API change)
 3. **Fix minimally** — Use Edit tool for the smallest change that resolves the error
-4. **Re-run build** — Run `dotnet build Main --no-restore 2>&1` to verify
+4. **Re-run build**: run `dotnet build Main -p:DisableModuleCopy=true -p:ModuleId= --no-restore 2>&1` to verify
 5. **Report** — "Fixed [error] in [file]. Remaining: N errors."
 6. **Move to next** — Continue with remaining errors
 
@@ -110,7 +110,7 @@ Build status: PASS/FAIL
 ## When NOT to Use
 
 - Code needs refactoring → do that directly
-- Tests are failing → run `dotnet test TAOM.Tests` instead
+- Tests are failing → run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` instead
 - Architecture changes needed → use `/new-feature` or plan mode
 - TaleWorlds API is unknown → use `/research` first
 

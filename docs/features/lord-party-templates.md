@@ -237,7 +237,7 @@ swapped template reaches `FindAppropriateInitialRosterForMobileParty`. Both are 
    sides. Vanilla-id lords retagged in `lords.xslt` use the vanilla id (`lord_1_34`).
 3. Do NOT bind the template to a clan or culture.
 4. Extend `ShippedLordPartyTemplateTests` with the new pair and whatever composition the brief
-   asked for, then `dotnet test TAOM.Tests --filter FullyQualifiedName~LordPartyTemplate` and
+   asked for, then `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~LordPartyTemplate` and
    `python tools/validate_moduledata.py`.
 5. Restart the game. The lord's NEXT party spawn uses the template; a party already on the map
    keeps its roster.

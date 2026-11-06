@@ -22,7 +22,7 @@
 # uncaught exception would exit 1 and read as findings): allowed, but never silently,
 # the traceback goes out as PreToolUse additionalContext beside the tool result.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -45,7 +45,7 @@ except Exception:
 ' 2>/dev/null)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
-# `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
+# `git commit-tree` / `commit-graph`. Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".
 case "$COMMAND" in
     *"git commit-"*) echo '{}'; exit 0 ;;
 esac
@@ -54,7 +54,12 @@ case "$COMMAND" in
     *) echo '{}'; exit 0 ;;
 esac
 
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# The top level of the repository the commit runs in, not always the project root (_pybin.sh
+# taom_git_repo_dir). A commit in another repository is not this gate's: its tools/*.py are not
+# TAOM's to run.
+COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-moduledata-validation; exit 0; }
+cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
+taom_is_project_repo "$COMMIT_REPO" || { echo '{}'; exit 0; }
 
 # Files in the commit. No blanket --amend skip (amend is commonly "oops, add a
 # file" -- exactly the case to catch); include HEAD's files on amend.
@@ -68,11 +73,15 @@ esac
 
 # Only run when the commit touches ModuleData XML (the validator's scope).
 HAS_MD=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         Main/_Module/ModuleData/*.xml) HAS_MD=1; break ;;
     esac
-done <<< "$STAGED"
+done
 [[ $HAS_MD -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).
@@ -123,7 +132,7 @@ RC=$?
 # because an overrun is an infrastructure fault and a hook's own fault must not hard-block.
 if [[ $RC -eq 124 ]]; then
     [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
     exit 0
 fi
 
@@ -159,5 +168,5 @@ print(json.dumps(
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

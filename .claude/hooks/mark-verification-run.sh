@@ -54,7 +54,12 @@ LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
 # evidence-over-claims.md. Split on shell separators and inspect each segment's leading
 # token, the same shape block-dangerous-git.sh already uses.
 MARK=0
-while IFS= read -r seg; do
+SEGMENTS=$(printf '%s' "$COMMAND" | tr ';&|' '\n')
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
+# which is harmless here.
+set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
+for seg in "${SEG_LIST[@]}"; do
   seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
   while :; do                                    # drop env-var prefixes: FOO=bar cmd
     case "$seg" in
@@ -71,7 +76,7 @@ while IFS= read -r seg; do
     pwsh | powershell | powershell.exe)
       case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
   esac
-done <<< "$(printf '%s' "$COMMAND" | tr ';&|' '\n')"
+done
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null
