@@ -23,6 +23,8 @@ _PREFIXES = {
     "troop": "NPCCharacter.",
     "culture": "Culture.",
     "party_template": "PartyTemplate.",
+    "body_property": "BodyProperty.",
+    "faction": "Faction.",
 }
 
 # The engine (taom_schema.REF_KINDS) names the troop kind "npccharacter"; the
@@ -90,8 +92,8 @@ class ModuleDataQuery:
 
     def find_references(self, target_id: str, kind: str | None = None, limit: int = 200) -> dict:
         """Find every reference to an id across ModuleData. `target_id` may be
-        prefixed (Item.x / NPCCharacter.x / Culture.x / PartyTemplate.x) or bare
-        with `kind` set; with neither, all four prefixes are searched."""
+        prefixed (Item.x / NPCCharacter.x / Culture.x / PartyTemplate.x / BodyProperty.x /
+        Faction.x) or bare with `kind` set; with neither, all six prefixes are searched."""
         bare, inferred = target_id, _KIND_ALIASES.get(kind, kind)
         for k, p in _PREFIXES.items():
             if target_id.startswith(p):

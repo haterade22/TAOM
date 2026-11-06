@@ -23,6 +23,10 @@ Checks (each maps to a recurring TAOM bug class):
   INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
   BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
   BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
+  BROKEN_FACTION_REF         Faction.X (settlement owner=, Hero faction=) names a clan no
+                             <Faction id> defines -> the object loads ownerless (clans.xml plus
+                             vanilla spclans.xml, minus the rows spclans.xslt strips;
+                             Faction.neutral is allowed; needs the install)
   MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
   MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
@@ -50,33 +54,45 @@ Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
   python tools/validate_moduledata.py --game-modules "E:/.../Modules"
 
-Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
+Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), 2 for bad input (no
+install), 3 when the validator itself crashed (the traceback is on stderr), else 0.
 """
 import argparse
 import json
 import os
 import re
 import sys
+import traceback
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import taom_schema as ts
-# Aliased: main() binds a local `game_modules`, which would shadow the import.
-from _gamedir import game_modules as resolve_game_modules
+# A crash here happens before entry() can catch it, and Python would exit 1, the "ERROR findings"
+# code. Run as a script, it exits 3 like any other crash (see entry()); imported, it raises as usual.
+try:
+    import taom_schema as ts
+    # Aliased: main() binds a local `game_modules`, which would shadow the import.
+    from _gamedir import game_modules as resolve_game_modules
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
-SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    REPO_ROOT = Path(__file__).resolve().parent.parent
+    MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+    SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
 
-# The commit hook runs this with no --game-modules, so the default is what it
-# gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
-# while the hook still saw PASS (#404).
-DEFAULT_GAME_MODULES = resolve_game_modules(
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-)
+    # The commit hook runs this with no --game-modules, so the default is what it
+    # gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
+    # while the hook still saw PASS (#404).
+    DEFAULT_GAME_MODULES = resolve_game_modules(
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+    )
+except Exception:  # noqa: BLE001 - a crash is reported, never mistaken for a finding
+    if __name__ != "__main__":
+        raise
+    traceback.print_exc()
+    print("ERROR: tools/validate_moduledata.py crashed while loading (traceback above); no verdict was "
+          "reached, exit 3.", file=sys.stderr)
+    sys.exit(3)
 
 
 # TAOM's data lives in three modules and two of them are outside this repo and
@@ -445,7 +461,9 @@ def main() -> int:
         # Per environment-failures.md: report, don't guess. The item/culture
         # registry will be TAOM-only, so external refs will look broken.
         print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
-              f"         item / troop / party-template ref checks will be SKIPPED (need the\n"
+              f"         item / troop / party-template / body-property / faction ref checks\n"
+              f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
+              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF) will be SKIPPED (need the\n"
               f"         game install for a complete registry). Culture-validity, duplicate-id,\n"
               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
               f"         pass --game-modules <path> to enable the skipped checks.\n"
@@ -462,7 +480,8 @@ def main() -> int:
           f"{len(registries.npccharacters):,} NPCCharacters, "
           f"{len(registries.cultures)} cultures, "
           f"{len(registries.party_templates):,} party templates, "
-          f"{len(registries.body_properties)} body properties", file=sys.stderr)
+          f"{len(registries.body_properties)} body properties, "
+          f"{len(registries.factions)} clans", file=sys.stderr)
 
     extra_roots = build_extra_ref_roots(game_modules)
 
@@ -522,5 +541,19 @@ def main() -> int:
     return 0
 
 
+def entry() -> int:
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code
+    that means "ERROR findings", so the commit hook would block a commit over a validator bug and
+    show the author a bare status. 3 is its own code: the traceback goes to stderr and the hook
+    fails open on it. argparse's SystemExit passes through."""
+    try:
+        return main()
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for a finding
+        traceback.print_exc()
+        print("ERROR: tools/validate_moduledata.py crashed (traceback above); no verdict was reached, "
+              "exit 3.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(entry())

@@ -26,6 +26,12 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **`face_key_template` pointing at an undefined `BodyProperty`** — not an XML error: the engine
   registers a placeholder, `MBObjectManager.UnregisterNonReadyObjects` drops it, and the character
   silently loses its authored face. (`BROKEN_BODY_PROPERTY_REF`)
+- **A `Faction.X` reference to an undefined clan** (settlement `owner=`, Hero `faction=`) leaves the
+  settlement or hero ownerless at load. The registry is every `<Faction id>` in the repo's
+  `characters/clans.xml` plus vanilla `SandBox/ModuleData/spclans.xml`, minus the five bandit clans
+  `spclans.xslt` strips with `<xsl:template match="Faction[@id='X']"/>` (the engine never loads
+  those rows); `Faction.neutral` (the engine's clanless value for named companions) is allowed.
+  XML only: the `faction` attributes `heroes.xslt` writes are not swept. (`BROKEN_FACTION_REF`, #949)
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
@@ -855,6 +861,13 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `BROKEN_FACTION_REF` (error, in the commit hook) ported (#949; WP136): a `Faction.X` ref
+  must resolve to a clan in `characters/clans.xml` or vanilla `spclans.xml` that `spclans.xslt` does
+  not strip; `Faction.neutral` is allowed. A separate suspect-registry floor (50) on the vanilla clans
+  flags a missing `spclans.xml`, which the repo's own clans could otherwise hide. The validator now
+  exits 3 on an unexpected exception (the traceback on stderr) and the commit hook allows that
+  commit with the traceback beside the tool result; Python's own exit 1 would have blocked it.
+  `taom_query.find_references` searches the `BodyProperty.` and `Faction.` prefixes as well.
 - 2026-11-05: `SCHEMA_INVALID` (error) ported from the 1.5.x line (#621, #974, #980; WP136) and named
   in the commit hook's `--code` list. `taom_body_length` stays a reported failure (D15).
 - 2026-11-05: `MISSING_COLLISION_BODY` (error), `MISSING_VISUAL_MESH` (warn) and

@@ -107,9 +107,9 @@ def party_template_exists(template_id: str) -> dict:
 @mcp.tool()
 def find_references(target_id: str, kind: str | None = None, limit: int = 200) -> dict:
     """Find every reference to an id across ModuleData. `target_id` may be
-    prefixed (Item./NPCCharacter./Culture./PartyTemplate.) or bare with `kind`
-    set to one of item|troop|culture|party_template (npccharacter is accepted as
-    an alias of troop). Returns {target, kind, count, truncated, references:
+    prefixed (Item./NPCCharacter./Culture./PartyTemplate./BodyProperty./Faction.) or
+    bare with `kind` set to one of item|troop|culture|party_template|body_property|
+    faction (npccharacter is accepted as an alias of troop). Returns {target, kind, count, truncated, references:
     [{file, line, kind, ref}]}, capped at `limit` (default 200)."""
     return _query.find_references(target_id, kind, limit)
 

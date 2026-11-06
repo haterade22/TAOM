@@ -20,6 +20,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -592,6 +593,39 @@ class ValidatorContractTests(unittest.TestCase):
 """)
         self.assertEqual([i for i in self._run() if i.code == "BROKEN_BODY_PROPERTY_REF"], [])
 
+    # ----------------------------------------------------------------- #
+    # Faction refs (#949). A settlement owner= or Hero faction= naming a clan
+    # nothing defines leaves the settlement or hero ownerless at load.
+    # ----------------------------------------------------------------- #
+    _FACTION_HERO = """<?xml version="1.0" encoding="utf-8"?>
+<Heroes>
+  <Hero id="lord_a" faction="Faction.%s" />
+</Heroes>
+"""
+
+    def test_broken_faction_ref_is_reported(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "clan_gondor_99")
+        issues = [i for i in self._run() if i.code == "BROKEN_FACTION_REF"]
+        self.assertEqual(len(issues), 1, f"expected exactly one, got {self._codes(self._run())}")
+        self.assertIn("clan_gondor_99", issues[0].message)
+        self.assertIs(issues[0].severity, ts.Severity.ERROR)
+
+    def test_resolving_faction_ref_is_clean(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "clan_gondor_1")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
+    def test_faction_neutral_is_allowed(self):
+        self.registries.factions = {"clan_gondor_1"}
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "neutral")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
+    def test_faction_check_skipped_when_registry_unavailable(self):
+        self.registries.factions = set()
+        _write(self.md / "heroes.xml", self._FACTION_HERO % "anything")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_FACTION_REF"], [])
+
     def test_extra_ref_roots_are_swept_and_reported_with_module_prefix(self):
         armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
         _write(armory / "LOTRLOME_items" / "rhun" / "head_armors.xml",
@@ -798,6 +832,73 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertIn("real_sword", regs.items)
         self.assertIn("taom_own", regs.items, "TAOM's own <Items> file still defines its items")
         self.assertNotIn("retired_helm", regs.items, "a config row quoting an id is not a definition")
+
+    _CLANS_XML = ('<?xml version="1.0"?>\n<Factions>\n%s</Factions>\n')
+
+    def test_factions_registry_built_from_repo_and_vanilla_clans(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % '  <Faction\n\t\tid="clan_vanilla_1" name="x" />\n')
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n'
+                                 '  <!-- <Faction id="clan_ghost" /> -->\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("clan_vanilla_1", regs.factions)
+        self.assertIn("clan_taom_1", regs.factions)
+        self.assertNotIn("clan_ghost", regs.factions)
+
+    def test_factions_registry_empty_without_game_install(self):
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n')
+        regs = ts.build_registries(self.md, None)
+        self.assertEqual(regs.factions, set())
+
+    def test_shrunken_factions_registry_warns(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % '  <Faction id="clan_taom_1" name="y" />\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("factions", " ".join(regs.suspect_registries))
+
+    def test_healthy_factions_registry_is_not_flagged_suspect(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="v{i}" name="x" />\n' for i in range(60)))
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="c{i}" name="y" />\n' for i in range(120)))
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual([s for s in regs.suspect_registries if "factions" in s], [])
+
+    def test_missing_vanilla_spclans_is_flagged_even_when_repo_clans_fill_the_total(self):
+        # The repo's own clans can reach the total floor alone, so a vanished spclans.xml needs
+        # its own floor: every Faction ref to a vanilla clan would otherwise read as broken.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(self.md / "characters" / "clans.xml",
+               self._CLANS_XML % "".join(f'  <Faction id="c{i}" name="y" />\n' for i in range(120)))
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("vanilla_factions", " ".join(regs.suspect_registries))
+
+    def test_faction_stripped_by_spclans_xslt_is_not_registered(self):
+        # spclans.xslt deletes the five bandit clans from vanilla's file, so a ref to one
+        # leaves the settlement or hero ownerless at runtime and must be reported.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "spclans.xml",
+               self._CLANS_XML % '  <Faction id="clan_vanilla_1" />\n  <Faction id="sea_raiders" />\n'
+                                 '  <Faction id="steppe_bandits" />\n')
+        _write(self.md / "spclans.xslt", """<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:template match="Faction[@id='sea_raiders']"/>
+  <!-- <xsl:template match="Faction[@id='clan_vanilla_1']"/> -->
+  <xsl:template match="Faction[@id='steppe_bandits']"></xsl:template>
+  <xsl:template match="Faction[@id='clan_vanilla_2']">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+</xsl:stylesheet>
+""")
+        regs = ts.build_registries(self.md, modules)
+        self.assertIn("clan_vanilla_1", regs.factions)
+        self.assertNotIn("sea_raiders", regs.factions)
+        self.assertNotIn("steppe_bandits", regs.factions)
 
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",
@@ -2244,6 +2345,64 @@ class MissingCollisionBodyTests(unittest.TestCase):
                                      "--game-modules", str(root / "nowhere"), "--code", vm.BODY_CODE)
         self.assertIn(f"{vm.BODY_CODE} SKIPPED", err)
         self.assertEqual(code, 2)
+
+    def test_main_without_install_names_the_skipped_ref_checks(self):
+        """The no-install warning lists what it skips; the faction and body-property checks
+        were skipped without being named, which reads like a clean sweep."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            _, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                  "--game-modules", str(root / "nowhere"))
+        self.assertIn("faction", err)
+        self.assertIn("body-property", err)
+
+    def test_registry_line_counts_the_clans(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            _write(root / "ModuleData" / "characters" / "clans.xml",
+                   '<?xml version="1.0"?>\n<Factions>\n  <Faction id="c1" />\n</Factions>\n')
+            (root / "Modules").mkdir()
+            _, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                  "--game-modules", str(root / "Modules"), "--code", "NO_SUCH_CODE")
+        self.assertRegex(err, r"Registry: .*\d+ clans")
+
+
+class EntryPointCrashTests(unittest.TestCase):
+    """An unexpected exception out of main() must exit 3 with the traceback on stderr. Python's own
+    exit for an uncaught exception is 1, the code that means "ERROR findings", so the commit hook
+    would block a commit over a validator bug and show the author a bare exit status."""
+
+    def test_unexpected_exception_exits_3_with_the_traceback(self):
+        err = io.StringIO()
+        with mock.patch.object(vm, "main", side_effect=RuntimeError("registry exploded")), \
+             redirect_stderr(err):
+            code = vm.entry()
+        self.assertEqual(code, 3)
+        self.assertIn("Traceback", err.getvalue())
+        self.assertIn("registry exploded", err.getvalue())
+
+    def test_a_normal_exit_code_passes_through(self):
+        for rc in (0, 1, 2):
+            with self.subTest(rc=rc), mock.patch.object(vm, "main", return_value=rc):
+                self.assertEqual(vm.entry(), rc)
+
+    def test_argparse_exit_is_not_turned_into_a_crash(self):
+        with mock.patch.object(vm, "main", side_effect=SystemExit(2)):
+            with self.assertRaises(SystemExit) as cm:
+                vm.entry()
+        self.assertEqual(cm.exception.code, 2)
+
+    def test_a_crash_while_loading_the_module_also_exits_3(self):
+        # A broken taom_schema.py fails at import time, before entry() runs (the convergence
+        # review of #949-#952 reproduced exit 1 this way).
+        script = Path(vm.__file__).resolve()
+        code = ("import sys, runpy; sys.modules['taom_schema'] = None; "
+                f"sys.argv = [{str(script)!r}]; runpy.run_path({str(script)!r}, run_name='__main__')")
+        run = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=120)
+        self.assertEqual(run.returncode, 3, run.stderr[-2000:])
+        self.assertIn("Traceback", run.stderr)
 
 
 _FACTIONS_XSD = """<?xml version="1.0" encoding="utf-8"?>
