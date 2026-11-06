@@ -100,5 +100,7 @@ A gate that builds a repo-relative key from the disk compares it with `OrdinalIg
 `Main/_Module/GUI/PreFabs`, and a checkout can hold the folder as `Prefabs` on a case-insensitive
 filesystem (`GauntletStretchInCoverRatchetTests`, #1078).
 
+Judge every test by the two-edit test: break the behaviour (it must fail), change only the internals (it must pass); see `4-completeness.md` item 9 in `.claude/skills/deep-review/lenses/`.
+
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

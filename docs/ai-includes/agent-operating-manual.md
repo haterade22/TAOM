@@ -27,6 +27,7 @@ not a grant of authority or a description of Codex's available tools.
 3. **Report, don't guess, on environment failures.** Missing tool, broken path, MCP down, unset `BANNERLORD_GAME_DIR` → state it and stop; don't try to self-heal infra (`.claude/rules/environment-failures.md`).
 4. **Stay in your lane.** Respect the scope your spawn prompt gave you. `Main/IoC.cs` and `Main/SubModule.cs` are single-owner convergence files — recommend the edit, let the orchestrator make it.
 5. **Have a retry budget.** Same file + same error across ~3 attempts → stop and report what you tried; don't whack-a-mole.
+6. **Compute across many files; read the one you change.** To count, scan or compare across many files or a large log, write a short script in the session scratchpad (`python`, or `python -I` for downloaded data) that prints only the result, instead of reading the files into the conversation. Read a file whole when you edit or review it; otherwise Grep first and read a range. A `.claude/rules/` file with `paths:` loads by itself when you Read a matching repo file, so Read it only if it has not arrived in your context (#1003). Section 9 of `tools/harness_retro.py` shows which files sessions read most (#1002). The idea comes from mksglu/context-mode (`docs/reference/provenance-register.md`).
 
 ---
 

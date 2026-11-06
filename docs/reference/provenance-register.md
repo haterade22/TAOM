@@ -103,6 +103,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 | ralph-claude-code | `ralph-claude-code` `frankbria/ralph-claude-code` | MIT | behavioural-port | `.claude/rules/working-discipline.md` (no-progress breaker), `tools/loop_progress.py`, `.claude/skills/improve/workflows/execute.js` (run breaker), the Dead ends sections, `.claude/rules/hook-authoring.md` (digits-only arithmetic) (#996, #998) | cleared |
 | pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
+| context-mode | `context-mode` `mksglu/context-mode` | Elastic-2.0 | behavioural-port | `docs/ai-includes/agent-operating-manual.md` (execution model item 6) | cleared |
+| claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
 
 <!-- provenance-register-end -->
 
@@ -629,6 +631,23 @@ two-edit test check, comment review, a verification recipe per feature, the prem
 audit, a perf method, more prose tells). The record lists TAOM-side changes, not copied files, and the
 table of them is there:
 [`docs/reviews/adopt-pstack-2026-10-24.md`](../reviews/adopt-pstack-2026-10-24.md).
+
+### context-mode
+
+Upstream: https://github.com/mksglu/context-mode, `main` at `7e9ebef` · Elastic License 2.0. Its
+README's "think in code" principle (a script computes across files and prints only the result) was
+read while writing item 6 of the agent operating manual, so the derivation is a behavioural port.
+The per-file Read table in section 9 of `tools/harness_retro.py` (#1002) is TAOM's own measurement
+and has no counterpart upstream. No code or text was copied, so no ELv2 notice is carried, and
+nothing was installed or run. Record: [`docs/reviews/adopt-context-mode-2026-10-26.md`](../reviews/adopt-context-mode-2026-10-26.md).
+
+### claude-plugins-official
+
+Upstream: https://github.com/anthropics/claude-plugins-official, `5826794`, read from a shallow clone;
+nothing was installed or run. Five ideas were rebuilt on the TAOM side: frontmatter key
+checks, two review-lens prompts, dangerous-sink rules, a canary test that must turn a run red, and
+token and cache accounting. The record describes ideas ported, not files copied. Record:
+[`docs/reviews/adopt-claude-plugins-official-2026-10-26.md`](../reviews/adopt-claude-plugins-official-2026-10-26.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
