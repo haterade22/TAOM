@@ -282,6 +282,19 @@ class SyncMissingIdsTests(unittest.TestCase):
             self.assertLess(body.index('id="key_b"'), body.index("</strings>"),
                             "the seeded row must land inside <strings>")
 
+    def test_a_seeded_row_takes_the_files_usual_indent_and_terminator_not_the_last_rows(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt = Path(d) / "src.xml", Path(d) / "tgt.xml"
+            src.write_bytes(self.SRC.encode("utf-8"))
+            rows = ['    <string id="key_a" text="Alfa" />\r\r\n', '    <string id="key_c" text="Charlie" />\r\r\n',
+                    '  <string id="key_d" text="Delta" />\r\n']
+            head = '<?xml version="1.0" encoding="utf-8"?>\r\r\n<base type="string">\r\r\n  <strings>\r\r\n'
+            tgt.write_bytes((head + "".join(rows) + '  </strings>\r\r\n</base>\r\r\n').encode("utf-8"))
+            self.assertEqual(t.sync_missing_ids(src, tgt), ["key_b"])
+            seeded = next(line for line in tgt.read_bytes().split(b"\n") if b'id="key_b"' in line) + b"\n"
+            self.assertEqual(seeded, b'    <string id="key_b" text="Bravo &amp; Sons" />\r\r\n')
+
     def test_skips_ids_another_source_owns(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
