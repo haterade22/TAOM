@@ -19,7 +19,7 @@ paths:
 |---|---|
 | `spcultures.xslt` | `SandBoxCore/ModuleData/spcultures.xml` |
 | `spkingdoms.xslt`, `spclans.xslt`, `lords.xslt`, `heroes.xslt`, `module_strings.xslt` | `SandBox/ModuleData/` file of the same name (SandBoxCore has none) |
-| `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates); gate: `LordTemplateRosterTests` |
+| `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates) |
 
 ## Passthrough Requirements (CRITICAL)
 - Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`
