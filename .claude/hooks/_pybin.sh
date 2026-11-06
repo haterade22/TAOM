@@ -145,3 +145,12 @@ taom_pybin_degraded() {
 # settings.json (validated above), not an export.
 PYBIN=$(taom_resolve_python || true)
 export PYBIN
+
+# UTF-8 stdio for every Python a hook runs. On Windows a piped stdin/stdout defaults to the
+# ANSI code page (cp1252), so a tool input holding a character outside it (an arrow, a CJK
+# name) made `print(command)` raise inside the hooks' `except: pass` extraction: the command
+# came back empty and every gate allowed it unchecked (measured 2026-09-23, #647: a commit
+# subject with no version label and one arrow in it went straight through). It reaches every
+# Python the hook starts, including tools it launches; tools/test_hooks.sh section 6 pins it
+# with raw and escaped payloads.
+export PYTHONIOENCODING=utf-8

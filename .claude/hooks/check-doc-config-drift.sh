@@ -20,7 +20,7 @@
 # ANY hook-internal failure -- no python, linter crash, nothing relevant staged --
 # ALLOWS the commit. Only a genuine drift finding (linter rc=1 on --drift-only) blocks.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -96,7 +96,7 @@ RC=$?
 # 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
 # infrastructure fault, and a hook's own fault must never hard-block the user.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --drift-only"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --drift-only"}}'
     exit 0
 fi
 
@@ -118,5 +118,5 @@ print(json.dumps(
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

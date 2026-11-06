@@ -22,7 +22,7 @@
 # uncaught exception would exit 1 and read as findings): allowed, but never silently,
 # the traceback goes out as PreToolUse additionalContext beside the tool result.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -45,7 +45,7 @@ except Exception:
 ' 2>/dev/null)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
-# `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
+# `git commit-tree` / `commit-graph`. Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".
 case "$COMMAND" in
     *"git commit-"*) echo '{}'; exit 0 ;;
 esac
@@ -123,7 +123,7 @@ RC=$?
 # because an overrun is an infrastructure fault and a hook's own fault must not hard-block.
 if [[ $RC -eq 124 ]]; then
     [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
     exit 0
 fi
 
@@ -159,5 +159,5 @@ print(json.dumps(
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

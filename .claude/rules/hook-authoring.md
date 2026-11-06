@@ -125,13 +125,20 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 |---|---|
 | **Time the hook's slow path before you pick a number.** `time <the exact command the hook runs>` | The fast path is the path you will not be debugging. A guess here is a dead gate. |
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
-| **Handle rc 124 explicitly, and never as a pass.** Emit `permissionDecision: "ask"`, or write to stderr for an advisory hook | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
+| **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or write to stderr for an advisory hook | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
-`bash tools/test_hooks.sh` enforces every line of this: it fails if a registration has no
-timeout, if a hook runs an external tool with no inner bound, or if an inner bound is not
-strictly below its registered timeout. Run it before committing anything under `.claude/hooks/`.
+`bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
+without an inner bound below it, and (4b) every PreToolUse gate answers a commit inside 80% of
+its registration. Run it before committing anything under `.claude/hooks/`.
+
+## Prove a gate live (EMPIRICAL: TAOM 2026-09-23, #647)
+
+A gate is done when a real tool call it must stop has been shown stopped: the harness refused
+it, not a test read the hook's output. Nine gates passed every test for months while Claude Code
+ignored their top-level `permissionDecision` (`harness-facts.md` "PreToolUse output contract").
+Test the inputs that go missing too: a non-ASCII command, a multi-line one.
 
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 
