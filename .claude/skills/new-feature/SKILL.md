@@ -51,5 +51,5 @@ Before scaffolding, suggest `/freeze` to the user with the new feature dir as th
 - [ ] IoC registered in `Main/IoC.cs`
 - [ ] Entry points <150 lines
 - [ ] No `#region`, `[Obsolete]`, or `#if DEBUG`
-- [ ] Build passes: `./build.ps1 -RunTests` — if it fails, route to `/build-fix`; if structural, `/investigate`
+- [ ] `/verify` passes; if it fails, route to `/build-fix`; if structural, `/investigate`
 - [ ] `/deep-review` clean before commit (per CLAUDE.md Critical Rules)

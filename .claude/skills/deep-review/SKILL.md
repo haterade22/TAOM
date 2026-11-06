@@ -125,9 +125,7 @@ After the core agents complete, assess whether the findings warrant additional f
 
 (Script tooling is no longer an expansion: the Tooling correctness lens in Step 2 covers every script under `tools/` or `.claude/hooks/`, read-only ones included.)
 
-**Launch additional Codex passes when:**
-- Any Claude agent and Codex disagree → dispatch a second Codex pass focused on the disputed finding
-- Data Flow agent finds a gap Codex missed → dispatch Codex with the specific gap description to get independent verification
+**When a Claude agent and Codex disagree:** re-read the code first. Offer a focused Codex pass only if that leaves it open; it runs on the maintainer's word.
 
 **The review is done when:** All agents have reported, all disagreements are resolved, no agent's findings suggest an unexplored area, and Step 4 has applied or accounted for every proposal.
 

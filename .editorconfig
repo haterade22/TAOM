@@ -6,6 +6,12 @@ end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.{sh,bash}]
+end_of_line = lf
+
+[.githooks/*]
+end_of_line = lf
+
 [*.cs]
 indent_style = space
 indent_size = 4

@@ -11,23 +11,25 @@ TAOM has 49 GameModel overrides (48 registered + 1 abstract base). All follow th
 ## Pattern
 
 ```csharp
-public class TaomFooModel : DefaultFooModel
+public class TaomPartyMoraleModel : DefaultPartyMoraleModel
 {
-    private readonly IFooService _service;
+    private readonly ICulturalFeatsService _feats;
 
-    public TaomFooModel(IFooService service)
+    public TaomPartyMoraleModel(ICulturalFeatsService feats)
     {
-        _service = service;
+        _feats = feats;
     }
 
-    public override float SomeCalculation(SealedType param)
+    public override ExplainedNumber GetEffectivePartyMorale(MobileParty party, bool includeDescription = false)
     {
-        var adapter = IoC.Resolve<IAdapterFactory>().GetAdapter(param);
-        var taomResult = _service.Calculate(adapter);
-        return taomResult ?? base.SomeCalculation(param);
+        var result = base.GetEffectivePartyMorale(party, includeDescription);
+        _feats.ApplyMoraleFeats(CultureFeatAdapter.FromOrNull(party.Party), ref result);
+        return result;
     }
 }
 ```
+
+Live example, with one more service call: `Main/Features/CulturalFeats/Models/TaomPartyMoraleModel.cs`.
 
 ## Rules
 

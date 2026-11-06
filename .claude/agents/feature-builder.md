@@ -72,10 +72,9 @@ You cannot invoke `/freeze` yourself (no Skill tool). In your report, **recommen
 
 ## Integration
 After building the feature:
-1. Wire IoC into `Main/IoC.cs` (may require widening freeze scope or temporarily `/unfreeze`)
-2. Register entry points in `Main/SubModule.cs` if needed
-3. Run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` to verify (never `./build.ps1`: it deploys into the game install)
-4. If build fails, do NOT iterate ad-hoc past your retry budget — **recommend `/build-fix`** (compile errors) or **`/investigate`** (structural failures) to the orchestrator; you can't invoke them yourself.
+1. Report the exact `Main/IoC.cs` and `Main/SubModule.cs` lines the feature needs; the orchestrator applies them
+2. Run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` to verify (never `./build.ps1`: it deploys into the game install)
+3. If the build fails, do NOT iterate ad-hoc past your retry budget: **recommend `/build-fix`** (compile errors) or **`/investigate`** (structural failures) to the orchestrator; you can't invoke them yourself.
 
 ## Retry budget (HARD STOP)
 

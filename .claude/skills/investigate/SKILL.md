@@ -42,6 +42,10 @@ Gather context before forming any hypothesis.
 
 1. **Collect symptoms.** Read error messages, stack traces, save-load logs, Bannerlord crash dumps. If the user hasn't given enough context, ask ONE question at a time via `AskUserQuestion`.
 
+   **A native crash takes a detour first.** An access violation in `TaleWorlds.Native.dll` or a CTD with
+   no managed culprit: run `/native-crash-triage` to name the site, then come back here with that site as
+   the symptom.
+
 2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
 
 2b. **Map a stack trace to its owning patch (crash-to-owner in one step).** If the trace names a TaleWorlds type or a TAOM patch, grep it in [`docs/reference/harmony-patch-registry.md`](../../../docs/reference/harmony-patch-registry.md) FIRST — the registry maps a failing type to its owning `PatchNN` category, exact target method, and status (active / DISABLED / PARKED) before you trace further. (This is where the former CLAUDE.md "Harmony Patch Categories" table now lives.)
@@ -154,9 +158,9 @@ Once root cause is confirmed:
 
 4. **Build + tests.**
    ```bash
-   ./build.ps1 -RunTests
+   dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
    ```
-   No build errors. No test regressions. Paste the output.
+   No build errors. No test regressions. Paste the output. Use `./build.ps1` only when a game check follows, and never while Bannerlord runs.
 
 5. **Blast-radius gate.** If the fix touches >5 files, `AskUserQuestion`:
    ```

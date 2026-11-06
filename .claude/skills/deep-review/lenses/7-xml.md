@@ -43,7 +43,8 @@ installs are partial, so broken refs into them are environment gaps, not defects
    lists) is a finding, and it fails a by-name run (exit 1, summary FAIL); the summary line counts
    them. MISSING is a registration that loads nothing, or a `project.mbproj` the engine cannot load. Confirm each XSLT still matches the elements it targets; a new file in a
    folder-registered Armory directory loads only after a game RESTART, so report the restart plus
-   visual check as OWED; cross-module refs are Agent 5 item 10's trace. Then read the Traps table in CLAUDE.md and apply every row your files touch; each linked doc
+   visual check as OWED; Agent 5 item 10 owns the cross-module ref trace, and never ask for a
+   DependedModule row. Then read the Traps table in CLAUDE.md and apply every row your files touch; each linked doc
    names its gate.
 
 3. BYTE FIDELITY for any file a script or bulk edit touched: BOM kept or dropped as the original

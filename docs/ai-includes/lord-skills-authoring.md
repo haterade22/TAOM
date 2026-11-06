@@ -12,7 +12,7 @@ If you're authoring a **net-new culture** (armor + troops + recruitment), read [
 ## TL;DR
 
 1. **Source of truth**: hand-edited `CULTURES` dict in [`tools/apply_culture_skills_traits.py`](../../tools/apply_culture_skills_traits.py).
-2. **Generator**: `python tools/apply_culture_skills_traits.py --all-cultures --apply` emits 3 outputs — `taom_lord_skill_sets.xml` (SkillSets), updated `lords.xml` + `lords.xslt` (skill_template attr swaps + populated `<skills>`/`<Traits>` blocks).
+2. **Generator**: `python tools/apply_culture_skills_traits.py --all-cultures --apply` (unsafe for live lords: read Step 5) emits 3 outputs: `taom_lord_skill_sets.xml` (SkillSets), updated `lords.xml` + `lords.xslt` (skill_template attr swaps + populated `<skills>`/`<Traits>` blocks).
 3. **Engine consumption**: every adult NPCCharacter has `skill_template="SkillSet.taom_..."` that points to a TAOM-owned SkillSet — that's what the engine actually uses. Explicit `<skills>` blocks on hero NPCs are IGNORED (kept as documentation only).
 4. **Verify**: XML well-formed (3 files), then in-game Encyclopedia spot-check (Boromir OneHanded=295 + level growth = ~302).
 5. **Ship**: commit-split (data + tool separate), one GitHub issue per culture via [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
@@ -145,6 +145,8 @@ Three shapes for a canonical entry:
 python tools/apply_culture_skills_traits.py --all-cultures --apply
 ```
 
+**Unsafe for live lords.** Like `--culture`, this mode re-resolves every NPC, so it can undo hand-tuned assignments. For a repoint use `tools/repoint_evil_lord_skillsets.py`.
+
 The script:
 - Regenerates `taom_lord_skill_sets.xml` from scratch (35 archetypes + every canonical with `skills=`)
 - Walks every NPCCharacter in lords.xml + lords.xslt with `culture="Culture.<id>"`
@@ -205,7 +207,7 @@ done
 |---|---|---|
 | `python tools/apply_culture_skills_traits.py --skillsets-only --apply` | Regenerates `taom_lord_skill_sets.xml` only | After tweaking `BASE_ARCHETYPES` values; no NPCCharacter edits needed |
 | `python tools/apply_culture_skills_traits.py --culture gondor --apply` | Re-applies skill_template + skills/Traits blocks for one culture | After editing one culture's canonical or keyword_archetypes |
-| `python tools/apply_culture_skills_traits.py --all-cultures --apply` | Full pass across all 17 cultures | After cross-cutting changes; the safe default |
+| `python tools/apply_culture_skills_traits.py --all-cultures --apply` | Full pass across all cultures | Unsafe for live lords, the same as `--culture`: it re-resolves every NPC. Use `tools/repoint_evil_lord_skillsets.py` for repoints |
 
 Dry-run (preview without writing): omit `--apply`.
 
@@ -466,7 +468,7 @@ This guide handles the skills layer. For the broader culture (armor + troops + r
 
 2. The script auto-discovers NPCs by `culture="Culture.arnor"`. No SubModule.xml change needed for culture additions — only if you're adding a NEW XML file (which `apply_culture_skills_traits.py` doesn't).
 
-3. Run `--all-cultures --apply`. Verify. Commit. Open one GitHub issue using [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
+3. Read the Step 5 warning, then run `--all-cultures --apply`. Verify. Commit. Open one GitHub issue using [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
 
 ---
 

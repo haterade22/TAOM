@@ -32,5 +32,5 @@ See **[external-repo-adoption.md § The cycle](../../../docs/ai-includes/externa
 ## Pair with
 
 - `/security-scan` — runs at the end of the implement phase.
-- `/deep-review`, `/review-codex` — for the adversarial-review phase on C# changes.
+- `/deep-review` on C# changes; `/review-codex` only on the maintainer's word (paid).
 - `external-skill-ports.md`, `evidence-over-claims.md`, `simplicity-criterion.md` — the rules this cycle leans on.

@@ -1,6 +1,6 @@
 ---
 name: localize
-description: Propagate new player-facing text through TAOM's 12-language localization pipeline — wrap with {=KEY}, register the string, run the Claude translation tool, validate. Use after adding UI text or XSLT strings.
+description: Use after adding player-facing text in C#, data XML or XSLT. Wraps with {=KEY}, registers, seeds the 12 languages, validates. The paid translator runs only on the maintainer's word.
 argument-hint: [c#|xml-file|xslt]
 ---
 
@@ -11,18 +11,18 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
 2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
-3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded.
+3. Seed: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. Record the owed translation (source issue, keys, module) in the commit body and the issue that tracks the work. The paid run is the same command without `--seed-only`, and it needs the maintainer's word.
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Register the file in `SubModule.xml` as `<XmlNode><XmlName id="GameText" path="..."/>`.
 2. Add a `<LanguageFile>` reference in **all 12** `language_data.xml` files.
 3. Create empty per-language stubs (`Languages/<LANG>/std_taom_*.xml`).
 4. **Bump** the `LanguageDataXmlTests.HaveExactlyXLanguageFiles` count in [TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs](../../../TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs).
-5. Run `tools/translate_with_claude.py`.
+5. Seed per language, as in Case A step 3.
 
 ## Case C — XSLT injects new `{=KEY}default` text
 1. Harvest the new keys into `Main/_Module/ModuleData/taom_xslt_strings.xml` (precedent: commit `20713a1`).
-2. Run `tools/translate_with_claude.py`.
+2. Seed per language, as in Case A step 3.
 
 ## Case E: changing English that is already translated
 Stage the edit, then run `python tools/check_stale_loc_rows.py --staged` (report only). It lists each language row left holding the old translation while the cache entry is unchanged too. Redo those rows and the cache entries in the same commit ([TRANSLATOR_GUIDE.md](../../../docs/localization/TRANSLATOR_GUIDE.md), "Changing English Text That Is Already Translated"); leave a row that is still right, such as an accent-only fix.
