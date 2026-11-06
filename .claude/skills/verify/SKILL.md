@@ -24,6 +24,18 @@ while Bannerlord is running (.ai/verification.md). Never `./build.ps1` here.
 
 If it fails, report errors and **STOP** (no point running tests on broken build).
 
+## Step 1b: NuGet audit
+
+```bash
+dotnet restore TAOM.sln --force-evaluate 2>&1
+```
+
+`Directory.Build.props` makes a high or critical advisory (NU1903, NU1904) a restore error (#1020),
+but NuGet skips the audit on a no-op restore, so an unchanged checkout never hears of a new
+advisory. `--force-evaluate` makes this restore a full one. An NU1903 or NU1904 error is a FAIL.
+NU1900 means the vulnerability data could not be fetched (offline): report the audit as
+UNCHECKED, not as a pass.
+
 ## Step 2: Test Suite
 
 ```bash
