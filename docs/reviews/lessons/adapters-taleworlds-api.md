@@ -880,3 +880,32 @@ transfer route with no panel refresh).
   inventory transfers, call `IInventoryVMAdapter.RefreshDisplay()`, which runs the pair through
   cached delegates pinned by `ReflectionSiteBindingTests`. EquipPresets still needs the same (follow-up).
 - **Source:** 1.5.x `docs/reviews/rca-quickactions-unequip-2026-10-19.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An agent spawned beside the troop supplier needs its own origin, never a supplier-backed one (#627, 2026-09-19)
+The howdah crew were built with `AgentBuildData.TroopOrigin(mahout.Origin)`. In a campaign battle that is a `PartyGroupAgentOrigin`, which latches per instance: the first crew casualty went through its `SetKilled`, removing the Harad elephant rider from the party roster while he still rode, moving the troop supplier's `NumRemovedTroops` (so `MissionBattleSideSpawnContext.NumberOfActiveTroops` read a lost unit and a side could be declared beaten while its elephant fought), and the crew's hits paid the rider XP. A null origin is no escape: `BattleObserverMissionLogic.OnAgentBuild` reads `agent.Origin.BattleCombatant` unguarded.
+- **Why missed:** the spawn was parked code, re-enabled by removing a comment, and the flip was reviewed as a flag rather than as the path it switches on. The June port also deviated from its own reference (ADOD_Beasts built a fresh origin per crewman).
+- **Prevent:** an agent the troop supplier did not spawn gets a per-agent `IAgentOriginBase` whose casualty and score calls do nothing and whose `BattleCombatant`, colours and command forward to the parent's (`HowdahCrewAgentOrigin` is the pattern, unit-tested with `Substitute.For<IAgentOriginBase>()`). Grep every `TroopOrigin(` for an origin that came from another agent.
+- **On this tree:** This incident ran on the 1.5.x line, and `HowdahCrewAgentOrigin` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `PartyGroupAgentOrigin.cs`, `MissionBattleSideSpawnContext.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand-built `AgentBuildData` gets none of what `Mission.SpawnTroop` adds (#627, 2026-09-19)
+The crew builder set team, position, direction, origin and formation. Vanilla's `Mission.SpawnTroop` (v1.4.8 `Mission.cs:4430`) also sets the banner, both clothing colours and `NoHorses`, and calls `WieldInitialWeapons()` after the spawn; without them the crew wore the builder's default colours (which TAOM's colour persistence also skipped) and might stand with nothing in hand.
+- **Why missed:** the builder was written from what the spawn needed to work, not from what vanilla does to every troop.
+- **Prevent:** when spawning outside the troop supplier, open `Mission.SpawnTroop` and match their builder calls and post-spawn steps, or say in a comment why one is left out.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before relying on another mod's setting or table, find every reader and writer across all of its DLLs (#740, 2026-10-06)
+- **Why missed:** the research grepped ButterLib and MCM for the setting and concluded that a player could keep the Distance Matrix on with ButterLib's own `Options.json` key. MCM's `MBOptionScreen` owns ButterLib's settings page, stores a second key in the same file, applies it before TAOM's main-menu hook and rewrites the file without other keys on save; it enumerates `IEnumerable<ISubSystem>` and builds the key at runtime as `Id + " Enabled"`, so a name grep finds nothing. An earlier design also missed that ButterLib's public `DistanceMatrix<Kingdom>.Create()` reads the table it deferred.
+- **Prevent:** a name grep is not enough. Also grep every installed DLL (MCM and the version-specific implementation DLLs included) for the interfaces the type implements (here `ISubSystem`) and the settings folder id (here `ButterLib`), and read every settings page or container that enumerates them; trace each reader and writer before writing the design or the doc.
+- **Source:** 1.5.x `docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A member reached by name joins the reflection binding gate in the same change (#646, 2026-09-23)
+`MonsterSizeCatalogAdapter` reaches `HorseComponent.BodyLength`'s private setter, `ItemObject.CalculateEffectiveness`
+and the `Effectiveness` setter by name. None had a row in `ReflectionSiteBindingTests` or `reflection-sites.md`, so an
+engine update that renamed one would have left every sized mount at 1.0x (or its tournament rating stale) with no
+failing test, and the recompute's absence was not even logged.
+- **Why missed:** the size pass was designed inside the first review's fix round, and its convergence pass checked
+  that the members exist today, not that the offline gate would see them tomorrow; no lens asked.
+- **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
+  catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3, on `origin/bannerlord-1.5.x` (ported by WP142).

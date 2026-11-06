@@ -3425,3 +3425,89 @@ brace. Two pushed commits held invalid JSON, and every local run passed because 
   commit. Never `--unidiff-zero` a structured file.
 - **On this tree:** This incident ran on the 1.5.x line, and `tools/translation_name_tags.json` exists only there; the rule holds here.
 - **Source:** 1.5.x `rca-feral-orcs-2026-10-29.md` finding 12, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate's hook trigger must cover every file kind its scope names (#626, 2026-09-19)
+`SKILL_TEMPLATE_MISMATCH` judges every XML and XSLT file of the repo module, `lords.xslt` included
+(364 of its 1,528 templated blocks), and its docs said the commit hook ran it. The hook ran the
+validator only when a commit staged `Main/_Module/ModuleData/*.xml`, so a commit touching only
+`lords.xslt` ran nothing.
+- **Why missed:** `CommitGateCoverageTests` pins the hook's `--code` list against the validator's codes,
+  which is one of the two statements of what a gate covers. The other, the path pattern that decides
+  whether the hook runs at all, has no test and nobody read it when the new code's scope went wider.
+- **Prevent:** when a gate's scope gains a file kind, read the hook's trigger pattern in the same
+  change and widen it, and run the pattern against one path of each kind. The trigger was widened to
+  `*.xml|*.xslt` with #626.
+- **On this tree:** This incident ran on the 1.5.x line, and `SKILL_TEMPLATE_MISMATCH` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-skill-template-parity-2026-09-19.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### At an engine bump, resolve the RELEASED TAOM.dll against the new engine, not only a fresh build (1.5.x, 2026-10-05)
+1.5.x replaced a five-parameter `TooltipProperty` constructor with a six-parameter twin. The source
+compiled, every binding gate passed and the fresh build resolved, while the testing channel's v2.0.33
+`TAOM.dll` still called the removed member on 21 tooltip sites.
+- **Why missed:** each bump gate checks source or the fresh build. A compile binds whatever overload the
+  new engine offers, and the binding tests resolve TAOM's patch targets, not its call sites.
+- **Prevent:** `/engine-bump` Phase 1 step 5. Read every engine `MemberRef` of each channel's released
+  `TAOM.dll` with System.Reflection.Metadata, resolve it by name and full signature against the installed
+  assemblies, and use a fresh build as the negative control. Check a claim about what a binary calls
+  against its metadata, never a decompile of it: optional parameters are invisible in source, which is how
+  a review lens blamed the wrong build.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F1 and "The false positive"; #736, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A removed binary lives on in the install and every channel folder until something refuses it (2026-10-05)
+Removing NativeSkinFixes deleted `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` from the repo, but
+copies stayed in the dev install's Client, Server and wEditor bin folders and in all three release
+channels, and the packager classified them COPY. The next package would have shipped MinHook without the
+BSD-2 notice the same change removed. `BehaviorTreeWrapper.dll` went the same way on 2026-05-24.
+- **Why missed:** deploys never delete, the removal edited only the repo, and the only defence was a
+  manual prune step whose keep-list still counted the deleted files.
+- **Prevent:** add any binary the repo stops shipping to `RETIRED_BINARIES` in `tools/package_release.py`,
+  which refuses it (dry runs included), and sweep the install and the channel folders as part of the
+  removal, with a backup.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Blocked on an upstream publish" is a check with a time stamp, not a state (2026-10-05)
+At 08:2x NuGet had no 1.5.x BUTR reference assemblies, and the bump wrote the red test off as blocked.
+BUTR published `1.5.4.123627-beta` for all five packages later the same day; the review found it.
+- **Why missed:** the note recorded a state, with no time stamp and no step that looked again.
+- **Prevent:** re-check the NuGet flat-container index before writing "blocked" into a doc or a commit.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hand edit to live data is done when its replay script, snapshot and ledger say the same (#646, 2026-09-23)
+Mike resized the moose to 150 by hand in the live Armory; `tools/apply_animalia_armory.py`, the ledger's reinstall
+recipe, still wrote 100, and its verification step ran no size test, so a reinstall would have reverted the moose
+silently with a 1.5x reach left on a 1.0x body. The same evening's Animalia sets and antler actions never reached the
+in-repo snapshot whose README is the restore path.
+- **Why missed:** the live edit was the visible deliverable; the replay script and the snapshot are read only after
+  a loss, so nothing failed while they drifted.
+- **Prevent:** when you edit live Armory or TAOM_Map data by hand, update in the same change the script that replays
+  it, the ledger's redo steps (with a test filter that covers the edited value) and, for a file under
+  `docs/reference/lotrlome-armory-snapshot/`, the snapshot copy.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/apply_animalia_armory.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` rows 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix that removes a parameter removes what it rejected: name the rejection first (#646, 2026-09-23)
+The first review's tooling round removed `wire_anim_master_skeletons.ps1`'s `-BoneCount` parameter as a nuisance
+("a mixed-rig folder had no way to get that right") and read each master's own bone count instead. The parameter had
+been the script's only rig check: an EMPTY master of another rig found no patch offset and failed. Afterwards any
+EMPTY master could be re-pointed at `horse_skeleton`, and the live warg folder held one (`Warg_Taunt2_geo.tpac`, 50
+bones). The convergence pass and every re-run used the elk folder, one rig, where the change is invisible.
+- **Why missed:** the fix was judged on the input it was written for; nobody asked what the removed value refused.
+- **Prevent:** before deleting a parameter, a check or a flag in a fix, write down what input it made the tool reject,
+  and run the fixed tool on such an input (here a mixed folder: warg, elephant or chariot animations). The tooling
+  lens asks this of every removal.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_anim_master_skeletons.ps1`, `Warg_Taunt2_geo.tpac` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A consumer of a JSON report rejects its error records, not only its missing keys (#646, 2026-09-23)
+`measure_animalia_clips.py` stores a clip that failed as `{"error": ...}` so the rest still measure, and its `.DONE`
+said "ok" unless the whole run failed. `gen_animalia_anim_clips.ps1` checked only for a missing key; PowerShell reads
+an error record's absent `loop_displacement_m` and `plants_sorted` as `$null`, and `[float]$null` is 0, so a failed
+measurement would have been written into the live Armory as a gait that covers no ground, with every check passing.
+- **Why missed:** the committed measurements are clean, so the path never ran; a null check reads as validation.
+- **Prevent:** a tool that consumes another tool's report validates each record's meaning (a loop above 0, enough
+  plants, a fraction inside its range, no error key) before use, and a producer's completion flag fails when any
+  record failed. Prove it with a deliberately broken report.
+- **On this tree:** This incident ran on the 1.5.x line, and `measure_animalia_clips.py`, `gen_animalia_anim_clips.ps1`, `loop_displacement_m`, `plants_sorted` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F4, on `origin/bannerlord-1.5.x` (ported by WP142).

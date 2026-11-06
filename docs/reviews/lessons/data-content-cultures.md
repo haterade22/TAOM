@@ -1687,3 +1687,18 @@ big cultures assumes "another settlement of my culture" exists.
   RCA lists the other six). Fix the one live site by keeping the engine's pick and adding a fallback, never by skipping vanilla.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `docs/reviews/rca-bard-town-guard-2026-10-19.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An item handed to the player must pass the engine's equip gate, not just its stats
+
+#629 moved the career kits onto real troop items and compared them on level, mesh, damage, hit points and
+armour. The Bow skill a ladder bow demands (`difficulty`, up to 100) was never looked at: troops ignore it,
+but `CharacterHelper.CanUseItem` refuses a player whose skill is lower, so a new character could shoot the
+bow it started with and never put it back on once removed. The twins it replaced asked 0.
+
+**Why missed:** the rule was written in the terms of the question (vanilla or not, lowest tier); the
+engine's per-hero requirements live in a different place from the stats being compared.
+
+**Prevent:** before handing the player any item, read `difficulty` (and the gender flags) against what a
+new character holds. `tools/generate_career_kits.py` picks bows by lowest requirement first.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/generate_career_kits.py` exists only there; the rule holds here.
+- **Source:** 1.5.x issue #629 deep review, `docs/reviews/rca-career-kits-2026-09-19.md` finding 1 (2026-09-19), on `origin/bannerlord-1.5.x` (ported by WP142).

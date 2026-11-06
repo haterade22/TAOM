@@ -1592,3 +1592,17 @@ behind a green suite and an RCA that said it was done.
   member) and would fail with the old wiring; an RCA marks a finding fixed only with that test named.
 - **On this tree:** This incident ran on the 1.5.x line, and `UnequipAll_DelegatesToEquipmentAdapter_ReturnsCount` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-quickactions-unequip-2026-10-19.md` row 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A byte-compare test on a tracked text file needs a `.gitattributes` eol pin (#627, 2026-09-19)
+`HowdahPrefabTests` compares the repo snapshot of an Armory prefab with the live file byte for byte. The snapshot was LF only because a tool wrote it; with `core.autocrlf=true` and no rule for `*.xml`, a clone or branch switch checks it out CRLF and the test fails with a false alarm whose remedy churns line endings (sibling snapshot files already check out `w/crlf`).
+- **Why missed:** the test was verified on the file as written, never on the file as git would check it out.
+- **Prevent:** any test that compares a tracked text file's bytes with something outside git gets a `text eol=<x>` row in `.gitattributes` in the same change; check it with `git check-attr text eol -- <path>`. Otherwise compare with line endings normalised.
+- **On this tree:** This incident ran on the 1.5.x line, and `HowdahPrefabTests` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A data pin covers the contract its consumer reads, not only the values the change edited (#627, 2026-09-19)
+The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable bodies, floor height, frame and rail placement) and nothing the C# depends on: the root entity name `GameEntity.Instantiate` asks for, the machine and seat scripts it casts to, the `visible_only_when_editing` masks that keep marker meshes out of battle. A rename, a dropped script or a lost mask passed all seven tests and failed only at runtime.
+- **Why missed:** the tests were written from the diff, not from the consumer.
+- **Prevent:** before writing a data pin, list what each consumer reads from the data (names, scripts, flags, tags) and pin those, with the name shared through one constant the code and the test both use (`ElephantConfig.HowdahPrefabName`).
+- **On this tree:** This incident ran on the 1.5.x line, and `HowdahPrefabTests`, `HowdahPrefabName` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
