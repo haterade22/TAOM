@@ -218,7 +218,7 @@ instructions `AGENTS.md`.
 
 ## Architecture (One-liner)
 
-**Mod**: `[HarmonyPatch/GameModel/CampaignBehavior]` -> `IHookInterface` -> `Service` -> `IAdapter` (sealed types)
+**Mod**: `[HarmonyPatch/GameModel/CampaignBehavior]` -> `Service` -> `IAdapter` (sealed types); `IOnXxx` hook optional
 
 ## GameModel Overrides
 
