@@ -8,7 +8,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 |-----|-------|---------|--------|----------|
 | [001](./001-xml-config.md) | XML Configuration Format | All config files use XML (no JSON) | Accepted | Standard |
 | [002](./002-thin-entry-points.md) | Thin Entry Points Pattern | Entry points <150 lines, delegate to services | Accepted | **Mandatory** |
-| [003](./003-no-regions.md) | No Code Regions | No `#region` directives, use class decomposition | Accepted | Standard |
+| [003](./003-no-regions.md) | No Code Regions | No `#region` directives, use class decomposition; a service may be split into partial files by concern (2026-10-21 amendment) | Accepted | Standard |
 | [004](./004-no-obsolete.md) | No Obsolete Markers | Migrate all usage sites immediately, no deprecation | Accepted | Standard |
 | [005](./005-no-preprocessor-directives.md) | No #if DEBUG in App Code | Use DI for environment-specific code (except IoC.cs) | Accepted | Standard |
 | 006 | _(Revoked — never filed)_ | Number reserved; no ADR was written for this slot | Revoked | — |
