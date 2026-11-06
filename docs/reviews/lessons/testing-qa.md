@@ -1206,3 +1206,44 @@ fires), and every real sit-out logged "joining anyway" first.
 - **Prevent:** when a new rule runs beside an existing call, stub that call with what production returns
   in the new case, and assert the calls that must not happen.
 - **Source:** 1.5.x `docs/reviews/rca-enlistment-vassal-sit-out-2026-10-21.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Test the values a validation guard must still accept, not only the ones it rejects (plan 002, 2026-09-24)
+`MutationParams.GetFloat` gained a finiteness guard with one test per rejected value (NaN, plus and minus Infinity), a valid value and a missing key. Nothing pinned the unparseable fallback or a negative finite value passing through, so narrowing the guard to `IsFiniteAtLeast(result, 0f)` (which would silently zero every negative `multiply` factor) passed all five tests. The plan named "negative values must still pass" as a reviewer probe, not as a test.
+- **Why missed:** the test list was written from the bug (what must be rejected), not from the guard's full contract.
+- **Prevent:** for every validation guard, write one test per rejection condition AND one per boundary the guard must keep (a negative, a zero, the edge of the range), and one for each pre-existing fallback branch the edited expression shares. Prove the keep-tests with a mutant that over-constrains the guard. A reviewer probe in a plan becomes a test in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Drive a guard with the state the game hands it on its most common path (2026-10-02)
+Harmony runs Patch99's finalizer after every call, including the fast merges whose original the prefix skipped, but
+every finalizer test passed an engine-path call; removing the `call.Handled` early return doubled every summary count
+with all tests green. The stand-aside filter was tested only with nothing patched, never with TAOM's own prefix on the
+target, which is its state on every in-game merge.
+- **Why missed:** tests followed the author's model of each method's purpose (the finalizer "logs engine merges"; the
+  filter "finds other mods") rather than the inputs it receives at run time.
+- **Prevent:** list a hook's callers and the state each leaves (here, the prefix's success path) and test each; test a
+  filter with the owner it must ignore present. Prove each new test red by deleting the guard it covers once.
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An equivalence proven on one data set is stated with that data set, and its known boundary is written down (2026-10-02)
+Plan 042 proved the fast merge byte-identical on every type of the live install, then several docs said "identical
+output" without the domain. Three review lenses built fixtures on which the dropped round trip differs without an
+exception (a namespace prefix rebound by a later file; adjacent text after `_replaceWhileMerging`), and only an
+exception would have sent such a merge back to the engine.
+- **Why missed:** the harness's scope was correct in the harness and lost when the result was summarised in the
+  patch comment, the registry and the engine reference.
+- **Prevent:** every sentence that cites an equivalence gate names its data set; when the replaced step is not an
+  identity in general, a "Known limits" section lists the inputs that differ and the command that re-proves a
+  player's module set (`TAOM_XMLMERGE_MODULES`).
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard's test needs an input its two outcomes disagree on, and a stubbed result never runs the code it stands in for (plan 037, 2026-10-04)
+Plan 037's refuge listeners gained `if (AllRefuges.Count == 0) return;` and the marketplace gained a batched `GetItemCounts`. The three refuge tests passed a null `MapEvent`, which walks to no party whichever way the guard points, so inverting the guard in either listener passed all thirteen tests. The 64-case top-up oracle took its counts from a stub of the adapter and the one adapter test passed a null settlement, so a `GetItemCounts` returning zeros for every real settlement passed all ten cache tests (Codex, two P3s). The deep review had left the call-site inversions on the Not-tested list as needing a live `MapEvent` or `MobileParty`; a bare `MapEvent` graph, a bare `Settlement`, a real `ItemRoster` and a real `TroopRoster` reach every one of them except the speed model's, which calls the vanilla model first.
+- **Why missed:** each test was written from the optimization's promise ("skip the walk", "one pass") with the cheapest input that runs the method, and the null input made both branches look alike; the oracle's stub supplied the answer the loop under test existed to compute. "Needs a live engine object" was taken from the plan's wording without trying the staging that "Structurally untestable is a claim to try" above describes.
+- **Prevent:** for a guard, write one test where the guarded work would have a visible effect and the guard must stop it, and one where the guard must let it through; a null or empty argument is neither. For a stubbed collaborator, add a test of its own method on real engine objects (`TownRosterAdapterGetItemCountsTests`, the battle tests in `RefugeCampaignBehaviorTests`), then plant the plausible mutant (inverted, dropped, all zeros), watch the test fail and restore the file before committing the test.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` Codex review rows C1 to C3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A pass-through test varies every flag it forwards, and a test is named for what it observes (plan 037 convergence, 2026-10-04)
+The two `ApplyDesertion` tests added for Codex's call-order remark stubbed `ShouldEvaluate("gondor", false, false)` and invoked the method with `false, false`, so five one-token mutants of the gate call, three of the calculation call, and `IsHero` replaced by `true` (which makes every troop immune) passed all twenty tests of the two classes. The refuge tests added for Codex's other P3 were named `*_DoesNotWalkTheBattle` but asserted only that nothing is dispatched, and moving the guard below the walk passed all twenty too (convergence review, two LOW). The fix for those two left a smaller instance of each (a further review, two LOW): its two desertion rows `(true, false)` and `(false, true)` always disagree, so a flag replaced by the other flag's negation made the real call on both and passed all twenty-four runs, and the refuge pair `*_NoRefuge_ChecksTheBookFirst` kept a name claiming an order that a null event cannot show.
+- **Why missed:** the desertion tests were written to pin the gate's polarity, which a constant `false, false` does; whether the flags were forwarded was never asked, and an NSubstitute stub on those same constants matches the mutant's call. The refuge fix built the positive half of Codex's request and treated its "observable enumeration boundary" as unobservable without saying so, so the report row read as complete. The fix repeated the shape one step later: it chose its desertion rows to differ in both flags and tried the mutants the finding had named, not every value the two flags can take, and its rename covered the two tests the finding named, not the file.
+- **Prevent:** a test of a call that forwards flags runs every combination of them (two flags, four rows), stubs the guard so that every other combination answers the opposite, and asserts the flags on the downstream call too. Complementary rows are not enough: `(true, false)` and `(false, true)` catch a constant, a duplicate and a swap, but the second flag is the negation of the first on both, so a flag replaced by the other flag's negation makes the real call on both and passes; `(false, false)` and `(true, true)` are the rows that tell them apart. A test is named for what its assertions observe, and a finding that names two tests sends you to grep the whole file for the same claim. When a claim cannot be observed from a test (a walk that swallows its exceptions over plain members), pin it another way, here the IL call order the desertion gate already uses, and state the residual it leaves (call order, not control flow) in the test and in the report row. Plant the mutant, watch the new test fail, restore the file byte for byte.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` Convergence rounds R3-1 and R3-2, and R4-1 and R4-2 for their residuals, on `origin/bannerlord-1.5.x` (ported by WP142).

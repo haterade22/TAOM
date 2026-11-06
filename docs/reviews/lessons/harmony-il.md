@@ -895,3 +895,17 @@ read, returns the safe result and skips the original only there, and swallows no
   narrowest type, and write down what else can throw it inside the replacement: other owners' prefixes, postfixes
   and transpilers, and every callee the JIT can inline.
 - **Source:** 1.5.x `rca-lastseen-guard-2026-10-26.md`; Codex outputs `docs/reviews/raw/codex-prereview-lastseen-guard-2026-10-26.md` and `codex-fixreview-lastseen-guard-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new patch on an engine method also gets PatchShield's finalizer: describe the target's whole finalizer set (2026-10-02)
+Patch99's comment, feature doc and registry row said its `void` finalizer keeps Harmony on `rethrow`. PatchShield's
+second pass (at the first game init) gives every patched method declared outside TAOM, and not on its exclusion lists,
+a value-returning finalizer, so `CreateMergedXmlFile` ends in `throw` from then on; only `RethrowStackPreserver` keeps
+the engine's trace. The same finalizer swallows the missing-API trinity into a null result, which a method that was
+never patched before did not do.
+- **Why missed:** the 2026-09-22 Prevent line above ("a finalizer that only observes should be void, which leaves
+  Harmony on rethrow") reads as unconditional, and nobody asked which other finalizers the new patch would bring onto
+  the target.
+- **Prevent:** when a patch targets an engine method that had no patch before, write down the target's full finalizer
+  list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
+  that list, not for TAOM's own finalizer alone.
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).

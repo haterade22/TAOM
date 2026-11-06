@@ -802,3 +802,24 @@ campaign and custom field battle.
 - **Why missed:** the allocation fix was judged per call; nobody looked up the registration that sets the field's lifetime.
 - **Prevent:** when hoisting a buffer into a field, read the owner's registration or construction site; if the owner outlives the data (an IoC singleton, a static), clear the buffer after each use and pin the clear with a test.
 - **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hero's getter hides a null field until a clone copies the raw value
+
+`CharacterObject.Culture` returns `HeroObject.Culture` on a hero, so a null raw `BasicCharacterObject._culture` passes every read while the character stays a hero. `FillFrom` copies the raw field onto a child's new character, which is not a hero yet, and `StealthEquipments` then throws at `CharacterObject.cs` (bundle `3fbdc0c5`, `lord_MM15_6`). The bundle could not say how the raw value became null, because nothing logged it.
+- **Why missed:** the stale-character sweep walks registered characters and tests four fields. It left `_culture` null on purpose, and it never looks at a hero's character through the base type.
+- **Prevent:** to check a field a `new` member shadows, read it through `BasicCharacterObject`. When a crash leaves the origin of a bad state open, land the repair with a log line that states the facts, and say in the commit body that the origin is open.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A repair of a restored object follows that object to the end of the method it protects
+
+A stack names the first null, not the only one. The first repair for bundle `3fbdc0c5` restored the culture, and on a hollow parent the birth then threw at `CharacterHelper.cs` on the body range, now after `AddHero`, so each daily tick left a half-built child in a saved list (found in review, never shipped). The same review showed that `IsRegistered` is saved: an object unregistered at one load stays out of the manager at every later load, while XML builds a new twin of its id, so "this log has no unregister line" does not clear a save.
+- **Why missed:** the service's own comment and the feature doc's "Why the repair covers four fields, not one" record this shape from September. The author read them and still stopped at the field the stack named.
+- **Prevent:** before calling a repair of a save-restored object done, read every member the protected method reads after the throw, with the object in its worst possible state. Copy from the registered twin with the engine's own method where one exists. A `[Check]` written before the protected work proves the repair ran, not that the work finished: report how the work ended with a second line from a void Finalizer, which also sees a throw.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine copy from a template overwrites every field another system restored
+
+`InitializeHeroCharacterOnAfterLoad` is safe at load because `RacePersistenceService` runs after it and puts each saved race back. The same call during a birth runs after that restore, so it replaced a registered generated hero's race with the template's, and the next save captured the wrong one (Codex F1, #1076; a Claude data-flow lens had seen the edge and accepted it).
+- **Why missed:** the engine's own copy looked safer than a hand copy, so nobody listed which copied fields TAOM owns.
+- **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
+- **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
