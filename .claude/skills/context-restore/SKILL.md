@@ -80,7 +80,7 @@ Don't retry:
 - Caching the buff list per battle: stale after a mid-battle career change; recompute on read
 
 In-flight: Implementing Tier 2 + Tier 3 picks from ecosystem review (#93)
-Next step: Port refactoring-specialist subagent, run /context-budget, commit
+Next step: Port the new subagent, run /context-budget, commit
 
 Decisions carried over:
 - Skipped pick #8 (TodoWrite sufficient for solo)

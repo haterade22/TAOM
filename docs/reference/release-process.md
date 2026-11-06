@@ -1,7 +1,7 @@
 # Release Process — module versions and git tags
 
 > How a TAOM build gets a version, why that version must be a git tag, and how to turn a player's
-> crash report back into a commit. Skill: `/release`. Guard: `.claude/hooks/check-version-tagged.sh`.
+> crash report back into a commit. Skill: `/release`. Guard: `.claude/hooks/session-start.sh`, whose banner appears at the next startup.
 
 ## Why this exists
 
@@ -127,7 +127,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    them out waits on a v1.4.8 test that the game uses a Kit-built sack.
 
 **Step 8 is the one that gets skipped**, which is why
-[`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
+[`session-start.sh`](../../.claude/hooks/session-start.sh) prints a banner at the next startup
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
 catches both a bump committed without a tag and a version that never entered git.
 
@@ -213,9 +213,9 @@ commit shipped under the name.
 (gated on reading `<Version>` back out at that commit, backdated to the commit's author date). It is
 a second-generation instance of the same failure, not a leftover from the original sweep: the bump
 was a bare `fix(module)` commit rather than a `/release` run, so Phase 1's "current version is
-already tagged" pre-flight never executed. `check-version-tagged.sh` did catch it 60 seconds later,
-then muted itself per-version and stayed silent for 33 commits. `session-start.sh` now re-asserts the
-check every startup so a single missed warning cannot go quiet again.
+already tagged" pre-flight never executed. A Stop reminder did catch it 60 seconds later,
+then muted itself per-version and stayed silent for 33 commits. `session-start.sh` re-asserts the
+check at every startup so a single missed warning cannot go quiet again.
 
 `v2.0.19` was skipped outright and exists in no commit and no tag.
 

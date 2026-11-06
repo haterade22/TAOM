@@ -1,12 +1,20 @@
 #!/bin/bash
 
-# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse hook (Edit|Write): Block modifications to critical config files
 # Prevents AI from weakening configs instead of fixing code
 # Exit 2 = block, Exit 0 = allow
 
 INPUT=$(cat)
+
+# Prefilter before any Python starts: the payload must hold a protected name, in any case (NTFS
+# ignores it), or a \u escape, which JSON may use for any letter. An edit
+# to any other file allows here, with no _pybin.sh probe and no parse.
+LOWER=${INPUT,,}
+[[ "$LOWER" == *settings* || "$LOWER" == *directory.build.props* || "$LOWER" == *adrs* || "$INPUT" == *'\u'* ]] \
+  || { echo "{}"; exit 0; }
+
+# Resolve a safe Python (never a Microsoft Store alias, those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "config-protection" "edits to settings.json / Directory.Build.props / ADRs" jq && { echo '{}'; exit 0; }

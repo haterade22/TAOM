@@ -3,26 +3,14 @@ paths:
   - "Main/**/Hooks/**"
   - "Main/**/Patches/**"
   - "Main/**/*Patch.cs"
+  - "Dependencies/Foundation/**"
 ---
 
 # Harmony Patch Rules
 
-## Before writing ANY patch: read the lessons file (MANDATORY, and it is the step that gets skipped)
+## Before writing any patch: check the lessons
 
-Read **[`docs/reviews/lessons/harmony-il.md`](../../docs/reviews/lessons/harmony-il.md)** before
-writing or modifying a Harmony patch. It is the accumulated trap list for this exact subsystem, and
-it is cheaper than re-deriving a trap from a crash or from a review round.
-
-**This is not boilerplate.** On 2026-08-26 the UncapturableHeroes feature shipped two defects into
-review that were already written down in that file, one of them six days old: a defer-on-error catch
-that handed a hero back to vanilla capture after the patch had already made him a fugitive (the
-lesson's own worked example is the same actor in the same state), and a `false`-returning prefix that
-dropped a safety gate its sibling seam applied. CLAUDE.md's general "read the category file" line did
-not fire because it is general; this one loads when you open the file you are about to break. RCA:
-`docs/reviews/rca-uncapturable-heroes-2026-08-26.md`.
-
-Append to the lessons file after a review, but the append is the cheap half. The read is the half
-that prevents the bug.
+List the headings of [`docs/reviews/lessons/harmony-il.md`](../../docs/reviews/lessons/harmony-il.md) (`grep -n "^#"`) and read the entries matching your target type and patch shape (finalizer, prefix returning false, transpiler). Append after a review, but the read is the half that prevents the bug (`rca-uncapturable-heroes-2026-08-26.md`).
 
 ## Before editing an EXISTING patch: also read its registry entry
 
@@ -36,6 +24,11 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
 - Method existence in the installed engine version (see `.claude/pinned-game-version.txt`)
+- Every caller of the target, with the actor each one supplies, whenever the patch infers an actor
+  the signature does not carry (the player, the killer, the owner). Write that caller list into the
+  patch doc beside the claim. 2026-09-14: the blood-feud relation seam has no executor parameter;
+  the port arrived from the player-only caller, wrote "always the player", and the AI-executes-
+  player-kin caller ran the kinslaying multiplier against the bereaved (`lessons/harmony-il.md`).
 
 ## Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -48,7 +41,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
-- Use thread-local state pattern for multi-patch coordination
+- A prefix and finalizer on one method share `__state`. Patches on two different methods of one call chain share a `[ThreadStatic]`, cleared in a finalizer, never a Postfix
 
 ## Patch Organization
 - Place in `Main/Features/{FeatureName}/Hooks/` directory
@@ -67,6 +60,7 @@ houses Patch31_SmartCavalryAI (+ its Patch31b sibling on `Formation.SetTargetFor
 - Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
 - Event timing — verify when events fire vs when state changes
 - Static state — avoid unless using thread-local pattern
+- **No `ResetForUnload()` for a new patch.** Nothing reloads TAOM inside one process: the engine calls `OnSubModuleUnloaded` only from `Module.FinalizeSubModulesBases` (v1.4.8 `Module.cs:227-233`), reached only from `FinalizeModule` (`:1268-1287`) through `FinalizeCurrentModule` (`:1289-1293`), whose one caller is `CoreManaged.Finalize` (`CoreManaged.cs:113-118`) at shutdown; a rebuild means stopping the game and pressing Play again (maintainer decision, 2026-09-24). A static service cache in a patch class lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one to be called from `OnSubModuleUnloaded`. A reload tool would change this; the three once-per-process flags in `SubModule.cs` (`_missionTimePatchesApplied`, `_gameInitPatchesApplied`, `_basicTableauGuardApplied`) would then need resetting too.
 - **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
 
 ## Static State Machines: Sentinel-Collision Check (MANDATORY)
@@ -128,7 +122,7 @@ for the first time gets one Custom Battle run.
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered
-from native, and native decides the thread. Verified on v1.4.8, identical on v1.5.3 (#592, #595, #634):
+from native, and native decides the thread. Verified on v1.4.8 (#592, #595, #634):
 
 | Runs on | Engine entry points reached from it |
 |---|---|

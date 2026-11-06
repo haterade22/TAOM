@@ -167,10 +167,10 @@ The repo includes a Claude-powered translation pipeline that produces high-quali
 
 ```bash
 # Preview cost and counts (no API calls):
-python tools/translate_with_claude.py --lang PL --dry-run
+python tools/translate_with_claude.py --lang PL --module TAOM --dry-run
 
 # Run full translation across all 8 TAOM files + TAOM_Map + Armory:
-python tools/translate_with_claude.py --lang PL --apply
+python tools/translate_with_claude.py --lang PL --module all --apply
 
 # Translate just one module:
 python tools/translate_with_claude.py --lang PL --module TAOM --apply
@@ -192,7 +192,7 @@ else. Each provider reads its own variable (`ANTHROPIC_API_KEY`, `DEEPSEEK_API_K
 python tools/translate_with_claude.py --lang PL --module TAOM --provider deepseek --apply
 
 # Override the provider's model, or the prices the estimate is printed from:
-python tools/translate_with_claude.py --lang PL --provider openrouter \
+python tools/translate_with_claude.py --lang PL --module TAOM --provider openrouter \
     --model deepseek/deepseek-v4-pro --price-in 0.435 --price-out 0.87 --apply
 ```
 
@@ -331,6 +331,19 @@ An 8-character vanilla id in `taom_module_strings.xml` is a rewording for Englis
 ### Rows that nothing reads
 
 `python tools/check_orphan_loc_rows.py` lists registered `taom_*` rows that no code, data, composed family (`tools/loc_composed_families.json`) or reasoned allowlist entry (`tools/loc_orphan_allowlist.json`) reads. It looks only inside this repo, so before retiring a row, grep the live `TAOM_Map` and `LOTRLOME_Armory` `ModuleData` for its id; a row they read goes on the allowlist with that reason. An `UNREAD` row leaves the English file, the 12 language files and the caches. A `SHADOWED` row (a later row registers the same vanilla key) leaves the English file only.
+
+### English has no language file
+
+`Main/_Module/ModuleData/Languages/` holds the 12 locale folders and a root `language_data.xml` whose
+`<LanguageData id="English">` is empty. So the inline default in `{=KEY}Default` is the only English
+text the engine ever reads. Rename something in a strings source and run the translator, and all 12
+languages follow while English keeps the old literal; treat the English default as a thirteenth
+translation that no tool updates for you. `LanguageFileCoverageTests` cannot see this drift, because it
+checks that a key has a row, not what the row says. Lord names have a gate:
+`LordNameAndSexConsistencyTests.EveryLordNameFallbackMatchesTheRegisteredEnglishText` compares every
+`characters/lords.xml` fallback with `taom_xslt_strings.xml`, and
+`python tools/oneoff/sync_lord_name_fallbacks.py --apply` repairs a mismatch (dry run without
+`--apply`). Other kinds of text have no such gate yet.
 
 ## Adding Canonical Translations to Overrides
 

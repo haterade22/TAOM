@@ -8,7 +8,7 @@ paths:
 # Adapter Pattern Rules (ADR-007)
 
 ## Core Principle
-Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces.
+Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces. Gate: `ServiceSignatureGateTests`.
 
 ## Creating New Adapters
 1. **Research first** — Decompile the TaleWorlds class with `ilspycmd` before creating the adapter interface
@@ -22,7 +22,7 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 - Use null-conditional operators (`?.`) for computed properties accessing nested objects
 - Cache expensive property lookups where appropriate
 
-**A computed getter throws BEFORE your `!= null` guard can run — guard the inner object, not the result.** Decompile the getter body first: a property defined as `X => A.B` (e.g. `PartyBase.Culture => MapFaction.Culture`, PartyBase.cs:255) dereferences `A` with no guard, so `if (party.Culture != null)` NREs inside the getter when `MapFaction` is null. Write `party.MapFaction?.Culture` instead. Distinguish computed getters (throw) from plain `[SaveableField]` fields (`Hero.Culture`, `Settlement.Culture` — safe once the parent is non-null) by reading the member definition, not by assuming. When several models resolve the same value, funnel them through one null-safe chokepoint (e.g. `CultureFeatAdapter.ResolvePartyCulture`) and never resolve inline — a future inline `?? party.Culture` fallback silently reintroduces the crash. This shipped as a campaign-map NRE: issue #281, RCA `docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md`. Note that copying a vanilla helper verbatim (`PartyBaseHelper.HasFeat`) inherits its unstated preconditions — TAOM hit the NRE because it calls the helper on far more parties than vanilla does.
+**A computed getter throws BEFORE your `!= null` guard can run: guard the inner object, not the result.** Decompile the getter body first: a property defined as `X => A.B` (e.g. `PartyBase.Culture => MapFaction.Culture`, v1.4.8 PartyBase.cs:255) dereferences `A` with no guard, so `if (party.Culture != null)` NREs inside the getter when `MapFaction` is null. Write `party.MapFaction?.Culture` instead. Distinguish computed getters (throw) from plain `[SaveableField]` fields (`Hero.Culture`, `Settlement.Culture`: safe once the parent is non-null) by reading the member definition, not by assuming. When several models resolve the same value, funnel them through one null-safe chokepoint (e.g. `CultureFeatAdapter.ResolvePartyCulture`) and never resolve inline: a future inline `?? party.Culture` fallback silently reintroduces the crash. This shipped as a campaign-map NRE: issue #281, RCA `docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md`. Note that copying a vanilla helper verbatim (`PartyBaseHelper.HasFeat`) inherits its unstated preconditions: TAOM hit the NRE because it calls the helper on far more parties than vanilla does.
 
 **A hero's character can be hollow (MANDATORY before reading a raw character field).** `IsRegistered` is saved (v1.4.8 `MBObjectBase.cs:23-25`), so a hero can keep a `CharacterObject` that XML never reaches while XML builds a new twin of its id. `CharacterObject.Culture` answers from the hero (`CharacterObject.cs:258-272`) and hides a null raw culture until `BasicCharacterObject.FillFrom` copies it onto a clone (`BasicCharacterObject.cs:193-195`). Read the raw culture through `BasicCharacterObject` and the raw name through its field (`Name` is virtual, so a cast does not help), and before calling a repair done, trace every member the protected method reads after the first throw ([repair](../../docs/features/stale-character-repair.md), #1076).
 
@@ -38,8 +38,8 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 TaleWorlds' inventory and equipment APIs frequently expose **two parallel overloads**: a simpler `(ItemObject, int)` form and a richer `(EquipmentElement, int)` form. The simpler form internally calls `new EquipmentElement(item)` — discarding any `ItemModifier` (durability state, quality prefix like "Sharp"/"Damaged", cosmetic item, quest-item flag). When the adapter touches a slot that vanilla treats as `EquipmentElement`-shaped, **the richer overload is the correct API surface.**
 
-**Examples of the parallel-overload pattern in v1.4.5:**
-- `ItemRoster.AddToCounts(ItemObject, int)` ↔ `ItemRoster.AddToCounts(EquipmentElement, int)`
+**Examples of the parallel-overload pattern in v1.4.8:**
+- `ItemRoster.AddToCounts(ItemObject, int)` and `ItemRoster.AddToCounts(EquipmentElement, int)` (ItemRoster.cs:185,194)
 - `Equipment[EquipmentIndex] = ?` accepts only `EquipmentElement` — already lossless if you pass the captured element through
 - `EquipmentHelper.AssignHeroEquipmentFromEquipment` takes `Equipment` directly — preserves modifier
 - `ItemRoster.AddToCounts(ItemRosterElement)` and `Add(ItemRosterElement)` carry full element

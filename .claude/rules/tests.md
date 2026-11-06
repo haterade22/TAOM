@@ -26,12 +26,7 @@ Examples:
 - **No Moq** — Project uses NSubstitute exclusively
 
 ## Coverage Requirements
-| Layer | Required |
-|-------|----------|
-| Services/Engines | 100% |
-| Hooks | 80%+ |
-| Entry Points | N/A (thin delegation) |
-| Adapters | Via service tests |
+Every decision path in a service or engine has a test, judged by the two-edit test. No coverage percentage is measured or claimed.
 
 ## Skip-Guard Exhaustion (MANDATORY)
 

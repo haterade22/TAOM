@@ -1,6 +1,6 @@
 ---
 name: deep-review
-description: Use before committing C# or XML work. Senior reviewers audit standards, engine compatibility, efficiency, completeness, data flow, XML integrity and design, then apply every better way found.
+description: Use before committing C# or XML work. Risk-tiered senior reviewers report defects; a second wave and design improvements follow a CRITICAL or HIGH.
 argument-hint: "[feature-name]"
 effort: max
 ---
@@ -11,9 +11,11 @@ Scale the review to the risk of the change (Step 2 "Risk tier", Mike 2026-10-22)
 
 Run this AFTER completing a feature or fix, BEFORE closing out.
 
+**While lenses run, act only on findings that change runtime behaviour:** editing a file an agent is reading invalidates its report. The one exception is a violation your own change introduced. The tell that you are about to break this is writing "this is polish, not a fix" and continuing anyway.
+
 **Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-facts.md`), which would quietly downgrade the reviewer. **Effort follows the tier (Mike, 2026-11-03, #1078):** a tier 1 first-wave lens and an adversarial escalation take the definition's `max`, so pass nothing; a tier 2 first-wave lens and every second-wave lens pass `effort: "high"`. On one diff, `high` cost 30% of `max` and found the shared MED and the same LOW items, but missed one MED that only `max` found.
 
-**The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported.
+**The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported. When neither lens ran, Step 4 is N/A and the report says so.
 
 The feature or area to review: `$ARGUMENTS` (if empty, review all uncommitted changes).
 
@@ -32,7 +34,7 @@ If triggered:
      run_in_background: true
      timeout: 7200000  (an unattended run stops a background command at its timeout, 2 h at most)
      ```
-   - `<level>` is the session's call (`/review-codex` "Reasoning effort is the session's call"), sized to the change as for any first pass; the shorter prompt shortens the run, not the level.
+   - `<level>` defaults to the one the Step 2 tier table gives; the session may lower it and says why in the dispatch line. The shorter prompt shortens the run, not the level.
    - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.
 3. Continue to Step 1 immediately; do NOT wait for Codex here. The Claude agents run in parallel with the Codex background job.
 4. After all Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/raw/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.
@@ -85,14 +87,14 @@ Decide from the Step 1 split, within the tier above. A lens in scope that the ti
 | 2 Engine compatibility | `lenses/2-engine-compat.md` | C# or C++ in scope, or changed text or tooling that states engine behaviour |
 | 3 Efficiency | `lenses/3-efficiency.md` | C# or C++ in scope, or a script under `tools/` or `.claude/hooks/` |
 | 4 Completeness | `lenses/4-completeness.md` | always |
-| 5 Data flow | `lenses/5-data-flow.md` | always; the highest-value lens (every HIGH Codex has found in this project was a data-flow gap) |
+| 5 Data flow | `lenses/5-data-flow.md` | always; historically the most productive lens (no per-lens yield is measured yet) |
 | 6 Design & Elegance | `lenses/6-design.md` | always |
 | 7 XML & ModuleData | `lenses/7-xml.md` | any XML or XSLT in scope, repo or live install |
 | Tooling correctness | `lenses/tooling.md` | any script under `tools/` or `.claude/hooks/`, read-only ones included |
 
 ### Waves of four
 
-**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost (on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
+**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget"; on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
 
 ### The spawn prompt
 
@@ -112,7 +114,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 ## Step 2c: Adaptive Expansion (always evaluate)
 
-After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it.
+After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
 **Launch additional agents when:**
 - Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
@@ -125,15 +127,13 @@ After the core agents complete, assess whether the findings warrant additional f
 
 (Script tooling is no longer an expansion: the Tooling correctness lens in Step 2 covers every script under `tools/` or `.claude/hooks/`, read-only ones included.)
 
-**Launch additional Codex passes when:**
-- Any Claude agent and Codex disagree → dispatch a second Codex pass focused on the disputed finding
-- Data Flow agent finds a gap Codex missed → dispatch Codex with the specific gap description to get independent verification
+**When a Claude agent and Codex disagree:** re-read the code first. Offer a focused Codex pass only if that leaves it open; it runs on the maintainer's word.
 
 **The review is done when:** All agents have reported, all disagreements are resolved, no agent's findings suggest an unexplored area, and Step 4 has applied or accounted for every proposal.
 
 ## Step 3: Compile Report
 
-After every launched agent completes, compile their results into a single report. Mark a lens the Step 2 table did not launch as NOT IN SCOPE. The three IMPROVEMENTS lists and the VERDICT are filled in by Step 4:
+After every launched agent completes, compile their results into a single report. Mark a lens that does not apply to the change as NOT IN SCOPE, and a lens the tier skipped as SKIPPED BY TIER. The three IMPROVEMENTS lists and the VERDICT are filled in by Step 4:
 
 ```
 DEEP REVIEW REPORT
@@ -145,14 +145,14 @@ Scope:   [C#/C++, XML/XSLT, scripts, harness, docs; live files swept since <time
 Blast radius: [N types checked with graphify affected, M callers outside the diff / UNCHECKED (why) / NOT IN SCOPE (XML only)]
 Waves:   [which agents ran in which wave]
 
-STANDARDS:     [PASS/FAIL — N violations / NOT IN SCOPE]
-COMPATIBILITY: [PASS/FAIL — N incompatible, N unverified / NOT IN SCOPE]
-EFFICIENCY:    [PASS/FAIL — N issues (H high, M medium, L low) / NOT IN SCOPE]
-COMPLETENESS:  [COMPLETE/INCOMPLETE — list missing items]
-DATA FLOW:     [PASS/FAIL — N gaps, N inconsistencies]
-DESIGN:        [N KEEP proposals (A apply, F follow-up) / ALREADY OPTIMAL]
-XML:           [PASS/FAIL — G gates (F failed, X not run), N findings / NOT IN SCOPE]
-TOOLING:       [PASS/FAIL — N findings / NOT IN SCOPE]
+STANDARDS:     [PASS/FAIL: N violations / NOT IN SCOPE / SKIPPED BY TIER]
+COMPATIBILITY: [PASS/FAIL: N incompatible, N unverified / NOT IN SCOPE / SKIPPED BY TIER]
+EFFICIENCY:    [PASS/FAIL: N issues (H high, M medium, L low) / NOT IN SCOPE / SKIPPED BY TIER]
+COMPLETENESS:  [COMPLETE/INCOMPLETE: list missing items / SKIPPED BY TIER]
+DATA FLOW:     [PASS/FAIL: N gaps, N inconsistencies / SKIPPED BY TIER]
+DESIGN:        [N KEEP proposals (A apply, F follow-up) / ALREADY OPTIMAL / SKIPPED BY TIER]
+XML:           [PASS/FAIL: G gates (F failed, X not run), N findings / NOT IN SCOPE / SKIPPED BY TIER]
+TOOLING:       [PASS/FAIL: N findings / NOT IN SCOPE / SKIPPED BY TIER]
 
 ─────────────────────────
 DETAILS
@@ -192,7 +192,7 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 
 ## Step 3e: Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)
 
-If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. Per `.claude/rules/harness-facts.md` and `feedback_root_cause_mandatory.md` — this is not optional, not severity-gated, not "only HIGH." The literal text: *"Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features."*
+If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. Per `.claude/rules/harness-facts.md`, this is not optional, not severity-gated, not "only HIGH." The literal text: *"Do NOT skip this step. The point is not just to fix bugs: it's to make the same category of bug impossible in future features."*
 
 The recurring failure is conflating severity with importance for RCA: we patch LOW symptoms but never extract the systemic lesson, and the same category of bug ships again. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
 
@@ -202,7 +202,7 @@ The recurring failure is conflating severity with importance for RCA: we patch L
 
 1. Write the finding text + severity.
 2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.
-3. **Preventive action:** generalizable rule, feedback-memory entry, or scope extension to an existing rule? Or one-off?
+3. **Preventive action:** generalizable rule, or scope extension to an existing rule? Or one-off?
 4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` + `~/.claude/projects/.../memory/feedback_*.md` for it), call that out — repeat-offender bugs need stronger preventive action than first-time bugs.
 
 **Write the result to `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`** following the format of `docs/reviews/rca-quickactions-2026-05-06.md` or `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md`:
@@ -224,7 +224,7 @@ If the RCA reveals a rule that's already documented but wasn't followed (scope g
 
 A better way that the review found and left in a report is a better way nobody gets. When Agent 6 returns a KEEP proposal or Agent 3 an APPLY-scoped fix for the changed code (together, "proposals" below), the orchestrator applies it in this session. The reviewers never edit; you do.
 
-1. **After every lens, defects first.** Start only when all agents (Step 2b and 2c included) have reported: editing a file an agent is still reading invalidates its report (`.claude/rules/working-discipline.md`). Resolve Agent 1, 2, 5 and 7 findings before any improvement, per the Step 2 triage order.
+1. **After every lens, defects first.** Start only when all agents (Step 2b and 2c included) have reported: editing a file an agent is still reading invalidates its report. Resolve Agent 1, 2, 5 and 7 findings before any improvement, per the Step 2 triage order.
 2. **Changed code only** (Mike, 2026-09-18). A FOLLOW-UP proposal (pre-existing code the change did not modify) is never applied here; list it with its issue number, or with the reason none is filed.
 3. **Re-verify, then apply or account.** Re-read the source behind each proposal before applying it (`.claude/rules/evidence-over-claims.md` §A). Every proposal not applied goes under NOT APPLIED with its reason: disproved, breaks an ADR, a single-owner file (`IoC.cs`, `SubModule.cs`) held by another session, or Mike declined. No silent skips.
 4. **Behaviour-changing proposals: ask once.** Put every CHANGING proposal in one `AskUserQuestion` batch before applying any; PRESERVING ones need no question.
@@ -239,7 +239,7 @@ Then fill in the IMPROVEMENTS lists and the VERDICT in the Step 3 report. READY 
 - The review agents are READ-ONLY; they never edit. Code changes happen only in Step 4 (improvements) and the fix loop below (defects), both done by the orchestrator.
 - If any agent fails to launch (MCP issues, etc.), note it in the report and run the checks manually.
 - Engine signatures and behaviour come from the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>` or ilspycmd). The dump at E:\Decompiled_Bannerlord\ can lag an engine bump; use it to browse, never as the authority.
-- Agent 5 (Data Flow) is the highest-value lens: it catches the class of bugs every other lens consistently misses.
+- Agent 5 (Data Flow) has historically been the most productive lens (no per-lens yield is measured yet).
 - If the verdict is NEEDS FIXES, list the fixes needed in priority order.
 
 ## HIGH findings — no silent deferrals (MANDATORY)
@@ -251,13 +251,12 @@ If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does
    - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
    - A `Known limitation:` paragraph in the commit body (it becomes the release's CHANGELOG entry)
 
-What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed — Codex independently caught the same bug later. Memory: `feedback_dont_defer_high_review_findings.md`.
+What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed; Codex independently caught the same bug later.
 
 ## Fix-loop guidance
 
 When the verdict is NEEDS FIXES and the user chooses to address findings now:
 
-- If fixes are confined to one feature module, **suggest `/freeze`** scoped to that module before starting. Prevents the fix-loop from drifting into adjacent code that wasn't part of the review.
 - If a finding is structural (root cause unclear, multiple symptoms in one area), invoke **`/investigate`** instead of fixing directly — its 6-phase workflow auto-engages `/freeze` and enforces the Iron Law.
 - **Verify each fix at the OUTERMOST gate, not just the layer you edited.** When a fix makes a method's behavior unconditional (or changes its guard semantics), grep every CALLER of that method for early-outs that re-condition it before marking the finding fixed — and note that layer-local regression tests cannot see caller-level gates. (Codex review 72 caught a service-layer "unconditional close" fix bypassed by two hook-level `IsEnabled` gates one review after it shipped; RCA `rca-tournament-exit-hang-2026-07-06.md` finding #4.)
 - After fixes land, re-review the fix diff only when it fixed a CRITICAL or HIGH, or changed runtime behaviour in a tier 1 area: one Codex pass at `high` plus the lens that found it. Fixes for MEDIUM and lower are proven by their tests and `/verify`.

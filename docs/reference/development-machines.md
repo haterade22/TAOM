@@ -19,8 +19,8 @@ the only one holding all of it.
 
 ## How a path resolves, and where it does not
 
-Three environment variables carry the difference. Set them per machine; never hardcode a drive
-letter into new code.
+Three environment variables carry the difference. Set them per machine. A new tool reads its path from an
+environment variable and may fall back to a desktop default; name the variable in the table below.
 
 | Variable | Set where | Read by |
 |---|---|---|

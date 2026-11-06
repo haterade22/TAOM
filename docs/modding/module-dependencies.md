@@ -12,6 +12,9 @@ no `<Xmls>` block, only seven `<SubModule>` entries that boot other people's cla
 required and should be uninstalled (`Dependencies/_Module/SubModule.xml:124-126`,
 [dr3-maintenance.md](../migration/dr3-maintenance.md) line 309).
 
+Add no new `DependedModule` row to a TAOM `SubModule.xml`, and open no issue proposing one, because the Modding Kit
+force-loads every module a row names (maintainer, 2026-09-21). The rows #371 added stay. No test enforces this.
+
 This chapter is a concept chapter: it explains what the four libraries are, why they are packaged
 this way, the version pairing that a release must keep intact, the vendored-DLL allowlist, the
 licence notice, the co-op manifest and the four alias stub modules. How a manifest is read in general

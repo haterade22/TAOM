@@ -1,7 +1,3 @@
----
-description: How every reply opens (scrutiny, not agreement; confidence tags) and how produced prose reads (no AI-writing tells). Merged from response-style.md + ai-prose-style.md 2026-08-05.
----
-
 <!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Output Style

@@ -27,7 +27,6 @@
   "env": {
     "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
     "PYTHONIOENCODING": "utf-8",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"
   },
   "statusLine": {
@@ -125,16 +124,6 @@
             "timeout": 30
           }
         ]
-      },
-      {
-        "matcher": "mcp__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-check.sh",
-            "timeout": 5
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -146,6 +135,11 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-polearm-shield-parity.sh",
             "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…",
             "timeout": 20
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-feedback-memory.sh",
+            "timeout": 5
           }
         ]
       },
@@ -172,46 +166,12 @@
     ],
     "PostToolUseFailure": [
       {
-        "matcher": "mcp__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-mark.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
             "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-compact.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact.sh",
-            "timeout": 10
           }
         ]
       }
@@ -234,29 +194,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-deep-review.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-verification-evidence.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-version-tagged.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-stop.sh",
             "timeout": 10
           }
         ]

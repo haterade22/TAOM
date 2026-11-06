@@ -88,26 +88,26 @@ esac
 
 # Files in the commit. No blanket --amend skip (amend is commonly "oops, add a
 # file" -- exactly the case to catch); include HEAD's files on amend.
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$(git -c core.quotePath=false diff --cached --name-only --no-renames 2>/dev/null)
 if [[ ${#COMMIT_PATHS[@]} -gt 0 ]]; then
     # What a path commit records: the named paths' working copies against HEAD (against the index
     # while HEAD is unborn). A directory path lists only what changed in it, so it is no longer
     # relevant for the feature docs it merely holds.
     if git rev-parse -q --verify 'HEAD^{commit}' >/dev/null 2>&1; then
-        PATH_FILES=$(git diff --name-only HEAD -- "${COMMIT_PATHS[@]}" 2>/dev/null)
+        PATH_FILES=$(git -c core.quotePath=false diff --name-only --no-renames HEAD -- "${COMMIT_PATHS[@]}" 2>/dev/null)
     else
-        PATH_FILES=$(git diff --cached --name-only -- "${COMMIT_PATHS[@]}" 2>/dev/null)
+        PATH_FILES=$(git -c core.quotePath=false diff --cached --name-only --no-renames -- "${COMMIT_PATHS[@]}" 2>/dev/null)
     fi
     # Paths that change nothing here: judge the index, as the hook did before it read paths.
     if [[ -n "$PATH_FILES" ]]; then STAGED=$PATH_FILES; else COMMIT_PATHS=(); fi
 fi
 if [[ $AMEND -eq 1 ]]; then
     STAGED=$(printf '%s\n%s\n' "$STAGED" \
-        "$(git show HEAD --name-only --pretty=format: 2>/dev/null)" | sort -u)
+        "$(git -c core.quotePath=false show HEAD --name-only --no-renames --pretty=format: 2>/dev/null)" | sort -u)
 fi
 
-# Only run when the commit touches a surface the drift checks care about:
-# a feature doc, a shipped ModuleData JSON, a version marker, or an RCA.
+# Only run when the commit touches a surface the gating checks read: a feature doc, a shipped
+# ModuleData JSON, a version marker, an entry doc, an RCA, or the rule text the drift checks scan.
 RELEVANT=0
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
 # 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
@@ -119,8 +119,9 @@ for f in "${STAGED_LIST[@]}"; do
         docs/reviews/rca-*.md) RELEVANT=1; break ;;
         Main/_Module/ModuleData/*.json) RELEVANT=1; break ;;
         .claude/pinned-game-version.txt) RELEVANT=1; break ;;
-        CLAUDE.md) RELEVANT=1; break ;;
-        docs/reference/taleworlds-api-snapshot/*.md) RELEVANT=1; break ;;
+        CLAUDE.md|AGENTS.md|docs/ai-includes/*.md) RELEVANT=1; break ;;
+        .claude/rules/*.md|.claude/agents/*.md|.claude/skills/*.md) RELEVANT=1; break ;;
+        docs/modding/*.md|docs/reference/*.md|.ai/*.md|.agents/*.md) RELEVANT=1; break ;;
     esac
 done
 # A feature doc that `git add <doc> && git commit` stages in one command is not in the index yet:
@@ -175,10 +176,33 @@ print(json.dumps("[check-doc-config-drift] The doc drift gate exceeded its 20s b
     exit 0
 fi
 
-[[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
+# A linter that cannot judge (3: it crashed; 2: a base it cannot resolve). A hook's own fault must never
+# block, so allow, and say so where Claude reads it: an allow's stderr reaches no one, and no output
+# would read as "checked, clean".
+unchecked() {
+    local why
+    why=$("$PYBIN" -c 'import sys, json
+print(json.dumps("[check-doc-config-drift] tools/lint_docs.py " + sys.argv[1] + ", so this commit is "
+                 "UNCHECKED by the doc linter. This is NOT a pass. Run: python tools/lint_docs.py " + sys.argv[2]))' \
+        "$1" "${LINT_ARGS[*]}" 2>/dev/null)
+    [[ -z "$why" ]] && { echo '{}'; exit 0; }
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$why"
+    exit 0
+}
+[[ $RC -eq 0 ]] && { echo '{}'; exit 0; }
+[[ $RC -ne 1 ]] && unchecked "could not judge (exit $RC)"
 
-# Extract just the gating sections (drift / version / CLAUDE.md budget / RCA — the report's tail), bounded.
-DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget|RCA FOLLOW-UP lines with no issue or reason|Feature docs with no in-game verification section|Git diff failed)/{f=1} f' | head -40)
+# Extract every `## ` section of the report (--drift-only prints only the gating checks, so the
+# list of checks lives in the linter, not here), without the report-only [size-warn] lines. A section
+# left with no finding line after that is dropped whole, header included. Bounded.
+DETAILS=$(printf '%s\n' "$OUT" | awk '
+function flush() { if (keep) printf "%s", buf; buf = ""; keep = 0 }
+/^## / { flush(); f = 1 }
+f { if ($0 ~ /\[size-warn\]/) next; buf = buf $0 "\n"; if ($0 ~ /^- /) keep = 1 }
+END { flush() }' | head -40)
+
+# Exit 1 with no finding to quote: the linter died while it loaded (a crash in its main exits 3).
+[[ -z "$DETAILS" ]] && unchecked "exited 1 with no findings"
 
 # The reproduction quotes the arguments this run passed, and a path commit reads the working copy, so
 # its fix is the file, not the index.

@@ -10,6 +10,8 @@ paths:
 - Where a vanilla file exists in both modules, **SandBoxCore/ModuleData/** is authoritative: SandBox's
   copy can use element names the engine ignores. Example: SandBoxCore `spcultures.xml` uses
   `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores).
+- TAOM's other stylesheets are live under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no
+  checkout. `python tools/check_external_xslt.py` reaches them.
 - Most inputs exist in only one module. Transform and diff against this file (checked against the
   installed v1.4.8, 2026-11-04):
 
@@ -17,7 +19,7 @@ paths:
 |---|---|
 | `spcultures.xslt` | `SandBoxCore/ModuleData/spcultures.xml` |
 | `spkingdoms.xslt`, `spclans.xslt`, `lords.xslt`, `heroes.xslt`, `module_strings.xslt` | `SandBox/ModuleData/` file of the same name (SandBoxCore has none) |
-| `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates); gate: `LordTemplateRosterTests` |
+| `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates) |
 
 ## Passthrough Requirements (CRITICAL)
 - Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`
@@ -79,17 +81,4 @@ name exactly and throws on an unknown one. It fails on a race computed at transf
 race as literal text.
 
 ## Identity Transform
-Every XSLT file must include the identity transform template to copy unmatched nodes:
-```xml
-<xsl:template match="@*|node()">
-  <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-  </xsl:copy>
-</xsl:template>
-```
-
-## Common Mistakes to Avoid
-- Overly broad `xsl:template match` that catches unintended elements
-- Hardcoding attribute values that should be passed through from vanilla
-- Missing `xsl:output` declaration
-- Forgetting to handle child elements when overriding a parent
+Every stylesheet keeps the identity template, or it drops every unmatched node.

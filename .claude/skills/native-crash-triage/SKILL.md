@@ -15,7 +15,11 @@ corruption) named and fixed in one day with exactly this protocol.
 instead — this skill is the native-side complement (and `/investigate` may hand off here).
 
 **Iron rule (from `/investigate`):** no fixes without a named site + root cause. Every fix this
-protocol has produced was DATA (XML) or a routing patch — never a blind retry.
+protocol has produced was DATA (XML) or a routing patch; never a blind retry.
+
+A crash reported only by logs: read every line of both logs, collapsing repeats with `sort | uniq -c`, before naming a cause. Never tail and grep, because a native crash leaves no error line. A player's engine build is context, not a finding to file, and never "tell players to update"; you still need it to read an RVA.
+
+A battle frozen with threads spinning at a `lock xadd`: TAOM guards the engine's first two skeleton pools, so read the session's `[SkeletonBuffer] guard` lines (`guard ON pool N`, `guard OFF pool N: <reason>`, or one `guard OFF: <reason>` when the whole install stopped). A hang in pool 1 or 2 means that pool's guard was off or another module's.
 
 ## Phase 1 — Collect (no debugger needed)
 
@@ -97,7 +101,7 @@ crash row (the tool shows them); the common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
-  a key. Fix: make the table TOTAL (see `feedback_engine_lookup_total_key_coverage` memory)
+  a key. Fix: make the table TOTAL
 - faulting address ≈ heap, or an index register holding float bits → **corrupted record**
   consumed downstream; check binding targets (phantom-animation sweep) and route around if
   engine-internal (Patch47 pattern)
@@ -133,4 +137,4 @@ control battle that exercises the trigger, and compare the next Event Log offset
 crashes — a NEW offset is progress, not failure.
 
 Full worked example with all three patterns: `docs/features/spider.md` ("The v1.4.6 engine-bump
-campaign"); generalized lessons: memory `feedback_engine_lookup_total_key_coverage`.
+campaign").

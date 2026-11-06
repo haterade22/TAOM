@@ -103,6 +103,15 @@ the CLAUDE.md section is a pointer. Field names came from
 https://code.claude.com/docs/en/sub-agents and the Agent tool schema; the Agent tool's effort beats a
 definition's; `CLAUDE_CODE_EFFORT_LEVEL` beats both (DOC, 2026-11-02; harness-facts.md).
 
+## harness-facts.md stories and counts (2026-11-03 trim)
+
+The dated observations behind `harness-facts.md` rows that this line took from the 1.5.x review.
+
+| Row | Observation |
+|---|---|
+| Subagents load `MEMORY.md` | On 2026-11-02, every subagent transcript on the 1.5.x line was read: `MEMORY.md` was in the `instructions` file list and the rendered text of all 2,232 subagent spawns that had that record, against the docs. The cause stays unknown. |
+| Stop output reaches Claude only as JSON | On 2026-09-23 `suggest-compact.sh` printed about 18 times in one session and none arrived. On 2026-09-29 `check-polearm-shield-parity.sh` was found to have reported to stderr on exit 0 since 2026-08-20, so no one saw a report (`tools/test_hooks.sh` 7k). |
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -109,6 +109,8 @@ A hand-written service may be split into partial files by concern, as `Volunteer
 - The main file's remarks list the parts.
 - The class still has one responsibility, and every part is covered by the same test suite.
 
+Known gap: `VolunteerRecruitmentService.DolGuldur.cs` and `VolunteerRecruitmentService.Erebor.cs` declare 3 fields of their own, against the rule above; move them to the main file at the next edit of the service.
+
 A partial file is still subject to the 150-line limit for entry points (ADR-002); it is never a way to grow a behavior, a patch or a model. Regions remain forbidden.
 
 Decided by the maintainer on 2026-10-21 on the 1.5.x line, after the Fire and Tribute review (#870) found other classes already split this way, and ported to this line on 2026-11-05. Known gap when it was ported: `VolunteerRecruitmentService` does not list its parts in its remarks. Bring it into line when it is next changed.
@@ -129,24 +131,11 @@ Decided by the maintainer on 2026-10-21 on the 1.5.x line, after the Fire and Tr
 
 ## Enforcement
 
-1. **Pre-Commit Hook**: Automated validation blocks commits with `#region` directives
-   - Run: `./scripts/validate-no-regions.ps1`
-   - Installed via: `./scripts/install-pre-commit-hook.ps1`
-2. **Code Review**: Reviewers reject PRs containing `#region` directives in non-generated code
-3. **Static Analysis**: `.editorconfig` configured with IDE0055 warning
-4. **Documentation**: This ADR linked in CLAUDE.md coding guidelines
-5. **Cleanup Tool**: Use `./scripts/remove-regions.ps1` to automatically remove all regions
+Enforcement: `BannedConstructsGateTests`.
 
-## Migration Strategy
+### Amendment (2026-11-03): enforcement
 
-When encountering regions in existing code:
-1. **Assess Class Size**: If >200 lines, plan decomposition
-2. **Identify Responsibilities**: Find distinct concerns within the class
-3. **Extract Services**: Create focused classes for each responsibility
-4. **Update IoC**: Register new services with appropriate lifetimes
-5. **Update Tests**: Split tests to match new class structure
-6. **Remove Regions**: Delete region directives as part of refactoring
-7. **Verify**: Ensure functionality unchanged through testing
+The Enforcement and Migration Strategy sections named a pre-commit hook, three PowerShell scripts, an IDE0055 setting in `.editorconfig` and a link from CLAUDE.md. None of them exist, and no `#region` is left to migrate. They are gone. The ban is held by `BannedConstructsGateTests`.
 
 ---
 

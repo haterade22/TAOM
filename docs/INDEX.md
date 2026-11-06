@@ -281,21 +281,16 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 
 ## AI / process guidance
 
+- [reference/gui-prefab-clones.md](reference/gui-prefab-clones.md): why a full prefab clone goes stale across engine versions, its gates, the verified rename table and how to fix one
 - [reference/rules-catalog.md](reference/rules-catalog.md) — full `.claude/rules/` catalog (rule → scope → content, always-load vs path-scoped); CLAUDE.md keeps only the load-convention note
 - [reference/rule-provenance.md](reference/rule-provenance.md) — the always-load rules' "why this exists / relationships / source" sections, moved out of the eager load; read when auditing or editing a rule
-- [reference/provenance-register.md](reference/provenance-register.md): every third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
+- [reference/provenance-register.md](reference/provenance-register.md): every named third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
 - [ai-includes/architecture.md](ai-includes/architecture.md) — layer stack, IoC, lifetimes
 - [ai-includes/patterns.md](ai-includes/patterns.md) — Hook / Strategy / GameModel patterns
 - [ai-includes/agent-teams.md](ai-includes/agent-teams.md) — when to spawn parallel agents
-- [ai-includes/tdd-enforcement.md](ai-includes/tdd-enforcement.md) — TDD workflow rules
 - [ai-includes/testing-guide.md](ai-includes/testing-guide.md) — MSTest + NSubstitute patterns
-- [ai-includes/research-workflow.md](ai-includes/research-workflow.md) — `taom-src` + decompilation workflow
 - [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) — decompiled-source navigation
-- [ai-includes/decompiled-code-analysis.md](ai-includes/decompiled-code-analysis.md) — reading decompiled output
-- [ai-includes/iterative-problem-solving.md](ai-includes/iterative-problem-solving.md) — multi-pass refinement
-- [ai-includes/multi-approach-validation.md](ai-includes/multi-approach-validation.md) — comparing alternative implementations
 - [ai-includes/code-quality.md](ai-includes/code-quality.md) — non-negotiable C# quality rules
-- [ai-includes/security.md](ai-includes/security.md) — input validation, boundary trust
 - [ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md) — repeatable end-to-end culture authoring (Dale + Gondor)
 
 ## Cross-cutting concerns (where memory ↔ docs intersect)
@@ -321,6 +316,7 @@ These are recurring lessons the auto-memory system has captured. The memory file
 LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](research/README.md) for the structure and `/knowledge-compile` workflow.
 
 - [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
+- [harmony-fork-feasibility](research/harmony-fork-feasibility.md): the researched, not pursued option of forking Harmony 2.4.2 into `TAOM.Dependencies` (shared-state finding, risks); the shipped route is the bundled `Lib.Harmony` package
 - [reference/external-resources.md](reference/external-resources.md) — verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy, BUTR deps, Harmony, LOTR/Tolkien lore + naming generators, comparable total-conversion mods, save-compat versioning). Cite this instead of re-searching the web.
 
 ## Player-facing copy (Discord)

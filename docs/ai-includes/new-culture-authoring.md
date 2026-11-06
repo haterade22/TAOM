@@ -12,7 +12,7 @@ If you're creating a **net-new culture entry in `taom_spcultures.xml`** (the und
 1. **Armor**: enumerate Solus's mesh IDs from `.tpac` → write generator script → emit XML files → register `<culture>/` folder in `LOTRLOME_Armory/SubModule.xml`.
 2. **Troops**: lore-research → tier design on paper → write generator script → emit `troops_<culture>.xml` → register in `Main/_Module/SubModule.xml`.
 3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (9 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
-4. **Validate** via `tools/validate_all_troop_refs.py`, then `/verify` → `/deep-review` → `/review-codex` → RCA + commit.
+4. **Validate** via `tools/validate_all_troop_refs.py`, then `/verify` → `/deep-review` → RCA + commit. `/review-codex` runs only when the maintainer asks for it (paid).
 5. **Expect 5–10 iteration commits** after the initial ship (renames, equipment swaps, balance tuning, settlement-specific recruitment, color schemes). That's normal — the first ship is a draft.
 
 ---
@@ -207,7 +207,7 @@ Register in `Main/_Module/SubModule.xml` next to similar cultures:
 
 ## Phase 3: Tree wiring
 
-### 3a. Culture XSLT binding (MANDATORY — read `feedback_xslt_passthrough_unintended_inheritance` memory)
+### 3a. Culture XSLT binding (MANDATORY)
 
 For XSLT-passthrough cultures, the existing culture block in `spcultures.xslt` will preserve every vanilla attribute via `<xsl:apply-templates select="@*"/>` — including ones you don't want. Enumerate **every** CultureObject template/troop attribute the engine reads and explicitly classify each as BIND or PASSTHROUGH.
 
@@ -331,9 +331,9 @@ dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filte
 /verify quick           # build + git status
 /deep-review <culture>  # 5 parallel agents: Standards, API Compat, Efficiency, Completeness, Data Flow
                         # Fix all HIGH findings in-session (per .claude/skills/deep-review)
-/review-codex <culture> # Codex adversarial review in the background; its effort (and run time) sized to the change
-                        # Auto-resume on notification; verify each finding by reading source
 ```
+
+`/review-codex <culture>` is a paid call and runs only when the maintainer asks for it. Verify each finding by reading source.
 
 **Phase 3e RCA is mandatory** for every confirmed Codex finding (any severity, including LOW). Write to `docs/reviews/rca-<culture>-<date>.md`. Pattern: finding, why missed, preventive action, repeat-offender check.
 
@@ -384,14 +384,14 @@ Each iteration that touches the `VolunteerRecruitmentService` pool **must update
 
 ## Patterns codified during Dale iteration
 
-These all became feedback-memory entries — read them before authoring:
+Read these before authoring:
 
-- `feedback_xslt_passthrough_unintended_inheritance.md` — enumerate every CultureObject attribute; passthrough silently inherits vanilla bindings you didn't want.
-- `feedback_enumerate_from_source_of_truth.md` — extending a config? enumerate from the upstream source, not the existing config rows.
-- `feedback_classify_by_grep_not_by_assumption.md` — unfamiliar IDs (kingdom? culture? clan?) — grep before classifying.
-- `feedback_multi_folder_id_uniqueness.md` — canonical-folder table for armor-item prefixes; check before authoring a new item to avoid duplicate-ID warnings.
-- `feedback_verify_troop_ids_against_canonical_xml.md` — user-spec troop name → ID conversion needs canonical XML grep, not sibling-naming inference.
-- `feedback_xml_grep_wrapper_offset.md` — `grep -c "<NPCCharacter"` overcounts by 1 because `<NPCCharacters>` wrapper matches.
+- Enumerate every CultureObject attribute; passthrough silently inherits vanilla bindings you didn't want.
+- Extending a config? enumerate from the upstream source, not the existing config rows.
+- Unfamiliar IDs (kingdom? culture? clan?): grep before classifying.
+- Canonical-folder table for armor-item prefixes; check before authoring a new item to avoid duplicate-ID warnings.
+- User-spec troop name → ID conversion needs canonical XML grep, not sibling-naming inference.
+- `grep -c "<NPCCharacter"` overcounts by 1 because `<NPCCharacters>` wrapper matches.
 
 And the patterns visible in the Dale generator code (clone these explicitly for your next culture):
 

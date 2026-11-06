@@ -24,22 +24,18 @@ Historical model names, patch counts and review totals are context, not live fac
 - **LOW**: Style violation, missing comment explaining non-obvious behavior
 
 ### Evidence Calibration Rule
-If you cannot quote decompiled vanilla code supporting your claim, **downgrade severity by one level**. "I believe vanilla does X" is not evidence — read the decompiled source at `E:\Decompiled_Bannerlord\` and include the relevant code in your finding. Prior reviews produced false positives when vanilla behavior was assumed rather than verified (e.g., `characterObject.IsMounted` was flagged as a bug but matches vanilla `KhuzaitRecruitUpgradeFeat` exactly).
+If you cannot quote decompiled vanilla code supporting your claim, **downgrade severity by one level**. "I believe vanilla does X" is not evidence: read the installed source with `pwsh tools/taom-src.ps1 path <Type>`, or the dump at `E:\Decompiled_Bannerlord\` naming its version, and include the relevant code in your finding. Prior reviews produced false positives when vanilla behavior was assumed rather than verified (e.g., `characterObject.IsMounted` was flagged as a bug but matches vanilla `KhuzaitRecruitUpgradeFeat` exactly).
 
 ### Output Format
 
-```
-[SEVERITY] path/to/file.cs:line — Rule — Issue — Fix
-```
+The finding line, grouping, totals and verdict are in [report-format.md](report-format.md).
 
-Group findings by severity. End with a summary:
+### Lessons From Prior Reviews, distilled
 
-```
-CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
-VERDICT: CLEAN / ISSUES FOUND
-```
-
-### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
+- **Feeds a new filter or gate the input that should fail it** (2026-09-30, KEYforce art, 2 of 2 LOW
+  real): a troop whose spider sat only in its second battle set (the filter kept it), and three XML
+  fragments the new siege-scene gate misjudged. For a new filter or gate, ask for that input.
+- **What the deserializer assembles, not the XML's shape** (2026-09-30, KEYforce art: a Codex miss that three scoped Claude lenses caught in the fix review). Codex's fix for a first-roster-only mount read named every battle roster and battle `EquipmentSet` references, but not the `<equipment>` written directly under `<Equipments>`, which `MBEquipmentRoster.AddOverriddenEquipments` writes over its slot in every set; 88 troops mount that way. When a finding models what a troop carries, list every path `BasicCharacterObject.Deserialize` takes.
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
 - **Deletes and reorders a call the unit tests cannot reach** (2026-10-08, War of the Ring Phase 2 wars
@@ -144,8 +140,8 @@ VERDICT: CLEAN / ISSUES FOUND
 Full worked-example catalog — every rolling essay + the complete "bugs Codex misses / false
 positives / what Codex does well / run-mode caveats" lists: **[`docs/reviews/codex-track-record.md`](../docs/reviews/codex-track-record.md)**
 (older essays: `docs/reviews/agents-md-review-lessons-archive.md`). Read it when a review touches
-an area with prior history. Convention: add each new essay to the top of the track-record file,
-archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<category>.md`.
+an area with prior history. That file is frozen: a new false-positive pattern or missed category
+gets one line here, and durable patterns go into `docs/reviews/lessons/<category>.md`.
 
 **Look harder here — what a scoped per-feature pass structurally misses (Codex's edge):**
 - **Semantic correctness of a SAMPLE from an engine collection.** `GetFirstUnit()` / `[0]` / `.First()` is a sample, not the owner — correct only while the collection is homogeneous. Ask "what if this is MIXED?" (culture / faction / tier).
@@ -167,7 +163,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
   reversed and the `is` forms, but not `?.`; seven `PartyBase.MainParty?.` reads in two adapters
   stayed. When a scan bans a guard on a getter that throws, list `?.` and `??` among the forms.
 
-**False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
+**False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `taom-src` rather than siding with confidence.
 
 ### Intentional Patterns (Do NOT flag these)
 - `IoC.Resolve<T>()` in Harmony patch classes — approved service locator usage in entry points only
@@ -179,6 +175,9 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - `/investigate` SKILL.md re-declaring `/freeze`'s PreToolUse hook in its own frontmatter — intentional hook reuse so debugging auto-engages scope-lock; copying the inline hook block to other skills must be a deliberate choice, not a casual paste
 - `PlayerPossessionService.TryConsumePossession` gating on `ICoopPresenceProvider.IsCoopActive` and then mutating the hero — presence is the wrong predicate for a world-mutating path everywhere else (`ShouldDeferToHost` / `IsAuthority` own that), but here it is the **heir-succession discriminator**: `Hero.MainHero` also changes in solo play when the player continues as an heir, and this gate keeps a solo heir out of the re-grant path. One of three independent guards, any one sufficient — presence, single consumption, and the `SyncData` per-hero marker `_taom_possessionReconciledHeroes`. Named as the sanctioned exception in `docs/features/coop-interop.md` ("One consumer breaks that shape and is not a violation")
 - `DedicatedServerProvider` deriving server-ness from `Assembly.GetExecutingAssembly().Location` containing `Win64_Shipping_Server` rather than from co-op role — deliberate. A CLIENT-HOSTED session's host also reports `IsServer` while being a real player who must keep earning, so role cannot answer this question; the binaries folder Bannerlord loaded the module from is a fact about the process and cannot change mid-run. It fails to "not a server" because every gate built on it only ever suppresses behaviour
+- Debug builds ship on purpose because crash reports need every frame: no Release finding without a measured player-facing gain (maintainer, 2026-09-30)
+- No naval DLC: a naval-only path is out of scope in one line with no follow-up issue, unless vanilla CampaignSystem itself runs that branch (maintainer, 2026-10-20)
+- No new `DependedModule` row on a TAOM `SubModule.xml`, and no issue proposing one, because the Kit force-loads each one (maintainer, 2026-09-21); the rows #371 added stay
 
 ### When reviewing `.claude/` harness changes (not C# features)
 - Check whether claims about Claude Code's load semantics are verified — official docs at https://code.claude.com/docs/en/skills and /docs/en/hooks and /docs/en/memory are authoritative.
@@ -246,227 +245,36 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 
 ---
 
-## Non-Negotiable ADR Rules
+## ADR Rules, IoC Lifetimes, Test Coverage and Feature Layout
 
-| Rule | Detail |
-|------|--------|
-| Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions") |
-| Interfaces that earn their file | Every adapter has one (ADR-007); a service gets one only when a test fakes it or a second class implements it (ADR-002) |
-| Constructor injection only | No service locator in services |
-| Convert at boundary | Adapt sealed types in the entry point, not deep in services |
-| `?.` for computed properties | TaleWorlds getters crash before your null check |
-
-### IoC Lifetimes
-
-| Lifetime | Use For |
-|----------|---------|
-| `Reuse.Singleton` | Services, engines, caches |
-| `Reuse.Transient` | Hooks, stateless helpers |
-
-### Test Coverage Requirements (ADR-008)
-
-| Component | Required | Notes |
-|-----------|----------|-------|
-| Services | 100% | Must be mockable via constructor injection |
-| Engines | 100% | Pure functions — easy to test |
-| Hooks | 80%+ | Use `NSubstitute` mocks for adapters |
-| Entry Points | Not required | Harmony/GameModel — test via game |
-
-### Feature File Layout
-
-```
-Main/Features/MyFeature/
-    IMyFeatureService.cs     <-- only if a test fakes it or a second class implements it
-    MyFeatureService.cs
-    MyFeatureIoC.cs          <-- Reuse.Singleton registrations
-    Models/
-        TaomMyModel.cs       <-- GameModel override (if needed)
-    Hooks/
-        MyPatch.cs           <-- Harmony patch (if needed)
-Main/Adapters/
-    IMyTypeAdapter.cs
-    MyTypeAdapter.cs
-TAOM.Tests/Features/MyFeature/
-    MyFeatureServiceTests.cs
-```
+The non-negotiable ADR rules, IoC lifetimes, the test coverage rule and feature file layout are in
+[csharp-architecture.md](../.claude/rules/csharp-architecture.md); the decisions are indexed in
+[docs/adrs/README.md](../docs/adrs/README.md).
 
 ---
 
 ## Adapter Pattern Rules (ADR-007)
 
-### Core Principle
-Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces.
-
-### Creating New Adapters
-1. **Research first** — Decompile the TaleWorlds class before creating the adapter interface
-2. **Interface in `Main/Adapters/`** — `I{TypeName}Adapter.cs` with only the properties/methods the feature needs
-3. **Implementation in `Main/Adapters/`** — `{TypeName}Adapter.cs` wrapping the sealed type
-4. **Recursive wrapping** — If the sealed type exposes other sealed types, wrap those too
-5. **Defensive validity** — Check for dead agents, null references in computed properties
-
-### Property Guidelines
-- Identify read-only vs read-write properties from decompiled source
-- Use null-conditional operators (`?.`) for computed properties accessing nested objects
-- Cache expensive property lookups where appropriate
-
-### Testing
-- Adapters are thin wrappers — test coverage via service tests that mock the adapter interface
-- Use `NSubstitute.Substitute.For<IXxxAdapter>()` in tests
+The rules are in [adapters.md](../.claude/rules/adapters.md).
 
 ---
 
 ## Harmony Patch Rules
 
-### Research First (MANDATORY)
-ALWAYS decompile the target method before writing a patch. Verify:
-- Exact method signature (parameters, return types, access modifiers)
-- Whether the method is virtual, sealed, or static
-- Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.4.8
-
-### Patch Types
-- **Prefix** — Runs before original method. Return `false` to skip original.
-- **Postfix** — Runs after original method. Can modify `__result`.
-- **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
-
-### Architecture Requirements
-- Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
-- Entry point files MUST be <150 lines (ADR-002)
-- Resolve services from IoC container, never instantiate directly
-- Use thread-local state pattern for multi-patch coordination
-
-### Patch Organization
-- Place in `Main/Features/{FeatureName}/Hooks/` directory
-- Name: `{TargetClass}{TargetMethod}Patch.cs`
-
-### Common Pitfalls
-- Collection modification during iteration — use `.ToList()` copy
-- Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
-- Event timing — verify when events fire vs when state changes
-- Static state — avoid unless using thread-local pattern
+The rules are in [harmony-patches.md](../.claude/rules/harmony-patches.md).
 
 ---
 
 ## GameModel Override Rules
 
-TAOM has 31+ GameModel overrides. All follow the same pattern.
-
-### Pattern
-
-```csharp
-public class TaomFooModel : DefaultFooModel
-{
-    private readonly IFooService _service;
-
-    public TaomFooModel(IFooService service)
-    {
-        _service = service;
-    }
-
-    public override float SomeCalculation(SealedType param)
-    {
-        var adapter = IoC.Resolve<IAdapterFactory>().GetAdapter(param);
-        var taomResult = _service.Calculate(adapter);
-        return taomResult ?? base.SomeCalculation(param);
-    }
-}
-```
-
-### Rules
-1. **Research first** — Always decompile `DefaultXxxModel` before overriding
-2. **Inherit from `Default*`** — Never override `GameModel` directly
-3. **Call `base.Method()`** — Unless deliberately replacing behavior, fall through for unhandled cases
-4. **Thin model class** — Entry point (<150 lines). All logic in Service
-5. **Adapter boundary** — Convert sealed params to adapters immediately
-6. **JSON/XML config** — Configurable values in `Main/_Module/ModuleData/configs/`, not hardcoded
-7. **Register in SubModule.cs** — via `CreateGameModels()` / `OnGameStart()`
-8. **Tests** — Service logic fully unit-tested. Model class itself is thin enough to skip
-
-### Existing Overrides (31+ total)
-
-| GameModel | Overrides | Purpose |
-|-----------|-----------|---------|
-| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
-| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture feats |
-| `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
-| `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence feats |
-| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | Culture forest/infantry speed feats |
-| `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | Culture hearth growth feats |
-| `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | Culture veteran militia feats |
-| `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | Culture construction speed feats |
-| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | Culture production feats |
-| `TaomCaravanModel` | `DefaultCaravanModel` | Umbar caravan cost feat (CulturalFeats) + CaravanTrade basket-diversity overrides (`GetInitialTradeGold` floor, `GetMaxGoldToSpendOnOneItemCategory`) |
-| `TaomBattleRewardModel` | `DefaultBattleRewardModel` | Umbar renown feat |
-| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Mounted recruit cost feats |
-| `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | Party size feats |
-| `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | Food consumption feats |
-| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | Settlement loyalty feats |
-| `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats |
-| `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats |
-| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat |
-| `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats |
-| `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power |
-| `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio |
-| `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses |
-| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + prize pools |
-| `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans |
-| `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints |
-| `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision rules |
-| `TaomDiplomacyModel` | `DefaultDiplomacyModel` | LOTR faction relationships |
-| `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific execution penalties |
-| `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions |
-| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Army targeting: commitment stickiness, faction priority lists, border proximity |
+The rules are in [gamemodels.md](../.claude/rules/gamemodels.md); the current overrides, with each
+model's vanilla base and purpose, are in [gamemodel-registry.md](../docs/reference/gamemodel-registry.md).
 
 ---
 
 ## C# Design Patterns
 
-### 1. Hook Pattern (Harmony -> Hook Interface -> Service), optional
-
-Optional layer. Most patches resolve their service at the boundary and call it directly (`patch -> service -> adapter`). Add an `IOnXxx` hook interface only when the patch needs a narrow seam over a wide service or a test fakes the hook; a hook that only forwards one call is a deletion candidate when its files are next touched.
-
-```
-HarmonyPatch (thin)
-    -> IOnXxx hook interface
-        -> XxxHook implementation
-            -> IXxxService (business logic)
-```
-
-- Harmony patch resolves `IOnXxx` hooks via `IoC.ResolveAll<IOnXxx>()`, iterates, delegates
-- Hook implementation builds context, calls service
-- Service contains all logic — uses adapters, fully testable
-
-### 2. Strategy Pattern
-
-For per-culture or per-faction variants:
-
-```csharp
-public interface ICultureStrategy
-{
-    string CultureId { get; }
-    float Calculate(IContextAdapter context);
-}
-// One class per culture, registered as a collection
-// Service resolves all and dispatches by CultureId
-```
-
-### 3. GameModel Override Pattern
-
-```csharp
-public class TaomFooModel : DefaultFooModel
-{
-    private readonly IFooService _service;
-    public TaomFooModel(IFooService service) => _service = service;
-
-    public override float Calculate(SealedType param)
-    {
-        var adapter = IoC.Resolve<IAdapterFactory>().GetAdapter(param);
-        return _service.Calculate(adapter) ?? base.Calculate(param);
-    }
-}
-```
+The hook, strategy and GameModel patterns are in [csharp-patterns.md](../.claude/rules/csharp-patterns.md).
 
 ### Anti-Patterns (Flag these)
 - Business logic in Harmony patches (must delegate to services)
@@ -478,69 +286,15 @@ public class TaomFooModel : DefaultFooModel
 
 ## XSLT Rules
 
-### Authoritative Source
-- **SandBoxCore/ModuleData/** is the authoritative reference for vanilla XML structure
-- NEVER use SandBox/ModuleData/ — it has different element names the engine ignores
-- Example: SandBoxCore uses `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores)
-- TAOM's other 8 XSLT are LIVE under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no checkout and in no CI job
-
-### Passthrough Requirements (CRITICAL)
-- Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`
-- Always pass through unmodified child elements: `<xsl:apply-templates select="*[not(...)]"/>`
-- Never filter out vanilla attributes — critical ones like `is_main_culture`, `can_have_settlement`, `faction_banner_key` will be silently dropped
-- Only override the specific attributes/elements you intend to change
-
-### Identity Transform
-Every XSLT file must include:
-```xml
-<xsl:template match="@*|node()">
-  <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-  </xsl:copy>
-</xsl:template>
-```
-
-### Common Mistakes
-- Overly broad `xsl:template match` catching unintended elements
-- Hardcoding attribute values that should be passed through from vanilla
-- Missing `xsl:output` declaration
-- Forgetting to handle child elements when overriding a parent
+The rules are in [xslt.md](../.claude/rules/xslt.md): the authoritative source, passthrough and the
+identity transform.
 
 ---
 
 ## Testing Rules (TDD Mandatory)
 
-### Workflow: RED -> GREEN -> REFACTOR
-1. Write a failing test FIRST (verify RED state)
-2. Write minimum production code to pass (GREEN)
-3. Refactor while keeping tests green
-
-### Naming Convention
-`MethodName_StateUnderTest_ExpectedBehavior`
-
-### Structure: AAA Pattern
-```csharp
-[TestMethod]
-public void MethodName_State_Expected()
-{
-    // Arrange
-    var mock = Substitute.For<IMyAdapter>();
-
-    // Act
-    var result = _sut.DoSomething();
-
-    // Assert
-    Assert.AreEqual(expected, result);
-}
-```
-
-### Framework
-- **MSTest** — `[TestClass]`, `[TestMethod]`, `[TestInitialize]`, `[TestCleanup]`
-- **NSubstitute** — `Substitute.For<T>()`, `.Returns()`, `.Received()`
-- **No Moq** — Project uses NSubstitute exclusively
-
-### Test Organization
-Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`
+The rules are in [tests.md](../.claude/rules/tests.md); the AAA structure is in
+[testing-guide.md](../docs/ai-includes/testing-guide.md).
 
 ---
 
@@ -591,7 +345,7 @@ These are all registered, intentional patches — do not flag them as unauthoriz
 | `Patch39_BanditPartySize` | Scale bandit initial rosters by PlayerProgress (cap = stack MaxValue) | `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (Postfix) | active |
 | `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
 | `Patch41_McmLayoutFix` | Flip MCM options screen to top-to-bottom layout (#252) | UIExtenderEx `WidgetFactoryManager.CreateAndRegister` (Postfix) | active |
-| `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
+| `Patch42_CastleRecruitment` | Castle troop recruitment, AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler) | active |
 | `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + mission-exit lifecycle + stall watchdog | 11 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `Mission.EndMission`, `MapState.OnTick`, ...) | active |
 | `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
 | `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |
@@ -642,6 +396,8 @@ Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 ---
 
 ## TaleWorlds Research — Lookup Order
+
+`E:\` paths below are the desktop; [development-machines.md](../docs/reference/development-machines.md) maps them for each machine.
 
 **Check the engine study docs first for conceptual "how does X work" questions.** Use the decompile for signature verification.
 

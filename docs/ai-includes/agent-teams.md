@@ -4,17 +4,9 @@ How to use Claude Code Agent Teams for parallel work on the TAOM project.
 
 ---
 
-## What Are Agent Teams?
+## Terms
 
-Agent Teams let a **lead session** coordinate multiple **teammate sessions** working in parallel. Each teammate is an independent Claude Code instance with its own context, tools, and permissions.
-
-Key concepts:
-- **Lead** — creates the team, spawns teammates, assigns tasks, integrates results
-- **Teammates** — autonomous agents that own specific directories/tasks
-- **Shared task list** — all agents read/write tasks at `~/.claude/tasks/{team-name}/`
-- **Mailbox messaging** — agents communicate via `SendMessage` (DMs) or `broadcast`
-
-Teams are enabled via the env var `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json`.
+The **lead** is the session that spawns the agents and integrates their results. A **teammate** is a spawned agent that owns a directory or a task. Agents talk through `SendMessage`, addressed by name. The experimental teams flag is not needed: `SendMessage` is offered without it, and nothing here calls `TeamCreate` (probed on the 1.5.x line, 2026-11-03).
 
 ---
 
@@ -73,16 +65,16 @@ Teammates report needed changes to these files via message; the lead integrates.
 **Spawn prompt (Feature Dev):**
 ```
 You are a Feature Developer for the TAOM Bannerlord mod. Read docs/ai-includes/architecture.md
-and docs/ai-includes/tdd-enforcement.md first. Your scope is Main/Features/PartySpeed/ only.
+and .claude/rules/tests.md first. Your scope is Main/Features/PartySpeed/ only.
 Follow the adapter pattern (ADR-007). Do NOT edit IoC.cs or SubModule.cs — report needed
 registrations to the lead via message. Build with: dotnet build Main -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
 **Spawn prompt (Test Dev):**
 ```
-You are a Test Developer for the TAOM Bannerlord mod. Read docs/ai-includes/tdd-enforcement.md
+You are a Test Developer for the TAOM Bannerlord mod. Read .claude/rules/tests.md
 and docs/ai-includes/testing-guide.md first. Your scope is TAOM.Tests/Features/PartySpeed/ only.
-Use MSTest + NSubstitute. Mock all adapters. 100% service/engine coverage required (ADR-008).
+Use MSTest + NSubstitute. Mock all adapters. Every decision path gets a test (ADR-008).
 Run tests with: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
@@ -158,6 +150,13 @@ When an orchestrator dispatches fresh subagents to implement and then review wor
 
 This composes with the `Workflow` tool: a `pipeline()` can implement in stage 1, run spec-compliance review in stage 2, and code-quality review in stage 3 — each item flows through without a barrier. The `parallel()` adversarial-verify pattern in the Workflow docs is the fan-out form of step 3 above.
 
+### Workflow script gotchas
+
+- **`parallel()` and `pipeline()` take functions, not promises.** `parallel([agent(a), agent(b)])` throws "expects an array of functions"; write `parallel([() => agent(a), () => agent(b)])`, and do the same for a `parallel` nested inside a `pipeline()` stage. The agents that already ran keep their results in the run journal (`workflowProgress[]` and the output file), so a thunk bug costs the aggregation, not the finders' work.
+- **`run_in_background` is not a Workflow parameter.** The tool always runs in the background and notifies on completion; passing it is an input validation error.
+- **Resume is keyed by prefix.** After the first changed or failed `agent()` call every later agent runs again, finished ones included, so launch a new script when later stages already did work.
+- **Keep the refute lens in a find-then-verify run.** One verifier to confirm and one to refute split a contested finding and filtered the false positives in the run that taught this (2026-06-25).
+
 ---
 
 ## When NOT to Use Agent Teams
@@ -213,7 +212,7 @@ You are a Feature Developer for the TAOM Bannerlord mod.
 
 Read these docs first:
 - docs/ai-includes/architecture.md (layer architecture)
-- docs/ai-includes/tdd-enforcement.md (TDD workflow)
+- .claude/rules/tests.md (TDD workflow)
 - docs/ai-includes/patterns.md (design patterns)
 
 Your scope: Main/Features/{FEATURE_NAME}/ only.
@@ -311,7 +310,7 @@ Report findings to lead via message. You are read-only — do NOT edit files.
 
 ## Limitations
 
-- **No session resumption** — if a teammate crashes, its context is lost (the `pre-compact.sh` hook helps the lead session recover by dumping modified file lists before context compaction)
+- **No session resumption:** if a teammate crashes, its context is lost
 - **No file locking** — agents can overwrite each other's changes if ownership isn't respected
 - **No nested teams** — a teammate cannot spawn its own team
 - **One team per session** — the lead manages one team at a time
@@ -362,6 +361,12 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 
 **Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md` (the four CombatMechanics seam findings).
 
+### Budget: fan-out width and checkers
+
+Fan-out width exhausts the session limit: spawn at most four builders at once. One checker over the integrated result replaces a verifier per file; per-file verifiers multiply the spend and still miss the seams between files.
+
+On 2026-09-05 a 39-chapter doc build blew the 5-hour limit twice, first with 124 agents (an author plus three verifiers per chapter, all at once), then 8 chapters wide. A subagent that hits the limit returns nothing, so every unreported agent's work was lost. Each subagent re-reads the contract, manifest and sources from scratch, so three verifiers triple the cost. Replace repeated hand verification with one deterministic checker: a lint script of about 900 lines replaced 93 verifier agents and found four real defects on its first pass. Have the author run the gates before returning, chunk four wide, let each chunk finish, and commit each chunk as it lands. A workflow's `budget.spent()` counts the whole session, so guard on the delta from a baseline captured at run start. More than about a dozen agents for one deliverable means a script should do the checking.
+
 ### Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
 
 **Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.
@@ -375,7 +380,6 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 ## Related Guides
 
 - [architecture.md](./architecture.md) — Layer architecture and patterns
-- [tdd-enforcement.md](./tdd-enforcement.md) — TDD workflow
 - [patterns.md](./patterns.md) — Design patterns (Hook, Strategy, Builder)
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) — Decompilation workflow
 - [code-quality.md](./code-quality.md) — Clean code principles

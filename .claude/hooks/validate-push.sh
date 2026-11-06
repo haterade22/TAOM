@@ -1,10 +1,9 @@
 #!/bin/bash
 # PreToolUse hook (Bash and PowerShell): hard-blocks a force push to a protected branch
 # (CLAUDE.md "Commits"). It is the only force-push guard: GitHub protects no branch (D29).
-# Non-blocking stderr warning (which Claude does not see) for a plain push to a protected branch.
 
 # The deadline starts at the first command (#680). A killed gate fails open, so the judge gets what
-# is left of 3.0 s and an overrun asks; the 10 s registration is only a backstop. The digits of
+# is left of 3.0 s and an overrun asks; the 30 s registration is only a backstop. The digits of
 # EPOCHREALTIME (bash 5.0 or later) are microseconds; it is empty in an older bash.
 T0=${EPOCHREALTIME//[!0-9]/}
 INPUT=$(cat)
@@ -97,9 +96,7 @@ case "$RC:$VERDICT" in
   0:block$'\t'?*)
     echo "BLOCKED: force push to '$TARGET' is not allowed. Do not retry with --no-verify or as a plain push; explain the block and ask the user whether to push to a non-protected branch." >&2
     exit 2 ;;
-  0:warn$'\t'?*)
-    echo "WARNING: pushing to protected branch '$TARGET'. Confirm this is intentional." >&2
-    exit 0 ;;
+  0:warn$'\t'?*) exit 0 ;;
   0:allow)
     exit 0 ;;
 esac

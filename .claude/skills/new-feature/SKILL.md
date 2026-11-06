@@ -10,6 +10,8 @@ Create a new feature module following TAOM architecture from @docs/ai-includes/a
 
 ## Feature Name: `$ARGUMENTS`
 
+A feature adopted from another mod gets a Tolkien-flavoured TAOM name, never the source mod's, for its folder and MCM group too. Grep for clashes first (maintainer, 2026-10-18).
+
 ## Required Structure
 
 Create the following files under `Main/Features/$ARGUMENTS/`:
@@ -33,10 +35,10 @@ Create the following files under `Main/Features/$ARGUMENTS/`:
 - Only create if wrapping a new sealed TaleWorlds type not already adapted
 
 ### 5. Tests (MANDATORY — TDD)
-Follow @docs/ai-includes/tdd-enforcement.md
+Follow .claude/rules/tests.md (it loads when you open a test).
 
 Create under `TAOM.Tests/Features/$ARGUMENTS/`:
-- `{FeatureName}ServiceTests.cs` — 100% service coverage
+- `{FeatureName}ServiceTests.cs`: one test per behaviour and guard, judged by the two-edit test
 - Use MSTest + NSubstitute
 - Naming: `MethodName_StateUnderTest_ExpectedBehavior`
 - Write tests FIRST (RED), then implement (GREEN), then refactor
@@ -51,5 +53,5 @@ Before scaffolding, suggest `/freeze` to the user with the new feature dir as th
 - [ ] IoC registered in `Main/IoC.cs`
 - [ ] Entry points <150 lines
 - [ ] No `#region`, `[Obsolete]`, or `#if DEBUG`
-- [ ] Build passes: `./build.ps1 -RunTests` — if it fails, route to `/build-fix`; if structural, `/investigate`
+- [ ] `/verify` passes; if it fails, route to `/build-fix`; if structural, `/investigate`
 - [ ] `/deep-review` clean before commit (per CLAUDE.md Critical Rules)

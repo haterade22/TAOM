@@ -79,7 +79,7 @@ When your job hits one of these situations, finish your analysis and **name the 
 Don't assume these reached you — read the relevant one when your task touches it:
 
 - Architecture / layers: [`architecture.md`](./architecture.md) · patterns: [`patterns.md`](./patterns.md)
-- TDD workflow: [`tdd-enforcement.md`](./tdd-enforcement.md) · testing: [`testing-guide.md`](./testing-guide.md)
+- TDD: `.claude/rules/tests.md` · shipped-data tests: [`testing-guide.md`](./testing-guide.md)
 - Adapter pattern (ADR-007), thin entry points (ADR-002), no #region/[Obsolete]/#if DEBUG (ADR-003/004/005): [`docs/adrs/`](../adrs/README.md)
 - TaleWorlds research workflow: [`taleworlds-research-guide.md`](./taleworlds-research-guide.md)
 - The `.claude/rules/*.md` (csharp-architecture, harmony-patches, gamemodels, adapters, tests, xslt, gui-ui, troops, xml-data) — read the one matching the files you're editing.

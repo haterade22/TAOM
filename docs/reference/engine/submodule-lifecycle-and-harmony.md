@@ -81,7 +81,7 @@ TAOM crosses that boundary only via **MinHook** (NativeSkinFixes byte-pattern ho
 
 ## Evidence (file:line)
 - `Main/SubModule.cs`:82 (`: MBSubModuleBase`), :91 (`OnSubModuleLoad`), :104 (`new Harmony("com.taom.mod")`), :133-242 (`PatchCategory("PatchNN_X")` ×N; CrashReport unconditional since the plan 006 port), :207-235 (`.Initialize` static wiring), :247 (`OnBeforeInitialModuleScreenSetAsRoot`), :294 (`OnGameStart` → `AddBehavior`/`AddModel` :310-391+), :512 (`OnGameInitializationFinished`), :640 (`OnMissionBehaviorInitialize`: deferred MovementOrder category), :704 (`OnApplicationTick`), :726 (`OnSubModuleUnloaded`).
-- TAOM patch catalogue + categories: `docs/reference/harmony-patch-registry.md` (full rationale/history) + the thin routing tables in `CLAUDE.md` ("Harmony Patch Categories" + "GameModel Overrides"). Defensive infra: `Dependencies/Foundation/PatchShield`. Gotcha lessons: [harmony-il.md](../../reviews/lessons/harmony-il.md).
+- TAOM patch catalogue + categories: `docs/reference/harmony-patch-registry.md` (full rationale/history); model overrides: `docs/reference/gamemodel-registry.md`. Defensive infra: `Dependencies/Foundation/PatchShield.cs`. Gotcha lessons: [harmony-il.md](../../reviews/lessons/harmony-il.md).
 - Linked: gamemodel-system.md (Phase 7, AddModel), campaignevents-and-campaignbehavior.md (Phase 9, AddBehavior), formations-and-team-ai.md / campaign-to-mission-bridge.md (Phases 13/17, deferred patch), bannerlord-engine-and-toolchain.md (the native/MinHook boundary).
 
 ---

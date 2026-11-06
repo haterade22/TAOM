@@ -4,8 +4,8 @@
 
 One read-only pass over `docs/` (plus `CLAUDE.md`, `AGENTS.md`, and the shipped ModuleData configs)
 that reports **doc rot**, the class of defect where the code moved and the prose did not. Pure
-stdlib, no game install required. Checks 5 to 7 **block a commit** through
-`.claude/hooks/check-doc-config-drift.sh`; check 8 gates through `--fail-on-drift`; the others are
+stdlib, no game install required. Checks 5 to 11 **block a commit** through
+`.githooks/pre-commit` and, for Claude's commits, `.claude/hooks/check-doc-config-drift.sh`; the others are
 advisory.
 
 Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
@@ -45,6 +45,7 @@ skip the whole report — including the six checks that were correct.
 | 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | through `--fail-on-drift` | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference nor a `no issue:` reason |
 | 9 | **Git diff failed** ([#987](https://github.com/haterade22/TAOM/issues/987)) | **yes** | the new-lines checks (dashes, check 8) could not diff because the diff failed on a resolvable base, which means repository damage (a broken index or a missing object; a mistyped `--dash-base` exits 2 instead). Reported once under its own heading and `git_diff_failed:` counter; it used to read as zero findings |
 | 10 | **New feature doc with no verify section** | **yes** | a `docs/features/*.md` ADDED against the base with no `## How to verify in game` section that has a body (outside a code fence); `--also-new` names a doc a pending `git add` will add. A modified doc, `TEMPLATE.md`, `README.md`, a subdirectory doc and a doc a merged branch already has are not checked |
+| 11 | **Rule text drift** | **yes** | in `.claude/rules/`, `.claude/agents/`, `.claude/skills/`, `docs/ai-includes/` and, for this token, `docs/reference/engine/`: a `feedback_` or `feedback-` token (`dead-memory-ref`, a machine-local memory file); in `.claude/rules/`, a backticked `...Service`, `...Adapter`, `...Factory`, `...Provider`, `...Tests` or `...Hook` name outside code fences that no tracked `.cs` or `tools/**/*.py` file contains (`rule-symbol`; mark an example line `<!-- illustrative-name -->`; `docs/adrs/` is listed report-only); a `dotnet test` or `dotnet build` of a TAOM target without `-p:ModuleId=` in the command, a line continuation read whole, in `docs/modding`, `docs/reference`, `docs/ai-includes`, `.claude/rules`, `.claude/agents` and `.claude/skills` (`unflagged-dotnet`). Under `--staged` or `--only-paths` it judges only the files the commit records, as it records them |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -54,7 +55,7 @@ pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) 
 reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
 this is a check and not a note.
 
-`--fail-on-drift` gates on **5 to 10**; checks 1-4 never block. Within 7, only hard violations
+`--fail-on-drift` gates on **5 to 11**; checks 1-4 never block. Within 7, only hard violations
 gate; a `size-warn` finding is report-only by design.
 
 ### Budget constants (check 7)
@@ -87,9 +88,6 @@ another cell counts.
   count: write the issue number in plain text.
 - **Blind spot:** an edited legacy line becomes a new line, so rewording an old bare `FOLLOW-UP` in
   an existing RCA trips the check until it cites an issue or a reason.
-- **Not wired to the commit hook on this line yet.** `check-doc-config-drift.sh` does not run for a
-  commit that stages only an RCA and does not pass `--staged`; that half waits for the hook work of
-  plan 103.
 - **What the hook passes (#987).** `--staged` judges the index against `HEAD`. A `git commit --amend`
   records the index against `HEAD~1` (the empty tree for a root commit), so the hook adds
   `--dash-base`. A path commit (`git commit -m x -- <paths>`, or paths after the message without
@@ -115,6 +113,18 @@ another cell counts.
   `iter_lines_outside_code_fences`, as the link and version checks do: a fence of any indent opens,
   and closes only on its own character with a run at least as long as the opener's, so a
   three-backtick line inside a four-backtick block stays inside it.
+
+Under `--staged` or `--only-paths` every gating check judges the tree the commit records
+(`CommitView`, read through one `git cat-file --batch`), so another session's unstaged edit cannot
+refuse a commit, and a staged breach cannot pass behind a clean working copy. Under `--only-paths`
+that tree is the named working copies on top of HEAD. Check 11 judges only the files the commit
+changes. The hooks' trigger lists keep a commit the checks cannot concern away from them, and they
+cover every folder check 11 scans.
+
+`.githooks/pre-merge-commit` adds `--clean-merge`: git writes `MERGE_HEAD` only after that hook, so a
+doc the merged branch holds would read as new, and check 10 is skipped there. A conflicted merge runs
+`pre-commit` at its later `git commit`, with `MERGE_HEAD` in place. A crash inside the linter exits 3,
+which the hooks report as "could not judge", because exit 1 means a finding.
 
 ## What "stale" means (check 2, the model that took two attempts)
 
@@ -197,7 +207,7 @@ python tools/lint_docs.py --quick          # dead links only (fastest; tight loo
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
 python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 8, the pre-commit gate
-python tools/lint_docs.py --drift-only    # only checks 5 to 8, the commit hook's mode (under a second)
+python tools/lint_docs.py --drift-only    # only the gating checks, the commit hooks' mode (a few seconds)
 python tools/lint_docs.py --fail-on-drift --staged   # check 8 reads the index
 python tools/lint_docs.py --drift-only --staged --dash-base HEAD~1   # what the hook runs for an amend
 python tools/lint_docs.py --drift-only --staged --only-paths docs/reviews/rca-x.md   # a path commit
@@ -220,6 +230,7 @@ before treating it as an all-clear.
 |---|---|
 | `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
+| `tools/tests/test_lint_rule_drift.py` | tests for check 11 and for `--followups` (every RCA `FOLLOW-UP` line that cites no issue number, with the count last; report only) |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
 | `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged` (plus `--dash-base HEAD~1` for an amend and `--only-paths` for a path commit) when a commit stages or names a file the gating checks read, an RCA included, and quotes every `## ` section of the report except `size-warn` lines (`tools/test_hooks.sh` 5d pins that list to the entry docs and to the RCA glob) |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |

@@ -13,7 +13,7 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 > **Hard boundary:** Blender → `.tpac` compile is **Modding-Kit-GUI-only**. This workflow produces
 > refined clips + **Kit-ready FBX**; it cannot compile or in-game-test them. Movement clips then MUST
 > be tagged `quad_movement` at Kit compile (see [`spider.md`](../features/spider.md) "How-to") or the
-> game AVs at `Skeleton.TickAnimations` ([[feedback-quad-movement-tag-required-for-gait-clips]]).
+> game AVs at `Skeleton.TickAnimations`.
 
 ## 1. Environment & toolkit
 
@@ -59,7 +59,6 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 
 - **In-place authoring.** Locomotion clips have **zero net root forward travel**; the engine supplies
   translation. Verify `analyze_gait → rootY_net ≈ 0`. Baked forward root motion double-speeds + slides.
-  ([[feedback-movement-anims-in-place-engine-driven]])
 - **No foot float on amplitude edits.** Reducing a leg's swing toward its *mean* lifts the planted
   foot (floats). Always anchor reductions to the **planted-frame pose** weighted by foot height
   (`damp_leg_lift`) so stance frames are untouched.
@@ -202,15 +201,14 @@ done. Nothing here is Kit-compiled or in-game-tested (GUI-only).
 Each links its backing memory; the session's meta-lesson is last.
 
 - **In-place authoring** — locomotion clips have zero net root forward travel; the engine translates.
-  Baked root motion double-speeds + slides. [[feedback-movement-anims-in-place-engine-driven]]
+  Baked root motion double-speeds + slides.
 - **`quad_movement` is mandatory on movement clips** — an untagged gait AVs at `Skeleton.TickAnimations`
   on the first mount tick in a *live mission* (never in preview/detached). Fix = the byte-graft (recipe
   in [`spider.md`](../features/spider.md) "How-to"; parse-based patcher in §1).
-  [[feedback-quad-movement-tag-required-for-gait-clips]]
 - **Blender 5.1.2 slotted-action API** — `Action.fcurves` is gone (layers/strips/channelbags; author via
   `pose_bone.keyframe_insert`); FBX I/O needs a VIEW_3D `temp_override`. The Kit-export recipe is fixed
   (armature-only, `primary_bone_axis=Y, forward=-Y, up=Z`, no leaf bones, baked, take = scene name,
-  armature `<skel>_notused`). [[feedback-blender-512-slotted-action-api]]
+  armature `<skel>_notused`).
 - **Phase is float-safe; amplitude is not** — re-phasing (`phase_shift_bones`) preserves each foot's
   trajectory; amplitude reductions must anchor to the planted-foot pose (`damp_leg_lift`) or the stance
   foot floats.
@@ -218,11 +216,11 @@ Each links its backing memory; the session's meta-lesson is last.
   in-place, loop seam) turns "looks off" into numbers; pair it with the render→montage→Read visual loop.
 - **Rider = the human skeleton, verified by compositing** — author rider poses on the 28-bone
   `human_skeleton`, parent to the mount's `rider_sit_bone`, and verify the *meshed* fit via
-  `orc_rider.fbx` (§4a). [[feedback-rider-animation-on-mount-composite-verify]]
+  `orc_rider.fbx` (§4a).
 - **META-LESSON — re-verify a port's documented completeness.** `chariot.md` *claimed* the upstream pack authored
   *all* clips with `quad_movement`; an independent `tpac_clipinfo` re-check found 2 gait clips were
   untagged. A port's own doc asserting a property holds for *all* elements is a CLAIM to verify against
-  the artifacts, not a fact. [[feedback-ported-data-upstream-bugs-vanilla-baseline]]
+  the artifacts, not a fact.
 - **Stale-tool watch** — `tools/blender/creature_anim_ops.py` still has `primary_bone_axis='X'`; audit a
   tool's defaults before reusing it.
 

@@ -1,7 +1,3 @@
----
-description: Surface load-bearing assumptions before the first Edit. Ask if uncertain. Don't ask on trivial/mechanical work — that's the opposite failure mode.
----
-
 <!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Think Before Coding

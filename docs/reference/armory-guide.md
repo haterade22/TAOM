@@ -3,6 +3,9 @@
 > LOTRLOME_Armory item layout, canonical-folder-per-prefix table, Gondor prefixes, CC facegen action_sets. Extracted from CLAUDE.md 2026-07-18. Authoring workflow: `/author-armor`.
 
 
+The Armory ships to players at the next editor package, and "unversioned" means untracked by git, not unshipped.
+Never edit, commit or push `lotraom-assets`; the maintainer syncs it. Name the live file you changed in your report (2026-09-22).
+
 | Item | Details |
 |------|---------|
 | **Armory dependency** | `LOTRLOME_Armory` (NOT `Armory_2` — it will be deleted) |

@@ -20,8 +20,9 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    It does not merely "stay a version behind": on 2026-08-10 it jumped **three versions at once**,
    `v1.4.5.114928` → `v1.4.8.119303` (`public const string GameVersion`, `_editor_build_v1.4.5/`
    vs `_editor_build/TaleWorlds.Library.cs`), while the client moved 1.4.7 → 1.4.8.
-   **What skipping it breaks: native crash triage, silently.** `/native-crash-triage` derives fault
-   offsets from the wEditor `TaleWorlds.Native.dll`, so that binary's version *is* the offset base —
+   **What skipping it breaks: triage of an editor crash, which passes `--dll` on the wEditor binary.**
+   `tools/native_crash_triage.py` defaults to the shipping client DLL, so a client crash is unaffected, but an
+   offset from the wEditor `TaleWorlds.Native.dll` holds only for that binary's version:
    every offset taken before that jump was against a v1.4.5 image, and it moved with no signal.
    Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
    them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
@@ -107,10 +108,17 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 1. **`/verify-bindings`**: every Harmony patch / GameModel / reflection site / transpiler site (`TranspilerSiteBindingTests`) / `[ViewModelMixin]` refresh method (`ViewModelMixinBindingTests`). Two things about the
    snapshot half (`pwsh tools/snapshot_api_surface.ps1`): it reads `TAOM.dll` out of
    `TAOM.Tests/bin/{Debug,Release}/net472` and **throws if TAOM.Tests has not been built**, so build
-   first; and `-Check` reports **DRIFT against the committed files by design** — the generator emits
-   no backlinks footer while `tools/build_backlinks.py` appends one to every doc, so `-Check` only
-   returns 0 in the window between regenerating and restoring backlinks. That drift is the footer
-   alone. If it names anything above the `---`, the API surface genuinely moved.
+   first; and `-Check` exits 1 with DRIFT when a patch target or GameModel base moved, which after a bump is expected until you
+   regenerate. It ignores the backlinks footer.
+   The same gate runs Patch99's live harness (`XmlMergeLiveEquivalenceTests`), because the IL
+   fingerprint of the merge bodies does not pin every input of the merge. Its runsettings set
+   `TAOM_RUN_BENCHMARKS=1`, which a plain `dotnet test` needs to run it. A red harness means the fast
+   path no longer matches the engine's merge, or the gate's inventory or speed rule failed: read the
+   message ([fast path](../../../docs/features/xml-merge-fast-path.md), "How to run the harness").
+   - The hand-copied engine id sets, which stay green when the engine drops an id: the policy ids in
+     `KingdomPolicyIdsTests.EnginePolicyIds` (re-read `DefaultPolicies.RegisterAll`, #756).
+   - A vanilla prefab that moved: read `PrefabCloneWidgetReferenceTests`, re-base the clone on the
+     installed file and re-apply TAOM's edits, and delete a clone with no TAOM edit.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines. **Report-only: it contains no `sys.exit` and always exits 0**, so it cannot be
    gated on in a script and a green exit code proves nothing — READ the output.
@@ -163,8 +171,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 First read the new build's first start in `taom_debug_*.log` for the native guards (`docs/features/skeleton-buffer-guard.md`, "After an engine bump"): both `[SkeletonBuffer] guard ON pool 1` and `guard ON pool 2` must appear; a `guard OFF pool N` (or one `guard OFF:`) with a pattern reason means players lost that pool's freeze protection until the patterns are re-derived. Then: vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
 Windows Event Log fault offset against the previous version's known sites BEFORE assuming your
 last change caused it** (`/native-crash-triage` Phase 1) — the rewritten native lookups in new
-engine versions turn previously-tolerated data misses into AVs
-(memory: `feedback_engine_lookup_total_key_coverage`).
+engine versions turn previously-tolerated data misses into AVs.
 
 Worked example of the whole protocol: `docs/features/spider.md` "The v1.4.6 engine-bump
 campaign" + CHANGELOG 2026-06-12.

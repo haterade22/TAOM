@@ -69,6 +69,25 @@ being built ([lord-party-templates.md](../features/lord-party-templates.md)). A 
 must stay unbound by every clan and culture, so it is a third place to grep before calling a
 template dead.
 
+The clan row is per CLAN, not per culture, and that is where 176 of the 193 lord-party templates live
+(the other 17 are the culture defaults, which `Clan.DefaultPartyTemplate` falls back to only when the
+clan binds nothing). The binding is `default_party_template` in `characters/clans.xml` or
+`spclans.xslt`, and those two files are what you grep to prove a clan template is reachable, NOT the
+culture files. The id is a convention, not a derivation, so never compute one. Most embed the clan id
+minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebor_1_template`), but
+Gondor's 14 embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds
+`kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the ROSTER's culture,
+which is not always the clan's: the five `Culture.bluecraig` clans bind
+`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. The five
+`Culture.mistymountainorcs` clans are the counter-example that proves the token is a convention and
+not a derivation: they keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks
+are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing instead of
+grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
+`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14. A third binding site exists
+since 2026-09-12: `lord_party_templates/lord_party_templates.json` binds a template to ONE hero
+(Patch88, `docs/features/lord-party-templates.md`), and a template listed there is deliberately
+absent from every clan and culture. Grep it too before calling a template dead.
+
 ## Attributes
 
 <!-- engine-table type="TaleWorlds.CampaignSystem.Party.PartyTemplateObject" file="Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Party/PartyTemplateObject.cs" method="Deserialize" inert="" -->

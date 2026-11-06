@@ -6,7 +6,7 @@ argument-hint: "[bug|feature|crash] [brief description]"
 
 # Create GitHub Issue
 
-Create a GitHub issue following TAOM's mandatory issue format.
+Create a GitHub issue following TAOM's mandatory issue format. Creating one is public, so it needs the maintainer's word. Editing a body or adding a progress comment needs no ask; run `python tools/check_public_text.py` on the text first.
 
 ## Type: `$ARGUMENTS`
 
@@ -35,11 +35,12 @@ Same procedure, with these sections:
 
 ## Steps
 
-1. Determine issue type from `$ARGUMENTS`
-2. Fill in all sections — do NOT leave placeholder text
-3. Write the body to a file, run `check_public_text.py`, then `gh issue create --body-file`
-4. Output the created issue URL
-5. Reference the issue number in your next commit message
+1. Search the open issues for the same file, tool or symptom first: `gh issue list --state open --search "<file or symptom>"`. If one exists, update or comment on it instead of filing a duplicate.
+2. Determine issue type from `$ARGUMENTS`
+3. Fill in all sections; do NOT leave placeholder text
+4. Write the body to a file, run `check_public_text.py`, then `gh issue create --body-file`
+5. Output the created issue URL
+6. Reference the issue number in your next commit message
 
 ## After Completing Work
 

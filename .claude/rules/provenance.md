@@ -27,6 +27,22 @@ first, it is history, not policy.
 
 De-naming does not work in practice: a link target or file name always carries the name anyway.
 
+## Sources the maintainer chooses not to name
+
+The maintainer may decide that a source is never named (Mike, 2026-10-26). For such a source:
+
+- **Write nothing about it in the repo:** no name, no euphemism, no register row, no link, no file
+  or branch name that carries it. "Inspired by another mod" is a euphemism too.
+- **TAOM builds its own version from its own written spec.** It copies no code, data, text or assets,
+  and nobody reads the source's code or data while building. The feature doc, issue and commit
+  describe TAOM's design on its own terms, as any other TAOM feature.
+- **The record stays outside the repo,** in the maintainer's private notes. An agent told a source
+  is unnamed keeps it out of every public surface: commits, issues, PRs, docs, code and comments.
+
+This is the one exception to "name it" below. It never covers a source whose code, data, text or
+assets TAOM ships or reproduces, or one read while building (a `behavioural-port`): those still need a
+register row and, when it applies, a notice.
+
 ## What good attribution looks like
 
 Two examples in this repo, both safe, both worth copying:
@@ -46,6 +62,7 @@ Two examples in this repo, both safe, both worth copying:
 | **Name it** | Use the source's published name in comments, docs, and commit messages. Link the register row. |
 | **A shipped notice states terms only when they are established** | `UNKNOWN` is a valid value in the register and never appears in a `THIRD-PARTY-LICENSES.txt`. A shipped notice may still describe a derivation factually (what TAOM's code is, what it was written from) without asserting terms nobody has confirmed, and it must not carry the register's internal status vocabulary or point at repo-internal tracking docs. Publishing "we do not know" is not a notice; it is a worklist. |
 | **Never assert ownership you do not have** | A blanket "all other binaries here are original TAOM work" in a notice file is an affirmative claim about every artifact it sweeps up. Enumerate, or scope the sentence to what you can actually stand behind. This is the same defect as an unattributed taking, pointing the other way. |
+| **A Fab purchase needs no licence research** | Register it as `purchased-asset`, code terms informal, derivation `data-port`, status `cleared`, with no creator or licence research. An asset reaching players through the Armory needs no `THIRD-PARTY-LICENSES` entry (maintainer, 2026-09-23). |
 | **Pick the narrowest true derivation** | The vocabulary is closed: `clean-room`, `behavioural-port`, `verbatim-port`, `data-port`, `redistributed`, `interop-only`, `comparison-only`. **If you read the source while implementing, it is not `clean-room`**, no matter how much you changed. Claiming clean-room falsely is worse than claiming nothing, because it is the one claim a rights holder would actually test. |
 | **Redistributing a binary means reproducing its notice** | Anything landing under `*/_Module/bin/**` that is not TAOM-built needs a `redistributed` row and an entry in that module's `THIRD-PARTY-LICENSES.txt`. MinHook shipped for months without one. |
 | **Do not carry another party's identity into TAOM's public surface** | Their initials in a type name, their SaveSystem base id, their namespace. These outlive any comment and are visible to every other mod in the process. **One carve-out, and it must be argued in writing:** a short identifier that has become community vocabulary can be kept when the reasoning is recorded, as `docs/scene-scripts/ATTRIBUTION.md` does for Alliance's `CS_` scene-script prefix (short names are not copyrightable, and map authors search for them). A prefix that is just the donor's initials on a type nobody outside TAOM searches for does not qualify. |

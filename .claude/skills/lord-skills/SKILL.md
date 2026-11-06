@@ -13,7 +13,7 @@ Assign lore-driven skill values + personality traits to TAOM lords. **Read the a
 - A new TAOM lord needs skills/traits, or a whole culture roster needs a balance pass.
 
 ## The one critical fact (the recurring bug)
-Hero stats come from `skill_template="SkillSet.taom_..."`, NOT from the NPCCharacter's `<skills>` block — **explicit `<skills>` on heroes are IGNORED by the engine** (kept as documentation only). To change a hero's skills, edit the SkillSet (or repoint `skill_template`). See memory `feedback_skill_template_overrides_explicit_skills.md` — Boromir showed OneHanded=145 instead of 295 because someone hand-edited `<skills>`.
+Hero stats come from `skill_template="SkillSet.taom_..."`, NOT from the NPCCharacter's `<skills>` block: **explicit `<skills>` on heroes are IGNORED by the engine** (kept as documentation only). To change a hero's skills, edit the SkillSet (or repoint `skill_template`). Boromir showed OneHanded=145 instead of 295 because someone hand-edited `<skills>`.
 
 ## Workflow
 1. **Identify the NPC** — grep `characters/lords.xml`, `lords.xslt`, `heroes.xslt` for the name → NPCCharacter id. Classify the layer: `lords.xml` (TAOM-new, wins at runtime) > `lords.xslt` (vanilla override, loses to lords.xml on same id) > `heroes.xslt` (bio text, stat-irrelevant).
@@ -25,4 +25,4 @@ Hero stats come from `skill_template="SkillSet.taom_..."`, NOT from the NPCChara
 ## Gotchas
 - **Saves bake values** — XML edits affect NEW campaigns + un-spawned heroes only; existing saves keep locked-in stats.
 - **An id in both files merges:** `characters/lords.xml` wins each attribute and `<skill id>` it redeclares, `lords.xslt` supplies the rest, and differing `<Equipments>` sets union into a random per-campaign pick (lesson #644 in `docs/reviews/lessons/xslt-moduledata.md`). Grep both files before editing a lord.
-- After any rename, grep ALL `Main/_Module/ModuleData/**/*.xml` for the OLD name (lore flavor text goes stale silently — memory `feedback_rename_grep_all_moduledata.md`).
+- After any rename, grep ALL `Main/_Module/ModuleData/**/*.xml` for the OLD name (lore flavor text goes stale silently).

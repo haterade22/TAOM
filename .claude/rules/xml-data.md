@@ -28,13 +28,13 @@ To extend a pool (e.g. add a 3rd Rural Notable `_23` to support a higher notable
 1. Define `<NPCCharacter id="spc_notable_{culture}_23" …>` in `characters/npcs_{culture}.xml`.
 2. Add `<template name="NPCCharacter.spc_notable_{culture}_23" />` inside that culture's `<notable_templates>` block in `taom_spcultures.xml`.
 
-The same applies to additional Preachers, Headmen, or any new notable beyond the base 26. Why: the engine populates the spawn pool from `<notable_templates>` (read by vanilla `NotablesCampaignBehavior` / `HeroCreator.CreateNotable`), NOT by enumerating `npcs_*.xml`. RCA: `docs/reviews/rca-cultural-feats-3pack-2026-05-31.md`. Memory: `feedback_notable_template_two_layer_registration`.
+The same applies to additional Preachers, Headmen, or any new notable beyond the base 26. Why: the engine populates the spawn pool from `<notable_templates>` (read by vanilla `NotablesCampaignBehavior` / `HeroCreator.CreateNotable`), NOT by enumerating `npcs_*.xml`. RCA: `docs/reviews/rca-cultural-feats-3pack-2026-05-31.md`.
 
 ## Culture Attribute References
 Culture XML attributes (`merchant_notary`, `artisan_notary`, etc.) must reference the FIRST NPC of each occupation type.
 
 ## Region Codes
-EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=Dale/North, DG=Dol Guldur, E=Erebor, G=Gundabad, I=Isengard, L=Lothlorien, M=Mirkwood, R=Rivendell, RU=Rhun, U=Umbar, MM=Misty Mountain Orcs, GT=Goblins (Goblin-town, settlements), LN=Lindon
+Settlement prefixes, measured from the live map in [id-cheatsheet](../../docs/modding/id-cheatsheet.md) "Region prefixes": A=Khand and Harad (Aserai-mapped), DG=Dol Guldur, E=Erebor, EN=Dunland, ES=Mordor, EW=Gondor, FH=Far Harad, G=Gundabad, GBC=Blue Craig, GT=Goblin-town, I=Isengard, K=Khand (Variag), L=Lothlorien, LN=Lindon, M=Mirkwood, MM=Misty Mountains, R=Rivendell, RU=Rhun, S=Dale, U=Umbar, V=Rohan
 
 **Lord/hero id region prefixes** (`lord_<CODE><clanN>_<lordN>`) differ from settlement codes for the new orc kingdoms: Misty Mountain Orcs lords use `MM`, **Goblin lords use `GB`** (settlements use `GT`), Lindon lords use `LN`. Goblin's settlement code (`GT`) and lord code (`GB`) are independent id-spaces.
 
@@ -79,7 +79,7 @@ Without `equipmentType="Civilian"` on a civilian roster, the engine treats it as
 
 **The `<EquipmentRoster>` element itself also needs `culture="Culture.<id>"`** (1.4.3+ — mirror vanilla; see [docs/migration/templates/equipment-rosters.md](../../docs/migration/templates/equipment-rosters.md) attribute table). The engine logs `EquipmentRoster with id: <id> don't have culture definition` once per roster at load when it's absent. Non-fatal — the roster still loads, and code-driven lookups (e.g. `child_education_equipments_*` resolved by `EducationCampaignBehavior`) key off the id, not the resolved culture — but it's per-roster log noise and a template gap. For the `_<culture>`-suffixed education/child/wanderer rosters the value is the id's final token (`Culture.gundabad`). This bit `taom_education_equipment_templates.xml`: **980** rosters shipped without it (fixed 2026-06-22 via `tools/add_education_roster_cultures.py`; the orc-culture set added in #267 inherited the omission). When you author or mirror a standalone roster, set BOTH the roster `culture=` AND each civilian `<EquipmentSet equipmentType="Civilian">`.
 
-**Why this matters:** Encyclopedia portraits, settlement-walk views, dialog scenes, and random equipment selection at hero spawn all key off this attribute, not off the roster ID. A misclassified civilian roster manifests as the wrong outfit in non-combat contexts — exactly the Faramir/Boromir bug pattern (memory: feedback_equipmenttype_civilian_required.md).
+**Why this matters:** Encyclopedia portraits, settlement-walk views, dialog scenes, and random equipment selection at hero spawn all key off this attribute, not off the roster ID. A misclassified civilian roster manifests as the wrong outfit in non-combat contexts: exactly the Faramir/Boromir bug pattern.
 
 **Catch list before commit** — when editing any `taom_equipment_sets_*.xml`:
 1. Grep for `<EquipmentRoster id="[^"]*_civ` matches in the file.

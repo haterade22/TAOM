@@ -70,7 +70,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | User intent / phrase | Invoke | Confidence gate |
 |----------------------|--------|-----------------|
 | "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions from a TAOM patch or service | **`/investigate`** — never debug ad-hoc | None — always |
-| Native CTD: `0xC0000005` / `AccessViolationException` with the stack dying in `TaleWorlds.Native.dll` (or any native module), "crashed to desktop" with no managed culprit | **`/native-crash-triage`** — never blind-retry a native AV | None — always. `/investigate` hands off here when the trail goes native |
+| Native CTD: `0xC0000005` / `AccessViolationException` with the stack dying in `TaleWorlds.Native.dll` (or any native module), "crashed to desktop" with no managed culprit, a hang | **`/native-crash-triage`**: never blind-retry a native AV | None: always. `/investigate` hands off here when the trail goes native |
 | "add a new creature", "make X rideable", "new mount", a creature troop/mount feature kickoff | **`/new-creature-mount`** | Skip if the user is just sketching aloud — invoke when they say "do it" |
 | Session-start hook prints "GAME VERSION DRIFT", Steam updated Bannerlord, "the game updated", deliberate engine migration | **`/engine-bump`** | None — always, and BEFORE trusting any test run |
 | "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** | None — always. If error mentions a missing/renamed TaleWorlds type, hand off to `/research` first; if `/build-fix` retry budget triggers, hand off to `/investigate`. |
@@ -88,10 +88,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | HARNESS RETRO DUE banner; "did that rule help" | **`/harness-retro`** | |
 | "save my work", "save state", "save progress", "context save", before stepping away or before `/compact` | **`/context-save`** | None — always |
 | "where was I", "resume", "pick up where I left off", "restore context" | **`/context-restore`** | None — always |
-| Bash script bug, build infra issue, MCP server error, hook script crash — anything outside TAOM C# | **`debugger` agent** (Task tool) | None — but route TAOM C# bugs to `/investigate` instead |
 | Agent loop / drift, repeated retries with no progress, context degradation | **`/agent-introspection-debugging`** | None — always |
-| Multiple seemingly-unrelated bugs in same session/save, suspect shared root | **`error-detective` agent** (Task tool) | None — always |
-| "this method is too long", "this class needs to be split", structural cleanup without behavior change | **`refactoring-specialist` agent** (Task tool) | Tests must be green BEFORE invoking. Tests must remain green AFTER. |
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 | User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
 | Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
@@ -118,14 +115,13 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Scoped Rules (auto-loaded by file path)
 
-Full catalog (rule → scope → content, 17 path-scoped + 8 always-load):
+Full catalog (rule → scope → content, 18 path-scoped + 8 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
 full text is already in context every session; the path-scoped ones load when you open a matching file.
 
 ## Custom Agents
 
-9 custom agents in `.claude/agents/`: the specialists taleworlds-researcher, feature-builder, debugger,
-error-detective and refactoring-specialist; the tiers `fast-reader`, `implementer` and `architect`
+6 custom agents in `.claude/agents/`: the specialists taleworlds-researcher and feature-builder; the tiers `fast-reader`, `implementer` and `architect`
 (`.claude/rules/model-effort-selection.md`); and `deep-reviewer` for `/deep-review` lenses. Descriptions
 load eagerly; each body carries its own execution model. **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
 do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
@@ -201,16 +197,18 @@ instructions `AGENTS.md`.
 | **`Town.LastCapturedBy` is a stamp, not participation** | Written ONLY by `ApplyBySiege`, to the assault LEADER's clan, never cleared: army members get nothing and a clan that stormed the place months ago still reads as capturer on every re-election. Vanilla pays it +30 merit. TAOM scores participation from `IFiefSiegeParticipationService` (#565). `docs/features/fief-granting.md`. |
 | **One MarriageModel slot** | `TaomMarriageModel` carries BOTH the Ringwraith block and the Free/Evil rule (#542): `AddModel` does not compose, so a second marriage model silently shadows one of them. New marriage rules go in that class. `IsCoupleSuitableForMarriage` is the chokepoint for every path. `docs/features/marriage-alignment.md` |
 | **Player Switcher priority** | The character-creation handover MUST register at handler priority 1100, above TAOM's own 1050. Lower and `ApplyFinalEffects` plus `SetPlayerRace` hit the real lord: Erebor at renown zero, Sauron's race overwritten and then persisted. Reassign the player clan BEFORE removing the created hero or the orphan clan survives. `docs/features/player-switcher.md`. |
-| **Armory asset trees** | No cooked tree: 0 `AssetPackages/*.tpac`, the engine loads loose `Assets/**` and loose WINS where both exist (TAOM/TAOM_Map ship both; `rgl_log` names `Assets` for each). The old stale-pack trap is unreachable here. Current inventory is GENERATED, never counted by hand: `docs/reference/armory-catalogue/`. |
+| **Armory asset trees** | Desktop: no cooked tree, 0 `AssetPackages/*.tpac`. Laptop and public build: cooked, `AssetPackages/` and no `Assets/`. Desktop: the engine loads loose `Assets/**` and loose WINS where both exist (TAOM/TAOM_Map ship both; `rgl_log` names `Assets` for each). Current inventory is GENERATED, never counted by hand: `docs/reference/armory-catalogue/`. |
+| **An Armory sync renames meshes; the XML keeps the old names** | A `body_name` no tpac ships spins `PreloadHelper.WaitForMeshesToBeLoaded` forever (#352, #599); `Patch90_PreloadBodyGuard` drains it and logs `[PreloadGuard]`. Nothing prompts the audit: after any Armory sync run `python tools/audit_armory_refs.py`, repoint refs, never restore a tpac. `docs/features/armory-ref-audit.md` |
 | **Settlement menus need an encounter** | Inside a settlement with no `PlayerEncounter`, every vanilla settlement menu CTDs: `game_menu_settlement_wait_on_init` derefs `EncounterSettlement`, the rest deref `LocationEncounter`. Only `IEncounterAdapter.EnsureSettlementEncounter` may place the player there; an IL ban test enforces it (#510). |
 | **Horse-skeleton reskins** | A reskin shares its action vocabulary with the ENGINE, so "our code never fires this" stops meaning "nothing fires this". The vanilla horse rig has NO attack clip (`monster_usage_strikes` is a hit-REACTION table); its only attack is `act_horse_kick`. `act_horse_rear` blocks `Agent.Mount`; `act_horse_strike_*` are hit reactions. `docs/features/war-ram.md` |
 | **A HorseHarness is REQUIRED beside every Horse slot** | Not always armour: on the ram it is the SEAT (`sk_eb_goat_a/_b` are bare pelts), so an empty slot renders a rider on bare hide. No XML says which mounts carry their own saddle, so the rule is universal; exemptions go in `_HARNESSLESS_BY_DESIGN` with a reason. Gate: `MOUNT_WITHOUT_HARNESS`. `docs/features/war-ram.md` |
 | **Animation must be authored on the ENGINE skeleton** | Skinning is roll-independent, so a mesh FBX can carry wrong bone orientations and still deform correctly in game; rotations are not. A clip authored on a mesh rig looks perfect in Blender and twisted in game. Dump the real rig first: `pwsh tools/dump_engine_skeleton.ps1 -Skeleton <name>`. `docs/reference/bannerlord-skeleton-authoring.md` |
+| **A tpac the Kit never saved is invisible, with no log line** | The client renders only packages with a `RuntimeDataCache/<package GUID>.rdc`, which ONLY the editor writes. A hand-built tpac, a Kit import without a module save, or a reimport leaves packages without one: skipped whole, no `Unable to find`, no `Overriding item`. Gate: `python tools/check_rdc_entries.py --under <folder>` (#616). |
 | **Renaming a Kit animation clip corrupts it** | The Kit keeps resolving the old name: `Size in KB = 0`, Save refused, scrambled model viewer, and the renamed file can vanish. Only a full Kit restart clears it, every time. Leave the clip on `new_animation_clip`, close the Kit, then `python tools/rename_anim_clip_tpac.py <file> <name> --apply` |
 | **Player start items are `starter_` twins** | Every id a `player_char_creation_*` or `player_career_*` roster hands out is a `starter_<donor>` clone; `StarterKitCoverageTests` fails on a real item. The vanilla-six override puts `_replaceWhileMerging="true"` on the ROSTER, never a set: `EquipmentSet` has no schema key. `docs/features/starting-equipment-tuning.md` |
 | **Troop bows are generated `ladder_*` items** | Reach is the bow's `missile_speed`; skill is accuracy, never range. 130 `ladder_<line>_<bow|xbow>_<band>` items live in the unversioned Armory from `tools/ranged_ladders.json`; a reinstall drops them and archers spawn bowless, no error. `generate_ranged_ladder_items.py --verify`; gate `RANGED_LADDER_INVERSION`. `docs/features/ranged-ladders.md` |
 | **A Stop order never forms a line** | `MovementOrderStop` is `StandGround`: `GetOrderPositionOfUnit` returns each rider's OWN position (`Formation.cs:1262`), so a `SetPositioning` line applied under it is ignored and riders freeze in place. Shape a formation with a Move (Hold: arrangement slots). SmartCavalryAI ran 4 months on Stop, 44 tests green (#586). `docs/features/smart-cavalry-ai.md` |
-| **Agent slots recycle; Agent.Tick is off-thread** | A deleted agent's index goes to the next agent built and its dead `Agent` still reads that slot (`IsActive` says yes): never key mission state on `Agent.Index` (#592). In SP `Agent.Tick` runs on the async AI thread: no blows or mission collections from an `AgentComponent` tick; trees tick from `BehaviorTreeMissionLogic.OnMissionTick`. |
+| **Agent slots recycle; Agent.Tick and callbacks are off-thread** | A deleted agent's index goes to the next agent built and its dead `Agent` still reads that slot (`IsActive` says yes): never key mission state on `Agent.Index` (#592). `Agent.Tick` and native callbacks (`OnAgentRemoved` too, #634) run off the main thread: no blows from a component tick; write mission state via `RunOrDefer`. |
 | **An `AfterStart` throw reloads the mission forever** | v1.4.8 `FinishMissionLoading` clears `_missionInitializing` before `Mission.AfterStart` (`MissionState.cs:333-352`), so a throw makes every later tick reload the mission and SaveShield swallows it: an endless loading screen. Patch103 cuts the throwing call short. `docs/features/mission-start-guard.md` |
 | **Event listeners run newest first** | `MbEvent.AddNonSerializedListener` prepends (v1.4.8 `MbEvent.cs:24-30`), so a listener added after the engine's runs BEFORE it on the same event. `docs/reference/engine/campaign-tick-time-and-party-ai.md` |
 
@@ -229,7 +227,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-95 categories mapping a stack trace to its owning feature -> exact target -> status.
+118 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`
@@ -267,7 +265,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 - **The commit body is the changelog entry** (`/release` writes `CHANGELOG.md`). ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
 - **CLAUDE.md:** new features add their row to `docs/reference/feature-map.md`, NOT here — here only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget).
-- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md) — detailed enough that a future session needs ZERO re-decompilation.
+- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. The maintainer may waive the issue for a piece of work; filing one is public, so without a standing word ask once, and record a waiver or decline in the commit body. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md): detailed enough that a future session needs ZERO re-decompilation.
 - **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
 
 ## Commits
@@ -375,19 +373,18 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 | Hook | Expected Response |
 |------|------------------|
-| `post-compact.sh` | Immediately `Read` MEMORY.md and each file listed under "Files in flight" before resuming work. Do not continue from transcript memory alone — the file is the source of truth. |
 | `session-start.sh` ("GAME VERSION DRIFT" warning) | Surface the drift to the user FIRST and invoke `/engine-bump` before any build/test/crash-attribution work. Do not dismiss it — every test run on an unacknowledged engine bump produces misattributable evidence (the 1.4.6 lesson). |
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
 | `check-verification-evidence.sh` | A Stop block reason, once per streak. Run `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
-| `check-version-tagged.sh` | Ask the user before tagging and pushing; both are the maintainer's. An untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
 
 ## Notes
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- No git actions unless explicitly asked
+- No git action that changes a ref, the index or the working tree unless asked; reads are free
+- Test for CRLF with `file <path>`; `grep -c $'\r'` reports 0 under this shell.
 - Native PowerShell tool (opt-in) and its knobs: [`docs/reference/powershell-tool.md`](docs/reference/powershell-tool.md)
 
 ## Equipment & Armory

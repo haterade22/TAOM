@@ -3,6 +3,8 @@
 ## Overview
 Overrides Bannerlord's `DefaultInformationRestrictionModel` to add a MCM setting that reveals all characters in the encyclopedia regardless of whether the player has encountered them. When the setting is off, vanilla behavior is preserved.
 
+The home page (six painted panels) stays as is (maintainer, 2026-10-07).
+
 ## Why This Exists
 - **Vanilla behavior:** `DefaultInformationRestrictionModel.DoesPlayerKnowDetailsOf(Hero)` returns `false` for heroes the player has not met, hiding their encyclopedia entries. Vanilla also provides the console cheat `campaign.toggle_information_restrictions` to bypass this.
 - **TAOM requirement:** Players and modders often need to inspect all lords and characters in the encyclopedia without using the console, especially during testing or when exploring the new LOTR factions.

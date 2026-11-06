@@ -57,7 +57,7 @@ Table of current configuration values with notes explaining the choices.
 | `Main/Features/<Name>/Service.cs` | Core logic |
 | `Main/Features/<Name>/IService.cs` | Service interface |
 | `Main/Features/<Name>/Behavior.cs` | CampaignBehavior or GameModel |
-| `Main/Features/<Name>/IoC.cs` | DryIoc registration |
+| `Main/Features/<Name>/<Name>Module.cs` | Feature module: DI, patches and models it declares |
 | `Main/Adapters/IXxxAdapter.cs` | Adapter interface |
 | `Main/Adapters/XxxAdapter.cs` | TaleWorlds API wrapper |
 | `Main/_Module/ModuleData/<config>` | Configuration data |
@@ -76,7 +76,7 @@ Table of current configuration values with notes explaining the choices.
 
 **Preconditions:** new campaign or existing save, whether a restart is needed, the MCM toggle, the module set.
 
-1. One exact `taom.*` console command or UI action, then the observable result that proves it (a printed value, a menu option, a log line).
+1. One exact `taom.*` command or UI action, then the `[Check]` line, log line or report field that proves pass or fail, written by the code before the first test (maintainer, 2026-10-31). Add a manifest in `tools/ingame_checks/` when an issue exists. A result only a person can see says so.
 2. Next step, same pairing.
 
 An unreachable step is reported with the command tried and the unmet precondition. Never mark it verified through another path.

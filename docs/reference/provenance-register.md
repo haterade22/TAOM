@@ -1,6 +1,6 @@
 # Provenance Register
 
-Every third-party source TAOM derives from, interoperates with, or was compared against, with its
+Every named third-party source TAOM derives from, interoperates with, or was compared against, with its
 license and what kind of derivation it is. This file is the single authoritative record. It is also
 read by `tools/check_provenance.py`, which checks the Derivation and Status vocabulary, that each
 shipped non-TAOM binary has a `redistributed` row, and that each adoption record is named here or
@@ -11,7 +11,9 @@ mention is a violation, and so is an unnamed euphemism ("the donor mod", "the up
 reverses an earlier standing rule that said TAOM documentation must not name other mods, recorded at
 [`docs/changelog-archive/CHANGELOG-2026-H1.md:2258-2270`](../changelog-archive/CHANGELOG-2026-H1.md).
 That rule produced a partial de-naming pass and no enforcement, and it left the repo documenting that
-something had been taken while making it impossible to check under what terms. Full rule:
+something had been taken while making it impossible to check under what terms. One exception: a
+source the maintainer chooses not to name, from which TAOM copies nothing, gets no row and no
+mention anywhere in the repo. Full rule:
 [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
 
 **This file does not ship.** It carries `uncleared` rows, which are a working list of open questions,
@@ -57,7 +59,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
-| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,skill-stocktake,agent-introspection-debugging,build-fix,verify}/**`; `.claude/hooks/{config-protection,mcp-health-check,mcp-health-mark,block-dangerous-git}.sh`; `.claude/skills/context-save` and `context-restore` (failed-approaches field, staleness notice) | cleared |
+| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,skill-stocktake,agent-introspection-debugging,build-fix,verify}/**`; `.claude/hooks/{config-protection,block-dangerous-git}.sh`; `.claude/skills/context-save` and `context-restore` (failed-approaches field, staleness notice) | cleared |
 | graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
@@ -199,7 +201,7 @@ Ideas and procedures re-expressed in TAOM's own words and code across four revie
 config scanner is a calibrated subset of AgentShield's categories. The file itself names ECC in
 `audit_claude_config.py`, the `context-budget`, `skill-stocktake`, `agent-introspection-debugging`,
 `context-save` and `context-restore` skills and `block-dangerous-git.sh`; the early-2026
-ports (`build-fix`, `verify`, `config-protection.sh`, `mcp-health-check.sh`, `mcp-health-mark.sh`) carry
+ports (`build-fix`, `verify`, `config-protection.sh`) carry
 no attribution line, and their record is the "Everything-Claude-Code Cherry-Pick" entry in
 `docs/changelog-archive/CHANGELOG-2026-H1.md`. Harness tooling only: none of it ships to players, so no
 `THIRD-PARTY-LICENSES.txt` entry is owed. Adoption records:

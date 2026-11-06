@@ -10,5 +10,6 @@ tools:
   - Bash
   - Grep
   - Glob
+  - Monitor
 ---
 Implement the task as specified, following the conventions in CLAUDE.md. Run relevant tests before reporting. If the spec is unclear or the change spreads beyond its stated scope, stop and report back rather than improvising architecture.

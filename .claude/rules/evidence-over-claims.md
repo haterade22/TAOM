@@ -1,7 +1,3 @@
----
-description: Evidence over performance — verify a review finding before implementing it, never sycophantically agree, and make no "done" claim without fresh verification output.
----
-
 <!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Evidence Over Claims
@@ -10,9 +6,9 @@ Three facets of one discipline: **technical truth over social comfort.** When so
 
 ## A. Receiving feedback / review findings
 
-A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop auto-implements "confirmed" findings and `/deep-review` runs 5+ agents — both produce false positives. Memory `feedback_audit_findings_not_always_correct.md` records the measured rate: ~95% accurate, not 100%. So:
+A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop auto-implements "confirmed" findings and `/deep-review` runs 5+ agents: both produce false positives. The measured rate is ~95% accurate, not 100%. So:
 
-1. **Verify the finding against the codebase before implementing it.** Re-read the actual file/decompiled signature the finding refers to. A finding that says "this drops the ItemModifier" is checked by reading the call, not by trusting the reviewer's confidence. (`feedback_codex_caught_api_misread.md`: when two agents disagree on a TaleWorlds API, re-run `ilspycmd` — don't side with the more confident one.)
+1. **Verify the finding against the codebase before implementing it.** Re-read the actual file/decompiled signature the finding refers to. A finding that says "this drops the ItemModifier" is checked by reading the call, not by trusting the reviewer's confidence. (When two agents disagree on a TaleWorlds API, re-run `ilspycmd`: don't side with the more confident one.)
 2. **Push back with evidence when warranted** — the suggestion breaks existing behavior, the reviewer lacks context the codebase contradicts, or it violates YAGNI / `simplicity-criterion.md`. Pushback is a one-line technical reason, not a refusal.
 3. **When you were wrong, say so factually and briefly, then fix it.** "Checked `GetCharacterWage` — you're right, it falls back to `DeadBattleEquipment`. Fixing." No preamble.
 4. **When you relay a subagent's research/review to the user, spot-verify its load-bearing claims against the source first.** A confident subagent report is a claim, not evidence — relaying it unverified is the same failure as trusting an agent's "✅ done." Especially security claims (telemetry defaults, install-time code-exec, exfil). (2026-05-29: a subagent reported open-design's telemetry "content off by default"; reading `app-config.ts` showed `content: true` — the error rode into the user-facing summary until an independent check caught it.)
@@ -34,11 +30,7 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 
 **Cadence: this rule gates CLAIMS, not edits.** It says nothing may be *claimed* unverified. It does not ask for a full suite after every edit, and reading it that way is how a session spends most of its wall-clock waiting on its own test runs (2026-08-11: the full 6,380-test suite run ~15 times across seven fixes; the user noticed the latency before the session did). The rate that keeps the guarantee intact:
 
-| When | Run |
-|---|---|
-| After each edit | **Compile**, fast, and it catches the error that actually happens most |
-| While iterating on one component | **Filtered suite**, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~XxxTests` |
-| At each work-item boundary, and once before the review gate | **Full suite**; this is the run you quote, and the only one this rule ever asked for |
+Compile after each edit, run the filtered suite while iterating, and run the full suite (dotnet test and tools/tests) at each work-item boundary and once before the review gate; quote only that run.
 
 Batch engine lookups the same way: related `ilspycmd` / `taom-src` calls go in one command, not one round trip per type. A verification you already ran this turn and haven't invalidated is still evidence; re-running it is not more evidence.
 

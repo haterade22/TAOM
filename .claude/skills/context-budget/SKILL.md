@@ -127,7 +127,7 @@ Trimming the eager surface is the structural lever; these per-session knobs redu
 - **Cap thinking tokens.** Set `MAX_THINKING_TOKENS` (default ~32k) to ~10k for routine work — large savings on hidden reasoning cost. Raise it deliberately for genuinely hard reasoning.
 - **Disable unused MCP servers per project.** A 200k window can effectively be ~70k with too many tools enabled. Keep active tool count modest (a useful rule of thumb is well under ~80); disable servers you aren't using in `.mcp.json` / settings rather than carrying all of them.
 - **Compact at a logical breakpoint, not at the wall.** Trigger `/compact` once a plan is finalized (clearing exploration context) rather than waiting for the auto-compact threshold.
-- **Model tiering** (already in CLAUDE.md "Model Routing"): Haiku for read-only/search, Sonnet for most coding, Opus for architecture/deep reasoning.
+- **Model tiering** (already in CLAUDE.md "Model & Effort Selection"): Haiku for read-only/search, Sonnet for most coding, Opus for architecture/deep reasoning.
 
 ## Common Findings (Expected for TAOM)
 

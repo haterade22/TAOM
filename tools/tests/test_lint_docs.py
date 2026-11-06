@@ -1375,5 +1375,123 @@ class CommitOnlyPathsTests(_GitRepo):
         self.assertEqual([], [a for a in calls if "rev-parse" in a and "HEAD^{commit}" in a])
 
 
+class CommitViewTests(_GitRepo):
+    """Every gating check judges the tree the commit records, so another session's unstaged edit in
+    the same checkout cannot refuse this commit, and a staged breach cannot pass behind a clean
+    working copy."""
+
+    CONFIG = "Main/_Module/ModuleData/thing.json"
+    DOC = "docs/features/thing.md"
+
+    def setUp(self):
+        super().setUp()
+        _write(self.root / "CLAUDE.md", "# c\n\nTarget: Bannerlord v1.5.6\n")
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n")
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v1.5.6\n")
+        _write(self.root / self.CONFIG, '{"Speed": 1}\n')
+        _write(self.root / self.DOC, f"`{self.CONFIG}`:\n\n```json\n{{\"Speed\": 1}}\n```\n")
+        _write(self.root / "docs" / "reference" / "a.md", "one\n")
+        self._commit()
+        self.size = ld._crlf_size((self.root / "AGENTS.md").read_text(encoding="utf-8"))
+        for name, value in (("CLAUDE_MD", self.root / "CLAUDE.md"), ("AGENTS_MD", self.root / "AGENTS.md"),
+                            ("AGENTS_MD_MAX_BYTES", 100), ("AGENTS_MD_WARN_BYTES", 100),
+                            ("DOCS_DIR", self.root / "docs")):
+            patcher = mock.patch.object(ld, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def _budget(self, staged=True, only_paths=None):
+        return [f[2] for f in ld.check_claude_md_budget(ld.commit_view(staged, only_paths, "HEAD"))]
+
+    def _grow_agents(self):
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n" + "x" * 200 + "\n")
+
+    def _trim_agents(self):
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n")
+
+    def test_a_staged_entry_doc_over_budget_with_a_trimmed_working_copy_gates(self):
+        self._grow_agents()
+        self._git("add", "AGENTS.md")
+        self._trim_agents()
+        self.assertEqual(self._budget(), ["size"])
+
+    def test_another_sessions_unstaged_entry_doc_growth_does_not_refuse_this_commit(self):
+        self._grow_agents()
+        _write(self.root / "docs" / "reference" / "a.md", "two\n")
+        self._git("add", "docs/reference/a.md")
+        self.assertEqual(self._budget(), [])
+        self.assertEqual(self._budget(staged=False), ["size"])
+
+    def test_a_path_commit_reads_the_named_copy_and_head_for_the_rest(self):
+        self._grow_agents()
+        self.assertEqual(self._budget(only_paths=["AGENTS.md"]), ["size"])
+        self.assertEqual(self._budget(only_paths=[ "docs/reference/a.md"]), [])
+
+    def test_a_path_commit_ignores_what_is_staged_outside_it(self):
+        self._grow_agents()
+        self._git("add", "AGENTS.md")
+        self._trim_agents()
+        self.assertEqual(self._budget(only_paths=["docs/reference/a.md"]), [])
+
+    def _drift(self, staged=True, only_paths=None):
+        files = [self.root / self.DOC]
+        return ld.check_config_example_drift(files, ld.commit_view(staged, only_paths, "HEAD"))
+
+    def test_unstaged_config_drift_does_not_refuse_this_commit(self):
+        _write(self.root / self.CONFIG, '{"Speed": 2}\n')
+        self.assertEqual(self._drift(), [])
+        self.assertEqual(len(self._drift(staged=False)), 1)
+
+    def test_a_staged_config_drift_gates_behind_a_clean_working_copy(self):
+        _write(self.root / self.CONFIG, '{"Speed": 2}\n')
+        self._git("add", self.CONFIG)
+        _write(self.root / self.CONFIG, '{"Speed": 1}\n')
+        self.assertEqual(len(self._drift()), 1)
+
+    def test_the_version_pin_is_read_from_the_index(self):
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v9.9.9\n")
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertEqual(ld.check_version_consistency(view), [])
+        self.assertEqual(len(ld.check_version_consistency(None)), 1)
+        self._git("add", ".claude/pinned-game-version.txt")
+        self.assertEqual(len(ld.check_version_consistency(ld.commit_view(True, None, "HEAD"))), 1)
+
+    def test_a_crlf_working_copy_and_its_lf_index_copy_measure_the_same(self):
+        path = self.root / "AGENTS.md"
+        path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertEqual(ld._crlf_size(view.read(path)), self.size)
+
+    def test_a_tree_or_a_missing_path_reads_as_no_file(self):
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertIsNone(view.read(self.root / "docs"))
+        self.assertIsNone(view.read(self.root / "nope.md"))
+        self.assertEqual(view.read(self.root / "docs" / "reference" / "a.md").strip(), "one")
+
+    def test_a_path_with_a_space_reads(self):
+        _write(self.root / "docs" / "two words.md", "spaced\n")
+        self._commit()
+        self.assertEqual(ld.commit_view(True, None, "HEAD").read(self.root / "docs" / "two words.md").strip(), "spaced")
+
+    def test_outside_a_git_tree_there_is_no_commit_in_view(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(ld, "REPO_ROOT", Path(tmp)):
+            self.assertIsNone(ld.commit_view(True, None, "HEAD"))
+
+    def test_no_staged_or_path_argument_means_no_commit_in_view(self):
+        self.assertIsNone(ld.commit_view(False, None, "HEAD"))
+
+
+class CrashExitTests(unittest.TestCase):
+    def test_a_crash_exits_3_because_exit_1_is_a_finding(self):
+        err = io.StringIO()
+        with mock.patch.object(ld, "main", side_effect=RuntimeError("boom")), mock.patch("sys.stderr", err):
+            self.assertEqual(ld.entry([]), 3)
+        self.assertIn("boom", err.getvalue())
+
+    def test_an_ordinary_exit_passes_through(self):
+        with mock.patch.object(ld, "main", return_value=1):
+            self.assertEqual(ld.entry([]), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

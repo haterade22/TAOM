@@ -74,7 +74,7 @@ movement — pick by how different the motion must be:
 
 > **Asset gate:** authored animation FBXs are exported to a NON-Armory staging folder
 > (`E:\LOTRAOMAssets\troll_clips_to_import\`); the user imports them into LOTRLOME_Armory + Kit-compiles
-> themselves (see memory `feedback-keep-new-anims-out-of-armory`). Never write new FBXs into the Armory.
+> themselves. Never write new FBXs into the Armory.
 
 ## The pipeline
 
