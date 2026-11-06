@@ -61,10 +61,11 @@ Then **append** the agent-supplied narrative — these are the parts the user / 
 1. **In-flight task:** what feature/fix is being worked on (1-3 sentences). If a GitHub issue is open, link it.
 2. **Decisions made this session:** bullet list of choices that shaped the current state and shouldn't be re-litigated. Include the *why*, not just the *what*.
 3. **Open questions / blockers:** what's NOT yet decided that the next session needs to address.
-4. **Files in flight:** which files are mid-edit and why (one line each).
-5. **Next concrete step:** the single next action a fresh session should take.
-6. **Suggested skills for the next session:** which TAOM skills the resuming session should reach for first, in order — e.g. "`/context-restore` this snapshot, then `/verify`, then `/deep-review` on the changed scope." TAOM's catalog is large; naming the entry points saves the next session re-deriving the route. (Adopted from mattpocock/skills `handoff`, MIT.)
-7. **Anything that surprised you this session:** the kind of thing future-you would forget. (Optional — but the highest-value field when present.)
+4. **Failed approaches (don't retry):** each approach tried and abandoned, why it failed, and the evidence (the command, file or error). Write "None" rather than omitting it: without this field a resumed session retries the dead ends. (Adopted from affaan-m/ECC `save-session`, MIT.)
+5. **Files in flight:** which files are mid-edit and why (one line each).
+6. **Next concrete step:** the single next action a fresh session should take.
+7. **Suggested skills for the next session:** which TAOM skills the resuming session should reach for first, in order, e.g. "`/context-restore` this snapshot, then `/verify`, then `/deep-review` on the changed scope." TAOM's catalog is large; naming the entry points saves the next session re-deriving the route. (Adopted from mattpocock/skills `handoff`, MIT.)
+8. **Anything that surprised you this session:** the kind of thing future-you would forget. (Optional, but the highest-value field when present.)
 
 Use `AskUserQuestion` to gather any of these the user can fill faster than you can infer.
 
@@ -100,6 +101,9 @@ Implementing Tier 2 + Tier 3 picks from Claude Code ecosystem review (#93). 6 of
 
 ## Open questions / blockers
 - (none — clear runway)
+
+## Failed approaches (don't retry)
+- Caching the buff list per battle: stale after a mid-battle career change (repro: `CareerServiceTests.BuffCacheInvalidates` failed). Recompute on read instead.
 
 ## Files in flight
 - `Main/Features/CareerSystem/Services/CareerService.cs` — mid-investigation of Codex finding on stale buff cache; not yet modified
