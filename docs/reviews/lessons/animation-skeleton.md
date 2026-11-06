@@ -591,3 +591,14 @@ is exactly the shape that produces a lookup miss.
 not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view transform to `Standard`
 with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
 creature with subtly wrong lighting that nobody can explain later.
+
+### A crash tied to one mesh is not a rule for the next: KEYforce's whole spider meshes rendered first time (2026-09-29)
+In June one un-split 58-bone spider mesh AV'd in `PreloadForRendering`, so the spider shipped on L/R split halves.
+The per-mesh bone cap offered as the cause was refuted on 2026-06-13 and the real cause was never found, yet the #616
+issue, `spider.md` and the Armory ledger went on saying the un-split mesh "must not ship", as though that were a
+rule. KEYforce's whole re-export on the same `spider_skeleton` loaded, rendered and fought in battle on the first try:
+one item swapped first, then all five.
+- **Why missed:** an unexplained crash hardened into a standing prohibition by repetition, each doc citing the last.
+- **Prevent:** record an unexplained crash against the exact asset that produced it (package, mesh name, date), and
+  test a new asset with a one-item swap and a battle before rebuilding the old workaround for it.
+- **Source:** the 1.5.x `docs/features/spider.md` and spider-mount ledger entries of 2026-09-29, on `origin/bannerlord-1.5.x` (ported by WP142).

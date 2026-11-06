@@ -1792,7 +1792,7 @@ those tools, so the documented happy path was the bypass.
   a claim about the set of routes to an effect, and that set grows silently as tools are added.
 - **Prevent:** when a hook guards an EFFECT (a commit, a file write, a push), enumerate every
   tool that can produce it, not just the one you had in mind. Deny the alternatives you do not
-  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json`,
+  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json` (untracked since WP142; the git and filesystem servers left `.mcp.json` with WP116),
   and the read-only ones are untouched.
 - **Source:** 2026-08-31 audit, `docs/reviews/rca-hook-harness-hang-2026-08-31.md`.
 
@@ -2111,3 +2111,116 @@ the total. The tool's tests assert behaviour, so they stayed green.
 - **Why missed:** each pair had a genuinely shared symbol, and the sentence claiming agreement was written about that symbol. Neither test suite ran the two consumers on one fixture where the precedence or the routing around the shared symbol would give different answers, so nothing could fail.
 - **Prevent:** when a doc or docstring says two tools cannot disagree, write the test that would make them disagree: one fixture, both consumers, an input chosen so the logic AROUND the shared symbol (precedence, routing, scaling granularity) is what decides. If the second consumer needs data the first has and it lacks (the validator had no item folders), add the data rather than approximating (culture for folder).
 - **Source:** #583 deep review, 2026-09-13, `docs/reviews/rca-kingdom-cap-curve-2026-09-13.md` findings 1 and 2.
+
+### When a fact moves, grep every statement of it (plan 016, 2026-09-24)
+Plan 016 moved the MCP deny list into the tracked `.claude/settings.json` and pinned four servers
+in `.mcp.json` and `.codex/config.toml` on the 1.5.x line. The files the plan listed were right; four other places
+stayed stale: `.vscode/mcp.json.example` and a `.mcp.json` snippet in `kingdom-voices.md` kept the
+unpinned launch strings, a lesson's **Prevent:** still sent deny edits to the untracked file, and
+the ModuleData activation step still said the server was enabled for every clone.
+- **Why missed:** the plan's scope list was treated as the complete set of places the fact lives.
+  The audit reads only `.mcp.json`, so no gate saw the other copies.
+- **Prevent:** before committing a change that moves a file, renames a setting or pins a value,
+  `git grep` the old location and the old value across the repo (docs, lessons, templates,
+  examples) and fix or consciously leave each hit. A recount ("Three things" to "Two things")
+  re-derives the list rather than deleting one item.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D5, D6, D7, D10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Give the command that writes the file itself (plan 016, 2026-09-24)
+The migration note told developers to restore their settings with
+`git show <sha>:<path> > <path>`. In Windows PowerShell 5.1 (installed on the desktop) `>` is
+`Out-File`, which wrote `FF FE` plus UTF-16LE; Git Bash and pwsh 7 write the bytes unchanged.
+- **Why missed:** the command was written and tested in Git Bash and read as portable.
+- **Prevent:** in a documented command that recreates a file, let the tool write it
+  (`git restore --source=<sha> -- <path>` writes the working tree only and leaves an ignored path
+  unstaged), or name the shell. Never rely on a shell redirect for a file another program parses.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Untracking a file another live branch tracks changes every switch and every new worktree (plan 016, 2026-09-24)
+Plan 016 untracked `.claude/settings.local.json` on `bannerlord-1.5.x` only. Its note covered merge
+and pull, but `bannerlord-1.4.5` still tracks the file: git silently overwrites an ignored file
+when a switch brings in a tracked one, and removes it on the way back. A worktree created after
+the untrack starts with no copy at all. This line untracked it in WP142; `1b00d1acd` and older still track it.
+- **Why missed:** the note traced one transition (merge or pull on one branch), not every way a
+  checkout's tree changes.
+- **Prevent:** when untracking a per-user file, list each live branch that still tracks it and
+  state in the migration note what a switch, a new worktree and a fresh clone do to the user's copy.
+- **Source:** 1.5.x `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A Visual Studio launch deploys the whole working tree, refs to held-back Armory items included (2026-09-29)
+To keep a load test to two Armory mesh swaps, four new items were held out of the live Armory while the repo already
+named them. The launch came from Visual Studio, which builds and deploys the working tree (MSBuild 19:22:05,
+`TAOM.dll` 19:22:11, the game 19:22:23), so the deployed `harad_elephant_rider` rolled two rosters whose HorseHarness
+named nothing: 14 of 29 elephants spawned bare, with no platform and no crew (`wears harness 'none'`). An earlier
+session under that debugger ended with no crash log and no Windows error event; whether the debugger caught a native
+crash is unestablished (the repo's default Visual Studio profile, `Main/Properties/launchSettings.json`, debugs managed
+code only).
+- **Why missed:** "nothing deploys until a build" was reasoned about the session's own build commands, while the
+  maintainer's launch path is itself a build.
+- **Prevent:** land Armory items before any repo data that names them (a `BROKEN_ITEM_REF` means the tree is not
+  launchable), and when a session ends with no crash record, ask whether a debugger was attached, and what it showed,
+  before reading the silence as a clean exit.
+- **Source:** 1.5.x TAOM logs `taom_debug_2026-09-29_19-22-43.log` and `_19-29-26.log`, and `docs/features/elephant.md` "Package the Armory", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A subagent's issue number is a claim: check it against the tracker (2026-09-29)
+A builder subagent tagged the elephant change "#694" in five comments across code and tests. #694 is the troll
+bandits, and no issue existed for the work; every other `#694` in the tree was the trolls'.
+- **Why missed:** the brief named no issue, and the agent filled the gap with the most recent number in its context.
+- **Prevent:** brief a subagent with the issue number or say there is none, and grep its diff for `#[0-9]+` before
+  accepting it.
+- **Source:** the 1.5.x KEYforce art session, 2026-09-29 (`Main/Features/Elephant/`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A backup written beside a live module file ships with it: write it to the quarantine (2026-09-29)
+The 14 backups for the KEYforce wiring went in as `*.bak-keyforce-2026-09-29` beside the live Armory files, and
+`.bak` breaks the Cloudflare distribution ([module-backup-sweep.md](../../reference/module-backup-sweep.md)). They were
+moved to `E:\Bannerlord_Backups\module_bak_sweep_2026-09-29\` with their hashes checked, before any package.
+- **Why missed:** the XML I/O convention says to back up before a destructive write and never with an `.xml`
+  extension, but not where; the sweep doc says where, and nothing links the two.
+- **Prevent:** write a live-module backup straight to `E:\Bannerlord_Backups\module_bak_sweep_<date>\<Module>\<same
+  relative path>`, or run `pwsh tools/sweep_module_backups.ps1 -Apply` before a package.
+- **Source:** 1.5.x `docs/reference/lotrlome-spider-mount-changes.md` "2026-09-29", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before hand-editing a data file, check who writes it; an owned file goes through its owner (2026-09-29)
+A one-off translation script inserted rows by cloning an anchor line. Two of its targets are generated:
+`taom_troop_name_strings.xml` (its header says "Do not hand-edit; re-run the generator") and the 12
+`tools/translation_cache/*.json` (sorted on every save by `translate_with_claude.py`). The content was right and the
+order was not, so the next save by either owner would have landed a reorder hunk in an unrelated commit. The same
+session rewrote one sentence of the 1.5.x `/armory-audit` skill to forbid editing the mirror and left the file's second
+mention of the mirror in place.
+- **Why missed:** the script checked bytes and parse, not ownership; the skill fix edited the sentence that misled,
+  not the rule.
+- **Prevent:** read a file's header and `tools/README.md` for a generator before editing it, and run the owner
+  (`generate_name_localization_strings.py --apply --category troop`, `translate_with_claude.save_cache`). When changing
+  a policy sentence, grep the same file for its other mentions.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F7 and F8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A memory card's "UNCOMMITTED" is a claim about the past: grep the release commit before saying what ships (v2.0.33, 2026-10-04)
+Before the v2.0.33 cut this session told Mike that nine untranslated `taom_tr_*` strings were unused by shipped
+code. The Tournament Rewards memory card said "UNCOMMITTED, review owed"; in fact Mike's mixed commit `9e2a39f4` had
+carried the whole feature to trunk two days earlier, registered in `FeatureModules.cs:23`, with no review.
+- **Why missed:** the card was read as current state; nothing in git flags a feature that reached trunk without a
+  review record.
+- **Prevent:** before telling Mike what a release contains, grep the code at the commit being released (`git grep
+  -n <key> <sha> -- Main`), and for each feature in the range check that a review record exists
+  (`docs/reviews/rca-*`). A card that says UNCOMMITTED for files `git log` shows on trunk is stale: update it.
+- **Source:** 1.5.x `docs/reviews/rca-tournament-rewards-2026-10-04.md`, "How it shipped unreviewed"; the Mouth of Sauron's gear went the same way (`docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pick a release number no channel already carries (v2.0.33 renumbered as v2.0.34, 2026-10-04)
+v2.0.33 was tagged and pushed while the testing channel already held an untagged v2.0.33 build of 2026-10-02
+(`bc39f6e4` plus uncommitted work, by its DLL stamp), so a tester's "v2.0.33" was not the tagged code. Mike asked for
+v2.0.34; the same happened with v2.0.31 on 2026-09-26.
+- **Why missed:** the release pre-flight checked git tags only; an untagged channel build is invisible to git.
+- **Prevent:** `/release` Phase 1 item 4b reads the `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM`
+  before choosing the number; on a machine without that folder, it asks Mike.
+- **Source:** the 1.5.x v2.0.34 release commit `18a4e402`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Commit a single path with `git commit -- <path>` when anything else is staged (B4a, 2026-10-22)
+A docs commit ran `git add <skill file> && git commit`, and `git commit` with no path commits the whole index. The index
+already held 15 staged `git mv` renames of an unfinished batch, so the pushed docs commit (1.5.x `0a8d61a4e`) moved the files
+without the core changes and did not build on its own until the batch commit (1.5.x `10f1f0b80`) landed.
+- **Why missed:** the subagent's report said the renames were staged; the commit step checked the working tree, not the
+  index.
+- **Prevent:** run `git diff --cached --name-only` before every commit and compare it with the paths you meant to commit.
+  When the index holds anything else, commit with `git commit -- <path>`, which commits only that path. Never push a commit
+  whose file list you did not read.
+- **Source:** 1.5.x commits `0a8d61a4e` and `10f1f0b80`, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -1433,3 +1433,15 @@ Taking troop files verbatim from `bannerlord-1.5.x` onto the 1.4.x line (#697) b
 - **Why missed:** reference validation answers "does every id the data names exist?", not "does the target branch have what this data relies on?". The desktop (1.5.3 only) cannot compile the 1.4.x line, so the first test run happened on the laptop after the commit.
 - **Prevent:** for a cross-branch data port, run `git log <base>..<source> -- <ported paths>`, then `git show --stat` on each commit, and classify every file it changed outside the ported set as ported, unneeded, or a dependency the target lacks. Remove or revert the rows that depend on the missing code, and build and test on an install of the target engine before the port merges.
 - **Source:** `docs/reviews/rca-public-armory-ids-2026-09-30.md` findings 1, 2 and 4; #697.
+
+### A troop joining a tree is read by every consumer that selects troops by role, not only by its recruiters (2026-09-29)
+The goblin tree's two mountain spider riders were planned through their recruitment and their upgrade from the Lurker.
+They were also the first Cavalry troops in the tree Goblin-town, the Misty Mountain Orcs and Blue Craig share, and
+five consumers picked them up with no code change: the AI upgrade weighting (a lord commits each branch at 9999:1),
+notable slot growth, the garrison culture swap (captured cavalry started mapping onto spiders), the enlistment roster
+generator (goblin "cavalry" kits from spider-rider gear, on foot) and the skill rebaseliner (+94 and +244 points).
+- **Why missed:** the plan traced the new ids inward (who recruits them) and never outward (who selects troops by
+  `default_group`, formation or upgrade graph).
+- **Prevent:** when a troop joins a tree, grep `DefaultFormationClass`, `default_group`, `UpgradeTargets`
+  and every `troops_*.xml` reader under `tools/`, and decide for each consumer whether the new troop belongs.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F1 to F4, on `origin/bannerlord-1.5.x` (ported by WP142).
