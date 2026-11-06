@@ -138,15 +138,11 @@ convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems 
 need 1–2 + scope. Implement-then-review dispatch follows the two-stage ordering in
 [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 
-## Model Routing
+## Model & Effort Selection
 
-| Task | Model | Why |
-|------|-------|-----|
-| Architecture decisions, complex design | **Opus** | Deepest reasoning for trade-off analysis |
-| Feature implementation, code review | **Sonnet** | Best coding model, fast enough for iteration |
-| Lightweight research, documentation, exploration | **Haiku** | 90% of Sonnet capability at 3x cost savings |
-| Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
-| Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
+Each task runs on the cheapest model and lowest effort that does it well: the table, escalation and
+the one-line note before each spawn are in `.claude/rules/model-effort-selection.md`. Tier agents:
+`fast-reader` (Haiku/low), `implementer` (Sonnet/medium), `architect` (Opus/high).
 
 ## Doc Lookup
 

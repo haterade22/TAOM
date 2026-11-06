@@ -1,7 +1,7 @@
 ---
 name: taleworlds-researcher
 description: Decompile and analyze TaleWorlds game classes for TAOM mod development. Use when implementing adapters, Harmony patches, GameModels, or investigating bugs.
-model: sonnet
+model: opus
 tools:
   - Bash
   - Read
@@ -11,6 +11,7 @@ disallowedTools:
   - Write
   - Edit
   - NotebookEdit
+effort: high
 ---
 
 # TaleWorlds Researcher Agent

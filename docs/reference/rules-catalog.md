@@ -14,12 +14,13 @@ the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader
 
 ## Always-load rules (no `paths:` — full text in context every session)
 
-_(7 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
+_(8 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
 
 | Rule | Content |
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 | `harness-facts.md` | Pinned Claude Code load semantics, hook lifecycle, rule loader rules with doc URLs. Source-of-truth for harness behavior. |
+| `model-effort-selection.md` | The main session does most of the work; each subagent gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `simplicity-criterion.md` | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
 | `think-before-coding.md` | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. Reuse-before-write ladder (engine API → existing service/adapter → one-line delegation → minimal new code) before writing new code. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |

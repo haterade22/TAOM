@@ -9,6 +9,7 @@ tools:
   - Bash
   - Grep
   - Glob
+effort: high
 ---
 
 # TAOM Feature Builder Agent

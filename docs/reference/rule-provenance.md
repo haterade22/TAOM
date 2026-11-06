@@ -93,6 +93,16 @@ Enforcement is `check_ai_dashes` in `tools/lint_docs.py`, scoped to lines added 
 
 ---
 
+## model-effort-selection.md
+
+Mike's request, 2026-10-08: sessions ran Opus 5.5 at high effort for everything, including searches
+and test runs. The rule routes each delegated task to the cheapest model and effort that fits and
+adds the `fast-reader`, `implementer` and `architect` tier agents (his drafts). It is an unscoped
+rule rather than a CLAUDE.md section because this line's CLAUDE.md sits close to its 46,000 B cap;
+the CLAUDE.md section is a pointer. Field names came from
+https://code.claude.com/docs/en/sub-agents and the Agent tool schema; the Agent tool's effort beats a
+definition's; `CLAUDE_CODE_EFFORT_LEVEL` beats both (DOC, 2026-11-02; harness-facts.md).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

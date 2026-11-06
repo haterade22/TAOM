@@ -9,6 +9,7 @@ tools:
   - Bash
   - Glob
   - Grep
+effort: medium
 ---
 
 # Refactoring Specialist Agent

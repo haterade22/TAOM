@@ -6,6 +6,8 @@ tools:
   - Grep
   - Glob
   - Bash
+model: opus
+effort: high
 ---
 
 # Error Detective Agent
