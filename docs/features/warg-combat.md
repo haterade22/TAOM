@@ -181,8 +181,8 @@ step 3 above never happens.
 |---|---|
 | A rage starts | `start episode=N formationKnown=<known>`, where `<known>` is `True` or `False` |
 | The rage's end is seen | `end episode=N outcome=<outcome>`, where `<outcome>` is `restored`, `null-formation` or `rider-inactive` |
-| The rider is back in its formation | `returned episode=N s=<seconds>` |
-| Given up after 60 mission seconds | `not-returned episode=N s=<seconds> distance=<m> allowed=<m>`: how far the rider was from the formation's front middle, and how near it had to be |
+| The rider is back in its formation | `returned episode=N s=<seconds> distance=<m> nearest=<m>` |
+| Given up after 60 mission seconds | `not-returned episode=N s=<seconds> distance=<m> nearest=<m> allowed=<m>`: how far the rider was from the formation's front middle, how far from its nearest formation mate (`none` when it has none; within 15 m counts as back), and how near the front middle it had to be. A mate is a unit in the formation's arrangement that is not another rider with an open rage episode |
 | Rider on foot with no formation for 100 mission seconds with no reset | `stranded episode=N` |
 | A second rage began before the first returned | `superseded episode=N` |
 

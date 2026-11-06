@@ -590,6 +590,7 @@ internal sealed class FaithfulScene : IFordsSceneAdapter
 /// A warg rider and the formation it belongs to, for the warg rage log's seam: the rider walks back to the formation's rear rank
 /// (<see cref="Depth"/> behind the front-middle the distance is measured to) once it has the formation again, unless <see cref="Stuck"/>.
 /// The rider comes from behind the formation, so it never passes the front-middle on the way, and the depth is wider than the log's 15 m base margin, so a return check that drops the depth term fails here.
+/// It has no formation mates, so the scenarios judge only the front-middle distance; <c>WargRageLogTests</c> cover the nearest-mate rule.
 /// </summary>
 internal sealed class FaithfulRider
 {

@@ -243,6 +243,52 @@ public class WargRageLogTests
     }
 
     [TestMethod]
+    public void HasReturned_AlsoPassesARiderWithin15mOfAFormationMate_WhateverItsFrontMiddleDistance()
+    {
+        // Run 20261106-054613: a Fords lane formation strings out along its lane, so its front-middle can be 200 m from its lead group.
+        Assert.IsTrue(WargRageLog.HasReturned(200f, 10f, 0f, 15f));
+        Assert.IsFalse(WargRageLog.HasReturned(200f, 10f, 0f, 15.1f));
+        Assert.IsFalse(WargRageLog.HasReturned(200f, 10f, 0f), "no mate: only the front-middle counts");
+        Assert.IsFalse(WargRageLog.HasReturned(200f, 10f, 0f, float.NaN), "a NaN mate distance never passes");
+    }
+
+    [TestMethod]
+    public void NearestMate_SkipsTheRiderItself_RidersTheSkipNames_AndNaNPositions()
+    {
+        var rider = Rider();
+        var raging = Rider();
+        var units = new List<(object Unit, float X, float Y)>
+        {
+            (rider, 0f, 0f), (raging, 1f, 0f), (Rider(), float.NaN, 0f), (Rider(), 30f, 0f), (Rider(), 0f, 12f),
+        };
+
+        Assert.AreEqual(12f, WargRageLog.NearestMate(rider, 0f, 0f, units, u => ReferenceEquals(u, raging)), 0.001f,
+            "two riders reset together far from the formation must not vouch for each other (Codex, 2026-11-06)");
+    }
+
+    [TestMethod]
+    public void NearestMate_WithNoOtherUnit_IsMaxValue()
+    {
+        var rider = Rider();
+        Assert.AreEqual(float.MaxValue, WargRageLog.NearestMate(rider, 0f, 0f, new List<(object Unit, float X, float Y)> { (rider, 0f, 0f) }, _ => false));
+    }
+
+    [TestMethod]
+    public void Watch_ARiderFarFromTheFrontMiddleButNearAMate_Returns_AndBothDistancesAreLogged()
+    {
+        var scene = Scene.Create();
+        var rider = Rider();
+        scene.Log.Started(rider, true);
+        scene.Log.Ended(rider, Form());
+        scene.View = new WargRageLog.RiderView(true, true, true, true, 208f, 10f, 0f, 4f);
+
+        scene.Log.Watch();
+
+        Assert.AreEqual(1, scene.Log.Counts().Returned);
+        scene.Logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("returned episode=1") && s.Contains("distance=208.0") && s.Contains("nearest=4.0")));
+    }
+
+    [TestMethod]
     public void Watch_ANotReturned_NamesHowFarTheRiderIs_AndHowNearItHadToBe()
     {
         var scene = Scene.Create();
@@ -254,7 +300,7 @@ public class WargRageLogTests
 
         scene.Log.Watch();
 
-        scene.Logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("not-returned episode=1") && s.Contains("distance=200.0") && s.Contains("allowed=19.0")));
+        scene.Logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("not-returned episode=1") && s.Contains("distance=200.0") && s.Contains("allowed=19.0") && s.Contains("nearest=none")));
     }
 
     [TestMethod]
