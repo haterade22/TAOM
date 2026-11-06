@@ -658,3 +658,19 @@ Armoury in the Modding Kit and saving cooked the entry and the meshes appeared.
   2026-06-11 byte-patched clips with copied hashes loaded because their packages already had cache entries
   from the Kit; that precedent says nothing about hash validation either way.
 - **Source:** 1.5.x the 1.5.x lessons file at `5ccde2771`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that runs after the fix it checks can never fail (2026-09-26)
+`transfer_hand_morphs.py` pins the wrist seam (every seam vertex that moves gets weight 0, and only moving vertices
+are written), then its seam gate reads the seam back from the written keys. Every seam vertex is either unwritten
+or written at weight 0, so the gate reads 0.0 for any reference: fed the torn Isengard run's numbers (seam 0.089,
+peak 0.552), it passed. The live report's "seam max 0.0 against the limit 0.01035" was quoted in three docs as
+proof of a clean wrist; the real guard was the `--preview` render and Mike's look.
+- **Why missed:** the hand-channel lesson's own rule, "gate it from the keys actually written", is what emptied the
+  gate once the pin ran before it; the gate's unit test fed the gate function numbers the pipeline can no longer
+  produce, so it stayed green.
+- **Prevent:** gate the quantity the fault changes, before the step that masks it (here the raw seam movement of the
+  smoothed field, before the pin), and check the masking step separately (the pin held: written seam offsets 0).
+  Test a gate by running the real pipeline on a known-bad input and watching it fail, not by feeding the gate
+  function a number.
+- **On this tree:** This incident ran on the 1.5.x line, and `transfer_hand_morphs.py` exists only there; the rule holds here.
+- **Source:** 1.5.x tools review 2026-09-26 (Blender tooling lens, M1); `tools/blender/transfer_hand_morphs.py` `seam_weights`, `seam_offsets`, `seam_gate`; `docs/features/troll-race.md` "Hand pose morphs", on `origin/bannerlord-1.5.x` (ported by WP142).

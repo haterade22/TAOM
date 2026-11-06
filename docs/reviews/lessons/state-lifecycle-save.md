@@ -992,3 +992,16 @@ never ran, and a second rage-mode controller leaked its handlers.
   registration; `MissionViewRegistrationGateTests` fails any other. Give a new view a log line that proves its screen is set.
 - **On this tree:** This incident ran on the 1.5.x line, and `MissionScreen.cs:2684-2694` exists only there; the rule holds here.
 - **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A reading taken from a lifecycle event follows only the work that ran before that event (2026-10-02)
+The 2026-09-12 memory run read the inventory's `[MemStation] enter` line as the heap after two engine collections (the previous close and this open) and concluded that the 2.6 GB still there was rooted state. In v1.4.8 the line is written from `ScreenManager.OnPushScreen`, which `GameStateManager.OnPushState` reaches through its listeners before its own `Common.MemoryCleanupGC()` (`GameStateManager.cs:257-285`), so the reading followed one collection, the pop's, taken while the closing screen was still on the stack. A screen-close heap release was removed as redundant on that reading; a release one frame after the pop was never tried.
+- **Why missed:** the review checked that both state transitions collect, not where in each transition the sampler's event fires relative to the collection.
+- **Prevent:** before inferring how many collections, cache clears or flushes a reading follows, read the order of the event that writes it against the side effects in the same method, and state that order next to the conclusion.
+- **Source:** 1.5.x `plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md`; `docs/reviews/rca-memory-instruments-2026-09-12.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sibling tracker's scan is a limb, not a redundancy: carry it or write down why the callback set is complete
+`SignatureStrikesMissionLogic` (#605) was modelled on `DreadAuraMissionLogic` and `WargMissionBehavior` and registered agents through `OnAgentBuild` alone; both siblings also scan the agents already on the field once, for an agent built before the behavior could see it. The scan was dropped as redundant on the reasoning that behaviors initialize before spawns. That reasoning was never written down or proven, and the failure it guards against is silent: the one hero the feature exists for is simply never on the roster, and no log line says so.
+- **Why missed:** the sibling was copied for its structure, and the limb whose purpose was not obvious was the one left out. `/deep-review` Agent 5's lifecycle matrix caught it; nothing before the review asked "which callbacks can miss an agent".
+- **Prevent:** when a mission-scope tracker mirrors an existing one, keep every registration path the sibling has (build callback AND one-shot scan) unless the dropped path's safety is proven from the engine and stated in the class comment. A scan is one loop per mission; the proof costs more than the loop.
+- **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesMissionLogic` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

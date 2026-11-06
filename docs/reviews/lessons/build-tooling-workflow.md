@@ -3256,3 +3256,119 @@ A two-run PowerShell line kept the bone-map path in `$M` and then set `$m` to th
 - **Prevent:** in PowerShell, give variables names that differ by more than case (`$mapPath`, `$mooseOut`). The commonest shape is a lookup table named in capitals and its loop variable in lower case: it struck again the same afternoon, after this lesson was written, when `$role = $PLAN[...]` in `gen_animalia_anim_clips.ps1` overwrote the `$ROLE` template table and the next `$ROLE[$r]` threw a null-index error. Name the table for what it holds (`$TEMPLATE_OF`) and the item for what it is (`$clipRole`).
 - **On this tree:** This incident ran on the 1.5.x line, and `gen_animalia_anim_clips.ps1`, `TEMPLATE_OF` exist only there; the rule holds here.
 - **Source:** 1.5.x #646 moose reskin run and `tools/gen_animalia_anim_clips.ps1`, 2026-09-23, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that prefers a cooked asset tree reads stale art (2026-09-26)
+A cook at 07:36 on 2026-09-26 wrote the Armory's `AssetPackages/pack0-9.tpac`. `validate_mesh_refs.py`,
+`validate_moduledata.py` (`MISSING_COLLISION_BODY`) and `audit_armory_refs.py` preferred a cooked tree wherever one
+existed, so from 07:36 they read those packs: the hill troll hammer, saved in the Kit at 11:39, read MISSING and would
+have blocked the commit hook, and art deleted from `Assets/` would have passed. The game never read that tree: the
+08:41 session still logged `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`.
+- **Why missed:** a recurrence of "A mesh validator that resolves against cooked packs cannot see art deleted after
+  the last cook" (`data-content-cultures.md`, 2026-08-28). The 2026-09-01 correction in `armory-guide.md` proved from
+  the engine log that the loose tree wins, then called the stale-pack trap unreachable because the Armory had no
+  cooked tree, and the tools kept their cooked-first order. The first cook made the trap live again.
+- **Prevent:** a gate reads the tree the engine's own `Loading packages` line names, never the one that looks more
+  final. The mesh and body gates (`validate_mesh_refs`, `validate_moduledata`, `audit_armory_refs`,
+  `audit_gender_variation_flags`) take their present-set from `validate_mesh_refs.tpac_paths_for_modules` (a module's loose
+  `Assets/**` when it has one, cooked packs only for a module without one, Native), pinned by
+  `test_loose_assets_win_when_both_trees_exist`. When a doc calls a trap unreachable because of how the data happens
+  to look today, fix the code anyway or add a check that fails when the data changes.
+- **Source:** 1.5.x `docs/reference/armory-guide.md` "Two asset trees, and why a clean validator run can lie"; `tools/validate_mesh_refs.py` `tpac_paths_for_modules`; `tools/tests/test_validate_mesh_refs.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A line anchor ending in `.*` splits a CRLF line: the insert lands between `\r` and `\n` (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` found its anchor with `^([ \t]*).*anchor.*$` under `re.M` and inserted
+at the match end. On a CRLF line `.*` takes the `\r` and `$` stops before the `\n`, so the hammer lines went in
+between the two: three live Armory files (`weapon_descriptions.xslt`, `crafting_templates.xslt`,
+`Languages/loc_LOTRAOM_weapons.xml`) gained one `\r\r\n` and one bare `\n`, and the tracked snapshot copy of
+`weapon_descriptions.xslt` inherited them. Every gate passed, because the files still parse; the docs-pass checker
+found it by counting terminators.
+- **Why missed:** the tool detected the file's terminator and emitted it for every line it wrote, and read that as
+  byte-faithful. The parse-before-write check, which the XML I/O convention mandates, cannot see a terminator. No
+  test covered the insert helper on CRLF text.
+- **Prevent:** match a line body with `[^\r\n]*` and end it with `(?=\r?\n|\Z)`, never `.*$`. Give any helper that
+  splices text into a file a CRLF test case (`tools/tests/test_add_hill_troll_hammer_items.py`). When checking a
+  write, compare the counts of `\r\r\n` and bare `\n` before and after, as well as parsing.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/oneoff/add_hill_troll_hammer_items.py`, `tools/tests/test_add_hill_troll_hammer_items.py` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/oneoff/add_hill_troll_hammer_items.py` `insert_after_line`; `tools/README.md` "XML I/O convention"; `docs/reference/lotrlome-hill-troll-changes.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A path gate written with forward slashes never fires on Windows (2026-09-26)
+`config-protection.sh` guarded ADRs with `[[ "$FILE_PATH" == *"/docs/adrs/"* ]]`, but the Edit and Write tools
+pass `E:\repos\TAOM\docs\adrs\x.md`. The pattern never matched, so the ADR guard was dead on the only machine it
+runs on: ADR-012 was created and ADR-010 and the ADR index edited on 2026-09-26 without a challenge (#677), while
+the same hook's `settings.json` check fired, because that one compared `basename`, which splits on both
+separators. An earlier pass had fixed this hook's JSON decoding of Windows paths and left the pattern alone.
+- **Why missed:** the guard was never tested with the path the harness actually sends; every mental check used a
+  forward-slash repo path. A guard that allows is indistinguishable from one that looked and found nothing.
+- **Prevent:** normalise a path before any pattern match in a hook (`${p//\\//}`, then `${p,,}` because NTFS
+  ignores case), and cover the backslash, forward-slash, MSYS, relative and mixed-case spellings in a test
+  (`tools/test_hooks.sh` 7f). Prove a path gate live with a real Edit or Write the harness must refuse.
+- **Source:** 1.5.x `.claude/hooks/config-protection.sh`; `docs/reference/hooks-catalog.md`; `.claude/rules/hook-authoring.md` "Prove a gate live", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A package check by substring passes the wrong art: the head mesh name is inside the body name (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` refuses `--apply` until the hammer's package holds its three names, and
+it tested each one with `name.encode() in blob`. `wm_hill_troll_2h_hammer_head` is a substring of
+`bo_wm_hill_troll_2h_hammer_head`, so the head check passes whenever the body is there, and a body exported as
+`bo_wm_hill_troll_2h_hammer_head_a` passes the body check as well: a package holding only that body and the handle
+clears all three. A `body_name` no package ships is the #352 infinite mission load, the failure the check exists to
+stop. Nothing shipped wrong: the tool ran against a package with the exact names, and `validate_moduledata.py` and
+`audit_armory_refs.py` report a missing body as an ERROR.
+- **Why missed:** a recurrence. `.claude/rules/moduledata-validation.md` already requires "exact-token comparison
+  rather than substring containment" for a script that writes outside the repo, and "Substring keyword matching on
+  names false-matches" is an earlier lesson in this file. The rule is worded for deriving a target set from a report
+  or index, and a presence check on a binary package did not read as the same question. TAOM's art names nest by
+  construction (a body is `bo_` plus its mesh name, LODs add `.lodN`, variants add `_a`), so a substring presence test
+  over them passes on a neighbour.
+- **Prevent:** check a package through its table of contents, by exact name: `validate_mesh_refs.scan_tpac_metameshes`
+  returns the metamesh and physics-shape name sets (on the real hammer package, the head and handle meshes and the one
+  `bo_` body). Test such a check with a package holding only the near-miss name (`bo_..._head_a`), which it must refuse.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/oneoff/add_hill_troll_hammer_items.py`, `wm_hill_troll_2h_hammer_head`, `bo_wm_hill_troll_2h_hammer_head`, `bo_wm_hill_troll_2h_hammer_head_a` exist only there; the rule holds here.
+- **Source:** 1.5.x 2026-09-26 tooling review, finding F1; `tools/oneoff/add_hill_troll_hammer_items.py` package check; `tools/validate_mesh_refs.py` `scan_tpac_metameshes`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The Write and Edit tools decode `\uXXXX`; a source file that needs a literal backslash-u escape is built from char codes
+A C# regex written as `"[\u2013\u2014]"` through the Write tool landed in the file as the two dash characters themselves, because the tool decodes the escape in its parameter. The Edit tool did the same and refused the fix as "no change". The Bash heredoc has the opposite defect (it eats one backslash round), so a Python heredoc carrying the same escape failed to parse. The only reliable shape was a script FILE composing `chr(92) + "u2013"`.
+- **Why missed:** the file compiled and the test passed either way (a literal dash inside a regex character class matches the same text), so only the output-style dash scan noticed, and it noticed a `.cs` file the markdown linter does not read.
+- **Prevent:** when a source file must contain a literal `\u` escape (or any backslash sequence the tools interpret), write it via a script file that builds the backslash from `chr(92)`, then grep the file for the characters you did NOT want. Run the dash scan over changed `.cs` and `.json` files too, not only markdown.
+- **Source:** 1.5.x `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read engine types only from vanilla modules: a third-party mod can bundle engine DLLs (2026-10-14)
+The first 1.5.x body diff reported 509 changed members. The installed Coop module ships 40 1.5.x
+`TaleWorlds` and `SandBox` DLLs of its own, `tools/decompile_bannerlord.ps1` decompiles every module's
+bin, and so `_modules_build` held a second, stale copy of every engine type. The new side indexed two
+definitions of each type, and the tool joined both bodies, so every member compared one body against two.
+- **Why missed:** the decompile and the lookup tools treated "a file under `_modules_build`" as "engine
+  source", and the calibration run (1.5.x to 1.5.x) predated the Coop module.
+- **Prevent:** `engine_body_diff.py` and `check_engine_member_refs.ps1` read engine assemblies only from
+  vanilla modules (`test_third_party_engine_copy_is_ignored`). `decompile_bannerlord.ps1` and
+  `taom-src.ps1` do not yet: `taom-src` probes module bins in name order, so `Coop` wins lookups before
+  `SandBox` and `StoryMode` (follow-up in `rca-engine-bump-1.5.x-2026-10-14.md`). Never quote an engine
+  type from a non-vanilla `_modules_build` file or a `taom-src` hit under `Modules\Coop`.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump, 509 false CHANGED rows, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Installed" is not "effective": prove a guard can see the failure it targets (2026-10-14)
+`SubModuleConstructionGuard` put a Harmony finalizer on `MBSubModuleBase` constructors and
+`Module.AddSubModule` to swallow a third-party SubModule constructor failure. It logged "installed" on
+every launch: 526 installs since 2026-05-27, 0 logged swallows. It could never fire. `Install()` ran from
+`OnSubModuleLoad`, after `Module.LoadSubModules` had constructed every SubModule, and on 1.5.x the only
+`MBSubModuleBase` constructor is 7 bytes with no fields, so a derived class's initialiser exceptions never
+reach it. The class was deleted in the 1.5.x bump.
+- **Why missed:** a clean log read as proof of safety, and no test or log line could tell "nothing
+  threw" from "the guard was never in position".
+- **Prevent:** a guard needs proof it can see the failure it targets: the patched method can actually
+  throw, and the install precedes the guarded event. Install time against the event's time is the first
+  check; a deliberately failing fixture is the second. Count swallows against installs over a long
+  window before keeping one.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump deep review, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A check must fail on inputs it could not read, never report 0 of what it read as clean (2026-10-14)
+The 1.5.x deep review found the new tools passing in states where they had checked nothing:
+`check_engine_member_refs` and `engine_body_diff` could report clean on a missing directory, on an
+assembly that was never indexed, or when the "old" baseline was the same build as the new one.
+- **Why missed:** each tool counted hits against what it did read, so an empty or unreadable input gave
+  0 hits and a green result.
+- **Prevent:** every check reports how many inputs it read against how many it expected, and exits
+  non-zero on a missing directory, an unindexed assembly or a same-build baseline. A positive control
+  (a build known to miss) and a negative control (a fresh build) sit beside it.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.5 engine bump deep review (`check_engine_member_refs`, `engine_body_diff`), on `origin/bannerlord-1.5.x` (ported by WP142).

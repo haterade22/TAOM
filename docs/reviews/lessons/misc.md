@@ -479,3 +479,15 @@ Two claims held for the formula and not for the path they named. A refused creat
 - **Why missed:** each claim was reasoned from the line or the formula it was written for, not from the consumer's own clock or the code above the guard.
 - **Prevent:** prove the claim on that path. For "costs no string", an allocation count (`GC.GetAllocatedBytesForCurrentThread`, reached by reflection on net472) over every event kind on the refused path; for a gate in front of a self-throttled consumer, say where the consumer's clock now starts and bound the shift on every later scan, not only the first (a short simulation of the old and new call patterns does it).
 - **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X3, X4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An outside defect register is a list of hypotheses: check each premise against TAOM's RCAs and the installed engine before planning a fix (co-op safety nets, 2026-10-21)
+The co-op gap ledger copied rows from a compat register written against Bannerlord 1.4.8 and TAOM 2.0.29.5. The
+sweep confirmed that our code matched each claim's description, not that each claim's premise held. Three premises
+failed on 1.5.x (R1 bind timing, R5 divergence, R9 module-list timing), and R9's had been refuted by a TAOM RCA two
+months earlier, while two stale code comments still stated it.
+- **Why missed:** the sweep read code and comments, not `docs/reviews/rca-*.md`, and took the register's rationale as
+  verified input.
+- **Prevent:** for every row taken from an outside source, grep the RCAs for the premise and confirm it in the
+  installed engine or the other mod's source before the row gets an action. Record the evidence in the row.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-coop-safety-nets-2026-10-21.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).

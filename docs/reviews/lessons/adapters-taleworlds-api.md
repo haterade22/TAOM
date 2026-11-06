@@ -824,3 +824,29 @@ NullReferenceException inside `OrderTroopPlacer.OnMissionScreenTick` (Mike's deb
 - **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
 - **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
 - **Source:** 1.5.x plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Test a NativeObject reference with `is null` in code a unit test reaches (plan 015, 2026-09-24)
+`== null` on a `Skeleton` binds to `NativeObject.operator ==` (v1.4.8 dump `NativeObject.cs:221-227`), a static member, so the first call runs `NativeObject`'s static constructor, which calls `LibraryApplicationInterface.IManaged`, null in the test host. The `TypeInitializationException` poisons `NativeObject` for the rest of the test run. In game the operator returns `(object)a == null` for a null right side, so `is null` gives the same result.
+- **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
+- **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
+- **Source:** 1.5.x plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A perf commit's win names the cost it removes, read from the old path's body too (plan 033, 2026-10-02)
+Commit `d45774a5` replaced the spider hunt's scan of hostile agents with the engine's nearby query, claiming to save "up to three native reads per hostile agent". On 1.5.x `Agent.IsHuman`, `IsActive()` and `Position` are `[AggressiveInlining]` unsafe loads through pointers cached at agent creation (`AgentHelper`), while `GetNearbyAgentsAux` walks the same fields for every used slot under a static lock and adds a locked `GetManagedObjectWithId` per result. v1.4.8 differs, `Agent.IsHuman` reads `GetAgentFlags()` (`Agent.cs:640`), so price it again on this engine. The plan decompiled the new side four times and the old side never; the change was reverted.
+- **Why missed:** a recurrence of "An engine method's COST is a decompile question" (above): the replaced calls were costed by their names.
+- **Prevent:** before a perf plan claims a saving, open the body of every engine member on the path it removes, not only on the path it adds, and state both costs in the commit body. A saving argued from call counts alone ships only with a measurement.
+- **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Gate a non-formation agent's scripted moves on the deployment signals: AI ticking off, and a scripted move teleports (2026-09-28)
+The deployment controller sets `Mission.AllowAiTicking = false` for the whole deployment
+(v1.4.8 dump `DeploymentMissionController.cs:31`, back on at `:75`) and, for the Order of Battle screen,
+`Mission.IsTeleportingAgents = true`, under which `Agent.SetScriptedPosition` teleports the agent to the target when
+its XY differs (`Agent.cs:2420-2422`). Vanilla pauses and hides only formation members and humans, and TAOM's behaviour trees tick regardless (`BehaviorTreeMissionLogic.OnMissionTick`). A
+riderless creature bandit, in no formation, would have hunted during deployment and landed on the paused army.
+- **Why missed:** the spike spawned creatures from the console after deployment, and every engine AI component checks
+  `AllowAiTicking` itself, so nothing in the framework carries that check for a tree.
+- **Prevent:** any tree or task that moves an agent vanilla does not pause (no formation, not human) gates on
+  `AllowAiTicking && !IsTeleportingAgents` and holds the agent meanwhile (`CreatureMayFightDecorator`,
+  `CreatureHoldTask`). Formation members are paused by vanilla; everything else is yours.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureMayFightDecorator`, `CreatureHoldTask` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
