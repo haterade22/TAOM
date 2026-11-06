@@ -26,4 +26,4 @@ fi
 
 - This affects only the freeze state file. `/freeze`'s declared hooks remain registered (they're inert without the state file).
 - If you want to switch boundaries instead of releasing, just run `/freeze` again — it overwrites the state file.
-- Ending the conversation also clears the boundary (state file lives in `.claude/tmp/freeze/`, gitignored, but persists across sessions until manually cleared — re-run `/unfreeze` if a stale boundary is still active when you start work).
+- The state file lives in `.claude/tmp/freeze/` (gitignored) and persists across sessions until cleared: re-run `/unfreeze` if a stale boundary is still active when you start work.

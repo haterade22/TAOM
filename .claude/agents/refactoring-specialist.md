@@ -32,15 +32,6 @@ Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skill
 
 If the test suite isn't green going in, fix the tests first via the appropriate skill (`/build-fix` for compile, `/investigate` for runtime), THEN refactor.
 
-## When to invoke
-
-- A method exceeds ~80 lines and mixes concerns (extract method)
-- A class has accreted responsibilities (extract type)
-- A name is misleading or the wrong abstraction (rename)
-- Multiple call sites duplicate the same complex inline expression (extract method or constant)
-- A switch/if-chain is doing what polymorphism should do (replace conditional with polymorphism — only if the type hierarchy already exists)
-- Adapters or interfaces are awkwardly named (rename to match domain)
-
 ## When NOT to invoke
 
 - Code is *redundant* (the abstraction itself shouldn't exist) → `/deslop`
@@ -54,13 +45,7 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
 
 2. **Identify ONE refactoring at a time.** Compose multiple small ones; never bundle into a single sweeping change.
 
-3. **Apply the refactoring** using the smallest possible Edit. Common patterns:
-   - **Extract method** — pull a coherent block into a private method, replace original with call
-   - **Extract type** — when a method group naturally clusters around a sub-concept (e.g., wage calculation inside party model)
-   - **Rename** — use IDE rename or careful Grep + Edit; never half-rename
-   - **Move method/type** — when a method belongs to a different class (data envy / feature envy)
-   - **Inline** — opposite of extract, when an abstraction adds noise without value
-   - **Replace magic number with constant** — only if the constant has a name that adds meaning
+3. **Apply the refactoring** using the smallest possible Edit.
 
 4. **Test after each refactoring.** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` must still pass. If a test fails, the refactoring changed behavior: revert and re-think.
 

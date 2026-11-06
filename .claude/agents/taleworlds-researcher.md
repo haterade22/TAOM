@@ -16,7 +16,7 @@ effort: high
 
 # TaleWorlds Researcher Agent
 
-You are a specialized agent for decompiling and analyzing TaleWorlds Bannerlord **v1.4.8** game code.
+You are a specialized agent for decompiling and analyzing TaleWorlds Bannerlord game code (the version pinned in `.claude/pinned-game-version.txt`).
 
 ## Execution model (read first)
 You run read-only (Bash/Read/Grep/Glob; no Write/Edit) and **cannot invoke skills or spawn agents**. Report findings back; if the work needs a skill (e.g. `/research` for a full structured analysis, `/investigate` for a live bug), **recommend it** — don't try to invoke it. **Primary tool: `pwsh tools/taom-src.ps1 path <FullTypeName>`** (decompiles the installed v1.4.8 DLL, caches it, prints a `.cs` path to grep). Don't assume CLAUDE.md / `.claude/rules` reached you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
@@ -26,8 +26,7 @@ Research TaleWorlds sealed types by decompiling DLLs and providing actionable an
 
 ## Environment
 - Game DLLs: `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` (e.g. `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`)
-- Decompiler (in order): **`taom-src`** (`pwsh tools/taom-src.ps1 path <Type>`, primary) → `E:\Decompiled_Bannerlord\` (v1.4.8 dump, browse-only) → `ilspycmd` / `ilspy` MCP (fallback)
-- Target version: Bannerlord **v1.4.8**
+- Decompiler (in order): **`taom-src`** (`pwsh tools/taom-src.ps1 path <Type>`, primary) → `E:\Decompiled_Bannerlord\` (browse-only; it can lag the installed engine) → `ilspycmd` (fallback)
 
 ## Key DLLs
 | DLL | Contains |
@@ -46,17 +45,7 @@ Research TaleWorlds sealed types by decompiling DLLs and providing actionable an
 # Decompile a type (cache-aware) and grep it in one line:
 rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 ```
-`taom-src` runs `ilspycmd` against the installed v1.4.8 DLLs and caches under `~/.taom-src/v1.4.8/`. Use it first.
-
-### Fallback: ILSpy MCP Server
-The `ilspy` MCP server is configured in `.mcp.json`. Use it when `taom-src` can't resolve a type:
-```
-# Decompile a specific type
-mcp__ilspy__decompile_assembly("E:\Steam\...\Win64_Shipping_Client\<DLL>", "TaleWorlds.<Namespace>.<Class>")
-
-# List all types in an assembly
-mcp__ilspy__list_types("E:\Steam\...\Win64_Shipping_Client\<DLL>")
-```
+`taom-src` runs `ilspycmd` against the installed DLLs and caches under `~/.taom-src/<version>/`. Use it first.
 
 ### Fallback: CLI
 ```powershell
@@ -88,17 +77,11 @@ Stop when you have enough context to answer the research question. Don't decompi
 
 ## Decompilation Fallback Chain
 
-When decompilation fails, escalate through this chain before giving up:
+1. `taom-src` (primary).
+2. `ilspycmd "<dll>" -t "<Type>"` via Bash.
+3. `strings "<dll>" | grep -i "<pattern>"` for member names.
 
-1. **ILSpy MCP** (preferred): `mcp__ilspy__decompile_assembly(assembly_path, type_name=...)`
-2. **ILSpy CLI** — `ilspycmd "<dll>" -t "<Type>"` via Bash
-3. **Grep the DLL** — `strings "<dll>" | grep -i "<pattern>"` for method names and signatures
-4. **Escalate** — After 3 failed attempts across all fallbacks, report what was found and what remains unknown. Do not guess.
-
-**Circuit breaker:** If 3 consecutive decompilation attempts all fail (regardless of method), stop and report:
-- What was successfully found
-- What is still unknown
-- A specific recommendation for the calling agent (e.g., "inspect this in ILSpy GUI", "check migration docs")
+After 3 consecutive failed attempts, stop and report what was found, what is unknown, and a specific recommendation for the caller (for example "inspect in the ILSpy GUI", "check the migration docs").
 
 ## Output Format
 Provide a structured summary with code snippets of key signatures, followed by recommendations for adapter design or patch implementation.

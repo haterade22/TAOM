@@ -26,7 +26,7 @@ hooks:
 
 # /freeze — Restrict Edits to a Directory
 
-Hard-block any Edit, Write, or NotebookEdit to a file outside the chosen directory for the remainder of the session.
+Hard-block any Edit, Write, or NotebookEdit to a file outside the chosen directory until /unfreeze.
 
 Adapted from [garrytan/gstack/freeze](https://github.com/garrytan/gstack/tree/main/freeze). Uses the inline-hooks-in-skill-frontmatter pattern: the PreToolUse hooks above only fire while this skill is active — no global `settings.json` change.
 

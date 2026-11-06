@@ -25,8 +25,7 @@ archived CHANGELOG line, had no checker, covered two of a dozen sources, and lef
 documenting that something had been taken while making the terms unverifiable. If you find that line
 first, it is history, not policy.
 
-De-naming also did not work in practice: `docs/INDEX.md:47` said "the upstream beasts pack" while
-linking to a file named `adod-beasts-architecture-and-taom-port.md`. The identifiers always survive.
+De-naming does not work in practice: a link target or file name always carries the name anyway.
 
 ## What good attribution looks like
 

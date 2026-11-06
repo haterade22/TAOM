@@ -20,22 +20,6 @@ Examples:
 - `GetWage_Tier10_ReturnsExtendedWage`
 - `LoadRegions_MissingFile_ReturnsEmptyAndLogs`
 
-## Structure: AAA Pattern
-```csharp
-[TestMethod]
-public void MethodName_State_Expected()
-{
-    // Arrange
-    var mock = Substitute.For<IMyAdapter>();
-
-    // Act
-    var result = _sut.DoSomething();
-
-    // Assert
-    Assert.AreEqual(expected, result);
-}
-```
-
 ## Framework
 - **MSTest** — `[TestClass]`, `[TestMethod]`, `[TestInitialize]`, `[TestCleanup]`
 - **NSubstitute** — `Substitute.For<T>()`, `.Returns()`, `.Received()`
