@@ -281,6 +281,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 
 ## AI / process guidance
 
+- [reference/gui-prefab-clones.md](reference/gui-prefab-clones.md): why a full prefab clone goes stale across engine versions, its gates, the verified rename table and how to fix one
 - [reference/rules-catalog.md](reference/rules-catalog.md) — full `.claude/rules/` catalog (rule → scope → content, always-load vs path-scoped); CLAUDE.md keeps only the load-convention note
 - [reference/rule-provenance.md](reference/rule-provenance.md) — the always-load rules' "why this exists / relationships / source" sections, moved out of the eager load; read when auditing or editing a rule
 - [reference/provenance-register.md](reference/provenance-register.md): every named third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
