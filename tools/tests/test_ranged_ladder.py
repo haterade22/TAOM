@@ -307,7 +307,7 @@ class RepoSpecTests(unittest.TestCase):
                     self.assertLess(sx, sb, f"T{tx} {lx} crossbow spread {sx:.2f}, {lb} bow {sb:.2f}")
 
     def test_one_item_per_listed_tier(self):
-        self.assertEqual(len(rl.planned_items(self.spec)), 146)  # +1 harad bow tier 7 (#803); +4 cardolan, +5 rhudaur (#978) ; +6 lothlorien bows T4 to T9 and +2 T2, T3 (2026-11-05)
+        self.assertEqual(len(rl.planned_items(self.spec)), 147)  # +1 harad bow tier 7 (#803); +4 cardolan, +5 rhudaur (#978) ; +6 lothlorien bows T4 to T9 and +2 T2, T3 (2026-11-05); +1 arthedain bow tier 7 (Steel Bowman, 2026-11-06)
 
     def test_donor_table_stays_under_the_hero_ceiling(self):
         s = self.spec
