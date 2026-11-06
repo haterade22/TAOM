@@ -37,6 +37,7 @@ import contextlib
 import io
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -805,6 +806,138 @@ class TestRequireBuildUnit(unittest.TestCase):
             with mock.patch.object(pr, "read_build_stamp", side_effect=PermissionError("denied")):
                 problems, _checked = pr.require_build([plan], "HEAD")
             self.assertTrue(any("cannot read" in m for m in problems), problems)
+
+
+class TestTagOnAnotherLine(unittest.TestCase):
+    """Decision D8 again: a tag this line's history does not reach belongs to another line."""
+
+    def setUp(self):
+        self.head = _git_head()
+        if self.head is None:
+            self.skipTest("not a git checkout")
+
+    def _skip_unless_tagged(self, tag):
+        if pr.resolve_commit(tag) is None:
+            self.skipTest(f"{tag} is not in this clone")
+
+    def test_a_tag_this_line_cannot_reach_is_refused(self):
+        self._skip_unless_tagged("v2.1.0")
+        self.assertIn("another line", pr.tag_on_another_line("v2.1.0", self.head))
+
+    def test_a_tag_in_this_lines_history_passes(self):
+        self._skip_unless_tagged("v2.0.28")
+        self.assertIsNone(pr.tag_on_another_line("v2.0.28", self.head))
+
+    def test_a_number_with_no_tag_passes(self):
+        self.assertIsNone(pr.tag_on_another_line("v9.9.9", self.head))
+
+
+class TestInstalledManifest(unittest.TestCase):
+    """The installed SubModule.xml must be the release commit's, or the DLLs' stamps vouch for a
+    module the manifest then misdescribes. The public channel's hand-typed v2.0.29.5 is the case."""
+
+    def setUp(self):
+        self.head = _git_head()
+        if self.head is None:
+            self.skipTest("not a git checkout")
+        self.taom = self._show("Main/_Module/SubModule.xml")
+        self.deps = self._show("Dependencies/_Module/SubModule.xml")
+        self.taom_version = re.search(rb'<Version value="([^"]+)"', self.taom).group(1)
+        self.deps_version = re.search(rb'<Version value="([^"]+)"', self.deps).group(1)
+
+    @staticmethod
+    def _show(path):
+        return subprocess.run(["git", "show", f"HEAD:{path}"], cwd=TOOL.parent.parent,
+                              capture_output=True, check=True).stdout
+
+    def _gate(self, td, *manifests):
+        src = Path(td) / "Modules"
+        names = []
+        for module, dll, data in manifests:
+            names.append(module)
+            bin_dll = src / module / "bin/Win64_Shipping_Client" / dll
+            bin_dll.parent.mkdir(parents=True, exist_ok=True)
+            bin_dll.write_bytes(_dll_bytes(f"{STAMP}+{self.head}"))
+            (src / module / "SubModule.xml").write_bytes(data)
+        return _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", *names,
+                    "--dry-run", "--require-build", "HEAD")
+
+    def test_a_hand_typed_version_is_refused(self):
+        data = self.taom.replace(b'<Version value="' + self.taom_version + b'"',
+                                 b'<Version value="v2.0.29.5"')
+        self.assertNotEqual(data, self.taom)
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM", "TAOM.dll", data))
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("v2.0.29.5", r.stderr)
+            self.assertIn(self.taom_version.decode(), r.stderr)
+
+    def test_another_dll_list_is_refused(self):
+        data = self.taom.replace(b'<DLLName value="TAOM.dll"', b'<DLLName value="Other.dll"')
+        self.assertNotEqual(data, self.taom)
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM", "TAOM.dll", data))
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("names", r.stderr)
+            self.assertIn("Other.dll", r.stderr)
+
+    def test_a_dll_name_differing_only_in_case_passes(self):
+        data = self.taom.replace(b'<DLLName value="TAOM.dll"', b'<DLLName value="taom.DLL"')
+        self.assertNotEqual(data, self.taom)
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM", "TAOM.dll", data))
+            self.assertEqual(r.returncode, 0, r.stderr)
+
+    def test_a_manifest_that_does_not_parse_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM", "TAOM.dll", b"<Module><Version"))
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("does not parse", r.stderr)
+
+    def test_another_dependencies_version_is_refused(self):
+        data = self.deps.replace(b'<Version value="' + self.deps_version + b'"',
+                                 b'<Version value="v9.9.9"')
+        self.assertNotEqual(data, self.deps)
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM.Dependencies", "TAOM.Dependencies.dll", data))
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("v9.9.9", r.stderr)
+            self.assertIn(self.deps_version.decode(), r.stderr)
+
+    def test_the_commits_exact_bytes_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(td, ("TAOM", "TAOM.dll", self.taom),
+                           ("TAOM.Dependencies", "TAOM.Dependencies.dll", self.deps))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("build stamp OK", r.stdout)
+
+
+class TestCommitReleaseNumber(unittest.TestCase):
+    """The gate reads the release number from the commit, so a mis-numbered commit is refused."""
+
+    def setUp(self):
+        self.head = _git_head()
+        if self.head is None:
+            self.skipTest("not a git checkout")
+
+    def _gate(self, td, version):
+        src = Path(td) / "Modules"
+        dll = src / "TAOM/bin/Win64_Shipping_Client/TAOM.dll"
+        dll.parent.mkdir(parents=True)
+        dll.write_bytes(_dll_bytes(f"{STAMP}+{self.head}"))
+        with mock.patch.object(pr, "_read_manifest", return_value=(version, ["TAOM.dll"])):
+            problems, _checked = pr.require_build([pr.plan_module(src / "TAOM")], "HEAD")
+        return problems
+
+    def test_a_1_5_x_number_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertTrue(any("1.5.x" in m for m in self._gate(td, "v2.0.31")))
+
+    def test_a_tag_on_another_line_is_refused(self):
+        if pr.resolve_commit("v2.1.0") is None:
+            self.skipTest("v2.1.0 is not in this clone")
+        with tempfile.TemporaryDirectory() as td:
+            self.assertTrue(any("another line" in m for m in self._gate(td, "v2.1.0")))
 
 
 class TestRequireBuildCli(unittest.TestCase):

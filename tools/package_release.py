@@ -60,6 +60,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
@@ -156,6 +157,10 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # every bin/<platform>/ folder (Steam, dedicated server, Modding Kit) and every copy
 # ships, so the gate reads them all; the Win64 client copy must exist.
 SHIPPED_DLLS = {"taom": "TAOM.dll", "taom.dependencies": "TAOM.Dependencies.dll"}
+
+# Where each shipped module's SubModule.xml lives in the repo, for the release commit's copy.
+REPO_MANIFESTS = {"taom": "Main/_Module/SubModule.xml",
+                  "taom.dependencies": "Dependencies/_Module/SubModule.xml"}
 
 # InformationalVersion as the assembly metadata stores it (UTF-8): build.<yyyyMMdd-HHmmss>Z, then
 # '+' ('.' on older builds), then the commit SHA or "nogit", then an optional .dirty or .nogit flag.
@@ -378,6 +383,44 @@ def _git(*args: str):
         return None
 
 
+def _git_bytes(*args: str):
+    """Like _git, but stdout stays bytes: a manifest is parsed from bytes so its BOM or encoding
+    declaration decides, not the console code page."""
+    try:
+        return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True)
+    except OSError:
+        return None
+
+
+def _read_manifest(data: bytes):
+    """(version, sorted DLLName values) of SubModule.xml bytes, or None when they do not parse."""
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError:
+        return None
+    version = root.find("Version")
+    return (None if version is None else (version.get("value") or "").strip(),
+            sorted({(e.get("value") or "").strip() for e in root.iter("DLLName")}))
+
+
+def _commit_manifest(sha: str, path: str):
+    """_read_manifest of the file as the commit holds it, or None when it cannot be read."""
+    r = _git_bytes("show", f"{sha}:{path}")
+    return _read_manifest(r.stdout) if r and r.returncode == 0 else None
+
+
+def tag_on_another_line(version, sha: str) -> str | None:
+    """A refusal when `version` is a tag that `sha` does not descend from: another line's number."""
+    r = _git("rev-parse", "-q", "--verify", f"refs/tags/{version}^{{commit}}")
+    tagged = r.stdout.strip() if r and r.returncode == 0 else ""
+    if not tagged:
+        return None
+    ancestor = _git("merge-base", "--is-ancestor", tagged, sha)
+    if ancestor and ancestor.returncode == 0:
+        return None
+    return f"{version} is a tag on another line ({tagged[:12]}); pick the next v2.4.x number"
+
+
 def resolve_commit(rev: str) -> str | None:
     """The full SHA of the commit `rev` names in this repository, or None."""
     r = _git("rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}")
@@ -475,6 +518,14 @@ def require_build(plans, rev: str, requested=()) -> tuple:
         return [f"{sha[:12]} predates the {DIRTY_FLAG_TARGET} target, so a DLL built there "
                 "cannot prove its tree was clean"], []
     problems, checked = [], []
+    release = _commit_manifest(sha, REPO_MANIFESTS["taom"])
+    if release is None:
+        problems.append(f"{sha[:12]}:{REPO_MANIFESTS['taom']} cannot be read, so the release number is unknown")
+    else:
+        for reason in (release_number_problem(release[0]), tag_on_another_line(release[0], sha)):
+            if reason:
+                problems.append(f"release number: {reason}")
+    problems.extend(installed_manifest_problems(plans, sha))
     planned = {p.name.casefold() for p in plans}
     for name in requested:
         if name.casefold() in SHIPPED_DLLS and name.casefold() not in planned:
@@ -769,6 +820,35 @@ def release_number_problem(version) -> str | None:
     if version in FIVE_X_RELEASES:
         return f"{version} is a 1.5.x release number (decision D8: the 1.4.x line uses v2.4.x)"
     return None
+
+
+def installed_manifest_problems(plans, sha: str) -> list:
+    """Why the installed SubModule.xml of each planned TAOM module is not the commit's. An absent
+    installed manifest is not this check's finding."""
+    problems = []
+    for p in plans:
+        path = REPO_MANIFESTS.get(p.name.casefold())
+        installed = p.root / "SubModule.xml"
+        if path is None or not installed.is_file():
+            continue
+        where = f"{p.name}/SubModule.xml"
+        expected = _commit_manifest(sha, path)
+        if expected is None:
+            problems.append(f"{sha[:12]}:{path} cannot be read")
+            continue
+        try:
+            found = _read_manifest(installed.read_bytes())
+        except OSError as e:
+            problems.append(f"{where}: cannot read ({e})")
+            continue
+        if found is None:
+            problems.append(f"{where} does not parse")
+            continue
+        if found[0] != expected[0]:
+            problems.append(f"{where} says version {found[0]}, but {sha[:12]} says {expected[0]}")
+        if {n.casefold() for n in found[1]} != {n.casefold() for n in expected[1]}:
+            problems.append(f"{where} names {found[1]}, but {sha[:12]} names {expected[1]}")
+    return problems
 
 
 def _gb(n: int) -> float:
