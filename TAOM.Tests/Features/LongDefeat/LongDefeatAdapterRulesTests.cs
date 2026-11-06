@@ -76,6 +76,32 @@ public class LongDefeatAdapterRulesTests
         Assert.IsTrue(write >= 0 && kill > write, "Fell must lower a standing soldier's health before KillAgentCheat");
     }
 
+    [TestMethod]
+    public void Read_MeansTheHealthOfTheSamePeopleRestDefendersHeals_RunnersIncluded()
+    {
+        // The field-care check compares the next tick's reading with RestDefenders' own read-back, so both walk every active human of the defending team with a limit, running away or not.
+        var read = Body("Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs", "public LdReading Read(");
+        var rest = Body("Main/Adapters/LongDefeatBattlefieldAdapter.cs", "public LdRest RestDefenders(float share)");
+
+        var health = read.IndexOf("agent.Health / ", System.StringComparison.Ordinal);
+        var runner = read.IndexOf("defendersFleeing++", System.StringComparison.Ordinal);
+        Assert.IsTrue(health >= 0 && runner > health, "the defenders' health is summed before the loop sets a runner aside");
+        StringAssert.Contains(read, "healthShares / healthRead");
+        StringAssert.Contains(rest, "!agent.IsHuman || !agent.IsActive() || !(limit > 0f)");
+        StringAssert.Contains(read, "if (limit > 0f)");
+    }
+
+    [TestMethod]
+    public void RestDefenders_ReadsEachHealthBackAfterTheWrite_SoTheCheckSeesWhatTheEngineKept()
+    {
+        var rest = Body("Main/Adapters/LongDefeatBattlefieldAdapter.cs", "public LdRest RestDefenders(float share)");
+
+        var write = rest.IndexOf("agent.Health = ", System.StringComparison.Ordinal);
+        var readBack = rest.IndexOf("after += agent.Health / limit", System.StringComparison.Ordinal);
+        Assert.IsTrue(write >= 0 && readBack > write, "the mean after comes from the engine's stored health, not from the value written");
+        StringAssert.Contains(rest, "Math.Min(limit, health + share * (limit - health))");
+    }
+
     private static string Body(string relative, string header)
     {
         var path = RepoPaths.CSharpFiles("Main").Single(f => f.Replace('\\', '/').EndsWith("/" + relative));

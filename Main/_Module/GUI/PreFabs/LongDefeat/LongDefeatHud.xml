@@ -69,6 +69,12 @@
                     Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#FF8A70FF"
                     Text="@CommanderText" DoNotAcceptEvents="true" />
 
+        <!-- The Elven Volley line: ready, the seconds to the next use, or why the last shot could not leave. Under the commander line, during a wave. -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="174"
+                    Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#9AD7E9FF"
+                    Text="@VolleyText" DoNotAcceptEvents="true" />
+
         <!-- The last refusal. -->
         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                     HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="96"

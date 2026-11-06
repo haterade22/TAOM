@@ -29,6 +29,7 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
         registrator.Register<IMarshalSettingsProvider, MarshalSettingsProvider>(Reuse.Singleton);
         registrator.Register<IMarshalOrderAdapter, MarshalOrderAdapter>(Reuse.Transient);
         registrator.Register<IMarshalFireAdapter, MarshalFireAdapter>(Reuse.Transient);
+        registrator.Register<IMarshalThrowerAdapter, MarshalThrowerAdapter>(Reuse.Transient);
         registrator.Register<IMarshalOutlineAdapter<TaleWorlds.MountAndBlade.Agent>, MarshalOutlineAdapter>(Reuse.Transient);
         registrator.Register<MarshalHotKeys>(Reuse.Singleton);
         registrator.Register<IMarshalOrderProviderRegistrar, NullMarshalOrderProviderRegistrar>(Reuse.Singleton);

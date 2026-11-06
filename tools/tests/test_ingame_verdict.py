@@ -1562,8 +1562,12 @@ class MarshalsWordManifestTests(unittest.TestCase):
     HOLD_STRIKE = PREFIX + "hold-strike"
     SQUARE = PREFIX + "square"
     SPACING = PREFIX + "spacing"
+    THROWERS_STAND = PREFIX + "throwers-stand"
+    THROWERS_THROW = PREFIX + "throwers-throw"
+    THROWERS_MELEE = PREFIX + "throwers-melee"
+    THROWERS_COST = PREFIX + "throwers-cost"
     STAGE_TWO = [CAPTURED, STARTED, FINISHED, PATIENCE, CLEARED, DECLINED, ARRAY, MARCH, SPREAD]
-    NEW = [FIRE, WORD, HOLD, RELEASE, MARK, EFFECT, MASSED, HOLD_TOGGLE, HOLD_LINE, HOLD_SLOT, HOLD_STRIKE, SQUARE, SPACING]
+    NEW = [FIRE, WORD, HOLD, RELEASE, MARK, EFFECT, MASSED, HOLD_TOGGLE, HOLD_LINE, HOLD_SLOT, HOLD_STRIKE, SQUARE, SPACING, THROWERS_STAND, THROWERS_THROW, THROWERS_MELEE, THROWERS_COST]
     ALL = STAGE_TWO + NEW
 
     def setUp(self):
@@ -2026,6 +2030,109 @@ class MarshalsWordManifestTests(unittest.TestCase):
         for check_id in self.ALL + [SeatOfSeeingManifestTests.ENTER, SeatOfSeeingManifestTests.GLIDE]:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    # ---- throwers on an advance ----
+
+    def test_a_stand_inside_the_overshoot_passes_a_walk_in_fails_and_a_run_that_never_stood_reads_not_reached(self):
+        code, out, _ = self.judge("marshal_throwers_stand_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_STAND), "PASS", out)
+        code, out, _ = self.judge("marshal_throwers_stand_walked_in.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_STAND), "FAIL", out)
+        self.assertIn("reason=walked-in", out)
+        code, out, _ = self.judge("marshal_throwers_stand_skip.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_STAND), "NOT REACHED", out)
+        self.assertIn("why=held", out)
+
+    def test_the_postfix_fault_line_fails_the_stand_check_and_the_captured_check(self):
+        code, out, _ = self.judge("marshal_throwers_stand_fault.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_STAND), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
+
+    def test_the_shared_category_failing_to_apply_fails_the_captured_check(self):
+        code, out, _ = self.judge("marshal_throwers_category_failed.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
+
+    def test_ten_javelins_loosed_pass_the_throw_check_and_a_stand_that_threw_too_little_fails(self):
+        code, out, _ = self.judge("marshal_throwers_throw_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_THROW), "PASS", out)
+        code, out, _ = self.judge("marshal_throwers_throw_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_THROW), "FAIL", out)
+        self.assertIn("reason=few-throws", out)
+        code, out, _ = self.judge("marshal_throwers_throw_skip.txt")
+        self.assertEqual(verdict_of(out, self.THROWERS_THROW), "NOT REACHED", out)
+
+    def test_the_throw_pass_needs_ten_shots(self):
+        pattern = self.check(self.THROWERS_THROW).passes[0]
+        line = "[Check] id=taom.marshals-word.throwers-throw result=pass mission=1 company=1 shots=%s stood_s=4.0"
+        for shots in ("0", "1", "9"):
+            self.assertFalse(pattern.search(line % shots), "shots=" + shots)
+        for shots in ("10", "12", "120"):
+            self.assertTrue(pattern.search(line % shots), "shots=" + shots)
+
+    def test_blows_after_the_release_pass_the_melee_check_and_none_within_the_wait_fails(self):
+        code, out, _ = self.judge("marshal_throwers_melee_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_MELEE), "PASS", out)
+        code, out, _ = self.judge("marshal_throwers_melee_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_MELEE), "FAIL", out)
+        self.assertIn("reason=no-melee", out)
+        code, out, _ = self.judge("marshal_throwers_melee_skip.txt")
+        self.assertEqual(verdict_of(out, self.THROWERS_MELEE), "NOT REACHED", out)
+
+    def test_blows_with_a_company_that_did_not_go_in_fail_the_melee_check_as_no_advance(self):
+        code, out, _ = self.judge("marshal_throwers_melee_no_advance.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_MELEE), "FAIL", out)
+        self.assertIn("reason=no-advance", out)
+
+    def test_the_melee_pass_needs_at_least_one_blow(self):
+        pattern = self.check(self.THROWERS_MELEE).passes[0]
+        line = "[Check] id=taom.marshals-word.throwers-melee result=pass mission=1 company=1 blows=%s melee_s=3.0 advanced_m=4.0"
+        self.assertFalse(pattern.search(line % "0"))
+        self.assertTrue(pattern.search(line % "1"))
+        self.assertTrue(pattern.search(line % "40"))
+
+    def test_the_melee_pass_needs_the_advanced_fact(self):
+        pattern = self.check(self.THROWERS_MELEE).passes[0]
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.throwers-melee result=pass mission=1 company=1 blows=1 melee_s=5.0"))
+        self.assertTrue(pattern.search("[Check] id=taom.marshals-word.throwers-melee result=pass mission=1 company=1 blows=1 melee_s=5.0 advanced_m=3.0"))
+
+    def test_a_cheap_epoch_passes_the_cost_check_and_a_slow_mean_or_one_slow_call_fails_it(self):
+        code, out, _ = self.judge("marshal_throwers_cost_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.THROWERS_COST), "PASS", out)
+        for fixture, reason in (("marshal_throwers_cost_fail_mean.txt", "reason=mean"), ("marshal_throwers_cost_fail_max.txt", "reason=max")):
+            code, out, _ = self.judge(fixture)
+            self.assertEqual(code, 1, out)
+            self.assertEqual(verdict_of(out, self.THROWERS_COST), "FAIL", out)
+            self.assertIn(reason, out)
+        code, out, _ = self.judge("marshal_throwers_cost_skip.txt")
+        self.assertEqual(verdict_of(out, self.THROWERS_COST), "NOT REACHED", out)
+        self.assertIn("reason=too-few-calls", out)
+
+    def test_the_cost_pass_needs_three_hundred_calls(self):
+        pattern = self.check(self.THROWERS_COST).passes[0]
+        line = "[Check] id=taom.marshals-word.throwers-cost result=pass mission=1 epoch=1 calls=%s mean_us=4.0 max_us=9.0"
+        for calls in ("0", "12", "299", "30"):
+            self.assertFalse(pattern.search(line % calls), "calls=" + calls)
+        for calls in ("300", "999", "1000", "52000"):
+            self.assertTrue(pattern.search(line % calls), "calls=" + calls)
+
+    def test_every_thrower_check_names_the_postfix_fault_and_the_shared_category_in_its_fail_list(self):
+        for check_id in (self.THROWERS_STAND, self.THROWERS_THROW, self.THROWERS_MELEE, self.THROWERS_COST):
+            patterns = [p.pattern for p in self.check(check_id).fails]
+            with self.subTest(check_id=check_id):
+                self.assertIn(r"\[MarshalsWord\] the thrower stand failed", patterns)
+                self.assertIn(r"\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)", patterns)
+
 
 
 class CrashReportEchoTests(unittest.TestCase):

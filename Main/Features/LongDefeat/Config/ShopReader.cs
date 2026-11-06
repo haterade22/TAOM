@@ -8,7 +8,7 @@ namespace TAOM.Features.LongDefeat;
 /// <summary>
 /// shop.json: shops by id. A bad starting gold falls back to 0; an offer with no id or troop, a duplicate id (the first is
 /// kept), a bad class, pack size or price is skipped. A shop left with no offer still loads, so a fortress may start with only
-/// its gold and nothing to buy.
+/// its gold and nothing to buy. A shop's <c>fortifications</c> block is read by <see cref="FortificationsReader"/>.
 /// </summary>
 internal static class ShopReader
 {
@@ -61,7 +61,7 @@ internal static class ShopReader
             s.Warn($"'{label}.offers' is missing or not an array; this shop sells nothing");
         }
 
-        return new ShopPlan(s.Int(shop, label, "startingGold", 0, 0, 1_000_000), offers);
+        return new ShopPlan(s.Int(shop, label, "startingGold", 0, 0, 1_000_000), offers, FortificationsReader.Read(shop, label, s));
     }
 
     private static ShopOffer? ReadOffer(JObject? o, string label, HashSet<string> seen, LongDefeatConfigScope s)

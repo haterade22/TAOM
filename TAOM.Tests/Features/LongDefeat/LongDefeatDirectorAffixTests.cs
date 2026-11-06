@@ -18,8 +18,8 @@ namespace TAOM.Tests.Features.LongDefeat;
 [TestClass]
 public class LongDefeatDirectorAffixTests
 {
-    // Wave 5 rolls one power: seed 0 hide, 1 drums, 2 discipline, 4 eye, 6 terror, 8 hammer, 27 lash (AffixPlanTests). Wave 10 rolls two: seed 31 lash and eye.
-    private const ulong Eye = 4, Hide = 0, Lash = 27, LashAndEye = 31;
+    // Wave 5 rolls one power: seed 0 eye, 1 hide, 2 lash, 3 blades, 5 discipline, 7 terror, 9 hammer, 15 drums (AffixPlanTests). Wave 10 rolls two: seed 39 lash, then eye.
+    private const ulong Eye = 0, Hide = 1, Lash = 2, LashAndEye = 39;
 
     private static readonly Dictionary<string, string> Names = AffixPlan.Ids.ToDictionary(id => id, id => "{=TAOM_LD_Test_" + id + "}Name of " + id);
 

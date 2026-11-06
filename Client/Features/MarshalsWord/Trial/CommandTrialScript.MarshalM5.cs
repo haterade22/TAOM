@@ -21,6 +21,7 @@ internal sealed partial class CommandTrialScript
         into["square_side_kept"] = s => s.SquareSideKept();
         into["spacing_one_rider"] = s => s.SpacingOneRider();
         MarshalHoldSteps(into);
+        MarshalThrowerSteps(into);
     }
 
     private sealed class VolleyGround

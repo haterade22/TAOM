@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Adapters;
@@ -6,8 +7,7 @@ namespace TAOM.Adapters;
 /// <summary>
 /// The engine writes and reads that are not the field itself: what the director publishes into the engine's hooks, and what it reads back
 /// to prove a number reached the agents. Takes and returns domain types only (ADR-007). Main thread. Slices 2 and 3 hold the wave's published
-/// table (damage factor, stat record, armour) and the two reads that prove it; Slice 6 adds the troop and class boons' refresh, health writes and read-back; Slice 8 adds the engines' hit points and the morale pulse; the poison
-/// member of the plan joins it in its own slice.
+/// table (damage factor, stat record, armour) and the two reads that prove it; Slice 6 adds the troop and class boons' refresh, health writes and read-back; Slice 8 adds the engines' hit points and the morale pulse; Slice 9 adds the poison tick.
 /// </summary>
 internal interface ILongDefeatEffectsAdapter
 {
@@ -39,6 +39,14 @@ internal interface ILongDefeatEffectsAdapter
     /// once, counts the defenders drained and left below the floor inside the call, and times itself.
     /// </summary>
     LdPulseResult PulseMorale(LdMoralePulse pulse);
+
+    /// <summary>
+    /// One Morgul Blades tick: takes <paramref name="damage"/> health off the defender <paramref name="victim"/> (his key in the registry), ignoring armour. While his health stays above the damage that is all.
+    /// A tick that would kill him needs a real owner: <paramref name="poisoner"/> while the registry holds him and he is active, else the commander, else any attacker the registry holds as active
+    /// (<see cref="PoisonOwner"/>), never an owner of -1. With none standing the tick is withheld and the victim keeps 1 health. The owner's <c>IsActive()</c> is read again at the call, and one that is not active
+    /// is counted (<c>OwnerMissing</c>) and kills nothing. A victim already gone answers an empty result.
+    /// </summary>
+    LdPoisonResult ApplyPoison(AgentKey victim, AgentKey poisoner, int damage);
 
     /// <summary>
     /// Derives the driven properties of every standing human of one group of the player's side again (and of each one's mount), so a stat record just published reaches soldiers already

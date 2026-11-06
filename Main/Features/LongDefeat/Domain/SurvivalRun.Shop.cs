@@ -26,9 +26,10 @@ internal sealed partial class SurvivalRun
             return BuyResult.NoGold;
         if (_lastDefenders + PendingDefenders + offer.PackSize > _r.GarrisonCap)
             return BuyResult.GarrisonFull;
-        if (!_purse.TrySpend(offer.Price))
+        if (!_purse.TrySpend(offer.Price, PurseSink.Packs))
             return BuyResult.NoGold;
 
+        _purchases.Add(new FortPurchase(_wave + 1, PurchaseKind.Pack, offer.Id, 0, _plan.Shop.Offers.First(o => o.Id == offer.Id).Price, offer.Price, 0f));
         _packs.Add(offer);
         _bought[(int)offer.Slot]++;
         _pendingEvents.Add(new RunEvent(RunEventKind.Bought, _wave, "offer=" + offer.Id));

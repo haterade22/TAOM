@@ -13,7 +13,7 @@ internal static class LongDefeatRunReport
     private const int Schema = 2;
 
     internal static string Build(string fortressId, RunOptions options, RunProvenance provenance, RunResult result, RunStats stats, Purse purse,
-        DateTime startedUtc, DateTime endedUtc, int maxSpeed = 1, RunBoons? boons = null)
+        DateTime startedUtc, DateTime endedUtc, int maxSpeed = 1, RunBoons? boons = null, RunFort? fort = null)
     {
         var report = new JObject
         {
@@ -30,6 +30,7 @@ internal static class LongDefeatRunReport
             ["class"] = options.ClassId ?? "",
             ["startWave"] = options.StartWave,
             ["startRerolls"] = options.StartRerolls,
+            ["startGold"] = options.StartGold is int startGold ? new JValue(startGold) : JValue.CreateNull(),
             ["boons"] = new JArray((boons?.Picks ?? Array.Empty<BoonPickRecord>()).Select(Pick)),
             ["rerolls"] = new JObject { ["earned"] = boons?.Earned ?? 0, ["used"] = boons?.Used ?? 0, ["banked"] = boons?.Banked ?? 0 },
             ["targetWaves"] = options.StopAfterWaves is int target ? new JValue(target) : JValue.CreateNull(),
@@ -59,6 +60,10 @@ internal static class LongDefeatRunReport
                 ["summonKills"] = w.SummonKills,
                 ["summonFelled"] = w.SummonFelled,
                 ["commander"] = w.Commander is { } commander ? Commander(commander) : JValue.CreateNull(),
+                ["gate"] = Gate(w.Fort.Gate),
+                ["posts"] = new JObject { ["filled"] = w.Fort.Posts.Filled, ["short"] = w.Fort.Posts.Short, ["manned"] = w.Fort.Posts.Manned, ["lost"] = w.Fort.Posts.Lost },
+                ["volley"] = Volley(w.Fort.Volley),
+                ["towerVolley"] = Volley(w.Fort.TowerVolley),
             })),
             ["gold"] = new JObject
             {
@@ -71,10 +76,66 @@ internal static class LongDefeatRunReport
                 ["earlyStart"] = purse.EarnedFrom(PurseSource.EarlyStart),
                 ["commander"] = purse.EarnedFrom(PurseSource.Commander),
                 ["boon"] = purse.EarnedFrom(PurseSource.Boon),
+                ["spentOn"] = new JObject
+                {
+                    ["packs"] = purse.SpentOn(PurseSink.Packs),
+                    ["gate"] = purse.SpentOn(PurseSink.Gate),
+                    ["towers"] = purse.SpentOn(PurseSink.Towers),
+                    ["fieldCare"] = purse.SpentOn(PurseSink.FieldCare),
+                    ["volley"] = purse.SpentOn(PurseSink.Volley),
+                },
             },
-            ["poison"] = new JObject { ["doses"] = 0, ["hits"] = 0, ["damage"] = 0, ["ownerMissing"] = 0, ["withheld"] = 0 },
+            ["purchases"] = new JArray((fort ?? RunFort.None).Purchases.Select(Purchase)),
+            ["fortifications"] = new JObject
+            {
+                ["gateLevel"] = (fort ?? RunFort.None).GateLevel,
+                ["towerLevel"] = (fort ?? RunFort.None).TowerLevel,
+                ["volleyLevel"] = (fort ?? RunFort.None).VolleyLevel,
+            },
+            ["poison"] = new JObject
+            {
+                ["doses"] = stats.Poison.Doses,
+                ["hits"] = stats.Poison.Hits,
+                ["damage"] = stats.Poison.Damage,
+                ["ownerMissing"] = stats.Poison.OwnerMissing,
+                ["withheld"] = stats.Poison.Withheld,
+            },
         };
         return report.ToString(Newtonsoft.Json.Formatting.Indented);
+    }
+
+    /// <summary>A wave's gate: the level in force at its start, the hit points it began with and could hold, whether it fell and when (null when it stood).</summary>
+    private static JObject Gate(GateWaveRecord g) => new()
+    {
+        ["level"] = g.Level,
+        ["startHitPoints"] = g.StartHitPoints,
+        ["maxHitPoints"] = g.MaxHitPoints,
+        ["fell"] = g.Fell,
+        ["fellAtSeconds"] = g.FellAtSeconds is float at ? new JValue(at) : JValue.CreateNull(),
+    };
+
+    private static JObject Volley(VolleyWaveRecord v) => new() { ["uses"] = v.Uses, ["arrows"] = v.Arrows, ["hits"] = v.Hits, ["kills"] = v.Kills, ["withheld"] = v.Withheld };
+
+    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel" };
+
+    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid, and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    private static JObject Purchase(FortPurchase p)
+    {
+        var row = new JObject
+        {
+            ["beforeWave"] = p.BeforeWave,
+            ["kind"] = PurchaseKinds[(int)p.Kind],
+            ["id"] = p.Id,
+            ["level"] = p.Level,
+            ["basePrice"] = p.BasePrice,
+            ["price"] = p.Price,
+            ["share"] = Math.Round((double)p.Share, 3, MidpointRounding.AwayFromZero),
+        };
+
+        // A repair is priced per gate (D18), so its row lists each gate's missing share beside the total; a row with no list is a one-gate repair.
+        if (p.Kind == PurchaseKind.GateRepair)
+            row["shares"] = new JArray((p.Shares ?? new[] { p.Share }).Select(s => Math.Round((double)s, 3, MidpointRounding.AwayFromZero)));
+        return row;
     }
 
     /// <summary>A wave's commander: his troop, the rank's id and the steps past the ranks, how he ended, how often each ability fired and how often after his end (0 unless a clock failed to stop).</summary>

@@ -53,13 +53,13 @@ public class LongDefeatAgentRegistryTests
         registry.Register(killed, AttackerRole.Commander);
         Assert.IsTrue(registry.MarkFelled(felled));
 
-        Assert.IsTrue(registry.TakeRemoval(felled, out var role1, out var isFelled1));
-        Assert.IsTrue(registry.TakeRemoval(killed, out var role2, out var isFelled2));
+        Assert.IsTrue(registry.TakeRemoval(felled, out var role1, out var isFelled1, out _));
+        Assert.IsTrue(registry.TakeRemoval(killed, out var role2, out var isFelled2, out _));
 
         Assert.AreEqual((AttackerRole.Summoned, true), (role1, isFelled1));
         Assert.AreEqual((AttackerRole.Commander, false), (role2, isFelled2));
         Assert.AreEqual(0, registry.Count);
-        Assert.IsFalse(registry.TakeRemoval(felled, out _, out _), "an agent is removed once");
+        Assert.IsFalse(registry.TakeRemoval(felled, out _, out _, out _), "an agent is removed once");
     }
 
     [TestMethod]
@@ -71,7 +71,7 @@ public class LongDefeatAgentRegistryTests
         Assert.AreEqual(AttackerRole.Roster, registry.RoleOf(stranger));
         Assert.IsFalse(registry.IsFelled(stranger));
         Assert.IsFalse(registry.MarkFelled(stranger));
-        Assert.IsFalse(registry.TakeRemoval(stranger, out var role, out var felled));
+        Assert.IsFalse(registry.TakeRemoval(stranger, out var role, out var felled, out _));
         Assert.AreEqual((AttackerRole.Roster, false), (role, felled));
         Assert.IsFalse(registry.TryGetKey(null, out _));
     }
@@ -82,7 +82,7 @@ public class LongDefeatAgentRegistryTests
         var registry = new LongDefeatAgentRegistry();
         var a = new object();
         var first = registry.Register(a, AttackerRole.Roster);
-        registry.TakeRemoval(a, out _, out _);
+        registry.TakeRemoval(a, out _, out _, out _);
 
         var second = registry.Register(new object(), AttackerRole.Roster);
         registry.Clear();
@@ -103,7 +103,7 @@ public class LongDefeatAgentRegistryTests
 
         var snapshot = registry.Snapshot();
         foreach (var agent in agents)
-            registry.TakeRemoval(agent, out _, out _);
+            registry.TakeRemoval(agent, out _, out _, out _);
 
         Assert.AreEqual(5, snapshot.Count);
         Assert.AreEqual(1, snapshot.Count(s => s.Felled));
@@ -125,5 +125,47 @@ public class LongDefeatAgentRegistryTests
 
         Assert.AreEqual(200, keys.Distinct().Count());
         Assert.AreEqual(200, registry.Count);
+    }
+
+    [TestMethod]
+    public void TryGetAgent_FindsARegisteredAgentByItsKey_AndNotAnEvictedOneOrAStrangersKey()
+    {
+        var registry = new LongDefeatAgentRegistry();
+        var a = new object();
+        var key = registry.Register(a, AttackerRole.Roster);
+
+        Assert.IsTrue(registry.TryGetAgent(key, out var found));
+        Assert.AreSame(a, found);
+        Assert.IsFalse(registry.TryGetAgent(new AgentKey(key.Value + 100), out _));
+        registry.TakeRemoval(a, out _, out _, out _);
+        Assert.IsFalse(registry.TryGetAgent(key, out _), "an evicted agent is no longer found by its key");
+    }
+
+    [TestMethod]
+    public void TakeRemoval_AlsoReturnsTheKey_SoTheRunCanForgetTheAgent()
+    {
+        var registry = new LongDefeatAgentRegistry();
+        var a = new object();
+        var key = registry.Register(a, AttackerRole.Roster);
+
+        Assert.IsTrue(registry.TakeRemoval(a, out _, out _, out var removed));
+        Assert.AreEqual(key, removed);
+        Assert.IsFalse(registry.TakeRemoval(a, out _, out _, out var again));
+        Assert.AreEqual(0, again.Value, "no key for an agent the registry does not hold");
+    }
+
+    [TestMethod]
+    public void ADefenderRegisteredOnItsFirstHit_IsHeldLikeAnyOtherAgent()
+    {
+        // The poison victims are defenders; they register when first struck and are evicted at their removal, so a long run holds no more than the agents that stand or were hit.
+        var registry = new LongDefeatAgentRegistry();
+        var defender = new object();
+
+        var first = registry.Register(defender, AttackerRole.Roster);
+        var second = registry.Register(defender, AttackerRole.Roster);
+
+        Assert.AreEqual(first, second);
+        Assert.IsTrue(registry.TryGetKey(defender, out var key) && key == first);
+        Assert.AreEqual(1, registry.Count);
     }
 }

@@ -120,10 +120,11 @@ public class LongDefeatPowersWiringTests
         StringAssert.Contains(BodyOf(source, "private void Finish()"), "FlushTerror()");
     }
 
+    // The effects adapter kills too since Slice 9, but only inside ApplyPoison: LongDefeatBlowOwnerTests scans every member and pins that one.
     [TestMethod]
     public void TheHammerAndTerror_KillNothing_SoTheBlowOwnerGateHasNothingToAllow()
     {
-        foreach (var path in new[] { EffectsAdapter, "Main/Features/LongDefeat/LongDefeatDirector.Powers.cs", "Main/Features/LongDefeat/Domain/LdMoralePulse.cs" })
+        foreach (var path in new[] { "Main/Features/LongDefeat/LongDefeatDirector.Powers.cs", "Main/Features/LongDefeat/Domain/LdMoralePulse.cs" })
         {
             var source = RepoPaths.ReadSource(path, stripComments: true);
             Assert.IsFalse(source.Contains("KillAgentCheat") || source.Contains(".Die(") || source.Contains("new Blow("), path + " must not kill");

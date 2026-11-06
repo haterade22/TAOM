@@ -20,4 +20,7 @@ internal interface IMarshalSettingsProvider
 
     /// <summary>A company with one rider among its foot soldiers keeps the foot soldiers' spacing limits. Read at patch time, so a change needs a restart (stage M5).</summary>
     bool SpacingRepair { get; }
+
+    /// <summary>A company of throwers on an Advance stops short of the enemy and throws before it goes in (stage M5, 9.4).</summary>
+    bool ThrowersFirst { get; }
 }

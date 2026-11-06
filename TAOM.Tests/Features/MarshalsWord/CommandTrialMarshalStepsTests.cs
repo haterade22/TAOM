@@ -20,7 +20,7 @@ public class CommandTrialMarshalStepsTests
     private static readonly string[] Rows =
     {
         "queue_two_moves", "direct_order_clears", "array_keeps_offsets", "arrive_together", "volley_holds", "volley_looses", "mark_keeps_order",
-        "outline_clears", "volley_massed", "square_side_kept", "spacing_one_rider", "hold_line_proof", "hold_line_slot", "hold_line_strike", "hold_line_flag",
+        "outline_clears", "volley_massed", "square_side_kept", "spacing_one_rider", "hold_line_proof", "hold_line_slot", "hold_line_strike", "hold_line_flag", "advance_throwers", "advance_throwers_vanilla",
     };
 
     private CommandTrialWorld _world = null!;

@@ -8,7 +8,35 @@
         { "id": "axemen", "name": "{=TAOM_LD_Offer_Axemen}Westfold Axemen", "troop": "fow_rohan_westfold_axeman", "class": "Infantry", "packSize": 8, "price": 200 },
         { "id": "bowmen", "name": "{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen", "troop": "fow_rohan_eastfold_bowman", "class": "Ranged", "packSize": 8, "price": 200 },
         { "id": "kings_knights", "name": "{=TAOM_LD_Offer_Knights}King's Knights, on foot", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "class": "Infantry", "packSize": 6, "price": 360 }
-      ]
+      ],
+      "fortifications": {
+        "gate": {
+          "repairPrice": 200,
+          "levels": [
+            { "hitPointsPercent": 50, "price": 200 },
+            { "hitPointsPercent": 100, "price": 300 },
+            { "hitPointsPercent": 150, "price": 450 }
+          ]
+        },
+        "towers": {
+          "troop": "fow_rohan_eastfold_bowman",
+          "levels": [
+            { "posts": 4, "price": 250 },
+            { "posts": 8, "price": 300 },
+            { "posts": 8, "volley": true, "price": 400 }
+          ],
+          "volley": { "item": "fow_tower_arrow", "arrows": 6, "firstSeconds": 20, "cooldownSeconds": 30, "radius": 6.0, "range": 80.0, "originHeight": 2.5 }
+        },
+        "fieldCare": { "share": 0.75, "price": 150, "perIntermission": 1 },
+        "elvenVolley": {
+          "item": "ld_elven_arrow",
+          "originHeight": 3.0,
+          "levels": [
+            { "price": 350, "arrows": 12, "cooldownSeconds": 45, "radius": 8.0, "range": 90.0, "aim": "auto" },
+            { "price": 300, "arrows": 16, "cooldownSeconds": 40, "radius": 8.0, "range": 90.0, "aim": "crosshair" }
+          ]
+        }
+      }
     }
   }
 }

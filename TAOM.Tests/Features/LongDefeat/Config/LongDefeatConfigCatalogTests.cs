@@ -25,10 +25,11 @@ public class LongDefeatConfigCatalogTests
     [TestInitialize]
     public void Setup() => _logger = Substitute.For<IModLogger>();
 
-    private static string Fortress(string garrison = Garrison, string replaceKey = "", string replaceWith = "", string keep = "null", string muster = "")
+    private static string Fortress(string garrison = Garrison, string replaceKey = "", string replaceWith = "", string keep = "null", string muster = "", string sally = "")
     {
         var text = "{'id':'helms','name':'{=K}Helm','scene':'s','defenderCulture':'vlandia','attackerCulture':'isengard'," +
-                   "'playerTroop':'lord_4_1','waves':'r','shop':'sh','garrison':[" + garrison + "],'keep':" + keep + (muster.Length == 0 ? "" : ",'muster':" + muster) + "}";
+                   "'playerTroop':'lord_4_1','waves':'r','shop':'sh','garrison':[" + garrison + "],'keep':" + keep + (muster.Length == 0 ? "" : ",'muster':" + muster)
+                   + (sally.Length == 0 ? "" : ",'sally':" + sally) + "}";
         return replaceKey.Length == 0 ? text : text.Replace(replaceKey, replaceWith);
     }
 
@@ -857,6 +858,84 @@ public class LongDefeatConfigCatalogTests
         var catalog = Load();
 
         Assert.IsNull(catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default).Muster);
+    }
+
+    private const string Sally = "{'x':-20.5,'y':70,'z':12,'fx':0,'fy':-1}";
+
+    [TestMethod]
+    public void Sally_ARecordedBlock_IsReadInTheMusterShape()
+    {
+        var sally = Load(Fortresses(Fortress(sally: Sally))).Fortresses.Single().Sally;
+
+        Assert.AreEqual(new MusterFrame(-20.5f, 70f, 12f, 0f, -1f), sally);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ArmouryAndYardBlocks_AnExportCarries_LoadWithNoWarning_BeforePhase4ReadsThem()
+    {
+        var catalog = Load(Fortresses(Fortress(sally: Sally + ",'armoury':{'x':30,'y':40,'z':5,'fx':1,'fy':0},'yard':{'x':60,'y':70,'z':2,'fx':0,'fy':-1}")));
+
+        Assert.AreEqual("helms", catalog.Fortresses.Single().Id);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Sally_TheLookIsNormalized()
+    {
+        var sally = Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':0.6,'fy':0}"))).Fortresses.Single().Sally!;
+
+        Assert.AreEqual(1f, sally.Fx);
+        Assert.AreEqual(0f, sally.Fy);
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("null")]
+    public void Sally_AbsentOrNull_IsNullWithNoWarning_SoCavalryRidesFromBeginWithNoSally(string sally)
+    {
+        var catalog = Load(Fortresses(Fortress(sally: sally)));
+
+        Assert.IsNull(catalog.Fortresses.Single().Sally);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("{'x':1,'y':2,'z':3,'fx':0,'fy':0}")]
+    [DataRow("{'x':1,'y':2,'z':3,'fx':0.2,'fy':0.2}")]
+    [DataRow("{'x':1,'y':2,'z':3,'fx':3,'fy':4}")]
+    [DataRow("{'x':1,'y':2,'z':3,'fx':NaN,'fy':1}")]
+    [DataRow("{'x':NaN,'y':2,'z':3,'fx':0,'fy':1}")]
+    [DataRow("{'x':1,'y':2,'z':3,'fx':0}")]
+    [DataRow("{}")]
+    [DataRow("7")]
+    public void Sally_BadBlock_IsSkippedWithOneWarning_AndTheFortressAndItsMusterStay(string sally)
+    {
+        var catalog = Load(Fortresses(Fortress(muster: "{'foot':" + Foot + "}", sally: sally)));
+
+        var fortress = catalog.Fortresses.Single();
+        Assert.IsNull(fortress.Sally);
+        Assert.IsNotNull(fortress.Muster, "a bad sally block must not take the muster with it");
+        AssertOneWarningNaming("fortresses.json", "sally");
+    }
+
+    [TestMethod]
+    public void Sally_LookLengthAtTheEdgesOfTheRange_IsAcceptedAndOutsideItRefused()
+    {
+        Assert.IsNotNull(Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':0.5,'fy':0}"))).Fortresses.Single().Sally);
+        Assert.IsNotNull(Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':1.5,'fy':0}"))).Fortresses.Single().Sally);
+        Assert.IsNull(Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':0.49,'fy':0}"))).Fortresses.Single().Sally);
+        Assert.IsNull(Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':1.51,'fy':0}"))).Fortresses.Single().Sally);
+    }
+
+    [TestMethod]
+    public void Sally_ReachesTheRunPlan_AndAnAbsentOneLeavesThePlanWithNone()
+    {
+        var with = Load(Fortresses(Fortress(sally: Sally)));
+        var without = Load();
+
+        Assert.AreEqual(with.Fortresses.Single().Sally, with.BuildPlan(with.Fortresses.Single(), RunOptions.Default).Sally);
+        Assert.IsNull(without.BuildPlan(without.Fortresses.Single(), RunOptions.Default).Sally);
     }
 
     [TestMethod]

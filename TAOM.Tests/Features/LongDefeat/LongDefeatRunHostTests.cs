@@ -35,6 +35,64 @@ public class LongDefeatRunHostTests
     public void Clean() => MissionThreadGuard.ResetForTests();
 
     [TestMethod]
+    public void WantsHits_IsFalse_AndAHitIsIgnored_BeforeTheRunStarts()
+    {
+        var (host, menu, _, _) = NewHost(() => new FakeLongDefeatField());
+
+        Assert.IsFalse(host.WantsHits);
+        host.OnHit("D:man", "A:orc");
+
+        Assert.AreEqual(0, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void WantsHits_IsFalse_ForARunWithNoBladesWave_AndAfterTheShutDown()
+    {
+        var (host, _, _, _) = NewHost(() => new FakeLongDefeatField());
+        host.MarkStartDue();
+        host.Step(0.1f, () => 1f);
+
+        Assert.IsFalse(host.WantsHits, "wave 1 carries no affix");
+        host.ShutDown();
+        Assert.IsFalse(host.WantsHits);
+    }
+
+    [TestMethod]
+    public void AContactHit_AndABodyEvent_BeforeTheRunStarts_AreIgnored()
+    {
+        var (host, menu, _, _) = NewHost(() => new FakeLongDefeatField());
+
+        host.OnContactHit("A:orc", "P", 40f);
+        host.OnBodyEvent("P", "removed", "Routed");
+
+        Assert.AreEqual(0, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void ABodyEvent_ReachesTheField_OnlyOnceTheRunHasStarted()
+    {
+        var field = new FakeLongDefeatField();
+        var (host, _, _, _) = NewHost(() => field);
+        host.MarkStartDue();
+        host.Step(0.1f, () => 1f);
+
+        host.OnBodyEvent("P", "removed", "Routed");
+
+        Assert.AreEqual(1, field.BodyNotes);
+    }
+
+    [TestMethod]
+    public void WatchesBodies_IsTrueOnlyForAMountedClass()
+    {
+        var (foot, _, _, _) = NewHost(() => new FakeLongDefeatField());
+        var mounted = new LongDefeatRunHost(Plan with { Loadout = new LdLoadout("cavalry", true, Array.Empty<LdKitSlot>()) }, new LongDefeatSession(),
+            Substitute.For<IModLogger>(), new RecordingOutcomeLog(), new FakeLongDefeatMenu(), "m1", () => new FakeLongDefeatField());
+
+        Assert.IsFalse(foot.WatchesBodies);
+        Assert.IsTrue(mounted.WatchesBodies);
+    }
+
+    [TestMethod]
     public void Step_BeforeTheStartIsDue_DoesNothing_AndNeverAsksTheMissionClock()
     {
         var (host, menu, session, _) = NewHost(() => new FakeLongDefeatField());

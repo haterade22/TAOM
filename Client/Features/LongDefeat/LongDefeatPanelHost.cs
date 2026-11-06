@@ -8,7 +8,7 @@ namespace TAOM.Client.Features.LongDefeat;
 
 /// <summary>
 /// The panel layer of the Long Defeat HUD: created when the view model wants it, removed when it does not, in the shape of
-/// <c>MissionGauntletEscapeMenuBase</c> but without its engine pause, so the wave timer runs. Also reads M, B and H.
+/// <c>MissionGauntletEscapeMenuBase</c> but without its engine pause, so the wave timer runs. Also reads M, B, H and N.
 /// </summary>
 internal sealed class LongDefeatPanelHost
 {
@@ -23,8 +23,9 @@ internal sealed class LongDefeatPanelHost
     internal LongDefeatPanelHost(Action<string> log) => _log = log;
 
     /// <summary>
-    /// M steps the speed, also while a panel is open (read from that panel's own input, since the focus layer takes the keys). B toggles the shop and H sounds the horn,
-    /// while no panel is open. Ctrl or Alt leave every key to the game. Not T: the chat view reads it from the scene layer.
+    /// M steps the speed, also while a panel is open (read from that panel's own input, since the focus layer takes the keys). B toggles the shop, H sounds the horn and N looses the Elven Volley,
+    /// while no panel is open (the panel opens between waves and the volley is loosed in one, so it only buys, D24). N is the campaign Encyclopedia key and B the Banner window's, so a clash found in play is
+    /// this one line. Ctrl or Alt leave every key to the game. Not T: the chat view reads it from the scene layer.
     /// </summary>
     internal void ReadKeys(IInputContext input, LongDefeatHudVM vm)
     {
@@ -41,6 +42,8 @@ internal sealed class LongDefeatPanelHost
             vm.ToggleShop();
         if (input.IsKeyPressed(InputKey.H))
             vm.SoundHorn();
+        if (input.IsKeyPressed(InputKey.N))
+            vm.FireVolley();
     }
 
     /// <summary>

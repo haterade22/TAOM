@@ -145,6 +145,7 @@ internal sealed partial class CommandTrialWorld
         AdvanceArchers(dt);
         AdvanceMassed();
         AdvanceHold(dt);
+        AdvanceThrowers(dt);
         if (_watching && ArchersExist && MarshalFireMode(0) == FireMode.Free)
             _watchedShots += FreeShotsPerSecond * dt;
     }

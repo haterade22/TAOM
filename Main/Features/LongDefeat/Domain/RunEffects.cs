@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -56,6 +57,27 @@ internal sealed class RunEffects
     /// </summary>
     public float? EngineHitPoints { get; set; }
 
+    /// <summary>
+    /// A gate level was bought since the last tick: the factor over the gate's vanilla maximum its hit points are set to (1.5 is half as many again), keeping the share of hit points a standing gate holds (<see cref="GateMath.KeepShare"/>).
+    /// Applied after <see cref="EngineHitPoints"/>, before <see cref="RepairGates"/>. Null at every other tick.
+    /// </summary>
+    public float? GateLevel { get; set; }
+
+    /// <summary>A repair was bought since the last tick: mend every visible gate to the levelled maximum, which is this factor over its vanilla maximum. Null at every other tick.</summary>
+    public float? RepairGates { get; set; }
+
+    /// <summary>The towers' posts are to be manned or refilled, before any batch of this tick, free: the troop, the posts per tower and the room left under the garrison cap. Null at every other tick.</summary>
+    public LdPostFill? FillPosts { get; set; }
+
+    /// <summary>Field care was bought since the last tick: every standing defender regains this share of his missing health. 0 at every other tick, and never the tick the clear's <see cref="RestShare"/> rides.</summary>
+    public float FieldCare { get; set; }
+
+    /// <summary>
+    /// The volleys armed for this tick, to be fired last (they read the attackers this tick's batches spawned): the Elven Volley's shot when the player or the bot armed it, and each tower whose volley clock
+    /// is ready. The director answers each with <see cref="SurvivalRun.VolleyFired"/> or <see cref="SurvivalRun.VolleyWithheld"/>. Empty at every other tick.
+    /// </summary>
+    public List<VolleyOrder> FireVolleys { get; } = new();
+
     /// <summary>A Winged Terror pulse is due: lower the morale of the defenders near the attackers, never below the pulse's floor. Null at every other tick.</summary>
     public LdMoralePulse? MoralePulse { get; set; }
 
@@ -63,8 +85,17 @@ internal sealed class RunEffects
     public LdBoonApply? ApplyBoon { get; set; }
     public List<SoldierBatch> AttackerBatches { get; } = new();
 
+    /// <summary>The Morgul Blades damage due this tick: whole points for each poisoned defender, to the attacker who dosed him. Empty outside a blades wave.</summary>
+    public List<PoisonTick> PoisonTicks { get; } = new();
+
     /// <summary>A war cry began or ended (or the commander who raised it fell): derive every standing attacker's properties again, after <see cref="PublishStats"/>.</summary>
     public bool RefreshAttackers { get; set; }
+
+    /// <summary>
+    /// A mounted class's move at the edge of a wave: <see cref="SallyMove.Out"/> with the wave's start (before its first attacker batch), <see cref="SallyMove.Home"/> with its clear, the one that ends the
+    /// run included. None for a foot class, a run with no class and every other tick. Whether the point is usable and the body is the lord's own are the director's to decide.
+    /// </summary>
+    public SallyMove Sally { get; set; }
 
     /// <summary>The wave's first batch is out: force the attacker tactic and give it a fresh TacticBreachWalls.</summary>
     public bool RefreshAttackerTactic { get; set; }

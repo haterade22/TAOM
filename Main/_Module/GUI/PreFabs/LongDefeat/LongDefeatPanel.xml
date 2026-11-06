@@ -85,6 +85,109 @@
                         </ButtonWidget>
                       </ItemTemplate>
                     </ListPanel>
+                    <ListPanel DataSource="{Fort}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="6" IsVisible="@IsVisible"
+                               StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="6"
+                                    Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#E9B84AFF"
+                                    Text="@Title" DoNotAcceptEvents="true" />
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsCareVisible" IsEnabled="@CanBuyCare" Command.Click="ExecuteBuyCare">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@CareName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@CareDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@CarePrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsGateVisible" IsEnabled="@CanBuyGate" Command.Click="ExecuteBuyGate">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@GateName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@GateDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@GatePrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsRepairVisible" IsEnabled="@CanRepair" Command.Click="ExecuteRepair">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@RepairName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@RepairDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@RepairPrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsTowersVisible" IsEnabled="@CanBuyTowers" Command.Click="ExecuteBuyTowers">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@TowersName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@TowersDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@TowersPrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsVolleyVisible" IsEnabled="@CanBuyVolley" Command.Click="ExecuteBuyVolley">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@VolleyName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@VolleyDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@VolleyPrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                      </Children>
+                    </ListPanel>
                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8"
                                 Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#CCCCCCFF"
                                 Text="@SpeedTitle" DoNotAcceptEvents="true" />

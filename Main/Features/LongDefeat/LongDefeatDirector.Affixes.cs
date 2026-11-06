@@ -13,6 +13,7 @@ internal sealed partial class LongDefeatDirector
     {
         _affixesToRead = false;
         _terror = null;
+        _blades = null;
         var rolled = _run.WaveAffixes;
         if (rolled.Count == 0 && _plan.Affixes.CountFor(wave) == 0)
             return;
@@ -23,6 +24,8 @@ internal sealed partial class LongDefeatDirector
             RecordHammer(wave);
         if (_effects != null && rolled.Contains(AffixPlan.Terror))
             _terror = new TerrorWatch(wave, _plan.Affixes.Value(AffixPlan.Terror, "floor"));
+        if (rolled.Contains(AffixPlan.Blades))
+            WatchBlades(wave);
         _affixesToRead = _effects != null && rolled.Any(id => LongDefeatAffixChecks.Expectations(_plan.Affixes, id).Count > 0);
     }
 

@@ -92,6 +92,24 @@ Phase 2 changes the arithmetic of six schema 1 rules, so its reports carry `sche
 
 **What these rules cannot see, added:** whether the player picked the card the report names (the end-panel clip shows the boons), and the Cavalry remount, which the rules cannot see at all.
 
+## Schema 2, Phase 3 (Fortifications)
+
+Phase 3 adds fields to schema 2 and no schema 2 rule changes meaning ([phase3-plan.md](phase3-plan.md), section 7, D26): a volley kill is a defender kill, inside `kills` and `gold.bounty`. A report from a build that offers no fortification (Slice 2 ships `Offered` empty) still writes every field below at its empty value, so a reader finds one shape. Slice 2 writes and judges the money side (the rules below); the gate, post and volley counts fill in with Slices 4 to 8.
+
+**New fields:** `startGold` (a test option, 0 to 100000, the gold the run began with instead of the shop's; null on a board run), `gold.spentOn` (`packs`, `gate`, `towers`, `fieldCare`, `volley`; their sum is `gold.spent`), `purchases[]` (every purchase in order: `beforeWave`, `kind` of `pack`, `gateLevel`, `gateRepair`, `towerLevel`, `fieldCare` or `volleyLevel`, `id` (the offer, for a pack, else empty), `level` (the level a level kind reached, else 0), `basePrice`, `price`, `share` (the missing share a repair mended, or the share of the missing health care returned, to three decimals, else 0)), `fortifications` (the final `gateLevel`, `towerLevel` and `volleyLevel`) and, per wave, `gate` (`level`, `startHitPoints`, `maxHitPoints` summed over the visible gates, `fell`, `fellAtSeconds` or null), `posts` (`filled`, `short`, `manned`, `lost`), `volley` and `towerVolley` (`uses`, `arrows`, `hits`, `kills`, `withheld`). A wave's row is written at its clear, so the wave a run ends in has none of these.
+
+**Amended rules:**
+
+- Rule 3: also `startGold` is null.
+- Rule 8: also `gold.spent` equals the sum of `gold.spentOn`, and each `spentOn` part equals the sum of the `price` of its purchases (`gateLevel` and `gateRepair` go to `gate`).
+- Rule 19: each purchase's `basePrice` equals `shop.json`'s for its kind and level (the offer's price for a pack; the repair price for a repair), and its `price` equals `max(1, GoldFactors.Apply(basePrice, factor))` with the price factor of the boons owned before that wave (D29: the `pricePercent` sum over `boons[]`, `max(0, 1 + sum / 100)` in 32-bit float, half away from zero), and for a repair the sum over its gates of `max(1, ceil(that * share_i))`, one gate at a time (a repair row lists `shares`, each gate's missing share, and its `share` is their sum: two gates of 0.371 at a repair price of 100 cost 76, where one gate of 0.742 would cost 75; a share is above 0 and at most 1 for each gate, and the game leaves a gate missing under 0.0005 alone, so no repair is written with a share of 0). The kind and level are in the `Offered` list of the build (D31); levels are bought in order with no gap; the final levels equal the highest bought; at most `perIntermission` field care per `beforeWave`. A boon taken in the intermission before a wave may have come before or after a purchase of that intermission, so a price is accepted at any factor that intermission could have held; and a repair's shares are rounded to three decimals (half away from zero), so each gate's price is accepted for any share within half a thousandth.
+- Rule 20: a row's `volley.uses` is 0 before the first wave after the first `volleyLevel` purchase; `arrows` is at most `uses` times the arrows of the level in force; `kills` is at most `arrows`; the same for `towerVolley` against tower level 3 and the tower volley's arrows.
+- Rule 21 (**flag**): a row whose `gate.fell` is true, followed by a row whose gate starts standing (`startHitPoints` above 0), needs a `gateRepair` before that wave.
+
+**What these rules cannot see, added:** whether a volley was aimed by a person or fired by the bot.
+
+The wrapper (`tools/run_long_defeat.py`, `purchase_problem`) replays rules 8, 19 and 20 over a report it judges, with `FORT_OFFERED` mirroring the build's `Offered`; rule 21 is the bot's to flag.
+
 ## The boards
 
 - **One board per fortress and per `balance`:** a change to any of the six JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.

@@ -14,6 +14,14 @@ public class RunOptionsTests
         Assert.IsNull(options.Seed);
         Assert.AreEqual(1, options.StartWave);
         Assert.AreEqual(0, options.StartRerolls);
+        Assert.IsNull(options.StartGold);
+    }
+
+    [TestMethod]
+    public void Seeded_KeepsTheStartGold()
+    {
+        Assert.AreEqual(5000, new RunOptions { StartGold = 5000 }.Seeded(5L).StartGold);
+        Assert.AreEqual(100_000, RunOptions.MaxStartGold);
     }
 
     [TestMethod]

@@ -124,6 +124,32 @@ public class LongDefeatBindingTests
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }
 
+    // The sally (Slice 10, spike S9): the teleport, the fade of the old body, the mounted spawn at a given place, the boundary test, and the callbacks the logic forwards.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheSallyMembers_StillResolve()
+    {
+        Method(typeof(Agent), "TeleportToPosition", typeof(void), typeof(Vec3));
+        Method(typeof(Agent), "FadeOut", typeof(void), typeof(bool), typeof(bool));
+        Assert.IsNotNull(Property(typeof(Agent), "LookDirection", typeof(Vec3)).GetSetMethod(), "Agent.LookDirection lost its public setter");
+        Property(typeof(Agent), "MountAgent", typeof(Agent));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Property(typeof(Agent), "State", typeof(AgentState));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+        Method(typeof(AgentBuildData), "InitialPosition", typeof(AgentBuildData), typeof(Vec3).MakeByRefType());
+        Method(typeof(AgentBuildData), "InitialDirection", typeof(AgentBuildData), typeof(Vec2).MakeByRefType());
+        Method(typeof(AgentBuildData), "NoHorses", typeof(AgentBuildData), typeof(bool));
+        Method(typeof(AgentBuildData), "Equipment", typeof(AgentBuildData), typeof(Equipment));
+        Property(typeof(Formation), "OrderGroundPosition", typeof(Vec3));
+        Property(typeof(Formation), "OrderPositionIsValid", typeof(bool));
+        Property(typeof(CastleGate), "IsGateOpen", typeof(bool));
+        Property(typeof(CastleGate), "IsDestroyed", typeof(bool));
+        Method(typeof(MissionBehavior), "OnAgentDeleted", typeof(void), typeof(Agent));
+        Assert.IsTrue(typeof(MissionBehavior).GetMethod("OnAgentDeleted", AnyMember)!.IsVirtual, "the logic overrides OnAgentDeleted");
+    }
+
     // The endless scale (Slice 2): the health write after spawn, the character maximum it is read against, the blow the damage factor scales,
     // and the damage model seam it rides.
     [TestMethod]
@@ -315,6 +341,123 @@ public class LongDefeatBindingTests
         Method(typeof(AgentComponentExtensions), "GetMorale", typeof(float), typeof(Agent));
         Method(typeof(AgentComponentExtensions), "ChangeMorale", typeof(void), typeof(Agent), typeof(float));
         Property(typeof(Agent), "Position", typeof(Vec3));
+    }
+
+    // The gates (phase3-plan.md Slice 5, D17 and D18): the vanilla reset the repair calls by reflection, the closing call after it, the destructible's public hit point fields the level writes, the damage-state
+    // string whose length is the state count, the gate's state and the engine's own archer-position count the boot line reads (A23).
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheGateMembers_StillResolve()
+    {
+        // The reflection site: found by name on CastleGate itself, so an override that moves up the hierarchy would make AccessTools find another method.
+        var reset = typeof(CastleGate).GetMethod("OnMissionReset", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null);
+        Assert.IsNotNull(reset, "CastleGate.OnMissionReset() is no longer declared on CastleGate: a gate repair cannot reset the door (R10)");
+        Assert.AreEqual(typeof(void), reset!.ReturnType);
+        Assert.IsTrue(reset.IsVirtual, "the repair invokes the override the engine itself runs on a mission reset");
+        Method(typeof(CastleGate), "SetAutoOpenState", typeof(void), typeof(bool));
+        Property(typeof(CastleGate), "State", typeof(CastleGate.GateState));
+        Assert.IsTrue(Enum.IsDefined(typeof(CastleGate.GateState), "Closed"), "CastleGate.GateState.Closed");
+        Property(typeof(CastleGate), "IsDisabled", typeof(bool));
+        Field(typeof(DestructableComponent), "MaxHitPoint", typeof(float));
+        Assert.IsFalse(typeof(DestructableComponent).GetField("MaxHitPoint", AnyMember)!.IsInitOnly, "the level writes MaxHitPoint");
+        Field(typeof(DestructableComponent), "DestructionStates", typeof(string));
+        Assert.IsNotNull(Property(typeof(DestructableComponent), "HitPoint", typeof(float)).GetSetMethod(), "DestructableComponent.HitPoint lost its public setter");
+        Property(typeof(DestructableComponent), "IsDestroyed", typeof(bool));
+        Method(typeof(DestructableComponent), "Reset", typeof(void));
+        Property(typeof(TeamAISiegeDefender), "ArcherPositions", typeof(System.Collections.Generic.List<ArcherPosition>));
+        Property(typeof(Team), "FormationsIncludingEmpty", typeof(MBList<Formation>));
+        Property(typeof(Formation), "CountOfUnits", typeof(int));
+        Field(typeof(Formation), "FormationIndex", typeof(FormationClass));
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+    }
+
+    // The Elven Volley (phase3-plan.md Slice 6, section 4 "Binding gate"): the scripted missile with all ten parameters (forcedMissileIndex included), the two hit callbacks, the eye and chest points, the ray
+    // cast the aim and the clearance test use, the missile list the cancelled-hit lookup walks, and the agent flags the owner rule reads.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheVolleyMembers_StillResolve()
+    {
+        Method(typeof(Mission), "AddCustomMissile", typeof(Mission.Missile), typeof(Agent), typeof(MissionWeapon), typeof(Vec3), typeof(Vec3), typeof(Mat3), typeof(float), typeof(float), typeof(bool),
+            typeof(MissionObject), typeof(int));
+        Method(typeof(MissionBehavior), "OnMissileHit", typeof(void), typeof(Agent), typeof(Agent), typeof(bool), typeof(AttackCollisionData));
+        Method(typeof(MissionBehavior), "OnAgentHit", typeof(void), typeof(Agent), typeof(Agent), typeof(MissionWeapon).MakeByRefType(), typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType());
+        Method(typeof(Agent), "GetEyeGlobalPosition", typeof(Vec3));
+        Method(typeof(Agent), "GetChestGlobalPosition", typeof(Vec3));
+        Property(typeof(Agent), "LookDirection", typeof(Vec3));
+        Property(typeof(Agent), "Velocity", typeof(Vec3));
+        Property(typeof(Agent), "IsAIControlled", typeof(bool));
+        Property(typeof(Agent), "IsMainAgent", typeof(bool));
+        Property(typeof(Agent), "IsRangedCached", typeof(bool));
+        Property(typeof(Agent), "IsRunningAway", typeof(bool));
+        Method(typeof(Scene), "RayCastForClosestEntityOrTerrain", typeof(bool), typeof(Vec3), typeof(Vec3), typeof(float).MakeByRefType(), typeof(Vec3).MakeByRefType(), typeof(float), typeof(BodyFlags));
+        Property(typeof(Mission), "MissilesList", typeof(MBReadOnlyList<Mission.Missile>));
+        Property(typeof(Mission.Missile), "Weapon", typeof(MissionWeapon));
+        Property(typeof(Mission.Missile), "Index", typeof(int));
+        var all = typeof(Mission).GetProperty("AllAgents", AnyMember);
+        Assert.IsNotNull(all, "Mission.AllAgents no longer resolves");
+        Assert.IsNotNull(all!.PropertyType.GetProperty("Count"), "Mission.AllAgents lost its Count: the volley's agent count reads it");
+        Property(typeof(Blow), "IsMissile", typeof(bool));
+        Property(typeof(AttackCollisionData), "AttackBlockedWithShield", typeof(bool));
+        Property(typeof(AttackCollisionData), "AffectorWeaponSlotOrMissileIndex", typeof(int));
+        Property(typeof(AttackCollisionData), "MissileVelocity", typeof(Vec3));
+        Property(typeof(AttackCollisionData), "MissileStartingBaseSpeed", typeof(float));
+        Method(typeof(AgentStatCalculateModel), "GetWeaponDamageMultiplier", typeof(float), typeof(Agent), typeof(WeaponComponentData));
+        Method(typeof(Mat3), "Orthonormalize", typeof(void));
+        Property(typeof(MissionWeapon), "Item", typeof(ItemObject));
+    }
+
+    // Morgul Blades and the kill owner (phase2-plan.md Slice 9): the hit callback with the engine's own isBlocked and damagedHp, and the blow the two members allowed to kill build.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheBladesAndKillOwnerMembers_StillResolve()
+    {
+        Method(typeof(MissionBehavior), "OnScoreHit", typeof(void), typeof(Agent), typeof(Agent), typeof(WeaponComponentData), typeof(bool), typeof(bool),
+            typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float), typeof(float), typeof(float));
+        Method(typeof(Agent), "Die", typeof(void), typeof(Blow), typeof(Agent.KillInfo));
+        Method(typeof(Agent), "RegisterBlow", typeof(void), typeof(Blow), typeof(AttackCollisionData).MakeByRefType());
+        Method(typeof(Agent), "GetEyeGlobalHeight", typeof(float));
+        Property(typeof(Agent), "Index", typeof(int));
+        Property(typeof(Agent), "IsMount", typeof(bool));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "LookDirection", typeof(Vec3));
+        Property(typeof(Agent), "Velocity", typeof(Vec3));
+        Property(typeof(Agent), "CurrentMortalityState", typeof(Agent.MortalityState));
+        Assert.IsNotNull(Property(typeof(Agent), "Health", typeof(float)).GetSetMethod(), "Agent.Health lost its public setter");
+        Assert.IsNotNull(typeof(Blow).GetConstructor(new[] { typeof(int) }), "Blow(int ownerId) no longer resolves");
+        foreach (var (name, type) in new[]
+        {
+            ("DamageType", typeof(DamageTypes)), ("BoneIndex", typeof(sbyte)), ("GlobalPosition", typeof(Vec3)), ("BaseMagnitude", typeof(float)), ("InflictedDamage", typeof(int)),
+            ("SwingDirection", typeof(Vec3)), ("Direction", typeof(Vec3)), ("DamageCalculated", typeof(bool)), ("WeaponRecord", typeof(BlowWeaponRecord)),
+        })
+            Field(typeof(Blow), name, type);
+        Method(typeof(BlowWeaponRecord), "FillAsMeleeBlow", typeof(void), typeof(ItemObject), typeof(WeaponComponentData), typeof(int), typeof(sbyte));
+        Assert.IsNotNull(typeof(AttackCollisionData).GetMethod("GetAttackCollisionDataForDebugPurpose", BindingFlags.Public | BindingFlags.Static), "AttackCollisionData.GetAttackCollisionDataForDebugPurpose no longer resolves");
+        Property(typeof(Monster), "HeadLookDirectionBoneIndex", typeof(sbyte));
+        Property(typeof(Monster), "MainHandItemBoneIndex", typeof(sbyte));
+    }
+
+    // The high towers' posts (phase3-plan.md Slice 7, spike S6): the scripted hold, the speed limit of variant B, the formation's AI switch of D30a and variant C, the formation membership the re-assert moves, and the
+    // callback that counts a post archer's own arrows.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ThePostsMembers_StillResolve()
+    {
+        Method(typeof(Agent), "SetScriptedPositionAndDirection", typeof(void), typeof(WorldPosition).MakeByRefType(), typeof(float), typeof(bool), typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "SetMaximumSpeedLimit", typeof(void), typeof(float), typeof(bool));
+        Method(typeof(Agent), "GetCurrentNavigationFaceId", typeof(int));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Assert.IsNotNull(Property(typeof(Agent), "Formation", typeof(Formation)).GetSetMethod(), "Agent.Formation lost its public setter: the re-assert moves agents with it");
+        Method(typeof(Formation), "SetControlledByAI", typeof(void), typeof(bool), typeof(bool));
+        Method(typeof(Formation), "SetPositioning", typeof(void), typeof(WorldPosition?), typeof(Vec2?), typeof(int?));
+        Method(typeof(Formation), "ApplyActionOnEachUnit", typeof(void), typeof(Action<Agent>), typeof(Agent));
+        Method(typeof(Formation), "BeginSpawn", typeof(void), typeof(int), typeof(bool));
+        Method(typeof(Formation), "EndSpawn", typeof(void));
+        Property(typeof(Formation), "IsAIControlled", typeof(bool));
+        Property(typeof(Formation), "IsAIOwned", typeof(bool));
+        Field(typeof(Formation), "HasBeenPositioned", typeof(bool));
+        Method(typeof(Team), "GetFormation", typeof(Formation), typeof(FormationClass));
+        Method(typeof(MissionBehavior), "OnAgentShootMissile", typeof(void), typeof(Agent), typeof(EquipmentIndex), typeof(Vec3), typeof(Vec3), typeof(Mat3), typeof(bool), typeof(int));
+        Assert.AreEqual(4, (int)FormationClass.Skirmisher, "the posts formation index the A23 boot line was read for");
     }
 
     private static PropertyInfo Property(Type type, string name, Type expected)

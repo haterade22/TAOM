@@ -186,8 +186,9 @@ public static class CoopSettingsRelevance
         // Marshal's Word (M1 to M4): richer orders for YOUR companies in a single-player battle. The session is off whenever a network
         // session is active (MarshalView.MayRun asks the network fact, the engine's session or a live co-op session), so no value reaches a co-op simulation, and the
         // orders it issues go through the same OrderController a player's click does. MarshalSpacingRepair is read once at patch time and the patch stays off
-        // whenever co-op is present (MarshalSpacingPatch.Prepare), so no value of it reaches a co-op simulation either; MarshalHollowSquare is read only by a live session.
-        "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether", "MarshalOutlines", "MarshalHollowSquare", "MarshalSpacingRepair",
+        // whenever co-op is present (MarshalSpacingPatch.Prepare), so no value of it reaches a co-op simulation either; MarshalHollowSquare and MarshalThrowersFirst are read only by a live session, and only that session writes the table the two thrower patches read, so
+        // with no session both answer as vanilla.
+        "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether", "MarshalOutlines", "MarshalHollowSquare", "MarshalSpacingRepair", "MarshalThrowersFirst",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableNameplateRelationColors", "NameplateRelationTintStrength",

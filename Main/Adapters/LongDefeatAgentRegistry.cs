@@ -9,7 +9,7 @@ namespace TAOM.Adapters;
 /// The role (roster soldier, summoned soldier, commander) and the felled mark of every attacker the Long Defeat field spawned, in the shape of <c>FordsAgentRegistry</c>: keys from a
 /// counter that only goes up and is never reused, agents held by object reference and never by <c>Agent.Index</c>, which the engine hands to the next agent it builds
 /// (csharp-architecture.md "Mission-scope agent handles"), every member under one lock because the removal callback can arrive off the main thread, and an entry evicted when the engine
-/// removes the agent. The stalemate rule's <c>Fell</c> marks each soldier before it kills him, so the removal that follows is booked as felled by identity. Holds <c>object</c> so the
+/// removes the agent. The stalemate rule's <c>Fell</c> marks each soldier before it kills him, so the removal that follows is booked as felled by identity. A defender enters on the first hit an attacker lands on him in a Morgul Blades wave (role <c>Roster</c>, which means nothing for a defender), so his poison dose has a key, and leaves at his removal like any other. Holds <c>object</c> so the
 /// rules are unit-tested without an engine; the battlefield adapter casts back to <c>Agent</c>.
 /// </summary>
 internal sealed class LongDefeatAgentRegistry
@@ -40,6 +40,7 @@ internal sealed class LongDefeatAgentRegistry
 
     private readonly object _gate = new();
     private readonly Dictionary<object, Entry> _byAgent = new(ReferenceComparer.Instance);
+    private readonly Dictionary<AgentKey, Entry> _byKey = new();
     private int _next;
 
     public int Count
@@ -61,6 +62,7 @@ internal sealed class LongDefeatAgentRegistry
 
             var entry = new Entry(new AgentKey(++_next), agent, role);
             _byAgent[agent] = entry;
+            _byKey[entry.Key] = entry;
             return entry.Key;
         }
     }
@@ -79,6 +81,22 @@ internal sealed class LongDefeatAgentRegistry
             key = entry.Key;
             return true;
         }
+    }
+
+    /// <summary>The agent a key was handed out for, while the registry still holds it: false for a key never handed out and for an agent already evicted.</summary>
+    public bool TryGetAgent(AgentKey key, out object agent)
+    {
+        lock (_gate)
+        {
+            if (_byKey.TryGetValue(key, out var entry))
+            {
+                agent = entry.Agent;
+                return true;
+            }
+        }
+
+        agent = null!;
+        return false;
     }
 
     /// <summary>The role of a registered agent; a roster soldier for one the registry does not hold.</summary>
@@ -108,9 +126,10 @@ internal sealed class LongDefeatAgentRegistry
     }
 
     /// <summary>
-    /// The engine removed the agent: returns its role and felled mark and forgets it, once. For an agent the registry does not hold: false, a roster soldier, not felled.
+    /// The engine removed the agent: returns its role, felled mark and key (the run forgets the key) and forgets it, once. For an agent the registry does not hold: false, a roster soldier, not felled,
+    /// and key 0, which no agent has.
     /// </summary>
-    public bool TakeRemoval(object agent, out AttackerRole role, out bool felled)
+    public bool TakeRemoval(object agent, out AttackerRole role, out bool felled, out AgentKey key)
     {
         lock (_gate)
         {
@@ -118,12 +137,15 @@ internal sealed class LongDefeatAgentRegistry
             {
                 role = AttackerRole.Roster;
                 felled = false;
+                key = default;
                 return false;
             }
 
             _byAgent.Remove(agent);
+            _byKey.Remove(entry.Key);
             role = entry.Role;
             felled = entry.Felled;
+            key = entry.Key;
             return true;
         }
     }
@@ -144,6 +166,9 @@ internal sealed class LongDefeatAgentRegistry
     public void Clear()
     {
         lock (_gate)
+        {
             _byAgent.Clear();
+            _byKey.Clear();
+        }
     }
 }

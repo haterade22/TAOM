@@ -26,15 +26,27 @@ internal sealed partial class LongDefeatDirector
             _effects?.PublishStats(stats);
         if (fx.EngineHitPoints is { } engines)
             SetEngineHitPoints(engines);
+
+        // The gates are written after the Hammer (which writes rams and towers only, D19), the level before the repair so a repair restores the new maximum.
+        if (fx.GateLevel is { } gateLevel)
+            ApplyGateLevel(gateLevel);
+        if (fx.RepairGates is { } restore)
+            ApplyGateRepair(restore);
         if (fx.ApplyBoon is { } boon)
             ApplyBoonToStanding(boon);
         if (fx.RefreshAttackers)
             RefreshAttackerStats();
 
+        if (fx.FillPosts is { } fill)
+            ApplyFillPosts(fill);
+
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
-        var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
+
+        // A lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
+        var joinsBatch = fx.SpawnPlayer && !LordRides;
+        var closes = joinsBatch ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
-            SpawnBatch(batch, false, fx.SpawnPlayer, standing, closes);
+            SpawnBatch(batch, false, joinsBatch, standing, closes);
 
         if (fx.SpawnPlayer && !SpawnLord(false))
             _logger.LogError($"{Tag}[Boot] the player's lord could not be spawned");
@@ -53,7 +65,11 @@ internal sealed partial class LongDefeatDirector
             BeginScaleWatch(start);
             BeginAffixes(start.Wave);
             BeginCommander();
+            OpenPostsWatches(start.Wave);
         }
+
+        if (fx.Sally == SallyMove.Out)
+            SallyOut(_run.Wave);
 
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
@@ -71,6 +87,8 @@ internal sealed partial class LongDefeatDirector
             _field.RestoreDefenderTactic();
         if (fx.MoralePulse is { } pulse)
             PulseMorale(pulse);
+        if (fx.PoisonTicks.Count > 0)
+            ApplyPoison(fx.PoisonTicks);
         if (fx.FellAttackers > 0)
         {
             var felled = _field.Fell(fx.FellAttackers);
@@ -78,6 +96,8 @@ internal sealed partial class LongDefeatDirector
                 _logger.LogWarning($"{Tag}[Wave] asked to fell {fx.FellAttackers} attackers, {felled} fell; each one felled is marked, so only those removals pay no bounty");
         }
 
+        if (fx.Sally == SallyMove.Home)
+            SallyHome();
         foreach (var e in fx.Events)
             OnEvent(e);
         if (fx.RestShare > 0f)
@@ -86,6 +106,15 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
         }
 
+        // After the batches, so a pack bought beside the care is healed too; before any volley.
+        if (fx.FieldCare > 0f)
+            ApplyFieldCare(fx.FieldCare);
+
+        // Last: a volley reads the attackers this tick's batches spawned (D30), and every order is answered here, fired or withheld, so a ready source never orders twice.
+        FireVolleys(fx.FireVolleys);
+
+        // Read in the engine's hit callback, which may run off the main thread: a blades wave wants hits from its start until its clear or the run's end.
+        _poisonHits = _run.PoisonWave;
         if (_run.Result != null)
             Finish();
     }
@@ -219,8 +248,13 @@ internal sealed partial class LongDefeatDirector
 
     private void OnWaveCleared(RunEvent e)
     {
+        JudgeGateAttacked(false);
+        JudgePosts(false);
+        CloseVolleyWatch("wave");
+        _volleyByBot = false;
         FlushScale();
         FlushTerror();
+        FlushBlades();
         var stats = _run.Stats.Waves.LastOrDefault(w => w.Wave == e.Wave);
         if (stats != null)
         {
@@ -253,18 +287,24 @@ internal sealed partial class LongDefeatDirector
             return;
 
         _finished = true;
+        JudgeFieldCare(null);
+        JudgeGateAttacked(true);
+        JudgePosts(true);
+        FinishVolleys();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary());
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
         FlushScale();
         FlushTerror();
+        FlushBlades();
         FinishCommander();
+        EndSallyWatch("run-ended");
     }
 
     private bool WriteReport()

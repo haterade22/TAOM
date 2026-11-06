@@ -28,6 +28,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     private readonly IModLogger _logger;
     private readonly LongDefeatAgentRegistry _registry;
 
+    // The lord's body, the body a remount faded and the callbacks that reached them; by object reference, any thread.
+    private readonly LongDefeatLordWatch _lordWatch = new();
+
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
     // The recorded muster place each defender class spawns at while its batch is open (SetMusterFrame to EndBatch). A class with no entry spawns at the scene's frame.
@@ -133,6 +136,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _gates = all.Where(g => g.GameEntity.IsVisibleIncludeParents()).OrderByDescending(g => g.GameEntity.HasTag("outer_gate")).ToList();
         var walls = _mission.ActiveMissionObjects.FindAllWithType<WallSegment>().Where(w => w.DefenseSide != FormationAI.BehaviorSide.BehaviorSideNotSet).ToList();
         _highZ = HighLine(_gates.FirstOrDefault(), walls);
+        CaptureGates(_gates, all.Where(g => !_gates.Contains(g)).ToList());
         var broken = 0;
         foreach (var hidden in all.Where(g => !_gates.Contains(g)))
         {
@@ -280,7 +284,32 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
                 onPoint++;
         }
 
+        // The same bound the muster check fails on (LongDefeatChecks.Muster), so a small pack correctly placed beside the point writes no line.
+        if (mustered && onPoint > Math.Max(Features.LongDefeat.Diagnostics.LongDefeatChecks.MusterLimit, batch.Count / 2))
+            LogStackedBatch(team.GetFormation(Class(batch.Slot)), batch, onPoint, musterAt);
         return new LdSpawnReport(points, far, offMesh, onPoint);
+    }
+
+    // A mustered soldier takes his place from GetUnitSpawnFrameWithIndex(CountOfUnits, order position, Direction, Width, CountOfUnits + 1, ...) (Mission.cs:3950-3953, :3975-3976,
+    // :4243-4247). It gives no place in two cases: the width gate "width >= actualWidth" fails (Formation.cs:3141), or CreateNewPosition finds no free rank (Formation.cs:3146,
+    // LineFormation.cs:2475); the engine then puts him on the order position itself (Mission.cs:3992-3995). A place with no navmesh is walked back toward the order position
+    // (Mission.cs:3983-3985), which can also stack him. This repeats the call for the next index and logs what tells the cases apart: the real file count against the simulation's
+    // minimum file count max(1, (int)sqrt(units + 1)) (LineFormation.cs:142, :198), whether the place has a navmesh, and how far the order position stands from the muster point.
+    private void LogStackedBatch(Formation formation, SoldierBatch batch, int onPoint, Vec3 musterAt)
+    {
+        var index = formation.CountOfUnits;
+        var position = formation.CreateNewOrderWorldPosition(WorldPosition.WorldPositionEnforcedCache.GroundVec3);
+        var direction = formation.Direction;
+        formation.GetUnitSpawnFrameWithIndex(index, in position, in direction, formation.Width, index + 1, formation.UnitSpacing, false, out var place, out _);
+        var interval = formation.Interval;
+        var diameter = formation.UnitDiameter;
+        var files = (int)((formation.Width - diameter) / (interval + diameter) + 1e-5f) + 1;
+        var minFiles = Math.Max(1, (int)Math.Sqrt(index + 1));
+        var placeMesh = place.HasValue ? (place.Value.GetNavMesh() == UIntPtr.Zero ? "no" : "yes") : "-";
+        _logger.LogWarning($"[LongDefeat][Muster] stacked batch {batch.Slot} {batch.TroopId} on_point={onPoint} of {batch.Count}: layout_place={(place.HasValue ? "yes" : "none")} place_navmesh={placeMesh} " +
+            $"files={files} min_files={minFiles} width={formation.Width:0.00} interval={interval:0.00} diameter={diameter:0.00} arrangement={formation.Arrangement.GetType().Name} " +
+            $"order={formation.ArrangementOrder.OrderEnum} units={index} spacing={formation.UnitSpacing} ai={(formation.IsAIControlled ? "yes" : "no")} " +
+            $"order_to_muster={formation.OrderPosition.Distance(musterAt.AsVec2):0.0}");
     }
 
     // BaseHealthLimit and HealthLimit have public setters (Agent.cs:911, :915) and the engine's own horse spawn writes the same three values
@@ -297,15 +326,21 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     }
 
     // A kit goes on the build data, and the engine reads it before anything else (Mission.cs:4108). The engine still edits the copy it takes (a hero's banner, NoHorses, NoArmor and
-    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. NoHorses(true) repeats spawnWithHorse: false above (Mission.cs:4468), so a mounted
-    // class (Slice 11) must drive both from the loadout.
+    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. GetAgentBuildDataToSpawnTroop sets NoHorses(true) for spawnWithHorse: false (Mission.cs:4468),
+    // so a mounted class keeps passing false there and takes the horse from the kit instead: NoHorses(!mounted) below leaves the kit's Horse slot in place and the engine builds the horse from it
+    // (Mission.cs:4311). spawnWithHorse true is not used: it would read a mount key from the troop's own Horse slot (Mission.cs:4500-4503), the lord's horse and not the kit's. With no key the horse is
+    // still built, only the engine's visual picks a random coat: "if (string.IsNullOrEmpty(mountCreationKeyStr)) mountCreationKeyStr = MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.RandomInt());"
+    // (MountVisualCreator.cs:41-46), so risk 8 is closed and a new horse after a remount is a new coat.
+    // A place goes in as a position with its direction: the engine reads the direction of a given position at once (Mission.cs:4498), and a given position skips the formation layout (Mission.cs:4227).
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
-        bool intoOwnFormation = false, Equipment? kit = null)
+        bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false)
     {
-        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
+        Vec3? initialPosition = place == null ? null : new Vec3(place.X, place.Y, place.Z);
+        Vec2? initialDirection = place == null ? null : FacingOf(place);
+        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, initialPosition, initialDirection, formationIndex: cls)
             .Banner(team.Banner);
         if (kit != null)
-            data.Equipment(kit).NoHorses(true);
+            data.Equipment(kit).NoHorses(!mounted);
 
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
@@ -396,12 +431,26 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     internal static float FellHealth(float health) => Math.Min(health, FellBlowDamage / 2f);
 
+    // Every kill needs a living owner (phase2-plan.md section 4): CustomBattleMoraleModel reads affectorAgent.Formation with no null test, and KillAgentCheat takes "MainAgent ?? agent" as the owner
+    // (Mission.cs:6220-6221), so with the player dead the victim would own his own death, or Agent.Die would swap in a stale last hitter (Agent.cs:4689-4693). While the player's body stands
+    // KillAgentCheat is used as before. Without it the same blow is built here (a blunt 2000, its debug collision data, RegisterBlow, as KillAgentCheat does at :6216-6254) owned by a
+    // standing defender, who gains the kill and the defenders the morale a felled straggler would give the player's body anyway (decision D13). With no defender standing nobody is felled: the run ends on that tick.
     public int Fell(int count)
     {
         if (count <= 0)
             return 0;
 
+        var main = _mission.MainAgent;
+        var mainStands = main != null && main.IsActive();
+        var owner = mainStands ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
+        if (owner == null)
+        {
+            _logger.LogWarning("[LongDefeat][Wave] no defender stands to own a felled straggler's death; nobody was felled");
+            return 0;
+        }
+
         var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway).Take(count).ToList();
+        _logger.LogInfo($"[LongDefeat][Wave] felling {left.Count} straggler(s), kills owned by {(mainStands ? "the player's body" : "defender " + owner.Character?.StringId)}");
         foreach (var agent in left)
         {
             _logger.LogInfo(DescribeStraggler(agent));
@@ -410,11 +459,35 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             if (!_registry.MarkFelled(agent))
                 _logger.LogWarning($"[LongDefeat][Wave] a felled attacker ({agent.Character?.StringId}) was not in the registry; his removal will be booked as a kill");
             agent.Health = FellHealth(agent.Health);
-            _mission.KillAgentCheat(agent);
+            if (mainStands)
+            {
+                _mission.KillAgentCheat(agent);
+                continue;
+            }
+
+            var blow = new Blow(owner.Index)
+            {
+                DamageType = DamageTypes.Blunt,
+                BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
+                GlobalPosition = agent.Position,
+                BaseMagnitude = FellBlowDamage,
+                InflictedDamage = (int)FellBlowDamage,
+                SwingDirection = agent.LookDirection,
+                DamageCalculated = true,
+            };
+            blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
+            blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+            blow.Direction = blow.SwingDirection;
+            var collision = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, CombatCollisionResult.StrikeAgent,
+                -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, owner.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+                Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, agent.Velocity, Vec3.Up);
+            agent.RegisterBlow(blow, in collision);
         }
 
         return left.Count;
     }
+
+    private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());
 
     public void AdoptMain(bool aiDriven)
     {
@@ -441,6 +514,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     public void Clear()
     {
         _gates = new List<CastleGate>();
+        ClearGates();
+        ClearPosts();
         _ladders = new List<SiegeLadder>();
         _towers = new List<SiegeTower>();
         _rams = new List<BatteringRam>();
@@ -451,5 +526,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _knownMain = null;
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
+        _lordWatch.Clear();
     }
 }

@@ -19,7 +19,7 @@ internal sealed class LongDefeatSetupPrompt
     private const string PromptDescription = "{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel.";
     private const string ChoiceWithBest = "{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}";
     private const string ClassTitle = "{=TAOM_LD_Prompt_ClassTitle}Choose your class";
-    private const string ClassDescription = "{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is.";
+    private const string ClassDescription = "{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is.";
     private const string ChoiceClass = "{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}";
     internal const string StartFailedMessage = "{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason.";
 

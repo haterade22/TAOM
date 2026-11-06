@@ -181,17 +181,21 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.affix-effect"
-needs = "a wave whose roll holds a power with an effect check (--start-wave 5 --waves 1 --seed N): at wave 5 seed 0 rolls hide, 1 drums, 2 discipline, 4 eye, 6 terror (the wave must run a few seconds), 8 hammer, 27 lash"
+needs = "a wave whose roll holds a power with an effect check (--start-wave 5 --waves 1 --seed N): at wave 5 seed 0 rolls eye, 1 hide, 2 lash, 3 blades (a hit must land on a defender), 5 discipline, 7 terror (the wave must run a few seconds), 9 hammer, 15 drums"
 reached = ['\[Check\] id=taom\.long-defeat\.affix-effect result=']
 pass = ['\[Check\] id=taom\.long-defeat\.affix-effect result=pass power=[a-z]+ ']
 fail = ['\[Check\] id=taom\.long-defeat\.affix-effect result=fail']
-# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs); hammer and terror write their own line under the same id and key (LongDefeatDirector.Powers.cs, below). One standing human attacker with no live race ability is read
+# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs); hammer and terror write their own line under the same id and key (LongDefeatDirector.Powers.cs and .Blades.cs, below). One standing human attacker with no live race ability is read
 # through the effects adapter: each driven property the power changes against the stat model's own answer for the same agent with the affixes left out, within 1% (armour against the spawn equipment's sums, since
 # the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood.
 # hammer: written when the wave starts, after the engines' hit points were set, as power=hammer engines=<n> want=<factor> got=<kind>=<ratio>,.. gate=<standing|destroyed|none> (the gates are read from every mission object, since a destroyed gate leaves the active list, Mission.cs:3060); every live ram and tower must hold the vanilla hit points of its type
 # (SiegeEngineType.BaseHitPoints) times the factor within 1%, the gate's state is logged and judges nothing, no live engine or a factor of 1 is a skip, and a hammer wave reads no soldier.
 # terror: written when the wave clears (or the run ends in it) as power=terror w=<N> pulses= drained= lost= pushed_below= max_ms= budget_ms=16 floor=; it fails when any pulse left a defender below the floor (pushed_below above 0) or the slowest took 16 ms or more,
-# and skips when the wave had no pulse or none drained anyone. The [LongDefeat][Terror] pulse n= ms= lines show the first three pulses of each wave and any slow one. blades is not rolled yet, so it has no line, until Slice 9 switches it on.
+# and skips when the wave had no pulse or none drained anyone. The [LongDefeat][Terror] pulse n= ms= lines show the first three pulses of each wave and any slow one.
+# blades (Morgul Blades, Fouled Blades at Helm's Deep): written when the wave clears (or the run ends in it) as power=blades w=<N> doses= hits= damage= owner_missing= withheld=, from the run's own counts for that wave. Every hit by an attacker on a defender that the engine's
+# OnScoreHit reports unblocked with some health taken doses the defender (one dose per victim, 2 health a second for 6 s at Helm's Deep, armour ignored), and each tick that would kill needs a living owner: the poisoner, else the commander, else any attacker standing,
+# else the tick is withheld and the victim keeps 1 health. owner_missing counts an owner found not active at the call and kills nothing; the line fails above 0 (run_long_defeat.py also fails any owner_missing= token in the log and the report's poison.ownerMissing).
+# The line skips when no hit landed (reason=no-hit) or no dose took a point of health (reason=no-damage); [LongDefeat][Blades] tick lines show the first three ticks of a wave and any that killed, were withheld or went to a substitute owner.
 absence = "not-reached"
 
 [[check]]
@@ -205,8 +209,8 @@ fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
 # A troop or class boon with a stat or health key also ends the line with read=pass, read=skip (no soldier of its target stood) or read=fail: a soldier of the target, read right after the refresh,
 # holds its health limit at the combined factor and each driven property at its baseline changed by the summed percent. The first pack of that group spawned after the pick is read the same way
 # and written as its own line of this check (key p<N>-<group>, read=spawned), which the pass pattern leaves alone and a fail line fails.
-# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --seed 4 (the lord's draw speed). Slice 7 added a Legend row, which moved every draw, so these seeds are not Slice 6's.
-# The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run: a cavalry boon (seeds 27, 28, 32) reads skip with reason=no-soldier. Cavalry speed and health belong to the human row below.
+# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --class archer --seed 4 (the lord's draw speed), --waves 5 --seed 29 (a Cavalry run: the bot's draw from seed 29 is cavalry and its first pick is Gallop of the Eorlingas, a player move speed boon, so the read-back samples the lord and his horse). The pass only proves the horse when the lord still had one at the pick: read the `[Check] ... boon ... read=standing target=player` line and confirm a MountSpeed part is on it, because the read-back drops the horse expectation when none stood and still writes read=pass (the horse can die in waves 1 to 3, and with no sally block nothing remounts him). Slice 7 added a Legend row, which moved every draw, and Slice 11 added a fourth class, which moved every unarmed seed's class draw from Below(3) to Below(4), so these seeds are not Slice 6's: seed 4 now needs --class archer. With all eight affixes rolling (Slice 9) their wave 5 is blades (seeds 33 and 4) and lash (seeds 22 and 29): the first two also write a blades line.
+# The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run, and the mounted lord is the player record, never a cavalry soldier: a cavalry troop boon reads skip with reason=no-soldier even in a Cavalry run (seed 19 draws cavalry and takes Fleet Horses of the Mark; that proves the troop row can be taken and nothing about a horse). The horse of the lord is read through the player boons of the Cavalry class (seed 29). The drums sample on a horse stays unbuilt: the attackers spawn on foot.
 # The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
 absence = "not-reached"
 
@@ -222,12 +226,12 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.class"
-needs = "a run with a class (every run has one: --class archer --waves 2, or --class all --runs 3 for the three foot classes)"
+needs = "a run with a class (every run has one: --class archer --waves 2, --class cavalry --waves 3 for the mounted class, or --class all --runs 4 for all four)"
 reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass', 'LongDefeatConfigCatalog: classes\.json: ']
 pass = ['\[Check\] id=taom\.long-defeat\.class result=pass class=\S+ mounted=(true|false) ']
 fail = ['\[Check\] id=taom\.long-defeat\.class result=fail']
 # Written by LongDefeatDirector.Player.cs after each spawn of the lord, key <mission> at the start and <mission>-d<N> at a respawn: the kit's slots read back from his spawn equipment (an empty slot reads back empty), the horse
-# slots cleared and no mount for a foot class, no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
+# slots cleared and no mount for a foot class, a horse under him (has_mount=true) and the kit's horse and harness read back for the mounted class (Cavalry), no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
 absence = "fail"
 
 [[check]]
@@ -251,6 +255,127 @@ fail = ['\[Check\] id=taom\.long-defeat\.summon result=fail']
 # Written by LongDefeatDirector.Commander.cs when the wave clears, one line per summon, key w<N>s<k>: the summon queued the count the plan gives that ability for that wave (expected=) and every queued soldier was sent to the field
 # before the clear (spawned=). fired_at, spawned_at and wave_seconds are wave seconds, so risk 16 (do the summons arrive in time) reads off the line. A run that ends before the soldiers all came writes a skip line, which reads NOT REACHED.
 absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.sally"
+needs = "a Cavalry run (--class cavalry --waves 3) on a fortress whose fortresses.json row has a recorded sally block. With no block, as at Slice 11, each wave writes a skip with reason=no-sally-point (the lord rides from Begin) and run_long_defeat.py accepts that skip, for that reason alone, in place of the pass"
+reached = ['\[Check\] id=taom\.long-defeat\.sally result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally result=pass w=[0-9]+ how=(teleport|remount) mount=yes ']
+fail = ['\[Check\] id=taom\.long-defeat\.sally result=fail']
+# Written by LongDefeatDirector.Sally.cs at each wave's start, key w<N>, from the lord read right after the move: he stands within 2 m of the sally point on the ground with a horse under him, no player death was counted by
+# the move (deaths=a->b), and for a remount (he was on foot: his horse died, or he was knocked off or dismounted) the step was done and the old body was not reported killed or knocked out (old_state, old_lost). Native reports the faded body Routed inside FadeOut,
+# before the new body spawns, so a later killed or knocked-out report is not expected; if one came it would write a second line for the wave, result=fail. A skip says why no sally was made (reason=no-sally-point, point-unusable, taken-over or no-lord). The same wave writes [LongDefeat][Sally] w<N> out: teleport|remount with the
+# formation and its order position (risk 3: a formation that drags the rider home against a camera or horse fault), mount=yes (risk 8 is closed from source: a null mount key builds the horse with a random coat, so mount= reads the horse, not the key), the old body's state and every removal and deletion callback for it.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.sally-return"
+needs = "the same run, a wave cleared after a sally. With no sally block each clear writes a skip with reason=no-sally-point, which the judge accepts in place of the pass only while the sally check reads the same"
+reached = ['\[Check\] id=taom\.long-defeat\.sally-return result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally-return result=pass w=[0-9]+ dist=']
+fail = ['\[Check\] id=taom\.long-defeat\.sally-return result=fail']
+# Written by LongDefeatDirector.Sally.cs at each clear of a wave the lord sallied in, key w<N>: after the teleport home he stands within the keep radius of the home point (the recorded foot muster, else the keep) and no player death was counted since he went out. A skip names why
+# he was not brought home (no-lord, taken-over: his body is a soldier's now, point-unusable: the home point failed its check). With no sally block (Slice 11) the clear also writes a skip, reason=no-sally-point, for the run that rides from Begin, so no sally was made to return from.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.sally-contact"
+needs = "the same run, with attackers near the sally point in the wave's first 180 s"
+reached = ['\[Check\] id=taom\.long-defeat\.sally-contact result=']
+pass = ['\[Check\] id=taom\.long-defeat\.sally-contact result=pass w=[0-9]+ t=']
+fail = ['\[Check\] id=taom\.long-defeat\.sally-contact result=fail']
+# Written by LongDefeatDirector.Sally.cs, key w<N>: pass at the first hit in the wave's first 180 s, within 40 m of the sally point, by or on the lord or his horse (hits_given, hits_taken, mount_hits and kills are in the line, the horse's in its own field). A wave with
+# none writes a skip (reason=none-in-180s, none-before-clear), never a fail: the judge reports this check and does not require it. While he is more than 20 m outside the keep, a [LongDefeat][Sally] w<N> t=<s> line every 5 s carries the counts, nearest_attacker,
+# to_formation, gate and outside_boundary seconds (MissionBoundaryCrossingHandler retreats the mission after 10 s, which ends the run).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.field-care"
+needs = "a Long Defeat run in which field care is bought and heals: python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3 --start-gold 5000 (the bot buys care at clear 1; startGold is echoed in the report)"
+reached = ['\[Check\] id=taom\.long-defeat\.field-care result=']
+pass = ['\[Check\] id=taom\.long-defeat\.field-care result=pass c=[0-9]+ share=[0-9.]+ count=[0-9]+ before=[0-9.]+ after=[0-9.]+ expected=[0-9.]+ reread=']
+fail = ['\[Check\] id=taom\.long-defeat\.field-care result=fail']
+# Written by LongDefeatDirector.Fort.cs, key c<N> (the heal's number in the run), one line per heal: field care is bought between waves (Fortifications group of the shop, or the bot) and the standing defenders regain its share (0.75 shipped) of the
+# health they are missing on the tick after the buy, through the same RestDefenders the clear's rest uses and never on the clear's own tick. The line is judged on the next tick's reading: the mean health share of the standing defenders after the write
+# equals the mean before plus the share of what was missing within 1% (Agent.Health's setter ceils, so a soldier can gain up to a whole point), the next reading still holds it (reread=, none when the run ended first), and the purse's care sink grew by
+# exactly the gold of the care purchases the heal carries (paid= and purse=). A garrison missing too little health for the heal to show (share times the missing mean at most 2%, twice the tolerance, so a blank write would pass) writes a skip (reason=too-little-missing), which proves nothing and reads NOT REACHED. A next reading that is not a mean (the adapter read nobody) fails; only the run ending first leaves reread=none. run_long_defeat.py owes a pass whenever the report's purchases hold field care.
+# The [LongDefeat][Care] c<N> line names the means in percent. The game shows no soldier's health, so the line is the proof of the garrison's heal; whether the lord's own health bar visibly rose is the human row about the Fortifications group below.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.fort-points"
+needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts, tower volley spots or volley origins (Mike records them with taom.ld_record; none is recorded for Helm's Deep until 2026-11-06, and the line is then a skip)"
+reached = ['\[Check\] id=taom\.long-defeat\.fort-points result=']
+pass = ['\[Check\] id=taom\.long-defeat\.fort-points result=pass points=[0-9]+ failed=0']
+fail = ['\[Check\] id=taom\.long-defeat\.fort-points result=fail']
+# Written once at the boot by LongDefeatDirector.Gates.cs (key: the mission): every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary, the sally points' own test. A point that fails is named
+# (bad=hornburg.post[1](navmesh=no boundary=yes)) and warned about at the boot; it does not refuse the run, because the slice that reads the point decides what to do without it. With nothing recorded the line is a skip (points=0 reason=none-recorded), which proves nothing
+# and reads NOT REACHED. The 2 m clear-ray test of a volley origin (phase3-plan.md section 4) is built with the Elven Volley that reads the origins.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-level"
+needs = "a Long Defeat run in which the gate is reinforced: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys gate level 1 at clear 1 and level 2 at clear 2; the report lists them as gateLevel purchases)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-level result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-level result=pass l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ (g[0-9]+\.)?max=[0-9.]+/[0-9.]+ (g[0-9]+\.)?hp=']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-level result=fail']
+# Written by LongDefeatDirector.Gates.cs, key l<N> (the level reached), on the tick after the buy, once the adapter has written every visible gate (D18): each gate's maximum is its vanilla maximum (read at the boot before any hit, 15000 at Helm's Deep) times
+# the level's factor within 1% (max=actual/wanted), a standing gate's share of hit points held within 0.1% (share=before->after: the write is HP * newMax / oldMax less one hit point, so a level never heals the missing share and a broken gate stays at 0), and the damage-state index the
+# next hit computes did not fall (index=before->after, E9b: a next hit that computes index 0 on a gate stored at 1 or more reads state -1 and throws; a level keeps the index from falling at all). A level bought where no gate stands fails (gates=0).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-repair"
+needs = "a Long Defeat run in which a gate is repaired: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot repairs at clear 1 when the ram broke the gate or took a tenth of it; if wave 1 leaves it under 0.1 missing the line is not reached and Slice 10's runs owe it; the damaged path and the broken path are each owed once across the runs)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-repair result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-repair result=pass w=[0-9]+ path=(broken|damaged) gates=[0-9]+ (g[0-9]+\.)?hp=[0-9.]+/[0-9.]+ (g[0-9]+\.)?index=0 (g[0-9]+\.)?disabled=false (g[0-9]+\.)?closed=true (g[0-9]+\.)?open=false']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-repair result=fail']
+# Written by LongDefeatDirector.Gates.cs, key w<N> (the wave the repair precedes), on the tick after the buy (D17): the one repair path (the maximum written, then vanilla's CastleGate.OnMissionReset by reflection, then SetAutoOpenState(false)) left every gate it acted on
+# standing, enabled, with State Closed and not open, its hit points at the levelled maximum (vanilla times the level's factor within 1%) and its damage-state index 0, and the hidden gate the boot broke still broken (hidden_down=true). path=broken when any repaired gate was destroyed, else damaged.
+# With two or more visible gates every number is keyed g0., g1. and so on, which the patterns accept. near= counts the defenders within 4 m of the gate (R3: a soldier in the gateway when it closes may be caught in the door, so read it before treating a stuck soldier as a bug). reset=missing means the reflection found nothing (R10).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gate-attacked"
+needs = "the same run, a wave played after the repair (--waves 3 --garrison-scale 1.3 --start-gold 5000: the ram attacks the repaired gate in wave 2)"
+reached = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=pass w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=0 samples=[1-9]']
+fail = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=fail']
+# Written by LongDefeatDirector.Gates.cs, key w<N>, at the next clear or the run's end (ended=run): the repaired gates lost hit points since the repair (or a later level write) or fell again (A20), and through= attackers sampled on the 5 s state line within 3 m behind the gate's plane
+# while it stood stayed 0 (the plane is the gate's own forward axis, turned to face the keep; the box is 3 m deep, 5 m either side of the door's centre and 4 m up or down from the gate, a first guess, so the wall walk above the door does not count; samples= counts only the samples that measured a plane, and a pass over 0 of them is not accepted). An untouched gate is a skip (reason=no-blow): a wave whose ram died earlier brings no blow at all (E30, R4),
+# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.volley"
+needs = "a Long Defeat run at a fortress whose fortresses.json records volley.origins (Mike records them with taom.ld_record volley; none is recorded for Helm's Deep until 2026-11-06, so without them the Elven Volley is not for sale and this row is NOT REACHED): python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys level 1 in the preparation and level 2 at clear 1, and looses the volley in each wave: an auto line in wave 1 and a mode=crosshair aim=bot line in waves 2 and 3); Mike also presses N and aims (aim=person)"
+reached = ['\[Check\] id=taom\.long-defeat\.volley result=']
+pass = ['\[Check\] id=taom\.long-defeat\.volley result=pass w=[0-9]+ use=[0-9]+ source=(elven|tower-[a-z_]+) mode=(auto|crosshair)( aim=(person|bot) ray_gap=(-?[0-9.]+|NaN))? arrows=[0-9]+ shots=[0-9]+ candidates=[0-9]+ distinct=[0-9]+ spawned=0 hits=[0-9]+ blocked=[0-9]+ friendly=0 cancelled=[0-9]+ kills=[0-9]+ affector_null=[0-9]+ affector_side=[0-9]+ owner=\S+ mult=\S+ base_speed=[0-9.]+ impact_speed=[0-9.]+ window=[0-9.]+']
+fail = ['\[Check\] id=taom\.long-defeat\.volley result=fail']
+# Written by LongDefeatDirector.Volley.cs, one line per use, key elven-w<N>u<k> (tower-<id>-w<N>u<k> for a tower's volley, Slice 8), when the use's six-second hit window closes, the wave's clear cuts it (ended=wave) or the run ends (ended=run).
+# arrows= is the arrows asked for, shots= the shots the aim planned and candidates= the attackers in reach; distinct= must be min(shots, candidates), one attacker per arrow while they lasted. spawned=0 is the mission's agent count around the fire (a missile is no agent).
+# hits= are foe hits within the window and must reach half the arrows (a first guess for Mike to tune, A16); blocked= shield and weapon blocks, on a foe or a defender, are counted apart and left out of that share (the engine never cancels a friendly block, and a block does the defender no harm); friendly= is an unblocked friendly hit the engine did NOT cancel and must be 0 (cancelled= counts the ones it did, E14, A19).
+# affector_null= and affector_side= count hits whose engine affector was null or on the wrong side (an owner that died or whose slot was reused while the arrow flew, A24): reported, never judged, and a non-zero count is an UNSETTLED native case for the main session before any fix.
+# owner= is the troop of the defender who owns the arrows (never the main agent, an AI-controlled archer far from the melee first, D22) and mult= his weapon damage multiplier (D25); base_speed= is the first hit's MissileStartingBaseSpeed and impact_speed= the arrow's speed at that hit (collisionData.MissileVelocity); the engine gives an arrow air drag and scales its damage by (impact speed over base speed) squared, so an impact speed well under base_speed at long range is the drag, not a tuning fault.
+# mode=crosshair names who aimed it: aim=person is the lord's eye ray, aim=bot runs from his eye toward the densest group because nothing turns an AI lord's look onto the attackers; ray_gap= is the distance from the point the ray hit to the nearest attacker in reach.
+# A window cut short before the share was met is a skip (reason=window-cut) and proves nothing; a skip never pays this row. The check is owed once a volley level was bought before a wave the run then played, whether or not the report shows a use.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.posts"
+needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts (Mike records them with taom.ld_record post <tower>; none is recorded for Helm's Deep until 2026-11-06, so without them the tower row is not for sale and this row is NOT REACHED): python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3 --start-gold 5000, once per hold variant (--posts-variant A, B and C; the bot buys tower level 1 in the preparation and level 2 at clear 1)"
+reached = ['\[Check\] id=taom\.long-defeat\.posts result=']
+pass = ['\[Check\] id=taom\.long-defeat\.posts result=pass tower=[a-z_]+ w=[0-9]+ level=[12] variant=[ABC] formation=[0-9]+ posts=[0-9]+ expected=[1-9][0-9]* manned=[0-9]+ held=([0-9]+) sampled=\1 max_drift=[0-9.]+ max_dz=[0-9.]+ shots=[1-9][0-9]* split=[0-9]+ out=[0-9]+ short=[0-9]+ failed=0']
+fail = ['\[Check\] id=taom\.long-defeat\.posts result=fail']
+# Written by LongDefeatDirector.Posts.cs, one line per tower and wave, key <tower>-w<N>, at the wave's clear, or with ended=run when the run ends first (Slice 7, spike S6). manned= is the archers standing on the tower as the wave began and expected= the posts the fill should
+# have filled (the level's posts less short=, the posts the garrison cap left empty: named, never failed; a spawn that threw is failed=N, kept in expected= so it fails the line, and a pass needs failed=0); held=H sampled=N is the sample taken 30 s into the wave, H archers of the N still standing within 1.5 m and 2 m of their own posts (max_drift= and max_dz= are the worst of them),
+# and it must read the same number twice (every word of the detail is name=value: the game's log sanitiser glues a bare word to the value before it, so "held=4 of 4" would be logged as held=4_of_4 and never match); shots= is the arrows the tower's archers loosed by the clear (the engine's OnAgentShootMissile), at least one, which settles A18: a held archer still shoots. split= counts post archers the once-a-second re-assert (D30a) moved back into the posts formation
+# after the tactic took them away and out= agents it moved out of it; variant= names how the archers were held (A a scripted position, B with a speed limit of 0, C with the formation set not splittable by AI) and formation= the posts formation's index (4, the A23 boot lines).
+# A skip proves nothing and is named: reason=short-wave (the wave ended before the 30 s sample), none-standing (no archer left at the sample), no-archers (the fill left nothing to prove) or window-cut (the run ended before any arrow). A skip never pays this row.
+absence = "not-reached"
+
+[[human]]
+claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
 
 [[human]]
 claim = "the commander is visible among the attackers, fights as a soldier and falls like one, and the HUD names his rank and next ability"
@@ -289,7 +414,13 @@ claim = "the Escape exit returns to the main menu and the report still lands"
 claim = "a boon card reads clearly: its name, its category, what it gives, and a drawback line in its own colour; the reroll button shows its count; the pick is announced by a notice and the hint, and the panel never opens by itself"
 
 [[human]]
-claim = "Winged Terror does not rout the walls by itself: in a terror wave (--start-wave 5 --seed 6) the defenders near the attackers waver but stay on the walls, the pulse lines show pushed_below=0, and no defender flees from the pulse alone"
+claim = "Winged Terror does not rout the walls by itself: in a terror wave (--start-wave 5 --seed 7) the defenders near the attackers waver but stay on the walls, the pulse lines show pushed_below=0, and no defender flees from the pulse alone"
+
+[[human]]
+claim = "Morgul Blades reads as poison and kills fairly: in a blades wave (--start-wave 5 --seed 3) defenders an attacker struck lose health over the next seconds without a visible blow, none dies with the attackers all dead, the [LongDefeat][Blades] tick lines show the owner kept real (substituted only when the poisoner had fallen), and the kill counts and morale of the attackers move as for any kill"
+
+[[human]]
+claim = "a --lose run in which the stalemate rule fells attackers after the player has died throws nothing in AgentMoraleInteractionLogic: the [LongDefeat][Wave] felling line names a defender as the owner of the kills, and the run goes on to its end"
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"
@@ -298,7 +429,25 @@ claim = "the affix line on the HUD names the running wave's affixes during a wav
 claim = "a troop boon visibly changes the group it names: infantry and cavalry with a health boon already standing, and packs bought afterwards, are tougher; a cavalry speed boon makes riders faster; the lord's class shows on the HUD strip after the wave and on the end panel"
 
 [[human]]
-claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears"
+claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears; for Cavalry the spear, shield, sword and the Rohan rider's armour show on a lord who sits a horse in its harness, and the horse is a new coat at each spawn"
+
+[[human]]
+claim = "the Cavalry boons reach the horse: Gallop of the Eorlingas makes the lord's horse visibly faster at once and again after a respawn or a remount (the horse is built before its rider, so the first moments after a spawn are the ones to watch), Spear of Eorl hits harder and its spear thrusts slower, Oath of Eorl takes more to bring down"
+
+[[human]]
+claim = "a Cavalry lord who loses his horse (killed under him, or knocked off) fights on foot until he falls, because no remount path runs while fortresses.json holds no sally block; Mike decides whether that stands or whether the lord is remounted at the home point at a wave's start (plan D14 and the Slice 13 note)"
 
 [[human]]
 claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"
+
+[[human]]
+claim = "the repaired gate looks closed and whole, plank and door, and the ram plays its hits on it again (wave 2 of --waves 3 --garrison-scale 1.3 --start-gold 5000); a reinforced gate takes visibly more blows to break; the Fortifications group lists Reinforce the gate with its level, its percent and its price, and Repair the gate with a price only when a gate is hurt"
+
+[[human]]
+claim = "the shop's Fortifications group reads clearly: field care is listed with its share and price, buying it spends the gold at once and the group then reads Used until the next wave is cleared, and, if the lord was hurt, his own health bar rises on the next tick (the game shows no soldier's health, so the field-care line proves the garrison's heal); care is not listed in the preparation before wave 1"
+
+[[human]]
+claim = "the Elven Volley reads as arrows from behind the wall landing on the attackers (a --waves 3 --garrison-scale 1.3 --start-gold 5000 run at a fortress with recorded volley origins), and how the arrow looks in flight (it shares the vanilla flying mesh, so it likely looks like any arrow); pressing N during a wave looses it and does nothing else, the strip under the commander line reads ready, then the seconds to the next use, and No attackers in reach when nobody is in range; the panel's Elven Volley row only buys; level two lands where Mike looks (aim=person), and no defender is hit"
+
+[[human]]
+claim = "posted archers stand on the high towers and shoot (a --waves 2 --garrison-scale 1.3 --start-gold 5000 run at a fortress with recorded tower posts, once per hold variant A, B and C): they face out over the approach, keep their posts for the whole wave without walking off or stopping, and loose arrows at the attackers; judge which variant reads best, and say if the fallback (the posts formation with one vanilla Move order to the tower top and no per-agent hold) is the better choice; the panel's High towers row only buys, and its second level fills the remaining posts"

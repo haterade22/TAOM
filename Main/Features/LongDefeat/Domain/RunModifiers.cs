@@ -106,6 +106,20 @@ internal static class RunModifiers
         return new LdTerror(seconds, new LdMoralePulse(radius, amount, floor));
     }
 
+    /// <summary>
+    /// The Morgul Blades doses of a wave, or null when the wave has none or the power's numbers cannot poison anyone (a rate or a length that is not positive and finite). One dose does
+    /// <c>poisonPerSecond</c> a second for <c>poisonSeconds</c> seconds.
+    /// </summary>
+    public static LdPoisonBook? Blades(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Blades))
+            return null;
+
+        var perSecond = plan.Value(AffixPlan.Blades, "poisonPerSecond");
+        var seconds = plan.Value(AffixPlan.Blades, "poisonSeconds");
+        return IsPositive(perSecond) && IsPositive(seconds) ? new LdPoisonBook(perSecond, seconds) : null;
+    }
+
     private const float MinEngineFactor = 0.1f;
 
     private static bool IsPositive(float v) => v > 0f && !float.IsInfinity(v);

@@ -53,7 +53,7 @@ public class LongDefeatPrefabTests
         foreach (var movie in Movies)
             Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
 
-        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM) })
+        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM), typeof(LongDefeatFortVM) })
         {
             var names = bound.TryGetValue(vmType, out var found) ? found : new HashSet<string>();
             foreach (var property in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
@@ -134,11 +134,48 @@ public class LongDefeatPrefabTests
     }
 
     [TestMethod]
+    public void TheHudShowsTheVolleyLine_AndItsPanelRowOnlyBuys()
+    {
+        Assert.IsTrue(Root("LongDefeatHud").Descendants().Any(e => (string?)e.Attribute("Text") == "@VolleyText"));
+        var commands = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("Command.Click")).Where(c => c != null).ToList();
+        CollectionAssert.Contains(commands, "ExecuteBuyVolley");
+        Assert.IsFalse(commands.Any(c => c!.Contains("FireVolley")), "N looses the volley; the panel never does (D24)");
+    }
+
+    [TestMethod]
     public void ThePanelGroups_AreGatedByTheirOwnVisibility()
     {
         var gates = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("IsVisible")).Where(v => v != null).ToList();
 
         CollectionAssert.IsSubsetOf(new[] { "@IsShopVisible", "@IsEndVisible", "@IsPickVisible" }, gates);
+    }
+
+    [TestMethod]
+    public void TheFortificationsGroup_BindsTheFortVM_ShowsOnItsOwnFlag_AndItsRowBuysOnClick()
+    {
+        var group = Root("LongDefeatPanel").Descendants().Single(e => (string?)e.Attribute("DataSource") == "{Fort}");
+
+        Assert.AreEqual("@IsVisible", (string?)group.Attribute("IsVisible"));
+        Assert.IsTrue(group.Descendants().Any(e => (string?)e.Attribute("Text") == "@Title"));
+        var buttons = group.Descendants("ButtonWidget").ToList();
+        Assert.AreEqual(5, buttons.Count, "field care, the gate level, the gate repair, the high towers and the Elven Volley");
+
+        // Each row: its click, its enabled flag, its own visible flag, and its three lines.
+        foreach (var (command, can, visible, texts) in new[]
+                 {
+                     ("ExecuteBuyCare", "@CanBuyCare", "@IsCareVisible", new[] { "@CareName", "@CareDetail", "@CarePrice" }),
+                     ("ExecuteBuyGate", "@CanBuyGate", "@IsGateVisible", new[] { "@GateName", "@GateDetail", "@GatePrice" }),
+                     ("ExecuteRepair", "@CanRepair", "@IsRepairVisible", new[] { "@RepairName", "@RepairDetail", "@RepairPrice" }),
+                     ("ExecuteBuyTowers", "@CanBuyTowers", "@IsTowersVisible", new[] { "@TowersName", "@TowersDetail", "@TowersPrice" }),
+                     ("ExecuteBuyVolley", "@CanBuyVolley", "@IsVolleyVisible", new[] { "@VolleyName", "@VolleyDetail", "@VolleyPrice" }),
+                 })
+        {
+            var row = buttons.Single(b => (string?)b.Attribute("Command.Click") == command);
+            Assert.AreEqual(can, (string?)row.Attribute("IsEnabled"), command);
+            Assert.AreEqual(visible, (string?)row.Attribute("IsVisible"), command);
+            foreach (var text in texts)
+                Assert.IsTrue(row.Descendants().Any(e => (string?)e.Attribute("Text") == text), command + " " + text);
+        }
     }
 
     [TestMethod]

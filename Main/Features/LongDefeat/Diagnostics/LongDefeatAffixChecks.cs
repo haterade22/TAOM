@@ -20,7 +20,7 @@ internal readonly record struct AffixExpect(string Stat, AffixMath Math, float P
 /// <summary>
 /// The <c>affix</c> and <c>affix-effect</c> verdicts of #1079 (phase2-plan.md section 6). Pure: the director reads the roll and the engine, these turn
 /// the numbers into pass, fail or skip. The arithmetic is written out here on purpose, apart from <c>RaceAbilityService</c>, so a check that shared it
-/// could not catch a change in it. The stat powers and <c>hide</c> are read back from a sampled attacker (<see cref="Effect"/>); the Hammer of the Underworld and Winged Terror have their own verdicts (<see cref="Hammer"/>, <see cref="Terror"/>), because their effect is on the engines and on the defenders' morale, not on an attacker's driven properties; Morgul Blades joins with its own slice.
+/// could not catch a change in it. The stat powers and <c>hide</c> are read back from a sampled attacker (<see cref="Effect"/>); the Hammer of the Underworld and Winged Terror have their own verdicts (<see cref="Hammer"/>, <see cref="Terror"/>), because their effect is on the engines and on the defenders' morale, not on an attacker's driven properties; so has Morgul Blades (<see cref="Blades"/>), read from the poison the wave dealt.
 /// </summary>
 internal static class LongDefeatAffixChecks
 {
@@ -85,8 +85,9 @@ internal static class LongDefeatAffixChecks
                 };
             case AffixPlan.Hammer:
             case AffixPlan.Terror:
-                // The row exists so the two are decided here, not forgotten: neither changes a driven property of an attacker, so the stat read has nothing to ask of them and a wave
-                // with only these reads no soldier. Each is proven by its own verdict (Hammer, Terror) from the engines and the pulses, recorded under the same affix-effect id.
+            case AffixPlan.Blades:
+                // The row exists so the three are decided here, not forgotten: none changes a driven property of an attacker, so the stat read has nothing to ask of them and a wave
+                // with only these reads no soldier. Each is proven by its own verdict (Hammer, Terror, Blades) from the engines, the pulses and the poison, recorded under the same affix-effect id.
                 return Array.Empty<AffixExpect>();
             default:
                 return Array.Empty<AffixExpect>();
@@ -198,6 +199,22 @@ internal static class LongDefeatAffixChecks
             return new CheckVerdict(CheckResult.Skip, detail + " reason=no-pulse");
 
         return tally.Drained > 0 ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
+    }
+
+    /// <summary>
+    /// A wave's Morgul Blades, read from the run's own counts for that wave: fails when any poison tick found its owner not active at the call (<c>owner_missing</c>, which a living owner for every kill keeps
+    /// at 0); a wave with no accepted hit, or whose doses never took a point of health, could not show the effect and is a skip; otherwise it passes. Withheld ticks (no attacker stood to own the kill) are
+    /// shown and judge nothing.
+    /// </summary>
+    internal static CheckVerdict Blades(int wave, PoisonTally tally)
+    {
+        var detail = $"power=blades w={Num(wave)} doses={Num(tally.Doses)} hits={Num(tally.Hits)} damage={Num(tally.Damage)} owner_missing={Num(tally.OwnerMissing)} withheld={Num(tally.Withheld)}";
+        if (tally.OwnerMissing > 0)
+            return new CheckVerdict(CheckResult.Fail, detail);
+        if (tally.Hits == 0)
+            return new CheckVerdict(CheckResult.Skip, detail + " reason=no-hit");
+
+        return tally.Damage > 0 ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-damage");
     }
 
     private static string Flag(bool v) => v ? "true" : "false";

@@ -32,6 +32,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private string _hintText = string.Empty;
     private string _affixText = string.Empty;
     private string _commanderText = string.Empty;
+    private string _volleyText = string.Empty;
     private string _speedText = string.Empty;
     private string _speedTitle = string.Empty;
     private string _noticeText = string.Empty;
@@ -58,6 +59,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         Offers = new MBBindingList<LongDefeatOfferVM>();
         Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
+        Fort = new LongDefeatFortVM(BuyCare, BuyGate, RepairGate, BuyVolley, BuyTowers);
         foreach (var level in LongDefeatSession.SpeedLevels)
             Speeds.Add(new LongDefeatSpeedVM(level, SelectSpeed));
     }
@@ -98,6 +100,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     public string CommanderText { get => _commanderText; private set => Set(ref _commanderText, value, nameof(CommanderText)); }
 
     [DataSourceProperty]
+    public string VolleyText { get => _volleyText; private set => Set(ref _volleyText, value, nameof(VolleyText)); }
+
+    [DataSourceProperty]
     public string SpeedText { get => _speedText; private set => Set(ref _speedText, value, nameof(SpeedText)); }
 
     [DataSourceProperty]
@@ -123,6 +128,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public MBBindingList<LongDefeatOfferVM> Offers { get; }
+
+    [DataSourceProperty]
+    public LongDefeatFortVM Fort { get; }
 
     [DataSourceProperty]
     public bool IsPickVisible { get => _isPickVisible; private set => Set(ref _isPickVisible, value, nameof(IsPickVisible)); }
@@ -244,6 +252,11 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             HornText = LongDefeatHudText.Horn();
             CloseText = LongDefeatHudText.Close();
             ApplyOffers(view);
+            Fort.Update(view);
+        }
+        else
+        {
+            Fort.Hide();
         }
 
         ApplyBoons(view);
@@ -269,6 +282,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         HintText = LongDefeatHudText.Hint(view);
         AffixText = LongDefeatHudText.AffixLine(view);
         CommanderText = LongDefeatHudText.CommanderLine(view);
+        VolleyText = LongDefeatHudText.VolleyLine(view);
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;
@@ -343,6 +357,43 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             Notify(LongDefeatHudText.Refusal(result));
         }
 
+        Refresh();
+    }
+
+    private void BuyCare()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryFieldCare()));
+        Refresh();
+    }
+
+    private void BuyGate()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryBuyGateLevel()));
+        Refresh();
+    }
+
+    private void RepairGate()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryRepairGates()));
+        Refresh();
+    }
+
+    private void BuyTowers()
+    {
+        Notify(LongDefeatHudText.RefusalTowers(_session.TryBuyTowerLevel()));
+        Refresh();
+    }
+
+    private void BuyVolley()
+    {
+        Notify(LongDefeatHudText.RefusalVolley(_session.TryBuyVolleyLevel()));
+        Refresh();
+    }
+
+    /// <summary>The volley key (D24): arms the Elven Volley in a wave, which the director looses on the next tick. A refusal is said on the notice line; an armed press says nothing.</summary>
+    internal void FireVolley()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryVolley()));
         Refresh();
     }
 

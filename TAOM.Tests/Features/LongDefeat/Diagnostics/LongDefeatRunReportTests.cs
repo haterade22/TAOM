@@ -77,7 +77,7 @@ public class LongDefeatRunReportTests
         purse.Earn(PurseSource.Bounty, 8);
         purse.Earn(PurseSource.WaveBonus, 200);
         purse.Earn(PurseSource.EarlyStart, 30);
-        purse.TrySpend(180);
+        purse.TrySpend(180, PurseSink.Packs);
 
         var report = Build(new RunResult(RunEndReason.TargetReached, 1, 1, 2), stats, purse);
 
@@ -174,6 +174,22 @@ public class LongDefeatRunReportTests
         Assert.AreEqual((0, 0), ((int)gold["commander"]!, (int)gold["boon"]!));
         var poison = (JObject)report["poison"]!;
         Assert.AreEqual((0, 0, 0, 0, 0), ((int)poison["doses"]!, (int)poison["hits"]!, (int)poison["damage"]!, (int)poison["ownerMissing"]!, (int)poison["withheld"]!));
+    }
+
+    [TestMethod]
+    public void Build_WritesWhatMorgulBladesDid_IntoThePoisonObject()
+    {
+        var stats = new RunStats();
+        stats.Poison.Doses = 7;
+        stats.Poison.Hits = 19;
+        stats.Poison.Damage = 84;
+        stats.Poison.OwnerMissing = 0;
+        stats.Poison.Withheld = 2;
+
+        var report = Build(new RunResult(RunEndReason.Abandoned, 5, 4, 0), stats, new Purse(600));
+
+        var poison = (JObject)report["poison"]!;
+        Assert.AreEqual((7, 19, 84, 0, 2), ((int)poison["doses"]!, (int)poison["hits"]!, (int)poison["damage"]!, (int)poison["ownerMissing"]!, (int)poison["withheld"]!));
     }
 
     [TestMethod]

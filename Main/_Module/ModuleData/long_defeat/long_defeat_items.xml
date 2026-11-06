@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <!-- The Elven Volley's arrow (The Long Defeat, phase3-plan.md OQ3 and Slice 6). Mission.AddCustomMissile adds no bow damage, so an arrow carries only its own thrust (Mission.cs:4954-4980): wm_elven_arrow_q1v3 deals 4 at speed 10, which
+       an Uruk's armour turns, so this is a TAOM item with the same 30 thrust and missile speed 45 as fow_tower_arrow, and q1v3's held mesh and quiver. No troop carries it and it is not for sale, so the volley's hit filter reads this id and nothing else,
+       and a soldier's own arrows never count as a volley. The flying mesh is the shared arrow_bl_flying, the one q1v3 and fow_tower_arrow use, so in flight it looks like any arrow (which mesh the engine draws in flight is unverified).
+       Custom Game only (SubModule.xml), beside fords_items, so a campaign never loads it. The held and quiver meshes are the Armory's: tools/tests/test_long_defeat_items.py reads them from the installed modules.
+       The name is vanilla's {=gFtu0j4T}Arrows, as fow_tower_arrow's is, so the item adds no string. CannotBePickedUp keeps a stuck volley arrow from becoming a pickup (SpawnedItemEntity.cs:163-164 deactivates it): a player who took
+       one could fire it inside a volley's window and have the shot counted. -->
+  <Item
+    id="ld_elven_arrow"
+    name="{=gFtu0j4T}Arrows"
+    body_name="bo_capsule_arrow"
+    holster_body_name="bo_axe_short"
+    mesh="wm_mirkwood_arrow_a01"
+    holster_mesh="wm_elven_quiver_v1_a"
+    holster_mesh_with_weapon="wm_elven_quiver_v1_a"
+    weight="0.041"
+    is_merchandise="false"
+    flying_mesh="arrow_bl_flying"
+    appearance="1"
+    Type="Arrows"
+    item_holsters="quiver_back_middle:quiver_bolts_2:quiver_bolts"
+    holster_position_shift="0.0,0.0,0.15">
+    <ItemComponent>
+      <Weapon
+        weapon_class="Arrow"
+        stack_amount="50"
+        physics_material="missile"
+        thrust_speed="0"
+        speed_rating="0"
+        missile_speed="45"
+        weapon_length="97"
+        thrust_damage="30"
+        thrust_damage_type="Pierce"
+        item_usage="arrow_right"
+        passby_sound_code="event:/mission/combat/missile/passby"
+        rotation="0, -80, 25"
+        sticking_position="0,-0.97,0"
+        sticking_rotation="90,0,0"
+        center_of_mass="0,0,-0.13"
+        modifier_group="arrow">
+        <WeaponFlags
+          Consumable="true"
+          AmmoSticksWhenShot="true"
+          AmmoBreaksOnBounceBack="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags CannotBePickedUp="true" />
+  </Item>
+</Items>

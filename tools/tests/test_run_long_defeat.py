@@ -33,6 +33,11 @@ def pass_line(name):
     return f"[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.{name} result=pass detail=1"
 
 
+def skip_line(name, wave, reason):
+    """The skip the game writes for a sally or a return it did not make (LongDefeatSallyChecks.Skipped): the wave and the reason."""
+    return f"[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.{name} result=skip w={wave} reason={reason}"
+
+
 HEAD = "0123456789abcdef0123456789abcdef01234567"
 FIXTURE_HEAD = "985b0d54e1672ede8d9dc08ed986d0f3870aa5d3"
 FIXTURE = REPO / "tools" / "tests" / "fixtures" / "long_defeat_checks.txt"
@@ -72,11 +77,23 @@ def wave_row(wave, seed=7, **more):
     expected = ld.commander_expected(spec, wave) if spec else None
     commander = None if expected is None else {"troop": expected[1], "rank": expected[0], "steps": expected[2], "outcome": "killed", "uses": {}, "usesAfterEnd": 0}
     return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)),
-            "summoned": 0, "summonKills": 0, "summonFelled": 0, "commander": commander, **more}
+            "summoned": 0, "summonKills": 0, "summonFelled": 0, "commander": commander, **NO_VOLLEYS, **more}
+
+
+# A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
+NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+           "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
 # The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
-REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1}
+REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1,
+          "waves": [wave_row(n) for n in range(1, 6)], **NO_FORT}
+def cleared(n, seed=7, **more):
+    """REPORT with n cleared waves and the one row the game writes for each (RunStats.CloseWave); a wave a run ends in has no row."""
+    return {**REPORT, "seed": seed, "class": ld.bot_class(seed), "wavesCleared": n, "waves": [wave_row(w, seed) for w in range(1, n + 1)], **more}
+
+
 BLOCK = "[2026-11-04 09:59:59] [ERROR] [CrashReport] swallowed during the mission load"
 
 
@@ -178,8 +195,8 @@ class JudgeTests(unittest.TestCase):
 
     def test_the_wave_lines_are_counted_against_what_the_report_cleared(self):
         ld.target_waves = 2
-        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=2), log_of(STANDARD, 2))[0], 0)
-        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=3), log_of(STANDARD, 2))[0], 1)
+        self.assertEqual(ld.judge(FINAL, cleared(2), log_of(STANDARD, 2))[0], 0)
+        self.assertEqual(ld.judge(FINAL, cleared(3), log_of(STANDARD, 2))[0], 1)
 
     def test_no_done_file_fails(self):
         self.assertEqual(ld.judge(None, REPORT, FULL_LOG), (1, "no done file"))
@@ -198,7 +215,7 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, dict(REPORT, final=False), FULL_LOG), (1, "the JSON report is not final"))
 
     def test_too_few_waves_cleared_fails(self):
-        code, why = ld.judge(FINAL, dict(REPORT, wavesCleared=4), FULL_LOG)
+        code, why = ld.judge(FINAL, cleared(4), FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("wavesCleared=4", why)
 
@@ -272,16 +289,16 @@ class LoseJudgeTests(unittest.TestCase):
 
     def test_a_lost_run_passes_on_the_shorter_list_with_no_wave_cleared(self):
         for reason in ld.LOSE_REASONS:
-            code, why = ld.judge({"reason": reason, "expect": "lost"}, {**REPORT, "final": False, "wavesCleared": 0}, LOSE_LOG)
+            code, why = ld.judge({"reason": reason, "expect": "lost"}, cleared(0, final=False), LOSE_LOG)
             self.assertEqual(code, 0, why)
 
     def test_a_lost_run_with_no_wave_cleared_passes_on_the_lines_the_director_writes(self):
         # LongDefeatChecks.BestRunSaved for a 0-wave run saved into a fresh folder and read back.
         best = "[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.best-run result=pass waves=0 kills=14 read_back=same"
         log = "\n".join([stamp_line()] + [pass_line(n) for n in ld.LOSE_CHECKS if n != "best-run"] + [best] + READ_BACK_LINES)
-        self.assertEqual(ld.judge(self.LOST, {**REPORT, "final": False, "wavesCleared": 0}, log)[0], 0)
+        self.assertEqual(ld.judge(self.LOST, cleared(0, final=False), log)[0], 0)
         skipped = best.replace("result=pass", "result=skip")
-        self.assertEqual(ld.judge(self.LOST, {**REPORT, "final": False, "wavesCleared": 0}, log.replace(best, skipped))[0], 1)
+        self.assertEqual(ld.judge(self.LOST, cleared(0, final=False), log.replace(best, skipped))[0], 1)
 
     def test_a_lost_run_is_not_asked_for_the_wave_shop_or_horn_checks(self):
         for name in ("wave", "no-rout", "gold", "shop", "early-start"):
@@ -506,9 +523,23 @@ class ManifestTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
         text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
-        code, why = ld.judge({"reason": "final"}, {**REPORT, "wavesCleared": 2, "wavesFelled": 0}, text)
+        code, why = ld.judge({"reason": "final"}, cleared(2, wavesFelled=0), text)
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
+
+    def test_the_affix_effect_row_judges_the_blades_line_the_game_writes(self):
+        # The line is LongDefeatAffixChecks.Blades' detail under the affix-effect id, keyed by power (see LongDefeatBladesChecksTests for the exact text).
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.affix-effect")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} "
+        detail = "power=blades w=5 doses=12 hits=40 damage=96 owner_missing={} withheld=1"
+        passing = [(None, 1, head.format("pass") + detail.format(0))]
+        failing = [(None, 1, head.format("fail") + detail.format(1))]
+        skipping = [(None, 1, head.format("skip") + "power=blades w=5 doses=0 hits=0 damage=0 owner_missing=0 withheld=0 reason=no-hit")]
+
+        self.assertEqual(iv.judge_segment(row, passing, []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, failing, []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, skipping, []).verdict, iv.NOT_REACHED, "a wave in which nothing could show the poison proves nothing")
 
     def test_the_wave_row_needs_its_minimum_of_five_lines(self):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
@@ -525,7 +556,9 @@ class ManifestTests(unittest.TestCase):
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
-                          "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon"):
+                          "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
+                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
+                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -536,7 +569,7 @@ class ManifestTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
         text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
-        report = {**REPORT, "wavesCleared": 2}
+        report = cleared(2)
         for row in manifest.checks:
             bad = f"[2026-11-04 04:00:00] [INFO] [Check] id={row.id} result=fail"
             self.assertEqual(ld.judge({"reason": "final"}, report, text + "\n" + bad)[0], 1, row.id)
@@ -548,14 +581,14 @@ class ManifestTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "tree_head", None)
         text = LOST_FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         done = {"reason": "lost_defenders", "expect": "lost"}
-        code, why = ld.judge(done, {**REPORT, "final": False, "wavesCleared": 3}, text)
+        code, why = ld.judge(done, cleared(3, final=False), text)
         self.assertEqual(code, 0, why)
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
         lines = [(None, number, row) for number, row in enumerate(text.splitlines(), 1)]
         row = next(c for c in manifest.checks if c.id == "taom.long-defeat.player-death")
         self.assertEqual(iv.judge_segment(row, lines, []).verdict, iv.PASS)
         bad = "[2026-11-04 04:30:00] [INFO] [Check] id=taom.long-defeat.end result=fail reason=fault"
-        self.assertEqual(ld.judge(done, {**REPORT, "final": False, "wavesCleared": 3}, text + "\n" + bad)[0], 1)
+        self.assertEqual(ld.judge(done, cleared(3, final=False), text + "\n" + bad)[0], 1)
 
     SCALE_LINE = ("[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.scale result=pass w=11 health=1.050 spawn=1.050 late=1.049 "
                   "troop=fow_urukhai_spearman in_mix=true damage=1.03 amplified=12 steps=0 over_room=0")
@@ -578,6 +611,38 @@ class ManifestTests(unittest.TestCase):
         for key in ("w=", "health=", "spawn=", "late=", "troop=", "in_mix=", "damage=", "amplified=", "steps=", "over_room="):
             self.assertIn(key + "{", formatted, key)
         self.assertRegex(self.SCALE_LINE, r"result=pass w=[0-9]+ health=[0-9.]+ spawn=[0-9.]+ late=[0-9.]+ troop=\S+ in_mix=(true|false) damage=[0-9.]+ amplified=[0-9]+ steps=[0-9]+ over_room=[0-9]+")
+
+    SALLY_LINES = {
+        "sally": "w=1 how=remount mount=yes dist=0.4 deaths=0->0 old_state=Routed old_lost=no",
+        "sally-return": "w=1 dist=1.2 keep_radius=14.0 deaths=0->0",
+        "sally-contact": "w=1 t=12.5 hits_given=1 hits_taken=0 mount_hits=0 kills=0",
+    }
+
+    def test_the_sally_rows_read_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        for name, detail in self.SALLY_LINES.items():
+            row = next(c for c in manifest.checks if c.id == f"taom.long-defeat.{name}")
+            head = f"[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.{name} result="
+            self.assertEqual(row.absence, "not-reached", name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "pass " + detail)], []).verdict, iv.PASS, name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, head + "fail " + detail)], []).verdict, iv.FAIL, name)
+            self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED, name)
+
+    def test_a_skipped_sally_line_proves_nothing_and_a_late_fail_beside_a_pass_is_a_fail(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.sally")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.sally result="
+        skipped = [(None, 1, head + "skip w=1 reason=no-sally-point")]
+        both = [(None, 1, head + "pass " + self.SALLY_LINES["sally"]), (None, 2, head + "fail w=1 reason=old-body-reported-lost callback=removed old_state=Killed")]
+        self.assertEqual(iv.judge_segment(row, skipped, []).verdict, iv.NOT_REACHED)
+        self.assertEqual(iv.judge_segment(row, both, []).verdict, iv.FAIL)
+
+    def test_the_sally_lines_are_the_ones_the_csharp_checks_format(self):
+        checks = source("Diagnostics", "LongDefeatSallyChecks.cs")
+        for key in ("w=", "how=", "mount=", "dist=", "deaths=", "old_state=", "old_lost=", "keep_radius=", "t=", "reason=", "callback="):
+            self.assertIn(key, checks, key)
+        for name in ("sally", "sally-return", "sally-contact"):
+            self.assertIn(f'"taom.long-defeat.{name}"', source("Diagnostics", "LongDefeatChecks.cs"))
 
     def test_the_manifest_names_the_issue_and_the_taom_log(self):
         data = self.manifest()
@@ -789,12 +854,12 @@ class SharedVectorTests(unittest.TestCase):
 
 PINNED_ROLLS = [
     # (seed, wave, the roll at the shipped schedule): the same rows as AffixPlanTests.cs, taken from an independent implementation.
-    (1, 5, ["drums"]),
-    (1, 10, ["discipline", "hammer"]),
-    (1, 15, ["discipline", "eye", "lash"]),
-    (12345, 40, ["hide", "hammer", "eye"]),
-    (7, 5, ["hide"]),
-    (0, 15, ["lash", "eye", "terror"]),
+    (1, 5, ["hide"]),
+    (1, 10, ["drums", "terror"]),
+    (1, 15, ["hide", "hammer", "blades"]),
+    (12345, 40, ["drums", "discipline", "blades"]),
+    (7, 5, ["terror"]),
+    (0, 15, ["lash", "drums", "discipline"]),
 ]
 
 
@@ -824,7 +889,7 @@ class AffixReplayTests(unittest.TestCase):
         self.assertIsNotNone(found)
         names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
         self.assertEqual(list(ld.AFFIX_POOL), [names[part.strip()] for part in found.group(1).split(",")])
-        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror"], list(ld.AFFIX_POOL), "Slice 9 adds blades here")
+        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades"], list(ld.AFFIX_POOL), "all eight roll since Slice 9")
         self.assertEqual([i for i in ld.AFFIX_IDS if i in ld.AFFIX_POOL], list(ld.AFFIX_POOL), "the pool keeps the order of the eight")
         self.assertTrue(set(ld.AFFIX_EFFECT_IDS) <= set(ld.AFFIX_POOL), "an effect line is only owed for a power that can roll")
 
@@ -835,10 +900,9 @@ class AffixReplayTests(unittest.TestCase):
             for count in range(len(ld.AFFIX_POOL) + 1):
                 self.assertEqual(full[:count], ld.affix_roll(seed, 20, count), (seed, count))
 
-    def test_no_seed_rolls_a_power_that_does_nothing_yet(self):
-        for seed in range(200):
-            for wave in (5, 10, 15, 40):
-                self.assertFalse({"blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
+    def test_every_power_of_the_eight_can_roll_now_that_each_acts(self):
+        seen = {power for seed in range(200) for wave in (5, 10, 15, 40) for power in ld.affix_roll(seed, wave, 3)}
+        self.assertEqual(set(ld.AFFIX_IDS), seen)
 
     def test_the_schedule_is_the_shipped_files(self):
         self.assertEqual(((5, 1), (10, 2), (15, 3)), ld.shipped_affix_schedule())
@@ -945,12 +1009,12 @@ class AffixJudgeTests(unittest.TestCase):
         ld.target_waves = 5
         rows = [wave_row(w) for w in range(1, 6)]
         wrong = [{**row, "affixes": ["lash"]} if row["wave"] == 5 else row for row in rows]
-        self.assertEqual(["hide"], rows[4]["affixes"], "seed 7 rolls hide at wave 5")
+        self.assertEqual(["terror"], rows[4]["affixes"], "seed 7 rolls terror at wave 5")
         code, why = ld.judge(FINAL, self.report(rows=wrong), FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("wave 5", why)
         self.assertIn("lash", why)
-        self.assertIn("hide", why)
+        self.assertIn("terror", why)
 
     def test_a_wave_that_lost_its_affixes_or_gained_one_fails(self):
         rows = [wave_row(w) for w in range(1, 6)]
@@ -976,14 +1040,16 @@ class AffixJudgeTests(unittest.TestCase):
     def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
         without = log_of(BOONED + ("affix",), 5)
         # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
-        seeds = {"hide": 0, "drums": 1, "discipline": 2, "eye": 4, "terror": 6, "hammer": 8, "lash": 27}
+        seeds = {"eye": 0, "hide": 1, "lash": 2, "blades": 3, "discipline": 5, "terror": 7, "hammer": 9, "drums": 15}
         for power, seed in seeds.items():
             report = self.report(seed=seed, rows=[wave_row(w, seed) for w in range(1, 6)])
             self.assertEqual([power], report["waves"][4]["affixes"])
             code, why = ld.judge(FINAL, report, without)
             self.assertEqual(code, 1, power)
             self.assertIn("taom.long-defeat.affix-effect", why)
-            self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0, power)
+            # Seeds 2 and 5 draw the Cavalry class since Slice 11, which owes its sally checks as well.
+            owed = tuple(ld.CLASS_CHECKS.get(report["class"], ()))
+            self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + owed, 5))[0], 0, power)
         self.assertEqual(sorted(seeds), sorted(ld.AFFIX_EFFECT_IDS))
 
     def test_the_effect_line_may_be_a_pass_or_a_skip_but_a_fail_fails_the_run(self):
@@ -995,7 +1061,7 @@ class AffixJudgeTests(unittest.TestCase):
 
     def test_a_row_with_no_effect_power_owes_no_effect_line(self):
         self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
-        self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades has no effect line until Slice 9")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades proves its poison under the same id")
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades", "eye"]}]}))
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer"]}]}), "the hammer proves its engine write under the same id")
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["terror"]}]}), "terror proves its pulses under the same id")
@@ -1043,8 +1109,8 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_a_seed_of_zero_is_still_checked(self):
         ld.expected_report = {"seed": 0}
-        self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 5}, FULL_LOG)[0], 1)
-        self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 0, "class": ld.bot_class(0)}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, {**cleared(5), "seed": 5}, FULL_LOG)[0], 1)
+        self.assertEqual(ld.judge(FINAL, cleared(5, seed=0), FULL_LOG)[0], 0)
 
     def test_an_owner_missing_above_zero_fails_and_zero_passes(self):
         zero = FULL_LOG + "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=hide owner_missing=0 withheld=2"
@@ -1054,15 +1120,19 @@ class PhaseTwoJudgeTests(unittest.TestCase):
             self.assertEqual(code, 1, count)
             self.assertIn("owner_missing=" + count, why)
 
+    def test_a_blades_line_with_owner_missing_fails_the_run_even_as_a_pass(self):
+        line = "\n[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=blades w=5 doses=3 hits=4 damage=9 owner_missing={} withheld=0"
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG + line.format(0))[0], 0)
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG + line.format(2))
+        self.assertEqual(code, 1)
+        self.assertIn("owner_missing=2", why)
+
     def test_the_largest_owner_missing_in_the_log_is_the_one_reported(self):
         log = FULL_LOG + "\nx owner_missing=0\ny owner_missing=4\nz owner_missing=2"
         self.assertIn("owner_missing=4", ld.judge(FINAL, REPORT, log)[1])
 
     def test_the_cavalry_class_also_requires_sally_and_sally_return(self):
-        # Cavalry is not in classes.json until Slices 10 and 11, so this plays the day it is: the class is on offer and armed.
-        offer = mock.patch.object(ld, "class_offer", return_value=ld.CLASSES + ("cavalry",))
-        offer.start()
-        self.addCleanup(offer.stop)
+        # Once a sally point is recorded (a pass line for the sally), the cavalry class owes both checks again.
         ld.expected_report = {"class": "cavalry"}
         report = {**REPORT, "class": "cavalry"}
         code, why = ld.judge(FINAL, report, FULL_LOG)
@@ -1073,13 +1143,153 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, full)[0], 0)
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("sally",), 5))[0], 1)
 
+    def cavalry_run(self):
+        ld.expected_report = {"class": "cavalry"}
+        return {**REPORT, "class": "cavalry"}, log_of(STANDARD + ("sally", "sally-return"), 5)
+
+    # ---- no sally point recorded (Slice 11): Cavalry rides from Begin and the game writes a skip for the sally and for the return at every wave ----
+
+    def no_point_log(self, waves=5, reason="no-sally-point", checks=STANDARD):
+        """The log of a Cavalry run with no sally point: the standard passes, then a sally skip at each wave's start and a sally-return skip at each clear."""
+        rows = [log_of(checks, waves)]
+        for wave in range(1, waves + 1):
+            rows.append(skip_line("sally", wave, reason))
+            rows.append(skip_line("sally-return", wave, reason))
+        return "\n".join(rows)
+
+    def test_a_cavalry_run_with_no_sally_point_recorded_passes_on_skips_that_say_so(self):
+        report, _ = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, self.no_point_log())
+        self.assertEqual(code, 0, why)
+        self.assertIn("no sally point recorded", why)
+        self.assertIn("sally and sally-return skipped", why)
+
+    def test_the_no_sally_point_skip_is_accepted_for_that_reason_alone(self):
+        report, _ = self.cavalry_run()
+        for reason in ("point-unusable", "taken-over", "no-lord"):
+            code, why = ld.judge(FINAL, report, self.no_point_log(reason=reason))
+            self.assertEqual(code, 1, reason)
+            self.assertIn("taom.long-defeat.sally", why, reason)
+
+    def test_one_other_reason_among_the_no_sally_point_skips_spoils_the_waiver(self):
+        report, _ = self.cavalry_run()
+        log = self.no_point_log() + "\n" + skip_line("sally", 6, "taken-over")
+        code, why = ld.judge(FINAL, report, log)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
+
+    def test_the_waiver_needs_the_skip_lines_and_not_just_a_missing_pass(self):
+        report, _ = self.cavalry_run()
+        # No pass and no skip at all for either check: nothing says why, so both are still missing.
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
+        # The sally skipped for no point but a cleared wave wrote no return line of any kind.
+        only_out = log_of(STANDARD, 5) + "\n" + skip_line("sally", 1, "no-sally-point")
+        code, why = ld.judge(FINAL, report, only_out)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally-return", why)
+
+    def test_once_a_point_exists_both_checks_are_required_again(self):
+        report, _ = self.cavalry_run()
+        # A sally that went out passes, so the point is recorded: a return skip that claims no point does not stand in for the return.
+        log = log_of(STANDARD + ("sally",), 5) + "\n" + skip_line("sally-return", 1, "no-sally-point")
+        code, why = ld.judge(FINAL, report, log)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally-return", why)
+        # A pass on both is what counts, whatever skips sit beside it.
+        both = log_of(STANDARD + ("sally", "sally-return"), 5) + "\n" + skip_line("sally", 2, "no-sally-point")
+        self.assertEqual(ld.judge(FINAL, report, both)[0], 0)
+
+    # Slice 11 review (data flow): the game writes reason=no-sally-point for a malformed `sally` block too (FortressesReader drops it with a warning and the plan has no sally), and the judge
+    # does not fail on config warnings. The waiver therefore also needs this tree's fortresses.json to hold no `sally` key for the fortress.
+    def fortresses_with(self, folder, sally):
+        row = {"id": "helms", "defenderCulture": "vlandia"}
+        if sally is not None:
+            row["sally"] = sally
+        path = Path(folder) / "fortresses.json"
+        path.write_text(json.dumps({"fortresses": [row]}), encoding="utf-8")
+        return path
+
+    def test_the_waiver_holds_only_while_the_fortress_row_records_no_sally_block(self):
+        report, _ = self.cavalry_run()
+        log = self.no_point_log()
+        with tempfile.TemporaryDirectory() as folder:
+            with mock.patch.object(ld, "FORTRESS_FILE", self.fortresses_with(folder, None)):
+                self.assertEqual(ld.judge(FINAL, report, log)[0], 0)
+            for block in ({"x": 1, "y": 2, "z": 3, "fx": 0, "fy": 1}, {"x": 1}, "garbage"):
+                with mock.patch.object(ld, "FORTRESS_FILE", self.fortresses_with(folder, block)):
+                    code, why = ld.judge(FINAL, report, log)
+                    self.assertEqual(code, 1, str(block))
+                    self.assertIn("taom.long-defeat.sally", why, str(block))
+
+    def test_the_shipped_fortresses_record_no_sally_block_so_the_waiver_stands_today(self):
+        self.assertFalse(ld.sally_recorded("helms"))
+        self.assertFalse(ld.sally_recorded(None))
+
+    def test_a_lose_run_owes_the_sally_but_never_the_return(self):
+        # A run built to lose clears no wave on purpose (LOSE_CHECKS), so a sally-return pass is not owed; the sally is written at wave 1's start whatever follows.
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**cleared(0), "class": "cavalry", "final": False}
+        ld.expected_report = {"class": "cavalry"}
+        code, why = ld.judge(lost, report, log_of(ld.LOSE_CHECKS + ("sally",), 0))
+        self.assertEqual(code, 0, why)
+        self.assertEqual(ld.judge(lost, report, log_of(ld.LOSE_CHECKS, 0))[0], 1)
+        no_point = log_of(ld.LOSE_CHECKS, 0) + "\n" + skip_line("sally", 1, "no-sally-point")
+        self.assertEqual(ld.judge(lost, report, no_point)[0], 0)
+
+    def test_a_deep_run_lost_before_its_first_clear_owes_no_return(self):
+        lost = {"reason": "lost_defenders", "expect": "deep"}
+        report = {**REPORT, "class": "cavalry", "startWave": 12, "wavesCleared": 0, "final": False, "waves": []}
+        ld.expected_report = {"class": "cavalry", "startWave": 12}
+        log = log_of(ld.DEEP_CHECKS + ("sally",), 0)
+        code, why = ld.judge(lost, report, log)
+        self.assertNotIn("sally-return", why)
+        cleared = {**report, "wavesCleared": 1, "waves": [wave_row(12)]}
+        code, why = ld.judge(lost, cleared, log)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally-return", why)
+
+    def test_sally_contact_is_reported_for_a_cavalry_run_and_never_required(self):
+        report, base = self.cavalry_run()
+        none = ld.judge(FINAL, report, base)
+        self.assertEqual(none[0], 0, none[1])
+        self.assertIn("sally-contact: not reached", none[1])
+        contact = pass_line("sally-contact") + "\n" + pass_line("sally-contact").replace("detail=1", "detail=2")
+        got = ld.judge(FINAL, report, base + "\n" + contact)
+        self.assertEqual(got[0], 0, got[1])
+        self.assertIn("sally-contact: 2 pass, 0 skip", got[1])
+        quiet = base + "\n" + pass_line("sally-contact").replace("result=pass", "result=skip")
+        self.assertIn("sally-contact: 0 pass, 1 skip", ld.judge(FINAL, report, quiet)[1])
+
+    def test_a_failed_sally_contact_line_still_fails_the_run_like_any_failed_check(self):
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally-contact").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_late_loss_report_on_the_old_body_fails_the_run_through_the_sally_check(self):
+        # The game writes a second line for the wave, result=fail, when native reports the faded body killed after the step passed: any failed check line fails the run.
+        report, base = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, base + "\n" + pass_line("sally").replace("result=pass", "result=fail"))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
+
+    def test_a_foot_class_report_adds_no_contact_note(self):
+        for name in (c for c in ld.CLASSES if c not in ld.CLASS_CHECKS):
+            ld.expected_report = {"class": name}
+            self.assertNotIn("sally-contact", ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[1], repr(name))
+
     def test_another_class_asks_nothing_extra(self):
-        for name in ld.CLASSES:
+        feet = [c for c in ld.CLASSES if c not in ld.CLASS_CHECKS]
+        self.assertEqual(feet, ["sword_and_board", "two_handed", "archer"], "only Cavalry adds checks")
+        for name in feet:
             ld.expected_report = {"class": name}
             self.assertEqual(ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[0], 0, repr(name))
 
     def test_a_run_that_played_past_the_authored_list_owes_the_scale_check(self):
-        report = {**REPORT, "waves": [wave_row(10, healthFactor=1.0), wave_row(11, healthFactor=1.05)]}
+        rows = [wave_row(n) for n in range(7, 10)] + [wave_row(10, healthFactor=1.0), wave_row(11, healthFactor=1.05)]
+        report = {**REPORT, "wavesCleared": len(rows), "waves": rows}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
@@ -1087,18 +1297,54 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_a_damage_factor_alone_also_owes_the_scale_check(self):
         # The game's own rule (a wave is scaled when health, damage or the tier steps moved) also holds for a roster whose health line is flat.
-        report = {**REPORT, "waves": [wave_row(11, healthFactor=1.0, damageFactor=1.03)]}
+        rows = [wave_row(n) for n in range(7, 11)] + [wave_row(11, healthFactor=1.0, damageFactor=1.03)]
+        report = {**REPORT, "wavesCleared": len(rows), "waves": rows}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
 
     def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
-        for waves in (None, [], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
-                      [wave_row(1, healthFactor="2")], ["x"], "waves"):
-            self.assertEqual(ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)[0], 0, repr(waves))
+        for waves in ([], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
+                      [wave_row(1, healthFactor="2")], ["x"]):
+            self.assertEqual(ld.judge(FINAL, cleared(5, waves=waves + [wave_row(n) for n in range(len(waves) + 1, 6)]), FULL_LOG)[0], 0, repr(waves))
+
+    def test_a_won_run_needs_one_row_for_each_cleared_wave(self):
+        # RCA phase2 row 120: wavesCleared=5 with waves=[] gave the affix, boon and commander replays nothing to replay, and the judge passed it.
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
+        for rows in ([], REPORT["waves"][:4], REPORT["waves"] + [wave_row(6)]):
+            code, why = ld.judge(FINAL, {**REPORT, "waves": rows}, FULL_LOG)
+            self.assertEqual(code, 1, len(rows))
+            self.assertIn("wavesCleared=5", why)
+            self.assertIn(f"waves lists {len(rows)} row(s)", why)
+
+    def test_a_lost_run_carries_rows_for_the_waves_it_cleared_and_none_for_the_one_it_lost(self):
+        # SurvivalRun.ClearWave is the only writer of a row (RunStats.CloseWave), so a run lost in wave 3 after two clears lists two rows, and one lost in wave 1 lists none.
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        for n in (0, 2):
+            self.assertEqual(ld.judge(lost, cleared(n, final=False), LOSE_LOG)[0], 0, n)
+        for rows in ([wave_row(1), wave_row(2), wave_row(3)], [wave_row(1)]):
+            code, why = ld.judge(lost, cleared(2, final=False, waves=rows), LOSE_LOG)
+            self.assertEqual(code, 1, len(rows))
+            self.assertIn("waves lists", why)
+
+    def test_the_wave_row_rule_leaves_a_report_with_the_wrong_type_to_the_checks_that_name_it(self):
+        self.assertEqual(ld.waves_count_problem({"wavesCleared": 5, "waves": "rows"}), "")
+        self.assertEqual(ld.waves_count_problem({"wavesCleared": "5", "waves": []}), "")
+        self.assertEqual(ld.waves_count_problem({"wavesCleared": True, "waves": [{}]}), "")
+
+    def test_a_schema_2_report_without_a_waves_list_fails_the_judge(self):
+        for waves in (None, "waves", {}, 5):
+            code, why = ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)
+            self.assertEqual(code, 1, repr(waves))
+            self.assertIn("must carry a waves list", why)
+        missing = {key: value for key, value in REPORT.items() if key != "waves"}
+        code, why = ld.judge(FINAL, missing, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("must carry a waves list", why)
 
     def test_the_deep_run_lists_scale_once(self):
-        report = {**REPORT, "waves": [wave_row(12, healthFactor=1.1)]}
+        rows = [wave_row(12, healthFactor=1.1)] + [wave_row(n) for n in range(13, 17)]
+        report = {**REPORT, "wavesCleared": len(rows), "waves": rows}
         self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave", "affix-effect", "boon"), 5))[0], 0)
         self.assertEqual(ld.DEEP_CHECKS.count("scale"), 1)
 
@@ -1117,7 +1363,7 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_the_seed_must_be_a_whole_number_within_the_cap(self):
         for good in (0, 7, 2 ** 53 - 1):
-            self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": good, "class": ld.bot_class(good)}, FULL_LOG)[0], 0, good)
+            self.assertEqual(ld.judge(FINAL, cleared(5, seed=good), FULL_LOG)[0], 0, good)
         for bad in (None, True, False, "7", 7.0, -1, 2 ** 53, 2 ** 63 - 1):
             code, why = ld.judge(FINAL, {**REPORT, "seed": bad}, FULL_LOG)
             self.assertEqual(code, 1, repr(bad))
@@ -1167,7 +1413,7 @@ class DeepJudgeTests(unittest.TestCase):
     def test_a_final_deep_run_needs_the_deep_list_and_the_wave_lines_but_not_the_standard_list(self):
         # Four clears owed a pick at the third, so the boon check is owed too (ld.BOON_FROM_CLEARS).
         log = log_of(ld.DEEP_CHECKS + ("wave", "boon"), 4)
-        report = {**REPORT, "wavesCleared": 4}
+        report = cleared(4)
         code, why = ld.judge(self.DEEP, report, log)
         self.assertEqual(code, 0, why)
         self.assertEqual(ld.judge(self.DEEP, report, log_of(ld.DEEP_CHECKS + ("wave", "boon"), 3))[0], 1, "four waves cleared, three wave lines")
@@ -1176,7 +1422,7 @@ class DeepJudgeTests(unittest.TestCase):
     def test_a_lost_deep_run_passes_without_a_cleared_wave(self):
         log = log_of(ld.DEEP_CHECKS, 0)
         for reason in ld.LOSE_REASONS:
-            code, why = ld.judge({"reason": reason, "expect": "deep"}, {**REPORT, "final": False, "wavesCleared": 1}, log)
+            code, why = ld.judge({"reason": reason, "expect": "deep"}, cleared(1, final=False), log)
             self.assertEqual(code, 0, why)
 
     def test_a_deep_run_that_stalled_or_faulted_fails(self):
@@ -1187,7 +1433,7 @@ class DeepJudgeTests(unittest.TestCase):
         log = log_of(ld.DEEP_CHECKS + ("wave",), 4)
         for name in ld.DEEP_CHECKS:
             kept = "\n".join(row for row in log.splitlines() if f"long-defeat.{name} " not in row)
-            code, why = ld.judge(self.DEEP, {**REPORT, "wavesCleared": 4}, kept)
+            code, why = ld.judge(self.DEEP, cleared(4), kept)
             self.assertEqual(code, 1, name)
             self.assertIn(f"taom.long-defeat.{name}", why)
 
@@ -1239,17 +1485,21 @@ class PhaseTwoArgumentTests(unittest.TestCase):
         with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit):
             self.parse("--class", "wizard")
 
-    def test_cavalry_is_refused_by_name_until_the_game_can_play_it(self):
-        # Slices 10 and 11 add the class to classes.json; until then neither --class cavalry nor --class all may arm a class the game would silently replace.
-        self.assertNotIn("cavalry", ld.CLASSES)
+    def test_cavalry_is_accepted_now_that_classes_json_ships_it(self):
+        self.assertIn("cavalry", ld.CLASSES)
+        self.assertEqual(self.parse("--class", "cavalry").klass, "cavalry")
+        self.assertFalse(hasattr(ld, "PLANNED_CLASSES"), "no class is planned but unplayable any more")
+
+    def test_a_class_the_game_does_not_know_is_still_refused_by_name(self):
         stderr = io.StringIO()
         with mock.patch("sys.stderr", stderr), self.assertRaises(SystemExit):
-            self.parse("--class", "cavalry")
-        self.assertIn("cavalry", stderr.getvalue())
-        self.assertIn("not playable yet", stderr.getvalue())
+            self.parse("--class", "wizard")
+        self.assertIn("wizard", stderr.getvalue())
+        self.assertIn("cavalry", stderr.getvalue(), "the message lists the classes on offer, Cavalry among them")
 
-    def test_all_never_arms_cavalry(self):
-        self.assertNotIn("cavalry", [ld.class_for_run("all", n) for n in range(12)])
+    def test_all_gives_each_of_four_runs_the_next_class_and_cavalry_is_the_fourth(self):
+        self.assertEqual([ld.class_for_run("all", n) for n in range(4)], ["sword_and_board", "two_handed", "archer", "cavalry"])
+        self.assertEqual(ld.class_for_run("all", 4), "sword_and_board", "the rotation wraps")
 
     def test_deep_is_start_wave_twelve_and_four_waves_whatever_those_flags_said(self):
         known = ld.apply_deep(self.parse("--deep", "--waves", "9", "--start-wave", "3"))
@@ -1265,7 +1515,7 @@ class PhaseTwoArgumentTests(unittest.TestCase):
         # Pinned to the file itself, read here without the wrapper's own reader: the foot classes of Slice 5, in the file's order.
         shipped = json.loads((REPO / "Main" / "_Module" / "ModuleData" / "long_defeat" / "classes.json").read_text(encoding="utf-8-sig"))
         self.assertEqual(ld.CLASSES, tuple(row["id"] for row in shipped["classes"]))
-        self.assertEqual(ld.CLASSES, ("sword_and_board", "two_handed", "archer"))
+        self.assertEqual(ld.CLASSES, ("sword_and_board", "two_handed", "archer", "cavalry"))
 
     def test_every_shipped_class_has_a_kit_for_the_helms_defender_culture(self):
         shipped = json.loads((REPO / "Main" / "_Module" / "ModuleData" / "long_defeat" / "classes.json").read_text(encoding="utf-8-sig"))
@@ -1298,7 +1548,7 @@ class PhaseTwoArgumentTests(unittest.TestCase):
 
     def test_all_rotates_through_the_classes_one_per_run(self):
         self.assertEqual([ld.class_for_run("all", n) for n in range(6)],
-                         ["sword_and_board", "two_handed", "archer", "sword_and_board", "two_handed", "archer"])
+                         ["sword_and_board", "two_handed", "archer", "cavalry", "sword_and_board", "two_handed"])
         self.assertEqual(ld.class_for_run("archer", 3), "archer")
         self.assertIsNone(ld.class_for_run(None, 0))
 
@@ -1338,11 +1588,11 @@ class PhaseTwoArmTests(unittest.TestCase):
     def test_class_all_gives_each_run_the_next_class(self):
         arm = self.captured_arm("--class", "all", "--runs", "4")
         classes = [re.search(r"^class=(\S+)$", arm("E:/out", SimpleNamespace(wall_limit=None))[0], re.M).group(1) for _ in range(5)]
-        self.assertEqual(classes, ["sword_and_board", "two_handed", "archer", "sword_and_board", "two_handed"])
+        self.assertEqual(classes, ["sword_and_board", "two_handed", "archer", "cavalry", "sword_and_board"])
 
     def test_the_judge_expects_the_class_each_run_armed_run_by_run(self):
         arm = self.captured_arm("--class", "all", "--runs", "4")
-        for expected in ("sword_and_board", "two_handed", "archer", "sword_and_board"):
+        for expected in ("sword_and_board", "two_handed", "archer", "cavalry"):
             arm("E:/out", SimpleNamespace(wall_limit=None))
             self.assertEqual(ld.expected_report.get("class"), expected)
             self.assertEqual(ld.expected_report.get("startRerolls"), 1, "the other armed fields stay")
@@ -1400,10 +1650,11 @@ class ClassJudgeTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def test_the_bots_class_is_pinned_to_the_games_vectors(self):
-        # The same seeds and answers as ClassPlanTests.Choose_TheBotsPick_IsPinned: stream 3 at (0, 0), Below(3) over the classes in classes.json order.
+        # The same seeds and answers as ClassPlanTests.Choose_TheBotsPick_OverTheShippedFour_IncludesCavalry_AndIsPinnedToThePythonReplay: stream 3 at (0, 0), Below(4) over the
+        # classes in classes.json order (Slice 11 added Cavalry, which moved every seed's class from the Below(3) draw of Slice 5).
         got = [ld.bot_class(seed) for seed in range(8)]
-        self.assertEqual(got, ["two_handed", "sword_and_board", "archer", "archer", "archer", "sword_and_board", "two_handed", "two_handed"])
-        self.assertEqual([ld.SplitMix64(seed, 3, 0, 0).below(3) for seed in range(8)], [1, 0, 2, 2, 2, 0, 1, 1])
+        self.assertEqual(got, ["sword_and_board", "archer", "cavalry", "archer", "two_handed", "cavalry", "archer", "archer"])
+        self.assertEqual([ld.SplitMix64(seed, 3, 0, 0).below(4) for seed in range(8)], [0, 2, 3, 2, 1, 3, 2, 2])
 
     def test_the_bots_class_reads_the_offer_of_the_reports_fortress(self):
         with mock.patch.object(ld, "class_offer", return_value=("a", "b")) as offer:
@@ -1434,11 +1685,11 @@ class ClassJudgeTests(unittest.TestCase):
         self.assertIn("never took effect", why)
 
     def test_a_class_the_game_does_not_offer_fails_even_when_it_was_armed(self):
-        # --class cavalry before it ships: the game falls back, so the report names a shipped class and the armed one is not back.
-        ld.expected_report = {"class": "cavalry"}
+        # A class classes.json does not ship: the game falls back, so the report names a shipped class and the armed one is not back.
+        ld.expected_report = {"class": "wizard"}
         self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 1)
-        ld.expected_report = {"class": "cavalry"}
-        code, why = ld.judge(FINAL, {**REPORT, "class": "cavalry"}, FULL_LOG)
+        ld.expected_report = {"class": "wizard"}
+        code, why = ld.judge(FINAL, {**REPORT, "class": "wizard"}, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("not one of the classes", why)
 
@@ -1460,7 +1711,7 @@ class ClassJudgeTests(unittest.TestCase):
 
     def test_a_lose_run_also_owes_the_class_line_and_the_class_match(self):
         lost = {"reason": "lost_defenders", "expect": "lost"}
-        report = {**REPORT, "final": False, "wavesCleared": 0}
+        report = cleared(0, final=False)
         self.assertEqual(ld.judge(lost, report, LOSE_LOG)[0], 0)
         without = "\n".join(row for row in LOSE_LOG.splitlines() if "long-defeat.class " not in row)
         self.assertEqual(ld.judge(lost, report, without)[0], 1)
@@ -1735,18 +1986,21 @@ class BoonReplayTests(unittest.TestCase):
 
 class BoonJudgeTests(unittest.TestCase):
 
+    # Slice 11: a fourth class moved every seed's unarmed class draw (Below(3) to Below(4)), and the draws here are pinned to the class this seed drew before, so the class is armed.
+    CLASS = "sword_and_board"
+
     def setUp(self):
         ld.target_waves = 5
         ld.tree_head = HEAD
-        ld.expected_report = {}
+        ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, picks=None, cleared=5, **more):
-        picks = boon_picks(1, rerolls=1, class_id=ld.bot_class(1)) if picks is None else picks
+        picks = boon_picks(1, rerolls=1, class_id=self.CLASS) if picks is None else picks
         used = sum(max(0, len(p["offered"]) - 1) for p in picks)
-        return {**REPORT, "seed": 1, "class": ld.bot_class(1), "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
+        return {**REPORT, "seed": 1, "class": self.CLASS, "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
                 "waves": [wave_row(w, 1) for w in range(1, cleared + 1)], **more}
 
     def test_a_run_that_cleared_four_waves_owes_the_boon_check(self):
@@ -1760,7 +2014,7 @@ class BoonJudgeTests(unittest.TestCase):
     def test_a_run_that_stops_at_the_third_clear_never_sees_the_intermission_and_owes_neither(self):
         # --waves 3: the pick opens at the clear that ends the run, so the bot has no intermission to take it in.
         ld.target_waves = 3
-        report = self.report(picks=[{"pick": 1, "wave": 3, "offered": [boon_picks(1, rerolls=0, class_id=ld.bot_class(1))[0]["offered"][0]], "taken": None, "takenBeforeWave": 0}], cleared=3,
+        report = self.report(picks=[{"pick": 1, "wave": 3, "offered": [boon_picks(1, rerolls=0, class_id=self.CLASS)[0]["offered"][0]], "taken": None, "takenBeforeWave": 0}], cleared=3,
                              rerolls={"earned": 1, "used": 0, "banked": 1})
         self.assertIsNone(ld.boon_problem(report))
         self.assertFalse(ld.owes_boon(report))
@@ -1769,7 +2023,7 @@ class BoonJudgeTests(unittest.TestCase):
 
     def test_a_run_that_cleared_two_owes_neither(self):
         ld.target_waves = 2
-        report = {**REPORT, "wavesCleared": 2, "startRerolls": 1, "waves": [wave_row(1, 7), wave_row(2, 7)]}
+        report = {**REPORT, "class": self.CLASS, "wavesCleared": 2, "startRerolls": 1, "waves": [wave_row(1, 7), wave_row(2, 7)]}
         self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 2))[0], 0)
 
     def test_a_banked_reroll_at_the_first_pick_owes_the_reroll_check(self):
@@ -1781,14 +2035,14 @@ class BoonJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("reroll",), 5))[0], 0)
 
     def test_a_run_armed_with_no_reroll_that_spent_none_owes_no_reroll_check(self):
-        picks = boon_picks(1, rerolls=0, class_id=ld.bot_class(1))
+        picks = boon_picks(1, rerolls=0, class_id=self.CLASS)
         report = self.report(picks=picks, startRerolls=0, rerolls={"earned": 1, "used": 0, "banked": 1})
-        ld.expected_report = {"startRerolls": 0}
+        ld.expected_report = {"startRerolls": 0, "class": self.CLASS}
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0)
         self.assertFalse(ld.owes_reroll(report))
 
     def test_boons_that_do_not_replay_fail_the_run_naming_the_draw(self):
-        picks = boon_picks(1, rerolls=1, class_id=ld.bot_class(1))
+        picks = boon_picks(1, rerolls=1, class_id=self.CLASS)
         picks[0]["offered"][0] = ["riders_at_dawn", "the_long_watch", "haggler_of_edoras"]
         code, why = ld.judge(FINAL, self.report(picks=picks), log_of(STANDARD + ("reroll",), 5))
         self.assertEqual(code, 1)
@@ -1981,8 +2235,10 @@ class NamedBoonSeedTests(unittest.TestCase):
     stands in its run and a cavalry boon could only write read=skip (reason=no-soldier): a named seed must take a boon of a group that is fielded."""
 
     # (seed, class armed with --class or None for the bot's own draw, the boon its first pick takes, the target group it changes)
-    SEEDS = ((33, None, "stout_yeomanry", "infantry"), (22, "archer", "marksmans_call", "archers"), (4, None, "steady_hand", "player"))
+    SEEDS = ((33, None, "stout_yeomanry", "infantry"), (22, "archer", "marksmans_call", "archers"), (4, "archer", "steady_hand", "player"), (29, None, "gallop_of_the_eorlingas", "player"))
     FIELDED = {"infantry", "archers", "player"}
+    # Slice 11: a Cavalry run's bot draws a cavalry TROOP boon here, and no soldier of that group ever stands (the lord is the player record), so it reads skip with reason=no-soldier.
+    CAVALRY_TROOP_SEED = (19, None, "fleet_horses_of_the_mark", "cavalry")
 
     def first_pick(self, seed, class_id):
         """The game's bot at the first pick (ShopBot.Decide): one reroll from the start bank, more only while every card has a drawback, then the first card without one."""
@@ -2023,11 +2279,28 @@ class NamedBoonSeedTests(unittest.TestCase):
         for row in fortress["garrison"]:
             self.assertNotEqual(ld.troop_group(known[row["troop"]]), "cavalry", row["troop"])
 
-    def test_the_manifest_names_exactly_these_seeds_and_no_cavalry_one(self):
+    def test_the_manifest_names_exactly_these_seeds(self):
         line = self.seed_line()
         for seed, armed, _, _ in self.SEEDS:
             self.assertIn((f"--class {armed} " if armed else "") + f"--seed {seed}", line)
-        self.assertNotIn("cavalry", line.lower())
+        self.assertNotIn("--seed 19", line, "the cavalry troop seed is named in the next comment line, as a skip")
+
+    def test_a_cavalry_seed_plays_cavalry_and_takes_a_boon_that_reaches_the_lords_horse(self):
+        seed, armed, boon, group = next(s for s in self.SEEDS if s[0] == 29)
+        self.assertEqual(ld.bot_class(seed), "cavalry")
+        taken, raw = self.first_pick(seed, "cavalry")
+        self.assertEqual(taken, boon)
+        row = next(b for b in raw["boons"] if b["id"] == boon)
+        self.assertEqual({(e["key"], e["target"]) for e in row["effects"]}, {("moveSpeedPercent", "player")}, "a move speed boon of the player record reaches the horse through MountSpeedPercent")
+
+    def test_the_cavalry_troop_seed_draws_cavalry_and_reads_skip_because_no_rider_stands(self):
+        seed, armed, boon, group = self.CAVALRY_TROOP_SEED
+        self.assertEqual(ld.bot_class(seed), "cavalry")
+        taken, _ = self.first_pick(seed, "cavalry")
+        self.assertEqual(taken, boon)
+        self.assertNotIn(group, self.FIELDED, "no cavalry soldier is fielded, so the read for this boon is read=skip reason=no-soldier")
+        text = (REPO / "tools" / "ingame_checks" / "1079.toml").read_text(encoding="utf-8")
+        self.assertIn(f"seed {seed} draws cavalry and takes Fleet Horses of the Mark", text)
 
 
 class BoonReadBackJudgeTests(unittest.TestCase):
@@ -2036,23 +2309,26 @@ class BoonReadBackJudgeTests(unittest.TestCase):
     # Seed 5 draws wains_of_the_westfold, swift_nock and haggler_of_edoras first for its class (sword_and_board), one of which owes a read-back; the draw moves when a slice adds boon rows.
     SEED = 5
 
+    # Slice 11: a fourth class moved every seed's unarmed class draw (Below(3) to Below(4)), and the draws here are pinned to the class this seed drew before, so the class is armed.
+    CLASS = "sword_and_board"
+
     def setUp(self):
         ld.target_waves = 5
         ld.tree_head = HEAD
-        ld.expected_report = {}
+        ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def card(self, reads):
         """A card of the first draw for the bot's class at Helm's Deep that does (reads) or does not owe a read-back; the draw moves when a slice adds boon rows."""
-        draw = boon_picks(self.SEED, rerolls=0, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)[0]["offered"][0]
+        draw = boon_picks(self.SEED, rerolls=0, class_id=self.CLASS, groups=ALL_GROUPS)[0]["offered"][0]
         owed = {r["id"]: r["reads"] for r in ld.shipped_boons()[0]}
         return next(c for c in draw if owed[c] == reads)
 
     def report(self, taken, cleared=5):
-        picks = boon_picks(self.SEED, rerolls=0, take=taken, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)
-        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": ld.bot_class(self.SEED), "wavesCleared": cleared, "startRerolls": 0, "boons": picks,
+        picks = boon_picks(self.SEED, rerolls=0, take=taken, class_id=self.CLASS, groups=ALL_GROUPS)
+        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": self.CLASS, "wavesCleared": cleared, "startRerolls": 0, "boons": picks,
                 "rerolls": {"earned": 1, "used": 0, "banked": 1}, "waves": [wave_row(w, self.SEED) for w in range(1, cleared + 1)]}
 
     def test_the_read_owed_rows_are_exactly_those_with_a_stat_or_health_key(self):
@@ -2117,10 +2393,13 @@ class CommanderJudgeTests(unittest.TestCase):
 
     SEED = 5
 
+    # Slice 11: a fourth class moved every seed's unarmed class draw (Below(3) to Below(4)), and the draws here are pinned to the class this seed drew before, so the class is armed.
+    CLASS = "sword_and_board"
+
     def setUp(self):
         ld.target_waves = 5
         ld.tree_head = HEAD
-        ld.expected_report = {}
+        ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
         self.addCleanup(setattr, ld, "expected_report", {})
@@ -2139,7 +2418,7 @@ class CommanderJudgeTests(unittest.TestCase):
         return rows
 
     def report(self, rows, **more):
-        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": ld.bot_class(self.SEED), "wavesCleared": len(rows), "startRerolls": 0, "waves": rows,
+        return {**REPORT, "seed": self.SEED, "fortress": "helms", "class": self.CLASS, "wavesCleared": len(rows), "startRerolls": 0, "waves": rows,
                 "boons": [], "rerolls": {"earned": 0, "used": 0, "banked": 0}, **more}
 
     def test_the_shipped_commanders_are_read_from_waves_json(self):
@@ -2202,7 +2481,7 @@ class CommanderJudgeTests(unittest.TestCase):
 
     def five_clears(self, rows):
         """A report of five clears, which owe one boon pick (at the third clear), taken as the first card of the seed's draw."""
-        picks = boon_picks(self.SEED, rerolls=0, class_id=ld.bot_class(self.SEED), groups=ALL_GROUPS)
+        picks = boon_picks(self.SEED, rerolls=0, class_id=self.CLASS, groups=ALL_GROUPS)
         return self.report(rows, boons=picks, rerolls={"earned": 1, "used": 0, "banked": 1})
 
     def judged(self, rows, checks):
@@ -2221,7 +2500,7 @@ class CommanderJudgeTests(unittest.TestCase):
     def test_the_judge_asks_for_the_summon_check_of_a_run_whose_commander_summoned(self):
         # --start-wave 8 --waves 1: one clear, so no pick is owed and the lieutenant's wave is the only row.
         ld.target_waves = 1
-        ld.expected_report = {"startWave": 8}
+        ld.expected_report = {"startWave": 8, "class": self.CLASS}
         lieutenant = self.commander("lord_I1_1", "lieutenant", uses={"war_cry": 2, "summon_uruks": 1})
         rows = [wave_row(8, self.SEED, commander=lieutenant, summoned=20, summonKills=20, summonFelled=0)]
         report = self.report(rows, startWave=8, wavesCleared=1)
@@ -2235,6 +2514,1122 @@ class CommanderJudgeTests(unittest.TestCase):
         code, why = self.judged(self.rows(5, w4={"commander": None}), STANDARD)
         self.assertEqual(code, 1)
         self.assertIn("commanders", why)
+
+
+class FortificationsLoaderTests(unittest.TestCase):
+    """The Python loader against FortificationsReader (phase3-plan.md section 5): both read tools/tests/long_defeat_fort_cases.json, whose expectations were written by hand from the plan's rules table."""
+
+    CASES = json.loads((REPO / "tools" / "tests" / "long_defeat_fort_cases.json").read_text(encoding="utf-8"))["cases"]
+
+    def same(self, expected, got, where):
+        if isinstance(expected, dict):
+            self.assertIsInstance(got, dict, where)
+            self.assertEqual(sorted(expected), sorted(got), where)
+            for key in expected:
+                self.same(expected[key], got[key], f"{where}.{key}")
+        elif isinstance(expected, list):
+            self.assertIsInstance(got, list, where)
+            self.assertEqual(len(expected), len(got), where)
+            for i, (e, g) in enumerate(zip(expected, got)):
+                self.same(e, g, f"{where}[{i}]")
+        elif isinstance(expected, bool) or isinstance(expected, str) or expected is None:
+            self.assertEqual(expected, got, where)
+        else:
+            self.assertAlmostEqual(expected, got, places=6, msg=where)
+
+    def test_every_shared_case_reads_as_the_case_file_says(self):
+        self.assertGreaterEqual(len(self.CASES), 40)
+        for case in self.CASES:
+            shop = {} if case["absent"] else {"fortifications": case["block"]}
+            plan, warnings = ld.read_fortifications(shop)
+            if case["expected"] is None:
+                self.assertEqual((plan, warnings), (None, 0), case["name"])
+                continue
+            expected = dict(case["expected"])
+            self.assertEqual(warnings, expected.pop("warnings"), case["name"])
+            self.same(expected, plan, case["name"])
+
+    def test_the_shipped_shop_loads_whole_with_no_warning(self):
+        shops = json.loads(ld.SHOP_FILE.read_text(encoding="utf-8"))["shops"]
+        plan, warnings = ld.read_fortifications(shops["rohan"])
+
+        self.assertEqual(warnings, 0)
+        self.assertEqual([len(plan["gate"]["levels"]), len(plan["towers"]["levels"]), len(plan["volley"]["levels"])], [3, 3, 2])
+        self.assertEqual(plan["towers"]["volley"]["item"], "fow_tower_arrow")
+        self.assertEqual(ld.shipped_fortifications(), plan)
+
+    def test_a_fortress_the_file_does_not_know_has_no_plan(self):
+        self.assertIsNone(ld.shipped_fortifications("nowhere"))
+
+    def test_the_offered_list_is_the_games_and_offers_the_gate_and_field_care(self):
+        domain = source("Domain", "FortPlan.cs")
+        self.assertIn("Offered { get; } = new(3, 2, true, 2);", domain)
+        self.assertIn("None { get; } = new(0, 0, false, 0);", domain)
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2})
+
+    def test_the_price_range_is_the_shops(self):
+        self.assertIn("MaxPrice = 1_000_000;", source("Config", "FortificationsReader.cs"))
+        self.assertEqual(ld.MAX_PRICE, 1_000_000)
+
+
+class FortPriceTests(unittest.TestCase):
+    """The price factor mirror: 32-bit float arithmetic as GoldFactors.Apply and RunModifiers.Factor do it (pinned in SurvivalRunFortTests.cs too)."""
+
+    def test_a_factor_is_one_plus_the_percent_over_a_hundred_in_single_precision(self):
+        self.assertEqual(ld.price_factor(0), 1.0)
+        self.assertEqual(ld.price_factor(-20), ld._f32(0.8))
+        self.assertEqual(ld.price_factor(-100), 0.0)
+        self.assertEqual(ld.price_factor(-250), 0.0, "never below 0")
+
+    def test_a_price_is_rounded_half_away_from_zero_and_never_below_one(self):
+        self.assertEqual(ld.apply_price(180, ld.price_factor(-20)), 144)
+        self.assertEqual(ld.apply_price(200, ld.price_factor(10)), 220)
+        self.assertEqual(ld.apply_price(200, ld.price_factor(-100)), 1)
+        self.assertEqual(ld.apply_price(150, ld.price_factor(0)), 150)
+
+    def test_the_half_case_follows_the_games_float_not_a_double(self):
+        # 0.45 as a 32-bit float is 0.449999988, so 150 * 0.45 is 67.4999982 and rounds to 67; the double 0.45 gives exactly 67.5 and would round to 68.
+        # SurvivalRunFortTests.cs pins the same pair on the C# side (a -55 percent boon on the field care price of 150).
+        self.assertEqual(ld.apply_price(150, ld.price_factor(-55)), 67)
+        self.assertEqual(150 * 0.45, 67.5)
+
+    def test_a_repair_price_is_the_ceil_of_the_price_times_the_share_at_least_one(self):
+        self.assertEqual(list(ld.repair_prices(200, 1.0))[-1], 200)
+        self.assertIn(74, ld.repair_prices(200, 0.37))
+        self.assertIn(1, ld.repair_prices(200, 0.0))
+        self.assertNotIn(80, ld.repair_prices(200, 0.37))
+
+    def test_the_shipped_price_boons_are_the_five_the_plan_names(self):
+        self.assertEqual(ld.shipped_price_percents(), {"haggler_of_edoras": -20, "hornblowers_bargain": 10, "wains_of_the_westfold": 10, "light_of_the_phial": 25, "the_long_silence": 15})
+
+
+class PurchaseJudgeTests(unittest.TestCase):
+    """Rules 8, 19 and 20 of leaderboard-plan.md, replayed over a report (phase3-plan.md Slice 2): the books, the prices through the boons' price factor, the levels in order, the volley counts."""
+
+    PLAN = {
+        "gate": {"repairPrice": 200, "levels": [[50, 200], [100, 300], [150, 450]]},
+        "towers": {"troop": "t", "levels": [[4, False, 250], [8, False, 300], [8, True, 400]], "volley": {"item": "fow_tower_arrow", "arrows": 6}},
+        "care": {"share": 0.75, "price": 150, "perIntermission": 1},
+        "volley": {"item": "ld_elven_arrow", "originHeight": 3.0, "levels": [[350, 12, 45, 8, 90, "auto"], [300, 16, 40, 8, 90, "crosshair"]]},
+    }
+    OFFERS = {"militia": 180}
+    PERCENTS = {"haggler": -20, "dear": 10}
+
+    def setUp(self):
+        patcher = mock.patch.dict(ld.FORT_OFFERED, {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def buy(self, wave, kind, base, price, level=0, share=0.0, id="", shares=None):
+        row = {"beforeWave": wave, "kind": kind, "id": id, "level": level, "basePrice": base, "price": price, "share": share}
+        if kind == "gateRepair":
+            row["shares"] = [share] if shares is None else shares
+        return row
+
+    def report(self, purchases, boons=(), waves=(), **more):
+        spent_on = dict.fromkeys(ld.SPENT_ON, 0)
+        for p in purchases:
+            if isinstance(p, dict) and p.get("kind") in ld.KIND_SINK and isinstance(p.get("price"), int):
+                spent_on[ld.KIND_SINK[p["kind"]]] += p["price"]
+        levels = {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}
+        for p in purchases:
+            if isinstance(p, dict) and p.get("kind") in levels:
+                levels[p["kind"]] = max(levels[p["kind"]], p["level"])
+        return {"fortress": "helms", "purchases": list(purchases), "boons": list(boons), "waves": list(waves), "fortifications": levels,
+                "gold": {"spent": sum(spent_on.values()), "spentOn": spent_on}, **more}
+
+    def problem(self, report):
+        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS)
+
+    def row(self, wave, volley=None, tower=None):
+        return {"wave": wave, "volley": volley or dict(NO_VOLLEYS["volley"]), "towerVolley": tower or dict(NO_VOLLEYS["towerVolley"])}
+
+    def test_a_run_that_bought_nothing_passes(self):
+        self.assertIsNone(self.problem(self.report([])))
+
+    def test_a_full_schedule_with_a_price_boon_replays(self):
+        haggler = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+        report = self.report([
+            self.buy(1, "pack", 180, 180, id="militia"),
+            self.buy(1, "volleyLevel", 350, 350, level=1),
+            self.buy(1, "towerLevel", 250, 250, level=1),
+            self.buy(2, "gateRepair", 200, 74, share=0.37),
+            self.buy(2, "gateLevel", 200, 200, level=1),
+            self.buy(2, "fieldCare", 150, 150, share=0.75),
+            self.buy(4, "pack", 180, 144, id="militia"),
+            self.buy(4, "gateLevel", 300, 240, level=2),
+            self.buy(4, "fieldCare", 150, 120, share=0.75),
+        ], boons=[haggler])
+
+        self.assertIsNone(self.problem(report))
+
+    def test_a_repair_charges_the_factored_price_times_the_missing_share(self):
+        haggler = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+
+        self.assertIsNone(self.problem(self.report([self.buy(5, "gateRepair", 200, 60, share=0.37)], boons=[haggler])))
+        self.assertIn("paid 74", self.problem(self.report([self.buy(5, "gateRepair", 200, 74, share=0.37)], boons=[haggler])))
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 200, share=1.0)])), "a broken gate pays all of it")
+
+    def test_a_repair_share_is_read_to_the_three_decimals_the_report_writes(self):
+        # 200 * 0.3704 is 74.08 and the game charges 75; the report writes 0.37, whose own ceil is 74. The half-thousandth either side is allowed.
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 75, share=0.37)])))
+
+    def test_a_repair_of_two_gates_is_priced_per_gate(self):
+        # Slice 5 (RCA row 8): two gates of 0.371 at a repair price of 100 cost ceil(37.1) twice, 76; one gate of 0.742 would cost 75. The share is the total, the shares are the gates'.
+        plan = {**self.PLAN, "gate": {"repairPrice": 100, "levels": [[50, 200]]}}
+        two = self.report([self.buy(2, "gateRepair", 100, 76, share=0.742, shares=[0.371, 0.371])])
+        one = self.report([self.buy(2, "gateRepair", 100, 75, share=0.742, shares=[0.371, 0.371])])
+
+        self.assertIsNone(ld.purchase_problem(two, "helms", fort=plan, offers=self.OFFERS, percents=self.PERCENTS))
+        self.assertIn("paid 75", ld.purchase_problem(one, "helms", fort=plan, offers=self.OFFERS, percents=self.PERCENTS))
+
+    def test_a_repair_of_a_broken_and_a_damaged_gate_may_total_over_one(self):
+        # A share is a gate's; three gates of 0.4 total 1.2 and are accepted, where the single-share rule refused any share above 1.
+        report = self.report([self.buy(2, "gateRepair", 200, 240, share=1.2, shares=[0.4, 0.4, 0.4])])
+
+        self.assertIsNone(self.problem(report))
+
+    def test_a_repair_needs_a_share_for_each_gate_that_adds_up_to_its_share(self):
+        self.assertIn("shares", self.problem(self.report([{**self.buy(2, "gateRepair", 200, 74, share=0.37), "shares": None}])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[])])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.37, 1.5])])))
+        self.assertIn("shares", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.0])])), "a gate that was not repaired has no share")
+        self.assertIn("sum", self.problem(self.report([self.buy(2, "gateRepair", 200, 74, share=0.37, shares=[0.2, 0.2])])))
+
+    def test_a_repair_of_the_smallest_share_the_game_sells_replays(self):
+        # The game refuses a repair under 0.0005 (GateMath.MinMissingShare) and writes a share half away from zero, so the smallest written share is 0.001 at a price of 1.
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 1, share=0.001)])))
+
+    def test_a_purchase_in_the_intermission_of_a_pick_may_come_before_or_after_it(self):
+        pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+
+        self.assertIsNone(self.problem(self.report([self.buy(4, "fieldCare", 150, 150, share=0.75)], boons=[pick])), "bought before the pick")
+        self.assertIsNone(self.problem(self.report([self.buy(4, "fieldCare", 150, 120, share=0.75)], boons=[pick])), "bought after it")
+        self.assertIn("paid 130", self.problem(self.report([self.buy(4, "fieldCare", 150, 130, share=0.75)], boons=[pick])))
+        self.assertIn("paid 120", self.problem(self.report([self.buy(3, "fieldCare", 150, 120, share=0.75)], boons=[pick])), "a pick for wave 4 cannot price wave 3")
+
+    def test_a_drawback_boon_raises_the_prices(self):
+        pick = {"pick": 1, "taken": "dear", "takenBeforeWave": 2}
+
+        self.assertIsNone(self.problem(self.report([self.buy(2, "pack", 180, 198, id="militia")], boons=[pick])))
+
+    def test_the_half_price_follows_the_games_single_precision_factor(self):
+        pick = [{"pick": 1, "taken": "tithe", "takenBeforeWave": 2}]
+        report = self.report([self.buy(3, "fieldCare", 150, 67, share=0.75)], boons=pick)
+
+        self.assertIsNone(ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents={"tithe": -55}))
+        self.assertIn("paid 68", ld.purchase_problem(self.report([self.buy(3, "fieldCare", 150, 68, share=0.75)], boons=pick), "helms", fort=self.PLAN, offers=self.OFFERS, percents={"tithe": -55}))
+
+    def test_a_base_price_other_than_shop_jsons_is_refused(self):
+        for purchase in (self.buy(1, "pack", 170, 170, id="militia"), self.buy(1, "gateLevel", 150, 150, level=1), self.buy(1, "gateRepair", 150, 150, share=1.0),
+                         self.buy(1, "towerLevel", 200, 200, level=1), self.buy(1, "fieldCare", 100, 100, share=0.75), self.buy(1, "volleyLevel", 300, 300, level=1)):
+            self.assertIn("basePrice", self.problem(self.report([purchase])), purchase["kind"])
+
+    def test_a_pack_the_shop_does_not_sell_is_refused(self):
+        self.assertIn("basePrice", self.problem(self.report([self.buy(1, "pack", 180, 180, id="ghost")])))
+
+    def test_a_price_the_factor_does_not_give_is_refused(self):
+        self.assertIn("paid 190", self.problem(self.report([self.buy(1, "pack", 180, 190, id="militia")])))
+        self.assertIn("paid 1", self.problem(self.report([self.buy(1, "fieldCare", 150, 1, share=0.75)])))
+
+    def test_levels_are_bought_in_order_with_no_gap(self):
+        self.assertIn("in order", self.problem(self.report([self.buy(1, "gateLevel", 300, 300, level=2)])))
+        self.assertIn("in order", self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateLevel", 200, 200, level=1)])))
+        self.assertIsNone(self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(2, "gateLevel", 300, 300, level=2), self.buy(3, "gateLevel", 450, 450, level=3)])))
+
+    def test_a_level_beyond_the_shops_rows_is_refused(self):
+        rows = [self.buy(1, "volleyLevel", 350, 350, level=1), self.buy(1, "volleyLevel", 300, 300, level=2), self.buy(1, "volleyLevel", 300, 300, level=3)]
+
+        self.assertIn("not offered", self.problem(self.report(rows)))
+
+    def test_field_care_is_limited_to_per_intermission_a_wave(self):
+        two = [self.buy(2, "fieldCare", 150, 150, share=0.75), self.buy(2, "fieldCare", 150, 150, share=0.75)]
+
+        self.assertIn("more than 1", self.problem(self.report(two)))
+        self.assertIsNone(self.problem(self.report([two[0], self.buy(3, "fieldCare", 150, 150, share=0.75)])))
+
+    def test_a_repair_share_must_be_above_zero_and_at_most_one(self):
+        self.assertIn("share", self.problem(self.report([self.buy(1, "gateRepair", 200, 1, share=0.0)])))
+        self.assertIn("share", self.problem(self.report([self.buy(1, "gateRepair", 200, 200, share=1.5)])))
+
+    def test_the_final_levels_are_the_highest_bought(self):
+        report = self.report([self.buy(1, "gateLevel", 200, 200, level=1)])
+        report["fortifications"]["gateLevel"] = 2
+
+        self.assertIn("fortifications.gateLevel", self.problem(report))
+
+    def test_the_books_must_balance(self):
+        report = self.report([self.buy(1, "pack", 180, 180, id="militia")])
+        report["gold"]["spent"] = 181
+        self.assertIn("gold.spent", self.problem(report))
+
+        report = self.report([self.buy(1, "pack", 180, 180, id="militia")])
+        report["gold"]["spentOn"]["gate"] = 10
+        report["gold"]["spentOn"]["packs"] = 170
+        report["gold"]["spent"] = 180
+        self.assertIn("spentOn", self.problem(report))
+
+    def test_a_spent_on_that_is_not_the_five_sinks_is_refused(self):
+        report = self.report([])
+        del report["gold"]["spentOn"]["volley"]
+        self.assertIn("spentOn", self.problem(report))
+        report = self.report([])
+        report["gold"]["spentOn"]["packs"] = -1
+        self.assertIn("spentOn", self.problem(report))
+
+    def test_purchases_and_levels_are_required(self):
+        report = self.report([])
+        del report["purchases"]
+        self.assertIn("purchases", self.problem(report))
+        report = self.report([])
+        del report["fortifications"]
+        self.assertIn("fortifications", self.problem(report))
+
+    def test_a_purchase_that_is_not_a_purchase_is_refused(self):
+        self.assertIn("purchase 0", self.problem(self.report([{"kind": "gift"}])))
+        self.assertIn("purchase 0", self.problem(self.report([5])))
+        self.assertIn("not a number", self.problem(self.report([{**self.buy(1, "pack", 180, 180, id="militia"), "price": "180"}])))
+
+    # ---- D31: this build offers nothing yet ----
+
+    def test_a_kind_this_build_does_not_offer_is_refused(self):
+        with mock.patch.dict(ld.FORT_OFFERED, {"gate": 1, "towers": 0, "fieldCare": False, "volley": 0}):
+            self.assertIsNone(self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateLevel", 300, 300, level=2)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "towerLevel", 250, 250, level=1)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "fieldCare", 150, 150, share=0.75)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "volleyLevel", 350, 350, level=1)])))
+            self.assertIsNone(self.problem(self.report([self.buy(1, "gateRepair", 200, 200, share=1.0)])), "the gate offered offers the repair")
+
+    def test_the_shipped_empty_offered_refuses_every_fortification_and_passes_a_pack_only_report(self):
+        with mock.patch.dict(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0}):
+            self.assertIsNone(self.problem(self.report([self.buy(1, "pack", 180, 180, id="militia")])))
+            for purchase in (self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateRepair", 200, 200, share=1.0), self.buy(1, "towerLevel", 250, 250, level=1),
+                             self.buy(1, "fieldCare", 150, 150, share=0.75), self.buy(1, "volleyLevel", 350, 350, level=1)):
+                self.assertIn("not offered", self.problem(self.report([purchase])), purchase["kind"])
+
+    # ---- rule 20 ----
+
+    def test_a_volley_count_before_the_first_level_is_refused(self):
+        report = self.report([self.buy(3, "volleyLevel", 350, 350, level=1)], waves=[self.row(2, volley={"uses": 1, "arrows": 12, "hits": 5, "kills": 1, "withheld": 0})])
+
+        self.assertIn("no level that fires it", self.problem(report))
+
+    def test_volley_arrows_are_at_most_uses_times_the_level_in_force(self):
+        bought = [self.buy(1, "volleyLevel", 350, 350, level=1), self.buy(2, "volleyLevel", 300, 300, level=2)]
+        ok = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 24, "hits": 12, "kills": 4, "withheld": 0}),
+                                        self.row(2, volley={"uses": 2, "arrows": 32, "hits": 12, "kills": 4, "withheld": 1})])
+        self.assertIsNone(self.problem(ok))
+
+        too_many = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 25, "hits": 12, "kills": 4, "withheld": 0})])
+        self.assertIn("above uses 2 times the 12 arrows", self.problem(too_many))
+        old_level = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 32, "hits": 12, "kills": 4, "withheld": 0})])
+        self.assertIn("above uses 2 times the 12 arrows", self.problem(old_level), "level 2 was bought for wave 2, not wave 1")
+
+    def test_volley_kills_are_at_most_its_arrows(self):
+        report = self.report([self.buy(1, "volleyLevel", 350, 350, level=1)], waves=[self.row(1, volley={"uses": 1, "arrows": 12, "hits": 12, "kills": 13, "withheld": 0})])
+
+        self.assertIn("kills", self.problem(report))
+
+    def test_tower_volley_counts_need_the_tower_level_that_adds_it(self):
+        fired = {"uses": 2, "arrows": 12, "hits": 6, "kills": 2, "withheld": 0}
+        early = self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2)], waves=[self.row(2, tower=fired)])
+        self.assertIn("no level that fires it", self.problem(early))
+
+        late = self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2), self.buy(2, "towerLevel", 400, 400, level=3)],
+                           waves=[self.row(2, tower=fired), self.row(3, tower={**fired, "arrows": 13})])
+        self.assertIn("wave 3", self.problem(late))
+        self.assertIsNone(self.problem(self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2), self.buy(2, "towerLevel", 400, 400, level=3)],
+                                                   waves=[self.row(2, tower=fired)])))
+
+    def test_a_wave_row_without_its_volley_counts_is_refused(self):
+        self.assertIn("volley", self.problem(self.report([], waves=[{"wave": 1}])))
+        self.assertIn("volley", self.problem(self.report([], waves=[self.row(1, volley={"uses": 0})])))
+
+    def test_a_wave_row_without_a_wave_number_is_refused_not_a_traceback(self):
+        fired = {"uses": 1, "arrows": 12, "hits": 5, "kills": 1, "withheld": 0}
+        row = {"volley": fired, "towerVolley": dict(NO_VOLLEYS["towerVolley"])}
+
+        self.assertIn("no wave number", self.problem(self.report([self.buy(1, "volleyLevel", 350, 350, level=1)], waves=[row])))
+        self.assertIn("no wave number", self.problem(self.report([], waves=[{**row, "wave": "2"}])))
+
+    # ---- the judge ----
+
+    def test_the_judge_fails_a_report_whose_books_do_not_replay(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}}}
+
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+
+        self.assertEqual(code, 1)
+        self.assertIn("gold.spent", why)
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
+
+
+class StartGoldArgumentTests(unittest.TestCase):
+    """--start-gold: the test option of phase3-plan.md D27, armed as start_gold and echoed back in the report's startGold."""
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def parse(self, *argv):
+        return ld.build_parser().parse_known_args(list(argv))[0]
+
+    def captured_arm(self, *argv):
+        return PhaseTwoArmTests.captured_arm(self, *argv)
+
+    def test_start_gold_defaults_to_none_and_takes_zero_to_a_hundred_thousand(self):
+        self.assertIsNone(self.parse().start_gold)
+        self.assertEqual(self.parse("--start-gold", "0").start_gold, 0)
+        self.assertEqual(self.parse("--start-gold", "100000").start_gold, 100000)
+        for bad in ("-1", "100001", "x", "1.5"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=bad):
+                self.parse("--start-gold", bad)
+
+    def test_the_flag_reaches_the_arm_text_and_a_zero_is_armed(self):
+        text, _ = self.captured_arm("--start-gold", "5000")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("start_gold=5000\n", text)
+        text, _ = self.captured_arm("--start-gold", "0")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("start_gold=0\n", text)
+        text, _ = self.captured_arm()("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertNotIn("start_gold", text)
+
+    def test_the_arm_key_and_its_range_are_the_games(self):
+        plan = source("Autorun", "LongDefeatAutorunPlan.cs")
+        self.assertIn('case "start_gold":', plan)
+        self.assertIn(("start_gold", 5000), ld.arm_pairs(self.parse("--start-gold", "5000"), "out", 3900))
+        self.assertIn("MaxStartGold = 100_000;", source("Domain", "RunOptions.cs"))
+
+    def test_the_report_must_echo_the_armed_start_gold(self):
+        self.captured_arm("--start-gold", "5000", "--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertEqual(ld.expected_report["startGold"], 5000)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "startGold": 5000}, FULL_LOG)[0], 0)
+        for report in (armed, {**armed, "startGold": 600}, {**armed, "startGold": "5000"}, {**armed, "startGold": True}):
+            code, why = ld.judge(FINAL, report, FULL_LOG)
+            self.assertEqual(code, 1, report.get("startGold"))
+            self.assertIn("startGold", why)
+
+    def test_a_run_armed_with_no_start_gold_must_report_none(self):
+        self.captured_arm("--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertNotIn("startGold", ld.expected_report)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "startGold": None}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, armed, FULL_LOG)[0], 0, "a report with no key at all is a null one")
+        code, why = ld.judge(FINAL, {**armed, "startGold": 5000}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("startGold", why)
+
+    def test_the_report_writes_start_gold(self):
+        self.assertIn('["startGold"]', source("Diagnostics", "LongDefeatRunReport.cs"))
+
+
+class FieldCareJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 4: field care is offered, so the report may list it and the judge owes its check line (phase3-plan.md section 6, D31)."""
+
+    # LongDefeatFortChecks.FieldCare's detail, as LongDefeatDirectorCareTests pins it.
+    DETAIL = "c=1 share=0.75 count=150 before=0.600 after=0.900 expected=0.900 reread=0.900 paid=150 purse=150"
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.field-care result={} "
+
+    def setUp(self):
+        ld.target_waves = 2
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, care=True, **more):
+        bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
+        spent = 150 if care else 0
+        return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0}}, **more}
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
+
+    def test_the_build_offers_the_gate_and_field_care(self):
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2}, "tower levels 1 and 2 joined in Slice 7; level 3, the tower volley, waits for Slice 8")
+
+    def test_a_report_that_bought_care_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+
+    def test_every_other_kind_is_still_refused(self):
+        # Tower level 3 is the tower volley (Slice 8): levels 1 and 2 are for sale, the third is not.
+        bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in ((1, 250), (2, 300), (3, 400))]
+        report = self.report(care=False, purchases=bought, gold={"spent": 950, "spentOn": {"packs": 0, "gate": 0, "towers": 950, "fieldCare": 0, "volley": 0}},
+                             fortifications={"gateLevel": 0, "towerLevel": 3, "volleyLevel": 0})
+        self.assertIn("not offered", ld.purchase_problem(report) or "")
+
+    def test_a_run_that_bought_care_owes_the_field_care_check(self):
+        self.assertTrue(ld.owes_field_care(self.report()))
+        code, why = ld.judge(FINAL, self.report(), self.log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.field-care", why)
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.HEAD_LINE.format("pass") + self.DETAIL))
+        self.assertEqual(code, 0, why)
+        self.assertIn("field-care", why)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        skipped = self.HEAD_LINE.format("skip") + self.DETAIL + " reason=too-little-missing"
+
+        code, why = ld.judge(FINAL, self.report(), self.log(skipped))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.field-care", why)
+
+    def test_a_failed_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.HEAD_LINE.format("pass") + self.DETAIL, self.HEAD_LINE.format("fail") + self.DETAIL))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_run_that_bought_none_owes_none(self):
+        self.assertFalse(ld.owes_field_care(self.report(care=False)))
+        self.assertEqual(ld.judge(FINAL, self.report(care=False), self.log())[0], 0)
+
+    def test_the_debt_reads_the_purchases_and_nothing_else(self):
+        self.assertFalse(ld.owes_field_care({}))
+        self.assertFalse(ld.owes_field_care({"purchases": "x"}))
+        self.assertFalse(ld.owes_field_care({"purchases": [5, {"kind": "pack"}]}))
+        self.assertTrue(ld.owes_field_care({"purchases": [{"kind": "pack"}, {"kind": "fieldCare"}]}))
+
+    def test_a_lose_run_is_not_asked_for_it(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1, "waves": [wave_row(1)]}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_manifest_row_reads_the_line_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.field-care")
+        self.assertEqual(row.absence, "not-reached")
+        head = self.HEAD_LINE
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("pass") + self.DETAIL)], []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("fail") + self.DETAIL)], []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("skip") + self.DETAIL + " reason=too-little-missing")], []).verdict, iv.NOT_REACHED, "a heal of nothing proves nothing")
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+
+    def test_the_manifest_names_the_proof_run(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.field-care")
+        self.assertIn("--waves 2 --garrison-scale 1.3 --start-gold 5000", row.needs)
+
+    def test_the_line_is_the_one_the_csharp_check_formats(self):
+        checks = source("Diagnostics", "LongDefeatFortChecks.cs")
+        self.assertIn('FieldCareId = "taom.long-defeat.field-care"', source("Diagnostics", "LongDefeatChecks.cs"))
+        for key in ("c=", "share=", "count=", "before=", "after=", "expected=", "reread=", "paid=", "purse=", "reason=too-little-missing"):
+            self.assertIn(key, checks, key)
+        self.assertRegex(self.DETAIL, r"^c=[0-9]+ share=[0-9.]+ count=[0-9]+ before=[0-9.]+ after=[0-9.]+ expected=[0-9.]+ reread=([0-9.]+|none) paid=[0-9]+ purse=[0-9]+$")
+        self.assertIn('"c" + heal.N', source("LongDefeatDirector.Fort.cs"))
+
+    def test_the_wrapper_names_the_proof_run(self):
+        self.assertIn("--waves 2 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+
+
+class GateJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 5: the gate is offered, so the report may list a level and a repair and the judge owes their check lines (phase3-plan.md section 6, D31)."""
+
+    # The details LongDefeatGateChecks formats, as LongDefeatGateChecksTests pins them.
+    LEVEL = "l=1 factor=1.50 gates=1 max=22500.0/22500.0 hp=11000.0->16499.0 share=0.733->0.733 index=1->1"
+    REPAIR = "w=2 path=broken gates=1 hp=15000.0/15000.0 index=0 disabled=false closed=true open=false near=0 hidden_down=true reset=found"
+    ATTACKED = "w=2 path=broken start=15000.0 now=12000.0 lost=3000.0 fell=false through=0 samples=12"
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.{} result={} "
+
+    def setUp(self):
+        ld.target_waves = 3
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, level=True, repair=True, waves=3, **more):
+        bought = []
+        if repair:
+            bought.append({"beforeWave": 2, "kind": "gateRepair", "id": "", "level": 0, "basePrice": 200, "price": 200, "share": 1.0, "shares": [1.0]})
+        if level:
+            bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
+        spent = sum(p["price"] for p in bought)
+        return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0}},
+                "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 3) + "\n" + "\n".join(extra)
+
+    def line(self, name, result, detail):
+        return self.HEAD_LINE.format(name, result) + detail
+
+    def passes(self):
+        return [self.line("gate-level", "pass", self.LEVEL), self.line("gate-repair", "pass", self.REPAIR), self.line("gate-attacked", "pass", self.ATTACKED)]
+
+    def test_the_debts_follow_the_purchases(self):
+        both = self.report()
+        self.assertTrue(ld.owes_gate_level(both))
+        self.assertTrue(ld.owes_gate_repair(both))
+        self.assertTrue(ld.owes_gate_attacked(both))
+        self.assertFalse(ld.owes_gate_repair(self.report(repair=False)))
+        self.assertFalse(ld.owes_gate_attacked(self.report(repair=False)))
+        self.assertFalse(ld.owes_gate_level(self.report(level=False)))
+
+    def test_the_attack_is_owed_only_when_a_wave_after_the_repair_was_played(self):
+        # The repair is before wave 2; a run that ended with wave 1 cleared never met the repaired gate.
+        self.assertFalse(ld.owes_gate_attacked(self.report(waves=1)))
+        self.assertTrue(ld.owes_gate_attacked(self.report(waves=1, wave=2)), "ended in wave 2: the run ends in the wave the gate was attacked in")
+        self.assertTrue(ld.owes_gate_attacked(self.report(waves=2)))
+
+    def test_the_debts_read_the_purchases_and_nothing_else(self):
+        for bad in ({}, {"purchases": "x"}, {"purchases": [5, {"kind": "pack"}]}):
+            self.assertFalse(ld.owes_gate_level(bad))
+            self.assertFalse(ld.owes_gate_repair(bad))
+            self.assertFalse(ld.owes_gate_attacked(bad))
+        self.assertFalse(ld.owes_gate_attacked({"purchases": [{"kind": "gateRepair", "beforeWave": "2"}], "wave": 3}))
+
+    def test_a_report_that_bought_the_gate_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+
+    def test_a_run_with_all_three_lines_passes(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes()))
+
+        self.assertEqual(code, 0, why)
+        for name in ("gate-level", "gate-repair", "gate-attacked"):
+            self.assertIn(name, why)
+
+    def test_each_missing_line_fails_the_run_by_its_name(self):
+        for missing, lines in (("gate-level", [1, 2]), ("gate-repair", [0, 2]), ("gate-attacked", [0, 1])):
+            code, why = ld.judge(FINAL, self.report(), self.log(*[self.passes()[i] for i in lines]))
+            self.assertEqual(code, 1, missing)
+            self.assertIn("taom.long-defeat." + missing, why)
+
+    def test_a_skip_does_not_pay_the_debt_and_a_no_blow_skip_says_why(self):
+        skipped = self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow")
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], skipped))
+
+        self.assertEqual(code, 1)
+        self.assertIn("gate-attacked", why)
+        self.assertIn("no-blow", why)
+
+    def test_a_failed_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("gate-attacked", "fail", self.ATTACKED.replace("through=0", "through=2"))))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_run_that_bought_no_gate_owes_none(self):
+        code, why = ld.judge(FINAL, self.report(level=False, repair=False), self.log())
+
+        self.assertEqual(code, 0, why)
+
+    def test_a_lose_run_is_not_asked_for_them(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1, "waves": [wave_row(1)]}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_manifest_rows_read_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        lines = {"gate-level": self.LEVEL, "gate-repair": self.REPAIR, "gate-attacked": self.ATTACKED}
+        for name, detail in lines.items():
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertEqual(row.absence, "not-reached", name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "pass", detail))], []).verdict, iv.PASS, name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "fail", detail))], []).verdict, iv.FAIL, name)
+            self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED, name)
+        attacked = next(c for c in manifest.checks if c.id == "taom.long-defeat.gate-attacked")
+        self.assertEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow"))], []).verdict, iv.NOT_REACHED)
+        self.assertNotEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", self.ATTACKED.replace("through=0", "through=2")))], []).verdict, iv.PASS,
+                            "a repaired gate with attackers behind it is not a pass")
+
+    def test_the_manifest_rows_read_a_fortress_with_two_gates_too(self):
+        # With two or more visible gates the C# checks key every number g0., g1. and so on (LongDefeatGateChecks.Prefix); the pass patterns must still match them.
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        level = ("l=1 factor=1.50 gates=2 g0.max=22500.0/22500.0 g0.hp=11000.0->16499.0 g0.share=0.733->0.733 g0.index=1->1 "
+                 "g1.max=22500.0/22500.0 g1.hp=15000.0->22499.0 g1.share=1.000->1.000 g1.index=0->0")
+        repair = ("w=2 path=broken gates=2 g0.hp=15000.0/15000.0 g0.index=0 g0.disabled=false g0.closed=true g0.open=false g0.near=0 "
+                  "g1.hp=15000.0/15000.0 g1.index=0 g1.disabled=false g1.closed=true g1.open=false g1.near=1 hidden_down=true reset=found")
+        for name, detail in (("gate-level", level), ("gate-repair", repair)):
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line(name, "pass", detail))], []).verdict, iv.PASS, name)
+
+    def test_a_gate_attacked_line_that_measured_nothing_is_not_a_pass(self):
+        # samples= counts only the samples that measured a plane; through=0 over none proves nothing.
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        attacked = next(c for c in manifest.checks if c.id == "taom.long-defeat.gate-attacked")
+        unmeasured = self.ATTACKED.replace("samples=12", "samples=0")
+        self.assertNotEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", unmeasured))], []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(attacked, [(None, 1, self.line("gate-attacked", "pass", self.ATTACKED))], []).verdict, iv.PASS)
+
+    def test_the_manifest_names_the_proof_run(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        for name in ("gate-level", "gate-repair", "gate-attacked"):
+            row = next(c for c in manifest.checks if c.id == "taom.long-defeat." + name)
+            self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", row.needs, name)
+
+    def test_the_lines_are_the_ones_the_csharp_checks_format(self):
+        checks = source("Diagnostics", "LongDefeatGateChecks.cs")
+        ids = source("Diagnostics", "LongDefeatChecks.cs")
+        for const, name in (("GateLevelId", "gate-level"), ("GateRepairId", "gate-repair"), ("GateAttackedId", "gate-attacked"), ("FortPointsId", "fort-points")):
+            self.assertIn(f'{const} = "taom.long-defeat.{name}"', ids, name)
+        for key in ("l=", "factor=", "gates=", "max=", "hp=", "share=", "index=", "w=", "path=", "disabled=", "closed=", "open=", "near=", "hidden_down=", "reset=",
+                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "points=", "failed=", "reason=none-recorded"):
+            self.assertIn(key, checks, key)
+        self.assertRegex(self.LEVEL, r"^l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ max=[0-9.]+/[0-9.]+ hp=[0-9.]+->[0-9.]+ share=[0-9.]+->[0-9.]+ index=[0-9]+->[0-9]+$")
+        self.assertRegex(self.REPAIR, r"^w=[0-9]+ path=(broken|damaged) gates=[0-9]+ hp=[0-9.]+/[0-9.]+ index=[0-9]+ disabled=(true|false) closed=(true|false) open=(true|false) near=[0-9]+ hidden_down=(true|false) reset=(found|missing)$")
+        self.assertRegex(self.ATTACKED, r"^w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=[0-9]+ samples=[0-9]+$")
+        director = source("LongDefeatDirector.Gates.cs")
+        for key in ('"l" + level', '"w" + wave', '"w" + watch.Wave'):
+            self.assertIn(key, director, key)
+
+    def test_the_wrapper_names_the_proof_run(self):
+        self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+
+
+class FortPointsJudgeTests(unittest.TestCase):
+    """The fort-points check (Slice 5): a skip while the fortress records no point, a pass line owed once it does."""
+
+    def fortresses(self, helms):
+        return {"fortresses": [{"id": "helms", **helms}, {"id": "other", "towers": [{"id": "t", "posts": [{}]}]}]}
+
+    def test_a_fortress_with_no_recorded_point_owes_nothing(self):
+        for helms in ({}, {"towers": []}, {"volley": {"origins": []}}, {"towers": "x"}, {"volley": 3}):
+            self.assertFalse(ld.recorded_fort_points("helms", self.fortresses(helms)), helms)
+
+    def test_a_tower_or_a_volley_origin_is_a_recorded_point(self):
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "posts": [{"x": 1}], "volley": []}]})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "volley": [{"x": 1}]}]})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"volley": {"origins": [{"x": 1, "y": 2, "z": 3}]}})))
+
+    def test_the_shipped_helms_records_none_yet(self):
+        self.assertFalse(ld.recorded_fort_points("helms"), "Mike records the points on 2026-11-06")
+
+    def test_the_debt_is_a_pass_line_and_a_skip_does_not_pay_it(self):
+        report = {"fortress": "helms"}
+        self.assertFalse(ld.owes_fort_points(report, {"fortresses": [{"id": "helms"}]}))
+        self.assertTrue(ld.owes_fort_points(report, {"fortresses": [{"id": "helms", "volley": {"origins": [{"x": 1}]}}]}))
+
+
+class VolleyJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 6: the Elven Volley is offered, so the report may list its levels and a use, and the judge owes the volley check lines (phase3-plan.md section 6, D31)."""
+
+    # The details LongDefeatVolleyChecks formats, as LongDefeatVolleyChecksTests pins them.
+    AUTO = ("w=1 use=1 source=elven mode=auto arrows=12 shots=12 candidates=27 distinct=12 spawned=0 hits=8 blocked=1 friendly=0 cancelled=0 kills=3 "
+            "affector_null=0 affector_side=0 owner=fow_rohan_eastfold_bowman mult=1.00 base_speed=45.0 impact_speed=30.0 window=6.0")
+    CROSSHAIR = ("w=2 use=1 source=elven mode=crosshair aim=bot ray_gap=1.2 arrows=16 shots=16 candidates=40 distinct=16 spawned=0 hits=9 blocked=0 friendly=0 cancelled=1 kills=4 "
+                 "affector_null=0 affector_side=0 owner=fow_rohan_eastfold_bowman mult=1.00 base_speed=45.0 impact_speed=30.0 window=6.0")
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.{} result={} "
+
+    def setUp(self):
+        ld.target_waves = 3
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, levels=2, waves=3, fire=True, **more):
+        bought = [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}]
+        if levels >= 2:
+            bought.append({"beforeWave": 2, "kind": "volleyLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
+        spent = sum(p["price"] for p in bought)
+        rows = []
+        for n in range(1, waves + 1):
+            arrows = 16 if n >= 2 and levels >= 2 else 12
+            volley = {"uses": 1, "arrows": arrows, "hits": 8, "kills": 3, "withheld": 0} if fire else NO_VOLLEYS["volley"]
+            rows.append(wave_row(n, volley=volley))
+        return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": rows, "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent}},
+                "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": levels}, **more}
+
+    def line(self, result, detail, name="volley"):
+        return self.HEAD_LINE.format(name, result) + detail
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 3) + "\n" + "\n".join(extra)
+
+    def test_the_shipped_build_offers_both_levels_of_the_volley(self):
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2})
+
+    def test_a_report_that_bought_the_volley_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+        self.assertIsNone(ld.purchase_problem(self.report(levels=1)))
+
+    def test_a_level_beyond_the_build_is_still_refused(self):
+        report = self.report()
+        report["purchases"].append({"beforeWave": 3, "kind": "volleyLevel", "id": "", "level": 3, "basePrice": 300, "price": 300, "share": 0.0})
+        report["gold"]["spent"] = report["gold"]["spentOn"]["volley"] = 950
+        report["fortifications"]["volleyLevel"] = 3
+
+        self.assertIn("not offered", ld.purchase_problem(report))
+
+    def test_the_debts_follow_the_purchases_and_the_waves_played(self):
+        self.assertTrue(ld.owes_volley(self.report()))
+        self.assertTrue(ld.owes_volley_crosshair(self.report()))
+        self.assertFalse(ld.owes_volley_crosshair(self.report(levels=1)), "level one aims itself")
+        self.assertFalse(ld.owes_volley({**self.report(), "purchases": []}))
+        # Level 2 is bought before wave 2: a run that stopped after wave 1 never met it.
+        self.assertFalse(ld.owes_volley_crosshair(self.report(waves=1)))
+        self.assertTrue(ld.owes_volley(self.report(waves=1)))
+        # Bought but the run ended before the wave it precedes: nothing was owed.
+        late = self.report(waves=1)
+        late["purchases"][0]["beforeWave"] = 4
+        self.assertFalse(ld.owes_volley(late))
+
+    def test_the_debts_read_the_purchases_and_nothing_else(self):
+        for bad in ({}, {"purchases": "x"}, {"purchases": [5, {"kind": "pack"}]}):
+            self.assertFalse(ld.owes_volley(bad))
+            self.assertFalse(ld.owes_volley_crosshair(bad))
+        self.assertFalse(ld.owes_volley({"purchases": [{"kind": "volleyLevel", "beforeWave": "1"}], "wave": 3}))
+
+    def test_a_run_with_the_auto_and_the_crosshair_line_passes(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("pass", self.AUTO), self.line("pass", self.CROSSHAIR)))
+
+        self.assertEqual(code, 0, why)
+        self.assertIn("volley", why)
+
+    def test_a_missing_line_fails_the_run_by_its_name(self):
+        code, why = ld.judge(FINAL, self.report(), self.log())
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.volley", why)
+
+    def test_a_volley_that_never_fired_is_caught_though_the_report_replays(self):
+        # The bot arming nothing (BotActionKind.Volley with no case) leaves uses at 0, which rule 20 accepts; only the check line is owed and absent.
+        report = self.report(fire=False)
+        self.assertIsNone(ld.purchase_problem(report))
+
+        code, why = ld.judge(FINAL, report, self.log())
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.volley", why)
+
+    def test_level_two_owes_a_crosshair_line_and_an_auto_line_does_not_pay_it(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("pass", self.AUTO)))
+
+        self.assertEqual(code, 1)
+        self.assertIn("mode=crosshair", why)
+
+    def test_a_level_one_run_needs_only_the_auto_line(self):
+        code, why = ld.judge(FINAL, self.report(levels=1), self.log(self.line("pass", self.AUTO)))
+
+        self.assertEqual(code, 0, why)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        cut = self.line("skip", self.AUTO + " ended=run reason=window-cut")
+
+        code, why = ld.judge(FINAL, self.report(levels=1), self.log(cut))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.volley", why)
+
+    def test_a_failed_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(levels=1), self.log(self.line("pass", self.AUTO), self.line("fail", self.AUTO.replace("friendly=0", "friendly=1"))))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_lose_run_is_not_asked_for_it(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1, "waves": [wave_row(1)]}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_manifest_row_reads_the_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.volley")
+        self.assertEqual(row.absence, "not-reached")
+        for detail in (self.AUTO, self.CROSSHAIR, self.AUTO.replace("source=elven", "source=tower-hornburg"), self.CROSSHAIR.replace("ray_gap=1.2", "ray_gap=NaN").replace("aim=bot", "aim=person")):
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("pass", detail))], []).verdict, iv.PASS, detail)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("fail", detail))], []).verdict, iv.FAIL, detail)
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+        cut = self.line("skip", self.AUTO + " ended=run reason=window-cut")
+        self.assertEqual(iv.judge_segment(row, [(None, 1, cut)], []).verdict, iv.NOT_REACHED, "a window cut short proves nothing")
+        uncancelled = self.AUTO.replace("friendly=0", "friendly=2")
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", uncancelled))], []).verdict, iv.PASS, "an uncancelled friendly hit is not a pass")
+        spawned = self.AUTO.replace("spawned=0", "spawned=1")
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", spawned))], []).verdict, iv.PASS, "a fire that spawned an agent is not a pass")
+
+    def test_the_manifest_names_the_proof_run_and_says_it_needs_recorded_origins(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.volley")
+        self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", row.needs)
+        self.assertIn("volley.origins", row.needs)
+        text = (REPO / "tools" / "ingame_checks" / "1079.toml").read_text(encoding="utf-8")
+        self.assertIn("pressing N during a wave looses it", text)
+
+    def test_the_line_is_the_one_the_csharp_check_formats(self):
+        checks = source("Diagnostics", "LongDefeatVolleyChecks.cs")
+        ids = source("Diagnostics", "LongDefeatChecks.cs")
+        self.assertIn('VolleyId = "taom.long-defeat.volley"', ids)
+        for key in ("w=", "use=", "source=", "mode=crosshair", "mode=auto", "aim=", "ray_gap=", "arrows=", "shots=", "candidates=", "distinct=", "spawned=", "hits=", "blocked=", "friendly=",
+                    "cancelled=", "kills=", "affector_null=", "affector_side=", "owner=", "mult=", "base_speed=", "impact_speed=", "window=", "ended=", "reason=window-cut"):
+            self.assertIn(key, checks, key)
+        self.assertRegex(self.AUTO, r"^w=[0-9]+ use=[0-9]+ source=(elven|tower-[a-z_]+) mode=auto arrows=[0-9]+ shots=[0-9]+ candidates=[0-9]+ distinct=[0-9]+ spawned=[0-9]+ hits=[0-9]+ blocked=[0-9]+ "
+                                  r"friendly=[0-9]+ cancelled=[0-9]+ kills=[0-9]+ affector_null=[0-9]+ affector_side=[0-9]+ owner=\S+ mult=[0-9.]+ base_speed=[0-9.]+ impact_speed=[0-9.]+ window=[0-9.]+$")
+        director = source("LongDefeatDirector.Volley.cs")
+        self.assertIn('$"{use.Source.Id}-w{use.Wave', director)
+
+    def test_the_wrapper_names_the_proof_run(self):
+        self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+
+    def test_the_offered_mirror_is_the_one_the_game_ships(self):
+        text = source("Domain", "FortPlan.cs")
+        self.assertIn("new(3, 2, true, 2)", text, "FortOffer.Offered, which FORT_OFFERED mirrors")
+
+
+class FortPointsHintTests(unittest.TestCase):
+    """The fort-points check counts the points the game's reader accepted, so the judge names a reader that dropped what the file records."""
+
+    def fortresses(self):
+        return {"fortresses": [{"id": "helms", "towers": [{"id": "hornburg", "posts": [{"x": 1}, {"x": 2}], "volley": [{"x": 3}]}], "volley": {"origins": [{"x": 4}, {"x": 5}]}}]}
+
+    def test_the_recorded_count_is_every_post_spot_and_origin(self):
+        self.assertEqual(ld.recorded_fort_point_count("helms", self.fortresses()), 5)
+        self.assertEqual(ld.recorded_fort_point_count("helms", {"fortresses": [{"id": "helms"}]}), 0)
+        self.assertEqual(ld.recorded_fort_point_count("none", self.fortresses()), 0)
+
+    def test_a_reader_that_dropped_points_is_named_and_one_that_kept_all_is_not(self):
+        line = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.fort-points result=pass points={} failed=0"
+
+        note = ld.fort_points_note({"fortress": "helms"}, line.format(3), self.fortresses())
+        self.assertIn("3 of 5", note)
+        self.assertEqual(ld.fort_points_note({"fortress": "helms"}, line.format(5), self.fortresses()), "")
+        self.assertEqual(ld.fort_points_note({"fortress": "helms"}, "no line", self.fortresses()), "")
+        self.assertEqual(ld.fort_points_note({"fortress": "helms"}, line.format(0), {"fortresses": [{"id": "helms"}]}), "", "nothing recorded, nothing dropped")
+
+    def test_a_skip_for_none_recorded_while_the_file_records_points_names_the_reader(self):
+        report = {**REPORT, "fortress": "helms"}
+        skip = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.fort-points result=skip points=0 reason=none-recorded"
+        with mock.patch.object(ld, "recorded_fort_points", return_value=True):
+            ld.target_waves = 5
+            ld.tree_head = HEAD
+            ld.expected_report = {}
+            self.addCleanup(setattr, ld, "target_waves", None)
+            self.addCleanup(setattr, ld, "tree_head", None)
+            code, why = ld.judge(FINAL, {**report, "wavesCleared": 5, "waves": [wave_row(n) for n in range(1, 6)]}, FULL_LOG + "\n" + skip)
+
+        self.assertEqual(code, 1)
+        self.assertIn("fort-points", why)
+        self.assertIn("reader accepted none", why)
+
+
+class PostsJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 7: tower levels 1 and 2 are offered, so the report may list them and the judge owes the posts check lines (phase3-plan.md section 6, D31, spike S6)."""
+
+    # The detail LongDefeatPostsChecks formats, as LongDefeatPostsChecksTests pins it (tower=hornburg w=2 ... short=0 failed=0). Every word is name=value: the game's OutcomeLog.SanitiseDetail glues a word with no
+    # '=' to the value before it ("held=4 of 4" was logged as "held=4_of_4"), so a pattern written for the raw detail could never match a real log.
+    PASS = ("tower=hornburg w=1 level=1 variant=A formation=4 posts=8 expected=4 manned=4 held=4 sampled=4 max_drift=0.4 max_dz=0.2 shots=15 split=0 out=0 short=0 failed=0")
+    PASS2 = PASS.replace("w=1 level=1", "w=2 level=2")
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.{} result={} "
+
+    def setUp(self):
+        ld.target_waves = 2
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        ld.posts_variant = None
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+        self.addCleanup(setattr, ld, "posts_variant", None)
+
+    def report(self, levels=2, waves=2, **more):
+        bought = [{"beforeWave": 1, "kind": "towerLevel", "id": "", "level": 1, "basePrice": 250, "price": 250, "share": 0.0}]
+        if levels >= 2:
+            bought.append({"beforeWave": 2, "kind": "towerLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
+        spent = sum(p["price"] for p in bought)
+        return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
+
+    @staticmethod
+    def sanitise(detail):
+        """OutcomeLog.SanitiseDetail: whitespace-separated words, a word with no '=' joined to the text before it with '_'."""
+        out = ""
+        for word in detail.split():
+            if out:
+                out += " " if "=" in word[1:] else "_"
+            out += word
+        return out
+
+    def line(self, result, detail, name="posts"):
+        return self.HEAD_LINE.format(name, result) + self.sanitise(detail)
+
+    def passes(self, variant="A"):
+        """The two pass lines a bot run with both tower levels owes: level 1 in wave 1 and level 2 in wave 2."""
+        return [self.line("pass", d.replace("variant=A", f"variant={variant}")) for d in (self.PASS, self.PASS2)]
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
+
+    def test_the_shipped_build_offers_two_tower_levels(self):
+        self.assertEqual(ld.FORT_OFFERED["towers"], 2)
+
+    def test_a_report_that_bought_both_tower_levels_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+        self.assertIsNone(ld.purchase_problem(self.report(levels=1)))
+
+    def test_the_towers_volley_level_is_still_refused(self):
+        report = self.report()
+        report["purchases"].append({"beforeWave": 3, "kind": "towerLevel", "id": "", "level": 3, "basePrice": 400, "price": 400, "share": 0.0})
+        report["gold"]["spent"] = report["gold"]["spentOn"]["towers"] = 950
+        report["fortifications"]["towerLevel"] = 3
+
+        self.assertIn("not offered", ld.purchase_problem(report))
+
+    def test_the_debt_follows_the_purchases_and_the_waves_played(self):
+        self.assertTrue(ld.owes_posts(self.report()))
+        self.assertFalse(ld.owes_posts({**self.report(), "purchases": []}))
+        late = self.report(waves=1)
+        late["purchases"][0]["beforeWave"] = 4
+        self.assertFalse(ld.owes_posts(late), "bought for a wave the run never reached")
+        for bad in ({}, {"purchases": "x"}, {"purchases": [5, {"kind": "pack"}]}, {"purchases": [{"kind": "towerLevel", "beforeWave": "1"}], "wave": 3}):
+            self.assertFalse(ld.owes_posts(bad))
+
+    def test_a_run_with_the_posts_pass_passes(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes()))
+
+        self.assertEqual(code, 0, why)
+        self.assertIn("posts", why)
+
+    def test_the_second_level_owes_a_level_two_pass(self):
+        self.assertTrue(ld.owes_posts_level2(self.report()))
+        self.assertFalse(ld.owes_posts_level2(self.report(levels=1)))
+        late = self.report(waves=1)
+        late["purchases"][1]["beforeWave"] = 4
+        self.assertFalse(ld.owes_posts_level2(late), "bought for a wave the run never reached")
+        for bad in ({}, {"purchases": "x"}, {"purchases": [{"kind": "towerLevel", "beforeWave": 1, "level": "2"}], "wave": 3}):
+            self.assertFalse(ld.owes_posts_level2(bad))
+
+    def test_a_level_one_pass_alone_does_not_pay_a_level_two_buy(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("pass", self.PASS)))
+
+        self.assertEqual(code, 1)
+        self.assertIn("level=2", why)
+
+    def test_a_level_two_skip_does_not_pay_it_either(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("pass", self.PASS), self.line("skip", self.PASS2 + " reason=short-wave")))
+
+        self.assertEqual(code, 1)
+        self.assertIn("level=2", why)
+
+    def test_a_run_that_bought_only_level_one_owes_only_level_one(self):
+        code, why = ld.judge(FINAL, self.report(levels=1), self.log(self.line("pass", self.PASS)))
+
+        self.assertEqual(code, 0, why)
+
+    def test_a_run_that_bought_towers_and_has_no_pass_fails_by_name(self):
+        code, why = ld.judge(FINAL, self.report(), self.log())
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.posts", why)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("skip", self.PASS + " reason=short-wave")))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.posts", why)
+
+    def test_a_failed_posts_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("fail", self.PASS.replace("shots=15", "shots=0"))))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def towerless(self):
+        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+                "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
+
+    def test_a_run_that_bought_no_tower_owes_no_posts_line(self):
+        self.assertEqual(ld.judge(FINAL, self.towerless(), self.log())[0], 0)
+
+    def test_an_armed_variant_with_no_tower_bought_fails_by_name(self):
+        ld.posts_variant = "B"
+
+        code, why = ld.judge(FINAL, self.towerless(), self.log())
+
+        self.assertEqual(code, 1)
+        self.assertIn("never tried", why)
+        self.assertIn("--posts-variant B", why)
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        lose_report = {**self.report(), "final": False, "wavesCleared": 1, "waves": [wave_row(1)]}
+        self.assertEqual(ld.judge(lost, lose_report, LOSE_LOG)[0], 0, "a run built to lose buys no tower and is not asked for the variant")
+
+    def test_main_arms_the_variant_it_was_given_and_clears_one_left_in_the_shell(self):
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
+        with mock.patch.dict(os.environ, {ld.POSTS_VARIANT_ENV: "C"}), mock.patch.multiple(runner, main=lambda rest: 0, **keep):
+            ld.main(["--waves", "2"])
+            self.assertNotIn(ld.POSTS_VARIANT_ENV, os.environ, "a variable left in the shell would arm a variant the judge never checks")
+            ld.main(["--waves", "2", "--posts-variant", "b"])
+            self.assertEqual(os.environ[ld.POSTS_VARIANT_ENV], "B")
+
+    def test_the_pass_fixture_is_the_detail_the_game_tests_pin(self):
+        pinned = (REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Diagnostics" / "LongDefeatPostsChecksTests.cs").read_text(encoding="utf-8")
+        self.assertIn(self.PASS.replace("w=1", "w=2"), pinned, "the Python fixture drifted from the detail LongDefeatPostsChecks writes")
+
+    def test_a_lose_run_is_not_asked_for_it(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1, "waves": [wave_row(1)]}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_armed_variant_must_be_the_one_the_pass_names(self):
+        ld.posts_variant = "B"
+        self.assertEqual(ld.judge(FINAL, self.report(), self.log(*self.passes()))[0], 1, "a variant A line when B was armed: the env var never took")
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes("B")))
+        self.assertEqual(code, 0, why)
+
+    def test_the_variant_pattern_does_not_match_a_longer_token_or_a_skip(self):
+        pattern = ld.posts_variant_pattern("A")
+        self.assertIsNone(pattern.search(self.line("skip", self.PASS)))
+        self.assertIsNone(pattern.search(self.line("pass", self.PASS.replace("variant=A", "variant=AB"))))
+        self.assertIsNotNone(pattern.search(self.line("pass", self.PASS)))
+
+    def test_the_flag_takes_a_variant_in_either_case_and_refuses_another(self):
+        parser = ld.build_parser()
+        self.assertEqual(parser.parse_args(["--posts-variant", "c"]).posts_variant, "C")
+        self.assertIsNone(parser.parse_args([]).posts_variant)
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["--posts-variant", "D"])
+
+    def test_the_environment_name_is_the_games(self):
+        text = source("Domain", "LdPosts.cs")
+        self.assertIn(f'EnvironmentName = "{ld.POSTS_VARIANT_ENV}"', text)
+
+    def test_the_manifest_row_reads_the_line_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.posts")
+        self.assertEqual(row.absence, "not-reached")
+        for detail in (self.PASS, self.PASS2, self.PASS.replace("variant=A", "variant=C").replace("short=0", "short=2"), self.PASS + " ended=run"):
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("pass", detail))], []).verdict, iv.PASS, detail)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("fail", detail))], []).verdict, iv.FAIL, detail)
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", self.PASS.replace("failed=0", "failed=1")))], []).verdict, iv.PASS, "a spawn that failed is not a pass")
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+        cut = self.line("skip", self.PASS + " ended=run reason=window-cut")
+        self.assertEqual(iv.judge_segment(row, [(None, 1, cut)], []).verdict, iv.NOT_REACHED, "a run cut short proves nothing")
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", self.PASS.replace("held=4 sampled=4", "held=3 sampled=4")))], []).verdict, iv.PASS, "an archer off his post is not a pass")
 
 
 if __name__ == "__main__":

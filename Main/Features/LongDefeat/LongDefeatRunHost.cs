@@ -25,7 +25,7 @@ internal sealed class LongDefeatRunHost
     private readonly Func<ILongDefeatBattlefieldAdapter> _fieldFactory;
     private readonly Func<ILongDefeatEffectsAdapter>? _effectsFactory;
     private readonly LongDefeatRunRecords? _records;
-    private LongDefeatDirector? _director;
+    private volatile LongDefeatDirector? _director;
     private bool _startDue;
     private bool _leaving;
     private int _faults;
@@ -72,6 +72,39 @@ internal sealed class LongDefeatRunHost
 
     public void OnAgentFleeing(object agent) => Guarded("OnAgentFleeing", () => _director?.OnAgentFleeing(agent));
 
+    /// <summary>Whether the running wave wants the engine's hits (a Morgul Blades wave). Read in the engine's hit callback, which may run off the main thread, so it is one volatile read of the director's flag.</summary>
+    public bool WantsHits => _director?.WantsHits ?? false;
+
+    /// <summary>An attacker's blow on a defender, already filtered by the logic. May run off the main thread.</summary>
+    public void OnHit(object affected, object attacker) => Guarded("OnHit", () => _director?.OnHit(affected, attacker));
+
+    /// <summary>Whether a volley's hit window is open. Read in the engine's hit callbacks, which may run off the main thread, before anything else is done for a hit: one volatile read of the director's flag.</summary>
+    public bool WantsVolleyHits => _director?.WantsVolleyHits ?? false;
+
+    /// <summary>Whether the id is the arrow item of a volley. The set is fixed by the plan, so it is safe to read on any thread.</summary>
+    public bool IsVolleyItem(string itemId) => _director?.IsVolleyItem(itemId) ?? false;
+
+    /// <summary>An arrow of a volley struck something, already read by the logic's filter. May run off the main thread.</summary>
+    public void OnVolleyHit(LdVolleyHit hit) => Guarded("OnVolleyHit", () => _director?.OnVolleyHit(hit));
+
+    /// <summary>Whether a wave with posted archers is running. Read in the engine's shot callback (not multithread callable, Mission.cs:4982): one volatile read of the director's flag.</summary>
+    public bool WantsPostShots => _director?.WantsPostShots ?? false;
+
+    /// <summary>An agent loosed an arrow; the field counts it when he is a post archer.</summary>
+    public void OnPostShot(object shooter) => Guarded("OnPostShot", () => _director?.OnPostShot(shooter));
+
+    /// <summary>
+    /// A hit as the engine raised it, for the sally's contact count: the lord or his horse struck or was struck. Unfiltered (a blocked blow is contact too). <paramref name="victimHealth"/> is read after the blow. May run
+    /// off the main thread.
+    /// </summary>
+    public void OnContactHit(object? affected, object? affector, float victimHealth) => Guarded("OnContactHit", () => _director?.OnContactHit(affected, affector, victimHealth));
+
+    /// <summary>Whether this run plans a removal of the lord's body (a mounted class): only then does the mission logic forward the callbacks that reach bodies. A plain read of the plan.</summary>
+    public bool WatchesBodies => _plan.Loadout?.Mounted == true;
+
+    /// <summary>A removal or a deletion reached an agent, with the engine's state name. May run off the main thread.</summary>
+    public void OnBodyEvent(object agent, string callback, string state) => Guarded("OnBodyEvent", () => _director?.OnBodyEvent(agent, callback, state));
+
     public void ShutDown()
     {
         var director = _director;
@@ -90,7 +123,8 @@ internal sealed class LongDefeatRunHost
 
     private void StartRun()
     {
-        var director = new LongDefeatDirector(_plan, _fieldFactory(), _session, _logger, _outcomes, _missionKey, _records, _effectsFactory?.Invoke());
+        var field = _fieldFactory();
+        var director = new LongDefeatDirector(_plan, field, _session, _logger, _outcomes, _missionKey, _records, _effectsFactory?.Invoke(), field as ILongDefeatFortAdapter);
         _director = director;
         if (director.Start())
             return;
