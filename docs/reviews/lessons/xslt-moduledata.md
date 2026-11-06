@@ -377,3 +377,18 @@ do not.
   `SubModule.xml`.
 - **Source:** docs/reference/lotrlome-soln-id-fix.md. No issue filed; found while auditing a
   cross-session report on 2026-08-28.
+
+### Troop-level `<equipment>` overrides beat roster slots and reach every set, civilian included (1.5.x #636, ported 2026-11)
+In `troops_*.xml`, an `<equipment>` written directly under `<Equipments>` is not a default a roster can
+override: `BasicCharacterObject.Deserialize` adds the troop's rosters first, then
+`MBEquipmentRoster.AddOverriddenEquipments` deserializes each such node into every equipment the troop has,
+battle and civilian (v1.4.8 `BasicCharacterObject.cs:412`, `MBEquipmentRoster.cs:121-136`); an empty id
+clears the slot (`Equipment.cs:204-221`, `IsItemFitsToSlot` :445-451). 88 troops in `troops_*.xml` get
+their mount this way (2026-11-06).
+- **Why missed:** on the 1.5.x line a wiring test and two tools were written from the markup, reading the
+  roster's slot first as the more specific scope (#636, #641, #696).
+- **Prevent:** a check of what a troop carries reads the `<Equipments>`-level override first and the roster
+  slot only as the fallback, and treats it as present in the civilian set too. Read the deserializer
+  (`pwsh tools/taom-src.ps1 path TaleWorlds.Core.BasicCharacterObject`) before modelling precedence from XML
+  shape; `.claude/rules/moduledata-validation.md` states the rule for scripts under `tools/`.
+- **Source:** 1.5.x `docs/reviews/rca-elk-2026-09-22.md` finding F3 and `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` fix review R1, on `origin/bannerlord-1.5.x` (ported by WP142).
