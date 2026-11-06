@@ -2224,3 +2224,127 @@ without the core changes and did not build on its own until the batch commit (1.
   When the index holds anything else, commit with `git commit -- <path>`, which commits only that path. Never push a commit
   whose file list you did not read.
 - **Source:** 1.5.x commits `0a8d61a4e` and `10f1f0b80`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator that pastes free text into a file it later parses must escape that text's delimiters (plan 020, 2026-09-24)
+`tools/changelog_from_commits.py` copied commit bodies verbatim into `CHANGELOG.md` and then, on the
+next release, searched the whole file with `^## v…` to refuse a duplicate. A body that showed an
+example heading (`## v2.0.32 (2026-11-01)`, even inside a code fence) made the v2.0.32 run refuse,
+and any heading-shaped body line added structure to the file. Codex found it; six lenses did not.
+- **Why missed:** every fixture body was plain prose and every test ran one release. The design
+  lens dismissed escaping because none of 916 past bodies had a heading, which judges the defect
+  by history when the input is bodies not yet written.
+- **Prevent:** when a tool embeds text it does not control inside a format it will parse again,
+  escape the format's delimiters on the way in (here, lines CommonMark reads as ATX headings, which
+  leaves `#622:` alone) and write a test that runs the tool twice, the second run reading the
+  first run's output.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Retiring a duty: search for the duty, not for its phrases in the folders you expect (plan 020, 2026-09-24)
+Plan 020 retired the hand-written CHANGELOG. Its sweep grepped a fixed list of folders for fixed
+phrases, so eleven live instructions survived (`docs/features/` recipes, the feature-doc template,
+the `commit-split` routing row, two lens prompts), a rule still said a deleted hook enforced the
+duty, and `release-process.md` kept the old step order that `/release` had just reversed. The
+executor wrappers under `plans/` still ordered hand entries.
+- **Why missed:** a list of places is a guess about where the duty is written. Reworded
+  instructions ("Update CHANGELOG", "Add to CHANGELOG", "the CHANGELOG `Not-tested:` line") pass a
+  phrase grep. Repeat of "A structural refactor's leftover-reference sweep must cover living docs"
+  (2026-07-01).
+- **Prevent:** grep the whole repo, case-insensitive, for the artifact's name (`changelog`) with no
+  folder filter, then classify each hit as history (leave it) or instruction (fix it). When a skill
+  changes its step order, re-read the doc it calls its "Full contract" in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C5, C6, C13, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Anchor "was X changed" checks and release ranges to a fixed commit, not HEAD (plan 020, 2026-09-24)
+Two defects in one change. The completeness lens checked for a hand edit with
+`git diff --name-only HEAD -- CHANGELOG.md`, which sees only uncommitted edits, so on a branch
+that had rewritten the file it printed nothing. And `/release` generated the section from `HEAD`,
+then tagged `HEAD` phases later, so a commit landing in between was in the tag and in no section.
+- **Why missed:** each check was right at the moment its author pictured (`/verify` before a
+  commit; a single session cutting a release) and was reused where `HEAD` means something else.
+- **Prevent:** a review check diffs against the review's base (`HEAD` only for uncommitted work).
+  A multi-step procedure that reads a range resolves the end to a SHA once, prints it, checks it
+  before committing, and tags by SHA.
+- **Source:** 1.5.x `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `ReadAllText` strips the BOM, so a "keep the BOM if present" check on its result can never fire
+A one-number edit to `docs/reviews/LESSONS-LEARNED.md` was made with PowerShell `[IO.File]::ReadAllText` then `WriteAllText(..., new UTF8Encoding($raw.StartsWith([char]0xFEFF)))`. `ReadAllText` detects the BOM and removes it from the string it returns, so `StartsWith(0xFEFF)` was always false and the write dropped the file's `EF BB BF`, a hunk nobody asked for in a file two sessions were editing.
+- **Why missed:** the check read as a preservation guard and was never run against a file known to have a BOM; its input had already lost the thing it was testing for.
+- **Prevent:** decide the BOM from bytes (`[IO.File]::ReadAllBytes(p)[0..2]`), or edit with the Edit tool, which keeps the file's encoding. After any scripted rewrite of a tracked file, `git diff --stat` it: a line-1 hunk you did not intend is the tell.
+- **Source:** 1.5.x `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md` deep review finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A PreToolUse gate's decision counts only under `hookSpecificOutput`; prove a gate live (#647, 2026-09-23)
+Nine TAOM gates printed `{"permissionDecision": "deny", ...}` at the top level of their JSON, and Claude Code ignores that form, so no deny or ask they returned was ever honoured: the destructive-git prompt, `/freeze`, the commit-label, CHANGELOG, ModuleData and doc-drift gates. A debug dump showed the label gate returning a deny in 0.25 s while the commit ran.
+- **Why missed:** `harness-facts.md` stated the top-level form as the contract, and `tools/test_hooks.sh` judged a decision by matching the text `"permissionDecision":"deny"`, which the nested form contains too. Every test ran a gate through bash; none ran a tool call through the harness. The hooks catalog's "Hard-blocks" lines described the source, not an observed refusal.
+- **Prevent:** print `{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":...,"permissionDecisionReason":...}}` or exit 2. `test_hooks.sh` 5c fails the top-level form statically, and section 4 reads decisions the way the harness does. A gate is done when a live tool call it must stop has been shown refused (`hook-authoring.md` "Prove a gate live").
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Hook Python reads stdin in the ANSI code page: one character outside it blinded every gate (#647, 2026-09-23)
+On Windows a piped stdin and stdout default to cp1252. A command holding a character outside it made the hooks' extraction `print(command)` raise inside `except: pass`, the command came back empty, and each gate treated it as nothing to check. With the old `_pybin.sh`, `NOTE=→ git push --force origin bannerlord-1.4.5` passed the force-push block.
+- **Why missed:** every test payload was ASCII, and the bare `except` turned an encoding error into the gate's "not my command" path, which is silent by design.
+- **Prevent:** `_pybin.sh` exports `PYTHONIOENCODING=utf-8` for every hook that sources it. Test a gate with a non-ASCII command as raw and as escaped JSON; a new gate copies those cases.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a shell command, Markdown or YAML with its parser, not a line regex (#647, 2026-09-23)
+Three gates approximated a language with regexes and each broke on valid input. The commit gate missed `$'...'` quoting, attached `-m"..."` and concatenated words, and took option-shaped prose inside a message for a real option. The import scan closed a four-backtick fence on a three-backtick line and read a code span across lines as prose. The budget took a rule with unparseable frontmatter for path-scoped.
+- **Why missed:** each regex matched the forms seen so far, and every test used those forms.
+- **Prevent:** tokenize shell with `shlex` (decode `$'...'` first, split at `;`, `&&`, `|` and unquoted newlines) and read each command's own options; scan Markdown by its documented rules (fence character and length, spans across lines inside a paragraph); parse YAML with `yaml.safe_load`. Test the unusual forms the language allows, not only the usual ones.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` C2 to C6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timeout check that picks hooks by what they launch misses the one slow for another reason (#647, 2026-09-23)
+`check-claude-files-tracked.sh` asked git two or three times per file, took 6 s against its 5 s registration, and was killed on every commit, which reads as a pass. `test_hooks.sh` check 3 times only hooks that launch a `tools/*.py`, so it never looked at this one: the 2026-08-31 "measure the slow path" lesson, missed a second time by how the check chose its hooks.
+- **Why missed:** the check discovered hooks by their external tool, not by being a gate.
+- **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
+- **Source:** 1.5.x `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A here-string of 65,537 to 65,664 bytes hangs Git Bash forever, and a killed gate fails open (#681, 2026-09-26)
+On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose text is 65,537 to 65,664 bytes never
+returns: up to 65,536 bytes bash feeds it through a pipe, from 65,665 through a temp file, and in between it blocks
+writing into its own pipe before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
+`mapfile <<<`, an expanding `<<EOF`, even `: <<<` with no reader). Ten hook sites fed a payload or a git name list
+through `<<<`, so a force push to a trunk, a `reset --hard` or a broad `add` padded into the window hung
+`validate-push.sh`, `block-dangerous-git.sh` and `block-broad-git-add.sh` until the harness killed them, and a killed
+gate allows. The staged-name sites are reachable too: four commits in TAOM history list over 64 KiB of paths. The
+issue proposed `done < <(printf '%s\n' "$X")`, which never hangs but forks on every call (22 ms each) and makes bash
+read a pipe one byte at a time: 2,155 ms for a 400 KB loop against 585 ms for the here-string and 22 ms for an
+array split, which would have pushed `validate-push.sh` past its 5 s registration on a large command (#680).
+- **Why missed:** a here-string reads as an in-memory string, so nobody sized it, and every test payload was either
+  small or far above the window; a hang only 128 bytes wide is invisible to a test that doesn't aim for it.
+- **Prevent:** split hook text without a redirection: `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for`
+  loop (no fork, empty lines dropped, variables set in the loop stay visible), or `set -f; T=($X); set +f` for words;
+  keep `set -f`, `set +f` and the IFS restore on one line. `tools/test_hooks.sh` 4e refuses a here-string or an
+  expanding here-document in any script a hook registration runs, and 7h sends payloads sized into the window
+  through the gates. Measure an alternative's cost on large text before proposing it as a fix.
+- **Source:** 1.5.x issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`, `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`, `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate's suite passed a mutant that switched off its no-Python answer (#680 review, 2026-09-27)
+The #680 review changed `validate-push.sh`'s degraded branch from `&& coarse "no safe python"` to `&& exit 0`, and
+the whole hook suite stayed green: the starved-environment row checks only that a gate fails open and says so, and
+the mutant still printed its note while it allowed every push. Three more tests proved less than they claimed. The
+bytecode check passed whenever an earlier run had left `_pushjudge.cpython-*.pyc` in `.claude/hooks/__pycache__`.
+With a global `push.default=matching`, four 7c rows and two unit rows failed on a correct hook, since they read
+this machine's git config. And 4e skipped every line that opens with `#`, so a here-string on a line continuing a
+quoted string went unseen, as did one after a quoted `<< "Z"` inside a string, one in a `bash -s <<'SH'` body that a
+child shell runs, and any registration naming a script outside `.claude/`.
+- **Why missed:** each test was checked by passing on a correct hook, never by failing on a broken one, and each
+  leaned on the machine it ran on: a Python on PATH, a warm cache, an unset global setting.
+- **Prevent:** give every branch of a gate a row that runs on any machine (a sandbox copy of the hooks with
+  `PYBIN=""` appended to `_pybin.sh` takes Python away portably); run each new test against a mutant of the code it
+  guards and watch it fail; build a test's inputs fresh (a temp copy of the modules, a scratch repository whose
+  local config sets what the code reads); and make a scan assert that it covered what it claims (4e now fails a
+  registration naming a script it cannot find).
+- **Source:** 1.5.x the #680 and #681 review, 2026-09-26 (mutant H10; the 4e probes); `tools/test_hooks.sh` 4e, 7c and 7e; `tools/tests/test_pushjudge.py` (`CliTests`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook registered by a relative path stops running after a cd (#690, 2026-09-26)
+All 27 `settings.json` registrations named their script as `.claude/hooks/<name>.sh`. Claude Code runs a hook
+command in the session's current directory, and a Bash `cd` into a project subdirectory persists across tool
+calls, so after `cd tools` every hook failed to start with "No such file or directory". The harness treats that
+as a non-blocking error: the call ran with no force-push guard, no commit gates and no confirm prompts. The #680
+review proved it live (a trunk force push reached git after `cd tools`; 33 such lines in the session's debug
+log) and in a sandbox where the anchored form refused from the subdirectory. The skill-frontmatter hooks of
+`/freeze` and `/investigate` had always anchored on `${CLAUDE_PROJECT_DIR}` and kept working.
+- **Why missed:** every test ran hooks from the repo root, and the catalog recorded "cwd = the MAIN tree
+  regardless", which holds for a `cd` inside the same command, not for one that persists.
+- **Prevent:** register every hook as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`, and test a gate the way
+  the harness runs it: the registered command string through `bash -c`, from a subdirectory
+  (`tools/test_hooks.sh` 7j).
+- **Source:** 1.5.x issue #690; `docs/reference/hooks-catalog.md`; the review evidence in `E:\repos\taom-improve\scratch\680\review\bash\` (desktop), on `origin/bannerlord-1.5.x` (ported by WP142).

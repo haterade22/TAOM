@@ -542,3 +542,9 @@ by a maintainer decision (E09) and the adapter's radius was copied from it (Code
   the service. When a decision moves an edge, grep every search radius that feeds the old one. Pin the radius with
   an IL or boundary test.
 - **Source:** 1.5.x `docs/reviews/rca-eye-of-sauron-2026-10-14.md` F4 (Codex), fixed in `2d17ceba3`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Call a long all-bool engine signature with named arguments
+`CustomAttacksUtils.TakeDamage` builds a `CombatLogData` through its 17-argument constructor, fifteen of them bools, and passed them by position. The fifteenth is `crushedThrough`, which prints "Crushed through!" (`CombatLogData.cs`); TAOM passed `knockDown` there since the helper was ported, so every creature knockdown the player saw claimed a broken guard. A same-day review of the same struct fixed its `DamageType` and never mapped the other arguments.
+- **Why missed:** a positional list of bools reads as correct in any order, and a reviewer checks the argument they came for.
+- **Prevent:** name every argument of an engine constructor or factory that takes more than a few bools of one type (`crushedThrough: false`), at least from the first one TAOM sets on purpose; when reviewing such a call, map each position to the decompiled signature. `AttackCollisionData.GetAttackCollisionDataForDebugPurpose` (twelve leading bools) in the same method is the next candidate.
+- **Source:** 1.5.x `docs/reviews/rca-elk-delta-2026-09-23.md`, Codex F1 (#643), on `origin/bannerlord-1.5.x` (ported by WP142).
