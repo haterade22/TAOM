@@ -335,7 +335,7 @@ When refactoring existing code:
 ## Enforcement
 
 1. **Code Review**: Reviewers reject PRs violating this pattern
-2. **Architecture Tests**: Automated tests verify entry point line counts
+2. **Architecture Tests**: `EntryPointLineCountGateTests` fails an entry point of 150 lines or more, against the shrink-only list of older classes in `EntryPointLineCountBaseline.txt`. `ServiceLocatorGateTests` fails an `IoC.Resolve` in a service, a view model or an engine.
 3. **Documentation**: This ADR is linked in CLAUDE.md
 4. **Examples**: Reference implementations for each entry point type
 

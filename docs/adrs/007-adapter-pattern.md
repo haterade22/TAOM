@@ -6,19 +6,19 @@
 
 ## Decision
 
-Service layer MUST use adapter interfaces for all sealed TaleWorlds game classes. Entry points (CampaignBehaviors, GameModels, Harmony patches, MissionViews) convert sealed types to adapters before calling services. **Adapters MUST recursively wrap ALL nested sealed types** - when a sealed class contains properties that return other sealed classes, those nested types must also be wrapped in adapter interfaces. This enables 100% testability of business logic.
+Service layer MUST use adapter interfaces for all TaleWorlds game classes (sealed or not), in public, internal and protected signatures alike. Entry points (CampaignBehaviors, GameModels, Harmony patches, MissionViews) convert sealed types to adapters before calling services. **Adapters MUST recursively wrap ALL nested sealed types** - when a sealed class contains properties that return other sealed classes, those nested types must also be wrapped in adapter interfaces. This enables 100% testability of business logic.
 
 ## Rationale
 
 ### The Problem: Sealed Game Classes Cannot Be Mocked
 
-TaleWorlds game classes are sealed, preventing:
+Most TaleWorlds game classes are sealed, and the rest are public classes or static classes that a test cannot substitute either. Any of them prevents:
 - Unit testing with mocked objects
 - Test-driven development (TDD)
 - Service isolation during testing
 - Fast test execution (no game framework initialization)
 
-**Sealed Classes Requiring Adapters**:
+**Classes Requiring Adapters** (`TroopRoster`, `ItemRoster`, `Equipment`, `WeaponComponentData`, `ArmorComponent`, `Town`, `Village` and `Hideout` are public classes, not sealed; the three Action types are static; `CampaignTime`, where the list still names it, is a struct; the rest are sealed):
 - **Core**: `Hero`, `MobileParty`, `Settlement`, `Clan`, `Kingdom`, `CharacterObject`
 - **Party**: `TroopRoster`, `ItemRoster`, `PartyBase`, `MapEvent`
 - **Items**: `ItemObject`, `Equipment`, `WeaponComponentData`, `ArmorComponent`
@@ -64,7 +64,7 @@ public class PatrolService : IPatrolService
 ```
 
 **Problems**:
-- `Settlement` and `TroopRoster` are sealed, cannot be mocked
+- `Settlement` is sealed and `TroopRoster` is a public class; neither can be mocked
 - Service requires real game framework to test (slow, brittle)
 - TDD impossible (cannot write tests before implementation)
 - Cannot isolate service behavior in unit tests
@@ -793,9 +793,9 @@ Before merging PRs touching service layer:
 - [ ] Tests use mocked adapters (NSubstitute), or a test subclass that overrides the service's boundary seams
 - [ ] Tests mock nested adapter interfaces where properties are accessed
 
-### Architecture Tests (Recommended)
+### Architecture Tests
 
-See `TAOM.Tests/Architecture/AdapterPatternArchitectureTests.cs` for automated enforcement.
+`ServiceSignatureGateTests` fails a public, internal or protected member of a `*Service` type or an `I*Adapter` interface that names a TaleWorlds class (sealed or not), against the shrink-only list in `ServiceSignatureBaseline.txt`.
 
 ## Reference Implementations
 
