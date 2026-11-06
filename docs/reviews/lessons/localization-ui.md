@@ -731,3 +731,85 @@ logged. Separately, a `ButtonWidget` passes its enabled, hover and disabled stat
   brushes the engine loads; a button whose label should follow its state sets `UpdateChildrenStates="true"`, as vanilla
   and the Family Tree buttons do.
 - **Source:** 1.5.x `rca-messengers-brushes-2026-10-24.md` findings 0 and 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never register a vanilla key a stylesheet keeps; vanilla's translation is the better one (2026-10-02)
+The 2026-10-01 run registered 36 keys `comment_strings.xslt` and `action_strings.xslt` write, believing them TAOM's own.
+They were SandBox's: the stylesheets keep each key and only drop "the". TAOM's language files load after SandBox's and
+`LocalizedTextManager.DeserializeStrings` keeps the last row for an id, so 432 machine rows replaced TaleWorlds' curated
+ones, which carry the engine's grammar tokens: Turkish lost `'{.e}`/`'{.den}` (players would read "Gondor'e"), and in
+DE, FR, BR and IT a male player read "meine mein Herr". Reverted on 2026-10-02.
+- **Why missed:** the registration script filtered on "no TAOM English row", never on "vanilla defines it", and the
+  research agent that judged the keys TAOM-authored had searched `SandBoxCore`, while the strings live in `SandBox`.
+- **Prevent:** `VanillaKeyOverrideTests` (LiveInstall) fails on any TAOM language row whose id vanilla's English data
+  declares, outside an allowlist with reasons. A stylesheet that keeps a vanilla key and its meaning registers nothing;
+  a change of meaning takes a TAOM key (`TAOM_liege_*`).
+- **Source:** 1.5.x `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A delegated search's "not found" is checked against the module list before it is relayed (2026-10-02)
+The same run's planning relayed an agent's claim that the 36 XSLT keys were "absent from vanilla" after checking two
+other claims by hand. The agent had grepped one of the three vanilla modules that ship ModuleData. Two lenses of the
+deep review found the error in minutes by searching all of them.
+- **Why missed:** the spot-check covered the claims that looked load-bearing for scope (a dead file, a shared key),
+  not the one that decided whether to register 36 keys.
+- **Prevent:** a negative finding ("X does not exist in vanilla") is relayed only with the paths it searched; check
+  them against Native, SandBoxCore, SandBox, StoryMode and CustomBattle (and the DLC modules) before acting on it.
+- **Source:** 1.5.x `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A language row kept identical to the English is rewritten from the cache on every run: pin it in the overrides (hill troll, 2026-09-25)
+The Italian editions keep `Dale` untranslated, and the IT row for `taom_aso_kingdom.sturgia` held `Dale` by hand.
+`translate_with_claude.py` discovers a row when `cur_text == eng_text`, so that row counted as untranslated on the
+hill troll's translator run and was rewritten from the cache, which held `Valle`. Nothing in the run's output
+distinguished it from the 26 rows the run was meant to fill.
+- **Why missed:** the discovery gate cannot tell "not yet translated" from "translated as the English word"; the
+  guide documented the stale-English direction of this trap, not its mirror image.
+- **Prevent:** a canonical rendering that equals the English goes in `tools/translation_overrides/<lang>.json`, and
+  the cache gets the same text (`it.json` now pins `Dale`). After any translator run, diff the changed rows against
+  HEAD by id, not by line, and read every row that changed from a non-English value.
+- **Source:** 1.5.x the hill troll translator run, 2026-09-25 (`docs/localization/TRANSLATOR_GUIDE.md` "mirror-image trap"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A documented checklist did not stop 351 keys going stale: sweep the history, then gate it (2026-09-25)
+The TRANSLATOR_GUIDE had described the stale-English trap since #388 (2026-08-06). A sweep on
+2026-09-25 still found 351 keys whose English had changed while every language kept the old text:
+renamed lords, 249 career tooltips with old numbers, rewritten faction lore, an empty promotion offer.
+- **Why missed:** nothing reports it. Discovery skips any row that differs from the English, so a
+  run over a stale file prints "0 untranslated" exactly like a clean one; the checklist relies on the
+  author of the English edit remembering 12 other files.
+- **Prevent:** after an English edit, reset the rows and the cache in the same change. Periodically,
+  walk each English source's `git log`, find each key's last text change, and flag rows byte-identical
+  to their value at that commit's parent (the method in the guide). Follow-up: turn that sweep into a
+  `tools/` check so the count is computed, not discovered.
+- **Source:** 1.5.x the 2026-09-25 localization sweep (CHANGELOG `fix(loc)`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A character copied with its localization key shows the original's name in every other language (2026-09-25)
+Lindon's 21 troops were copied from Rivendell's and kept the Rivendell `{=KEY}`s with new English
+defaults; six Umbar clans shared one key; two quest templates reused a third's fallback keys. English
+looked right everywhere, because English reads the inline default. The other 12 languages look up the
+key alone, so they showed one text for both.
+- **Why missed:** no gate compares the inline defaults of one key across files, and every English
+  surface a reviewer checks renders correctly.
+- **Prevent:** a character's name key is `aom_<id>_name`, changed whenever the character is copied;
+  a C# fallback key belongs to one class. When splitting a shared key, give the copy the new key, carry
+  the existing translations onto it, and translate only the reset original.
+- **Source:** 1.5.x the 2026-09-25 localization sweep (TRANSLATOR_GUIDE "One key, one character"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An override is a translation of one English text and goes stale with it (2026-09-25)
+`tools/translation_overrides/ru.json` pinned `taom_precompile_hint` to a translation of its July
+English. The English was rewritten for #560; the override outranked the cache and the re-translation,
+so Russian kept describing the old behaviour.
+- **Why missed:** overrides are written for names that never change, and nothing flags an override
+  whose key's English moved afterwards.
+- **Prevent:** keep sentences out of the override files; when editing English, grep the override
+  files for the key (TRANSLATOR_GUIDE checklist step 5).
+- **Source:** 1.5.x the 2026-09-25 localization sweep, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Seed a translation row by ownership: a second row for the same id in one language replaces the first (2026-09-25)
+`global_strings.xml` declares 26 `taom_aso_*` keys, 23 of them also in `taom_module_strings.xml`, and the translator maps it to the
+keybind file, so a `--sync-ids` run seeded all 26 into every keybind file. The engine keeps the row a language loads
+last (`LocalizedTextManager.DeserializeStrings` assigns by indexer; files load in `language_data.xml` order), and the
+keybind file loads after the module file: 22 copies replaced curated rows in 11 languages, the Italian "Dale" among them.
+- **Why missed:** the run printed "26 ids seeded" and nobody asked whether those ids already lived in another file of
+  the language; every check read one file at a time.
+- **Prevent:** `translate_with_claude.py` now skips a key another English source owns (`key_owners`) or another file
+  of the language carries (`skip_ids_for`); `LocalizationKeyConsistencyTests` fails on one id with two texts in one
+  language. When two English sources declare a key, treat that as a smell, not a feature.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

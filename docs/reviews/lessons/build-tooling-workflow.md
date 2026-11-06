@@ -3013,3 +3013,58 @@ sliced all but one entry into the paid phase. Someone deferring translation woul
 - **Prevent:** test a limit with `is not None`, reject negatives, and pin 0 and -1 with tests that patch the provider
   call to raise. For "do the free half only", add a flag that returns before the paid phase (`--seed-only`).
 - **Source:** 1.5.x `rca-keyforce-harad-javelins-2026-10-16.md` (D6 and the second review), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a gate on a tree it cannot read, not only on the fault it was built for (#1026, 2026-10-26)
+
+The text-processor gate skipped a file it could not parse, passed when it found no Native files, passed a release channel when the path was wrong, and its tests stayed green when the UTF-16 path or the exit code was deleted. This is the third gate on 2026-10-26 to pass on input it never read (after #1020 and #1017).
+
+- **Why missed:** the gate was proven on the live install that showed the fault, and its pass test for the release step was the absence of a FAIL line, which a run that never starts also meets.
+- **Prevent:** read inputs the way the consumer (the engine) reads them; exit 2 on an unreadable file, an empty reference set or zero files checked; give a release check a PASS line and an exit code with one meaning; kill a mutant of each guard (skip the parse, drop the exit code) before trusting the tests.
+- **Source:** 1.5.x `rca-text-processors-2026-10-26.md` findings 3 to 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Run the docs lint in the mode the hook runs: --fail-on-drift (2026-09-25)
+A new trap row was 197 characters (cap 180). `python tools/lint_docs.py` in report mode printed it among eight
+context-budget lines while the builder read only the dash count; `--fail-on-drift`, which the commit hook and CI run,
+exits 1 on it.
+- **Why missed:** the report mode exits 0 whatever it finds.
+- **Prevent:** before a commit that touches docs, run `python tools/lint_docs.py --fail-on-drift` and read the exit code.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Regenerating a generated file encodes every input's working-tree state, another session's included (2026-09-25)
+`generate_name_localization_strings.py --apply` rebuilt `taom_troop_name_strings.xml` from `troops/*.xml` as they stood
+on disk, so the file picked up another session's uncommitted Gondor renames and dropped a troop that session deleted;
+the translator then re-translated 75 language rows to those names. Committed alone, 11 languages would name troops the
+committed English does not.
+- **Why missed:** the regeneration's own diff looked right, and its inputs were not compared with HEAD.
+- **Prevent:** before regenerating a shared generated file, `git status` its inputs; if another session has them
+  modified, commit the regenerated file with that session's work or `/commit-split` the hunks.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a finding reverses a documented claim, grep the claim's key terms, not one phrasing (2026-09-24/25)
+On 2026-09-24 the builder corrected "the human set plays on the re-framed rig" in eight docs and missed a ninth,
+`troll-race.md`'s recipe step "Human clips need no retarget on a re-framed rig", worded differently.
+- **Why missed:** the sweep searched for the sentence as first written.
+- **Prevent:** grep the nouns of the claim together (here `re-framed` with `human clip`, `retarget`, `no retarget`)
+  across `docs/`, the CHANGELOG and tool docstrings, and read every hit.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A generator reads every fact the runtime owns from the runtime's source (#769 C1, 2026-10-15)
+The career forks generator parsed the effect enum from C#, but kept hand copies of which types are flat,
+class-filtered and mask-gated, which sign helps the player, and which troops pay upkeep. Each copy was wrong
+or drifted while it was under review: TroopMorale priced as a count, penalties priced as perks, a new
+class-filtered type refused, and upkeep counted by a field the runtime calls documentation only.
+- **Why missed:** a rules file feels like configuration, so facts the code decides were typed into it.
+- **Prevent:** before a generator writes a rule into its own config, ask who decides it at run time; if the
+  answer is C# or data, parse that source at run time and fail with exit 2 when it cannot be found. Keep only
+  design choices (units, budgets, caps, bans) in the rules file.
+- **Source:** 1.5.x `docs/reviews/rca-career-forks-generator-2026-10-15.md` pattern 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A data rule enforced in one writer is not enforced: list every tool that writes the file (2026-10-26)
+The fix taught `translate_with_claude.py` to skip English-only overrides. `rebuild_translation_files.py` and
+`generate_translation_template.py` also write the language files, and the translator guide prescribes both; each wrote
+all 177 deleted rows back, from the cache or as English that the translator then filled.
+- **Why missed:** the fix was tested against the tool it changed, not against the file it protects.
+- **Prevent:** before relying on a rule about what a data file may hold, grep `tools/` for every writer of that file
+  and route all of them through one shared function, with a test per writer that runs on a synthetic tree. Prune any
+  cache that would let a bypassing writer restore the data for free.
+- **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

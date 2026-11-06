@@ -1608,3 +1608,22 @@ Five cultures (goblin, mistymountainorcs, bluecraig, lindon, arthedain; 53 wande
 - **Why missed:** the engine reads those rows with `GameTexts.FindText`, which renders a missing id as text rather than failing load, and no test read the strings file against the wanderer list. #257 had fixed the same gap for Âbanissa and Shaghâna by hand on 2026-05-31 with no test, and it came back three times: goblin and mistymountainorcs (2026-06-02), bluecraig and lindon (2026-08-11), arthedain (2026-10-08). `tools/promote_borrowed_cultures.py` copies wanderer blocks and never touches the strings file.
 - **Prevent:** `WandererBackstoryCoverageTests` reads both files and fails on any wanderer missing one of the seven required rows; the culture and kingdom recipes now name the strings file. This is the rule of "A safety barrier that rests on shipped data needs a test, not a doc paragraph" above, applied late.
 - **Source:** 1.5.x #757, #257; `docs/reviews/rca-wanderer-backstory-strings-2026-10-08.md`; wanderers-and-named-companions.md "Gotchas", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A troop in a culture's hero party template reaches no lord whose clan binds its own (2026-09-25)
+Both trolls sit only in `kingdom_hero_party_mordor_template`, the Mordor culture's default. A lord's roster comes from
+`Clan.DefaultPartyTemplate`, which falls back to the culture's template only when the clan names none, and all 15 Mordor
+clans name their own (9 in `spclans.xslt`, 6 in `characters/clans.xml`). So no AI lord fields a troll, and a comment
+saying the troll "spawns via the Mordor hero party template" had carried the error since the cave troll's return.
+- **Why missed:** the hill troll copied the cave troll's placement and comment without tracing `LordPartyComponent`.
+- **Prevent:** before writing "spawns via template X", grep which clans and lords reference X; a culture template is a
+  fallback, not a roster.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A culture's lord template is not unused because every shipped clan binds its own (2026-09-25)
+The review called Mordor's culture template unused because all 15 Mordor clans bind a template. A companion
+made a lord gets a clan with the settlement's culture and no template (`Clan.CreateCompanionToLordClan`), so
+`Clan.DefaultPartyTemplate` falls back to the culture's, and `Campaign.CalculateAverageWage` reads every main
+culture's template too.
+- **Why missed:** the claim was built from the shipped data, not from the callers of `DefaultPartyTemplate`.
+- **Prevent:** before calling a template, list or setting unused, list every engine caller that can reach it.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 46, on `origin/bannerlord-1.5.x` (ported by WP142).
