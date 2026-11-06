@@ -186,7 +186,7 @@ def armor_attrs(item_id, slot, st):
     elif slot == "arm":
         parts = [f'arm_armor="{st["arm_armor"]}"', 'covers_hands="true"']
     elif slot == "leg":
-        parts = [f'leg_armor="{st["leg_armor"]}"', 'covers_legs="false"']
+        parts = [f'leg_armor="{st["leg_armor"]}"', 'covers_legs="true"']
     else:
         parts = [f'body_armor="{st["body_armor"]}"', f'arm_armor="{st["arm_armor"]}"']
     parts.append(f'modifier_group="{st["modifier_group"]}"')

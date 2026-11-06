@@ -61,6 +61,7 @@ Clone [`tools/generate_dale_armor.py`](../../tools/generate_dale_armor.py) (the 
 
 - **`STAT_TIERS`** dict — `{slot}.{tier} → {stats}` table. Cloned verbatim from Gondor/Dale; don't retune per culture unless intentional.
 - **`MATERIAL_BY_CLASS_TIER`** dict — `{class}.{tier} → (material, modifier_group)`. This is the **only culture-specific data table**. For Dale archers: light→Cloth, medium→Leather, heavy/elite→Chainmail. Customize per Solus's design.
+- **Leg pieces:** every greave and boot writes `covers_legs="true"` (shoes that leave the shin bare are the only exception, see [items-armor.md](../modding/items-armor.md) rule 5). Before the first `--apply`, list the attributes the generator writes for each slot and compare them with a sibling culture's items of that slot. Lothlorien shipped `covers_legs="false"` on all eight leg pieces because nobody did.
 - **`COVERS_HANDS_FALSE`** set — explicit allow-list of bracers/gauntlets that should NOT cover the hand mesh (visual: shows fingers below the wrist guard). The rest get `covers_hands="true"`.
 - **Parser** — regex over the manifest splits `[clo_]sk_<culture>_[<sub-region>_]<slot>_<class>_<variant>[_slim]`. Map components to slot key + material lookup.
 - **`generate_item_xml`** — emits one `<Item>` block per mesh ID. **Always** include `<Flags UseTeamColor="true" />` for banner-tint support. Set `culture="Culture.<id>"` (use the XSLT-host culture for passthrough cultures, e.g. `Culture.sturgia` for Dale).
@@ -286,6 +287,34 @@ Add `InitializeXxxCulture()`, optionally `InitializeXxxSettlements()`, optionall
 - Settlement override → correct settlement pool wins over culture pool.
 - Fallthrough → non-overridden settlements inherit culture pool.
 
+### 3d. Every consumer of the culture's troops
+
+A tree that loads, validates and passes the test suite can still hand out another culture's troops, because every gate checks that a reference resolves and none checks who owns it. Lothlorien had its own troop file and still paid out Rivendell troops through seven party templates, its enlistment kits, its career kits, its villager and eight of its eleven lords ([RCA](../reviews/rca-lorien-snow-orcs-2026-11-05.md)). Walk this list for any culture that gets its own troop file, and pin the answer in a data test (`LothlorienOwnTreeDataTests` is the shape).
+
+| Consumer | Where | Do |
+|---|---|---|
+| Troop and militia slots | `taom_spcultures.xml` culture block | Name only the culture's own troops, including the four militia slots |
+| Seven military templates | culture block and `taom_partyTemplates.xml` | Default army, three patrols, militia, rebels, vassal reward: each its own template, fielding only the culture's troops |
+| Villager | `characters/npcs_<culture>.xml`, `villager_<culture>_template`, culture attributes `villager` and `villager_party_template` | Its own villager, upgrading into the culture's `basic_troop` |
+| Lord kit | `equipmentsets/taom_equipment_sets_<culture>.xml` | Battle sets in the culture's own armour. Heroes are exempt from slot mixing, so each set is one whole kit. Lord kit is saved hero state: new campaigns only |
+| Enlistment rosters | `generate_enlistment_rosters.py --culture <id> --reseed --apply` | Run after the final troop file, and only with `--culture` (see the order below) |
+| Career kits | `generate_career_kits.py`, `KIT_SOURCE`, and the mirror in `StarterKitCoverageTests` | Remove any alias to another culture, then `--verify` |
+| Troop weights | `TroopWeights/troop_weights.xml` | A row for every troop from level 31 up, by the level rule at the top of the file |
+| Crown guard | `CrownGuardMap.cs` and `crown_guard_cultures.json` | A troop of the culture |
+| Clan specs | `build_clan_specs.py` `CULTURE_TABLE` | Move the culture out of `TROOPLESS_TABLE` |
+| Armour classes | `generate_armour_classes.py --check`, then `--apply` | New and newly worn pieces change the table |
+| Art cache | `check_rdc_entries.py --under <folder>` | A package without `RuntimeDataCache/<GUID>.rdc` is skipped whole, with no log line |
+| Loc | `check_external_loc_coverage.py`, issue #763 | Raise the baseline in the same change and add the #763 row |
+
+**Order of generator runs.** Each step reads the output of the one before it, and the order lives nowhere but here:
+
+1. The troop generator, then `rebalance_troops.py --fix-monotonicity --restat <ids>` and `rebalance_ranged_ladders.py --apply` for the skills.
+2. `generate_enlistment_rosters.py --culture <id> --reseed --apply`. Run before the militia and skills exist, it seeds a partial set (Lothlorien got 9 of 14 cells). Run without `--culture`, it rewrote about 6,700 lines across other cultures.
+3. `generate_career_kits.py --verify`, `generate_armour_classes.py --check`, then every generator's own `--check` (`--verify` for career kits).
+4. A generator without `--check` cannot be compared with the shipped file. Run it into a scratch copy and diff it before you trust the shipped output.
+
+Run the validator from the checkout you changed: it derives its data root from its own location, so a copy in another worktree validates that worktree's files.
+
 ---
 
 ## Phase 4: Validation gate
@@ -390,6 +419,7 @@ The patterns visible in the Dale generator code (clone these explicitly for your
 | **Bearer banner** | `Main/_Module/ModuleData/banner_bearers/banner_bearers_config.json` and `BannerBearerConfig.cs` | modified (+ a `CultureBanners` row; gated by `ShippedConfig_MapsEveryInfantryTroopCultureToABanner`) |
 | **Crown guard** | `Main/_Module/ModuleData/crown_guard/crown_guard_cultures.json` and `CrownGuardMap.Default()` | modified when the culture rules a kingdom (+ a row; gated by `ShippedConfig_KeysEqualTheKingdomCultures`) |
 | **Hall of Fire** | `Main/_Module/ModuleData/hall_of_fire/hall_of_fire.json` and `HallOfFireMap.Default()` | modified when the culture owns a settlement (+ a row; gated by `ShippedConfig_EveryConversionTargetCultureHasARowOrIsVanilla`, `ShippedConfig_EqualsTheBuiltInDefault` and the live `EveryCultureOwningANonHideoutSettlement_HasARowOrIsVanilla`) |
+| **Other consumers of the troops** | villager, lord kits, enlistment, career kits, weights, clan spec, art cache | modified (see 3d) |
 | **Culture wiring** | `Main/_Module/ModuleData/spcultures.xslt` | modified (Culture[@id='X'] block — ~9 military attrs minimum) |
 | **Party templates** | `Main/_Module/ModuleData/taom_partyTemplates.xml` | modified (+10 templates) |
 | **Recruitment** | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | modified (+ `InitializeXxxCulture` minimum) |

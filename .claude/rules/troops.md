@@ -19,6 +19,7 @@ Update ALL of the following (checklist):
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
+| 7. Other consumers | villager, lord kits, enlistment, career kits, weights, crown guard, clan spec, art cache | [new-culture-authoring.md](../../docs/ai-includes/new-culture-authoring.md) 3d, with the generator order |
 
 ## Equipment sets are mixed PER SLOT, not chosen whole (MANDATORY before editing any troop roster)
 

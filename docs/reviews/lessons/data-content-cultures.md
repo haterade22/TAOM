@@ -2316,3 +2316,27 @@ The Evendim Warden carried a poleaxe in Item0 on the generator's `twohand` curve
 - **Why missed:** a role name describes a weapon family ("two-handed"), and a poleaxe is two-handed by name. No gate compares the relevant skill of Item0 with the curve; two older troops (`arthedain_squire`, `rhudaur_squire`) have the same shape.
 - **Prevent:** for every new troop read the crafting template of Item0 and map it with `WeaponComponentData.GetRelevantSkillFromWeaponClass`: polearms (and pikes) take the `spear` role, two-handed swords and axes `twohand`, one-handed blades `sword`. Pin it in the generator's test (`test_the_evendim_warden_fights_its_opening_poleaxe_at_its_best_melee_skill` is the shape).
 - **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) finding F1.
+
+### Compare every attribute of a generated item family with a sibling's same-slot items (Lorien leg armour, 2026-11-06)
+
+The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces, so every greave drew with the bare shin showing through. The deep review of 2026-11-05 had read the same generator and fixed `has_gender_variations` and the lord-only flag, because those were the attributes it already suspected. It never listed the others.
+
+- **Why missed:** the review checked the attributes it expected to be wrong. No gate reads `covers_legs` ([moduledata-validation.md](../../features/moduledata-validation.md) lists it as a coverage gap), and [items-armor.md](../../modding/items-armor.md) rule 5 states the convention but nothing enforces it.
+- **Prevent:** before the first `--apply` of an item generator, list the attributes it writes for each slot and diff that set against a sibling culture's items of the same slot. `tools/tests/test_generate_lothlorien_armor.py` pins `covers_legs` for Lorien. Shoes that leave the shin bare stay `false` on purpose (Mike, 2026-11-06).
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R6.
+
+### Look for where an asset lives before calling it unversioned (Lorien armour, 2026-11-05)
+
+The first review report said the Lorien armour was in no repo and would break a clean checkout. The items and art are in the lotraom-assets repo (`E:\repos\lotraom-assets`), which the maintainer syncs into the live Armory by hand.
+
+- **Why missed:** the trap index says the Armory is unversioned, and the report stopped there instead of looking for the source repo.
+- **Prevent:** before reporting a risk about an unversioned module, check lotraom-assets (`git log -- <path>`) and the mirror's `RuntimeDataCache` folder. A session never edits the mirror: it is the maintainer's to sync.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R1.
+
+### Run dependent generators in order, and scope each to one culture (Lorien enlistment, 2026-11-05)
+
+The Lorien enlistment rosters were seeded before the militia troops existed, so 9 of 14 cells were seeded and an archer recruit got a spear and shield with no bow. A later unscoped `generate_enlistment_rosters.py --apply` rewrote about 6,700 lines across other cultures, which had to be reverted.
+
+- **Why missed:** the order troops, then skills, then enlistment was kept in the session's head. The enlistment generator has no `--check`, so no command compared its output with the shipped file.
+- **Prevent:** follow the order in [new-culture-authoring.md](../../ai-includes/new-culture-authoring.md) 3d, always pass `--culture`, and diff a generator without `--check` against a scratch copy. Adding `--check` to the troop and enlistment generators is a standing follow-up.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F3 and round 2, R3.
