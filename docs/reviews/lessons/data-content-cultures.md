@@ -1596,3 +1596,15 @@ the same attribute.
   in the same change. A group gate uses the engine's hero rule (horse crossed with launcher) in both
   directions, and it reads troop-level `<equipment>`, where the Falcons carry their horse.
 - **Source:** 1.5.x `docs/reviews/rca-dunland-formation-groups-2026-10-20.md`; #555 item 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live Armory edit is not shipped until a release channel carries it (2026-10-02)
+The troll-gear lockout edited the dev install's Armory and called it done; the XML lens ran the new gate against `E:\LOTRAOM_Releases\testing\Modules` and got the same 15 findings as before the edit. Players get the Armory from the releases folder after Mike's next editor package, and the gate and commit hook read only `BANNERLORD_GAME_DIR`.
+- **Why missed:** "live" was read as "what players run"; the three-part guard for a live edit (a replay script in `tools/`, a gate, a snapshot README "APPLIED EDIT" block) was applied one part in three, with the script left in the scratchpad.
+- **Prevent:** every live Armory or TAOM_Map edit ships with a `tools/` replay script that takes a `--modules` root, its "APPLIED EDIT" block, and a gate run with `--game-modules` against each release channel; the doc says which channels carry it.
+- **Source:** 1.5.x `docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A cloned wanderer block brings no backstory strings (wanderer ERROR text, 2026-10-08)
+Five cultures (goblin, mistymountainorcs, bluecraig, lindon, arthedain; 53 wanderers) copied a donor's `NPCCharacter` blocks into `taom_wanderers.xml` but never added rows to `taom_wanderer_strings.xml`, so their conversations printed "ERROR: Text with id backstory_c doesn't exist!". The 2026-09-05 handbook measured the gap at 40 and recorded it as a gotcha, and Arthedain still added 13 more, because a measured gap with no gate does not stop the next culture.
+- **Why missed:** the engine reads those rows with `GameTexts.FindText`, which renders a missing id as text rather than failing load, and no test read the strings file against the wanderer list. #257 had fixed the same gap for Âbanissa and Shaghâna by hand on 2026-05-31 with no test, and it came back three times: goblin and mistymountainorcs (2026-06-02), bluecraig and lindon (2026-08-11), arthedain (2026-10-08). `tools/promote_borrowed_cultures.py` copies wanderer blocks and never touches the strings file.
+- **Prevent:** `WandererBackstoryCoverageTests` reads both files and fails on any wanderer missing one of the seven required rows; the culture and kingdom recipes now name the strings file. This is the rule of "A safety barrier that rests on shipped data needs a test, not a doc paragraph" above, applied late.
+- **Source:** 1.5.x #757, #257; `docs/reviews/rca-wanderer-backstory-strings-2026-10-08.md`; wanderers-and-named-companions.md "Gotchas", on `origin/bannerlord-1.5.x` (ported by WP142).

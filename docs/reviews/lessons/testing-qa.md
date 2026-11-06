@@ -1485,3 +1485,8 @@ brush that draws unstyled in game could have passed.
 - **Prevent:** before writing a gate over engine resources, read the loader (`UIResourceManager`, `ResourceDepot`,
   `BrushFactory` here) and the nearest sibling gate, model the same set, and pin one name the model must exclude.
 - **Source:** 1.5.x `rca-messengers-brushes-2026-10-24.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A shipped-config test reads the file without the provider's merge (#749, 2026-10-06)
+- **Why missed:** the Lindon survival-bonus test copied `BattleBalanceConfigProvider`'s `JsonConvert.DeserializeObject<T>(json)`. Json.NET's default `ObjectCreationHandling.Auto` reuses a pre-initialised dictionary property and merges the file's keys into it, so with the compiled default also holding `lindon`, the "file has no lindon row" assert could never fire. RED had been checked only when both rows were absent.
+- **Prevent:** when a test pins what a JSON file carries and the target class initialises a collection, deserialize with `ObjectCreationHandling.Replace`, then prove RED by removing the row from the file while the compiled default still has it.
+- **Source:** 1.5.x `docs/reviews/rca-lindon-balance-tables-2026-10-06.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

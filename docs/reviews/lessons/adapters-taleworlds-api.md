@@ -736,3 +736,36 @@ troop and inventory exchange, companion recall, a gift line).
   every reachable dialog consequence for the same writes. Gate the feature's lines on one shared "remote
   conversation" flag rather than one check per feature.
 - **Source:** 1.5.x `docs/reviews/rca-messenger-session-rules-2026-10-23.md` findings 1 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the engine's fallback before compensating for a missing role (enlisted survival redirect, 2026-10-26)
+The healing model redirected an enlisted player's survival roll to his commander's party, on the premise that his own
+one-hero party had no surgeon. Vanilla's effective surgeon falls back to the party leader, so the player already rolled
+with his own Medicine and Cheat Death, and the redirect made some players more likely to die.
+- **Why missed:** the comment stated the premise. The 2026-08-08 review did read the effective-role getters and their
+  leader fallback, but applied them to the commander's party and never to the player's own party.
+- **Prevent:** before code that makes up for an engine gap (a missing role, perk or bonus), read the engine getter that
+  fills that role and quote its fallback in the comment. If the fallback already covers the case, delete the workaround.
+- **Source:** 1.5.x `rca-camp-work-2026-10-26.md` Follow-ups, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard on TAOM's call does not guard the engine's call: pin its precondition in data (Lord Banners, 2026-10-19)
+TAOM checks every formation's heraldry before its own `SetFormationBanner`, because the native banner-tableau rebuild
+crashed on a troop with an empty heraldry banner (`rca-banner-bearers-siege-ctd-2026-07-23.md`). Lord Banners (#823)
+gave TAOM lords banner items, so vanilla's `GeneralsAndCaptainsAssignmentLogic` now banners their formations first,
+AI teams included, and TAOM's guarded path skips them. Nothing failed: every clan and kingdom `banner_key` parses to
+at least one layer. But nothing pinned that, so one malformed key would have reopened the crash with no guard in
+front.
+- **Why missed:** the plan traced the overridden model's reader, not where the value it produces is consumed
+  downstream, and so not which TAOM guard sat on the old consumer.
+- **Prevent:** when a change routes data onto another path to an engine call that TAOM guards only at its own call
+  site, the guard no longer applies there: make its precondition hold in the shipped data and pin that with a test
+  (`ShippedHeraldryBannerKeyTests`). Search the TAOM code for guards on the engine method the new path reaches.
+- **Source:** 1.5.x `docs/reviews/rca-lord-banners-2026-10-19.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a campaign behavior's RegisterEvents before stating when it acts (Lord Banners, 2026-10-19)
+The Lord Banners doc said existing saves would get banners over several days through the daily tick.
+`BannerCampaignBehavior` registers `GiveBannersToHeroes` on `OnGameLoadFinishedEvent` as well as on new game, so
+every eligible lord gets one as the save finishes loading, prisoners included.
+- **Why missed:** research read the give methods and inferred their triggers instead of reading `RegisterEvents`.
+- **Prevent:** before writing when or how often a vanilla behavior does something, read its `RegisterEvents` and list
+  every event that reaches the method.
+- **Source:** 1.5.x `docs/reviews/rca-lord-banners-2026-10-19.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
