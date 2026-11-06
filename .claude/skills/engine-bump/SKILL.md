@@ -110,6 +110,15 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    `TAOM.Tests/bin/{Debug,Release}/net472` and **throws if TAOM.Tests has not been built**, so build
    first; and `-Check` exits 1 with DRIFT when a patch target or GameModel base moved, which after a bump is expected until you
    regenerate. It ignores the backlinks footer.
+   The same gate runs Patch99's live harness (`XmlMergeLiveEquivalenceTests`), because the IL
+   fingerprint of the merge bodies does not pin every input of the merge. Its runsettings set
+   `TAOM_RUN_BENCHMARKS=1`, which a plain `dotnet test` needs to run it. A red harness means the fast
+   path no longer matches the engine's merge, or the gate's inventory or speed rule failed: read the
+   message ([fast path](../../../docs/features/xml-merge-fast-path.md), "How to run the harness").
+   - The hand-copied engine id sets, which stay green when the engine drops an id: the policy ids in
+     `KingdomPolicyIdsTests.EnginePolicyIds` (re-read `DefaultPolicies.RegisterAll`, #756).
+   - A vanilla prefab that moved: read `PrefabCloneWidgetReferenceTests`, re-base the clone on the
+     installed file and re-apply TAOM's edits, and delete a clone with no TAOM edit.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines. **Report-only: it contains no `sys.exit` and always exits 0**, so it cannot be
    gated on in a script and a green exit code proves nothing — READ the output.

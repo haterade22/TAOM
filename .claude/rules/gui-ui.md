@@ -22,6 +22,8 @@ Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 3. **Do NOT add module prefixes** — a PNG at `SpriteParts/ui_taom/CareerSystem/foo.png` is `CareerSystem\foo`, NOT `TAOM\CareerSystem\foo`
 4. **Verify the PNG exists** — check `GUI/SpriteParts/ui_taom/<subfolder>/` before referencing
 
+Gate for `Sprite=` in a prefab or PrefabExtension: `PrefabSpriteTests` (vanilla and runtime sprites count).
+
 **Why:** Sprite="TAOM\CareerSystem\career_button_placeholder" failed silently (blank button, no crash, no log) because the registered name was "CareerSystem\career_button_placeholder". This class of bug is invisible without in-game testing.
 
 **The same rule applies to `Brush="X"` (added 2026-08-05).** `BrushFactory.GetBrush(name)` returns

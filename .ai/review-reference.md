@@ -32,6 +32,11 @@ The finding line, grouping, totals and verdict are in [report-format.md](report-
 
 ### Lessons From Prior Reviews, distilled
 
+- **Feeds a new filter or gate the input that should fail it** (2026-09-30, KEYforce art, 2 of 2 LOW
+  real): a troop whose spider sat only in its second battle set (the filter kept it), and three XML
+  fragments the new siege-scene gate misjudged. For a new filter or gate, ask for that input.
+- **What the deserializer assembles, not the XML's shape** (2026-09-30, KEYforce art: a Codex miss that three scoped Claude lenses caught in the fix review). Codex's fix for a first-roster-only mount read named every battle roster and battle `EquipmentSet` references, but not the `<equipment>` written directly under `<Equipments>`, which `MBEquipmentRoster.AddOverriddenEquipments` writes over its slot in every set; 88 troops mount that way. When a finding models what a troop carries, list every path `BasicCharacterObject.Deserialize` takes.
+
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
 - **Deletes and reorders a call the unit tests cannot reach** (2026-10-08, War of the Ring Phase 2 wars
   #772, 3 of 3 findings real): handed a host-only handler that reads `Campaign.Current`, it ran the real
@@ -340,7 +345,7 @@ These are all registered, intentional patches — do not flag them as unauthoriz
 | `Patch39_BanditPartySize` | Scale bandit initial rosters by PlayerProgress (cap = stack MaxValue) | `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (Postfix) | active |
 | `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
 | `Patch41_McmLayoutFix` | Flip MCM options screen to top-to-bottom layout (#252) | UIExtenderEx `WidgetFactoryManager.CreateAndRegister` (Postfix) | active |
-| `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
+| `Patch42_CastleRecruitment` | Castle troop recruitment, AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler) | active |
 | `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + mission-exit lifecycle + stall watchdog | 11 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `Mission.EndMission`, `MapState.OnTick`, ...) | active |
 | `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
 | `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |

@@ -109,6 +109,8 @@ A hand-written service may be split into partial files by concern, as `Volunteer
 - The main file's remarks list the parts.
 - The class still has one responsibility, and every part is covered by the same test suite.
 
+Known gap: `VolunteerRecruitmentService.DolGuldur.cs` and `VolunteerRecruitmentService.Erebor.cs` declare 3 fields of their own, against the rule above; move them to the main file at the next edit of the service.
+
 A partial file is still subject to the 150-line limit for entry points (ADR-002); it is never a way to grow a behavior, a patch or a model. Regions remain forbidden.
 
 Decided by the maintainer on 2026-10-21 on the 1.5.x line, after the Fire and Tribute review (#870) found other classes already split this way, and ported to this line on 2026-11-05. Known gap when it was ported: `VolunteerRecruitmentService` does not list its parts in its remarks. Bring it into line when it is next changed.

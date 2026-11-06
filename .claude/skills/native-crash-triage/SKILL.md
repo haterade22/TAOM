@@ -19,6 +19,8 @@ protocol has produced was DATA (XML) or a routing patch; never a blind retry.
 
 A crash reported only by logs: read every line of both logs, collapsing repeats with `sort | uniq -c`, before naming a cause. Never tail and grep, because a native crash leaves no error line. A player's engine build is context, not a finding to file, and never "tell players to update"; you still need it to read an RVA.
 
+A battle frozen with threads spinning at a `lock xadd`: TAOM guards the engine's first two skeleton pools, so read the session's `[SkeletonBuffer] guard` lines (`guard ON pool N`, `guard OFF pool N: <reason>`, or one `guard OFF: <reason>` when the whole install stopped). A hang in pool 1 or 2 means that pool's guard was off or another module's.
+
 ## Phase 1 — Collect (no debugger needed)
 
 1. **Windows Event Log gives the faulting module + offset even after a CTD:**
