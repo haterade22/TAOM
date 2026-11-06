@@ -7,24 +7,33 @@ the target file is an empty stub (no <string> elements to substitute). This scri
 builds the target files from scratch by walking the English source structure and
 injecting translations from override/cache.
 
-Usage: python tools/rebuild_translation_files.py --lang RU
-       python tools/rebuild_translation_files.py --all
+A run is a dry run unless it carries --apply, and it must name every module it may write with --module
+(TAOM, TAOM_Map, Armory; repeat the flag for more than one). A run with no --module exits 2 and writes nothing.
+Do not rebuild the TAOM module this way: its language files are curated, and a rebuild drops rows
+(tools/README.md). The Armory and TAOM_Map writes are backed up first.
+
+Usage: python tools/rebuild_translation_files.py --lang RU --module Armory            (dry run)
+       python tools/rebuild_translation_files.py --lang RU --module Armory --apply    (writes)
+       python tools/rebuild_translation_files.py --all --module TAOM_Map --module Armory --dry-run
 """
 
 import argparse
 import json
 import re
+import shutil
 import sys
 import xml.etree.ElementTree as ET
+from datetime import datetime
 from pathlib import Path
 
-from _gamedir import ensure_exists, game_modules
-from translate_with_claude import override_ids_to_skip
+from _gamedir import DEFAULT_GAME_ROOT, ensure_exists, game_modules
+from _loc_sources import TAOM_SOURCES
+from translate_with_claude import key_owners, override_ids_to_skip
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME_ROOT = game_modules(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+GAME_ROOT = game_modules(DEFAULT_GAME_ROOT)
 
 LANGUAGES = {
     "BR":  ("por-BR", "Portuguese (Brazilian)"),
@@ -42,9 +51,68 @@ LANGUAGES = {
 }
 
 
+def taom_sources(locale):
+    """The TAOM English sources and their language file names, from the table every localization tool shares."""
+    return [(src, tpl.format(locale=locale)) for src, tpl in TAOM_SOURCES]
+
+
+def source_owners():
+    """Each key's owning source: the first table row that declares it (key_owners)."""
+    return key_owners([REPO_ROOT / "Main" / "_Module" / "ModuleData" / src for src, _ in TAOM_SOURCES])
+
+
+def owned_elsewhere(owners, key, src_path):
+    """True when another source owns the key: a row here would load after the owner's and replace its curated row."""
+    return owners.get(key, src_path) != src_path
+
+
 def escape(text):
     return (text.replace("&", "&amp;").replace('"', "&quot;")
                 .replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def write_text_file(path, content, dry_run, backup=False):
+    """Write `content` to `path` unless dry_run. With backup, an existing file whose bytes would change is copied aside first."""
+    if dry_run:
+        return
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = content.encode("utf-8")
+    if backup and path.exists() and path.read_bytes() != data:
+        shutil.copy2(path, str(path) + ".bak_nametags_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+    # Bytes: the content already holds CRLF, and text mode would write CR CR LF.
+    path.write_bytes(data)
+
+
+def _rows_of(xml_text):
+    root = ET.fromstring(xml_text.encode("utf-8"))
+    return {el.get("id"): el.get("text") or "" for el in root.iter("string")}
+
+
+def summarize_map_diff(current_xml, new_xml):
+    """How `new_xml` differs from `current_xml`: rows, changed rows, row-set differences."""
+    cur, new = _rows_of(current_xml), _rows_of(new_xml)
+    summary = {"rows": len(new), "unchanged": 0, "other_changes": [],
+               "only_in_new": [i for i in new if i not in cur], "only_in_current": [i for i in cur if i not in new]}
+    for sid, text in new.items():
+        if sid not in cur:
+            continue
+        if cur[sid] == text:
+            summary["unchanged"] += 1
+        else:
+            summary["other_changes"].append((sid, cur[sid], text))
+    return summary
+
+
+def report_dry_run(label, path, content):
+    """Print how a dry-run rebuild of `path` would differ from the file on disk (read only)."""
+    if not Path(path).exists():
+        print(f"  {label} dry run: {path} does not exist yet")
+        return
+    s = summarize_map_diff(Path(path).read_text(encoding="utf-8"), content)
+    print(f"  {label} dry run vs the current file: {s['rows']} rows, "
+          f"{s['unchanged']} unchanged, {len(s['other_changes'])} other changes, "
+          f"{len(s['only_in_new'])} only in the rebuild, {len(s['only_in_current'])} only in the current file")
 
 
 def parse_source_with_keys(path):
@@ -108,9 +176,13 @@ def build_translation_xml(language_tag, ordered_entries):
     return "\r\n".join(lines)
 
 
-def rebuild_language(lang):
+MODULES = ("TAOM", "TAOM_Map", "Armory")
+
+
+def rebuild_language(lang, modules, dry_run=True):
+    """Rebuild `lang` for the named `modules` only; writes nothing while dry_run is true (the default)."""
     locale, lang_name = LANGUAGES[lang]
-    print(f"\n[{lang}] {lang_name}")
+    print(f"\n[{lang}] {lang_name}{' (dry run: nothing is written)' if dry_run else ''}")
 
     # Load overrides + cache
     overrides_path = REPO_ROOT / "tools" / "translation_overrides" / f"{lang.lower()}.json"
@@ -129,21 +201,10 @@ def rebuild_language(lang):
             return cache[sid], "cache"
         return english, "english_fallback"
 
-    # ─── TAOM module: 10 source XMLs ────────────────────────────────────────────
-    taom_sources = [
-        ("taom_module_strings.xml",                       f"std_taom_module_strings_{locale}.xml"),
-        ("taom_wanderer_strings.xml",                     f"std_taom_wanderer_strings_{locale}.xml"),
-        ("named_companions/named_companion_strings.xml",  f"std_taom_named_companion_strings_{locale}.xml"),
-        ("taom_cc_strings.xml",                           f"std_taom_cc_strings_{locale}.xml"),
-        ("taom_career_strings.xml",                       f"std_taom_career_strings_{locale}.xml"),
-        ("taom_messenger_strings.xml",                    f"std_taom_messenger_strings_{locale}.xml"),
-        ("taom_xslt_strings.xml",                         f"std_taom_xslt_strings_{locale}.xml"),
-        ("taom_wotr_strings.xml",                          f"std_taom_wotr_strings_{locale}.xml"),
-        ("taom_lotr_issue_strings.xml",                   f"std_taom_lotr_issue_strings_{locale}.xml"),
-        ("taom_emissary_strings.xml",                     f"std_taom_emissary_strings_{locale}.xml"),
-    ]
+    # ─── TAOM module: the sources of tools/_loc_sources.py ──────────────────────
+    owners = source_owners() if "TAOM" in modules else {}
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
-    for src_rel, tgt_name in taom_sources:
+    for src_rel, tgt_name in (taom_sources(locale) if "TAOM" in modules else []):
         src_path = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_rel
         if not src_path.exists():
             print(f"  [skip] {src_rel} not found")
@@ -156,19 +217,22 @@ def rebuild_language(lang):
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
         for sid, english in src_map.items():
-            if sid in english_only:
+            if sid in english_only or owned_elsewhere(owners, sid, src_path):
                 continue
             text, source = resolve(sid, english)
             ordered.append((sid, text))
             stats[source] += 1
         content = build_translation_xml(lang_name, ordered)
-        tgt_path.write_text(content, encoding="utf-8")
+        if dry_run:
+            report_dry_run(f"TAOM {tgt_name}", tgt_path, content)
+        write_text_file(tgt_path, content, dry_run)
         print(f"  TAOM {tgt_name}: {len(ordered)} entries (override={stats['override']} cache={stats['cache']} en_fallback={stats['english_fallback']})")
 
     # ─── TAOM_Map: settlements.xml ──────────────────────────────────────────────
     settlements_xml = GAME_ROOT / "TAOM_Map" / "ModuleData" / "settlements.xml"
     map_target = GAME_ROOT / "TAOM_Map" / "ModuleData" / "Languages" / lang / "loc_settlements.xml"
-    if settlements_xml.exists():
+    if "TAOM_Map" in modules:
+        ensure_exists(settlements_xml, what="TAOM_Map's settlements.xml")
         src_map = parse_settlements_xml(settlements_xml)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
@@ -177,19 +241,22 @@ def rebuild_language(lang):
             ordered.append((sid, text))
             stats[source] += 1
         content = build_translation_xml(lang_name, ordered)
-        map_target.parent.mkdir(parents=True, exist_ok=True)
-        map_target.write_text(content, encoding="utf-8")
+        if dry_run:
+            report_dry_run("TAOM_Map loc_settlements.xml", map_target, content)
+        write_text_file(map_target, content, dry_run, backup=True)
         print(f"  TAOM_Map loc_settlements.xml: {len(ordered)} entries (override={stats['override']} cache={stats['cache']} en_fallback={stats['english_fallback']})")
 
     # ─── LOTRLOME_Armory: 19 source XMLs at root of Languages/ ─────────────────
     armory_root = GAME_ROOT / "LOTRLOME_Armory" / "ModuleData" / "Languages"
-    # mkdir(parents=True) under a root that does not exist quietly builds the
-    # whole Modules/LOTRLOME_Armory/ModuleData/Languages/<lang> chain there,
-    # finds no loc_*.xml to read, and the run still ends on "Done." (#404).
-    ensure_exists(armory_root, what="the Armory Languages folder")
     armory_target = armory_root / lang
-    armory_target.mkdir(parents=True, exist_ok=True)
-    for src_path in sorted(armory_root.glob("loc_*.xml")):
+    if "Armory" in modules:
+        # mkdir(parents=True) under a root that does not exist quietly builds the
+        # whole Modules/LOTRLOME_Armory/ModuleData/Languages/<lang> chain there,
+        # finds no loc_*.xml to read, and the run still ends on "Done." (#404).
+        ensure_exists(armory_root, what="the Armory Languages folder")
+        if not dry_run:
+            armory_target.mkdir(parents=True, exist_ok=True)
+    for src_path in (sorted(armory_root.glob("loc_*.xml")) if "Armory" in modules else []):
         src_map = parse_armory_english(src_path)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
@@ -199,14 +266,28 @@ def rebuild_language(lang):
             stats[source] += 1
         content = build_translation_xml(lang_name, ordered)
         tgt = armory_target / src_path.name
-        tgt.write_text(content, encoding="utf-8")
+        if dry_run:
+            report_dry_run(f"Armory {src_path.name}", tgt, content)
+        write_text_file(tgt, content, dry_run, backup=True)
         print(f"  Armory {src_path.name}: {len(ordered)} entries (override={stats['override']} cache={stats['cache']} en_fallback={stats['english_fallback']})")
 
 
-def main():
+def build_parser():
     p = argparse.ArgumentParser()
     p.add_argument("--lang", choices=list(LANGUAGES.keys()))
     p.add_argument("--all", action="store_true")
+    p.add_argument("--module", action="append", choices=MODULES, required=True,
+                   help="a module this run may write; repeat for more than one. TAOM is not meant for this tool")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true", help="write the files (default: a dry run that writes nothing)")
+    mode.add_argument("--dry-run", action="store_true",
+                      help="the default, stated: build every file in memory and write none; "
+                           "for the live TAOM_Map file print the diff")
+    return p
+
+
+def main():
+    p = build_parser()
     args = p.parse_args()
 
     if args.all:
@@ -217,7 +298,7 @@ def main():
         p.error("Specify --lang LANG or --all")
 
     for lang in targets:
-        rebuild_language(lang)
+        rebuild_language(lang, set(args.module), dry_run=not args.apply)
 
     print("\nDone.")
 

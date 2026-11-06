@@ -77,6 +77,18 @@ public class FactionMapDataTests
         AssertArrayLength(faction, "traits", min: 3, factionKey);
     }
 
+    // The game_faction keys the retired make_new_factions_playable.py --apply wrote stale (rivendell for Lindon,
+    // goblin for Blue Craig). A key that names another real culture still resolves, so only a pinned row catches it.
+    [DataTestMethod]
+    [DataRow("goblins_of_blue_craig", "bluecraig")]
+    [DataRow("high_kingdom_of_lindon", "lindon")]
+    public void Faction_GameFaction_IsItsOwnCulture(string factionKey, string gameFaction)
+    {
+        var faction = LoadFactions()[factionKey] as JObject;
+        Assert.IsNotNull(faction, $"faction key '{factionKey}' missing from factions.json");
+        Assert.AreEqual(gameFaction, faction.Value<string>("game_faction"));
+    }
+
     private static void AssertArrayLength(JObject faction, string field, int min, string factionKey)
     {
         var arr = faction[field] as JArray;

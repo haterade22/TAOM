@@ -122,7 +122,7 @@ Generate at 2x the widget size for sharpness — the engine downscales at runtim
 | Type | Filename | Registered Name (TAOMSpriteData.xml) |
 |------|----------|--------------------------------------|
 | Portrait | `career_{career_id}_portrait.png` | `CareerSystem\Portraits\career_{career_id}_portrait` |
-| Ability icon | `{ability_template_id}.png` | `CareerSystem\Abilities\{ability_template_id}` |
+| Ability icon | `{ability_template_id}.png` | `CareerSystem\Abilities\{ability_sprite, else ability_template_id}` |
 | Career button | `career_button_placeholder.png` | `CareerSystem\career_button_placeholder` |
 
 ### How to Add a Career Portrait
@@ -154,7 +154,7 @@ Generate at 2x the widget size for sharpness — the engine downscales at runtim
    </GenericSprite>
    ```
 5. Copy to game install and run sprite generator
-6. The VM constructs the path as `CareerSystem\Abilities\{ability_template_id}`
+6. The VM constructs the path as `CareerSystem\Abilities\{AbilitySprite}`: the career's `ability_sprite` attribute when set, else its `ability_template_id`. The 18 cloned careers set `ability_sprite` to their source's template id and so show that icon; to give a clone its own, bake the PNG and delete that career's `ability_sprite`.
 
 ### Sprite Migration Checklist
 

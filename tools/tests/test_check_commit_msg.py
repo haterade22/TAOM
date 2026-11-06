@@ -138,6 +138,25 @@ class EntryTests(unittest.TestCase):
             self.assertEqual(ccm.entry(["check_commit_msg.py"]), 2)
 
 
+@unittest.skipUnless(shutil.which("git"), "needs git")
+class CommitVersionTests(unittest.TestCase):
+    def test_an_unstaged_version_edit_is_not_the_version_the_commit_carries(self):
+        tmp = tempfile.mkdtemp(prefix="taom_commitver_")
+        self.addCleanup(shutil.rmtree, tmp, True)
+        path = Path(tmp) / ccm.SUBMODULE
+        path.parent.mkdir(parents=True)
+        path.write_text('<Version value="v2.0.36"/>', encoding="utf-8")
+        subprocess.run(["git", "init", "-q", tmp], check=True)
+        subprocess.run(["git", "-C", tmp, "add", ccm.SUBMODULE], check=True)
+        subprocess.run(["git", "-C", tmp, "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+                        "commit", "-q", "-m", "seed"], check=True)
+        path.write_text('<Version value="v9.0.0"/>', encoding="utf-8")
+        before = os.getcwd()
+        self.addCleanup(os.chdir, before)
+        os.chdir(tmp)
+        self.assertEqual(ccm.commit_version(), "v2.0.36")
+
+
 @unittest.skipUnless(shutil.which("git") and shutil.which("bash"), "needs git and bash")
 class HookEndToEndTests(unittest.TestCase):
     def setUp(self):

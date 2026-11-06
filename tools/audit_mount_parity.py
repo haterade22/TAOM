@@ -11,6 +11,8 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
   F. chariot vs VANILLA HORSE — the chariot is a ridden vehicle with no behaviour tree, so its
      reference class is the horse, not the warg. Sections A-E are baselined on the spider and
      deliberately do not cover it.
+  G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set and
+     sits on the vanilla as_horse action set; checks both.
 
 Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
 "AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
@@ -510,10 +512,48 @@ def section_f(types):
         print(f"      deployed but never referenced ({len(orphans)}): {', '.join(orphans)}")
 
 
+# ---------- G. war ram vs vanilla horse ----------
+RAM = {
+    "monster": (LOTR + r"\Monsters\LOTR\lotr_monster_war_ram.xml", "taom_war_ram"),
+}
+
+
+def ram_gaps(monster):
+    """Where the war ram stops being the vanilla horse it is built on, as printable lines (empty = none).
+
+    The ram inherits the horse's usage set through base_monster, and monster_usage="horse" is what hands
+    a dwarf rider his act_horse_* rows. On the 1.4.x line it authors no action set of its own, so it sits
+    on as_horse and its kick is the vanilla act_horse_kick (war-ram.md)."""
+    if monster is None:
+        return ["Monster taom_war_ram not found"]
+    gaps = []
+    if monster.get("base_monster") != "horse":
+        gaps.append(f'base_monster is "{monster.get("base_monster")}", not "horse": the horse surface is not inherited')
+    if monster.get("monster_usage") not in (None, "horse"):
+        gaps.append(f'monster_usage is "{monster.get("monster_usage")}": the dwarf rider needs the horse usage set')
+    if monster.get("action_set") != "as_horse":
+        gaps.append(f'action_set is "{monster.get("action_set")}", not "as_horse"')
+    return gaps
+
+
+def section_g():
+    """Prints section G and returns its gaps, which --strict counts: data_gates.py reads only the exit code."""
+    print("=" * 72)
+    print("G. WAR RAM vs VANILLA HORSE (horse-skeleton reskin, the horse usage set is inherited)")
+    # A missing file is a gap (ram_gaps names the absent Monster), not a traceback.
+    monster = elem_by_id(RAM["monster"][0], "Monster", RAM["monster"][1]) if os.path.isfile(RAM["monster"][0]) else None
+    gaps = ram_gaps(monster)
+    for g in gaps:
+        print(f"      {g}   <-- REVIEW")
+    if not gaps:
+        print("      Monster inherits the horse and sits on as_horse")
+    return gaps
+
+
 def main():
     ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables")
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, or the war ram (section G) has a gap")
     args = ap.parse_args()
     if not os.path.isdir(LOTR):
         print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
@@ -526,7 +566,8 @@ def main():
     section_d(types)
     section_e()
     section_f(types)
-    failed = section_strict() if args.strict else 0
+    ram_gaps_found = section_g()
+    failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
     return 1 if failed else 0

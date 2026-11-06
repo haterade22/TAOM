@@ -2576,6 +2576,56 @@ g7e_long() {  # $1 the command's head; the rest is 300,000 letters
 [[ "$(g7e_long 'git commit -m ')" == rc=0 ]] \
     && ok "block-no-verify allows a too-long command with no flag" \
     || bad "block-no-verify refused a too-long command with no flag"
+# On the raw text over-blocking is the safe direction, so anything that names --no-veri refuses. The -n test still reads
+# past a quoted message, because -n is common: a later git call's -n stays allowed.
+[[ "$(g7e_long 'git commit -m "add -n flag" ; git log -n 1 ; echo ')" == rc=0 ]] \
+    && ok "raw text: the -n of a later git call after a stripped message is not read" \
+    || bad "raw text: a stripped message left a double space that read past the separator"
+[[ "$(g7e_long 'git commit -m x; git log -n 1 ; echo ')" == rc=0 ]] \
+    && ok "raw text: the -n of a later git call after a glued separator is not read" \
+    || bad "raw text: a word holding a separator did not end the call"
+[[ "$(g7e_long 'git commit -m "the --no-verify ban" ; echo ')" == rc=2 ]] \
+    && ok "raw text: a message that names --no-verify refuses, the safe direction" \
+    || bad "raw text: a message that names --no-verify went through"
+[[ "$(g7e_long 'bash -c "cd x && git commit --no-verify -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag inside bash -c is refused" \
+    || bad "raw text: the flag inside bash -c went through"
+[[ "$(g7e_long 'eval "cd x; git commit --no-verify -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag inside eval is refused" \
+    || bad "raw text: the flag inside eval went through"
+[[ "$(g7e_long 'bash -c "git -c core.hooksPath=/dev/null commit -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: core.hooksPath inside bash -c is refused" \
+    || bad "raw text: core.hooksPath inside bash -c went through"
+[[ "$(g7e_long '(git commit --no-verify) ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag in a subshell is refused" \
+    || bad "raw text: the flag in a subshell went through"
+[[ "$(g7e_long 'true;git commit --no-verify ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag after a glued separator is refused" \
+    || bad "raw text: the flag after a glued separator went through"
+[[ "$(g7e_long 'git commit "-n" -m ')" == rc=2 ]] \
+    && ok "raw text: a quoted -n is refused" \
+    || bad "raw text: a quoted -n went through"
+[[ "$(g7e_long $'git commit -n;\necho ')" == rc=2 ]] \
+    && ok "raw text: -n right before a separator is refused" \
+    || bad "raw text: -n right before a separator went through"
+[[ "$(g7e_long $'git commit -n&& echo ok\necho ')" == rc=2 ]] \
+    && ok "raw text: -n right before && is refused" \
+    || bad "raw text: -n right before && went through"
+[[ "$(g7e_long 'git commit -n<input ; echo ')" == rc=2 ]] \
+    && ok "raw text: -n right before an input redirection is refused" \
+    || bad "raw text: -n right before an input redirection went through"
+[[ "$(g7e_long 'git -C . commit -n -m ')" == rc=2 ]] \
+    && ok "raw text: -n past a global option is refused" \
+    || bad "raw text: -n past a global option went through"
+[[ "$(g7e_long 'git commit "--no-verify" -m ')" == rc=2 ]] \
+    && ok "raw text: a flag quoted as a whole word is refused" \
+    || bad "raw text: a flag quoted as a whole word went through"
+[[ "$(g7e_long $'git commit \\\n--no-verify -m ')" == rc=2 ]] \
+    && ok "raw text: a flag on a continuation line is refused" \
+    || bad "raw text: a flag on a continuation line went through"
+[[ "$(g7e_long 'git -c "core.hooksPath=/dev/null" commit -m ')" == rc=2 ]] \
+    && ok "raw text: a quoted core.hooksPath value is refused" \
+    || bad "raw text: a quoted core.hooksPath value went through"
 
 # The four gates that judge what is staged only need to know a commit is coming. Each reaches its
 # `cd` to the project only past its two-stage commit test, so a bash -x trace shows the answer.
@@ -2804,6 +2854,8 @@ head2 "7g. config-protection blocks ADR and config edits whatever the path spell
 CP_CASES=(
   '2|E:\repos\TAOM\docs\adrs\012-graphify-code-graph-in-the-workflow.md'
   '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs/./adrs/010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs/x/../adrs/010-knowledge-base-architecture.md'
   '2|/e/repos/TAOM/docs/adrs/README.md'
   '2|docs/adrs/011-knowledge-delivery-tiers.md'
   '2|docs\adrs\011-knowledge-delivery-tiers.md'

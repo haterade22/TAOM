@@ -836,8 +836,8 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     string_lines = [i for i, (c, _) in enumerate(lines[:close]) if c.lstrip().startswith("<string ")]
     if string_lines:
         anchor = string_lines[-1]
-        indent = re.match(r"\s*", lines[anchor][0]).group(0)
-        nl = lines[anchor][1] or default_nl
+        indent = Counter(re.match(r"\s*", lines[i][0]).group(0) for i in string_lines).most_common(1)[0][0]
+        nl = default_nl
         blank_separated = anchor + 1 < close and lines[anchor + 1][0].strip() == ""
         insert_at = anchor + (2 if blank_separated else 1)
     else:  # empty stub — indent one level past </strings>

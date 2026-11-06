@@ -268,7 +268,7 @@ Expandable choice panels.
 CareerScreenVM
 ├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription, @RootPerkDescription (shown when @HasRootPerk)
 ├── @CareerPortraitSprite (career portrait image)
-├── @AbilityName, @AbilitySpriteName, @AbilityLabel
+├── @AbilityName, @AbilitySpriteName (CareerSystem\Abilities\<ability_sprite, else ability template id>), @AbilityLabel
 ├── @FreeCareerPointsText ("Free Points: 5")
 ├── @Tier1/2/3Label, @Tier1/2/3Locked
 ├── {AbilityEffects} → MBBindingList<CareerAbilityEffectVM>

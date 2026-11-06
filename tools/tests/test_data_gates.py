@@ -411,6 +411,12 @@ class ResolveNamedTests(unittest.TestCase):
 
 
 class ChangedFilesTests(unittest.TestCase):
+    def test_git_output_does_not_quote_a_non_ascii_path(self):
+        done = subprocess.CompletedProcess([], 0, stdout="", stderr="")
+        with mock.patch.object(subprocess, "run", return_value=done) as run:
+            dg._git("diff", "--name-only", "HEAD")
+        self.assertIn("core.quotepath=off", run.call_args[0][0])
+
     def test_changed_files_unions_tracked_changes_and_untracked_files(self):
         def fake_git(*args):
             return {"diff": "a.xml\nb.xml\n", "ls-files": "c.xml\n"}[args[0]]

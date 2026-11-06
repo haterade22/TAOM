@@ -158,7 +158,6 @@ skill templates (`taom_elf_king/warrior/lady_skills`).
 | `tools/generate_new_faction_kingdoms.py` | 4 kingdoms + clans + ~130 lords + heroes (templates read by id, parametrized) |
 | `tools/generate_new_faction_settlements.py` | `<Settlement>` blocks; `--apply` writes the live `TAOM_Map/settlements.xml` (+ timestamped backup) |
 | `tools/assign_orc_village_types.py` | Per-fief orc/goblin village economy (animal food + 1 mine; `VALID_VILLAGE_TYPES` guard); `--apply` edits the live settlements.xml in place |
-| `tools/make_new_factions_playable.py` | The 4 CC faction-map cards in `factions.json` (`--apply` dry-run guard); then `tools/harvest_factionmap_strings.py` propagates the card strings into `taom_module_strings.xml` |
 | `tools/insert_new_faction_cc_menus.py` | Clones gundabad's CC narrative menu entries → goblin/mistymountainorcs (parents/youth/adulthood/education); childhood is culture-independent. Fixes blank CC stages. |
 | `tools/add_bluecraig_castles.py` | Adds the 4 Blue Craig castles (`castle_GBC1..4`) + 11 castle-villages to the live settlements.xml, spread across clans 2-5 (`--apply` + backup; idempotent; positions FROM scene.xscene). Only adds ids already placed in the scene. |
 

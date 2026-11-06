@@ -74,12 +74,14 @@ and `language_data.xml` use a plain `\r\n`. Measured on `std_taom_module_strings
 line terminators, every one of them `\r\r\n`. The TR, FR, PL and RU copies of that file report the
 same count.
 
-The doubled CR is produced, not inherited, so it comes back after every rebuild.
-`build_translation_xml` in `tools/rebuild_translation_files.py` joins its lines on `\r\n` (`:107`),
-and `rebuild_language` writes the result with `Path.write_text(content, encoding="utf-8")` (`:159`).
-Default text mode expands each `\n` to `\r\n` on Windows, so `\r\n` goes in and `\r\r\n` comes out.
-The doubled types are exactly the ten entries in that script's `taom_sources` list (`:132-143`); the
-enlistment file is plain because it is not in that list, so the rebuild never touches it.
+The doubled CR came from how the rebuild used to write, and it stays in a file until a rebuild replaces
+that file. `build_translation_xml` in `tools/rebuild_translation_files.py` joins its lines on `\r\n`
+(`:176`). The old `rebuild_language` wrote that with `Path.write_text(content, encoding="utf-8")`, and
+default text mode expands each `\n` to `\r\n` on Windows, so `\r\n` went in and `\r\r\n` came out.
+`write_text_file` (`:74`, called at `:228`, `:246` and `:271`) now writes bytes, so a rebuild with
+`--apply` writes a plain `\r\n`. `taom_sources` (`:54`) builds the rebuild's file list from
+`TAOM_SOURCES` in `tools/_loc_sources.py`, and the enlistment file is on that list today, so its plain
+terminator does not mean the rebuild skips it.
 
 Two consequences:
 
@@ -230,12 +232,12 @@ do" for a module it never looked at.
 > The cache is only the second of two gates, and a stale row usually never even reaches it. See
 > "Changing English Text That Is Already Translated" below.
 
-After running the API translator, run the rebuild step to inject the cached translations into the actual XML files:
+After running the API translator, run the rebuild step to inject the cached translations into the actual XML files: A run is a dry run until `--apply`, a run with no `--module {TAOM,TAOM_Map,Armory}` exits 2, and `--module TAOM` is never named: a row with no cache entry falls back to English and a row corrected by hand is overwritten.
 
 ```bash
-python tools/rebuild_translation_files.py --lang PL
+python tools/rebuild_translation_files.py --lang PL --module TAOM_Map --module Armory --apply
 # or for all 12 languages:
-python tools/rebuild_translation_files.py --all
+python tools/rebuild_translation_files.py --all --module TAOM_Map --module Armory --apply
 ```
 
 ### Option B — Manual translation from scratch
@@ -274,7 +276,7 @@ as a run with nothing to do.
 `missing = [sid for sid in src_map if sid not in tgt_map]`, so it appends only the keys a
 per-language file lacks entirely. A key that is present but stale is not missing.
 
-**`rebuild_translation_files.py` does not close it either.** Its `resolve` (`:124-129`) does visit
+**`rebuild_translation_files.py` does not close it either.** Its `resolve` (`:197-202`) does visit
 every key in the English source, but it resolves override, then cache, then English fallback, and
 that cache is the same `string_id`-keyed dictionary. It writes the stale translation back, and
 because it rebuilds the whole file it will also overwrite a row you corrected by hand.
@@ -358,7 +360,7 @@ If you want certain key terms translated consistently (e.g., always render "Stri
 }
 ```
 
-The translator script applies overrides BEFORE consulting the cache or API, so they always win. Edit the JSON, re-run `python tools/rebuild_translation_files.py --lang RU`, and your overrides propagate everywhere the key is referenced.
+The translator script applies overrides BEFORE consulting the cache or API, so they always win. Edit the JSON, re-run `python tools/rebuild_translation_files.py --lang RU --module TAOM_Map --module Armory --apply`, and your overrides propagate everywhere the key is referenced.
 
 ---
 

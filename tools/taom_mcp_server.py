@@ -41,7 +41,8 @@ GAME_MODULES = game_modules(r"E:\Steam\steamapps\common\Mount & Blade II Bannerl
 
 
 def _build_query() -> tq.ModuleDataQuery:
-    """Build registries once at startup (cached for the server's lifetime). When
+    """Build registries once at startup. They are a snapshot for the server's lifetime: a data edit
+    after startup shows only after a restart. When
     the game install is absent the item/troop/party registries are empty and the
     affected checks are skipped -- same degradation as the CLI.
 
@@ -52,6 +53,9 @@ def _build_query() -> tq.ModuleDataQuery:
         schemas = ts.load_schemas(SCHEMA_DIR)
         registries = ts.build_registries(
             MODULEDATA, GAME_MODULES if GAME_MODULES.exists() else None)
+        # The build's read cache holds every ModuleData file (about 200 MB) and nothing reads it again.
+        # Clearing it also means a rebuild in this process reads the files as they are now.
+        ts._read_stripped.cache_clear()
         return tq.ModuleDataQuery(MODULEDATA, registries, schemas)
     except Exception as exc:  # noqa: BLE001 - startup diagnostic then re-raise
         print(f"[taom-moduledata] failed to initialize: {exc!r}\n"
@@ -107,9 +111,9 @@ def party_template_exists(template_id: str) -> dict:
 @mcp.tool()
 def find_references(target_id: str, kind: str | None = None, limit: int = 200) -> dict:
     """Find every reference to an id across ModuleData. `target_id` may be
-    prefixed (Item./NPCCharacter./Culture./PartyTemplate./BodyProperty./Faction.) or
-    bare with `kind` set to one of item|troop|culture|party_template|body_property|
-    faction (npccharacter is accepted as an alias of troop). Returns {target, kind, count, truncated, references:
+    prefixed (Item./NPCCharacter./Culture./PartyTemplate./BodyProperty./Faction./
+    Settlement.) or bare with `kind` set to one of item|troop|culture|party_template|
+    body_property|faction|settlement (npccharacter is accepted as an alias of troop). Returns {target, kind, count, truncated, references:
     [{file, line, kind, ref}]}, capped at `limit` (default 200)."""
     return _query.find_references(target_id, kind, limit)
 

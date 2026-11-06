@@ -44,6 +44,7 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 6a. For the channel this release ships to (its folder per [`development-machines.md`](../../../docs/reference/development-machines.md)), `BANNERLORD_GAME_MODULES="<channel>/Modules" python tools/check_external_loc_coverage.py --processors-only` (PowerShell: set `$env:BANNERLORD_GAME_MODULES` first). Any exit other than 0 blocks the release: the TAOM_Map and Armory packages must carry Native's text processor.
 6b. `DependenciesPairing_MainMetadataEqualsDependenciesVersion` is green in the test run: Main's manifest names the Dependencies version it ships with.
 6c. Reseed the removed-troop baseline for the new tag, first at v2.4.0: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids <tag>`. Until then the header of `tools/shipped_troop_ids.txt` names the branch.
+6d. Every release channel's `TAOM` and `TAOM_Map` agree: `python tools/check_release_pair.py <channel>/Modules` exits 0 and prints `PASS:` (exit 2 or 3 judged nothing). See [`release-process.md`](../../../docs/reference/release-process.md) ("TAOM and TAOM_Map ship as a pair").
 7. Owed in-game checks (never blocks): `python tools/ingame_ledger.py` lists the closed issues still
    labelled `triage-needs-ingame` that a commit since the last tag names. Tell the maintainer the
    count; Phase 5 hands the list to the testers. Exit 3 is a `gh` or `git` failure: report it and

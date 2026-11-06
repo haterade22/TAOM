@@ -70,6 +70,8 @@ def orphan_docs() -> list[str]:
 def compare(current: dict, baseline: dict) -> list:
     """Regressions, as human-readable strings. Empty list means within baseline."""
     problems = []
+    if not current.get("components"):
+        problems.append("no docs were read: an empty corpus is a broken checkout, not an improvement")
     for key in RATCHETED:
         if key not in baseline:
             problems.append(f"{key}: missing from the baseline file, cannot check")
