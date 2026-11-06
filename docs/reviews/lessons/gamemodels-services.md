@@ -1058,3 +1058,25 @@ dead the same way.
   match the old value in the new object or document each change.
 - **On this tree:** This incident ran on the 1.5.x line, and `compare.py` exists only there; the rule holds here.
 - **Source:** 1.5.x `rca-b8-server-settings-2026-10-23.md` findings 2 and 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A config list is validated entry by entry: a null or blank entry passes a count check (#645, 2026-09-23)
+
+`SignatureStrikesConfigProvider` reverted a `null` identity list and dropped a signature whose three
+lists were all empty ("matches nobody"), but it returned any non-null list as it was. `"heroIds":
+[null]` or `[""]` therefore counted as one identity, the signature loaded as valid, and the registry
+skipped the entry without a word, so it matched nobody while the log said Loaded. Codex found it with
+a one-signature JSON input.
+
+- **Why missed:** the provider's tests covered the list's two states (`null`, `[]`) and not its
+  entries; the "matches nobody" rule read `Count`, which a null entry satisfies. The registry's own
+  blank-entry skip hid the problem downstream instead of reporting it.
+- **Prevent:** for every list a provider accepts, validate each entry as a field of its own (remove
+  a null or blank entry with a warning, trim a padded one the way the provider's other names are
+  trimmed) before any rule that reads the list's size, and give each entry rule its own test
+  (`GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`,
+  `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`,
+  `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped`). Fix the class, not the input
+  the reviewer sent: the first cut removed `[null]` and `[""]` and still let `" lord_1_17 "` match
+  nobody.
+- **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesConfigProvider`, `GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`, `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`, `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex review 130 (O1); `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass", on `origin/bannerlord-1.5.x` (ported by WP142).

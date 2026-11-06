@@ -965,3 +965,9 @@ architect checks verified the same members.
   doc named the wrong behaviour as the one that turns panic into a rout because the brief copied a lens's claim
   unopened.
 - **Source:** 1.5.x `rca-fords-of-war-2026-10-31.md` findings D2, D6, D7, D17, P3, R7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A moved comment's engine claims are re-verified at the move: byte parity proves the code, not the comment (#737, 2026-10-05)
+- **Why missed:** the #737 parity check proved every moved block byte-identical, and that was read as proof the move was right. Five comments that came along were wrong or stale on 1.5.x: "per missile spawn" (the engine asks per missile hit, `Mission.MissileHitCallback`), a v1.4.6 line citation, a value said to feed a context that has no such field, "every decision stays in the services" after two gates moved into the facade, and a factory naming one of its two callers. A new summary written from a switch's two arms also missed vanilla's third party-carrying origin, `SimpleAgentOrigin`.
+- **Prevent:** when a refactor moves or rewrites a comment that states engine behaviour, check each claim against the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>`) as if it were new text, and list an interface's implementers before writing "only".
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F4, F5, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -714,3 +714,14 @@ same tick, so damage lands whether or not the animation survives.
 `docs/reference/bannerlord-animation-clip-flags.md`), and judge it in battle, never in the viewer.
 - **On this tree:** This incident ran on the 1.5.x line, and `warg_attack_stand` exists only there; the rule holds here.
 - **Source:** 1.5.x the 1.5.x lessons file at `4520af802`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A missing action set's visible effect is read from the set that holds the action (#956, 2026-10-20)
+Sauron had no `as_sauron_facegen`, and the plan expected the fix to change his coronation pose. The scene's pose action
+`act_main_story_become_king` lives only in `as_human_warrior`, which is both the engine's fallback set 0 for a missing
+set and the new set's `base_set`, so the only effect was the missing-set log line.
+- **Why missed:** the plan inferred the effect from the missing set's name.
+- **Prevent:** before promising what an action-set fix changes, find which set declares the action the scene plays
+  (the spawn point's `InitialAction`, the clip in use) and what the engine falls back to; state the log line as the
+  check when nothing visible changes.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_sauron_facegen` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-coronation-fixes-2026-10-20.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).

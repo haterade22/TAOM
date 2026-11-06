@@ -511,3 +511,41 @@ Plans 031 and 037 moved the hot-path settings providers onto a cached MCM refere
 - **Prevent:** when a feature multiplies what a shared host iterates every frame, read the host's per-frame path at the new n for allocations and O(n) work, and pin an allocation-free copy with an IL test. In the feature, gate each per-frame or per-decision cost on whether its answer can matter yet (`RaceAbilityReportClock.IsDue`, `RaceAbilityService.PlanScan`), and give a hot-path settings provider the cached accessor and a row in `HotPathSettingsProvidersTests`.
 - **On this tree:** This incident ran on the 1.5.x line, and `RaceAbilityReportClock`, `RaceAbilityService`, `PlanScan` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R20, R21, R23, R24 (lens 3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
+
+Twice in one session a correction reached one surface and missed the others. The #648 count was
+corrected to 176 in the issue while the #644 CHANGELOG entry kept "the other 173", a hand subtraction
+from 179 that was wrong from the start (the #644 lesson above forbids subtracting by hand). And
+checking a lesson's wording showed that the spider AV `CustomAttacksUtils` guards against was later
+traced to `HandleBlowAux`; the RCA row and the lesson were corrected, but the same claim already sat
+in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
+
+- **Why missed:** each correction was made where the error was noticed, and the fix felt complete
+  because the surface being edited was now right. Nothing prompted a search for the other copies.
+- **Prevent:** when a claim turns out wrong, grep the whole change (committed files, the scratch
+  drafts of the CHANGELOG, issue and commit text, and memory) for the claim's distinctive words or
+  number, and fix every hit in the same edit.
+- **On this tree:** This incident ran on the 1.5.x line, and `StrikeSoundPlayer`, `signature-strikes.md` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex review 130 (the S4 cross-check); `docs/reviews/rca-nazgul-race-2026-09-23.md` and `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A handoff plan's prescribed sentence is a draft: re-derive its history and engine claims before committing it (plan 025, 2026-09-24)
+
+Plan 025 prescribed its doc and CHANGELOG text word for word, and the executor copied it. Four of
+those claims were wrong: the binding row's recovery commit (`6a80bac6`; `git log -S` finds
+`41258657`), "never in the shipped JSON" (the shipped config carried both keys from `6a80bac6` until
+`b5cb3018`), Phase 1 paths being reusable in Phase 2 (1.5.x keeps the path local, and Phase 2
+pathfinds with a different cost multiplier), and a citation said to end "one line further off" that
+the deletion made exact. Its "keep the rest of the line unchanged" also left "That alone is a 2-3x
+win" pointing at the deleted scaffold, and Codex found its Step 6 sentence contradicted its own done
+check.
+
+- **Why missed:** the plan was specific and cited commits, so its text read as verified; the
+  executor re-checked code facts but not the history and engine claims inside the prose.
+- **Prevent:** when executing a plan, treat each prescribed sentence as a new claim. Run
+  `git log -S` for every commit it names as an item's origin, `git log` the file behind any "never"
+  about history, check an engine claim against the installed DLL, and re-read the neighbouring
+  sentence once the edit lands. A plan author (`/improve`) cites the evidence for each claim it
+  prescribes, or marks the sentence as a draft.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F1, F2, F5, F7, on `origin/bannerlord-1.5.x` (ported by WP142).

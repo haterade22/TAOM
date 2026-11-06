@@ -1728,3 +1728,25 @@ padding, so it would have mapped every Rohan blade wrong on the shipped mesh.
 - **Why missed:** the entry above says custom cultures inherit none of the templates and XSLT cultures get them for free. Since `lord_template_rosters.xslt`, the six renamed cultures' adult lord, teen and ruler pools hold only TAOM's `taom_*` rosters; only child templates still come from vanilla. A generated Dunland lord had drawn vanilla Empire gear 26 times in 27.
 - **Prevent:** treat `taom_lord_template_equipment.xml` as the only lord, teen and ruler pool for all eighteen TAOM cultures. A roster it loses empties a pool (null equipment, NRE in four engine callers). Never rerun its generator whole (#637); hand-port. `LordTemplateRosterTests` checks every pool the engine requests.
 - **Source:** 1.5.x `docs/reviews/rca-generated-lord-kits-2026-10-06.md`, generated-lord-kits.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new reference into the unversioned Armory lands with a gate that reads the live file (#644, 2026-09-23)
+
+`race="nazghul"` names a race only the live `LOTRLOME_Armory/ModuleData/skins.xml` registers, and
+`FaceGen.GetRaceOrDefault` is a plain dictionary index despite its name (`TaleWorlds.MountAndBlade.FaceGen.cs`), so an install without the race throws out of the
+NPCCharacters load on every campaign start. The #644 plan checked the Armory by reading it once; a
+reinstall or a rename there would have left every repo gate green.
+
+- **Why missed:** the "Unversioned modules" trap is phrased for a FIX landed in the Armory. A new
+  REFERENCE into it reads as ordinary repo data.
+- **Prevent:** `CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace` checks every
+  `race` in ModuleData XML and XSLT against the installed skins, Inconclusive without the install.
+  Give any new kind of reference into the Armory the same shape of gate in the same change: it reads
+  the live file and skips, never fails, when the file is absent.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 2 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Hold a new culture's coverage with tests that read the data, not with a sweep (Arthedain, 2026-10-07)
+The #749 lesson asked for a grep sweep of every table keyed on the scaffold culture. Arthedain's sweep covered ModuleData and still missed a C# map keyed on career ids (`CareerSystemIoC`, so all three careers' abilities were no-ops), a compound JSON key (`"gondor,gondor_soldiers"` in `race_abilities.json`), and both armour quests, excluded on a misread test. Each is now a test that reads the data: every career has an archetype, every character-creation culture has a commission row and a Deep Seam row, compiled defaults equal the shipped JSON, and the custom-battle culture set equals the playable cultures (`CultureDataFixture.MainCultureIds()`).
+- **Why missed:** a grep for a culture id cannot see a table keyed on something else, and a hand list that "mirrors" another is checked by nobody.
+- **Prevent:** when a table must cover every culture, write the test that reads the cultures from the data and fails on a missing one; a named known-gap set is allowed only with a reason and a test that it only shrinks. The recipe's "C# a kingdom touches" table lists every compiled list and its guard.
+- **On this tree:** This incident ran on the 1.5.x line, and `race_abilities.json`, `MainCultureIds` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-arthedain-2026-10-07.md` findings 2 to 4, 9 and 10, on `origin/bannerlord-1.5.x` (ported by WP142).

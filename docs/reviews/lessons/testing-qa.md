@@ -1730,3 +1730,30 @@ Plan 015's decision 5 moved `BoneCheckDuringAnimation.Tick`'s skeleton fetch ins
 - **Prevent:** before leaving a container test untagged, follow every constructor the resolve reaches, field initializers included, for an engine type; tag `RequiresGame` on the method when one appears, so the class's source-only tests stay on CI (`RealmBordersWiringTests`, `ArmourAcquisitionWiringTests`, `WandererAllegianceWiringTests` are the shape).
 - **On this tree:** This incident ran on the 1.5.x line, and `RaceAbilitiesWiringTests`, `RaceAbilityRuntime`, `RealmBordersWiringTests`, `ArmourAcquisitionWiringTests` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R13 (lenses 1 and 4), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A culture-id existence test reads the defining document, not every element of that name (Race Abilities, 2026-10-04)
+The live-install test meant to prove every culture key in `race_abilities.json` exists counted any `<Culture id>` element in TAOM's ModuleData as a definition. Seven feature configs use that element for rows of their own, and `charactercreation/cc_body_properties.xml` carries `<Culture id="dale">`, so the exact wrong key the xml-data rule warns about would have passed.
+- **Why missed:** the regex was written for the shape of a definition and never checked against the other files that share the element name; the BannerBearers lesson (keys must be real StringIds) was applied, but its test's narrower source was not copied.
+- **Prevent:** pin culture keys against `taom_spcultures.xml` (assert its root is `SPCultures`) plus the six vanilla ids TAOM re-skins through `spcultures.xslt`. It needs no install, so it runs on CI (`ShippedBannerBearerConfigTests`, `ShippedRaceAbilitiesConfigTests`).
+- **On this tree:** This incident ran on the 1.5.x line, and `race_abilities.json`, `ShippedRaceAbilitiesConfigTests` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R18 (lens 7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Name a test for what it proves: an expectation built from the production helper is a composition check, and an IL scan proves a call is present, not ordered (2026-10-03)
+Plan 032's feature doc called `ComputeUnitPlanePosition_EveryLayout_PlacesEachUnitAtItsAssignedSlot` a "position oracle". Its IL test class said the prefix asks `FindLaidOutFormation` "first", and the doc said the IL pins show that the prefix "hands a throw to `NoteFallback`". The position test computes its expected values with `LayoutPositioner.BuildInitialAssignment` and `UnitPitch`, the production code it checks, so it pins how the service composes them on one fake geometry and says nothing about the geometry. The IL scan finds a call anywhere in the method, so it shows neither the order nor that the catch is where `NoteFallback` sits.
+- **Why missed:** each test was written to characterise unchanged behaviour on the cheapest harness, and the doc copied the test's intent instead of its assertion.
+- **Prevent:** write the doc claim from the assertion. Say "composition check" for an expectation derived from the code under test and "structural" for an IL call-presence pin; keep "oracle" for an expectation computed independently (a literal, or a second implementation). Where an ordering claim matters, assert the order or leave the claim out.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnitPitch` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md`, "Codex adversarial review", finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A deletion's RED step lives in the log, not the suite: no permanent absence test (plan 025, 2026-09-24)
+Plan 025 added `RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly`, asserting that seven deleted type names and two
+property names were absent from TAOM.dll. It was the RED step for a pure deletion. After the commit it tested no
+behaviour, kept nine dead identifiers greppable (the plan's own leftover-reference sweep needed a whitelist for it) and
+sat in the config provider's test class. It was removed under the simplicity criterion; the test that a config still
+carrying the retired keys loads stays, because that is behaviour a player's file depends on.
+- **Why missed:** "test first" was applied to a deletion, where the RED proof is a one-off run, and nothing asked
+  what the test would guard once the deletion landed.
+- **Prevent:** for a pure deletion, prove RED with a scratch run or the compile failure and keep it in the log. Add a
+  permanent test only for behaviour the deletion must preserve (a save field, a config key, a public contract).
+- **On this tree:** This incident ran on the 1.5.x line, and `RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -916,3 +916,15 @@ while the button is enabled; a "why is this greyed out" hint there can never app
   the hint, keep the button's inner hint for the enabled state, and pin the shape with a structural test (the hint's
   parent has no `IsEnabled` binding). Check the hover in game with the button disabled.
 - **Source:** 1.5.x `docs/reviews/rca-reeves-ledger-2026-10-19.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A registered key does not reach English: the inline text after `{=key}` is what English players read (#845, 2026-10-26)
+Field duties composed `{=taom_enlist_duty_<id>_title}a task for the company` from the row id. The key was
+registered and translated, so every gate passed, yet English players read the generic inline text for every
+duty: for English, `MBTextManager.GetLocalizedText` returns the inline text and never looks the key up
+(v1.4.8 `MBTextManager.cs:264`, the lookup is on the non-English branch).
+- **Why missed:** the localization gates check that a key has a row and a translation, not that the inline
+  English at the call site is the row's English.
+- **Prevent:** a composed key must carry the row's own English inline (read it from the data that owns it);
+  a generic inline fallback is for a row that no longer exists, never the normal path. Test the English
+  path by asserting the source string, not only the key.
+- **Source:** 1.5.x `rca-enlistment-duty-text-2026-10-26.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).

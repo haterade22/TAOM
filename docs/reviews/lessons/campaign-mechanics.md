@@ -691,3 +691,27 @@ A review worried that a raid reaching the village an enlisted soldier stands in 
 - **Why missed:** nothing in TAOM watched map events for age, and code that removes troops from a party (daily desertion, for one) never asks whether that party is in a battle.
 - **Prevent:** the hourly `StuckBattleModule` sweep is the backstop. Code that removes or wounds a party's troops outside a mission should ask whether the party is in a map event before it runs.
 - **Source:** 1.5.x player report "NPC battle that appears to be stuck" (#748, follow-up #750); map-event-guard.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A menu consequence that can fail part way must know what menu state each earlier step left (#828, 2026-10-19)
+Enlistment's "Go on your way" exit (an isLeave option on the service wait menu) first treated "return" and
+"exit to the map" as neutral on every failure branch. They were not: the engine calls `EndWait()` before an
+isLeave consequence on a wait menu (v1.4.8 `GameMenu.cs:274-277`), so a branch that keeps the menu must re-enter
+it; `PlayerEncounter.Finish` exits the menu itself when a context exists, so a later "keep the menu" must re-open
+it; `ExitToLast` without a context does nothing. The owed in-game check made the same mistake one level up: it
+expected the service menu after a load in a town, but the load-time discharge's own `Finish(true)` clears
+`MapStateData.GameMenuId` when no menu context exists (`PlayerEncounter.cs:1019-1025`).
+- **Why missed:** the plan reasoned forward from the defect report and listed the happy path; nobody wrote down
+  the menu state after each engine call on each failure branch, or walked the discharge's own release branch
+  during `OnGameLoaded`.
+- **Prevent:** for every menu consequence with more than one branch, write the menu and wait state after each
+  engine call it makes (EndWait, Finish, ExitToLast, SwitchTo) and end every branch in a stated state: a re-entered
+  menu, an opened menu, or the map with no live encounter. Write an in-game check only after tracing what the load
+  path does to the saved menu id for that exact save shape.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-discharged-menu-2026-10-19.md` F1 to F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard justified by engine ordering cites the decompiled lines, and its fixtures come from them (#796, 2026-10-26)
+An engine-ordering claim (`MapEventSide.Clear()` nulls the main party's map event before the encounter closes) was copied between comments until it became a rule, R1b, that nobody tested against the engine. In 1.5.x the main party stays in its map event through the loot and aftermath screens; on that path vanilla removes it inside `PlayerEncounter.Finish` (`MapEvent.cs`, `MapEventSide.cs`). Other exits remove it with the encounter still open: a defender's repulsed assault (`SiegeAssaultEventComponent.OnPlayerEncounterContinueBattle`), an army leader leaving the event (`PartyBase.cs`), and `LeaveBattle`. The rule was redundant where it was meant to act and harmful had it acted (it never ran).
+- **Why missed:** every test built the snapshot by hand with the claimed shape, so no test could disagree with the engine.
+- **Prevent:** a guard justified by engine ordering cites the decompiled lines, and its test fixtures are built from the shapes those lines produce.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-enlistment-battle-encounter-rule-2026-10-26.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

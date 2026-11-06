@@ -459,3 +459,24 @@ The ADOD_Beasts-derived howdah cage was re-framed onto the elephant every tick w
 - **Prevent:** follow the vanilla moving platform (`Native/Prefabs/props_siege_siegetowers.xml`): every body on a re-framed entity is `moveable`; scale `bo_barrier` (width, 1, height) and flag it `barrier` so agents are held and missiles pass. Measure a shape before scaling it, and check a fit pairwise as well as against the walls. `HowdahPrefabTests` pins all three for the howdah.
 - **On this tree:** This incident ran on the 1.5.x line, and `HowdahPrefabTests` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A vanilla lord in both `lords.xslt` and `characters/lords.xml` is two definitions merged, not an override (#644, 2026-09-23)
+
+The engine merges every file of one XML id: the later `characters/lords.xml` row wins each attribute
+it states, and `<Equipments>` is `AlwaysPreferMerge` with `EquipmentSet` unique on id + civilian +
+stealth, so a set whose id differs is ADDED and `Hero.SetInitialValuesFromCharacter` then picks one at
+random per campaign . Three of the Nine wore the
+Nazgul kit or a generic Mordor kit by coin flip, and their age of 20 came only from the row (the
+templates carried the vanilla children's ages, 9 and 11). 176 vanilla ids still have both, 113 of them
+with differing kits (#648).
+
+- **Why missed:** the #644 plan read "three are race uruk in characters/lords.xml" from a doc, grepped
+  `lords.xslt` only for the six ids it expected there, and edited the row. Either file alone looks
+  complete, and no gate compares the two.
+- **Prevent:** before editing a lord, grep BOTH files for its id. Mike's rule (2026-09-23): vanilla
+  lords live only in `lords.xslt`, new ones only in `characters/lords.xml`. Moving one means folding
+  every value the row wins into the template, checked by transforming the installed vanilla file
+  (the #644 shape), then deleting the row. `NazgulRaceDataTests.LordsXml_DefinesNoneOfTheNine` pins
+  the Nine; #648 carries the general gate.
+- **On this tree:** This incident ran on the 1.5.x line, and `NazgulRaceDataTests`, `LordsXml_DefinesNoneOfTheNine` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 1 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
