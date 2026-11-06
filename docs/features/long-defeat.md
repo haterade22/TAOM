@@ -424,6 +424,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - **Affixes:** named powers on the attackers, rolled for each wave: 1 from wave 5, 2 from wave 10, 3 from wave 15.
 - **Endless scale:** a wave cannot exceed the battle size, so each wave also raises health and damage, and the troop tiers rise.
 - **Leaderboard:** players submit the run report through a Discord command, a bot checks it and updates the board, and a top 10 entry also needs a clip. Mike accepted this on 2026-11-04. The plan is [leaderboard-plan.md](long-defeat/leaderboard-plan.md), and Luiz has the brief for the bot.
+- **Phase 4 (planned):** the armoury, the engineer's yard, gear that lasts the run, and the death rule (take over a soldier, rise at the keep at the next clear) are planned in [phase4-plan.md](long-defeat/phase4-plan.md), with open questions OQ8 to OQ20 taken at their recommended answers unless Mike changes them. Nothing of it is built.
 
 ## Notes for Phase 1
 
