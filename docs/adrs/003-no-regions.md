@@ -129,24 +129,11 @@ Decided by the maintainer on 2026-10-21 on the 1.5.x line, after the Fire and Tr
 
 ## Enforcement
 
-1. **Pre-Commit Hook**: Automated validation blocks commits with `#region` directives
-   - Run: `./scripts/validate-no-regions.ps1`
-   - Installed via: `./scripts/install-pre-commit-hook.ps1`
-2. **Code Review**: Reviewers reject PRs containing `#region` directives in non-generated code
-3. **Static Analysis**: `.editorconfig` configured with IDE0055 warning
-4. **Documentation**: This ADR linked in CLAUDE.md coding guidelines
-5. **Cleanup Tool**: Use `./scripts/remove-regions.ps1` to automatically remove all regions
+Enforcement: `BannedConstructsGateTests`.
 
-## Migration Strategy
+### Amendment (2026-11-03): enforcement
 
-When encountering regions in existing code:
-1. **Assess Class Size**: If >200 lines, plan decomposition
-2. **Identify Responsibilities**: Find distinct concerns within the class
-3. **Extract Services**: Create focused classes for each responsibility
-4. **Update IoC**: Register new services with appropriate lifetimes
-5. **Update Tests**: Split tests to match new class structure
-6. **Remove Regions**: Delete region directives as part of refactoring
-7. **Verify**: Ensure functionality unchanged through testing
+The Enforcement and Migration Strategy sections named a pre-commit hook, three PowerShell scripts, an IDE0055 setting in `.editorconfig` and a link from CLAUDE.md. None of them exist, and no `#region` is left to migrate. They are gone. The ban is held by `BannedConstructsGateTests`.
 
 ---
 
