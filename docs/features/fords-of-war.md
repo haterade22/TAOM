@@ -376,7 +376,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 | Faction | Strength | Weakness | Feats | Mechanic |
 |---|---|---|---|---|
-| Rohan | The best and cheapest cavalry: six of eight offers are riders at 0.5 of the full price for their level (the horse archers 0.4, `eliteWeight`; the foot 0.7), the two cheapest rider packs hold 8, every free wave brings 5 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
+| Rohan | The best and cheapest cavalry: six of eight offers are riders at 0.65 of the full price for their level (the horse archers 0.5, `eliteWeight`; the foot 0.7), the two lowest-level rider packs hold 8, every free wave brings 4 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75, the largest free waves (25 or more a wave) | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |

@@ -306,7 +306,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.** It lands after the round robin on `92973f27a`.
 
-### Round robin 1 on `92973f27a` (this change)
+### Round robin 1 on `92973f27a`
 
 **Seen:** all 78 pairs played once at 4x, 2026-11-05 10:00 to 2026-11-06 04:05, from `python tools/fords_round_robin.py summary --build 92973f27a`. The build has the Mordor swarm, and none of the evening's changes (Rohan's cheap cavalry, Dol Guldur's uruk army, hero guards).
 
@@ -341,6 +341,16 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 **Undo:** each change is one value set in `factions.json`; the old values are above. Gundabad (3 wins, gold trade 0.89) is not changed: its weak towers are a stated trait, and the hero guards add four berserkers to each hero.
 
 **Result: not measured.** Round 2 runs on the build that carries this change and the evening's changes together.
+
+### Rohan's riders made weaker (this change)
+
+**Why:** Mike, 2026-11-06: "Reduce the strength of the cheap riders [if] Rohan is 10 and 0." In round 2 on `329e841d2`, after 21 of 78 pairs, Rohan won 10 of 10, 9 of them by the keep, in 27.0 minutes on average, with a gold trade of 1.37 (`python tools/fords_round_robin.py summary --build 329e841d2`, 2026-11-06 07:40). Before its cheap cavalry, Rohan won 9 of 12 in round 1.
+
+**Changed:** the five rider packs cost 0.65 of the full price for their level, up from 0.5; the horse archers 0.5, up from 0.4; each free wave brings 4 riders, down from 5. The rider packs stay the cheapest of any faction (Gundabad's wolf riders are next at 0.75), the two lowest-level packs still hold 8 riders, and the AI still buys riders in 7 of its 10 pack buys, so Rohan keeps many cheap riders. The rider troops' skills are not cut, because Long Defeat fields two of the same troops.
+
+**Undo:** set the five `eliteWeight` values back to 0.5, the horse archers to 0.4 and the three free-wave rider counts to 5 in `factions.json`.
+
+**Result: not measured.** Round 2 keeps `329e841d2` to the end, so its other pairs stay on one build; the next round measures this change.
 
 ## Open questions
 

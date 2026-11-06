@@ -187,12 +187,12 @@
         { "text": "{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers.", "strength": false }
       ],
       "units": [
-        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.5 },
-        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.5 },
-        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 0.5 },
-        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 0.4 },
-        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 0.5 },
-        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.5 },
+        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.65 },
+        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.65 },
+        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 0.65 },
+        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 0.5 },
+        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 0.65 },
+        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.65 },
         { "id": "militia", "troop": "fow_rohan_westfold_militiaman", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.7 },
         { "id": "yeomen", "troop": "fow_rohan_eastfold_skirmisher", "role": "Ranged", "packSize": 10, "level": 11, "eliteWeight": 0.7 }
       ],
@@ -207,7 +207,7 @@
           "fromMinute": 0,
           "units": [
             { "troop": "fow_rohan_westfold_recruit", "count": 3 },
-            { "troop": "fow_rohan_westemnet_recruit", "count": 5, "role": "Cavalry" },
+            { "troop": "fow_rohan_westemnet_recruit", "count": 4, "role": "Cavalry" },
             { "troop": "fow_rohan_eastfold_recruit", "count": 2, "role": "Ranged" }
           ]
         },
@@ -215,7 +215,7 @@
           "fromMinute": 10,
           "units": [
             { "troop": "fow_rohan_westfold_militiaman", "count": 3 },
-            { "troop": "fow_rohan_westemnet_rider", "count": 5, "role": "Cavalry" },
+            { "troop": "fow_rohan_westemnet_rider", "count": 4, "role": "Cavalry" },
             { "troop": "fow_rohan_eastfold_skirmisher", "count": 2 }
           ]
         },
@@ -223,7 +223,7 @@
           "fromMinute": 20,
           "units": [
             { "troop": "fow_rohan_westfold_axeman", "count": 3 },
-            { "troop": "fow_rohan_westemnet_veteran_rider", "count": 5, "role": "Cavalry" },
+            { "troop": "fow_rohan_westemnet_veteran_rider", "count": 4, "role": "Cavalry" },
             { "troop": "fow_rohan_eastfold_bowman", "count": 2, "role": "Ranged" }
           ]
         }
