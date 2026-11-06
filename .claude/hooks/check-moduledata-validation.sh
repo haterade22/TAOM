@@ -130,7 +130,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code SCHEMA_INVALID \
         --code BROKEN_FACTION_REF \
         --code ITEM_SLOT_REJECTED \
-        --code TROOP_ID_REMOVED --code BROKEN_ROSTER_REF \
+        --code TROOP_ID_REMOVED --code BROKEN_ROSTER_REF --code BROKEN_SETTLEMENT_REF \
         2>"$ERR_FILE")
 RC=$?
 

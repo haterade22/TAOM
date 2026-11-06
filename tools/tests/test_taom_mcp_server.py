@@ -71,6 +71,12 @@ class McpServerTests(unittest.TestCase):
         self.assertEqual(set(self._call("registry_sizes", {})),
                          {"items", "npccharacters", "cultures", "party_templates"})
 
+    def test_building_the_query_leaves_no_read_cache_behind(self):
+        # build_registries reads about 4,300 files into an unbounded cache nothing reads again (about 200 MB).
+        import taom_schema as ts
+        self.srv._build_query()
+        self.assertEqual(ts._read_stripped.cache_info().currsize, 0)
+
     def test_validate_tool_returns_shape(self):
         out = self._call("validate_moduledata", {"codes": ["UNKNOWN_CULTURE"]})
         self.assertEqual(set(out), {"error_count", "warning_count", "issues"})

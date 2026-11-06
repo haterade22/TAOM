@@ -25,6 +25,7 @@ _PREFIXES = {
     "party_template": "PartyTemplate.",
     "body_property": "BodyProperty.",
     "faction": "Faction.",
+    "settlement": "Settlement.",
 }
 
 # The engine (taom_schema.REF_KINDS) names the troop kind "npccharacter"; the
@@ -98,7 +99,7 @@ class ModuleDataQuery:
     def find_references(self, target_id: str, kind: str | None = None, limit: int = 200) -> dict:
         """Find every reference to an id across ModuleData. `target_id` may be
         prefixed (Item.x / NPCCharacter.x / Culture.x / PartyTemplate.x / BodyProperty.x /
-        Faction.x) or bare with `kind` set; with neither, all six prefixes are searched."""
+        Faction.x / Settlement.x) or bare with `kind` set; with neither, all seven prefixes are searched."""
         bare, inferred = target_id, _KIND_ALIASES.get(kind, kind)
         for k, p in _PREFIXES.items():
             if target_id.startswith(p):
@@ -108,7 +109,7 @@ class ModuleDataQuery:
         patterns = [(k, re.compile(r'="' + re.escape(_PREFIXES[k] + bare) + r'"')) for k in kinds]
         refs = []
         for xml in sorted(self.moduledata.rglob("*.xml")):
-            text = ts._read_fresh(xml)
+            text = ts._read_fresh(xml, keep_lines=True)   # the line numbers reported are the file's
             rel = self._rel(xml)
             for k, pat in patterns:
                 for m in pat.finditer(text):

@@ -186,6 +186,8 @@ Armory: it is named in the release note and never allowlisted (decision D15). `V
 TAOM data names villages the map lacks (`recruitment_pools/gondor.json` names four). `HIDEOUT` findings
 predict the new-game hideout throw that plan 112 guards.
 
+**TAOM and TAOM_Map ship as a pair.** Each names the other's rows: the map's settlements name TAOM's cultures and clans, and TAOM's clans and kingdoms name the map's settlements. A pair that disagrees points settlements at undefined cultures and clans, or names homes the map lacks and can leave a culture with no settlement (`LANDLESS_CULTURE`, #374). Before publishing, check each channel: `python tools/check_release_pair.py <channel Modules folder>`. Exit 0 and a `PASS:` line means the pair agrees; 1 lists each disagreement with its code, file and line; 2 means a file it needs is missing or unreadable; 3 means the tool crashed. Neither 2 nor 3 judged anything. The check compares the two packages with each other and counts no rows, so a pair that agrees can still lag the current build. The pins above still apply.
+
 ## Historical record: the backfill (2026-08-08)
 
 Eleven `v2.0.x` tags were created retroactively at the commit that **introduced** each version.
