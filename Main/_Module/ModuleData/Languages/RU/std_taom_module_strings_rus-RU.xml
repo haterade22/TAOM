@@ -7716,6 +7716,10 @@
     <string id="TAOM_LD_Notice_VolleyFull" text="The Elven Volley is fully upgraded." />
     <string id="TAOM_LD_Notice_VolleyNotInWave" text="The Elven Volley is loosed during a wave." />
     <string id="TAOM_LD_Notice_VolleyNotOwned" text="Buy the Elven Volley between waves first." />
+    <string id="TAOM_LD_Fort_Towers" text="High towers" />
+    <string id="TAOM_LD_Fort_TowersDetail" text="Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them." />
+    <string id="TAOM_LD_Fort_TowersFull" text="Fully manned" />
+    <string id="TAOM_LD_Notice_TowersFull" text="The high towers are fully manned." />
   </strings>
 
 </base>

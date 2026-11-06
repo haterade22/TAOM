@@ -199,7 +199,7 @@ internal sealed partial class SurvivalRun
         var towers = _plan.Shop.Fort?.Towers;
         if (_plan.Offered.Towers <= 0)
             return Refuse(FortResult.NotOffered);
-        if (towers == null || _plan.Towers.Count == 0)
+        if (towers == null || !Towers.Any(t => t.Posts.Count > 0))
             return Refuse(FortResult.Hidden);
         if (_towerLevel >= towers.Levels.Count)
             return Refuse(FortResult.MaxLevel);
@@ -261,7 +261,7 @@ internal sealed partial class SurvivalRun
     private int PostsAdded(TowerPlan towers, int from, int to)
     {
         int Target(int level) => level <= 0 ? 0 : towers.Levels[level - 1].Posts;
-        return _plan.Towers.Sum(t => Math.Min(Target(to), t.Posts.Count) - Math.Min(Target(from), t.Posts.Count));
+        return Towers.Sum(t => Math.Min(Target(to), t.Posts.Count) - Math.Min(Target(from), t.Posts.Count));
     }
 
     /// <summary>The factor over the vanilla maximum the gate level in force gives: 1 with no level.</summary>
@@ -294,7 +294,7 @@ internal sealed partial class SurvivalRun
     /// <summary>A wave was cleared: the posts are manned again, free, up to the room left under the cap. Packs are bought later in the intermission, so the refill always comes first.</summary>
     private void RefillPosts(RunEffects fx)
     {
-        if (_towerLevel > 0)
+        if (_towerLevel > 0 && Towers.Any(t => t.Posts.Count > 0))
             fx.FillPosts = FillNow();
     }
 
@@ -302,7 +302,7 @@ internal sealed partial class SurvivalRun
     {
         var troop = _plan.Shop.Fort!.Towers!;
         var room = _r.GarrisonCap - _lastDefenders - (PendingDefenders - _pendingPosts);
-        return new LdPostFill(troop.Troop, troop.Levels[_towerLevel - 1].Posts, Math.Max(0, room));
+        return new LdPostFill(troop.Troop, troop.Levels[_towerLevel - 1].Posts, Math.Max(0, room), DefenderHealth(new WaveSoldier(troop.Troop, FormationSlot.Ranged)));
     }
 
     private void ObserveGates(IReadOnlyList<LdGateFacts>? gates)
@@ -329,7 +329,7 @@ internal sealed partial class SurvivalRun
             _gateFellAt = _waveSeconds;
     }
 
-    private FortWave FortWaveNow() => new(new GateWaveRecord(_gateWaveLevel, _gateStartHitPoints, _gateStartMax, _gateFellAt != null, _gateFellAt), PostsWaveRecord.None, ElvenWaveNow(), TowerWaveNow());
+    private FortWave FortWaveNow() => new(new GateWaveRecord(_gateWaveLevel, _gateStartHitPoints, _gateStartMax, _gateFellAt != null, _gateFellAt), PostsWaveNow(), ElvenWaveNow(), TowerWaveNow());
 
     private FortView FortViewNow()
     {
@@ -338,17 +338,18 @@ internal sealed partial class SurvivalRun
         return new FortView(
             Row(QuoteGate(), _gateLevel, fort.Gate?.Levels.Count ?? 0),
             Row(QuoteRepair(), 0, 0),
-            Row(tower, _towerLevel, fort.Towers?.Levels.Count ?? 0, tower.Posts == 0 || PostsFit(tower.Posts)),
+            Row(tower, _towerLevel, Math.Min(fort.Towers?.Levels.Count ?? 0, _plan.Offered.Towers), tower.Posts == 0 || PostsFit(tower.Posts)),
             Row(QuoteCare(), _careUsed, fort.Care?.PerIntermission ?? 0),
             Row(QuoteVolley(), _volleyLevel, fort.Volley?.Levels.Count ?? 0),
             _gates,
             _plan.Options.StartGold != null)
         {
             CareShare = fort.Care?.Share ?? 0f,
+            TowerPostsShown = fort.Towers is { } towerRow ? towerRow.Levels[Math.Min(_towerLevel, Math.Min(towerRow.Levels.Count, Math.Max(1, _plan.Offered.Towers)) - 1)].Posts : 0,
             GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,
             VolleyShown = fort.Volley is { } volley ? volley.Levels[Math.Min(_volleyLevel, volley.Levels.Count - 1)] : null,
         };
     }
 
-    private static FortRow Row(Quote quote, int level, int maxLevel, bool fits = true) => new(level, maxLevel, quote.Price, quote.Result == FortResult.Ok && fits);
+    private static FortRow Row(Quote quote, int level, int maxLevel, bool fits = true) => new(level, maxLevel, quote.Price, quote.Result == FortResult.Ok && fits) { Full = quote.Result == FortResult.Ok && !fits };
 }

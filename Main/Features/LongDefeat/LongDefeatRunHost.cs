@@ -87,6 +87,12 @@ internal sealed class LongDefeatRunHost
     /// <summary>An arrow of a volley struck something, already read by the logic's filter. May run off the main thread.</summary>
     public void OnVolleyHit(LdVolleyHit hit) => Guarded("OnVolleyHit", () => _director?.OnVolleyHit(hit));
 
+    /// <summary>Whether a wave with posted archers is running. Read in the engine's shot callback (not multithread callable, Mission.cs:4982): one volatile read of the director's flag.</summary>
+    public bool WantsPostShots => _director?.WantsPostShots ?? false;
+
+    /// <summary>An agent loosed an arrow; the field counts it when he is a post archer.</summary>
+    public void OnPostShot(object shooter) => Guarded("OnPostShot", () => _director?.OnPostShot(shooter));
+
     /// <summary>
     /// A hit as the engine raised it, for the sally's contact count: the lord or his horse struck or was struck. Unfiltered (a blocked blow is contact too). <paramref name="victimHealth"/> is read after the blow. May run
     /// off the main thread.

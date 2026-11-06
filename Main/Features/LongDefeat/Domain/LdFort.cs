@@ -63,9 +63,9 @@ internal sealed record RunFort(IReadOnlyList<FortPurchase> Purchases, int GateLe
 }
 
 /// <summary>
-/// The posts to man for the high towers, as the director will hand the adapter: <c>Posts</c> per tower, up to <c>Room</c> soldiers more under the garrison cap. The refill is free and comes before any pack.
+/// The posts to man for the high towers, as the director will hand the adapter: <c>Posts</c> per tower, up to <c>Room</c> soldiers more under the garrison cap. The refill is free and comes before any pack. <c>HealthFactor</c> is the health boons' factor for the troop's group, as a pack of that troop would carry it.
 /// </summary>
-internal sealed record LdPostFill(string Troop, int Posts, int Room);
+internal sealed record LdPostFill(string Troop, int Posts, int Room, float HealthFactor = 1f);
 
 /// <summary>A wave's gate row: the level in force at its start, the hit points the gates held then and could hold, whether one fell in the wave and when. Sums over the visible gates (Helm's Deep has one).</summary>
 internal sealed record GateWaveRecord(int Level, float StartHitPoints, float MaxHitPoints, bool Fell, float? FellAtSeconds)

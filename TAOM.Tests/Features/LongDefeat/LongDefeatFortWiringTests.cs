@@ -308,12 +308,14 @@ public class LongDefeatFortWiringTests
     }
 
     [TestMethod]
-    public void TheBootWarningForAFortPoint_SaysDroppedOnlyForAVolleyOrigin()
+    public void TheBootWarningForAFortPoint_SaysDropped_ForEveryPointTheTowersAndTheVolleyKeepOnlyUsable()
     {
         var gates = Source("Main/Features/LongDefeat/LongDefeatDirector.Gates.cs");
 
-        Assert.IsFalse(gates.Contains("is unusable and is dropped"), "posts and tower spots are named, never removed");
-        StringAssert.Contains(gates, "volley[");
+        StringAssert.Contains(gates, "is unusable and is dropped");
+        Assert.IsFalse(gates.Contains("StartsWith(\"volley[\""), "the warning no longer tells a volley origin from a post: all are dropped");
+        StringAssert.Contains(gates, "_run.LimitTowers(kept)");
+        StringAssert.Contains(gates, "_run.LimitVolleyOrigins(");
     }
 
     [TestMethod]

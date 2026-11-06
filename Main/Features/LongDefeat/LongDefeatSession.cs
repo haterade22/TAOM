@@ -64,6 +64,9 @@ internal sealed class LongDefeatSession
     /// <summary>Buys the repair (D17): every visible gate that is broken or damaged is made whole at the levelled maximum on the next tick.</summary>
     public FortResult TryRepairGates() => _run?.TryRepairGates() ?? FortResult.RunOver;
 
+    /// <summary>Buys the next tower level (D20): the recorded towers' posts are manned on the next tick, and again at every clear, free, before any pack.</summary>
+    public FortResult TryBuyTowerLevel() => _run?.TryBuyTowerLevel() ?? FortResult.RunOver;
+
     /// <summary>Buys the next Elven Volley level (phase3-plan.md D22 to D24): the volley is loosed in a wave, on the key N, and the panel only buys.</summary>
     public FortResult TryBuyVolleyLevel() => _run?.TryBuyVolleyLevel() ?? FortResult.RunOver;
 

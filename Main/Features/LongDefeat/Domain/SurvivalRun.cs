@@ -347,6 +347,7 @@ internal sealed partial class SurvivalRun
         InitPoison();
         InitGateRecord();
         InitVolley();
+        InitPosts();
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>

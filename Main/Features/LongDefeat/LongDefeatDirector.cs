@@ -158,6 +158,7 @@ internal sealed partial class LongDefeatDirector
         _mainBody = read.MainBody;
         AdoptIfNew();
         JudgeFieldCare(read.DefenderHealthMean);
+        ReadPostsTick();
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
             _defendersAtKeep, read.SiegeBattleSize, read.Gates));
@@ -166,6 +167,7 @@ internal sealed partial class LongDefeatDirector
             return;
 
         TickVolleyWatch(dt);
+        TickPosts(dt);
         if (_plan.Options.Autoplay)
             PlayShop(dt);
         TickSally(dt);

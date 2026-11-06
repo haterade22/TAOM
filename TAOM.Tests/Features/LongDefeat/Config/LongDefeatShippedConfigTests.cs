@@ -116,6 +116,23 @@ public class LongDefeatShippedConfigTests
         Assert.IsTrue(helms.Shop.Offers.Any(o => o.TroopId == towers.Troop), "the shop already sells him, so the roster and its boon group are known");
     }
 
+    // The tower rows are sold only against a recorded post; the test follows the fortress file, so it holds with or without recorded posts.
+    [TestMethod]
+    public void ShippedHelms_SellsTheTowerRowExactlyWhenAPostIsRecorded()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+        var run = new SurvivalRun(plan);
+        run.Begin();
+
+        var recorded = plan.Towers.Any(t => t.Posts.Count > 0);
+
+        Assert.AreEqual(recorded, run.GetView().Fort.Towers.Available, "a row with no post to man is hidden");
+        Assert.AreEqual(recorded ? FortResult.Ok : FortResult.Hidden, run.TryBuyTowerLevel());
+        Assert.AreEqual(2, plan.Offered.Towers, "levels 1 and 2 are offered; level 3 is the tower volley, Slice 8");
+    }
+
     [TestMethod]
     public void ShippedTowerVolley_FiresTheFordsTowerArrow_AndTheTowersTroopJoinsTheLaunchCheck()
     {
@@ -203,7 +220,7 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedBuild_OffersTheGateFieldCareAndTheVolley_UntilEachSlicesEffectLands()
+    public void ShippedBuild_OffersTheGateFieldCareTheVolleyAndTwoTowerLevels_UntilEachSlicesEffectLands()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
@@ -211,7 +228,7 @@ public class LongDefeatShippedConfigTests
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
         Assert.AreEqual(FortOffer.Offered, plan.Offered);
-        Assert.AreEqual(new FortOffer(3, 0, true, 2), plan.Offered);
+        Assert.AreEqual(new FortOffer(3, 2, true, 2), plan.Offered);
         Assert.IsNotNull(plan.Shop.Fort?.Care, "the shipped shop carries the care row the build offers");
         Assert.AreEqual(plan.Offered.Gate, plan.Shop.Fort!.Gate!.Levels.Count, "the shipped shop carries exactly the gate levels the build delivers");
         Assert.IsTrue(plan.Shop.Fort.Gate.RepairPrice > 0);

@@ -165,7 +165,7 @@ internal sealed partial class SurvivalRun
         if (carries < 0 || _towerLevel <= carries)
             return;
 
-        foreach (var tower in _plan.Towers.Where(t => t.VolleyOrigins.Count > 0))
+        foreach (var tower in Towers.Where(t => t.VolleyOrigins.Count > 0))
             _towerClocks.Add(new TowerVolley(tower, new VolleyClock(_waveSeconds, volley.FirstSeconds, volley.CooldownSeconds)));
     }
 

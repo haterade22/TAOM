@@ -4740,6 +4740,9 @@
 	<string id="TAOM_LD_Fort_RepairDetail" text="{=TAOM_LD_Fort_RepairDetail}Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost." />
 	<string id="TAOM_LD_Fort_RepairNone" text="{=TAOM_LD_Fort_RepairNone}Nothing to repair" />
 	<string id="TAOM_LD_Fort_Title" text="{=TAOM_LD_Fort_Title}Fortifications" />
+	<string id="TAOM_LD_Fort_Towers" text="{=TAOM_LD_Fort_Towers}High towers" />
+	<string id="TAOM_LD_Fort_TowersDetail" text="{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them." />
+	<string id="TAOM_LD_Fort_TowersFull" text="{=TAOM_LD_Fort_TowersFull}Fully manned" />
 	<string id="TAOM_LD_Fort_Used" text="{=TAOM_LD_Fort_Used}Used" />
 	<string id="TAOM_LD_Fort_Volley" text="{=TAOM_LD_Fort_Volley}Elven Volley" />
 	<string id="TAOM_LD_Fort_VolleyAuto" text="{=TAOM_LD_Fort_VolleyAuto}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave." />
@@ -4805,6 +4808,7 @@
 	<string id="TAOM_LD_Notice_NoReroll" text="{=TAOM_LD_Notice_NoReroll}No reroll is banked." />
 	<string id="TAOM_LD_Notice_RunOver" text="{=TAOM_LD_Notice_RunOver}The run is over." />
 	<string id="TAOM_LD_Notice_ShopClosed" text="{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave." />
+	<string id="TAOM_LD_Notice_TowersFull" text="{=TAOM_LD_Notice_TowersFull}The high towers are fully manned." />
 	<string id="TAOM_LD_Notice_UnknownOffer" text="{=TAOM_LD_Notice_UnknownOffer}That pack is not for sale." />
 	<string id="TAOM_LD_Notice_VolleyCooldown" text="{=TAOM_LD_Notice_VolleyCooldown}The Elven Volley is not ready yet." />
 	<string id="TAOM_LD_Notice_VolleyFull" text="{=TAOM_LD_Notice_VolleyFull}The Elven Volley is fully upgraded." />

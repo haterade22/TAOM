@@ -281,10 +281,21 @@ internal static class LongDefeatHudText
 
     internal static string RepairDetail() => new TextObject("{=TAOM_LD_Fort_RepairDetail}Mends a broken or hurt gate and shuts it again. The price follows how much of the gate is lost.").ToString();
 
+    internal static string TowersName() => new TextObject("{=TAOM_LD_Fort_Towers}High towers").ToString();
+
+    /// <summary>The towers row's line: the level the next buy brings (the top one when all are owned) and the archers each tower holds at it (shop.json's posts for that level).</summary>
+    internal static string TowersDetail(int level, int maxLevel, int posts) => new TextObject("{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them.")
+        .SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("POSTS", posts > 0 ? posts : 0).ToString();
+
+    internal static string TowersFull() => new TextObject("{=TAOM_LD_Fort_TowersFull}Fully manned").ToString();
+
     internal static string RepairNone() => new TextObject("{=TAOM_LD_Fort_RepairNone}Nothing to repair").ToString();
 
     /// <summary>The refusal line for a gate or care buy the run turned down; empty for Ok. <c>MaxLevel</c> reads as the gate's, which the gate row's buy answers.</summary>
     internal static string Refusal(FortResult result) => Refusal(result, new TextObject("{=TAOM_LD_Notice_GateFull}The gate is fully reinforced.").ToString());
+
+    /// <summary>The high towers' refusal: the generic lines, and its own wording for a level it does not have (the gate's line would be wrong here, Slice 5's review).</summary>
+    internal static string RefusalTowers(FortResult result) => Refusal(result, new TextObject("{=TAOM_LD_Notice_TowersFull}The high towers are fully manned.").ToString());
 
     /// <summary>The Elven Volley's refusal: the generic lines, and its own wording for a level it does not have (the tower row, Slice 7, passes its own).</summary>
     internal static string RefusalVolley(FortResult result) => Refusal(result, new TextObject("{=TAOM_LD_Notice_VolleyFull}The Elven Volley is fully upgraded.").ToString());

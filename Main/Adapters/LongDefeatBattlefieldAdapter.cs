@@ -515,6 +515,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     {
         _gates = new List<CastleGate>();
         ClearGates();
+        ClearPosts();
         _ladders = new List<SiegeLadder>();
         _towers = new List<SiegeTower>();
         _rams = new List<BatteringRam>();

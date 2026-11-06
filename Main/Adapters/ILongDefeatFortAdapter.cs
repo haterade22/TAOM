@@ -66,4 +66,29 @@ internal interface ILongDefeatFortAdapter
     /// adds nothing and says why.
     /// </summary>
     LdVolleyFire FireVolley(string itemId, IReadOnlyList<LdVolleyShot> shots, string towerId);
+
+    /// <summary>The way posted archers are held for this mission (spike S6): the plan's first choice, or the variant the process environment names (<see cref="PostsVariants.EnvironmentName"/>).</summary>
+    PostsVariant PostsVariant { get; }
+
+    /// <summary>The posts formation's index (<c>FormationClass.Skirmisher</c>, 4: the A23 boot line shows ProperDefense leaves it empty).</summary>
+    int PostsFormationIndex { get; }
+
+    /// <summary>
+    /// Mans the towers' posts (D20): for each tower, up to <see cref="LdPostFill.Posts"/> posts (the recorded ones, if fewer) that no live archer holds get a new one of <see cref="LdPostFill.Troop"/>, spawned at the
+    /// post facing its direction (the spawn takes a position with a direction, E20), until <see cref="LdPostFill.Room"/> soldiers are out; the rest are short (the cap), and a spawn that fails is failed. Each is held by a
+    /// scripted position (<see cref="PostsVariant"/>). Soldiers who are not post archers and stand in the posts formation (the tactic splits units into any empty index) are moved out first, and counted in the answer.
+    /// </summary>
+    LdPostsFilled FillPosts(LdPostFill fill, IReadOnlyList<LdTower> towers);
+
+    /// <summary>Each tower's post archers as they stand now: how many are live, how many are within the hold distance of their own post, the worst drift, and the arrows loosed so far.</summary>
+    LdPostsReading ReadPosts();
+
+    /// <summary>
+    /// The D30a re-assert, run once a second while posts exist: the posts formation is kept off AI control (variant C: kept not splittable), any agent in it that is not a post archer is moved out, a post archer the
+    /// tactic took away is moved back, and each live archer's scripted position is set again.
+    /// </summary>
+    LdPostsHold HoldPosts();
+
+    /// <summary>An agent loosed an arrow (the logic's <c>OnAgentShootMissile</c>, which the engine declares not multithread callable, Mission.cs:4982). Counted against the tower whose post archer he is; any other agent is ignored.</summary>
+    void NotePostShot(object shooter);
 }

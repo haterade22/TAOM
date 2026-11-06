@@ -361,6 +361,19 @@ fail = ['\[Check\] id=taom\.long-defeat\.volley result=fail']
 # A window cut short before the share was met is a skip (reason=window-cut) and proves nothing; a skip never pays this row. The check is owed once a volley level was bought before a wave the run then played, whether or not the report shows a use.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.posts"
+needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts (Mike records them with taom.ld_record post <tower>; none is recorded for Helm's Deep until 2026-11-06, so without them the tower row is not for sale and this row is NOT REACHED): python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3 --start-gold 5000, once per hold variant (--posts-variant A, B and C; the bot buys tower level 1 in the preparation and level 2 at clear 1)"
+reached = ['\[Check\] id=taom\.long-defeat\.posts result=']
+pass = ['\[Check\] id=taom\.long-defeat\.posts result=pass tower=[a-z_]+ w=[0-9]+ level=[12] variant=[ABC] formation=[0-9]+ posts=[0-9]+ expected=[1-9][0-9]* manned=[0-9]+ held=([0-9]+) sampled=\1 max_drift=[0-9.]+ max_dz=[0-9.]+ shots=[1-9][0-9]* split=[0-9]+ out=[0-9]+ short=[0-9]+ failed=0']
+fail = ['\[Check\] id=taom\.long-defeat\.posts result=fail']
+# Written by LongDefeatDirector.Posts.cs, one line per tower and wave, key <tower>-w<N>, at the wave's clear, or with ended=run when the run ends first (Slice 7, spike S6). manned= is the archers standing on the tower as the wave began and expected= the posts the fill should
+# have filled (the level's posts less short=, the posts the garrison cap left empty: named, never failed; a spawn that threw is failed=N, kept in expected= so it fails the line, and a pass needs failed=0); held=H sampled=N is the sample taken 30 s into the wave, H archers of the N still standing within 1.5 m and 2 m of their own posts (max_drift= and max_dz= are the worst of them),
+# and it must read the same number twice (every word of the detail is name=value: the game's log sanitiser glues a bare word to the value before it, so "held=4 of 4" would be logged as held=4_of_4 and never match); shots= is the arrows the tower's archers loosed by the clear (the engine's OnAgentShootMissile), at least one, which settles A18: a held archer still shoots. split= counts post archers the once-a-second re-assert (D30a) moved back into the posts formation
+# after the tactic took them away and out= agents it moved out of it; variant= names how the archers were held (A a scripted position, B with a speed limit of 0, C with the formation set not splittable by AI) and formation= the posts formation's index (4, the A23 boot lines).
+# A skip proves nothing and is named: reason=short-wave (the wave ended before the 30 s sample), none-standing (no archer left at the sample), no-archers (the fill left nothing to prove) or window-cut (the run ended before any arrow). A skip never pays this row.
+absence = "not-reached"
+
 [[human]]
 claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
 
@@ -435,3 +448,6 @@ claim = "the shop's Fortifications group reads clearly: field care is listed wit
 
 [[human]]
 claim = "the Elven Volley reads as arrows from behind the wall landing on the attackers (a --waves 3 --garrison-scale 1.3 --start-gold 5000 run at a fortress with recorded volley origins), and how the arrow looks in flight (it shares the vanilla flying mesh, so it likely looks like any arrow); pressing N during a wave looses it and does nothing else, the strip under the commander line reads ready, then the seconds to the next use, and No attackers in reach when nobody is in range; the panel's Elven Volley row only buys; level two lands where Mike looks (aim=person), and no defender is hit"
+
+[[human]]
+claim = "posted archers stand on the high towers and shoot (a --waves 2 --garrison-scale 1.3 --start-gold 5000 run at a fortress with recorded tower posts, once per hold variant A, B and C): they face out over the approach, keep their posts for the whole wave without walking off or stopping, and loose arrows at the attackers; judge which variant reads best, and say if the fallback (the posts formation with one vanilla Move order to the tower top and no per-agent hold) is the better choice; the panel's High towers row only buys, and its second level fills the remaining posts"

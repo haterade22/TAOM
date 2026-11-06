@@ -158,7 +158,7 @@ public class LongDefeatPrefabTests
         Assert.AreEqual("@IsVisible", (string?)group.Attribute("IsVisible"));
         Assert.IsTrue(group.Descendants().Any(e => (string?)e.Attribute("Text") == "@Title"));
         var buttons = group.Descendants("ButtonWidget").ToList();
-        Assert.AreEqual(4, buttons.Count, "field care, the gate level, the gate repair and the Elven Volley");
+        Assert.AreEqual(5, buttons.Count, "field care, the gate level, the gate repair, the high towers and the Elven Volley");
 
         // Each row: its click, its enabled flag, its own visible flag, and its three lines.
         foreach (var (command, can, visible, texts) in new[]
@@ -166,6 +166,7 @@ public class LongDefeatPrefabTests
                      ("ExecuteBuyCare", "@CanBuyCare", "@IsCareVisible", new[] { "@CareName", "@CareDetail", "@CarePrice" }),
                      ("ExecuteBuyGate", "@CanBuyGate", "@IsGateVisible", new[] { "@GateName", "@GateDetail", "@GatePrice" }),
                      ("ExecuteRepair", "@CanRepair", "@IsRepairVisible", new[] { "@RepairName", "@RepairDetail", "@RepairPrice" }),
+                     ("ExecuteBuyTowers", "@CanBuyTowers", "@IsTowersVisible", new[] { "@TowersName", "@TowersDetail", "@TowersPrice" }),
                      ("ExecuteBuyVolley", "@CanBuyVolley", "@IsVolleyVisible", new[] { "@VolleyName", "@VolleyDetail", "@VolleyPrice" }),
                  })
         {

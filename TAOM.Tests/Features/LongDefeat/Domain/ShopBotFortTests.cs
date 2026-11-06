@@ -243,6 +243,23 @@ public class ShopBotFortTests
         Assert.AreEqual(3, sim.Towers, "tower 3 is bought at clear 2, so wave 3 has the tower volley");
     }
 
+    // Slice 7's named run, --waves 2 --garrison-scale 1.3 --start-gold 5000, with the build as it ships: two tower levels. The bot owns level 1 for wave 1, level 2 for wave 2, and never asks for level 3.
+    [TestMethod]
+    public void TheSliceSevenRun_OwnsTowerLevelOneForWaveOne_LevelTwoForWaveTwo_AndNeverAsksForTheThird()
+    {
+        var sim = new Sim { Offered = new FortOffer(0, 2, false, 0), StartGold = true };
+        sim.Shop();
+        Assert.AreEqual(1, sim.Towers, "level 1 in the preparation");
+        sim.Clear();
+        sim.Shop();
+        Assert.AreEqual(2, sim.Towers, "level 2 at clear 1");
+        sim.Clear();
+
+        sim.Shop();
+
+        Assert.AreEqual(2, sim.Towers, "level 3 is the tower volley, which this build does not offer");
+    }
+
     [TestMethod]
     public void AFiveWaveRun_OwnsEveryKindAtItsTop_BeforeWaveFour()
     {

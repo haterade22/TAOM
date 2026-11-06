@@ -149,6 +149,25 @@
                           </Children>
                         </ButtonWidget>
                         <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsTowersVisible" IsEnabled="@CanBuyTowers" Command.Click="ExecuteBuyTowers">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                       DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                            Text="@TowersName" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                            Text="@TowersDetail" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                            Text="@TowersPrice" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
                                       Brush="ButtonBrush2" UpdateChildrenStates="true" IsVisible="@IsVolleyVisible" IsEnabled="@CanBuyVolley" Command.Click="ExecuteBuyVolley">
                           <Children>
                             <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"

@@ -2,7 +2,7 @@
 """Run The Long Defeat (#1079) in the real game with nobody at the keyboard, and judge its [Check] lines.
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
-                                      [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--deep]
+                                      [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--posts-variant A|B|C] [--deep]
                                       [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
@@ -23,6 +23,7 @@ the next class. The report must be schema 2 and must echo the seed, start wave, 
 The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
 The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
+The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
@@ -36,6 +37,7 @@ import argparse
 import itertools
 import json
 import math
+import os
 import re
 import struct
 import subprocess
@@ -665,7 +667,7 @@ def owes_summon(report_json):
 # read_fortifications mirrors FortificationsReader rule for rule (both suites read tools/tests/long_defeat_fort_cases.json), FORT_OFFERED mirrors FortOffer.Offered (D31), and
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
-FORT_OFFERED = {"gate": 3, "towers": 0, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5 and the Elven Volley in Slice 6; each later slice raises its kind here and in FortOffer.Offered
+FORT_OFFERED = {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6 and tower levels 1 and 2 in Slice 7; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
 SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
@@ -1090,19 +1092,45 @@ VOLLEY_CHECK = "volley"
 VOLLEY_CROSSHAIR_PASS = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + VOLLEY_CHECK) + r" result=pass\b[^\n]*\bmode=crosshair\b")
 
 
-def _volley_bought_before_play(report_json, level):
+def _level_bought_before_play(report_json, kind, level):
     played = _played(report_json)
-    return any(_is_int(p.get("beforeWave")) and p["beforeWave"] <= played and _is_int(p.get("level")) and p["level"] >= level for p in _bought(report_json, "volleyLevel"))
+    return any(_is_int(p.get("beforeWave")) and p["beforeWave"] <= played and _is_int(p.get("level")) and p["level"] >= level for p in _bought(report_json, kind))
 
 
 def owes_volley(report_json):
     """The volley check is owed once a volley level was bought before a wave the run then played."""
-    return _volley_bought_before_play(report_json, 1)
+    return _level_bought_before_play(report_json, "volleyLevel", 1)
 
 
 def owes_volley_crosshair(report_json):
     """A crosshair pass is owed once level two was bought before a wave the run then played."""
-    return _volley_bought_before_play(report_json, 2)
+    return _level_bought_before_play(report_json, "volleyLevel", 2)
+
+
+# The high towers (Slice 7). The game writes one posts line per tower and wave (key <tower>-w<N>) at the clear or the run's end: the archers the fill owed stood at the wave's start, were still at their posts 30 s in and
+# loosed an arrow by the clear. A report that bought a tower level before a wave the run then played owes a pass line, whether or not the report shows archers: a level that mans nobody leaves the wave rows' posts at 0, which the
+# replay accepts, and only this debt catches it. A skip (a wave under 30 s, a fill the cap left empty, a run that ended before an arrow) proves nothing. The proof needs recorded tower posts in fortresses.json.
+# Level two is bought at clear 1 and fills in wave 2, so a report that bought it before a wave the run played owes a pass with level=2 as well; any one pass would otherwise satisfy both debts (Slice 7 review).
+POSTS_CHECK = "posts"
+POSTS_LEVEL2_PASS = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\blevel=2\b")
+POSTS_VARIANT_ENV = "TAOM_LD_POSTS_VARIANT"
+POSTS_VARIANTS = ("A", "B", "C")
+posts_variant = None
+
+
+def owes_posts(report_json):
+    """The posts check is owed once a tower level was bought before a wave the run then played."""
+    return _level_bought_before_play(report_json, "towerLevel", 1)
+
+
+def owes_posts_level2(report_json):
+    """A level=2 posts pass is owed once tower level two was bought before a wave the run then played."""
+    return _level_bought_before_play(report_json, "towerLevel", 2)
+
+
+def posts_variant_pattern(variant):
+    """A posts pass line that names the variant the run armed (the wrapper's --posts-variant set it in the game's environment)."""
+    return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\bvariant=" + re.escape(variant) + r"\b")
 
 
 def recorded_fort_points(fortress_id, root=None):
@@ -1201,6 +1229,18 @@ def owes_return(report_json, lose):
     return not lose and _is_int(cleared) and cleared >= 1
 
 
+def waves_count_problem(report_json):
+    """"" when the report's waves list holds one row per cleared wave, else what is wrong (phase2 RCA rows 120 and 121). The game writes a row only at a clear (SurvivalRun.ClearWave ->
+    RunStats.CloseWave), so a run that ends in a wave, won or lost, carries rows for the waves it cleared and none for the one it ended in: len(waves) == wavesCleared in both. A shorter list gives
+    the affix, boon and commander replays nothing to replay, and a longer one is a row the game cannot write. A report whose waves or wavesCleared is not the right type is left to the checks that name it."""
+    waves, cleared = report_json.get("waves"), report_json.get("wavesCleared")
+    if not isinstance(waves, list) or not _is_int(cleared):
+        return ""
+    if len(waves) != cleared:
+        return f"wavesCleared={cleared} but waves lists {len(waves)} row(s); the game writes one row for each wave it clears and none for the wave a run ends in"
+    return ""
+
+
 def judge(done, report_json, log_text=None):
     """(exit code, why). The whole log counts for the CrashReport check: it opens at this launch, so every line is this run's, and a time
     cut would only hide a block from the load."""
@@ -1222,6 +1262,9 @@ def judge(done, report_json, log_text=None):
         return 1, f"the report's schema is {schema!r}, wanted {SCHEMA}: the game under test is not a schema {SCHEMA} build{note}"
     if not isinstance(report_json.get("waves"), list):
         return 1, f"the report's waves is {report_json.get('waves')!r}: a schema {SCHEMA} report must carry a waves list, or the affixes, boons and commanders have nothing to replay{note}"
+    mismatch = waves_count_problem(report_json)
+    if mismatch:
+        return 1, f"the report's waves do not match its clears: {mismatch}{note}"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
     for key, wanted in {"startWave": 1, "startGold": None, **expected_report}.items():
         got = report_json.get(key)
@@ -1292,10 +1335,16 @@ def judge(done, report_json, log_text=None):
     if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
         required = required + (FIELD_CARE_CHECK,)
     for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK),
-                       (owes_volley, VOLLEY_CHECK)):
+                       (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK)):
         if not lose and owed(report_json) and name not in required:
             required = required + (name,)
+    if not lose and posts_variant and not owes_posts(report_json):
+        return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
+    if not lose and posts_variant and not posts_variant_pattern(posts_variant).search(log_text):
+        missing.append(POSTS_CHECK + f" (a pass with variant={posts_variant}: {POSTS_VARIANT_ENV} never took effect)")
+    if not lose and owes_posts_level2(report_json) and not POSTS_LEVEL2_PASS.search(log_text):
+        missing.append(POSTS_CHECK + " (a pass with level=2: the second tower level fills the remaining posts)")
     if not lose and owes_volley_crosshair(report_json) and not VOLLEY_CROSSHAIR_PASS.search(log_text):
         missing.append(VOLLEY_CHECK + " (a pass with mode=crosshair: level two aims where the lord looks)")
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
@@ -1429,6 +1478,8 @@ def build_parser():
                         help="begin the run at this wave number (a test option: the clears still count from 0, so the report is not a board run)")
     parser.add_argument("--start-gold", type=whole_in_range(0, 100000),
                         help="the gold the run starts with instead of the shop's, and the sign that the bot buys fortifications before packs (a test option: the report is not a board run; fortification runs use 5000)")
+    parser.add_argument("--posts-variant", type=str.upper, choices=POSTS_VARIANTS,
+                        help="how the high towers' archers are held (spike S6): A a scripted position, B with a speed limit of 0, C with the posts formation not splittable by AI; sets TAOM_LD_POSTS_VARIANT for the game (default: the game's own, A)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
                         help=f"boon rerolls in the bank at the start (default {DEFAULT_START_REROLLS}, so a 5-wave run proves a reroll at clear 3)")
     group.add_argument("--deep", action="store_true",
@@ -1487,10 +1538,15 @@ def show_results(done_text, log_copy, report_json, say):
 
 
 def main(argv=None):
-    global target_waves, tree_head, expected_speed, expected_report
+    global target_waves, tree_head, expected_speed, expected_report, posts_variant
     parser = build_parser()
     known, rest = parser.parse_known_args(argv)
     apply_deep(known)
+    posts_variant = known.posts_variant
+    if known.posts_variant:
+        os.environ[POSTS_VARIANT_ENV] = known.posts_variant
+    else:
+        os.environ.pop(POSTS_VARIANT_ENV, None)
     target_waves = known.waves
     expected_speed = known.speed
     expected_report = armed_report_fields(known)

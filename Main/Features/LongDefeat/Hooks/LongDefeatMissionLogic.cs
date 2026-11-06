@@ -3,6 +3,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.LongDefeat.Hooks;
@@ -97,6 +98,14 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     {
         base.OnMissileHit(attacker, victim, isCanceled, collisionData);
         LongDefeatVolleyHooks.MissileHit(_host, Mission, victim, isCanceled, in collisionData);
+    }
+
+    // The post archers' own shots for the posts check (E15: raised for an agent's own shot only, never for AddCustomMissile). The engine declares the callback not multithread callable (Mission.cs:4982).
+    public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
+    {
+        base.OnAgentShootMissile(shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex);
+        if (_host.WantsPostShots)
+            _host.OnPostShot(shooterAgent);
     }
 
     public override void OnAgentFleeing(Agent affectedAgent)

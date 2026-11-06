@@ -436,6 +436,30 @@ public class LongDefeatBindingTests
         Property(typeof(Monster), "MainHandItemBoneIndex", typeof(sbyte));
     }
 
+    // The high towers' posts (phase3-plan.md Slice 7, spike S6): the scripted hold, the speed limit of variant B, the formation's AI switch of D30a and variant C, the formation membership the re-assert moves, and the
+    // callback that counts a post archer's own arrows.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ThePostsMembers_StillResolve()
+    {
+        Method(typeof(Agent), "SetScriptedPositionAndDirection", typeof(void), typeof(WorldPosition).MakeByRefType(), typeof(float), typeof(bool), typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "SetMaximumSpeedLimit", typeof(void), typeof(float), typeof(bool));
+        Method(typeof(Agent), "GetCurrentNavigationFaceId", typeof(int));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Assert.IsNotNull(Property(typeof(Agent), "Formation", typeof(Formation)).GetSetMethod(), "Agent.Formation lost its public setter: the re-assert moves agents with it");
+        Method(typeof(Formation), "SetControlledByAI", typeof(void), typeof(bool), typeof(bool));
+        Method(typeof(Formation), "SetPositioning", typeof(void), typeof(WorldPosition?), typeof(Vec2?), typeof(int?));
+        Method(typeof(Formation), "ApplyActionOnEachUnit", typeof(void), typeof(Action<Agent>), typeof(Agent));
+        Method(typeof(Formation), "BeginSpawn", typeof(void), typeof(int), typeof(bool));
+        Method(typeof(Formation), "EndSpawn", typeof(void));
+        Property(typeof(Formation), "IsAIControlled", typeof(bool));
+        Property(typeof(Formation), "IsAIOwned", typeof(bool));
+        Field(typeof(Formation), "HasBeenPositioned", typeof(bool));
+        Method(typeof(Team), "GetFormation", typeof(Formation), typeof(FormationClass));
+        Method(typeof(MissionBehavior), "OnAgentShootMissile", typeof(void), typeof(Agent), typeof(EquipmentIndex), typeof(Vec3), typeof(Vec3), typeof(Mat3), typeof(bool), typeof(int));
+        Assert.AreEqual(4, (int)FormationClass.Skirmisher, "the posts formation index the A23 boot line was read for");
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

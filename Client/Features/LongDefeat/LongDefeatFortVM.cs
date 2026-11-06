@@ -5,8 +5,8 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Client.Features.LongDefeat;
 
 /// <summary>
-/// The shop panel's Fortifications group (phase3-plan.md section 4), buying only: a click goes to the session and the run answers. Field care, the gate (a level row and a repair row) and the Elven Volley are in;
-/// the towers join as their effect lands. The volley row only buys: the key N looses it, in a wave (D24). A row is listed while the build offers it and the shop carries it, and stays listed once used or at its top, so a player sees it is spent.
+/// The shop panel's Fortifications group (phase3-plan.md section 4), buying only: a click goes to the session and the run answers. Field care, the gate (a level row and a repair row), the high towers (levels 1 and
+/// 2, Slice 7) and the Elven Volley are in; the tower volley is level 3, Slice 8. The volley row only buys: the key N looses it, in a wave (D24). A row is listed while the build offers it and the shop carries it, and stays listed once used or at its top, so a player sees it is spent.
 /// </summary>
 public sealed class LongDefeatFortVM : LongDefeatViewModel
 {
@@ -14,6 +14,7 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
     private readonly Action _buyGate;
     private readonly Action _repair;
     private readonly Action _buyVolley;
+    private readonly Action _buyTowers;
     private bool _isVisible;
     private string _title = string.Empty;
     private bool _isCareVisible;
@@ -36,13 +37,19 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
     private string _volleyDetail = string.Empty;
     private string _volleyPrice = string.Empty;
     private bool _canBuyVolley;
+    private bool _isTowersVisible;
+    private string _towersName = string.Empty;
+    private string _towersDetail = string.Empty;
+    private string _towersPrice = string.Empty;
+    private bool _canBuyTowers;
 
-    internal LongDefeatFortVM(Action buyCare, Action buyGate, Action repair, Action buyVolley)
+    internal LongDefeatFortVM(Action buyCare, Action buyGate, Action repair, Action buyVolley, Action buyTowers)
     {
         _buyCare = buyCare;
         _buyGate = buyGate;
         _repair = repair;
         _buyVolley = buyVolley;
+        _buyTowers = buyTowers;
     }
 
     [DataSourceProperty]
@@ -111,6 +118,21 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
     [DataSourceProperty]
     public bool CanBuyVolley { get => _canBuyVolley; private set => Set(ref _canBuyVolley, value, nameof(CanBuyVolley)); }
 
+    [DataSourceProperty]
+    public bool IsTowersVisible { get => _isTowersVisible; private set => Set(ref _isTowersVisible, value, nameof(IsTowersVisible)); }
+
+    [DataSourceProperty]
+    public string TowersName { get => _towersName; private set => Set(ref _towersName, value, nameof(TowersName)); }
+
+    [DataSourceProperty]
+    public string TowersDetail { get => _towersDetail; private set => Set(ref _towersDetail, value, nameof(TowersDetail)); }
+
+    [DataSourceProperty]
+    public string TowersPrice { get => _towersPrice; private set => Set(ref _towersPrice, value, nameof(TowersPrice)); }
+
+    [DataSourceProperty]
+    public bool CanBuyTowers { get => _canBuyTowers; private set => Set(ref _canBuyTowers, value, nameof(CanBuyTowers)); }
+
     public void ExecuteBuyCare() => _buyCare();
 
     public void ExecuteBuyGate() => _buyGate();
@@ -118,6 +140,8 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
     public void ExecuteRepair() => _repair();
 
     public void ExecuteBuyVolley() => _buyVolley();
+
+    public void ExecuteBuyTowers() => _buyTowers();
 
     internal void Update(RunView view)
     {
@@ -129,13 +153,16 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
         IsRepairVisible = IsGateVisible;
         var volley = view.Fort.Volley;
         IsVolleyVisible = volley.Available || volley.Level > 0;
-        IsVisible = IsCareVisible || IsGateVisible || IsVolleyVisible;
+        var towers = view.Fort.Towers;
+        IsTowersVisible = towers.Available || towers.Full || towers.Level > 0;
+        IsVisible = IsCareVisible || IsGateVisible || IsVolleyVisible || IsTowersVisible;
         if (!IsVisible)
         {
             CanBuyCare = false;
             CanBuyGate = false;
             CanRepair = false;
             CanBuyVolley = false;
+            CanBuyTowers = false;
             return;
         }
 
@@ -145,7 +172,17 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
         CarePrice = used ? LongDefeatHudText.CareUsed() : LongDefeatHudText.Price(care.Price);
         CanBuyCare = care.Available && view.Gold >= care.Price;
         UpdateGate(view, gate);
+        UpdateTowers(view, towers);
         UpdateVolley(view, volley);
+    }
+
+    private void UpdateTowers(RunView view, FortRow towers)
+    {
+        var atTop = towers.MaxLevel > 0 && towers.Level >= towers.MaxLevel;
+        TowersName = LongDefeatHudText.TowersName();
+        TowersDetail = LongDefeatHudText.TowersDetail(Math.Min(towers.Level + 1, Math.Max(1, towers.MaxLevel)), towers.MaxLevel, view.Fort.TowerPostsShown);
+        TowersPrice = atTop ? LongDefeatHudText.TowersFull() : LongDefeatHudText.Price(towers.Price);
+        CanBuyTowers = towers.Available && view.Gold >= towers.Price;
     }
 
     private void UpdateVolley(RunView view, FortRow volley)
@@ -178,6 +215,8 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
         IsGateVisible = false;
         IsRepairVisible = false;
         IsVolleyVisible = false;
+        IsTowersVisible = false;
+        CanBuyTowers = false;
         CanBuyCare = false;
         CanBuyGate = false;
         CanRepair = false;

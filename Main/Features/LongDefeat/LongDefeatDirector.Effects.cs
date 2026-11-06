@@ -37,6 +37,9 @@ internal sealed partial class LongDefeatDirector
         if (fx.RefreshAttackers)
             RefreshAttackerStats();
 
+        if (fx.FillPosts is { } fill)
+            ApplyFillPosts(fill);
+
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
 
         // A lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
@@ -62,6 +65,7 @@ internal sealed partial class LongDefeatDirector
             BeginScaleWatch(start);
             BeginAffixes(start.Wave);
             BeginCommander();
+            OpenPostsWatches(start.Wave);
         }
 
         if (fx.Sally == SallyMove.Out)
@@ -245,6 +249,7 @@ internal sealed partial class LongDefeatDirector
     private void OnWaveCleared(RunEvent e)
     {
         JudgeGateAttacked(false);
+        JudgePosts(false);
         CloseVolleyWatch("wave");
         _volleyByBot = false;
         FlushScale();
@@ -284,6 +289,7 @@ internal sealed partial class LongDefeatDirector
         _finished = true;
         JudgeFieldCare(null);
         JudgeGateAttacked(true);
+        JudgePosts(true);
         FinishVolleys();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));

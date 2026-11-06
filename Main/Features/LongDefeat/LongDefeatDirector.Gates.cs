@@ -72,7 +72,8 @@ internal sealed partial class LongDefeatDirector
     /// <summary>
     /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test), and a volley origin's ray out over the wall hits nothing
     /// within two metres (R5). Nothing recorded writes a skip. A point that fails is named here and by the check and is dropped, as section 5's Points rule says; it does not refuse the boot. The Elven Volley
-    /// is handed the origins that passed, and with none left its row is hidden. The posts and the towers' volley spots are read by their own slices, which take their verdicts from the same line.
+    /// is handed the origins that passed, and with none left its row is hidden. The towers are handed only the posts and volley spots that passed (a tower with none left is dropped), so a bad post is never manned; with
+    /// no tower left the tower rows are hidden.
     /// </summary>
     private void CheckFortPoints()
     {
@@ -123,11 +124,36 @@ internal sealed partial class LongDefeatDirector
         var verdict = LongDefeatGateChecks.FortPoints(points);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.FortPointsId, _mission, verdict);
         foreach (var (name, fact) in points.Where(p => !p.Item2.Usable))
-            _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable{(name.StartsWith("volley[", StringComparison.Ordinal) ? " and is dropped" : string.Empty)}: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}, clear {(fact.Clear ? "yes" : "no")}");
+            _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable and is dropped: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}, clear {(fact.Clear ? "yes" : "no")}");
         _logger.LogInfo($"{Tag}[Boot] fort points: {verdict.Detail}");
         if (_plan.Volley != null)
             _run.LimitVolleyOrigins(origins.Where((_, i) => facts[firstOrigin + i].Usable).ToList());
+        LimitTowersToUsable(facts);
         CheckVolleyArrow();
+    }
+
+    /// <summary>
+    /// Hands the run the towers whose points passed, in the order <see cref="CheckFortPoints"/> asked them (each tower's posts, then its volley spots). A tower keeps only its usable points and is dropped with none.
+    /// No boot test of the posts formation: it runs before the first defender spawns, so index 4 is always empty then.
+    /// </summary>
+    private void LimitTowersToUsable(IReadOnlyList<LdPointFacts> facts)
+    {
+        if (_plan.Towers.Count == 0)
+            return;
+
+        var next = 0;
+        var kept = new List<LdTower>();
+        foreach (var tower in _plan.Towers)
+        {
+            var posts = tower.Posts.Where((_, i) => facts[next + i].Usable).ToList();
+            next += tower.Posts.Count;
+            var spots = tower.VolleyOrigins.Where((_, i) => facts[next + i].Usable).ToList();
+            next += tower.VolleyOrigins.Count;
+            if (posts.Count + spots.Count > 0)
+                kept.Add(new LdTower(tower.Id, posts, spots));
+        }
+
+        _run.LimitTowers(kept);
     }
 
     /// <summary>The A23 boot line: the engine's count of archer positions and the units in each defender formation, which tells the posts slice which formation index is free.</summary>
