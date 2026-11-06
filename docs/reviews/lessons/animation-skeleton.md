@@ -602,3 +602,13 @@ one item swapped first, then all five.
 - **Prevent:** record an unexplained crash against the exact asset that produced it (package, mesh name, date), and
   test a new asset with a one-item swap and a battle before rebuilding the old workaround for it.
 - **Source:** the 1.5.x `docs/features/spider.md` and spider-mount ledger entries of 2026-09-29, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Size a broad creature from its mesh, not from a scaled human (2026-09-26)
+The hill troll's movement capsule (radius 0.82) and its first formation width (1.78 m) were the human's scaled by
+height. KEYForce's troll is about twice as broad for its height: 2.43 m across the shoulders at scale 1, 2.7 m in
+game, so neighbours stood inside each other. The capsule is now 1.2 (half the measured shoulders, same vertical
+extent) and the formation width the measured shoulders times `AgentScale`.
+- **Why missed:** the height ratio was the only number measured; width was assumed to follow it.
+- **Prevent:** for any creature whose silhouette is not human, measure the LOD0 mesh's width in height bands
+  (shoulders, hips) and size the capsule, formation width and reach from those.
+- **Source:** 1.5.x `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`, on `origin/bannerlord-1.5.x` (ported by WP142).

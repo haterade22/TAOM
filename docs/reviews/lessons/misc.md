@@ -186,3 +186,9 @@ Plan 030's wording said the per-mission hit summary left nothing the per-hit lin
 - **Why missed:** "aggregate, never drop" was checked as "an aggregate exists".
 - **Prevent:** the doc for any aggregate that replaces per-event lines lists the statistics it keeps and the detail it drops, with one pair of inputs it cannot tell apart; "nothing is lost" is never written about one.
 - **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change to a list's membership re-reads every text that describes the list: counts, "left out" examples and player-facing hints
+D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left the MCM hint describing only the original six ("character tableau callbacks", no combat), two reference-doc lines saying "six", and an owed in-game probe whose example of a *dropped* callback (`OnAgentRemoved`) was one of the entries just added, so the probe could no longer fail. This repeats the 2026-09-23 lesson above ("A change that deletes or moves data invalidates numbers and line refs elsewhere"), this time for additions.
+- **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
+- **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3), on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -857,3 +857,15 @@ A heap release was built on `ScreenManager.OnPopScreen` for the inventory, party
 - **Why missed:** the close check read as the natural "ran out" test and sat beside two correct positive checks on the same field.
 - **Prevent:** when a field is gated positively in one place (`x > 0f`), write every other decision on it as the negation of that requirement (`!(x > 0f)`), never as the complementary comparison, and pin the NaN case in a test.
 - **Source:** 1.5.x `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A campaign-only GameModel leaves Custom Battle on the vanilla model (2026-09-26)
+`TaomBattleBannerBearersModel`, which keeps trolls from carrying standards, was added on the campaign starter only;
+Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so the vanilla gate alone ran there
+and hill trolls raised banners in every troll smoke. The registration comment even said "Custom Battle ... is
+unaffected", which was true of the density policy and false of the race gate.
+- **Why missed:** the model was written for the campaign policy, and the race gate rode along without anyone asking
+  which game types it had to cover.
+- **Prevent:** for every model rule, ask whether it must hold in Custom Battle too; if it must, add a Custom Battle
+  subclass in `SubModule.RegisterCustomBattleModels` (the morale, agent-stat and now banner models are the shape),
+  carrying only that rule.
+- **Source:** 1.5.x `docs/features/banner-bearers.md` "Race gate", on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -2387,3 +2387,41 @@ switch-off logged no reason. The settings gate beside it returned "off" from a c
   returns the off value logs why, once or on change. Pin each with a test that a second reason still
   logs after the first.
 - **Source:** 1.5.x `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 2 and 3 (all six lenses), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### No Windows dump while a debugger holds the game: Visual Studio, or TaleWorlds' own Watchdog (2026-09-26)
+Three troll crashes in a row left no Event Log entry and no dump: Visual Studio was attached, so the access
+violation stopped in the debugger, and ending the session killed the process before Windows saw it. procdump
+`-e -w` then refused with "The process is already being debugged": the launcher starts `Watchdog.exe -p <pid> -dd
+...\crashes`, TaleWorlds' crash catcher, which attaches as a debugger itself.
+- **Why missed:** the earlier crashes of the day had produced dumps, so their absence read as a different crash
+  rather than a changed setup.
+- **Prevent:** reproduce a native crash with no debugger attached; if Visual Studio is attached, Detach All at the
+  exception, never Stop. Only one debugger can hold the process, so procdump cannot attach while the Watchdog runs;
+  a debugger's `$exception` still gives `_ip` and `_target`, enough to match the fault offset.
+- **Source:** 1.5.x `docs/features/troll-race.md` "The swing CTD", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A native hash-map miss names its missing key in a register: read it from the dump, resolve it in game (2026-09-25)
+The +0x6590B9 crash was a chained hash lookup whose miss left a null row. The missing key stayed in `r9` in the
+exception context of all three dumps (6511, 6511, 6462); a one-off in-game scan of every action's clip index named
+it `anim_hill_troll_release_overswing_2h`. After that, reading the table's builder in the disassembly (RTTI named the
+owning class, the insert call named the rule) replaced three rounds of guessing the scope from crashes.
+- **Why missed:** the crash had been treated as unreadable because the dump holds no heap; the register needed no
+  heap.
+- **Prevent:** `python tools/native_crash_triage.py --dump <dmp>` now prints the faulting thread's registers; for a
+  lookup miss, find which register holds the key in the disassembly, then name it in game. Before widening a data
+  rule to dodge a native crash, find the code that fills the table.
+- **Source:** 1.5.x `docs/features/troll-race.md` "The swing CTD"; `tools/native_crash_triage.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Test a stated cause against the failures before fixing it (Bash tool length, 2026-10-21)
+CLAUDE.md said Bash heredocs "mangle backslashes and quotes", and agents kept hitting "unexpected EOF
+while looking for matching" anyway: 151 times in 51 session rows across every agent type. Measured
+over the whole history, the cause was length: `bash -n` accepts 58 of 61 of the failing commands,
+140 of 142 Bash calls at 8,000 or more characters (each ' counted as 4) failed, and none under 7,000
+did. A short heredoc full of quotes runs fine; the backslash half of the old rule is real (the tool
+halves `\\`). `check-bash-length.sh` now refuses the long commands with the fix in its reason.
+- **Why missed:** the rule was written from the symptom (a quote error, seen in heredocs that held
+  quotes), and every failing example also happened to be long, so nothing contradicted it.
+- **Prevent:** before writing a rule or gate against a recurring error, split the calls that fail
+  from the ones that pass on the suspected cause and on size; a cause that does not separate them is
+  not the cause.
+- **Source:** 1.5.x harness-retro-2026-10-21.md, proposal P3, on `origin/bannerlord-1.5.x` (ported by WP142).
