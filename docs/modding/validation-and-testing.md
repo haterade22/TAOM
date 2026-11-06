@@ -30,7 +30,8 @@ rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | engine XSD required attributes; whether an id points at the *right* thing |
+| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | whether an id points at the *right* thing; the engine XSD layer of the live modules (`--live` below) |
+| `python tools/validate_xml_schemas.py [FILE ...]` | every engine-loaded ModuleData file against the XSD the engine itself picks (a missing required attribute, an undeclared one, a DOCTYPE, a registration that loads nothing); a file passed by name is classed LANGUAGE FILE, STYLESHEET, NATIVE or NOT REGISTERED | what a file means, a registration with no XSD (NO SCHEMA, such as the Armory's `ModuleSounds`), any file no `<XmlName>` loads, and a run without lxml (exit 2) |
 | `python tools/validate_all_troop_refs.py` | armour ids in ten troop files resolve against the Armory | six troop files, and weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
 | `python tools/validate_gondor_refs.py` | the Gondor-only ancestor of the above | superseded; prefer `validate_moduledata.py` |
 | `python tools/audit_item_refs.py` | every `Item.X` reference in TAOM ModuleData against the multi-module item registry | armour-only scope is gone here, but rosters applied at runtime are still invisible |
@@ -349,7 +350,7 @@ These cannot be checked with the tools above and are not a data modder's job to 
 
 | Situation | Why it needs a developer |
 |---|---|
-| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | the TAOM validator does not model it, and `characters/clans.xml` has no schema at all. Only the Bannerlord editor or an engine load will say. This is how `clan_umbar_3` shipped with no home settlement |
+| The engine XSD layer (a missing required attribute, an undeclared extra attribute) | `python tools/validate_xml_schemas.py` has modelled it since 2026-09-18 (the `SCHEMA_INVALID` pass in `validate_moduledata.py` runs it, and `characters/clans.xml` is checked against the engine's `Factions` schema), so a missing required attribute or an undeclared one is caught for every registered file the engine ships an XSD for. What stays here is a registration with no XSD (the Armory's `ModuleSounds` prints NO SCHEMA), a file no `<XmlName>` loads, and an XSD that lags the deserializer. This is how `clan_umbar_3` shipped with no home settlement |
 | Anything a stylesheet does | no gate interprets XSLT. `spcultures.xslt` rewriting a vanilla culture in place is invisible to every check here; `CulturePartyTemplateTests` is the only detector and it is a C# test |
 | A culture fielding another faction's troops | the ref sweep proves an id resolves, never that it points at the right faction. That gap hid nine cultures' worth of Calradian troops for months |
 | A lord with the wrong name or sex for his body | free text behind a localization key; `LordNameAndSexConsistencyTests` owns it |

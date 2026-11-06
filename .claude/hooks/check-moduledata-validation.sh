@@ -18,7 +18,9 @@
 # Fail-open (per .claude/rules/harness-facts.md "TAOM hooks MUST fail open"):
 # ANY hook-internal failure -- no python, validator crash, missing game install
 # (rc=2), nothing staged -- ALLOWS the commit. Only a genuine validator ERROR
-# exit (rc=1) blocks.
+# exit (rc=1) blocks. A validator crash exits 3 (validate_moduledata.py entry(); an
+# uncaught exception would exit 1 and read as findings): allowed, but never silently,
+# the traceback goes out as PreToolUse additionalContext beside the tool result.
 #
 # Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
 
@@ -92,12 +94,14 @@ PY="$PYBIN"
 # WP108 adds MISSING_COLLISION_BODY and COLLISION_BODY_BORROWED: each runs one
 # validate_mesh_refs.extract_refs pass over the Armory XML (about 3.5 s each on the 1.5.x
 # desktop, 2026-09-21). The laptop's measured total is in the WP108 validator commit.
+# SCHEMA_INVALID adds about 0.5 s (1.5.x desktop, 2026-09-21).
 #
 # The validator itself now runs in ~4s, not 27s: 16.5s of that original figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
 # file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
 # left deliberately generous. Headroom costs nothing unless the work overruns, and being
 # killed is the failure mode this gate has already suffered once.
+ERR_FILE=$(mktemp 2>/dev/null) || ERR_FILE=/dev/null
 OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
@@ -108,15 +112,38 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
         --code COLLISION_BODY_BORROWED \
-        2>/dev/null)
+        --code SCHEMA_INVALID \
+        --code BROKEN_FACTION_REF \
+        --code ITEM_SLOT_REJECTED \
+        --code TROOP_ID_REMOVED \
+        2>"$ERR_FILE")
 RC=$?
 
 # 124 = the inner timeout fired. Never report this as a pass; ask instead of blocking,
 # because an overrun is an infrastructure fault and a hook's own fault must not hard-block.
 if [[ $RC -eq 124 ]]; then
+    [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
     printf '%s\n' '{"permissionDecision":"ask","message":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}'
     exit 0
 fi
+
+# 3 = the validator crashed. Its own fault never blocks, so allow, and say so: no output would
+# read as "checked, clean".
+if [[ $RC -eq 3 ]]; then
+    CRASH=$(tail -n 15 "$ERR_FILE" 2>/dev/null | "$PYBIN" -c '
+import sys, json
+print(json.dumps(
+    "[check-moduledata-validation] tools/validate_moduledata.py CRASHED (exit 3), so this commit is "
+    "UNCHECKED for broken Item/NPCCharacter/Faction refs, unknown or landless cultures and duplicate ids. "
+    "This is NOT a pass; the commit was allowed because a hook bug must not block. Fix the validator, "
+    "then run: python tools/validate_moduledata.py\n\n" + sys.stdin.read()))
+' 2>/dev/null)
+    [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
+    [[ -z "$CRASH" ]] && { echo '{}'; exit 0; }
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$CRASH"
+    exit 0
+fi
+[[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
 
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 

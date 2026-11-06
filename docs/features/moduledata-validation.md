@@ -26,6 +26,12 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **`face_key_template` pointing at an undefined `BodyProperty`** — not an XML error: the engine
   registers a placeholder, `MBObjectManager.UnregisterNonReadyObjects` drops it, and the character
   silently loses its authored face. (`BROKEN_BODY_PROPERTY_REF`)
+- **A `Faction.X` reference to an undefined clan** (settlement `owner=`, Hero `faction=`) leaves the
+  settlement or hero ownerless at load. The registry is every `<Faction id>` in the repo's
+  `characters/clans.xml` plus vanilla `SandBox/ModuleData/spclans.xml`, minus the five bandit clans
+  `spclans.xslt` strips with `<xsl:template match="Faction[@id='X']"/>` (the engine never loads
+  those rows); `Faction.neutral` (the engine's clanless value for named companions) is allowed.
+  XML only: the `faction` attributes `heroes.xslt` writes are not swept. (`BROKEN_FACTION_REF`, #949)
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
@@ -83,6 +89,8 @@ The CLI, hook, and MCP server are thin front-ends over the same engine — the e
 Cross-reference kinds are defined in `REF_KINDS` (code, not schema) because the prefixes are fixed Bannerlord conventions. The vanilla-culture floor set (`VANILLA_CULTURES`) backstops cultures that exist only in code/XSLT output.
 
 ## Coverage boundary — engine XSD rules are NOT checked
+
+**Since WP136 the XSD layer has its own pass, `SCHEMA_INVALID`: see "Engine XSD layer" below.** The rest of this section describes what the cross-reference sweep alone does not do, and the history that motivated the pass.
 
 The validator checks **cross-references** (the `Item.` / `NPCCharacter.` / `Culture.` / `PartyTemplate.` prefixes, on any attribute in any `ModuleData/**/*.xml` — including `characters/clans.xml`) plus **per-schema** duplicate-id / enum / civilian-type rules. It does **not** validate the engine's own XSD schemas (`<game>/XmlSchemas/*.xsd`), which enforce *required-attribute presence* and element structure.
 
@@ -447,6 +455,41 @@ these checks were added, **four of the nine error codes were absent from that li
 and so could never block a commit. `CommitGateCoverageTests` now asserts the two sets
 agree in both directions. See [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md).
 
+## Item in the wrong slot (`ITEM_SLOT_REJECTED`)
+
+**`ITEM_SLOT_REJECTED` (ERROR).** An equipment row, in any battle or civilian set, whose item
+type the engine will not put in that slot. `Equipment.DeserializeNode` (v1.4.8 `Equipment.cs:204-220`)
+assigns the item only when `IsItemFitsToSlot` passes; otherwise it asserts and leaves the slot empty,
+so the troop never wears it. Nothing else notices: the id resolves, and the XSD types `slot` as a
+plain string. Two Uruk troops shipped `BodyArmor` in the Cape slot until #729. The pass reuses
+`audit_battle_equipment_memory.py` (`load_definitions`, `slot_rejections`), so the slot rule, the
+standalone rosters and the troop-level `<equipment>` overrides are modelled once. It loads Native,
+SandBoxCore, SandBox, the live Armory and the repo's TAOM module, and reports every module's
+refusals. An item id no module defines is left to `BROKEN_ITEM_REF`; a module folder that is
+missing is a WARNING that the slot fit was not verified. Cost on the laptop: about 0.6 s of a 19 s full run (2026-11-05).
+
+## Shipped troops and half-armed kits (`TROOP_ID_REMOVED`, `INCONSISTENT_WEAPON_SLOT`, `TOWNSFOLK_WITHOUT_BATTLE_ROSTER`)
+
+**`TROOP_ID_REMOVED` (ERROR).** A troop id in `tools/shipped_troop_ids.txt` that no `troops/troops_*.xml`
+defines. A save holding it keeps a hollow `CharacterObject` whose null `UpgradeTargets` the engine's
+daily ticks read unguarded (#670). A missing or empty baseline is one ERROR, never a silent pass. The
+pass runs only for the repo's own ModuleData. The baseline is read with `git show`, so it names what a
+ref held and no Armory is involved; this line's first seed is the 857 ids of branch `bannerlord-1.4.5`,
+because the `v2.0.28` tag lacks `ironpass_ram_herder` and `ironpass_ram_marshal`. Reseed it after a
+release: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids <tag>`. `[exceptions]` rows
+(`id | reason`) survive a reseed.
+
+**`INCONSISTENT_WEAPON_SLOT` (WARNING).** A non-hero troop whose battle sets disagree: a launcher in a
+slot of some sets only, or no weapon slot index filled in every set. Slots draw independently, so that
+ships a bow the troop never draws or an unarmed draw (#529). The launcher half needs the install's item
+index, so its count on the `v2.0.26` Armory is void (D20, D25). The 1.5.x ammo half is not ported: it
+reads `item_trade`, built for a code this line does not have.
+
+**`TOWNSFOLK_WITHOUT_BATTLE_ROSTER` (WARNING).** A `characters/npcs_*.xml` character whose inline
+equipment is civilian only. It has no battle set (`BasicCharacterObject.FirstBattleEquipment` is null,
+v1.4.8 `:108`), so the arena stands spawn it naked (#295's in-game log; the spawner was not found in
+managed code). Repair: `python tools/add_townsfolk_battle_rosters.py --apply`.
+
 ## Upgrade armour regression (`UPGRADE_ARMOUR_REGRESSION`)
 
 **WARNING.** The equipment half of the ladder rule (#541). For every upgrade edge the validator
@@ -630,6 +673,16 @@ old cooked-first order read stale packs left by a cook and reported a newly impo
 `MISSING_COLLISION_BODY` (2026-09-26). Test: `test_loose_assets_win_when_both_trees_exist` in
 `tools/tests/test_validate_mesh_refs.py`.
 
+## Engine XSD layer (`SCHEMA_INVALID`)
+
+The engine validates a file against its XSD on load, but `MBObjectManager.ValidationEventHandler` (v1.4.8 `:1324`) only prints the failure and the file loads anyway, so a clan with no `initial_home_settlement` reached players. `tools/validate_xml_schemas.py` mirrors the engine's file and schema resolution (`GetMergedXmlForManaged`, `HandleXsltList`, `LoadXmlWithValidation`, `XmlResource`, `ModuleHelper`) and `validate_moduledata.py` runs it as a pass, so the commit hook gates it.
+
+- **Scope:** the pass covers the repo module only. `python tools/validate_xml_schemas.py --live` adds `TAOM_Map` and the Armory, which only that command gates.
+- **Duplicate ids:** a repeated `<Faction>`, `<Hero>` or `<Kingdom>` id is caught, because the engine XSDs declare `@id` unique (`EngineIdUniquenessTests`, `b409e6505`).
+- **`taom_body_length` is not allowlisted on this line (D15).** The public Armory's Monster files carry it and v1.4.8 `Monsters.xsd` does not declare it, so `--live` reports it. WP115's pairing check reads that as an Armory pairing signal.
+- **`lxml` is optional.** Without it the tool exits 2 and the pass emits one NOT-verified warning, never a silent pass. A missing `<game>/XmlSchemas` folder gets the same warning.
+- An XSD can lag the code: confirm a failure against the element's deserializer before editing data.
+
 ## Key Files
 
 | File | Purpose |
@@ -644,6 +697,9 @@ old cooked-first order read stale packs left by a cook and reported a newly impo
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
 | `tools/tests/test_validate_moduledata.py` | 144 unittest cases (validator; counted 2026-09-12) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
+| `tools/shipped_troop_ids.txt` | baseline of `TROOP_ID_REMOVED`: one id per line, then `[exceptions]` as `id \| reason` |
+| `tools/validate_xml_schemas.py` | the engine-XSD layer: file and schema resolution mirrored from the engine, the `SCHEMA_INVALID` pass and the `--live` command |
+| `tools/tests/test_validate_xml_schemas.py` | unittest cases for it, including `UndeclaredAttributeIsReportedTests` (D15) |
 | `tools/validate_mesh_refs.py` | engine of the three collision-body and mesh codes: `extract_refs`, `module_tpacs`, `build_present_set`, `classify` |
 | `tools/tests/test_collision_body_borrowed.py` | 14 synthetic cases for `COLLISION_BODY_BORROWED`: the #633 shape, own twin, own capsule, variant name, same-kit share, the Rhun family, vanilla, shields, missing body, per-piece pairing, no packs, a raising scan, `_kit`, `_twin_owner` |
 | `tools/tests/test_add_collision_body.py` | 9 cases for the twin-authoring tool's pure parts (`bpy` stubbed): the three required arguments, the report path under bad arguments, the round-trip comparison |
@@ -841,6 +897,18 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `TROOP_ID_REMOVED` (error, in the commit hook), `INCONSISTENT_WEAPON_SLOT` and
+  `TOWNSFOLK_WITHOUT_BATTLE_ROSTER` (warnings) ported (#295, #529, #670; WP136), without the ammo half.
+- 2026-11-05: `ITEM_SLOT_REJECTED` (error, in the commit hook) ported (#729; WP136).
+- 2026-11-05: `BROKEN_FACTION_REF` (error, in the commit hook) ported (#949; WP136): a `Faction.X` ref
+  must resolve to a clan in `characters/clans.xml` or vanilla `spclans.xml` that `spclans.xslt` does
+  not strip; `Faction.neutral` is allowed. A separate suspect-registry floor (50) on the vanilla clans
+  flags a missing `spclans.xml`, which the repo's own clans could otherwise hide. The validator now
+  exits 3 on an unexpected exception (the traceback on stderr) and the commit hook allows that
+  commit with the traceback beside the tool result; Python's own exit 1 would have blocked it.
+  `taom_query.find_references` searches the `BodyProperty.` and `Faction.` prefixes as well.
+- 2026-11-05: `SCHEMA_INVALID` (error) ported from the 1.5.x line (#621, #974, #980; WP136) and named
+  in the commit hook's `--code` list. `taom_body_length` stays a reported failure (D15).
 - 2026-11-05: `MISSING_COLLISION_BODY` (error), `MISSING_VISUAL_MESH` (warn) and
   `COLLISION_BODY_BORROWED` (error) ported from the 1.5.x line (#599, #622, #633; WP108), wired into
   `main()` and the commit hook's `--code` list, with the loose-tree-first package list. A Modules

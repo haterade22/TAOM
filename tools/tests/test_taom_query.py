@@ -85,6 +85,22 @@ class ModuleDataQueryTests(unittest.TestCase):
         # comment-stripped: a commented ref is not counted
         self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 0)
 
+    def test_find_references_covers_faction_and_body_property_refs(self):
+        # Both are REF_KINDS the validator checks; without their prefixes here a lookup
+        # returned a confident 0 for an id that is referenced.
+        _write(self.md / "heroes.xml", """<?xml version="1.0" encoding="utf-8"?>
+<Heroes>
+  <Hero id="lord_a" faction="Faction.clan_x" />
+  <NPCCharacter id="n"><face><face_key_template value="BodyProperty.fighter_x" /></face></NPCCharacter>
+</Heroes>
+""")
+        r = self.q.find_references("Faction.clan_x")
+        self.assertEqual((r["kind"], r["count"]), ("faction", 1))
+        r = self.q.find_references("fighter_x", kind="body_property")
+        self.assertEqual((r["kind"], r["count"]), ("body_property", 1))
+        self.assertEqual(self.q.find_references("clan_x")["count"], 1, "a bare id searches every prefix")
+        self.assertEqual(self.q.find_references("BodyProperty.fighter_x")["count"], 1)
+
     def test_party_template_exists(self):
         self.assertTrue(self.q.party_template_exists("good_template")["exists"])
         self.assertTrue(self.q.party_template_exists("PartyTemplate.good_template")["exists"])

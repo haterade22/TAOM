@@ -23,6 +23,10 @@ Checks (each maps to a recurring TAOM bug class):
   INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
   BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
   BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
+  BROKEN_FACTION_REF         Faction.X (settlement owner=, Hero faction=) names a clan no
+                             <Faction id> defines -> the object loads ownerless (clans.xml plus
+                             vanilla spclans.xml, minus the rows spclans.xslt strips;
+                             Faction.neutral is allowed; needs the install)
   MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
   MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
@@ -40,38 +44,65 @@ Checks (each maps to a recurring TAOM bug class):
   COLLISION_BODY_BORROWED    a weapon or crafting piece whose body_name is another kit's
                              bo_<mesh> twin: it resolves, on art the item does not own
                              (#633; needs the install; reuses validate_mesh_refs.py)
+  SCHEMA_INVALID             a file the repo module registers breaks the engine's own XSD
+                             for its id, or a SubModule.xml registration loads nothing. The
+                             engine only logs the former and loads the file anyway (repo
+                             module only; the XSD layer lives in validate_xml_schemas.py;
+                             one warning when lxml or <game>/XmlSchemas is absent)
+  ITEM_SLOT_REJECTED         an equipment row whose item type the engine will not put in that
+                             slot: Equipment.DeserializeNode asserts and leaves it empty, so
+                             the troop never wears the item (#729; needs the install)
+  TROOP_ID_REMOVED           a troop id in tools/shipped_troop_ids.txt that no troops/troops_*.xml
+                             defines: a save holding it keeps a hollow CharacterObject (#670)
+  INCONSISTENT_WEAPON_SLOT   a non-hero troop whose battle sets disagree: a launcher in a slot of
+                             some sets only, or no weapon slot filled in every set (warning)
+  TOWNSFOLK_WITHOUT_BATTLE_ROSTER  a characters/npcs_*.xml character with civilian rosters only:
+                             it stands naked in the arena stands (#295, warning)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
   python tools/validate_moduledata.py --game-modules "E:/.../Modules"
 
-Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
+Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), 2 for bad input (no
+install), 3 when the validator itself crashed (the traceback is on stderr), else 0.
 """
 import argparse
 import json
 import os
 import re
 import sys
+import traceback
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import taom_schema as ts
-# Aliased: main() binds a local `game_modules`, which would shadow the import.
-from _gamedir import game_modules as resolve_game_modules
+# A crash here happens before entry() can catch it, and Python would exit 1, the "ERROR findings"
+# code. Run as a script, it exits 3 like any other crash (see entry()); imported, it raises as usual.
+try:
+    import taom_schema as ts
+    # Aliased: main() binds a local `game_modules`, which would shadow the import.
+    from _gamedir import game_modules as resolve_game_modules
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
-SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    REPO_ROOT = Path(__file__).resolve().parent.parent
+    MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+    SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
 
-# The commit hook runs this with no --game-modules, so the default is what it
-# gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
-# while the hook still saw PASS (#404).
-DEFAULT_GAME_MODULES = resolve_game_modules(
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-)
+    # The commit hook runs this with no --game-modules, so the default is what it
+    # gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
+    # while the hook still saw PASS (#404).
+    DEFAULT_GAME_MODULES = resolve_game_modules(
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+    )
+except Exception:  # noqa: BLE001 - a crash is reported, never mistaken for a finding
+    if __name__ != "__main__":
+        raise
+    traceback.print_exc()
+    print("ERROR: tools/validate_moduledata.py crashed while loading (traceback above); no verdict was "
+          "reached, exit 3.", file=sys.stderr)
+    sys.exit(3)
 
 
 # TAOM's data lives in three modules and two of them are outside this repo and
@@ -352,6 +383,143 @@ def module_vintage(root) -> str:
     return f"{root.parent.name}: {version} (newest ModuleData file {stamp})"
 
 
+SCHEMA_CODE = "SCHEMA_INVALID"
+
+
+def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
+    """ERROR per engine-XSD violation in a file the module registers, and per registration
+    that loads nothing; ONE warning when the layer could not be checked.
+
+    Every other pass here reads refs and TAOM's own JSON schemas, never the XSD the
+    engine loads a file with, so a clan with no `initial_home_settlement` passed them all
+    (`clan_umbar_3`, 2026-06-22). The engine validates, but only logs a failure and loads
+    the file anyway. validate_xml_schemas.py owns the engine's file resolution and schema
+    choice; this only turns its report into issues. Scope is the module given (the repo's
+    Main/_Module), like the other schema passes: the live modules are unversioned and
+    their known findings are not this repo's to fix.
+
+    Skipped, never faked: without lxml, the engine's XmlSchemas folder or a SubModule.xml
+    the pass reports that the layer was NOT verified, because silence here would read
+    exactly like a clean run."""
+    import validate_xml_schemas as vx
+    module_dir = Path(module_dir)
+    submodule = module_dir / "SubModule.xml"
+    if not vx.HAVE_LXML:
+        unverified = "lxml is not installed"
+    elif not Path(game_schemas).is_dir():
+        unverified = f"the engine schema folder {game_schemas} was not found"
+    elif not submodule.is_file():
+        unverified = f"there is no {submodule}"
+    else:
+        unverified = None
+    if unverified:
+        return [ts.Issue(
+            severity=ts.Severity.WARNING, code=SCHEMA_CODE, file="", line=0, entry_id="",
+            message=f"{unverified}, so the engine-XSD layer (tools/validate_xml_schemas.py) "
+                    f"was NOT verified this run")]
+    try:
+        report = vx.run([module_dir], Path(game_schemas))
+    except ET.ParseError as exc:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=exc.position[0],
+            entry_id="", message=f"SubModule.xml is not well-formed ({exc}); the engine throws on "
+                                 f"it at startup")]
+
+    moduledata = module_dir / "ModuleData"
+    issues = []
+    for rec in report["failed"]:
+        path = Path(rec["file"])
+        rel = path.relative_to(moduledata).as_posix() if moduledata in path.parents else str(path)
+        # The rerun hint must work from the repo root, where the hook and a person run it.
+        hint = path.relative_to(REPO_ROOT).as_posix() if REPO_ROOT in path.parents else path.as_posix()
+        for error in rec["errors"]:
+            m = re.match(r"L(\d+): (.*)", error, flags=re.S)
+            line, text = (int(m.group(1)), m.group(2)) if m else (0, error)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SCHEMA_CODE, file=rel, line=line, entry_id=rec["id"],
+                message=f"{text} (engine schema {Path(rec['schema']).name}; the engine only logs "
+                        f"this and loads the file anyway). python tools/validate_xml_schemas.py {hint}"))
+    for text in report["missing"]:
+        issues.append(ts.Issue(
+            severity=ts.Severity.ERROR, code=SCHEMA_CODE, file="SubModule.xml", line=0, entry_id="",
+            message=text))
+    return issues
+
+
+SLOT_CODE = "ITEM_SLOT_REJECTED"
+_SLOT_MODULES = ("Native", "SandBoxCore", "SandBox", "LOTRLOME_Armory", "TAOM")
+
+
+def slot_rejection_issues(game_modules, moduledata) -> list:
+    """ERROR per troop equipment row whose item type the engine will not put in that slot (#729).
+
+    `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes; otherwise it
+    asserts and the slot stays empty, so a BodyArmor written to `slot="Cape"` never reaches the
+    troop. No XSD catches it (`slot` is a plain string) and no ref is broken. The rule, the load
+    order and the roster and troop-level override handling are audit_battle_equipment_memory's;
+    this only turns its refusals into issues. Civilian sets count: the engine refuses those rows too.
+
+    The modules load in the audit's order, with TAOM taken from the repo (`moduledata.parent`),
+    not the installed copy. A module that cannot be read is one WARNING, never a silent pass,
+    because an item no loaded module defines is skipped and would hide its refusals."""
+    import audit_battle_equipment_memory as abem
+    game_modules = Path(game_modules)
+    folders = [(name, moduledata.parent if name == "TAOM" else game_modules / name)
+               for name in _SLOT_MODULES]
+    defs = abem.load_definitions(folders)
+    issues = []
+    missing = [name for name, folder in folders if not Path(folder).is_dir()]
+    if missing:
+        issues.append(ts.Issue(
+            severity=ts.Severity.WARNING, code=SLOT_CODE, file="", line=0, entry_id="",
+            message=f"slot fit was NOT verified against {', '.join(missing)}: module folder not "
+                    f"found under {game_modules}; items only that module defines are skipped"))
+    for char in defs.characters.values():
+        for slot, item_id in abem.slot_rejections(char, defs, include_civilian=True):
+            kind = abem.item_type(defs.items[item_id])
+            fix = abem.ARMOUR_ITEM_SLOTS.get(kind)
+            if fix:
+                target = f"{fix} slot"
+            elif defs.items[item_id].extra_slot_only:
+                target = f"the {abem.EXTRA_SLOT} slot"
+            else:
+                target = f"a weapon slot ({abem.WEAPON_SLOTS[0]} to {abem.WEAPON_SLOTS[-1]})"
+            rel = char.file.split("/", 1)
+            path = (f"Main/_Module/ModuleData/{rel[1]}" if char.module == "TAOM" and len(rel) == 2
+                    else char.file)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SLOT_CODE, file=path, line=0, entry_id=char.id,
+                message=f"the engine refuses a {kind} item ({item_id}) in slot {slot} and leaves the "
+                        f"slot empty, so {char.id} never wears it; move it to the {target}"))
+    return issues
+
+
+def regenerate_shipped_troop_ids(tag: str = "") -> int:
+    """Rewrite tools/shipped_troop_ids.txt from a release tag's or a branch's troop files, read with
+    `git show` so today's tree never leaks in. No tag means the newest tag reachable from HEAD. The
+    [exceptions] section is kept as it stands."""
+    import subprocess
+
+    def git(*args):
+        return subprocess.run(["git", "-C", str(REPO_ROOT), *args], capture_output=True, check=True).stdout
+
+    tag = tag or git("describe", "--tags", "--abbrev=0").decode("utf-8").strip()
+    folder = "Main/_Module/ModuleData/troops/"
+    names = [n for n in git("ls-tree", "--name-only", tag, folder).decode("utf-8").split()
+             if re.search(r"/troops_[^/]*\.xml$", n)]
+    ids = set()
+    for name in names:
+        text = re.sub(r"<!--.*?-->", "", git("show", f"{tag}:{name}").decode("utf-8-sig", "ignore"), flags=re.S)
+        ids |= set(re.findall(r'<NPCCharacter\b[^>]*?\bid="([^"]+)"', text))
+    if not ids:
+        print(f"ERROR: no troop ids found in {tag}:{folder}", file=sys.stderr)
+        return 2
+    exceptions = ts.read_shipped_troop_ids(SHIPPED_TROOP_IDS)[1] if SHIPPED_TROOP_IDS.is_file() else {}
+    ts.write_shipped_troop_ids(SHIPPED_TROOP_IDS, tag, ids, exceptions)
+    print(f"Wrote {len(ids)} troop ids from {tag} ({len(names)} files) to {SHIPPED_TROOP_IDS}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -365,7 +533,14 @@ def main() -> int:
                     help="Exit non-zero if any WARNING is found, not just ERROR")
     ap.add_argument("--code", action="append", default=None,
                     help="Only report this issue code (repeatable)")
+    ap.add_argument("--regenerate-shipped-troop-ids", nargs="?", const="", metavar="TAG", default=None,
+                    help="Rewrite tools/shipped_troop_ids.txt (the TROOP_ID_REMOVED baseline) from a "
+                         "release tag's or branch's troop files (default: the newest tag reachable "
+                         "from HEAD), then exit")
     args = ap.parse_args()
+
+    if args.regenerate_shipped_troop_ids is not None:
+        return regenerate_shipped_troop_ids(args.regenerate_shipped_troop_ids)
 
     moduledata = Path(args.moduledata)
     game_modules = Path(args.game_modules)
@@ -377,7 +552,9 @@ def main() -> int:
         # Per environment-failures.md: report, don't guess. The item/culture
         # registry will be TAOM-only, so external refs will look broken.
         print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
-              f"         item / troop / party-template ref checks will be SKIPPED (need the\n"
+              f"         item / troop / party-template / body-property / faction ref checks\n"
+              f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
+              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF) will be SKIPPED (need the\n"
               f"         game install for a complete registry). Culture-validity, duplicate-id,\n"
               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
               f"         pass --game-modules <path> to enable the skipped checks.\n"
@@ -394,11 +571,15 @@ def main() -> int:
           f"{len(registries.npccharacters):,} NPCCharacters, "
           f"{len(registries.cultures)} cultures, "
           f"{len(registries.party_templates):,} party templates, "
-          f"{len(registries.body_properties)} body properties", file=sys.stderr)
+          f"{len(registries.body_properties)} body properties, "
+          f"{len(registries.factions)} clans", file=sys.stderr)
 
     extra_roots = build_extra_ref_roots(game_modules)
 
-    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
+    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
+    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
+    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
+                             shipped_troop_ids_file=shipped_ids)
     for root in validator.extra_ref_roots:
         print(f"Also sweeping refs in: {root} [{module_vintage(root)}]", file=sys.stderr)
     # Never let a vanished root pass as a clean run. Silence here would revert the
@@ -412,18 +593,23 @@ def main() -> int:
         print(f"WARNING: {warning}", file=sys.stderr)
 
     issues = validator.run()
+    # The engine's XmlSchemas folder sits beside Modules in the install root.
+    issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
         # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
         # commit hook's --code line for it blocked nothing.
         issues += missing_collision_body_issues(game_modules, moduledata)
         issues += borrowed_body_issues(game_modules, moduledata)
-        issues.sort(key=lambda i: i.sort_key())
+        issues += slot_rejection_issues(game_modules, moduledata)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
         print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
               f"         live install's tpacs.", file=sys.stderr)
+        print(f"WARNING: {SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
+              f"         only the live install has.", file=sys.stderr)
+    issues.sort(key=lambda i: i.sort_key())
 
     if args.code:
         wanted = set(args.code)
@@ -452,5 +638,19 @@ def main() -> int:
     return 0
 
 
+def entry() -> int:
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code
+    that means "ERROR findings", so the commit hook would block a commit over a validator bug and
+    show the author a bare status. 3 is its own code: the traceback goes to stderr and the hook
+    fails open on it. argparse's SystemExit passes through."""
+    try:
+        return main()
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for a finding
+        traceback.print_exc()
+        print("ERROR: tools/validate_moduledata.py crashed (traceback above); no verdict was reached, "
+              "exit 3.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(entry())
