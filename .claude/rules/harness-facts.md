@@ -83,6 +83,12 @@ These four facts are the ones the 2026-08-31 outage turned on, and none of them 
 
 Writing or modifying a `.claude/hooks/` script? The authoring conventions — mirror-the-sibling's-FULL-convention-set, the two-stage git-commit matcher (handles `git -C ... commit`, rejects `commit-tree`), amend-exemption patterns, and log-rotation for appending hooks — live in the paths-scoped rule `.claude/rules/hook-authoring.md`, which loads automatically when a hook file is opened. The durable lifecycle facts (fail-open mandate, JSON output contract, settings-vs-frontmatter scoping) stay in the tables above.
 
+## Tool and session behaviour
+
+| Fact | Source | Why we care |
+|------|--------|-------------|
+| `statusLine` renders only in the terminal CLI and the extension's terminal mode; the VS Code graphical panel shows a prompt-box context indicator and `/usage` (session and week bars with reset times) instead. | statusline and vs-code docs (DOC, 2026-10-26) | Mike works in the panel: point him to `/usage` for `statusline.sh`'s usage line (#1012) |
+
 ## Gitignore blast radius
 
 | Fact | Source | Why we care |

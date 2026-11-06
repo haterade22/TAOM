@@ -99,6 +99,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
 | rtk (Rust Token Killer) | `rtk` `rtk-ai/rtk` `Rust Token Killer` | Apache-2.0 (the CLI in `src/`; `engine/` and `proxy/` are BUSL-1.1 and nothing derives from them) | behavioural-port | `.claude/hooks/_shellwords.py` (`command_index`, `peel`); `tools/harness_retro.py` (`command_family`, report section 9) | cleared |
 | Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
+| claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
 
 <!-- provenance-register-end -->
 
