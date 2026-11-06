@@ -341,7 +341,7 @@ documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 
-10 servers (8 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
+7 servers (5 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
 and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md)**.
 
 ### MCP Usage Guide
@@ -350,11 +350,11 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 |------|-------------|------------|
 | Navigate C# symbols, find references | **Serena** (`find_symbol`, `get_symbols_overview`) | Grep for class names |
 | Research TaleWorlds classes | **Read/Grep** `E:\Decompiled_Bannerlord\` first, **ilspy** MCP as fallback | On-demand decompilation |
-| Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
-| Diff analysis (read-only) | **git** (`git_diff`, `git_log`, `git_show`) | `git` via Bash. NOTE: there is no `git_blame` tool; use `git blame` via Bash. And the git/filesystem MCP **write** tools bypass every PreToolUse gate, which match only the Bash and PowerShell tools, so stage and commit via Bash. |
-| Create/close GitHub issues | **GitHub** | `gh` via Bash |
+| Read files across Bannerlord modules | **Read/Grep/Glob** | Bash `cat` on long paths |
 | Validate/query TAOM ModuleData (does item/troop/culture id exist? what references id X? are there broken refs?) | **taom-moduledata** MCP (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `find_references`, `list_cultures`) — or `python tools/validate_moduledata.py` if the MCP isn't loaded | Grep ModuleData / hand-rolling a one-off ref validator |
 | Research before implementing | **`taom-src path <Type>`** for signatures, **Read/Grep** decompiled source for browsing patterns, **Serena** for symbol nav, **ilspy** MCP as fallback | Manual decompilation workflow |
+
+git goes through Bash and issues through the `gh` CLI (the git, filesystem and GitHub MCP servers were removed by WP116).
 
 ### TaleWorlds Research — Lookup Order
 

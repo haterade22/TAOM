@@ -802,7 +802,7 @@ def _json_file(p: Path):
 
 def _plugin_roots(home: Path, res: Result) -> list[Path]:
     """Every installed plugin's folder, once. Any project can enable a plugin (TAOM's own tracked
-    settings enable seven), so the vet does not ask which settings file enabled it. A plugin that
+    settings enable six), so the vet does not ask which settings file enabled it. A plugin that
     ~/.claude/settings.json enables but whose folder is gone is a finding: it was not vetted, and
     a plugin sync can bring it back unaudited."""
     installed = _json_file(home / ".claude/plugins/installed_plugins.json")

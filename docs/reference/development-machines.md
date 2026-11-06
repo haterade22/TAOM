@@ -37,9 +37,10 @@ letter into new code.
 - `tools/decompile_bannerlord.ps1` and `tools/decompile_to_folder.ps1` take `-Out` / `-GameBin` /
   `-Source` / `-Destination` parameters and honour no environment variable (this is already noted
   in [tools/README.md](../../tools/README.md)).
-- `.mcp.json` is committed with the desktop's `E:\` paths hardcoded, so on the laptop the
-  `filesystem` server points at directories that do not exist and `taom-moduledata` invokes
-  `E:/repos/TAOM/tools/taom_mcp_server.py`. Editing that file to suit one machine breaks the
+- `.mcp.json` is committed with the desktop's `E:\` paths hardcoded, so on the laptop `serena`
+  opens `E:/repos/TAOM` and `taom-moduledata` invokes `E:/repos/TAOM/tools/taom_mcp_server.py`
+  (the `filesystem` server that also pointed at desktop folders was removed by WP116 (1.5.x removed it 2026-09-29); the
+  desktop reads those folders as `additionalDirectories` in the tracked `.claude/settings.local.json`). Editing that file to suit one machine breaks the
   other. The fix is a local-scope MCP override in user config, not a change to the committed file.
 - `.claude/settings.local.json` is **tracked**, despite the name, so it is not a machine-local
   slot either. Machine-specific values belong in Windows user environment variables.

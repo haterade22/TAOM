@@ -30,7 +30,7 @@ python tools/audit_claude_config.py --user                      # this machine's
 user skills, agents, rules, hooks and commands, every `MEMORY.md`, the MCP servers in `~/.claude.json`
 (top level and per project; only those server maps are scanned, and nothing else from the file is
 printed), and every installed plugin's folder, once, vetted at `--external` severity (any project can
-enable a plugin; TAOM's own settings enable seven). A plugin your user settings enable but whose folder
+enable a plugin; TAOM's own settings enable six). A plugin your user settings enable but whose folder
 is gone is `user-plugin-missing`; an absent or unreadable `~/.claude.json` is `user-config-absent`.
 `--external` vets the whole foreign tree (a plugin repo, a marketplace, one skill folder) except `.git`
 and `node_modules`; exit **3** (`UNCHECKED`) means no config was found to scan, which is not a pass.
