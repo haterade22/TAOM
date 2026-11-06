@@ -773,3 +773,106 @@ Patch43 and still shielded, so a shield finalizer runs inside every spawn bracke
 - **Prevent:** before writing that a cost is absent from a bracket, list the patched methods the bracketed method calls
   (the decompile's call graph, one level per patched callee) and state the claim for the bracketed methods only.
 - **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R12; the plan 028 lesson above, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A shield exclusion kept for an unmeasured cost loses the rescue for nothing, and a bracket must survive its prefix being stripped (2026-10-03)
+Plans 028 and 041 put `Mission.OnTick`, `Mission.OnPreTick` and `Mission.SpawnAgent` on PatchShield's
+`ExcludedTargetMethods` under the per-agent house rule of the 2026-09-26 and 2026-09-28 lessons, on a per-call price that
+plan 034 found was never measured (#331's whole stall divided by an estimated call count). Plan 034 measured the shield's
+finalizer at about 5 ns per call once its change is in (64 ns and 241 bytes of garbage per call as the finalizer ships
+without it, 1,146 ns with eight threads contending), and maintainer decision D13 (2026-10-03) took the three entries
+off. What the exclusion had given up was the rescue from a broken patch on those methods. The rescue classifies by
+exception type only, so it also swallows a mission behaviour's missing-API exception, and it strips every unprotected
+owner's patches on the method, TAOM's own included. The entries that stay (`TickAgentsAndTeamsImp`,
+`WaitTickCompletion`) are there because a swallow would skip a body the frame needs, but they stop a swallow only at
+their own method: both callers are shielded, so the exception is swallowed one level up, and the `tickCompleted` hang is
+not prevented by shielding `Mission.OnTick` (the feature doc says so; the remedy belongs to the PatchShield follow-up
+plan). `TickComponents` stays as built.
+Shielding the methods again exposed a second gap: the rescue strips the prefixes, postfixes and transpilers of every
+unprotected owner on the method, and TAOM's `com.taom.mod` is unprotected (FOLLOW-UP L1), so Patch98's prefix can go
+while its finalizer, which the rescue never strips, stays. The first guard counted prefixes in per thread and let a
+finalizer that found no count warn once. Its review found that it answered "is some prefix outstanding on this thread",
+not "did this call's prefix run": a nested call that lost its prefix consumed the outer call's count and closed the
+outer bracket early, because the rescue strips from inside the call that threw while the outer call keeps running its
+old replacement, and Harmony's rerun of every finalizer after a later one throws read as a missing prefix. Each call now
+carries its own state in Harmony's `__state` (one local per call, started at 0), and the lone finalizers are counted and
+reported at each mission's end, not only warned about once.
+- **Why missed:** a cost figure that was a derived average was carried into per-frame targets as if measured, and the
+  deep review of plan 028 named the exclusion "a cost for the maintainer to weigh" without a number to weigh it with. A
+  prefix and finalizer pair was reviewed as a pair, not as a finalizer that can run alone; and the guard was tested with
+  hand-called enters and exits and a strip between top-level calls, never a strip inside a running outer call or a
+  finalizer rerun, which only real Harmony produces.
+- **Prevent:** write the call rate and the measured per-call cost beside any `ExcludedTargetMethods` entry kept for
+  cost, naming the change the figure depends on when it is not in the branch, and say what a swallow would break beside
+  any kept for correctness, including the callers that stay shielded. Pair a prefix with its finalizer through Harmony's
+  `__state` (one local per call, default 0, set by the prefix before any code that can throw or return early, closed by the finalizer), never a
+  count, a depth or a thread-keyed flag, and test the guard through real Harmony: the prefix stripped inside an outer call
+  and a later finalizer that throws. PatchShield strips prefixes and never finalizers. This lesson replaces the per-frame
+  half of the 2026-09-26 and 2026-09-28 Prevent lines: exclude a per-frame or per-spawn target only where a swallow is
+  unsafe, and keep the per-unit and worker-thread per-agent entries until they are re-measured.
+- **Source:** 1.5.x maintainer decision D13 (2026-10-03); `plans/034-patchshield-per-call-cost.md`; `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md` ("A cost for the maintainer to weigh"); `HitchProbeHooksTests.StrippedPrefix_FinalizerRunsAlone_WarnsOnceAndRecordsNothing`; `HitchProbePrefixGuardTests` and the fix pass in `docs/reviews/deep-review-041-profiler-extensions-and-hitch-probe-2026-10-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Recurrence: a new patch on a shielded method also needs its loss noticed (2026-10-08)
+- **Why missed:** Patch103 (the mission-start guard) shares `Mission.AfterStart` with Patch43 and PatchShield; from
+  the second game start a swallowed MissingMethod, MissingField or TypeLoad throw there strips TAOM's prefix and
+  transpiler (owner `com.taom.mod` is not protected), and the module had logged "ON" once at install. The
+  2026-10-03 lesson above already said to look again where each measurement starts; the builder brief did not
+  carry it.
+- **Prevent:** when the patch has a finalizer, use the cheaper canary: PatchShield never strips finalizers, so the
+  finalizer can check that the same call's prefix ran (and that a transpiler's live swap count is whole) and warn
+  once per process. Carry this lesson in every brief for a patch on a method PatchShield wraps.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard that turns a throw into survival keeps the code after the throw that cannot be skipped (2026-10-08)
+- **Why missed:** Patch103 wraps every submodule's `OnMissionBehaviorInitialize`, TAOM's own included. A throw in
+  TAOM's registrations used to loop the load; survived, it skipped the BattleLoad loading window's only closer,
+  registered near the end, so the window stayed open for the battle and the stall watchdog would bundle a running
+  battle. The design took "TAOM's behaviours guard themselves" (#699) as given and never asked what the cut-short
+  method still had to do.
+- **Prevent:** when a change makes a throw survivable, list what the code after each wrapped call is responsible for
+  (closers, counters, registrations) and put the part that cannot be skipped in a `finally` around all of that work;
+  pin it with a source test. Moving it ahead of the registrations was the first fix here, and it fell short twice: a
+  throw in the work before it still skipped it (Codex), and the move reversed its tick order (a convergence lens).
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 20, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An install line claims only what was checked (2026-10-08)
+- **Why missed:** `ModuleRunner.RunPhase` calls a module's `OnPhase` whether or not its patch category applied, and
+  Patch103's and Patch104's ON lines were written there; Patch103's swap count is set by its transpiler, which runs
+  before Harmony can still fail and register nothing.
+- **Prevent:** derive an ON line from the applied state: `Harmony.GetPatchInfo` lists the patch (the
+  `MapFrameProfilerInstaller` precedent), or a `[HarmonyCleanup]` method resets a transpiler's count when the apply
+  fails.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 22, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook verified once at install can be stripped later by PatchShield: look again where each measurement starts (2026-10-03)
+Plan 039's installer checked at the first game start that all six Patch101 targets carried a profiler patch, then trusted
+that for the process. PatchShield strips by owner: after a swallowed MissingMethod, MissingField or TypeLoad throw on a
+shielded method it unpatches every non-protected owner's prefixes, postfixes and transpilers on that method, and
+`com.taom.mod` is not protected, so Patch101's pair on `Campaign.RealTick`, `MapScreen.OnFrameTick` or `MapState.OnTick`
+goes with the rest and nothing reinstalls it. The profiler kept writing windows whose `realTickMs` read 0.00 and looked
+measured (Codex adversarial review, 2026-10-03). The first docs called that "silently ends that measurement" and
+accepted it as a cost of option B.
+- **Why missed:** the install check answered "did the apply work", and the shield's strip was analysed for what it does
+  to the swallowed method's callers, not to the profiler's own patches sharing that method. Accepting a silent end of
+  the measurement skipped the cheaper question of whether the profiler could notice it.
+- **Prevent:** a diagnostic whose patches share a method with a shield re-runs its installed check at its natural
+  cadence (a session start, a window start, a session end; never per call or per frame) and on a loss stops behind one
+  aggregated warning that names every lost hook, keeping what it already measured (D6). It never reinstalls what the
+  shield removed. List which of its hooks the shield can reach (the declaring assembly decides: TAOM's own methods are
+  never shielded) and which hook carries the check: a strip of the hook that runs the check cannot be reported by it, so
+  say so, and let the end of the run, which a TAOM method drives, look once more before it writes its summary. Say where
+  each look's cost lands: one at a window or session start runs after the boundary's stamp, so its time and allocation
+  fall in the next frame (`otherMs`, `maxFrameMs`, `allocKB`), and the feature doc names it beside the line write. A
+  patch-info read is a `BinaryFormatter` deserialization plus a scan of the loaded modules for each patch inspected, and
+  stays UNVERIFIED until timed; plan 028 ran its check at a mission start, off its measurement's clock, for that reason.
+- **Update (2026-10-03, convergence round):** the first fix looked at each start and not before the summary the session
+  ends with, so a strip after the last window start put frames with a zero phase into that summary unflagged, and a
+  strip on `MapState.OnTick` left the other hooks measuring with nothing in the output to say so. A measuring session's
+  end (`SubModule.OnGameEnd`, or a new campaign) now looks first, and a lost hook turns the summary into
+  `reason=hooksLost`.
+- **Source:** 1.5.x `docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md` (review follow-up); `MapSessionHooks.LostHooks`, `MapFrameProfilerHooksTests.Step_HooksLostAtWindowStart_WritesTheWindowThenOneWarningThenTheSummaryAndStops`, `MapFrameProfilerHooksTests.EndSession_HooksLostSinceTheLastLook_WarnsForThatSessionAndWritesTheSummaryAsHooksLost`, `MapFrameProfilerInstallerTests.IsPatchedByThisProfiler_AfterThePatchShieldStripCalls_False`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a shield exclusion is justified, trace where the unshielded exception lands (#1019, 2026-10-27)
+The map profiler's menu probe on `GameMenuVM.OnFrameTick` was excluded from PatchShield with the reason "a swallowed exception would skip the rest of the tick and the probe would vanish". The exclusion does the opposite: a missing-API error inside the method is no longer caught there, and it leaves through `GauntletMenuBaseView.OnFrameTick` and `MenuViewContext.OnFrameTick` (neither catches) into `MapScreen.OnFrameTick`, which is shielded. That catch skips the rest of the map screen frame and strips Patch36, Patch89 and Patch101, so profiling stops. The honest reason is parity: with the profiler off nothing TAOM patches the method, so the same escape happens. Another mod's patch on it loses the shield either way.
+- **Why missed:** the exclusion was copied from the earlier profiler-only targets, and its stated reason was never checked against the callers.
+- **Prevent:** when a shield exclusion is justified, trace where an unshielded exception lands, and write that path and the parity reason in the feature doc's per-target table (the 2026-10-02 per-target table rule). A method that stays shielded beside it gets its own row, naming which patches a strip removes.
+- **Source:** 1.5.x #1019; `rca-enlistment-board-render-and-probes-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

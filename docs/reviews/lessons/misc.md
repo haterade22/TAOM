@@ -204,3 +204,55 @@ plan 041 turns the profiler on for every player.
   in full, one line where the cap starts, and a count of every event in the run's summary
   (`MissionTickProfiler.MaxHitchLinesPerMission`). Price a stream at its setting's floor, not its default.
 - **Source:** 1.5.x `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Text that promises a switch "takes effect immediately" names every side effect the switch cannot undo
+Plan 006 made the crash-capture master toggle live and rewrote the hint and how-to to say the game's handler "(or BUTR)" takes over without a restart. `CrashReportService` calls ButterLib's `Disable()` on every capture while Suspend BUTR is on, and TAOM has no path that re-enables it, so after any capture in the session BUTR stays off until the player re-enables it on ButterLib's page or restarts. The old text ("Restart the game") had been true by accident.
+- **Why missed:** the rewrite traced the toggle's own reads, not the state earlier captures had already changed.
+- **Prevent:** before writing "live" or "no restart" for a toggle, list what the feature did while the toggle was on (suspended handlers, installed hooks, persisted state) and say which of those turning it off does not reverse.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a second measurer joins, re-read every "not measuring" line of the first (2026-10-02)
+Plan 041 made Patch98's hitch probe measure every mission by default and left plan 028's tick profiler reason lines as
+they were. On the default path, a player turning the profiler on mid-session got "no patches are installed and nothing
+is measured" in a mission that then wrote `[TickProfile]`, `[Hitch]` and `[HitchDetail]`; the same held for the failed
+install and switched-off lines, and the transpiler fallbacks still said "no mission is measured". The plan limited the
+older file to one line, so the executor fixed that line and left its siblings.
+- **Why missed:** the change was checked where it was edited; the older lines live in a file the plan froze, and their
+  claim became false without any edit to them.
+- **Prevent:** when a change adds a second instrument, grep the first one's status lines for "nothing", "not measuring",
+  "no mission" and similar consequences, and choose each by what still measures (`HitchProbeLines.ProfilerNotTimingLine`,
+  `BuildProfilerOffLine`). A scope limit on a file is not a reason to leave a line in it false; say so to the
+  orchestrator instead.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R3, R9 and R10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A benchmark's baseline arm runs in the state players had before the change, and its figure names what it stubbed (2026-10-02)
+Plan 041's overhead benchmark installed the measuring profiler before timing its unpatched arm, so Patch91's agent-tick
+pair did its measuring work in both arms and its cost cancelled out, though before plan 041 a default player's profiler
+was null and the pair returned at once. The same figure, 0.43 us per frame, was quoted as the probe's cost while the
+native clip-loading call was a stub returning false.
+- **Why missed:** the baseline was set up in the patched arm's state for convenience, and "the benchmark" was read as
+  covering everything a frame pays.
+- **Prevent:** set the baseline arm to what players ran before the change (here, no profiler), and write every cost claim
+  as "the managed part, X us; the stubbed call's cost is the line that measures it". Corrected figure: 0.477 and
+  0.470 us.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R13 and R15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a decision reverses an invariant, grep its old words across code comments, config headers, MCM hints and the lessons
+- **Source:** 1.5.x the 1.5.x lessons file at `f6bf0e588`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fault latch records its key before anything that can throw, and a fault keeps what was already measured (2026-10-02)
+The plan 039 map profiler stopped measuring on a fault and relied on its session (`_session`, the campaign) to keep
+the next frame from retrying. `OpenSession` stored the session after the provider reads, so a throwing read left no
+session and every later frame opened it again and threw again. A guard added to log the fault once per session keyed
+on a session number that only `BeginSession` advanced, so it muted the repeated throws instead of stopping them, and a
+second campaign's identical fault logged nothing. The fault also dropped every frame already closed in the session,
+against D6's per-session summary. Separately, a failed install warned that nothing would be measured only at the next
+game init, which a one-campaign process never reaches.
+- **Why missed:** the fault design was written for faults inside a measuring session; the open path's own failure was
+  not walked, and a log guard was chosen where the latch was wrong.
+- **Prevent:** a fault handler sets the state that stops the retry itself (here `Fault` takes the campaign and makes it
+  the session) rather than relying on code that runs after the throw. Test the fault in the open path with a throwing
+  substitute and `Received(1)` on the read (`Step_SessionOpenThrows_FaultsOnceAndDoesNotRetryTheSameCampaign`). A
+  stop on fault writes the summary so far with `reason=fault`. A reason line is written at the event that causes it,
+  not at the next opportunity to report.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R8, R10 and R11, on `origin/bannerlord-1.5.x` (ported by WP142).
