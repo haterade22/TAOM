@@ -1479,3 +1479,69 @@ missing that Mike had kept them by decision D3 the day before.
 - **Prevent:** before writing who made a data block or whether it should be regenerated, run `git log -S'<id>' --
   <file>` and grep `docs/reviews/rca-*.md` decision tables for the file; cite the decision in the doc and in the file.
 - **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### On 1.4.8 skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
+- **Source:** 1.5.x the 1.5.x lessons file at `83bdad853`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When the governing rule changes mid-task, re-derive every decision made under the old one
+
+#629's rule changed twice in one session ("replace vanilla", then "never better than regular gear", then
+"the lowest troops' own equipment, nothing new"). The orc careers' borrowed Isengard arrows were the right
+answer to the first rule and wrong under the last (40 x 3 against the orcs' own 20 to 27 at 0 to 2), and
+the retention design was built for a scan that the later rules made fragile. Neither was revisited.
+
+**Why missed:** each new directive was applied to the next piece of work, not replayed over the earlier
+answers and code.
+
+**Prevent:** when the user restates the principle, list the decisions already taken and re-check each
+against the new wording before building further.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` findings 2 and 4 (2026-09-19).
+- **Source:** 1.5.x the 1.5.x lessons file at `925db38d1`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change that supersedes a generator deletes or disarms every writer of that file
+
+After #629 two scripts could still rewrite `taom_career_starting_equipment.xml` with the pre-#629 kits,
+and every validator would have stayed green. One was marked "do not run" in the README; the other, a
+one-off, was listed nowhere but a generator-ref registry.
+
+**Why missed:** the sweep searched the docs for descriptions of the old behaviour instead of the code for
+anything that can still write the file.
+
+**Prevent:** `grep -rn <file name> tools/` for every writer of a file the change takes over, and delete it
+(or make `main()` refuse, never a module-level exit, because `check_generator_item_refs.py` imports these
+modules) in the same change.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` finding 3 (2026-09-19).
+- **Source:** 1.5.x the 1.5.x lessons file at `925db38d1`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A CustomGame-only troop is not hidden: the Custom Battle picker lists every Soldier of a culture (#646, 2026-09-23)
+The two `taom_test_*` riders were registered for CustomGame only and read as private test data, but
+`ArmyCompositionGroupVM` lists every `IsSoldier && !IsObsolete` character, and TAOM offers every settled culture, so
+both appeared in every player's Mirkwood cavalry picker, in English in every language.
+- **Why missed:** "CustomGame only" answers where a troop loads, not who sees it.
+- **Prevent:** a test troop is either `is_obsolete="true"` (hidden from the picker, still spawnable by
+  `taom.spawn_troops`) or on the release checklist to delete; say which in the file's header.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Trace an availability claim through TAOM's own market, and quote Mike before calling it his decision (#646, 2026-09-23)
+Six texts said "the moose is not sold" because the item is `is_merchandise="false"`. TAOM's CultureMarketplace never
+reads that flag: `ItemPoolAdapter.GetAllItems` takes every item, `CultureItemPoolService.BuildPools` groups them by
+culture, and the daily draw put the `Culture.mirkwood` moose in a Mirkwood town about once a fortnight. The review
+scope then recorded "the moose is not sold" as Mike's standing decision; he had asked only that the starting elk be
+sold. Asked, he chose to let the moose appear.
+- **Why missed:** a vanilla flag was read as the whole story, and a session's own wording was promoted to a decision.
+- **Prevent:** before writing that an item is or is not sold, dropped or looted, follow it through TAOM's systems (the
+  CultureMarketplace pool and routing, loot and reward models), not only the vanilla flag. A decision attributed to
+  Mike carries his words or the question he answered; anything else is the session's wording, and says so.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a feature moves where a value lives, grep every doc that tells a reader where to change it (#646, 2026-09-23)
+The size moved from the Horse item onto the Monster, and the feature docs followed, but the modding handbook's
+"Resize a mount" recipe still said to edit the item's `body_length`, "the only scale knob a mount has". For the three
+sized mounts that edit is undone at every game init and fails the data tests; and the handbook is the no-C#
+audience's only guide.
+- **Why missed:** the doc sweep followed links from the feature, and the handbook recipe does not link to it.
+- **Prevent:** when the place a value lives changes, grep the repo for the old place's name (the attribute, the file,
+  "resize") and fix every how-to, the handbook and doc-lookup included, in the same change.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F6, on `origin/bannerlord-1.5.x` (ported by WP142).

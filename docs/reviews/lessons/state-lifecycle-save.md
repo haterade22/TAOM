@@ -823,3 +823,29 @@ A stack names the first null, not the only one. The first repair for bundle `3fb
 - **Why missed:** the engine's own copy looked safer than a hand copy, so nobody listed which copied fields TAOM owns.
 - **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
 - **Source:** 1.5.x `rca-offspring-parent-culture-2026-11-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A two-sample falling `shaders=` count is not "draining" when the 1 Hz stream went silent (2026-10-18)
+The battle-load triage tool called a player bundle (public 1.4.8 build, 2026-10-18) a cold shader cache that was
+DRAINING: two `WaitingForRender` samples read 3128 then 3066. But the line is written once per second on every
+render-wait frame, and the log held nothing after +11.7 s while the watchdog fired about 290 s later. The watchdog
+fires only when the published count is unchanged for 60 s, so the count was frozen and the main thread had gone
+silent. Slow compile and wedge cannot be told apart from that log.
+- **Why missed:** the tool compared the first and last sample and never asked how long after the last sample the
+  watchdog line came.
+- **Prevent:** judge a periodic stream by its cadence as well as its values. `triage_battle_load.py` now reports
+  the frozen case when the gap to the watchdog line is 30 s or more
+  (`RENDER_WAIT_SILENCE_THRESHOLD_S`), and names the next evidence: `compile_shader` lines in the full
+  `rgl_log_<pid>.txt`, then a hang dump.
+- **Source:** 1.5.x player bundle `taom_crash_20261018_184529_b18f3441`; fix in `tools/triage_battle_load.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The end of the log is a second silence anchor when no watchdog line exists (2026-10-26)
+A player log from 2026-10-25 again got the DRAINING verdict: three `WaitingForRender` samples (2771, 2737, 2704),
+then 117 s of `[MemSample]` lines and no watchdog line, because the player closed the frozen game about 2 minutes
+into the wait. The 2026-10-18 fix measured the silence only up to the watchdog line, so with no watchdog it
+measured nothing and fell back to "draining".
+- **Why missed:** the fix assumed every frozen load lasts until the 300 s watchdog. A player who closes a "not
+  responding" window earlier produces a log with no watchdog line at all.
+- **Prevent:** a silence check needs an anchor that always exists. `[MemSample]` runs on a timer thread, so its
+  lines keep coming while the game thread is frozen. The tool now measures to the newest stamped line of any kind
+  when there is no watchdog line (`Timeline.last_ts`), and the report says "before the log ended".
+- **Source:** 1.5.x player log `taom_debug_2026-10-25_17-36-25.log` (TAOM `84f0459bc`); fix in `tools/triage_battle_load.py`, test `test_silent_stream_before_the_log_ends_is_not_called_draining`, on `origin/bannerlord-1.5.x` (ported by WP142).

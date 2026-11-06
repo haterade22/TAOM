@@ -600,3 +600,9 @@ have changed the merged document with no exception, no fallback and a green `/ve
   (`XmlMergeBindingTests.MirroredEngineBodies_CallExactlyThePinnedSequence`); resolve watched or bound members in the
   test by the same parameter list the adapter uses, from one shared table.
 - **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### In OnAgentBuild the gear an agent wears is `agent.SpawnEquipment`, not `Character.Equipment` (#627, 2026-09-19)
+`Character.Equipment` is the troop's default (first) roster; `Mission.SpawnAgent` rolls a battle roster, stores it with `InitializeSpawnEquipment` before `OnAgentBuild`, and builds the mount from that roster's Horse and HorseHarness. A gate that reads the character's equipment answers for a roster the agent may not be wearing.
+- **Why missed:** the troop had one roster, so both reads agreed and nothing failed.
+- **Prevent:** read `agent.SpawnEquipment[slot]` in any build-time gate about what the agent carries or rides.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs`, `:4309`, `:4324-4328`, on `origin/bannerlord-1.5.x` (ported by WP142).

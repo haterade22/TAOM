@@ -2543,3 +2543,65 @@ review lenses rejected D under the simplicity criterion and B1 bought nothing; b
   decision needs new evidence the review lacked. Before building stage N, re-state stage N's win against the
   code as stages 1 to N-1 left it; drop the stage when the win no longer dominates its cost.
 - **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Reversing a toggle again: sweep every commit since the template, and re-verify its claims (2026-09-25)
+Shader Pre-compilation was parked (`5ae02f08`), re-enabled (`1e654021` and `1700156b`, #560) and
+parked again. The second park replayed the first one's file list and comments. Docs the re-enable
+commits had rewritten as live were not on that list, and a copied comment said the Patch21 postfix
+ran "per loading-screen frame"; vanilla calls `LoadingWindowViewModel.Update` every frame from a
+global layer.
+- **Why missed:** the older template looked complete because it once was; everything changed
+  between it and today was invisible to a replay.
+- **Prevent:** when undoing a change that was itself an undo, list files from every commit since
+  the template (`git log --stat <template>..HEAD --grep='#<issue>'`, not just the headline commit),
+  then grep the whole repo for the feature doc's slug and issue number and classify each hit as
+  history or living text (the "Retiring a duty" lesson above prescribes the same sweep). Re-check
+  every engine or library claim the template's comments make before copying them.
+- **Source:** 1.5.x `docs/reviews/rca-shader-precompile-repark-2026-09-25.md`, findings 1 to 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving a file out of a module does not remove it from installs: rename what a stale copy would still answer to (#627, 2026-09-19)
+The howdah prefab moved from `Main/_Module/Prefabs/` to `LOTRLOME_Armory/Prefabs` under the same name. The repo and the dev install were cleaned, but every release from v2.0.22 to v2.0.30 had shipped `Modules/TAOM/Prefabs/taom_howdah_agent.xml`, an in-place update keeps it, and the release channel folder is itself updated in place. Players would load two prefabs of one name, and which one the engine instantiates is native and undefined.
+- **Why missed:** "the deploy never deletes" was already a lesson (above), but it was read as a dev-machine fact. The move checked the dev install and not the installs players already have.
+- **Prevent:** when a file leaves a module and something is looked up by its name (a prefab, a string id, an XML id), rename the identifier so a stale copy is dead data, and pin the name the code asks for in a test. Deletion steps in the packager cannot reach installs already in players' hands.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Re-enabled parked code is new code: review the path the flag switches on, not the flag (#627, 2026-09-19)
+Howdah crew spawn sat behind a commented-out call from June to September. Turning it back on was a one-line change; the path behind it had drifted (the crew's formation comments still said HorseArcher, the rider had been Cavalry since June 29), carried a port deviation that booked crew deaths as the rider's (see adapters-taleworlds-api.md), and missed vanilla spawn parity. A seven-lens delta review found one HIGH and a dozen LOW in code that "already worked in June".
+- **Why missed:** "re-enable X" reads as a toggle, and the June code had once run, which read as proof.
+- **Prevent:** when a parked path comes back, review it as if newly written: trace it end to end against today's data and engine, and compare it with the reference it was ported from. Also: a validator described as read-only may write (`audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` on every run); re-run such a tool just before staging its output.
+- **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A scratch tool rebuilt at every bump needs a parse count, or "0 unresolved" means "0 of what I read" (2026-10-05)
+The bound-member body diff, rebuilt per bump as "forty lines", parsed snapshot rows with a regex that
+skipped every target carrying a generic-arity backtick: 27 of 292 rows, one a real change, while it still
+reported 0 unresolved. It also ran before the snapshot was regenerated.
+- **Why missed:** the tool counted what it compared, never what it skipped, and the skill told each bump
+  to rewrite it.
+- **Prevent:** regenerate the API snapshot first, then run the archived script and require its
+  `unparsed=0` (`/engine-bump` Phase 3). Promoting it into `tools/` with a row-count test is a follow-up
+  on #736.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A report a tool promises never changes the exit code is still on the exit-code path (plan 035, 2026-10-02)
+The release packager's new scene listing printed every shipped scene folder name. Under a piped stdout, which is
+cp1252 on Windows, a name outside the code page raised `UnicodeEncodeError` out of `main`: a clean dry run exited 1,
+and a real run stopped before the copy, although the change and its docs promised the report never changes the exit
+code. This is the third cp1252 stdout crash in TAOM tools, after `rebalance_troops.py`'s delta glyph and the #647
+hook extraction (both earlier in this file).
+- **Why missed:** "never changes the exit code" was checked as "adds no `return` or `raise`"; a print of a name the
+  tool did not write is a way out of `main` too. Every scene name on disk is ASCII, so no real run showed it.
+- **Prevent:** a tool that prints names it reads from disk calls
+  `sys.stdout.reconfigure(errors="backslashreplace")` (and stderr) at the top of `main`, guarded with
+  `hasattr(stream, "reconfigure")` for in-process tests. A section promised to be report-only runs inside its own
+  `try/except Exception` that prints the failure and goes on. Test both: a child run with
+  `PYTHONIOENCODING=cp1252` and a non-ASCII name, and a report patched to raise
+  (`tools/tests/test_package_release.py`, `TestSceneShaderCacheCli`).
+- **Source:** 1.5.x `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release blocker goes in the /release pre-flight, not only in a feature doc (#646, 2026-09-23)
+Mike kept the Custom-Battle test riders visible until release (D1), and the blocker was written in the feature doc,
+the workflow doc and the CHANGELOG, none of which `/release` reads.
+- **Why missed:** writing it down felt like tracking it.
+- **Prevent:** a "must happen before a release" item becomes a mechanical pre-flight line in
+  `.claude/skills/release/SKILL.md` (here `git grep -l taom_test_ -- Main/_Module` prints nothing).
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F7, on `origin/bannerlord-1.5.x` (ported by WP142).
