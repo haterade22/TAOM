@@ -191,7 +191,7 @@ before treating it as an all-clear.
 | `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
-| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only` |
+| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged`, also for a commit staging only an RCA |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 

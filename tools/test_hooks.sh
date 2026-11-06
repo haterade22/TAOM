@@ -981,6 +981,33 @@ if [[ "$(decision_of "$OUT")" == allow && ! -e "$PRJ_FOREIGN/tools/ran.txt" ]]; 
 else
     bad "check-doc-config-drift judged another repository or ran its tools/lint_docs.py"
 fi
+# A commit staging only an RCA runs the linter (plan 136 D4, #984), the linter is asked to read the
+# index, and the deny quotes the linter's RCA section. A staged non-RCA review doc runs nothing.
+printf 'import os, sys\nopen(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ran.txt"), "w").write(" ".join(sys.argv[1:]))\nprint("# Doc lint report")\nprint("## RCA FOLLOW-UP lines with no issue or reason")\nprint("- docs/reviews/rca-x-2026-10-23.md:1 [followup-no-owner]")\nsys.exit(1)\n' > "$PRJ_WT/tools/lint_docs.py"
+rm -f "$PRJ_WT/tools/ran.txt"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+mkdir -p "$PRJ_WT/docs/reviews"
+printf '# notes\n' > "$PRJ_WT/docs/reviews/notes.md"
+git -C "$PRJ_WT" add docs/reviews/notes.md 2>/dev/null
+OUT=$(drift_run "$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")")
+if [[ "$(decision_of "$OUT")" == allow && ! -e "$PRJ_WT/tools/ran.txt" ]]; then
+    ok "check-doc-config-drift ignores a commit staging only a non-RCA review doc"
+else
+    bad "check-doc-config-drift ran for a staged docs/reviews/notes.md: $(printf '%s' "$OUT" | head -c 160)"
+fi
+git -C "$PRJ_WT" reset -q 2>/dev/null
+printf '# rca\n' > "$PRJ_WT/docs/reviews/rca-x-2026-10-23.md"
+git -C "$PRJ_WT" add docs/reviews/rca-x-2026-10-23.md 2>/dev/null
+OUT=$(drift_run "$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")")
+if [[ "$(decision_of "$OUT")" == deny && -e "$PRJ_WT/tools/ran.txt" ]] && grep -q 'followup-no-owner' <<< "$OUT"; then
+    ok "check-doc-config-drift runs the linter for a staged RCA and quotes its section"
+else
+    bad "check-doc-config-drift did not deny a staged RCA with the linter's section: $(printf '%s' "$OUT" | head -c 200)"
+fi
+grep -q -- '--drift-only --staged' "$PRJ_WT/tools/ran.txt" 2>/dev/null \
+    && ok "check-doc-config-drift asks the linter to read the index (--drift-only --staged)" \
+    || bad "check-doc-config-drift did not pass --drift-only --staged: $(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)"
+git -C "$PRJ_WT" reset -q 2>/dev/null
 # The subject gate reads the <Version> of the repository the session works in, the payload's cwd.
 SUBJ_WT="$SANDBOX/subj-wt"
 mkdir -p "$SUBJ_WT/Main/_Module"
@@ -1172,6 +1199,64 @@ if [[ -z "$K7" ]]; then
 else
     bad "settings.json: $(printf '%s' "$K7" | tr '\n' ';')"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7m. check-moduledata-validation fails open on a validator crash and says so, and still denies on findings"
+pre_payload() {  # $1 tool, $2 command: a PreToolUse payload as the harness sends it
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$1" "$2"
+}
+# validate_moduledata.py exits 1 for ERROR findings, and Python exits 1 for an uncaught exception too,
+# so a validator bug used to DENY the commit with a bare status. entry() now turns a crash into exit 3,
+# and the hook allows it, with the traceback beside the tool result (PreToolUse additionalContext: an
+# allow's stderr reaches no one). The stub imports the real validator and makes main() raise, so the
+# whole chain is under test, not a mock of it. A sandbox repo stages one ModuleData file.
+VM_REPO="$SANDBOX/vm-repo"
+mkdir -p "$VM_REPO/tools" "$VM_REPO/Main/_Module/ModuleData"
+git -C "$VM_REPO" init -q 2>/dev/null
+printf '<Items />\n' > "$VM_REPO/Main/_Module/ModuleData/x.xml"
+git -C "$VM_REPO" add Main/_Module/ModuleData/x.xml 2>/dev/null
+VM_TOOLS=$(cygpath -m "$REPO/tools" 2>/dev/null || echo "$REPO/tools")
+cat > "$VM_REPO/tools/validate_moduledata.py" <<STUB
+import sys
+sys.path.insert(0, r"$VM_TOOLS")
+import validate_moduledata as vm
+def boom():
+    raise RuntimeError("stub validator crash")
+vm.main = boom
+sys.exit(vm.entry())
+STUB
+vm_run() {  # stdin: the payload; prints the hook's answer
+    CLAUDE_PROJECT_DIR="$VM_REPO" timeout -k 2 30 bash "$REPO/.claude/hooks/check-moduledata-validation.sh" 2>/dev/null
+}
+VM_PAYLOAD=$(pre_payload Bash 'git commit -m "data: v0.0.0 - stub"')
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_VERDICT=$(printf '%s' "$VM_OUT" | "$HPY" -c '
+import json, sys
+try:
+    d = json.loads(sys.stdin.read() or "{}")
+except Exception:
+    print("invalid"); sys.exit()
+h = d.get("hookSpecificOutput", {}) if isinstance(d, dict) else {}
+if h.get("permissionDecision") == "deny":
+    print("deny")
+elif "stub validator crash" in h.get("additionalContext", "") and "Traceback" in h.get("additionalContext", ""):
+    print("allow-with-traceback")
+else:
+    print("allow-silent")')
+case "$VM_VERDICT" in
+    allow-with-traceback) ok "a validator crash (exit 3) allows the commit and carries the traceback in additionalContext" ;;
+    deny)                 bad "a validator crash DENIED the commit: a hook's own fault must fail open" ;;
+    *)                    bad "a validator crash was $VM_VERDICT, expected allow-with-traceback: $(printf '%s' "$VM_OUT" | head -c 200)" ;;
+esac
+# Control: a genuine findings exit (1) still denies.
+printf 'import sys\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+if [[ "$(decision_of "$VM_OUT")" == deny ]]; then
+    ok "a validator findings exit (1) still denies the commit"
+else
+    bad "a validator findings exit (1) no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
+fi
+rm -rf "$VM_REPO"
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

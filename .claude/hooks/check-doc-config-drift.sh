@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # check-doc-config-drift.sh
 # PreToolUse(Bash) hook: when `git commit` is about to run touching a feature doc,
-# a shipped ModuleData JSON config, or a game-version marker, run the doc-linter's
+# a shipped ModuleData JSON config, a game-version marker or an RCA, run the doc-linter's
 # drift checks and BLOCK the commit if they find:
 #   - config-example drift: a docs/features/*.md ```json example whose values disagree
 #     with the shipped Main/_Module/ModuleData/**/*.json config it mirrors, or a doc
 #     key absent from the shipped file (renamed/removed).
 #   - version mismatch: CLAUDE.md's "Target: Bannerlord X" line or an API-snapshot
 #     header that disagrees with .claude/pinned-game-version.txt.
+#   - a new FOLLOW-UP line in a staged docs/reviews/rca-*.md with no issue and no reason (#984).
 #
 # Why: this is the enforcement for the v1.4.7-bump deep-review finding -- flipping
 # banner_color_config.json's EnableLayerLimitTranspiler default left the feature doc's
@@ -70,7 +71,7 @@ case "$COMMAND" in
 esac
 
 # Only run when the commit touches a surface the drift checks care about:
-# a feature doc, a shipped ModuleData JSON, or a version marker.
+# a feature doc, a shipped ModuleData JSON, a version marker, or an RCA.
 RELEVANT=0
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
 # 65,536 to 65,663 bytes of text (#681), and a killed gate fails open. An empty line is dropped,
@@ -79,6 +80,7 @@ set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
 for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         docs/features/*.md) RELEVANT=1; break ;;
+        docs/reviews/rca-*.md) RELEVANT=1; break ;;
         Main/_Module/ModuleData/*.json) RELEVANT=1; break ;;
         .claude/pinned-game-version.txt) RELEVANT=1; break ;;
         CLAUDE.md) RELEVANT=1; break ;;
@@ -92,27 +94,28 @@ PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
 # Run the drift gate. --drift-only runs just the checks that can block (config-example drift,
-# version markers, the CLAUDE.md and AGENTS.md budget) and exits 1 iff one fails; 0 otherwise.
+# version markers, the CLAUDE.md and AGENTS.md budget, RCA FOLLOW-UP lines) and exits 1 iff one fails;
+# 0 otherwise. --staged makes the RCA check read the index, which is what the commit records.
 # Only rc=1 blocks. The full --fail-on-drift run took 25 s on the laptop (2026-11-04), past the
 # 20 s bound below; these checks take under a second.
 #
 # Inner bound, below the 30s registered timeout. A harness kill discards this hook's
 # output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
 # a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
-OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --drift-only 2>/dev/null)
+OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --drift-only --staged 2>/dev/null)
 RC=$?
 
 # 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
 # infrastructure fault, and a hook's own fault must never hard-block the user.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --drift-only"}}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches, the CLAUDE.md eager-load budget and RCA FOLLOW-UP lines. This is NOT a pass. Run: python tools/lint_docs.py --drift-only --staged"}}'
     exit 0
 fi
 
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
-# Extract just the gating sections (drift / version / CLAUDE.md budget — the report's tail), bounded.
-DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget)/{f=1} f' | head -40)
+# Extract just the gating sections (drift / version / CLAUDE.md budget / RCA — the report's tail), bounded.
+DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget|RCA FOLLOW-UP lines with no issue or reason)/{f=1} f' | head -40)
 
 MSG=$(printf '%s' "$DETAILS" | "$PYBIN" -c '
 import sys, json
@@ -123,7 +126,8 @@ print(json.dumps(
     "(46KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
     "detail to the linked doc). Sync the doc example to the shipped ModuleData config, the "
     "version marker to .claude/pinned-game-version.txt, or thin the CLAUDE.md row, then "
-    "re-stage. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
+    "re-stage. A new FOLLOW-UP line in an RCA must cite an issue or say no issue: and why. "
+    "Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
