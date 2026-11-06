@@ -20,7 +20,7 @@
     {"id": "tooling", "patterns": ["tools/*", "*.ps1", "*.sh", "*.py", "*.yml", "*.yaml", ".github/*"], "checks": ["python-tests", "mcm-defaults", "loc-orphans"]},
     {"id": "ai-harness", "patterns": ["AGENTS.md", "CLAUDE.md", ".ai/*", ".claude/*", ".codex/*", ".agents/*", ".kimi*", ".mcp.json", "tools/reviewctl.py", "docs/ai-includes/*"], "checks": ["reviewctl-tests"]},
     {"id": "claude-hooks", "patterns": [".claude/settings.json", ".claude/hooks/*", ".claude/skills/*", "tools/test_hooks.sh"], "checks": ["hook-contract"]},
-    {"id": "native-dependencies", "patterns": ["Dependencies/*", "*.cpp", "*.h", "*.hpp", "*.dll", "*.vcxproj"], "checks": []},
+    {"id": "native-dependencies", "patterns": ["Dependencies/*", "*.cpp", "*.h", "*.hpp", "*.dll", "*.vcxproj", "docs/reference/provenance-register.md", "docs/reviews/adopt-*"], "checks": []},
     {"id": "assets-localization", "patterns": ["*.tpac", "*.png", "*.dds", "*.wav", "*.ogg", "*.fbx", "Main/_Module/ModuleData/Languages/*"], "checks": ["data-gates"]},
     {"id": "docs-policy", "patterns": ["*.md", "*.json", "*.toml", "*.yml", "*.yaml"], "checks": []}
   ]
