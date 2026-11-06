@@ -238,6 +238,8 @@ template and culture.
   error, `confirm` is literal) and pins for its quarter-sight point and every refusal.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditLiveDataTests.cs` (LiveInstall): the brood anchors equal every
   Mirkwood and Dol Guldur town, castle and village on the live map, and both troll `_map` action sets exist.
+- `TAOM.Tests/Features/CreatureBandits/CreatureSpawnCoopGateTests.cs`: both daily spawn ticks stop on a co-op
+  client and run with authority, read on every tick (#1084).
 - `TAOM.Tests/Features/CreatureBandits/TrollBanditDataTests.cs`: the troll XML matches the catalogue and loads in the
   campaign; each twin is a hidden `wild_trolls` bandit equal to its Mordor troll less the armour; the clan and
   culture are a bandit looter shape; the band template holds two to four hill trolls; no other template or culture
@@ -400,6 +402,8 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
   only for now: a bare cave troll's body has no cloth, its trousers belong to the armour mesh. The cave twin stays
   defined, armourless and in no band. In place of armour a bandit troll has 300 hit points (the race's 200 plus
   100) and takes 70% of every hit (Mike's choice).
+- 2026-11-05: on a co-op server only the host spawns broods and troll bands (#1084). Clients ran both daily
+  ticks too and threw a caught `NullReferenceException` in `WarPartyComponent.OnInitialize` on each try.
 
 ## GitHub Issue
 

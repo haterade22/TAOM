@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DryIoc;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.CreatureBandits.Hooks;
 
 namespace TAOM.Features.CreatureBandits;
@@ -37,8 +38,8 @@ internal sealed class CreatureBanditsModule : TaomFeatureModule
 
     private static readonly CampaignBehaviorDecl[] Campaign =
     {
-        CampaignBehaviorDecl.Of(resolver => new CreatureBroodSpawnBehavior(resolver.Resolve<IModLogger>())),
-        CampaignBehaviorDecl.Of(resolver => new TrollBandSpawnBehavior(resolver.Resolve<IModLogger>())),
+        CampaignBehaviorDecl.Of(resolver => new CreatureBroodSpawnBehavior(resolver.Resolve<ICoopSessionProvider>(), resolver.Resolve<IModLogger>())),
+        CampaignBehaviorDecl.Of(resolver => new TrollBandSpawnBehavior(resolver.Resolve<ICoopSessionProvider>(), resolver.Resolve<IModLogger>())),
         // Temporary diagnostics (strip after sign-off with the Diagnostics folder).
         CampaignBehaviorDecl.Of(resolver => new Diagnostics.CreatureBroodCampaignDiagBehavior()),
     };
