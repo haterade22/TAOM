@@ -813,3 +813,33 @@ keybind file loads after the module file: 22 copies replaced curated rows in 11 
   of the language carries (`skip_ids_for`); `LocalizationKeyConsistencyTests` fails on one id with two texts in one
   language. When two English sources declare a key, treat that as a smell, not a feature.
 - **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the script a translation is written in: the model returns words from other languages (2026-09-25)
+Korean 돌진 and Chinese 氏族 inside Turkish sentences, "[Ривенделл]新obranец" and Latin look-alike letters inside
+Russian words ("Брандa", "Бûрзгâш"), katakana in the Korean "Imladris", "黑numenor" in Chinese: about 120 rows across
+nine languages, each also in the cache, so every re-run served it back. The placeholder gate passed all of them.
+- **Why missed:** every check on translator output compared ids, counts and placeholders, never the characters.
+- **Prevent:** `LanguageTextIntegrityTests.NoTranslatedString_MixesWritingSystems` (per-language allowed scripts, no
+  word gluing two scripts in Russian, no lowercase Latin run glued to CJK or Hangul). Repair a flagged row and its cache
+  entry together: a letter map for Latin look-alikes in Cyrillic, a reset plus re-run for the rest.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The seeding terminator bug came back: fix the tool the first time a lesson names it (2026-09-25)
+Plan 022's lesson (2026-09-24, above) named `sync_missing_ids` giving seeded rows the wrong terminator in `\r\r\n`
+files and left the fix as a follow-up. A day later the hill troll's translator runs seeded 384 more such rows (156 in
+the repo, 228 in the live Armory), and the builder had written that the translator preserved terminators, having
+checked `write_back` only.
+- **Why missed:** a follow-up with no owner and no failing test is a note, not a fix.
+- **Prevent:** `sync_missing_ids` now keeps each line's own terminator, with a `\r\r\n` test. A lesson that ends in
+  "follow-up" gets an issue or a failing test the same day.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Gate the translation cache, not only the rows (2026-09-25)
+The writing-system gate read the repo's language files, but `tools/translation_cache/<lang>.json` holds the
+translator's output for all three modules, the unversioned Armory and TAOM_Map included, and a re-run writes
+its values back. Damage fixed in the rows but left in the cache returns on the next run.
+- **Why missed:** the gate was written against the files the repo ships, and the cache is not shipped.
+- **Prevent:** a content rule on translations runs over the cache too
+  (`NoCachedTranslation_MixesWritingSystems`); a word rule judges each hyphen-separated part of a name, so
+  "Bahr al-Yeshm" and "Cigfran-lûth" stay clean.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 36, on `origin/bannerlord-1.5.x` (ported by WP142).

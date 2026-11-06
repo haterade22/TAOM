@@ -439,3 +439,12 @@ written, the next Standards pass would flag the exemplars the exception was writ
   class, including the private members its qualifying members call, and either narrow the claim to
   what passes or record the rest as known debt in the same text.
 - **Source:** 1.5.x `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` O1, O2 (Agents 1 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A creature behaviour extended to a second Monster: compare the Monsters' size fields, not only the sets (2026-09-25)
+The Brute Force tree scales its trigger range and ring by `AgentScale` only. The engine's reach is `Monster.ArmLength`
+times `AgentScale`: the cave troll's `arm_length` 0.9 at scale 1.9, the hill troll's 2.79 at 1.09, three times the reach
+per unit of scale, so one set of constants cannot fit both.
+- **Why missed:** the extension checked Monster ids, action sets and clips, not the fields the engine sizes a body by.
+- **Prevent:** when a tree or service gains a Monster, table `arm_length`, capsules, eye heights and the skin's scale
+  for every Monster it serves, and scale distances by what the engine scales reach by.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 7, on `origin/bannerlord-1.5.x` (ported by WP142).
