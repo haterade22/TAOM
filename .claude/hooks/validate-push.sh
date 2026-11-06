@@ -113,9 +113,10 @@ fi
 # Protected branches. bannerlord-1.4.5 is this repo's actual trunk and was missing until
 # 2026-08-20, so a force push to the branch everyone works on passed unchallenged while
 # master and main, which this repo does not use, were the only names guarded.
+# bannerlord-1.5.x added 2026-11: a session on this line must not force-push the other trunk either.
 is_protected() {
   case "$1" in
-    master|main|bannerlord-1.4.5) return 0 ;;
+    master|main|bannerlord-1.4.5|bannerlord-1.5.x) return 0 ;;
     *) return 1 ;;
   esac
 }

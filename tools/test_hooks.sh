@@ -1014,6 +1014,22 @@ rm -rf "$CFT_REPO/.claude/skills/other" "$CFT_REPO/sub" "$CFT_WT" "$PRJ" "$PRJ_W
 
 
 # ---------------------------------------------------------------------------
+head2 "7c. validate-push refuses a force push to either trunk, master or main"
+for row in "2|git push --force origin bannerlord-1.4.5" "2|git push --force origin HEAD:bannerlord-1.5.x" \
+           "2|git push -f origin master" "2|git push origin +bannerlord-1.5.x" \
+           "0|git push origin port148/103-x" "0|git push --force origin port148/103-x"; do
+    want="${row%%|*}"; cmd="${row#*|}"
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"hook_event_name":"PreToolUse"}))' "$cmd")
+    rc=0
+    printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1 || rc=$?
+    if [[ "$rc" == "$want" ]]; then
+        ok "validate-push rc=$rc for: $cmd"
+    else
+        bad "validate-push expected rc=$want, got rc=$rc for: $cmd"
+    fi
+done
+
+# ---------------------------------------------------------------------------
 # 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
 #     Git Bash 5.3 hangs forever on a here-string or here-document of 65,537 to 65,664 bytes, and a
 #     killed gate fails open. On 1.4.x each gate reads the raw command, so each row sizes its command
