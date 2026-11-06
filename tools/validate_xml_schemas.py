@@ -7,8 +7,8 @@ or carrying one the engine does not know, passed every TAOM gate: `clan_umbar_3`
 with no `initial_home_settlement` that way (fixed 2026-06-22). The engine does validate on
 a normal campaign load, but `MBObjectManager.LoadXmlWithValidation` only PRINTS a failure
 to the log and loads the file anyway, so the mistake is silent in game.
-Plan 136 Step B1 makes this tool `validate_moduledata.py`'s SCHEMA_INVALID pass so the
-commit hook gates it; until that lands it runs by hand or through `tools/data_gates.py`.
+`validate_moduledata.py` runs this tool over the repo module as its SCHEMA_INVALID pass, so the
+commit hook gates it; `--live` runs by hand or through `tools/data_gates.py`.
 
 This tool mirrors the engine's file resolution and schema choice (v1.4.8, taom-src: `MBObjectManager.cs:877-917`, `:949`, `:1061-1129`, `XmlResource.cs:114-153`, `ModuleHelper.cs:232-247`;
 `TaleWorlds.ObjectSystem.MBObjectManager.GetMergedXmlForManaged`,

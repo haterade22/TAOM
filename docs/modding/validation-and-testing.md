@@ -30,7 +30,7 @@ rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | engine XSD required attributes; whether an id points at the *right* thing |
+| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | whether an id points at the *right* thing; the engine XSD layer of the live modules (`--live` below) |
 | `python tools/validate_xml_schemas.py [FILE ...]` | every engine-loaded ModuleData file against the XSD the engine itself picks (a missing required attribute, an undeclared one, a DOCTYPE, a registration that loads nothing); a file passed by name is classed LANGUAGE FILE, STYLESHEET, NATIVE or NOT REGISTERED | what a file means, a registration with no XSD (NO SCHEMA, such as the Armory's `ModuleSounds`), any file no `<XmlName>` loads, and a run without lxml (exit 2) |
 | `python tools/validate_all_troop_refs.py` | armour ids in ten troop files resolve against the Armory | six troop files, and weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
 | `python tools/validate_gondor_refs.py` | the Gondor-only ancestor of the above | superseded; prefer `validate_moduledata.py` |
