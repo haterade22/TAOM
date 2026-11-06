@@ -80,3 +80,15 @@ When porting a native hook target to a new engine build, a structural body-match
 - **Prevent:** take a count two independent ways (a disassembler sweep with skipdata and a raw displacement scan)
   and write the method beside the number; a single ad hoc scan is a lead, not a fact.
 - **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 12. - **Recurrence (2026-10-08, fix round):** the cull's MCM hint gave yotthani's 1,002 settlements as TAOM's count (the live `TAOM_Map` file holds 1,040), and both map-view hints stated his measurements as fact. Player-facing text carries only counts TAOM took, with their basis, or attributes the figure (finding 26), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A diagnostic meant to decide a lever lists what it cannot see (2026-10-03)
+The `[AnimMem]` docs and plan said a total far below 12 MiB "rules out" both clip levers. It speaks to the budget lever only. A type 2 clip starts unloaded and loads on its first sample whatever the total (the acquire path, `0x474140`, never reads the counter), and the probe samples once a second in `OnMissionTick`, after the frame's `WaitTickCompletion`, so a load that delayed a frame has ended before `loadingNow` is read.
+- **Why missed:** every native claim was checked for truth and none for what the measurement can reject; the stated purpose ("decides between the levers") was copied into the reading guide.
+- **Prevent:** when a log is meant to choose between levers, write per lever the observation that would reject it, and mark each lever the log cannot reject. Say where the sample sits in the frame (the engine's tick order): a point sample misses a wait that ended before it.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A safety comment names what is checked, what is trusted and what is outside the checks (2026-10-03)
+The probe's summary said every address is proven inside a mapped section before any read. Only the two targets are checked against the section table; the header page and the code copy are read on trust; the module is assumed to stay mapped; and `IsAnyAnimationLoadingFromDisk` walks a native list with no lock, outside every check (`0x6EAAE0` holds no call, lock-prefixed instruction or thread check; what can grow the list was not traced).
+- **Why missed:** the comment was written for the arming path, which the reviews read closely, and it covered a class that also forwards an engine call nobody traced; the rollout cost sat in the review record and not in the doc that ships the default.
+- **Prevent:** write a safety comment as three lists (checked, trusted, outside the checks) and give each forwarded engine call its own entry. A doc that ships a diagnostic on by default says what was not measured and how to measure it.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X3, on `origin/bannerlord-1.5.x` (ported by WP142).

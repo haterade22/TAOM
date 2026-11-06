@@ -256,3 +256,9 @@ game init, which a one-campaign process never reaches.
   stop on fault writes the summary so far with `reason=fault`. A reason line is written at the event that causes it,
   not at the next opportunity to report.
 - **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R8, R10 and R11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A windowed diagnostic flushes its partial window before the summary (2026-10-02)
+The `[AnimMem]` session wrote one line per 5 s window and a mission summary. Samples after the last 5 s line reached the log only through the summary, which has no minimum, so a partial window's low point was lost, against D6's "aggregate or sample, never drop".
+- **Why missed:** the plan said "a summary at mission end", and nobody compared the summary's fields with the periodic line's to find the fields only the periodic line carries.
+- **Prevent:** for any instrument with periodic and summary lines, write the partial window at the end whenever it holds samples, and pin it with a test that ends the session between two periodic lines.
+- **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).

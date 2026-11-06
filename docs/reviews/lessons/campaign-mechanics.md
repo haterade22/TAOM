@@ -499,3 +499,22 @@ longer owned.
   one method, not a copy. A release reads the live engine flag (the pin) before acting, not a flag the feature
   set earlier. After a maintainer decision adds a transition, re-run the lens that reads state transitions.
 - **Source:** 1.5.x `docs/reviews/rca-eye-of-sauron-2026-10-14.md` F1 and F3 (Codex), fixed in `2d17ceba3`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mercenary contract sets `Clan.Kingdom`, so a hired company is not kingdomless (#957, 2026-10-20)
+Comments and docs called a mercenary player or a hired minor clan "kingdomless" and said its row in `alignment.json` decides. `StartMercenaryServiceAction.ApplyStart` sets `clan.Kingdom` to the employer, so a hired company's map faction is the employer and its heroes side by the employer's pair. Only an independent clan, and an enlisted player (enlistment deliberately does not join the commander's kingdom), have no kingdom.
+- **Why missed:** "mercenary" reads as "serves no kingdom" and nobody opened the action.
+- **Prevent:** read the action (`pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Actions.StartMercenaryServiceAction`) before writing what a status does to `Clan.Kingdom`. A minor clan's own row applies only while it serves no kingdom.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 1, comments, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A war veto gates where the engine prices or offers the war, not only where it declares it (#818, 2026-10-18)
+The War of the Ring phase rule first sat only on `DeclareWarAction.ApplyInternal`. The engine charges before that:
+`Kingdom.AddDecision` takes 200 influence from an AI proposer before `IsAllowed` cancels the decision, a declined
+call-to-war offer costs 50 relation, a one-clan player kingdom gets a map notice without `IsAllowed`, and
+`ChangeCrimeRatingAction` takes 10 relation before each refused declaration, every day the rating stays high. The war
+never started, and every cost was still paid.
+- **Why missed:** the design traced where wars start, not what each path costs before the start.
+- **Prevent:** when you add a veto on an engine action, walk back from the action to every stage that charges a cost or
+  shows the action to the player, and gate the earliest one: the score model for AI proposals
+  (`GetScoreOfDeclaringWar`), `IsAllowed` for decisions, the notice itself for direct offers. Keep the action prefix as
+  the backstop.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` findings 4 to 6 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).

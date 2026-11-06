@@ -2481,3 +2481,40 @@ a dirty build there passed as clean.
 - **Prevent:** when a verdict rests on a marker being absent, first prove the producer at that revision could have
   emitted it (here `git show <sha>:Directory.Build.props` contains the target), and refuse otherwise.
 - **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A JVM left with a non-daemon thread keeps its Python host alive after the traceback (2026-09-26)
+The failed first run above printed its Python traceback and then never exited: it sat at 1.5 GB until killed, and
+its background task never reported. A `jstack` dump showed one non-daemon Java thread besides `main`,
+`FelixDispatchQueue`, left by the half-started OSGi framework, and the JVM will not let the process end while one
+lives. A run that succeeds releases the bundle host and exits normally, so only the failure path hangs.
+- **Why missed:** a traceback reads as "the process ended". Only the missing `exit=` line from the wrapper showed it
+  had not.
+- **Prevent:** a tool that starts a JVM in-process leaves through `os._exit` once the JVM is up, after closing
+  what it opened (`tools/native_decompile.py` `exit_process`, tested both ways). When a run prints a traceback but its
+  task never completes, take a thread dump before killing it: the non-daemon threads name the culprit.
+- **Source:** 1.5.x #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test fake returns the text shape you imagine; Ghidra's C carries CRLF on Windows (2026-09-26)
+`native_decompile.py` printed every decompiled line ending in CR CR LF: Ghidra's `getC()` already uses CRLF on
+Windows, and Python's text-mode stdout added a CR to each LF. Redirected to a file the output doubled its line count
+(3,781 lines for about 1,900), and viewers show a blank line under every line of C. The 22 unit tests stayed green,
+because their fake backend returns `\n` text.
+- **Why missed:** the fake encoded the shape the author expected rather than the one the real API returns, the same
+  blind spot as the fixture lesson at the top of this file.
+- **Prevent:** normalise line endings where text crosses from a foreign runtime into Python's stdout, and assert on
+  the raw bytes in the integration test (`assertNotIn(b"\r\r\n", ...)`), where universal newlines cannot hide it.
+- **Source:** 1.5.x #688; `tools/tests/test_native_decompile.py` `GhidraIntegrationTests`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mute that greps for a token nothing writes is dead, and reads as working
+`check-deep-review.sh` muted its Stop reminder by grepping `agent-audit.log` for `deep-review|Standards Compliance|Efficiency.*Performance|...`, the review's lens titles. `log-agent.sh` writes only `[TS] agent_type=<type> agent_id=<id>`, and the reviewers ran as `Explore` and `taleworlds-researcher`, so across both log generations the mute matched 0 lines and never fired. The lesson above held it up as the muting example to copy.
+- **Why missed:** the consumer was written against what the author expected the log to hold, not against a line the writer had produced. Every run of the hook looked fine because a reminder that always fires is indistinguishable from one that fires correctly.
+- **Prevent:** a hook that reads another hook's output (a log line, a state file) gets a two-direction case in `tools/test_hooks.sh` that drives the REAL writer and the REAL reader together: without the event it must fire, after the writer logs it it must not. Section 7 does this for the deep-review mute; the pattern now names `agent_type=deep-reviewer`, the one token the writer emits.
+- **Source:** 1.5.x `/deep-review` overhaul review, 2026-09-18, `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate checked only against the case it was written for misses the history it guards (#1017, 2026-10-26)
+
+The first `check_mcm_default_flips.py` compared the settings against one release tag, so every flip that had shipped earlier was invisible, and it compared constant defaults as text, so a changed constant passed. Rebuilt to compare against every reachable release tag and to resolve constants, it found nine more settings.
+
+- **Why missed:** one base tag, constants compared as text, and silent OK paths (no tag, no settings found, a failed read, a partial class) that printed a pass.
+- **Prevent:** compare against every release the trap can reach; make every degenerate input fail loudly; prove the gate on the commit before the fix (it must fail there) before trusting a green run.
+- **Source:** 1.5.x `rca-settings-default-flips-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
