@@ -118,6 +118,38 @@ class AnswerDialogsTests(unittest.TestCase):
         click.assert_called_once_with(100, 5)
 
 
+class SystemHostTests(unittest.TestCase):
+    QUESTION = (200, "*_*", ["&Yes", "&No", "The application faced a problem."], {"&Yes": 6, "&No": 7})
+
+    def run_pass(self, dialogs, hosts):
+        lines = []
+        with mock.patch.object(a, "game_dialogs", side_effect=lambda pid: dialogs.get(pid, [])),                 mock.patch.object(a, "click_button", return_value=True) as click:
+            total = a.answer_dialogs([7], set(), 0, lines.append, hosts)
+        return total, lines, click
+
+    def test_the_crash_question_shown_by_csrss_gets_no(self):
+        total, lines, click = self.run_pass({7: [], 50: [self.QUESTION]}, [50])
+        self.assertEqual(total, 1)
+        click.assert_called_once_with(200, 7)
+        self.assertIn("faced a problem", lines[0])
+
+    def test_other_system_boxes_are_neither_clicked_nor_logged(self):
+        other = (201, "ASSERT", ["&Abort", "&Retry", "&Ignore", "x"], {"&Abort": 3, "&Retry": 4, "&Ignore": 5})
+        total, lines, click = self.run_pass({7: [], 50: [other]}, [50])
+        self.assertEqual(total, 0)
+        self.assertEqual(lines, [])
+        click.assert_not_called()
+
+    def test_host_pids_lists_csrss_and_an_error_gives_none(self):
+        with mock.patch.object(a, "list_processes", return_value=[{"pid": 50, "name": "csrss.exe"}]) as listing:
+            self.assertEqual(a.host_pids(lambda _: None), {50})
+        listing.assert_called_once_with(["csrss.exe"])
+        lines = []
+        with mock.patch.object(a, "list_processes", side_effect=OSError("denied")):
+            self.assertEqual(a.host_pids(lines.append), set())
+        self.assertIn("denied", lines[0])
+
+
 class GamePidsTests(unittest.TestCase):
     def pids_from(self, previous, listing):
         lines = []
@@ -127,7 +159,21 @@ class GamePidsTests(unittest.TestCase):
     def test_names_only_the_game_processes(self):
         with mock.patch.object(a, "list_processes", return_value=[]) as listing:
             a.game_pids(set(), lambda _: None)
-        listing.assert_called_once_with(["TaleWorlds.MountAndBlade.Launcher.exe", "Bannerlord.exe"])
+        listing.assert_called_once_with(["TaleWorlds.MountAndBlade.Launcher.exe", "Bannerlord.exe", "Watchdog.exe"])
+
+    def test_watches_the_game_watchdog_that_shows_the_crash_question(self):
+        path = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_wEditor\Watchdog\Watchdog.exe"
+        pids, _ = self.pids_from(set(), {"return_value": [{"pid": 9, "name": "Watchdog.exe", "path": path}]})
+        self.assertEqual(pids, {9})
+
+    def test_skips_a_watchdog_of_another_program(self):
+        for path in (r"C:\Program Files\Other\Watchdog.exe", None):
+            pids, lines = self.pids_from(set(), {"return_value": [{"pid": 9, "name": "Watchdog.exe", "path": path}]})
+            self.assertEqual(pids, set(), path)
+            self.assertEqual(lines, [])
+
+    def test_crash_question_chooses_no(self):
+        self.assertEqual(a.choose_button("*_*", {"&Yes": 6, "&No": 7}), 7)
 
     def test_reports_a_found_and_a_lost_process_once(self):
         pids, lines = self.pids_from(set(), {"return_value": [{"pid": 7, "name": "Bannerlord.exe"}]})
