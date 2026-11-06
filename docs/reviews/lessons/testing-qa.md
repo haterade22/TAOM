@@ -1308,3 +1308,22 @@ their order with `Received.InOrder`.
   and ask what an adapter call evaluated just before it can do: throw a sentinel there and assert
   everything that ran first. Prefer this to reflection or to moving an engine read.
 - **Source:** 1.5.x Codex review of plan 014 (gpt-6-astra, ultra), observation 1; `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When the fix lives in a thin adapter, pin the adapter: service tests over a fake roster cannot fail (#1011, 2026-10-26)
+The dead-hero race fix changed only `HeroRosterAdapter` (which heroes it reads); the service diff was a rename. The seven
+new service tests fed a fake roster to an unchanged service, so they passed on the unfixed code, and the only RED was a
+compile error from the rename.
+- **Why missed:** TAOM does not unit-test thin adapters, and a green service test looked like coverage of the fix.
+- **Prevent:** before calling a fix tested, revert the fix's own lines and run the new tests; if they stay green, add a
+  test on the layer that changed (for an adapter, a source pin on the engine member it must read).
+- **Source:** 1.5.x `rca-b09-followups-2026-10-26.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test fixture's content id comes from the shipped config's `id`, never its display name (plan 001, 2026-09-24)
+The plan 001 tests wrote Gondor's resource as `castar`; the id in
+`special_resources_config.xml` is `caster` and "Castar" is only the display name. Storage keys are
+opaque, so no assertion could fail, but the fixture's message tied the pair to the seed gate, which
+keys on `resource.Id`.
+- **Why missed:** docs and the CHANGELOG say "Castar"; the executor typed the name it had read most.
+- **Prevent:** copy a content id into a fixture from the config file (or the `taom-moduledata` MCP),
+  not from prose. Codex's config cross-reference table is the check that caught it.
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F6; Codex P3, on `origin/bannerlord-1.5.x` (ported by WP142).
