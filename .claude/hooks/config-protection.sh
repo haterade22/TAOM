@@ -7,7 +7,7 @@
 INPUT=$(cat)
 
 # Prefilter before any Python starts: the payload must hold a protected name, in any case (NTFS
-# ignores it), or a \u escape, which JSON may use for any letter (maintainer decision D40). An edit
+# ignores it), or a \u escape, which JSON may use for any letter. An edit
 # to any other file allows here, with no _pybin.sh probe and no parse.
 LOWER=${INPUT,,}
 [[ "$LOWER" == *settings* || "$LOWER" == *directory.build.props* || "$LOWER" == *adrs* || "$INPUT" == *'\u'* ]] \

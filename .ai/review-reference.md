@@ -247,7 +247,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 
 ## ADR Rules, IoC Lifetimes, Test Coverage and Feature Layout
 
-The non-negotiable ADR rules, IoC lifetimes, ADR-008 coverage table and feature file layout are in
+The non-negotiable ADR rules, IoC lifetimes, the test coverage rule and feature file layout are in
 [csharp-architecture.md](../.claude/rules/csharp-architecture.md); the decisions are indexed in
 [docs/adrs/README.md](../docs/adrs/README.md).
 
@@ -397,10 +397,16 @@ Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
 
 ## TaleWorlds Research — Lookup Order
 
-Engine concepts come from the [engine process docs](../docs/reference/engine/); signatures come only from the
-installed DLLs (`pwsh tools/taom-src.ps1 path <Type>`, AGENTS.md "Research first"). The decompilation workflow and
-the native tools are in [taleworlds-research-guide.md](../docs/ai-includes/taleworlds-research-guide.md).
-A native claim with no `python tools/native_decompile.py` output behind it is UNVERIFIED.
+`E:\` paths below are the desktop; [development-machines.md](../docs/reference/development-machines.md) maps them for each machine.
+
+**Check the engine study docs first for conceptual "how does X work" questions.** Use the decompile for signature verification.
+
+| Step | Action | When |
+|------|--------|------|
+| 0. **[Engine process docs](../docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does this process work" questions — lifecycle, formation/team AI, mount/rider, campaign-mission seam, campaign heartbeat, agent spawn pipeline, usable machines, GauntletUI, save/object system, GameModel, campaign behaviors, items. Saves raw decompile time. |
+| 1. **Read decompiled source** | Read or search files in `E:\Decompiled_Bannerlord\` | Signature and behavior verification once you know which class/method to check |
+| 2. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+| 3. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C (Ghidra, desktop only) | When the managed trail ends at an `[EngineMethod]` or in natively parsed data. A native claim with no decompile behind it is UNVERIFIED |
 
 > ⚠️ **The decompiled source at `E:\Decompiled_Bannerlord\` is the SHIPPING-CLIENT build — it strips editor-only code.** Editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX-import / animation authoring) exist ONLY in `Win64_Shipping_wEditor` DLLs. "Absent from the dump" ≠ "doesn't exist." If a class is missing, check the editor build at `E:\Decompiled_Bannerlord\_editor_build\` before concluding it's native. See [bannerlord-engine-and-toolchain.md](../docs/reference/bannerlord-engine-and-toolchain.md).
 
@@ -418,4 +424,63 @@ A native claim with no `python tools/native_decompile.py` output behind it is UN
 | Campaign→mission seam / encounter / `MissionState.OpenNew` | [campaign-to-mission-bridge.md](../docs/reference/engine/campaign-to-mission-bridge.md) — the single managed↔native handoff; AI auto-resolve without a Mission |
 | GauntletUI / ViewModel / screen push | [gauntletui-viewmodel-screen.md](../docs/reference/engine/gauntletui-viewmodel-screen.md) — `CreateState<T>()` + `PushState` mandatory; `IGameStateListener`; layer input wiring |
 
-If a type is in neither the installed DLLs nor the dump, mark the API usage as `UNVERIFIED` rather than guessing.
+### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
+
+The entire Bannerlord v1.4.8 codebase is pre-decompiled and organized by category:
+
+| Folder | Contents |
+|--------|----------|
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views, all `Default*Model` classes (1,362 files) |
+| `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
+| `Network/` | Diamond, Network, PlayerServices (147 files) |
+| `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
+| `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
+| `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
+
+### Quick Lookup Examples
+
+```bash
+# Find a class
+find "E:/Decompiled_Bannerlord/" -name "DefaultPartyWageModel.cs"
+
+# Search for a method across all decompiled source
+grep -r "GetCharacterWage" "E:/Decompiled_Bannerlord/Campaign/"
+
+# Browse a namespace
+ls "E:/Decompiled_Bannerlord/Campaign/TaleWorlds.CampaignSystem/TaleWorlds/CampaignSystem/GameComponents/"
+```
+
+### When to Look Up TaleWorlds Source
+
+1. **Harmony patches** — Verify the target method exists with the exact signature (name, params, return type, access modifier)
+2. **GameModel overrides** — Verify the base class method you're overriding exists and has the expected signature
+3. **Adapter interfaces** — Verify the TaleWorlds properties/methods being wrapped actually exist
+4. **Any API call you're uncertain about** — TaleWorlds renames/removes APIs between engine versions
+
+### ILSpy MCP Fallback
+
+If a type is not in the decompiled source, use the `ilspy` MCP tool:
+
+```
+mcp__ilspy__decompile_assembly(
+  assembly_path: "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\SandBox.dll",
+  type_name: "SandBox.GameComponents.DefaultPartyWageModel"
+)
+```
+
+**DLL path:** `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+
+| DLL | Contains |
+|-----|----------|
+| `TaleWorlds.CampaignSystem.dll` | Campaign, Hero, Clan, Kingdom, Settlement, MobileParty |
+| `TaleWorlds.Core.dll` | BasicCharacterObject, ItemObject, Banner, FeatObject, GameModel base classes |
+| `TaleWorlds.MountAndBlade.dll` | Agent, Mission, MissionBehavior, FormationClass |
+| `SandBox.dll` | All `Default*Model` classes, SandboxAgentApplyDamageModel |
+| `SandBox.View.dll` | MobilePartyVisual, MapScreen, view-layer classes |
+| `StoryMode.dll` | StoryMode campaign behaviors |
+
+If neither source is available, mark API usages as `UNVERIFIED` rather than guessing.

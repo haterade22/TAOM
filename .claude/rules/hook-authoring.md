@@ -111,7 +111,7 @@ lesson does not depend on which it was, because a guard with *any* silent-failur
 | Test the broken-input path, not just the happy path | Export a bogus value and run the hook. The 2026-08-10 bug reproduced in one command. |
 
 Still `exit 0`, still never blocks — but loud about not knowing. Applies to `session-start.sh`'s
-checks, `upstream-watch.sh`, `check-polearm-shield-parity.sh` and any future hook whose value is the
+checks, `check-polearm-shield-parity.sh` and any future hook whose value is the
 warning it emits.
 
 ## A timeout must be measured against the SLOW path (EMPIRICAL: TAOM 2026-08-31)
