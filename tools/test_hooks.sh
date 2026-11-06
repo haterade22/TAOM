@@ -566,12 +566,12 @@ else
             [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
         else
             # Each gate's own word (maintainer decision D39): validate-push.sh filters on
-            # `push`, block-no-verify.sh on `no-verify`, the five commit gates on `commit`,
+            # `push`, block-no-verify.sh on `no-ver`, `commit` and `hooksPath`, the commit gates on `commit`,
             # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
             case "$name" in
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
                 validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
-                block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x' 'cd /x\ngit commit -n -m x' 'cd /x\ngit -c core.hooksPath=/y status') ;;
                 # Its trigger is length, not a word: a long command must reach the parser.
                 check-bash-length.sh) triggers=("cd /x\\necho $(printf 'x%.0s' {1..6000})") ;;
                 # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
@@ -1683,6 +1683,23 @@ PY
 [[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
     && ok "check-doc-config-drift: an amend over the scan limit falls back to the raw --amend" \
     || bad "check-doc-config-drift: an over-long amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# A linter that cannot judge allows, and says so where the agent reads it: an allow's stderr reaches no
+# one, and no output would read as "checked, clean".
+cat > "$PRJ_WT/tools/lint_docs.py" <<'CRASHWRAP'
+import os, sys
+sys.exit(int(os.environ.get("TAOM_STUB_LINT_RC", "3")))
+CRASHWRAP
+RCA_CRASH=docs/reviews/rca-crash-2026-11-03.md
+mkdir -p "$PRJ_WT/docs/reviews"; printf 'x\n' > "$PRJ_WT/$RCA_CRASH"
+git -C "$PRJ_WT" add "$RCA_CRASH" 2>/dev/null
+for stub_rc in 3 1; do
+    OUT=$(TAOM_STUB_LINT_RC=$stub_rc drift_run "$PRJ_WT_M" "git commit -m x")
+    [[ "$OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$OUT" && grep -q 'additionalContext' <<< "$OUT" \
+        && ok "check-doc-config-drift allows and says UNCHECKED when the linter exits $stub_rc with no finding" \
+        || bad "check-doc-config-drift on a linter exit $stub_rc with no finding: $(printf '%s' "$OUT" | head -c 200)"
+done
+git -C "$PRJ_WT" reset -q 2>/dev/null
+rm -f "$PRJ_WT/$RCA_CRASH"
 # Clear the index the amend and path-commit cases left before the same-command `git add` cases, which
 # replace the stub linter with the real one.
 # `git add <doc> && git commit` in ONE command: the doc is not staged when the hook runs, so the hook
@@ -1694,8 +1711,8 @@ sys.path.insert(0, os.environ["TAOM_REAL_TOOLS"])
 import lint_docs as ld
 ld.REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 ld.DOC_ROOTS = [ld.REPO_ROOT / "docs"]
-ld.check_claude_md_budget = lambda: []
-ld.check_version_consistency = lambda: []
+ld.check_claude_md_budget = lambda *a, **k: []
+ld.check_version_consistency = lambda *a, **k: []
 sys.exit(ld.main(sys.argv[1:]))
 REALWRAP
 export TAOM_REAL_TOOLS; TAOM_REAL_TOOLS=$(cygpath -m "$REPO/tools" 2>/dev/null || echo "$REPO/tools")
@@ -2284,12 +2301,74 @@ G7E_ROWS=(
   "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit --no-verify -m \"x\""
   "block-no-verify.sh|PowerShell|S|rc=2 allow|GIT commit --no-verify -m x"
   "block-no-verify.sh|PowerShell|S|rc=2 allow|& 'C:\\Program Files\\Git\\cmd\\git.exe' push --no-verify origin feature"
-  # A known gap, pinned (see Out of scope): the raw prefilter never sees the text no-verify here.
-  "block-no-verify.sh|PowerShell|S|rc=0 allow|git commit --no-verif''y -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit --no-verif''y -m x"
   "block-no-verify.sh|PowerShell|S|rc=2 allow|git status; git commit ${BT}${NL}  --no-verify -m x"
   "block-no-verify.sh|PowerShell|S|rc=0 allow|npm publish --no-verify"
   "block-no-verify.sh|Bash|S|rc=2 allow|GIT commit --no-verify -m x"
   "block-no-verify.sh|Bash|S|rc=2 allow|git commit --no-verify -m x"
+  # Every spelling that skips commit-msg: git expands --no-veri, -n is the short form, and a
+  # one-call hooksPath points git away from .githooks.
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit --no-veri -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -nm x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m x -n"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -C /tmp commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|timeout 60 git commit -n -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c core.hooksPath=/dev/null commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c CORE.HOOKSPATH=/dev/null commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|(git commit --no-verify -m x)"
+  "block-no-verify.sh|Bash|S|rc=2 allow|(git commit -n -m x)"
+  "block-no-verify.sh|Bash|S|rc=2 allow|true;git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|cd /x&&git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c \"git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c 'git commit -n -m x'"
+  "block-no-verify.sh|Bash|S|rc=2 allow|exec git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit \"-n\" -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit '-n' -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -\"n\" -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m x \"-n\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -P commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --no-optional-locks commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --namespace=x commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -C \"E:/a b\" commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c \"user.name=a b\" commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c \"core.hooksPath=/dev/null\" commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c 'core.hooksPath=/dev/null' commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --config-env=core.hooksPath=V commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m fix#12 --no-verify"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m fix#12 -n"
+  "block-no-verify.sh|Bash|S|rc=2 allow|exec git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|sudo -u bob git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|eval \"cd /x && git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|pwsh -c \"git status; git commit --no-verify -m y\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --attr-source HEAD commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|( exec git commit -n -m x )"
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c \"exec git commit -n -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|pwsh -ExecutionPolicy Bypass -Command \"git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|cat <<'EOF' # note${NL}it's${NL}EOF${NL}git commit --no-verify -m x"
+  # Look-alikes stay allowed: a dry run, another flag, a message, another command.
+  "block-no-verify.sh|Bash|S|rc=0 allow|git push -n origin feature"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit --no-verbose -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"add the -n flag\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git log -n 5 commit"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit-tree -n x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git config --get core.hooksPath"
+  "block-no-verify.sh|Bash|S|rc=0 allow|grep -n commit file"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"docs; git commit -n is refused\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"block --no-verify in the gate\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<EOF${NL}git commit -n is now refused${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -mn"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -uno -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git log --grep=--no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|grep --no-verify a.txt; git status"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m x # --no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|echo git commit --no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|sudo git commit -m \"the -n flag\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<'EOF' | tail -n 3${NL}fix: it's done${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<'EOF' && git log -n 1${NL}fix: it's done${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"\$(echo \"it's\")\" && git log -n 1"
   # block-dangerous-git.sh confirms (ask) a command that can destroy work
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git reset --hard"
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|& git reset --hard HEAD~1"
@@ -2483,6 +2562,20 @@ for entry in "${G7E_ROWS[@]}"; do
         bad "$hook [$tool] expected '$want', got '$got' for: $shown"
     fi
 done
+
+# A command too long for the reader: _shellwords.py bypass raises, and block-no-verify.sh judges the raw
+# text, which proves the fallback is alive.
+g7e_long() {  # $1 the command's head; the rest is 300,000 letters
+    "$HPY" -c 'import json, sys; sys.stdout.write(json.dumps({"tool_name": "Bash", "tool_input": {"command": sys.argv[1] + "x" * 300000}}))' "$1" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/block-no-verify.sh" >/dev/null 2>&1
+    echo "rc=$?"
+}
+[[ "$(g7e_long 'git commit --no-verify -m ')" == rc=2 ]] \
+    && ok "block-no-verify judges a command too long to read on its raw text, and refuses the flag" \
+    || bad "block-no-verify let a too-long command with the flag through"
+[[ "$(g7e_long 'git commit -m ')" == rc=0 ]] \
+    && ok "block-no-verify allows a too-long command with no flag" \
+    || bad "block-no-verify refused a too-long command with no flag"
 
 # The four gates that judge what is staged only need to know a commit is coming. Each reaches its
 # `cd` to the project only past its two-stage commit test, so a bash -x trace shows the answer.
@@ -3256,13 +3349,19 @@ case "$VM_VERDICT" in
     *)                    bad "a validator crash was $VM_VERDICT, expected allow-with-traceback: $(printf '%s' "$VM_OUT" | head -c 200)" ;;
 esac
 # Control: a genuine findings exit (1) still denies.
-printf 'import sys\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
+printf 'import sys\nprint("BROKEN_ITEM_REF stub")\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
 VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
 if [[ "$(decision_of "$VM_OUT")" == deny ]]; then
     ok "a validator findings exit (1) still denies the commit"
 else
     bad "a validator findings exit (1) no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
 fi
+# An exit 1 with nothing to quote: the validator died while it loaded. Allow, and say so.
+printf 'import sys\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
+    && ok "a validator exit 1 with no findings allows the commit and says UNCHECKED" \
+    || bad "a validator exit 1 with no findings: $(printf '%s' "$VM_OUT" | head -c 200)"
 rm -rf "$VM_REPO"
 
 # ---------------------------------------------------------------------------
@@ -3352,7 +3451,6 @@ if grep -q 'worktree count UNCHECKED this session (git worktree list exited 3)' 
 else
     bad "worktree banner: a failing git worktree list printed no UNCHECKED note"
 fi
-rm -rf "$RC"
 
 # The core.hooksPath banner: a fake git answers `config core.hooksPath` with FAKE_HP. A value that
 # names a folder holding commit-msg (relative to the project root, where the hook has cd'd) is
@@ -3390,6 +3488,7 @@ else
     bad "hooksPath banner: a folder without commit-msg printed no NOTE"
 fi
 rm -rf "$RC/fakebin-hp" "$RC/.githooks"
+rm -rf "$RC"
 
 # ---------------------------------------------------------------------------
 head2 "7n. session-start.sh re-surfaces recent Dead ends after a compaction, and only then (#998)"
