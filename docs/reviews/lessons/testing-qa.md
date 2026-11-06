@@ -1490,3 +1490,26 @@ brush that draws unstyled in game could have passed.
 - **Why missed:** the Lindon survival-bonus test copied `BattleBalanceConfigProvider`'s `JsonConvert.DeserializeObject<T>(json)`. Json.NET's default `ObjectCreationHandling.Auto` reuses a pre-initialised dictionary property and merges the file's keys into it, so with the compiled default also holding `lindon`, the "file has no lindon row" assert could never fire. RED had been checked only when both rows were absent.
 - **Prevent:** when a test pins what a JSON file carries and the target class initialises a collection, deserialize with `ObjectCreationHandling.Replace`, then prove RED by removing the row from the file while the compiled default still has it.
 - **Source:** 1.5.x `docs/reviews/rca-lindon-balance-tables-2026-10-06.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A data gate checks what the engine asks for, read from its caller, and parses the file
+`CustomBattleSceneLiveDataTests` matched the text `<level name="siege"` because that was the line the new Edoras
+scene showed. A commented-out declaration passed it, a single-quoted or reordered one failed it, and the wall level a
+Custom Battle siege loads with `siege` (`level_N siege`, N from 1 to 3) went unchecked.
+- **Why missed:** the gate was written from the example in hand, not from the decompiled method that consumes the
+  file.
+- **Prevent:** before writing a gate over engine data, decompile the consumer and list every value it can ask for;
+  parse the file by element and attribute rather than matching markup text, and test a commented-out and a reordered
+  declaration.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` Codex pass C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate counts what it parsed against what exists (#951, 2026-10-20)
+The banner icon gate matched keys made of digits and dots, so it silently skipped the 18 keys holding a negative rotation, and two of those named icons that do not exist. Its floor (more than 100 keys) still passed.
+- **Why missed:** the pattern was written from the keys the author looked at, and the floor counted parsed keys, not declared ones.
+- **Prevent:** assert that the parsed count equals every declaration of the thing (here every `banner_key`), so a pattern that cannot read an entry fails instead of skipping it.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Build a fake's result from the engine's inputs, never from the caller's identity (#952, 2026-10-20)
+The face roll fake put the hero id into every rolled key, so every result was unique by construction: a constant seed passed all tests, and the data gate could only ever report the twins it allowlists.
+- **Why missed:** the fake was written to make results tell apart, not to behave like the engine, which returns the same face for the same race, sex, face, variation and seed.
+- **Prevent:** derive a fake's output only from the inputs the engine uses, then mutate the code under test (a constant seed here) and confirm a test fails before trusting the suite.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F5, on `origin/bannerlord-1.5.x` (ported by WP142).

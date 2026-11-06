@@ -769,3 +769,9 @@ every eligible lord gets one as the save finishes loading, prisoners included.
 - **Prevent:** before writing when or how often a vanilla behavior does something, read its `RegisterEvents` and list
   every event that reaches the method.
 - **Source:** 1.5.x `docs/reviews/rca-lord-banners-2026-10-19.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A singleton adapter holds no engine objects between calls (#952, 2026-10-20)
+The face adapter cached every `Hero` by id to avoid a linear `Hero.Find`, and as a process singleton it kept the last created campaign's heroes alive after the player loaded another save.
+- **Why missed:** the cache was a performance shortcut and nothing cleared it.
+- **Prevent:** carry the engine object inside the snapshot as an opaque handle (the `MountSnapshot` pattern), so the adapter stays stateless and references live only for one call.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).

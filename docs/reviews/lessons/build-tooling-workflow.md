@@ -3068,3 +3068,81 @@ all 177 deleted rows back, from the cache or as English that the translator then
   and route all of them through one shared function, with a test per writer that runs on a synthetic tree. Prune any
   cache that would let a bypassing writer restore the data for free.
 - **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A validator states an engine verdict only from the engine's own read path
+
+`tools/validate_xml_schemas.py` was written to say how the engine loads a file. Its first NATIVE line said "loaded
+through project.mbproj row X" for any row, but the engine loads a row only when a caller requests its exact id
+(managed `GetMergedXmlForNative`) or when native code reads its `type`; a dead id printed "loaded". Its first
+unloadable-manifest check said "the engine throws at startup" whenever Python failed to parse the file, but the engine
+reads `project.mbproj` and `language_data.xml` as decoded text and ignores the declared encoding, so a file the tool
+called fatal loads in the game. Both repeat the class #980 was opened for: the tool described a load from the data's
+shape or from its own parser instead of from the engine's consumer.
+- **Why missed:** the brief described one loader, and the builder verified the parsing it wrote, not the engine call
+  that decides whether anything is read; "Python cannot parse it" was taken as "the engine cannot".
+- **Prevent:** before a tool prints that the engine loads, ignores or rejects a file, name the engine method that
+  decides it and read it (`pwsh tools/taom-src.ps1 path <Type>`); when the tool's parser is stricter or looser than
+  the engine's, either parse the way the engine does or word the line as the tool's own verdict. Replay one edge case
+  on the engine's real reader when the two might differ.
+- **Source:** 1.5.x `docs/reviews/rca-schema-check-2026-10-23.md` finding 1 and C1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate is tested through the thing that runs it, not only as a function (#984, 2026-10-23)
+
+The RCA FOLLOW-UP check in `lint_docs.py` was built test first and passed every test, but the commit hook that runs
+`--drift-only` only starts the linter when a staged path is on its trigger list, and `docs/reviews/` was not; an RCA-only
+commit (9 of the last 60 RCA commits) never reached the check. The hook also judged the working tree, so another
+session's untracked draft could block a commit, and its deny message extracted named sections only, so the new failure
+came with no detail.
+- **Why missed:** the brief named the linter, not its consumer; `tools/test_hooks.sh` section 5d (the trigger list
+  covers what the gate checks) exists for exactly this, after the #647 review, and was not extended.
+- **Prevent:** a brief for a new gate names every consumer (the hook, the skill step, `/verify`) and asks for one test
+  through each: the hook fires for the gate's own file paths, judges what the commit records, and quotes the failure.
+- **Source:** 1.5.x `docs/reviews/rca-review-followups-2026-10-23.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Give a scratch transform a timeout (2026-10-20)
+A read-only XSLT transform a review agent started hung for more than four hours and held `spclans.xslt` open, which blocked a later data fix with `PermissionError`.
+- **Why missed:** the script had no time limit and nothing reported it as stuck.
+- **Prevent:** run scratch transforms through `timeout` (or `Start-Process` with a wait limit), and when a repo file will not open for writing, look for this session's own stale processes first.
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md`, process note, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before you add a gate, prove no gate already catches the case (#974, 2026-10-23)
+A review said nothing caught a repeated clan, hero or kingdom id, and the claim went into an RCA, a lesson, two docs and an issue, then three new duplicate-id schemas. The next review showed `SCHEMA_INVALID` already blocked it at commit: the engine XSDs declare those ids unique (`xs:unique`), and the hook validates the registered files against them. The schemas only reported each duplicate twice and were removed.
+- **Why missed:** the claim was relayed from a reviewer without a probe; the schema JSON files looked like the only duplicate-id source.
+- **Prevent:** before writing a new check, break a copy of the real file the way the check targets and run the existing gate (`validate_moduledata.py`, which includes the engine XSD layer). Write the gate only if that run passes. Pin an existing protection with a test instead (`EngineIdUniquenessTests`).
+- **Source:** 1.5.x `rca-ui-data-sweep-2026-10-23.md` follow-up batch, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An absence check must run where the thing lives, in the form it is stored (plan 005, 2026-09-24)
+Plan 005's port reported a vendored BUTR credential "already gone from disk" after
+`grep -rln packageSourceCredentials Dependencies/` found nothing. The grep ran in a worktree, where
+the gitignored `Dependencies/.vendor-source/` does not exist, and grep cannot read inside the
+`.tar.gz` archives that folder actually holds; three of them still carry the block. The new
+checklist line shipped with the same blind spot.
+- **Why missed:** a "no match" was read as proof of absence, although the check could not have
+  matched: wrong tree, wrong file form. The sprint record (`plans/README.md`) already named the
+  three tarballs.
+- **Prevent:** before claiming something is absent, prove the check can see it: run it where the data
+  lives (the main checkout or the live install, not a worktree, for anything gitignored) and on the
+  stored form (`tar -xzOf <a> | grep`, `zgrep`, or extract a `.zip`/`.nupkg`). Seed a known hit when
+  you can. Cross-check the claim against the plan's own status row before writing it.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Code carried in a string is only tested by running it (plan 005, 2026-09-24)
+`tools/process_faction_map.py` runs two child programs held in `"""..."""` literals. Plan 005
+verified its injection fix with `python -m py_compile`, which parses the outer file and never the
+children, and called a behaviour test "structurally untestable". A short stdlib test (a synthetic
+PNG under folders named `it's here` and `a'+...+'`) fails on the old tool and passes on the fix.
+- **Why missed:** "it deploys assets" was taken for the whole tool; the helpers write only to paths
+  they are given, so a temp folder isolates them.
+- **Prevent:** when a fix touches code built as a string (`python -c`, `eval`, templated SQL or
+  XSLT), the proof is a test that runs it, including the hostile input the fix targets. Before
+  writing "untestable" in a plan or a `Not-tested:` trailer, name the side effect that prevents a
+  temp-folder test.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write a documented search pattern in `-E` form (plan 005, 2026-09-24)
+The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the Grep tool) reads
+`\|` as a literal pipe, so the same pattern pasted there reports a clean tree.
+- **Why missed:** the command was written for one tool and read as portable.
+- **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
+  and the Grep tool read the same way.
+- **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).

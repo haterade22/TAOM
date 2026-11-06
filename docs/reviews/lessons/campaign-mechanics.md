@@ -656,3 +656,9 @@ of the patched method, TAOM's bound delegate included.
   engine method TAOM calls, not only for the TAOM caller. A delegate bound with `Delegate.CreateDelegate` or a reflective
   call goes through every Harmony patch on that method. Verify a `[Likely]` finding before it becomes an issue.
 - **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` addendum, finding A2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new-game pass over heroes runs after the follow-ups, at adult age (#952, 2026-10-20)
+The face pass first ran on `OnNewGameCreatedEvent` and rolled each hero at the hero's own age. Initial children are cloned after that event (follow-up 0), so they copied the shared faces, and the native roll picks its face table by age, so young heroes had hair and beard reset to `Bald` and `Cleanshaven`.
+- **Why missed:** the design copied vanilla's roll call but not its input (vanilla always rolls an adult range) or its timing.
+- **Prevent:** hook a pass that must see every new-game hero to `OnNewGameCreatedPartialFollowUpEndEvent`, and roll faces at `BodyProperties.DefaultAge` (30).
+- **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
