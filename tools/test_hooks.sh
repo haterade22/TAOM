@@ -1354,6 +1354,17 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
+# A Workflow script is a .js file (.claude/skills/improve/workflows): one left untracked never ships,
+# and the extension filter once named only md, sh, py, json and yaml.
+mkdir -p "$CFT_REPO/.claude/skills/demo/workflows"
+printf 'export const meta = {}\n' > "$CFT_REPO/.claude/skills/demo/workflows/run.js"
+OUT=$(cft_run)
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'run.js (untracked' <<< "$OUT"; then
+    ok "denies an untracked Workflow script (.js) under .claude/skills"
+else
+    bad "check-claude-files-tracked let an untracked .js Workflow script through: $(printf '%s' "$OUT" | head -c 160)"
+fi
+git -C "$CFT_REPO" add .claude/skills/demo/workflows/run.js 2>/dev/null
 # A commit in another worktree is checked in THAT repository (2026-10-16). The registration runs this
 # script from the project root, which stays where the session started after it enters a worktree, so
 # another session's untracked skill in the main checkout denied every worktree commit. The repository
