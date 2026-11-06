@@ -230,6 +230,11 @@
 	     (TrollBruteForceConfig.ActionName). Untyped: its ring is a synthetic RegisterBlow, which never runs the
 	     kick pipeline, so actt_kick would buy nothing. Bound in as_cave_troll_warrior by tools/bind_troll_action_set.py. -->
 	<action name="act_troll_brute_force" />
+	<!-- #1087 dwarf head butt and drop kick, played by TAOM Main/Features/DwarfAttacks from its behaviour tree.
+	     actt_kick, the vanilla kick's type (StandingPoint lets go of a machine on it). Clips from
+	     tools/gen_dwarf_attack_clips.ps1; bound in as_dwarf_warrior by tools/bind_dwarf_attack_actions.py. -->
+	<action name="act_dwarf_head_butt" type="actt_kick" />
+	<action name="act_dwarf_drop_kick" type="actt_kick" />
 	<action name="act_warg_stand_1"/>
 	<action name="act_warg_stand_2"/>
 	<action name="act_warg_idle_1" type="actt_idle" />

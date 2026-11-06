@@ -41,7 +41,7 @@ python tools/audit_armory_refs.py --regen-catalogue  # regen
 About 60 s against the live install (18 s with `--no-generators`). Writes `docs/audits/armory-ref-audit.md` and prints
 `Verdict: CLEAN|BROKEN`. Exit 1 on any `MISSING_BODY`, `MISSING_MESH`, dead `Item.<id>`, or a
 deleted or renamed mesh the live XML still names. Generator drift is a WARNING with its `DRIFT:`
-lines shown. A reinstall or art drop reverts the troll wiring, the orc locomotion rows, the FBX LOD passes and the troll gear lock while the ref checks stay CLEAN, so the audit runs those checks and `validate_moduledata.py --code COLLISION_BODY_BORROWED` itself (`COMPANION_CHECKS` in the tool) and folds them into the verdict and exit 1; a check that prints SKIPPED has not passed.
+lines shown. A reinstall or art drop reverts the troll wiring, the orc locomotion rows, the dwarf attack rows, the FBX LOD passes and the troll gear lock while the ref checks stay CLEAN, so the audit runs those checks and `validate_moduledata.py --code COLLISION_BODY_BORROWED` itself (`COMPANION_CHECKS` in the tool) and folds them into the verdict and exit 1; a check that prints SKIPPED has not passed.
 
 ## Step 2: read the report, in this order
 

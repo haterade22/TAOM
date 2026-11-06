@@ -1,0 +1,46 @@
+# In-game checks for #1087, read by tools/ingame_verdict.py. The [Check] lines come from
+# Main/Features/DwarfAttacks/DwarfAttackChecks.cs, called by BehaviorTreeElements/DwarfAttackTask.cs: a pass on the
+# first landed hit of each attack in the process (with the victim's distance, the clip progress and how far the dwarf
+# travelled, to tune the reach), a fail on the first attack whose clip never played (a lost Armory binding or clip
+# package: a clip replaced before it showed, while the clip exists, counts as cut short). A hit at 0 % damage writes
+# no line. Every later hit only counts: the [Session] summary reports counter ids taom.dwarf-attacks.head-butt-hits
+# and taom.dwarf-attacks.drop-kick-hits (pass = landed, fail = no victim in reach) and the -cut-short counters
+# (pass = a hit reaction replaced the clip, fail = the clip never played).
+issue = 1087
+title = "Dwarves head-butt and drop-kick enemies in battle"
+fixed_in = "ab7e51acb"   # trunk before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.dwarf-attacks.head-butt"
+needs = "a Custom Battle or field battle with AI dwarf infantry on foot in melee with any enemy on foot"
+reached = ['\[Check\] id=taom\.dwarf-attacks\.head-butt result=(pass|fail)']
+pass = ['\[Check\] id=taom\.dwarf-attacks\.head-butt result=pass dwarf=.+ victim=.+ distance=[0-9.]+ progress=[0-9.]+ travelled=[0-9.]+ damage=[1-9][0-9]* knockdown=0$']
+fail = [
+  '\[Check\] id=taom\.dwarf-attacks\.head-butt result=fail',
+  '\[DwarfAttacks\] act_dwarf_head_butt (?:resolved to act_none|has no clip)',
+  '\[DwarfAttacks\] Action set as_dwarf_warrior not found',
+  '\[DwarfAttacks\] (?:OnMissionTick|OnAgentBuild) error',
+]
+absence = "not-reached"
+
+[[check]]
+id = "taom.dwarf-attacks.drop-kick"
+needs = "the same battle; the drop kick starts on an enemy 1.8 to 2.6 m in front, so open ground helps"
+reached = ['\[Check\] id=taom\.dwarf-attacks\.drop-kick result=(pass|fail)']
+pass = ['\[Check\] id=taom\.dwarf-attacks\.drop-kick result=pass dwarf=.+ victim=.+ distance=[0-9.]+ progress=[0-9.]+ travelled=[0-9.]+ damage=[1-9][0-9]* knockdown=[01]$']
+fail = [
+  '\[Check\] id=taom\.dwarf-attacks\.drop-kick result=fail',
+  '\[DwarfAttacks\] act_dwarf_drop_kick (?:resolved to act_none|has no clip)',
+  '\[DwarfAttacks\] Action set as_dwarf_warrior not found',
+  '\[DwarfAttacks\] (?:OnMissionTick|OnAgentBuild) error',
+]
+# travelled near 0 on the pass line means the clip's DisplacementUsage did not move the agent: the kick then lands
+# only on enemies inside DropKickReach of where the dwarf stood. Judge it by the line; the verdict cannot.
+absence = "not-reached"
+
+[[human]]
+claim = "the head butt plays with the feet planted and no glide; the drop kick runs two steps, leaves the ground, lands and gets up without the feet sliding; the victim staggers (butt) or falls (kick)"
+
+[[human]]
+claim = "female dwarves fight and animate as before, and no dwarf freezes or slides after an attack"

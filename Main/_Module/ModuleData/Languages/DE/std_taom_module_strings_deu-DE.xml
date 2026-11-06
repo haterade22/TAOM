@@ -7812,6 +7812,10 @@
     <string id="TAOM_LD_Notice_TowersFull" text="The high towers are fully manned." />
     <string id="TAOM_LD_Fort_TowersVolleyDetail" text="Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them." />
     <string id="taom_lm_lothlorien" text="Lórien Mallorn-silver" />
+    <string id="taom_dwarf_attacks_mcm_enabled" text="Enable Dwarf Attacks" />
+    <string id="taom_dwarf_attacks_mcm_enabled_hint" text="AI dwarves on foot head-butt an enemy right in front of them and drop-kick one a few steps away, each on its own cooldown. The head butt staggers; the drop kick knocks the enemy down unless a shield blocks it. Your own character never does either. Off, no new attack starts. Default: on." />
+    <string id="taom_dwarf_attacks_mcm_damage" text="Dwarf Attack Damage (%)" />
+    <string id="taom_dwarf_attacks_mcm_damage_hint" text="The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100." />
   </strings>
 
 </base>

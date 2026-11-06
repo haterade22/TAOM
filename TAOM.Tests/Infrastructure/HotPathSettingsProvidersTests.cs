@@ -19,6 +19,7 @@ using TAOM.Features.CreatureBandits;
 using TAOM.Features.CultureDoctrine;
 using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Domain;
+using TAOM.Features.DwarfAttacks;
 using TAOM.Features.Elephant;
 using TAOM.Features.FellFoes;
 using TAOM.Features.LostFooting;
@@ -75,6 +76,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
     [DataRow(typeof(SignatureStrikesSettingsProvider))]
     [DataRow(typeof(GaitVarietySettingsProvider))]
@@ -131,6 +133,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(ICultureDoctrineSettingsProvider), typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(ISiegePropDiagnosticsSettingsProvider), typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider), typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(DwarfAttacksSettingsProvider), typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(IRefugeSettingsProvider), typeof(RefugeSettingsProvider))]
     [DataRow(typeof(ISignatureStrikesSettingsProvider), typeof(SignatureStrikesSettingsProvider))]
     [DataRow(typeof(IGaitVarietySettingsProvider), typeof(GaitVarietySettingsProvider))]
@@ -195,6 +198,9 @@ public class HotPathSettingsProvidersTests
             nameof(ISiegePropDiagnosticsSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSiegePropDiagnostics), () => new TaomSettings()),
         [typeof(RaceAbilitySettingsProvider)] = (() => new RaceAbilitySettingsProvider(),
             nameof(RaceAbilitySettingsProvider.Enabled), nameof(TaomSettings.EnableRaceAbilities), () => new TaomSettings()),
+        // #1087: read on every dwarf's tree decision and every impact.
+        [typeof(DwarfAttacksSettingsProvider)] = (() => new DwarfAttacksSettingsProvider(),
+            nameof(DwarfAttacksSettingsProvider.Enabled), nameof(TaomSettings.DwarfAttacksEnabled), () => new TaomSettings()),
         // #745: read per hit on a refuge's defenders, real-time and auto-resolve.
         [typeof(RefugeSettingsProvider)] = (() => new RefugeSettingsProvider(),
             nameof(IRefugeSettingsProvider.Enabled), nameof(TaomSettings.EnableRefuges), () => new TaomSettings()),
@@ -247,6 +253,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
     [DataRow(typeof(SignatureStrikesSettingsProvider))]
     [DataRow(typeof(GaitVarietySettingsProvider))]

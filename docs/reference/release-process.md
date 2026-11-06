@@ -192,6 +192,13 @@ Since #1081 (2026-11-04) the six wolf riders in `troops_goblin.xml` and `troops_
 the `dire_wolf_saddle` from `LOTRAOM_horses.xml`, so the next Armory package must also carry those items, the Monster
 `lotr_monster_dire_wolf.xml`, the `as_dire_wolf*` sets and `Assets/creature/direwolf/`
 ([ledger](lotrlome-dire-wolf-changes.md)). Without them those troops spawn on foot.
+Since #1087 (2026-11-06) the TAOM build plays two dwarf attacks from the Armory: the declarations of
+`act_dwarf_head_butt` and `act_dwarf_drop_kick` in `action_types.xml`, their two rows in `as_dwarf_warrior`
+(`action_sets.xml`) and the four packages in `Assets/Race Test/dwarf/animations/` with their `RuntimeDataCache` entries
+([ledger](lotrlome-dwarf-attack-changes.md)). Without them both actions resolve to `act_none`, each battle logs two
+errors and no dwarf ever uses either attack. Check each channel:
+`python tools/bind_dwarf_attack_actions.py --check --armory E:/LOTRAOM_Releases/<channel>/Modules/LOTRLOME_Armory/ModuleData`
+must exit 0.
 
 **TAOM and TAOM_Map ship as a pair.** They are separate packages that name each other's rows: the map's settlements name TAOM's cultures and clans, and TAOM's clans and kingdoms name the map's settlements. A map ahead of its TAOM points settlements at undefined cultures and clans. A TAOM ahead of its map names home settlements the map lacks and can leave a culture owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Every realm since Arthedain carries this coupling, among them the Dale lord expansion, Ered Luin, Anduin Vale, Angáladh and the Feral Orcs. Check each channel before publishing: `python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules`. Pass means exit 0 and a `PASS:` line. Exit 1 lists each disagreement with its code, file and line. Exit 2 means a file the check needs is missing or does not parse, and exit 3 means the tool crashed: neither judged anything. It compares the pair with each other: a pair that agrees can still lag the current build. It counts no rows, so a map holding part of a realm passes when every reference resolves, and it does not read the bare ids in TAOM's JSON files (`war_chronicle.json`, `army_targeting.json`, `named_companion_config.json`). Vanilla's cultures and clans come from the install, because a channel holds no SandBox.
 

@@ -1473,3 +1473,20 @@ set and the new set's `base_set`, so the only effect was the missing-set log lin
   (the spawn point's `InitialAction`, the clip in use) and what the engine falls back to; state the log line as the
   check when nothing visible changes.
 - **Source:** `docs/reviews/rca-coronation-fixes-2026-10-20.md` C2.
+
+### Compare two bone rotations by the quaternion dot, not `rotation_difference` (#1087, 2026-11-06)
+Checking the exported dwarf attack clips against the authored keys, `Quaternion.rotation_difference(...).angle` read about 360 deg on
+bones that matched, because q and -q are the same rotation and the import flipped the sign of some keys. The angle
+`2 * acos(|q1 . q2|)` read at most 0.056 deg on every bone and frame.
+- **Why missed:** a large angle looked like a real mismatch, not a sign.
+- **Prevent:** compare rotations with `2 * acos(min(1, |dot|))`; never read a raw quaternion difference as an error.
+- **Source:** #1087 Steps 2 and 3, the re-import checks of `tools/blender/author_dwarf_attack_clips.py` output.
+
+### A recursive dump of a TpacTool object graph overflows the stack (#1087, 2026-11-06)
+A PowerShell dump that walked every property of a loaded `AnimationClip` down to depth 7, then piped it to
+`ConvertTo-Json`, ended the process with a StackOverflow: the package, its items and their back references form
+a cycle. An older scratch inspector failed the same way.
+- **Why missed:** a depth limit looks like a bound, but on a cyclic graph every level fans out again.
+- **Prevent:** read the fields you need into a flat hashtable (the clip's `Metadata` properties, the usages) and
+  serialize that; load through `TolerantTpacLoader` as `tools/gen_dwarf_attack_clips.ps1` does.
+- **Source:** #1087 Step 3, the clip generator's field dump.

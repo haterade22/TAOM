@@ -163,7 +163,7 @@ class CompanionChecks(unittest.TestCase):
     def test_the_named_companions_include_every_hand_run_check(self):
         scripts = {argv[0]: argv for argv in aa.COMPANION_CHECKS}
         for name in ("wire_hill_troll_race.py", "register_armory_names.py", "bind_orc_goblin_locomotion.py",
-                     "audit_fbx_lods.py", "validate_moduledata.py"):
+                     "bind_dwarf_attack_actions.py", "audit_fbx_lods.py", "validate_moduledata.py"):
             self.assertIn(name, scripts)
         tail = scripts["validate_moduledata.py"]
         self.assertIn("COLLISION_BODY_BORROWED", tail)

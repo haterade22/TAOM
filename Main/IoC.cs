@@ -133,6 +133,7 @@ public static class IoC
         Features.Elk.ElkIoC.RegisterElkFeature(container);
         Features.Animalia.AnimaliaIoC.RegisterAnimaliaFeature(container);
         Features.TrollBruteForce.TrollBruteForceIoC.RegisterTrollBruteForceFeature(container);
+        Features.DwarfAttacks.DwarfAttacksIoC.RegisterDwarfAttacksFeature(container);
         Features.MonsterSize.MonsterSizeIoC.RegisterMonsterSizeFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);

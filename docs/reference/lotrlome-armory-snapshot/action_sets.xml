@@ -14887,6 +14887,9 @@
 		<action
 			type="act_ghurab_captain_idle"
 			animation="ghurab_captain_idle" />
+		<!-- #1087 dwarf attacks (TAOM Main/Features/DwarfAttacks); written by tools/bind_dwarf_attack_actions.py -->
+		<action type="act_dwarf_head_butt" animation="dwarf_head_butt" />
+		<action type="act_dwarf_drop_kick" animation="dwarf_drop_kick" />
 	</action_set>
 	<action_set
 		id="as_dwarf_female_warrior"

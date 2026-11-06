@@ -4918,3 +4918,11 @@ The deep review of 2026-11-05 covered the first round. The next day added a vill
 - **Why missed:** the work felt like a follow-up to a reviewed change, and the commit body did not say what was reviewed and what was not.
 - **Prevent:** run `/deep-review` on the new files, or write the waiver and its reason in the commit body. Never leave the gap unnamed.
 - **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R9.
+
+### A live-install writer refuses while the game or Kit runs, and its check mode parses (dwarf attacks, 2026-11-06)
+
+Two new writers for the live Armory, `bind_dwarf_attack_actions.py` and `gen_dwarf_attack_clips.ps1`, shipped without the game and Kit guard their siblings carry, and the binder parsed its output only on the write path. A commented-out row, a duplicate declaration with reordered attributes or a merge-conflicted snapshot passed `--check`, and the conflicted snapshot made `--apply` write three of four files before it threw. The tests passed every mutant that deleted a guard.
+
+- **Why missed:** each tool was written from the shape of the closest sibling, and the sibling chosen (`gen_troll_anim_clips.ps1`) has no guard either.
+- **Prevent:** a new writer to the live install copies `_gamedir.game_or_kit_running` (Python) or `Assert-GameAndKitClosed` (PowerShell) and exits 2; its planning loop parses every output in every mode before any write; run the reviewer's mutant script, not only the tests, before calling the tests done.
+- **Source:** [rca-dwarf-attacks-2026-11-06.md](../rca-dwarf-attacks-2026-11-06.md), F11 to F13.

@@ -17,6 +17,7 @@ using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.DreadAura.Hooks;
+using TAOM.Features.DwarfAttacks;
 using TAOM.Features.Elephant;
 using TAOM.Features.Elk;
 using TAOM.Features.Enlistment.Hooks;
@@ -79,6 +80,7 @@ public static class CoopMissionRoles
         [nameof(ElkMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(AnimaliaMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(TrollBruteForceMissionBehavior)] = CoopMissionRole.AgentOwner,
+        [nameof(DwarfAttacksMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(MixedFormationsMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(SmartCavalryAIMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(BannerBearerAssignmentMissionLogic)] = CoopMissionRole.AgentOwner,

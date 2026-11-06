@@ -1815,3 +1815,19 @@ The fast-forward flag is not the mission's clock. The engine takes a fixed step 
 - **Why missed:** the launcher's list looked like the whole mission.
 - **Prevent:** before calling any engine component absent from a mission, read the `OpenNew` call's last arguments and `AddDefaultMissionBehaviorsTo`.
 - **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).
+
+### A new per-agent tree for soldiers who already carry one takes its slot (dwarf attacks, 2026-11-06)
+
+`BehaviorTreeMissionLogic.trees` holds one tree per agent, and `AddBehaviorTree` overwrites it. Every soldier whose race or culture has an ability profile carries the race-ability tree, and `RaceAbilityRuntime.CarriesTree` skips an agent that already has a `BehaviorTreeAgentComponent`. The dwarf attack tree copied the troll's component pattern, attached first on every late spawn, and every dwarf soldier lost Stand Fast with no log line. The only record of the rule was a comment in `RaceAbilityRuntime.cs`.
+
+- **Why missed:** the troll and war ram precedents target creatures that have no ability profile, so the pattern had never met a second tree.
+- **Prevent:** before a new per-agent tree, list every feature that attaches one to the same agents (`grep -rn "new BehaviorTreeAgentComponent\|CreatureTreeTracker" Main`). For a race or culture soldier, run the tree from the feature's own mission tick, as `DwarfTreeHost` does. Rule line: `csharp-architecture.md` item 3.
+- **Source:** [rca-dwarf-attacks-2026-11-06.md](../rca-dwarf-attacks-2026-11-06.md), F1.
+
+### `IsAIControlled` reads the controller, not who the agent is (dwarf attacks, 2026-11-06)
+
+`Agent.IsAIControlled` is `Controller == AI` (Agent.cs:646). The Battle Command seat, Fords of War and the Long Defeat hand the player's hero to the AI, so a tree gated only by `IsAiAgentDecorator` made the player's own dwarf head-butt, against the MCM hint.
+
+- **Why missed:** the decorator's name reads as "not the player".
+- **Prevent:** to exclude the player's own character, test `IsMainAgent || IsPlayerTroop` (`IsPlayerTroop` compares `Origin.Troop` with `Game.Current.PlayerTroop`, so it survives `MainAgent = null`).
+- **Source:** [rca-dwarf-attacks-2026-11-06.md](../rca-dwarf-attacks-2026-11-06.md), F2.

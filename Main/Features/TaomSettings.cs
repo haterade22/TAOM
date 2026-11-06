@@ -3011,4 +3011,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_marshal_mcm_throwers_first}Throwers Throw First", Order = 6, RequireRestart = false,
         HintText = "{=taom_marshal_mcm_throwers_first_hint}On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on.")]
     public bool MarshalThrowersFirst { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultThrowersFirst;
+
+    // --- Battle Tactics / Dwarf Attacks (#1087) ---
+
+    [SettingPropertyGroup("Battle Tactics/Dwarf Attacks", GroupOrder = 84)]
+    [SettingPropertyBool("{=taom_dwarf_attacks_mcm_enabled}Enable Dwarf Attacks", Order = 0, RequireRestart = false,
+        HintText = "{=taom_dwarf_attacks_mcm_enabled_hint}AI dwarves on foot head-butt an enemy right in front of them and drop-kick one a few steps away, each on its own cooldown. The head butt staggers; the drop kick knocks the enemy down unless a shield blocks it. Your own character never does either. Off, no new attack starts. Default: on.")]
+    public bool DwarfAttacksEnabled { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Dwarf Attacks")]
+    [SettingPropertyInteger("{=taom_dwarf_attacks_mcm_damage}Dwarf Attack Damage (%)", 0, TAOM.Features.DwarfAttacks.DwarfAttacksConfig.MaxDamagePercent, Order = 1, RequireRestart = false,
+        HintText = "{=taom_dwarf_attacks_mcm_damage_hint}The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100.")]
+    public int DwarfAttacksDamagePercent { get; set; } = TAOM.Features.DwarfAttacks.DwarfAttacksConfig.DefaultDamagePercent;
 }

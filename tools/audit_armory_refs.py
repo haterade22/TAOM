@@ -47,6 +47,7 @@ WHAT IT CHECKS (each section reuses the engine that owns it; nothing is re-deriv
                           `wire_hill_troll_race.py --check` (the troll swing CTD),
                           `register_armory_names.py --check`,
                           `bind_orc_goblin_locomotion.py --check`,
+                          `bind_dwarf_attack_actions.py --check` (#1087),
                           `audit_fbx_lods.py --check` (LOD0 to LOD5 with no gaps), and
                           `validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE
                           --code COLLISION_BODY_BORROWED`. Unlike the generators, a
@@ -99,6 +100,7 @@ COMPANION_CHECKS = [
     ["wire_hill_troll_race.py", "--check"],
     ["register_armory_names.py", "--check"],
     ["bind_orc_goblin_locomotion.py", "--check"],
+    ["bind_dwarf_attack_actions.py", "--check"],
     ["audit_fbx_lods.py", "--check"],
     ["validate_moduledata.py", "--code", "CREATURE_GEAR_OBTAINABLE", "--code", "COLLISION_BODY_BORROWED"],
 ]

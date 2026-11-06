@@ -25,6 +25,7 @@ public class CreatureTreeClockTests
         "TAOM.Features.CreatureBandits.BehaviorTreeElements.",
         // The tree classes outside their elements namespace; no trailing dot, so nested closures match too.
         "TAOM.Features.CreatureBandits.CreatureBanditBehaviorTree",
+        "TAOM.Features.DwarfAttacks.",
         "TAOM.Features.Elephant.",
         "TAOM.Features.ElephantLike.",
         "TAOM.Features.Elk.",

@@ -102,7 +102,7 @@ public class CoopMissionRolePolicyTests
         var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         var added = Regex.Matches(subModule, @"AddTaomBehavior\(\s*new\s+([\w.]+)\(")
             .Cast<Match>().Select(m => m.Groups[1].Value.Split('.').Last()).ToList();
-        Assert.AreEqual(29, added.Count, "AddTaomBehavior(new ...) call sites in SubModule.cs changed; recount and update the table");
+        Assert.AreEqual(30, added.Count, "AddTaomBehavior(new ...) call sites in SubModule.cs changed; recount and update the table");
 
         var declared = FeatureModules.All.SelectMany(m => m.MissionBehaviors).Select(d => d.BehaviorType.Name).ToList();
         Assert.AreEqual(13, declared.Count, "module mission behavior declarations changed; update the table");
