@@ -1136,6 +1136,7 @@ terrain reads 0 as well, and face id 0 is walkable.
 
 ## Changelog
 
+- 2026-11-06: the trample and tusk (shared `ElephantLikeAttackTasks`, also the war ram, mûmakil, elk and moose): a raised shield now cuts the blow to a quarter and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-29: KEYforce's art. The body is `sk_elephant_basemesh_a`; the harnesses are his six (three plain armours,
   three howdahs on one deck placement), `sk_elephant_armor_a` kept as the medium plain armour. All three howdahs get
   the platform and crew (`ElephantConfig.HowdahHarnessStringIds`, one `HowdahHarness.GetsPlatform` rule); the plain

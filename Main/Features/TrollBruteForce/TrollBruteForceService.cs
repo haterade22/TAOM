@@ -20,6 +20,9 @@ public sealed class TrollBruteForceService : ITrollBruteForceService
         return now - last >= CooldownSeconds;
     }
 
+    public bool IsReady(bool actionResolved, float? lastFired, float now) =>
+        actionResolved && IsOffCooldown(lastFired, now);
+
     public bool ShouldEngage(float enemyDistance, float facingDot, float bodyScale, bool busy)
     {
         if (busy) return false;

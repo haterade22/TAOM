@@ -523,6 +523,7 @@ the output folder in variables whose names differ by more than case (`$M` and `$
 
 ## Changelog
 
+- 2026-11-06: the antler attack (shared `ElephantLikeAttackTasks`): a raised shield now cuts the blow to a quarter and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-23: packs exported; four elk and two moose variants reskinned onto `horse_skeleton` with the
   pack's weights; 64 + 33 clips retargeted and checked; 1K textures; staged in the Armory's sources. Tools
   added: `reskin_animalia_to_horse.py`, `retarget_animalia_to_horse.py`, `animalia_to_horse_map.json`;

@@ -43,6 +43,26 @@ public class TrollBruteForceServiceTests
         Assert.IsTrue(_service.IsOffCooldown(null, 100f));
     }
 
+    // A smash whose action resolved to act_none (the Armory lost act_troll_brute_force) never starts (#1088): act_none
+    // plays no smash, and the busy test would read an idle troll's empty channel as smashing.
+    [TestMethod]
+    public void IsReady_ActionNotResolved_IsFalse()
+    {
+        Assert.IsFalse(_service.IsReady(actionResolved: false, lastFired: null, now: 100f));
+    }
+
+    [TestMethod]
+    public void IsReady_ResolvedAndOffCooldown_IsTrue()
+    {
+        Assert.IsTrue(_service.IsReady(actionResolved: true, lastFired: null, now: 100f));
+    }
+
+    [TestMethod]
+    public void IsReady_ResolvedButOnCooldown_IsFalse()
+    {
+        Assert.IsFalse(_service.IsReady(actionResolved: true, lastFired: 100f, now: 100.5f));
+    }
+
     [TestMethod]
     public void IsOffCooldown_ExactlyTheCooldownLater_IsTrue()
     {

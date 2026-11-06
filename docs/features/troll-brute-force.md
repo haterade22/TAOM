@@ -116,7 +116,7 @@ The action and its bindings live in the UNVERSIONED `LOTRLOME_Armory`: `act_trol
 `action_types.xml`, bound in `as_cave_troll_warrior` by `tools/bind_troll_action_set.py` and in
 `as_hill_troll_warrior` by `tools/bind_hill_troll_action_set.py` (`EXTRA_BINDINGS`, `anim_hill_troll_attack1`).
 On each mission's first tick the mission behavior logs an error when the action resolves to `act_none`, when a
-troll's set is missing, or when a set has no clip for the action (a reinstall drops all three).
+troll's set is missing, or when a set has no clip for the action (a reinstall drops all three). With the action at `act_none` the ready decorator refuses every smash.
 `python tools/wire_hill_troll_race.py --check` is the out-of-game gate for the hill troll's set.
 
 ## Key Files
@@ -195,6 +195,7 @@ swing CTD").
 
 ## Changelog
 
+- 2026-11-06: a smash whose action resolved to `act_none` never starts (`ITrollBruteForceService.IsReady`); before, the troll played `act_none`, which clears its channel, and the busy test read the empty channel as a smash. In the ring, a raised shield now halves the blow and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-26: each smash hits at most a drawn cap of 1 to 5 enemies, the nearest to the impact first
   (`RingMinTargets`, `RingMaxTargets`, `NearestRingVictims`; Mike: one swing was clearing a whole infantry block),
   and the ring line reports hits over the cap and how many it spared.

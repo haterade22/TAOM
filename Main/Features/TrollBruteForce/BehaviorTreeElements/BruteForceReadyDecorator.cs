@@ -31,7 +31,8 @@ public class BruteForceReadyDecorator : BTReturnFalseDecorator, IBTBannerlordBas
             return false;
 
         _service ??= IoC.Resolve<ITrollBruteForceService>();
-        if (!_service.IsOffCooldown(LastFired.GetValue(), mission.CurrentTime)) return false;
+        if (!_service.IsReady(TrollBruteForceCombat.Action != ActionIndexCache.act_none, LastFired.GetValue(), mission.CurrentTime))
+            return false;
 
         bool busy = troll.GetCurrentAction(0) == TrollBruteForceCombat.Action
             || troll.IsInBeingStruckAction

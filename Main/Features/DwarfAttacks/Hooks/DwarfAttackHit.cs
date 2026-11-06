@@ -58,18 +58,7 @@ internal static class DwarfAttackHit
         if (victim == null) return new DwarfAttackHitResult(null, 0f, 0, false);
 
         // A raised shield covers only its bearer's front: one held toward another enemy does not stop a blow from behind.
-        bool shieldRaised = victim.GetCurrentActionType(1) == Agent.ActionCodeType.DefendShield;
-        float victimFacing = -1f;
-        if (shieldRaised)
-        {
-            Vec2 look = victim.LookDirection.AsVec2;
-            float lookLength = look.Length;
-            Vec2 toDwarf = position - victim.Position.AsVec2;
-            float toDwarfLength = toDwarf.Length;
-            if (lookLength > 1e-4f && toDwarfLength > 1e-4f)
-                victimFacing = (look.x * toDwarf.x + look.y * toDwarf.y) / (lookLength * toDwarfLength);
-        }
-        bool shieldBlocked = service.ShieldBlocks(shieldRaised, victimFacing);
+        bool shieldBlocked = CustomAttacksUtils.ShieldBlocks(victim, position3);
         if (service.DecideBlow(attack, shieldBlocked, damagePercent) is not DwarfAttackBlow blow)
             return new DwarfAttackHitResult(victim.Name, victimDistance, 0, false);
 

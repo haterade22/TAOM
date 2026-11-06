@@ -1375,3 +1375,11 @@ shrink, so a row showed one hero and bought another.
 - **Why missed:** moving a guard behind a call looks like moving text, but the order of reads changes. A sealed-type model has no unit seam to show it.
 - **Prevent:** when guards protect later reads of a sealed type, keep them in a call of their own (`CanConceive`) before the reads. Compare old and new for each input, the negative and null ones included, before you write "behaviour-preserving".
 - **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) finding 7.
+
+### A rule moved to a shared place keeps each consumer's numbers out of its comment (shield cover, 2026-11-06)
+
+The shield facing rule moved from the dwarf attacks into `TAOM.Core.Combat.ShieldCover` for five features. Its comment, its test header and three changelog lines said every caller "halves" a blocked blow, the dwarf's value; the elephant-like attacks and the signature rings keep a quarter. The same review found a comment that stated native `act_none` behaviour nobody had traced.
+
+- **Why missed:** the sentence was written from the case in hand and copied with the code.
+- **Prevent:** before writing a shared rule's comment, list each consumer's value (grep its config) and say what differs, or say nothing about it; state engine behaviour only as far as it was traced.
+- **Source:** [rca-shield-cover-2026-11-06.md](../rca-shield-cover-2026-11-06.md), S1 and S5.

@@ -73,10 +73,10 @@ test explicit; the rest are fixed in this feature.
 
 ## Deferred
 
-- FOLLOW-UP (no issue: pre-existing code outside this change; Mike to decide whether to file): the troll Brute Force
+- FIXED 2026-11-06 (#1088): the troll Brute Force
   guard has the F5 gap (`TrollBruteForceMissionBehavior.cs` logs "Trolls will not smash." and `BruteForceTask` still
   plays `act_none`).
-- FOLLOW-UP (no issue: pre-existing code outside this change; Mike to decide whether to file): the war ram, the troll
+- FIXED 2026-11-06 (#1089; one rule, `ShieldCover`): the war ram, the troll
   ring and the signature strikes read a raised shield whichever way it faces (F4's test in
   `ElephantLikeAttackTasks.cs`, `BruteForceRing.cs`, `SignatureStrikeRunner.cs`).
 - Known limitation: no line-of-sight test, so an enemy at the same height behind a thin wall within 1.6 m can be hit,

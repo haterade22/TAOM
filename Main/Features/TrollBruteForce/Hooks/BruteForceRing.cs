@@ -59,7 +59,7 @@ internal static class BruteForceRing
             }
 
             float distance = (victim.Position.AsVec2 - centre).Length;
-            bool shieldBlocked = victim.GetCurrentActionType(1) == Agent.ActionCodeType.DefendShield;
+            bool shieldBlocked = CustomAttacksUtils.ShieldBlocks(victim, position);    // only toward the troll
             BruteForceBlow? blow = service.DecideRingBlow(distance, scale, shieldBlocked);
             if (blow is not BruteForceBlow b || b.Damage <= 0)
             {
