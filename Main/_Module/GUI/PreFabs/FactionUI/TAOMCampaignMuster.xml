@@ -1,0 +1,17 @@
+<Prefab>
+  <Window>
+    <CampaignMusterWidget Id="MapGatherArmyButton" NativeVisible="@IsGatherArmyVisible" CanGatherArmy="@CanGatherArmy" StatsPanelWidget="..\InfoBarWidget\StatsPanel" MusterButton="MusterButton" BannerWidget="MusterButton\FactionBanner" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="58" SuggestedHeight="72" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="4" MarginBottom="4" PositionXOffset="-10" PositionYOffset="-78" DoNotAcceptEvents="true">
+      <Children>
+        <NavigationScopeTargeter ScopeID="MapBarArmyButtonScope" ScopeParent="..\MusterButton" ScopeMovements="Horizontal" LeftNavigationScope="MapBarRightPanelTopInfoBarScope" DownNavigationScope="MapBarExtendButtonScope" ExtendDiscoveryAreaLeft="410" IsScopeEnabled="@IsGatherArmyVisible" />
+        <ButtonWidget Id="MusterButton" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Muster.HitArea" Command.Click="ExecuteArmyManagement" IsEnabled="@CanGatherArmy" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="1">
+          <Children>
+            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Muster.Frame" DoNotAcceptEvents="true" />
+            <BrushWidget SuggestedWidth="30" SuggestedHeight="39" PositionXOffset="13.5" PositionYOffset="21.5" Brush="TAOM.Muster.Hem" DoNotAcceptEvents="true" />
+            <CampaignMusterBannerWidget Id="FactionBanner" SuggestedWidth="29" SuggestedHeight="38" PositionXOffset="14" PositionYOffset="22" Brush="TAOM.Muster.Cloth" OverlayTextureScale="0.6" DoNotAcceptEvents="true" />
+            <HintWidget DataSource="{GatherArmyHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </CampaignMusterWidget>
+  </Window>
+</Prefab>

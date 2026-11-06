@@ -1,0 +1,82 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+        <ImageWidget Id="EscapeDimmer" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Escape.Dimmer" DoNotAcceptEvents="true" />
+
+        <NavigationScopeTargeter ScopeID="EscapeMenuItemsScope" ScopeParent="..\EscapeMenu" ScopeMovements="Vertical" HasCircularMovement="true" IsDefaultNavigationScope="true" />
+
+        <Widget Id="EscapeMenu" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="920" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Children>
+            <ImageWidget Id="EscapeBackplate" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Escape.Panel" DoNotAcceptEvents="true" />
+
+            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="42" HorizontalAlignment="Center" MarginTop="102" Brush="TAOM.Escape.Title" Text="PAUSED" />
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="13" HorizontalAlignment="Center" MarginTop="152" Brush="TAOM.Escape.Divider" DoNotAcceptEvents="true" />
+
+            <Widget Id="MenuArea" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="450" HorizontalAlignment="Center" MarginTop="195">
+              <Children>
+                <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\ButtonsContainer" VerticalScrollbar="..\VerticalScrollbar">
+                  <Children>
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+                        <NavigatableListPanel Id="ButtonsContainer" DataSource="{MenuItems}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="0" MaxIndex="100">
+                          <ItemTemplate>
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" MarginBottom="2" UseSiblingIndexForNavigation="true">
+                              <Children>
+
+                                <EscapeMenuButtonWidget DoNotPassEventsToChildren="true" Command.Click="ExecuteAction" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="292" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Escape.Button" PositiveBehaviorBrush="TAOM.Escape.Button.Positive" IsDisabled="@IsDisabled" IsPositiveBehaviored="@IsPositiveBehaviored" UpdateChildrenStates="true">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginLeft="16" MarginRight="16" VerticalAlignment="Center" PositionYOffset="-4" Text="@ActionText" Brush="TAOM.Escape.ButtonText" ClipContents="false" />
+                                  </Children>
+                                </EscapeMenuButtonWidget>
+
+                                <Widget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="292" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="@IsDisabled">
+                                  <Children>
+                                    <HintWidget DataSource="{DisabledHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                  </Children>
+                                </Widget>
+
+                              </Children>
+                            </Widget>
+                          </ItemTemplate>
+                        </NavigatableListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="8" MarginBottom="8" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="TAOM.Escape.ScrollTrack" />
+                    <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="TAOM.Escape.ScrollHandle" />
+                  </Children>
+                </ScrollbarWidget>
+              </Children>
+            </Widget>
+
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="13" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="148" Brush="TAOM.Escape.Divider" DoNotAcceptEvents="true" />
+            <Widget Id="EscapeTitleBox" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="186" SuggestedHeight="55" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="72" DoNotAcceptEvents="true">
+              <Children>
+                <ImageWidget Id="EscapeLogo" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Escape.Logo" DoNotAcceptEvents="true" />
+                <Widget Id="Shimmer0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Left" PositionXOffset="-120" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><ImageWidget Id="ShimmerImg0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="186" HorizontalAlignment="Left" PositionXOffset="120" Brush="TAOM.Escape.LogoShine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="17" HorizontalAlignment="Left" PositionXOffset="-120" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><ImageWidget Id="ShimmerImg1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="186" HorizontalAlignment="Left" PositionXOffset="120" Brush="TAOM.Escape.LogoShine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="25" HorizontalAlignment="Left" PositionXOffset="-120" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><ImageWidget Id="ShimmerImg2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="186" HorizontalAlignment="Left" PositionXOffset="120" Brush="TAOM.Escape.LogoShine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="34" HorizontalAlignment="Left" PositionXOffset="-120" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><ImageWidget Id="ShimmerImg3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="186" HorizontalAlignment="Left" PositionXOffset="120" Brush="TAOM.Escape.LogoShine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

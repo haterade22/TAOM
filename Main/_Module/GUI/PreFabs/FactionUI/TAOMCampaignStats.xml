@@ -1,0 +1,52 @@
+<Prefab>
+  <Window>
+    <MapInfoBarWidget Id="InfoBarWidget" SuggestedWidth="456" SuggestedHeight="168" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="4" MarginBottom="4" ClipContents="true" DoNotAcceptEvents="true" ExtendButtonWidget="StatsPanel\ExtendButtonWidget" IsInfoBarExtended="@IsInfoBarExtended" IsVisible="@IsInfoBarEnabled">
+      <Children>
+        <CampaignStatsPanelWidget Id="StatsPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" IsInfoBarExtended="@IsInfoBarExtended" UpperPlate="UpperPlate" LowerPlate="LowerPlate" JoinBorderWidget="JoinBorder" RightJoinWidget="RightJoin" PrimaryItemsWidget="PrimaryItems" SecondaryItemsWidget="SecondaryItems" ExpandButtonWidget="ExtendButtonWidget">
+          <Children>
+            <BrushWidget Id="UpperPlate" SuggestedWidth="456" SuggestedHeight="104" PositionYOffset="64" Brush="TAOM.Stats.Upper" DoNotAcceptEvents="true" />
+            <BrushWidget Id="LowerPlate" SuggestedWidth="356" SuggestedHeight="94" PositionXOffset="100" PositionYOffset="168" Brush="TAOM.Stats.Lower" DoNotAcceptEvents="true" IsVisible="false" />
+            <!-- Redraw only the existing upper border strip above the lower tier's stone. -->
+            <Widget Id="JoinBorder" SuggestedWidth="456" SuggestedHeight="6" PositionYOffset="148" ClipContents="true" DoNotAcceptEvents="true" IsVisible="false">
+              <Children><BrushWidget SuggestedWidth="456" SuggestedHeight="104" PositionYOffset="-84" Brush="TAOM.Stats.Upper" DoNotAcceptEvents="true" /></Children>
+            </Widget>
+            <!-- Keep the one original right branch intact above both panel backgrounds. -->
+            <Widget Id="RightJoin" SuggestedWidth="56" SuggestedHeight="40" PositionXOffset="400" PositionYOffset="128" ClipContents="true" DoNotAcceptEvents="true" IsVisible="false">
+              <Children><BrushWidget SuggestedWidth="456" SuggestedHeight="104" PositionXOffset="-400" PositionYOffset="-64" Brush="TAOM.Stats.Upper" DoNotAcceptEvents="true" /></Children>
+            </Widget>
+            <Widget DataSource="{PrimaryInfoItems}" Id="PrimaryItems" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+              <ItemTemplate>
+                <CampaignStatItemWidget Id="StatItem" StatId="@VisualId" IconWidget="StatIcon" ValueWidget="StatValue" SuggestedWidth="68" SuggestedHeight="72" DoNotPassEventsToChildren="true" GamepadNavigationIndex="0">
+                  <Children>
+                    <IconBrushWidget Id="StatIcon" SuggestedWidth="42" SuggestedHeight="42" HorizontalAlignment="Center" MarginTop="0" IconBrush="TAOM.Stats.Icons" IconID="@VisualId" UseStylesFromSourceIcon="true" DoNotAcceptEvents="true" />
+                    <MapBarCustomValueTextWidget Id="StatValue" WidthSizePolicy="StretchToParent" SuggestedHeight="26" MarginTop="36" Brush="TAOM.Stats.Value" Text="@Value" ValueAsInt="@IntValue" IsWarning="@HasWarning" NormalColor="#E6DDC2FF" WarningColor="#CE785EFF" DoNotAcceptEvents="true" />
+                    <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </CampaignStatItemWidget>
+              </ItemTemplate>
+            </Widget>
+            <Widget DataSource="{SecondaryInfoItems}" Id="SecondaryItems" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+              <ItemTemplate>
+                <CampaignStatItemWidget Id="StatItem" StatId="@VisualId" IconWidget="StatIcon" ValueWidget="StatValue" SuggestedWidth="68" SuggestedHeight="72" DoNotPassEventsToChildren="true" GamepadNavigationIndex="0">
+                  <Children>
+                    <SpecialResourceSpriteWidget Id="StatIcon" SuggestedWidth="42" SuggestedHeight="42" HorizontalAlignment="Center" MarginTop="0" IconBrush="TAOM.Stats.Icons" IconID="@VisualId" UseStylesFromSourceIcon="true" DoNotAcceptEvents="true" />
+                    <MapBarCustomValueTextWidget Id="StatValue" WidthSizePolicy="StretchToParent" SuggestedHeight="26" MarginTop="36" Brush="TAOM.Stats.Value" Text="@Value" ValueAsInt="@IntValue" IsWarning="@HasWarning" NormalColor="#E6DDC2FF" WarningColor="#CE785EFF" DoNotAcceptEvents="true" />
+                    <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </CampaignStatItemWidget>
+              </ItemTemplate>
+            </Widget>
+            <NavigationScopeTargeter ScopeID="MapBarRightPanelTopInfoBarScope" ScopeParent="..\PrimaryItems" ScopeMovements="Horizontal" />
+            <NavigationScopeTargeter ScopeID="MapBarRightPanelBottomInfoBarScope" ScopeParent="..\SecondaryItems" ScopeMovements="Horizontal" IsScopeEnabled="@IsInfoBarExtended" />
+            <NavigationScopeTargeter ScopeID="MapBarExtendButtonScope" ScopeParent="..\ExtendButtonWidget" />
+            <ButtonWidget Id="ExtendButtonWidget" SuggestedWidth="30" SuggestedHeight="34" PositionXOffset="398" PositionYOffset="100" Brush="TAOM.Stats.Expand" GamepadNavigationIndex="0" DoNotPassEventsToChildren="true">
+              <Children>
+                <HintWidget DataSource="{ExtendHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </CampaignStatsPanelWidget>
+      </Children>
+    </MapInfoBarWidget>
+  </Window>
+</Prefab>

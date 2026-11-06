@@ -1,0 +1,44 @@
+<Prefab>
+  <VisualDefinitions>
+    <VisualDefinition Name="TAOMNavigationAlertAttachment" TransitionDuration="0.12">
+      <VisualState PositionXOffset="51" PositionYOffset="-10" State="Default" />
+      <VisualState PositionXOffset="54.3" PositionYOffset="-17.9" State="Hovered" />
+      <VisualState PositionXOffset="54.3" PositionYOffset="-17.9" State="Pressed" />
+      <VisualState PositionXOffset="51" PositionYOffset="-10" State="Selected" />
+      <VisualState PositionXOffset="51" PositionYOffset="-10" State="Disabled" />
+    </VisualDefinition>
+  </VisualDefinitions>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" PositionYOffset="-11" DoNotAcceptEvents="true">
+      <Children>
+        <ImageWidget Id="NavigationBackplate" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="490" SuggestedHeight="56" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="4" MarginBottom="4" Sprite="cb_backplate" ColorFactor="1.0321" SaturationFactor="-20.73" DoNotAcceptEvents="true" />
+        <ImageWidget Id="NavigationBranch" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="486" SuggestedHeight="46" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="6" MarginBottom="22" Sprite="cb_branch" ColorFactor="1.0432" SaturationFactor="-21.57" DoNotAcceptEvents="true" />
+        <NavigationScopeTargeter ScopeID="MapNavigationScope" ScopeParent="..\MapBar" ScopeMovements="Horizontal" ForceGainNavigationOnClosestChild="true" RightNavigationScope="MapBarCenterPanelScope" />
+        <ListPanel Id="MapBar" DataSource="{NavigationItems}" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="102" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="12" MarginBottom="4" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <StringBasedVisibilityWidget Id="@ItemId" FirstString="@ItemId" SecondString="escape_menu" WatchType="NotEqual" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="77" SuggestedHeight="102" MarginRight="2" UpdateChildrenStates="true">
+              <Children>
+                <ButtonWidget Id="NavigationButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="72.6" SuggestedHeight="98" HorizontalAlignment="Center" VerticalAlignment="Bottom" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" Command.Click="ExecuteOpen" Command.AlternateClick="ExecuteGoToLink" IsEnabled="@IsEnabled" IsSelected="@IsActive" GamepadNavigationIndex="0">
+                  <Children>
+                    <IconBrushWidget Id="Icon" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="72.6" SuggestedHeight="72.6" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="19.2" Brush="TAOM.Campaign.Icon" IconBrush="TAOM.Campaign.Icons" IconID="@ItemId" UseIconSize="false" UpdateChildrenStates="true">
+                      <Children>
+                        <Widget Id="NavigationAlert" VisualDefinition="TAOMNavigationAlertAttachment" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="18" SuggestedHeight="30" PositionXOffset="51" PositionYOffset="-10" IsVisible="@HasAlert" UpdateChildrenStates="true" DoNotAcceptEvents="true">
+                          <Children>
+                            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Campaign.NavigationAlertLeaf" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="22" MarginLeft="1" MarginTop="2" PositionYOffset="-1" Brush="TAOM.Campaign.NavigationAlertText" Text="@AlertText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </IconBrushWidget>
+                    <CampaignNavigationLabelWidget Id="Label" ItemId="@ItemId" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="16" VerticalAlignment="Bottom" MarginBottom="3" Brush="TAOM.Campaign.Label" DoNotAcceptEvents="true" />
+                    <HintWidget DataSource="{AlertTooltip}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@HasAlert" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </StringBasedVisibilityWidget>
+          </ItemTemplate>
+        </ListPanel>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

@@ -1,0 +1,57 @@
+<Brushes>
+  <Brush Name="TAOM.Time.Backplate"><Layers><BrushLayer Name="Default" Sprite="cb_time_leaf_wings" ImageFit.Type="Contain" ColorFactor="0.8" SaturationFactor="-26" HueFactor="-2" /></Layers></Brush>
+  <Brush Name="TAOM.Time.Date" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E6DDC2FF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Time.Pause" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_time_pause" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.72" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Time.Play" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_time_play" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.72" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Time.FastForward" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_time_fast_forward" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.72" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Time.ExtraFastForward" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_time_extra_fast_forward" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.72" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+  <!-- The blank right wing; same colour treatment as the left wing so the halves match. -->
+  <Brush Name="TAOM.Time.CampWing"><Layers><BrushLayer Name="Default" Sprite="cb_time_camp_wing" ImageFit.Type="Contain" ColorFactor="0.8" SaturationFactor="-26" HueFactor="-2" /></Layers></Brush>
+  <Brush Name="TAOM.Time.Camp" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="cb_camp_button" ImageFit.Type="Contain" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.85" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" ColorFactor="0.6" AlphaFactor="0.5" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

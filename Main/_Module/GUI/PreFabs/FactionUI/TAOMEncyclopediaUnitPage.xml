@@ -1,0 +1,180 @@
+<Prefab>
+  <Window>
+    <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
+      <Children>
+        <Widget Id="TroopPage" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaStonePanelWidget SuggestedWidth="350" SuggestedHeight="780" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
+            <Widget Id="TroopPortrait" SuggestedWidth="350" SuggestedHeight="780" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="16" MarginRight="16" MarginTop="156" MarginBottom="20" ClipContents="true" IsEnabled="false">
+                  <Children>
+                    <CharacterTableauWidget DataSource="{UnitCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText" MountCreationKey="@MountCreationKey" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsEnabled="false" />
+                  </Children>
+                </Widget>
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="30" MarginRight="30" MarginTop="100" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@NameText" Brush="Encyclopedia.SubPage.Title.Text" Brush.FontSize="29" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+                    <ListPanel DataSource="{PropertiesList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8">
+                      <ItemTemplate>
+                        <Widget SuggestedWidth="32" SuggestedHeight="32" MarginLeft="5" MarginRight="5" Sprite="@Text">
+                          <Children>
+                            <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                          </Children>
+                        </Widget>
+                      </ItemTemplate>
+                    </ListPanel>
+                    <Widget DataSource="{CurrentSelectedEquipmentSet}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="12" DoNotAcceptEvents="true">
+                      <Children>
+                        <NavigationScopeTargeter ScopeID="EncyclopediaUnitLeftEquipmentListScope" ScopeParent="..\LeftEquipmentList" ScopeMovements="Vertical" />
+                        <NavigatableListPanel Id="LeftEquipmentList" DataSource="{LeftEquipmentList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <EquipmentTypeVisualBrushWidget SuggestedWidth="35" SuggestedHeight="35" MarginBottom="5" Brush="EquipmentType.Image" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsVisible="@HasItem" Type="@Type" />
+                          </ItemTemplate>
+                        </NavigatableListPanel>
+                        <NavigationScopeTargeter ScopeID="EncyclopediaUnitRightEquipmentListScope" ScopeParent="..\RightEquipmentList" ScopeMovements="Vertical" />
+                        <NavigatableListPanel Id="RightEquipmentList" DataSource="{RightEquipmentList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <EquipmentTypeVisualBrushWidget SuggestedWidth="35" SuggestedHeight="35" MarginBottom="5" Brush="EquipmentType.Image" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsVisible="@HasItem" Type="@Type" />
+                          </ItemTemplate>
+                        </NavigatableListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ListPanel>
+                <NavigationScopeTargeter ScopeID="EncyclopediaUnitBookmarkScope" ScopeParent="..\BookmarkButton" />
+                <ButtonWidget Id="BookmarkButton" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Center" MarginTop="18" Brush="Encyclopedia.Bookmark.Button" Command.Click="ExecuteSwitchBookmarkedState" IsSelected="@IsBookmarked" GamepadNavigationIndex="0">
+                  <Children>
+                    <HintWidget DataSource="{BookmarkHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </ButtonWidget>
+                <ListPanel DataSource="{EquipmentSetSelector}" WidthSizePolicy="CoverChildren" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="24" DoNotAcceptEvents="true">
+                  <Children>
+                    <ButtonWidget SuggestedWidth="40" HeightSizePolicy="StretchToParent" Command.Click="ExecuteSelectPreviousItem" Brush="TAOM.Encyclopedia.TextButton" UpdateChildrenStates="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true" UpdateChildrenStates="true"><Children><ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="13.75" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowLeft" DoNotAcceptEvents="true" /></Children></Widget>
+                      </Children>
+                    </ButtonWidget>
+                    <TextWidget DataSource="{..}" SuggestedWidth="160" HeightSizePolicy="StretchToParent" Text="@EquipmentSetText" Brush="TAOM.Encyclopedia.ListMutedCentered" Brush.FontSize="25" DoNotAcceptEvents="true" />
+                    <ButtonWidget SuggestedWidth="40" HeightSizePolicy="StretchToParent" Command.Click="ExecuteSelectNextItem" Brush="TAOM.Encyclopedia.TextButton" UpdateChildrenStates="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true" UpdateChildrenStates="true"><Children><ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="13.75" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.GalleryArrowRight" DoNotAcceptEvents="true" /></Children></Widget>
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+              </Children>
+            </Widget>
+
+            <EncyclopediaStonePanelWidget SuggestedWidth="1360" SuggestedHeight="780" PositionXOffset="368" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+                
+              </Children>
+            </EncyclopediaStonePanelWidget>
+            <Widget Id="TroopTreePanel" SuggestedWidth="1360" SuggestedHeight="780" PositionXOffset="368" DoNotAcceptEvents="true">
+              <Children>
+                <EncyclopediaTroopScrollablePanel Id="RightSideScrollablePanel" SuggestedWidth="1288" SuggestedHeight="644" MarginTop="26" HorizontalAlignment="Center" InnerPanel="TreeRect\InnerPanel" ClipRect="TreeRect" HorizontalScrollbar="..\TreeHorizontalScrollbar" VerticalScrollbar="..\TreeVerticalScrollbar" PanWithMouseEnabled="true" MouseScrollAxis="Vertical" AutoHideScrollBars="true" IsHidden="@HasErrors">
+                  <Children>
+                    <Widget Id="TreeRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget Id="InnerPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget DataSource="{TroopTreeLayout}" SuggestedWidth="@TreeWidth" SuggestedHeight="@TreeHeight" DoNotAcceptEvents="true">
+                              <Children>
+                                <Widget DataSource="{Columns}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                                  <ItemTemplate>
+                                    <Widget SuggestedWidth="@Width" HeightSizePolicy="StretchToParent" PositionXOffset="@X" DoNotAcceptEvents="true">
+                                      <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" Text="@Label" Brush="TAOM.Encyclopedia.PreviewName" Brush.FontSize="26" DoNotAcceptEvents="true" />
+                                        <BrushWidget WidthSizePolicy="StretchToParent" SuggestedHeight="1" PositionYOffset="40" MarginLeft="8" MarginRight="8" Brush="TAOM.Encyclopedia.Rule" DoNotAcceptEvents="true" />
+                                        <ImageWidget SuggestedWidth="8" SuggestedHeight="8" HorizontalAlignment="Center" PositionYOffset="37" Sprite="cs_scroll_thumb" DoNotAcceptEvents="true" />
+                                        <Widget SuggestedWidth="1" HeightSizePolicy="StretchToParent" MarginTop="42" MarginBottom="8" HorizontalAlignment="Right" Sprite="BlankWhiteSquare" Color="#91734640" DoNotAcceptEvents="true" />
+                                      </Children>
+                                    </Widget>
+                                  </ItemTemplate>
+                                </Widget>
+                                <Widget DataSource="{Lines}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                                  <ItemTemplate>
+                                    <Widget SuggestedWidth="@Width" SuggestedHeight="@Height" PositionXOffset="@X" PositionYOffset="@Y" Sprite="BlankWhiteSquare" Color="#956F44FF" IsHidden="@IsHighlighted" DoNotAcceptEvents="true" />
+                                  </ItemTemplate>
+                                </Widget>
+                                <Widget DataSource="{Lines}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                                  <ItemTemplate>
+                                    <Widget SuggestedWidth="@Width" SuggestedHeight="@Height" PositionXOffset="@X" PositionYOffset="@Y" Sprite="BlankWhiteSquare" Color="#F1BF61FF" IsVisible="@IsHighlighted" DoNotAcceptEvents="true" />
+                                  </ItemTemplate>
+                                </Widget>
+                                <Widget Id="TroopCards" DataSource="{Cards}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                                  <ItemTemplate>
+                                    <Widget SuggestedWidth="174" SuggestedHeight="168" PositionXOffset="@X" PositionYOffset="@Y" DoNotAcceptEvents="true">
+                                      <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="56" PositionYOffset="111" Text="@CardName" Brush="TAOM.Encyclopedia.PreviewName" Brush.FontSize="22" Brush.TextVerticalAlignment="Top" DoNotAcceptEvents="true" />
+                                        <Widget DataSource="{Node}" WidthSizePolicy="StretchToParent" SuggestedHeight="110" DoNotAcceptEvents="true">
+                                          <Children>
+                                            <ButtonWidget DataSource="{Unit}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteLink">
+                                              <Children>
+                                                <NavigationAutoScrollWidget TrackedWidget="..\ElementImage" AutoScrollTopOffset="60" AutoScrollBottomOffset="60" />
+                                                <NavigationScopeTargeter ScopeID="EncyclopediaUnitTreeItemScope" ScopeParent="..\ElementImage" />
+                                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_troop_card_background" DoNotAcceptEvents="true" />
+                                                <EncyclopediaMaskedImageWidget Id="ElementImage" DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush="TAOM.Encyclopedia.TroopCardMask" DoNotAcceptEvents="true" GamepadNavigationIndex="0" />
+                                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_troop_card_rim" DoNotAcceptEvents="true" />
+                                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_troop_card_rim" Brush.ColorFactor="1.25" IsVisible="@IsActiveUnit" DoNotAcceptEvents="true" />
+                                                <Widget DataSource="{TypeIconData}" SuggestedWidth="24" SuggestedHeight="24" MarginLeft="8" MarginTop="7" Sprite="@Text">
+                                                  <Children>
+                                                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotAcceptEvents="true" />
+                                                  </Children>
+                                                </Widget>
+                                                <Widget DataSource="{TierIconData}" SuggestedWidth="24" SuggestedHeight="24" HorizontalAlignment="Right" MarginRight="8" MarginTop="7" Sprite="@Text">
+                                                  <Children>
+                                                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotAcceptEvents="true" />
+                                                  </Children>
+                                                </Widget>
+                                                <Widget SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="8" MarginBottom="7" IsVisible="@HasSpecialResourceCost" Sprite="@SpecialResourceIconSprite">
+                                                  <Children>
+                                                    <HintWidget DataSource="{SpecialResourceTooltip}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotAcceptEvents="true" />
+                                                  </Children>
+                                                </Widget>
+                                                <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotAcceptEvents="true" />
+                                              </Children>
+                                            </ButtonWidget>
+                                            <ButtonWidget SuggestedWidth="24" SuggestedHeight="22" VerticalAlignment="Bottom" MarginLeft="8" MarginBottom="7" IsVisible="@IsAlternativeUpgrade" UpdateChildrenStates="true">
+                                              <Children>
+                                                <BrushWidget DataSource="{AlternativeUpgradeTooltip}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.PerkInfo.Button" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                              </Children>
+                                            </ButtonWidget>
+                                          </Children>
+                                        </Widget>
+                                      </Children>
+                                    </Widget>
+                                  </ItemTemplate>
+                                </Widget>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </EncyclopediaTroopScrollablePanel>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="50" Text="@TreeDisplayErrorText" Brush="Encyclopedia.Error.Text" IsVisible="@HasErrors" />
+                <ScrollbarWidget Id="TreeVerticalScrollbar" SuggestedWidth="10" SuggestedHeight="644" MarginTop="26" MarginRight="22" AlignmentAxis="Vertical" HorizontalAlignment="Right" Handle="TreeVerticalHandle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <BrushWidget SuggestedWidth="2" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed" />
+                    <BrushWidget Id="TreeVerticalHandle" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle" />
+                  </Children>
+                </ScrollbarWidget>
+                <ScrollbarWidget Id="TreeHorizontalScrollbar" SuggestedWidth="1288" SuggestedHeight="10" MarginTop="674" AlignmentAxis="Horizontal" HorizontalAlignment="Center" Handle="TreeHorizontalHandle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <BrushWidget WidthSizePolicy="StretchToParent" SuggestedHeight="2" VerticalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed" />
+                    <BrushWidget Id="TreeHorizontalHandle" SuggestedWidth="50" SuggestedHeight="8" VerticalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle" />
+                  </Children>
+                </ScrollbarWidget>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+        <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
+        <TAOMEncyclopediaPageNavigation />
+      </Children>
+    </BrushWidget>
+  </Window>
+</Prefab>

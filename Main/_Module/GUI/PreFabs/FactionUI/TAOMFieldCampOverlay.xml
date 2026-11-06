@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- FactionUI's themed clone of FieldCamp/TaomFieldCampOverlay.xml (#704, campaign HUD option A),
+         loaded in its place by FrontEndMovieService; the original stays as the fallback and under co-op.
+         Same VM, same status panel; only the Make Camp button changes, into an icon on the clock's right
+         wing. This layer sits above the map bar, so it paints the icon only, never stone. -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            DoNotAcceptEvents="true">
+      <Children>
+
+        <!-- Status panel: unchanged from the original. -->
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                     SuggestedWidth="360"
+                     HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150"
+                     IsVisible="@IsCampActive" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true"
+                     Brush="Popup.Frame">
+          <Children>
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                       MarginTop="14" MarginBottom="14" MarginLeft="22" MarginRight="22"
+                       StackLayout.LayoutMethod="VerticalBottomToTop">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26"
+                            HorizontalAlignment="Center" MarginBottom="8"
+                            Brush="Popup.Description.Text" Brush.FontSize="18"
+                            Brush.FontColor="#FFF0C8FF"
+                            Brush.TextHorizontalAlignment="Center"
+                            Text="@CampStatusText" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                        SuggestedWidth="200" SuggestedHeight="14"
+                        HorizontalAlignment="Center"
+                        IsVisible="@ProgressVisible"
+                        Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                            SuggestedWidth="@ProgressFillWidth"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Sprite="BlankWhiteSquare_9" Color="#5BB84BFF" AlphaFactor="0.95" />
+                  </Children>
+                </Widget>
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+        <!-- Camp icon: 32x32, centred in the wing's compartment between the divider (+201) and the
+             inner right curve (about +273): 237 px right of the screen centre, 38 px above the screen
+             bottom (the stone interior's vertical centre). The wrapper is always enabled so a disabled icon (moving,
+             in a settlement, a modal open) still shows its caption on hover; Gauntlet hovers only
+             enabled widgets, and a HintWidget relays its parent's hover. The enabled button carries its
+             own hint, the vanilla button shape. -->
+        <!-- Thin divider between the speed controls and the Camp icon (the blank right wing carries
+             none): 1x20, 201 px right of the screen centre, centred 38 px above the screen bottom on
+             the wing's stone, with equal clearance to its upper and lower borders. Paint only. -->
+        <Widget Id="CampDivider" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                SuggestedWidth="1" SuggestedHeight="20"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionXOffset="201" MarginBottom="28"
+                IsVisible="@ShowCampButton" DoNotAcceptEvents="true"
+                Sprite="BlankWhiteSquare_9" Color="#B8964EFF" AlphaFactor="0.7" />
+
+        <Widget Id="CampIconHover" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                SuggestedWidth="32" SuggestedHeight="32"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionXOffset="237" MarginBottom="22"
+                IsVisible="@ShowCampButton">
+          <Children>
+            <HintWidget DataSource="{CampButtonHint}" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+            <ButtonWidget Id="CampButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                          SuggestedWidth="32" SuggestedHeight="32"
+                          Brush="TAOM.Time.Camp" IsEnabled="@CanMakeCamp"
+                          Command.Click="ExecuteOpenCampMenu"
+                          DoNotPassEventsToChildren="true">
+              <Children>
+                <HintWidget DataSource="{CampButtonHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                            Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

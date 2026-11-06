@@ -71,8 +71,7 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             return;
         }
 
-        // One look at the target (verdict, price, days) from the core boundary; the button shows the price and the
-        // hint explains a refusal or says about how long the trip takes.
+        // The compact icon keeps the quote and travel time or refusal together in its hover text.
         var offer = behavior.GetOffer(hero, inPerson: false);
         IsMessengerAvailable = offer.CanSend;
 
@@ -85,11 +84,11 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             var days = new TextObject("{=taom_messenger_trip_days}The messenger will take about {DAYS} {?IS_PLURAL}days{?}day{\\?}.");
             days.SetTextVariable("DAYS", offer.Days);
             days.SetTextVariable("IS_PLURAL", offer.Days > 1 ? 1 : 0);
-            SendMessengerHint = new HintViewModel(days);
+            SendMessengerHint = new HintViewModel(new TextObject(SendMessengerActionName + "\n" + days));
         }
         else
         {
-            SendMessengerHint = new HintViewModel(behavior.GetReason(offer, hero));
+            SendMessengerHint = new HintViewModel(new TextObject(SendMessengerActionName + "\n" + behavior.GetReason(offer, hero)));
         }
     }
 

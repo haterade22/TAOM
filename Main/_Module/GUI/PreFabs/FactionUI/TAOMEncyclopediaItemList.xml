@@ -1,0 +1,162 @@
+<Prefab>
+  <Window>
+    <EncyclopediaListScreenWidget Id="EncyclopediaListScreen" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" EntryList="ListCanvas\EntryScroll\EntryClip\Entries" EntryScroll="ListCanvas\EntryScroll" DoNotAcceptEvents="true">
+      <Children>
+        <Widget Id="ListCanvas" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaStonePanelWidget Id="FilterPanel" SuggestedWidth="384" SuggestedHeight="798" PositionXOffset="42" PositionYOffset="110" Sprite="ec_panel_9" DoNotAcceptEvents="true"><Children></Children></EncyclopediaStonePanelWidget>
+            <EncyclopediaStonePanelWidget Id="EntriesPanel" SuggestedWidth="772" SuggestedHeight="798" PositionXOffset="450" PositionYOffset="110" Sprite="ec_panel_9" DoNotAcceptEvents="true"><Children></Children></EncyclopediaStonePanelWidget>
+            <EncyclopediaStonePanelWidget Id="PreviewCaptionPanel" SuggestedWidth="396" SuggestedHeight="190" PositionXOffset="1242" PositionYOffset="717" Sprite="ec_panel_9" IsVisible="@HasSelection" DoNotAcceptEvents="true"><Children></Children></EncyclopediaStonePanelWidget>
+            <TextWidget SuggestedWidth="250" SuggestedHeight="42" PositionXOffset="80" PositionYOffset="128" Text="@FiltersLabel" Brush="TAOM.Encyclopedia.ListHeading" DoNotAcceptEvents="true" />
+            <ButtonWidget Id="ResetFilters" SuggestedWidth="128" SuggestedHeight="36" PositionXOffset="288" PositionYOffset="132" Command.Click="ExecuteResetFilters" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+              <Children>
+                <ImageWidget Id="ResetIcon" SuggestedWidth="32" SuggestedHeight="32" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.ResetIcon" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="38" PositionYOffset="-4" Text="@ResetLabel" Brush="TAOM.Encyclopedia.ListActionText" DoNotAcceptEvents="true" />
+              </Children>
+            </ButtonWidget>
+            <ImageWidget SuggestedWidth="330" SuggestedHeight="6" PositionXOffset="80" PositionYOffset="172" Sprite="cs_scroll_rail" DoNotAcceptEvents="true" />
+            <TextWidget SuggestedWidth="450" SuggestedHeight="42" PositionXOffset="470" PositionYOffset="128" Text="@PageTitle" Brush="TAOM.Encyclopedia.ListHeading" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="720" SuggestedHeight="6" PositionXOffset="470" PositionYOffset="172" Sprite="cs_scroll_rail" DoNotAcceptEvents="true" />
+
+            <ScrollablePanel Id="FilterScroll" SuggestedWidth="344" SuggestedHeight="704" PositionXOffset="76" PositionYOffset="186" InnerPanel="EncyclopediaFiltersContainer\FilterSections" ClipRect="EncyclopediaFiltersContainer" VerticalScrollbar="..\FilterScrollbar" MouseScrollAxis="Vertical" AutoHideScrollBars="true" AutoHideScrollBarHandle="true">
+              <Children>
+                <Widget Id="EncyclopediaFiltersContainer" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <NavigatableListPanel Id="FilterSections" DataSource="{FilterSections}" SuggestedWidth="326" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="18" DoNotAcceptEvents="true">
+                          <Children>
+                            <ButtonWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" Command.Click="ExecuteToggle" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                              <Children>
+                                <EncyclopediaCollapseIndicatorWidget SuggestedWidth="16" SuggestedHeight="16" PositionXOffset="6" VerticalAlignment="Center" IsExpanded="@IsExpanded" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" MarginLeft="32" Text="@Name" Brush="TAOM.Encyclopedia.FilterHeading" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ButtonWidget>
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="42" IsVisible="@IsExpanded" DoNotAcceptEvents="true">
+                              <Children>
+                                <Widget DataSource="{Native}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <NavigatableListPanel DataSource="{Filters}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                      <ItemTemplate>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" ButtonType="Toggle" IsSelected="@IsSelected" Command.Click="ExecuteOnFilterActivated" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                                          <Children>
+                                            <ImageWidget SuggestedWidth="20" SuggestedHeight="20" PositionXOffset="34" VerticalAlignment="Center" Sprite="ec_list_checkbox" DoNotAcceptEvents="true"><Children><ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_list_tick" IsVisible="@IsSelected" DoNotAcceptEvents="true" /></Children></ImageWidget>
+                                            <ScrollingTextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="34" MarginLeft="66" MarginRight="4" Text="@Name" Brush="TAOM.Encyclopedia.ListText" DoNotAcceptEvents="true" />
+                                          </Children>
+                                        </ButtonWidget>
+                                      </ItemTemplate>
+                                    </NavigatableListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
+                      </ItemTemplate>
+                    </NavigatableListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="FilterScrollbar" SuggestedWidth="12" SuggestedHeight="704" PositionXOffset="416" PositionYOffset="186" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="Handle">
+              <Children><ImageWidget SuggestedWidth="1" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.25" DoNotAcceptEvents="true" /><ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="64" HorizontalAlignment="Center" Sprite="ec_list_scroll" /></Children>
+            </ScrollbarWidget>
+
+            <NavigationScopeTargeter ScopeID="TAOMEncyclopediaEntriesScope" ScopeParent="..\EntryScroll\EntryClip\Entries" ScopeMovements="Vertical" IsDefaultNavigationScope="true" HasCircularMovement="false" />
+            <ScrollablePanel Id="EntryScroll" SuggestedWidth="720" SuggestedHeight="690" PositionXOffset="470" PositionYOffset="194" InnerPanel="EntryClip\Entries" ClipRect="EntryClip" VerticalScrollbar="..\EntryScrollbar" MouseScrollAxis="Vertical" AutoHideScrollBars="true" AutoHideScrollBarHandle="true">
+              <Children>
+                <Widget Id="EntryClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <NavigatableListPanel Id="Entries" DataSource="{Entries}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="22" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <EncyclopediaListEntryButtonWidget EntryId="@Id" WidthSizePolicy="StretchToParent" SuggestedHeight="55" IsVisible="@IsVisible" IsSelected="@IsSelected" DominantSelectedState="true" Command.Click="ExecuteSelect" Command.HoverBegin="ExecuteBeginTooltip" Command.HoverEnd="ExecuteEndTooltip" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <ImageWidget Id="EntryBullet" SuggestedWidth="20" SuggestedHeight="18" PositionXOffset="10" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.RowBullet" DoNotAcceptEvents="true" />
+                            <ImageWidget Id="EntrySelectedDiamond" SuggestedWidth="9" SuggestedHeight="9" PositionXOffset="15.5" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.RowSelectedDiamond" DoNotAcceptEvents="true" />
+                            <ImageWidget Id="EntrySelectionAccent" SuggestedWidth="1" SuggestedHeight="20" PositionXOffset="39" VerticalAlignment="Center" Brush="TAOM.Encyclopedia.RowSelectionAccent" DoNotAcceptEvents="true" />
+                            <ScrollingTextWidget Id="EntryName" WidthSizePolicy="StretchToParent" SuggestedHeight="48" MarginLeft="52" MarginRight="136" VerticalAlignment="Center" Text="@Name" Brush="TAOM.Encyclopedia.RowText" DoNotAcceptEvents="true" />
+                            <TextWidget SuggestedWidth="112" SuggestedHeight="48" HorizontalAlignment="Right" MarginRight="20" VerticalAlignment="Center" Text="@ComparedValue" Brush="TAOM.Encyclopedia.ListValue" DoNotAcceptEvents="true" />
+                            <ImageWidget SuggestedWidth="10" SuggestedHeight="9" HorizontalAlignment="Right" MarginRight="6" VerticalAlignment="Center" Sprite="cs_scroll_thumb" IsVisible="@IsBookmarked" DoNotAcceptEvents="true" />
+                            <ImageWidget Id="EntryRowRule" WidthSizePolicy="StretchToParent" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="fs_divider_thin" AlphaFactor="0.28" DoNotAcceptEvents="true" />
+                            <ImageWidget Id="EntryHoverRule" WidthSizePolicy="StretchToParent" SuggestedHeight="1" MarginLeft="40" MarginRight="6" VerticalAlignment="Bottom" PositionYOffset="-8" Brush="TAOM.Encyclopedia.RowHoverRule" DoNotAcceptEvents="true" />
+                          </Children>
+                        </EncyclopediaListEntryButtonWidget>
+                      </ItemTemplate>
+                    </NavigatableListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="EntryScrollbar" SuggestedWidth="16" SuggestedHeight="690" PositionXOffset="1190" PositionYOffset="194" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="Handle">
+              <Children><ImageWidget SuggestedWidth="1" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.3" DoNotAcceptEvents="true" /><ImageWidget Id="Handle" SuggestedWidth="9" SuggestedHeight="90" HorizontalAlignment="Center" Sprite="ec_list_scroll" /></Children>
+            </ScrollbarWidget>
+            <TextWidget SuggestedWidth="660" SuggestedHeight="100" PositionXOffset="490" PositionYOffset="300" Text="@EmptyListText" IsVisible="@IsEmpty" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+
+            <Widget SuggestedWidth="400" SuggestedHeight="764" PositionXOffset="1240" PositionYOffset="125" IsVisible="@HasSelection" DoNotAcceptEvents="true">
+              <Children>
+                <EncyclopediaPictureWidget Id="EntryPicture" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" PictureFile="@PreviewImageFile" PictureSprite="@PreviewSpriteName" PortraitFrame="true" FrameZoom="1.22" FrameFocusY="0.61" SpriteFrameCrops="ec_window_:1.12:0.55" IsVisible="@ShowIllustration" DoNotAcceptEvents="true" />
+                <Widget Id="HeroPreview" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" IsVisible="@ShowHeroPreview" DoNotAcceptEvents="true">
+                  <Children>
+                    <EncyclopediaStonePanelWidget Id="HeroWindow" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
+                    <Widget Id="HeroRenderClip" SuggestedWidth="290" SuggestedHeight="470" HorizontalAlignment="Center" PositionYOffset="105" ClipContents="true" IsVisible="@ShowHeroRender" DoNotAcceptEvents="true">
+                      <Children>
+                        <EncyclopediaCharacterTableauWidget Id="HeroPortrait" DataSource="{HeroCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText" MountCreationKey="@MountCreationKey" IsEnabled="false" IsDead="@IsDead" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IdleAction="@IdleAction" IdleFaceAnim="@IdleFaceAnim" Race="@Race" IsHidden="@IsHidden" IsTableauEnabled="@IsTableauEnabled" IsBannerShownInBackground="false" DoNotUseCustomScale="true" />
+                      </Children>
+                    </Widget>
+                    <ImageWidget Id="HeroSilhouette" SuggestedWidth="245" SuggestedHeight="410" HorizontalAlignment="Center" PositionYOffset="150" Sprite="@HeroSilhouetteSprite" IsVisible="@ShowHeroSilhouette" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+                <!--Kingdoms and clans: the selected entry's live banner in the detail pages' pennant stack (mask, 1.35 zoom, drape, rim) at its 408:664 aspect, no rod or nameplate.-->
+                <Widget Id="BannerPreview" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" IsVisible="@ShowBannerPreview" DoNotAcceptEvents="true">
+                  <Children>
+                    <Widget Id="BannerPennant" SuggestedWidth="286" SuggestedHeight="465" HorizontalAlignment="Center" PositionYOffset="62" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsBannerDestroyed" DoNotAcceptEvents="true" ClipContents="true">
+                          <Children>
+                            <EncyclopediaMaskedImageWidget Id="LiveBannerTableau" DataSource="{BannerIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35" />
+                          </Children>
+                        </Widget>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsBannerDestroyed" DoNotAcceptEvents="true" ClipContents="true">
+                          <Children>
+                            <EncyclopediaMaskedImageWidget Id="DestroyedBannerTableau" DataSource="{BannerIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35" />
+                          </Children>
+                        </Widget>
+                        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true" />
+                        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+                <TextWidget SuggestedWidth="396" SuggestedHeight="50" HorizontalAlignment="Center" PositionYOffset="604" Text="@SelectedName" Brush="TAOM.Encyclopedia.PreviewName" DoNotAcceptEvents="true" />
+                <TextWidget SuggestedWidth="396" SuggestedHeight="36" HorizontalAlignment="Center" PositionYOffset="656" Text="@SelectedSubtitle" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+                <ButtonWidget Id="OpenEntry" SuggestedWidth="290" SuggestedHeight="46" HorizontalAlignment="Center" PositionYOffset="708" Command.Click="ExecuteOpenEntry" Brush="TAOM.Encyclopedia.OpenEntry" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                  <Children><TextWidget Id="OpenEntryText" WidthSizePolicy="StretchToParent" SuggestedHeight="32" VerticalAlignment="Center" PositionYOffset="-5" MarginLeft="18" MarginRight="18" Text="@OpenEntryLabel" Brush="TAOM.Encyclopedia.OpenEntryText" DoNotAcceptEvents="true" /></Children>
+                </ButtonWidget>
+              </Children>
+            </Widget>
+
+            <TextWidget SuggestedWidth="75" SuggestedHeight="36" PositionXOffset="855" PositionYOffset="132" Text="@SortByLabel" Brush="TAOM.Encyclopedia.ListValue" DoNotAcceptEvents="true" />
+            <Widget DataSource="{SortController}" SuggestedWidth="24" SuggestedHeight="36" PositionXOffset="940" PositionYOffset="132">
+              <Children><ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsAlternativeSortVisible" Command.Click="ExecuteSwitchSortOrder" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true"><Children><ImageWidget SuggestedWidth="18" SuggestedHeight="18" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="ec_list_sort_order" DoNotAcceptEvents="true" /></Children></ButtonWidget></Children>
+            </Widget>
+            <ButtonWidget Id="EncyclopediaSortButton" SuggestedWidth="220" SuggestedHeight="38" PositionXOffset="970" PositionYOffset="132" Command.Click="ExecuteToggleSort" Brush="TAOM.Encyclopedia.SortButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+              <Children><TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="14" MarginRight="34" Text="@SortLabel" Brush="TAOM.Encyclopedia.ListText" DoNotAcceptEvents="true" /><ImageWidget SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Right" MarginRight="12" VerticalAlignment="Center" Sprite="ec_list_collapse" DoNotAcceptEvents="true" /></Children>
+            </ButtonWidget>
+            <ScrollablePanel Id="SortPopup" SuggestedWidth="220" SuggestedHeight="260" PositionXOffset="970" PositionYOffset="174" IsVisible="@ShowSortOptions" InnerPanel="SortClip\SortOptions" ClipRect="SortClip" VerticalScrollbar="..\SortScrollbar" MouseScrollAxis="Vertical" AutoHideScrollBars="true" AutoHideScrollBarHandle="true" Sprite="ec_list_popup">
+              <Children>
+                <Widget Id="SortClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="4" MarginRight="10" MarginTop="4" MarginBottom="4" ClipContents="true">
+                  <Children>
+                    <NavigatableListPanel Id="SortOptions" DataSource="{SortOptions}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate><ButtonWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" Brush="TAOM.Encyclopedia.ListRow" Command.Click="ExecuteChoose" DoNotPassEventsToChildren="true" UpdateChildrenStates="true"><Children><TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="10" Text="@Name" Brush="TAOM.Encyclopedia.ListText" DoNotAcceptEvents="true" /></Children></ButtonWidget></ItemTemplate>
+                    </NavigatableListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="SortScrollbar" SuggestedWidth="8" SuggestedHeight="252" PositionXOffset="1180" PositionYOffset="178" IsVisible="@ShowSortOptions" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="Handle"><Children><ImageWidget Id="Handle" SuggestedWidth="4" SuggestedHeight="40" Sprite="ec_list_scroll" /></Children></ScrollbarWidget>
+          </Children>
+        </Widget>
+      </Children>
+    </EncyclopediaListScreenWidget>
+  </Window>
+</Prefab>

@@ -1,0 +1,22 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+        <Widget SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+          <Children>
+            <NavigationScopeTargeter ScopeID="EncyclopediaHomeScope" ScopeParent="..\EncyclopediaHomeList" ScopeMovements="Horizontal" IsDefaultNavigationScope="true" HasCircularMovement="false" />
+            <NavigatableListPanel Id="EncyclopediaHomeList" DataSource="{Lists}" WidthSizePolicy="Fixed" SuggestedWidth="1400" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" MarginLeft="0" MarginRight="0" MarginTop="144" MarginBottom="64">
+              <ItemTemplate>
+                <EncyclopediaCategoryButtonWidget Id="CategoryButton" CategoryId="@ImageID" Command.Click="Execute" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="12" MarginRight="12" Brush="TAOM.Encyclopedia.Category" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" FrictionEnabled="false">
+                  <Children>
+                    <TextWidget Id="CategoryLabel" WidthSizePolicy="StretchToParent" SuggestedHeight="37.8" PositionYOffset="63" MarginLeft="7.2" MarginRight="7.2" Text="@Name" Brush="TAOM.Encyclopedia.CategoryText" DoNotAcceptEvents="true" />
+                  </Children>
+                </EncyclopediaCategoryButtonWidget>
+              </ItemTemplate>
+            </NavigatableListPanel>
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

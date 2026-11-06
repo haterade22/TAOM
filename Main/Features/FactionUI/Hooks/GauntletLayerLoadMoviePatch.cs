@@ -4,6 +4,7 @@ using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.FactionUI.Menus;
+using TAOM.Features.FactionUI.Campaign;
 
 namespace TAOM.Features.FactionUI.Hooks;
 
@@ -28,11 +29,12 @@ public static class GauntletLayerLoadMoviePatch
     [ThreadStatic] private static bool _loadingVanillaFallback;
     private static bool _reported;
 
-    static void Prefix(GauntletLayer __instance, ref string movieName, ViewModel dataSource, out SwapState? __state)
+    static void Prefix(GauntletLayer __instance, ref string movieName, ref ViewModel dataSource, out SwapState? __state)
     {
         __state = null;
         var movies = FactionUIPatchContext.Movies;
-        if (movies == null || _loadingVanillaFallback)
+        // Under co-op the native map bar stays, so the Camp icon that sits beside TAOM's clock does too.
+        if (movies == null || _loadingVanillaFallback || ((movieName == "MapBar" || movieName == "TaomFieldCampOverlay") && CoopPresence.IsActive))
             return;
 
         try
@@ -40,7 +42,9 @@ public static class GauntletLayerLoadMoviePatch
             var swap = movies.BeginLoad(movieName, dataSource?.GetType().Name);
             if (swap == null)
                 return;
-            __state = new SwapState(swap, __instance.UIContext?.Root?.ChildCount ?? 0);
+            var boundSource = CampaignPresentation.Bind(swap.TargetName, dataSource);
+            __state = new SwapState(swap, __instance.UIContext?.Root?.ChildCount ?? 0, dataSource);
+            dataSource = boundSource!;
             movieName = swap.TargetName;
         }
         catch (Exception ex)
@@ -60,6 +64,7 @@ public static class GauntletLayerLoadMoviePatch
             if (__state != null)
                 FactionUIPatchContext.Movies?.LoadSucceeded(__state.Swap, __result);
             FactionUIPatchContext.Effects?.OnMovieLoaded(__instance, __result, __result.MovieName, dataSource);
+            CampaignPresentation.OnLoaded(__result, dataSource);
         }
         catch (Exception ex)
         {
@@ -88,7 +93,7 @@ public static class GauntletLayerLoadMoviePatch
             if (!__state.Swap.HasVanillaFallback)
                 return RethrowStackPreserver.PreserveForRethrow(__exception, null);
             _loadingVanillaFallback = true;
-            __result = __instance.LoadMovie(__state.Swap.OriginalName, dataSource);
+            __result = __instance.LoadMovie(__state.Swap.OriginalName, __state.OriginalSource);
         }
         catch
         {
@@ -102,6 +107,7 @@ public static class GauntletLayerLoadMoviePatch
         try
         {
             FactionUIPatchContext.Effects?.OnMovieLoaded(__instance, __result, __result.MovieName, dataSource);
+            CampaignPresentation.OnLoaded(__result, dataSource);
         }
         catch (Exception ex)
         {
@@ -125,14 +131,16 @@ public static class GauntletLayerLoadMoviePatch
     /// <summary>The swap in progress and how many widgets the layer's root held before the load.</summary>
     internal sealed class SwapState
     {
-        public SwapState(MovieSwap swap, int rootChildCount)
+        public SwapState(MovieSwap swap, int rootChildCount, ViewModel originalSource)
         {
             Swap = swap;
             RootChildCount = rootChildCount;
+            OriginalSource = originalSource;
         }
 
         public MovieSwap Swap { get; }
 
         public int RootChildCount { get; }
+        public ViewModel OriginalSource { get; }
     }
 }

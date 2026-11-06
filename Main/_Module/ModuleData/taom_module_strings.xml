@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
+	<string id="taom_ency_relations_empty" text="{=taom_ency_relations_empty}None known" />
+	<string id="taom_ency_kingdom_history" text="{=taom_ency_kingdom_history}History" />
 
 	<!-- ============================================== -->
 	<!-- Vanilla Culture Replacements (LOTR-themed)     -->
@@ -3249,6 +3251,10 @@
 	<string id="taom_fui_character" text="{=taom_fui_character}CHARACTER" />
 	<string id="taom_fui_origins" text="{=taom_fui_origins}ORIGINS" />
 	<string id="taom_fui_random" text="{=taom_fui_random}Random" />
+	<string id="taom_fui_ency_bookmark" text="{=taom_fui_ency_bookmark}Bookmark" />
+	<string id="taom_fui_ency_local_information" text="{=taom_fui_ency_local_information}Local information" />
+	<string id="taom_fui_ency_read_description" text="{=taom_fui_ency_read_description}Read full description" />
+	<string id="taom_fui_ency_close_description" text="{=taom_fui_ency_close_description}Close" />
 	<string id="taom_fui_difficulty" text="{=taom_fui_difficulty}DIFFICULTY" />
 	<string id="taom_fui_review" text="{=taom_fui_review}REVIEW" />
 	<string id="taom_fui_build" text="{=taom_fui_build}BUILD" />

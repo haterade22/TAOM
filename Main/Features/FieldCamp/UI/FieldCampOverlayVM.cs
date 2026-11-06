@@ -36,7 +36,9 @@ public sealed class FieldCampOverlayVM : ViewModel
     private readonly ICampMenuActivationQuery _activation;
     private readonly IReadOnlyList<ICampOverlayContributor> _contributors;
     private readonly Func<CampState, float> _buildProgress;
+    private readonly Func<string, ViewModel>? _captionHint;
 
+    private ViewModel? _campButtonHint;
     private bool _isCampActive;
     private bool _showCampButton;
     private bool _canMakeCamp;
@@ -53,6 +55,20 @@ public sealed class FieldCampOverlayVM : ViewModel
         ICampMenuActivationQuery activation,
         IReadOnlyList<ICampOverlayContributor> contributors,
         Func<CampState, float> buildProgress)
+        : this(camps, settings, menus, activation, contributors, buildProgress, null)
+    {
+    }
+
+    /// <summary>As the six-argument constructor, plus the factory that builds the Camp icon's caption
+    /// hint (the themed overlay); a separate overload keeps the original constructor's signature.</summary>
+    public FieldCampOverlayVM(
+        ICampService camps,
+        ICampSettingsProvider settings,
+        IGameMenuAdapter menus,
+        ICampMenuActivationQuery activation,
+        IReadOnlyList<ICampOverlayContributor> contributors,
+        Func<CampState, float> buildProgress,
+        Func<string, ViewModel>? captionHint)
     {
         _camps = camps;
         _settings = settings;
@@ -60,6 +76,27 @@ public sealed class FieldCampOverlayVM : ViewModel
         _activation = activation;
         _contributors = contributors ?? Array.Empty<ICampOverlayContributor>();
         _buildProgress = buildProgress;
+        _captionHint = captionHint;
+    }
+
+    /// <summary>
+    /// The hover tooltip of the themed overlay's icon-only Camp button: the current caption. Built by the
+    /// constructor's caption-hint factory because the hint view model lives in a client-only assembly
+    /// (ADR-013); null when no factory is given, and the original text overlay never binds it.
+    /// Replaced only when the caption changes, so the 4 Hz refresh does not rebind it.
+    /// </summary>
+    [DataSourceProperty]
+    public ViewModel? CampButtonHint
+    {
+        get => _campButtonHint;
+        private set
+        {
+            if (ReferenceEquals(_campButtonHint, value))
+                return;
+            _campButtonHint?.OnFinalize();
+            _campButtonHint = value;
+            OnPropertyChangedWithValue(value, nameof(CampButtonHint));
+        }
     }
 
     [DataSourceProperty]
@@ -111,6 +148,8 @@ public sealed class FieldCampOverlayVM : ViewModel
                 return;
             _campButtonText = value;
             OnPropertyChangedWithValue(value, nameof(CampButtonText));
+            if (_captionHint != null)
+                CampButtonHint = _captionHint(value);
         }
     }
 
@@ -284,6 +323,12 @@ public sealed class FieldCampOverlayVM : ViewModel
 
         IsCampActive = false;
         ProgressVisible = false;
+    }
+
+    public override void OnFinalize()
+    {
+        base.OnFinalize();
+        CampButtonHint = null;
     }
 
     private static float Clamp01(float value)

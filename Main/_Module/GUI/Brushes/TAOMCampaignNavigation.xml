@@ -1,0 +1,41 @@
+<Brushes>
+  <Brush Name="TAOM.Campaign.Icon" TransitionDuration="0.12">
+    <Layers>
+      <BrushLayer Name="Default" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.95" ExtendLeft="0" ExtendRight="0" ExtendTop="0" ExtendBottom="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" ExtendLeft="5.445" ExtendRight="5.445" ExtendTop="10.89" ExtendBottom="0" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.75" ExtendLeft="5.445" ExtendRight="5.445" ExtendTop="10.89" ExtendBottom="0" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" ColorFactor="0.55" AlphaFactor="0.65" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Campaign.Icons">
+    <Layers>
+      <BrushLayer Name="escape_menu" Sprite="MapBar\mapbar_icon1" />
+      <BrushLayer Name="character_developer" Sprite="cb_character" />
+      <BrushLayer Name="inventory" Sprite="cb_inventory" />
+      <BrushLayer Name="party" Sprite="cb_party" />
+      <BrushLayer Name="quest" Sprite="cb_quests" />
+      <BrushLayer Name="clan" Sprite="cb_clan" />
+      <BrushLayer Name="kingdom" Sprite="cb_kingdom" />
+      <BrushLayer Name="manage_fleet" Sprite="Map\ship" />
+    </Layers>
+  </Brush>
+  <Brush Name="TAOM.Campaign.Label" Font="FS_Garamond" FontSize="14" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E6DDC2FF" />
+      <Style Name="Hovered" FontColor="#F2E4BFFF" />
+      <Style Name="Disabled" TextAlphaFactor="0.55" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Campaign.NavigationAlertLeaf">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="cb_navigation_alert_leaf" ImageFit.Type="Contain" ColorFactor="0.91" SaturationFactor="-20" />
+    </Layers>
+  </Brush>
+  <Brush Name="TAOM.Campaign.NavigationAlertText" Font="FS_Garamond" FontSize="13" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F3E4BFFF" /></Styles>
+  </Brush>
+</Brushes>

@@ -1,0 +1,54 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="ContentWidth" DefaultValue="140" />
+    <!--Defaults are the Hero page gallery sizes (84 px portrait, 62 by 48 baby, 14 by 12 crown at 60,18); the owner passes them scaled.-->
+    <Parameter Name="PortraitSize" DefaultValue="84" />
+    <Parameter Name="BabyWidth" DefaultValue="62" />
+    <Parameter Name="BabyHeight" DefaultValue="48" />
+    <Parameter Name="CrownWidth" DefaultValue="14" />
+    <Parameter Name="CrownHeight" DefaultValue="12" />
+    <Parameter Name="CrownX" DefaultValue="60" />
+    <Parameter Name="CrownY" DefaultValue="18" />
+    <Parameter Name="NameFontSize" DefaultValue="19" />
+  </Parameters>
+  <Window>
+    <!--Settlement-only portrait: the Hero page ally and family frame stack (HeroFriendMask, ec_hero_friend_rim, desaturated dead branch, baby
+        and crown) in a square, with the name in the layout under it, wrapping, so its measured height counts. Whole item is the link.-->
+    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="*ContentWidth" HorizontalAlignment="Center" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteLink" UpdateChildrenStates="true">
+      <Children>
+        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" UpdateChildrenStates="true">
+          <Children>
+            <Widget Id="Portrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="*PortraitSize" SuggestedHeight="*PortraitSize" HorizontalAlignment="Center" MarginTop="4" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsChild" DoNotAcceptEvents="true">
+                  <Children>
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                      <Children>
+                        <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                      </Children>
+                    </Widget>
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                      <Children>
+                        <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_mask" Brush.Color="#211D19FF" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="*BabyWidth" SuggestedHeight="*BabyHeight" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="Encyclopedia\portrait_baby" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_rim" DoNotAcceptEvents="true" />
+                <Widget SuggestedWidth="*CrownWidth" SuggestedHeight="*CrownHeight" PositionXOffset="*CrownX" PositionYOffset="*CrownY" Sprite="SPGeneral\SPScoreboard\leader_crown_icon" IsVisible="@IsKingdomLeader" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+
+            <!--Element Name: wraps inside the layout instead of hanging below the button at a fixed height-->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="6" MarginLeft="6" MarginRight="6" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="*NameFontSize" Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Top" Text="@NameText" DoNotAcceptEvents="true" />
+          </Children>
+        </ListPanel>
+
+        <!--Element Hint: relays the button's hover-->
+        <HintWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+      </Children>
+    </ButtonWidget>
+  </Window>
+</Prefab>

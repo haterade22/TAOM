@@ -1,0 +1,45 @@
+<Prefab>
+  <Window>
+    <!--Settlement-only variant of native EncyclopediaSettlementPageStats: the same two collections, items, icons, texts and hints, as one continuous
+        row. Each list covers only its own items (installed VM: a town or castle fills 4 left and 3 right, a village 1 and 1), each value a 120 by 36
+        cell with a 24 px icon and a 20 pt value centred together, and a 16 px transparent gap separates the two native groups. The row is centred
+        in the 904 px stats area: a town is 7 x 120 + 16 = 856 px wide, a village 256 px.-->
+    <ListPanel Id="Properties" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+      <Children>
+        <NavigationScopeTargeter ScopeID="LeftSidePropertiesScope" ScopeParent="..\LeftSideProperties" ScopeMovements="Horizontal" ForceGainNavigationOnClosestChild="true" />
+        <NavigatableListPanel Id="LeftSideProperties" DataSource="{LeftSideProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <Widget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="36" VerticalAlignment="Center">
+              <Children>
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" UpdateChildrenStates="true">
+                  <Children>
+                    <IconBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" VerticalAlignment="Center" Brush="Encyclopedia.Settlement.Description.Type.BaseBrush" IconBrush="Encyclopedia.Settlement.Description.Type.Brush" IconID="@TypeString" UseStylesFromSourceIcon="true" />
+                    <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginLeft="9" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextVerticalAlignment="Center" Text="@StatText" />
+                  </Children>
+                </ListPanel>
+                <HintWidget DataSource="{BasicTooltipViewModel}" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </NavigatableListPanel>
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="36" DoNotAcceptEvents="true" />
+        <NavigationScopeTargeter ScopeID="RightSidePropertiesScope" ScopeParent="..\RightSideProperties" ScopeMovements="Horizontal" ForceGainNavigationOnClosestChild="true" />
+        <NavigatableListPanel Id="RightSideProperties" DataSource="{RightSideProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <Widget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="36" VerticalAlignment="Center">
+              <Children>
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" UpdateChildrenStates="true">
+                  <Children>
+                    <IconBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" VerticalAlignment="Center" Brush="Encyclopedia.Settlement.Description.Type.BaseBrush" IconBrush="Encyclopedia.Settlement.Description.Type.Brush" IconID="@TypeString" UseStylesFromSourceIcon="true" />
+                    <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginLeft="9" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextVerticalAlignment="Center" Text="@StatText" />
+                  </Children>
+                </ListPanel>
+                <HintWidget DataSource="{BasicTooltipViewModel}" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </NavigatableListPanel>
+      </Children>
+    </ListPanel>
+  </Window>
+</Prefab>

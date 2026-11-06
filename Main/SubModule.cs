@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using TAOM.Dependencies.Foundation;
@@ -2313,6 +2313,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+        TAOM.Features.FactionUI.Campaign.EncyclopediaPictureCache.ReleaseAll();
 
         // Clean-shutdown marker. Written FIRST, while IoC and the logger are both still alive, and
         // on the durable path so it is flushed synchronously before the process can go away.

@@ -108,6 +108,26 @@ public sealed class FrontEndMovieService
             case FactionScreenMovie when dataSourceTypeName == "FactionScreenVM":
                 return Themed(movieName, FactionScreenMovie, CreationFrame | FrontEndImageGroups.FactionArt);
 
+            case "EscapeMenu":
+            case "CampaignOptions":
+            case "MapBar" when dataSourceTypeName == "MapBarVM":
+            case "CharacterDeveloper" when dataSourceTypeName == "CharacterDeveloperVM":
+            case "EncyclopediaBar":
+            case "EncyclopediaHome":
+            case "EncyclopediaItemList":
+            case "EncyclopediaSettlementPage":
+            case "EncyclopediaHeroPage":
+            case "EncyclopediaUnitPage":
+            case "EncyclopediaFactionPage":
+            case "EncyclopediaClanPage":
+                var groups = movieName == "EscapeMenu" ? CreationFrame | FrontEndImageGroups.MainMenu : CreationFrame;
+                return Themed(movieName, "TAOM" + movieName, groups);
+
+            // The Camp icon beside the clock. Its layer is built by FieldCampMapView, in no fixed order
+            // with the MapBar, so it takes its own hold on the chrome its icon draws from.
+            case "TaomFieldCampOverlay" when dataSourceTypeName == "FieldCampOverlayVM":
+                return Themed(movieName, "TAOMFieldCampOverlay", CreationFrame);
+
             default:
                 return null;
         }

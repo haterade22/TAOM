@@ -1,0 +1,32 @@
+<Brushes>
+  <Brush Name="TAOM.Character.Text" TextHorizontalAlignment="Left" Font="FS_Garamond" FontSize="22" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.CenterText" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" /><Style Name="Hovered" FontColor="#E8C77AFF" /><Style Name="Selected" FontColor="#E8C77AFF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Panel"><Layers><BrushLayer Name="Default" Sprite="cs_character_backplate" ColorFactor="0.82" SaturationFactor="-12" /></Layers></Brush>
+  <Brush Name="TAOM.Character.Stone"><Layers><BrushLayer Name="Default" Sprite="ld_bar_stone" ColorFactor="0.65" /></Layers></Brush>
+  <Brush Name="TAOM.Character.Rail"><Layers><BrushLayer Name="Default" Sprite="cs_tab_rail_9" ColorFactor="0.84" /></Layers></Brush>
+  <Brush Name="TAOM.Character.Card" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="cs_skill_card" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" Sprite="cs_skill_card" /></Style><Style Name="Hovered"><BrushLayer Name="Default" Sprite="cs_skill_card_selected" ColorFactor="0.85" /></Style><Style Name="Selected"><BrushLayer Name="Default" Sprite="cs_skill_card_selected" /></Style><Style Name="Disabled"><BrushLayer Name="Default" Sprite="cs_skill_card" AlphaFactor="0.45" /></Style></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Tab" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#CBA653FF" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style><Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.08" /></Style><Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.14" /></Style><Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="0.11" /></Style></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Perk" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Rim" Sprite="cs_circle" Color="#826F4CFF" /><BrushLayer Name="Stone" Sprite="cs_circle" Color="#161714FF" ExtendLeft="-2" ExtendRight="-2" ExtendTop="-2" ExtendBottom="-2" /></Layers>
+    <Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Rim" Color="#E3C074FF" /></Style><Style Name="Pressed"><BrushLayer Name="Rim" Color="#BA9349FF" /></Style><Style Name="Selected"><BrushLayer Name="Rim" Color="#E3C074FF" /><BrushLayer Name="Stone" Color="#28251AFF" /></Style></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Action" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="fs_confirm" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.9" /></Style><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style><Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Previous"><Layers><BrushLayer Name="Default" Sprite="cc_arrow_l" ImageFit.Type="Contain" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.4" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.25" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Character.Next"><Layers><BrushLayer Name="Default" Sprite="cc_arrow_r" ImageFit.Type="Contain" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.4" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.25" /></Style></Styles></Brush>
+  <Brush Name="TAOM.Character.ScrollRail"><Layers><BrushLayer Name="Default" Sprite="cs_scroll_rail" /></Layers></Brush>
+</Brushes>
+
+

@@ -1,0 +1,60 @@
+<Prefab>
+  <VisualDefinitions>
+    <VisualDefinition Name="TAOMTimePanel" TransitionDuration="0.45" EaseType="EaseOut" EaseFunction="Quint">
+      <VisualState PositionYOffset="0" State="Default" />
+      <VisualState PositionYOffset="110" State="Disabled" />
+    </VisualDefinition>
+  </VisualDefinitions>
+  <Window>
+    <MapCurrentTimeVisualWidget Id="CenterPanel" VisualDefinition="TAOMTimePanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="536" SuggestedHeight="96" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="4" CurrentTimeState="@TimeFlowState" FastForwardButton="FastForwardButton" IsEnabled="@IsCenterPanelEnabled" PauseButton="PauseButton" PlayButton="PlayButton">
+      <Children>
+        <!-- 536 wide so the Camp side lies inside the panel's event rectangle; everything that was
+             already here is offset by 53 so it keeps its screen position. The original leaf wings are
+             clipped to their left half (never stretched) and the blank right wing carries the Camp
+             icon's room; the icon itself is drawn by the camp overlay layer (TAOMFieldCampOverlay).
+             The right wing is painted 13 px right of the panel centre (offset 281, natural 268 width):
+             its leaf stem then sits beside the 96 px dial, not under it. Its outer tip passes the
+             panel edge by 13 px; the root does not clip, and the wing takes no events. -->
+        <Widget Id="LeftWingClip" SuggestedWidth="215" SuggestedHeight="62.5" PositionXOffset="53" PositionYOffset="35.3" ClipContents="true" DoNotAcceptEvents="true">
+          <Children>
+            <BrushWidget Id="TimeBackplate" SuggestedWidth="430" SuggestedHeight="62.5" Brush="TAOM.Time.Backplate" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+        <BrushWidget Id="CampWing" SuggestedWidth="268" SuggestedHeight="62.5" PositionXOffset="281" PositionYOffset="35.3" Brush="TAOM.Time.CampWing" DoNotAcceptEvents="true" />
+        <NavigationScopeTargeter ScopeID="MapBarCenterPanelScope" ScopeParent="..\." ScopeMovements="Horizontal" NavigateFromScopeEdges="true" LeftNavigationScope="MapNavigationScope" RightNavigationScope="MapBarRightPanelTopInfoBarScope" IsScopeEnabled="@IsCenterPanelEnabled" />
+        <TextWidget Id="CampaignDate" SuggestedWidth="140" SuggestedHeight="30" PositionXOffset="69" PositionYOffset="43.5" Brush="TAOM.Time.Date" Text="@Date" DoNotAcceptEvents="true" />
+        <ButtonWidget Id="TreeDialButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="96" SuggestedHeight="96" HorizontalAlignment="Center" VerticalAlignment="Bottom" Command.Click="ExecuteResetCamera" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+          <Children>
+            <CampaignTimeDialWidget Id="TreeDial" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" SuggestedWidth="96" SuggestedHeight="96" DayTime="@Time" DoNotAcceptEvents="true">
+              <Children>
+                <ImageWidget Id="DayTrees" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cb_time_day" DoNotAcceptEvents="true" />
+                <ImageWidget Id="NightTrees" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cb_time_night" DoNotAcceptEvents="true" />
+              </Children>
+            </CampaignTimeDialWidget>
+            <HintWidget DataSource="{TimeOfDayHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget Id="PauseButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="186" MarginBottom="23" Brush="TAOM.Time.Pause" Command.Click="ExecuteTimeControlChange" CommandParameter.Click="0" GamepadNavigationIndex="1">
+          <Children>
+            <HintWidget DataSource="{PauseHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget Id="PlayButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="151" MarginBottom="23" Brush="TAOM.Time.Play" Command.Click="ExecuteTimeControlChange" CommandParameter.Click="1" GamepadNavigationIndex="2">
+          <Children>
+            <HintWidget DataSource="{PlayHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget Id="FastForwardButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="111" MarginBottom="23" Brush="TAOM.Time.FastForward" Command.Click="ExecuteFastForward" CommandParameter.Click="2" GamepadNavigationIndex="3">
+          <Children>
+            <HintWidget DataSource="{FastForwardHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget Id="FastFastForwardButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="71" MarginBottom="23" Brush="TAOM.Time.ExtraFastForward" IsSelected="@IsExtraFastForwardActive" Command.Click="ExecuteExtraFastForward" CommandParameter.Click="2" GamepadNavigationIndex="4">
+          <Children>
+            <HintWidget DataSource="{ExtraFastForwardHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+          </Children>
+        </ButtonWidget>
+      </Children>
+    </MapCurrentTimeVisualWidget>
+  </Window>
+</Prefab>
