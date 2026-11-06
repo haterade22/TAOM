@@ -22,6 +22,17 @@ Unverified agreement, unverified success, and invented facts are the three cheap
 
 Sections A + B imported from obra/superpowers (`receiving-code-review` + `verification-before-completion` skills, reviewed 2026-05-29), combined into one rule because both encode "evidence over performance." Adapted to TAOM's review-heavy, auto-implementing pipeline; the verify-the-finding-first emphasis is TAOM-specific, grounded in `feedback_audit_findings_not_always_correct.md` and `feedback_codex_caught_api_misread.md`. We did NOT adopt superpowers' wholesale plugin (prompt-injection-by-design + context tax) — only the reviewed text. **Section C is TAOM-originated (2026-05-30), written from a live fabrication failure in this codebase** (`feedback_no_write_before_reading_tool_output.md`) rather than ported — the user's standing instruction is that not-knowing is fine and must be met with research, never with invention.
 
+### Incidents since the first write-up
+
+- **2026-11-06, Arnor elite troops** ([RCA](../reviews/rca-arnor-elite-troops-2026-11-06.md) F2 and F8).
+  Facets A.4 and C.4 failed in one change. A lens's load-bearing claim (a bastard sword "has no one-handed
+  grip without a shield", read from its primary usage only) went into a code comment and a doc before
+  anyone read the usage list. "The Armory has no pike item" came from a search limited to two item
+  prefixes, and "upgrade-only, nothing else changes" came from the party-template list instead of from the
+  readers of the upgrade edge. Both statements sat in the review brief, so every reviewer inherited them;
+  two lenses and Codex still caught them because the brief asked them to disprove the change. The fix
+  lives in the workflow, not the rule: the deep-review skill's "Brief with decisions and facts you read".
+
 ## simplicity-criterion.md
 
 ### Why this rule exists

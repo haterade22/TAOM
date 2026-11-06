@@ -50,6 +50,10 @@ The file list (Files changed, or Implementation for a feature) names every shipp
   section, and link that section in the closing comment.
   The backlog is a query, visible from every machine and client:
   `gh issue list --state all --label triage-needs-ingame`
+- If the maintainer waived the issue, nothing carries that label, so the owed checks must not live only
+  in your head: write them in the feature doc's `## How to verify in game` section (one per changed doc),
+  note "no issue, waived by <name>" in its changelog line, and put a `Not-tested:` paragraph in the commit
+  body that names each check. A translation row still goes on the #763 backlog (Arnor elite troops, 2026-11-06).
 
 **Commands:** Use `gh issue create` and `gh issue close` via Bash.
 

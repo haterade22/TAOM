@@ -2,7 +2,7 @@
 
 **Summary:** A player suggested five lore-based elite units for the Arnor realms. Mike chose all five, no special resource cost (#963 stands), no outside mod named, and waived the GitHub issue. Four were built: the Knight of Annuminas, the Evendim Warden and the Dunedain Steel Bowman for Arthedain, and the Tharbad Bridge Guard for Cardolan. The Grey Company Ranger was not started (the Grey Company is a vanilla minor clan whose tier troops are retagged by `lords.xslt`; it needs its own look at that XSLT).
 
-The review was tier 1, because the change writes live Armory data (the new bow). Codex ran at `high` (lowered from `ultra`: four data rows that copy sibling rows, no engine code). The first wave was lenses 5 (data flow), 2 (engine compatibility), 7 (XML) and the tooling lens. Lens 7 reported a HIGH, which triggered a second wave (lenses 3, 4 and 6 at `high`), a lens 7 re-review of the fix and a second Codex pass on the fix diff. Lens 1 (standards) was not in scope: no C# production code and no harness file changed. The build and the full C# suite passed except `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`, an environment failure (installed build 125270, reference package 125053).
+The review was tier 1, because the change writes live Armory data (the new bow). Codex ran at `high` (lowered from `ultra`: four data rows that copy sibling rows, no engine code). The first wave was lenses 5 (data flow), 2 (engine compatibility), 7 (XML) and the tooling lens. Lens 7 reported a HIGH, which triggered a second wave (lenses 3, 4 and 6 at `high`), a lens 7 re-review of the fix and a second Codex pass on the fix diff. Lens 1 (standards) was not in scope: no C# production code and no harness file changed. The build passed. The final full C# suite had 37354 passes and two failures that this change does not cause: `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` (installed build 125270, reference package 125053), and `LongDefeatTowerVolleyPinTests.HelmsDeepsHighTowers_...`, which reads the live TAOM_Map Helm's Deep scene, rewritten the same day and no longer naming a `towertop` or `walltower`. The Python tool tests passed (8030).
 
 One HIGH, three MEDIUM and a run of LOW findings were confirmed. The HIGH and two of the MEDIUM were fixed; the third MEDIUM is a property of the engine and is documented. Nothing was found that crashes the game or corrupts a save.
 
@@ -35,6 +35,23 @@ F1, F2, F3 and F4 share one cause: I added troops to a tree by editing the gener
 - **Lens 6 (design):** caught F3's design flaw and the two false statements in F8. **Lens 4 (completeness):** caught F9. **Lens 3 (efficiency):** nothing in scope.
 - **Codex (second pass) and the lens 7 re-review:** confirmed the F1, F4 and F5 fixes and found only the F8(a) comment again.
 
+## What went wrong in the process
+
+These are the working mistakes behind the findings, kept so the next change does not repeat them.
+
+1. **Code before tests.** The approved plan said "tests first (RED)". I edited both generators first and let the generators' self-check stand in for a test. It passed, and it proves only that the tree is well formed. The failing tests for F1, F3 and F4 were written after a reviewer had found each defect.
+2. **A scope claim without a trace.** I wrote "upgrade-only, nothing else in the game changes" into the plan, the review brief and a chat message before I had listed who reads `UpgradeTargets` (F2).
+3. **An unscoped negative.** I told the maintainer that no pike item existed after a search limited to the Gondor and Numenorean prefixes, and wrote it into the plan, a generator comment, a feature doc and the Codex brief (F8b).
+4. **A relayed claim.** I copied a lens's statement about the bastard sword's grips into a comment and a doc without opening the usage list (F8a). I read the data only after a second lens contradicted it.
+5. **Questions asked late.** The Bridge Guard's placement and weapon went to the maintainer after the design lens had flagged them. They could have been asked at design time, with the sibling troop's data beside the proposal.
+6. **A brief that carried my conclusions.** The Codex and lens briefs listed my own readings under "Deliberate choices", so every reviewer inherited them.
+
+What worked, and stays: a tier 1 review with a pre-review from Codex and independent lenses found the HIGH before it shipped; every reviewer's claim that disagreed with another's was settled by reading the source; the second wave and the convergence pass each found something the earlier waves did not.
+
+## The workflow that replaces it
+
+Written down in three places, by who needs it when: the three checks in `.claude/rules/troops.md` (fires when a troop file is read or edited), the recipe and the nine-step order in `docs/modding/troops.md` "Recipes: Add", and the brief rule in the `/deep-review` skill ("Brief with decisions and facts you read"). The verified weapon-usage facts are in `docs/features/weapon-xml-pipeline.md` "Shieldless troops", the faction screen tie-break in `docs/features/faction-ui.md`, and the waived-issue handling in `docs/ai-includes/completion-workflow.md`.
+
 ## Follow-ups
 
 - FOLLOW-UP: `tools/realm_troops.py` `self_check` has no check that an archer's engine tier is on its ladder line (tooling lens T2), and none that the weapon class of Item0 matches the role curve (lens 6). A scan of the eight realm generators finds two more troops with the Evendim Warden's old shape: `arthedain_squire` and `rhudaur_squire` (one poleaxe on the `twohand` curve, so Polearm 80 against TwoHanded 100). no issue: Mike waived issues for this work, and the code predates it; it is for the next `/improve` pass.
@@ -45,4 +62,4 @@ F1, F2, F3 and F4 share one cause: I added troops to a tree by editing the gener
 
 ## Lessons recorded
 
-`docs/reviews/lessons/data-content-cultures.md`: "Adding an upgrade edge changes more than the troop tree" and "A role curve must match the engine skill of the weapon in Item0" (both 2026-11-06).
+`docs/reviews/lessons/data-content-cultures.md`: "Adding an upgrade edge changes more than the troop tree" and "A role curve must match the engine skill of the weapon in Item0" (both 2026-11-06). `docs/reviews/lessons/misc.md`: "A review brief carries decisions and facts you read, not your own conclusions". The rule-provenance record for `evidence-over-claims.md` has the incident (`docs/reference/rule-provenance.md`).

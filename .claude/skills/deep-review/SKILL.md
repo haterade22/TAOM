@@ -106,6 +106,8 @@ SCOPE NOTES: <the change's intent; in shared files, which hunks are this change'
 
 Add only what the lens cannot know. The agent definition already carries the operating-manual briefing and the read-only rules.
 
+**Brief with decisions and facts you read, never your own conclusions stated as facts.** Every lens, and Codex, inherits the premise in the brief, and a false one (an unchecked "nothing else changes") comes back repeated. Under "Deliberate choices" list only what the maintainer decided; put your own readings of the code in SCOPE NOTES as questions. When two lenses disagree on an engine or data fact, read the source yourself before you write either claim into code or a doc ([RCA](../../../docs/reviews/rca-arnor-elite-troops-2026-11-06.md) F8).
+
 **Triage ordering, spec before quality** (`docs/ai-includes/agent-teams.md` "Subagent review ordering"): resolve Agent 1, 2, 5 and 7 findings before acting on Agent 3 and 6 proposals. A standards violation can make quality feedback moot; don't optimise code that is about to be restructured.
 
 ## Step 2b: Adversarial Escalation (conditional)
