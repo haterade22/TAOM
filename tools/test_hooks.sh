@@ -2249,6 +2249,66 @@ PYEOF
 done
 
 # ---------------------------------------------------------------------------
+head2 "7g. config-protection blocks ADR and config edits whatever the path spelling"
+# The ADR guard matched `*"/docs/adrs/"*`, but the Edit and Write tools pass a Windows path
+# (E:\repos\TAOM\docs\adrs\x.md), so it never fired on the dev machine: ADR-012 and two ADR edits
+# went through unchallenged on 2026-09-26 (#677). A case is "2" for blocked, "0" for allowed. The
+# session id is unique so a leftover override flag from a real session cannot mask a case.
+CP_CASES=(
+  '2|E:\repos\TAOM\docs\adrs\012-graphify-code-graph-in-the-workflow.md'
+  '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
+  '2|/e/repos/TAOM/docs/adrs/README.md'
+  '2|docs/adrs/011-knowledge-delivery-tiers.md'
+  '2|docs\adrs\011-knowledge-delivery-tiers.md'
+  '2|E:\repos\TAOM\Docs\ADRs\012-Graphify.MD'
+  '2|E:\repos\TAOM\.claude\settings.json'
+  '2|E:\repos\TAOM\.claude\Settings.Local.json'
+  '2|E:\repos\TAOM\Directory.Build.props'
+  '0|E:\repos\TAOM\docs\features\graphify-code-graph.md'
+  '0|E:\repos\TAOM\docs\adrs-notes\draft.md'
+  '0|E:\repos\TAOM\docs\adrs\diagram.png'
+  '0|E:\repos\TAOM\docs\reviews\adrs\summary.md'
+)
+cp_run() {   # $1 path, $2 the payload's session_id or "", then env assignments; returns the hook's rc
+    local path="$1" sid="$2" payload
+    shift 2
+    payload=$("$HPY" -c '
+import json, sys
+d = {"tool_name": "Edit", "tool_input": {"file_path": sys.argv[1]}, "hook_event_name": "PreToolUse"}
+if sys.argv[2]:
+    d["session_id"] = sys.argv[2]
+print(json.dumps(d))' "$path" "$sid")
+    printf '%s' "$payload" | timeout -k 2 10 env -u CLAUDE_CODE_SESSION_ID -u CLAUDE_SESSION_ID \
+        CLAUDE_PROJECT_DIR="$SANDBOX" "$@" bash .claude/hooks/config-protection.sh >/dev/null 2>&1
+}
+for entry in "${CP_CASES[@]}"; do
+    want="${entry%%|*}"; path="${entry#*|}"
+    cp_run "$path" "taom-hooktest-$$"
+    got=$?
+    [[ "$got" == "$want" ]] && ok "config-protection rc=$got for: $path" \
+        || bad "config-protection expected rc=$want, got $got for: $path"
+done
+# The override is per session (2026-10-16). Its name carries the payload's session_id (every hook's
+# input), else CLAUDE_CODE_SESSION_ID, else CLAUDE_SESSION_ID. Until then it read only CLAUDE_SESSION_ID,
+# which the harness does not set, so the name was always ...-none and one file unlocked every session.
+CP_SID="taom-hooktest-ovr-$$"
+CP_SETTINGS='E:\repos\TAOM\.claude\settings.json'
+: > "/tmp/claude-config-override-$CP_SID"
+cp_run "$CP_SETTINGS" "$CP_SID"; got=$?
+[[ $got -eq 0 ]] && ok "config-protection: this session's override (payload session_id) allows a settings.json edit" \
+    || bad "config-protection ignored the payload session_id's override (rc=$got)"
+cp_run "$CP_SETTINGS" "taom-hooktest-other-$$"; got=$?
+[[ $got -eq 2 ]] && ok "config-protection: another session's override does not unlock this session" \
+    || bad "config-protection let one session's override unlock another (rc=$got)"
+cp_run "$CP_SETTINGS" "" CLAUDE_CODE_SESSION_ID="$CP_SID"; got=$?
+[[ $got -eq 0 ]] && ok "config-protection: CLAUDE_CODE_SESSION_ID names the override when the payload has no id" \
+    || bad "config-protection ignored CLAUDE_CODE_SESSION_ID (rc=$got)"
+cp_run "$CP_SETTINGS" "x/../../tmp/claude-config-override-$CP_SID"; got=$?
+[[ $got -eq 2 ]] && ok "config-protection: a session id cannot walk to another override file" \
+    || bad "config-protection followed path characters in a session id to another file (rc=$got)"
+rm -f "/tmp/claude-config-override-$CP_SID"
+
+# ---------------------------------------------------------------------------
 # 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
 #     Git Bash 5.3 hangs forever on a here-string or here-document whose document is 65,537 to
 #     65,664 bytes (text of 65,536 to 65,663 plus the newline a here-string adds), and a killed gate
