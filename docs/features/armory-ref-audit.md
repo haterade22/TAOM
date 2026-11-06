@@ -70,7 +70,7 @@ the generators' `--verify` is per generator. And nothing ran any of them after a
   `docs/audits/armory-ref-audit.md`, so `git diff` after a re-run is the change log. Verdict
   `CLEAN` or `BROKEN`; generator drift is a WARNING with its `DRIFT:` lines, because a verdict that
   stays BROKEN over a scaffolder disagreement trains readers to ignore it.
-- **The validator carries the hang class, on the line that has plan 108 Step B4.** That step is held on the 1.4.x line (D27 rule 8): `validate_moduledata.py` here emits neither code below, the hook has no such `--code` line, and the tests this page names for them are absent. Until it lands, `tools/audit_armory_refs.py` (below) and the Patch90 runtime guard carry the class. What B4 brings: `validate_moduledata.py` gained
+- **The validator carries the hang class.** `validate_moduledata.py` gained
   `MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), emitted from the same
   `validate_mesh_refs` engine, skipped never faked without the install, and a run that found no
   tpacs to scan is itself a finding. The commit hook's `--code` allowlist carries the ERROR;
@@ -97,7 +97,7 @@ after any Armory sync, by hand  ---------------------------->  tools/audit_armor
                                                                     '-- generate_ranged_ladder_items / generate_starter_kit --verify
                                                                     v
                                                     docs/audits/armory-ref-audit.md  (committed)
-validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh  (MCP, /verify: #623; plan 108 Step B4, held)
+validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh  (MCP, /verify: #623)
 ```
 
 ## Configuration
@@ -113,9 +113,9 @@ the CLI.
 | `tools/audit_armory_refs.py` | the composer; `flag_breakage`, `join_impact`, `render_report`, `exit_code` are pure |
 | `tools/tests/test_audit_armory_refs.py` | ten synthetic tests, no install |
 | `docs/audits/armory-ref-audit.md` | the committed report |
-| `tools/validate_moduledata.py` (plan 108 Step B4, held) | `missing_collision_body_issues`, `borrowed_body_issues`, `BODY_CODE`, `MESH_CODE`, `BORROWED_BODY_CODE`, `_loaded_tpacs` |
-| `tools/tests/test_validate_moduledata.py` (plan 108 Step B4, held) | `MissingCollisionBodyTests`; `CommitGateCoverageTests` scans both emitting files |
-| `.claude/hooks/check-moduledata-validation.sh` (plan 108 Step B4, held) | `--code MISSING_COLLISION_BODY`, `--code COLLISION_BODY_BORROWED` |
+| `tools/validate_moduledata.py` | `missing_collision_body_issues`, `borrowed_body_issues`, `BODY_CODE`, `MESH_CODE`, `BORROWED_BODY_CODE`, `_loaded_tpacs` |
+| `tools/tests/test_validate_moduledata.py` | `MissingCollisionBodyTests`; `CommitGateCoverageTests` scans both emitting files |
+| `.claude/hooks/check-moduledata-validation.sh` | `--code MISSING_COLLISION_BODY`, `--code COLLISION_BODY_BORROWED` |
 | `tools/validate_mesh_refs.py` | the engine: `extract_refs`, `tpac_paths_for_modules` / `module_tpacs` (loose tree first), `build_present_set`, `classify` |
 | `docs/reference/armory-catalogue/catalogue.tsv` | the baseline the drift is measured against |
 
@@ -130,7 +130,7 @@ the CLI.
   committed flag; direct and roster-hop consumers both appear; the report names body, item and
   troop on one row and is byte-stable; exit code semantics; generator drift warns; a cooked install
   skips the catalogue and refuses `--regen-catalogue`.
-- Once plan 108 Step B4 lands: `python -m unittest tools.tests.test_validate_moduledata.MissingCollisionBodyTests
+- `python -m unittest tools.tests.test_validate_moduledata.MissingCollisionBodyTests
   tools.tests.test_validate_moduledata.CommitGateCoverageTests` (11), and
   `python -m unittest tools.tests.test_collision_body_borrowed` (14).
 - `bash tools/test_hooks.sh` covers the hook's timeout and inner bound.

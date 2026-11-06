@@ -31,6 +31,15 @@ Checks (each maps to a recurring TAOM bug class):
                              live install does not define (warning; needs the install;
                              the generator list and the walk live in
                              check_generator_item_refs.py)
+  MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
+                             collision body names a PhysicsShape no loaded tpac ships.
+                             PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
+                             the #352 / #599 infinite mission load (needs the install;
+                             the tpac scan lives in validate_mesh_refs.py)
+  MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
+  COLLISION_BODY_BORROWED    a weapon or crafting piece whose body_name is another kit's
+                             bo_<mesh> twin: it resolves, on art the item does not own
+                             (#633; needs the install; reuses validate_mesh_refs.py)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -41,6 +50,7 @@ Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
 import argparse
 import json
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -134,6 +144,201 @@ def generator_item_ref_issues(items: set) -> list:
     return issues
 
 
+BODY_CODE = "MISSING_COLLISION_BODY"
+MESH_CODE = "MISSING_VISUAL_MESH"
+# Every module whose packs the client loads for item art; which tree of each the
+# engine reads is validate_mesh_refs.tpac_paths_for_modules's to decide.
+_ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
+
+
+def _loaded_tpacs(game_modules: Path) -> list:
+    import validate_mesh_refs as vmr
+    return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
+
+
+def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
+    """ERROR per collision-body ref no loaded tpac ships, WARNING per visual mesh.
+
+    A body the engine cannot resolve is not a warning class: `PreloadHelper.
+    WaitForMeshesToBeLoaded` (TaleWorlds.MountAndBlade.View) counts every
+    registered body name that `PhysicsShape.GetFromResource` returns null for,
+    on every pass of a do/while with no exit, so one bad `body_name` on any item
+    a mission preloads (every participant's kit, the player's first) spins the
+    game thread forever. Two body_name typos did it in #352; the 2026-09-11 art
+    drop that renamed the elven bows did it again in #599, and the elf start
+    hung for two days because the only gate for it was a separate command
+    nobody ran after the sync. This pass makes it part of the validator the
+    commit hook runs (wired into main() by #622; the MCP tool and /verify do not
+    run it yet, #623).
+
+    validate_mesh_refs.py owns the ref extraction and the tpac TOC scan (Tier B
+    visual meshes, Tier C PhysicsShapes); this only turns its findings into
+    issues, over the Armory's WHOLE ModuleData plus this repo's (the #352 scope
+    lesson: crafting pieces live one level above LOTRLOME_items/). Its
+    KNOWN_DEAD_MESH allowlist and UNVERIFIED downgrades stay in that tool.
+
+    Skipped, never faked, without the install; and a run that found no packs to
+    scan is reported as a finding, because "every body missing" filtered to
+    nothing would read exactly like a clean run."""
+    import validate_mesh_refs as vmr
+    tpacs = _loaded_tpacs(game_modules)
+    if not tpacs:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
+                    f"collision bodies were NOT verified this run")]
+    try:
+        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+        if moduledata.exists():
+            refs += vmr.extract_refs(moduledata)
+        present = vmr.build_present_set(tpacs)
+        # A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        # parse can hide one. Byte-scanning all of them took 110-119 s (4,611 packs, 22.6 GiB),
+        # past the commit hook's 45 s bound, in exactly the #599 case this gate exists for.
+        unparsed = [Path(p) for p, _ in present.unparsed]
+        findings = vmr.classify(refs, present, None, scan_bodies=True, body_tpac_paths=unparsed)
+    except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"collision bodies were NOT verified this run: the scan raised "
+                    f"{type(exc).__name__}: {exc}")]
+    issues = []
+    for i in findings:
+        if i.code == "MISSING_BODY":
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=BODY_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. Every mission that preloads a carrier of this item spins "
+                        f"forever in PreloadHelper.WaitForMeshesToBeLoaded (#352, #599). Repoint the "
+                        f"ref to the art that ships; python tools/audit_armory_refs.py names the troops"))
+        elif i.code == "MISSING_MESH":
+            issues.append(ts.Issue(
+                severity=ts.Severity.WARNING, code=MESH_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
+                message=f"{i.message}. The item renders invisible; repoint the mesh to the art that ships"))
+    return issues
+
+
+BORROWED_BODY_CODE = "COLLISION_BODY_BORROWED"
+_SHIELD_ATTRS = {"shield_body_name"}
+# Body sharing that is design, not a borrow. Each entry: (borrower kit regex, owner kit regex,
+# reason). A kit is the first two tokens of a name after its sm_/wm_/bo_/bo_cap_ prefix.
+_SHARED_BODY_BY_DESIGN = (
+    (re.compile(r"^(?:rh_drag|dg_khml|rh_loke)$"), re.compile(r"^(?:rh_drag|dg_khml|rh_loke)$"),
+     "Dragon and Khamul are re-textured Loke geometry; the three Rhun kits share bodies "
+     "(Mike, 2026-09-21)"),
+)
+_ART_PREFIX_RE = re.compile(r"^(?:bo_cap_|bo_)?(?:sm_|wm_)?")
+
+
+def _kit(name: str) -> str:
+    """The kit a mesh or body belongs to: its first two name tokens after the art prefixes.
+    `sm_rh_drag_sword_blade_a` -> `rh_drag`, `bo_wm_elven_bow_a03` -> `elven_bow`,
+    `wm_rivendell_sword_a01_silver_blade` -> `rivendell_sword`."""
+    return "_".join(_ART_PREFIX_RE.sub("", name).split("_")[:2])
+
+
+def _twin_owner(body: str, meshes: set):
+    """The mesh this body is the twin of, by the `bo_<mesh>` / `bo_cap_<mesh>` convention, or
+    None when no shipped mesh matches (a body under a variant name is nobody's twin)."""
+    for prefix in ("bo_cap_", "bo_"):
+        if body.startswith(prefix) and body[len(prefix):] in meshes:
+            return body[len(prefix):]
+    return None
+
+
+def borrowed_body_issues(game_modules: Path, moduledata: Path) -> list:
+    """ERROR per weapon or crafting piece whose collision body is another kit's twin (#633).
+
+    The convention (docs/ai-includes/weapon-creation-workflow.md, Step D) is that a weapon body
+    is `bo_` + the exact mesh id, authored in the mesh's own FBX. That doc also sanctions
+    borrowing a same-shaped body from elsewhere as a placeholder until the artist delivers.
+    Three Rhun longbow meshes shipped on that placeholder for good, all carrying the elven bow's
+    `bo_wm_elven_bow_a03`, and no gate noticed because the borrowed name resolves: every "does it
+    resolve" check answers yes for a name that ships anywhere. This asks the other question: is
+    the body this mesh's own?
+
+    A borrow is a body that is provably ANOTHER mesh's twin: `bo_<M2>` or `bo_cap_<M2>` for a
+    shipped mesh M2 that is not this item's mesh. A body under a variant name
+    (`bo_uruk_halberd_blade_a1` for `sm_uruk_halberd_blade_a1`) is nobody's twin and passes.
+    Sharing a body WITHIN a kit is design, not a borrow: the ruby and topaz Aranruth blades, the
+    silver and black Rivendell swords, the `_a2` Erebor axe on `_a`'s body, all share one
+    geometry, so a borrow from the same kit passes, and `_SHARED_BODY_BY_DESIGN` names the
+    cross-kit shares that are authorised (Dragon and Khamul are re-textured Loke). Vanilla bodies
+    are exempt (Native is always resident, and vanilla art is never a placeholder for ours);
+    shields are exempt (they carry `bo_cap_*` in `body_name` and share capsules by convention,
+    docs/modding/items-shields.md); a body no pack ships is left to MISSING_COLLISION_BODY.
+
+    Measured 2026-09-21 on the live install after the #633 repair: 0 items, 58 crafting pieces
+    borrow, 38 of them the Rhun family and 20 within one kit, so 0 findings. The nine #633 items
+    (three donors, six generated clones) fire under this rule. Why the player's build hung is a
+    separate, open question: the cooked release on this machine ships the borrowed body in its
+    pack0, so the borrow resolved there too, and the mechanism this gate was first written on (a
+    body cooked into a different AssetPackage than its mesh) is false: the cook puts every body in
+    pack0/pack1 and every mesh elsewhere, for the working items as much as the broken ones.
+
+    Skipped, never faked, without the install. Reuses validate_mesh_refs.py for the ref
+    extraction and the TOC scan, like missing_collision_body_issues."""
+    import validate_mesh_refs as vmr
+    tpacs = vmr.module_tpacs(Path(game_modules) / "LOTRLOME_Armory", "LOTRLOME_Armory")
+    if not tpacs:
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",
+            message=f"no LOTRLOME_Armory *.tpac found under {game_modules}; collision-body "
+                    f"ownership was NOT verified this run")]
+    try:
+        present = vmr.build_present_set(tpacs)
+        meshes = {n.lower() for n in present.metameshes}
+        bodies = {n.lower() for n in present.physicsshapes}
+        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+        if moduledata.exists():
+            refs += vmr.extract_refs(moduledata)
+    except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",
+            message=f"collision-body ownership was NOT verified this run: the scan raised "
+                    f"{type(exc).__name__}: {exc}")]
+
+    primary: dict = {}
+    shields: set = set()
+    for r in refs:
+        key = (r.file, r.item_id)
+        if r.kind == "visual_mesh" and r.attr == "mesh":
+            primary[key] = r.name.lower()
+        if r.attr in _SHIELD_ATTRS:
+            shields.add(key)
+
+    issues = []
+    for r in refs:
+        # holster_body_name is a third body the engine polls; it is not paired with a mesh
+        # today (no ref of it borrows, measured 2026-09-21) and stays MISSING_COLLISION_BODY's.
+        if r.attr != "body_name":
+            continue
+        key = (r.file, r.item_id)
+        if key in shields:
+            continue
+        body = r.name.lower()
+        # Not an Armory body: vanilla (always resident, never our placeholder) or missing.
+        if body not in bodies:
+            continue
+        mesh = primary.get(key)
+        if not mesh or body in (f"bo_{mesh}", f"bo_cap_{mesh}"):
+            continue
+        owner = _twin_owner(body, meshes)
+        if owner is None or owner == mesh or _kit(owner) == _kit(mesh):
+            continue
+        if any(b.match(_kit(mesh)) and o.match(_kit(owner)) for b, o, _ in _SHARED_BODY_BY_DESIGN):
+            continue
+        issues.append(ts.Issue(
+            severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file=r.file, line=r.line,
+            entry_id=r.item_id,
+            message=f"collision body {r.name!r} is {owner!r}'s twin, borrowed onto mesh {mesh!r} "
+                    f"from another kit. It loads, as that other weapon's hull, and it is tied to "
+                    f"art that can be renamed or retired without this item (#599, #633). Author "
+                    f"bo_{mesh} into the mesh's own FBX (tools/blender/add_collision_body.py, "
+                    f"then a Modding Kit import), or add the pair to _SHARED_BODY_BY_DESIGN "
+                    f"with a reason"))
+    return issues
+
+
 def module_vintage(root) -> str:
     """`<module>: <Version> (newest ModuleData file <date>)`. A stale copy reads exactly like a repo
     defect (XML-DATA-02), so every sweep says what it swept. Never raises: this is a header."""
@@ -209,10 +414,16 @@ def main() -> int:
     issues = validator.run()
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
+        # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
+        # commit hook's --code line for it blocked nothing.
+        issues += missing_collision_body_issues(game_modules, moduledata)
+        issues += borrowed_body_issues(game_modules, moduledata)
         issues.sort(key=lambda i: i.sort_key())
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
+        print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
+              f"         live install's tpacs.", file=sys.stderr)
 
     if args.code:
         wanted = set(args.code)

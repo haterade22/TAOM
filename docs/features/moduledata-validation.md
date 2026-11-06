@@ -532,6 +532,104 @@ there.
 
 Expected noise in a player's rgl log, not a data defect: `Unable to find particle system with name ...` (vanilla names), `Unable to find item to add dependency` while Native's packages register (UNVERIFIED without a vanilla-only log).
 
+## Missing collision body (`MISSING_COLLISION_BODY`, `MISSING_VISUAL_MESH`)
+
+**ERROR** for a body, **WARNING** for a visual mesh: an item or crafting piece whose `body_name`,
+holster body or collision body names a `PhysicsShape` that no loaded tpac ships. On v1.4.8
+`PreloadHelper.WaitForMeshesToBeLoaded` counts every registered body name that
+`PhysicsShape.GetFromResource(name, true)` returns null for, on every pass of a do/while with no
+exit (`TaleWorlds.MountAndBlade.View.PreloadHelper.cs:57-70` in the taom-src cache), so one such
+name on any item a mission preloads freezes the main thread on the first frame after the loading
+screen drops (#352 on this line, #599 on the 1.5.x line). Patch90
+([preload-body-guard.md](preload-body-guard.md)) is the runtime guard; this is the desk gate. A
+missing visual mesh cannot hang: `MetaMesh.GetCopy(name, false, true)` returns null and the preload
+drops it (`PreloadHelper.cs:211-228`), so the item only renders invisible.
+
+`validate_mesh_refs.py` owns the ref extraction and the tpac TOC scan (Tier B meshes, Tier C
+PhysicsShapes); this pass turns its `MISSING_BODY` into an error and its `MISSING_MESH` into a
+warning, over the Armory's whole `ModuleData` plus this repo's, and leaves its `KNOWN_DEAD_MESH`
+allowlist in that tool. Only a pack whose TOC failed to parse is byte-scanned for bodies: a parsed
+TOC already lists them, and scanning every pack took 110 to 119 s on the 1.5.x desktop, past the
+commit hook's 45 s bound (#622). Skipped, never faked, without the install; a run that finds no
+packs, or a scan that raises, is one NOT-verified ERROR. `main()` calls it, and
+`CommitGateCoverageTests.test_every_issue_pass_is_reached_from_main` pins that (on the 1.5.x line
+the pass sat uncalled for three days, #622). Repair the ref to the art that ships, never restore a
+tpac; `python tools/audit_armory_refs.py` names the troops carrying the item
+([armory-ref-audit.md](armory-ref-audit.md)).
+
+## Borrowed collision body (`COLLISION_BODY_BORROWED`)
+
+**ERROR.** The question `MISSING_COLLISION_BODY` cannot ask. That check asks whether a `body_name`
+resolves, and a borrowed body resolves: it is some other mesh's twin, shipped in some other pack.
+This asks whether the body is this mesh's own.
+
+The convention is `docs/ai-includes/weapon-creation-workflow.md` Step D: a weapon body is `bo_` plus
+the exact mesh id, authored into the mesh's own FBX. That doc also sanctions borrowing a same-shaped
+body from another kit as a placeholder until the artist delivers. #633 is what happens when the
+placeholder ships: three Rhun longbow meshes (`sm_rh_drag_longbow_a`, `sm_dg_khml_longbow_a`,
+`sm_rh_loke_longbow_a`) had no twin, carried `bo_wm_elven_bow_a03`, and six generated `ladder_*`
+clones inherited it by `copy.deepcopy`. A borrow is a dependency on art the borrower does not own:
+the 2026-09-11 art drop had already renamed that body once (#599), and every "does it resolve" gate,
+`audit_armory_refs.py` included, read CLEAN on 2026-09-20.
+
+**A borrow is a body that is provably another mesh's twin.** For a `body_name` an Armory tpac ships:
+if it equals `bo_<mesh>` or `bo_cap_<mesh>` it is the item's own; if it is `bo_<M2>` or
+`bo_cap_<M2>` for a shipped mesh M2 that is not this item's mesh, it is a borrow; if no shipped mesh
+matches (`bo_uruk_halberd_blade_a1` for `sm_uruk_halberd_blade_a1`) it is the artist's own naming
+and nobody's twin. Refs are paired with their owner's `mesh` by item id, which for a
+`<CraftingPiece>` needed `validate_mesh_refs._ITEM_OPEN_RE` to learn that element: before #633 every
+piece ref carried item id `""` and all 313 piece bodies compared against one mesh.
+
+Three exemptions, each measured on the live install on 2026-09-21:
+
+- **Same-kit sharing is design.** A kit is the first two name tokens after the `sm_`/`wm_`/`bo_`
+  prefix (`rh_drag`, `elven_bow`, `rivendell_sword`). The ruby and topaz Aranruth blades, the silver
+  and black Rivendell swords, the `_a2` Erebor axe on `_a`'s body: one geometry, several textures.
+  20 shipped rows.
+- **Authorised cross-kit shares** live in `_SHARED_BODY_BY_DESIGN` with a reason each: Dragon and
+  Khamul are re-textured Loke geometry, so the three Rhun kits share bodies (Mike, 2026-09-21).
+  38 shipped rows.
+- **Vanilla bodies and shields.** A Native body is resident whatever TAOM does and vanilla art is
+  never our placeholder. A shield carries the `bo_cap_*` capsule in `body_name` and the full body in
+  `shield_body_name`, and sharing a sibling culture's is the convention
+  (`docs/modding/items-shields.md`). A body no pack ships is left to `MISSING_COLLISION_BODY`.
+
+Result: 0 findings on items and 0 on crafting pieces after the #633 repair; the nine #633 items fire
+under the rule (proved by restoring the borrow on one donor: one ERROR, `LOTRAOM_weapons.xml:8643`).
+
+Those figures are the 1.5.x desktop's. The laptop's `v2.0.26` Armory reads 3 findings here, the three
+Rhun longbow items; that count is void (D20), because it is not the public build.
+
+**What this gate is not.** The first version, `COLLISION_BODY_FOREIGN_PACK`, compared the tpac that
+ships the body with the tpac that ships the mesh, on the theory that the release cook keeps a source
+tpac together and a body cooked into a different `AssetPackages/pack*.tpac` than its mesh is absent
+when the mesh loads. The `/deep-review` of 2026-09-21 refuted that against the shipped
+`E:\LOTRAOM_Releases\patreon` tree: the cook groups every one of the Armory's bodies into `pack0`
+and `pack1` and every mesh into the other packs, so the working elven and Isengard bows are split
+exactly like the broken Rhun ones, and `bo_wm_elven_bow_a03` is present in that tree's `pack0`. The
+engine resolves a body by name, process-wide (`PhysicsShape.GetFromResource`). Pack co-residency is
+neither achieved nor needed, and a draft that flagged every split pairing returned 430 findings.
+Why the player's build hung is therefore still open: the leading hypothesis is a build whose packs
+predate the 2026-09-11 art drop while its XML carries the post-#599 name, the plain #599 class.
+
+The repair is to author the twin, not to repoint the borrow:
+`tools/blender/add_collision_body.py --fbx <file> --mesh <MeshObject> --material <physics_material>
+--apply`, then a Modding Kit import of that FBX, or the new name exists in no tpac.
+
+Skipped, never faked, without the install; a run that finds no Armory packs is itself a finding.
+About 3.5 s, almost all of it `validate_mesh_refs.extract_refs` (the TOC scan is 0.2 s). Tests:
+`tools/tests/test_collision_body_borrowed.py` (14, synthetic, no install needed).
+
+**Which packs count as shipped.** This gate, `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH`
+take their package list from `validate_mesh_refs.module_tpacs`, as `audit_armory_refs.py` does
+through `tpac_paths_for_modules`: per module, the loose `Assets/**/*.tpac` when it has any, and the
+cooked `AssetPackages/*.tpac` only for a module with no loose tree. That is the engine's order
+([armory-guide.md](../reference/armory-guide.md), 'Two asset trees'). The public 1.4.8 release ships
+the Armory cooked only, so there the gates read the packs the game loads. On the 1.5.x desktop the
+old cooked-first order read stale packs left by a cook and reported a newly imported hammer as
+`MISSING_COLLISION_BODY` (2026-09-26). Test: `test_loose_assets_win_when_both_trees_exist` in
+`tools/tests/test_validate_mesh_refs.py`.
+
 ## Key Files
 
 | File | Purpose |
@@ -546,6 +644,9 @@ Expected noise in a player's rgl log, not a data defect: `Unable to find particl
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
 | `tools/tests/test_validate_moduledata.py` | 144 unittest cases (validator; counted 2026-09-12) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
+| `tools/validate_mesh_refs.py` | engine of the three collision-body and mesh codes: `extract_refs`, `module_tpacs`, `build_present_set`, `classify` |
+| `tools/tests/test_collision_body_borrowed.py` | 14 synthetic cases for `COLLISION_BODY_BORROWED`: the #633 shape, own twin, own capsule, variant name, same-kit share, the Rhun family, vanilla, shields, missing body, per-piece pairing, no packs, a raising scan, `_kit`, `_twin_owner` |
+| `tools/tests/test_add_collision_body.py` | 9 cases for the twin-authoring tool's pure parts (`bpy` stubbed): the three required arguments, the report path under bad arguments, the round-trip comparison |
 | `.claude/hooks/check-moduledata-validation.sh` | PreToolUse commit gate (blocks on ERROR; fail-open) |
 | `.claude/rules/moduledata-validation.md` | Auto-loaded rule when editing the covered XML / schemas |
 
@@ -740,6 +841,11 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `MISSING_COLLISION_BODY` (error), `MISSING_VISUAL_MESH` (warn) and
+  `COLLISION_BODY_BORROWED` (error) ported from the 1.5.x line (#599, #622, #633; WP108), wired into
+  `main()` and the commit hook's `--code` list, with the loose-tree-first package list. A Modules
+  folder missing one of the live modules no longer crashes `main()` (`Validator.missing_ref_roots`
+  now holds Paths).
 - 2026-09-13: `FORTIFICATION_WITHOUT_VILLAGE` added (#597): every town and castle in the live world
   must have a bound village, and `build_settlement_economy` now records `bound` per village. Found
   Serelond, Methir and Framsburg empty; all three gained villages the same evening.

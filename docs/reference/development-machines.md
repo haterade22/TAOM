@@ -64,6 +64,10 @@ public Armory not yet installed, and `TAOM_Map` at `v2.0.27`: on the merged `ban
 programme; per-code counts in `plans/README.md`): the data half is owed until the public Armory is
 installed, and no item verdict rests on it. A laptop result above it still deserves a look.
 
+WP108 Step B4 (2026-11-05) adds the collision-body passes, which read 3 `COLLISION_BODY_BORROWED` on
+this Armory, so the same run now prints 3771 errors: 3768 `BROKEN_ITEM_REF` plus those 3, void under
+D20, with warnings unchanged at 120. Compare later runs with 3771, not 3768.
+
 Before believing a content failure, check that the module it points into is actually populated. The
 cheap version is a file count under `Modules\<name>\ModuleData`; a handful of files where there
 should be hundreds is the answer. `validate_moduledata.py` prints which extra roots it swept, so
