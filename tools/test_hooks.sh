@@ -208,8 +208,9 @@ done
 #     not valid YAML, so the WHOLE frontmatter was dropped and those skills lost their
 #     eager description from the model's routing surface. Nothing detected it.
 # ---------------------------------------------------------------------------
-head2 "3b. skill/agent frontmatter parses as YAML"
-FM=$("$HPY" - <<'PYEOF'
+head2 "3b. skill, agent and rule frontmatter parses as YAML"
+fm_check() {   # $1 the directory holding .claude; prints COUNT n and one BAD line per defect
+"$HPY" - "$1" <<'PYEOF'
 import pathlib, sys
 try:
     import yaml
@@ -228,9 +229,23 @@ def frontmatter(txt):
             return "\n".join(lines[1:i])
     return None
 
+# Allowlists: harness-facts.md "Skill load semantics" and "Agent (subagent) load semantics".
+# Both pages were truncated when read (2026-10-26), so a documented key may be missing.
+SKILL_KEYS = {'name', 'description', 'when_to_use', 'argument-hint', 'arguments',
+              'disable-model-invocation', 'user-invocable', 'allowed-tools', 'disallowed-tools',
+              'model', 'effort', 'context', 'agent', 'background', 'hooks', 'paths', 'shell',
+              'metadata', 'license', 'compatibility'}   # https://code.claude.com/docs/en/skills
+AGENT_KEYS = {'name', 'description', 'tools', 'disallowedTools', 'model', 'permissionMode',
+              'maxTurns', 'autoCompactWindow', 'skills', 'mcpServers', 'hooks', 'memory',
+              'background', 'omitClaudeMd', 'effort', 'isolation', 'color', 'initialPrompt',
+              'experimental'}   # https://code.claude.com/docs/en/sub-agents
+root = pathlib.Path(sys.argv[1])
+root = pathlib.Path(sys.argv[1])
 bad = []
 n = 0
-for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.Path('.claude/agents').glob('*.md')):
+for p in (list(root.glob('.claude/skills/*/SKILL.md'))
+          + list(root.glob('.claude/agents/*.md'))
+          + list(root.glob('.claude/rules/**/*.md'))):   # rules load recursively
     txt = p.read_text(encoding='utf-8', errors='replace')
     fm = frontmatter(txt)
     if fm is None:
@@ -273,18 +288,39 @@ for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.
                 continue  # quoted, the # is safe
             if ' #' in val:
                 bad.append(f"{p}: unquoted '#' in {field[:-1]} truncates it at that point (YAML comment); quote the value")
+
+    # Claude Code silently ignores an unrecognised frontmatter key, so a typo such as
+    # `disable-model-invocaton` or `allowed_tools` turns a setting off with no error.
+    # Rules are not checked: harness-facts.md says Claude Code reads only `paths` there,
+    # and 8 rules carry a `description` that is documentation for readers.
+    # The kind is the first part of the path under .claude, never the file or folder name: a
+    # future .claude/rules/agents/ folder holds rules.
+    kind = p.relative_to(root / '.claude').parts[0]
+    if kind == 'skills':
+        allowed, stem = SKILL_KEYS, p.parent.name
+    elif kind == 'agents':
+        allowed, stem = AGENT_KEYS, p.stem
+    else:
+        continue
+    for k in d:
+        if k not in allowed:
+            bad.append(f"{p}: frontmatter key '{k}' is not on the allowlist. A misspelled key is ignored by Claude Code; if the key is documented, add it to the allowlist in tools/test_hooks.sh section 3b and to .claude/rules/harness-facts.md")
+    nm = d.get('name')
+    if nm is not None and str(nm) != stem:
+        bad.append(f"{p}: name '{nm}' must equal '{stem}' ({'its directory' if kind == 'skills' else 'its file stem'})")
 print(f"COUNT {n}")
 for b in bad:
     print("BAD " + b)
 PYEOF
-)
+}
+FM=$(fm_check .)
 # The check must be able to FAIL. The first version of this block died on a SyntaxError,
 # $FM came back empty, and the else-branch reported a pass with a blank count: a broken
 # check reading as a green one, which is the whole defect class this suite exists to catch.
 if printf '%s' "$FM" | grep -q '^SKIP'; then
     # Loud, not silent: an unrun check must never read as a pass.
     echo "  note: pyyaml unavailable, frontmatter parse check SKIPPED (not passed)"
-elif ! printf '%s' "$FM" | grep -q '^COUNT [0-9]'; then
+elif ! printf '%s' "$FM" | grep -q '^COUNT [1-9]'; then
     bad "frontmatter check did not run (no COUNT line). Output was: $(printf '%s' "$FM" | head -c 200)"
 elif printf '%s' "$FM" | grep -q '^BAD '; then
     while IFS= read -r line; do
@@ -292,6 +328,42 @@ elif printf '%s' "$FM" | grep -q '^BAD '; then
     done <<< "$FM"
 else
     ok "all $(printf '%s' "$FM" | sed -n 's/^COUNT //p') frontmatters parse; description/argument-hint are strings"
+fi
+# Self-test: the same check over a synthetic tree with four planted defects (a misspelled skill key,
+# an agent name that differs from its stem, a broken YAML frontmatter, an unquoted # in a skill
+# description) and one negative case (a rule under a folder named agents) must report each.
+# Without this, a change that made 3b vacuous (a wrong glob, a swallowed error) would stay green.
+if ! printf '%s' "$FM" | grep -q '^SKIP'; then
+    FMT="$(mktemp -d 2>/dev/null || echo "/tmp/taom-3b-$$")"
+    mkdir -p "$FMT/.claude/skills/good" "$FMT/.claude/skills/typo" "$FMT/.claude/skills/hash" "$FMT/.claude/agents" \
+             "$FMT/.claude/rules/agents" "$FMT/.claude/rules/broken"
+    printf -- '---\nname: good\ndescription: fine\n---\nbody\n' > "$FMT/.claude/skills/good/SKILL.md"
+    printf -- '---\nname: typo\ndescription: fine\ndisable-model-invocaton: true\n---\nbody\n' > "$FMT/.claude/skills/typo/SKILL.md"
+    printf -- '---\nname: hash\ndescription: cut # here\n---\nbody\n' > "$FMT/.claude/skills/hash/SKILL.md"
+    printf -- '---\nname: other-name\ndescription: fine\n---\nbody\n' > "$FMT/.claude/agents/stem.md"
+    printf -- '---\ndescription: [unclosed\n---\nbody\n' > "$FMT/.claude/rules/broken/r.md"
+    # A rule inside a folder called agents is a rule: its name and keys are not agent-checked.
+    printf -- '---\nname: not-the-stem\nbogus-key: 1\n---\nbody\n' > "$FMT/.claude/rules/agents/r.md"
+    FMS=$(fm_check "$FMT")
+    printf '%s' "$FMS" | grep -q '^COUNT 6$' \
+        && ok "3b self-test: the synthetic tree is read (6 frontmatters)" \
+        || bad "3b self-test: expected COUNT 6 over the synthetic tree, got: $(printf '%s' "$FMS" | head -c 300)"
+    printf '%s' "$FMS" | grep -q "^BAD .*typo.*disable-model-invocaton.*not on the allowlist" \
+        && ok "3b self-test: a misspelled skill key is reported" \
+        || bad "3b self-test: a misspelled skill key was not reported"
+    printf '%s' "$FMS" | grep -q "^BAD .*stem.md: name 'other-name' must equal 'stem'" \
+        && ok "3b self-test: an agent whose name differs from its file stem is reported" \
+        || bad "3b self-test: an agent name that differs from its file stem was not reported"
+    printf '%s' "$FMS" | grep -q "^BAD .*hash.*unquoted '#' in description" \
+        && ok "3b self-test: an unquoted # in a skill description is reported" \
+        || bad "3b self-test: an unquoted # in a skill description was not reported"
+    printf '%s' "$FMS" | grep -q '^BAD .*broken.*r.md' \
+        && ok "3b self-test: a broken YAML frontmatter is reported" \
+        || bad "3b self-test: a broken YAML frontmatter was not reported"
+    printf '%s' "$FMS" | grep -q '^BAD .*rules.agents' \
+        && bad "3b self-test: a rule under .claude/rules/agents/ was checked as an agent" \
+        || ok "3b self-test: a rule under .claude/rules/agents/ is not checked as an agent"
+    rm -rf "$FMT"
 fi
 
 # ---------------------------------------------------------------------------

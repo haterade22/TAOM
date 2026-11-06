@@ -49,6 +49,8 @@ Report:
 - Passed / Failed / Skipped
 - Any failure details (test name + assertion message)
 
+A total under 7,000 (the WP101 baseline was 9,154) means discovery broke: not a pass.
+
 ## Step 2b: Python tool tests
 
 ```bash
@@ -58,6 +60,17 @@ python -m unittest discover -s tools/tests -t . 2>&1
 The tests for `tools/`. Plain `unittest`, no pytest. Nothing else runs them automatically since the
 GitHub CI was removed (2026-10-05). Report `Ran N tests` and the failures. No `Ran N tests` line,
 or fewer than 1,200 tests, means discovery broke: not a pass.
+
+## Step 2c: Canary
+
+```bash
+TAOM_VERIFY_CANARY=1 dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~VerifyCanaryTests 2>&1
+```
+
+`--no-build` is safe here: Step 2 just built the test DLL. This proves the runner can report a
+failure without editing any source (`TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`). The canary
+PASSES only when the run exits non-zero AND its output contains `VERIFY_CANARY_TRIPPED`. An exit 0
+or a missing token means the runner cannot report failures, so the whole verify FAILS.
 
 ## Step 2e: Data gates
 
@@ -126,6 +139,7 @@ VERIFICATION REPORT
 Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
+Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
 Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
