@@ -30,12 +30,25 @@ Usage:
   python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release \\
       --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies --allow-unknown
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
+  python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release --require-build v2.4.0 --dry-run
+
+Every run also reports, and never refuses over: what each shipped SceneObj/<scene> carries in
+ShaderCache/D3D11 (terrain shader header, compressed shader cache sack, the sack's format), with
+a WARNING for a sack whose format differs from the majority; every module-level
+<module>/Shaders/D3D11 sack the planned modules hold (size and format); and whether the JIT
+optimizes each shipped copy of TAOM.dll and TAOM.Dependencies.dll (OFF, ON, or unknown with its
+reason when the file, or its DebuggableAttribute, cannot be read). TAOM ships Debug builds on
+purpose, so the JIT line is a fact to read, not a gate.
+
+Module sacks ship on the 1.4.x line; the report lists each one with its size and format under one
+policy line.
 
 Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination /
             retired binaries in the source (RETIRED_BINARIES, dry runs included) / a Game Pass bin
             (dry runs included) / a shipped
             ModuleData file defining a taom_test_ id / an Armory shader with no source players
-            have, or an Armory shader report that cannot be checked (all dry runs included).
+            have, or an Armory shader report that cannot be checked (all dry runs included) /
+            failed --require-build.
 """
 from __future__ import annotations
 
@@ -44,7 +57,11 @@ import json
 import os
 import re
 import shutil
+import struct
+import subprocess
 import sys
+import xml.etree.ElementTree as ET
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
@@ -113,7 +130,427 @@ BACKUP_SUFFIX_RE = re.compile(
 # vanilla ships them, so the include-list alone would wave the backups through.
 SCENE_BACKUP_PARENTS = frozenset({"SceneObj", "SceneEditData"})
 
+# A scene's compiled shaders live in SceneObj/<scene>/ShaderCache/D3D11/: the terrain shader
+# header and the compressed shader cache (the "sack"). Sacks have been problematic for players
+# (the maintainer, 2026-10-02), shipping them is his call, and vanilla ships header-only scenes
+# too, so the packager only reports what each scene carries. The sack's format is the dword at
+# bytes 4 to 7 (every scene sack in the dev install and the patreon channel read 0x0783 on
+# 2026-10-03). A sack in another format than its shipped siblings is flagged; a set of scene
+# sacks that lags the engine as a whole is not. Module-level <Module>/Shaders/D3D11 sacks are never
+# compared with them: issue #448's three lagging sacks were exactly those.
+SHADER_HEADER = "terrain_shaders_header_data.bin"
+SHADER_SACK = "compressed_shader_cache.sack"
+
+# The same file name directly in <Module>/Shaders/D3D11/ is a module's own compiled shader cache,
+# not a scene's. On the 1.4.x line it ships: the 1.5.x exclusion rests on an untested assumption
+# that the game uses a Kit-built sack, and E3 shows 2,720 shaders pending at battle start. The
+# report prints this line and lists each sack.
+MODULE_SACK_POLICY = ("module shader sacks ship as they are on the 1.4.x line: leaving them out "
+                      "waits on a v1.4.8 test that the game uses a Kit-built sack")
+
 CANDIDATE_RULES = ("EM_ASSET_PACKAGES", "RACE_TEST")
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# The two assemblies TAOM compiles, by module (keyed casefolded: "--modules taom" resolves on
+# Windows). Each carries the build stamp from Directory.Build.props. The build writes a copy into
+# every bin/<platform>/ folder (Steam, dedicated server, Modding Kit) and every copy
+# ships, so the gate reads them all; the Win64 client copy must exist.
+SHIPPED_DLLS = {"taom": "TAOM.dll", "taom.dependencies": "TAOM.Dependencies.dll"}
+
+# Where each shipped module's SubModule.xml lives in the repo, for the release commit's copy.
+REPO_MANIFESTS = {"taom": "Main/_Module/SubModule.xml",
+                  "taom.dependencies": "Dependencies/_Module/SubModule.xml"}
+
+# InformationalVersion as the assembly metadata stores it (UTF-8): build.<yyyyMMdd-HHmmss>Z, then
+# '+' ('.' on older builds), then the commit SHA or "nogit", then an optional .dirty or .nogit flag.
+# The one definition of the format: read_build_stamp finds it, check_build_stamp parses it.
+STAMP_RE = re.compile(
+    r"build\.\d{8}-\d{6}Z[+.](?P<rev>[0-9a-f]{40}|nogit)(?:\.(?P<flag>dirty|nogit))?", re.ASCII)
+
+# The Directory.Build.props target that writes the .dirty flag. A commit without it stamps a bare
+# SHA whatever the tree held, so a clean-looking stamp from such a commit proves nothing.
+DIRTY_FLAG_TARGET = "TaomStampWorkingTreeState"
+
+# The MethodRefSig (ECMA-335 II.23.2.2) of each DebuggableAttribute constructor as the compilers
+# write it: HASTHIS, the parameter count, void, then (Boolean, Boolean), or the DebuggingModes enum,
+# a value type (0x11) named by one compressed TypeDefOrRef token of one, two or four bytes
+# (II.23.2). All 16,813 attributes in a survey of 18,490 DLLs on the dev machine on 2026-10-03 (the
+# .NET runtimes and GAC, the NuGet caches and this repo's builds) used the enum form with a one or
+# two byte token; none used the Boolean form.
+_BOOLS_CTOR = re.compile(rb"\x20\x02\x01\x02\x02")
+_MODES_CTOR = re.compile(rb"\x20\x01\x01\x11(?:[\x00-\x7f]|[\x80-\xbf].|[\xc0-\xdf]...)", re.DOTALL)
+
+# ECMA-335 II.24.2.6: the tables a HasCustomAttribute coded index can name, in tag order.
+# Assembly (0x20) is tag 14.
+_HAS_CUSTOM_ATTRIBUTE = (0x06, 0x04, 0x01, 0x02, 0x08, 0x09, 0x0A, 0x00, 0x0E, 0x17, 0x14, 0x11,
+                         0x1A, 0x1B, 0x20, 0x23, 0x26, 0x27, 0x28, 0x2A, 0x2C, 0x2B)
+
+
+class _NoMetadata(Exception):
+    """The file is not a managed assembly this reader understands."""
+
+
+def jit_optimization(dll: Path) -> tuple:
+    """(disabled, why): disabled is True when the assembly's DebuggableAttribute turns JIT
+    optimization off (a Debug build: the value's first byte has its low bit set and its second
+    byte is not zero; the reader's comment gives how that rule was measured),
+    False when it does not, None when the file holds no readable .NET metadata (a native DLL, a
+    stand-in, a truncated file) or a DebuggableAttribute that is malformed (a constructor or a
+    value that is not one of the layouts ECMA-335 gives it). `why` says what stopped the read for
+    None, and for a False that the assembly carries no DebuggableAttribute at all; it is empty
+    when the attribute is there and leaves optimization on. Reads the metadata tables directly
+    (ECMA-335 II.24), so the assembly is never loaded."""
+    try:
+        return _read_jit_optimizer_disabled(Path(dll).read_bytes())
+    except OSError as e:
+        return None, f"cannot read: {e.strerror or e}"
+    except _NoMetadata as e:
+        return None, str(e)
+    except (struct.error, IndexError, ValueError) as e:
+        return None, f"malformed metadata: {type(e).__name__}: {e}"
+
+
+def _read_jit_optimizer_disabled(d: bytes) -> tuple:
+    def u16(o):
+        return struct.unpack_from("<H", d, o)[0]
+
+    def u32(o):
+        return struct.unpack_from("<I", d, o)[0]
+
+    if d[:2] != b"MZ":
+        raise _NoMetadata("no MZ header")
+    pe = u32(0x3C)
+    if d[pe:pe + 4] != b"PE\0\0":
+        raise _NoMetadata("no PE signature")
+    nsec, opt_size, opt = u16(pe + 6), u16(pe + 20), pe + 24
+    cli_rva = u32(opt + (112 if u16(opt) == 0x20B else 96) + 14 * 8)   # data directory 14
+    if cli_rva == 0:
+        raise _NoMetadata("no CLI header (a native DLL)")
+    sections = [struct.unpack_from("<IIII", d, opt + opt_size + i * 40 + 8) for i in range(nsec)]
+
+    def at(rva):
+        for vsize, vaddr, rsize, roff in sections:
+            if vaddr <= rva < vaddr + max(vsize, rsize):
+                return roff + rva - vaddr
+        raise _NoMetadata(f"RVA {rva:#x} is in no section")
+
+    root = at(u32(at(cli_rva) + 8))
+    if u32(root) != 0x424A5342:                                        # "BSJB"
+        raise _NoMetadata("no metadata signature")
+    p = root + 16 + u32(root + 12)                                     # past the version string
+    count, p, streams = u16(p + 2), p + 4, {}
+    for _ in range(count):
+        end = d.index(b"\0", p + 8)
+        streams[d[p + 8:end].decode("ascii")] = root + u32(p)
+        p = (end + 4) & ~3
+    tables = streams.get("#~", streams.get("#-"))
+    if tables is None or "#Strings" not in streams or "#Blob" not in streams:
+        raise _NoMetadata("no table, string or blob stream")
+    heap_sizes = d[tables + 6]
+    valid = struct.unpack_from("<Q", d, tables + 8)[0]
+    rows, p = {}, tables + 24
+    for t in range(64):
+        if valid >> t & 1:
+            rows[t], p = u32(p), p + 4
+    str_w, guid_w, blob_w = (4 if heap_sizes & bit else 2 for bit in (1, 2, 4))
+
+    def index_w(t):
+        return 2 if rows.get(t, 0) < 1 << 16 else 4
+
+    def coded_w(tag_bits, targets):
+        return 2 if max(rows.get(t, 0) for t in targets) < 1 << (16 - tag_bits) else 4
+
+    scope_w = coded_w(2, (0x00, 0x1A, 0x23, 0x01))          # ResolutionScope
+    tdor_w = coded_w(2, (0x02, 0x01, 0x1B))                 # TypeDefOrRef
+    parent_w = coded_w(3, (0x02, 0x01, 0x1A, 0x06, 0x1B))   # MemberRefParent
+    const_w = coded_w(2, (0x04, 0x08, 0x17))                # HasConstant
+    hca_w = coded_w(5, _HAS_CUSTOM_ATTRIBUTE)
+    cat_w = coded_w(3, (0x06, 0x0A))                        # CustomAttributeType
+    row_w = [
+        2 + str_w + 3 * guid_w,                             # 0x00 Module
+        scope_w + 2 * str_w,                                # 0x01 TypeRef
+        4 + 2 * str_w + tdor_w + index_w(0x04) + index_w(0x06),  # 0x02 TypeDef
+        index_w(0x04),                                      # 0x03 FieldPtr
+        2 + str_w + blob_w,                                 # 0x04 Field
+        index_w(0x06),                                      # 0x05 MethodPtr
+        8 + str_w + blob_w + index_w(0x08),                 # 0x06 MethodDef
+        index_w(0x08),                                      # 0x07 ParamPtr
+        4 + str_w,                                          # 0x08 Param
+        index_w(0x02) + tdor_w,                             # 0x09 InterfaceImpl
+        parent_w + str_w + blob_w,                          # 0x0A MemberRef
+        2 + const_w + blob_w,                               # 0x0B Constant
+        hca_w + cat_w + blob_w,                             # 0x0C CustomAttribute
+    ]
+    start, p = [], tables + 24 + 4 * len(rows)
+    for t, w in enumerate(row_w):
+        start.append(p)
+        p += w * rows.get(t, 0)
+
+    def read(o, w):
+        return u16(o) if w == 2 else u32(o)
+
+    def string(i):
+        o = streams["#Strings"] + i
+        return d[o:d.index(b"\0", o)].decode("utf-8", "replace")
+
+    def blob(i):
+        o = streams["#Blob"] + i
+        if d[o] & 0x80 == 0:
+            return d[o + 1:o + 1 + d[o]]
+        if d[o] & 0xC0 == 0x80:
+            return d[o + 2:o + 2 + (((d[o] & 0x3F) << 8) | d[o + 1])]
+        n = ((d[o] & 0x1F) << 24) | (d[o + 1] << 16) | (d[o + 2] << 8) | d[o + 3]
+        return d[o + 4:o + 4 + n]
+
+    for r in range(rows.get(0x0C, 0)):
+        o = start[0x0C] + r * row_w[0x0C]
+        parent, ctor = read(o, hca_w), read(o + hca_w, cat_w)
+        if parent & 0x1F != 14 or ctor & 0x7 != 3:          # on the Assembly, via a MemberRef
+            continue
+        member = start[0x0A] + ((ctor >> 3) - 1) * row_w[0x0A]
+        cls = read(member, parent_w)
+        if cls & 0x7 != 1:                                  # declared on a TypeRef
+            continue
+        typeref = start[0x01] + ((cls >> 3) - 1) * row_w[0x01]
+        namespace = string(read(typeref + scope_w + str_w, str_w))
+        name = string(read(typeref + scope_w, str_w))
+        if (namespace, name) != ("System.Diagnostics", "DebuggableAttribute"):
+            continue
+        sig = blob(read(member + parent_w + str_w, blob_w))   # the constructor's MethodRefSig
+        value = blob(read(o + hca_w + cat_w, blob_w))
+        return _debuggable_optimizer_disabled(sig, value), ""
+    return False, "no DebuggableAttribute on the assembly"
+
+
+def _debuggable_optimizer_disabled(sig: bytes, value: bytes) -> bool:
+    """Whether the JIT generates unoptimized code for an assembly with this DebuggableAttribute.
+    `sig` is the MethodRefSig of the constructor it names and `value` its CustomAttrib blob
+    (ECMA-335 II.23.3): a prolog 01 00, the constructor's arguments, then NumNamed. The attribute
+    has no settable member, so NumNamed is 00 00. The constructor fixes the layout, so a
+    constructor this does not know, or a value that is not exactly that layout, is malformed:
+    _NoMetadata, never a verdict."""
+    if _BOOLS_CTOR.fullmatch(sig):
+        args = 2        # isJITTrackingEnabled, isJITOptimizerDisabled
+    elif _MODES_CTOR.fullmatch(sig):
+        args = 4        # DebuggingModes, an int32
+    else:
+        raise _NoMetadata(f"unsupported DebuggableAttribute constructor {sig.hex()}")
+    if len(value) != 4 + args or value[:2] != b"\x01\x00" or value[-2:] != b"\x00\x00":
+        raise _NoMetadata(f"unexpected DebuggableAttribute value {value.hex()}")
+    # The runtime's behaviour, measured, fits a rule on the first two bytes after the prolog,
+    # whichever constructor wrote them: the two Booleans, or the low two bytes of the
+    # DebuggingModes int32 (Default is bit 0 of the first, DisableOptimizations bit 0 of the
+    # second). The JIT generates unoptimized code only when the first has its low bit set and the
+    # second is not zero, so DisableOptimizations without Default (0x100) still leaves it
+    # optimizing. Measured on .NET Framework 4.8.1 (clr.dll 4.8.9345.0, 64-bit) on 2026-10-04: an
+    # assembly per value, then whether the JIT inlined a small callee and let a dead local be
+    # collected; 1,304 DebuggingModes values and 30 pairs of Boolean bytes all fit. The 4.7.2
+    # reference documentation (mscorlib.xml) says to combine DisableOptimizations with Default
+    # and does not say what it does alone; no other 4.x build was run. A Debug build stamps 0x107
+    # (Default | IgnoreSymbolStoreSequencePoints | EnableEditAndContinue | DisableOptimizations)
+    # and a Release build 0x2, both read off real TAOM builds on 2026-10-02, and both fit.
+    tracking, optimizer_disabled = value[2], value[3]
+    return bool(tracking & 1 and optimizer_disabled)
+
+
+def read_build_stamp(dll: Path) -> str | None:
+    """The one build stamp in a compiled TAOM assembly; None when there is none or several."""
+    found = {m.group(0) for m in STAMP_RE.finditer(dll.read_bytes().decode("latin-1"))}
+    return found.pop() if len(found) == 1 else None
+
+
+def check_build_stamp(stamp: str | None, expected_sha: str) -> str | None:
+    """None when the stamp proves a clean build of expected_sha, otherwise why it does not."""
+    if stamp is None:
+        return "no single build stamp in the DLL (a pre-2026-08-01 build, or not a TAOM assembly)"
+    m = STAMP_RE.fullmatch(stamp)
+    if m is None:
+        return f"unrecognised build stamp '{stamp}'"
+    if m["rev"] == "nogit" or m["flag"] == "nogit":
+        return f"built where git could not report the tree ({stamp})"
+    if m["flag"] == "dirty":
+        return f"built from a working tree with uncommitted changes ({stamp})"
+    if m["rev"] != expected_sha.lower():
+        return f"built at {m['rev'][:12]}, but the release is {expected_sha[:12]} ({stamp})"
+    return None
+
+
+def _git(*args: str):
+    try:
+        return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True)
+    except OSError:
+        return None
+
+
+def _git_bytes(*args: str):
+    """Like _git, but stdout stays bytes: a manifest is parsed from bytes so its BOM or encoding
+    declaration decides, not the console code page."""
+    try:
+        return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True)
+    except OSError:
+        return None
+
+
+def _read_manifest(data: bytes):
+    """(version, sorted DLLName values) of SubModule.xml bytes, or None when they do not parse."""
+    try:
+        root = ET.fromstring(data)
+    except (ET.ParseError, LookupError, ValueError):
+        return None
+    version = root.find("Version")
+    return (None if version is None else (version.get("value") or "").strip(),
+            sorted({(e.get("value") or "").strip() for e in root.iter("DLLName")}))
+
+
+def _commit_manifest(sha: str, path: str):
+    """_read_manifest of the file as the commit holds it, or None when it cannot be read."""
+    r = _git_bytes("show", f"{sha}:{path}")
+    return _read_manifest(r.stdout) if r and r.returncode == 0 else None
+
+
+def tag_on_another_line(version, sha: str) -> str | None:
+    """A refusal when `version` is a tag that `sha` does not descend from: another line's number."""
+    r = _git("rev-parse", "-q", "--verify", f"refs/tags/{version}^{{commit}}")
+    tagged = r.stdout.strip() if r and r.returncode == 0 else ""
+    if not tagged:
+        return None
+    ancestor = _git("merge-base", "--is-ancestor", tagged, sha)
+    if ancestor and ancestor.returncode == 0:
+        return None
+    return f"{version} is a tag on another line ({tagged[:12]}); pick the next v2.4.x number"
+
+
+def resolve_commit(rev: str) -> str | None:
+    """The full SHA of the commit `rev` names in this repository, or None."""
+    r = _git("rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}")
+    sha = r.stdout.strip() if r else ""
+    return sha if r and r.returncode == 0 and sha else None
+
+
+def stamps_dirty_trees(sha: str) -> bool:
+    """True when the commit's Directory.Build.props carries the .dirty-flag target."""
+    r = _git("show", f"{sha}:Directory.Build.props")
+    return bool(r) and r.returncode == 0 and DIRTY_FLAG_TARGET in r.stdout
+
+
+def shipped_dll_copies(plan) -> list:
+    """Module-relative path of every bin/<platform>/ copy of the TAOM assembly this module ships
+    (none for a module outside SHIPPED_DLLS)."""
+    dll_name = SHIPPED_DLLS.get(plan.name.casefold())
+    if dll_name is None:
+        return []
+    return [rel for rel, _size in plan._copy_list
+            if rel.casefold().startswith("bin/")
+            and PurePosixPath(rel).name.casefold() == dll_name.casefold()]
+
+
+@dataclass(frozen=True)
+class SceneShaderCache:
+    """What one shipped scene carries in SceneObj/<scene>/ShaderCache/D3D11/. sack_format is the
+    sack's format dword, None without a sack or when it cannot be read (then `note` says why)."""
+    module: str
+    scene: str
+    header: bool
+    sack: bool
+    sack_format: int | None = None
+    note: str = ""
+
+    @property
+    def where(self) -> str:
+        return f"{self.module}/SceneObj/{self.scene}"
+
+
+def read_sack_format(sack: Path) -> tuple:
+    """(format, why): the dword at bytes 4 to 7 of a compressed shader cache, or None and the
+    reason it could not be read."""
+    try:
+        with open(sack, "rb") as f:
+            head = f.read(8)
+    except OSError as e:
+        return None, f"cannot read: {e.strerror or e}"
+    if len(head) < 8:
+        return None, f"{len(head)} bytes, shorter than the 8-byte prefix that holds the format"
+    return struct.unpack_from("<I", head, 4)[0], ""
+
+
+def scene_shader_caches(plan) -> list:
+    """One SceneShaderCache per scene folder this module ships under SceneObj/, sorted by name,
+    whether or not it has a ShaderCache. Reads the copy list, so an excluded path
+    (SceneObj/Backups) is never judged; a file directly under SceneObj/ is not a scene."""
+    scenes = {}
+    for rel, _size in plan._copy_list:
+        parts = PurePosixPath(rel).parts
+        if len(parts) < 3 or parts[0].casefold() != "sceneobj":
+            continue
+        files = scenes.setdefault(parts[1], {})
+        if (len(parts) == 5 and parts[2].casefold() == "shadercache"
+                and parts[3].casefold() == "d3d11"):
+            files[parts[4].casefold()] = rel
+    caches = []
+    for scene in sorted(scenes):
+        files = scenes[scene]
+        sack_rel = files.get(SHADER_SACK)
+        fmt, note = read_sack_format(plan.root / sack_rel) if sack_rel else (None, "")
+        caches.append(SceneShaderCache(plan.name, scene, SHADER_HEADER in files,
+                                       sack_rel is not None, fmt, note))
+    return caches
+
+
+def stale_sack_formats(caches) -> tuple:
+    """(majority, odd): the most common readable sack format (the newer one on a tie), and every
+    cache whose sack reads a different format. (None, []) when no sack format was readable."""
+    counts = Counter(c.sack_format for c in caches if c.sack_format is not None)
+    if not counts:
+        return None, []
+    majority = max(counts, key=lambda f: (counts[f], f))
+    return majority, [c for c in caches
+                      if c.sack_format is not None and c.sack_format != majority]
+
+
+def require_build(plans, rev: str, requested=()) -> tuple:
+    """(problems, checked): every reason the planned TAOM assemblies are not a clean build of
+    `rev` (empty: all good), and the module-relative path of every DLL copy read."""
+    sha = resolve_commit(rev)
+    if sha is None:
+        return [f"cannot resolve '{rev}' to a commit in {REPO_ROOT}"], []
+    if not stamps_dirty_trees(sha):
+        return [f"{sha[:12]} predates the {DIRTY_FLAG_TARGET} target, so a DLL built there "
+                "cannot prove its tree was clean"], []
+    problems, checked = [], []
+    release = _commit_manifest(sha, REPO_MANIFESTS["taom"])
+    if release is None:
+        problems.append(f"{sha[:12]}:{REPO_MANIFESTS['taom']} cannot be read, so the release number is unknown")
+    else:
+        for reason in (release_number_problem(release[0]), tag_on_another_line(release[0], sha)):
+            if reason:
+                problems.append(f"release number: {reason}")
+    problems.extend(installed_manifest_problems(plans, sha))
+    planned = {p.name.casefold() for p in plans}
+    for name in requested:
+        if name.casefold() in SHIPPED_DLLS and name.casefold() not in planned:
+            problems.append(f"{name}: requested but not present in the source")
+    for p in plans:
+        dll_name = SHIPPED_DLLS.get(p.name.casefold())
+        if dll_name is None:
+            continue
+        copies = shipped_dll_copies(p)
+        client = f"bin/Win64_Shipping_Client/{dll_name}"
+        if client.casefold() not in {rel.casefold() for rel in copies}:
+            problems.append(f"{p.name}: {client} is missing")
+        for rel in copies:
+            checked.append(f"{p.name}/{rel}")
+            try:
+                stamp = read_build_stamp(p.root / rel)
+            except OSError as e:
+                problems.append(f"{p.name}/{rel}: cannot read ({e})")
+                continue
+            reason = check_build_stamp(stamp, sha)
+            if reason:
+                problems.append(f"{p.name}/{rel}: {reason}")
+    if not checked and not problems:
+        problems.append("neither TAOM nor TAOM.Dependencies is in the module set; nothing to verify")
+    return problems, checked
 
 
 @dataclass(frozen=True)
@@ -122,6 +559,13 @@ class Decision:
     rule: str = ""
     reason: str = ""
     candidate: bool = False
+
+
+def is_module_sack(rel: str) -> bool:
+    """True for Shaders/D3D11/compressed_shader_cache.sack (any case): a module's own sack, not a scene's."""
+    parts = PurePosixPath(rel).parts
+    return (len(parts) == 3 and parts[0].casefold() == "shaders"
+            and parts[1].casefold() == "d3d11" and parts[2].casefold() == SHADER_SACK)
 
 
 def classify(rel: str, *, keep_rdc: bool = False, exclude_candidates=()) -> Decision:
@@ -211,6 +655,8 @@ class ModulePlan:
     by_rule: dict = field(default_factory=dict)
     unknown: list = field(default_factory=list)
     candidates_shipped: dict = field(default_factory=dict)
+    # (module-relative path, size) of each module-level shader sack that ships
+    module_sacks: list = field(default_factory=list)
     _copy_list: list = field(default_factory=list, repr=False)
 
     @property
@@ -234,6 +680,8 @@ def plan_module(module_root: Path, *, keep_rdc: bool = False, exclude_candidates
                 plan.copy_bytes += size
                 plan.copy_files += 1
                 plan._copy_list.append((rel, size))
+                if is_module_sack(rel):
+                    plan.module_sacks.append((rel, size))
                 if d.candidate:
                     plan.candidates_shipped[d.rule] = plan.candidates_shipped.get(d.rule, 0) + size
             elif d.action == EXCLUDE:
@@ -374,6 +822,35 @@ def release_number_problem(version) -> str | None:
     return None
 
 
+def installed_manifest_problems(plans, sha: str) -> list:
+    """Why the installed SubModule.xml of each planned TAOM module is not the commit's. An absent
+    installed manifest is not this check's finding."""
+    problems = []
+    for p in plans:
+        path = REPO_MANIFESTS.get(p.name.casefold())
+        installed = p.root / "SubModule.xml"
+        if path is None or not installed.is_file():
+            continue
+        where = f"{p.name}/SubModule.xml"
+        expected = _commit_manifest(sha, path)
+        if expected is None:
+            problems.append(f"{sha[:12]}:{path} cannot be read")
+            continue
+        try:
+            found = _read_manifest(installed.read_bytes())
+        except OSError as e:
+            problems.append(f"{where}: cannot read ({e})")
+            continue
+        if found is None:
+            problems.append(f"{where} does not parse")
+            continue
+        if found[0] != expected[0]:
+            problems.append(f"{where} says version {found[0]}, but {sha[:12]} says {expected[0]}")
+        if {n.casefold() for n in found[1]} != {n.casefold() for n in expected[1]}:
+            problems.append(f"{where} names {found[1]}, but {sha[:12]} names {expected[1]}")
+    return problems
+
+
 def _gb(n: int) -> float:
     return round(n / (1024 ** 3), 2)
 
@@ -426,6 +903,83 @@ def _report(plans, args) -> None:
         print("  Until that verdict is recorded, prefer --keep-rdc for a build players will run.")
 
 
+def _shader_cache_report(plans) -> None:
+    """Every shipped scene's shader cache, one summary line, and a WARNING per sack whose format
+    differs from the majority of the shipped sacks. A report: whether a scene ships its sack is
+    the maintainer's call (2026-10-02), so this never refuses. The comparison is among the
+    shipped scene sacks only, so a set that lags the engine as a whole raises no WARNING.
+    Module-level <Module>/Shaders/D3D11 sacks, where issue #448's lagging sacks were, are left to
+    _module_sack_report and never compared."""
+    caches = [c for p in plans for c in scene_shader_caches(p)]
+    if not caches:
+        print("\nscene shader caches: no SceneObj/<scene> folder in the planned modules")
+        return
+    print("\nscene shader caches, SceneObj/<scene>/ShaderCache/D3D11 (report only, never refuses):")
+    for c in caches:
+        if not c.sack:
+            sack = "sack no"
+        elif c.sack_format is None:
+            sack = f"sack yes (format unreadable: {c.note})"
+        else:
+            sack = f"sack yes (format {c.sack_format:#06x})"
+        print(f"  {c.where}: header {'yes' if c.header else 'no'}, {sack}")
+    with_sack = sum(c.sack for c in caches)
+    header_only = sum(c.header and not c.sack for c in caches)
+    formats = Counter(c.sack_format for c in caches if c.sack_format is not None)
+    unreadable = sum(c.sack and c.sack_format is None for c in caches)
+    shown = ", ".join(f"{f:#06x} x{n}" for f, n in sorted(formats.items())) or "none"
+    if unreadable:
+        shown += f", {unreadable} unreadable"
+    print(f"scene shader caches: {len(caches)} scenes, {with_sack} with a sack, "
+          f"{len(caches) - with_sack} without ({header_only} with the header only); "
+          f"sack formats: {shown}")
+    majority, odd = stale_sack_formats(caches)
+    for c in odd:
+        print(f"WARNING: {c.where} ships a sack in format {c.sack_format:#06x}, not the majority "
+              f"{majority:#06x} of the shipped sacks (one of the two formats may be stale, "
+              f"see issue #448)")
+
+
+def _module_sack_report(plans) -> None:
+    """The one policy line for module-level sacks, then each <module>/Shaders/D3D11 sack the planned
+    modules hold with its size and format. They ship and this only reads: nothing here is compared
+    or refused."""
+    print(f"\n{MODULE_SACK_POLICY}")
+    found = [(p, rel, size) for p in plans for rel, size in sorted(p.module_sacks)]
+    if not found:
+        print("  none in the planned modules")
+    for p, rel, size in found:
+        fmt, why = read_sack_format(p.root / rel)
+        shown = f"format {fmt:#06x}" if fmt is not None else f"format unreadable: {why}"
+        print(f"  {p.name}/{rel}: {size:,} bytes, {shown}")
+
+
+def _jit_report(plans) -> None:
+    """One line per shipped copy of a TAOM assembly: whether the JIT optimizes it. A report:
+    TAOM ships Debug builds on purpose, so this never refuses."""
+    taom = [p for p in plans if p.name.casefold() in SHIPPED_DLLS]
+    if not taom:
+        print("\nTAOM assemblies: no planned module ships TAOM.dll or TAOM.Dependencies.dll, "
+              "so there is no JIT optimization line")
+        return
+    print("\nTAOM assemblies, JIT optimization (report only, never refuses):")
+    for p in taom:
+        copies = shipped_dll_copies(p)
+        if not copies:
+            print(f"  {p.name}: no bin/<platform>/{SHIPPED_DLLS[p.name.casefold()]} copy ships")
+        for rel in copies:
+            disabled, why = jit_optimization(p.root / rel)
+            if disabled is None:
+                verdict = f"unknown ({why})"
+            elif disabled:
+                verdict = "OFF (DebuggableAttribute disables optimization: a Debug build)"
+            else:
+                # A note means there is no attribute to read, which is not the same ON as an
+                # attribute that asks for optimization.
+                verdict = f"ON ({why})" if why else "ON"
+            print(f"  {p.name}/{rel}: JIT optimization {verdict}")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -442,7 +996,15 @@ def main(argv=None) -> int:
     ap.add_argument("--game-root", metavar="PATH", default=None,
                     help="game folder whose Shaders/Sources the Armory's native shaders need "
                          "(default: the parent of --source)")
+    ap.add_argument("--require-build", metavar="REV",
+                    help="refuse unless TAOM.dll and TAOM.Dependencies.dll are clean builds of "
+                         "this tag or commit (checked in --dry-run too)")
     args = ap.parse_args(argv)
+    # A piped stdout on Windows is cp1252: a folder name it cannot encode is escaped, never a
+    # traceback that turns a clean run into exit 1.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="backslashreplace")
 
     src = Path(args.source)
     if not src.is_dir():
@@ -465,6 +1027,15 @@ def main(argv=None) -> int:
         return 1
 
     _report(plans, args)
+    # The reports only read, and none may change the exit code or what ships: a failure in one is
+    # printed and the run goes on as if it had not been there.
+    for label, report in (("scene shader cache", _shader_cache_report),
+                          ("module shader sack", _module_sack_report),
+                          ("JIT optimization", _jit_report)):
+        try:
+            report(plans)
+        except Exception as e:
+            print(f"\n{label} report failed, ignored: {type(e).__name__}: {e}")
 
     unknown_total = sum(p.unknown_bytes for p in plans)
     has_unknown = any(p.unknown for p in plans)
@@ -513,6 +1084,19 @@ def main(argv=None) -> int:
         print("\nshader sources OK:")
         for line in shader_info:
             print(line)
+
+    if args.require_build is not None:
+        problems, checked = require_build(plans, args.require_build, names)
+        if problems:
+            print(f"\nERROR: not a clean build of {args.require_build}; refusing to package:",
+                  file=sys.stderr)
+            for msg in problems:
+                print(f"  {msg}", file=sys.stderr)
+            return 2
+        print(f"\nbuild stamp OK: {len(checked)} TAOM assembly copies are clean builds of "
+              f"{args.require_build}:")
+        for rel in checked:
+            print(f"  {rel}")
 
     if args.json:
         manifest = {

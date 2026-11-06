@@ -40,4 +40,40 @@
 		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
 		<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
 	</PropertyGroup>
+
+	<!--
+	  Working-tree flag (plan 017). The .NET SDK appends +$(SourceRevisionId), HEAD's commit SHA, to
+	  InformationalVersion, and that SHA says nothing about uncommitted edits. This target runs after
+	  InitializeSourceControlInformation sets SourceRevisionId and before
+	  AddSourceRevisionToInformationalVersion appends it, and marks it:
+	    <sha>.dirty   compiled or deployed inputs differ from HEAD (untracked files count, whatever
+	                  status.showUntrackedFiles says; ignored files, and skip-worktree or
+	                  assume-unchanged paths, do not)
+	    <sha>.nogit   the repository was found, but the git command failed
+	    nogit         no repository information at all (a source zip)
+	  tools/package_release.py (require-build) refuses any of the three for a release.
+	  A new file that a project imports or compiles from outside these paths must be added to the
+	  pathspec.
+	-->
+	<Target Name="TaomStampWorkingTreeState"
+	        AfterTargets="InitializeSourceControlInformation"
+	        BeforeTargets="AddSourceRevisionToInformationalVersion">
+		<Exec Command="git --no-optional-locks status --porcelain --untracked-files=normal -- Main Dependencies Stubs Directory.Build.props GameReferences.targets 2&gt;nul"
+		      WorkingDirectory="$(MSBuildThisFileDirectory)"
+		      ConsoleToMSBuild="true"
+		      IgnoreExitCode="true"
+		      IgnoreStandardErrorWarningFormat="true"
+		      StandardOutputImportance="low"
+		      StandardErrorImportance="low"
+		      EchoOff="true"
+		      Condition="'$(SourceRevisionId)' != ''">
+			<Output TaskParameter="ConsoleOutput" ItemName="_TaomGitStatusLine" />
+			<Output TaskParameter="ExitCode" PropertyName="_TaomGitStatusExitCode" />
+		</Exec>
+		<PropertyGroup>
+			<SourceRevisionId Condition="'$(SourceRevisionId)' == ''">nogit</SourceRevisionId>
+			<SourceRevisionId Condition="'$(_TaomGitStatusExitCode)' != '' AND '$(_TaomGitStatusExitCode)' != '0'">$(SourceRevisionId).nogit</SourceRevisionId>
+			<SourceRevisionId Condition="'$(_TaomGitStatusExitCode)' == '0' AND '@(_TaomGitStatusLine)' != ''">$(SourceRevisionId).dirty</SourceRevisionId>
+		</PropertyGroup>
+	</Target>
 </Project>
