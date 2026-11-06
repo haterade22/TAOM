@@ -38,6 +38,7 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 | `git --git-dir=/path commit` | Operate on a specific git-dir | NO — would need a separate pattern |
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
+| `timeout 60 git ...`, `{ git ...; }`, `! git ...`, `then git ...` | A wrapper word or shell grammar in front of git (#985) | NO: read segments from `_shellwords.py commands`, a parsed call through `_git_call` |
 
 **Reference pattern** (used by `check-claude-files-tracked.sh`):
 

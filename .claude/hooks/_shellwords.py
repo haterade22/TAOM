@@ -5,10 +5,19 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|segments|verdict [protected...]|git-repo [subcommand] < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand] < the hook payload (JSON)
   posix     the command as POSIX-shell text
-  segments  the posix text split at ; & | and newlines outside quotes, one segment per line, with a
-            # comment dropped (mark-verification-run.sh)
+  commands  the posix text split at ; & | and newlines outside quotes (a # comment dropped), each
+            segment from its command word on, one per line (#985): past VAR=value, shell grammar
+            ({ ! if then do ...) and, for the Bash tool, the wrappers env, timeout, command, time,
+            nice, nohup, xargs and stdbuf. The script of a `bash|sh|zsh -c` and the body of a heredoc
+            such a shell reads are split too; a heredoc any other command reads is data and adds
+            nothing. mark-verification-run.sh reads this form, so a mention never marks. With
+            --blind (block-dangerous-git.sh, block-broad-git-add.sh) it also adds the pieces of the
+            text cut at every ; & | and newline whatever the quotes, heredoc bodies inline: a
+            superset of the old sed split, so a confirm gate never asks less than it did (lesson
+            #947). Only the first 32 words of a segment are looked at. Not peeled: sudo, exec, rtk,
+            eval, watch, $(...), case arms, cmd /c, command -v. The string of env -S is read as a script.
   verdict   validate-push.sh's answer for the protected branch names given as arguments (#680): one
             line, block<TAB>target, warn<TAB>target or allow; _pushjudge.py judges the candidate
             lines (push_candidates). A payload that is no JSON object prints unread, which the hook
@@ -421,6 +430,9 @@ GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "-
 CHDIR = {"cd", "chdir", "set-location", "sl"}
 PUSHD = {"pushd", "push-location"}
 POPD = {"popd", "pop-location"}
+# Wrappers that run their command in a child process, whose cd leaves the shell's directory alone. `command`
+# and `time` run a builtin in the shell itself, so a cd behind them still moves.
+CHILD_WRAPPERS = {"env", "timeout", "nice", "nohup", "xargs", "stdbuf"}
 
 
 def strip_heredocs(cmd):
@@ -450,6 +462,322 @@ def expand_heredoc(value, bodies):
     """A value naming a heredoc placeholder is that heredoc's body (the $(cat <<EOF) form)."""
     hm = re.search(r"__TAOM_HEREDOC_(\d+)__", value)
     return bodies[int(hm.group(1))] if hm else value
+
+
+# ---- the command of a segment, past wrapper words and shell grammar (#985) ----------------------
+# A gate that finds a segment's command by its first word misses `timeout 60 git reset --hard`,
+# `{ git reset --hard; }` and `! git ...`: command_index skips what runs nothing itself, so every
+# reader (the commit gates through _git_call, and the `commands` mode the confirm gates and
+# mark-verification-run.sh read) finds the same word. The idea comes from rtk-ai/rtk's permission
+# matcher (docs/reference/provenance-register.md); no rtk code is used.
+GRAMMAR ={"{", "!", "if", "then", "do", "else", "elif", "while", "until"}
+ASSIGNMENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\+?=")
+PEEL_WORDS = 32
+# Wrapper -> (short options that take a value, long options that take a value). A short option is
+# complete when glued (-k5); a long option when it carries `=`. xargs -i -l -e and their long forms
+# --replace --max-lines --eof take a glued value only (GNU xargs --help), so none is listed.
+WRAPPERS = {
+    "env": ("uC", ("--unset", "--chdir")),
+    "timeout": ("ks", ("--kill-after", "--signal")),
+    "command": ("", ()),
+    "time": ("", ()),
+    "nice": ("n", ("--adjustment",)),
+    "nohup": ("", ()),
+    "xargs": ("ILnPsEda", ("--arg-file", "--delimiter", "--max-args", "--max-procs", "--max-chars",
+                           "--process-slot-var")),
+    "stdbuf": ("ioe", ("--input", "--output", "--error")),
+}
+
+
+def _takes_value(wrapper, word):
+    shorts, longs = WRAPPERS[wrapper]
+    if word.startswith("--"):
+        name, eq, _ = word.partition("=")
+        return not eq and len(name) >= 3 and any(l.startswith(name) for l in longs)
+    for n, ch in enumerate(word[1:], 1):          # a bundle: the first value letter takes the rest of the word
+        if ch in shorts:                          # as its value, or the next word when it is the last letter
+            return n == len(word) - 1
+    return False
+
+
+def _skip_options(wrapper, words, i):
+    """The index after a wrapper's options (and, for timeout, its duration), or None where the
+    wrapper runs text rather than a command: command -v and -V, env -S."""
+    n = len(words)
+    while i < n:
+        w = words[i]
+        if w == "--":
+            i += 1
+            break
+        if not w.startswith("-"):
+            break
+        name = w.partition("=")[0]
+        if wrapper == "command" and re.fullmatch(r"-[pvV]+", w) and re.search("[vV]", w):
+            return None
+        if wrapper == "env" and (w.startswith("-S") or (len(name) >= 3 and "--split-string".startswith(name))):
+            return None
+        i += 2 if _takes_value(wrapper, w) else 1
+    return min(i + 1 if wrapper == "timeout" else i, n)
+
+
+def command_index(words, tool):
+    """The index of the word that names the command: past grammar words (`{ ! if then do else elif
+    while until`, a glued leading `(`), assignments (NAME=, NAME+=) and, for the Bash tool only, the
+    wrappers in WRAPPERS with their options. PowerShell's `timeout` is the Windows timeout.exe, which
+    runs no command, so there only grammar and assignments are skipped. len(words) when none is left."""
+    i, n = 0, len(words)
+    while i < n:
+        w = words[i].lstrip("(")
+        if not w or w in GRAMMAR or ASSIGNMENT.match(w):
+            i += 1
+        elif tool == "Bash" and w in WRAPPERS:
+            j = _skip_options(w, words, i + 1)
+            if j is None:
+                return i
+            i = j
+        else:
+            return i
+    return n
+
+
+_PLAIN = re.compile(r"[^ \t'\"\\]+")
+_DQ_END = re.compile(r'["\\]')
+DQ_ESCAPE = re.compile(r'\\([\\"$`])')          # the escapes bash honours inside double quotes
+
+
+def _lead_words(seg, limit):
+    """(start, end, text) of the first `limit` words of a segment read as bash words: quotes and
+    backslashes taken out of text, a quote left open running to the end. Linear in what it reads."""
+    out, i, n = [], 0, len(seg)
+    while len(out) < limit:
+        while i < n and seg[i] in " \t":
+            i += 1
+        if i >= n:
+            break
+        start, buf = i, []
+        while i < n and seg[i] not in " \t":
+            c = seg[i]
+            if c == "'":
+                j = seg.find("'", i + 1)
+                j = n if j < 0 else j
+                buf.append(seg[i + 1:j])
+                i = j + 1
+            elif c == '"':
+                j = i + 1
+                while True:
+                    m = _DQ_END.search(seg, j)
+                    if not m:
+                        j = n
+                        break
+                    if m.group() == '"':
+                        j = m.start()
+                        break
+                    j = m.end() + 1
+                inner = seg[i + 1:j]
+                buf.append(DQ_ESCAPE.sub(r"\1", inner) if "\\" in inner else inner)
+                i = j + 1
+            elif c == "\\":
+                buf.append(seg[i + 1:i + 2])
+                i += 2
+            else:
+                m = _PLAIN.match(seg, i)
+                buf.append(m.group())
+                i = m.end()
+        out.append((start, min(i, n), "".join(buf)))
+    return out
+
+
+def _trim_parens(text):
+    """text without the unquoted `)` that close a subshell and the blanks before them: `(git add -A)`
+    must end `-A`, not `-A)`. A quoted ")" stays."""
+    t = text.rstrip()
+    if not t.endswith(")"):
+        return text
+    q, closers, i = "", set(), 0
+    while i < len(t):
+        c = t[i]
+        if c == "\\" and q != "'":
+            i += 2
+            continue
+        if q:
+            q = "" if c == q else q
+        elif c in "\"'":
+            q = c
+        elif c == ")":
+            closers.add(i)
+        i += 1
+    j = len(t)
+    while j > 0 and (t[j - 1] in " \t" or (t[j - 1] == ")" and j - 1 in closers)):
+        j -= 1
+    return t[:j]
+
+
+def peel(seg, tool):
+    """The segment from its command word on, with that word written `git` when it names git (`GIT`,
+    a path, quotes). Only the first PEEL_WORDS words are looked at; with no command word among them
+    the segment comes back unchanged."""
+    words = _lead_words(seg, PEEL_WORDS)
+    k = command_index([w[2] for w in words], tool)
+    if k >= len(words):
+        return seg
+    start, end, text = words[k]
+    while start < end and seg[start] == "(":
+        start += 1
+    if GIT.fullmatch(text.lstrip("(")):
+        return _trim_parens("git" + seg[end:])
+    return _trim_parens(seg[start:])
+
+
+PLACEHOLDER = re.compile(r"__TAOM_HEREDOC_(\d+)__")
+SHORT_C = re.compile(r"-[A-Za-z]*c[A-Za-z]*")
+# Where the sed split the confirm gates ran before #985 cut a line: && || ; | and the newline. Not a lone &.
+GATE_CUT = re.compile(r"&&|\|\||;|\||\n")
+SCRIPT_DEPTH = 2          # how many bash -c scripts and shell heredocs deep commands() reads, as _git_call does
+
+
+SHELL_VALUE_OPTIONS = {"-o", "-O", "+o", "+O", "--rcfile", "--init-file"}
+SHORT_N = re.compile(r"-[A-Za-z]*n[A-Za-z]*")
+SHORT_S = re.compile(r"-[A-Za-z]*s[A-Za-z]*")
+REDIRECT_WORD = re.compile(r"\d*[<>]|&>")
+
+
+def _shell_scan(words):
+    """(script index, reads stdin) for a shell command line, words[0] the shell: the index of the script
+    given to `-c`, or to a short bundle holding c (-lc, -ec), a `--` right after it skipped; and whether
+    a heredoc on its stdin is run, which it is with neither -c nor an operand, or with -s. The scan stops
+    at the first operand (`bash script.sh -c x` runs the file) and skips the values of -o, -O, +o, --rcfile
+    and --init-file. A short bundle holding n (`bash -n`) runs nothing: (None, False)."""
+    i = 1
+    while i < len(words):
+        w = words[i]
+        if SHORT_N.fullmatch(w):
+            return None, False
+        if SHORT_C.fullmatch(w):
+            j = i + 1 + (1 if words[i + 1:i + 2] == ["--"] else 0)
+            return (j if j < len(words) else None), False
+        if SHORT_S.fullmatch(w):
+            return None, True
+        if w in SHELL_VALUE_OPTIONS:
+            i += 2
+        elif w.startswith("-") and w != "--" or w.startswith("+"):
+            i += 1
+        elif REDIRECT_WORD.match(w):        # `bash << EOF`, `bash > out`: a redirection is no operand
+            return None, True
+        else:
+            return None, False
+    return None, True
+
+
+def shell_script_index(words):
+    """The index in words (words[0] is bash, sh or zsh) of the script given to -c, else None (_shell_scan)."""
+    return _shell_scan(words)[0]
+
+
+def _is_shell(word):
+    """Whether a command word names bash, sh or zsh (a path, with or without .exe)."""
+    name = os.path.basename(word).lower()
+    return (name[:-4] if name.endswith(".exe") else name) in ("bash", "sh", "zsh")
+
+
+def _runs_a_shell(words):
+    """Whether the command word of these (start, end, text) words is a shell."""
+    return bool(words) and _is_shell(words[0][2])
+
+
+def _env_split_string(names):
+    """The string given to `env -S` / `--split-string` (env runs it as a command line), or None. names[0]
+    is env."""
+    i = 1
+    while i < len(names) and names[i].startswith("-") and names[i] != "--":
+        w = names[i]
+        if w.startswith("--"):
+            name, eq, val = w.partition("=")
+            if len(name) >= 3 and "--split-string".startswith(name):
+                return val if eq else (names[i + 1] if i + 1 < len(names) else None)
+        else:
+            for n, ch in enumerate(w[1:], 1):
+                if ch == "S":
+                    return w[n + 1:] or (names[i + 1] if i + 1 < len(names) else None)
+                if ch in "uC":
+                    break
+        i += 2 if _takes_value("env", w) else 1
+    return None
+
+
+# A command with more `<<` openers than this, or a text over REPO_SCAN_MAX holding one, is not stripped of
+# heredocs: strip_heredocs scans to the end of the text for each opener that has no closing line, so
+# `python -c` with 20,000 `x = 1 << 5` lines took 30 s (a killed gate fails open). 64 openers over 256 KB
+# measured under 0.4 s.
+HEREDOC_MAX_OPENERS = 64
+
+
+def commands(cmd, tool, blind=False, depth=0, inherited=None):
+    """One peeled segment per line, each from its command word on, in first-seen order and once each:
+    1. the command as POSIX text with heredocs taken out and $'...' words read, split outside quotes;
+    2. the script of a `bash|sh|zsh -c` segment, and the body of a heredoc such a shell reads
+       (`bash <<EOF`), read the same way, two levels deep. A heredoc another command reads (cat,
+       python, `git commit -F -`, a `$(cat <<EOF)` message) is data and adds nothing, so a body line
+       that starts `dotnet test` never marks;
+    3. blind only: the pieces of the text with its heredocs inline cut exactly where the sed split the
+       confirm gates used before #985 cut a line (&&, ||, ;, | and the newline, whatever the quotes; not a
+       lone &). An extra confirm is the safe direction there (lesson #947), so nothing the old split
+       caught goes unasked: a quoted `;`, a heredoc whose body holds an apostrophe, text the quote-aware
+       split reads as data.
+    A multi-line `bash -c '...'` script reaches step 1 with its newlines collapsed to spaces, so only its
+    first command is read there; that fails in the safe direction (the blind pass still sees every line
+    for the confirm gates, and the marker at worst nags once).
+    mark-verification-run.sh reads the plain form (a mention must never mark), the two confirm gates
+    `commands --blind`. Only the first PEEL_WORDS words of a segment are looked at.
+    A heredoc placeholder inside a `-c` script is judged by the command of the script's own segment, never
+    by the outer shell. Past HEREDOC_MAX_OPENERS openers, or REPO_SCAN_MAX characters with one, the
+    heredocs are not stripped: the blind pass still reads every piece, and the plain form reads nothing
+    after the first line holding an opener, so a body it cannot tell from commands never marks."""
+    posix = to_posix(cmd, tool)
+    if inherited is not None:               # a -c script: its heredocs were taken out with the whole command
+        text, bodies = posix, inherited
+    elif posix.count("<<") > HEREDOC_MAX_OPENERS or (len(posix) > REPO_SCAN_MAX and "<<" in posix):
+        text, bodies = posix, []
+        if not blind:
+            nl = posix.find("\n", posix.find("<<"))
+            text = posix if nl < 0 else posix[:nl]
+    else:
+        text, bodies = strip_heredocs(posix)
+    out, seen = [], set()
+
+    def add(line):
+        if line.strip() and line not in seen:
+            seen.add(line)
+            out.append(line)
+
+    def nested(script, scripts=False):
+        for line in commands(script, "Bash", blind, depth + 1, bodies if scripts else None).split("\n"):
+            add(line)
+
+    for seg in segments(decode_ansi_c(text)).split("\n"):
+        peeled = peel(seg, tool)
+        add(peeled)
+        words = _lead_words(peeled, PEEL_WORDS) if depth < SCRIPT_DEPTH else []
+        names = [w[2] for w in words]
+        if words and names[0] == "env":
+            script = _env_split_string(names)
+            if script is not None:
+                nested(script, True)
+            continue
+        if not _runs_a_shell(words):
+            continue
+        k, reads_stdin = _shell_scan(names)
+        if k is not None:
+            nested(names[k], True)      # with -c the shell reads the script, never its stdin
+            continue
+        if not reads_stdin:             # `bash tools/foo.sh <<EOF` feeds the script; `bash -n` runs nothing
+            continue
+        for m in PLACEHOLDER.finditer(peeled):
+            if int(m.group(1)) < len(bodies):
+                nested(bodies[int(m.group(1))])
+    if blind:
+        for piece in GATE_CUT.split(posix):
+            add(peel(piece, tool))
+    return "\n".join(out)
 
 
 def command_tokens(s, partial=False):
@@ -529,9 +857,13 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
     for t in command_tokens(text, partial) + [";"]:
         if t and set(t) <= CMD_SEP:
             if group:
-                name = os.path.basename(group[0]).lower()
-                if name in CHDIR or name in PUSHD:
-                    target = _chdir_target(group)
+                k = command_index(group, "Bash")
+                head = group[k:] or group                       # `{ cd x; ...` moves too
+                name = os.path.basename(head[0]).lower()
+                if any(w.lstrip("(") in CHILD_WRAPPERS for w in group[:k]):
+                    pass                                        # `timeout 5 cd x` changes a child's directory only
+                elif name in CHDIR or name in PUSHD:
+                    target = _chdir_target(head)
                     if target is not None:
                         if name in PUSHD:
                             pushed.append(cwd)
@@ -558,17 +890,57 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
     return found
 
 
+def _env_dirs(prefix, k):
+    """The directories named by the env options that start at prefix[k]: -C DIR, -CDIR, a bundle ending
+    in C (-iC DIR), --chdir DIR, --chdir=DIR and any unambiguous prefix of --chdir (--ch)."""
+    dirs = []
+    while k < len(prefix) and prefix[k].startswith("-") and prefix[k] != "--":
+        w = prefix[k]
+        if w.startswith("--"):
+            name, eq, val = w.partition("=")
+            if len(name) >= 3 and "--chdir".startswith(name):
+                if eq:
+                    dirs.append(val)
+                elif k + 1 < len(prefix):
+                    dirs.append(prefix[k + 1])
+        else:
+            for n, ch in enumerate(w[1:], 1):
+                if ch in "uC":
+                    if ch == "C":
+                        value = w[n + 1:]
+                        if value:
+                            dirs.append(value)
+                        elif k + 1 < len(prefix):
+                            dirs.append(prefix[k + 1])
+                    break
+        k += 2 if _takes_value("env", w) else 1
+    return dirs
+
+
+def _env_chdir(prefix, cwd):
+    """cwd moved by each directory an `env` among the words command_index skipped names (_env_dirs),
+    the way git -C moves it."""
+    for k, w in enumerate(prefix):
+        if w == "env":
+            for d in _env_dirs(prefix, k + 1):
+                cwd = join_dir(cwd, d)
+    return cwd
+
+
 def _git_call(g, bodies, subcommand, cwd, partial, depth):
-    i = 0
-    while i < len(g) and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", g[i]):   # VAR=value prefixes
-        i += 1
+    # Bash's wrappers and grammar are skipped whatever the tool: the commit gates cannot tell, and
+    # a PowerShell `timeout 60 git commit` runs no commit, so judging it only over-blocks (#985).
+    i = command_index(g, "Bash")
     if i >= len(g):
         return []
+    if "xargs" in g[:i]:      # xargs builds the argument list at run time: the text holds no real message
+        return []
+    cwd = _env_chdir(g[:i], cwd)
     word = os.path.basename(g[i]).lower()
-    if word in ("bash", "sh", "zsh", "bash.exe") and "-c" in g[i + 1:] and depth < 2:
-        k = g.index("-c", i + 1)
+    if _is_shell(word) and depth < 2:
+        k = shell_script_index(g[i:])
         # The script's heredocs were taken out with the whole command, so its placeholders index bodies.
-        return git_invocations(g[k + 1], bodies, subcommand, cwd, partial, depth + 1) if k + 1 < len(g) else []
+        return git_invocations(g[i + k], bodies, subcommand, cwd, partial, depth + 1) if k is not None else []
     if word not in ("git", "git.exe"):
         return []
     i += 1
@@ -630,8 +1002,8 @@ def read_cwd(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "segments", "verdict", "git-repo"):
-        sys.stderr.write("usage: _shellwords.py posix|segments|verdict [protected...]|git-repo [subcommand] < payload.json\n")
+    if mode not in ("posix", "commands", "verdict", "git-repo"):
+        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand] < payload.json\n")
         return 2
     raw = sys.stdin.buffer.read().decode("utf-8", "replace")
     payload = read_payload(raw)
@@ -650,10 +1022,10 @@ def main(argv):
         import _pushjudge
         kind, target = _pushjudge.Judge(argv[2:]).run(push_candidates(cmd, tool))
         text = kind + "\t" + target if target else kind
+    elif mode == "commands":
+        text = commands(cmd, tool, "--blind" in argv[2:])
     else:
         text = to_posix(cmd, tool)
-        if mode == "segments":
-            text = segments(text)
     sys.stdout.buffer.write((text + "\n").encode("utf-8", "replace"))
     return 0
 

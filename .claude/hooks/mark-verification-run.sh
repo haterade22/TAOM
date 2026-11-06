@@ -53,14 +53,22 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked. A
 # newline inside quotes (a commit message) becomes a space, so it cannot start a segment.
 #
-# The split is _shellwords.py segments (plan 027), shared with validate-push.sh: the command is
-# first read as POSIX-shell text (a PowerShell command as the Bash text of the same command), then
-# split outside quotes with \ as the escape, in time linear in its length (a per-character bash
-# loop took 9.5 s on a 100 KB command, plan 011 review), and a # comment is dropped. An escaped
-# newline joins its lines, and the output is bytes with LF only, so a CR never hides a command.
+# The split is _shellwords.py commands (plan 027, #985): the command is first read as POSIX-shell
+# text (a PowerShell command as the Bash text of the same command), then split outside quotes with
+# \ as the escape, in time linear in its length (a per-character bash loop took 9.5 s on a 100 KB
+# command, plan 011 review), and a # comment is dropped. An escaped newline joins its lines, and the
+# output is bytes with LF only, so a CR never hides a command. Each segment starts at its command
+# word: VAR=value, shell grammar and, in the Bash tool only, wrappers (timeout, env, time, nice,
+# nohup, xargs, stdbuf, command) are already read past, so `timeout 600 dotnet test` marks. A heredoc body
+# is marked only when a shell runs it (a heredoc given to bash), never a commit message or a script piped to python. In the
+# PowerShell tool `timeout` is the Windows timeout.exe and stays the command, so it does not mark.
 SEGMENTS=""
 if [ -n "$PYBIN" ]; then
-  SEGMENTS=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" segments 2>/dev/null)
+  # Bounded to 3 s of the 5 s registration (a kill cannot speak). A reader that fails or overruns (rc 124)
+  # leaves no segments, so nothing marks: the Stop reminder nags once, the safe direction.
+  SEGMENTS=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-3}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" commands 2>/dev/null)
+  RC=$?
+  [ $RC -eq 0 ] || SEGMENTS=""
 fi
 
 # Touch on any build/test invocation (pass OR fail: a failed build is still
@@ -81,17 +89,9 @@ MARK=0
 set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
 for seg in "${SEG_LIST[@]}"; do
   seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
-  # Drop env-var prefixes (FOO=bar cmd), and only a word that IS an assignment. The old
-  # pattern took any word with an `=` and a space somewhere after it, so it read
-  # `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, the repo's canonical
-  # test command, as a prefix and dropped `dotnet`: that command never marked (D41).
-  while :; do
-    word="${seg%%[[:space:]]*}"
-    [[ "$word" == "$seg" ]] && break             # a lone word is the command itself
-    # `env` too: `env DOTNET_NOLOGO=1 dotnet test` marked before D41 (plan 011 review).
-    [[ "$word" == env || "$word" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || break
-    seg="${seg#"$word"}"; seg="${seg#"${seg%%[![:space:]]*}"}"
-  done
+  # The reader already dropped env-var prefixes, grammar and wrappers (#985): it does what the prefix
+  # loop that stood here did (the D41 fix, which kept `dotnet test ... -p:ModuleId=` from being read as
+  # an assignment), and more.
   first="${seg%% *}"
   first=${first//\'/}                            # the reader quotes a word holding \ (plan 027)
   case "$first" in

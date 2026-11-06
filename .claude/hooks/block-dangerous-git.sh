@@ -20,14 +20,17 @@
 #
 # Left ungated: checkout -B, switch -C and branch -f move an existing branch, which the reflog
 # can undo. Known gaps (recorded follow-ups): git global options the stripper below does not know
-# (-P, --no-optional-locks) hide the subcommand, and a `;` inside a quoted argument splits a
-# segment. The 2026-09-29 additions follow ECC's gateguard list (docs/reviews/adopt-ecc-2026-09-29.md).
+# (-P, --no-optional-locks) hide the subcommand. Since #985 a quoted `;` no longer splits a segment,
+# and wrapper words and shell grammar in front of git (timeout, env, command, time, nice, nohup,
+# xargs, stdbuf, { ! if then do ...) are read past. Still out: sudo, exec, eval, watch, $(...), case
+# arms and cmd /c. The sed split is only the fallback when Python is unavailable. The 2026-09-29
+# additions follow ECC's gateguard list (docs/reviews/adopt-ecc-2026-09-29.md).
 #
 # Deliberately does NOT touch `git push` — owned by validate-push.sh.
 #
 # Detection is SEGMENT-ANCHORED, not substring-anywhere: the command is split on
 # shell separators (| ; && ||) and each segment is checked only if it is an
-# actual `git <subcommand>` invocation (after stripping env-var prefixes and git
+# actual `git <subcommand>` invocation (after stripping env-var prefixes, wrappers and git
 # global flags like -C / -c / --no-pager). This avoids false-positives on
 # commands that merely MENTION a destructive phrase as data — e.g.
 # `echo "git reset --hard"`, `git log | grep "git reset --hard"`,
@@ -45,7 +48,8 @@ INPUT=$(cat)
 
 # Prefilter: every decision below needs the text `git` in the command, and Claude Code never
 # escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
-# here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
+# here skips the _pybin.sh probe and both reader runs, posix and commands (three Python starts),
+# on most Bash calls.
 # Match the raw text, never a token regex: a newline before `git` arrives as \n.
 # tools/test_hooks.sh 4c checks both directions.
 # Never skip on an escape: JSON writes a letter either literally or as a \u escape,
@@ -79,9 +83,13 @@ long_is() {
   [[ ${#w} -ge 4 && "$2" == "$w"* ]]
 }
 
-# Split on shell separators so a destructive verb is only matched when it is the
-# actual command of a segment, never as text inside a quoted arg or a pipe target.
-SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
+# A destructive verb is only matched when it is the actual command of a segment, never as text
+# inside a quoted arg or a pipe target.
+# Segments, each from its command word on (#985): taom_hook_segments (_pybin.sh) reads the quote-aware
+# split past VAR=value, shell grammar and wrappers such as timeout, env and xargs, so `timeout 60 git
+# reset --hard` and `{ git reset --hard; }` are judged as the bare form, and adds the quote-blind
+# pieces, so nothing the old sed split caught goes unasked. Without Python it falls back to that sed split.
+SEGMENTS=$(taom_hook_segments block-dangerous-git)
 
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
 # 65,536 to 65,663 bytes of text, and a killed gate fails open (#681). An empty segment is dropped,

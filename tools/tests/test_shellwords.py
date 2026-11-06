@@ -39,8 +39,8 @@ def ps(command):
     return argvs(sw.to_posix(command, "PowerShell"))
 
 
-def run_cli(mode, stdin):
-    return subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py"), mode],
+def run_cli(mode, stdin, *args):
+    return subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py"), mode, *args],
                           input=stdin, capture_output=True, timeout=30)
 
 
@@ -261,6 +261,253 @@ class SegmentsTests(unittest.TestCase):
                          'Set-Location "E:\\x\\"\n dotnet test')
 
 
+class CommandWordTests(unittest.TestCase):
+    """command_index, peel and commands (#985): the command of a segment found past wrapper words and
+    shell grammar, so the gates see the git or dotnet call a `timeout 60` or a `{` hid."""
+
+    def lines(self, cmd, tool="Bash", blind=False):
+        return sw.commands(cmd, tool, blind).split("\n")
+
+    def dirs(self, cmd):
+        return sw.git_call_dirs(cmd, "Bash", "E:/w", "commit")
+
+    def test_every_bypass_form_peels_to_git(self):
+        for cmd, want in (
+                ("timeout 60 git reset --hard", "git reset --hard"),
+                ("timeout -k 5 60 git reset --hard", "git reset --hard"),
+                ("timeout --kill-after=5 --foreground 60 git reset --hard", "git reset --hard"),
+                ("timeout -s KILL 60 git reset --hard", "git reset --hard"),
+                ("command git clean -fd", "git clean -fd"),
+                ("command -p git clean -fd", "git clean -fd"),
+                ("env git reset --hard", "git reset --hard"),
+                ("env -i -u HOME A=1 git reset --hard", "git reset --hard"),
+                ("env -C /e/x git reset --hard", "git reset --hard"),
+                ("time git reset --hard", "git reset --hard"),
+                ("time -p git reset --hard", "git reset --hard"),
+                ("nice -n 5 git reset --hard", "git reset --hard"),
+                ("nice -5 git reset --hard", "git reset --hard"),
+                ("nohup git reset --hard", "git reset --hard"),
+                ("stdbuf -oL git reset --hard", "git reset --hard"),
+                ("stdbuf -o L git reset --hard", "git reset --hard"),
+                ("xargs git checkout --", "git checkout --"),
+                ("xargs -n 1 -I {} git checkout --", "git checkout --"),
+                ("timeout 60 time nice -n 5 env A=1 git reset --hard", "git reset --hard"),
+                ("{ git reset --hard; }", "git reset --hard"),
+                ("(git reset --hard)", "git reset --hard"),
+                ("! git reset --hard", "git reset --hard"),
+                ("if true; then git reset --hard; fi", "git reset --hard"),
+                ("for f in a; do git clean -fd; done", "git clean -fd"),
+                ("while true; do git clean -fd; done", "git clean -fd"),
+                ("cd X && timeout -k 5 60 git reset --hard", "git reset --hard"),
+                ("X=1 timeout 60 GIT reset --hard", "git reset --hard"),
+                ("X+=1 timeout 60 /usr/bin/git reset --hard", "git reset --hard")):
+            with self.subTest(cmd=cmd):
+                self.assertIn(want, self.lines(cmd))
+
+    def test_dotnet_is_peeled_too(self):
+        for cmd in ("timeout 600 dotnet test TAOM.Tests", "timeout -k 10 600 dotnet test TAOM.Tests",
+                    "time dotnet test TAOM.Tests", "env DOTNET_NOLOGO=1 dotnet test TAOM.Tests"):
+            with self.subTest(cmd=cmd):
+                self.assertIn("dotnet test TAOM.Tests", self.lines(cmd))
+
+    def test_text_that_only_mentions_a_command_stays_unpeeled(self):
+        for cmd in ('echo "timeout 60 git reset --hard"',
+                    'git commit -m "time git reset --hard"',
+                    'grep -rn "xargs git checkout" docs/',
+                    "command -v git",
+                    "command -V git",
+                    'git commit -m "a | git reset --hard"',
+                    'git -c "a;b" reset --hard'):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.lines(cmd), [cmd])
+
+    def test_quote_aware_split_keeps_a_quoted_separator_inside_its_segment(self):
+        self.assertEqual(self.lines('timeout 5 git -c "a;b" reset --hard'), ['git -c "a;b" reset --hard'])
+
+    def test_heredoc_apostrophe_does_not_hide_the_next_command(self):
+        lines = self.lines("git commit -F - <<'EOF'\nit's done\nEOF\ntimeout 5 git reset --hard")
+        self.assertIn("git reset --hard", lines)
+        self.assertEqual(lines[0], "git commit -F - << __TAOM_HEREDOC_0__")
+
+    def test_ansi_c_word_with_an_escaped_quote_does_not_hide_the_next_command(self):
+        self.assertIn("git reset --hard", self.lines("echo $'it\\'s'; timeout 5 git reset --hard"))
+
+    def test_heredoc_body_run_by_a_shell_is_still_judged(self):
+        self.assertIn("git reset --hard", self.lines("bash <<EOF\ngit reset --hard\nEOF"))
+        self.assertIn("git reset --hard", self.lines("bash <<EOF\ntimeout 5 git reset --hard\nEOF"))
+
+    def test_only_the_first_32_words_are_looked_at(self):
+        self.assertEqual(self.lines("env " * 31 + "git reset --hard")[-1], "git reset --hard")
+        past = "env " * 32 + "git reset --hard"
+        self.assertEqual(self.lines(past), [past.strip()])
+
+    def test_powershell_tool_keeps_timeout_as_the_windows_program(self):
+        for cmd in ("timeout 600 dotnet test TAOM.Tests", "env git reset --hard", "time git reset --hard"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.lines(cmd, "PowerShell"), [cmd])
+
+    def test_powershell_tool_still_reads_blocks_and_capitals(self):
+        self.assertIn("git reset --hard", [l.strip() for l in self.lines("Measure-Command { git reset --hard }", "PowerShell")])
+        self.assertIn("git reset --hard", self.lines("GIT reset --hard", "PowerShell"))
+
+    def test_a_shell_script_given_to_dash_c_is_read(self):
+        for blind in (False, True):
+            with self.subTest(blind=blind):
+                self.assertIn("git reset --hard", self.lines('bash -c "cd x && git reset --hard"', blind=blind))
+                self.assertIn("git clean -fd", self.lines("sh -c 'git status; git clean -fd'", blind=blind))
+                self.assertIn("git reset --hard", self.lines("timeout 5 /bin/zsh -c 'timeout 5 git reset --hard'", blind=blind))
+
+    def test_a_commit_message_heredoc_is_data_not_commands(self):
+        cmd = "git commit -m \"$(cat <<'EOF'\nfix: x\n\ndotnet test TAOM.Tests passes\nEOF\n)\""
+        self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+
+    def test_a_heredoc_fed_to_a_non_shell_is_data(self):
+        for cmd in ("python - <<'EOF'\ndotnet test TAOM.Tests\nEOF",
+                    "cat > File.cs <<'EOF'\ndotnet test TAOM.Tests\nEOF",
+                    "git commit -F - <<'EOF'\ndotnet test TAOM.Tests\nEOF"):
+            with self.subTest(cmd=cmd):
+                self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+
+    def test_a_heredoc_a_shell_runs_is_commands(self):
+        self.assertIn("dotnet test X", self.lines("bash <<'EOF'\ndotnet test X\nEOF"))
+        self.assertIn("dotnet test X", self.lines("timeout 5 sh <<EOF\ndotnet test X\nEOF"))
+
+    def test_blind_mode_keeps_what_the_old_sed_split_caught(self):
+        cmd = "cat <<'EOF' > f.txt\ndon't\nEOF\ngit reset --hard"
+        self.assertIn("git reset --hard", self.lines(cmd, blind=True))
+        pieces = self.lines('git commit -m "a | git reset --hard"', blind=True)
+        self.assertTrue([l for l in pieces if l.startswith("git reset --hard")])
+        self.assertFalse([l for l in self.lines('git commit -m "a | git reset --hard"') if l.startswith("git reset")])
+
+    def test_blind_mode_still_peels_and_dedupes(self):
+        lines = self.lines("timeout 5 git reset --hard; git status", blind=True)
+        self.assertEqual(lines, sorted(set(lines), key=lines.index))
+        self.assertIn("git reset --hard", [l.strip() for l in lines])
+
+    def test_r1_blind_cut_is_the_old_sed_cut_not_a_lone_ampersand(self):
+        for cmd in ('echo don\'t; git -C "E:/R&D" reset --hard',
+                    "cat <<'EOF' > f.txt\ndon't\nEOF\ngit -C \"E:/R&D\" reset --hard"):
+            with self.subTest(cmd=cmd):
+                self.assertTrue([l for l in self.lines(cmd, blind=True)
+                                 if l.startswith('git -C "E:/R&D" reset --hard')])
+
+    def test_r3_short_bundles_and_double_dash_before_a_script(self):
+        for blind in (False, True):
+            with self.subTest(blind=blind):
+                self.assertIn("git add -A", self.lines('bash -lc "git add -A"', blind=blind))
+                self.assertIn("git clean -fd", self.lines("zsh -ec 'git clean -fd'", blind=blind))
+                self.assertIn("git reset --hard", self.lines("bash -c -- 'git reset --hard'", blind=blind))
+                self.assertNotIn("--", self.lines("bash -c -- 'git reset --hard'", blind=blind))
+
+    def test_known_limit_heredoc_with_text_after_its_delimiter_is_not_stripped(self):
+        # Parity with 5c8003b72: the opening line must end at the delimiter. Widening it was quadratic in
+        # the delimiter's length and hid `echo $((1 << n))` NL `git commit ...` from the label gate (round 5).
+        self.assertEqual(sw.strip_heredocs("cat <<'EOF' > f.txt\nx\nEOF\n"), ("cat <<'EOF' > f.txt\nx\nEOF\n", []))
+        self.assertEqual(sw.strip_heredocs("echo $((1 << n))\ngit commit -m 'no label here'\nn=3")[1], [])
+        # The confirm gates' blind pass still sees the git line after such a heredoc (F3).
+        self.assertIn("git reset --hard", self.lines("cat <<'EOF' > f.txt\ndon't\nEOF\ngit reset --hard", blind=True))
+
+    def test_heredoc_regex_is_linear_in_a_long_delimiter(self):
+        import time
+        cmd = "git reset --hard && python -c '" + "".join("x = 1 << %s = 2\n" % ("a" * 200) for _ in range(64)) + "y = 2\n" * 30000 + "'"
+        for blind in (False, True):
+            start = time.perf_counter()
+            sw.commands(cmd, "Bash", blind)
+            self.assertLess(time.perf_counter() - start, 2.0)
+        start = time.perf_counter()
+        sw.git_call_dirs("git commit -m x && python -c '" + "x = 1 << abcdefghijklmnopqrstuvwxyz\n" * 3000 + "'", "Bash", "E:/w")
+        self.assertLess(time.perf_counter() - start, 5.0)
+
+    def test_v3_cd_behind_a_wrapper_runs_in_a_child_process(self):
+        self.assertEqual(self.dirs("timeout 5 cd /e/repos/TAOM; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("nohup cd /e/x && git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("env A=1 pushd /e/x; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("{ cd /e/x; git commit -m y; }"), ["E:/x"])
+        self.assertEqual(self.dirs("A=1 cd /e/x && git commit -m y"), ["E:/x"])
+        self.assertEqual(self.dirs("time cd /e/x && git commit -m y"), ["E:/x"])
+
+    def test_v4_a_heredoc_fed_to_a_shell_with_an_operand_is_that_scripts_stdin(self):
+        data = "bash tools/foo.sh <<'EOF'\ndotnet test TAOM.Tests\nEOF"
+        self.assertFalse([l for l in self.lines(data) if l.startswith("dotnet test")])
+        self.assertIn("dotnet test X", self.lines("bash -s <<'EOF'\ndotnet test X\nEOF"))
+        self.assertIn("dotnet test X", self.lines("bash -e -o pipefail <<'EOF'\ndotnet test X\nEOF"))
+
+    def test_v5_noexec_runs_nothing(self):
+        for cmd in ("bash -n -c 'dotnet test TAOM.Tests'", "bash -nc 'dotnet test TAOM.Tests'",
+                    "bash -n <<'EOF'\ndotnet test TAOM.Tests\nEOF"):
+            with self.subTest(cmd=cmd):
+                self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+        self.assertEqual(self.dirs("bash -n -c 'git commit -m x'"), [])
+
+    def test_r6_a_closing_paren_is_not_part_of_the_last_word(self):
+        for cmd, want in (("(git add -A)", "git add -A"), ("(git add .)", "git add ."),
+                          ("(cd sub && git checkout .)", "git checkout ."), ("( git add -A )", "git add -A")):
+            with self.subTest(cmd=cmd):
+                self.assertIn(want, self.lines(cmd))
+        self.assertEqual(self.lines('git commit -m ")"'), ['git commit -m ")"'])
+
+    def test_r8_wrapper_option_prefixes_and_bundles(self):
+        self.assertEqual(sw.command_index(["timeout", "--k", "5", "60", "git"], "Bash"), 4)
+        self.assertEqual(sw.command_index(["env", "-iC", "sub", "git"], "Bash"), 3)
+        self.assertEqual(sw.command_index(["env", "-Csub", "git"], "Bash"), 2)
+        self.assertEqual(sw.command_index(["xargs", "-n1", "git"], "Bash"), 2)
+        self.assertIn("git reset --hard", self.lines("timeout --k 5 60 git reset --hard"))
+        self.assertIn("git reset --hard", self.lines("env -iC sub git reset --hard"))
+
+    def test_t1_a_placeholder_inside_a_script_is_judged_by_the_scripts_own_command(self):
+        for cmd in ("bash -lc \"cat > f.txt <<'EOF'\ndotnet test\nEOF\"",
+                    "bash -c \"git commit -F - <<'EOF'\nfix: x\n\ndotnet test passes\nEOF\""):
+            with self.subTest(cmd=cmd):
+                self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+        self.assertIn("dotnet test X", self.lines("bash -c \"bash <<'EOF'\ndotnet test X\nEOF\""))
+
+    def test_t2_many_openers_or_a_huge_text_skip_heredoc_stripping_in_time(self):
+        import time
+        worst = 'python -c "' + "x = 1 << 5\n" * 20000 + '"'
+        for blind in (False, True):
+            start = time.perf_counter()
+            self.lines(worst, blind=blind)
+            self.assertLess(time.perf_counter() - start, 1.0)
+        near = "\n".join("x = %d << 5" % i for i in range(sw.HEREDOC_MAX_OPENERS)) + "\n" + "y" * 200000
+        start = time.perf_counter()
+        self.lines(near, blind=True)
+        self.assertLess(time.perf_counter() - start, 1.0)
+        many = "\n".join("x = 1 << 5" for _ in range(sw.HEREDOC_MAX_OPENERS + 6)) + "\ndotnet test"
+        self.assertFalse([l for l in self.lines(many) if l.startswith("dotnet test")])
+        self.assertIn("git reset --hard", self.lines(many + "\ngit reset --hard", blind=True))
+
+    def test_t5_env_split_string_runs_its_value(self):
+        for cmd in ("env -S 'git reset --hard'", "env --split-string='git reset --hard'",
+                    "env -i -S 'timeout 5 git reset --hard'", "env --split 'git reset --hard'"):
+            with self.subTest(cmd=cmd):
+                self.assertIn("git reset --hard", self.lines(cmd))
+
+    def test_t7_scan_stops_at_the_first_operand(self):
+        self.assertFalse([l for l in self.lines("bash script.sh -c 'dotnet test'") if l.startswith("dotnet test")])
+        for cmd in ("bash -o pipefail -c 'git reset --hard'", "bash --norc -c 'git reset --hard'",
+                    "bash --rcfile x -c 'git reset --hard'"):
+            with self.subTest(cmd=cmd):
+                self.assertIn("git reset --hard", self.lines(cmd))
+
+    def test_t8_two_heredocs_on_one_line(self):
+        cmd = "cat <<A <<B\na\nA\ndotnet test\nB"
+        self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+        # Known limit, parity with 5c8003b72: `<<A` is not followed by a newline, so only `<<B` opens a body.
+        self.assertEqual(sw.strip_heredocs(cmd)[1], ["a\nA\ndotnet test"])
+
+    def test_t9_escaped_quotes_inside_a_double_quoted_script(self):
+        cmd = 'bash -c "echo \\"; dotnet test; \\""'
+        self.assertFalse([l for l in self.lines(cmd) if l.startswith("dotnet test")])
+
+    def test_command_index_unit(self):
+        self.assertEqual(sw.command_index(["timeout", "-k", "5", "60", "git"], "Bash"), 4)
+        self.assertEqual(sw.command_index(["timeout", "-k", "5", "60", "git"], "PowerShell"), 0)
+        self.assertEqual(sw.command_index(["A=1", "{", "git"], "PowerShell"), 2)
+        self.assertEqual(sw.command_index(["command", "-v", "git"], "Bash"), 0)
+        self.assertEqual(sw.command_index(["env", "-S", "git status"], "Bash"), 0)
+        self.assertEqual(sw.command_index(["timeout", "--", "60", "git"], "Bash"), 3)
+
+
 class PushCandidatesTests(unittest.TestCase):
     """validate-push.sh's candidate lines (plan 027 review): each shape below was refused before
     plan 027, so a line that still shows the push must come back."""
@@ -396,6 +643,45 @@ class GitRepoTests(unittest.TestCase):
         self.assertEqual(sw.git_call_dirs("cd sub && git commit -m x", "Bash", "", "commit"), ["sub"])
         self.assertEqual(sw.git_call_dirs("git commit -m x", "Bash", "", "commit"), [""])
 
+    def test_env_chdir_moves_the_commit(self):
+        for cmd in ("env -C E:/repos/other git commit -m x", "env --chdir E:/repos/other git commit -m x",
+                    "env --chdir=E:/repos/other A=1 git commit -m x",
+                    "timeout 5 env -C /e/repos/other git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd, cwd="E:/repos/TAOM"), ["E:/repos/other"])
+        self.assertEqual(self.dirs("env -C sub git -C inner commit -m x"), ["E:/w/sub/inner"])
+        self.assertEqual(self.dirs("env A=1 git commit -m x -C y"), ["E:/w"])
+
+    def test_r2_xargs_builds_the_message_at_run_time_so_it_is_unjudged(self):
+        self.assertEqual(sw.git_call_dirs("xargs -0 -I{} git commit --amend -m {}", "Bash", "E:/w"), [])
+        self.assertEqual(sw.git_call_dirs("echo a | xargs git commit -m x", "Bash", "E:/w"), [])
+        text, bodies = sw.strip_heredocs("xargs -0 -I{} git commit --amend -m {}")
+        self.assertEqual(sw.git_invocations(text, bodies, "commit"), [])
+
+    def test_r3_bundled_c_and_double_dash_reach_the_script(self):
+        self.assertEqual(self.dirs('bash -lc "git commit -m x"'), ["E:/w"])
+        self.assertEqual(self.dirs('bash -c -- "cd /e/x && git commit -m y"'), ["E:/x"])
+
+    def test_t3_other_shell_names(self):
+        self.assertEqual(self.dirs('zsh.exe -c "cd /e/x && git commit -m y"'), ["E:/x"])
+        self.assertEqual(self.dirs('sh.exe -c "git commit -m y"'), ["E:/w"])
+
+    def test_t6_env_options_in_every_spelling(self):
+        for cmd in ("env -iC sub git commit -m x", "env -Csub git commit -m x", "env --ch sub git commit -m x",
+                    "env -u FOO -C sub git commit -m x", "env --chdir=sub git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd), ["E:/w/sub"])
+
+    def test_t7_a_commit_after_a_script_operand_is_not_read(self):
+        self.assertEqual(self.dirs("bash script.sh -c 'git commit -m x'"), [])
+
+    def test_wrapped_commit_keeps_its_c_option(self):
+        self.assertEqual(self.dirs("timeout 60 git -C /e/x commit -m y"), ["E:/x"])
+
+    def test_commit_in_a_group_or_loop_runs_in_the_cwd(self):
+        self.assertEqual(self.dirs("{ git commit -m x; }"), ["E:/w"])
+        self.assertEqual(self.dirs("for b in a; do git commit -m x; done"), ["E:/w"])
+
     def test_other_subcommand(self):
         self.assertEqual(self.dirs("cd /e/x && git add -A", sub="add"), ["E:/x"])
         self.assertEqual(self.dirs("cd /e/x && git add -A"), [])
@@ -440,9 +726,17 @@ class CliTests(unittest.TestCase):
         self.assertEqual(r.stdout, "git commit -m 'feat: x \u2192 y'\n".encode("utf-8"))
         self.assertNotIn(b"\r", r.stdout)
 
-    def test_segments_mode(self):
-        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "a; b"}})
-        self.assertEqual(run_cli("segments", payload.encode("ascii")).stdout, b"a\n b\n")
+    def test_commands_mode(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "a; timeout 5 git status"}})
+        self.assertEqual(run_cli("commands", payload.encode("ascii")).stdout, b"a\ngit status\n")
+
+    def test_commands_blind_mode(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": 'git commit -m "a | git reset --hard"'}})
+        out = run_cli("commands", payload.encode("ascii"), "--blind").stdout
+        self.assertIn(b"\ngit reset --hard", out)
+
+    def test_segments_mode_is_gone(self):
+        self.assertEqual(run_cli("segments", b"{}").returncode, 2)
 
     def test_bad_json_prints_an_empty_line(self):
         r = run_cli("posix", b'{"tool_name":')

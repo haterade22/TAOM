@@ -1741,7 +1741,6 @@ MVR_CASES=(
   "1|dotnet test TAOM.Tests --filter \"FullyQualifiedName~A|FullyQualifiedName~B\""
   "1|pwsh ./build.ps1 -RunTests"
   "1|echo start; dotnet build Main/TAOM.csproj"
-  "1|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests"
   "0|grep -rn \"dotnet test\" docs/"
   "0|grep -rn \"x; dotnet test\" docs/"
   "0|echo 'a | dotnet build'"
@@ -1762,6 +1761,7 @@ done
 # Each shell's own escape (plan 011 review): PowerShell escapes with a backtick and keeps a
 # backslash literal, so a path ending in \ closes its quote, and `" does not. Bash is the reverse.
 # A command's non-final lines arrive with a CR, which must not hide a command on them.
+MVR_NL=$'\n'
 MVR_TOOL_CASES=(
   'PowerShell|0|Write-Output "x`"; dotnet test"'
   'PowerShell|1|Set-Location "E:\repos\TAOM\"; dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId='
@@ -1778,6 +1778,33 @@ MVR_TOOL_CASES=(
   # Codex review of plan 027: a quoted path alone is a string PowerShell prints, not a run.
   "PowerShell|0|'.\\build.ps1'"
   "PowerShell|1|& '.\\build.ps1' -RunTests"
+  # #985: the Bash wrappers are peeled; `env` and `timeout` are no PowerShell wrappers (timeout is the
+  # Windows timeout.exe, which runs no command), so those do not mark there.
+  'Bash|1|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests'
+  'Bash|1|timeout 600 dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId='
+  'Bash|1|timeout -k 10 600 dotnet build Main/TAOM.csproj'
+  'Bash|1|time dotnet test TAOM.Tests'
+  'Bash|0|command -v dotnet'
+  'Bash|0|echo "timeout 600 dotnet test"'
+  'PowerShell|0|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests'
+  'PowerShell|0|timeout 600 dotnet test TAOM.Tests'
+  # Heredoc text a shell does not run is data: a commit message or a script body never marks (#985
+  # review); a body a shell runs does.
+  "Bash|0|git commit -m \"\$(cat <<'EOF'${MVR_NL}fix: x${MVR_NL}${MVR_NL}dotnet test TAOM.Tests passes${MVR_NL}EOF${MVR_NL})\""
+  "Bash|0|python - <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|cat > File.cs <<'EOF'${MVR_NL}dotnet build x${MVR_NL}EOF"
+  "Bash|1|bash <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  # Known limit, parity with 5c8003b72: text after the delimiter keeps the heredoc inline, so its body marks.
+  "Bash|1|cat <<'EOF' > notes.txt${MVR_NL}dotnet test${MVR_NL}EOF"
+  "Bash|1|python - <<'EOF' 2>&1${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|bash tools/foo.sh <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|bash -n -c 'dotnet test TAOM.Tests'"
+  "Bash|0|bash -lc \"cat > f.txt <<'EOF'${MVR_NL}dotnet test${MVR_NL}EOF\""
+  "Bash|0|bash -c \"git commit -F - <<'EOF'${MVR_NL}fix: x${MVR_NL}${MVR_NL}dotnet test passes${MVR_NL}EOF\""
+  "Bash|0|bash script.sh -c 'dotnet test TAOM.Tests'"
+  "Bash|0|cat <<A <<B${MVR_NL}a${MVR_NL}A${MVR_NL}dotnet test${MVR_NL}B"
+  "Bash|0|bash -c \"echo \\\"; dotnet test; \\\"\""
+  "Bash|1|bash -c 'cd x && dotnet test TAOM.Tests'"
 )
 for entry in "${MVR_TOOL_CASES[@]}"; do
     tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"; shown="${cmd//$'\n'/\\n}"
@@ -2048,6 +2075,63 @@ G7E_ROWS=(
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git branch -d x"
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git branch -f x HEAD~1"
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git commit -m \"docs: why switch -f and reflog expire are gated\""
+  # #985: the command is found past wrapper words and shell grammar, and the split is quote-aware
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout -k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|command git clean -fd"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|time git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|nice -n 5 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|xargs git checkout --"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|{ git reset --hard; }"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|(git reset --hard)"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|! git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|if true; then git reset --hard; fi"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|for f in a; do git clean -fd; done"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|cd X && timeout -k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|X=1 timeout 60 GIT reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|git -c \"a;b\" reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash <<'EOF'${NL}git reset --hard${NL}EOF"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|timeout 60 git status"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|echo \"timeout 60 git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|git commit -m \"time git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|grep -rn \"xargs git checkout\" docs/"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|command -v git"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|env -S 'git status'"
+  # The confirm gates also run the quote-blind split, so nothing the old sed split caught goes unasked
+  # (lesson #947): the quoted pipe below is the accepted cost, a false positive kept on purpose.
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|git commit -m \"a | git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash -c \"cd x && git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|sh -c 'git status; git clean -fd'"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|cat <<'EOF' > f.txt${NL}don't${NL}EOF${NL}git reset --hard"
+  # Round 3: the blind cut is the old sed cut (no lone &), a closing paren is no part of the last word,
+  # a short bundle holding c is -c, and a long-option prefix or a bundled value letter is still an option
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|echo don't; git -C \"E:/R&D\" reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|(git checkout .)"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash -c -- 'git reset --hard'"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout --k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env -iC sub git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env -S 'git reset --hard'"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|env -S 'git status'"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|(git add -A)"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|(git add .)"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|bash -lc \"git add -A\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|bash -lc \"git commit -m x\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|xargs -0 -I{} git commit --amend -m {}"
+  # Known gap, pinned: cmd /c is not a wrapper the reader peels. In the PowerShell tool `timeout` is
+  # the Windows timeout.exe, which runs no command, so it is no wrapper there either; its blocks are.
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|cmd /c git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|cmd /c git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|timeout 60 git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|Measure-Command { git reset --hard }"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|timeout 30 git add -A"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|{ git add -A; }"
+  "block-broad-git-add.sh|Bash|S|rc=0 allow|timeout 30 git add a.txt"
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|timeout 60 git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|{ git commit -m \"docs: no label\"; }"
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|env git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|timeout 60 git commit -m \"docs: $V - x\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|{ git commit -m \"docs: $V - x\"; }"
 )
 for entry in "${G7E_ROWS[@]}"; do
     hook="${entry%%|*}"; rest="${entry#*|}"
@@ -2115,6 +2199,39 @@ if [[ "$(decision_of "$out")" == ask ]] && grep -q '_shellwords.py failed' "$SAN
     ok "block-dangerous-git without _shellwords.py still asks, and says the reader failed"
 else
     bad "block-dangerous-git without _shellwords.py answered '$(decision_of "$out")' (expected ask plus the stderr note)"
+fi
+# #985: the `commands` mode failing leaves the sed split of the same gates, which still reads a
+# bare git after `&&`.
+for hook in block-dangerous-git.sh; do
+    out=$(pre_payload Bash "cd x && git reset --hard" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/$hook" 2>/dev/null)
+    if [[ "$(decision_of "$out")" == ask ]]; then
+        ok "$hook without _shellwords.py still asks for a bare git after &&, through the sed fallback"
+    else
+        bad "$hook without _shellwords.py answered '$(decision_of "$out")' to a bare git after && (expected ask)"
+    fi
+done
+# V2 (#985 round 5): a reader that hangs is cut off inside the gate and the sed split answers, never a
+# pass. A stand-in Python answers the probe and every other mode and sleeps in `commands`.
+SLOWPY="$SANDBOX/slowpy.sh"
+printf '#!/usr/bin/env bash\ncase "$*" in\n  *taompy*) printf taompy ;;\n  *"commands"*) sleep 30 ;;\n  *) exec "%s" "$@" ;;\nesac\n' "$HPY" > "$SLOWPY"
+chmod +x "$SLOWPY"
+S=$(date +%s%N)
+out=$(pre_payload Bash "cd x && git reset --hard" \
+    | timeout -k 2 40 env TAOM_PYBIN="$SLOWPY" TAOM_READER_TIMEOUT=1 CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/block-dangerous-git.sh" 2>"$SANDBOX/slowpy.err")
+MS=$(( ($(date +%s%N) - S) / 1000000 ))
+if [[ "$(decision_of "$out")" == ask && $MS -lt 15000 ]] && grep -q 'commands timed out' "$SANDBOX/slowpy.err"; then
+    ok "block-dangerous-git still asks when the segment reader hangs (${MS}ms), through the sed fallback"
+else
+    bad "block-dangerous-git answered '$(decision_of "$out")' in ${MS}ms when the segment reader hung (expected ask plus the stderr note)"
+fi
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+pre_payload Bash "dotnet test TAOM.Tests" | sed 's/"PreToolUse"/"PostToolUse"/' \
+    | timeout -k 2 40 env TAOM_PYBIN="$SLOWPY" TAOM_READER_TIMEOUT=1 CLAUDE_PROJECT_DIR="$MVR_DIR" bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1
+if [[ ! -f "$MVR_DIR/.claude/logs/.verification-ran" ]]; then
+    ok "mark-verification-run marks nothing when the segment reader hangs"
+else
+    bad "mark-verification-run marked a command although the segment reader hung"
 fi
 # validate-push.sh kept no bash judge to fall back on (#680, maintainer decision): with no verdict it
 # asks on a force marker in the raw payload, and allows anything else with a note. Until #680 this
