@@ -54,7 +54,7 @@ internal sealed class LongDefeatConfigCatalog
         _boons = new Lazy<BoonPlan>(() => Guard(logger, BoonsFile, BoonPlan.None, s => BoonsReader.Read(read(BoonsFile), s)));
         _classes = new Lazy<ClassPlan>(() => Guard(logger, ClassesFile, ClassPlan.None, s => ClassesReader.Read(read(ClassesFile), s)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
-            new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s)));
+            new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s, () => _classes.Value.Classes.Select(c => c.Id).ToList())));
         _fortresses = new Lazy<IReadOnlyList<FortressEntry>>(() => Guard<IReadOnlyList<FortressEntry>>(logger, FortressesFile,
             Array.Empty<FortressEntry>(), s => FortressesReader.Read(read(FortressesFile), _waves.Value, _shops.Value, s)));
     }
@@ -136,6 +136,8 @@ internal sealed class LongDefeatConfigCatalog
             Boons = _boons.Value,
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),
             ClassName = chosen?.Name ?? "",
+            ArmouryPoint = fortress.ArmouryPoint,
+            YardPoint = fortress.YardPoint,
         };
     }
 

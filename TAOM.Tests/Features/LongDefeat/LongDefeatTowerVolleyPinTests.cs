@@ -76,7 +76,8 @@ public class LongDefeatTowerVolleyPinTests
         StringAssert.Contains(Body(hooks, "internal static void MissileHit("), "host.IsVolleyItem, collisionData.AffectorWeaponSlotOrMissileIndex)");
     }
 
-    // The reason FireVolley names no object to ignore for a tower. The live scene is unversioned (TAOM_Map), so the test is Inconclusive where it is not installed.
+    // The reason FireVolley names no object to ignore for a tower. The live scene is unversioned (TAOM_Map) and its geometry is reworked in the Kit (2026-11-06 the
+    // towertop and walltower entities gave way to sm_helms_dep_castle_tower_a), so the test reads every entity named as a tower, and is Inconclusive where none is.
     [TestMethod]
     [TestCategory("LiveInstall")]
     public void HelmsDeepsHighTowers_AreStaticEntitiesWithNoScript_SoThereIsNoMissionObjectToIgnore()
@@ -87,9 +88,11 @@ public class LongDefeatTowerVolleyPinTests
         if (!File.Exists(scene))
             Assert.Inconclusive("the TAOM_Map Helm's Deep scene is not installed here; the towers cannot be read.");
 
-        var towers = XDocument.Load(scene).Descendants("game_entity").Where(e => (string?)e.Attribute("name") is "towertop" or "walltower").ToList();
+        var towers = XDocument.Load(scene).Descendants("game_entity")
+            .Where(e => ((string?)e.Attribute("name") ?? "").IndexOf("tower", StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        if (towers.Count == 0)
+            Assert.Inconclusive("the installed Helm's Deep scene names no tower entity; re-read which entity a tower volley could hit.");
 
-        Assert.IsTrue(towers.Count >= 2, "the scene names a towertop and a walltower: " + towers.Count);
         foreach (var tower in towers)
             Assert.IsNull(tower.Element("scripts"), $"{(string?)tower.Attribute("name")} carries a script, so it may be a MissionObject and FireVolley should name it for a tower's arrow");
     }

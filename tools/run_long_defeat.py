@@ -846,6 +846,156 @@ def shipped_fortifications(fortress_id=None, path=None):
     return read_fortifications(shop)[0] if isinstance(shop, dict) else None
 
 
+# The Phase 4 places (phase4-plan.md section 5). shop.json carries an `armoury`, a `yard` and a `marshal` block per shop. read_locations mirrors LocationsReader rule for rule (both suites read
+# tools/tests/long_defeat_location_cases.json), and LOCATION_OFFERED mirrors LocationOffer.Offered (D46): a test reads the C# source and compares the two, since FORT_OFFERED is pinned only to literals.
+# Nothing is delivered yet, so a shop's rows stay hidden; each later slice raises its kind here and in LocationOffer.Offered.
+LOCATION_OFFERED = {"armoury": False, "mangonel": False, "trebuchet": False, "marshal": False}
+ARMOURY_REACH = 4
+YARD_REACH = 6
+REACH_RANGE = (1, 15)
+ENGINE_KINDS = ("mangonel", "trebuchet")
+ARMOUR_SLOTS = ("Head", "Body", "Gloves", "Leg", "Cape")
+WEAPON_SLOTS = ("Item0", "Item1", "Item2", "Item3")
+SET_ID = re.compile("[a-z0-9_]+")
+
+
+def _read_gear_set(item, seen, class_ids, warnings):
+    """One entry of `armoury.sets` as {id, name, text, kind, classes, price, slots}, or None after the warnings LocationsReader.ReadSet logs (one for a structural fault, then the class ids' own)."""
+    if not isinstance(item, dict):
+        warnings.append("set is not an object")
+        return None
+    set_id = _fort_text(item.get("id"))
+    if set_id is None or not SET_ID.fullmatch(set_id):
+        warnings.append("set id")
+        return None
+    if set_id in seen:
+        warnings.append("set id is repeated")
+        return None
+    kind = _fort_text(item.get("kind"))
+    if kind not in ("armour", "weapons"):
+        warnings.append("set kind")
+        return None
+    if not _fort_int(item.get("price"), 1, MAX_PRICE):
+        warnings.append("set price")
+        return None
+    raw = item.get("slots")
+    if not isinstance(raw, dict) or not raw:
+        warnings.append("set slots")
+        return None
+    allowed = WEAPON_SLOTS if kind == "weapons" else ARMOUR_SLOTS
+    slots = []
+    for name, value in raw.items():
+        if name not in allowed:
+            warnings.append("set slot name")
+            return None
+        text = _fort_text(value)
+        if text is None:
+            warnings.append("set slot item")
+            return None
+        slots.append([name, text])
+    classes = None
+    if "classes" in item or kind == "weapons":
+        if "classes" not in item:
+            warnings.append("weapons set has no classes")
+            return None
+        if not isinstance(item["classes"], list):
+            warnings.append("set classes is not an array")
+            return None
+        classes = []
+        for entry in item["classes"]:
+            name = _fort_text(entry)
+            if name is None:
+                warnings.append("set class is not an id")
+            elif class_ids is not None and name not in class_ids:
+                warnings.append("set class is unknown")
+            elif name not in classes:
+                classes.append(name)
+        if not classes:
+            warnings.append("set has no known class")
+            return None
+    return {"id": set_id, "name": _fort_text(item.get("name")) or set_id, "text": _fort_text(item.get("text")) or "", "kind": kind, "classes": classes, "price": item["price"], "slots": slots}
+
+
+def read_locations(shop, class_ids=None):
+    """(plan, warnings) of one shop's `armoury`, `yard` and `marshal` blocks, as LocationsReader reads them. The plan is None when the shop has none of the three keys; otherwise a dict
+    {armoury, yard, marshal}, each None when its block is dropped. `class_ids` are the ids classes.json holds (None: not known, a listed class is taken as it is). `warnings` counts the values
+    that reverted or were skipped, one per problem, as the game logs them."""
+    if not any(key in shop for key in ("armoury", "yard", "marshal")):
+        return None, 0
+    warnings = []
+
+    def block(key):
+        if key not in shop:
+            return None
+        if isinstance(shop[key], dict):
+            return shop[key]
+        warnings.append(f"{key} is not an object")
+        return None
+
+    def reach_of(row, default):
+        if "reach" not in row:
+            return default
+        if _fort_float(row["reach"], *REACH_RANGE):
+            return row["reach"]
+        warnings.append("reach")
+        return default
+
+    armoury = None
+    row = block("armoury")
+    if row is not None:
+        reach = reach_of(row, ARMOURY_REACH)
+        if not isinstance(row.get("sets"), list):
+            warnings.append("armoury.sets")
+        else:
+            sets, seen = [], set()
+            for item in row["sets"]:
+                parsed = _read_gear_set(item, seen, class_ids, warnings)
+                if parsed is not None:
+                    seen.add(parsed["id"])
+                    sets.append(parsed)
+            if sets:
+                armoury = {"reach": reach, "sets": sets}
+            else:
+                warnings.append("armoury has no valid set")
+
+    yard = None
+    row = block("yard")
+    if row is not None:
+        reach = reach_of(row, YARD_REACH)
+        if not isinstance(row.get("engines"), list):
+            warnings.append("yard.engines")
+        else:
+            engines = []
+            for item in row["engines"]:
+                kind = _fort_text(item.get("kind")) if isinstance(item, dict) else None
+                if not isinstance(item, dict):
+                    warnings.append("engine is not an object")
+                elif kind not in ENGINE_KINDS:
+                    warnings.append("engine kind")
+                elif any(e[0] == kind for e in engines):
+                    warnings.append("engine kind is repeated")
+                elif not _fort_int(item.get("price"), 1, MAX_PRICE):
+                    warnings.append("engine price")
+                else:
+                    engines.append([kind, item["price"]])
+            if engines:
+                yard = {"reach": reach, "engines": engines}
+            else:
+                warnings.append("yard has no valid engine")
+
+    marshal = None
+    row = block("marshal")
+    if row is not None:
+        troop = _fort_text(row.get("troop"))
+        if troop is None:
+            warnings.append("marshal.troop")
+        elif not _fort_int(row.get("price"), 1, MAX_PRICE):
+            warnings.append("marshal.price")
+        else:
+            marshal = {"troop": troop, "price": row["price"], "name": _fort_text(row.get("name")) or troop, "text": _fort_text(row.get("text")) or ""}
+    return {"armoury": armoury, "yard": yard, "marshal": marshal}, len(warnings)
+
+
 def shipped_offers(fortress_id=None, path=None):
     """{offer id: price} of the packs of the fortress's shop in this tree's shop.json."""
     fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)

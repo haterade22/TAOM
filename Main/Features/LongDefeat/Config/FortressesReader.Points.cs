@@ -10,6 +10,7 @@ namespace TAOM.Features.LongDefeat;
 /// <c>towers</c>, a list of <c>{id, posts: [{x,y,z,fx,fy}], volley: [{x,y,z}]}</c>, and <c>volley</c>, <c>{origins: [{x,y,z}]}</c>.
 /// An absent or null block is nothing and no warning. A bad point is dropped on its own with one warning; a tower with no id, a bad id or a repeated id is skipped
 /// with one warning, and so is a tower left with no usable point; a block of the wrong shape is dropped whole with one warning. The fortress is never skipped for them.
+/// The <c>armoury</c> and <c>yard</c> places (phase4-plan.md section 5) are read here too, each through the muster point's reader: absent or null is no place, a bad one is one warning and no place.
 /// </summary>
 internal static partial class FortressesReader
 {
@@ -116,6 +117,18 @@ internal static partial class FortressesReader
         var origins = new List<LdPoint>();
         ReadList(o["origins"], label + " origins", s, (JToken? t, string name, out LdPoint spot) => TryReadSpot(t, name, s, out spot), origins);
         return origins.Count == 0 ? null : new LdVolleyOrigins(origins);
+    }
+
+    private const string ArmouryFallback = "the armoury is hidden";
+    private const string YardFallback = "the engineer's yard is hidden";
+
+    // The armoury and the yard (phase4-plan.md section 5), each recorded as the muster point is: {x,y,z,fx,fy}. Absent or null is no place and no warning; a bad one is one warning and no place, and the fortress stays.
+    private static MusterFrame? ReadPlace(JToken? token, string fortress, string key, string fallback, LongDefeatConfigScope s)
+    {
+        if (token == null || token.Type == JTokenType.Null)
+            return null;
+
+        return TryReadMusterFrame(token, $"fortress '{fortress}' {key}", s, out var frame, fallback) ? frame : null;
     }
 
     private delegate bool TryReadPoint<T>(JToken? token, string label, out T value);
