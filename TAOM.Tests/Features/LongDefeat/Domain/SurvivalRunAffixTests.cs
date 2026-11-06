@@ -79,7 +79,7 @@ public class SurvivalRunAffixTests
     [TestMethod]
     public void WaveFive_CarriesTheSeedsRoll_AndItsArmourRidesTheStartEffect()
     {
-        var run = Begun(Plan(startWave: 5, seed: 0));
+        var run = Begun(Plan(startWave: 5, seed: 1));
 
         var fx = TickToWaveStart(run);
 
@@ -91,7 +91,7 @@ public class SurvivalRunAffixTests
     [TestMethod]
     public void AStatPowersRecord_RidesTheStartEffect()
     {
-        var run = Begun(Plan(startWave: 5, seed: 27));
+        var run = Begun(Plan(startWave: 5, seed: 2));
 
         var fx = TickToWaveStart(run);
 
@@ -104,7 +104,7 @@ public class SurvivalRunAffixTests
     public void TheFirstBatchOfTheWave_AndItsPublishedStats_ComeInOneEffect()
     {
         // The director applies PublishStats before any batch of the same RunEffects (Apply order), so the first batch of a hide wave is armoured.
-        var run = Begun(Plan(startWave: 5, seed: 0));
+        var run = Begun(Plan(startWave: 5, seed: 1));
         RunEffects? first = null;
         for (var i = 0; i < 20 && first == null; i++)
         {
@@ -121,7 +121,7 @@ public class SurvivalRunAffixTests
     [TestMethod]
     public void NextAffixes_BeforeAWave_IsTheRollTheWaveWillCarry()
     {
-        var run = Begun(Plan(startWave: 5, seed: 0));
+        var run = Begun(Plan(startWave: 5, seed: 1));
 
         var preview = run.NextAffixes.ToArray();
         TickToWaveStart(run);
@@ -138,13 +138,13 @@ public class SurvivalRunAffixTests
         Assert.AreEqual(9, run.Wave);
 
         // wave 10 holds two affixes: the preview names them while wave 9 is still running.
-        CollectionAssert.AreEqual(new[] { "discipline", "hammer" }, run.NextAffixes.ToArray());
+        CollectionAssert.AreEqual(new[] { "drums", "terror" }, run.NextAffixes.ToArray());
     }
 
     [TestMethod]
     public void TheView_NamesTheNextWavesAffixes_BetweenWaves_AndTheCurrentOnesInAWave()
     {
-        var run = Begun(Plan(startWave: 5, seed: 0));
+        var run = Begun(Plan(startWave: 5, seed: 1));
 
         var prep = run.GetView();
         Assert.AreEqual("hide", prep.NextAffixes.Single().Id);
@@ -163,7 +163,7 @@ public class SurvivalRunAffixTests
     public void TheView_FallsBackToThePowerId_WhenTheTableHasNoName()
     {
         var plan = new AffixPlan(new[] { new AffixStage(5, 1) }, new Dictionary<string, IReadOnlyDictionary<string, float>>(), new Dictionary<string, string>());
-        var run = Begun(Plan(startWave: 5, seed: 0, affixes: plan));
+        var run = Begun(Plan(startWave: 5, seed: 1, affixes: plan));
 
         Assert.AreEqual("hide", run.GetView().NextAffixes.Single().Name);
     }
@@ -196,7 +196,7 @@ public class SurvivalRunAffixTests
     [TestMethod]
     public void AClearedWave_RecordsItsAffixesInTheStats()
     {
-        var run = Begun(Plan(startWave: 5, seed: 0, stopAfter: 1));
+        var run = Begun(Plan(startWave: 5, seed: 1, stopAfter: 1));
         TickToWaveStart(run);
         for (var i = 0; i < 400 && run.Result == null; i++)
             run.Tick(new RunSnapshot(1f, 0, 0, 40, 0, 0, 1000));
@@ -208,7 +208,7 @@ public class SurvivalRunAffixTests
     [TestMethod]
     public void TheHorn_NamesTheNewWavesAffixesAtOnce_NotThePreviousWavesList()
     {
-        var run = Begun(Plan(startWave: 5, seed: 19));
+        var run = Begun(Plan(startWave: 5, seed: 65));
         TickToWaveStart(run);
         Assert.AreEqual("hide", run.GetView().WaveAffixes.Single().Id);
         for (var i = 0; i < 400 && run.GetView().Phase != RunPhase.Intermission; i++)
@@ -219,7 +219,7 @@ public class SurvivalRunAffixTests
         var view = run.GetView();
 
         Assert.AreEqual(RunPhase.Wave, view.Phase);
-        Assert.AreEqual("drums", view.WaveAffixes.Single().Id, "seed 19 rolls hide at wave 5 and drums at wave 6, and the roll is taken when the horn sounds");
+        Assert.AreEqual("drums", view.WaveAffixes.Single().Id, "seed 65 rolls hide at wave 5 and drums at wave 6, and the roll is taken when the horn sounds");
         CollectionAssert.AreEqual(new[] { "drums" }, run.WaveAffixes.ToArray());
     }
 
@@ -229,6 +229,6 @@ public class SurvivalRunAffixTests
         var plan = Plan(startWave: 15, seed: 0) with { Options = new RunOptions { StartWave = 15 } };
         var run = Begun(plan);
 
-        CollectionAssert.AreEqual(new[] { "lash", "eye", "terror" }, run.NextAffixes.ToArray());
+        CollectionAssert.AreEqual(new[] { "lash", "drums", "discipline" }, run.NextAffixes.ToArray());
     }
 }

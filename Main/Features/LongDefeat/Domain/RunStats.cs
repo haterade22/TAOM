@@ -31,6 +31,31 @@ internal sealed record WaveRoles(int Summoned, int SummonSpawned, int SummonKill
     public static WaveRoles None { get; } = new(0, 0, 0, 0, null);
 }
 
+/// <summary>
+/// What Morgul Blades did, counted over the run: victims newly poisoned (<c>Doses</c>), every accepted hit (<c>Hits</c>, refreshes included), the health the doses took (<c>Damage</c>), the poison ticks whose owner was
+/// not active at the call (<c>OwnerMissing</c>, which must stay 0) and the killing ticks withheld because no attacker stood to own the kill (<c>Withheld</c>).
+/// </summary>
+internal sealed class PoisonTally
+{
+    public int Doses { get; set; }
+    public int Hits { get; set; }
+    public int Damage { get; set; }
+    public int OwnerMissing { get; set; }
+    public int Withheld { get; set; }
+
+    public PoisonTally Copy() => new() { Doses = Doses, Hits = Hits, Damage = Damage, OwnerMissing = OwnerMissing, Withheld = Withheld };
+
+    /// <summary>What was counted after <paramref name="earlier"/>, a copy taken before: one wave's share of the run's tally.</summary>
+    public PoisonTally Since(PoisonTally earlier) => new()
+    {
+        Doses = Doses - earlier.Doses,
+        Hits = Hits - earlier.Hits,
+        Damage = Damage - earlier.Damage,
+        OwnerMissing = OwnerMissing - earlier.OwnerMissing,
+        Withheld = Withheld - earlier.Withheld,
+    };
+}
+
 /// <summary>Per-wave and total counts for the report and its checks.</summary>
 internal sealed class RunStats
 {
@@ -39,6 +64,9 @@ internal sealed class RunStats
     private int _lost;
 
     public IReadOnlyList<WaveStats> Waves => _waves;
+
+    /// <summary>Morgul Blades over the run so far. The run writes it; a check takes the share of one wave with <see cref="PoisonTally.Since"/>.</summary>
+    public PoisonTally Poison { get; } = new();
 
     /// <summary>Kills of the waves closed so far plus the one in progress.</summary>
     public int TotalKills => _waves.Sum(w => w.Kills) + _kills;

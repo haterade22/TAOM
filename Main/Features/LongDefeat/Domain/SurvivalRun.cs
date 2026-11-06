@@ -258,6 +258,7 @@ internal sealed partial class SurvivalRun
 
         TickCommander(fx);
         var spawned = SpawnAttackers(s, fx);
+        TickPoison(s.Dt, s.AttackersStanding, fx);
         if (_stage != WaveStage.Fighting)
             return;
 
@@ -328,6 +329,7 @@ internal sealed partial class SurvivalRun
         fx.EngineHitPoints = RunModifiers.EngineHitPoints(_plan.Affixes, _waveAffixes);
         _terror = RunModifiers.Terror(_plan.Affixes, _waveAffixes);
         _terrorClock = 0f;
+        InitPoison();
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
@@ -373,6 +375,7 @@ internal sealed partial class SurvivalRun
         _purse.Earn(PurseSource.WaveBonus, bonus);
         _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow());
         _warCry = null;
+        EndPoison();
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
         OpenBoons(fx);
@@ -396,6 +399,7 @@ internal sealed partial class SurvivalRun
     {
         Result = new RunResult(reason, _wave, _wavesCleared, _stats.TotalKills);
         _phase = RunPhase.Ended;
+        EndPoison();
     }
 
     private void EmitMuster(float dt, RunEffects fx)

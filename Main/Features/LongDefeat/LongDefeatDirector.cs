@@ -18,6 +18,7 @@ internal sealed partial class LongDefeatDirector
 {
     private const string Tag = "[LongDefeat]";
     private const string RemovedSite = "LongDefeatDirector.OnAgentRemoved";
+    private const string HitSite = "LongDefeatDirector.OnHit";
     private const float KeepReadSeconds = 0.5f;
     private const float StateLogSeconds = 5f;
 
@@ -159,11 +160,14 @@ internal sealed partial class LongDefeatDirector
             return;
 
         var removal = _field.Classify(affected, loss);
-        if (removal.Kind == LdRemovalKind.None)
+        if (removal.Kind == LdRemovalKind.None && !removal.HasKey)
             return;
 
         _deferred.RunOrDefer(RemovedSite, () =>
         {
+            // Every agent the registry held leaves it at its removal, and the run forgets its key: a later hit that names it is dropped and its dose ends.
+            if (removal.HasKey)
+                _run.Forget(removal.Key);
             switch (removal.Kind)
             {
                 case LdRemovalKind.Attacker:
@@ -201,6 +205,7 @@ internal sealed partial class LongDefeatDirector
 
         _deferred.Drain();
         _shutDown = true;
+        _wantsHits = false;
         if (_started)
         {
             _run.Abandon();

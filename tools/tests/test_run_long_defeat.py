@@ -510,6 +510,20 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
 
+    def test_the_affix_effect_row_judges_the_blades_line_the_game_writes(self):
+        # The line is LongDefeatAffixChecks.Blades' detail under the affix-effect id, keyed by power (see LongDefeatBladesChecksTests for the exact text).
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.affix-effect")
+        head = "[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} "
+        detail = "power=blades w=5 doses=12 hits=40 damage=96 owner_missing={} withheld=1"
+        passing = [(None, 1, head.format("pass") + detail.format(0))]
+        failing = [(None, 1, head.format("fail") + detail.format(1))]
+        skipping = [(None, 1, head.format("skip") + "power=blades w=5 doses=0 hits=0 damage=0 owner_missing=0 withheld=0 reason=no-hit")]
+
+        self.assertEqual(iv.judge_segment(row, passing, []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, failing, []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, skipping, []).verdict, iv.NOT_REACHED, "a wave in which nothing could show the poison proves nothing")
+
     def test_the_wave_row_needs_its_minimum_of_five_lines(self):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
         row = next(c for c in manifest.checks if c.id == "taom.long-defeat.wave")
@@ -789,12 +803,12 @@ class SharedVectorTests(unittest.TestCase):
 
 PINNED_ROLLS = [
     # (seed, wave, the roll at the shipped schedule): the same rows as AffixPlanTests.cs, taken from an independent implementation.
-    (1, 5, ["drums"]),
-    (1, 10, ["discipline", "hammer"]),
-    (1, 15, ["discipline", "eye", "lash"]),
-    (12345, 40, ["hide", "hammer", "eye"]),
-    (7, 5, ["hide"]),
-    (0, 15, ["lash", "eye", "terror"]),
+    (1, 5, ["hide"]),
+    (1, 10, ["drums", "terror"]),
+    (1, 15, ["hide", "hammer", "blades"]),
+    (12345, 40, ["drums", "discipline", "blades"]),
+    (7, 5, ["terror"]),
+    (0, 15, ["lash", "drums", "discipline"]),
 ]
 
 
@@ -824,7 +838,7 @@ class AffixReplayTests(unittest.TestCase):
         self.assertIsNotNone(found)
         names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
         self.assertEqual(list(ld.AFFIX_POOL), [names[part.strip()] for part in found.group(1).split(",")])
-        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror"], list(ld.AFFIX_POOL), "Slice 9 adds blades here")
+        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades"], list(ld.AFFIX_POOL), "all eight roll since Slice 9")
         self.assertEqual([i for i in ld.AFFIX_IDS if i in ld.AFFIX_POOL], list(ld.AFFIX_POOL), "the pool keeps the order of the eight")
         self.assertTrue(set(ld.AFFIX_EFFECT_IDS) <= set(ld.AFFIX_POOL), "an effect line is only owed for a power that can roll")
 
@@ -835,10 +849,9 @@ class AffixReplayTests(unittest.TestCase):
             for count in range(len(ld.AFFIX_POOL) + 1):
                 self.assertEqual(full[:count], ld.affix_roll(seed, 20, count), (seed, count))
 
-    def test_no_seed_rolls_a_power_that_does_nothing_yet(self):
-        for seed in range(200):
-            for wave in (5, 10, 15, 40):
-                self.assertFalse({"blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
+    def test_every_power_of_the_eight_can_roll_now_that_each_acts(self):
+        seen = {power for seed in range(200) for wave in (5, 10, 15, 40) for power in ld.affix_roll(seed, wave, 3)}
+        self.assertEqual(set(ld.AFFIX_IDS), seen)
 
     def test_the_schedule_is_the_shipped_files(self):
         self.assertEqual(((5, 1), (10, 2), (15, 3)), ld.shipped_affix_schedule())
@@ -945,12 +958,12 @@ class AffixJudgeTests(unittest.TestCase):
         ld.target_waves = 5
         rows = [wave_row(w) for w in range(1, 6)]
         wrong = [{**row, "affixes": ["lash"]} if row["wave"] == 5 else row for row in rows]
-        self.assertEqual(["hide"], rows[4]["affixes"], "seed 7 rolls hide at wave 5")
+        self.assertEqual(["terror"], rows[4]["affixes"], "seed 7 rolls terror at wave 5")
         code, why = ld.judge(FINAL, self.report(rows=wrong), FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("wave 5", why)
         self.assertIn("lash", why)
-        self.assertIn("hide", why)
+        self.assertIn("terror", why)
 
     def test_a_wave_that_lost_its_affixes_or_gained_one_fails(self):
         rows = [wave_row(w) for w in range(1, 6)]
@@ -976,7 +989,7 @@ class AffixJudgeTests(unittest.TestCase):
     def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
         without = log_of(BOONED + ("affix",), 5)
         # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
-        seeds = {"hide": 0, "drums": 1, "discipline": 2, "eye": 4, "terror": 6, "hammer": 8, "lash": 27}
+        seeds = {"eye": 0, "hide": 1, "lash": 2, "blades": 3, "discipline": 5, "terror": 7, "hammer": 9, "drums": 15}
         for power, seed in seeds.items():
             report = self.report(seed=seed, rows=[wave_row(w, seed) for w in range(1, 6)])
             self.assertEqual([power], report["waves"][4]["affixes"])
@@ -995,7 +1008,7 @@ class AffixJudgeTests(unittest.TestCase):
 
     def test_a_row_with_no_effect_power_owes_no_effect_line(self):
         self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
-        self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades has no effect line until Slice 9")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades proves its poison under the same id")
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades", "eye"]}]}))
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer"]}]}), "the hammer proves its engine write under the same id")
         self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["terror"]}]}), "terror proves its pulses under the same id")
@@ -1053,6 +1066,13 @@ class PhaseTwoJudgeTests(unittest.TestCase):
             code, why = ld.judge(FINAL, REPORT, zero.replace("owner_missing=0", "owner_missing=" + count))
             self.assertEqual(code, 1, count)
             self.assertIn("owner_missing=" + count, why)
+
+    def test_a_blades_line_with_owner_missing_fails_the_run_even_as_a_pass(self):
+        line = "\n[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=blades w=5 doses=3 hits=4 damage=9 owner_missing={} withheld=0"
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG + line.format(0))[0], 0)
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG + line.format(2))
+        self.assertEqual(code, 1)
+        self.assertIn("owner_missing=2", why)
 
     def test_the_largest_owner_missing_in_the_log_is_the_one_reported(self):
         log = FULL_LOG + "\nx owner_missing=0\ny owner_missing=4\nz owner_missing=2"

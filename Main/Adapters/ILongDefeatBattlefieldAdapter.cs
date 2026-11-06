@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Adapters;
@@ -6,7 +7,7 @@ namespace TAOM.Adapters;
 /// <summary>
 /// All engine work on the Long Defeat field: the deployment, the siege engines, spawning, measuring, ordering and the player's
 /// body. Takes and returns domain types only, so the director never sees an engine type (ADR-007). Every method but
-/// <see cref="Classify"/> and <see cref="IsAttacker"/> runs on the main thread; those two are safe from the engine's callback
+/// <see cref="Classify"/>, <see cref="IsAttacker"/> and <see cref="TryHitKeys"/> runs on the main thread; those three are safe from the engine's callback
 /// threads, since they read an agent's own team and character and write only into the role registry, which holds one lock.
 /// </summary>
 internal interface ILongDefeatBattlefieldAdapter
@@ -85,7 +86,10 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>Every standing defender regains <paramref name="share"/> of the health they are missing.</summary>
     LdRest RestDefenders(float share);
 
-    /// <summary>Marks up to <paramref name="count"/> standing attackers as felled in the registry, kills them, and returns how many fell. The removal the engine raises for each is booked as felled.</summary>
+    /// <summary>
+    /// Marks up to <paramref name="count"/> standing attackers as felled in the registry, kills them, and returns how many fell. The removal the engine raises for each is booked as felled. Every kill has a living
+    /// owner: the player's body while it stands, else a standing defender, whose kill count and morale gain a felled straggler would give the player's body anyway; with no defender standing nobody is felled.
+    /// </summary>
     int Fell(int count);
 
     /// <summary>Counts the field. The keep counts are read only when <paramref name="countKeep"/> is set.</summary>
@@ -120,6 +124,12 @@ internal interface ILongDefeatBattlefieldAdapter
 
     /// <summary>Whether the agent is on the attacking team.</summary>
     bool IsAttacker(object? agent);
+
+    /// <summary>
+    /// The registry keys of one hit: <paramref name="victim"/> is a standing human defender (entered in the registry on its first hit, and evicted at its removal), <paramref name="attacker"/> the attacker who
+    /// struck it, which the field registered when it spawned him. False when the hit is not an attacker's blow on a defender, or when the registry no longer holds the attacker. Any thread.
+    /// </summary>
+    bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker);
 
     /// <summary>Drops every handle the adapter holds. Safe to call twice.</summary>
     void Clear();

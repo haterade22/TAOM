@@ -396,12 +396,26 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     internal static float FellHealth(float health) => Math.Min(health, FellBlowDamage / 2f);
 
+    // Every kill needs a living owner (phase2-plan.md section 4): CustomBattleMoraleModel reads affectorAgent.Formation with no null test, and KillAgentCheat takes "MainAgent ?? agent" as the owner
+    // (Mission.cs:6220-6221), so with the player dead the victim would own his own death, or Agent.Die would swap in a stale last hitter (Agent.cs:4689-4693). While the player's body stands
+    // KillAgentCheat is used as before. Without it the same blow is built here (a blunt 2000, its debug collision data, RegisterBlow, as KillAgentCheat does at :6216-6254) owned by a
+    // standing defender, who gains the kill and the defenders the morale a felled straggler would give the player's body anyway (decision D13). With no defender standing nobody is felled: the run ends on that tick.
     public int Fell(int count)
     {
         if (count <= 0)
             return 0;
 
+        var main = _mission.MainAgent;
+        var mainStands = main != null && main.IsActive();
+        var owner = mainStands ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
+        if (owner == null)
+        {
+            _logger.LogWarning("[LongDefeat][Wave] no defender stands to own a felled straggler's death; nobody was felled");
+            return 0;
+        }
+
         var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway).Take(count).ToList();
+        _logger.LogInfo($"[LongDefeat][Wave] felling {left.Count} straggler(s), kills owned by {(mainStands ? "the player's body" : "defender " + owner.Character?.StringId)}");
         foreach (var agent in left)
         {
             _logger.LogInfo(DescribeStraggler(agent));
@@ -410,11 +424,35 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             if (!_registry.MarkFelled(agent))
                 _logger.LogWarning($"[LongDefeat][Wave] a felled attacker ({agent.Character?.StringId}) was not in the registry; his removal will be booked as a kill");
             agent.Health = FellHealth(agent.Health);
-            _mission.KillAgentCheat(agent);
+            if (mainStands)
+            {
+                _mission.KillAgentCheat(agent);
+                continue;
+            }
+
+            var blow = new Blow(owner.Index)
+            {
+                DamageType = DamageTypes.Blunt,
+                BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
+                GlobalPosition = agent.Position,
+                BaseMagnitude = FellBlowDamage,
+                InflictedDamage = (int)FellBlowDamage,
+                SwingDirection = agent.LookDirection,
+                DamageCalculated = true,
+            };
+            blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
+            blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+            blow.Direction = blow.SwingDirection;
+            var collision = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, CombatCollisionResult.StrikeAgent,
+                -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, owner.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+                Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, agent.Velocity, Vec3.Up);
+            agent.RegisterBlow(blow, in collision);
         }
 
         return left.Count;
     }
+
+    private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());
 
     public void AdoptMain(bool aiDriven)
     {

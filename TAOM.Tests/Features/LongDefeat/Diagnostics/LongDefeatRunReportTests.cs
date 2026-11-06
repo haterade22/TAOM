@@ -177,6 +177,22 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_WritesWhatMorgulBladesDid_IntoThePoisonObject()
+    {
+        var stats = new RunStats();
+        stats.Poison.Doses = 7;
+        stats.Poison.Hits = 19;
+        stats.Poison.Damage = 84;
+        stats.Poison.OwnerMissing = 0;
+        stats.Poison.Withheld = 2;
+
+        var report = Build(new RunResult(RunEndReason.Abandoned, 5, 4, 0), stats, new Purse(600));
+
+        var poison = (JObject)report["poison"]!;
+        Assert.AreEqual((7, 19, 84, 0, 2), ((int)poison["doses"]!, (int)poison["hits"]!, (int)poison["damage"]!, (int)poison["ownerMissing"]!, (int)poison["withheld"]!));
+    }
+
+    [TestMethod]
     public void Build_ListsEachPickWithItsDrawsTheBoonTakenAndTheWaveItActsOn_AndTheRerollsAndTheBoonGold()
     {
         var picked = new BoonPickRecord(1, 3) { Taken = "stout", TakenBeforeWave = 4 };

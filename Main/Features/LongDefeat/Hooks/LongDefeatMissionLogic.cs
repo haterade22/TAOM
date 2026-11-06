@@ -58,6 +58,20 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         _host.OnAgentRemoved(affectedAgent, IsLoss(agentState));
     }
 
+    // OnScoreHit carries the engine's own isBlocked and damagedHp (Mission.cs:5671-5672; OnAgentHit has neither) and may run off the main thread: the volatile want comes first, so a wave
+    // with no Morgul Blades costs one read per hit. A mount's blow is its rider's. The victim's health is read here, after the blow wrote it (Agent.cs:5513, :5527), so a killing blow is dropped.
+    public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, WeaponComponentData attackerWeapon, bool isBlocked, bool isSiegeEngineHit, in Blow blow,
+        in AttackCollisionData collisionData, float damagedHp, float hitDistance, float shotDifficulty)
+    {
+        base.OnScoreHit(affectedAgent, affectorAgent, attackerWeapon, isBlocked, isSiegeEngineHit, in blow, in collisionData, damagedHp, hitDistance, shotDifficulty);
+        if (!_host.WantsHits)
+            return;
+
+        var attacker = LongDefeatHitFilter.Attacker(affectorAgent, a => a.IsMount, a => a.RiderAgent);
+        if (LongDefeatHitFilter.Admits(affectedAgent, attacker, isBlocked, damagedHp, affectedAgent?.Health ?? 0f))
+            _host.OnHit(affectedAgent, attacker!);
+    }
+
     public override void OnAgentFleeing(Agent affectedAgent)
     {
         base.OnAgentFleeing(affectedAgent);

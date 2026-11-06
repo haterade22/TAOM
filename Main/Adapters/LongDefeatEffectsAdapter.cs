@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using TAOM.Features.AdvancedCombat;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
@@ -150,6 +152,86 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
     {
         var at = agent.Position;
         return new LdPulseSpot(at.x, at.y);
+    }
+
+    // The victim loses the damage with no blow while his health stays above it, the way Fords' poison does ("agent.Health -= damage;"). A tick that would kill needs a real owner: AgentMoraleInteractionLogic hands
+    // the killing blow's affector to CustomBattleMoraleModel, which reads "affectorAgent.Formation" with no null test (CustomBattleMoraleModel.cs:42), and Agent.Die swaps the victim's last hitter in for an owner of
+    // -1 or himself ("(b.OwnerId == -1 || b.OwnerId == Index) && IsHuman && _lastHitInfo.CanOverrideBlow", Agent.cs:4689-4693), an index that may since belong to another agent. So Fords' owner -1 is not copied:
+    // the owner is chosen from the registry (the poisoner, else the commander, else any attacker standing), read for IsLive right here, and with none the tick is withheld and the victim keeps 1 health.
+    public LdPoisonResult ApplyPoison(AgentKey victim, AgentKey poisoner, int damage)
+    {
+        if (_registry == null || damage <= 0 || !_registry.TryGetAgent(victim, out var found) || !(found is Agent agent) || !IsLive(agent) || agent.CurrentMortalityState != Agent.MortalityState.Mortal)
+            return default;
+
+        if (agent.Health > damage)
+        {
+            agent.Health -= damage;
+            return new LdPoisonResult(damage, Killed: false, Withheld: false, OwnerMissing: false, Substituted: false);
+        }
+
+        // Tested positive before the cast: Math.Max(0f, NaN) is NaN and (int)NaN is int.MinValue, which the withheld branch below would wrap into a huge damage.
+        var health = agent.Health;
+        var taken = health > 0f ? (int)health : 0;
+        var choice = PoisonOwner.Choose(StandingAttackerKey(poisoner), StandingAttackerKey(CommanderKey()), StandingAttackerKey(AnyAttackerKey()));
+        if (choice is not { } ownerKey)
+        {
+            // No attacker stands to own the kill: the victim keeps 1 health until a later tick or the clear.
+            var held = Math.Max(0, taken - 1);
+            if (agent.Health > 1f)
+                agent.Health = 1f;
+            return new LdPoisonResult(held, Killed: false, Withheld: true, OwnerMissing: false, Substituted: false);
+        }
+
+        var substituted = ownerKey != poisoner;
+        if (!_registry.TryGetAgent(ownerKey, out var chosen) || !(chosen is Agent owner) || !IsLive(owner))
+            return new LdPoisonResult(0, Killed: false, Withheld: false, OwnerMissing: true, Substituted: substituted);
+
+        var blow = new Blow(owner.Index)
+        {
+            DamageType = DamageTypes.Pierce,
+            BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
+            GlobalPosition = agent.Position,
+            BaseMagnitude = damage,
+            InflictedDamage = damage,
+            SwingDirection = agent.LookDirection,
+            DamageCalculated = true,
+        };
+        blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
+        blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+        blow.Direction = blow.SwingDirection;
+        agent.Die(blow);
+        return new LdPoisonResult(taken, Killed: true, Withheld: false, OwnerMissing: false, Substituted: substituted);
+    }
+
+    // A candidate owner counts only while the registry still holds him as a human attacker and he is active at this call. A key that is not an agent answers null.
+    private AgentKey? StandingAttackerKey(AgentKey? key)
+    {
+        if (key is not { } k || _registry == null || !_registry.TryGetAgent(k, out var found))
+            return null;
+
+        return found is Agent a && a.IsHuman && IsLive(a) && a.Team?.Side == BattleSideEnum.Attacker ? k : null;
+    }
+
+    // A handle the registry holds across frames passes only while it is still the occupant of its slot: a deleted Agent answers IsActive() for the slot's next tenant (csharp-architecture.md,
+    // "Mission-scope agent handles"), and Die on it would strike whoever now holds the index. The Fords adapter gates its handles the same way.
+    private static bool IsLive(Agent agent) => agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent);
+
+    private AgentKey? CommanderKey() => OwnerCandidate(role => role == AttackerRole.Commander);
+
+    private AgentKey? AnyAttackerKey() => OwnerCandidate(_ => true);
+
+    private AgentKey? OwnerCandidate(Func<AttackerRole, bool> wanted)
+    {
+        if (_registry == null)
+            return null;
+
+        foreach (var entry in _registry.Snapshot())
+        {
+            if (wanted(entry.Role) && entry.Agent is Agent a && a.IsHuman && IsLive(a) && a.Team?.Side == BattleSideEnum.Attacker)
+                return entry.Key;
+        }
+
+        return null;
     }
 
     public LdTouched RefreshStats(BoonTarget target)

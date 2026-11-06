@@ -181,17 +181,21 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.affix-effect"
-needs = "a wave whose roll holds a power with an effect check (--start-wave 5 --waves 1 --seed N): at wave 5 seed 0 rolls hide, 1 drums, 2 discipline, 4 eye, 6 terror (the wave must run a few seconds), 8 hammer, 27 lash"
+needs = "a wave whose roll holds a power with an effect check (--start-wave 5 --waves 1 --seed N): at wave 5 seed 0 rolls eye, 1 hide, 2 lash, 3 blades (a hit must land on a defender), 5 discipline, 7 terror (the wave must run a few seconds), 9 hammer, 15 drums"
 reached = ['\[Check\] id=taom\.long-defeat\.affix-effect result=']
 pass = ['\[Check\] id=taom\.long-defeat\.affix-effect result=pass power=[a-z]+ ']
 fail = ['\[Check\] id=taom\.long-defeat\.affix-effect result=fail']
-# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs); hammer and terror write their own line under the same id and key (LongDefeatDirector.Powers.cs, below). One standing human attacker with no live race ability is read
+# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs); hammer and terror write their own line under the same id and key (LongDefeatDirector.Powers.cs and .Blades.cs, below). One standing human attacker with no live race ability is read
 # through the effects adapter: each driven property the power changes against the stat model's own answer for the same agent with the affixes left out, within 1% (armour against the spawn equipment's sums, since
 # the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood.
 # hammer: written when the wave starts, after the engines' hit points were set, as power=hammer engines=<n> want=<factor> got=<kind>=<ratio>,.. gate=<standing|destroyed|none> (the gates are read from every mission object, since a destroyed gate leaves the active list, Mission.cs:3060); every live ram and tower must hold the vanilla hit points of its type
 # (SiegeEngineType.BaseHitPoints) times the factor within 1%, the gate's state is logged and judges nothing, no live engine or a factor of 1 is a skip, and a hammer wave reads no soldier.
 # terror: written when the wave clears (or the run ends in it) as power=terror w=<N> pulses= drained= lost= pushed_below= max_ms= budget_ms=16 floor=; it fails when any pulse left a defender below the floor (pushed_below above 0) or the slowest took 16 ms or more,
-# and skips when the wave had no pulse or none drained anyone. The [LongDefeat][Terror] pulse n= ms= lines show the first three pulses of each wave and any slow one. blades is not rolled yet, so it has no line, until Slice 9 switches it on.
+# and skips when the wave had no pulse or none drained anyone. The [LongDefeat][Terror] pulse n= ms= lines show the first three pulses of each wave and any slow one.
+# blades (Morgul Blades, Fouled Blades at Helm's Deep): written when the wave clears (or the run ends in it) as power=blades w=<N> doses= hits= damage= owner_missing= withheld=, from the run's own counts for that wave. Every hit by an attacker on a defender that the engine's
+# OnScoreHit reports unblocked with some health taken doses the defender (one dose per victim, 2 health a second for 6 s at Helm's Deep, armour ignored), and each tick that would kill needs a living owner: the poisoner, else the commander, else any attacker standing,
+# else the tick is withheld and the victim keeps 1 health. owner_missing counts an owner found not active at the call and kills nothing; the line fails above 0 (run_long_defeat.py also fails any owner_missing= token in the log and the report's poison.ownerMissing).
+# The line skips when no hit landed (reason=no-hit) or no dose took a point of health (reason=no-damage); [LongDefeat][Blades] tick lines show the first three ticks of a wave and any that killed, were withheld or went to a substitute owner.
 absence = "not-reached"
 
 [[check]]
@@ -205,7 +209,7 @@ fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
 # A troop or class boon with a stat or health key also ends the line with read=pass, read=skip (no soldier of its target stood) or read=fail: a soldier of the target, read right after the refresh,
 # holds its health limit at the combined factor and each driven property at its baseline changed by the summed percent. The first pack of that group spawned after the pick is read the same way
 # and written as its own line of this check (key p<N>-<group>, read=spawned), which the pass pattern leaves alone and a fail line fails.
-# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --seed 4 (the lord's draw speed). Slice 7 added a Legend row, which moved every draw, so these seeds are not Slice 6's.
+# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --seed 4 (the lord's draw speed). Slice 7 added a Legend row, which moved every draw, so these seeds are not Slice 6's. With all eight affixes rolling (Slice 9) their wave 5 is blades (seeds 33 and 4) and lash (seed 22): the first two also write a blades line.
 # The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run: a cavalry boon (seeds 27, 28, 32) reads skip with reason=no-soldier. Cavalry speed and health belong to the human row below.
 # The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
 absence = "not-reached"
@@ -289,7 +293,13 @@ claim = "the Escape exit returns to the main menu and the report still lands"
 claim = "a boon card reads clearly: its name, its category, what it gives, and a drawback line in its own colour; the reroll button shows its count; the pick is announced by a notice and the hint, and the panel never opens by itself"
 
 [[human]]
-claim = "Winged Terror does not rout the walls by itself: in a terror wave (--start-wave 5 --seed 6) the defenders near the attackers waver but stay on the walls, the pulse lines show pushed_below=0, and no defender flees from the pulse alone"
+claim = "Winged Terror does not rout the walls by itself: in a terror wave (--start-wave 5 --seed 7) the defenders near the attackers waver but stay on the walls, the pulse lines show pushed_below=0, and no defender flees from the pulse alone"
+
+[[human]]
+claim = "Morgul Blades reads as poison and kills fairly: in a blades wave (--start-wave 5 --seed 3) defenders an attacker struck lose health over the next seconds without a visible blow, none dies with the attackers all dead, the [LongDefeat][Blades] tick lines show the owner kept real (substituted only when the poisoner had fallen), and the kill counts and morale of the attackers move as for any kill"
+
+[[human]]
+claim = "a --lose run in which the stalemate rule fells attackers after the player has died throws nothing in AgentMoraleInteractionLogic: the [LongDefeat][Wave] felling line names a defender as the owner of the kills, and the run goes on to its end"
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"

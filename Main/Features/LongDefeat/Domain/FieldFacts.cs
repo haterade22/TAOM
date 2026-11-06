@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -54,7 +55,11 @@ internal enum LdRemovalKind
 /// What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is no loss, except the commander's: an attacker comes with the <c>Role</c> the registry holds
 /// for him and whether the stalemate rule's <c>Fell</c> marked him (<c>Felled</c>), and a commander removed with no loss (a rout; a deletion only if native raises a removal for it, risk 2) is reported with <c>Loss</c> false so the run stops him.
 /// </summary>
-internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true);
+internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true, AgentKey Key = default)
+{
+    /// <summary>Whether the registry held the agent, so the run must forget its key (a removal of a kind <see cref="LdRemovalKind.None"/> can still carry one: a routed soldier, a deleted horse's rider).</summary>
+    public bool HasKey => Key.Value > 0;
+}
 
 /// <summary>A rest between waves: how many defenders it reached, and their mean health as a share of their limit, before and after.</summary>
 internal readonly record struct LdRest(int Count, float MeanBefore, float MeanAfter);
@@ -96,6 +101,13 @@ internal sealed record LdTargetSample(string TroopId, float HealthLimit, float C
 
     public bool HasAgent => TroopId.Length > 0;
 }
+
+/// <summary>
+/// What one Morgul Blades tick did to a defender: the health it took (<c>Damage</c>), whether it killed him, whether it was withheld because no attacker stood to own the kill (he keeps 1 health),
+/// whether the owner it chose was not active at the call (<c>OwnerMissing</c>, which must stay 0, and then nothing is killed) and whether the owner was not the poisoner (<c>Substituted</c>).
+/// All false and 0 for a victim already gone.
+/// </summary>
+internal readonly record struct LdPoisonResult(int Damage, bool Killed, bool Withheld, bool OwnerMissing, bool Substituted);
 
 /// <summary>What an effects-adapter call reached: how many agents, and the milliseconds it took (risk 11 reads the pick's refresh from the log).</summary>
 internal readonly record struct LdTouched(int Count, double Milliseconds);

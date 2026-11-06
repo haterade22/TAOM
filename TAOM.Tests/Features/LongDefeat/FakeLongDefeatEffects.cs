@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Tests.Features.LongDefeat;
@@ -114,6 +115,19 @@ internal sealed class FakeLongDefeatEffects : ILongDefeatEffectsAdapter
     }
 
     public string DescribeCommander() => "troop=fake at=(0.0, 0.0, 0.0)";
+
+    /// <summary>The poison ticks the director asked for, in order: victim, poisoner, damage.</summary>
+    public List<(AgentKey Victim, AgentKey Poisoner, int Damage)> Poisoned { get; } = new();
+
+    /// <summary>What a poison tick answers: the whole damage taken, nobody killed, the poisoner owning it.</summary>
+    public Func<AgentKey, AgentKey, int, LdPoisonResult> PoisonFor { get; set; } = (_, _, damage) => new LdPoisonResult(damage, false, false, false, false);
+
+    public LdPoisonResult ApplyPoison(AgentKey victim, AgentKey poisoner, int damage)
+    {
+        Poisoned.Add((victim, poisoner, damage));
+        _calls.Add($"Poison:{victim.Value}:{poisoner.Value}:{damage}");
+        return PoisonFor(victim, poisoner, damage);
+    }
 
     public LdScaleSample ReadScale()
     {

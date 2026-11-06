@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Adapters;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Tests.Features.LongDefeat;
@@ -199,12 +200,13 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     public LdRemoval Classify(object affected, bool loss)
     {
         var text = affected as string ?? "";
+        var key = KeyOf(text.TrimEnd('!'));
         if (text.StartsWith("C:", StringComparison.Ordinal))
-            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss);
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss, key);
         if (!loss)
-            return default;
+            return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")
-            return new LdRemoval(LdRemovalKind.Player, "");
+            return new LdRemoval(LdRemovalKind.Player, "", Key: key);
         if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
         {
             var marked = text.EndsWith("!", StringComparison.Ordinal);
@@ -214,13 +216,43 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
                 marked = true;
             }
 
-            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), text[0] == 'S' ? AttackerRole.Summoned : AttackerRole.Roster, marked);
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), text[0] == 'S' ? AttackerRole.Summoned : AttackerRole.Roster, marked, true, key);
         }
 
-        return text.StartsWith("D:", StringComparison.Ordinal) ? new LdRemoval(LdRemovalKind.Defender, text.Substring(2)) : default;
+        return text.StartsWith("D:", StringComparison.Ordinal) ? new LdRemoval(LdRemovalKind.Defender, text.Substring(2), Key: key) : default;
     }
 
     public bool IsAttacker(object? agent) => agent is string s && s.StartsWith("A:", StringComparison.Ordinal);
+
+    private readonly Dictionary<string, AgentKey> _keys = new();
+
+    /// <summary>How many hits the director asked this field to resolve to keys.</summary>
+    public int HitAsks { get; private set; }
+
+    /// <summary>The key the field gave an agent text on its first hit (keys count from 1), or default for a text it has not been asked about.</summary>
+    public AgentKey KeyOf(string text) => _keys.TryGetValue(text, out var key) ? key : default;
+
+    /// <summary>An attacker ("A:", "S:" or "C:" text) striking a defender ("D:" or "P"): both get a key the first time they are named, as the registry hands one out.</summary>
+    public bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker)
+    {
+        HitAsks++;
+        victim = attacker = default;
+        if (affected is not string hit || affector is not string hitter)
+            return false;
+        if (!(hit == "P" || hit.StartsWith("D:", StringComparison.Ordinal)) || !(hitter.Length > 1 && "ASC".Contains(hitter[0]) && hitter[1] == ':'))
+            return false;
+
+        victim = Key(hit);
+        attacker = Key(hitter);
+        return true;
+    }
+
+    private AgentKey Key(string text)
+    {
+        if (!_keys.TryGetValue(text, out var key))
+            _keys[text] = key = new AgentKey(_keys.Count + 1);
+        return key;
+    }
 
     public void Clear() => Calls.Add("Clear");
 

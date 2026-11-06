@@ -373,7 +373,7 @@ public class LongDefeatStatHooksTests
         // The check's stat names and arithmetic against the real producers (RunModifiers, then the hooks), not a canned sample.
         var plan = ShippedNumbers();
         var statPowers = AffixPlan.Pool.Where(power => LongDefeatAffixChecks.Expectations(plan, power).Count > 0).ToList();
-        CollectionAssert.AreEquivalent(new[] { "hammer", "terror" }, AffixPlan.Pool.Except(statPowers).ToArray(), "only the engine and morale powers have no stat effect to round-trip; they have their own verdicts");
+        CollectionAssert.AreEquivalent(new[] { "hammer", "terror", "blades" }, AffixPlan.Pool.Except(statPowers).ToArray(), "only the engine, morale and poison powers have no stat effect to round-trip; they have their own verdicts");
         foreach (var power in statPowers)
         {
             var expected = LongDefeatAffixChecks.Expectations(plan, power);

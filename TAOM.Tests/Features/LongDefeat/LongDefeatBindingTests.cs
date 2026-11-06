@@ -317,6 +317,36 @@ public class LongDefeatBindingTests
         Property(typeof(Agent), "Position", typeof(Vec3));
     }
 
+    // Morgul Blades and the kill owner (phase2-plan.md Slice 9): the hit callback with the engine's own isBlocked and damagedHp, and the blow the two members allowed to kill build.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheBladesAndKillOwnerMembers_StillResolve()
+    {
+        Method(typeof(MissionBehavior), "OnScoreHit", typeof(void), typeof(Agent), typeof(Agent), typeof(WeaponComponentData), typeof(bool), typeof(bool),
+            typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float), typeof(float), typeof(float));
+        Method(typeof(Agent), "Die", typeof(void), typeof(Blow), typeof(Agent.KillInfo));
+        Method(typeof(Agent), "RegisterBlow", typeof(void), typeof(Blow), typeof(AttackCollisionData).MakeByRefType());
+        Method(typeof(Agent), "GetEyeGlobalHeight", typeof(float));
+        Property(typeof(Agent), "Index", typeof(int));
+        Property(typeof(Agent), "IsMount", typeof(bool));
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "LookDirection", typeof(Vec3));
+        Property(typeof(Agent), "Velocity", typeof(Vec3));
+        Property(typeof(Agent), "CurrentMortalityState", typeof(Agent.MortalityState));
+        Assert.IsNotNull(Property(typeof(Agent), "Health", typeof(float)).GetSetMethod(), "Agent.Health lost its public setter");
+        Assert.IsNotNull(typeof(Blow).GetConstructor(new[] { typeof(int) }), "Blow(int ownerId) no longer resolves");
+        foreach (var (name, type) in new[]
+        {
+            ("DamageType", typeof(DamageTypes)), ("BoneIndex", typeof(sbyte)), ("GlobalPosition", typeof(Vec3)), ("BaseMagnitude", typeof(float)), ("InflictedDamage", typeof(int)),
+            ("SwingDirection", typeof(Vec3)), ("Direction", typeof(Vec3)), ("DamageCalculated", typeof(bool)), ("WeaponRecord", typeof(BlowWeaponRecord)),
+        })
+            Field(typeof(Blow), name, type);
+        Method(typeof(BlowWeaponRecord), "FillAsMeleeBlow", typeof(void), typeof(ItemObject), typeof(WeaponComponentData), typeof(int), typeof(sbyte));
+        Assert.IsNotNull(typeof(AttackCollisionData).GetMethod("GetAttackCollisionDataForDebugPurpose", BindingFlags.Public | BindingFlags.Static), "AttackCollisionData.GetAttackCollisionDataForDebugPurpose no longer resolves");
+        Property(typeof(Monster), "HeadLookDirectionBoneIndex", typeof(sbyte));
+        Property(typeof(Monster), "MainHandItemBoneIndex", typeof(sbyte));
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

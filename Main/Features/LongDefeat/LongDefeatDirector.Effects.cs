@@ -71,6 +71,8 @@ internal sealed partial class LongDefeatDirector
             _field.RestoreDefenderTactic();
         if (fx.MoralePulse is { } pulse)
             PulseMorale(pulse);
+        if (fx.PoisonTicks.Count > 0)
+            ApplyPoison(fx.PoisonTicks);
         if (fx.FellAttackers > 0)
         {
             var felled = _field.Fell(fx.FellAttackers);
@@ -86,6 +88,8 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
         }
 
+        // Read in the engine's hit callback, which may run off the main thread: a blades wave wants hits from its start until its clear or the run's end.
+        _wantsHits = _run.PoisonWave;
         if (_run.Result != null)
             Finish();
     }
@@ -221,6 +225,7 @@ internal sealed partial class LongDefeatDirector
     {
         FlushScale();
         FlushTerror();
+        FlushBlades();
         var stats = _run.Stats.Waves.LastOrDefault(w => w.Wave == e.Wave);
         if (stats != null)
         {
@@ -264,6 +269,7 @@ internal sealed partial class LongDefeatDirector
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
         FlushScale();
         FlushTerror();
+        FlushBlades();
         FinishCommander();
     }
 

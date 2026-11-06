@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -151,28 +152,46 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (!(affected is Agent agent) || !agent.IsHuman || !ReferenceEquals(agent.Mission, _mission))
             return new LdRemoval(LdRemovalKind.None, "");
 
+        // A defender the registry holds (one an attacker struck while a blades wave ran) leaves it here too, and the removal carries its key so the run forgets it. The entry is taken before the
+        // team is read: an agent with no team is still evicted, and its key still reaches the run.
+        var id = agent.Character?.StringId ?? "";
+        _registry.TakeRemoval(agent, out var role, out var felled, out var key);
         var team = agent.Team;
         if (team == null)
-            return new LdRemoval(LdRemovalKind.None, "");
+            return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
-        var id = agent.Character?.StringId ?? "";
         if (team.Side == BattleSideEnum.Attacker)
         {
-            _registry.TakeRemoval(agent, out var role, out var felled);
             if (loss)
-                return new LdRemoval(LdRemovalKind.Attacker, id, role, felled);
+                return new LdRemoval(LdRemovalKind.Attacker, id, role, felled, true, key);
 
-            return role == AttackerRole.Commander ? new LdRemoval(LdRemovalKind.Attacker, id, role, false, false) : new LdRemoval(LdRemovalKind.None, "");
+            return role == AttackerRole.Commander ? new LdRemoval(LdRemovalKind.Attacker, id, role, false, false, key) : new LdRemoval(LdRemovalKind.None, "", Key: key);
         }
 
         if (!loss)
-            return new LdRemoval(LdRemovalKind.None, "");
+            return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
         // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
         var isPlayer = agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
-        return new LdRemoval(isPlayer ? LdRemovalKind.Player : LdRemovalKind.Defender, id);
+        return new LdRemoval(isPlayer ? LdRemovalKind.Player : LdRemovalKind.Defender, id, Key: key);
     }
 
     public bool IsAttacker(object? agent) =>
         agent is Agent a && ReferenceEquals(a.Mission, _mission) && a.Team != null && a.Team.Side == BattleSideEnum.Attacker;
+
+    // A hit's two keys, which may be resolved off the main thread (the registry holds one lock). The attacker was registered when the field spawned him; the defender is entered on his first hit and leaves at
+    // his removal (Classify). A hit by a body the registry no longer holds, or on an agent that is not a standing human defender, has no keys.
+    public bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker)
+    {
+        victim = attacker = default;
+        if (!(affected is Agent hurt) || !(affector is Agent hitter) || !hurt.IsHuman || !hitter.IsHuman)
+            return false;
+        if (!ReferenceEquals(hurt.Mission, _mission) || !ReferenceEquals(hitter.Mission, _mission) || hurt.Team?.Side != BattleSideEnum.Defender || hitter.Team?.Side != BattleSideEnum.Attacker)
+            return false;
+        if (!_registry.TryGetKey(hitter, out attacker))
+            return false;
+
+        victim = _registry.Register(hurt, AttackerRole.Roster);
+        return true;
+    }
 }

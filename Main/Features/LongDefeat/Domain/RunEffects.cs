@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -62,6 +63,9 @@ internal sealed class RunEffects
     /// <summary>A troop or class boon was taken since the last tick: refresh and scale those standing, after <see cref="PublishStats"/> and before any soldier spawns.</summary>
     public LdBoonApply? ApplyBoon { get; set; }
     public List<SoldierBatch> AttackerBatches { get; } = new();
+
+    /// <summary>The Morgul Blades damage due this tick: whole points for each poisoned defender, to the attacker who dosed him. Empty outside a blades wave.</summary>
+    public List<PoisonTick> PoisonTicks { get; } = new();
 
     /// <summary>A war cry began or ended (or the commander who raised it fell): derive every standing attacker's properties again, after <see cref="PublishStats"/>.</summary>
     public bool RefreshAttackers { get; set; }

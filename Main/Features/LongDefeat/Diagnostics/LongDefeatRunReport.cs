@@ -72,7 +72,14 @@ internal static class LongDefeatRunReport
                 ["commander"] = purse.EarnedFrom(PurseSource.Commander),
                 ["boon"] = purse.EarnedFrom(PurseSource.Boon),
             },
-            ["poison"] = new JObject { ["doses"] = 0, ["hits"] = 0, ["damage"] = 0, ["ownerMissing"] = 0, ["withheld"] = 0 },
+            ["poison"] = new JObject
+            {
+                ["doses"] = stats.Poison.Doses,
+                ["hits"] = stats.Poison.Hits,
+                ["damage"] = stats.Poison.Damage,
+                ["ownerMissing"] = stats.Poison.OwnerMissing,
+                ["withheld"] = stats.Poison.Withheld,
+            },
         };
         return report.ToString(Newtonsoft.Json.Formatting.Indented);
     }

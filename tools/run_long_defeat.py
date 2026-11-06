@@ -21,7 +21,7 @@ a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHE
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only, so a class the game cannot play yet (cavalry) is refused here instead of being replaced by the game.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
-A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer or terror an affix-effect line (pass or skip).
+A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
 The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
@@ -80,16 +80,17 @@ DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
 # starts, so wave 5 (the first with an affix) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
 # affixes, owes it. The plan's "4 or more clears" would fail a --waves 4 run, which stops at the clear of wave 4 and never starts wave 5.
 AFFIX_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
-# The powers with an effect in the game (AffixPlan.Pool): hammer and terror joined in Slice 8, blades joins in Slice 9 when its effect lands.
-AFFIX_POOL = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror")
+# The powers with an effect in the game (AffixPlan.Pool): hammer and terror joined in Slice 8, blades in Slice 9 when its poison and its kill owner landed: all eight roll now.
+AFFIX_POOL = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 AFFIX_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "affixes.json"
 AFFIX_DEFAULT_SCHEDULE = ((5, 1), (10, 2), (15, 3))
 AFFIX_FROM_CLEARS = 5
 AFFIX_CHECK = "affix"
 # A cleared wave that rolled one of these has written an affix-effect line (pass, or skip for a soldier that could not show it): a run with none never read the effect back.
-# The stat powers and hide are read from a sampled attacker, hammer from the engines it hardened (with the gate's state), terror from its own pulses; all record under this id.
+# The stat powers and hide are read from a sampled attacker, hammer from the engines it hardened (with the gate's state), terror from its own pulses, blades from the poison the wave dealt
+# (doses, hits, damage and owner_missing); all record under this id.
 AFFIX_EFFECT_CHECK = "affix-effect"
-AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror")
+AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 
 # The classes (phase2-plan.md section 2, "Classes"): the game plays the ones in classes.json that have a kit for the fortress's defender culture, and the bot draws one
 # from RunRandom stream 3 when none is armed. Cavalry is in the plan but not in classes.json until Slices 10 and 11, so it is refused by name below.
