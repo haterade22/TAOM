@@ -2605,3 +2605,172 @@ the workflow doc and the CHANGELOG, none of which `/release` reads.
 - **Prevent:** a "must happen before a release" item becomes a mechanical pre-flight line in
   `.claude/skills/release/SKILL.md` (here `git grep -l taom_test_ -- Main/_Module` prints nothing).
 - **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that checks less on a parsed reading falls back to the old check when the reading resolves nothing (#987, 2026-10-26)
+
+To judge `--amend` and path commits, the doc-drift commit hook began asking `_shellwords.py commit-plan` for the
+paths after `git commit` and checking only those. The reader took `2>&1` as the paths `2`, `>&`, `1`; the hook found
+no relevant file among them and allowed the commit without running the linter, on half the commit calls in recent
+transcripts. A path commit typed from a subdirectory and the `>|` form failed the same way. Before the change the hook
+judged the index for every commit, so a misread command could not shrink the check; after it, any misread path list
+narrowed it to nothing. The same review found the audit's new INERT-ROW exemption written from the brief's example
+(any `<XmlName>` registering the file) instead of the engine's condition for a load (an exact requested id).
+- **Why missed:** the reader was tested on the command shapes the brief listed, not replayed on real commands; the
+  #985 lesson (wrapped and grammar forms in every gate's test rows) was not applied to a reader that narrows a gate.
+- **Prevent:** when a parsed reading makes a gate check less (a narrower path set, a downgrade to a warning), keep a
+  fallback to the old check when the reading resolves nothing, and replay the gate on real inputs (the local
+  transcripts, the live install) against the base version before review.
+- **Source:** 1.5.x `docs/reviews/rca-tool-987-2026-10-26.md` findings 1 to 3 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Removing an MCP server means every scope that declares it (2026-09-29)
+Deleting the `github` entry from `.mcp.json` left the server loaded: the `github@claude-plugins-official`
+plugin, enabled in `.claude/settings.json`, ships a `.mcp.json` declaring the same server. The other way
+round, the `blender` and `substance-painter` servers existed but never loaded: `claude mcp add --scope
+local` had stored them under the repo's old `C:` path in `~/.claude.json`, and the repo moved to `E:`.
+- **Why missed:** a server's identity was read from one file, while Claude Code assembles it from the
+  project `.mcp.json`, every enabled plugin, and the user and local scopes keyed by project path.
+- **Prevent:** to add or remove a server, grep the plugin caches for its name as well as `.mcp.json`, and
+  prove the result from inside a restarted session with `/mcp`, not from a shell in another folder.
+- **Source:** 1.5.x `docs/reviews/adopt-ecc-2026-09-29.md` Step 4 and Step 6; `docs/reference/mcp-servers.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test oracle must not sit downstream of anything the code under test can swap out (plan 013, 2026-09-24)
+`tools/test_hooks.sh` 4c proved "this hook starts no Python" by counting starts of a fake interpreter pinned through `TAOM_PYBIN`. `_pybin.sh` probes the pin under a 0.8 s timeout and silently falls back to the real `python` when it misses, which counts nothing. Under load the check read 0 starts and blamed a prefilter byte-identical to seven that passed; the same fallback could pass a hook that does start Python. The builder saw the false failure, reran, got green, and did not record it.
+- **Why missed:** the counter was designed without reading the resolver's fallback, and its premise check ran once, before the rows, so it could not see a later probe miss. A zero count looks exactly like success (repeat of "A zero you did not prove is not a zero", above).
+- **Prevent:** observe the decision itself, not a side effect behind a timed or fallible step: 4c reads a `bash -x` trace for the `source` of `_pybin.sh`. When a test flakes once, find the mechanism before rerunning; a green rerun is not evidence the red one was noise.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
+Eleven gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+- **Why missed:** the plan's caveat did not reach the comment text it prescribed.
+- **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a before-case against the committed base, not the RED intermediate (plan 013 decisions, 2026-09-24)
+The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subject gate before the change. It passed only in the builder's intermediate tree (D39 applied, D40 not yet); the committed base, still filtering on `git`, denied it. The real base hole was `\u0067it commit`. The same entry reused a "240 cases, no changed decision" parity sentence whose script held no escaped payload, next to a bullet describing a changed decision, and two docs said 4d covers "each blocking gate" when its table has five rows.
+- **Why missed:** the example came from the nearest RED log, not from a run on the base commit, and the counts came from intent, not from the table or the run.
+- **Prevent:** for any "before the change, X happened" claim, run X on the parent commit's file (`git show <base>:<path>`) and quote that result. When a claim is reused after a further change, restate it against what the evidence can see. Count the rows before writing "each" or "every".
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither.
+- **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
+- **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate change that refuses less anywhere must be run against the old gate, not argued from examples (plan 027, 2026-09-24)
+Plan 027 made `validate-push.sh` refuse less on purpose in two places: a trunk named only in a
+trailing `#` comment, and an option value (`-o ci.skip`) taken for the remote. Each relaxation
+consumed text that another stage had already reinterpreted. The comment strip ran on the
+quote-blind split, so a quoted ` #` after a heredoc line holding one quote, or inside PowerShell's
+typographic quotes, hid the push. The value skip ran on quote-flattened tokens, so a lost empty
+value (`-o ""`) made it skip the remote. Eight shapes the old hook refused passed, under a comment
+that promised the gate "never refuses less than before".
+- **Why missed:** the plan and both cold reviews checked the named examples and wrote the promise
+  as a property; no test fed the old hook and the new one the same inputs.
+- **Prevent:** before merging any gate change that relaxes a shape, run a differential sweep: the
+  old hook from `git show <base>:<path>` beside the new one over prefixes (heredoc lines with one
+  quote, comments, `cd x;`), bodies and suffixes, under both tool names and on a trunk and a
+  feature branch, and treat every refused-then-allowed row as blocking unless it is the named
+  relaxation. A stage that drops or skips text must do it where the quotes and argument boundaries
+  are still known, or judge both readings (with and without the drop) and block if either does.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A translator between two shells must cover the target grammar's statement forms, checked with its own parser (plan 027, 2026-09-24)
+`_shellwords.py` read every PowerShell form in the plan's parser table and none outside it: an
+assignment (`$r = git commit ...`), the `.` operator, `${env:X}`, the typographic quotes, a quoted
+word closing its token, and a string or variable standing alone as a value. The assignment alone
+let an unlabelled commit and an unconfirmed `reset --hard` through two gates. The same loss of the
+literal-versus-command distinction made the commit gate read `pbpaste` as a commit subject.
+- **Why missed:** the reader was written from a list of forms to support, not from the grammar of
+  where a command can start; `[System.Management.Automation.Language.Parser]::ParseInput` was run
+  only on the listed inputs.
+- **Prevent:** for a reader that decides "is this a command", list every statement head the shell
+  has (assignment, call operators, value statements, pipelines, blocks) and pin each with the
+  shell's own parser output in the unit tests. Interpret a producer's output only when it can be
+  computed (a literal echo, `printf '%s'`); anything else stays unknown, as before.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 5 to 7 and 11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Time a hook on one long segment and on a 1 MB payload, not only on many short ones (plan 027, 2026-09-24)
+The fork-free quote strip in `block-broad-git-add.sh` beat `sed` on 100 short segments and lost
+badly on one 100 KB segment (2.5 s, quadratic). `validate-push.sh` started Python three times and
+ran a bash split over the raw text twice, which took a 1 MB PowerShell command to 3.5 to 4.8 s of
+its 5 s registration; a killed gate fails open.
+- **Why missed:** the timing rows measured the shape the change optimised for.
+- **Prevent:** a hook's timing rows cover many short segments, one long segment and a 1 MB payload
+  under each tool, and a text transform in bash names its complexity in a comment.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 8 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A differential sweep proves only the classes in its corpus; seed it from the fix's own mechanism (plan 027 convergence, 2026-09-26)
+The review fix for the quoted ` #` checked for a quote only inside each piece of the quote-blind
+split, and a 5,896-shape sweep came back clean. The convergence pass then put the separator inside
+the quoted value (`X="a;b #c" git push --force origin <trunk>` after a heredoc line holding one
+quote): the split cut inside the value, the piece holding the push began at the `#`, and its
+opening quote sat in the piece before. 28 of 612 shapes the base gate refused passed. The same pass
+found the assignment fix covered two left-side spellings of the five `ParseInput` accepts.
+- **Why missed:** the sweep's bodies came from the findings being fixed, so it tested the fix's
+  examples; nothing in it attacked the fix's own assumption (that a piece holds its own quotes).
+- **Prevent:** after a fix, name the assumption it rests on and add sweep bodies that break it (for
+  a split, put every separator inside a quoted value on both sides of the checked character); for a
+  grammar fix, list every form the parser's AST type admits (Variable, Convert, Member, Index,
+  ArrayLiteral) and pin each.
+- **Source:** 1.5.x `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 16 and 18, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A bash judge ported to Python reads a line differently at every natural Python choice (#680, 2026-09-26)
+`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so a trunk force push
+carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed gate fails open.
+Plan 027's review had seen the cost and answered it with an order (lines that could force first, shortest first),
+which a message holding a force-like word beats. The fix moved the judge into Python (`_pushjudge.py`, run by
+`_shellwords.py verdict` in the reader's own start) under a 3.0 s deadline that asks on an overrun: the slowest
+2 MB shape now answers in under a second. A security gate's port must give every verdict bash gave, and each
+natural Python spelling of a bash step changes some. The #680 design audit judged 37,986 lines under three
+current branches against the bash judge and counted:
+
+| Natural Python choice | What bash does | Judgements that differ |
+|---|---|---|
+| `str.split()` | splits at space, tab and newline only (IFS) | 12,320 |
+| `str.lower()`, or bash under a named UTF-8 locale | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 99 each |
+| `str.isdigit()` for an fd number | `^[0-9]+$` takes ASCII digits only | 14 |
+| `fnmatch` for a refspec pattern | `[[ == ]]` pattern matching | 38 |
+
+The split is the dangerous one: the reader writes `\x1f` and `\x1e` inside a word to keep an argument whole, and a
+naive port let 546 refused hook runs through, the 7c row `git push --force -o "ci variable" origin` on a trunk
+among them. Two more sit outside the judge: bash's `$( )` dropped every NUL and saw a lone surrogate as `?`, so a
+line is judged as bash received it, and `str.splitlines()` on the candidate list breaks at an empty argument's
+`\x1e`. The port reads a `*`-only pattern exactly and takes one holding any other glob character as matching every
+protected name, which can only refuse more (git refuses such a refspec), instead of porting bash's bracket matcher.
+- **Why missed:** the per-word cost was measured in plan 027's review and treated with an order, which any content
+  can beat, rather than removed; and a bash judge's reading lives in bash's defaults (IFS, the locale, `$( )`),
+  which no line of the script spells out, so a port written from the script's text passes every ASCII test.
+- **Prevent:** pin each divergence with a line whose verdict was read from the bash judge's own functions
+  (`tools/tests/test_pushjudge.py`: 99 pins, and every 7c command with the target bash named), prove the pins bite
+  by mutating each choice back to the natural one, and switch only after a hook-level differential sweep against
+  the old hook shows zero refused-then-allowed rows (1,035 commands, 4,140 runs per hook). Delete the old judge
+  rather than keep it as a fallback: two readings drift. With no verdict, a coarse ask on a force marker in the
+  raw payload stands in for it.
+- **Source:** 1.5.x issue #680; `.claude/hooks/_pushjudge.py`, `.claude/hooks/_shellwords.py` (`verdict`), `.claude/hooks/validate-push.sh`; `tools/tests/test_pushjudge.py`; `tools/test_hooks.sh` 7e and 7i, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that matches full option spellings misses what git accepts (#689, 2026-09-26)
+`validate-push.sh` matched git's long force options by their full spelling, so every shorter spelling git accepts
+read as an ignored option. git takes an unambiguous prefix of a long option as that option: on a local bare
+repository with `--dry-run --porcelain` (a `+` line is a forced update), git 2.55 ran `--force-w` and `--force-with`
+as `--force-with-lease`, `--mir` and even `--m` as `--mirror`, and `-f --al` and `-f --b` as a forced `--all`, each
+force-updating both trunks from a feature checkout. The #680 design review found two more readings of the same
+kind: the refspec `:` (every branch the remote also has, forced by a flag or written `+:`) was read as an empty
+destination, that is the current branch, and so was a forced push with no refspec under `push.default=matching`,
+which pushes every matching branch. The judge now compares a long option's name before any `=` as a prefix of each
+option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`), so counting one as force
+refuses nothing git would run. A forced `:` or `+:`, and a forced push with no refspec under
+`push.default=matching` from `-c` or from `git config`, are refused as every matching branch. A differential sweep
+against the port (1,648 commands, 555 of them seeded from these rules; 8,240 runs per hook under both shell tools,
+on a trunk, a feature checkout and one set to `matching`) found 0 pushes refused before and allowed now; its 1,027
+exit-code differences and 275 renamed targets are all these shapes.
+- **Why missed:** the option table was written from the documented spellings and every test used them; the #680
+  port then pinned the bash verdicts, this gap among them (a pin read `--force-w` as a plain push), because a port
+  must change nothing; and "no refspec" was read as "the current branch", which holds only under the default
+  `push.default`.
+- **Prevent:** read an option the way the tool's own parser reads it, not the way its manual spells it: for git, a
+  prefix match on the name before `=`, counting an ambiguous prefix as the dangerous option. Before trusting a
+  gate's table, run each shorter spelling and each empty or default argument against a scratch repository and read
+  what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
+  read it.
+- **Source:** 1.5.x issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`, `PushDefaultTests`); `tools/test_hooks.sh` 7c, on `origin/bannerlord-1.5.x` (ported by WP142).

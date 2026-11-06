@@ -857,3 +857,18 @@ saved, but the great elk's lord wiring never shipped in a release, so every play
 - **Prevent:** when you describe what existing saves contain, read the value at the last release tag
   (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
 - **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A loop guard withholds output only; the state cleanup still runs (plan 011, 2026-09-25)
+The four Stop reminders exited at the top when `stop_hook_active` was true, the Stop that follows
+Claude's answer to a reminder. That answer is usually what ends the streak: a build, a CHANGELOG
+entry, a tag. The early exit skipped the "condition cleared, remove the marker" branch, so the
+marker outlived its streak and muted the next one: block, build, continuation Stop, fresh C# edit,
+and no reminder.
+- **Why missed:** the plan prescribed the early return as the loop guard and kept the marker logic
+  unchanged. The tests checked trigger, loop silence and mute, but never clear or re-arm, and never
+  a condition that clears during the continuation.
+- **Prevent:** place a loop or re-entry guard right before the emission it suppresses, never above
+  the state bookkeeping. For every one-shot marker, test the full cycle: trigger, mute, clear,
+  re-arm, and a clear that happens on the guarded path. Ask what the marker holds after an upgrade
+  from an older writer, too.
+- **Source:** 1.5.x `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F2, F10 (Codex P2), on `origin/bannerlord-1.5.x` (ported by WP142).
