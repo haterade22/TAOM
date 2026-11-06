@@ -2580,3 +2580,11 @@ Three findings of the second fix round each finished half of an earlier correcti
 - **Why missed:** each correction was written and tested against the one reader its finding named; nobody listed the other readers of the same rule.
 - **Prevent:** when a Deviations row or a fix changes what one count, ranking or cleanup reads, grep the rule's other readers in the same change, and give each the same test. A shared cleanup gets a verdict in every caller.
 - **Source:** [rca-marshals-word-m3-massed-m5-m6-2026-11-04.md](../rca-marshals-word-m3-massed-m5-m6-2026-11-04.md) rows 13, 14 and 15.
+
+### A check counts over the window its claim names, from facts the run froze (Marshal's Word, 2026-11-05)
+
+Five checks of throwers on an advance judged a wider window or a cheaper signal than their claim. `throwers-throw` counted from the run's start, so throws on the approach passed it. The trial counted from the Advance to the end of the melee wait and ignored the facts the driver froze at the release. `throwers-stand` counted a position within 4 m with no stop. The control passed whenever the gap closed. `throwers-melee` passed on blows that an enemy walking into a still company also produces. In the first game run 21 of 60 throws came on the approach, so the old window would have read 60 where the stand read 39.
+
+- **Why missed:** each check followed its spec sentence ("shots since the run began", "within 4 m"), and the driver and the trial each kept their own window for one fact. No test fed a check a run whose signal came from outside the window it claims.
+- **Prevent:** for each check write down the interval and the cause its claim names, then feed the rule a run where the same signal has another source: throws only on the approach, throws only after the release, a company that walks through its point, an enemy that walks in. The run freezes its facts at the end of the window and every judge reads the frozen value; a second path to the same fact is deleted.
+- **Source:** [rca-marshals-word-throwers-2026-11-05.md](../rca-marshals-word-throwers-2026-11-05.md) rows 5 (the driver's count and the trial's window), 6, 10 and 11. Related: "Each trial verdict has a test that makes it fail" and "A log verdict needs a number for the broken build and for the working one".

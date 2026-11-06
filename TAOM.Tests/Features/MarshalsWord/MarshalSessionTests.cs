@@ -51,7 +51,7 @@ public class MarshalSessionTests
     internal FakeMarshalOutlines Outlines { get; } = new();
 
     private MarshalSession NewSession(FakeMarshalOrders orders, FakeMarshalScreen screen) =>
-        new(orders, Fire, Outlines, screen, _settings, () =>
+        new(orders, Fire, new FakeMarshalThrowers(), Outlines, screen, _settings, () =>
         {
             _mayRunCalls++;
             return _mayRun;
@@ -297,7 +297,7 @@ public class MarshalSessionTests
     {
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
-        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "8");
+        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "8");
         session.OnMissionTick();
         Assert.IsTrue(session.IsLive);
 
@@ -378,7 +378,7 @@ public class MarshalSessionTests
         // Build-spec section 2: the screen tick writes only TAOM fields, and the fault path may hide flags, nothing more. A contour is an agent write.
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
-        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "11");
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), Outlines, _screen, settings, () => true, _log, _logger, "11");
         session.OnMissionTick();
         Assert.IsTrue(session.IsLive);
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
@@ -400,7 +400,7 @@ public class MarshalSessionTests
     {
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
-        var session = new MarshalSession(broken, new FakeMarshalFire(), Outlines, _screen, _settings, () => true, _log, _logger, "12");
+        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalThrowers(), Outlines, _screen, _settings, () => true, _log, _logger, "12");
         session.OnMissionTick();
         Assert.IsTrue(session.IsLive);
 
@@ -419,7 +419,7 @@ public class MarshalSessionTests
     {
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
-        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "13");
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), Outlines, _screen, settings, () => true, _log, _logger, "13");
         session.OnMissionTick();
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
         session.OnScreenTick(Frame());
@@ -437,7 +437,7 @@ public class MarshalSessionTests
         // The release is an agent write, so a fault in the screen tick owes it to the next mission tick, as the contour clear is owed.
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
-        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "14");
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), Outlines, _screen, settings, () => true, _log, _logger, "14");
         session.OnMissionTick();
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
 
@@ -458,7 +458,7 @@ public class MarshalSessionTests
     {
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
-        var session = new MarshalSession(broken, Fire, Outlines, _screen, _settings, () => true, _log, _logger, "15");
+        var session = new MarshalSession(broken, Fire, new FakeMarshalThrowers(), Outlines, _screen, _settings, () => true, _log, _logger, "15");
         session.OnMissionTick();
 
         session.TryCapture(Move());
@@ -487,7 +487,7 @@ public class MarshalSessionTests
     {
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
-        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "16");
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), Outlines, _screen, settings, () => true, _log, _logger, "16");
         session.OnMissionTick();
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
         session.OnScreenTick(Frame());
@@ -557,7 +557,7 @@ public class MarshalSessionTests
     {
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
-        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, key);
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), Outlines, _screen, settings, () => true, _log, _logger, key);
         session.OnMissionTick();
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
         session.OnScreenTick(Frame());
@@ -571,7 +571,7 @@ public class MarshalSessionTests
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
-        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, settings, () => true, _log, _logger, "9");
+        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), _screen, settings, () => true, _log, _logger, "9");
         session.OnMissionTick();
 
         session.OnScreenTick(Frame());
@@ -603,7 +603,7 @@ public class MarshalSessionTests
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.When(o => o.Detach()).Do(_ => throw new InvalidOperationException("detach broke"));
         broken.Now.Returns(_ => throw new InvalidOperationException("boom"));
-        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "10");
+        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "10");
         session.OnMissionTick();
 
         Assert.IsTrue(session.Faulted);
@@ -611,6 +611,23 @@ public class MarshalSessionTests
     }
 
     // ---- both teardown paths ----
+
+    [TestMethod]
+    public void AnAdvanceTheOrderAdapterRaises_EndsTheThrowerRunAtTheNextPass_AndAnotherStartsForTheSameCompany()
+    {
+        var engine = new FakeMarshalThrowers();
+        engine.Standard(1);
+        var session = new MarshalSession(_orders, Fire, engine, Outlines, _screen, _settings, () => true, _log, _logger, "17");
+        session.OnMissionTick();
+        var first = session.Throwers.FactsOf(1)!.Value.Serial;
+
+        _orders.RaiseAdvanceGiven(1);
+        engine.Now = 0.25;
+        session.OnMissionTick();
+
+        _logger.Received().LogInfo(Arg.Is<string>(line => line.Contains("throwers company=1 state=released why=new-advance")));
+        Assert.AreEqual(first + 1, session.Throwers.FactsOf(1)!.Value.Serial, "the player's new Advance is a new run");
+    }
 
     [TestMethod]
     public void Finish_ClearsTheStatics_UnsubscribesTheEvents_AndDropsTheFlags()
@@ -627,6 +644,7 @@ public class MarshalSessionTests
         Assert.IsNull(MarshalHooks.PlayerController);
         Assert.IsNull(MarshalHooks.Paces);
         Assert.IsFalse(_orders.HasDirectOrderListeners, "no event handler outlives the session");
+        Assert.IsFalse(_orders.HasAdvanceListeners, "the throwers hear the Advance event, and let go of it too");
         Assert.AreEqual(1, _orders.Detached);
         Assert.AreEqual(1, _screen.Dropped);
         Assert.AreEqual(0, _screen.Hidden, "the finish makes no native call: the flags go with the scene");
@@ -997,7 +1015,7 @@ public class MarshalSessionTests
             Wanted = { [1] = MarshalTuning.SelectedOutline, [2] = MarshalTuning.SelectedOutline, [3] = MarshalTuning.MarkedOutline },
         };
         var service = new MarshalOutlineService<int>(adapter);
-        var session = new MarshalSession(_orders, Fire, service, _screen, _settings, () => true, _log, _logger, "14");
+        var session = new MarshalSession(_orders, Fire, new FakeMarshalThrowers(), service, _screen, _settings, () => true, _log, _logger, "14");
         session.OnMissionTick();
         _orders.Now = 1.0;
         session.OnScreenTick(Keys(panel: true));

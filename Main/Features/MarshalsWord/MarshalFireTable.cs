@@ -18,6 +18,7 @@ internal static class MarshalFireTable
     private static readonly int[] ShotsFree = new int[Size];
     private static readonly int[] ShotsBeforeFirstWord = new int[Size];
     private static readonly int[] ShotsAfterOther = new int[Size];
+    private static readonly int[] ShotsAny = new int[Size];
     private static readonly bool[] Held = new bool[Size];
     private static readonly int[] BlowsDealt = new int[Size];
     private static readonly int[] StrikeBlowsDealt = new int[Size];
@@ -75,6 +76,15 @@ internal static class MarshalFireTable
     {
         if (InRange(company))
             Interlocked.Increment(ref StrikeBlowsDealt[company]);
+    }
+
+    /// <summary>Shots the company's soldiers have loosed this mission, whatever the company's fire mode (build-spec 9.4).</summary>
+    internal static int ShotsOf(int company) => InRange(company) ? Volatile.Read(ref ShotsAny[company]) : 0;
+
+    internal static void CountAnyShot(int company)
+    {
+        if (InRange(company))
+            Interlocked.Increment(ref ShotsAny[company]);
     }
 
     internal static void CountBlow(int company)
@@ -150,6 +160,7 @@ internal static class MarshalFireTable
         Array.Clear(ShotsFree, 0, Size);
         Array.Clear(ShotsBeforeFirstWord, 0, Size);
         Array.Clear(ShotsAfterOther, 0, Size);
+        Array.Clear(ShotsAny, 0, Size);
         Volatile.Write(ref _watched, -1);
         Watch.Reset();
         for (var i = 0; i < Size; i++)

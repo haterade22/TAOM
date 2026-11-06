@@ -168,4 +168,76 @@ internal static class MarshalTuning
 
     /// <summary>A change in the distance to the slot of less than this many metres, from the first replaced tick to the next hold read, is neither closer nor farther.</summary>
     internal const float SlotTrendMetres = 0.1f;
+
+    /// <summary>The share of a company that must be armed with throwing weapons for it to stand on an Advance (9.4).</summary>
+    internal const double ThrowerQualifyShare = 0.5;
+
+    /// <summary>The fewest armed soldiers a company needs to stand (9.4).</summary>
+    internal const int ThrowerMinArmed = 5;
+
+    /// <summary>The stand gap as a share of the throwing range (9.4).</summary>
+    internal const float StandShare = 0.45f;
+
+    /// <summary>The nearest stand gap in metres, clear of the distance (about 12 m) inside which Melee outscores holding the slot on an Advance (HumanAIComponent.cs:752-755), with room (9.4).</summary>
+    internal const float StandMinGap = 24f;
+
+    /// <summary>The farthest stand gap in metres (9.4).</summary>
+    internal const float StandMaxGap = 32f;
+
+    /// <summary>The rear rank must still reach the enemy's front: this share of the range must cover the stand gap and the company's depth (9.4).</summary>
+    internal const float ReachShare = 0.8f;
+
+    /// <summary>A company within this many metres of the point it was sent to, and no faster than <see cref="StandStillSpeed"/>, has arrived and stands (9.4).</summary>
+    internal const float StandArriveMetres = 4f;
+
+    /// <summary>A company stands only when it moved no faster than this, in metres a second between two slow passes, within the arrival distance of its point (9.4).</summary>
+    internal const float StandStillSpeed = 1f;
+
+    /// <summary>A new approach point replaces the published one only when it moved farther than this (9.4).</summary>
+    internal const float RepublishMetres = 2f;
+
+    /// <summary>The enemy drew off when the gap passes the stand gap by this many metres, and the company follows (9.4).</summary>
+    internal const float FollowMetres = 10f;
+
+    /// <summary>A run releases when the armed soldiers fall to this share of those that were armed at its start (9.4).</summary>
+    internal const double ReleaseShare = 0.3;
+
+    /// <summary>A run releases when the front to front gap falls to this many metres (9.4).</summary>
+    internal const float CloseMetres = 12f;
+
+    /// <summary>A run releases after this many seconds stood in all (9.4).</summary>
+    internal const double StandLimitSeconds = 40.0;
+
+    /// <summary>A run releases this many seconds after its start whatever else holds (9.4).</summary>
+    internal const double RunLimitSeconds = 120.0;
+
+    /// <summary>A gap this small before the first stand means the company is already in melee (9.4).</summary>
+    internal const float MeleeGapMetres = 8f;
+
+    /// <summary>A company that passes its published point toward the enemy by more than this many metres has walked in (9.4).</summary>
+    internal const float OvershootMetres = 6f;
+
+    /// <summary>Seconds a run must have stood before too few shots fail the throw check (9.4).</summary>
+    internal const double ThrowWindowSeconds = 10.0;
+
+    /// <summary>Shots from a run's first stand to its release that pass the throw check (9.4).</summary>
+    internal const int MinThrows = 10;
+
+    /// <summary>Seconds after a release in which the company's blows must rise and the company must go in (9.4).</summary>
+    internal const double MeleeWaitSeconds = 45.0;
+
+    /// <summary>After a release the company must have gone this many metres toward the enemy, besides the blows, for the melee check to pass (9.4).</summary>
+    internal const float MeleeAdvanceMetres = 3f;
+
+    /// <summary>Mission seconds between two cost lines (9.4).</summary>
+    internal const double CostLineSeconds = 10.0;
+
+    /// <summary>Calls the published bucket needs before the cost check judges (9.4).</summary>
+    internal const long CostMinCalls = 300;
+
+    /// <summary>The mean time of a published call, in microseconds, above which the cost check fails (9.4).</summary>
+    internal const double CostMeanMicros = 50.0;
+
+    /// <summary>The longest single published call, in microseconds, above which the cost check fails (9.4).</summary>
+    internal const double CostMaxMicros = 5000.0;
 }

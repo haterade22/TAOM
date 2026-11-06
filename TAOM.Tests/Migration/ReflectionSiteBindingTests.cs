@@ -227,6 +227,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestItemVM", "QuestItemVM", "PopulateQuestLog", "Method", "QuestJournalAdapter.cs:30")]
     // The guard check resolves QuestsVM.SetSelectedItem by name too; a miss reads as the SetSelectedItem patch not attached.
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestsVM", "QuestsVM", "SetSelectedItem", "Method", "QuestJournalAdapter.cs:39")]
+    // --- Marshal's Word (9.4): vanilla's sticky Advance point, set invalid after each answer the thrower stand moved. Missing: Forget throws, the postfix latches its fault and the stand is off for the mission.
+    [DataRow("TaleWorlds.MountAndBlade.MovementOrder", "MovementOrder", "_engageTargetPositionCache", "Field", "MarshalEngagePoint.cs:17")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

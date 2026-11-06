@@ -362,7 +362,7 @@ public class MarshalsWordChecksRenderTests
     {
         var screen = new FakeMarshalScreen();
         var settings = new FakeMarshalSettings();
-        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), screen, settings, () => true, _log, _logger, "1");
+        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), screen, settings, () => true, _log, _logger, "1");
         session.OnMissionTick();
         session.ArraySolved(click: true, companies: 2);
         session.ArraySolved(click: false, companies: 2);
@@ -389,7 +389,7 @@ public class MarshalsWordChecksRenderTests
         Assert.IsTrue(Fixture("marshal_fault.txt").Any(l => l.EndsWith("] [ERROR] " + prefix, StringComparison.Ordinal)));
 
         Fresh();
-        var off = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), screen, new FakeMarshalSettings { Enabled = false }, () => true, _log, _logger, "1");
+        var off = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), screen, new FakeMarshalSettings { Enabled = false }, () => true, _log, _logger, "1");
         off.OnMissionTick();
 
         var skip = "[Check] id=taom.marshals-word.captured result=skip mission=1 reason=setting-off";
@@ -413,6 +413,7 @@ public class MarshalsWordChecksRenderTests
     [DataRow("marshal_could_not_start.txt", "Client/Features/MarshalsWord/MarshalView.cs", "[MarshalsWord] Marshal's Word could not start for this mission", "ERROR", "Word could not start")]
     [DataRow("marshal_hotkey_failed.txt", "Main/Features/MarshalsWord/MarshalsWordModule.cs", "[MarshalsWord] hotkey registration failed", "ERROR", "hotkey registration failed")]
     [DataRow("marshal_release_failed.txt", "Main/Adapters/MarshalFireAdapter.cs", "[MarshalsWord] giving back a soldier", "ERROR", "giving back a soldier")]
+    [DataRow("marshal_throwers_stand_fault.txt", "Main/Features/MarshalsWord/MarshalThrowerDriver.cs", "[MarshalsWord] the thrower stand failed", "ERROR", "the thrower stand failed")]
     public void TheFeaturesOwnFailureLines_AreInTheCode_TheFixtures_AndTheCaptureChecksFailList(string fixture, string source, string prefix, string level, string manifestFragment)
     {
         StringAssert.Contains(ReadSource(source, stripComments: true), prefix, source);

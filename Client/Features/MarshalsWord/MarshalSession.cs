@@ -28,6 +28,7 @@ internal sealed class MarshalSession : IMarshalHookSink
     private readonly MarshalQueueDriver _queue;
     private readonly MarshalMarchDriver _march;
     private readonly MarshalFireDriver _fire;
+    private readonly MarshalThrowerDriver _throwers;
     private readonly MarshalMarkWatch _marks;
     private readonly MarshalProofWatch _proofs;
 
@@ -44,7 +45,7 @@ internal sealed class MarshalSession : IMarshalHookSink
     // Raised from an engine callback that may not run on the thread that reads it, so it is one volatile bool.
     private volatile bool _decisionDue = true;
 
-    internal MarshalSession(IMarshalOrderAdapter orders, IMarshalFireAdapter fire, IMarshalOutlines outlines, IMarshalScreenAdapter screen,
+    internal MarshalSession(IMarshalOrderAdapter orders, IMarshalFireAdapter fire, IMarshalThrowerAdapter throwers, IMarshalOutlines outlines, IMarshalScreenAdapter screen,
         IMarshalSettingsProvider settings, Func<bool> mayRun, IOutcomeLog outcomes, IModLogger logger, string missionKey)
     {
         _orders = orders;
@@ -58,6 +59,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         _queue = new MarshalQueueDriver(orders, outcomes, missionKey);
         _march = new MarshalMarchDriver(orders, outcomes, missionKey);
         _fire = new MarshalFireDriver(orders, fire, outcomes, logger, _screen.Say, missionKey);
+        _throwers = new MarshalThrowerDriver(throwers, outcomes, logger, missionKey);
         _marks = new MarshalMarkWatch(orders, outcomes, logger, missionKey);
         _proofs = new MarshalProofWatch(orders, outcomes, logger, missionKey);
     }
@@ -70,6 +72,9 @@ internal sealed class MarshalSession : IMarshalHookSink
 
     /// <summary>Field trial: the archers' driver, for the verdicts it judged and the companies' holding counts.</summary>
     internal MarshalFireDriver Fire => _fire;
+
+    /// <summary>Field trial: the throwers' driver, for the runs it holds and the table it publishes.</summary>
+    internal MarshalThrowerDriver Throwers => _throwers;
 
     /// <summary>Field trial: the queue driver's counters of finished steps, of steps that patience ended and of steps that ended by arrival.</summary>
     internal (int Finished, int ByPatience, int ByArrival) StepsFinished => (_queue.Finished, _queue.EndedByPatience, _queue.EndedByArrival);
@@ -115,7 +120,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         try
         {
             MarshalHooks.Arm(input.QueueKeyDown && input.PanelOpen, input.WidthsKeyDown && input.PanelOpen, _settings.KeepArray, _settings.ArriveTogether,
-                input.MarkKeyDown && input.PanelOpen, _settings.HollowSquare);
+                input.MarkKeyDown && input.PanelOpen, _settings.HollowSquare, _settings.ThrowersFirst && !MarshalHooks.TrialThrowersOff);
             _showOutlines = _settings.Outlines && (input.PanelOpen || input.IndicatorsDown);
             if (input.FirePressed)
                 _fire.PressFire();
@@ -146,6 +151,7 @@ internal sealed class MarshalSession : IMarshalHookSink
                 return;
             _queue.Pass();
             _march.Pass(MarshalHooks.ArriveTogether);
+            _throwers.Pass(MarshalHooks.ThrowersFirst);
             _fire.Pass();
             _marks.Pass();
             _proofs.Pass();
@@ -279,10 +285,12 @@ internal sealed class MarshalSession : IMarshalHookSink
     private void Begin()
     {
         _orders.DirectOrder += _queue.OnDirectOrder;
+        _orders.AdvanceGiven += _throwers.OnAdvanceGiven;
         _orders.PlayerTeamChanged += OnPlayerTeamChanged;
         _orders.Attach();
         MarshalHooks.Begin(this);
-        MarshalHooks.Arm(queue: false, keepWidths: false, _settings.KeepArray, _settings.ArriveTogether, hollowSquare: _settings.HollowSquare);
+        MarshalHooks.Arm(queue: false, keepWidths: false, _settings.KeepArray, _settings.ArriveTogether, hollowSquare: _settings.HollowSquare,
+            throwersFirst: _settings.ThrowersFirst && !MarshalHooks.TrialThrowersOff);
         _live = true;
     }
 
@@ -293,6 +301,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         _fire.OnPlayerTeamChanged();
         _marks.OnPlayerTeamChanged();
         _proofs.OnPlayerTeamChanged();
+        _throwers.OnPlayerTeamChanged();
     }
 
     private void RefreshFlags(MarshalScreenInput input)
@@ -346,12 +355,14 @@ internal sealed class MarshalSession : IMarshalHookSink
         Swallow(() =>
         {
             _orders.DirectOrder -= _queue.OnDirectOrder;
+            _orders.AdvanceGiven -= _throwers.OnAdvanceGiven;
             _orders.PlayerTeamChanged -= OnPlayerTeamChanged;
             _orders.Detach();
         });
         if (owner)
         {
             Swallow(_fire.Summarize);
+            Swallow(_throwers.Summarize);
             MarshalHooks.Clear();
         }
 

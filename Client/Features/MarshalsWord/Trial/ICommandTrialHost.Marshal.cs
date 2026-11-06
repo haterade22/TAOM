@@ -287,4 +287,40 @@ internal partial interface ICommandTrialHost
 
     /// <summary>The chosen company's four spacing limits and the values it could read as foot soldiers and as cavalry, read from the engine now; null for no company.</summary>
     SpacingRead? MarshalSpacingOfChosen(int company);
+
+    /// <summary>Chooses the largest company that the stand rules would let stand on an Advance, the order aside (build-spec 9.4), and returns its census; the default census when none qualifies.</summary>
+    ThrowerCensus MarshalChooseThrowers();
+
+    /// <summary>The chosen company's throwing range from item data, or NaN.</summary>
+    float MarshalThrowerRange(int company);
+
+    /// <summary>Gives the selected companies an Advance on the chosen enemy company through the player's controller; select with <c>MarshalSelect</c> first. An order: call it after the in-mission-tick marker.</summary>
+    void MarshalAdvance();
+
+    /// <summary>A copy of the chosen company's run facts, or null while it has none.</summary>
+    ThrowerFacts? MarshalThrowerRun(int company);
+
+    /// <summary>What the stand rules answer for the chosen company now, the order aside; an empty string when it may stand.</summary>
+    string MarshalThrowerWhy(int company);
+
+    /// <summary>The cost buckets of the epoch the patches have filled.</summary>
+    ThrowerCostRead MarshalThrowerCostRead { get; }
+
+    /// <summary>Tables written in the epoch.</summary>
+    int MarshalThrowerPublished { get; }
+
+    /// <summary>A thrower patch threw and turned itself off.</summary>
+    bool MarshalThrowerFaulted { get; }
+
+    /// <summary>The chosen company's census now.</summary>
+    ThrowerCensus MarshalThrowerCensus(int company);
+
+    /// <summary>The front to front gap from the chosen company to the chosen enemy company, or NaN.</summary>
+    float MarshalFrontGap(int company);
+
+    /// <summary>The chosen company's front (CurrentPosition), or null.</summary>
+    GroundPoint? MarshalCompanyAt(int company);
+
+    /// <summary>Turns Throwers Throw First off for the battle, or back on. The step that turns it off turns it on at its end.</summary>
+    void MarshalThrowersOff(bool off);
 }

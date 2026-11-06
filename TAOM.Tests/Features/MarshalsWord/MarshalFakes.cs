@@ -64,13 +64,19 @@ internal sealed class FakeMarshalOrders : IMarshalOrderAdapter
 
     public event Action<IReadOnlyList<int>>? DirectOrder;
 
+    public event Action<IReadOnlyList<int>>? AdvanceGiven;
+
     public event Action? PlayerTeamChanged;
 
     internal void RaiseDirectOrder(params int[] companies) => DirectOrder?.Invoke(companies);
 
+    internal void RaiseAdvanceGiven(params int[] companies) => AdvanceGiven?.Invoke(companies);
+
     internal void RaiseTeamChanged() => PlayerTeamChanged?.Invoke();
 
     internal bool HasDirectOrderListeners => DirectOrder != null;
+
+    internal bool HasAdvanceListeners => AdvanceGiven != null;
 
     public void Attach() => Attached++;
 
@@ -181,6 +187,8 @@ internal sealed class FakeMarshalSettings : IMarshalSettingsProvider
     public bool HollowSquare { get; set; } = true;
 
     public bool SpacingRepair { get; set; } = true;
+
+    public bool ThrowersFirst { get; set; } = true;
 }
 
 /// <summary>

@@ -56,7 +56,7 @@ public sealed class MarshalView : MissionView
             var mission = Mission;
             var serial = (++_missionSerial).ToString(System.Globalization.CultureInfo.InvariantCulture);
             var outlines = new MarshalOutlineService<Agent>(IoC.Resolve<IMarshalOutlineAdapter<Agent>>());
-            _session = new MarshalSession(IoC.Resolve<IMarshalOrderAdapter>(), IoC.Resolve<IMarshalFireAdapter>(), outlines, new MarshalScreenAdapter(mission),
+            _session = new MarshalSession(IoC.Resolve<IMarshalOrderAdapter>(), IoC.Resolve<IMarshalFireAdapter>(), IoC.Resolve<IMarshalThrowerAdapter>(), outlines, new MarshalScreenAdapter(mission),
                 IoC.Resolve<IMarshalSettingsProvider>(), () => MayRun(mission, coop, logger), IoC.Resolve<IOutcomeLog>(), logger, serial);
         }
         catch (Exception ex)

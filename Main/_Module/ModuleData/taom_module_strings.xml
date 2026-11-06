@@ -4774,5 +4774,9 @@
 	<!-- TaomSettings.cs -->
 	<string id="taom_seat_mcm_rise" text="{=taom_seat_mcm_rise}Rise to give orders" />
 	<string id="taom_seat_mcm_rise_hint" text="{=taom_seat_mcm_rise_hint}With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_marshal_mcm_throwers_first" text="{=taom_marshal_mcm_throwers_first}Throwers Throw First" />
+	<string id="taom_marshal_mcm_throwers_first_hint" text="{=taom_marshal_mcm_throwers_first_hint}On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on." />
 
 </strings>
