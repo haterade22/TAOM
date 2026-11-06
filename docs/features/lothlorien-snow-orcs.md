@@ -50,6 +50,21 @@ Entry troops: `lorien_scout` (the culture's basic troop), `lorien_gl_warrior` (i
 and a weight-2 culture fallback entry. In the live map `town_G2` belongs to `clan_gundabad_2` and
 Grishuk holds `castle_G6`.
 
+## Changing this tree safely
+
+Every step below is a command that was run to make this tree work; the order matters.
+
+1. Edit `tools/generate_lothlorien_troops.py`, run it, then `tools/rebalance_troops.py --fix-monotonicity --restat <ids>` and `tools/rebalance_ranged_ladders.py --apply`.
+2. `python tools/generate_enlistment_rosters.py --culture lothlorien --reseed --apply`. Never run it without `--culture`.
+3. `python tools/generate_career_kits.py --verify` and `python tools/generate_armour_classes.py --check`.
+4. For armour, `python tools/generate_lothlorien_armor.py --check`, then `--apply`. The generator owns every `sk_ll_` value: `rebalance_armor.py` skips them (`is_generator_owned`). Every leg piece is `covers_legs="true"`.
+5. `python tools/validate_moduledata.py` and `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` from the checkout you changed.
+6. A full game restart and a new campaign before you call any of it working.
+
+## What went wrong in the first pass
+
+The review of 2026-11-05 and the follow-up of 2026-11-06 got several things wrong before they got them right. The list is in [the RCA](../reviews/rca-lorien-snow-orcs-2026-11-05.md), round 2. The ones that change how to work on this tree: the tree loaded and passed every gate while seven party templates, the kits, the villager and eight lords still belonged to Rivendell; the generator wrote `covers_legs="false"` on all leg pieces; and the enlistment generator was run out of order and unscoped.
+
 ## Art cache entries
 
 The shipping client draws a package only when `RuntimeDataCache/<package GUID>.rdc` exists. The
@@ -108,3 +123,7 @@ enabled.
 6. Custom battle: Gundabad with Snow Orcs. Armour draws, wolf riders sit on `fell_warg`, and the Snow
    Spearman fights with spear and shield.
 7. A coronation under a Lorien ruler (`taom.play_coronation`): the guard is a Mallorn Defender.
+8. A Lorien village's villager party: the villagers wear Lorien light armour, and recruiting one promotes into `lorien_scout`.
+9. Encyclopedia, Heroes: all 11 Lorien lords wear `sk_ll` armour in battle kit. Galadriel, Celeborn and Thandirion have their own sets, the other eight share `lothlorien_bat_template_medium_a` to `_e`.
+10. Any Lorien greave or boot: no bare shin shows through it. The Uruk-hai shoes (`sk_uruk_hai_shoes_a1`) are meant to show the shin.
+11. An inventory screen shows the Lorien bows as "[Lórien] Longbow II" to "IX".

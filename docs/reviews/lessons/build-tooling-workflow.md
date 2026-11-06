@@ -4894,3 +4894,27 @@ A merge of KEYforce's Lorien and Snow Orc trees replaced the live Armory `SubMod
 - **Why missed:** no gate compared the Monster files on disk with the rows that load them, and the engine log line names no file.
 - **Prevent:** `LiveMonsterRegistrationTests` (`tools/tests/test_verify_mount_assets.py`) fails on any Monster file without a row. After an Armory sync, re-run each creature's `apply_*_armory.py` dry run.
 - **Source:** the dire wolf portrait crash, 2026-11-06; fix re-ran `apply_dire_wolf_armory.py --apply`.
+
+### Wait for long suites with one command, and never stop a baseline at the first failure (Lorien, 2026-11-06)
+
+Two suites started as `(cmd &)` inside a background Bash call returned at once, so the "completed" notice arrived while both were still running. A `pytest -x` baseline stopped at the first two failures and hid the third.
+
+- **Why missed:** a detached subshell ends the harness's background command immediately, and `-x` is a habit from iterating, not from taking a baseline.
+- **Prevent:** start the suites and wait for their summary lines in one `run_in_background` command with an until-loop that greps both result files. Take a baseline without `-x`. Name each failing test and whose uncommitted work causes it.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R8.
+
+### A scan names its scope, and the scope is the whole install (leg armour, 2026-11-06)
+
+The first `covers_legs` scan read four module folders and reported three vanilla leftovers. A rescan over the whole `Modules` folder found four more: one in NavalDLC and three in `SandBoxCoreMP`.
+
+- **Why missed:** the scan roots were the folders the session already knew about. [evidence-over-claims.md](../../../.claude/rules/evidence-over-claims.md) C4 says an empty search proves absence only inside what it searched.
+- **Prevent:** scan `Modules` as a whole when the question is "every item", and print the folders searched beside the count.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R7.
+
+### A second round of changes after a deep review needs its own review or a named waiver (Lorien, 2026-11-06)
+
+The deep review of 2026-11-05 covered the first round. The next day added a villager, five lord kit templates, a skip in `rebalance_armor.py` and the bow labels, and committed them on the strength of the validators and the test suites without a second `/deep-review`. CLAUDE.md asks for one before every commit that touches C# or XML.
+
+- **Why missed:** the work felt like a follow-up to a reviewed change, and the commit body did not say what was reviewed and what was not.
+- **Prevent:** run `/deep-review` on the new files, or write the waiver and its reason in the commit body. Never leave the gap unnamed.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) round 2, R9.

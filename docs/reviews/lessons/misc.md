@@ -711,3 +711,11 @@ command them: siege engines (the stage tactic undid his orders), engines again t
   and asks whether the player commands the side before it changes side-wide state. State it once in the feature doc and
   test the player-commanded case for every new rule.
 - **Source:** [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 2; [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) findings 1 and 27.
+
+### A review brief carries decisions and facts you read, not your own conclusions (Arnor elite troops, 2026-11-06)
+
+The brief for the Arnor review said the new troops were "upgrade-only, nothing else changes" and that "the Armory has no pike item". Both were my readings, and both were wrong. Every reviewer inherited them as given. Later, a lens's claim that a bastard sword "has no one-handed grip without a shield" went into a code comment and a doc without anyone reading the usage list, and a second lens and Codex had to contradict it.
+
+- **Why missed:** the brief's "Deliberate choices" list mixed the maintainer's decisions with my own unchecked conclusions, and a search limited to two item prefixes was reported as "none exists". A claim relayed from one lens was written down before a second source was read.
+- **Prevent:** under "Deliberate choices" list only what the maintainer decided; put your own readings in SCOPE NOTES as questions; name the scope of every "none exists". When two lenses disagree on an engine or data fact, read the source yourself before you write either claim into code or a doc (`/deep-review` "Brief with decisions and facts you read").
+- **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) findings F2 and F8.

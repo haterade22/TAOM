@@ -72,6 +72,25 @@ native AI code that the decompiled managed source does not show; confirm it in g
 `tools/register_one_handed_polearms.py` or by hand, and run `tools/audit_polearm_shield_parity.py` after any weapon
 generator.
 
+**Shieldless troops (verified 2026-11-06 against the merged data, Arnor elite troops).** A roster with no
+shield can use only usages whose set is flagged `requires_no_shield` or carries no shield flag. What the
+weapons the Arnor troops carry have, from `weapon_descriptions.xslt` (Armory), the Native
+`crafting_templates.xml` and `item_usage_sets.xml`:
+
+| Weapon | Registered under | Usages (usage set, flag) |
+|---|---|---|
+| `numenorean_poleaxe_heavy` | `TwoHandedPolearm` only | `polearm_block_long_shield_swing_thrust`, `requires_no_shield` |
+| `wm_gondor_spear_b_cardolan` | `TwoHandedPolearm`, `OneHandedPolearm`, `TwoHandedPolearm_Couchable`, `TwoHandedPolearm_Bracing` | one-handed `onehanded_polearm_block_long_rshield_thrust`, `requires_shield`; two-handed `polearm_block_long_shield_swing_thrust`, `requires_no_shield`; couched and braced |
+| `fine_pike_t4` (vanilla, `Pike` template) | `TwoHandedPolearm_Pike`, `TwoHandedPolearm_Bracing` | `polearm_pike`, `requires_no_mount` and `requires_no_shield`; both descriptions carry `NotUsableWithOneHand` |
+| `numenorean_bastard_elite_a` and `_b` (`TwoHandedSword` template) | `OneHandedBastardSword`, `TwoHandedSword` and `OneHandedBastardSwordAlternative` | `onehanded_block_rshield_swing_thrust` (`requires_shield`), a two-handed usage, and `onehanded_block_swing_thrust` (`requires_no_shield`) |
+
+So a shieldless bastard sword has both a one-handed and a two-handed usage, scored with OneHanded or
+TwoHanded, and which one the AI draws is native code not yet seen in game. Check a claim of the form
+"this weapon has no one-handed grip without a shield" against every description in the template's
+`<WeaponDescriptions>` list, not only the first match: the Arnor review wrote exactly that claim after reading
+only the primary usage, and it was wrong. The skill a weapon is scored with follows its class
+(`WeaponComponentData.GetRelevantSkillFromWeaponClass`): every polearm uses Polearm, whatever its template.
+
 `weapon_descriptions.xslt` (step 4) is the forgiving one. `WeaponDescription.Deserialize`
 (`WeaponDescription.cs:49-59`) resolves each `<AvailablePiece>` through `MBObjectManager.GetObject`
 and skips a null, so a stale id there is inert. Vanilla leans on that tolerance sparingly: of the

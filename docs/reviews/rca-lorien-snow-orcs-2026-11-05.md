@@ -81,3 +81,36 @@ FOLLOW-UP: the Snow Orc party template is sized 229 against a target of 260, `au
 
 Added to `docs/reviews/lessons/data-content-cultures.md`: pin the promise of a new troop tree, and check the art
 cache entries before saying new Armory art works.
+
+## Round 2 (2026-11-06): what I got wrong, and the process that works
+
+Round 1 above is the deep review and its fixes. Round 2 is the follow-up work (issue #1085: the villager, the lord kits, the armour owner, the bow names, then `covers_legs`) and a look back at my own mistakes across both days. Each row names the mistake, what it cost and the process that would have avoided it.
+
+| # | What I got wrong | Cost | Right process |
+|---|---|---|---|
+| R1 | I told Mike the Lorien armour was in no repo and would break a clean checkout. It lives in the lotraom-assets repo, which he syncs into the live Armory by hand. | A wrong risk report and a correction from Mike. | Look for the source repo before calling anything unversioned: `git log -- <path>` in `E:\repos\lotraom-assets`. Never edit the mirror. |
+| R2 | The first validator run in the review worktree read trunk data, because the tool derives its data root from its own location. | A clean result that described the wrong tree. | Run the tool from the checkout you changed, or pass its data root explicitly. |
+| R3 | I seeded the Lorien enlistment rosters before the militia troops existed (9 of 14 cells), then ran `generate_enlistment_rosters.py --apply` without `--culture`, which rewrote about 6,700 lines in other cultures. | A reseed, a revert of the file and a deleted backup. | Troops, then skills, then enlistment, with `--culture <id> --reseed --apply`. The order is in [new-culture-authoring.md](../ai-includes/new-culture-authoring.md) 3d. |
+| R4 | I removed `armour_from="rivendell"` from the culture marketplace config. `ArmourAcquisitionShippedDataTests` failed (Deep Seam material, donor mapping). | A revert, and a limit now listed in the feature doc. | Run the shipped-data tests before treating a data alias as dead. |
+| R5 | My first fix for the shield and two-handed sword pairs used weak one-handed swords. Six Lorien troops fell under the melee ladder band (135 to 141 warnings). | A second pass with in-band swords by tier. | Take the replacement from `fix_melee_ladder.py --culture <id>` output, not from memory. |
+| R6 | The Lorien armour generator wrote `covers_legs="false"` on all eight leg pieces, and my review of that generator never listed the attribute. | Greaves drawn with bare shin showing, found only when Mike asked for the fix. | Diff the attributes a generator writes per slot against a sibling culture's items before the first `--apply`. `test_generate_lothlorien_armor.py` pins it now. Uruk-hai shoes stay `false` on purpose (Mike, 2026-11-06). |
+| R7 | My first `covers_legs` scan read four module folders and reported three vanilla leftovers. The whole `Modules` folder held four more (NavalDLC and `SandBoxCoreMP`). | A wrong "everything is done" for one turn. | A negative result names its scope, and for "every item" the scope is the whole install. |
+| R8 | I started two suites as detached subshells, so the harness said "completed" while they ran, and a `pytest -x` baseline stopped at the first two failures and hid a third. | Two extra runs. | One background command that waits for both summary lines; a baseline without `-x`. |
+| R9 | Round 2 (villager, five lord kit templates, the `rebalance_armor.py` skip, the bow labels) was committed without its own `/deep-review`, and the commit body did not say so. | A review gate CLAUDE.md asks for was skipped by default. | Review the new files, or write the waiver and its reason in the commit body. |
+| R10 | Two sentences in the issue draft were mine and unchecked: that the Gundabad and Mirkwood villagers make the same level jump, and that the engine does not need adjacent levels. I read neither villager's level and no engine code. | The second sentence reached the public issue before I removed it. | Every factual sentence in an issue traces to a command or a file read this turn ([evidence-over-claims.md](../../.claude/rules/evidence-over-claims.md)). |
+
+## The workflow that worked
+
+1. Verify the first claim at its source (the repo, the log, the file) before reporting it.
+2. Fix a generated value in its generator, apply it with the generator's own backup, and pin it with a test that fails when the generator regresses.
+3. Run the whole suite and the data gates for a baseline, and attribute every failing test to a cause. Here: one game-build pin on this machine, and three tests that read another session's uncommitted Arthedain and Cardolan files.
+4. Commit explicit paths only. Stage a shared file by hunk (`git apply --cached --unidiff-zero` of the filtered diff), never wholesale.
+5. After the commit, `git fetch` and read `git rev-list --left-right --count HEAD...origin/<branch>`: the left number is what you are ahead, the right number what you are behind. When origin is ahead and another session has dirty files, merge origin instead of rebasing, because a rebase needs a stash and a stash of another session's work is never ours to take. Rerun the suites on the merged tree before the push.
+6. Close the issue with the commit hash and `triage-needs-ingame` when the in-game check is still owed.
+
+## Still owed after round 2
+
+- `/deep-review` of the round 2 files (R9), before the next commit that touches them.
+- The in-game checks in [the feature doc](../features/lothlorien-snow-orcs.md) "How to verify in game", steps 8 to 11, after a full restart and a new campaign.
+- The lotraom-assets mirror lacks `ladder_lothlorien_bow_t2` and `_t3`, and the live Armory edits to the Lorien, Isengard and Mordor leg pieces and the Uruk-hai shoes are not in git. A reinstall or an art drop reverts them. The mirror is Mike's to sync.
+- FOLLOW-UP: the 7 vanilla leg pieces with `covers_legs="false"` (`southern_moccasins`, `ladys_shoe`, `belted_leather_boots` in `SandBoxCore` and `SandBoxCoreMP`, `northman_raider_boot` in NavalDLC) are left as they are. No issue filed (a TAOM-side override of a vanilla item id has no precedent here and needs research first; waits for Mike's word).
