@@ -1054,6 +1054,155 @@ EOF"
 fi
 
 # ---------------------------------------------------------------------------
+head2 "7a. Stop reminders reach Claude: one JSON block per streak, never bare stderr"
+# Claude Code sends a Stop hook's exit-0 stderr and its plain stdout to the debug log only. The
+# four reminders wrote there until plan 011 and none ever arrived. The Stop channel TAOM uses is
+# {"decision":"block","reason":...} on stdout (hooks docs, "Stop decision control").
+STOP_HOOKS=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for g in d.get('hooks', {}).get('Stop', [])
+                       for h in g.get('hooks', [])})))
+PY
+)
+[[ -z "$STOP_HOOKS" ]] && bad "no Stop registrations found in settings.json; the 7a discovery is broken"
+for name in $STOP_HOOKS; do
+    f=".claude/hooks/$name"
+    [[ -f "$f" ]] || { bad "$name is registered on Stop but missing from .claude/hooks/"; continue; }
+    hit=$(grep -n '>&2' "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -1 | cut -d: -f1)
+    if [[ -n "$hit" ]]; then
+        bad "$name:$hit writes to stderr, which Claude never sees from a Stop hook; use taom_stop_block"
+    else
+        ok "$name writes nothing to stderr"
+    fi
+done
+
+# The helper: JSON-escapes the reason, and the loop guard reads only the real key.
+STOP_SAMPLE='quote " and backslash \ end'
+HELPER_OUT=$(bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_block "$1"' _ "$STOP_SAMPLE" 2>/dev/null)
+if printf '%s' "$HELPER_OUT" | "$HPY" -c 'import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get("decision")=="block" and d.get("reason")==sys.argv[1] else 1)' "$STOP_SAMPLE" 2>/dev/null; then
+    ok "taom_stop_block emits valid JSON and keeps quotes and backslashes"
+else
+    bad "taom_stop_block output is not a valid block with the reason intact: $(printf '%s' "$HELPER_OUT" | head -c 120)"
+fi
+# Through a variable: Git Bash drops a CR that $'\r' puts inside the text of a $( ).
+STOP_CTRL=$'one\ntwo\tthree\rfour'
+HELPER_OUT=$(source .claude/hooks/_stop_reminder.sh 2>/dev/null && taom_stop_block "$STOP_CTRL")
+if printf '%s' "$HELPER_OUT" | "$HPY" -c 'import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get("reason")=="one two three four" else 1)' 2>/dev/null; then
+    ok "taom_stop_block turns CR, LF and TAB into spaces and stays valid JSON"
+else
+    bad "taom_stop_block does not flatten CR, LF and TAB into valid JSON: $(printf '%s' "$HELPER_OUT" | head -c 120)"
+fi
+for pair in '0|{"stop_hook_active":true}' '0|{"stop_hook_active": true}' \
+            '1|{"stop_hook_active":false}' \
+            '1|{"last_assistant_message":"x \"stop_hook_active\":true","stop_hook_active":false}'; do
+    want="${pair%%|*}"; js="${pair#*|}"
+    bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_hook_active "$1"' _ "$js" 2>/dev/null
+    got=$?
+    [[ "$got" == "$want" ]] && ok "taom_stop_hook_active $want for $js" || bad "taom_stop_hook_active returned $got, expected $want, for $js"
+done
+
+# Each hook against a sandbox repo that triggers all four: a tracked, modified .cs, an untagged
+# version, an untouched CHANGELOG, no build marker, no logged review.
+STOP_REPO="$SANDBOX/stop-repo"
+mkdir -p "$STOP_REPO/.claude/logs" "$STOP_REPO/Main/_Module"
+git -C "$STOP_REPO" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$STOP_REPO/Main/Foo.cs"
+printf '<Module>\n  <Version value="v9.9.9" />\n</Module>\n' > "$STOP_REPO/Main/_Module/SubModule.xml"
+printf '# CHANGELOG\n' > "$STOP_REPO/CHANGELOG.md"
+git -C "$STOP_REPO" add Main CHANGELOG.md 2>/dev/null
+git -C "$STOP_REPO" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs"
+stop_run() {
+    printf '%s' "$2" | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/$1" 2>"$SANDBOX/stop.err"
+    echo "$?" > "$SANDBOX/stop.rc"
+}
+stop_shape() {
+    printf '%s' "$1" | "$HPY" -c '
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    print("silent"); sys.exit()
+try:
+    d = json.loads(raw)
+except Exception:
+    print("invalid"); sys.exit()
+ok = isinstance(d, dict) and d.get("decision") == "block" and isinstance(d.get("reason"), str) and d["reason"].strip()
+print("block" if ok else "BADSHAPE")'
+}
+STOP_LIVE='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}'
+STOP_LOOP='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":true}'
+# One step: the hook's answer must have the expected shape, exit 0 and write no stderr. A shape
+# check alone let a silent timeout or crash pass as "silent" (Codex review of plan 011).
+stop_expect() {  # hook payload want label
+    local got; got=$(stop_shape "$(stop_run "$1" "$2")")
+    if [[ "$got" == "$3" && "$(cat "$SANDBOX/stop.rc" 2>/dev/null)" == 0 && ! -s "$SANDBOX/stop.err" ]]; then
+        ok "$1 $4"
+    else
+        bad "$1: expected $3 ($4), got '$got', rc $(cat "$SANDBOX/stop.rc" 2>/dev/null), stderr: $(head -c 100 "$SANDBOX/stop.err" 2>/dev/null)"
+    fi
+}
+stop_markers() { ls -A "$STOP_REPO/.claude/logs" 2>/dev/null | grep -c -- '-reminded$'; }
+# Ends (clear) or restarts (set) each hook's streak the way a session would. The verification
+# streak ends through the real writer, called as the PowerShell tool, so the writer's marker path
+# and the reader's are proven to agree (a PowerShell build must mute the reminder: plan 011).
+stop_condition() {  # hook clear|set
+    local now; now=$(date +%s)
+    case "$1:$2" in
+        check-verification-evidence.sh:clear)
+            touch -d "@$((now - 10))" "$STOP_REPO/Main/Foo.cs"
+            "$HPY" -c 'import json; print(json.dumps({"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUse"}))' \
+                | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1 ;;
+        check-verification-evidence.sh:set) touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs" ;;
+        check-deep-review.sh:clear)          git -C "$STOP_REPO" checkout -q -- Main/Foo.cs ;;
+        check-deep-review.sh:set)            printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs" ;;
+        check-version-tagged.sh:clear)       git -C "$STOP_REPO" tag v9.9.9 ;;
+        check-version-tagged.sh:set)         git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1 ;;
+        *) return 2 ;;
+    esac
+    return 0
+}
+for name in $STOP_HOOKS; do
+    # The shared triggering state: a modified Foo.cs, no build marker, CHANGELOG untouched, no tag,
+    # no logged review, no streak marker.
+    printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs"
+    git -C "$STOP_REPO" checkout -q -- CHANGELOG.md
+    git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1
+    rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO"/.claude/logs/.verification-ran "$STOP_REPO/.claude/logs/agent-audit.log"
+    stop_condition "$name" set
+    [[ $? == 2 ]] && { bad "7a has no clear and set steps for the Stop hook $name"; continue; }
+    stop_expect "$name" "$STOP_LOOP" silent "is silent when stop_hook_active is true"
+    [[ $(stop_markers) == 0 ]] && ok "$name writes no marker when stop_hook_active is true" \
+        || bad "$name wrote a streak marker on a stop_hook_active Stop, which spends the reminder unseen"
+    stop_expect "$name" "$STOP_LIVE" block "reminds through a JSON block"
+    stop_expect "$name" "$STOP_LIVE" silent "mutes after one reminder"
+    stop_condition "$name" clear
+    stop_expect "$name" "$STOP_LIVE" silent "is silent once its condition clears"
+    [[ $(stop_markers) == 0 ]] && ok "$name clears its streak marker once its condition clears" \
+        || bad "$name left its streak marker after its condition cleared: the next streak stays muted"
+    stop_condition "$name" set
+    stop_expect "$name" "$STOP_LIVE" block "reminds again on the next streak"
+    # Claude acts on the reminder in the continuation, so the streak ends before a Stop that carries
+    # stop_hook_active; the next streak must still be reminded (Codex review of plan 011, P2).
+    stop_condition "$name" clear
+    stop_expect "$name" "$STOP_LOOP" silent "is silent on the continuation Stop"
+    stop_condition "$name" set
+    stop_expect "$name" "$STOP_LIVE" block "reminds on the next streak after one that ended in the continuation"
+done
+# A deep-reviewer run logged by the real writer ends the deep-review streak and clears its marker.
+printf 'class Foo { int y; }\n' > "$STOP_REPO/Main/Foo.cs"
+rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/agent-audit.log"
+stop_expect check-deep-review.sh "$STOP_LIVE" block "reminds before a review is logged"
+printf '{"agent_type":"deep-reviewer","agent_id":"t"}' \
+    | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
+stop_expect check-deep-review.sh "$STOP_LIVE" silent "is silent after log-agent.sh logs a deep-reviewer run"
+[[ -f "$STOP_REPO/.claude/logs/.deep-review-reminded" ]] \
+    && bad "check-deep-review.sh kept .deep-review-reminded after a logged review: the next streak stays muted" \
+    || ok "check-deep-review.sh clears its streak marker when a review is logged"
+rm -f "$STOP_REPO/.claude/logs/agent-audit.log"
+
+# ---------------------------------------------------------------------------
 head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
 # Until #647 it asked git two or three times per file, took 6 s against a 5 s registration,
 # and the harness killed it on every commit. A sandbox repo with one untracked and one
