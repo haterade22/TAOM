@@ -156,6 +156,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    `BindingVerification` and named here. Add a row per build from a read-only scan of the installed
    DLL (its file length, then the RVAs the tests resolve), and check the first start's guard lines
    (Phase 5).
+8. Write the gate results into a `## Gates` section of `docs/migration/v<ver>-impact.md` from the final `/verify` output, after the commit, in the past tense, and name the commit each number comes from. A later commit that changes one of those numbers rewrites the whole section, not only its own clause.
 
 ## Phase 5 — Control battles before believing anything
 
