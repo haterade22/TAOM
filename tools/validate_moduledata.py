@@ -49,6 +49,9 @@ Checks (each maps to a recurring TAOM bug class):
                              engine only logs the former and loads the file anyway (repo
                              module only; the XSD layer lives in validate_xml_schemas.py;
                              one warning when lxml or <game>/XmlSchemas is absent)
+  ITEM_SLOT_REJECTED         an equipment row whose item type the engine will not put in that
+                             slot: Equipment.DeserializeNode asserts and leaves it empty, so
+                             the troop never wears the item (#729; needs the install)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -436,6 +439,54 @@ def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
     return issues
 
 
+SLOT_CODE = "ITEM_SLOT_REJECTED"
+_SLOT_MODULES = ("Native", "SandBoxCore", "SandBox", "LOTRLOME_Armory", "TAOM")
+
+
+def slot_rejection_issues(game_modules, moduledata) -> list:
+    """ERROR per troop equipment row whose item type the engine will not put in that slot (#729).
+
+    `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes; otherwise it
+    asserts and the slot stays empty, so a BodyArmor written to `slot="Cape"` never reaches the
+    troop. No XSD catches it (`slot` is a plain string) and no ref is broken. The rule, the load
+    order and the roster and troop-level override handling are audit_battle_equipment_memory's;
+    this only turns its refusals into issues. Civilian sets count: the engine refuses those rows too.
+
+    The modules load in the audit's order, with TAOM taken from the repo (`moduledata.parent`),
+    not the installed copy. A module that cannot be read is one WARNING, never a silent pass,
+    because an item no loaded module defines is skipped and would hide its refusals."""
+    import audit_battle_equipment_memory as abem
+    game_modules = Path(game_modules)
+    folders = [(name, moduledata.parent if name == "TAOM" else game_modules / name)
+               for name in _SLOT_MODULES]
+    defs = abem.load_definitions(folders)
+    issues = []
+    missing = [name for name, folder in folders if not Path(folder).is_dir()]
+    if missing:
+        issues.append(ts.Issue(
+            severity=ts.Severity.WARNING, code=SLOT_CODE, file="", line=0, entry_id="",
+            message=f"slot fit was NOT verified against {', '.join(missing)}: module folder not "
+                    f"found under {game_modules}; items only that module defines are skipped"))
+    for char in defs.characters.values():
+        for slot, item_id in abem.slot_rejections(char, defs, include_civilian=True):
+            kind = abem.item_type(defs.items[item_id])
+            fix = abem.ARMOUR_ITEM_SLOTS.get(kind)
+            if fix:
+                target = f"{fix} slot"
+            elif defs.items[item_id].extra_slot_only:
+                target = f"the {abem.EXTRA_SLOT} slot"
+            else:
+                target = f"a weapon slot ({abem.WEAPON_SLOTS[0]} to {abem.WEAPON_SLOTS[-1]})"
+            rel = char.file.split("/", 1)
+            path = (f"Main/_Module/ModuleData/{rel[1]}" if char.module == "TAOM" and len(rel) == 2
+                    else char.file)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SLOT_CODE, file=path, line=0, entry_id=char.id,
+                message=f"the engine refuses a {kind} item ({item_id}) in slot {slot} and leaves the "
+                        f"slot empty, so {char.id} never wears it; move it to the {target}"))
+    return issues
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -507,11 +558,14 @@ def main() -> int:
         # commit hook's --code line for it blocked nothing.
         issues += missing_collision_body_issues(game_modules, moduledata)
         issues += borrowed_body_issues(game_modules, moduledata)
+        issues += slot_rejection_issues(game_modules, moduledata)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
         print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
               f"         live install's tpacs.", file=sys.stderr)
+        print(f"WARNING: {SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
+              f"         only the live install has.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:

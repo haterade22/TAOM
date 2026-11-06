@@ -455,6 +455,19 @@ these checks were added, **four of the nine error codes were absent from that li
 and so could never block a commit. `CommitGateCoverageTests` now asserts the two sets
 agree in both directions. See [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md).
 
+## Item in the wrong slot (`ITEM_SLOT_REJECTED`)
+
+**`ITEM_SLOT_REJECTED` (ERROR).** An equipment row, in any battle or civilian set, whose item
+type the engine will not put in that slot. `Equipment.DeserializeNode` (v1.4.8 `Equipment.cs:204-220`)
+assigns the item only when `IsItemFitsToSlot` passes; otherwise it asserts and leaves the slot empty,
+so the troop never wears it. Nothing else notices: the id resolves, and the XSD types `slot` as a
+plain string. Two Uruk troops shipped `BodyArmor` in the Cape slot until #729. The pass reuses
+`audit_battle_equipment_memory.py` (`load_definitions`, `slot_rejections`), so the slot rule, the
+standalone rosters and the troop-level `<equipment>` overrides are modelled once. It loads Native,
+SandBoxCore, SandBox, the live Armory and the repo's TAOM module, and reports every module's
+refusals. An item id no module defines is left to `BROKEN_ITEM_REF`; a module folder that is
+missing is a WARNING that the slot fit was not verified. Cost on the laptop: about 0.6 s of a 19 s full run (2026-11-05).
+
 ## Upgrade armour regression (`UPGRADE_ARMOUR_REGRESSION`)
 
 **WARNING.** The equipment half of the ladder rule (#541). For every upgrade edge the validator
@@ -861,6 +874,7 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `ITEM_SLOT_REJECTED` (error, in the commit hook) ported (#729; WP136).
 - 2026-11-05: `BROKEN_FACTION_REF` (error, in the commit hook) ported (#949; WP136): a `Faction.X` ref
   must resolve to a clan in `characters/clans.xml` or vanilla `spclans.xml` that `spclans.xslt` does
   not strip; `Faction.neutral` is allowed. A separate suspect-registry floor (50) on the vanilla clans
