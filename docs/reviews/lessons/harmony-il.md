@@ -1111,3 +1111,21 @@ narrative stage.
   initializers of every type whose static field the patched methods read, directly or through a small method
   the JIT can inline (a static getter such as `Campaign.Current`). This tree still registers from `OnSubModuleLoad` (`Main/SubModule.cs:248-250`) and has a mixin on `EncyclopediaHeroPageVM` (`Main/Features/Messengers/UI/MessengerEncyclopediaMixin.cs`); nobody has checked whether that target's v1.4.8 IL reaches the initializer.
 - **Source:** 1.5.x `rca-uiextender-ongamestart-2026-10-26.md`; TAOM logs `taom_debug_2026-10-26_16-34-58.log` (lines 201, 394-411) and `taom_debug_2026-10-26_16-37-09.log` (lines 197, 209, 226, 436-455), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mixin whose target declares no OnFinalize stacks a hook on every view model's OnFinalize
+
+UIExtenderEx 2.13.3 patches the target's own `OnFinalize` for its mixin teardown; when the target declares none,
+it patches the base `ViewModel.OnFinalize` instead (`ViewModelWithMixinPatch`). Harmony keeps every such patch, so
+each target of this kind adds one more hook that runs on every view model teardown in the game, builds a runtime
+list and does a table lookup; a mixin that overrides `OnFinalize` then runs once more per stacked hook. TAOM has
+three such targets (`MapInfoVM`, `EncyclopediaUnitVM`, `TownManagementReserveControlVM`).
+- **Why missed:** the hook is invisible in the mixin's code; it shows only in the UIExtenderEx decompile.
+- **Prevent:** before adding a mixin, check whether its target declares `OnFinalize`; if not, prefer a target that
+  does, or accept the stacked hook knowingly and keep mixin `OnFinalize` overrides empty or idempotent.
+- **Source:** 1.5.x `docs/reviews/rca-reeves-ledger-2026-10-19.md` "Not applied", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An invariant lives in the feature's pure rule, never only in a prefix that falls through to vanilla (#742, 2026-10-06)
+- **Why missed:** creature bandits are enemies at all times, but the only thing enforcing it was `Patch93_CreatureBanditSpawn` declining the player's side, and a declined troop falls through to the vanilla `SpawnTroop`. `taom.spawn_troops <creature> <n> ally` named the side itself, so the creature landed on the player's team as a husk on its mount.
+- **Prevent:** state the invariant as a pure rule in the owning feature (`CreatureBanditRules.SpawnsOnPlayerSide`) and audit every path that can name the state, console commands included, so each asks the rule before it acts. A prefix that declines and falls through enforces nothing for the case it declines.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditRules`, `SpawnsOnPlayerSide` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` (#742, "An invariant lived in a fall-through prefix"), on `origin/bannerlord-1.5.x` (ported by WP142).

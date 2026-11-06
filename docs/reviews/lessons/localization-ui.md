@@ -901,3 +901,18 @@ master file, and this session first misread those rows as good translations.
 - **Why missed:** every check measured presence. `LanguageFileCoverageTests`, `LanguageTextIntegrityTests` and the translator's own `tree.iter("string")` all walk descendants, so a row at any depth counted as translated, and the builder quoted the green coverage test as proof of delivery.
 - **Prevent:** gate `LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` fails any row outside `<base>/<strings>`. A test that proves text reaches the player reads it along the engine's load path, not with `Descendants()`. Until `sync_missing_ids` anchors on the `</strings>` line, check a seeded language file with that gate before committing it.
 - **Source:** 1.5.x `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hint on a disabled button needs an enabled parent
+
+Gauntlet only hovers enabled widgets: `EventManager.CollectEnableWidgetsAt` returns early for a widget whose
+`IsEnabled` is false and skips its disabled children, and a `HintWidget` has no hover of its own (it relays its
+parent's `HoverBegin`). So a `HintWidget` inside a `ButtonWidget` with a bound `IsEnabled` shows its hint only
+while the button is enabled; a "why is this greyed out" hint there can never appear. Vanilla's governor button
+(SandBox `TownManagement.xml`) puts the disabled-state hint on an always-enabled wrapper around the button.
+- **Why missed:** Reeve's Ledger copied an existing button's shape, and its comment claimed that shape shows a hint
+  when disabled; nobody read the hover path. TAOM's own prefabs hold many vanilla clones with the inner-hint shape,
+  so a repo-wide scan would be noisy.
+- **Prevent:** when a hint must explain a disabled state, wrap the button in a plain, enabled widget that carries
+  the hint, keep the button's inner hint for the enabled state, and pin the shape with a structural test (the hint's
+  parent has no `IsEnabled` binding). Check the hover in game with the button disabled.
+- **Source:** 1.5.x `docs/reviews/rca-reeves-ledger-2026-10-19.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

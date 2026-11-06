@@ -3596,3 +3596,24 @@ Two B4c gates went RED before the change and green after it, yet passed on a wro
 - **Prevent:** for every source-text gate, name one plausible wrong edit (an inverted condition, a deleted or swapped call) and make sure the assertion rejects it. Pin exact condition text, require every `IndexOf` to be at least 0 before comparing positions, or compare one whitespace-collapsed sequence.
 - **On this tree:** This incident ran on the 1.5.x line, and `SubModuleMissionServerGuardTests`, `WargControllerSwapTests` exist only there; the rule holds here.
 - **Source:** 1.5.x Codex B4c review F1 and F2; `rca-taom-client-b4c-2026-10-22.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool the docs tell people to run again is a standing tool: give it re-run safety on day one (banner packing, 2026-10-28)
+`pack_banner_sheets.py` was written for one merge. Its doc already said the next emblem goes into a free packed cell, yet a second `--apply` reused the packed sheet names, wrote over two full sheets and moved 70 rows onto used cells. Its gate predicate disagreed with its own planner, and no test drove a finding red.
+- **Why missed:** the tool, its refusals and its gate were judged on the one fresh tree they first ran on.
+- **Prevent:** when a doc describes a repeat use, test that use before the first run: the second run on the tool's own output must be a no-op, the gate's "something to do" must be the fixer's own plan, and each finding kind needs a test that turns it red.
+- **On this tree:** This incident ran on the 1.5.x line, and `pack_banner_sheets.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-banner-packing-2026-10-28.md` findings 1 to 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An advisory hook's output must reach Claude: test the channel, not the text (plan 008, 2026-09-24)
+Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
+- **Why missed:** the plan specified stderr, and `hook-authoring.md` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
+- **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
+- **On this tree:** This incident ran on the 1.5.x line, and `notify-test-results.sh` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A whole-file revert reverts every fix in the file: re-record each finding it touched (plan 008, 2026-09-25)
+Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-results.sh` byte for byte to its state before the plan. The records then said only F11 lapsed. The same revert also undid F2 (the all-skipped normal-verbosity case), the convergence fix D1, and F1's correction to the hook header, which went back to "summarize dotnet test results prominently" beside a catalog row saying nobody sees the output. The same records called the CI `if:` "still open", while #652's Decisions section, written before the commit, called it moot.
+- **Why missed:** the resolution was written from the decision's headline ("drop the banner") and from the session's memory of the answers, not from the list of findings the file carried or from the issue where the decisions were written down.
+- **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
+- **On this tree:** This incident ran on the 1.5.x line, and `notify-test-results.sh` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6, on `origin/bannerlord-1.5.x` (ported by WP142).

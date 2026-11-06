@@ -1032,3 +1032,29 @@ A TAOM `DiplomacyModel` override makes `Kingdom.IsAtWarWith` answer "at war" for
 - **Why missed:** every test faked `AreAtWar` as a constant, independent of the phase, so the feedback loop through the model could not show; the #764 Codex review found it by reading the engine, one change away from where it lived. The first M0b cut also left the phase flip after the declarations, and nobody asked what else listens to `OnWarDeclared` in between (F01).
 - **Prevent:** guard a declaration with the stored link the action itself writes (`IAllianceAdapter.HasDeclaredWar`) and keep `AreAtWar` for questions about the model; document on the adapter member that it must not guard a declaration. Fake the model-aware query in tests the way the override answers it (following the phase), in every test of the path, not one. Count a war only after re-reading the stance, since the veto prefix and unknown ids make `DeclareWar` a silent no-op. Set the phase before declaring, so vanilla's `OnWarDeclared` listeners (call to war) already see the constant war.
 - **Source:** 1.5.x `docs/reviews/rca-wotr-phase2-wars-2026-10-08.md` (#772), findings F01 to F04, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Fill a gap with the engine's own pick on a TAOM pool, never a copy of the pick (#933, 2026-10-19)
+Twice on one day a fallback re-implemented the engine's random pick: Bard Town Guard's service copied
+`GetRandomElementWithPredicate` over a flags array, and the vassal reward's `PickReward` copied `GetRandomElement`
+with an index clamp that can never fire (`MBRandom.RandomInt(n)` is always below n). Each copy carried its own
+tests, and neither did anything the engine call does not.
+- **Why missed:** the habit of putting every decision in a pure service, even when the decision is "pick one at
+  random", which the engine already does with the same single draw.
+- **Prevent:** build the pool in TAOM (a service such as `LordBannerService.Allowed`), then call
+  `GetRandomElement` or `GetRandomElementWithPredicate` on it at the boundary. Test the pool; pin the call order
+  with an IL test.
+- **On this tree:** This incident ran on the 1.5.x line, and `PickReward`, `LordBannerService` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F6; `rca-bard-town-guard-2026-10-19.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a source that returned null starts returning an object, diff every reader's old fallback (B8, 2026-10-23)
+B8 made `TaomSettings.Instance` and its three siblings return fresh compiled-default objects on a dedicated
+server, where MCM had returned null. Every `X.Instance?.Prop ?? fallback` reader switched from its fallback to the
+property initializer. One differed: the hitch probe's `?? false` against a compiled `true`, so Patch98 began
+installing on every server boot, against the provider's own fail-closed contract. Config-backed fallbacks went
+dead the same way.
+- **Why missed:** the plan checked the readers that test for null, not the value every reader got before and after.
+- **Prevent:** before a null source becomes an object, script a comparison of every `?? fallback`, clamp default and
+  config-backed fallback against the new object's value (lens 5's `compare.py` did 285 rows in one run), and either
+  match the old value in the new object or document each change.
+- **On this tree:** This incident ran on the 1.5.x line, and `compare.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-b8-server-settings-2026-10-23.md` findings 2 and 6, on `origin/bannerlord-1.5.x` (ported by WP142).

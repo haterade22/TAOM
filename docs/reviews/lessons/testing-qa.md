@@ -1671,3 +1671,35 @@ The culture-doctrine slice shipped four TAOM `TacticComponent` weights and a JSO
 - **Prevent:** when a new weight enters an engine `MaxBy` (tactic weights, behaviour weights, any priority the engine already scores), write a test-side reference of the competitors' formulas at their nominal scores with line citations (`VanillaTacticWeightReference`), then one test per shipped data row asserting the intended winner beats every competitor by the engine's hysteresis at a canonical input (`ShippedDoctrineOrderingTests`). Tune the data to the test, not the test to the data.
 - **On this tree:** This incident ran on the 1.5.x line, and `CavalryDominance`, `VanillaTacticWeightReference`, `ShippedDoctrineOrderingTests` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 4 (extensibility agent), #608, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fixture labelled as a real line is that line verbatim; a variant is derived from the writer's code and labelled "modelled on" (2026-10-02)
+Twice in plan 029: a `[TickSummary]` variant set `allocKB=na` while keeping numeric per-behaviour KB, a pair plan 028 writes from one flag (C3), and a `[Doctrine]` fixture labelled "as a 2026-09-29 log writes it" put `troops=1` after `registered=[...]`, which `TeamDoctrineInstaller.cs` writes last (R5). Both passed because the parser was right; both claimed a provenance they did not have, so a later reader would trust a shape no writer produces.
+- **Why missed:** the fixture was edited from a real line to reach the case the test wanted, and the label was kept from the line it started as.
+- **Prevent:** copy a real line byte for byte when the comment says it is real (name the log and time); when the test needs a shape the logs lack, build it from the writer's format string and say "modelled on <writer>". Never edit a pinned or logged line in place to make a new case.
+- **On this tree:** This incident ran on the 1.5.x line, and `TeamDoctrineInstaller.cs` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-perf-runs-parser-2026-10-02.md` C3 and R5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Outside a game Hero.MainHero throws; a test must not describe it as null (plan 001, 2026-09-24)
+A test comment said `Hero.MainHero` is null outside a campaign, and a test was named for a "no main
+hero yet" state. In v1.4.8 (`Hero.cs:892`) `MainHero => CharacterObject.PlayerCharacter.HeroObject` and
+`PlayerCharacter` reads `Game.Current`, which is null in the test host, so the getter throws a
+`NullReferenceException`. The test still passed for the right reason (any hero read fails it), but the
+explanation was false and the doc repeated it.
+- **Why missed:** the plan's excerpt said "null in the test harness" and nobody read the getter.
+- **Prevent:** when a test relies on an engine static being unusable in the harness, read the getter
+  and say what it does (throws, or returns null); name the test for what it pins ("reads no hero").
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A line-number label that drifted twice gets a gate (formation presets, 2026-10-09)
+`ReflectionSiteBindingTests` labels each reflection site `File.cs:N`, and `reflection-sites.md` repeats the labels.
+Plan 022 found the `OOBOverlayService` labels three lines off after a constructor change, fixed them, and recorded line
+labels as "a known weak pointer". Item 5 grew the same constructor and moved them again; a repo-wide check then
+found six labels pointing at the wrong code, three of them wrong since the commit that added them the day before, and
+a catalogue row missing.
+- **Why missed:** a label shows only in a failure message, so a stale one costs nothing until someone follows it; and
+  no convention said which line of a multi-line lookup to label.
+- **Prevent:** `ReflectionSiteBindingTests.EveryLineLabel_PointsAtALineThatNamesItsMember` (comments blanked) fails
+  when a labelled line does not spell its member, and `EveryDataRow_HasAMatchingRowInTheCatalogue` fails when
+  `reflection-sites.md` lacks a row. Write the convention a gate enforces beside it (label the line that spells the
+  member). A pointer that drifts a second time gets a gate, not a third hand edit.
+- **Source:** 1.5.x `docs/reviews/rca-formation-presets-2026-10-09.md` finding 8; `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 6, on `origin/bannerlord-1.5.x` (ported by WP142).

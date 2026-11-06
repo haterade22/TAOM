@@ -1028,3 +1028,18 @@ behavior has not registered yet.
 - **Prevent:** run stance changes on the first daily tick, or from an event that fires after the managers are restored.
   `EnforcePermanentAlliances` has the same shape and rarely acts.
 - **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A SyncData key-miss guard is not a no-record guard, and the reset goes before an OnGameLoaded seed (plan 001, 2026-09-24)
+Plan 001 made `SpecialResourcesBehavior.SyncData` load into a null local so a missing key cannot hand
+back the live singleton's dictionary, and described it as covering "a save predating the feature". It does not: v1.4.8 `CampaignBehaviorDataStore.LoadBehaviorData` (`:86-91`) calls `SyncData` only when a record
+matches the behavior's StringId or type name, so a save older than the behavior never reaches the
+guard, keeps the previous campaign's balances, and its `Contains`-gated legacy seed is skipped.
+- **Why missed:** the plan predates this file's session-reset rule and stated the engine path from
+  memory; the executor checked the plan's TAOM excerpts for drift but not its engine premises.
+- **Prevent:** for every per-campaign singleton, name both load cases separately: a record without the
+  key (the null-local guard) and no record at all (a `_syncedThisSession` flag the loading `SyncData`
+  sets, as in `FiefGrantingCampaignBehavior` and `FieldCampCampaignBehavior`). Where the behavior seeds
+  in `OnGameLoaded`, run the no-record reset as the first statement of `OnGameLoaded`, not in
+  `OnSessionLaunched`: v1.4.8 `Campaign.cs:1670-1671` raises `OnGameLoaded` before `OnSessionStart`, so a
+  later reset would wipe the seed.
+- **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
