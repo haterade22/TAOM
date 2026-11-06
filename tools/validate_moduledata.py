@@ -516,7 +516,7 @@ def regenerate_shipped_troop_ids(tag: str = "") -> int:
     ids = set()
     for name in names:
         text = re.sub(r"<!--.*?-->", "", git("show", f"{tag}:{name}").decode("utf-8-sig", "ignore"), flags=re.S)
-        ids |= set(re.findall(r'<NPCCharacter\b[^>]*?\bid="([^"]+)"', text))
+        ids |= set(re.findall(r'''<NPCCharacter\b[^>]*?\bid\s*=\s*["']([^"']+)["']''', text))
     if not ids:
         print(f"ERROR: no troop ids found in {tag}:{folder}", file=sys.stderr)
         return 2
