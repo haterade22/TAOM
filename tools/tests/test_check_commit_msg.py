@@ -53,7 +53,15 @@ class ScissorsTests(unittest.TestCase):
         self.assertIn("AI attribution", problems[0])
 
     def test_a_subject_below_the_scissors_line_does_not_count(self):
-        self.assertEqual(ccm.check(SCISSORS + "not a subject\n", V), [])
+        self.assertEqual(ccm.check(SCISSORS + "# Do not modify\nnot a subject\n", V), [])
+
+    def test_a_lookalike_with_no_comment_line_below_it_cuts_nothing(self):
+        for mark in ("x", "#"):
+            line = SCISSORS.replace("# ", mark + " ", 1)
+            problems = ccm.check("fix: v2.0.36 - good\n\n" + line + "Co-Authored-By: Claude <noreply@anthropic.com>\n", V)
+            self.assertEqual(len(problems), 1, mark)
+            self.assertIn("AI attribution", problems[0])
+            self.assertEqual(len(ccm.check(line + "feat: no label\n", V)), 1, mark)
 
     def test_a_scissors_line_quoted_in_the_body_needs_its_exact_form(self):
         problems = ccm.check("fix: v2.0.36 - good\n\nSee -- >8 -- in git.\nCloses #1, #2\n", V)
