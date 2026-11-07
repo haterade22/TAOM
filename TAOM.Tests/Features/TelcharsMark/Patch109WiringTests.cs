@@ -50,6 +50,7 @@ public class Patch109WiringTests
     // The three classes live in TAOM.Client (ADR-013, B5). The category pass builds its index from the loaded TAOM
     // assemblies, so on a client the category holds them; on a server (no client) it holds none and applies nothing.
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Index_FromTheLoadedTaomAssemblies_HoldsTheThreeClientClasses()
     {
         var previous = ClientComposition.Current;

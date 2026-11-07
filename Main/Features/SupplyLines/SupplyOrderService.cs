@@ -117,6 +117,13 @@ public class SupplyOrderService : ISupplyOrderService
             failReason = Localize(new TextObject("{=taom_sl_fail_disabled}Supply lines are disabled."));
             return null;
         }
+        // The final guard behind the town menu (#1086): a guest's book holds the host's orders, and only the
+        // authority writes it.
+        if (_coop.ShouldDeferToHost || !OwnsTheOrders)
+        {
+            failReason = Localize(new TextObject("{=taom_sl_coop_off}Supply orders are not available in a shared campaign."));
+            return null;
+        }
         if (source == null)
         {
             failReason = Localize(new TextObject("{=taom_sl_fail_source}No supply source selected."));

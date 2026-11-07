@@ -129,7 +129,11 @@ public class CareerQuestService : ICareerQuestService
                     break;
 
                 case CareerQuestRewardType.GrantItem:
-                    if (HeroOk(hero, quest, reward)) hero.AddItemToInventory(reward.Param, reward.Amount);
+                    // A hero with no party gets the item in MobileParty.MainParty, which on a dedicated server is
+                    // the placeholder hero's party, so the server pays no item.
+                    if (_dedicated.IsDedicatedServer)
+                        _logger.LogInfo($"CareerQuest '{quest.Id}': {reward.Type} skipped on a dedicated server");
+                    else if (HeroOk(hero, quest, reward)) hero.AddItemToInventory(reward.Param, reward.Amount);
                     break;
 
                 case CareerQuestRewardType.GrantRenown:
@@ -145,6 +149,13 @@ public class CareerQuestService : ICareerQuestService
 
     private bool HeroOk(IQuestHeroAdapter hero, CareerQuestDefinition quest, CareerQuestRewardDefinition reward)
     {
+        // An engine reward writes the hero the host owns, as the tournament skill award does (#1086), so a co-op
+        // guest gets none; the career-data rewards above are this peer's own book.
+        if (_coopSession.ShouldDeferToHost)
+        {
+            _logger.LogInfo($"CareerQuest '{quest.Id}': {reward.Type} skipped, the host owns this hero");
+            return false;
+        }
         if (hero != null && hero.IsValid) return true;
         _logger.LogWarning($"CareerQuest '{quest.Id}': cannot apply {reward.Type} — hero adapter invalid");
         return false;

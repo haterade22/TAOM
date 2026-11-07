@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.LongDefeat.Client;
 /// through the session, and worded for its own top level (the gate's "fully reinforced" would be wrong here, Slice 5's review).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class LongDefeatHudTowersTests
 {
     private static readonly TowerPlan Towers = new("fow_rohan_eastfold_bowman",

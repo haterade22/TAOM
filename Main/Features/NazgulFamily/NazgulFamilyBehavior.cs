@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using HarmonyLib;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
@@ -28,16 +26,12 @@ namespace TAOM.Features.NazgulFamily;
 /// the intended end state). The <c>Spouse</c> setter clears the partner's side; <c>Father</c>/<c>Mother</c>
 /// setters are asymmetric on null (they do NOT remove the child from the parent's list), so we remove
 /// the wraith from the ex-parent's <c>Children</c> explicitly; and we sever the <c>ExSpouses</c> residual
-/// the <c>Spouse</c> setter leaves (mirroring the engine's own <c>Hero</c> full-removal) so the wraith
+/// the <c>Spouse</c> setter leaves (no live engine path ever removes an entry) so the wraith
 /// shows no ex-spouse in the encyclopedia.
 /// </para>
 /// </remarks>
 public sealed class NazgulFamilyBehavior : CampaignBehaviorBase
 {
-    // Hero._exSpouses is a private MBList<Hero> with no public mutator; ExSpouses exposes only a
-    // read-only view. We mirror the engine's own clean-severance (Hero clears it from both sides).
-    private static readonly FieldInfo ExSpousesField = AccessTools.Field(typeof(Hero), "_exSpouses");
-
     private readonly INazgulRegistry _registry;
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
@@ -92,19 +86,19 @@ public sealed class NazgulFamilyBehavior : CampaignBehaviorBase
         return changed;
     }
 
-    // Remove the wraith from every ex-spouse's list and clear its own, matching the engine's clean
-    // sever (Hero does `_exSpouses.Remove(spouse); spouse._exSpouses.Remove(this)`). Fail-safe: if the
-    // private field can't be resolved, the spouse is still cleared above — only the cosmetic residual remains.
+    // Remove the wraith from every ex-spouse's list and clear its own. The Spouse setter appends to this list
+    // (v1.5.6 Hero.cs:906) and no live engine path removes an entry. ExSpouses returns Hero's own list, typed
+    // MBReadOnlyList<Hero>, which is a List<Hero> in v1.5.6, so the mutation needs no reflection; if the engine
+    // ever makes it truly read-only, this stops compiling instead of degrading silently. Null on a hero a co-op
+    // client replicated without its constructor (coop-compat-gap-ledger R6): nothing to clear.
     private bool ClearExSpouses(Hero wraith)
     {
-        if (ExSpousesField == null) return false;
         try
         {
-            if (!(ExSpousesField.GetValue(wraith) is IList<Hero> mine) || mine.Count == 0) return false;
+            var mine = wraith.ExSpouses;
+            if (mine == null || mine.Count == 0) return false;
             foreach (var ex in mine.ToList())
-            {
-                if (ExSpousesField.GetValue(ex) is IList<Hero> theirs) theirs.Remove(wraith);
-            }
+                ex?.ExSpouses?.Remove(wraith);
             mine.Clear();
             return true;
         }

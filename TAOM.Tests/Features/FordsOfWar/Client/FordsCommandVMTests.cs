@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.FordsOfWar.Client;
 /// income, offers inf 100, spear 120, archer 150, troll 400, elite 1500 (never affordable), heroes hero_a 700 and hero_b 400.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FordsCommandVMTests
 {
     private int _exits;

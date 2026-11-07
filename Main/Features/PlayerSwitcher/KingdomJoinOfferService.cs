@@ -1,5 +1,6 @@
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.PlayerSwitcher.Domain;
 
 namespace TAOM.Features.PlayerSwitcher;
@@ -22,6 +23,7 @@ public class KingdomJoinOfferService : IKingdomJoinOfferService
     private readonly IKingdomJoinAdapter _kingdoms;
     private readonly IInquiryAdapter _inquiry;
     private readonly IPlayerSwitchPolicyProvider _policy;
+    private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
     public KingdomJoinOfferService(
@@ -29,18 +31,26 @@ public class KingdomJoinOfferService : IKingdomJoinOfferService
         IKingdomJoinAdapter kingdoms,
         IInquiryAdapter inquiry,
         IPlayerSwitchPolicyProvider policy,
+        ICoopSessionProvider coop,
         IModLogger logger)
     {
         _session = session;
         _kingdoms = kingdoms;
         _inquiry = inquiry;
         _policy = policy;
+        _coop = coop;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Joining a kingdom writes the shared world. A first-time co-op joiner is asked in its local creation campaign,
+    /// and the prompt can still be open when Coop sends the hero to the server (#1086), so the accept checks again.
+    /// </summary>
+    private bool MayJoinAKingdom => _coop.IsAuthority && !_coop.ShouldDeferToHost;
+
     public void OfferIfEarned()
     {
-        if (!_policy.Current.Enabled)
+        if (!_policy.Current.Enabled || !MayJoinAKingdom)
             return;
 
         // A partially completed handover still made the player that hero, so the offer is
@@ -63,10 +73,20 @@ public class KingdomJoinOfferService : IKingdomJoinOfferService
             "taom_ps_join_body", "Your clan stands alone. {KINGDOM} would take your oath and your banner. Join them now?",
             "taom_ps_join_yes", "Swear the oath",
             "taom_ps_join_no", "Stay independent",
-            onOptionA: () => _kingdoms.JoinPlayerClanToKingdom(kingdomId),
+            onOptionA: () => Join(kingdomId),
             onOptionB: () => { },
             bodyVariableName: "KINGDOM", bodyVariableValue: kingdomName);
 
         _logger.LogInfo($"Player Switcher: offered the player clan a place in '{kingdomId}'");
+    }
+
+    private void Join(string kingdomId)
+    {
+        if (!MayJoinAKingdom)
+        {
+            _logger.LogInfo($"Player Switcher: the oath to '{kingdomId}' was refused, the campaign is now shared");
+            return;
+        }
+        _kingdoms.JoinPlayerClanToKingdom(kingdomId);
     }
 }

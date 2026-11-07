@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.CoopInterop.Missions;
 /// answers as singleplayer does ("owned"); with one, it delegates and resolves once.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CoopMissionOwnershipTests
 {
     private static Agent BareAgent() => (Agent)FormatterServices.GetUninitializedObject(typeof(Agent));

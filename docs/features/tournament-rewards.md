@@ -186,6 +186,8 @@ row. A bad value reverts with a warning; read once per process.
   session reset and hero count by source pin.
 - `TournamentRewardsBehaviorTests` (RequiresGame): a fault in the `TournamentFinished` listener is logged, not thrown.
 - `Patch96TournamentMaxBetTests`: the bet postfix applies the cap, and on a fault keeps vanilla's with one warning.
+- `Patch96TournamentJoinChoicesTests`: the Join prefix runs vanilla on a fault before the dialogs, skips it on an
+  immediate or deferred resume, and lets a fault inside vanilla's resumed run propagate without a second Join.
 - `TournamentRewardsBindingTests` (BindingVerification): Patch96's targets, parameter names and category, the
   `Prize` setter (also a `ReflectionSiteBindingTests` row), and the one link of the `TournamentFinished` listener
   order a test can pin: an `MbEvent` runs its last-registered listener first.

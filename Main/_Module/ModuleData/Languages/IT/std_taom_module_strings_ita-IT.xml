@@ -7956,6 +7956,8 @@
     <string id="TAOM_LD_Hud_KeyVolleyIdle" text="Elven Volley in a wave" />
     <string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="Elven Volley not bought" />
     <string id="TAOM_LD_Hud_KeyVolleyNotSold" text="Elven Volley not sold here" />
+    <string id="taom_rf_reason_coop_off" text="Refuges are not available in a shared campaign." />
+    <string id="taom_sl_caravan_meet_other" text="A supply caravan passes on toward its lord." />
   </strings>
 
 </base>

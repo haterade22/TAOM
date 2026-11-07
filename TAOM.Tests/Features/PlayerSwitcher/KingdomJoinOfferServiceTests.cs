@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.PlayerSwitcher;
 using TAOM.Features.PlayerSwitcher.Domain;
 
@@ -25,6 +26,7 @@ public class KingdomJoinOfferServiceTests
     private IInquiryAdapter _inquiry = null!;
     private IPlayerSwitchPolicyProvider _policy = null!;
     private IModLogger _logger = null!;
+    private ICoopSessionProvider _coop = null!;
     private KingdomJoinOfferService _sut = null!;
 
     [TestInitialize]
@@ -42,7 +44,10 @@ public class KingdomJoinOfferServiceTests
         _kingdoms.FindJoinableKingdomForPlayerCulture().Returns(KingdomId);
         _kingdoms.GetKingdomName(KingdomId).Returns("Erebor");
 
-        _sut = new KingdomJoinOfferService(_session, _kingdoms, _inquiry, _policy, _logger);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.IsAuthority.Returns(true);   // single-player: no session, authority
+
+        _sut = new KingdomJoinOfferService(_session, _kingdoms, _inquiry, _policy, _coop, _logger);
     }
 
     private void AssertNoPrompt()
@@ -155,6 +160,39 @@ public class KingdomJoinOfferServiceTests
         accept!();
 
         _kingdoms.Received(1).JoinPlayerClanToKingdom(KingdomId);
+    }
+
+    [TestMethod]
+    public void APeerThatDefersToTheHost_IsNotAsked()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        _sut.OfferIfEarned();
+
+        AssertNoPrompt();
+    }
+
+    [DataTestMethod]
+    [DataRow(true, true, DisplayName = "defers to the host")]
+    [DataRow(false, false, DisplayName = "no authority")]
+    public void AnAcceptAfterTheCampaignBecameShared_JoinsNothing(bool defers, bool authority)
+    {
+        // #1086 follow-up: a first-time co-op joiner sees the offer in its local creation campaign; if the prompt
+        // is still open when Coop sends the hero to the server, the accept must not write the shared world.
+        Action? accept = null;
+        _inquiry.ShowTwoOptionInquiry(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Do<Action>(a => accept = a), Arg.Any<Action>(),
+            Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+        _sut.OfferIfEarned();
+        _coop.ShouldDeferToHost.Returns(defers);
+        _coop.IsAuthority.Returns(authority);
+
+        accept!();
+
+        _kingdoms.DidNotReceive().JoinPlayerClanToKingdom(Arg.Any<string>());
     }
 
     [TestMethod]

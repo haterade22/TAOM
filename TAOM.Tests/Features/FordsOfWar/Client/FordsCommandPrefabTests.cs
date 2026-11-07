@@ -49,6 +49,7 @@ public class FordsCommandPrefabTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryBinding_ResolvesToAMemberOfTheViewModelInScope()
     {
         var failures = new List<string>();
@@ -61,6 +62,7 @@ public class FordsCommandPrefabTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryDataSourceProperty_IsBoundByThePrefabSomewhere()
     {
         var failures = new List<string>();

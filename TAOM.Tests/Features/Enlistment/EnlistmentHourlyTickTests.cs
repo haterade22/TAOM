@@ -14,6 +14,7 @@ namespace TAOM.Tests.Features.Enlistment;
 /// normalizer's and the captivity path's ReconcileHourly never reach the tick-only steps).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class EnlistmentHourlyTickTests
 {
     private IEnlistmentReconciler _reconciler = null!;

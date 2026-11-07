@@ -61,6 +61,7 @@ public class LongDefeatHudVolleyTests
     // ---- the shop row ----
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheShop_ListsTheElvenVolley_WithItsFirstLevelsDetailAndPrice()
     {
         var p = Panel();
@@ -77,6 +78,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheRow_IsBuyingOnly_APressBuysTheLevel_AndTheSecondLevelAimsAtTheCrosshair()
     {
         var p = Panel();
@@ -94,6 +96,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheTopLevel_StaysListedAsFullyUpgraded_AndASpareBuyHasItsOwnWording()
     {
         var p = Panel();
@@ -110,6 +113,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TooLittleGold_RefusesAndDisablesTheRow()
     {
         var p = Panel(gold: 200);
@@ -122,6 +126,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheRow_IsHidden_WithNoRecordedOrigin_OrWhenTheBuildOffersNoVolley()
     {
         Assert.IsFalse(Panel(origins: false).Vm.Fort.IsVolleyVisible, "Helm's Deep records no origin yet");
@@ -129,6 +134,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheGroup_IsHidden_WhenTheVolleyIsTheOnlyRow_AndItIsHidden()
     {
         Assert.IsFalse(Panel(origins: false).Vm.Fort.IsVisible);
@@ -137,6 +143,7 @@ public class LongDefeatHudVolleyTests
     // ---- the strip ----
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void InAWave_TheStripShowsReady_ThenTheCooldown_AndTheKeyHintIsOnTheHintLine()
     {
         var p = Panel();
@@ -157,6 +164,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void AWithheldShot_ShowsNoAttackersInReach_ForThreeSeconds_ThenTheStripReadsReadyAgain()
     {
         var p = Panel();
@@ -177,6 +185,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void OtherWithheldReasons_AreSaidPlainly()
     {
         var p = Panel();
@@ -191,6 +200,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheStrip_IsEmpty_WhenTheVolleyIsNotOwned_AndBetweenWaves()
     {
         var p = Panel();
@@ -207,6 +217,7 @@ public class LongDefeatHudVolleyTests
     // ---- the key ----
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheKey_InAWave_ArmsTheVolley_AndSaysNothing()
     {
         var p = Panel();
@@ -220,6 +231,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheKey_Refuses_WhenNotOwned_OnCooldown_OrBetweenWaves()
     {
         var notOwned = Panel();
@@ -243,6 +255,7 @@ public class LongDefeatHudVolleyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheKey_SaysNothing_WhereNoVolleyIsForSale_SoShippedHelmsDeepPlaysAsBefore()
     {
         // Helm's Deep records no origin yet, so the row is hidden: a press must not send the player to a shop row that does not exist.

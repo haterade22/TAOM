@@ -4913,5 +4913,10 @@
 	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- Refuge -->
+	<string id="taom_rf_reason_coop_off" text="{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign." />
+	<!-- SupplyLines -->
+	<string id="taom_sl_caravan_meet_other" text="{=taom_sl_caravan_meet_other}A supply caravan passes on toward its lord." />
 
 </strings>

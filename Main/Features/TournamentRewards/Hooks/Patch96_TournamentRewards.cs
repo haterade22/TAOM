@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using HarmonyLib;
 using SandBox.Tournaments.MissionLogics;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -47,7 +48,11 @@ public static class Patch96_TournamentMaxBet
 /// skips it, shows the prize and skill dialogs, and on the final pick re-enters the WHOLE vanilla method through a
 /// thread-static bypass (lessons/harmony-il.md "Re-enter vanilla via a thread-static bypass flag"), so nothing
 /// vanilla does is re-implemented. Closing a dialog leaves the player in the join menu, as before the click. On
-/// any fault before the dialogs, vanilla's join runs: a safe default, since it is exactly the unpatched game.
+/// any fault before the dialogs, vanilla's join runs: a safe default, since it is exactly the unpatched game. A fault
+/// inside vanilla's own resumed run propagates with vanilla's exception and never runs vanilla twice. From the final
+/// dialog it surfaces in the popup's Choose handler (MultiSelectionQueryPopUpVM.ExecuteAffirmativeAction, which then
+/// skips CloseQuery) rather than in the menu's consequence chain; the engine's InvokeWithLog logs and rethrows it in
+/// both cases.
 /// </summary>
 [HarmonyPatch(typeof(TournamentCampaignBehavior), "game_menu_tournament_join_current_game_on_consequence")]
 [HarmonyPatchCategory(TournamentRewardsModule.PatchCategory)]
@@ -64,14 +69,32 @@ public static class Patch96_TournamentJoinChoices
     {
         if (_resuming || Original == null)
             return true;
+        return RunChoices(
+            proceed => TAOM.IoC.Resolve<TournamentJoinService>().BeginJoin(proceed),
+            () => Resume(__instance, args),
+            ex => TAOM.IoC.Resolve<IModLogger>()?.LogWarning($"[TournamentRewards] Join choices failed ({ex.GetType().Name}: {ex.Message}); joining as vanilla"));
+    }
+
+    /// <summary>
+    /// True when the prefix must let vanilla run. Only a fault before vanilla was resumed falls back to vanilla: once
+    /// <paramref name="resume"/> has started, vanilla has run (or thrown on its own), so a second run would join twice.
+    /// </summary>
+    internal static bool RunChoices(Action<Action> beginJoin, Action resume, Action<Exception> warn)
+    {
+        bool resumed = false;
         try
         {
-            TAOM.IoC.Resolve<TournamentJoinService>().BeginJoin(() => Resume(__instance, args));
+            beginJoin(() =>
+            {
+                resumed = true;
+                resume();
+            });
             return false;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!resumed)
         {
-            TAOM.IoC.Resolve<IModLogger>()?.LogWarning($"[TournamentRewards] Join choices failed ({ex.GetType().Name}: {ex.Message}); joining as vanilla");
+            // swallow-ok: warn logs the fault, and the true return runs vanilla's own Join in its place.
+            warn(ex);
             return true;
         }
     }
@@ -82,6 +105,12 @@ public static class Patch96_TournamentJoinChoices
         try
         {
             Original!.Invoke(instance, new object[] { args });
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException != null)
+        {
+            // Surface vanilla's own exception, not the reflection wrapper, as the unpatched game would.
+            ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            throw; // not reached: Throw() always throws; the compiler cannot see that.
         }
         finally
         {

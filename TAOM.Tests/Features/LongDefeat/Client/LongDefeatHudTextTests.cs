@@ -9,6 +9,7 @@ namespace TAOM.Tests.Features.LongDefeat.Client;
 public class LongDefeatHudTextTests
 {
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Wave_NamesEachPhase_AndTheWaveNumber()
     {
         Assert.AreEqual("Preparation", LongDefeatHudText.Wave(RunPhase.Preparation, 0));
@@ -18,6 +19,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheCounters_FillTheirVariable()
     {
         Assert.AreEqual("Gold: 420", LongDefeatHudText.Gold(420));
@@ -26,6 +28,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheOffer_ResolvesTheConfigKey_ToItsEnglishDefault()
     {
         Assert.AreEqual("Westfold Militia", LongDefeatHudText.OfferName("{=TAOM_LD_Offer_Militia}Westfold Militia"));
@@ -35,6 +38,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryBuyRefusal_HasALine_AndOkHasNone()
     {
         Assert.AreEqual(string.Empty, LongDefeatHudText.Refusal(BuyResult.Ok));
@@ -51,6 +55,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheHornRefusal_IsNamedForBothRefusals_AndOkHasNone()
     {
         Assert.AreEqual(string.Empty, LongDefeatHudText.Refusal(StartResult.Ok));
@@ -59,6 +64,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryEndReason_HasItsOwnTitle()
     {
         var titles = new System.Collections.Generic.HashSet<string>();
@@ -71,6 +77,7 @@ public class LongDefeatHudTextTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheEndLines_ReportWavesAndKills_AndTheBest()
     {
         Assert.AreEqual("Waves cleared: 4\nKills: 321\nDefenders lost in cleared waves: 120", LongDefeatHudText.EndLines(4, 321, 120));

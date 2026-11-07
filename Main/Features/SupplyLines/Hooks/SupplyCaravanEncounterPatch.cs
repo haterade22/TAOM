@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SupplyLines.Components;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
@@ -23,11 +24,21 @@ namespace TAOM.Features.SupplyLines.Hooks;
 ///
 /// <para>Coexists with Refuge's prefix on the same method (Patch75): each guard acts only on its
 /// own component type, so at most one ever returns false for a given encounter.</para>
+///
+/// <para>CO-OP (#1086): a guest's caravans are the host's, so a guest who meets one gets the same
+/// teardown (vanilla's meeting would still find no leader) with a line that does not call it theirs.</para>
 /// </summary>
 [HarmonyPatch(typeof(PlayerEncounter), "DoMeeting")]
 [HarmonyPatchCategory("Patch73_SupplyLines")]
 public static class SupplyCaravanEncounterPatch
 {
+    private static ICoopSessionProvider? _coop;
+
+    /// <summary>The line shown when the player meets a supply caravan: theirs, or a host's in a shared campaign.</summary>
+    internal static string MeetingLine(bool defersToHost) => defersToHost
+        ? "{=taom_sl_caravan_meet_other}A supply caravan passes on toward its lord."
+        : "{=taom_sl_caravan_meet}Your supply caravan presses on toward your position.";
+
     [HarmonyPrefix]
     public static bool Prefix()
     {
@@ -37,8 +48,12 @@ public static class SupplyCaravanEncounterPatch
             if (party?.PartyComponent is not SupplyCaravanComponent)
                 return true;
 
+            // Only the wording depends on the role, so a failed resolve keeps the teardown and the owner's line.
+            bool defers = false;
+            try { defers = (_coop ??= TAOM.IoC.Resolve<ICoopSessionProvider>())?.ShouldDeferToHost == true; }
+            catch { /* swallow-ok: only the wording depends on the role; the teardown and the owner's line stand */ }
             InformationManager.DisplayMessage(new InformationMessage(
-                new TextObject("{=taom_sl_caravan_meet}Your supply caravan presses on toward your position.").ToString(),
+                new TextObject(MeetingLine(defers)).ToString(),
                 Colors.Green));
             PlayerEncounter.Finish();
             MobileParty.MainParty?.SetMoveModeHold();

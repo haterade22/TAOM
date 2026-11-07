@@ -32,6 +32,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheShop_ListsFieldCare_WithItsShareAndPrice()
     {
         var vm = Panel(out _, out _);
@@ -47,6 +48,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void InThePreparation_NoCareIsOnSale_NobodyIsHurtYet()
     {
         var vm = Panel(out var session, out _, intermission: false);
@@ -58,6 +60,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheGroup_IsHidden_WhenTheBuildOffersNothing_OrTheShopCarriesNoRow()
     {
         var none = Panel(out _, out _, offered: FortOffer.None);
@@ -69,6 +72,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheGroup_IsHidden_WithTheShopClosed_AndDuringAWave()
     {
         var vm = Panel(out _, out var run);
@@ -83,6 +87,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BuyingCare_SpendsTheGold_AndTheRowStaysListedButSpent()
     {
         var vm = Panel(out var session, out _);
@@ -98,6 +103,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BuyingCareTwice_SaysItIsUsed_AndSpendsNothingMore()
     {
         var vm = Panel(out var session, out _);
@@ -110,6 +116,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void WithTooLittleGold_TheRowIsListedButCannotBeBought_AndAClickSaysSo()
     {
         var vm = Panel(out _, out _, gold: 100);
@@ -121,6 +128,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheSession_SellsCareThroughTheRun()
     {
         var vm = Panel(out var session, out var run);
@@ -150,6 +158,7 @@ public class LongDefeatHudFortTests
     private static LdGateFacts Whole() => new(0, 15000f, 15000f, 15000f, false, false);
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheShop_ListsTheGateRow_WithItsLevelPercentAndPrice_AndTheRepairRowBesideIt()
     {
         var vm = Panel(out _, out _, fort: WithGate);
@@ -168,6 +177,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BuyingAGateLevel_SpendsTheGold_AndTheRowMovesToTheNextLevel_UntilTheTop()
     {
         var vm = Panel(out var session, out _, fort: WithGate, gold: 2000);
@@ -190,6 +200,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ABrokenGate_MakesTheRepairRowLive_AtItsPrice_AndBuyingItSpendsThePrice()
     {
         var vm = Panel(out var session, out var run, fort: WithGate);
@@ -207,6 +218,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ARepairClickedOnAWholeGate_SaysItNeedsNone_AndSpendsNothing()
     {
         var vm = Panel(out var session, out var run, fort: WithGate);
@@ -220,6 +232,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheGateRows_AreHidden_WhenTheBuildOffersNoGate_OrTheShopCarriesNone_ButTheGroupStaysForCare()
     {
         var noneOffered = Panel(out _, out _, fort: WithGate, offered: new FortOffer(0, 0, true, 0));
@@ -233,6 +246,7 @@ public class LongDefeatHudFortTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheGateRows_CanBeBoughtInThePreparation_UnlikeCare()
     {
         var vm = Panel(out _, out _, fort: WithGate, intermission: false);

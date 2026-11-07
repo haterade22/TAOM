@@ -19,6 +19,7 @@ public enum RefugeBlockReason
     AlreadyTopTier = 10,
     RefugeAlreadyHere = 11,
     Enlisted = 12,
+    SharedCampaign = 13,
 }
 
 /// <summary>

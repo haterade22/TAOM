@@ -405,6 +405,33 @@ public class RefugeServiceTests
         Assert.AreEqual(RefugeBlockReason.FeatureDisabled, _sut.CanFound());
     }
 
+    [DataTestMethod]
+    [DataRow(true, true, DisplayName = "defers to the host")]
+    [DataRow(false, false, DisplayName = "no authority")]
+    public void CanFound_AndCanUpgrade_ForAPeerThatMayNotWriteTheBook_AreSharedCampaign(bool defers, bool authority)
+    {
+        // #1086 follow-up: the menus are closed to a guest; these are the final guards behind them.
+        var data = Seed("r1");
+        _coop.ShouldDeferToHost.Returns(defers);
+        _coop.IsAuthority.Returns(authority);
+
+        Assert.AreEqual(RefugeBlockReason.SharedCampaign, _sut.CanFound());
+        Assert.AreEqual(RefugeBlockReason.SharedCampaign, _sut.CanUpgrade(data));
+        Assert.IsFalse(_sut.Upgrade(data));
+        Assert.AreEqual(0, _sut.Charges.Count);
+        Assert.IsNull(_sut.Found("warden_2", out var reason));
+        Assert.AreEqual(RefugeBlockReason.SharedCampaign, reason);
+    }
+
+    [TestMethod]
+    public void CanFound_FeatureDisabled_WinsOverSharedCampaign()
+    {
+        _settings.Enabled.Returns(false);
+        _coop.ShouldDeferToHost.Returns(true);
+
+        Assert.AreEqual(RefugeBlockReason.FeatureDisabled, _sut.CanFound());
+    }
+
     [TestMethod]
     public void CanFound_NoMainParty_FeatureDisabled()
     {
@@ -761,6 +788,23 @@ public class RefugeServiceTests
         Assert.AreEqual(0, _sut.AllRefuges.Count);
         _visuals.Received(1).Remove("r1");
         CollectionAssert.AreEqual(new[] { false }, _sut.Messages);
+    }
+
+    [DataTestMethod]
+    [DataRow(true, true, DisplayName = "defers to the host")]
+    [DataRow(false, false, DisplayName = "no authority")]
+    public void Dismantle_ForAPeerThatMayNotWriteTheBook_ChangesNothing(bool defers, bool authority)
+    {
+        var data = Seed("r1");
+        _coop.ShouldDeferToHost.Returns(defers);
+        _coop.IsAuthority.Returns(authority);
+
+        _sut.Dismantle(data);
+
+        Assert.AreEqual(0, _sut.Events.Count);
+        _wardens.DidNotReceiveWithAnyArgs().ReleaseWarden(default!, default);
+        Assert.AreEqual(0, _sut.DestroyedParties.Count);
+        Assert.AreEqual(1, _sut.AllRefuges.Count);
     }
 
     [TestMethod]

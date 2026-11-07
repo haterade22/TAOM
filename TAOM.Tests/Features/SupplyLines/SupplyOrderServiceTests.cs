@@ -234,6 +234,32 @@ public class SupplyOrderServiceTests
     }
 
     [TestMethod]
+    public void TryPlaceOrder_ForAPeerThatDefersToTheHost_FailsWithoutConsuming()
+    {
+        // #1086 follow-up: the town menu is closed to a guest; this is the final guard behind it.
+        _coop.ShouldDeferToHost.Returns(true);
+
+        var result = _sut.TryPlaceOrder(_townSource, null, null, SupplyEscortOption.None, out var reason);
+
+        Assert.IsNull(result);
+        Assert.IsNotNull(reason);
+        _sources.DidNotReceiveWithAnyArgs().Consume(default, default, default);
+    }
+
+    [TestMethod]
+    public void TryPlaceOrder_WithoutAuthority_FailsWithoutConsuming()
+    {
+        // A peer without authority never writes the order book, whatever the menu offered.
+        _coop.IsAuthority.Returns(false);
+
+        var result = _sut.TryPlaceOrder(_townSource, null, null, SupplyEscortOption.None, out var reason);
+
+        Assert.IsNull(result);
+        Assert.IsNotNull(reason);
+        _sources.DidNotReceiveWithAnyArgs().Consume(default, default, default);
+    }
+
+    [TestMethod]
     public void TryPlaceOrder_PlayerBlockaded_FailsWithoutConsuming()
     {
         _sut.Blockaded = true;

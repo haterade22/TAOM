@@ -7,6 +7,7 @@ namespace TAOM.Tests.Features.LongDefeat.Client;
 
 /// <summary>The lord's class on the HUD strip after the wave number and on the end panel (phase2-plan.md section 5, owed since the Slice 5 review).</summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class LongDefeatHudClassTests
 {
     private static (LongDefeatHudVM Vm, LongDefeatSession Session, SurvivalRun Run) Panel(string className)

@@ -33,6 +33,7 @@ public class LongDefeatPrefabTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryBinding_ResolvesToADataSourcePropertyOrCommandInScope()
     {
         var failures = new List<string>();
@@ -46,6 +47,7 @@ public class LongDefeatPrefabTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryDataSourceProperty_IsBoundByOneOfTheMovies()
     {
         var failures = new List<string>();

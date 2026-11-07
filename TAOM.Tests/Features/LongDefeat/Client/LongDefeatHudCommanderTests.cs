@@ -19,6 +19,7 @@ public class LongDefeatHudCommanderTests
         new("{=TAOM_LD_Rank_Captain}Captain", outcome, up, abilities);
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void WhileHeStands_TheLineNamesHisRankAndHisSoonestAbilityWithItsSeconds()
     {
         var view = View(Captain(CommanderOutcome.Standing, true, Ability("Summon", 41.2f), Ability("Cry", 11.1f)));
@@ -27,6 +28,7 @@ public class LongDefeatHudCommanderTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ARunningWarCry_ShowsAsNow()
     {
         var view = View(Captain(CommanderOutcome.Standing, true, Ability("Cry", 55f, running: true), Ability("Summon", 4f)));
@@ -35,12 +37,14 @@ public class LongDefeatHudCommanderTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void AKilledCommander_HasFallen()
     {
         Assert.AreEqual("Captain has fallen", LongDefeatHudText.CommanderLine(View(Captain(CommanderOutcome.Killed))));
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ACommanderWhoWasFelledOrLeft_IsNoLongerShown()
     {
         Assert.AreEqual(string.Empty, LongDefeatHudText.CommanderLine(View(Captain(CommanderOutcome.Felled))));
@@ -56,6 +60,7 @@ public class LongDefeatHudCommanderTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void AStandingCommanderWithNoAbility_ShowsJustHisRank()
     {
         Assert.AreEqual("Captain", LongDefeatHudText.CommanderLine(View(Captain())));

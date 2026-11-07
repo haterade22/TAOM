@@ -27,6 +27,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Refresh_ShowsOneRowPerTrack_WithItsNextPrice()
     {
         var vm = Panel(out _);
@@ -41,6 +42,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BuyUpgrade_RaisesTheRow_AndCostsTheGold()
     {
         var vm = Panel(out var match);
@@ -54,6 +56,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void AnArmourRow_ShowsLessDamageTaken()
     {
         var vm = Panel(out _);
@@ -64,6 +67,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ACompleteRow_SaysSo_AndCannotBeBought()
     {
         var vm = Panel(out _);
@@ -75,6 +79,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ARowTooDear_CannotBeBought_AndTheRefusalIsShown()
     {
         var vm = Panel(out var match, gold: 100);
@@ -88,6 +93,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BuyUpgrade_AKeyPastTheLastRow_DoesNothing()
     {
         var vm = Panel(out var match);
@@ -99,6 +105,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Refresh_NamesTheEnemyFaction_ForTheTopStrip()
     {
         var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
@@ -116,6 +123,7 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void ToggleUpgrades_HidesAndShowsThePanel()
     {
         var vm = Panel(out _);

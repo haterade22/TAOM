@@ -2596,3 +2596,11 @@ The first fix for check 12 passed a raging warg rider when any unit of its forma
 - **Why missed:** the draft asked whether a member was near without asking which members are the riders under judgement, and wrote the search inline in the engine reader.
 - **Prevent:** a "near the group" rule leaves out every agent the same check is judging, and the search is a pure helper over plain positions that a test calls with a self, a skipped unit and a NaN position. The log line prints each measure the rule can pass on.
 - **Source:** [rca-fords-warg-return-2026-11-06.md](../rca-fords-warg-return-2026-11-06.md) rows 1 to 3. Related: "Each trial verdict has a test that makes it fail".
+
+### A filtered test run while iterating names the feature's classes; before the review, add the source-scanning gates (#1091, 2026-11-06)
+
+Three new catch blocks raised the silent-catch ratchet over its baseline. The 897-test filtered run named only the changed feature classes, so it passed, and Codex found the failure.
+
+- **Why missed:** the filter was built from the changed types. `SilentCatchRatchetTests`, `BannedConstructsGateTests` and the other gates under `TAOM.Tests/Infrastructure` read every source file and belong to no feature.
+- **Prevent:** a filtered run that touches a catch, a `#if`, an entry point or a service signature also names `FullyQualifiedName~SilentCatch|FullyQualifiedName~BannedConstructs|FullyQualifiedName~EntryPointLineCount|FullyQualifiedName~ServiceSignature`. A delegated warning or an `ExceptionDispatchInfo` rethrow counts as silent to the scanner: mark the intended fallback with `swallow-ok:` and put `throw;` after `Throw()`.
+- **Source:** [rca-1091-followups-2026-11-06.md](../rca-1091-followups-2026-11-06.md) row 1.

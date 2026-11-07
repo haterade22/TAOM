@@ -433,6 +433,8 @@ public sealed class RefugeMenuController
                 return new TextObject("{=taom_rf_reason_already_here}A refuge already stands here - manage it instead.");
             case RefugeBlockReason.Enlisted:
                 return new TextObject("{=taom_rf_reason_enlisted}You cannot raise a refuge while serving in another lord's army.");
+            case RefugeBlockReason.SharedCampaign:
+                return new TextObject("{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign.");
             default:
                 return new TextObject("{=taom_rf_reason_blocked}You cannot do that here.");
         }

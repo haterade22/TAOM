@@ -169,6 +169,7 @@ public class CampActivitySettingsTests
     // ---- The saved fields
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheCampRecord_SavesTheFourWorkFields_UnderUniqueIds_ContinuingTheBlock()
     {
         var ids = typeof(CampState).GetFields(BindingFlags.Public | BindingFlags.Instance)

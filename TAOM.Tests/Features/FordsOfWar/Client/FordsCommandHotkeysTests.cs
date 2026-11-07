@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.FordsOfWar.Client;
 /// as <see cref="FordsCommandVMTests"/>: gold 1000, offers inf 100 first, heroes hero_a 700 and hero_b 400.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FordsCommandHotkeysTests
 {
     private FordsSession _session = null!;

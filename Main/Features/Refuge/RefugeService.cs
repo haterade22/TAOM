@@ -176,6 +176,12 @@ public class RefugeService : IRefugeService, IRefugeBook
     /// </summary>
     private bool OwnsTheRefuges => _coop.IsAuthority;
 
+    /// <summary>
+    /// The final guard behind the refuge menus, which are closed to a guest (#1086): a player action that writes
+    /// the book runs only where the book is written and the player is not deferring to a host.
+    /// </summary>
+    private bool PlayerMayChangeRefuges => OwnsTheRefuges && !_coop.ShouldDeferToHost;
+
     public IReadOnlyCollection<RefugeData> AllRefuges => _refuges.Values;
 
     public RefugeData GetByPartyId(string partyId)
@@ -200,6 +206,8 @@ public class RefugeService : IRefugeService, IRefugeBook
     {
         if (!_settings.Enabled)
             return RefugeBlockReason.FeatureDisabled;
+        if (!PlayerMayChangeRefuges)
+            return RefugeBlockReason.SharedCampaign;
         // No main party means no campaign to act in; the feature cannot operate at all.
         if (MainPartyId() == null)
             return RefugeBlockReason.FeatureDisabled;
@@ -319,6 +327,8 @@ public class RefugeService : IRefugeService, IRefugeBook
     {
         if (!_settings.Enabled)
             return RefugeBlockReason.FeatureDisabled;
+        if (!PlayerMayChangeRefuges)
+            return RefugeBlockReason.SharedCampaign;
         if (refuge?.PartyId == null || !_refuges.ContainsKey(refuge.PartyId))
             return RefugeBlockReason.NoRefugeInReach;
         if (!refuge.IsReady)
@@ -354,7 +364,7 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void Dismantle(RefugeData refuge)
     {
-        if (refuge?.PartyId == null || !_refuges.ContainsKey(refuge.PartyId))
+        if (!PlayerMayChangeRefuges || refuge?.PartyId == null || !_refuges.ContainsKey(refuge.PartyId))
             return;
         // A refuge inside a map event is a live battle participant; destroying it now would rip
         // rosters out from under the event. The menu gate (NearestDismantlable) already excludes

@@ -20,6 +20,7 @@ public class LongDefeatHudAffixTests
         new(phase, 5, 4, 100, 30f, 40, 0, 0, 0f, new List<ShopOffer>()) { WaveAffixes = wave ?? new AffixLabel[0], NextAffixes = next ?? new AffixLabel[0], NextHealthFactor = health, NextDamageFactor = damage };
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void DuringAWave_TheLineNamesTheWavesAffixes()
     {
         var view = View(RunPhase.Wave, wave: new[] { Label("lash", "The White Hand's Whip"), Label("hide", "Orthanc Plate") });
@@ -34,6 +35,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BetweenWaves_TheLineNamesTheNextWavesAffixes()
     {
         var view = View(RunPhase.Intermission, next: new[] { Label("drums", "War Drums of Orthanc") });
@@ -42,6 +44,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BetweenWaves_PastTheAuthoredList_TheLineAddsTheNextWavesFactors()
     {
         var view = View(RunPhase.Intermission, next: new[] { Label("drums", "War Drums of Orthanc") }, health: 1.10f, damage: 1.06f);
@@ -50,6 +53,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void BetweenWaves_WithNoAffix_ButAScaledWave_TheLineIsJustTheFactors()
     {
         var view = View(RunPhase.Preparation, health: 1.5f, damage: 1.09f);
@@ -70,6 +74,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void AnAffixWithNoName_ShowsItsId()
     {
         var view = View(RunPhase.Wave, wave: new[] { new AffixLabel("hide", "hide") });
@@ -106,6 +111,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheStrip_InPreparation_NamesTheFirstWavesAffixAndFactors()
     {
         var vm = Hud(startWave: 5, seed: 1, out _);
@@ -114,6 +120,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheStrip_InTheWave_NamesTheRunningWavesAffix()
     {
         var vm = Hud(startWave: 5, seed: 1, out var run);
@@ -126,6 +133,7 @@ public class LongDefeatHudAffixTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void TheStrip_BeforeAnyAffix_IsEmpty()
     {
         var vm = Hud(startWave: 1, seed: 1, out _);

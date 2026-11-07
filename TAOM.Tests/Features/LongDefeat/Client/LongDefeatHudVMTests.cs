@@ -8,6 +8,7 @@ namespace TAOM.Tests.Features.LongDefeat.Client;
 
 /// <summary>The HUD and panel view model over a real <see cref="LongDefeatSession"/> and a real run: one shop offer (180 gold, a pack of 12), 600 starting gold.</summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class LongDefeatHudVMTests
 {
     private int _leaves;

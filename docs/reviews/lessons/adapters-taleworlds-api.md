@@ -1831,3 +1831,11 @@ The fast-forward flag is not the mission's clock. The engine takes a fixed step 
 - **Why missed:** the decorator's name reads as "not the player".
 - **Prevent:** to exclude the player's own character, test `IsMainAgent || IsPlayerTroop` (`IsPlayerTroop` compares `Origin.Troop` with `Game.Current.PlayerTroop`, so it survives `MainAgent = null`).
 - **Source:** [rca-dwarf-attacks-2026-11-06.md](../rca-dwarf-attacks-2026-11-06.md), F2.
+
+### A comment that names an engine line is checked against that line, and a "read-only" view is checked for its type (#1091, 2026-11-06)
+
+A new reflection catalogue row copied the code comment: only the engine's full removal clears `Hero._exSpouses`, and `ExSpouses` is a read-only view. The cited lines were an `AfterLoad` migration for saves older than v1.2.8, and `ExSpouses` returns the same `List<Hero>`, so the reflection was never needed.
+
+- **Why missed:** the row reused the old comment's words and checked only that the line numbers existed.
+- **Prevent:** before writing what an engine line does, read the method that contains it and the condition around it. Before reflecting on a private collection behind a "read-only" property, read the property's return type and its base classes: `MBReadOnlyList<T>` is a `List<T>` on v1.5.6.
+- **Source:** [rca-1091-followups-2026-11-06.md](../rca-1091-followups-2026-11-06.md) row 3.

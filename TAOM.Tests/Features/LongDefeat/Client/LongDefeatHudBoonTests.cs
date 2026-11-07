@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.LongDefeat.Client;
 /// notice that announce an open pick (the panel never opens by itself), and a session that passes a pick or a reroll to the run and keeps the boons taken for the end panel.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class LongDefeatHudBoonTests
 {
     private static BoonRow Boon(string id, BoonCategory category, params (string Key, float Value)[] effects) =>

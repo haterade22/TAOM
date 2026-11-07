@@ -356,6 +356,54 @@ public class CareerQuestServiceTests
     }
 
     [TestMethod]
+    public void ApplyRewards_OnACoopGuest_KeepsTheCareerRewards_ButSkipsEveryEngineReward()
+    {
+        // #1086 follow-up: item, renown and influence write the hero the host owns, as the tournament skill award
+        // does, so a guest gets none of them; the career book is this peer's own.
+        _session.ShouldDeferToHost.Returns(true);
+        var hero = ValidHero();
+        var q = Quest("q", "c", 2, new List<CareerQuestObjectiveDefinition> { Obj(CareerQuestObjectiveType.WinBattles, 1) },
+            new List<CareerQuestRewardDefinition>
+            {
+                Rew(CareerQuestRewardType.UnlockTier, 2),
+                Rew(CareerQuestRewardType.GrantAttributeFlag, 0, "flag"),
+                Rew(CareerQuestRewardType.GrantItem, 1, "sk_gd_ith_sword"),
+                Rew(CareerQuestRewardType.GrantRenown, 50),
+                Rew(CareerQuestRewardType.GrantInfluence, 20),
+            });
+
+        _sut.ApplyRewards("hero1", q, hero);
+
+        _data.Received(1).UnlockTier("hero1", 2);
+        _data.Received(1).SetFlag("hero1", "flag");
+        hero.DidNotReceiveWithAnyArgs().AddItemToInventory(default!, default);
+        hero.DidNotReceiveWithAnyArgs().AddRenown(default);
+        hero.DidNotReceiveWithAnyArgs().AddInfluence(default);
+    }
+
+    [TestMethod]
+    public void ApplyRewards_OnADedicatedServer_PaysRenownAndInfluence_ButSkipsTheItem()
+    {
+        // The server owns the quest owner's hero, so it is the right peer for renown and influence. Only the item
+        // can land on MobileParty.MainParty (QuestHeroAdapter's fallback), the server's placeholder party.
+        _dedicated.IsDedicatedServer.Returns(true);
+        var hero = ValidHero();
+        var q = Quest("q", "c", 1, new List<CareerQuestObjectiveDefinition> { Obj(CareerQuestObjectiveType.WinBattles, 1) },
+            new List<CareerQuestRewardDefinition>
+            {
+                Rew(CareerQuestRewardType.GrantItem, 1, "sk_gd_ith_sword"),
+                Rew(CareerQuestRewardType.GrantRenown, 50),
+                Rew(CareerQuestRewardType.GrantInfluence, 20),
+            });
+
+        _sut.ApplyRewards("hero1", q, hero);
+
+        hero.DidNotReceiveWithAnyArgs().AddItemToInventory(default!, default);
+        hero.Received(1).AddRenown(50);
+        hero.Received(1).AddInfluence(20);
+    }
+
+    [TestMethod]
     public void ApplyRewards_NullQuest_DoesNothing()
     {
         _sut.ApplyRewards("hero1", null, ValidHero());

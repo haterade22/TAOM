@@ -68,8 +68,8 @@ SubModule (registers model + behavior)
 
 - **`NazgulFamilyBehavior`** runs once on `OnSessionLaunched` as the legacy-save fallback. For each
   wraith it nulls `Spouse` (the setter is two-way: it clears the partner's side too, matching the
-  engine's own `KillCharacterAction.cs:147` cleanup) and clears its `ExSpouses` residual (via reflection
-  on the private `_exSpouses`, mirroring the engine's full sever), removes the wraith from each ex-parent's
+  engine's own `KillCharacterAction.cs:147` cleanup) and clears its `ExSpouses` residual (through the public
+  `ExSpouses` list, which is a `List<Hero>` on v1.5.6; no live engine path removes an entry), removes the wraith from each ex-parent's
   `Children` (the `Father`/`Mother` setters are asymmetric on null), and severs each child's parent link
   before clearing the wraith's `Children`. Because all nine wraiths (incl. Khamûl, `lord_1_48`) are in
   the registry, the whole graph is wraith-internal — no non-wraith is widowed or left with a dangling

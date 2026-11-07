@@ -9,6 +9,7 @@ namespace TAOM.Tests.Features.FordsOfWar;
 public class FordsEngineTests
 {
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void FinitePosition_AllComponentsFinite_ReturnsThePoint()
     {
         var position = FordsEngine.FinitePosition(new Vec3(1f, 2f, 3f, -1f));
@@ -17,6 +18,7 @@ public class FordsEngineTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void FinitePosition_AnyComponentNotFinite_ReturnsNull()
     {
         Assert.IsNull(FordsEngine.FinitePosition(new Vec3(float.NaN, 2f, 3f, -1f)));
