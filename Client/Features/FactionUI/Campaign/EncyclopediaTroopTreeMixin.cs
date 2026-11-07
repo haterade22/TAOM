@@ -27,9 +27,9 @@ namespace TAOM.Features.FactionUI.Campaign
         {
             if (_layout == null) return;
             _layout = null;
-            // A page with no tree passes null, which clears the binding: UIExtenderEx 2.13.3 forwards the value unchanged,
-            // though its parameter is annotated non-null.
-            OnPropertyChangedWithValue(TroopTreeLayout!, nameof(TroopTreeLayout));
+            // Gauntlet re-reads the getter, which rebuilds the layout or returns null for a page with no tree. Never
+            // OnPropertyChangedWithValue here: on v1.5.6, UIExtenderEx 2.13.3 falls back to value.GetType(), so null throws.
+            OnPropertyChanged(nameof(TroopTreeLayout));
         }
     }
 

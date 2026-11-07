@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 
 namespace TAOM.Features.FactionUI.Campaign
@@ -53,7 +54,8 @@ namespace TAOM.Features.FactionUI.Campaign
                 CurrentCharacter = character;
                 NameText = Read<string>(character, "HeroNameText");
                 NameFontSize = Math.Max(17, Math.Min(30, 460 / Math.Max(1, NameText.Length)));
-                LevelText = "Level " + Read<string>(character, "CurrentCharacterLevelLbl");
+                LevelText = new TextObject("{=taom_hero_level}Level {LEVEL}")
+                    .SetTextVariable("LEVEL", Read<string>(character, "CurrentCharacterLevelLbl")).ToString();
                 Tabs.Clear();
                 foreach (ViewModel attribute in Items(character, "Attributes")) Tabs.Add(new CharacterAttributeTabVM(this, attribute));
                 var inspected = Read<ViewModel>(character, "CurrentSkill");

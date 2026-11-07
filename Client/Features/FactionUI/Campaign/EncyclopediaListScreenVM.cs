@@ -22,9 +22,9 @@ namespace TAOM.Features.FactionUI.Campaign
         [DataSourceProperty] public MBBindingList<EncyclopediaFilterSectionVM> FilterSections { get; private set; } = new MBBindingList<EncyclopediaFilterSectionVM>();
         [DataSourceProperty] public MBBindingList<EncyclopediaSortOptionVM> SortOptions { get; private set; } = new MBBindingList<EncyclopediaSortOptionVM>();
         [DataSourceProperty] public string PageTitle { get; private set; }
-        [DataSourceProperty] public string FiltersLabel => Label("taom_ency_filters", "Filters");
-        [DataSourceProperty] public string ResetLabel => Label("taom_ency_reset", "Reset");
-        [DataSourceProperty] public string OpenEntryLabel => Label("taom_ency_open_entry", "Open entry");
+        [DataSourceProperty] public string FiltersLabel => new TextObject("{=taom_ency_filters}Filters").ToString();
+        [DataSourceProperty] public string ResetLabel => new TextObject("{=taom_ency_reset}Reset").ToString();
+        [DataSourceProperty] public string OpenEntryLabel => new TextObject("{=taom_ency_open_entry}Open entry").ToString();
         [DataSourceProperty] public string SortByLabel => Read<string>(_sortController, "SortByLabel");
         [DataSourceProperty] public string EmptyListText => Read<string>(Native, "EmptyListText");
         [DataSourceProperty] public ViewModel SortController => _sortController;
@@ -88,10 +88,6 @@ namespace TAOM.Features.FactionUI.Campaign
         }
 
         internal static T Read<T>(ViewModel source, string property) => (T)source.GetPropertyValue(property);
-        private static string Label(string id, string text)
-        {
-            return new TextObject("{=" + id + "}" + text).ToString();
-        }
 
         private void OnItemsChanged(object sender, ListChangedEventArgs e) { _orderDirty = true; _selectionDirty = true; }
         private void OnNativeBoolChanged(object sender, PropertyChangedWithBoolValueEventArgs e)

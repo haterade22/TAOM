@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FactionUI.Campaign;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.FactionUI;
 
@@ -12,6 +13,17 @@ public class EncyclopediaTroopNamesTests
 {
     [TestCleanup]
     public void Cleanup() => EncyclopediaTroopNames.Active = false;
+
+    // Core cannot name the client constant, and an unknown category applies nothing without a failure, so a rename on
+    // either side would silently drop all eight patches.
+    [TestMethod]
+    public void PatchCategory_IsTheLiteralSubModuleApplies()
+    {
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+
+        Assert.AreEqual("TAOM.EncyclopediaTroopNames", EncyclopediaTroopNames.PatchCategory);
+        StringAssert.Contains(source, "TryPatchCategory(\"" + EncyclopediaTroopNames.PatchCategory + "\")");
+    }
 
     [TestMethod]
     public void ShownName_BeforeTheThemedEncyclopediaBinds_KeepsTheBrackets()

@@ -7818,12 +7818,13 @@
     <string id="taom_dwarf_attacks_mcm_damage_hint" text="The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100." />
     <string id="taom_ency_relations_empty" text="None known" />
     <string id="taom_ency_kingdom_history" text="History" />
-    <string id="taom_fui_ency_bookmark" text="Bookmark" />
-    <string id="taom_fui_ency_local_information" text="Local information" />
     <string id="taom_fui_ency_read_description" text="Read full description" />
     <string id="taom_fui_ency_close_description" text="Close" />
     <string id="taom_hero_level" text="Level {LEVEL}" />
     <string id="taom_encyclopedia_upgrade_stage" text="Stage {STAGE}" />
+    <string id="taom_ency_filters" text="Filters" />
+    <string id="taom_ency_reset" text="Reset" />
+    <string id="taom_ency_open_entry" text="Open entry" />
   </strings>
 
 </base>

@@ -1,27 +1,4 @@
 <Prefab>
-  <Variables>
-  </Variables>
-  <Constants>
-
-    <Constant Name="MapBar.GatherArmy.Icon.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Icon" BrushValueType="Width" />
-    <Constant Name="MapBar.GatherArmy.Icon.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Icon" BrushValueType="Height" />
-
-    <Constant Name="MapBar.GatherArmy.Background.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Background" BrushValueType="Width" />
-    <Constant Name="MapBar.GatherArmy.Background.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Background" BrushValueType="Height" />
-
-    <Constant Name="MapBar.GatherArmy.Button.Width" BrushLayer="Default" BrushName="MapBar.GatherArmy.Button" BrushValueType="Width" />
-    <Constant Name="MapBar.GatherArmy.Button.Height" BrushLayer="Default" BrushName="MapBar.GatherArmy.Button" BrushValueType="Height" />
-
-    <Constant Name="NormalMapBarTextColor" Value="#F4E1C4FF" />
-    <Constant Name="WarningMapBarTextColor" Value="#DB0808FF" />
-    <Constant Name="MapBar.Notification.Size" Value="20" />
-
-    <Constant Name="MapBar.Buttons.HorizonalSpacing" Value="2" />
-
-    <Constant Name="MapBar.ButtonIcon.XOffset" Value="0" />
-    <Constant Name="MapBar.ButtonIcon.YOffset" Value="1" />
-
-  </Constants>
   <Window>
     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsEnabled">
       <Children>

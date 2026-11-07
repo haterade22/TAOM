@@ -1834,6 +1834,10 @@ Party Fast Open (#853, [shadowfax-screens.md](../features/shadowfax-screens.md) 
 
 **Applied** at the first `OnGameInitializationFinished`, once per process, with `TryPatchCategory` in `SubModule.cs`: after `GameTexts` exists, because patching the campaign tooltip methods can run `CampaignUIHelper`'s static initializer. The FactionUI merge applied it lazily from the first themed encyclopedia movie instead, through a direct `Harmony.PatchCategory` call; ADR-013 moved it to the guarded applier. So that names do not change before the theme is seen, every name rewrite reads `EncyclopediaTroopNames.Active`, which `CampaignPresentation.Bind` sets on the first themed encyclopedia movie, the moment the category used to be applied. On a dedicated server TAOM.Client does not load and the category applies nothing. No target is per frame. Tests: `EncyclopediaTroopNamesTests` (the inert state and the bracket rule). Feature: [faction-ui.md](../features/faction-ui.md). **ACTIVE**, the moved build not yet seen in game.
 
+## CampaignTimeHintPatch (no category)
+
+**Lives in TAOM.Client** (`Client/Features/FactionUI/Campaign/CampaignTimeHintPatch.cs`). **Target (v1.5.6):** `MapTimeControlVM.Refresh()` (postfix). **Why:** the themed map bar's clock shows the hour and minute above vanilla's time-of-day tooltip. **Applied** lazily on the first themed `TAOMMapBar` movie, by `CampaignPresentation.Bind` with its own Harmony id `taom.factionui.campaign-time`, once per process; the postfix reads `CampaignTimeHintPatch.Enabled`. Feature: [faction-ui.md](../features/faction-ui.md). **ACTIVE**, not yet seen in game since the ADR-013 move.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Patch132_ItemIconRacePosition

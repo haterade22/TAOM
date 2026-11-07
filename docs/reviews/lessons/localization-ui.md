@@ -1497,3 +1497,11 @@ Two prefabs wrote `#FFE9B84A`, ARGB order, for a gold text. The engine parses re
 - **Why missed:** no test read a colour's alpha, and a small strip in a screenshot shows no tint. The rule was written for HUD layers, which must not take clicks, and I passed it to a builder without that scope. Native's `EscapeMenu.xml` sets no such flag.
 - **Prevent:** a prefab test reads every 8-digit colour and fails on a low alpha. A display-only layer flags every widget. A modal focus panel keeps its root accepting, so a click cannot reach the mission.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 2 and 19.
+
+### A key built at runtime, or registered with no reader, passes every localization gate (FactionUI, 2026-11-06)
+
+The faction UI built `{=taom_ency_filters}` and two more keys by concatenation in a `Label(id, text)` helper, so the harvester and the unregistered-key baseline, which read literal `{=taom_...}` text, never saw them: every language showed English. The same merge registered two keys that no code or prefab reads, and a seed run copied them into all 12 languages.
+
+- **Why missed:** both gates start from literals. Nothing walks from a registered key to a reader.
+- **Prevent:** write every TAOM key as a literal `{=taom_...}default` at its use; never pass a key id through a helper. Before a seed run, grep each new key for a reader outside the string tables.
+- **Source:** [rca-factionui-adr013-2026-11-06.md](../rca-factionui-adr013-2026-11-06.md), F2 and F3.

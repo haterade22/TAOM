@@ -45,9 +45,9 @@ namespace TAOM.Features.FactionUI.Campaign
 
             var previous = _tree;
             _tree = BuildTree();
-            // A null tree clears the binding: UIExtenderEx 2.13.3 forwards the value to the view model unchanged, though its
-            // parameter is annotated non-null.
-            OnPropertyChangedWithValue(_tree!, nameof(InlineFamilyTree));
+            // Gauntlet re-reads the getter, which returns the new tree or null. Never OnPropertyChangedWithValue here: on
+            // v1.5.6, UIExtenderEx 2.13.3 falls back to value.GetType() for an object value, so a null tree would throw.
+            OnPropertyChanged(nameof(InlineFamilyTree));
             OnPropertyChangedWithValue(_tree != null, nameof(HasInlineFamilyTree));
             previous?.OnFinalize();
         }
