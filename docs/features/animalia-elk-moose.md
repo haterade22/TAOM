@@ -322,10 +322,10 @@ a quarter on a shield block, rounded: 15 and 18; facing and already-attacking ga
 The moose went 100 to 150 after the first battle ("way bigger"); the great elk 200 to 120 to 110 ("still a bit
 too big"). That evening Mike moved the size onto the Monster ("The monster xml should control the size of the
 animal"): `body_length` in the table is now each Monster's `taom_body_length`, copied into its Horse item at game
-init, and the reach follows it with no C# constant ([monster-size.md](monster-size.md)). Whether the engine scales a
-gait clip's `LoopDisplacement` with the size is not established: the managed code reads `BodyLength` only for the
-agent scale, the camera and the item's effectiveness, so any travel scaling happens natively. The moose's travel was
-measured at 100, so watch its hooves at 150.
+init, and the reach follows it with no C# constant ([monster-size.md](monster-size.md)). The engine scales a gait
+clip's `LoopDisplacement` by the agent size natively (v1.5.6): the horse movement node compares it with the agent's
+velocity divided by the agent scale (#1081 review, 2026-11-06). So travel measured at model size, as the moose's at
+100, stays right at 150.
 
 ## Who rides them
 

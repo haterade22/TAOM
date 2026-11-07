@@ -8,9 +8,15 @@ unversioned, so every edit here is recorded in docs/reference/lotrlome-dire-wolf
 
   1. ModuleData/Monsters/LOTR/lotr_monster_dire_wolf.xml, written whole: the warg's behavior (monster_usage warg,
      family_type 1, flags, weight, hit points, sound class) on the wolf's own bones, as_dire_wolf and
-     taom_body_length 240. Lengths are in model units, which the engine then scales by the agent's size: the heights and
-     body capsule are the pack's own wolf Monster's, and the rider and rein values are the warg's over 2.37, the
-     measured size ratio of the two rigs. Tune them in game. The Monster has the warg's 5 rein attributes, not 12
+     taom_body_length 115. Lengths are in model units, which the engine then scales by the agent's size. The rig is
+     the pack's wolf times RIG_SCALE (2.08, tools/blender/prep_dire_wolf_meshes.py), moved RIG_BACK (0.52) toward the
+     tail, so its saddle sits under the warg's rider clip, which seats the rider for monster_usage warg
+     (docs/features/dire-wolf.md "Seat"). The wolf stands 1.94 m at mesh size, which is what portraits and the
+     inventory draw. In battle taom_body_length 115 makes it about 2.22 m, 25% larger than at the wargs' item
+     body_length 110 (Mike, 2026-11-06). Each length is its old value times RIG_SCALE, and the body capsule, the one
+     model-space position, also moves RIG_BACK: the heights and body capsule are the pack's own wolf Monster's, and the
+     rider and rein values are the warg's over 2.37, the measured size ratio of the two rigs before the resize. A tune
+     goes here first, then into the live file: a live-recipe test holds the two equal. The Monster has the warg's 5 rein attributes, not 12
      (creature-mount-authoring.md, gotcha 18): docs/features/dire-wolf.md owes a ridden-death test in game.
   2. SubModule.xml and ModuleData/project.mbproj: one Monsters registration each, after the fell warg's.
   3. ModuleData/action_sets.xml: as_dire_wolf and its _town_and_village and _map twins, derived from the three warg sets
@@ -52,6 +58,22 @@ MONSTER_FILE = "ModuleData/Monsters/LOTR/lotr_monster_dire_wolf.xml"
 WOLF_BONES = {"Pelvis", "Spine", "Spine1", "Spine2", "Neck", "Head", "L Clavicle", "R Clavicle", "L UpperArm",
               "R UpperArm", "L Finger0", "R Finger0", "L Thigh", "R Thigh"}
 
+# The wolf rig's size against the pack's (tools/blender/prep_dire_wolf_meshes.py RIG_SCALE).
+RIG_SCALE = 2.08
+# Model units the rig moves toward the tail (-y), so the wolf's seat is the warg's (prep_dire_wolf_meshes.RIG_BACK).
+RIG_BACK = 0.52
+
+
+def _length(values, sep=", "):
+    """Model-unit lengths measured on the pack's wolf, at the rig's size."""
+    return sep.join("%g" % round(v * RIG_SCALE, 3) for v in values)
+
+
+def _point(x, y, z):
+    """A model-space position measured on the pack's wolf, at the rig's size and place."""
+    return ", ".join("%g" % round(v, 3) for v in (x * RIG_SCALE, y * RIG_SCALE - RIG_BACK, z * RIG_SCALE))
+
+
 _BONES = (
     ("rider_sit_bone", "Spine1"), ("rein_handle_bone", "Spine2"), ("rein_collision_1_bone", "Spine1"),
     ("rein_collision_2_bone", "Spine1"), ("neck_root_bone", "Neck"), ("pelvis_bone", "Pelvis"),
@@ -65,14 +87,16 @@ _BONES = (
 _ATTRIBUTES = (
     ("id", "dire_wolf"), ("action_set", "as_dire_wolf"), ("monster_usage", "warg"), ("weight", "500"),
     ("hit_points", "80"), ("absorbed_damage_ratio", "1.0"), ("num_paces", "6"), ("jump_acceleration", "8"),
-    ("sound_and_collision_info_class", "warg"), ("rider_camera_height_adder", "-0.21"),
+    ("sound_and_collision_info_class", "warg"), ("rider_camera_height_adder", _length([-0.21])),
     ("rider_body_capsule_height_adder", "0"), ("rider_body_capsule_forward_adder", "0"),
-    ("standing_chest_height", "0.64"), ("standing_pelvis_height", "0.64"), ("standing_eye_height", "0.88"),
-    ("rider_eye_height_adder", "0.72"), ("eye_offset_wrt_head", "0.07, -0.05, 0.0"), ("jump_speed_limit", "4.5"),
-    ("relative_speed_limit_for_charge", "4"), ("family_type", "1"), ("taom_body_length", "240"),
+    ("standing_chest_height", _length([0.64])), ("standing_pelvis_height", _length([0.64])),
+    ("standing_eye_height", _length([0.88])), ("rider_eye_height_adder", _length([0.72])),
+    ("eye_offset_wrt_head", _length([0.07, -0.05, 0.0])), ("jump_speed_limit", "4.5"),
+    ("relative_speed_limit_for_charge", "4"), ("family_type", "1"), ("taom_body_length", "115"),
 ) + _BONES + (
     ("front_bone_to_detect_ground_slope_index", "2"), ("back_bone_to_detect_ground_slope_index", "4"),
-    ("rein_handle_left_local_pos", "0,-0.42,0.06"), ("rein_handle_right_local_pos", "0,-0.42,-0.06"),
+    ("rein_handle_left_local_pos", _length([0, -0.42, 0.06], ",")),
+    ("rein_handle_right_local_pos", _length([0, -0.42, -0.06], ",")),
 )
 
 SKINS = (("grey", "gundabad"), ("white", "gundabad"), ("black", "goblin"), ("brown", "goblin"))
@@ -110,12 +134,15 @@ def resolve_paths(root):
 def monster_text(nl):
     lines = ['\ufeff<?xml version="1.0" encoding="utf-8"?>', "<Monsters>",
              "\t<!-- TAOM dire wolf (#1081): the warg's behavior on the purchased ADOD_Beasts wolf rig.",
-             "\t     Written by tools/apply_dire_wolf_armory.py; size lives on taom_body_length. -->",
+             "\t     Written by tools/apply_dire_wolf_armory.py. The mesh is RIG_SCALE 2.08 times the pack's wolf,",
+             "\t     moved 0.52 toward the tail so the warg's rider clip seats the rider on the saddle;",
+             "\t     taom_body_length scales it in battle only (portraits and the inventory draw the mesh). -->",
              "\t<Monster"]
     lines += ['\t\t%s="%s"' % pair for pair in _ATTRIBUTES]
     lines[-1] += ">"
-    lines += ["\t\t<Capsules>", "\t\t\t<body_capsule", '\t\t\t\tradius="0.20"', '\t\t\t\tpos1="0, 0.55, 0.5"',
-              '\t\t\t\tpos2="0, -0.25, 0.5" />', "\t\t</Capsules>", "\t\t<Flags", '\t\t\tMountable="true"',
+    lines += ["\t\t<Capsules>", "\t\t\t<body_capsule", '\t\t\t\tradius="%s"' % _length([0.20]),
+              '\t\t\t\tpos1="%s"' % _point(0, 0.55, 0.5), '\t\t\t\tpos2="%s" />' % _point(0, -0.25, 0.5),
+              "\t\t</Capsules>", "\t\t<Flags", '\t\t\tMountable="true"',
               '\t\t\tCanRear="true"', '\t\t\tRunsAwayWhenHit="true"', '\t\t\tCanCharge="true"',
               '\t\t\tCanWander="true" />', "\t</Monster>", "</Monsters>", ""]
     return nl.join(lines)

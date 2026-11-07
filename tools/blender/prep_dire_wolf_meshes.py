@@ -15,6 +15,15 @@ Why this exists rather than importing the pack's FBX directly:
 - A rider needs a seat, and warg_saddle is skinned to skeleton_warg. The warg's saddle geometry is scaled to the
   wolf, placed on its back and weighted to its own spine, inside the FBX that defines the skeleton
   (creature-mount-authoring.md, replace table row 6).
+- The pack's wolf stands 0.93 m, and the engine draws portraits and the inventory at mesh size, so it looked like a
+  pup beside the 1.70 m warg (Mike, 2026-11-06). The whole rig, saddle included, is scaled by RIG_SCALE last
+  (tools/blender/rig_scale.py). The skeleton package and the animation masters take the same factor
+  (apply_dire_wolf_skeleton.py --scale, scale_dire_wolf_anims.py).
+- The engine seats a rider where its mount's usage's rider clip puts it in model space; rider_sit_bone only decides
+  what the rider follows (docs/features/dire-wolf.md "Seat"). The dire wolf uses the warg's rider rows, so its
+  saddle must sit where the warg's does. RIG_SCALE brings the seat to the warg's height, and the rig then moves
+  RIG_BACK toward the tail (--back), the same move the skeleton and the masters take. The gate measures both seats
+  and fails beyond SEAT_TOLERANCE.
 
 The armature keeps its name and bone order: WargConfig.ImpactBoneIds and the pack's animation masters index it.
 """
@@ -28,6 +37,7 @@ from mathutils import Matrix, Vector
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_job import flag_value, job, script_args  # noqa: E402
+from rig_scale import scale_rig, seat_point, tail_offset  # noqa: E402
 
 SKINS = ("grey", "black", "brown", "white")
 ARMATURE = "adod_wolf_armature_unused"
@@ -54,10 +64,17 @@ LODS = (
 )
 SADDLE_LOD_COUNT = 6
 SADDLE_BONE = "Spine1"
-# skeleton_warg is 2.37 times the wolf (Root_M to Head_M 2.128 m, Pelvis to Head 0.814 m on the fitted axes), and
-# the wolf is resized to warg size on its Monster, so the saddle is authored at the wolf's size.
+# skeleton_warg is 2.37 times the pack's wolf (Root_M to Head_M 2.128 m, Pelvis to Head 0.814 m on the fitted axes).
+# The saddle is fitted at the pack wolf's size, then scale_rig resizes it with the rest of the rig.
 WARG_TO_WOLF = 1.0 / 2.37
 SEAT_ABOVE_BACK = 0.02
+# 0.93 m to 1.94 m tall: portraits and the inventory draw this size. 2.08 puts the wolf's seat at the warg's seat
+# height (1.26 m at 1.73, the warg's 1.51 m). Battle size is the Monster's taom_body_length on top (115).
+RIG_SCALE = 2.08
+# Model units toward the tail: the wolf's seat (y 0.39 at 2.08, nose +y) onto the warg's (y -0.13), 2026-11-06.
+RIG_BACK = 0.52
+SEAT_TOLERANCE = 0.06  # model units, in y and in z
+TAIL = (0.0, 1.0, 0.0)  # scale_dire_wolf_anims.TAIL: the animation files move their object along it
 
 
 def parse_args():
@@ -65,6 +82,8 @@ def parse_args():
     p.add_argument("--src", required=True)
     p.add_argument("--saddle", required=True)
     p.add_argument("--out", required=True)
+    p.add_argument("--scale", type=float, default=RIG_SCALE)
+    p.add_argument("--back", type=float, default=RIG_BACK)
     return p.parse_args(script_args())
 
 
@@ -141,6 +160,10 @@ def import_saddles(path, armature, body):
     # The seat is the mesh's top; the straps hang below it. It keeps the warg's place along the spine.
     base = saddles[0]
     points = [base.matrix_world @ v.co for v in base.data.vertices]
+    # Seats compare in the engine's model frame, nose +y: each Kit import turns its creature that way.
+    nose = 1.0 if warg_forward.y > 0 else -1.0
+    rest_y, rest_z = seat_point([tuple(p) for p in points], -nose)
+    warg_seat = (rest_y * nose, rest_z)
     top = max(p.z for p in points)
     seat = [p for p in points if p.z > top - 0.08]
     seat_y = sum(p.y for p in seat) / len(seat)
@@ -176,7 +199,8 @@ def import_saddles(path, armature, body):
         if obj not in saddles:
             bpy.data.objects.remove(obj, do_unlink=True)
     return result, {"back_top": round(back_top, 3), "turned": turn != 0.0, "along_spine": round(along, 3),
-                    "seat_y": round(target_y, 3), "spine1_y": round(wolf_bone.y, 3), "mats": sorted({s.material.name for s in saddles[0].material_slots if s.material})}
+                    "seat_y": round(target_y, 3), "spine1_y": round(wolf_bone.y, 3), "warg_seat": warg_seat,
+                    "mats": sorted({s.material.name for s in saddles[0].material_slots if s.material})}
 
 
 def rename_materials(objs, skin):
@@ -238,6 +262,12 @@ def world_tails(arm):
 
 def tris(obj):
     return sum(len(p.vertices) - 2 for p in obj.data.polygons)
+
+
+def heights(armature, body):
+    """(pelvis, lowest vertex, highest vertex) in world z: a resize about the ground scales all three alike."""
+    zs = [(body.matrix_world @ v.co).z for v in body.data.vertices]
+    return (armature.matrix_world @ armature.data.bones["Pelvis"].head_local).z, min(zs), max(zs)
 
 
 def gate(path, want_heads, want_tails, want_order, want_tris, want_faces, want_saddle):
@@ -318,7 +348,7 @@ def render(path, preview_stem, location_ratio):
 def main(report):
     args = parse_args()
     os.makedirs(args.out, exist_ok=True)
-    report.update({"blender": bpy.app.version_string, "skins": {}})
+    report.update({"blender": bpy.app.version_string, "scale": args.scale, "back": args.back, "skins": {}})
     for skin in SKINS:
         reset()
         bpy.ops.import_scene.fbx(filepath=args.src)
@@ -352,16 +382,37 @@ def main(report):
         if skin == SKINS[0]:
             _, saddle_info = import_saddles(args.saddle, armature, lods[0])
 
+        before = heights(armature, lods[0])
+        bones = world_bones(armature)
+        offset = tail_offset(tuple(bones["Pelvis"]), tuple(bones["Head"]), args.back)
+        scale_rig(armature, args.scale, [o for o in bpy.data.objects if o.type == "MESH"], offset=offset)
+        after = heights(armature, lods[0])
+        size_problems = [f"{label} z {a:.3f}, want {b * args.scale:.3f}" for label, a, b in
+                         zip(("pelvis", "lowest vertex", "highest vertex"), after, before)
+                         if abs(a - b * args.scale) > 0.005]
+        if any(abs(a - b * args.back) > 1e-4 for a, b in zip(offset, TAIL)):
+            size_problems.append(f"the tail is {offset}, not scale_dire_wolf_anims.TAIL times --back")
+        if saddle_info is not None:
+            saddle = bpy.data.objects["dire_wolf_saddle"]
+            tail_y = 1.0 if TAIL[1] > 0 else -1.0  # from TAIL, which the check above ties to the rig: --back 0 is legal
+            seat_y, seat_z = seat_point([tuple(saddle.matrix_world @ v.co) for v in saddle.data.vertices], tail_y)
+            seat = (-seat_y * tail_y, seat_z)
+            want = saddle_info["warg_seat"]
+            saddle_info.update(offset=[round(v, 3) for v in offset], wolf_seat=[round(v, 3) for v in seat],
+                               warg_seat=[round(v, 3) for v in want])
+            if abs(seat[0] - want[0]) > SEAT_TOLERANCE or abs(seat[1] - want[1]) > SEAT_TOLERANCE:
+                size_problems.append(f"the seat is at y {seat[0]:.3f} z {seat[1]:.3f}, the warg's at y {want[0]:.3f} "
+                                     f"z {want[1]:.3f}")
         out = os.path.join(args.out, f"{name}.fbx")
         want_heads, want_tails = world_bones(armature), world_tails(armature)
         order = [b.name for b in armature.data.bones]
         want_tris = {o.name: tris(o) for o in bpy.data.objects if o.type == "MESH"}
         materials = {o.name: faces_per_material(o) for o in bpy.data.objects if o.type == "MESH"}
         export(out)
-        problems = gate(out, want_heads, want_tails, order, want_tris, materials, skin == SKINS[0])
-        report["skins"][skin] = {"fbx": out, "tris": want_tris, "materials": materials, "problems": problems, "saddle": saddle_info,
+        problems = size_problems + gate(out, want_heads, want_tails, order, want_tris, materials, skin == SKINS[0])
+        report["skins"][skin] = {"fbx": out, "heights": [round(z, 3) for z in after], "tris": want_tris, "materials": materials, "problems": problems, "saddle": saddle_info,
                                  "mb": round(os.path.getsize(out) / 1048576, 1)}
-    render(os.path.join(args.out, f"dire_wolf_{SKINS[0]}.fbx"), os.path.join(args.out, "preview"), 2.2)
+    render(os.path.join(args.out, f"dire_wolf_{SKINS[0]}.fbx"), os.path.join(args.out, "preview"), 2.2 * args.scale)
     failed = sorted(k for k, s in report["skins"].items() if s["problems"])
     if failed:
         raise RuntimeError(f"the re-import gate failed for {failed}")

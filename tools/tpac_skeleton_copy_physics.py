@@ -394,9 +394,14 @@ def load_skeleton(raw, name):
 
 
 def replace_userdata(raw, name, data):
+    return replace_segment(raw, name, shc.SKELETON_USERDATA_TAG, data)
+
+
+def replace_segment(raw, name, tag, data):
+    """The package with one segment of the skeleton's item replaced by data, its sizes and hash updated."""
     pkg = tcm.parse(raw)
     item = shc._skeleton_item(pkg, name)
-    seg = shc._segment(item, shc.SKELETON_USERDATA_TAG)
+    seg = shc._segment(item, tag)
     blob = lz4.block.compress(data, mode="high_compression", store_size=False) if seg.is_compressed else data
     if seg.is_compressed and len(blob) == len(data):
         raise Refused("the recompressed segment is exactly its raw size; tcm would read it back as raw")
@@ -409,19 +414,24 @@ def replace_userdata(raw, name, data):
 
 def verify_output(raw, out, name, data):
     """The new file holds exactly the new userdata and every other byte of payload unchanged."""
+    verify_segment(raw, out, name, shc.SKELETON_USERDATA_TAG, data)
+
+
+def verify_segment(raw, out, name, tag, data):
+    """The new file holds exactly the new payload in the skeleton's segment tag and every other byte unchanged."""
     before, after = tcm.parse(raw), tcm.parse(out)
     if tcm.serialize(after.package_guid, after.items, after.version) != out:
         raise Refused("the written package does not round-trip through the container parser")
     if shc.stale_segment_hashes(out):
         raise Refused("stale segment hashes after the edit: %s" % shc.stale_segment_hashes(out))
-    seg_after = shc._segment(shc._skeleton_item(after, name), shc.SKELETON_USERDATA_TAG)
+    seg_after = shc._segment(shc._skeleton_item(after, name), tag)
     if tcm.segment_payload(shc._skeleton_item(after, name), seg_after) != data:
-        raise Refused("the userdata segment does not read back as written")
+        raise Refused("segment %s does not read back as written" % tag.hex())
     if [it.name for it in before.items] != [it.name for it in after.items]:
         raise Refused("the item list changed")
     for a, b in zip(before.items, after.items):
         for sa, sb in zip(a.segments, b.segments):
-            if sa.tag == shc.SKELETON_USERDATA_TAG and a.name == shc._skeleton_item(before, name).name:
+            if sa.tag == tag and a.name == shc._skeleton_item(before, name).name:
                 continue
             if tcm.segment_payload(a, sa) != tcm.segment_payload(b, sb):
                 raise Refused("segment %s of %r changed" % (sa.tag.hex(), a.name))

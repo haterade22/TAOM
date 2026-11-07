@@ -10,8 +10,12 @@ The purchased ADOD_Beasts wolves become ridden dire wolves for Gundabad and the 
 Misty Mountain Orcs, Blue Craig). Each culture gets a three-step rider line. The existing wargs, fell wargs and
 spiders do not change.
 
-**Status (2026-11-04):** the art, the Armory data, the troops, the costs and the C# are written, and the static
-gates pass. Nothing has run in game. Everything under "How to verify in game" is still open.
+**Status (2026-11-06):** the art, the Armory data, the troops, the costs and the C# are written, and the static
+gates pass. In game, a portrait thumbnail threw because a merge into the live Armory `SubModule.xml` lost the wolf's
+Monster row (restored; `e7ab20fcf` adds a test that every Armory Monster file is registered), and the wolf looked far too small in the
+portrait and the inventory, so the rig was rebuilt at warg size (see "Size"). In the first ride the rider sat over the
+hips, so the rig was rebuilt again with the seat under the warg's (see "Seat"). That rebuild has not run in game yet.
+Everything under "How to verify in game" is still open.
 
 ## Why This Exists
 
@@ -45,6 +49,53 @@ to clips on the wolf's skeleton. The warg usage set, the action types, the rider
   ADOD_Beasts module loaded beside the Armory, and TAOM's module set does not include it.
 - **Dedicated server:** `DsAssetPackages/taom_creature_skeletons.tpac` holds the wolf skeleton, so that Monsters bone
   lookups do not assert on the server.
+
+### Size
+
+The pack's wolf stands 0.93 m, about half of `warg_low` (1.70 m). Portraits and the inventory draw the mesh at its own
+size, and `taom_body_length` reaches only the battle agent, so a Monster value alone left the wolf small on those
+screens (Mike, 2026-11-06). The whole rig is therefore 2.08 times the pack's (`RIG_SCALE`): the mesh stands 1.94 m.
+2.08 rather than the first rebuild's 1.73 puts the saddle at the warg's seat height (see "Seat"). In battle the
+Monster's `taom_body_length` 115 makes it about 2.22 m, 25% larger than the wargs, whose items have `body_length` 110
+(Mike, 2026-11-06, after the first ride). Portraits and the inventory keep the mesh size, so there the wolf is a little
+larger than a warg (1.94 m against 1.70 m).
+
+- **Meshes:** `prep_dire_wolf_meshes.py --scale` (default 2.08) scales the rest bones and the vertices about the world
+  origin, then `--back` moves them toward the tail. It fails the run unless the pelvis, the paws and the top all moved
+  by the factor and the saddle's seat lands on the warg's.
+- **Clip masters:** `tools/blender/scale_dire_wolf_anims.py` scales the 6 animation FBX (location keys and rest bones;
+  rotations stay), moves the armature object `--back` toward the tail, and checks each export against the pack by
+  re-import. Each keeps the pack's take name, which the Kit uses as the master name (`tools/blender/fbx_takes.py`).
+- **Skeleton:** `apply_dire_wolf_skeleton.py --scale` scales the rest translations, the capsule ends and radii and the
+  joint positions, and `--back` moves the root bone (Pelvis). Masses, joint frames and limits stay. The capsules are
+  then refit to the scaled mesh.
+- **Gaits:** each gait clip's `LoopDisplacement` is the pack clip's value times `RIG_SCALE`, in the rig's own units.
+  The engine applies the agent scale itself (native v1.5.6: the horse movement node compares this value with the
+  agent's velocity divided by its agent scale), so `taom_body_length` never enters a clip and a size change needs no
+  new clips.
+- **Monster lengths:** each height, rein and capsule value in `apply_dire_wolf_armory.py` is the old value times
+  `RIG_SCALE`. The body capsule is in model space, so it also moves `RIG_BACK`.
+
+### Seat
+
+**The engine seats a rider from its mount's rider clip, not on `rider_sit_bone`.** The dire wolf has
+`monster_usage="warg"`, so its rider plays the warg's rider rows, and those place the rider where the warg's saddle is
+in model space. In the first ride the rider sat over the wolf's hips: the warg's seat is at y -0.13, z 1.51 (model
+units, nose +y), and the wolf's saddle was at y 0.33, z 1.26.
+
+This is a native v1.5.6 read from the #1081 review (not checked at runtime). When the rider mounts, the engine stores
+the rider's offset from the sit bone, taken from the rider's reference clip and the mount's current clip
+(`FUN_1806402f0`). Each tick it places the rider at the sit bone plus that offset (`FUN_18063e700`), so in the
+reference pose the sit bone cancels out. `rider_sit_bone` only decides what the rider follows as the mount moves.
+The rider adders (`rider_body_capsule_forward_adder` and the others) feed the eye, the camera and the collision
+capsule, not the drawn rider.
+
+The fix moves the wolf instead of the rider. `RIG_SCALE` 2.08 lifts the saddle to the warg's seat height, and the
+whole rig moves `RIG_BACK` 0.52 model units toward the tail: the meshes, the skeleton's root, the animation masters'
+object and the Monster's body capsule. The model origin now sits under the saddle. `rider_sit_bone` stays `Spine1`,
+the bone under the seat, which gives the shortest lever. `prep_dire_wolf_meshes.py` measures both seats
+(`rig_scale.seat_point`) and fails beyond 0.06 model units; the 2026-11-06 run measured the wolf's seat at y -0.102,
+z 1.52 against the warg's y -0.108, z 1.51.
 
 ### Troops and cost
 
@@ -86,8 +137,14 @@ sub-meshes. This route is not proven in game, and the tag is not set yet.
 
 ## Traps
 
-- **Grey mesh re-import:** the Kit drops the Skeleton item. Run `tools/apply_dire_wolf_skeleton.py` and the capsule fit
-  again. See [lotrlome-dire-wolf-changes.md](../reference/lotrlome-dire-wolf-changes.md).
+- **Grey mesh re-import:** the Kit can drop the Skeleton item, or keep the old one (2026-11-06). Run
+  `tools/apply_dire_wolf_skeleton.py --replace` and the capsule fit again. See
+  [lotrlome-dire-wolf-changes.md](../reference/lotrlome-dire-wolf-changes.md).
+- **Animation import:** the Kit names a master after the FBX take and refuses a name the module already holds. Keep
+  the pack's take names (`scale_dire_wolf_anims.py` checks them). A Kit-imported master names no skeleton: run
+  `wire_anim_master_skeletons.ps1` after every import.
+- **`warg_attack_run`:** the Kit warns that this combat parameter is missing. The warg's own `warg_attack_running` clip
+  names it, no module defines it, and `dire_wolf_attack_running` copies it. It is older than the wolf.
 - **`_stand` clips:** `dire_wolf_trot_stand`, `_canter_stand` and `_forward_gallop_left_foot_stand` have no
   `quad_movement`, the same as their warg twins. `verify_mount_assets.py` exempts their four exact action and clip pairs,
   and `gen_dire_wolf_anim_clips.ps1 -Verify` holds their flags to the warg's. A mission crash at
@@ -99,20 +156,25 @@ sub-meshes. This route is not proven in game, and the tag is not set yet.
   reins fits in the inventory and reaches a null rein skeleton in `AddHorseReinsClothMesh`: test with `light_harness`.
 - **LODs:** LOD1 and LOD2 are heavier than `warg_low`, because fur cards do not survive decimation. Judge the cost in
   battle.
-- **Gait tuning:** to change `$GAIT_SCALE`, delete those clips, run `-Apply`, then open and save the Kit once. `-Apply`
+- **Gait tuning:** to change `$RIG_SCALE`, delete those clips, run `-Apply`, then open and save the Kit once. `-Apply`
   never overwrites, and it exits 1 on an existing clip that differs from the plan.
+- **Seat:** never move the rider with `rider_sit_bone` or the rider adders; move the rig (see "Seat"). `RIG_SCALE`
+  and `RIG_BACK` must agree in every tool that carries them (`RigScaleTests`). An animation file's armature object
+  turns, so its move goes on the object, never inside armature space (`rig_scale.move_object`).
 
 ## How to verify in game
 
 Nothing below has run yet. Run these in Custom Battle first, then in a campaign. A new item needs a full game restart.
 Spawn with `taom.spawn_troops goblin_wolf_lord 3 ally` and `taom.spawn_troops gundabad_wolf_lord 3 enemy`.
 
-1. All four skins spawn. The rider sits on the saddle (`SEAT_ABOVE_BACK`), and the straps do not pass through the fur.
-2. The gaits do not slide. The tune value is `$GAIT_SCALE` (2.4). `LoopDisplacement` scaling with agent size is not
-   established (`docs/features/animalia-elk-moose.md`).
+1. All four skins spawn. The rider sits in the saddle, not over the hips and not above it (see "Seat"), and the
+   straps do not pass through the fur. Check the seat at a stand, a walk, a gallop and a turn.
+2. The gaits do not slide. The clips hold the pack's travel times `RIG_SCALE`, and the engine scales it by the
+   agent size (see "Size").
 3. The bite and the rage fire. The log shows `[Warg] Added behavior trees to N wargs`, and no `act_none` plays.
-4. The size looks right beside a warg (`taom_body_length`, start 240; the log shows a `[MonsterSize]` line), with the
-   rider camera and eye values.
+4. The size looks right beside a warg (`taom_body_length` 115, about 2.22 m against the warg's 1.87 m; the log shows
+   a `[MonsterSize]` line), with the rider camera and eye values. The portrait and the inventory show the wolf a little
+   larger than a warg.
 5. On purpose: kill a ridden wolf, kill a rider while mounted, and charge. Check the ragdoll on the zero-radius head chain.
 6. **Harness cross-fit:** at `CharacterDetail` above 2, put `light_harness` on a wolf and ride. A crash here is the
    known limitation under Traps.

@@ -10,14 +10,16 @@
 
 A mount is **its own `Agent`** (spawned from the `Equipment[Horse]` item's `HorseComponent.Monster` via the
 `FromHorseObj` path — Phase 1/10). A rider is **another `Agent`**. At runtime the two are linked: the rider
-**`MountAgent`** points at the mount, the mount **`RiderAgent`** points back, and the rider is visually attached at the
-mount Monster's **`RiderSitBoneIndex`**. The link is requested in managed code (`Agent.Mount`) and executed by native.
+**`MountAgent`** points at the mount, the mount **`RiderAgent`** points back, and the rider follows the mount Monster's
+**`RiderSitBoneIndex`**. Where the rider sits comes from the rider clip of the mount's `monster_usage`, not from that
+bone (see "Where the rider sits"). The link is requested in managed code (`Agent.Mount`) and executed by native.
 
 ## HOW it works
 
 ### The Monster side (mount data — Monster.cs, Phase 3)
 - **`RiderSitBoneIndex`** (Monster.cs:168) — from `rider_sit_bone` (deserialized :551 with
-  **`validateHasParentBone: false`** — lenient, won't reject on a missing parent). **The rider is seated at this bone.**
+  **`validateHasParentBone: false`**, lenient: it won't reject a missing parent). **The rider follows this bone; it
+  does not sit on it** (see "Where the rider sits").
 - **Rein bones** (Monster.cs:152-184) — `ReinHandle*`/`ReinCollision*`/`ReinHead*`/`Rein{Left,Right}Hand*BoneIndex` +
   `ReinSkeleton`/`ReinCollisionBody`: the reins mesh + physics. Resolved **by name** → `-1` if absent (Phase 3 trap).
 - **`MonsterUsage`** (:44, e.g. `"horse"`/`"elephant"`/`"camel"`) — selects the action set + AI behaviors;
@@ -68,12 +70,30 @@ engine where the animation/physics state lives, so managed code never has to man
   AddSkinMeshes/native-AV crash. The detached riderless combatant (a `FromHorseObj` spider with no rider, which hit a `PreloadForRendering` AV) was deleted on 2026-06-10; see [spider.md](../../features/spider.md). The Mirkwood
   broods ride the same mounts riderless.
 - **Bone-by-name** (Phase 3): `RiderSitBoneIndex`/`Rein*BoneIndex` resolve by name → `-1` on a typo/missing bone; a
-  `-1` sit bone seats the rider at the origin (visible "rider floating at feet"). `rider_sit_bone` is *lenient*
+  `-1` sit bone was said to seat the rider at the origin ("rider floating at feet"). UNVERIFIED: the native seat code
+  read for #1081 does not show that path. `rider_sit_bone` is *lenient*
   (`validateHasParentBone:false`) so a bad parent won't error — it silently mis-seats.
 - **`MonsterUsage`/`FamilyType`** drive the action set + AI grouping; a creature mount needs a `monster_usage` whose
   action set exists (the elephant reuses `as_elephant`/`monster_usage="elephant"`; the spider has its own, `as_spider`/`monster_usage="spider"`).
 - **Two-phase mount is async** — after calling `Mount`, `MountAgent` is **not** set until the next tick; don't read it
   in the same frame.
+
+## Where the rider sits
+
+Native v1.5.6, read from the decompile for #1081 (2026-11-06), not checked at runtime:
+
+1. When the rider mounts, `FUN_1806402f0` stores one offset: the rider's bone 0 in the rider's reference clip (the
+   first rider row of the mount's `monster_usage`), less the mount's sit bone in the mount's current clip, in the sit
+   bone's frame.
+2. Each tick `FUN_18063e700` places the rider at the sit bone's current position plus that offset turned by the sit
+   bone's current rotation, then scales by the mount's agent scale.
+3. So in the reference pose the sit bone cancels out: the rider sits where the usage's rider clip puts it in the
+   mount's model space. The sit bone only decides what the rider follows as the mount moves.
+4. `rider_body_capsule_forward_adder` and the other rider adders feed the eye height, the camera and the collision
+   capsule. No Monster attribute moves the drawn rider.
+
+A creature that shares another's `monster_usage` must put its saddle where that creature's saddle is in model space.
+The dire wolf moves its whole rig to do this ([dire-wolf.md](../../features/dire-wolf.md) "Seat").
 
 ## The native boundary
 **Managed:** the `Mount`/`Dismount` *request* (`EventControlFlag`), and all Monster/Equipment *data*. **Native:**

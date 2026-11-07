@@ -64,7 +64,7 @@ and the gate.
 | `bo_` bodies | Use the mesh's own `bo_` twin, never a borrow; keep the misspelled `bo_capwm_isengard_shield_a02_clean` | [validation](../features/moduledata-validation.md) |
 | Unsaved tpac | No `.rdc`: skipped (`check_rdc_entries.py`). A build reverts a Kit save, not its `.rdc`: repo it first | [banners](../reference/banner-icon-generation.md) |
 | Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../features/war-ram.md) |
-| Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
+| Mount size, seat | Resize on the Monster (`taom_body_length`); the usage's rider clip seats a rider, never `rider_sit_bone` | [size](../features/monster-size.md) |
 | Riderless creatures | Soldiers ignore a riderless `Mountable` with no weapon state; fading a mount a soldier holds or chose CTDs | [bandits](../features/creature-bandits.md) |
 | Animation | Engine skeleton: engine frames, rest pose at frame 0, list order; own skeleton: retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../tools/README.md) |
