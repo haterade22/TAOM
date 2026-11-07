@@ -82,6 +82,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,CollectAssemblyTypesShim}.cs` (`SubModuleConstructionGuard.cs` removed 2026-11, plan 137) `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
+| AssertAutoIgnore (poheniks) | `AssertAutoIgnore` | UNKNOWN | behavioural-port | `tools/assert_auto_ignore.py` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` | UNKNOWN | comparison-only | (none) | uncleared |
 | module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
