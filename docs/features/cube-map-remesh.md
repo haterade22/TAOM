@@ -10,6 +10,29 @@ The current vertical slice handles closed, manifold, star-shaped triangle meshes
 single closed quad mesh with material assignments and quality metrics. It is not an Exoside
 replacement for general organic or highly concave assets.
 
+## Required workflow selection
+
+Every Blender quad-remeshing or retopology task in TAOM must use the quad toolkit. Do not write a
+new bridge, invoke `xremesh.exe` directly, or use the official modal Exoside add-on in a background
+job. Ordinary LOD reduction and animation-keyframe decimation are different operations and keep
+their existing tools.
+
+1. For a closed, manifold, star-shaped mesh where cube-directed quad flow is acceptable, use the
+   independent engine through `tools/blender/cube_map_remesh.py` or
+   `tools/examples/cube_map_active.py`. It requires NumPy but no Exoside installation.
+2. For open, nested, strongly concave, or organic work that needs better edge flow, use the
+   [licensed Exoside bridge](quad-remesher-job.md) through `tools/blender/quad_remesh_job.py` or
+   `tools/examples/remesh_active.py`. Do not force such input through the independent engine. If
+   the required Exoside license is unavailable, stop the retopology stage and report that blocker.
+3. Use a new output object when comparing candidates. Use in-place replacement only when the
+   workflow calls for it, preserve the source in staging, and inspect the generated report and
+   topology metrics before UV, baking, collision, LOD, or Kit stages.
+4. Use an older collapse-decimation route only for polygon reduction rather than quad retopology,
+   or when the maintainer explicitly accepts it as the fallback.
+
+The independent engine does not retain UVs. Rebuild UVs downstream, and expect FBX export to
+triangulate the quad faces for Bannerlord.
+
 ## Why This Exists
 
 TAOM needs an engine it can inspect, extend, and tune for its own asset pipeline instead of
@@ -97,6 +120,8 @@ making throughput claims.
 
 ## Changelog
 
+- 2026-11-07: made the toolkit the required Blender retopology path and documented backend
+  selection for repository workflows.
 - 2026-11-06: first independent vertical slice with closed quad topology, material projection,
   NumPy-only fallback, metrics, Blender integration, and real-runtime verification.
 

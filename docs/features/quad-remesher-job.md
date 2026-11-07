@@ -9,6 +9,14 @@ making its fixed-file protocol safe and useful in production workflows.
 This is separate from the independent cube-map engine. It does not replace or bypass Exoside
 licensing and does not provide a fallback remesher.
 
+## Required workflow selection
+
+This bridge is the required Exoside path for Blender retopology outside the independent engine's
+limits. Follow the [remesher selection](cube-map-remesh.md#required-workflow-selection) before
+choosing a backend. Never invoke `xremesh.exe` directly or use the official modal add-on in a
+background job. A missing Exoside license blocks this route; it does not authorize an unsupported
+independent-engine run.
+
 ## Why This Exists
 
 The official Blender bridge uses a modal operator driven by a window timer, which does not finish
@@ -80,6 +88,8 @@ behavior, artifact handling, and safe integration into background workflows.
 
 ## Changelog
 
+- 2026-11-07: documented required backend selection and prohibited direct engine calls in
+  repository Blender workflows.
 - 2026-11-06: added fixed-path locking, preservation, artifacts, process cleanup, Blender
   integration, tests, and real-runtime verification.
 

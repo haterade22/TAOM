@@ -63,6 +63,18 @@ Review record: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`; Blender go
 - **Fab vault downloads can be partial**: the tent collection shipped texture zips for only 3 of 6
   tent families; re-download missing "additional files" from the product page before converting.
 
+## Quad remeshing in Blender workflows
+
+Every quad-remeshing or retopology stage uses the
+[required toolkit selection](../features/cube-map-remesh.md#required-workflow-selection). Use the
+independent engine only for eligible closed, manifold, star-shaped meshes; use the licensed
+Exoside bridge for other quad retopology. Never invoke `xremesh.exe` directly. This rule does not
+replace ordinary collision, LOD, or animation-keyframe decimation.
+
+For Tripo props, remesh before UV probing and baking, then feed the resulting FBX to the prep
+script without `--decimate-tris` unless further polygon reduction is explicitly wanted. Preserve
+the source and remesh report in staging. The independent engine requires rebuilt UVs downstream.
+
 ## Single-prop path — Tripo AI assets (2026-07-25 throne; 2026-07-28 Gondor ships)
 
 A Tripo-generated FBX (single mesh, embedded `.fbm` JPEG textures: basecolor/normal/roughness/

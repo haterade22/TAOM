@@ -13,6 +13,13 @@ Exoside Quad Remesher 1.4 installation.
 No Exoside binaries, activation data, licenses, mesh assets, or decompiled native code are
 included.
 
+## TAOM workflow default
+
+TAOM Blender retopology must use this toolkit rather than a new bridge or a direct `xremesh.exe`
+call. Use the independent engine for eligible closed, manifold, star-shaped meshes. Use the
+licensed Exoside bridge for open, nested, concave, or organic retopology. The canonical repository
+rule is in `docs/features/cube-map-remesh.md` under "Required workflow selection".
+
 ## Independent engine
 
 Open a scene with the active mesh, then run:

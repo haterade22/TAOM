@@ -5,7 +5,8 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 
 ## Where things are
 
-- **Tools:** the catalog is [tools/README.md](../../tools/README.md).
+- **Tools:** the catalog is [tools/README.md](../../tools/README.md);
+  [retopology selection](../features/cube-map-remesh.md#required-workflow-selection).
 - **Maps:** [docs/INDEX.md](../INDEX.md) by topic, [feature-map.md](../reference/feature-map.md)
   from feature to code, [doc-lookup.md](../reference/doc-lookup.md) from task to doc.
 - **Registries:** for crash triage, grep the failing type in

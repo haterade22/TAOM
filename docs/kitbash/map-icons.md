@@ -3,7 +3,8 @@
 What draws a settlement on the campaign map, where icon sources live, the conventions a new icon
 follows, and a registry of the custom icons TAOM has made. The procedure for a new icon from a Tripo
 model, decimated or rebuilt, is the [`/prep-tripo-prop`](../../.claude/skills/prep-tripo-prop/SKILL.md)
-skill.
+skill. Any quad-retopology stage first follows the
+[required toolkit selection](../features/cube-map-remesh.md#required-workflow-selection).
 
 ## How an icon is drawn
 
@@ -29,8 +30,8 @@ rebuilds an icon from it.
 ## Conventions for a new icon
 
 - **Mesh:** visual only, no `bo_` (the shipped `gundabad icons.fbx` has none; every town entity
-  carries its own `bo_town`). On the decimate route the prep script's `<name>_low.fbx` is that file,
-  copied to the faction folder as `<name>.fbx`; on the rebuild route it is the unwrap's
+  carries its own `bo_town`). On the remesh or decimate route the resulting `<name>_low.fbx` is
+  that file, copied to the faction folder as `<name>.fbx`; on the rebuild route it is the unwrap's
   `uv\<name>.fbx`.
 - **Budget:** measure the faction's existing icons first (`tools/blender/probe_fbx.py`). The
   Gundabad set, as a reference:

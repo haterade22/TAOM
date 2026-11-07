@@ -342,6 +342,12 @@ The scripts behind the [`/prep-tripo-prop`](../.claude/skills/prep-tripo-prop/SK
 ([map-icons.md](../docs/kitbash/map-icons.md)). The Blender ones run headless through the Store
 launcher, which detaches; each writes `_report/DONE.txt` through `blender_job.py`.
 
+**Retopology default:** every Blender quad-remeshing task follows the
+[required toolkit selection](../docs/features/cube-map-remesh.md#required-workflow-selection).
+Use the independent engine for eligible closed, manifold, star-shaped meshes and the licensed
+Exoside bridge for other quad retopology. Never invoke `xremesh.exe` directly or start another
+background bridge. Ordinary LOD and animation-keyframe decimation are separate operations.
+
 | Script | Purpose |
 |--------|---------|
 | `blender/blender_job.py` | Shared by the headless scripts: `job()` removes the old report, writes `"ok"` only when the block returns and `"error"` with the trace on any exception (argparse's exit too), so a crash never leaves a stale `ok`; plus the FBX import fallback and the Kit FBX export settings (`kitbash_kits.FBX_EXPORT`). Tests: `tools/tests/test_blender_job.py`. |

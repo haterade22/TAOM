@@ -40,25 +40,34 @@ are in each script's docstring; the scripts are listed in [tools/README.md](../.
 3. Set the triangle budget from the reference asset. Map icon textures are 1K at most; prop textures
    are diffuse 2K and the rest 1K.
 4. Report triangles, textures and atlas state per candidate before changing anything.
-5. **Pick the route.** Decimate when the model has flat faces worth keeping: Phases 2A, 3, 4, 5.
+5. **Pick the route.** For quad retopology, use the
+   [required toolkit selection](../../../docs/features/cube-map-remesh.md#required-workflow-selection)
+   and Phase 2A step 1. Decimate when the model has flat faces worth keeping: Phases 2A, 3, 4, 5.
    Rebuild when it is a sculpt (rounded corners, dripping walls read as melted wax at any triangle
-   count in the Kit, and decimation cannot add hard edges back): Phases 2A step 3 (for the scaled
+   count in the Kit, and decimation cannot add hard edges back): Phases 2A step 4 (for the scaled
    source only), 2B, 4, 5. Show Mike the decimated mesh beside the source in Blender before you decide.
 
-## Phase 2A: Decimate and re-UV
+## Phase 2A: Remesh or decimate and re-UV
 
-1. Probe two UV methods on the decimated mesh, in parallel, each with its own `--staging` folder
-   (two runs in one folder overwrite each other's report). Same other arguments, then
+1. **Run quad retopology before UV probes.** For an eligible closed, manifold, star-shaped mesh:
+   `blender-launcher -b <scene.blend> --python-exit-code 1 -P tools/examples/cube_map_active.py -- --quads <n> --work-dir <job> --output <staging>\<mesh>_low.fbx`.
+   For open, nested, concave, or organic retopology, use `quad_remesh` or `remesh_in_place` from
+   `tools/blender/quad_remesh_job.py`; `tools/examples/remesh_active.py` is the invocation template.
+   Never call `xremesh.exe` directly. Feed the resulting FBX to the prep script as `--src` and omit
+   `--decimate-tris` unless further polygon reduction is explicitly wanted. Preserve the source and
+   inspect the remesh report before continuing.
+2. Probe two UV methods on the remeshed or decimated mesh, in parallel, each with its own `--staging`
+   folder (two runs in one folder overwrite each other's report). Same other arguments, then
    `--uv-method sharp_seams --probe-spreads 50` for one and `--uv-method chart_abf --probe-spreads 75`
    for the other:
    `blender-launcher -b -P tools/oneoff/blender_prep_tripo_prop.py -- --src <fbx> --dst <dir> --staging <dir> --name <mesh> --material t_<mesh> --scale-mode length --size <m> --decimate-tris <n> ...`
-2. Pick from `_report\DONE.txt` with the targets in the pipeline doc (use at least 40%, texel density
+3. Pick from `_report\DONE.txt` with the targets in the pipeline doc (use at least 40%, texel density
    p95/p5 at most 2.5, folds under 1%). `sharp_seams` wins on a clean low poly; `chart_abf` 75 on a
    decimated Tripo surface. Never `chart`.
-3. Full run with the chosen method. Add `--skip-bakes --export-high` when Painter will retexture:
+4. Full run with the chosen method. Add `--skip-bakes --export-high` when Painter will retexture:
    it writes `<mesh>.fbx` (with `bo_`) to `--dst`, and `<mesh>_low.fbx` and `<mesh>_high.fbx` to
    `--staging`. Without `--skip-bakes` the Tripo maps are rebaked onto the new UVs instead.
-4. To let Mike pick between candidates, run them without `--skip-bakes` and with `--dst` equal to
+5. To let Mike pick between candidates, run them without `--skip-bakes` and with `--dst` equal to
    `--staging`, then in GUI mode (no `-b`):
    `blender-launcher -P tools/blender/compare_prop_candidates.py -- <mesh> A=<dir a> B=<dir b>`.
 
