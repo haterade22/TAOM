@@ -129,8 +129,10 @@ Write the testers' checklist too: `python tools/ingame_ledger.py --since <previo
 into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, followed by an "Owed checks not PASS" section with the verdict lines from the run above. Issue titles are
 developer text, so they stay out of the Discord note.
 
-Add one line to the release note naming the TAOM_Map and LOTRLOME_Armory the release ships, copied
-from the `modules:` line of Phase 8 step 3, plus any `PAIRING SIGNAL` it printed.
+Add one line to the release note naming the TAOM_Map and LOTRLOME_Armory the release ships. Run
+`python tools/check_release_pairing.py --modules <the folder you will package from> --game-root "<game>"`
+now and copy its `modules:` line, plus any `PAIRING SIGNAL`, into the note. A non-zero exit here does
+not stop the note (`PIN_MISSING` is expected until a pin is recorded); Phase 8 still gates.
 
 ## Phase 6 — Commit
 
@@ -215,7 +217,8 @@ change (#371). When Mike says the packages and release folders are the maintaine
    what remains.
 5. The maintainer packages (an outward-facing action). Then re-run steps 2 and 3 with `--source` and
    `--modules` pointing at the channel's `Modules` folder (desktop: `E:\LOTRAOM_Releases\<channel>\Modules`)
-   and `--game-root "<game>"` before the maintainer uploads it.
+   and `--game-root "<game>"` before the maintainer uploads it. A `modules:` line from that folder
+   that differs from the release note's means the note is wrong: stop and ask the maintainer.
 
 ## Gotchas
 
