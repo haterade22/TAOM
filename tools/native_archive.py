@@ -9,9 +9,8 @@ engine-method map and the matcher index.
   python tools/native_archive.py [--detach] [--status]
         [--game-dir DIR] [--archive-dir DIR]
 
-The foreground check is stat-only and silent when nothing changed. With --detach (the
-SessionStart hook's call) changed DLLs are archived by a detached child and the call returns at
-once. Nothing is ever overwritten or deleted in the archive. Always exits 0, except an argparse
+The foreground check is stat-only and silent when nothing changed. With --detach changed DLLs are
+archived by a detached child and the call returns at once. Nothing is ever overwritten or deleted in the archive. Always exits 0, except an argparse
 error (2): a failure here is advice, never a block.
 """
 import argparse
@@ -493,7 +492,7 @@ def run(args) -> int:
     builds = [Build(tag, folder, game) for tag, folder in BUILDS]
     builds = [b for b in builds if b.dll.is_file()]
     if not builds:
-        return 0  # the hook already notes a missing install
+        return 0  # no install, nothing to archive
     try:
         archive.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
