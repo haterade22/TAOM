@@ -128,7 +128,7 @@ do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
 [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first",
 **(2)** "you cannot invoke skills or spawn agents — recommend them in your report", **(3)** the
 relevant tool reminder (`pwsh tools/taom-src.ps1 path <Type>` for signatures;
-`dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`), **(4)** explicit scope
+`dotnet … -p:DisableModuleCopy=true -p:ModuleId=`, not `./build.ps1`), **(4)** explicit scope
 (`Main/IoC.cs` / `Main/SubModule.cs` are single-owner — recommend, don't edit), **(5)** which
 convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems once
 ([agent-teams.md](./docs/ai-includes/agent-teams.md) "Case studies"). Read-only agents (`Explore`/`Plan`)
@@ -273,7 +273,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 **Every commit subject carries the module version** (user rule, 2026-09-13):
 `<type>[(scope)]: vX.Y.Z - <description>`, where `vX.Y.Z` is exactly the `<Version>` in
 `Main/_Module/SubModule.xml` as committed. The version moves ONLY in a `/release` commit, whose
-subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). Why: a crash bundle reports
+subject names the new one (`chore(release): vX.Y.Z - TAOM vX.Y.Z`). Why: a crash bundle reports
 `TaomVersion` from that file and between releases every pushed commit reads as the same version;
 `git log --grep 'v2.0.28 - '` now lists exactly the commits a v2.0.28 build can contain.
 Enforced by `.claude/hooks/check-commit-subject-version.sh` (refuses a subject without the label or
@@ -337,7 +337,7 @@ documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 
-7 servers (5 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
+5 project servers (`.mcp.json`, incl. `imagine`) and context7's plugin. Full server table, configuration,
 and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md)**.
 
 ### MCP Usage Guide
