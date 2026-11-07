@@ -287,7 +287,7 @@ cannot revert it.
 the tails, and the tails are what was wrong. The share of troops inside their band is the
 metric that answers the question; the median is not.
 
-Three constraints the swap respects, each of which cost something to learn:
+Four constraints the swap respects, each of which cost something to learn:
 
 1. **Culture is a hard filter, not a tiebreak.** The first version ranked it as a preference,
    and when a faction owned nothing in band the ranking fell through: Gondor's Swan Knights
@@ -300,6 +300,20 @@ Three constraints the swap respects, each of which cost something to learn:
    `requires_no_shield`. That pairing has shipped three times.
 3. **One swap per slot.** Six melee weapons sit in two different slots on the same troop, and a
    swap keyed on (slot, old item) would have replaced one and left the other.
+4. **Different weapons stay different (2026-11-07).** The 2026-09-21 run mapped each
+   out-of-band weapon to the single best in-band one, so two weapons of one class in a troop
+   became one id. The Black Uruk Barad-Dur Guard's spear and spare halberd both became Uruk
+   Halberd IX, the Shield Guard got two Gundabad spears, and Orc Polearms II to IV on the
+   Black Uruk Grunt all became the Black Numenorean lance. `pick_substitute` now skips any
+   candidate the troop keeps or was already handed, and reports the slot unresolved when no
+   other in-band weapon is left. The check covers the whole troop, every set at once,
+   because the writer applies one swap to every set. On the 2026-11-07 data it refused 15
+   swaps the old planner made: 11 named a weapon found only in a `civilian="true"` set,
+   which the writer skips anyway, 2 would have duplicated a weapon inside one set, 1 was a
+   collapse, and 1 (`lorien_gl_marksman`) only repeated a weapon another set carries.
+   The rosters were repaired by hand; the Grunt keeps the lance in 7 of its 14 sets
+   because the Mordor career kits take the lowest-level, then most-carried, Mordor
+   polearm, and Orc Polearm II is `requires_no_shield` beside those kits' shield.
 
 ### Pass 1 changes career starting kits
 

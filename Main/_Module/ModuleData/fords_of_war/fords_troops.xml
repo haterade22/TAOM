@@ -3465,9 +3465,6 @@
                     slot="Item1"
                     id="Item.sm_mordor_shield_tower_b" />
                 <equipment
-                    slot="Item2"
-                    id="Item.sm_uruk_halberd_j" />
-                <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_elite_b1" />
                 <equipment
@@ -3486,7 +3483,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_halberd_j" />
+                    id="Item.sm_uruk_halberd_g" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_mordor_shield_tower_b" />
@@ -3509,7 +3506,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_halberd_j" />
+                    id="Item.sm_uruk_halberd_m" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_mordor_shield_tower_c" />

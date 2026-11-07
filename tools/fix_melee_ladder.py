@@ -149,6 +149,7 @@ def pick_substitute(
     cat: mc.Catalogue,
     needs_shield_safe: bool,
     spec: dict,
+    taken: frozenset[str] = frozenset(),
 ) -> tuple[mc.Priced | None, str]:
     """The best replacement for `current`, or (None, why not).
 
@@ -159,10 +160,18 @@ def pick_substitute(
       2. Same crafting template. A troop's skills, animations and holster all follow the class,
          so swapping a sword for a mace is a different troop, not a rebalance.
       3. Shield-safe when the troop carries a shield. Non-negotiable, see NO_SHIELD_FLAG.
-      4. Inside the tier band.
-      5. Same named line as the weapon it replaces, so `[Gondor] Sword II` becomes
+      4. Inside the tier band, and not a hero blade unless nothing else is in band.
+      5. Not already in the troop's kit (`taken`).
+      6. Same named line as the weapon it replaces, so `[Gondor] Sword II` becomes
          `[Gondor] Sword IV` rather than a different Gondorian family.
-      6. Then closest to the band's target.
+      7. Then closest to the band's target.
+
+    `taken` holds every id the troop keeps (non-weapons included, which never match a
+    candidate) plus each replacement already chosen for it. A candidate in it is skipped, so
+    two different weapons never collapse into one id: the Barad-Dur Guard's spear and spare
+    halberd both became Halberd IX that way, and every Black Uruk Grunt set became the same
+    lance. The check is per troop across all its sets, because the writer applies one swap to
+    every set; a weapon left with no free candidate is reported unresolved for pass 2.
     """
     candidates = culture_pool.get(current.item.template, [])
     if not candidates:
@@ -184,8 +193,16 @@ def pick_substitute(
             )
         usable = safe
 
-    # Never trade a hero weapon in as a line troop's kit.
+    # Never trade a hero weapon in as a line troop's kit. This runs before the kit filter, so a
+    # kept weapon can never leave a hero blade as the only free pick.
     usable = [c for c in usable if not ladder.is_hero_blade(c.blade_piece, spec)] or usable
+
+    free = [c for c in usable if c.item.id not in taken]
+    if not free:
+        return None, (
+            f"every in-band {current.item.template} candidate is already in this troop's kit"
+        )
+    usable = free
 
     same_line = line_of(current.item.name)
     same_family = family(current.item.id)
@@ -228,18 +245,25 @@ def plan(
         window = ladder.band(troop.tier, troop.culture, spec)
         carries_shield = troop_carries_shield(troop, shields)
 
-        for iid in sorted(troop.items):
+        def out_of_band(iid: str) -> bool:
             p = priced.get(iid)
-            if p is None or p.best_dps <= 0:
+            return p is not None and p.best_dps > 0 and window.verdict(p.best_dps) != "ok"
+
+        # What the troop keeps, plus each replacement as it is chosen: never hand out a copy.
+        taken = {iid for iid in troop.items if not out_of_band(iid)}
+
+        for iid in sorted(troop.items):
+            if not out_of_band(iid):
                 continue
-            if window.verdict(p.best_dps) == "ok":
-                continue
+            p = priced[iid]
             replacement, why = pick_substitute(
-                p, window, pool.get(troop.culture, {}), cat, carries_shield, spec
+                p, window, pool.get(troop.culture, {}), cat, carries_shield, spec,
+                frozenset(taken),
             )
             if replacement is None:
                 unresolved.append((troop, iid, why))
                 continue
+            taken.add(replacement.item.id)
             slots = troop.slots_of.get(iid)
             if not slots:
                 unresolved.append((troop, iid, "could not locate the item's equipment slot"))

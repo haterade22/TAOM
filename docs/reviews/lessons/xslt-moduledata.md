@@ -541,3 +541,12 @@ its row would replace vanilla's text and translation key.
   vanilla defines it; `/engine-bump` Phase 4 now says so for the `str_last_seen` block.
 - **Source:** [rca-engine-bump-v1-5-6-2026-10-27.md](../rca-engine-bump-v1-5-6-2026-10-27.md) finding 7; Codex
   pre-review F2; #1036.
+
+### A script that reads troop rosters treats both civilian spellings as civilian (Black Uruk review, 2026-11-07)
+
+The engine reads a troop roster as civilian when it carries `civilian="true"` or `equipmentType="Civilian"`. Three TAOM loaders disagree: `analyze_melee_ladder.load_troops` skips only `equipmentType="Civilian"`, `generate_career_kits.index_troop_gear` skips only `civilian="true"`, and the roster writer in `fix_upgrade_armour_regressions.py` skips both. So 33 of the 72 swaps `fix_melee_ladder.py` planned on 2026-11-07 were silent writer no-ops, civilian weapons fed the fixer's pool and `MELEE_LADDER_INVERSION`, and a reviewer's count of refused swaps came out four times too high.
+
+- **Why missed:** each loader was written alone, and the loader test pins one spelling.
+- **Prevent:** a script that reads what a troop carries skips a roster on either spelling, as `derive_armor_tiers.py` does, and tests both. Count a planner's output against the writer's own filter before you quote it.
+- **Source:** [rca-black-uruk-weapons-2026-11-07.md](../rca-black-uruk-weapons-2026-11-07.md) F6 and F7.
+

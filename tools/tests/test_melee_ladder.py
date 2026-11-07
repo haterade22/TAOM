@@ -237,13 +237,67 @@ def test_a_swap_is_emitted_for_every_slot_the_weapon_sits_in():
     priced = {
         "wm_x_axe_a": weapon("wm_x_axe_a", "OneHandedAxe", dps=200.0),
         "wm_x_axe_b": weapon("wm_x_axe_b", "OneHandedAxe", dps=34.0),
+        "wm_x_axe_c": weapon("wm_x_axe_c", "OneHandedAxe", dps=36.0),
     }
     t = troop("t", 6, "x", ["wm_x_axe_a", "wm_x_axe_b"],
               slots={"wm_x_axe_a": frozenset({"Item0", "Item2"}),
                      "wm_x_axe_b": frozenset({"Item1"})})
-    swaps, _unres = fixer.plan(priced, cata.Catalogue(), [t], spec(), shields=set())
+    pool_owner = troop("other", 6, "x", ["wm_x_axe_c"])
+    swaps, _unres = fixer.plan(priced, cata.Catalogue(), [t, pool_owner], spec(), shields=set())
     moved = {s.slot for s in swaps if s.old == "wm_x_axe_a"}
     assert moved == {"Item0", "Item2"}
+
+
+def test_two_weapons_of_one_troop_never_collapse_onto_one_replacement():
+    """The defect this pins: the Barad-Dur Guard's spear and spare halberd both became Halberd IX.
+
+    Two different weapons in, two different weapons out; the second takes the next-ranked pick.
+    """
+    priced = {p.item.id: p for p in (
+        weapon("sm_uruk_spear_a", "TwoHandedPolearm", dps=20.0),
+        weapon("sm_uruk_halberd_b", "TwoHandedPolearm", dps=200.0),
+        weapon("sm_uruk_halberd_j", "TwoHandedPolearm", dps=69.0),
+        weapon("sm_uruk_halberd_c", "TwoHandedPolearm", dps=72.0),
+    )}
+    t = troop("guard", 26, "x", ["sm_uruk_spear_a", "sm_uruk_halberd_b"],
+              slots={"sm_uruk_spear_a": frozenset({"Item0"}),
+                     "sm_uruk_halberd_b": frozenset({"Item2"})})
+    pool_owner = troop("other", 26, "x", ["sm_uruk_halberd_j", "sm_uruk_halberd_c"])
+    swaps, _u = fixer.plan(priced, cata.Catalogue(), [t, pool_owner], spec(), shields=set())
+    new_ids = [s.new for s in swaps if s.troop == "guard"]
+    assert len(new_ids) == 2
+    assert len(set(new_ids)) == 2
+
+
+def test_a_swap_never_duplicates_a_weapon_the_troop_keeps():
+    """An in-band weapon stays; an out-of-band one must not be swapped into a copy of it."""
+    priced = {p.item.id: p for p in (
+        weapon("sm_uruk_spear_a", "TwoHandedPolearm", dps=20.0),
+        weapon("sm_uruk_halberd_j", "TwoHandedPolearm", dps=69.0),
+    )}
+    t = troop("guard", 26, "x", ["sm_uruk_spear_a", "sm_uruk_halberd_j"],
+              slots={"sm_uruk_spear_a": frozenset({"Item0"}),
+                     "sm_uruk_halberd_j": frozenset({"Item2"})})
+    swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [t], spec(), shields=set())
+    assert [s.new for s in swaps] == []
+    assert any(i == "sm_uruk_spear_a" and "already in this troop's kit" in why
+               for _t, i, why in unresolved)
+
+
+def test_a_kept_weapon_never_pushes_the_pick_onto_a_hero_blade():
+    """The only non-hero in-band sword is one the troop keeps; the hero blade must not fill in."""
+    priced = {p.item.id: p for p in (
+        weapon("wm_x_sword_a", "OneHandedSword", dps=20.0),
+        weapon("wm_x_sword_b", "OneHandedSword", dps=69.0),
+        weapon("wm_x_sword_hero", "OneHandedSword", dps=70.0, blade="hero_blade"),
+    )}
+    t = troop("line", 26, "x", ["wm_x_sword_a", "wm_x_sword_b"],
+              slots={"wm_x_sword_a": frozenset({"Item0"}),
+                     "wm_x_sword_b": frozenset({"Item1"})})
+    swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [t], spec(), shields=set())
+    assert [s.new for s in swaps] == []
+    assert any(i == "wm_x_sword_a" and "already in this troop's kit" in why
+               for _t, i, why in unresolved)
 
 
 def test_a_troop_already_in_band_is_left_alone():

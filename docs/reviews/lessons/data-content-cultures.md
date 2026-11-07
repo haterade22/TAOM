@@ -2356,3 +2356,11 @@ The maintainer decided that the Uruk-hai shoes show the shin. A one-off script f
 - **Why missed:** both scripts selected items by id, and the decision was about a mesh. Neither defaulted to a dry run, and an unchecked guard looks like a check.
 - **Prevent:** select by the property the decision names (here the mesh), assert the expected count, default to a dry run, and delete a computed guard that nothing asserts. `tools/audit_leg_cover_flags.py` (a `data_gates` row) now enforces the leg rule and reports all three boots on the pre-fix file.
 - **Source:** [rca-lothlorien-round2-2026-11-06.md](../rca-lothlorien-round2-2026-11-06.md) finding F2.
+
+### A best-candidate substitution collapses distinct items into one: keep inputs distinct (Black Uruk weapons, 2026-11-07)
+
+A player saw two halberds in one Barad-Dur Guard set and the same Black Numenorean lance on almost every Black Uruk Grunt. `fix_melee_ladder.py` (2026-09-21) picked the single best in-band weapon for each out-of-band one, so a spear and a spare halberd in one troop both became Uruk Halberd IX, and three Orc Polearms became one lance. The per-slot swap and the shield check both passed, because neither looks at what else the troop holds.
+
+- **Why missed:** the fixer's tests checked each swap alone; no test gave it two weapons of one class in one troop. The UI shows set 1 only, so the collapse stayed out of sight for weeks.
+- **Prevent:** `pick_substitute` takes the troop's kept and already-chosen ids and skips them (`test_two_weapons_of_one_troop_never_collapse_onto_one_replacement`). Before a hand repair of a Mordor low-tier roster, run `generate_career_kits.py --verify`: the career kit takes the most-carried low-tier polearm, so a rotation can move a player kit.
+- **Source:** [rca-black-uruk-weapons-2026-11-07.md](../rca-black-uruk-weapons-2026-11-07.md).
