@@ -469,7 +469,7 @@ Owed after the fix branch:
 - CHANGELOG.md entry for this branch (never staged, per the rules).
 - In game, nothing is run: an old German save showing six Umbar names, a real hollow hero across save and load, a real harmony.Patch failure. /deep-review was not run (cannot invoke skills); recommend /deep-review on efe9c6bfd, e84268475 and 95acf768c before merge.
 - Known limits left as they are: a restored human race on an unregistered hollow character still takes the twin's race (nothing tells it from the unsaved default); a manual patch failure is logged but not added to the patch failure report; the Exit Stall Sampler hint stays an unregistered MCM literal.
-- Not acted on, noted in delta-974e60bb2.md: DreadMissionGate.cs:38 and MountDespawnMissionGate.cs:33 read only GameNetwork.IsSessionActive (possible co-op gap, unverified, out of scope under D7); the 1.5.x Spacing Repair in Marshal's Word is a possible future work package.
+- Not acted on, noted in delta-974e60bb2.md: DreadMissionGate.cs:38 and MountDespawnMissionGate.cs:33 read only GameNetwork.IsSessionActive (read from source for BannerlordCoop only: Dread is owner-gated by DreadAgentGate, MountDespawn and BattleCorpses are per-peer presentation; Bannerlord Together and a two-peer run unverified; no action under D7); the 1.5.x Spacing Repair in Marshal's Word is a possible future work package.
 - What switches MSB3270 warnings on is not established.
 
 ## Verification at the tip (`30868fc76`), run by the session that wrote this
@@ -738,7 +738,7 @@ Not verified: any native behaviour beyond what the docs cite from RVA reads, and
 - Custom Battle with Mordor (trolls): no troll raises or fetches a banner.
 - One shader pre-compile batch (it runs hidden Custom Battles): no exception naming TaomCustomBattleBannerBearersModel or TaomCustomBattleDamageModel.
 - Dread: a campaign battle against a Nazgul: only troops in contact weaken; no formation-wide rout from the aura alone; MCM 'Dread Radius' shows 5 on an install with an old TAOM.json.
-- Knockdown: Rohan cavalry into Mordor orcs and uruks floors them head-on and floors men from any angle at full speed; cave trolls and dwarves mostly stay up; MCM 'Auto-Knockdown Weight Ratio' shows 6 on an old TAOM.json.
+- Knockdown: Rohan cavalry into Mordor orcs and uruks floors them head-on and floors men from any angle at full speed; cave trolls and dwarves mostly stay up; MCM 'Auto-Knockdown Weight Ratio' shows 6 on an old TAOM.json. Sauron: a Native horse with a rider floors him at speed factor 0.4 or more (ratio 6.0, Branch A) and a riderless horse does not (his 3.0 row applies); re-read his weight on the public Armory.
 - Custom Battle combat (Part D): troll cleave and stagger immunity, crush-through and charge knockdown work; a mounted hit causes no crash.
 - Battle action bar: the #970 checklist in docs/features/companion-tactics.md; with the setting off (default) no bar and no input change; the [BattleLoad] TAOM-behaviour count is two lower.
 - Warg: a player on a warg still loses and regains control in a rage; warg reinforcements return to their formation after a rage or after their warg dies.
