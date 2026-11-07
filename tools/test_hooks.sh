@@ -3822,6 +3822,16 @@ QV_ROWS=(
   "block-broad-git-add.sh|ask|git -C E:/nospace add -A"
   "block-broad-git-add.sh|allow|git -C \"E:/a b\" add a.txt"
   "block-broad-git-add.sh|allow|git -c user.name=\"A B\" commit -m \"fix: add -a flag\""
+  # A backslash-escaped space is part of the value too (integrated review 3).
+  "block-dangerous-git.sh|ask|git -C a\\ b reset --hard"
+  "block-dangerous-git.sh|ask|git -c x.y=a\\ b clean -f"
+  "block-dangerous-git.sh|ask|git --git-dir=E:/a\\ b/.git checkout -- ."
+  "block-dangerous-git.sh|ask|git --work-tree E:/a\\ b\\ c reset --hard"
+  "block-dangerous-git.sh|ask|git -C E:\\\\repos\\\\x reset --hard"
+  "block-dangerous-git.sh|allow|git -C a\\ b status"
+  "block-broad-git-add.sh|ask|git -C a\\ b add -A"
+  "block-broad-git-add.sh|ask|git -c x.y=a\\ b commit -a -m x"
+  "block-broad-git-add.sh|allow|git -C a\\ b add a.txt"
 )
 for entry in "${QV_ROWS[@]}"; do
     hook="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
