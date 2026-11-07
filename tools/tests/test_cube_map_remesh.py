@@ -44,6 +44,15 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "closed"):
             engine.remesh(vertices, faces, target_quads=24)
 
+    def test_nested_shells_are_rejected(self):
+        outer_vertices, outer_faces, _ = cube_mesh()
+        inner_vertices, inner_faces, _ = cube_mesh()
+        inner_vertices = inner_vertices * 0.5
+        vertices = np.concatenate((outer_vertices, inner_vertices))
+        faces = np.concatenate((outer_faces, inner_faces + len(outer_vertices)))
+        with self.assertRaisesRegex(ValueError, "star-shaped"):
+            engine.remesh(vertices, faces, target_quads=24)
+
     def test_nonfinite_vertices_are_rejected(self):
         vertices, faces, _ = cube_mesh()
         vertices[0, 0] = np.nan
@@ -66,8 +75,8 @@ class ValidationTests(unittest.TestCase):
             [1, -0.25, 0.75], [1, 0.25, 0.25], [-1, 0.2, -0.4],
             [0.3, 1, -0.7], [-0.2, -1, 0.6], [0.5, -0.5, 1],
         ])
-        projected, _ = engine._nearest_points_on_triangles(
-            points, vertices[faces], engine.cKDTree(vertices[faces].mean(axis=1)))
+        tree = engine.cKDTree(vertices[faces].mean(axis=1)) if engine.cKDTree else None
+        projected, _ = engine._nearest_points_on_triangles(points, vertices[faces], tree)
         np.testing.assert_allclose(projected, points, atol=1e-12, rtol=0)
 
 
@@ -91,6 +100,36 @@ class RemeshTests(unittest.TestCase):
         self.assertTrue(np.isin(result.material_ids, np.arange(6)).all())
         self.assertGreater(len(np.unique(result.material_ids)), 2)
         self.assertEqual(result.metrics["boundary_edges"], 0)
+
+    def test_material_nearest_is_not_limited_by_centroid_shortlist(self):
+        vertices, faces, materials = cube_mesh()
+        refined_vertices = vertices.tolist()
+        refined_faces = []
+        refined_materials = []
+
+        def split(triangle, depth, material):
+            if depth == 0:
+                refined_faces.append(triangle)
+                refined_materials.append(material)
+                return
+            a, b, c = triangle
+            ab = (np.asarray(refined_vertices[a]) + np.asarray(refined_vertices[b])) / 2
+            bc = (np.asarray(refined_vertices[b]) + np.asarray(refined_vertices[c])) / 2
+            ca = (np.asarray(refined_vertices[c]) + np.asarray(refined_vertices[a])) / 2
+            refined_vertices.extend((ab.tolist(), bc.tolist(), ca.tolist()))
+            i = len(refined_vertices) - 3
+            for child in ([a, i, i + 2], [i, b, i + 1], [i + 2, i + 1, c], [i, i + 1, i + 2]):
+                split(child, depth - 1, material)
+
+        for index, triangle in enumerate(faces):
+            split(triangle, 3 if index in (4, 5) else 0, materials[index])
+        refined_faces = np.asarray(refined_faces, dtype=np.int32)
+        refined_materials = np.asarray(refined_materials, dtype=np.int32)
+        triangles = np.asarray(refined_vertices)[refined_faces]
+        tree = engine.cKDTree(triangles.mean(axis=1)) if engine.cKDTree else None
+        _, source = engine._nearest_points_on_triangles(
+            np.array([[0.25, 1.0, 0.25]]), triangles, tree)
+        self.assertEqual(refined_materials[source[0]], 4)
 
     def test_octahedron_metrics_are_finite(self):
         vertices, faces, materials = octahedron_mesh()

@@ -72,56 +72,63 @@ def _query_centers(tree, centers, points, count):
     return nearest
 
 
+def _project_triangle_candidates(points, triangles):
+    a = triangles[:, 0]
+    b = triangles[:, 1]
+    c = triangles[:, 2]
+    p = points[:, np.newaxis, :]
+    ab = b - a
+    ac = c - a
+    ap = np.broadcast_to(p, (len(points), len(triangles), 3)) - a
+    d00 = np.sum(ab * ab, axis=1)
+    d01 = np.sum(ab * ac, axis=1)
+    d02 = np.sum(ab * ap, axis=2)
+    d11 = np.sum(ac * ac, axis=1)
+    d12 = np.sum(ac * ap, axis=2)
+    denominator = d00 * d11 - d01 * d01
+    v = np.divide(d11 * d02 - d01 * d12, denominator,
+                  out=np.zeros_like(d02), where=denominator != 0)
+    w = np.divide(d00 * d12 - d01 * d02, denominator,
+                  out=np.zeros_like(d02), where=denominator != 0)
+    closest = a + ab * v[:, :, np.newaxis] + ac * w[:, :, np.newaxis]
+    best_distances = np.full(v.shape, np.inf)
+    inside = (denominator != 0) & (v >= 0) & (w >= 0) & (v + w <= 1)
+    best_distances[inside] = np.sum((closest - p) ** 2, axis=2)[inside]
+    for edge_start, edge_end in ((a, b), (a, c), (b, c)):
+        edge = edge_end - edge_start
+        length_squared = np.sum(edge * edge, axis=1)
+        t = np.divide(np.sum((p - edge_start) * edge, axis=2), length_squared,
+                      out=np.zeros((len(points), len(triangles))), where=length_squared != 0)
+        t = np.clip(t, 0, 1)
+        projection = edge_start + edge * t[:, :, np.newaxis]
+        distances = np.sum((projection - p) ** 2, axis=2)
+        mask = distances < best_distances
+        closest[mask] = projection[mask]
+        best_distances[mask] = distances[mask]
+    return closest, best_distances
+
+
 def _nearest_points_on_triangles(points, triangles, tree):
     nearest = np.empty_like(points)
     nearest_triangles = np.empty(len(points), dtype=np.int32)
     candidate_count = min(32, len(triangles))
-    for start in range(0, len(points), 256):
-        query = points[start:start + 256]
+    triangle_min = triangles.min(axis=1)
+    triangle_max = triangles.max(axis=1)
+    for start, point in enumerate(points):
+        query = point[np.newaxis, :]
         candidates = _query_centers(tree, triangles.mean(axis=1), query, candidate_count)
-        if candidate_count == 1:
-            candidates = candidates[:, np.newaxis]
-        candidates = np.asarray(candidates, dtype=np.int32)
-        tri = triangles[candidates]
-        a = tri[:, :, 0]
-        b = tri[:, :, 1]
-        c = tri[:, :, 2]
-        p = query[:, np.newaxis, :]
-        ab = b - a
-        ac = c - a
-        ap = p - a
-        bp = p - b
-        cp = p - c
-        d00 = np.sum(ab * ab, axis=2)
-        d01 = np.sum(ab * ac, axis=2)
-        d02 = np.sum(ab * ap, axis=2)
-        d11 = np.sum(ac * ac, axis=2)
-        d12 = np.sum(ac * ap, axis=2)
-        denominator = d00 * d11 - d01 * d01
-        v = np.divide(d11 * d02 - d01 * d12, denominator,
-                      out=np.zeros_like(d02), where=denominator != 0)
-        w = np.divide(d00 * d12 - d01 * d02, denominator,
-                      out=np.zeros_like(d02), where=denominator != 0)
-        closest = a + ab * v[:, :, np.newaxis] + ac * w[:, :, np.newaxis]
-        best_distances = np.full(v.shape, np.inf)
-        inside = (denominator != 0) & (v >= 0) & (w >= 0) & (v + w <= 1)
-        best_distances[inside] = np.sum((closest - p) ** 2, axis=2)[inside]
-        for edge_start, edge_end in ((a, b), (a, c), (b, c)):
-            edge = edge_end - edge_start
-            length_squared = np.sum(edge * edge, axis=2)
-            t = np.divide(np.sum((p - edge_start) * edge, axis=2), length_squared,
-                          out=np.zeros_like(length_squared), where=length_squared != 0)
-            t = np.clip(t, 0, 1)
-            projection = edge_start + edge * t[:, :, np.newaxis]
-            distances = np.sum((projection - p) ** 2, axis=2)
-            mask = distances < best_distances
-            closest[mask] = projection[mask]
-            best_distances[mask] = distances[mask]
-        distances = best_distances
-        best = np.argmin(distances, axis=1)
-        rows = np.arange(len(query))
-        nearest[start:start + len(query)] = closest[rows, best]
-        nearest_triangles[start:start + len(query)] = candidates[rows, best]
+        candidates = np.asarray(candidates, dtype=np.int32).reshape(-1)
+        _, distances = _project_triangle_candidates(query, triangles[candidates])
+        best_distance = float(distances.min())
+        lower = np.maximum(np.maximum(triangle_min - point, point - triangle_max), 0)
+        possible = np.sum(lower * lower, axis=1) <= best_distance + 1e-24
+        if not np.any(possible):
+            possible[:] = True
+        possible_indices = np.flatnonzero(possible)
+        closest, distances = _project_triangle_candidates(query, triangles[possible])
+        best = int(np.argmin(distances))
+        nearest[start] = closest[0, best]
+        nearest_triangles[start] = possible_indices[best]
     return nearest, nearest_triangles
 
 
@@ -145,6 +152,10 @@ def _raycast(directions, origin, triangles):
         if not np.any(valid):
             raise ValueError(
                 "a cube-map ray did not intersect the source; input must be star-shaped")
+        hit_distances = distance[valid]
+        if len(hit_distances) > 1 and np.ptp(hit_distances) > 1e-10:
+            raise ValueError(
+                "a cube-map ray intersected multiple surfaces; input must be star-shaped")
         source = np.argmin(np.where(valid, distance, np.inf))
         points[start] = origin + direction * distance[source]
         source_indices[start] = source

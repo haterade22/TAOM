@@ -8,7 +8,7 @@ import traceback
 import bpy
 
 PACKAGE = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PACKAGE / "tools" / "blender"))
+sys.path.insert(0, str(PACKAGE / "blender"))
 
 from quad_remesh_job import quad_remesh, remesh_in_place
 

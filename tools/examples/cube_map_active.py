@@ -8,7 +8,7 @@ import traceback
 import bpy
 
 PACKAGE = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PACKAGE / "tools" / "blender"))
+sys.path.insert(0, str(PACKAGE / "blender"))
 
 from cube_map_remesh import remesh_in_place, remesh_object
 
