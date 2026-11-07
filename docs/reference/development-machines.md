@@ -60,7 +60,7 @@ Measured on the laptop on 2026-09-06: 6,894 `BROKEN_ITEM_REF`, 414 `LANDLESS_CUL
 it was a repo defect.
 
 Measured on the laptop on 2026-11-07 with the public build installed: `TAOM`, `TAOM_Map` and
-`LOTRLOME_Armory` all at `v2.0.29.5`, game `v1.4.8`, both extra roots swept (513 ModuleData files).
+`LOTRLOME_Armory` all at `v2.0.29.5`, game `v1.4.8`, both extra roots swept (498 ModuleData XML files: 454 Armory, 44 TAOM_Map).
 On the `bannerlord-1.4.5` port tree `validate_moduledata.py` reported 0 errors and 111 warnings:
 93 `INCONSISTENT_ARMOUR_SLOT`, 7 `RANGED_LADDER_INVERSION`, 7 `CROSS_CULTURE_ARMOUR_INVERSION` and
 4 `UPGRADE_ARMOUR_REGRESSION`. `BROKEN_ITEM_REF`, `BROKEN_ROSTER_REF`, `BROKEN_SETTLEMENT_REF` and
