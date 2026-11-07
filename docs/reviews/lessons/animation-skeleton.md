@@ -1490,3 +1490,51 @@ a cycle. An older scratch inspector failed the same way.
 - **Prevent:** read the fields you need into a flat hashtable (the clip's `Metadata` properties, the usages) and
   serialize that; load through `TolerantTpacLoader` as `tools/gen_dwarf_attack_clips.ps1` does.
 - **Source:** #1087 Step 3, the clip generator's field dump.
+
+### Name each Blender animation export's take; the exporter uses the scene name (#1081, 2026-11-06)
+Six dire wolf animation FBX exported from factory settings all carried one take, `Scene`, because Blender's FBX
+exporter names its single global take after the scene when it bakes neither NLA strips nor all actions. The Kit names
+a master after the take and holds a name once per module, so it imported one file and refused five with "Item with
+same name already exists".
+- **Why missed:** the export gate compared poses, frame ranges and bone order, not the take name the Kit reads.
+- **Prevent:** set `scene.name` to the take the master must carry before the export, and check the written take
+  names (`tools/blender/fbx_takes.py` reads them from a binary FBX without Blender), as
+  `tools/blender/scale_dire_wolf_anims.py` does.
+- **Source:** #1081 resize, the Kit's Editor Console on the first animation import.
+
+### Write a quad clip's LoopDisplacement at model size; the engine applies agent scale (#1081, 2026-11-06)
+The dire wolf clip generator multiplied each gait clip's travel by the rig's scale and also by the Monster's size
+(1.73 * 1.10), on the stated belief that whether the engine scales `LoopDisplacement` was "not established". The
+#1081 review's engine lens read the native v1.5.6 path: the horse movement node compares the clip's travel with the
+agent's velocity divided by its agent scale, so the size was counted twice and the stride was 10% too long. The
+Animalia generator already wrote travel at model size.
+- **Why missed:** an open engine question was answered with a tune value instead of a decompile, and two generators
+  kept opposite conventions.
+- **Prevent:** write travel in the rig's own model units, never times `taom_body_length` or `body_length`; a size
+  change then needs no new clips.
+- **Source:** `docs/reviews/raw/codex-prereview-dire-wolf-resize-2026-11-06.md` (Codex left it UNVERIFIED) and the
+  #1081 deep-review engine lens (`FUN_1805f7580`, `rglAnim_node_horse_movement`).
+
+### Seat a mount's rider by moving the mesh; `rider_sit_bone` and the rider adders do not place the drawn rider (#1081, 2026-11-06)
+The resized dire wolf carried its rider over the hips. The fix was planned as a new `rider_sit_bone`, from the docs'
+"the rider is seated at this bone". The #1081 engine lens read the native v1.5.6 seat code instead: at mount time the
+engine stores the rider's offset from the sit bone out of the rider's reference clip (the first rider row of the
+mount's `monster_usage`), so in the reference pose the bone cancels out and the rider sits where the usage's clip puts
+it in model space. The wolf shares the warg's usage, and its saddle was 0.46 model units ahead of and 0.25 below the
+warg's. The rig was rebuilt at 2.08 and moved 0.52 toward the tail; a Blender gate now measures both seats.
+- **Why missed:** the mount runtime doc stated the seat as a fact without a native read, and the saddle was placed by
+  its fraction along the spine, which matches only when two rigs share an origin.
+- **Prevent:** a creature that borrows another's `monster_usage` puts its saddle where that creature's saddle is in
+  model space, and its prep tool measures both seats. Never tune a seat with `rider_sit_bone` or the rider adders.
+- **Source:** the #1081 deep-review engine lens (`FUN_1806402f0`, `FUN_18063e700`); `docs/reference/engine/mount-and-rider-runtime.md` "Where the rider sits".
+
+### Move an animation file's rig at the armature object, not inside armature space (#1081, 2026-11-06)
+The first run of the dire wolf animation scaler moved the rest bones 0.52 toward the tail inside armature space, as
+the mesh tool does. Its re-import gate failed on 5 of 6 files by up to 0.81 m: those files turn the armature object
+(the turn clips, and a 60 degree yaw at the first frame of two files), so a move inside armature space turned with it,
+and the direction read from the first frame's pose was turned as well. Moving the object and its location keys by one
+world vector passed on all 6 (worst 0.43 mm).
+- **Why missed:** the mesh files have a still object, where both moves are the same.
+- **Prevent:** a constant model-space move of an animated rig goes on the object and its location keys
+  (`rig_scale.move_object`), and its direction is a constant checked against the mesh tool, never read from a pose.
+- **Source:** `E:\LOTRAOMAssets\_reskin_out\dire_wolf_x208\animations\scale_anims_report.json` (both runs).

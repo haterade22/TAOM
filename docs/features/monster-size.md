@@ -113,7 +113,19 @@ the placeholder 100** when you size its Monster (the schema requires the attribu
 | `taom_animalia_moose` (#646) | `lotr_monster_animalia.xml` | 150 | 2.74 m |
 | `taom_wildmesh_boar`, `_warthog`, `_mountaingoat`, `_deer` (#794) | `lotr_monster_wildmesh.xml` | 100 | owed (first battle) |
 | `taom_wildmesh_moose` (#794) | `lotr_monster_wildmesh.xml` | 150 | owed (first battle) |
-| `dire_wolf` (#1081) | `lotr_monster_dire_wolf.xml` | 240 | owed (first battle) |
+| `dire_wolf` (#1081) | `lotr_monster_dire_wolf.xml` | 115 | owed (about 2.22 m tall from the 1.94 m mesh; the warg 1.87 m) |
+
+**Size in battle is not size everywhere.** `taom_body_length` scales the agent in a mission only. A portrait
+(`CharacterSpawnerService`) draws the mesh at its own size, the inventory (`CharacterTableau`) scales it by the
+item's `scale_factor`, and the campaign map's party icon draws the mount at `ScaleFactor * 0.3`
+(`MobilePartyVisual`). So a mount that must look right on those screens gets its size in the mesh. The dire wolf's
+rig was rebuilt at 2.08 times the pack's size for that reason, which also brings its seat to the warg's height
+(2026-11-06, [dire-wolf.md](dire-wolf.md) "Size" and "Seat").
+
+**Size does not move the seat.** The rider sits where the rider clip of the mount's `monster_usage` puts it in
+model space, and the agent scale scales that place with the mount. A creature that borrows another's usage must
+put its saddle where that creature's saddle is in model space; `rider_sit_bone` and the rider adders do not move
+the drawn rider ([mount runtime](../reference/engine/mount-and-rider-runtime.md) "Where the rider sits").
 
 Every other mount keeps its item's `body_length` (the war ram 100, the elephant 130, the mumakil 300). **Never size
 the elephant or the mumakil here:** their howdah and tower prefabs are baked in metres for the item's size, so a

@@ -95,7 +95,7 @@ most numbers.
 | `standing_chest_height`, `standing_pelvis_height`, `standing_eye_height`, `crouch_eye_height` | float, metres | no | inherited, else 0 | The creature's own proportions on foot | `Monster.cs:419, 424, 429, 434` |
 | `mounted_eye_height` | float | no | inherited, else 0 | Rider-side: where this creature's eyes sit once it is on something | `Monster.cs:439` |
 | `eye_offset_wrt_head`, `first_person_camera_offset_wrt_head` | Vec3 written `x, y, z` | no | inherited, else (0.01, 0.01, 0.01) | Camera anchors relative to the head bone. Fewer than three comma-separated numbers throws during load | `Monster.cs:453, 462` |
-| `rider_camera_height_adder`, `rider_eye_height_adder`, `rider_body_capsule_height_adder`, `rider_body_capsule_forward_adder` | float | no | inherited, else 0 | Mount-side: how the rider is seated on THIS animal. These are the seat-correction knobs, and putting them here rather than on the rider's Monster is what keeps the fix from moving every member of that race on foot | `Monster.cs:389, 444, 394, 399` |
+| `rider_camera_height_adder`, `rider_eye_height_adder`, `rider_body_capsule_height_adder`, `rider_body_capsule_forward_adder` | float | no | inherited, else 0 | Mount-side: the rider's eye, camera and collision capsule on THIS animal. They do not move the drawn rider, whose seat comes from the usage's rider clip ([mount runtime](../reference/engine/mount-and-rider-runtime.md) "Where the rider sits"). Putting them here rather than on the rider's Monster keeps the change from moving every member of that race on foot | `Monster.cs:389, 444, 394, 399` |
 | `rein_skeleton`, `rein_collision_body` | resource name | no | inherited, else none | The rein geometry and its physics body | `Monster.cs:541, 543` |
 | `rein_handle_left_local_pos`, `rein_handle_right_local_pos` | Vec3 `x, y, z` | no | inherited, else zero | Where the rider's hands grip | `Monster.cs:531, 536` |
 | `rein_handle_bone`, `rein_collision_1_bone`, `rein_collision_2_bone`, `rein_head_bone`, `rein_head_right_attachment_bone`, `rein_head_left_attachment_bone`, `rein_right_hand_bone`, `rein_left_hand_bone` | bone name | no | inherited, else invalid index | The eight bones the rein simulation runs on | `Monster.cs:552-559` |
@@ -116,7 +116,7 @@ surface is a TAOM-only shape, and that no tool gates it.
 | `pelvis_bone`, `spine_lower_bone`, `spine_upper_bone`, `neck_root_bone`, `head_look_direction_bone`, `thorax_look_direction_bone`, `body_rotation_reference_bone` | bone name | no | inherited, else invalid index | The look, lean and turn chain | `Monster.cs:499-504, 550` |
 | `right_upper_arm_bone`, `left_upper_arm_bone`, `main_hand_bone`, `off_hand_bone`, `main_hand_item_bone`, `off_hand_item_bone`, `main_hand_item_secondary_bone`, `off_hand_item_secondary_bone`, `off_hand_shoulder_bone` | bone name | no | inherited, else invalid index | Where weapons and shields attach | `Monster.cs:505-506, 514-520` |
 | `primary_foot_bone`, `secondary_foot_bone`, `right_foot_ik_end_effector_bone`, `left_foot_ik_end_effector_bone`, `right_foot_ik_tip_bone`, `left_foot_ik_tip_bone` | bone name | no | inherited, else invalid index | Foot placement and inverse kinematics | `Monster.cs:523-528` |
-| `rider_sit_bone` | bone name | no | inherited, else invalid index | Mount-side: the bone the rider is parented to. Vanilla horse uses `horsespine2` | `Monster.cs:551` |
+| `rider_sit_bone` | bone name | no | inherited, else invalid index | Mount-side: the bone the rider follows as the mount moves; the seat itself comes from the usage's rider clip. Vanilla horse uses `horsespine2` | `Monster.cs:551` |
 | `fall_blow_damage_bone`, `terrain_decal_bone_0`, `terrain_decal_bone_1` | bone name | no | inherited, else invalid index | Fall damage origin and the two ground-decal bones | `Monster.cs:507-509` |
 | `ragdoll_bone_to_check_for_corpses_<n>`, `ragdoll_fall_sound_bone_<n>`, `ragdoll_stationary_check_bone_<n>`, `move_adder_bone_<n>`, `splash_decal_bone_<n>`, `blood_burst_bone_<n>`, `bones_to_modify_on_sloping_ground_<n>` | bone name, numbered from `_0` | no | inherited per slot, else empty | Indexed families. They must be contiguous from zero: the loop stops at the first index that does not resolve, so a gap or a misspelling at `_3` throws away `_4` and everything after it. Caps are 11, 4, 8, 7, 6, 8 and 7 entries | `Monster.cs:497, 498, 510-513, 545` |
 | `hand_num_bones_for_ik`, `foot_num_bones_for_ik`, `front_bone_to_detect_ground_slope_index`, `back_bone_to_detect_ground_slope_index` | sbyte | no | inherited, else 0 for the counts and -1 for the indices | How many bones the hand and foot IK chains use, and which slope bones to sample. These four are parsed with a bare `Parse`, not `TryParse`, so bad text throws | `Monster.cs:521, 529, 546, 548` |
@@ -412,7 +412,9 @@ Code: No code changes needed for a reskin. A bespoke creature needs a behaviour 
    `Agent.AgentScale`).
 4. Re-check the hit box: the capsule scales with the agent, so a 1x capsule that fits becomes a 3x
    capsule that may not cover a longer body.
-5. Tune the seat with `rider_eye_height_adder`, `rider_body_capsule_height_adder` and
+5. Check the seat. The rider sits where the usage's rider clip puts it in model space, so a seat that is off
+   needs the mesh moved or a usage of its own ([dire-wolf.md](../features/dire-wolf.md) "Seat"). Tune the
+   eye and camera with `rider_eye_height_adder`, `rider_body_capsule_height_adder` and
    `rider_camera_height_adder` on the MOUNT's Monster, never the rider's, unless you want every
    member of that race moved on foot as well.
 

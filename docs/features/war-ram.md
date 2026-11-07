@@ -77,10 +77,12 @@ identical count to vanilla `as_human_warrior`**, so inheriting the horse usage s
 rider a complete authored overlay for free. Any custom usage set would have meant hand-authoring a
 second rider partial into a 4,843-action set.
 
-**The dwarf seat correction belongs on the ram, not on the dwarf.** Because the ram is ridden only by
+**The dwarf eye and camera correction belongs on the ram, not on the dwarf.** Because the ram is ridden only by
 dwarves, `rider_eye_height_adder`, `rider_body_capsule_height_adder` and `rider_camera_height_adder`
 can be tuned on `Monster.taom_war_ram` without moving every dwarf on foot. They are currently left
-inherited from the horse, pending the in-game seat check.
+inherited from the horse, pending the in-game seat check. They do not move the drawn rider: the seat comes from the
+rider clip of the ram's `monster_usage` ([mount runtime](../reference/engine/mount-and-rider-runtime.md) "Where the
+rider sits"), so a seat that is off needs the ram's mesh moved, as the dire wolf did.
 
 ### Component Diagram
 
@@ -512,7 +514,8 @@ validator plus a naked or riderless troop means "file not loaded", not "data def
    the silent skeleton-drop failure)
 3. **Barding renders.** This is currently expected to FAIL until the asset packages are rebuilt: see
    the ledger's "Still owed"
-4. Seat check: the dwarf sits on the ram, not inside it. Tune the rider adders on the Monster
+4. Seat check: the dwarf sits on the ram, not inside it. A seat that is off needs the mesh moved (see "The dwarf eye
+   and camera correction"); the rider adders tune only the eye and camera
 5. Charge, including jumps
 6. Prolonged melee: the butt attack fires and reads correctly. Watch the log for any `act_none`
    resolution

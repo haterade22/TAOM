@@ -3,6 +3,7 @@ param(
   [switch]$Verify,
   [string]$Armory = 'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory',
   [string]$Pack = 'E:\LOTRAOMAssets\ADOD_Beasts\Assets\wolves\animations',
+  [string]$PackMasters = 'E:\LOTRAOMAssets\ADOD_Beasts\Assets\wolves',
   [string]$TpacBin = 'E:\Release_v0.5.1\bin',
   [string]$Loader = 'E:\LOTRAOMAssets\_auto_workspace\chariot\TolerantTpacLoader.cs'
 )
@@ -19,10 +20,15 @@ and pace limits are the warg's. The pack's own clips lack make_walk_sound, enfor
 why they are not shipped: locomotion would hide their attacks in battle. Per clip only these change:
   Name       warg_<x> becomes dire_wolf_<x>
   Guid       fresh
-  Animation, Source1, Source2, Duration   the pack clip's, so the wolf's own frames play at the pack's rate
-  LoopDisplacement   gaits only: the pack clip's value times $GAIT_SCALE, the Monster's size. A strafe or backward clip
-             keeps the warg's ratio to its forward gait. Whether the engine scales this value by agent size is not
-             established (docs/features/animalia-elk-moose.md), so a foot slide in game means tune $GAIT_SCALE.
+  Animation  the Armory master with the name of the pack clip's master. The masters are Kit imports of the pack's FBX
+             scaled by $RIG_SCALE (tools/blender/scale_dire_wolf_anims.py), and a Kit import gets a new GUID, so a
+             master that still carries the pack's GUID is an unscaled copy and is refused. Two masters with one name
+             are refused, and so is a master whose frame count differs from the pack master's.
+  Source1, Source2, Duration   the pack clip's, so the wolf's own frames play at the pack's rate
+  LoopDisplacement   gaits only: the pack clip's value times $RIG_SCALE, so it is in the rig's own model units.
+             A strafe or backward clip keeps the warg's ratio to its forward gait. The engine applies the agent scale
+             itself (native v1.5.6: the horse movement node compares this value with the agent's velocity divided by
+             its agent scale), so the Monster's taom_body_length does not enter it.
   a *_continue clip  the last frame of its death clip, as the warg's are.
 The pack has no jump, rear, quick stop, backward or collide clip. Those use the nearest clip in $MAP. A reaction must not
 hold the wolf longer than it holds the warg, so $WARG_TIME clips take the warg's Duration, and $WARG_CUT clips (from a
@@ -34,20 +40,20 @@ refreshes item checksums (tpac_fix_item_checksums.py). Open the Kit once afterwa
 RuntimeDataCache entries, then save. -Verify is read-only: every planned clip exists, plays a master that is in the
 folder, equals the plan (name, master, flags, frames, duration, travel) and has current item checksums. Get-ClipProblem
 is that one check, for existing clips in every mode, so -Apply exits 1 on an existing clip that differs from the plan.
-To change a clip (a new $GAIT_SCALE), delete it, run -Apply, then open and save the Kit once.
+To change a clip (a new $RIG_SCALE), delete it, run -Apply, then open and save the Kit once.
 All modes fail when as_warg binds a clip $MAP does not plan, so a new warg binding cannot leave the wolf behind.
 #>
 $ErrorActionPreference = 'Stop'
 if ($Apply -and $Verify) { Write-Output 'ERROR: pass -Apply or -Verify, not both (-Apply already re-verifies)'; exit 2 }
 if ($PSVersionTable.PSEdition -ne 'Desktop') { Write-Output 'ERROR: run under Windows PowerShell 5.1 (powershell.exe), not pwsh'; exit 2 }
-foreach ($need in @("$TpacBin\TpacTool.Lib.dll", $Loader)) {
+foreach ($need in @("$TpacBin\TpacTool.Lib.dll", $Loader, $Pack, $PackMasters)) {
   if (-not (Test-Path $need)) { Write-Output ('ERROR: {0} not found' -f $need); exit 2 }
 }
 Add-Type -Path "$TpacBin\TpacTool.Lib.dll"
 Add-Type -Path $Loader -ReferencedAssemblies @("$TpacBin\TpacTool.Lib.dll", 'System.dll', 'System.Core.dll')
 function Load($p) { [ChariotExtract.TolerantTpacLoader]::Load($p) }
 
-$GAIT_SCALE = 2.4
+$RIG_SCALE = 2.08  # tools/blender/prep_dire_wolf_meshes.py RIG_SCALE: the masters' travel is this much longer
 $WARG = "$Armory\Assets\creature\warg\animations"
 $OUT = "$Armory\Assets\creature\direwolf\animations"
 $SETS = 'as_warg', 'as_warg_map', 'as_warg_town_and_village'
@@ -117,6 +123,28 @@ function Get-ClipProblem($got, $want, $masters) {
   }
   if (-not $masters.ContainsKey($got['Animation'])) { 'NO MASTER {0}' -f $got['Animation'] }
 }
+function Resolve-Master($packGuid, $packNames, $outByName, $rigScale) {
+  # The Armory master that plays a pack clip: the one with the pack master's name. $null when either is unknown, or
+  # when it is the pack's own master on a scaled rig (an unscaled copy: a Kit import gets a new GUID).
+  $name = $packNames["$packGuid"]
+  if ($null -eq $name) { return $null }
+  $got = $outByName[$name]
+  if ($rigScale -ne 1.0 -and "$got" -eq "$packGuid") { return $null }
+  $got
+}
+function Add-MasterName($byName, $name, $guid, $file) {
+  # Record a master by name; a second GUID under one name is named, never silently replaced.
+  if ($byName.ContainsKey($name) -and $byName[$name] -ne $guid) {
+    return ('TWO MASTERS NAMED {0}: {1} and {2} ({3})' -f $name, $byName[$name], $guid, $file)
+  }
+  $byName[$name] = $guid
+}
+function Get-MasterFrameProblem($name, $frames, $packFrames) {
+  # A master must keep its pack master's frame count: every clip's Source1 and Source2 index those frames.
+  if ($packFrames.ContainsKey($name) -and $frames -ne $packFrames[$name]) {
+    'FRAMES {0}: {1}, the pack master has {2}' -f $name, $frames, $packFrames[$name]
+  }
+}
 function Get-SavedClip($path) {
   $item = @((Load $path).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' })[0]
   if ($null -ne $item) { Get-ClipFacts $item }
@@ -127,12 +155,28 @@ $errors = 0
 $wargFiles = Get-Clips $WARG
 $packFiles = Get-Clips $Pack
 $masterGuids = @{}
+$masterByName = @{}
+$masterFrames = @{}
 if (Test-Path $OUT) {
-  foreach ($f in Get-ChildItem $OUT -Filter 'adod_wolf_*_geo.tpac') {
+  foreach ($f in Get-ChildItem $OUT -Filter '*_geo.tpac') {
     foreach ($it in (Load $f.FullName).Package.Items) {
-      if ($it.GetType().Name -eq 'SkeletalAnimation') { $masterGuids["$($it.Guid)"] = $true }
+      if ($it.GetType().Name -ne 'SkeletalAnimation') { continue }
+      $masterGuids["$($it.Guid)"] = $true
+      $masterFrames[$it.Name] = [int]$it.Duration
+      $twice = Add-MasterName $masterByName $it.Name "$($it.Guid)" $f.Name
+      if ($twice) { $errors++; Write-Output $twice }
     }
   }
+}
+$packMasterNames = @{}
+$packFrames = @{}
+foreach ($f in Get-ChildItem $PackMasters -Filter '*_geo.tpac') {
+  foreach ($it in (Load $f.FullName).Package.Items) {
+    if ($it.GetType().Name -eq 'SkeletalAnimation') { $packMasterNames["$($it.Guid)"] = $it.Name; $packFrames[$it.Name] = [int]$it.Duration }
+  }
+}
+foreach ($n in $masterFrames.Keys) {
+  foreach ($problem in @(Get-MasterFrameProblem $n $masterFrames[$n] $packFrames)) { $errors++; Write-Output $problem }
 }
 
 [xml]$actionXml = Get-Content -Raw "$Armory\ModuleData\action_sets.xml"
@@ -155,7 +199,11 @@ foreach ($stem in $MAP.Keys) {
   $wargLoop = Get-Loop $c
   $c.Name = $clipName
   $c.Guid = [Guid]::NewGuid()
-  $c.Animation = $p.Animation
+  $master = Resolve-Master $p.Animation $packMasterNames $masterByName $RIG_SCALE
+  if ($null -eq $master) {
+    $errors++; Write-Output ('NO MASTER NAMED {0} in {1} for {2}' -f $packMasterNames["$($p.Animation)"], $OUT, $packName); continue
+  }
+  $c.Animation = [Guid]$master
   if ($stem -like '*_continue') {
     $c.Source1 = $p.Source2; $c.Source2 = $p.Source2
   } else {
@@ -169,7 +217,7 @@ foreach ($stem in $MAP.Keys) {
   } elseif ($null -ne $wargLoop) {
     $packLoop = Get-Loop $p
     if ($null -eq $packLoop) { $errors++; Write-Output ('NO PACK TRAVEL {0}' -f $packName); continue }
-    $value = $packLoop * $GAIT_SCALE
+    $value = $packLoop * $RIG_SCALE
     if ($FAMILY.ContainsKey($stem)) { $value = $value * $wargLoop / (Get-Loop (Get-Clip $wargFiles "warg_$($FAMILY[$stem])")) }
     foreach ($u in $c.ClipUsages) { if ($u.GetType().Name -eq 'QuadMovementUsage') { $u.LoopDisplacement = [float]$value } }
     $loop = 'loop={0:0.###}' -f $value

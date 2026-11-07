@@ -129,12 +129,31 @@ class WriterTests(unittest.TestCase):
         self.assertEqual(monster.get("monster_usage"), "warg")
         self.assertEqual(monster.get("action_set"), "as_dire_wolf")
         self.assertEqual(monster.get("family_type"), "1")
-        self.assertEqual(monster.get("taom_body_length"), "240")
+        self.assertEqual(monster.get("taom_body_length"), "115")
         self.assertEqual(monster.get("rider_sit_bone"), "Spine1")
         bones = [v for k, v in monster.attrib.items() if k.endswith("_bone") or "_bone_" in k]
         self.assertTrue(bones)
         self.assertFalse([b for b in bones if b.endswith("_M") or b.endswith("_L") or b.endswith("_R")], bones)
         self.assertEqual(monster.find("Flags").get("Mountable"), "true")
+
+    def test_the_monster_lengths_are_the_pack_wolf_at_rig_scale(self):
+        # The rig is 2.08 times the pack's wolf (prep_dire_wolf_meshes.RIG_SCALE), so every model-unit length is too.
+        # The body capsule is in model space, so it also moves RIG_BACK toward the tail with the rig.
+        self._run("--apply")
+        monster = ET.parse(self.tree.monster).getroot().find("Monster")
+        self.assertEqual(monster.get("standing_eye_height"), "1.83")
+        self.assertEqual(monster.get("standing_pelvis_height"), "1.331")
+        self.assertEqual(monster.get("rider_camera_height_adder"), "-0.437")
+        self.assertEqual(monster.get("rein_handle_left_local_pos"), "0,-0.874,0.125")
+        capsule = monster.find("Capsules/body_capsule")
+        self.assertEqual((capsule.get("radius"), capsule.get("pos1"), capsule.get("pos2")),
+                         ("0.416", "0, 0.624, 1.04", "0, -1.04, 1.04"))
+
+    def test_the_header_says_where_the_size_lives(self):
+        # Battle size is the rig times taom_body_length; portraits and the inventory draw the rig alone.
+        text = dw.monster_text("\n")
+        self.assertIn("RIG_SCALE", text)
+        self.assertIn("battle only", text)
 
     def test_the_items_cover_each_skin_and_the_saddle_shares_the_family(self):
         self._run("--apply")
@@ -309,6 +328,56 @@ class LiveRecipeParityTests(unittest.TestCase):
             self.skipTest("the tpac libraries are missing: %s" % exc)
         names = {b["name"] for b in cp.load_skeleton(_bytes(grey), dw.SKELETON)["bones"]}
         self.assertFalse(dw.monster_bones() - names)
+
+    def test_the_live_monster_is_the_recipe(self):
+        # The writer leaves an existing Monster alone, so a hand tune in the live file would revert on a reinstall.
+        root = os.environ.get("BANNERLORD_GAME_DIR") or dw._DEFAULT_GAME_DIR
+        armory = os.path.join(root, "Modules", "LOTRLOME_Armory")
+        if not os.path.isdir(armory):
+            self.skipTest("the Armory is not installed here")
+        text = _bytes(os.path.join(armory, *dw.MONSTER_FILE.split("/"))).decode("utf-8")
+        self.assertEqual(text, dw.monster_text("\r\n" if "\r\n" in text else "\n"))
+
+
+class RigScaleTests(unittest.TestCase):
+    """Five tools carry the rig's size; one value of RIG_SCALE must hold in all of them."""
+
+    def test_every_tool_names_the_same_rig_scale(self):
+        import re
+        tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        found = {}
+        for rel in ("apply_dire_wolf_armory.py", "apply_dire_wolf_skeleton.py", "gen_dire_wolf_anim_clips.ps1",
+                    os.path.join("blender", "prep_dire_wolf_meshes.py"), os.path.join("blender", "scale_dire_wolf_anims.py")):
+            with open(os.path.join(tools, rel), encoding="utf-8") as fh:
+                m = re.search(r"^\$?RIG_SCALE\s*=\s*([0-9.]+)", fh.read(), re.M)
+            self.assertIsNotNone(m, rel)
+            found[rel] = float(m.group(1))
+        self.assertEqual(set(found.values()), {dw.RIG_SCALE}, found)
+
+    def test_every_tool_names_the_same_rig_back(self):
+        # The rig moves RIG_BACK toward the tail in the meshes, the masters, the skeleton and the body capsule.
+        import re
+        tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        found = {}
+        for rel in ("apply_dire_wolf_armory.py", "apply_dire_wolf_skeleton.py",
+                    os.path.join("blender", "prep_dire_wolf_meshes.py"), os.path.join("blender", "scale_dire_wolf_anims.py")):
+            with open(os.path.join(tools, rel), encoding="utf-8") as fh:
+                m = re.search(r"^RIG_BACK\s*=\s*([0-9.]+)", fh.read(), re.M)
+            self.assertIsNotNone(m, rel)
+            found[rel] = float(m.group(1))
+        self.assertEqual(set(found.values()), {dw.RIG_BACK}, found)
+
+    def test_the_mesh_and_animation_tools_name_the_same_tail(self):
+        # The meshes move inside the armature and the masters move the object; one TAIL keeps both moves one vector.
+        import re
+        tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        found = {}
+        for rel in (os.path.join("blender", "prep_dire_wolf_meshes.py"), os.path.join("blender", "scale_dire_wolf_anims.py")):
+            with open(os.path.join(tools, rel), encoding="utf-8") as fh:
+                m = re.search(r"^TAIL\s*=\s*\(([^)]*)\)", fh.read(), re.M)
+            self.assertIsNotNone(m, rel)
+            found[rel] = tuple(float(v) for v in m.group(1).split(","))
+        self.assertEqual(len(set(found.values())), 1, found)
 
 
 if __name__ == "__main__":
