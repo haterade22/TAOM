@@ -191,9 +191,10 @@ except Exception:
 }
 
 # Whether the command only runs commit plumbing (`git commit-tree`, `git commit-graph`), which a commit
-# gate must skip. The text alone cannot say: `git commit -m "about git commit-tree"` and `git commit-graph
-# write && git commit` are commits. Python only when the words are there; any
-# answer but `no`, including no Python, is gated. It reads the hook's $INPUT and $COMMAND.
+# gate must skip. The text alone cannot say: `git commit -m "about git commit-tree"`, `git commit-graph
+# write && git commit` and `git -C . commit-graph write; eval "git commit"` are commits. Python only when
+# the words are there; any answer but `no`, including no Python, is gated. It reads the hook's $INPUT and
+# $COMMAND.
 taom_commit_plumbing_only() {
     case "$COMMAND" in
         *"git commit-"* | *"git -"*" commit-"*) ;;

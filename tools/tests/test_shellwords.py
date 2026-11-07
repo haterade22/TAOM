@@ -66,6 +66,26 @@ class IsCommitTests(unittest.TestCase):
                     'sudo git commit -m "about git commit-tree"', "pwsh -c 'git commit-graph write; git commit -m x'"):
             self.assertTrue(sw.is_commit(cmd, "Bash"), cmd)
 
+    def test_a_commit_the_reader_cannot_follow_beside_plumbing_stays_gated(self):
+        for cmd in ('git -C . commit-graph write; eval "git commit -m x"',
+                    "git -C . commit-tree T -m y | xargs git commit -m",
+                    "git commit-graph write; sudo git commit -m x",
+                    "git -C . commit-graph write; `git commit -m x`",
+                    "git -C . commit-graph write; find . -exec git commit -m x \\;",
+                    'git -C . commit-graph write; powershell -c "git commit -m x"',
+                    "git -C . commit-graph write; cmd /c git commit -m x",
+                    "git -C . commit-graph write; git -c alias.commit-x=commit commit-x",
+                    'git -C . commit-graph write; eval "git -C . commit -m x"',
+                    "git -C . commit-graph write; sudo bash <<EOF\ngit commit -m x\nEOF"):
+            self.assertTrue(sw.is_commit(cmd, "Bash"), cmd)
+        self.assertTrue(sw.is_commit('git -C . commit-graph write; iex "git commit -m x"', "PowerShell"))
+
+    def test_plumbing_with_no_commit_word_beside_it_still_passes(self):
+        for cmd in ("git commit-graph write --reachable | tee git-commit-graph.log",
+                    "git -C . commit-graph write; git -C . commit-tree T -m y",
+                    "git commit-tree T -m y | xargs git update-ref HEAD"):
+            self.assertFalse(sw.is_commit(cmd, "Bash"), cmd)
+
     def test_what_the_reader_cannot_follow_stays_gated(self):
         self.assertTrue(sw.is_commit('git commit-tree HEAD -m "an unclosed quote', "Bash"))
         self.assertTrue(sw.is_commit("git commit-graph write; x='" + "y" * (sw.REPO_SCAN_MAX + 1) + "'", "Bash"))
@@ -628,6 +648,24 @@ class GitRepoTests(unittest.TestCase):
 
     def test_c_option_of_another_git_command_does_not_count(self):
         self.assertEqual(self.dirs("git -C /e/other status && git commit -m x"), ["E:/w"])
+
+    def test_git_dir_names_the_repo_whose_index_the_commit_records(self):
+        self.assertEqual(self.dirs("git --git-dir=/e/main/.git --work-tree=/e/main commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("git --git-dir /e/main/.git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("git --git-dir=../main/.git commit -m x"), ["E:/w/../main"])
+        self.assertEqual(self.dirs("git -C sub --git-dir=.git commit -m x"), ["E:/w/sub"])
+
+    def test_git_dir_outside_a_dot_git_folder_falls_to_the_work_tree(self):
+        self.assertEqual(self.dirs("git --git-dir=/e/m/.git/worktrees/x --work-tree=/e/x commit -m y"), ["E:/x"])
+        self.assertEqual(self.dirs("git --git-dir=/e/m/.git/worktrees/x commit -m y"), ["E:/w"])
+
+    def test_work_tree_alone_moves_nothing_because_the_index_stays_put(self):
+        self.assertEqual(self.dirs("git --work-tree=/e/other commit -m x"), ["E:/w"])
+
+    def test_git_dir_environment_prefix_counts_and_the_option_beats_it(self):
+        self.assertEqual(self.dirs("GIT_DIR=/e/main/.git GIT_WORK_TREE=/e/main git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("env GIT_DIR=/e/main/.git git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("GIT_DIR=/e/a/.git git --git-dir=/e/b/.git commit -m x"), ["E:/b"])
 
     def test_c_option_after_another_option_counts(self):
         self.assertEqual(self.dirs("git -c user.name=x -C sub commit -m y"), ["E:/w/sub"])

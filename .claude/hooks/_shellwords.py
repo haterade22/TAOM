@@ -24,7 +24,8 @@ Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|g
             lines (push_candidates). A payload that is no JSON object prints unread, which the hook
             answers from the raw text, never with a silent allow
   git-repo  the directory of every `git <subcommand>` (default commit) in the command, one per line
-            (a cd or -C before it joined onto the payload's cwd, or the cwd), then a line `--`, then
+            (a cd or -C before it joined onto the payload's cwd, or the cwd; a --git-dir or a GIT_DIR=
+            in front of the call moves it, an `export GIT_DIR` is not read), then a line `--`, then
             the payload's cwd (_pybin.sh taom_git_repo_dir resolves each to its work tree's top level)
   commit-plan  what the `git commit` calls record, for check-doc-config-drift.sh (#987): a first line
             `amend` when any call amends HEAD, else `new`; then, when every call is a path commit
@@ -443,6 +444,8 @@ def push_candidates(cmd, tool):
 
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1[ \t]*\r?\n(.*?)\r?\n[ \t]*\2\b", re.S)
 CMD_SEP = set(";|&\n()")
+# The global options that say where the repository is, by the environment variable they override.
+GIT_LOCATION_OPTS = {"--git-dir": "GIT_DIR", "--work-tree": "GIT_WORK_TREE"}
 GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
                        "--config-env", "--attr-source"}
 # Commands that change the shell's directory: bash's, and PowerShell's as to_posix() leaves them. A push
@@ -977,6 +980,19 @@ def _env_chdir(prefix, cwd):
     return cwd
 
 
+def _named_repo(git_dir, work_tree, repo):
+    """The directory to judge for a git call with --git-dir or GIT_DIR. The index lives in the git
+    directory, so it is the folder holding that .git; for a git directory of another shape (a linked
+    worktree's) it is the work tree named beside it, else repo. A work tree named alone moves nothing:
+    git still finds the index from repo."""
+    if not git_dir:
+        return repo
+    path = join_dir(repo, git_dir).replace("\\", "/").rstrip("/")
+    if path.endswith("/.git"):
+        return path[:-5] or repo
+    return join_dir(repo, work_tree) if work_tree and path != ".git" else repo
+
+
 def _git_call(g, bodies, subcommand, cwd, partial, depth):
     # Bash's wrappers and grammar are skipped whatever the tool: the commit gates cannot tell, and
     # a PowerShell `timeout 60 git commit` runs no commit, so judging it only over-blocks (#985).
@@ -993,6 +1009,7 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
         return git_invocations(g[i + k], bodies, subcommand, cwd, partial, depth + 1) if k is not None else []
     if word not in ("git", "git.exe"):
         return []
+    named = {w.partition("=")[0]: w.partition("=")[2] for w in g[:i] if w.startswith(("GIT_DIR=", "GIT_WORK_TREE="))}
     i += 1
     repo = cwd
     if subcommand is None:
@@ -1000,9 +1017,12 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
     while i < len(g) and g[i].startswith("-"):
         if g[i] == "-C" and i + 1 < len(g):
             repo = join_dir(repo, g[i + 1])
+        name, eq, value = g[i].partition("=")
+        if name in GIT_LOCATION_OPTS:
+            named[GIT_LOCATION_OPTS[name]] = value if eq else " ".join(g[i + 1:i + 2])
         i += 2 if g[i] in GIT_OPTS_WITH_VALUE else 1
     if i < len(g) and g[i] == subcommand:
-        return [(g[i + 1:], repo)]
+        return [(g[i + 1:], _named_repo(named.get("GIT_DIR"), named.get("GIT_WORK_TREE"), repo))]
     return []
 
 
@@ -1114,13 +1134,19 @@ def _git_subcommand(words):
     return words[i] if i < len(words) else ""
 
 
+# The words of a commit in text the reader could not parse into a call: git, then commit on the same
+# segment, heredoc bodies included. commit-tree and commit-graph are not it.
+COMMIT_WORDS = re.compile(r"\bgit\b[^;&|\n]*\bcommit\b(?!-)", re.I)
+
+
 def is_commit(cmd, tool):
     """Whether a commit gate judges a command whose text names `git commit-`. False only when the whole
-    command was read and it holds a plumbing call (commit-tree, commit-graph) and no `git commit`. A
+    command was read, it holds a plumbing call (commit-tree, commit-graph) and no `git commit`, and its
+    text nowhere has the words of a commit. So a commit behind a runner the reader does not peel (sudo,
+    eval, xargs, cmd /c, an alias) stays True with a plumbing call beside it, and a message such as
+    `git commit-tree T -m "after git commit"` is gated too, which over-blocks on the safe side. A
     mention with no plumbing call stays True, as a mention of `git commit` does at the gates' raw test,
-    and so does what this reader cannot follow: bad quoting, a text too long to read, or a commit behind
-    a runner it does not peel (sudo, eval) with no plumbing call beside it. No commit gate lost a command
-    to this: the raw `*"git commit-"*` test it replaced let all of these through."""
+    and so does bad quoting or a text too long to read."""
     posix = to_posix(cmd, tool)
     if len(posix) > REPO_SCAN_MAX or posix.count("<<") > HEREDOC_MAX_OPENERS:
         return True
@@ -1131,6 +1157,8 @@ def is_commit(cmd, tool):
             return True
         calls = git_invocations(text, bodies, None)
     except ValueError:
+        return True
+    if COMMIT_WORDS.search(decode_ansi_c(posix)):
         return True
     return not any(_git_subcommand(words).startswith("commit-") for words, _repo in calls)
 

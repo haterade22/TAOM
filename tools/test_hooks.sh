@@ -3705,6 +3705,15 @@ OUT=$(nc_run "$NC_WW" "git commit -m x")
 [[ "$(decision_of "$OUT")" == allow ]] \
     && ok "check-native-dll-crt allows a worktree commit while the DLL is staged only in main" \
     || bad "check-native-dll-crt judged main for a worktree commit: $(printf '%s' "$OUT" | head -c 160)"
+# A commit aimed at main through a git directory records main's index, wherever the cwd is.
+for row in "--git-dir and --work-tree|git --git-dir=$NC_MW/.git --work-tree=$NC_MW commit -m x" \
+           "GIT_DIR and GIT_WORK_TREE|GIT_DIR=$NC_MW/.git GIT_WORK_TREE=$NC_MW git commit -m x"; do
+    label="${row%%|*}"; cmd="${row#*|}"
+    OUT=$(nc_run "$NC_WW" "$cmd")
+    [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'VCRUNTIME140' <<< "$OUT" \
+        && ok "check-native-dll-crt denies a DLL staged in main, reached from the worktree by $label" \
+        || bad "check-native-dll-crt missed a DLL staged in main, reached from the worktree by $label: $(printf '%s' "$OUT" | head -c 160)"
+done
 git -C "$NC_F" init -q 2>/dev/null
 nc_stub "$NC_F"
 nc_stage "$NC_F"
@@ -3721,7 +3730,8 @@ rm -rf "$NC_M" "$NC_W" "$NC_F"
 head2 "7q. the commit gates tell commit plumbing from a commit that mentions it"
 # A raw `*"git commit-"*` arm let any commit whose text held those words skip all five gates: a message
 # naming commit-tree, an earlier commit-graph call. Plumbing now passes only when _shellwords.py
-# is-commit read the whole command and found a plumbing call and no commit; anything it cannot follow
+# is-commit read the whole command, found a plumbing call and no commit, and the text has no `git ...
+# commit` words on one segment, which keeps a commit behind eval or xargs gated; anything it cannot follow
 # is gated. The trace shows whether a state gate got past its commit test (as in 7e).
 pc_reaches() {  # $1 hook, $2 tool, $3 command: 1 when the gate got past its commit test
     pre_payload "$2" "$3" | timeout -k 2 60 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" \
@@ -3736,6 +3746,11 @@ PC_CASES=(
   "1|Bash|sudo git commit -m \"about git commit-tree\""
   "1|Bash|eval \"git commit -m x; git commit-tree y\""
   "1|Bash|git commit-tree HEAD -m \"an unclosed quote"
+  "1|Bash|git -C . commit-graph write; eval \"git commit -m x\""
+  "1|Bash|git -C . commit-tree T -m y | xargs git commit -m"
+  "1|Bash|git commit-graph write; sudo git commit -m x"
+  "1|Bash|git -C . commit-graph write; powershell -c \"git commit -m x\""
+  "1|PowerShell|git -C . commit-graph write; iex \"git commit -m x\""
   "1|PowerShell|git commit -m 'about git commit-tree'"
   "0|Bash|git commit-tree HEAD^{tree} -m x"
   "0|Bash|git commit-graph write"
@@ -3743,6 +3758,7 @@ PC_CASES=(
   "0|Bash|git -C . commit-graph write"
   "0|PowerShell|git commit-graph write"
   "0|Bash|git log --grep commit"
+  "0|Bash|git -C . commit-graph write; git -C . commit-tree T -m y"
 )
 for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh; do
     for entry in "${PC_CASES[@]}"; do
