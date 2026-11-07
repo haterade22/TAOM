@@ -15,7 +15,7 @@ code's RVA in the new build, or says it cannot tell. An offline tool: no game, n
 - **The need:** `tools/native_archive.py` (#1004) keeps one copy of each client and wEditor DLL in
   `$TAOM_NATIVE_ARCHIVE` (default `E:\Decompiled_Bannerlord\_native`) with its engine-method map and this
   tool's index. On the 1.5.x line the session-start hook runs it; on the 1.4.x line it runs by hand
-  (`python tools/native_archive.py`; `/engine-bump` Phase 1 names it once the plan 137 skill edits land). A player's crash report can come from an older build than the one installed.
+  (`python tools/native_archive.py`; `/engine-bump` Phase 1 names it). A player's crash report can come from an older build than the one installed.
 - **Without it:** an old address is useless after an update until someone re-derives it by reading
   disassembly.
 
