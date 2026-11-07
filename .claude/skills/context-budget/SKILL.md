@@ -133,7 +133,7 @@ Trimming the eager surface is the structural lever; these per-session knobs redu
 
 These are illustrative ratios, not current counts (the inventory drifts fast — as of 2026-05-28 it was ~32 skills, 5 agents, 15 rules, 18 hook scripts, 5 MCP servers). **Always run `scan.sh` for the live numbers; do not trust hardcoded counts in this doc:**
 
-- **MCP overhead dominant.** Serena alone has ~20+ tools (find_symbol, get_symbols_overview, find_referencing_symbols, etc.). Filesystem MCP plus git/github push the count over 50 tools. Expect MCP to be 40-60% of total overhead.
+- **MCP overhead dominant.** Serena alone has ~20+ tools (find_symbol, get_symbols_overview, find_referencing_symbols, etc.). The other servers in `.mcp.json` add to that. Expect MCP to be 40-60% of total overhead.
 - **CLAUDE.md substantial.** At ~10 words/line × 1.3, every 100 lines ≈ 1,300 tokens — check `scan.sh` for the current size.
 - **Skills: frontmatter is the eager cost.** Per `harness-facts.md`, only skill *descriptions* load at startup; bodies load lazily (only the invoked skill's body enters context). So ~32 skills cost ~32 descriptions eagerly, not 32 full bodies — the per-body line count matters only when a skill is actually invoked.
 - **Rules load contingent on globs.** Not all loaded every session, but counted at worst case.

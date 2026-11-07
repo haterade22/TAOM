@@ -98,7 +98,7 @@ The hook is silent on success and verbose only when blocking, so freeze adds zer
 | Edit or Write to a memory card (`.claude/projects/*/memory/`) or a session scratchpad (`scratchpad/`) | Always allowed, whatever the boundary: neither is code the freeze protects |
 | Read, Glob, Grep | Always allowed (read-only) |
 | Bash | Always allowed — `sed`, `tee`, `>` etc. can still bypass freeze. **This is not a security boundary.** |
-| MCP server tools | Not checked by freeze; the git, filesystem and Serena editing tools are denied outright (`docs/reference/mcp-servers.md`), Serena's memory tools excepted. Use Edit/Write for changes you want freeze-protected. |
+| MCP server tools | Not checked by freeze; the git and filesystem servers are gone and Serena's editing tools are denied outright (`docs/reference/mcp-servers.md`), Serena's memory tools excepted. Use Edit/Write for changes you want freeze-protected. |
 
 In a worktree, a relative path resolves against that worktree's root, so `Main/Features/X/` locks the worktree's copy and not the main checkout's.
 
