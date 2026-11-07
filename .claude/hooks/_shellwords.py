@@ -807,10 +807,15 @@ def commands(cmd, tool, blind=False, depth=0, inherited=None):
 def strip_comments(text):
     """POSIX text without its comments, which start at a # that starts a word outside quotes, as in
     segments(). shlex's own comment handling ends a word at any #, so it read `git commit -m fix#12 -n`
-    as `git commit -m fix`, losing the flag, and joined the next line to the same call."""
+    as `git commit -m fix`, losing the flag, and joined the next line to the same call. A
+    backslash-newline outside single quotes is dropped as bash drops it: shlex kept the newline as a
+    word, so `git \\<newline> commit` read as no commit (integrated review 3)."""
     out, q, i, n, word_start = [], "", 0, len(text), True
     while i < n:
         c = text[i]
+        if c == "\\" and q != "'" and text[i + 1:i + 2] == "\n":
+            i += 2                      # a line continuation: bash drops both characters, in "" too
+            continue
         if c == "\\" and q != "'":
             out.append(text[i:i + 2])
             i += 2
@@ -1134,16 +1139,19 @@ def _git_subcommand(words):
     return words[i] if i < len(words) else ""
 
 
-# The words of a commit in text the reader could not parse into a call: git, then commit on the same
-# segment, heredoc bodies included. commit-tree and commit-graph are not it.
-COMMIT_WORDS = re.compile(r"\bgit\b[^;&|\n]*\bcommit\b(?!-)", re.I)
+# The word of a commit in text the reader could not parse into a call, heredoc bodies included:
+# commit, but not commit-tree or commit-graph. It needs no git beside it, because git reached by a
+# variable (`g=git; $g commit -m x`) puts none on the commit's segment (integrated review 3); a
+# plumbing call whose text holds the word anywhere else is gated, which over-blocks on the safe side.
+COMMIT_WORDS = re.compile(r"\bcommit\b(?!-)", re.I)
 
 
 def is_commit(cmd, tool):
     """Whether a commit gate judges a command whose text names `git commit-`. False only when the whole
     command was read, it holds a plumbing call (commit-tree, commit-graph) and no `git commit`, and its
-    text nowhere has the words of a commit. So a commit behind a runner the reader does not peel (sudo,
-    eval, xargs, cmd /c, an alias) stays True with a plumbing call beside it, and a message such as
+    text nowhere has the word commit on its own (COMMIT_WORDS). So a commit behind a runner the reader
+    does not peel (sudo, eval, xargs, cmd /c, an alias, git in a variable) stays True with a plumbing
+    call beside it, and a message such as
     `git commit-tree T -m "after git commit"` is gated too, which over-blocks on the safe side. A
     mention with no plumbing call stays True, as a mention of `git commit` does at the gates' raw test,
     and so does bad quoting or a text too long to read."""

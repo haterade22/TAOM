@@ -54,10 +54,7 @@ COMMAND=$(taom_hook_command posix check-doc-config-drift)
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
 # `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
 taom_commit_plumbing_only && { echo '{}'; exit 0; }
-case "$COMMAND" in
-    *"git commit"* | *"git -"*" commit"* ) ;;
-    *) echo '{}'; exit 0 ;;
-esac
+taom_names_commit || { echo '{}'; exit 0; }   # _pybin.sh: `git commit`, `git -C x commit`, any blanks
 
 # The top level of the repository the commit runs in, not always the project root (_pybin.sh
 # taom_git_repo_dir). A commit in another repository is not this gate's: its tools/*.py are not

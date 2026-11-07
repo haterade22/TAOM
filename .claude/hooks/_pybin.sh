@@ -203,6 +203,19 @@ taom_commit_plumbing_only() {
     [ "$(printf '%s' "$INPUT" | "${PYBIN:-false}" "$TAOM_HOOKS_DIR/_shellwords.py" is-commit 2>/dev/null)" = no ]
 }
 
+# Whether $COMMAND names a git commit, the raw stage of the two-stage matcher (hook-authoring.md): `git
+# commit` or `git -<option> ... commit`. A backslash-newline is a blank to bash and so is a run of blanks,
+# and the substring test missed both (`git \<newline> commit`, `git  commit`; integrated review 3), so a
+# text the substrings miss is asked again with blanks of any length. No Python, so it reads the same with
+# none. Callers run taom_commit_plumbing_only first where plumbing must pass.
+taom_names_commit() {
+    local t=${COMMAND//$'\\\n'/ }
+    case "$t" in
+        *"git commit"* | *"git -"*" commit"*) return 0 ;;
+    esac
+    [[ $t =~ git[[:space:]]+(commit|-.*[[:space:]]commit) ]]
+}
+
 # The segments a confirm gate judges (#985), one per line, each from its command word on: the quote-aware
 # split with wrappers and grammar read past, plus the quote-blind pieces (`_shellwords.py commands
 # --blind`), so nothing the old sed split caught goes unasked. $1 is the gate's name for the stderr note;
