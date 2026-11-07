@@ -41,6 +41,7 @@
 
     "rivendell": "archers_flag_t1",
     "lothlorien": "archers_flag_t1",
+    "lindon": "archers_flag_t1",
     "mirkwood": "scouts_flag_t1",
     "mirkwood_stalkers": "scouts_flag_t1",
 
@@ -51,6 +52,7 @@
     "gundabad_raiders": "standard_of_fury_t1",
     "goblin": "standard_of_fury_t1",
     "mistymountainorcs": "standard_of_fury_t1",
+    "bluecraig": "standard_of_fury_t1",
 
     "khuzait": "tug_of_wooden_arrow_t1",
     "rhun_raiders": "tug_of_wooden_arrow_t1",
@@ -66,6 +68,6 @@
     "dunland_raiders": "deer_bane_flag_t1"
   },
 
-  "_comment_DefaultBannerItemId": "Fallback for any culture not listed above. Empty by design (fail closed): 38 cultures are registered but only the 28 above are TAOM's — the rest are vanilla leftovers still referenced by live data (looters, sea_raiders, forest_bandits, desert_bandits, mountain_bandits, steppe_bandits, nord, vakken, darshi) plus neutral_culture. Naming a banner here hands one to ALL of them — e.g. looters raising the Gondorian Standard of Duty. A forgotten culture with no banner is a cosmetic absence; with the wrong banner it is an immersion break.",
+  "_comment_DefaultBannerItemId": "Fallback for any culture not listed above. Empty by design (fail closed): only the cultures listed above are TAOM's; the rest are vanilla leftovers still referenced by live data (looters, sea_raiders, forest_bandits, desert_bandits, mountain_bandits, steppe_bandits, nord, vakken, darshi) plus neutral_culture. Naming a banner here hands one to ALL of them, e.g. looters raising the Gondorian Standard of Duty. A forgotten culture with no banner is a cosmetic absence; with the wrong banner it is an immersion break.",
   "DefaultBannerItemId": ""
 }

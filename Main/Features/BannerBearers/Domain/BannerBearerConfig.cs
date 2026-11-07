@@ -74,6 +74,7 @@ public sealed class BannerBearerConfig
         // Elves — ranged/precision standards
         { "rivendell", "archers_flag_t1" },
         { "lothlorien", "archers_flag_t1" },
+        { "lindon", "archers_flag_t1" },
         { "mirkwood", "scouts_flag_t1" },
         { "mirkwood_stalkers", "scouts_flag_t1" },
 
@@ -85,6 +86,7 @@ public sealed class BannerBearerConfig
         { "gundabad_raiders", "standard_of_fury_t1" },
         { "goblin", "standard_of_fury_t1" },
         { "mistymountainorcs", "standard_of_fury_t1" },
+        { "bluecraig", "standard_of_fury_t1" },
 
         // Easterlings / Southrons — tug and desert standards
         { "khuzait", "tug_of_wooden_arrow_t1" },         // Easterlings (Rhun)
@@ -105,7 +107,7 @@ public sealed class BannerBearerConfig
     // Fallback for any culture not in CultureBanners. Empty => unmapped cultures get no banner
     // at all (and therefore no bearers).
     //
-    // Deliberately empty: fail CLOSED. 38 cultures are registered but only the 28 above are
+    // Deliberately empty: fail CLOSED. Only the cultures in the map above are
     // meaningfully TAOM's; the rest are vanilla leftovers still referenced by live data
     // (looters, sea_raiders, forest_bandits, desert_bandits, mountain_bandits, steppe_bandits,
     // nord, vakken, darshi) plus neutral_culture. A non-empty default hands every one of them

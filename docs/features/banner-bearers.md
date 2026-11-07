@@ -121,12 +121,12 @@ Subclassing keeps `this.BannerBearerLogic` (the initialized one) behind every `b
 | `HorseArcherBannerPerSoldiers` | `15` | 0–1000 | Inert while `HorseArcher` isn't in `AllowedFormationGroups`. |
 | `OtherBannerPerSoldiers` | `25` | 0–1000 | Any formation class outside the four defaults. |
 | `ExcludedRaces` | trolls + named | FaceGen race names | Race ids from `LOTRLOME_Armory/ModuleData/skins.xml`. A blank entry is removed with a warning and a padded one trimmed. |
-| `CultureBanners` | 28 entries | — | Culture **StringId** → banner `ItemObject` id. Map to `""` for no banner. See the StringId table below — keys are ids, not LOTR names. |
+| `CultureBanners` | one row per TAOM culture | n/a | Culture **StringId** → banner `ItemObject` id. Map to `""` for no banner. See the StringId table below, keys are ids, not LOTR names. |
 | `DefaultBannerItemId` | `""` | — | Fallback for unmapped cultures. **Empty by design — fail closed.** See below. |
 
 ### Why `DefaultBannerItemId` ships empty
 
-38 cultures are registered at runtime; only the 28 in `CultureBanners` are meaningfully TAOM's. The remaining 10 are vanilla leftovers still carrying **~99 live references in TAOM's own ModuleData** — `looters`, `sea_raiders`, `forest_bandits`, `desert_bandits`, `mountain_bandits`, `steppe_bandits`, `nord`, `vakken`, `darshi` — plus `neutral_culture`.
+Only the cultures in `CultureBanners` are meaningfully TAOM's. The rest are vanilla leftovers still carrying **~99 live references in TAOM's own ModuleData**, `looters`, `sea_raiders`, `forest_bandits`, `desert_bandits`, `mountain_bandits`, `steppe_bandits`, `nord`, `vakken`, `darshi`, plus `neutral_culture`.
 
 Any non-empty default hands a banner to **all** of them. The first cut shipped `standard_of_duty_t1`, which would have put the Gondorian Standard of Duty in the hands of every vanilla-culture bandit warband in the game.
 
@@ -189,14 +189,14 @@ To give another class banners, add its FormationClass name (`"Cavalry"`, `"Range
 
 TAOM does **not** override `GetBannerBearerReplacementWeapon`. Instead every culture declares the data, and a build-time test (`ShippedBannerBearerConfigTests.ShippedConfig_EveryBanneredCultureDeclaresReplacementWeapons`) pins the invariant. A test that fails the build beats runtime C# defending against the same gap — and keeps the GameModel free of the loop that ADR-002 forbids.
 
-Coverage after the 2026-07-16 fix (all 28 cultures declare replacement weapons):
+Coverage after the 2026-07-16 fix (every culture with a banner row declares replacement weapons):
 
 | Source | Cultures | Weapons |
 |---|---|---|
 | `spcultures.xslt` (TAOM override) | `empire` (Dunland), `aserai` (Harad), `vlandia` (Rohan), `khuzait` (Rhûn) | declared by the XSLT |
 | `spcultures.xslt` (vanilla passthrough — not stripped) | `sturgia` (Dale), `battania` (Khand) | vanilla's Calradian swords — works, lore-off; a candidate future polish |
-| `taom_spcultures.xml` | 14 main cultures | LOTR items |
-| `taom_spcultures.xml` | 8 `is_bandit="true"` cultures | **added 2026-07-16** — each mirrors its parent culture |
+| `taom_spcultures.xml` | main cultures | LOTR items |
+| `taom_spcultures.xml` | `is_bandit="true"` cultures | **added 2026-07-16**: each mirrors its parent culture |
 
 The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gundabad_raiders`, `umbar_corsairs`, `gondor_soldiers`, `erebor_warriors`, `mirkwood_stalkers`) had none and would have fielded unarmed bearers.
 
@@ -215,7 +215,7 @@ The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gund
 | `BannerBearerServiceTests.cs` (65) | `PassesRaceGate` (disabled admits a troll; enabled denies both trolls and an invalid id, admits a human); Density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**; **infantry-only gate** (Infantry allowed by default, Ranged/Cavalry/HorseArcher not, configurable, case-insensitive, empty/null/unknown handling, disabled → nothing). |
 | `BannerBearerRaceGateWiringTests.cs` (6) | Every banner model gates the dropped-banner pickup by race and overrides the engine's check (source and reflection pins). |
 | `BannerBearerConfigProviderTests.cs` (29) | Missing file, malformed JSON, full parse, `ObjectCreationHandling.Replace` on both collections, one test per validation rule, summary-warning behaviour, `Lazy<T>` caching; **`AllowedFormationGroups` validation** (valid parse; unknown, numeric and combined names dropped + warned; padded names and aliases stored as the enum prints them; all-invalid/empty/null revert to Infantry); blank `ExcludedRaces` entries dropped + warned and padded ones trimmed. |
-| `ShippedBannerBearerConfigTests.cs` (13) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item; **allows infantry only**. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**. |
+| `ShippedBannerBearerConfigTests.cs` (13) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item; **allows infantry only**. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**, **every culture of an infantry troop that a party template fields has a row** (`ShippedConfig_MapsEveryInfantryTroopCultureToABanner`). |
 | `ShippedHeraldryBannerKeyTests.cs` (9) | Every shipped `banner_key` in `characters/clans.xml` (145), `taom_spkingdoms.xml` (14), `spclans.xslt` (72) and `spkingdoms.xslt` (8) is a non-zero whole multiple of ten integers, the native banner tableau's precondition on the engine's captain-banner path (`GeneralsAndCaptainsAssignmentLogic.cs:262-264`), plus five rule rows. Counts measured 2026-11-04. |
 
 The GameModel and MissionLogic are entry points (ADR-008: not unit tested — they delegate).
@@ -228,6 +228,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 
 - Field battle, both sides, 2+ cultures → bearers present **and moving** (watch a bearer specifically — this is the freeze check).
 - **An orc/dwarf/elf formation's bearer is still an orc/dwarf/elf.** The headline requirement.
+- A Lindon formation without a lord raises the Archer's Flag, and a Blue Craig one the orcs' standard.
 - No troll ever raises a banner or picks up a dropped one, in the campaign or in Custom Battle.
 - Reinforcement wave → new bearers spawn, no freeze. **Post-#360:** bearers carry a 1H sidearm + banner; no `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` (an anomaly line names the drop mechanism — either outcome is signal, record it in the RCA).
 - Feature toggled OFF + a vanilla hero-captain-armed formation loses its bearer mid-battle → a replacement bearer still spawns (Patch63 vanilla-parity check, deep-review Flow-4).
@@ -247,7 +248,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 2. **Every override's disabled path must be `return base.<Method>(...)`, never a computed "off" value.** The model stays registered when the feature is off and the engine still asks it about formations TAOM never touched — including ones vanilla's hero-captain path banners. Returning `0` while "disabled" *suppresses* that vanilla mechanic instead of leaving it alone. The first cut did exactly that; see [rca-banner-bearers-2026-07-16.md](../reviews/rca-banner-bearers-2026-07-16.md).
 3. **`CultureBanners` keys are StringIds, not LOTR names** — Rohan is `vlandia`, Dunland is `empire`. A dead key is silent everywhere. See the table above.
 4. **`SetFormationBanner` validates nothing.** Its check is a stripped `Debug.Assert`, so a typo'd or non-banner item id is accepted **silently** and then fails downstream with no diagnostic. `BannerBearerAssignmentMissionLogic` checks `BannerBearerLogic.IsBannerItem` and warns once per bad id.
-5. **`DefaultBannerItemId` must stay empty.** 38 cultures are registered; 28 are mapped. A non-empty default hands a banner to the other 10 — vanilla leftovers like `looters` and `sea_raiders` that still have ~99 live references in TAOM's data. Fail closed.
+5. **`DefaultBannerItemId` must stay empty.** Only TAOM's own cultures are mapped. A non-empty default hands a banner to every other culture, vanilla leftovers like `looters` and `sea_raiders` that still have ~99 live references in TAOM's data. Fail closed.
 6. **`Agent.IsHuman` means humanoid, not human.** Do not "fix" it to exclude custom races.
 7. **Never sample one unit for a formation-wide property.** `GetFirstUnit()` is `Arrangement.GetAllUnits()[0]` — a slot, not an owner. Aggregate (majority) or use a real owner (captain/general).
 8. **Keep vanilla's `CanFormationDeployBannerBearers` gate** in `GetDesiredNumberOfBannerBearersForFormation` — `SpawnBannerBearer` dereferences the controller's `BannerItem` with no null check of its own.
