@@ -809,22 +809,22 @@ as proof those kinds were stress-tested against the Armory.
 TAOM's data spans **three modules**, and only one of them is in this repo. `TAOM_Map` and
 `LOTRLOME_Armory` live in the game install and are unversioned, which is why CLAUDE.md's
 "A fix in a dependency module" trap insists on an in-repo gate beside every external edit.
-Counts measured 2026-08-18:
+Counts measured 2026-11-07 on the public 2.0.29.5 install (the 2026-08-18 figures were 685 / 1,057 XML and 16 XSLT):
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 259 / 338 | 8 | `xml-schemas` gate (`validate_xml_schemas.py`): engine-registered files only, 94 on 2026-11-06; the CI sweep of `Main/_Module/ModuleData/**` ended 2026-10-05 | full (259 files), plus schema contracts | `check_external_xslt.py` (8 of 8); `/xslt-check` maps 6 of 8 |
-| TAOM_Map | game install | 44 / 313 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
-| LOTRLOME_Armory | game install | 382 / 406 | 7 | `check_external_xslt.py` | **full (382 files)** via `extra_ref_roots` | `check_external_xslt.py` |
-| total | | 685 / **1,057** | **16** | | **685 files swept** | **16 of 16** |
+| TAOM | this repo | 338 / 385 | 8 | `xml-schemas` gate (`validate_xml_schemas.py`): engine-registered files only, 94 on 2026-11-06; the CI sweep of `Main/_Module/ModuleData/**` ended 2026-10-05 | full (338 files), plus schema contracts | `check_external_xslt.py` (8 of 8); `/xslt-check` maps 6 of 8 |
+| TAOM_Map | game install | 44 / 308 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
+| LOTRLOME_Armory | game install | 454 / 467 | 8 | `check_external_xslt.py` | **full (454 files)** via `extra_ref_roots` | `check_external_xslt.py` |
+| total | | 836 / **1,160** | **17** | | **836 files swept** | **17 of 17** |
 
 The two columns matter: the validator only ever reads `ModuleData`, so the left number is its
-ceiling and the right one is the module's whole XML surface. Of TAOM's 259 ModuleData files, 145
+ceiling and the right one is the module's whole XML surface. Of TAOM's 338 ModuleData files, 217
 are localization files under `Languages/` (12 language folders). The deployed `Modules/TAOM` copy is build output; the repo is
-authoritative for it, so do not count it twice. Counts measured 2026-08-18; the 641 is
+authoritative for it, so do not count it twice. Counts measured 2026-11-07; the 836 is
 `len(_xml_files()) + len(_extra_ref_files())` on a live `Validator`.
 
-**The Armory is in better shape than its "foreign module" status suggests.** All 382 of its
+**The Armory is in better shape than its "foreign module" status suggests.** All 454 of its
 ModuleData XML are swept for dangling refs, and it contributes to two registries, not one: items via
 `item_roots`, and `<Monster>` declarations via `build_harness_registries`, which feeds
 `mount_family_types`. What it does *not* get is TAOM's schema contracts (duplicate ids, enums,
@@ -835,8 +835,8 @@ assumption about today's data, not a guarantee, and `/author-armor`'s workflow m
 someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
 
 **`TAOM_Map` WAS the sharp gap, closed by #462.** Its ModuleData is now an `extra_ref_root`, so all
-44 files and their 1,012 `Culture.` refs are swept; the validator visits 685 files (259 repo, 382
-Armory, 44 TAOM_Map). What follows is the shape of the hole as it stood then. Since 2026-11-04
+44 files and their `Culture.` refs (1,012 then, 1,002 on 2026-11-07) are swept; the validator then
+visited 685 files (259 repo, 382 Armory, 44 TAOM_Map), 836 on 2026-11-07 (338, 454, 44). What follows is the shape of the hole as it stood then. Since 2026-11-04
 TAOM_Map also feeds the settlement and roster registries. Exactly **two**
 of the 45 XML and XSLT files in its `ModuleData` are ever opened (44 XML plus `settlements.xslt`;
 the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copies, three
