@@ -3821,6 +3821,34 @@ for entry in "${QV_ROWS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
+head2 "7s. the context-budget scanner reads the main checkout's memory from a sibling worktree"
+# A session in a sibling worktree loads the main checkout's memory, so the scan must read that file.
+SC_H="$SANDBOX/sc-home"
+SC_M="$SANDBOX/scanmain"
+SC_W="$SANDBOX/scansibling"
+SC_S=".claude/skills/context-budget"
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain/memory"
+printf 'one line\n' > "$SC_H/.claude/projects/e--x-scanmain/memory/MEMORY.md"
+git init -q "$SC_M" \
+    && git -C "$SC_M" -c user.name=t -c user.email=t@t commit -q --allow-empty -m base \
+    && git -C "$SC_M" worktree add -q "$SC_W"
+mkdir -p "$SC_W/$SC_S"
+cp "$SC_S/scan.sh" "$SC_W/$SC_S/"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/$SC_S/scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain/memory/MEMORY.md' <<< "$SC_OUT" \
+    && ok "scan.sh reads the main checkout's MEMORY.md from a sibling worktree" \
+    || bad "scan.sh missed the main checkout's MEMORY.md from a sibling worktree: $(printf '%s' "$SC_OUT" | grep -i memory | head -2)"
+# The fallback search for a memory folder ends at the checkout's own name, so another project that holds the name is not read.
+rm -rf "$SC_H/.claude/projects/e--x-scanmain"
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain-old/memory"
+printf 'another project\n' > "$SC_H/.claude/projects/e--x-scanmain-old/memory/MEMORY.md"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/$SC_S/scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain-old/memory/MEMORY.md' <<< "$SC_OUT" \
+    && bad "scan.sh read another project's MEMORY.md through its fallback" \
+    || ok "scan.sh's fallback does not read another project that holds the checkout's name"
+rm -rf "$SC_H" "$SC_W" && git -C "$SC_M" worktree prune 2>/dev/null; rm -rf "$SC_M"
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then
