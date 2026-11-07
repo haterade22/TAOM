@@ -1,19 +1,22 @@
 TAOM Hair Toolkit notices
 
-Source revision: 7252a2db7379745fa4fd4c2d15ef2216d6af972c plus packaging support.
+Source revision: independent TAOM hair engine plus the Hair Tool 4.6.1 interop bridge.
 
-Software in this package is distributed under the MIT License in LICENSE.txt.
+The original TAOM bridge and packaging code are distributed under the MIT License
+in LICENSE.txt. The independent engine in tools/hair_engine/ and its Blender
+adapters are a behavioral implementation informed by Hair Tool source and are
+distributed under GPL-3.0-or-later. The full GPL license is included at
+tools/hair_engine/LICENSE.txt. These are new TAOM implementations, not unmodified
+upstream files, and no clean-room claim is made.
+
 Workflow prose is distributed under CC BY-NC-SA 4.0, as described in the TAOM
 LICENSE-CONTENT.md map: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-Hair Tool by Bartosz Styperek (JOSECONSCO) is a separate local dependency under
-GPL-3.0-or-later. Version 4.6.1 was inspected and exercised. No Hair Tool source,
-node assets, textures, presets, activation data, or installation files are included.
-Recipients must obtain and install Hair Tool 4.6.1 separately and comply with its
-license: https://www.gnu.org/licenses/gpl-3.0.html
-
-The bridge uses public Blender operators and independently written TAOM delivery
-code. No Hair Tool implementation code was copied into this package.
+Hair Tool by Bartosz Styperek (JOSECONSCO) is an optional local dependency under
+GPL-3.0-or-later. Version 4.6.1 was inspected and exercised for comparison. No
+Hair Tool source, node assets, textures, presets, activation data, or installation
+files are included. Recipients need it only for upstream-specific authoring or
+differential checks: https://www.gnu.org/licenses/gpl-3.0.html
 
 No race heads, donor grooms, generated FBX, Blender scenes, or other mesh assets
 are included. Recipients supply their own authorized source assets and are

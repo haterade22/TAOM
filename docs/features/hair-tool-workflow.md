@@ -1,6 +1,13 @@
 # Hair Tool Groom Workflow
 
-## Overview
+## Engine selection
+
+Use the [independent TAOM hair engine](independent-hair-engine.md) by default for new grooms. It
+provides generation, grooming, conversion, baking, rigging, libraries, and delivery without loading
+Hair Tool. This page remains the canonical optional route for upstream-specific Hair Tool authoring
+and for scenes that already depend on Hair Tool nodes.
+
+## Legacy Hair Tool bridge
 
 `tools/blender/hair_tool_pipeline.py` connects Hair Tool 4.6.1 to TAOM's groom delivery pipeline.
 It creates deterministic guides on the actual race head, finalizes existing Hair Systems, transfers

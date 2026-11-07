@@ -31,10 +31,12 @@ run the full suite before handing off.
 Update feature documentation and actual test evidence when the task warrants
 them; the commit body is the changelog entry (`/release` writes CHANGELOG.md).
 Report unavailable engine/runtime verification explicitly.
-For Blender hair, beard, or groom work, follow the
-[Hair Tool workflow](../../../docs/features/hair-tool-workflow.md): use the local
-4.6.1 add-on for authoring and TAOM's bridge for weights, UV checks, LODs, and
-staged FBX delivery.
+For Blender hair, beard, or groom work, default to the
+[independent hair engine](../../../docs/features/independent-hair-engine.md) and
+`tools/blender/hair_engine_pipeline.py`. Use the
+[Hair Tool workflow](../../../docs/features/hair-tool-workflow.md) only for
+upstream-specific authoring. Both routes retain TAOM's weight, UV, LOD, and
+staged FBX gates.
 
 For a review handoff, use the [packet workflow](../../../.ai/README.md) when an
 authorized committed snapshot exists. Do not commit other work to create it.

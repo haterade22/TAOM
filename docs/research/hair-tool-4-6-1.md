@@ -376,13 +376,12 @@ These findings apply to the audited upstream package. They are not reasons to by
 
 ## Implications for TAOM
 
-The existing [Hair Tool workflow](../features/hair-tool-workflow.md) is the required path for new
-curve-authored grooms. It uses the audited add-on for authoring, then owns deterministic guides,
-weight transfer, transform correction, material and UV gates, morph exclusion, staged FBX re-import,
-previews, LODs, and registration. Do not replace that path with a direct call to Hair Tool's generic
-exporter.
+The [independent TAOM hair engine](../features/independent-hair-engine.md) is now the default path
+for new curve-authored grooms. The older [Hair Tool workflow](../features/hair-tool-workflow.md)
+remains available for upstream-specific scenes. Both retain TAOM's weight, material, UV, morph,
+preview, LOD, and staged FBX gates. Neither uses Hair Tool's generic exporter directly.
 
-A future independent engine should be built in layers, with differential fixtures at each layer:
+The independent engine was built in these layers, with unit and Blender fixtures at each layer:
 
 1. Typed curve, attribute, surface, UV-region, and profile data structures independent of Blender UI.
 2. Deterministic generation, interpolation, resampling, simplification, guide ordering, and transport
@@ -419,7 +418,8 @@ independent implementation, but not to claim behavioral equivalence today.
 
 ## Cross-references
 
-- [Hair Tool groom workflow](../features/hair-tool-workflow.md): canonical TAOM authoring and delivery.
+- [Independent hair engine](../features/independent-hair-engine.md): TAOM's default authoring and delivery.
+- [Hair Tool groom workflow](../features/hair-tool-workflow.md): optional upstream-specific bridge.
 - [Race face and hand morphs](../reference/race-face-and-hand-morphs.md): upper-mesh and morph rules.
-- [Provenance register](../reference/provenance-register.md): GPL and interop-only boundary.
+- [Provenance register](../reference/provenance-register.md): GPL behavioral-port and interop boundaries.
 - [Quad Remesher engine research](quad-remesher-engine.md): separate native reverse-engineering effort.

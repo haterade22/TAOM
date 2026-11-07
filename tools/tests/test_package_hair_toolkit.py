@@ -51,6 +51,27 @@ class HairToolkitPackageTests(unittest.TestCase):
             finally:
                 pkg.PACKAGE_FILES[:] = original
 
+    def test_independent_engine_and_license_are_packaged(self):
+        required = {
+            "tools/hair_engine/__init__.py",
+            "tools/hair_engine/curves.py",
+            "tools/hair_engine/convert.py",
+            "tools/hair_engine/baking.py",
+            "tools/hair_engine/LICENSE.txt",
+            "tools/blender/hair_engine_pipeline.py",
+            "tools/blender/hair_engine_adapter.py",
+            "tools/blender/hair_engine_bake.py",
+            "tools/blender/hair_engine_operators.py",
+            "tools/blender/hair_engine_modal.py",
+            "tools/blender/hair_engine_library.py",
+            "tools/blender/hair_engine_particle.py",
+            "tools/blender/hair_engine_rigging.py",
+            "tools/tests/test_hair_engine_core.py",
+            "tools/tests/test_hair_engine_deform.py",
+            "docs/features/independent-hair-engine.md",
+        }
+        self.assertTrue(required <= set(pkg.PACKAGE_FILES))
+
     def test_recipient_commands_name_actual_modules(self):
         text = (ROOT / "tools/hair_toolkit/README.md").read_text(encoding="utf-8")
         for token in ("tools.blender.hair_tool_pipeline", "tools.tests.test_hair_tool_pipeline",

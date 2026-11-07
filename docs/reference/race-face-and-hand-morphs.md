@@ -162,8 +162,9 @@ shape to its groom ([head-mesh-and-groom-authoring.md](head-mesh-and-groom-autho
 
 ## Hair, beards and eyebrows
 
-For new groom authoring, use the [Hair Tool workflow](../features/hair-tool-workflow.md), which connects
-Hair Tool 4.6.1 to the weight, UV, preview, LOD, and Kit requirements below.
+For new groom authoring, default to the [independent hair engine](../features/independent-hair-engine.md).
+The optional [Hair Tool workflow](../features/hair-tool-workflow.md) supports upstream-specific scenes.
+Both connect to the weight, UV, preview, LOD, and Kit requirements below.
 
 The skin's `hair_meshes`, `beard_meshes` and `eyebrow_meshes` are "upper meshes": separate metameshes the face
 builder attaches over the head. **Vanilla is the reference, and it gives its hair and beards no morph channels at
@@ -261,7 +262,8 @@ section 5); that names the carrier, not the sampler.
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
 | `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair, beard, eyebrow or moustache meshes and their LODs, the vanilla shape; refuses face parts, hands, arms and bodies, and a run with nothing to strip |
-| `tools/blender/hair_tool_pipeline.py` | Default guided Hair Tool authoring and delivery: profile selection, transform-safe weight projection, UV and material gates, no upper-mesh morph channels, previews, and staged FBX re-import. See [hair-tool-workflow.md](../features/hair-tool-workflow.md) |
+| `tools/blender/hair_engine_pipeline.py` | Default independent hair authoring and delivery: profile selection, UV and material gates, no upper-mesh morph channels, previews, and staged FBX re-import. See [independent-hair-engine.md](../features/independent-hair-engine.md) |
+| `tools/blender/hair_tool_pipeline.py` | Optional guided Hair Tool authoring and delivery with transform-safe weight projection. See [hair-tool-workflow.md](../features/hair-tool-workflow.md) |
 | `tools/blender/transfer_upper_mesh_weights.py` | Weights an unweighted hair or beard mesh and its LODs from its finished siblings or a head; refuses one that already has weights |
 | `tools/oneoff/tune_face_slider_reach.py` | Scales a race head's slider ranges to the male dwarf's reach in millimetres; `--zero` pins a key at 0; `--check` is the reinstall gate |
 | `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |
