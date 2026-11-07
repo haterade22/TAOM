@@ -3767,6 +3767,41 @@ for entry in "${PC_SUBJECT[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
+head2 "7r. the confirm gates read past a quoted global option value that holds a space"
+# Their stripper took an option's value as `[^[:space:]]+`, so `git -C 'E:/a b' reset --hard` stopped
+# at `b' reset --hard`, no verb matched, and the gate allowed silently.
+QV_ROWS=(
+  "block-dangerous-git.sh|ask|git -C \"E:/a b\" reset --hard"
+  "block-dangerous-git.sh|ask|git -C 'E:/a b' clean -fdx"
+  "block-dangerous-git.sh|ask|git -c x.y='a b' reset --hard"
+  "block-dangerous-git.sh|ask|git -c user.name=\"A B\" clean -f"
+  "block-dangerous-git.sh|ask|git --git-dir='E:/a b/.git' checkout -- ."
+  "block-dangerous-git.sh|ask|git --git-dir 'E:/a b/.git' reset --hard"
+  "block-dangerous-git.sh|ask|git --work-tree='E:/a b' reset --hard"
+  "block-dangerous-git.sh|ask|git --work-tree 'E:/a b' clean -f"
+  "block-dangerous-git.sh|ask|git -C \"E:/a b\" -c x.y='c d' --no-pager reset --hard"
+  "block-dangerous-git.sh|ask|git -C E:/nospace reset --hard"
+  "block-dangerous-git.sh|ask|git -C it's reset --hard"
+  "block-dangerous-git.sh|allow|git -C \"E:/a b\" status"
+  "block-dangerous-git.sh|allow|git -C \"E:/a b\" commit -m \"say why reset --hard is gated\""
+  "block-broad-git-add.sh|ask|git -C \"E:/a b\" add -A"
+  "block-broad-git-add.sh|ask|git --work-tree 'E:/a b' add -A"
+  "block-broad-git-add.sh|ask|git --git-dir='E:/a b/.git' add ."
+  "block-broad-git-add.sh|ask|git -c x.y='a b' add -u"
+  "block-broad-git-add.sh|ask|git -c user.name=\"A B\" commit -a -m x"
+  "block-broad-git-add.sh|ask|git -C 'E:/a b' commit -a -m x"
+  "block-broad-git-add.sh|ask|git -C E:/nospace add -A"
+  "block-broad-git-add.sh|allow|git -C \"E:/a b\" add a.txt"
+  "block-broad-git-add.sh|allow|git -c user.name=\"A B\" commit -m \"fix: add -a flag\""
+)
+for entry in "${QV_ROWS[@]}"; do
+    hook="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(pre_payload Bash "$cmd" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/$hook" 2>/dev/null)
+    got=$(decision_of "$OUT")
+    [[ "$got" == "$want" ]] && ok "$hook $got: $cmd" || bad "$hook expected $want, got $got: $cmd"
+done
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then
