@@ -44,8 +44,9 @@ A crash reported only by logs: read every line of both logs, collapsing repeats 
 
 1. **Collect symptoms.** Read error messages, stack traces, save-load logs, Bannerlord crash dumps. If the user hasn't given enough context, ask ONE question at a time via `AskUserQuestion`.
 
-   **A native crash takes a detour first.** An access violation in `TaleWorlds.Native.dll` or a CTD with
-   no managed culprit: run `/native-crash-triage` to name the site, then come back here with that site as
+   **A native crash or a hang takes a detour first.** An access violation in `TaleWorlds.Native.dll`, a
+   CTD with no managed culprit, or a freeze: run `/native-crash-triage` to name the site and read it as C
+   (its hang section covers a freeze), then come back here with that site as
    the symptom.
 
 2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
