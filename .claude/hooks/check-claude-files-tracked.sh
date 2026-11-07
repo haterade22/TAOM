@@ -31,7 +31,7 @@ INPUT=$(cat)
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
-taom_pybin_degraded "check-claude-files-tracked" "untracked or gitignored files under .claude/" && { echo '{}'; exit 0; }
+taom_pybin_degraded "check-claude-files-tracked" "gitignored files under .claude/" && { echo '{}'; exit 0; }
 
 # The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
 # command back as the Bash text of the same command and names git `git` wherever it is the
