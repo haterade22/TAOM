@@ -1,0 +1,22 @@
+TAOM Hair Toolkit notices
+
+Source revision: 7252a2db7379745fa4fd4c2d15ef2216d6af972c plus packaging support.
+
+Software in this package is distributed under the MIT License in LICENSE.txt.
+Workflow prose is distributed under CC BY-NC-SA 4.0, as described in the TAOM
+LICENSE-CONTENT.md map: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Hair Tool by Bartosz Styperek (JOSECONSCO) is a separate local dependency under
+GPL-3.0-or-later. Version 4.6.1 was inspected and exercised. No Hair Tool source,
+node assets, textures, presets, activation data, or installation files are included.
+Recipients must obtain and install Hair Tool 4.6.1 separately and comply with its
+license: https://www.gnu.org/licenses/gpl-3.0.html
+
+The bridge uses public Blender operators and independently written TAOM delivery
+code. No Hair Tool implementation code was copied into this package.
+
+No race heads, donor grooms, generated FBX, Blender scenes, or other mesh assets
+are included. Recipients supply their own authorized source assets and are
+responsible for their licenses.
+
+Exoside Quad Remesher is not used or required by this package.

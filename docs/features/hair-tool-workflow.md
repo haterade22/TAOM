@@ -43,6 +43,10 @@ silently shipping bad weights.
 
 ## Reverse-engineered API evidence
 
+The [complete Hair Tool 4.6.1 audit](../research/hair-tool-4-6-1.md) covers all 65 Python modules,
+352 operators, eight Blender libraries, data contracts, algorithms, runtime probes, and unresolved
+formats. Use it before extending the integration beyond the operators below.
+
 The local package is `C:\Users\mikew\Downloads\hair_tool_4.6.1\hair_tool` on the desktop. The
 findings below come from its GPL source and actual Blender 5.2.3 calls, not from guessing its UI.
 
@@ -140,6 +144,15 @@ registration must follow the target race's actual skin structure and preserve it
 | `.claude/skills/groom-hair/SKILL.md` | Automatic Claude workflow for hair and beard tasks |
 | `docs/reference/race-face-and-hand-morphs.md` | Engine upper-mesh mapping and morph requirements |
 | `docs/reference/provenance-register.md` | Hair Tool license and interop-only provenance |
+| `tools/package_hair_toolkit.py` | Source-only recipient ZIP builder and manifest |
+| `tools/hair_toolkit/` | Recipient README, MIT software license, and dependency notices |
+
+## Sharing the toolkit
+
+Build `python tools/package_hair_toolkit.py --out <explicit-output.zip>`. The archive includes the
+bridge, kitbash and registration tools, tests, the grooming skill, and workflow documentation. It
+excludes Hair Tool, donor meshes, generated FBX, Blender scenes, textures, presets, and activation
+data. Recipients need their own Hair Tool 4.6.1 installation and authorized race assets.
 
 ## Tests
 
