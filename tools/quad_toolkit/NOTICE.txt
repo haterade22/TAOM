@@ -1,0 +1,26 @@
+Quad Toolkit for Blender
+
+This package contains an independent cube-map remesher and an Exoside process-protocol bridge.
+
+The Exoside bridge is a behavioral port of the process protocol used by:
+Quad-Remesher Bridge for Blender 1.4.1, by Maxime Rouca.
+The bridge source carries GNU GPL-2.0-or-later notices.
+
+The complete toolkit is distributed under GNU GPL-2.0-or-later.
+See LICENSE.txt for the license terms.
+
+GPL-covered files in this package:
+- tools/package_quad_toolkit.py
+- tools/quad_engine/**
+- tools/blender/cube_map_remesh.py
+- tools/blender/quad_remesh_job.py
+- tools/examples/cube_map_active.py
+- tools/examples/remesh_active.py
+- tools/tests/test_cube_map_remesh.py
+- tools/tests/test_quad_remesh_job.py
+- tools/quad_toolkit/**
+
+The independent cube-map algorithm is new source and does not copy Exoside's native remeshing
+algorithm. No Exoside engine binary, activation material, license data, decompiled native code,
+or mesh asset is included. Exoside Quad Remesher remains a separate proprietary dependency for
+the optional bridge and requires its own licensed installation.
