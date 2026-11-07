@@ -26,10 +26,13 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    every offset taken before that jump was against a v1.4.5 image, and it moved with no signal.
    Steam overwrites in place, so **archive both builds**: `python tools/native_archive.py` (no flags)
    copies each installed client and wEditor `TaleWorlds.Native.dll` by SHA-256 into `$TAOM_NATIVE_ARCHIVE`
-   (default `E:\Decompiled_Bannerlord\_native`; the laptop sets it) as
+   (default `E:\Decompiled_Bannerlord\_native`) as
    `TaleWorlds.Native.v<ver>.{client,wEditor}.dll`, caches its engine-method map while that build's managed
    DLLs are still installed, pre-builds the matcher index, and scores `--oracle` against the previous
-   archived build of the same kind. On the 1.5.x line the session-start hook runs it; on this line run it
+   archived build of the same kind. On the laptop, which has no E: drive, set `TAOM_NATIVE_ARCHIVE` and
+   `TAOM_GHIDRA_PROJECTS` first: without the first the default folder cannot be created, the tool prints
+   `NOTE: native archive UNCHECKED`, exits 0 and copies nothing, so an update can overwrite the old pair
+   unarchived. On the 1.5.x line the session-start hook runs it; on this line run it
    as soon as the update is noticed. Then `python tools/native_archive.py --status`: it shows saved state
    only, one row per install path, and does not re-check the installed DLL, so compare each row's `sha16`
    with the installed file
