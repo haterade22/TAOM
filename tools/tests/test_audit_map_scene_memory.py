@@ -9,15 +9,18 @@ Pure stdlib, synthetic inputs, no game install. Two kinds of pin:
     against bytes this file's encoders produce;
   - the container walker, the flora walk, the DDS header and the whole
     build_manifest pipeline run against a synthetic module tree written into
-    tmp_path, which pins module priority, prefab expansion, flora attribution,
+    a temporary directory, which pins module priority, prefab expansion, flora attribution,
     the flags and the totals.
 """
+import contextlib
 import hashlib
+import io
 import os
 import struct
 import sys
-
-import pytest
+import tempfile
+import unittest
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -149,10 +152,19 @@ def write_dds(path, width, height, mips, fourcc=b"DXT1"):
         f.write(head + bytes(64))
 
 
+class TmpPathCase(unittest.TestCase):
+    """A fresh temporary directory per test, as self.tmp_path (a Path)."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.tmp_path = Path(tmp.name)
+
+
 # --------------------------------------------------------------------------- #
 # texture chain formula
 # --------------------------------------------------------------------------- #
-class TestTextureChain:
+class TestTextureChain(unittest.TestCase):
     def test_bc5_4096_full_chain_matches_the_real_segment(self):
         assert a.texture_chain_bytes(4096, 4096, 13, "BC5") == 22_369_648
 
@@ -178,7 +190,7 @@ class TestTextureChain:
 # --------------------------------------------------------------------------- #
 # decoders against real bytes
 # --------------------------------------------------------------------------- #
-class TestRealBlobs:
+class TestRealBlobs(unittest.TestCase):
     def test_texture_header(self):
         assert len(REAL_TEXTURE_META) == 215
         t = a.parse_texture_meta(REAL_TEXTURE_META)
@@ -209,7 +221,7 @@ class TestRealBlobs:
         assert a.plausible_counts(a.parse_metamesh_records(REAL_METAMESH_META, "dirty_a")[0], by_guid)
 
 
-class TestSyntheticDecoders:
+class TestSyntheticDecoders(unittest.TestCase):
     def test_texture_round_trip_with_flags(self):
         meta = encode_texture_meta("$BASE/x.png", 2048, 1024, 12, "BC7", flags=["for_terrain"], flags2=["has_alpha"])
         t = a.parse_texture_meta(meta)
@@ -219,7 +231,7 @@ class TestSyntheticDecoders:
     def test_texture_wrong_version_is_refused(self):
         meta = bytearray(encode_texture_meta("x", 8, 8, 1, "DXT1"))
         meta[0] = 4
-        with pytest.raises(ValueError):
+        with self.assertRaises(ValueError):
             a.parse_texture_meta(bytes(meta))
 
     def test_material_round_trip(self):
@@ -241,8 +253,9 @@ class TestSyntheticDecoders:
 # --------------------------------------------------------------------------- #
 # container walk, index priority, flora walk, dds header
 # --------------------------------------------------------------------------- #
-class TestContainer:
-    def test_walk_yields_kinds_names_meta_and_segment_sizes(self, tmp_path):
+class TestContainer(TmpPathCase):
+    def test_walk_yields_kinds_names_meta_and_segment_sizes(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "pack0.tpac"
         write_tpac(p, [
             ("texture", "tex_a", guid_for("tex_a"), encode_texture_meta("s", 16, 16, 1, "DXT1"),
@@ -255,13 +268,15 @@ class TestContainer:
         assert items[0].seg_bytes(a.SEG_TEXTURE_PIXELS) == 128 and items[0].has_segment(a.SEG_TEXTURE_PIXELS)
         assert items[1].meta == b"\x01\x02" and items[1].seg_bytes() == 10
 
-    def test_not_a_tpac_is_refused(self, tmp_path):
+    def test_not_a_tpac_is_refused(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "bad.tpac"
         p.write_bytes(b"NOPE" + bytes(64))
-        with pytest.raises(ValueError):
+        with self.assertRaises(ValueError):
             list(a.iter_tpac_items(p, "x"))
 
-    def test_index_prefers_the_first_module_and_records_the_rest(self, tmp_path):
+    def test_index_prefers_the_first_module_and_records_the_rest(self):
+        tmp_path = self.tmp_path
         taom = tmp_path / "TAOM_Map" / "AssetPackages"
         native = tmp_path / "Native" / "AssetPackages"
         taom.mkdir(parents=True)
@@ -279,7 +294,8 @@ class TestContainer:
         assert idx.also_in[("texture", "shared_d")] == ["Native/AssetPackages/core.tpac"]
         assert idx.errors and idx.errors[0][0] == "SandBox"
 
-    def test_index_replaces_a_stub_only_twin_inside_one_module(self, tmp_path):
+    def test_index_replaces_a_stub_only_twin_inside_one_module(self):
+        tmp_path = self.tmp_path
         native = tmp_path / "Native" / "AssetPackages"
         native.mkdir(parents=True)
         write_tpac(native / "core.tpac", [("texture", "armor_d", guid_for("stub"),
@@ -292,7 +308,8 @@ class TestContainer:
         assert item.pack == "AssetPackages/pack_1.tpac" and item.has_segment(a.SEG_TEXTURE_PIXELS)
         assert idx.also_in[("texture", "armor_d")] == ["Native/AssetPackages/core.tpac (stub)"]
 
-    def test_index_walks_emassetpackages_recursively_after_assetpackages(self, tmp_path):
+    def test_index_walks_emassetpackages_recursively_after_assetpackages(self):
+        tmp_path = self.tmp_path
         native = tmp_path / "Native"
         (native / "AssetPackages").mkdir(parents=True)
         (native / "EmAssetPackages" / "text2").mkdir(parents=True)
@@ -307,8 +324,9 @@ class TestContainer:
         assert [p[1] for p in idx.packs] == ["AssetPackages/core.tpac", "EmAssetPackages/text2/text2.tpac"]
 
 
-class TestFloraBin:
-    def test_walk_counts_per_kind_and_is_consistent(self, tmp_path):
+class TestFloraBin(TmpPathCase):
+    def test_walk_counts_per_kind_and_is_consistent(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "flora.bin"
         write_flora_bin(p, [("flora_grass_a", 0), ("flora_grass_a", 3), ("tree_pines", 1)])
         fb = a.parse_flora_bin(p)
@@ -316,25 +334,29 @@ class TestFloraBin:
         assert fb.per_kind == {"flora_grass_a": 2, "tree_pines": 1}
         assert fb.variations == {0: 1, 3: 1, 1: 1}
 
-    def test_header_count_disagreeing_with_the_walk_is_flagged(self, tmp_path):
+    def test_header_count_disagreeing_with_the_walk_is_flagged(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "flora.bin"
         write_flora_bin(p, [("flora_grass_a", 0)], header_count=5)
         assert not a.parse_flora_bin(p).walk_ok
 
-    def test_wrong_magic_is_not_walked(self, tmp_path):
+    def test_wrong_magic_is_not_walked(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "flora.bin"
         p.write_bytes(b"XXXX" + bytes(40))
         fb = a.parse_flora_bin(p)
         assert fb.walked == 0 and not fb.walk_ok
 
 
-class TestDds:
-    def test_standard_header(self, tmp_path):
+class TestDds(TmpPathCase):
+    def test_standard_header(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "flowmap.dds"
         write_dds(p, 512, 256, 1)
         assert a.parse_dds_header(p) == (512, 256, 1, "DXT1")
 
-    def test_non_dds_is_none(self, tmp_path):
+    def test_non_dds_is_none(self):
+        tmp_path = self.tmp_path
         p = tmp_path / "x.dds"
         p.write_bytes(bytes(200))
         assert a.parse_dds_header(p) is None
@@ -427,8 +449,7 @@ FLORA_KINDS_XML = """<flora_kinds>
 REFERENCES_TXT = "6\nflora_entity kind_tree\nmesh rock_a\ntexture ground_d\nprefab house_a\nprefab merlon_1\ntexture only_in_references\n"
 
 
-@pytest.fixture
-def module_tree(tmp_path):
+def build_module_tree(tmp_path):
     modules = tmp_path / "game" / "Modules"
     scene = modules / "TAOM_Map" / "SceneObj" / "Main_map"
     scene.mkdir(parents=True)
@@ -501,9 +522,10 @@ def module_tree(tmp_path):
     return modules, scene
 
 
-class TestBuildManifest:
-    def test_textures_resolve_by_module_priority_with_flags(self, module_tree):
-        modules, scene = module_tree
+class TestBuildManifest(TmpPathCase):
+    def test_textures_resolve_by_module_priority_with_flags(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         rows = {r["name"]: r for r in m.texture_rows}
         assert rows["ground_d"]["module"] == "TAOM_Map" and rows["ground_d"]["also_in"] == "Native/AssetPackages/core.tpac"
@@ -523,8 +545,9 @@ class TestBuildManifest:
         assert rows["tree_d"]["module"] == "Native" and rows["decal_d"]["referenced_by"] == "material:decal_a=1"
         assert "only_in_references" not in rows
 
-    def test_meshes_count_direct_prefab_and_flora_references(self, module_tree):
-        modules, scene = module_tree
+    def test_meshes_count_direct_prefab_and_flora_references(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         rows = {r["name"]: r for r in m.mesh_rows}
         rock = rows["rock_a"]
@@ -537,8 +560,9 @@ class TestBuildManifest:
         tree = rows["tree_a"]
         assert tree["flora_kind_instances"] == 3 and tree["module"] == "Native"
 
-    def test_prefab_rows_and_unresolved(self, module_tree):
-        modules, scene = module_tree
+    def test_prefab_rows_and_unresolved(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         prefab = {r["prefab"]: r for r in m.prefab_rows}
         assert prefab["house_a"]["scene_instances"] == 2 and prefab["house_a"]["entities_per_instance"] == 2
@@ -552,8 +576,9 @@ class TestBuildManifest:
         assert ("references.txt prefab", "merlon_1") in unresolved
         assert not any(k == "material" for k, _, _ in m.unresolved)
 
-    def test_flora_physics_and_scene_files(self, module_tree):
-        modules, scene = module_tree
+    def test_flora_physics_and_scene_files(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         assert m.flora_bin.walk_ok and m.flora_bin.header_count == 3
         flora = m.flora_rows[0]
@@ -567,8 +592,9 @@ class TestBuildManifest:
         assert files["flowmap.dds"][1] == "DDS 32x32, 1 mip(s), DXT1"
         assert files["flora.bin"][1].startswith("FLR2, 3 instances")
 
-    def test_totals_by_module_and_category(self, module_tree):
-        modules, scene = module_tree
+    def test_totals_by_module_and_category(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         assert m.totals[("TAOM_Map", "meshes")] == (2, 2830 + 300)
         assert m.totals[("Native", "meshes")] == (1, 5800)
@@ -587,8 +613,9 @@ class TestBuildManifest:
         expected = (sum(b for (_, c), (_, b) in m.totals.items() if ":" not in c))
         assert f"({expected:,} bytes)" in grand_line
 
-    def test_outputs_are_written(self, module_tree, tmp_path):
-        modules, scene = module_tree
+    def test_outputs_are_written(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         m = a.build_manifest(modules, scene)
         out = tmp_path / "out"
         written = a.write_tsvs(m, out)
@@ -603,15 +630,23 @@ class TestBuildManifest:
         lines = a.summary_lines(m)
         assert any(line.startswith("top 20 textures") for line in lines)
 
-    def test_refuses_to_write_inside_the_game_install(self, tmp_path):
-        with pytest.raises(SystemExit):
+    def test_refuses_to_write_inside_the_game_install(self):
+        tmp_path = self.tmp_path
+        with self.assertRaises(SystemExit):
             a.refuse_inside_game(tmp_path / "Modules" / "TAOM_Map" / "out", tmp_path)
         a.refuse_inside_game(tmp_path.parent / "elsewhere", tmp_path)
 
-    def test_main_runs_end_to_end(self, module_tree, tmp_path, capsys):
-        modules, scene = module_tree
+    def test_main_runs_end_to_end(self):
+        tmp_path = self.tmp_path
+        modules, scene = build_module_tree(tmp_path)
         out = tmp_path / "manifest"
-        rc = a.main(["--game-dir", str(modules.parent), "--out-dir", str(out), "--top", "3"])
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            rc = a.main(["--game-dir", str(modules.parent), "--out-dir", str(out), "--top", "3"])
         assert rc == 0
         assert (out / "map-scene-memory.md").is_file() and (out / "totals.tsv").is_file()
-        assert "GRAND TOTAL" in capsys.readouterr().out
+        assert "GRAND TOTAL" in stdout.getvalue()
+
+
+if __name__ == "__main__":
+    unittest.main()
