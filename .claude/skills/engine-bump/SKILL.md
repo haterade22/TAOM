@@ -29,8 +29,11 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    aside now** — that copy is the only baseline the NEXT bump will have. The cost of not having one
    is already booked: the open player report (untracked; read it with
    `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
-3. `taom-src` auto-detects the new version (fresh cache under `~/.taom-src/v<new>/`) — old
-   caches remain but are unused.
+3. `taom-src` auto-detects the new build: a fresh cache and DLL index under `~/.taom-src/v<new>-<stamp>/`,
+   and the old caches stay unused. The stamp is `TaleWorlds.Library.dll`'s UTC write time, because a Steam
+   hotfix can keep the version string. Pass a short or fully qualified type name. A mod's own copy of an
+   engine assembly (`Modules\Coop`) searches last (#1038), so only a type that copy alone still holds
+   resolves from it. The tool prints only the cache path; `~/.taom-src/sources.json` names the DLL it read.
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 
