@@ -153,7 +153,8 @@ def _raycast(directions, origin, triangles):
             raise ValueError(
                 "a cube-map ray did not intersect the source; input must be star-shaped")
         hit_distances = distance[valid]
-        if len(hit_distances) > 1 and np.ptp(hit_distances) > 1e-10:
+        tolerance = max(1e-12, float(np.max(hit_distances)) * 1e-8)
+        if len(hit_distances) > 1 and np.ptp(hit_distances) > tolerance:
             raise ValueError(
                 "a cube-map ray intersected multiple surfaces; input must be star-shaped")
         source = np.argmin(np.where(valid, distance, np.inf))
@@ -228,12 +229,23 @@ def _metrics(vertices, faces, source_triangles, center_errors):
     }
 
 
+def _validate_star_shape(vertices, faces, center):
+    triangles = vertices[faces]
+    normals = np.cross(triangles[:, 1] - triangles[:, 0],
+                       triangles[:, 2] - triangles[:, 0])
+    centers = triangles.mean(axis=1)
+    facing = np.sum(normals * (centers - center), axis=1)
+    if np.any(facing <= 0):
+        raise ValueError("source surface is not visible from the center; input must be star-shaped")
+
+
 def remesh(vertices, faces, material_ids=None, target_quads=96):
     vertices, faces, material_ids, target_quads = _validate(
         vertices, faces, material_ids, target_quads)
     resolution = int(np.ceil(np.sqrt(target_quads / 6)))
     canonical, output_faces = _cube_topology(resolution)
     center = (vertices.min(axis=0) + vertices.max(axis=0)) / 2
+    _validate_star_shape(vertices, faces, center)
     lengths = np.linalg.norm(canonical, axis=1)
     directions = canonical / lengths[:, np.newaxis]
     source_triangles = vertices[faces]

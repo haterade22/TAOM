@@ -10,8 +10,8 @@ Licensing and activation routines are explicitly out of scope.
 - Engine version: `1.4.1.3852`.
 - Module: `xremeshlib.dll`, 12,267,520 bytes, x86-64 PE.
 - SHA-256: `0a77802b7b8299b12818efe88260d44c7ee816ddc2575593c30e802c5a8d3ff5`.
-- Native analysis: Ghidra 12.1.4, project `TestResults/quadremesher-ghidra`.
-- Decompiled functions and extracted strings: `.tmp/quadremesher-re`.
+- Native analysis: Ghidra 12.1.4, project `TestResults/quadremesher-ghidra` on the desktop at `E:\repos\TAOM`.
+- Decompiled functions and extracted strings: `.tmp/quadremesher-re` under the same desktop root. These are untracked analysis artifacts, not source packages, and other machines must reproduce them from the binary named above.
 
 The native remesher uses the `MX` framework, with `MXAutoRetopoAlgo`, `MXAutoRetopoCurv`,
 `MXMeshCurvatureAlgo`, and dedicated smooth-vector-field and UV solver drivers. FBX SDK and Qt

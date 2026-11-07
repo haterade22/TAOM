@@ -158,5 +158,91 @@ class ReapTests(unittest.TestCase):
         self.assertEqual(proc.waits, [5, 5, 5])
 
 
+class ScriptedProcess:
+    def __init__(self, progress_path, steps, exits_after=None, final=None):
+        self.progress_path = progress_path
+        self.steps = list(steps)
+        self.exits_after = exits_after
+        self.final = final
+        self.polls = 0
+        self.terminated = False
+        self.returncode = None
+
+    def advance(self):
+        if self.steps:
+            step = self.steps.pop(0)
+            if step is not None:
+                with open(self.progress_path, "w") as handle:
+                    handle.write(step)
+
+    def poll(self):
+        self.polls += 1
+        if self.exits_after is not None and self.polls > self.exits_after:
+            if self.final is not None:
+                with open(self.progress_path, "w") as handle:
+                    handle.write(self.final)
+                self.final = None
+            self.returncode = 0
+            return self.returncode
+        return None
+
+    def terminate(self):
+        self.terminated = True
+
+
+class WaitForEngineTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.progress = os.path.join(self.tmp.name, "progress.txt")
+        self.now = 0.0
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _wait(self, proc, timeout_s=600):
+        def sleep(_):
+            self.now += 1.0
+            proc.advance()
+        return qr.wait_for_engine(proc, self.progress, timeout_s=timeout_s, poll_s=1.0,
+                                  sleep=sleep, clock=lambda: self.now)
+
+    def test_success(self):
+        proc = ScriptedProcess(self.progress, [None, "0.5", "2"])
+        self._wait(proc)
+        self.assertFalse(proc.terminated)
+
+    def test_license_dialog(self):
+        proc = ScriptedProcess(self.progress, ["-2"])
+        with self.assertRaisesRegex(qr.QuadRemeshError, "license"):
+            self._wait(proc)
+
+    def test_engine_error(self):
+        proc = ScriptedProcess(self.progress, ["-7\nbad mesh"])
+        with self.assertRaisesRegex(qr.QuadRemeshError, "bad mesh"):
+            self._wait(proc)
+
+    def test_exit_without_result(self):
+        proc = ScriptedProcess(self.progress, ["0.5", "0.5", "0.5"], exits_after=2)
+        with self.assertRaisesRegex(qr.QuadRemeshError, "exited"):
+            self._wait(proc)
+
+    def test_success_written_before_exit_wins(self):
+        proc = ScriptedProcess(self.progress, ["0.5"], exits_after=1, final="2")
+        self._wait(proc)
+
+    def test_no_progress_file_fails_early(self):
+        proc = ScriptedProcess(self.progress, [None] * 100)
+        with self.assertRaises(qr.QuadRemeshError):
+            self._wait(proc)
+        self.assertTrue(proc.terminated)
+        self.assertLess(self.now, 60)
+
+    def test_timeout_terminates(self):
+        proc = ScriptedProcess(self.progress, ["0.5"] * 100)
+        with self.assertRaisesRegex(qr.QuadRemeshError, "timed out"):
+            self._wait(proc, timeout_s=5)
+        self.assertTrue(proc.terminated)
+
+
 if __name__ == "__main__":
     unittest.main()

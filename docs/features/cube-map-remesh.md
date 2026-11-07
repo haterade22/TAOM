@@ -51,7 +51,7 @@ covered by tests.
 | --- | --- |
 | `tools/quad_engine/cube_map.py` | Validation, cube topology, raycasting, projection, materials, and metrics |
 | `tools/blender/cube_map_remesh.py` | Blender conversion, object creation, in-place replacement, and artifacts |
-| `tools/tests/test_cube_map_remesh.py` | Twelve unit tests for validation, topology, materials, projection, and fallback behavior |
+| `tools/tests/test_cube_map_remesh.py` | Fourteen unit tests for validation, topology, materials, projection, and fallback behavior |
 | `docs/research/quad-remesher-engine.md` | Native Exoside research and future field-guided algorithm requirements |
 
 ## Limitations and next work
@@ -69,7 +69,7 @@ covered by tests.
 
 ## Tests
 
-- `python -m unittest tools.tests.test_cube_map_remesh`: twelve tests covering closed/open validation,
+- `python -m unittest tools.tests.test_cube_map_remesh`: fourteen tests covering closed/open validation,
   invalid values, target rounding, deterministic topology, materials, finite metrics, exact
   projection, and the NumPy-only fallback.
 - `python -m ruff check tools/quad_engine tools/blender/cube_map_remesh.py
@@ -81,7 +81,7 @@ covered by tests.
 
 This is a Blender asset tool and is not deployed into Bannerlord.
 
-1. Run `python -m unittest tools.tests.test_cube_map_remesh`. Expect twelve passing tests.
+1. Run `python -m unittest tools.tests.test_cube_map_remesh`. Expect fourteen passing tests.
 2. In Blender, call `remesh_in_place(obj, 96, work_dir)` from
    `tools/blender/cube_map_remesh.py`. The returned `report.json` must show `quad_count=96`,
    `boundary_edges=0`, `degenerate_quads=0`, and a positive `signed_volume`.

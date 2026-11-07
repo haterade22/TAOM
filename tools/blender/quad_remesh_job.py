@@ -1,8 +1,8 @@
 """Serialized, artifact-preserving Quad Remesher jobs for Blender pipelines.
 
-This is a separate prototype from quad_remesh.py. Exoside engine 1.4.1.3852 accepts the
-official Blender bridge's exact RetopoSettings.txt, inputMesh.fbx and retopo.fbx paths but
-rejects renamed or relocated job files. A cross-process file lock therefore protects the
+Exoside engine 1.4.1.3852 accepts the official Blender bridge's exact RetopoSettings.txt,
+inputMesh.fbx and retopo.fbx paths but rejects renamed or relocated job files. A cross-process
+file lock therefore protects the
 official job, previous bridge files are restored afterwards, and each run keeps diagnostic
 artifacts in a unique directory under work_dir. The official add-on does not honor this lock,
 so do not run it concurrently with this module.

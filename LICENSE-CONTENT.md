@@ -44,6 +44,21 @@ XML"), which left files claimed by two clauses at once. It is now split by path.
 | `build.ps1`, `setup-dev-env.ps1`, `Directory.Build.props`, `*.sln`, `*.csproj`, `*.vcxproj` | Build configuration |
 | `.claude/**`, `.github/**`, `.vscode/**`, `.codex/**` | Development harness |
 
+### GPL-2.0-or-later (quad remeshing toolkit)
+
+| Path | What |
+|---|---|
+| `tools/package_quad_toolkit.py` | Reproducible package builder |
+| `tools/quad_engine/**` | Independent cube-map remeshing source |
+| `tools/blender/cube_map_remesh.py` | Independent Blender adapter |
+| `tools/blender/quad_remesh_job.py` | Exoside process-protocol bridge |
+| `tools/examples/cube_map_active.py`, `tools/examples/remesh_active.py` | Blender examples |
+| `tools/tests/test_cube_map_remesh.py`, `tools/tests/test_quad_remesh_job.py` | Toolkit tests |
+| `tools/quad_toolkit/**` | Package documentation, license, and provenance notices |
+
+The independent cube-map algorithm is new source and does not copy Exoside's native algorithm.
+The Exoside bridge is a behavioral port of the GPL-2.0-or-later Blender bridge by Maxime Rouca.
+
 ### CC BY-NC-SA 4.0 (content)
 
 | Path | What |

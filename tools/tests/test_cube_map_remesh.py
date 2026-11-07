@@ -37,6 +37,48 @@ def octahedron_mesh():
     return vertices, faces, np.zeros(len(faces), dtype=np.int32)
 
 
+def blind_hole_mesh():
+    coords = [-1.0, -0.1, 0.1, 1.0]
+    vertices, lookup, faces = [], {}, []
+
+    def vid(point):
+        key = tuple(round(coordinate, 9) for coordinate in point)
+        if key not in lookup:
+            lookup[key] = len(vertices)
+            vertices.append(key)
+        return lookup[key]
+
+    def quad(a, b, c, d):
+        faces.extend(([a, b, c], [a, c, d]))
+
+    bases = [
+        ((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+        ((-1, 0, 0), (0, -1, 0), (0, 0, 1)),
+        ((0, 1, 0), (-1, 0, 0), (0, 0, 1)),
+        ((0, -1, 0), (1, 0, 0), (0, 0, 1)),
+        ((0, 0, 1), (1, 0, 0), (0, 1, 0)),
+        ((0, 0, -1), (-1, 0, 0), (0, 1, 0)),
+    ]
+    for normal, u_axis, v_axis in bases:
+        normal, u_axis, v_axis = map(np.array, (normal, u_axis, v_axis))
+        for j in range(3):
+            for i in range(3):
+                if normal[0] == 1 and i == 1 and j == 1:
+                    continue
+                points = [normal + u_axis * x + v_axis * y for x, y in (
+                    (coords[i], coords[j]), (coords[i + 1], coords[j]),
+                    (coords[i + 1], coords[j + 1]), (coords[i], coords[j + 1]))]
+                quad(*(vid(point) for point in points))
+    ring = [(-0.1, -0.1), (0.1, -0.1), (0.1, 0.1), (-0.1, 0.1)]
+    for index, (y0, z0) in enumerate(ring):
+        y1, z1 = ring[(index + 1) % 4]
+        quad(vid((1, y0, z0)), vid((0.5, y0, z0)),
+             vid((0.5, y1, z1)), vid((1, y1, z1)))
+    quad(vid((0.5, -0.1, -0.1)), vid((0.5, -0.1, 0.1)),
+         vid((0.5, 0.1, 0.1)), vid((0.5, 0.1, -0.1)))
+    return np.asarray(vertices), np.asarray(faces, dtype=np.int32)
+
+
 class ValidationTests(unittest.TestCase):
     def test_open_mesh_is_rejected(self):
         vertices = np.array([[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]], dtype=float)
@@ -52,6 +94,17 @@ class ValidationTests(unittest.TestCase):
         faces = np.concatenate((outer_faces, inner_faces + len(outer_vertices)))
         with self.assertRaisesRegex(ValueError, "star-shaped"):
             engine.remesh(vertices, faces, target_quads=24)
+
+    def test_blind_hole_is_rejected(self):
+        vertices, faces = blind_hole_mesh()
+        with self.assertRaisesRegex(ValueError, "star-shaped"):
+            engine.remesh(vertices, faces, target_quads=24)
+
+    def test_large_convex_mesh_is_not_rejected(self):
+        vertices, faces, materials = octahedron_mesh()
+        result = engine.remesh(vertices * 1e6, faces, materials, target_quads=24)
+        self.assertEqual(result.faces.shape, (24, 4))
+        self.assertEqual(result.metrics["boundary_edges"], 0)
 
     def test_nonfinite_vertices_are_rejected(self):
         vertices, faces, _ = cube_mesh()
@@ -100,6 +153,13 @@ class RemeshTests(unittest.TestCase):
         self.assertTrue(np.isin(result.material_ids, np.arange(6)).all())
         self.assertGreater(len(np.unique(result.material_ids)), 2)
         self.assertEqual(result.metrics["boundary_edges"], 0)
+        source_normals = np.cross(vertices[faces[:, 1]] - vertices[faces[:, 0]],
+                                  vertices[faces[:, 2]] - vertices[faces[:, 0]])
+        output_normals = np.cross(result.vertices[result.faces[:, 1]] - result.vertices[result.faces[:, 0]],
+                                  result.vertices[result.faces[:, 2]] - result.vertices[result.faces[:, 0]])
+        alignment = output_normals @ source_normals.T
+        expected_sources = np.argmax(alignment, axis=1)
+        np.testing.assert_array_equal(result.material_ids, materials[expected_sources])
 
     def test_material_nearest_is_not_limited_by_centroid_shortlist(self):
         vertices, faces, materials = cube_mesh()
