@@ -22,7 +22,9 @@
   <NPCCharacter id="lord_1_28" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_38" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_48" culture="Culture.dolguldur" />
-  <!-- lord_1_48_1/2/3 (the lesser Nazgul) are defined in characters/lords.xml on this branch: no stub. -->
+  <NPCCharacter id="lord_1_48_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_48_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_48_3" culture="Culture.mordor" />
 
   <!-- Gondor -->
   <NPCCharacter id="lord_1_75" culture="Culture.gondor" />
