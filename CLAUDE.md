@@ -337,7 +337,7 @@ documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 
-5 project servers (`.mcp.json`, incl. `imagine`) and context7's plugin. Full server table, configuration,
+5 project servers (`.mcp.json`, incl. `imagine`) and 2 plugin servers (context7, playwright). Full server table, configuration,
 and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md)**.
 
 ### MCP Usage Guide

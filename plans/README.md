@@ -266,8 +266,8 @@ Work no WP takes, recorded so nobody assumes otherwise.
 Not authorised yet; this is the order for when it is. The fast-forward deletes the main checkout's tracked `.claude/settings.local.json` from disk, so step 2 is not optional.
 
 1. From a clean main checkout on `bannerlord-1.4.5`: `git merge --ff-only port148/overnight`.
-2. Copy `taom-port/scratch/142/settings.local.main.json` to `.claude/settings.local.json` (WP142 M2). Fallback: `git restore --source=1b00d1acd -- .claude/settings.local.json`, as [development-machines.md](../docs/reference/development-machines.md) documents. A bare `git show` only prints to stdout.
-3. `git config core.hooksPath .githooks`, because it is unset in the main checkout today.
+2. Copy `../taom-port/scratch/142/settings.local.main.json` to `.claude/settings.local.json` (WP142 M2). Fallback: `git restore --source=1b00d1acd -- .claude/settings.local.json`, as [development-machines.md](../docs/reference/development-machines.md) documents. A bare `git show` only prints to stdout.
+3. `git config core.hooksPath .githooks`, because it is unset in the main checkout today. From then on, a terminal or IDE commit or clean merge that stages ModuleData XML or XSLT is refused on this laptop until the public Armory is installed (the WP143 line in the integrator record).
 4. Restart Claude Code and run the live checks in [plan 142](142-docs-process-sync.md) ("Live checks owed by the maintainer": `/mcp`, the Serena pin).
 5. Never pop, apply or drop `stash@{0}`.
 

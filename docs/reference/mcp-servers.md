@@ -14,6 +14,7 @@
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
 | **elevenlabs** | Project | Voice design for kingdom voices; needs `ELEVENLABS_API_KEY`. See `docs/features/kingdom-voices.md`. | `.mcp.json` |
 | **context7** | Plugin | Library documentation lookup | `context7@claude-plugins-official` in `.claude/settings.json` `enabledPlugins` |
+| **playwright** | Plugin | Browser automation | `playwright@claude-plugins-official` in `.claude/settings.json` `enabledPlugins` |
 
 **Removed by WP116 (from 1.5.x `fdf9f38cb`): `github`, `git`, `filesystem`.** No TAOM skill, agent or rule called them; each duplicated a tool with gates of its own (`gh`, git through Bash, Read/Glob/Grep). `github@claude-plugins-official` declares the same `github` server, so it is disabled in `.claude/settings.json` too. Record: [adopt-ecc-2026-09-29.md](../reviews/adopt-ecc-2026-09-29.md), Step 4.
 

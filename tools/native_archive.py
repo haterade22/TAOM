@@ -435,7 +435,7 @@ def detach(builds: list, archive: Path, state: dict, game: Path) -> int:
         if line and line[1] and not entry["oracle"].get("reported"):
             reports.append((b, line[0]))
         elif line and not line[1]:
-            notes.append(line[0])  # a wrong match is repeated every session, never marked quiet
+            notes.append(line[0])  # a wrong match is repeated every --detach run, never marked quiet
     if reports and not _mark_reported(archive, [b for b, _ in reports]):
         reports = []  # unmarked it would repeat, and a held lock means say nothing about it
     for note in notes:
