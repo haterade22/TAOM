@@ -209,7 +209,13 @@ def main(argv=None):
         print(f"  [FAIL] {len(unbound)} movement row(s) bind no clip in {c['action_set_ids'][0]}: {', '.join(unbound)}")
         fails.append("unbound")
     if not n_move:
-        print(f"  [FAIL] no measured-gait clip checked: usage set '{c['usage_id']}' has no movement row that binds a clip")
+        n_bound = sum(a in bindings for a in move_actions)
+        if n_bound:
+            cause = f"{len(exempted)} exempt, " if exempted else ""
+            print(f"  [FAIL] none of the {n_bound} bound measured-gait clips was checked: "
+                  f"{cause}{n_bound - len(exempted)} not found in a live tpac (see the phantom list)")
+        else:
+            print(f"  [FAIL] no measured-gait clip checked: usage set '{c['usage_id']}' has no movement row that binds a clip")
         fails.append("usage")
     elif not bad_move:
         print(f"  [PASS] quad_movement present on all {n_move} measured-gait clips (monster_usage_movements)"
