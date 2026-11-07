@@ -26,11 +26,7 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 > line was added that day, so 5.1 now reports one clear message instead. The shebang alone does not
 > cover this: on Windows the script runs under whichever host invoked it, and 5.1 is still the default.
 >
-> **Regenerating is the only way to keep these files honest.** On 2026-09-06 `patch-targets.md` was
-> found **21 rows stale** (194 committed against 220 real) because patches had been added across
-> several features without a regeneration. Hand-editing a row works and is format-checkable, but it
-> cannot find rows nobody knew were missing. Run the generator after any patch or GameModel change,
-> not only after an engine bump.
+> `/verify` Step 2d runs `-Check` and fails on drift; regenerate and commit with the change.
 
 ## The gate (`TAOM.Tests/Migration/`)
 
@@ -67,7 +63,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 - After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"`.
 - When you add a reflection site against an engine member: add a row to `reflection-sites.md` Category B **and** a `[DataRow]` to `ReflectionSiteBindingTests`.
-- Local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce; it ignores the backlinks footer and prints up to 20 differing lines).
+- Local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce; it ignores the backlinks footer and prints up to 20 differing lines). `/verify` Step 2d runs it and fails on drift.
 
 ## External references
 
