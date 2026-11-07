@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -53,8 +54,11 @@ public class FieldCampOverlayVMTests
         _activation.DefersToCoopHost.Returns(false);
     }
 
+    // The same factory FieldCampMapView (TAOM.Client) passes: the caption is already localized.
     private FieldCampOverlayVM CreateVm()
-        => new FieldCampOverlayVM(_camps, _settings, _menus, _activation, _contributors, _progress);
+        => new FieldCampOverlayVM(_camps, _settings, _menus, _activation, _contributors, _progress,
+            caption => new TaleWorlds.Core.ViewModelCollection.Information.HintViewModel(
+                new TaleWorlds.Localization.TextObject("{=!}" + caption)));
 
     private static CampState Camp(CampType type, bool foraging = false, int foragedTotal = 0, float forageAccumulator = 0f)
         => new CampState
@@ -103,6 +107,87 @@ public class FieldCampOverlayVMTests
         vm.Refresh();
 
         Assert.AreEqual("Refuge Options", vm.CampButtonText);
+    }
+
+    // ---- Caption tooltip for the icon-only Camp button (campaign HUD option A) ----
+    // Read by reflection so the rest of this class compiles before the property exists.
+
+    private static string CampHintText(FieldCampOverlayVM vm)
+    {
+        var property = typeof(FieldCampOverlayVM).GetProperty("CampButtonHint",
+            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        Assert.IsNotNull(property, "FieldCampOverlayVM has no public CampButtonHint for the Camp icon's tooltip");
+        Assert.IsTrue(property!.GetCustomAttributes(true).Any(a => a.GetType().Name.StartsWith("DataSourceProperty", StringComparison.Ordinal)),
+            "CampButtonHint needs [DataSourceProperty] or the tooltip binds once and never updates");
+        var hint = property.GetValue(vm) as TaleWorlds.Core.ViewModelCollection.Information.HintViewModel;
+        Assert.IsNotNull(hint, "CampButtonHint is not the HintViewModel the factory builds; the icon shows no tooltip");
+        // HintText is a public field on the installed HintViewModel (Native v1.5.6), not a property.
+        Assert.IsNotNull(hint!.HintText, "CampButtonHint carries no HintText");
+        return hint.HintText.ToString() ?? string.Empty;
+    }
+
+    [TestMethod]
+    public void Refresh_NoCamp_CampHintShowsMakeCamp()
+    {
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        StringAssert.Contains(CampHintText(vm), "Make Camp");
+    }
+
+    [TestMethod]
+    public void Refresh_CampStanding_CampHintFollowsTheCaptionToCampOptions()
+    {
+        var vm = CreateVm();
+        vm.Refresh();
+        _camps.PlayerCamp.Returns(Camp(CampType.Field));
+
+        vm.Refresh();
+
+        StringAssert.Contains(CampHintText(vm), "Camp Options");
+        Assert.IsFalse(CampHintText(vm).Contains("Make Camp"), "the tooltip kept the stale caption");
+    }
+
+    [TestMethod]
+    public void Refresh_ContributorCaption_CampHintShowsTheOverride()
+    {
+        var contributor = Substitute.For<ICampOverlayContributor>();
+        contributor.CaptionOverride().Returns("Refuge Options");
+        _contributors.Add(contributor);
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        StringAssert.Contains(CampHintText(vm), "Refuge Options");
+    }
+
+    [TestMethod]
+    public void Refresh_CampDisallowed_CampHintStillShowsTheCaption()
+    {
+        // The icon is disabled while moving, but its caption must still explain it on hover.
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        Assert.IsFalse(vm.CanMakeCamp);
+        StringAssert.Contains(CampHintText(vm), "Make Camp");
+    }
+
+    [TestMethod]
+    public void Refresh_CaptionUnchanged_KeepsTheSameHintInstance()
+    {
+        // Refresh runs at 4 Hz; a new hint each time would rebind the tooltip constantly.
+        var vm = CreateVm();
+        vm.Refresh();
+        var property = typeof(FieldCampOverlayVM).GetProperty("CampButtonHint");
+        Assert.IsNotNull(property, "FieldCampOverlayVM has no public CampButtonHint");
+        var first = property!.GetValue(vm);
+
+        vm.Refresh();
+
+        Assert.AreSame(first, property.GetValue(vm));
     }
 
     [TestMethod]

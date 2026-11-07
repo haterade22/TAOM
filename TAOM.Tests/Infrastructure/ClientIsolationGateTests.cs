@@ -104,6 +104,10 @@ public class ClientIsolationGateTests
 
         Assert.AreEqual(50, inClient.Count,
             "26 view model mixins and 24 prefab extension classes: " + string.Join(", ", inClient.Select(t => t.Name)));
+        var names = inClient.Select(t => t.Name).ToArray();
+        CollectionAssert.Contains(names, "EncyclopediaClanGalleryMixin", "the clan page roster, fief galleries and leader model");
+        CollectionAssert.Contains(names, "EncyclopediaRelationshipGalleryMixin", "the hero page relationship galleries");
+        CollectionAssert.Contains(names, "EncyclopediaKingdomGalleryMixin", "the kingdom page clan and fief galleries");
         CollectionAssert.AreEquivalent(
             new[]
             {

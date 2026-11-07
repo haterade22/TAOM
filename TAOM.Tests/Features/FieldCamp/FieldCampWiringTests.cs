@@ -266,17 +266,88 @@ public class FieldCampWiringTests
     }
 
     // The FactionUI theme loads its clone, TAOMFieldCampOverlay, over the same view model (FrontEndMovieService), so a
-    // property bound only by the clone (the Camp icon's CampButtonHint) is live, not dead.
+    // property bound only by the clone (the Camp icon's CampButtonHint) is live, not dead. The original above stays
+    // as its fallback.
     private static string ThemedPrefabPath => Path.Combine(
         RepoRoot, @"Main\_Module\GUI\PreFabs\FactionUI\TAOMFieldCampOverlay.xml");
+
+    private static XElement LoadThemedPrefabRoot()
+    {
+        Assert.IsTrue(File.Exists(ThemedPrefabPath), $"themed prefab missing at {ThemedPrefabPath}");
+        return XDocument.Load(ThemedPrefabPath).Root!;
+    }
+
+    [TestMethod]
+    public void ThemedPrefab_EveryBinding_ExistsOnTheOverlayVm()
+    {
+        var failures = new List<string>();
+        WalkThemed(LoadThemedPrefabRoot(), failures);
+        Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
+    }
+
+    private static void WalkThemed(XElement element, List<string> failures)
+    {
+        // The clone's one DataSource is the Camp icon's caption hint; every other binding is checked
+        // exactly as the original's.
+        var dataSource = element.Attribute("DataSource")?.Value;
+        if (dataSource != null)
+        {
+            var name = dataSource.Trim('{', '}');
+            if (element.Name.LocalName != "HintWidget")
+                failures.Add($"unexpected DataSource '{dataSource}' on <{element.Name}>; teach this test its item VM type");
+            else
+            {
+                AssertBoundProperty(name, failures);
+                // Typed as the base ViewModel: the hint VM lives in a client-only assembly (ADR-013).
+                var type = typeof(FieldCampOverlayVM).GetProperty(name)?.PropertyType;
+                if (type != null && !typeof(TaleWorlds.Library.ViewModel).IsAssignableFrom(type))
+                    failures.Add($"FieldCampOverlayVM.{name} is a {type.Name}, not a view model a HintWidget can bind");
+                // Inside the hint, commands resolve on the HintViewModel FieldCampMapView's factory builds.
+                WalkHint(element, typeof(TaleWorlds.Core.ViewModelCollection.Information.HintViewModel), failures);
+            }
+        }
+        else
+        {
+            var self = new XElement(element);
+            self.RemoveNodes();
+            Walk(self, failures);
+        }
+
+        foreach (var child in element.Elements())
+            WalkThemed(child, failures);
+    }
+
+    private static void WalkHint(XElement hint, Type hintType, List<string> failures)
+    {
+        foreach (var attr in hint.Attributes())
+        {
+            var name = attr.Name.LocalName;
+            if (name.StartsWith("Command.", StringComparison.Ordinal))
+            {
+                if (hintType.GetMethod(attr.Value, BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null) == null)
+                    failures.Add($"{hintType.Name} has no public parameterless method '{attr.Value}' for {name}");
+            }
+            else if (attr.Value.StartsWith("@", StringComparison.Ordinal))
+            {
+                failures.Add($"HintWidget binds '{attr.Value}' inside its hint data source; teach this test the hint's properties");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void FieldCampOverlayVM_SixArgumentConstructor_StaysPublic()
+    {
+        // Binary compatibility: the caption-hint factory is an overload, not an optional parameter.
+        var sixArgs = typeof(FieldCampOverlayVM).GetConstructors().Count(c => c.GetParameters().Length == 6);
+        Assert.AreEqual(1, sixArgs, "the original six-argument FieldCampOverlayVM constructor is gone");
+    }
 
     [TestMethod]
     public void OverlayVm_EveryDataSourceProperty_IsBoundInThePrefab()
     {
         var boundNames = new HashSet<string>(StringComparer.Ordinal);
         CollectBoundNames(LoadPrefabRoot(), boundNames);
-        Assert.IsTrue(File.Exists(ThemedPrefabPath), $"themed prefab missing at {ThemedPrefabPath}");
-        CollectBoundNames(XDocument.Load(ThemedPrefabPath).Root!, boundNames);
+        CollectBoundNames(LoadThemedPrefabRoot(), boundNames);
 
         var failures = new List<string>();
         foreach (var property in typeof(FieldCampOverlayVM).GetProperties(BindingFlags.Public | BindingFlags.Instance))

@@ -88,6 +88,27 @@ public class FrontEndMovieServiceTests
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
     }
 
+    [DataTestMethod]
+    [DataRow("EscapeMenu", "EscapeMenuVM", FrontEndImageGroups.CharacterCreation | FrontEndImageGroups.MainMenu)]
+    [DataRow("CampaignOptions", "CampaignOptionsVM", CharacterCreation)]
+    [DataRow("MapBar", "MapBarVM", CharacterCreation)]
+    [DataRow("CharacterDeveloper", "CharacterDeveloperVM", CharacterCreation)]
+    [DataRow("EncyclopediaHeroPage", "EncyclopediaHeroPageVM", CharacterCreation)]
+    [DataRow("EncyclopediaUnitPage", "EncyclopediaUnitPageVM", CharacterCreation)]
+    [DataRow("EncyclopediaFactionPage", "EncyclopediaFactionPageVM", CharacterCreation)]
+    [DataRow("EncyclopediaClanPage", "EncyclopediaClanPageVM", CharacterCreation)]
+    public void BeginLoad_CampaignScreens_UseTheThemedMovieAndKeepNativeFallback(
+        string movie, string viewModel, FrontEndImageGroups expectedGroups)
+    {
+        var swap = _sut.BeginLoad(movie, viewModel);
+
+        Assert.AreEqual("TAOM" + movie, swap!.TargetName);
+        Assert.AreEqual(movie, swap.OriginalName);
+        Assert.AreEqual(expectedGroups, swap.Holds);
+        Assert.IsTrue(swap.HasVanillaFallback);
+        Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
+    }
+
     [TestMethod]
     public void BeginLoad_FactionScreen_HoldsTheFrameAndTheFactionArt()
     {
@@ -368,5 +389,67 @@ public class FrontEndMovieServiceTests
         _settings.Value = new FactionUISettings(true, true, true, true, true, true, customFaceGen: false);
 
         Assert.IsFalse(_sut.WillThemeFaceGenerator());
+    }
+
+    // ── Field camp overlay: the Camp icon beside the time controls (campaign HUD option A) ──────
+
+    private const string CampOverlayMovie = "TaomFieldCampOverlay";
+    private const string ThemedCampOverlayMovie = "TAOMFieldCampOverlay";
+    private const string CampOverlayViewModel = "FieldCampOverlayVM";
+
+    [TestMethod]
+    public void BeginLoad_FieldCampOverlay_SwapsToTheThemedIconOverlayWithFallback()
+    {
+        var swap = _sut.BeginLoad(CampOverlayMovie, CampOverlayViewModel);
+
+        Assert.IsNotNull(swap, "the camp overlay is not themed, so the Camp icon never appears beside the clock");
+        Assert.AreEqual(ThemedCampOverlayMovie, swap!.TargetName);
+        Assert.AreEqual(CampOverlayMovie, swap.OriginalName);
+        Assert.IsTrue(swap.HasVanillaFallback, "a failed themed build must fall back to the original text button");
+    }
+
+    [TestMethod]
+    public void BeginLoad_FieldCampOverlayBeforeTheMapBar_RegistersAndHoldsTheCampaignChrome()
+    {
+        // The camp layer is built by its own MapView; nothing orders it after the MapBar, so the icon
+        // must not depend on the MapBar having loaded the chrome first.
+        var swap = _sut.BeginLoad(CampOverlayMovie, CampOverlayViewModel);
+
+        Assert.AreEqual(CharacterCreation, swap!.Holds);
+        Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"), "chrome sprites were not registered for the camp icon");
+    }
+
+    [TestMethod]
+    public void Tick_MapBarReleasedWhileTheCampOverlayLives_KeepsTheChromeHeld()
+    {
+        var mapBar = LoadThemed("MapBar", "MapBarVM");
+        LoadThemed(CampOverlayMovie, CampOverlayViewModel);
+        _state.IsMovieReleased(mapBar).Returns(true);
+
+        Assert.AreEqual(CharacterCreation, _sut.Tick(), "the Camp icon's sprite would be released under it");
+    }
+
+    [TestMethod]
+    public void Tick_CampOverlayReleased_GivesUpItsHold()
+    {
+        var camp = LoadThemed(CampOverlayMovie, CampOverlayViewModel);
+        _state.IsMovieReleased(camp).Returns(true);
+
+        Assert.AreEqual(FrontEndImageGroups.None, _sut.Tick());
+    }
+
+    [TestMethod]
+    public void BeginLoad_FieldCampOverlayDrivenByAnotherViewModel_IsLeftAlone()
+    {
+        Assert.IsNull(_sut.BeginLoad(CampOverlayMovie, "SomeOtherVM"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_ThemedFieldCampOverlayMissing_LeavesTheOriginalAndWarns()
+    {
+        _adapter.MissingPrefabs.Add(ThemedCampOverlayMovie);
+
+        Assert.IsNull(_sut.BeginLoad(CampOverlayMovie, CampOverlayViewModel));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(ThemedCampOverlayMovie)));
     }
 }
