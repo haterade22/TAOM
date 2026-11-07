@@ -25,6 +25,41 @@ REPO = Path(__file__).resolve().parent.parent.parent
 V = "v2.0.36"
 
 
+SCISSORS = "# ------------------------ >8 ------------------------\n"
+VERBOSE_TAIL = ("# Do not modify or remove the line above.\n# Everything below it will be ignored.\n"
+                "diff --git a/x.md b/x.md\n+Closes #1, #2\n+Generated with Claude Code\n")
+
+
+class ScissorsTests(unittest.TestCase):
+    """git commit -v hands commit-msg the staged diff below git's scissors line."""
+
+    def test_a_diff_below_the_scissors_line_is_not_the_message(self):
+        self.assertEqual(ccm.check("fix: v2.0.36 - good\n\nBody.\n\n" + SCISSORS + VERBOSE_TAIL, V), [])
+
+    def test_a_crlf_scissors_line_cuts_too(self):
+        text = "fix: v2.0.36 - good\n\n" + SCISSORS + VERBOSE_TAIL
+        self.assertEqual(ccm.check(text.replace("\n", "\r\n"), V), [])
+
+    def test_another_comment_character_cuts_too(self):
+        tail = (SCISSORS + VERBOSE_TAIL).replace("# ", "; ")
+        self.assertEqual(ccm.check("fix: v2.0.36 - good\n\n" + tail, V), [])
+
+    def test_the_same_text_above_the_scissors_line_is_refused(self):
+        problems = ccm.check("fix: v2.0.36 - good\n\nCloses #1, #2\n\n" + SCISSORS + VERBOSE_TAIL, V)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("closes only the first issue", problems[0])
+        problems = ccm.check("fix: v2.0.36 - good\n\nGenerated with Claude Code\n\n" + SCISSORS, V)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("AI attribution", problems[0])
+
+    def test_a_subject_below_the_scissors_line_does_not_count(self):
+        self.assertEqual(ccm.check(SCISSORS + "not a subject\n", V), [])
+
+    def test_a_scissors_line_quoted_in_the_body_needs_its_exact_form(self):
+        problems = ccm.check("fix: v2.0.36 - good\n\nSee -- >8 -- in git.\nCloses #1, #2\n", V)
+        self.assertEqual(len(problems), 1)
+
+
 class CheckTests(unittest.TestCase):
     def test_labelled_subject_with_the_version_passes(self):
         self.assertEqual(ccm.check("fix(map): v2.0.36 - Dunland names\n\nBody.\n", V), [])
