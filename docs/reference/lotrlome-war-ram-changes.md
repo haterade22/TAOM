@@ -2,7 +2,7 @@
 
 The war ram's **data plane lives in the external `LOTRLOME_Armory` module**
 (`E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\`), which is **not
-tracked by this repo**. A module reinstall silently reverts every change below, and nothing in CI
+tracked by this repo**. A module reinstall silently reverts every change below, and git never
 sees them. This ledger records each edit, why it exists, and how to redo it.
 
 Issue: [#515](https://github.com/haterade22/TAOM/issues/515). Feature doc:

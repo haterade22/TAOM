@@ -478,7 +478,7 @@ from the first game start.
 ## Tests
 
 - `MapSpeedTests`, `MapFrameProfilerTests`, `MapProfileLinesTests`, `TickEventSwapTests`,
-  `MapFrameProfilerWiringTests`: no category, so hosted CI's unit step runs them too.
+  `MapFrameProfilerWiringTests`: no category, so a plain test run takes them too.
 - `TickEventListenerWalkerTests` (the differential walk), `MapFrameProfilerHooksTests` (sessions, windows, the
   speed class through a fake time-control adapter, the hook revalidation through a fake `LostHooks`),
   `MapFrameProfilerInstallerTests` (the install decisions, the unpatched check, and a real Harmony strip with

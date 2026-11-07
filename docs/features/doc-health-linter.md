@@ -240,7 +240,7 @@ before treating it as an all-clear.
 
 Python 3.9+ stdlib only (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`).
 `Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages —
-which is why this is one of the few TAOM gates that can run in CI unchanged.
+which is why this is one of the few TAOM gates that needs no game install.
 
 ## Tests
 

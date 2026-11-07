@@ -54,7 +54,7 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   time. Hardened: party lookups cached (no per-frame LINQ over `MobileParty.All`), no-change frames
   skip the native set, and the internal `MobileParty.Bearing` setter is reached through one cached
   `AccessTools.PropertySetter`, pinned by `SupplyCaravanBearingBindingTests` so an engine rename
-  fails in CI instead of silently sliding caravans sideways.
+  fails a test instead of silently sliding caravans sideways.
 - **Volunteers respect TAOM's recruitment stack**: sourcing goes through
   `Campaign.Current.Models.VolunteerModel.MaximumIndexHeroCanRecruitFromHero` and honours the
   alignment gate's `-1` (recruit nothing from this notable). Recruit prices run through the vanilla

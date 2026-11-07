@@ -3,7 +3,7 @@
 The warg's **data plane moved out of the standalone `Alliance.Wargs` module and into the external
 `LOTRLOME_Armory` module** (`E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\`),
 which is **not tracked by this repo**. A module reinstall silently reverts every change below, and
-nothing in CI sees them. This ledger records each edit, why it exists, and how to redo it.
+git never sees them. This ledger records each edit, why it exists, and how to redo it.
 
 Goal: one fewer module a player has to install and enable. Precedent: the war elephant's
 `ADOD_Beasts` absorption on 2026-06-08 ([elephant.md](../features/elephant.md), "Action-sets

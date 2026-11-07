@@ -212,7 +212,7 @@ Three within-culture level inversions are known and accepted, all Gondor Ranged:
 
 Four upgrade edges end up exactly flat, which the gate allows because flat is not a decrease (the 6 militia pairs above rose by 15 on 2026-09-13 and are exempt anyway): the two `*_knight_golden_flower` capstones into their `*_warden_gondolin`, and two more in the goblin and gundabad Ironfang lines. Those two capstones sit at level 51, which is already tier 10, the cap `TaomCharacterStatsModel` sets, so there is no grid step left to promote them into. They are equal-tier variant branches that differ by equipment and role. The `*_bolgs_ironfang` pair had the same shape at level 36 and was fixed properly, by moving them one step to level 41 (the T8 they are labelled as) and restatting.
 
-**Per-skill enforcement lives in two gates**, not in the analyzer: `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` (runs in CI, no game install) and the `UPGRADE_SKILL_REGRESSION` error in `tools/taom_schema.py` (so `validate_moduledata.py` fails on it). `tools/tests/test_upgrade_skill_monotonicity.py` covers the gate, the clamp and the entry insertion on synthetic data.
+**Per-skill enforcement lives in two gates**, not in the analyzer: `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` (no game install needed) and the `UPGRADE_SKILL_REGRESSION` error in `tools/taom_schema.py` (so `validate_moduledata.py` fails on it). `tools/tests/test_upgrade_skill_monotonicity.py` covers the gate, the clamp and the entry insertion on synthetic data.
 
 ## Armour is a ladder too
 

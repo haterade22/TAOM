@@ -367,7 +367,6 @@ except Exception as e:
     declare -A SERVER_TOOLS=(
         [serena]=25
         [ilspy]=4
-        [sequential-thinking]=1
         [context7]=2
         [playwright]=24
         [taom-moduledata]=9
