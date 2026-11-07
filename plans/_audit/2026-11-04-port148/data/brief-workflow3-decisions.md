@@ -368,3 +368,14 @@ cold review. Nothing is pushed, tagged or merged to the trunk.
    on this laptop are denied until the public Armory is installed, and the report must say so. CLAUDE.md between 45,600 and the linter's 46,000 cap is not a
    STOP. Above 46,000, cut only text that a linked doc already holds and list each cut.
 8. **D25 rule 2 and D20 stand.** No step stages item, roster, equipment, troop or mesh data, and any count measured on the `v2.0.26` Armory is void.
+
+## D32: graphify dropped, follow-ups proceed (2026-11-06, maintainer's instruction)
+
+On 2026-11-06 the maintainer said to drop graphify and to proceed with the follow-ups and recommendations.
+
+1. **Graphify is closed on this line.** Graphify steps are no longer owed, so WP141's missing D1 steps 3 and 4 and D2 are closed. Row 141 stays PARTIAL for
+   its A5 and maintainer items.
+2. **Where the follow-ups land:** branch `port148/followups`.
+3. **Left out by recommendation:** Spacing Repair (a separate plan after the in-game baseline); the WP135 free seed and dry run (with the paid pass); the WP103
+   matcher change (a naive fix opens real commits, and the win is one nuisance deny); history rewrites.
+4. **Still not authorised:** push, tag, trunk merge.
