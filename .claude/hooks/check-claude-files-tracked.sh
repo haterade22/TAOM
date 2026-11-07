@@ -40,9 +40,7 @@ COMMAND=$(taom_hook_command posix check-claude-files-tracked)
 
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
-case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree etc — different command
-esac
+taom_commit_plumbing_only && { echo '{}'; exit 0; }
 case "$COMMAND" in
     *"git commit"* | *"git -"*" commit"* ) ;;
     *) echo '{}'; exit 0 ;;

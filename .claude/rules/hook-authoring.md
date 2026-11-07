@@ -36,21 +36,24 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 | `git -C /path commit` | Run as if from /path (no leading `cd`) | NO — needs `*"git -"*" commit"*` |
 | `git -c key=val commit` | One-time config override | NO — same |
 | `git --git-dir=/path commit` | Operate on a specific git-dir | NO for this substring; the reference pattern catches it |
-| `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
-| `git commit-graph` | Plumbing — same | YES (false positive) — same |
+| `git commit-tree` | Plumbing: a DIFFERENT command, must NOT match | YES (false positive): needs `taom_commit_plumbing_only` |
+| `git commit-graph` | Plumbing: same | YES (false positive): same |
 | `timeout 60 git ...`, `{ git ...; }`, `! git ...`, `then git ...` | A wrapper word or shell grammar in front of git (#985) | NO: read segments from `_shellwords.py commands`, a parsed call through `_git_call` |
 
 **Reference pattern** (used by `check-claude-files-tracked.sh`):
 
 ```bash
-case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree etc — different command
-esac
+taom_commit_plumbing_only && { echo '{}'; exit 0; }   # _pybin.sh: commit-tree etc, a different command
 case "$COMMAND" in
     *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
     *) echo '{}'; exit 0 ;;
 esac
 ```
+
+Never reject plumbing with a raw `*"git commit-"*` test: a message naming commit-tree, or an earlier
+`git commit-graph`, then skips the gate on a real commit. `taom_commit_plumbing_only` asks
+`_shellwords.py is-commit`, which says plumbing only when it read the whole command and found a plumbing
+call and no commit; whatever it cannot follow is gated (`tools/test_hooks.sh` 7q).
 
 **MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
 

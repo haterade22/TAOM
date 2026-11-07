@@ -5,7 +5,7 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|is-commit|bypass < the hook payload (JSON)
   posix     the command as POSIX-shell text
   bypass    the spelling that skips the commit hooks, as block-no-verify.sh names it, or an empty line
   commands  the posix text split at ; & | and newlines outside quotes (a # comment dropped), each
@@ -30,6 +30,8 @@ Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|g
             `amend` when any call amends HEAD, else `new`; then, when every call is a path commit
             (`git commit -m x -- <paths>`, or paths after the message, without -a or -i), one path per
             line, which the commit records from the working copy, not the index
+  is-commit `no` when the command only runs commit plumbing (is_commit), else `yes`; _pybin.sh
+            taom_commit_plumbing_only asks it when the text names `git commit-`
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -1104,6 +1106,35 @@ def commit_plan(cmd, tool, cwd=""):
     return amend, ([] if plain else paths)
 
 
+def _git_subcommand(words):
+    """The subcommand in the words after `git`, past its global options, or ""."""
+    i = 0
+    while i < len(words) and words[i].startswith("-"):
+        i += 2 if words[i] in GIT_OPTS_WITH_VALUE else 1
+    return words[i] if i < len(words) else ""
+
+
+def is_commit(cmd, tool):
+    """Whether a commit gate judges a command whose text names `git commit-`. False only when the whole
+    command was read and it holds a plumbing call (commit-tree, commit-graph) and no `git commit`. A
+    mention with no plumbing call stays True, as a mention of `git commit` does at the gates' raw test,
+    and so does what this reader cannot follow: bad quoting, a text too long to read, or a commit behind
+    a runner it does not peel (sudo, eval) with no plumbing call beside it. No commit gate lost a command
+    to this: the raw `*"git commit-"*` test it replaced let all of these through."""
+    posix = to_posix(cmd, tool)
+    if len(posix) > REPO_SCAN_MAX or posix.count("<<") > HEREDOC_MAX_OPENERS:
+        return True
+    text, bodies = strip_heredocs(posix)
+    text = decode_ansi_c(text)
+    try:
+        if git_invocations(text, bodies, "commit"):
+            return True
+        calls = git_invocations(text, bodies, None)
+    except ValueError:
+        return True
+    return not any(_git_subcommand(words).startswith("commit-") for words, _repo in calls)
+
+
 # ---- the spellings that skip the commit hooks (block-no-verify.sh, 2026-11-03) -------------------
 # --no-veri is the shortest spelling git accepts: --no-ver is ambiguous with --no-verbose.
 NO_VERIFY = re.compile(r"--no-veri(?:f|fy)?")
@@ -1241,8 +1272,8 @@ def read_cwd(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan", "bypass"):
-        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < payload.json\n")
+    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan", "is-commit", "bypass"):
+        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|is-commit|bypass < payload.json\n")
         return 2
     raw = sys.stdin.buffer.read().decode("utf-8", "replace")
     payload = read_payload(raw)
@@ -1261,6 +1292,11 @@ def main(argv):
             amend, paths = None, []
         head = "unknown" if amend is None else "amend" if amend else "new"
         text = "\n".join([head] + [p.replace("\n", "") for p in paths])
+    elif mode == "is-commit":
+        try:
+            text = "yes" if payload is None or is_commit(cmd, tool) else "no"
+        except Exception:                    # a gate never loses a commit to this reader's own fault
+            text = "yes"
     elif mode == "verdict" and payload is None:
         text = "unread"
     elif mode == "verdict":

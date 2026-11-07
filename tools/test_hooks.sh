@@ -3715,6 +3715,58 @@ git -C "$NC_M" worktree remove --force "$NC_W" 2>/dev/null
 rm -rf "$NC_M" "$NC_W" "$NC_F"
 
 # ---------------------------------------------------------------------------
+head2 "7q. the commit gates tell commit plumbing from a commit that mentions it"
+# A raw `*"git commit-"*` arm let any commit whose text held those words skip all five gates: a message
+# naming commit-tree, an earlier commit-graph call. Plumbing now passes only when _shellwords.py
+# is-commit read the whole command and found a plumbing call and no commit; anything it cannot follow
+# is gated. The trace shows whether a state gate got past its commit test (as in 7e).
+pc_reaches() {  # $1 hook, $2 tool, $3 command: 1 when the gate got past its commit test
+    pre_payload "$2" "$3" | timeout -k 2 60 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" \
+        bash -x "$REPO/.claude/hooks/$1" >/dev/null 2>"$SANDBOX/pc.trace"
+    if grep -qE '^\+ cd ' "$SANDBOX/pc.trace"; then echo 1; else echo 0; fi
+}
+PC_CASES=(
+  "1|Bash|git commit -m \"feat: no label, about git commit-tree\""
+  "1|Bash|git commit-graph write && git commit -m \"feat: bad\""
+  "1|Bash|git commit -m \"feat: no label\" -m \"see git commit-graph docs\""
+  "1|Bash|git -C . commit-graph write; git -C . commit -m \"feat: bad\""
+  "1|Bash|sudo git commit -m \"about git commit-tree\""
+  "1|Bash|eval \"git commit -m x; git commit-tree y\""
+  "1|Bash|git commit-tree HEAD -m \"an unclosed quote"
+  "1|PowerShell|git commit -m 'about git commit-tree'"
+  "0|Bash|git commit-tree HEAD^{tree} -m x"
+  "0|Bash|git commit-graph write"
+  "0|Bash|git -C . commit-tree HEAD -m x"
+  "0|Bash|git -C . commit-graph write"
+  "0|PowerShell|git commit-graph write"
+  "0|Bash|git log --grep commit"
+)
+for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh; do
+    for entry in "${PC_CASES[@]}"; do
+        want="${entry%%|*}"; rest="${entry#*|}"; tool="${rest%%|*}"; cmd="${rest#*|}"
+        got=$(pc_reaches "$hook" "$tool" "$cmd")
+        [[ "$got" == "$want" ]] && ok "$hook [$tool] gates=$got: $cmd" \
+            || bad "$hook [$tool] expected gates=$want, got $got: $cmd"
+    done
+done
+rm -f "$SANDBOX/pc.trace"
+PC_SUBJECT=(
+  "deny|git commit -m \"feat: no label, about git commit-tree\""
+  "deny|git commit-graph write && git commit -m \"feat: bad\""
+  "deny|git commit -m \"feat: no label\" -m \"see git commit-graph docs\""
+  "allow|git commit-tree HEAD^{tree} -m \"x\""
+  "allow|git commit-graph write"
+  "allow|git -C . commit-tree HEAD -m \"x\""
+)
+for entry in "${PC_SUBJECT[@]}"; do
+    want="${entry%%|*}"; cmd="${entry#*|}"
+    OUT=$(pre_payload Bash "$cmd" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$REPO" bash "$REPO/.claude/hooks/check-commit-subject-version.sh" 2>/dev/null)
+    got=$(decision_of "$OUT")
+    [[ "$got" == "$want" ]] && ok "check-commit-subject-version $got: $cmd" \
+        || bad "check-commit-subject-version expected $want, got $got: $cmd"
+done
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then

@@ -44,6 +44,41 @@ def run_cli(mode, stdin, *args):
                           input=stdin, capture_output=True, timeout=30)
 
 
+class IsCommitTests(unittest.TestCase):
+    """The answer that lets a commit gate skip plumbing: False only when the whole command was read
+    and holds a plumbing call and no commit. A gate must never lose a commit to it."""
+
+    def test_plumbing_alone_is_no_commit(self):
+        for cmd in ("git commit-tree HEAD^{tree} -m x", "git commit-graph write", "git -C . commit-tree HEAD -m x",
+                    'git -c a.b="c d" commit-graph write', 'bash -c "git commit-graph write"'):
+            self.assertFalse(sw.is_commit(cmd, "Bash"), cmd)
+        self.assertFalse(sw.is_commit("git commit-tree HEAD^{tree} -m x", "PowerShell"))
+
+    def test_a_commit_that_mentions_plumbing_is_a_commit(self):
+        for cmd in ('git commit -m "about git commit-tree"', 'git commit-graph write && git commit -m x',
+                    'git commit -m x -m "see git commit-graph docs"', 'git -C . commit-graph write; git -C . commit -m x',
+                    "git commit -F - <<EOF\nabout git commit-tree\nEOF", 'bash -c "git commit-graph write; git commit -m x"'):
+            self.assertTrue(sw.is_commit(cmd, "Bash"), cmd)
+        self.assertTrue(sw.is_commit("git commit -m 'about git commit-tree'", "PowerShell"))
+
+    def test_a_mention_with_no_plumbing_call_stays_gated(self):
+        for cmd in ('echo "git commit-tree"', 'eval "git commit -m x; git commit-tree y"',
+                    'sudo git commit -m "about git commit-tree"', "pwsh -c 'git commit-graph write; git commit -m x'"):
+            self.assertTrue(sw.is_commit(cmd, "Bash"), cmd)
+
+    def test_what_the_reader_cannot_follow_stays_gated(self):
+        self.assertTrue(sw.is_commit('git commit-tree HEAD -m "an unclosed quote', "Bash"))
+        self.assertTrue(sw.is_commit("git commit-graph write; x='" + "y" * (sw.REPO_SCAN_MAX + 1) + "'", "Bash"))
+        self.assertTrue(sw.is_commit("git commit-graph write\n" + "x << 1\n" * (sw.HEREDOC_MAX_OPENERS + 1), "Bash"))
+
+    def test_the_cli_prints_yes_or_no_and_a_bad_payload_is_yes(self):
+        plumbing = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git commit-graph write"}})
+        commit = json.dumps({"tool_name": "Bash", "tool_input": {"command": 'git commit -m "git commit-tree"'}})
+        self.assertEqual(b"no\n", run_cli("is-commit", plumbing.encode("ascii")).stdout)
+        self.assertEqual(b"yes\n", run_cli("is-commit", commit.encode("ascii")).stdout)
+        self.assertEqual(b"yes\n", run_cli("is-commit", b"not json").stdout)
+
+
 class PowerShellQuotingTests(unittest.TestCase):
     def test_single_quotes_double_an_apostrophe(self):
         self.assertEqual(ps("git commit -m 'it''s'"), [["git", "commit", "-m", "it's"]])

@@ -53,9 +53,7 @@ COMMAND=$(taom_hook_command posix check-doc-config-drift)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
 # `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
-case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;
-esac
+taom_commit_plumbing_only && { echo '{}'; exit 0; }
 case "$COMMAND" in
     *"git commit"* | *"git -"*" commit"* ) ;;
     *) echo '{}'; exit 0 ;;

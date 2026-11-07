@@ -53,10 +53,8 @@ taom_pybin_degraded "check-commit-subject-version" "the commit-subject version l
 COMMAND=$(taom_hook_command posix check-commit-subject-version)
 
 # Detect `git commit` invocations including `git -C <dir> commit` and
-# `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
-case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree / commit-graph etc, a different command
-esac
+# `git -c <key>=<val> commit`. Plumbing (`git commit-tree`, `commit-graph`) reaches the parser below,
+# which finds no commit call in it and allows.
 case "$COMMAND" in
     *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
     *) echo '{}'; exit 0 ;;
