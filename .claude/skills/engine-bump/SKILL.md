@@ -24,16 +24,44 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    `tools/native_crash_triage.py` defaults to the shipping client DLL, so a client crash is unaffected, but an
    offset from the wEditor `TaleWorlds.Native.dll` holds only for that binary's version:
    every offset taken before that jump was against a v1.4.5 image, and it moved with no signal.
-   Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
-   them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
-   aside now** — that copy is the only baseline the NEXT bump will have. The cost of not having one
-   is already booked: the open player report (untracked; read it with
-   `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
+   Steam overwrites in place, so **archive both builds**: `python tools/native_archive.py` (no flags)
+   copies each installed client and wEditor `TaleWorlds.Native.dll` by SHA-256 into `$TAOM_NATIVE_ARCHIVE`
+   (default `E:\Decompiled_Bannerlord\_native`; the laptop sets it) as
+   `TaleWorlds.Native.v<ver>.{client,wEditor}.dll`, caches its engine-method map while that build's managed
+   DLLs are still installed, pre-builds the matcher index, and scores `--oracle` against the previous
+   archived build of the same kind. On the 1.5.x line the session-start hook runs it; on this line run it
+   as soon as the update is noticed. Then `python tools/native_archive.py --status`: it shows saved state
+   only, one row per install path, and does not re-check the installed DLL, so compare each row's `sha16`
+   with the installed file
+   (`python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest()[:16])" <dll>`).
+   The OLD pair is in the archive only if it was archived before the update (v1.4.8 build 119303 by the
+   maintainer run of plan 137); if it is missing it is gone: record that and expect `oracle=unscored`. The
+   cost of not having one is already booked: the open player report (untracked; read it with
+   `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged
+   against a local binary.
 3. `taom-src` auto-detects the new build: a fresh cache and DLL index under `~/.taom-src/v<new>-<stamp>/`,
    and the old caches stay unused. The stamp is `TaleWorlds.Library.dll`'s UTC write time, because a Steam
    hotfix can keep the version string. Pass a short or fully qualified type name. A mod's own copy of an
    engine assembly (`Modules\Coop`) searches last (#1038), so only a type that copy alone still holds
    resolves from it. The tool prints only the cache path; `~/.taom-src/sources.json` names the DLL it read.
+4. **Warm the native decompiler, and read its map check.** Each new binary gets a fresh Ghidra project,
+   so on a machine with Ghidra run `python tools/native_decompile.py --engine-method get_current_action_type`
+   once for the client and once with `--dll` on the wEditor DLL: the first crash then decompiles in
+   seconds, not minutes. Any `WARNING: engine-method map:` line means the map is incomplete for that
+   binary, most likely because the registration sweep met an instruction form it does not read:
+   `--engine-method` refuses that assembly and the project is not seeded until
+   `tools/native_engine_methods.py` reads every id. Fix the sweep before trusting native answers for that
+   build. Without Ghidra (the laptop) the same completeness check runs as
+   `TAOM_GHIDRA_IT=1 python -m unittest tools.tests.test_native_engine_methods.InstalledEngineTests`; its
+   address and count pins need a row for the new build (v1.4.8: 686, 1,542 and 33 methods). Native
+   offsets quoted in docs and RCAs belong to their old binary; re-derive one by engine method or string,
+   not by offset ([ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)), or carry
+   it: `native_archive.py --status` shows the stored oracle result (`oracle=ok vs <old>`, or `oracle=wrong`
+   with counts); without one, run `python tools/native_build_match.py --old <archived old client DLL> --oracle`
+   once (exit 1, a wrong match: do not use it on this pair; exit 2, no map for the old build: the pair is
+   unscored), then `--rva <old offset>`. Only `MATCHED ... (hash)` gives an exact offset, and it means
+   identical code, not proven identity: read the new address with `native_decompile.py --rva` before it
+   goes into a pin ([native-build-match.md](../../../docs/features/native-build-match.md)).
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 

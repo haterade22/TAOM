@@ -1,6 +1,6 @@
 ---
 name: native-crash-triage
-description: Root-cause native Bannerlord CTDs (AccessViolation in TaleWorlds.Native.dll) via Event Log offsets, offline disassembly, and live debugger forensics. No symbols needed.
+description: Root-cause native Bannerlord CTDs (AccessViolation in TaleWorlds.Native.dll) and hangs, via Event Log offsets, hang dumps, Ghidra decompile and live debugger forensics. No symbols needed.
 ---
 
 # Native Crash Triage
@@ -13,6 +13,7 @@ corruption) named and fixed in one day with exactly this protocol.
 **When to use:** any `0xC0000005` / `System.AccessViolationException` whose stack dies in
 `TaleWorlds.Native.dll` (or another native module). For managed TAOM bugs use `/investigate`
 instead — this skill is the native-side complement (and `/investigate` may hand off here).
+A hang (the game spins, nothing crashes) goes to Phase 2b.
 
 **Iron rule (from `/investigate`):** no fixes without a named site + root cause. Every fix this
 protocol has produced was DATA (XML) or a routing patch; never a blind retry.
@@ -31,7 +32,11 @@ A battle frozen with threads spinning at a `lock xadd`: TAOM guards the engine's
    ```
    The `Fault offset` IS the RVA. **Compare offsets across runs** — identical offset = same
    site (discriminates "my fix didn't work" from "a different crash"); this is how Patch47 was
-   exonerated. Caveat: a crash held by a debugger never reaches WER — no Event Log entry.
+   exonerated. Caveat: a crash held by a debugger never reaches WER: no Event Log entry. That
+   includes Visual Studio (Detach All at the exception, never Stop, or the process dies unrecorded;
+   its `$exception._ip` still gives the offset) and TaleWorlds' own `Watchdog.exe -p <pid>`
+   (`bin\Win64_Shipping_Client\Watchdog\` on v1.4.8), which the launcher starts and which blocked
+   procdump from attaching on the desktop (2026-09-26).
 2. **Player crash bundles (no reporter Event Log):** TW's CrashDumper drops a minidump
    (`dump.dmp`) in the crash-report bundle. `python tools/native_crash_triage.py --dump
    <bundle>/dump.dmp` names the faulting module + RVA and the commit split (total / image /
@@ -40,6 +45,12 @@ A battle frozen with threads spinning at a `lock xadd`: TAOM guards the engine's
    transfer to a local disassembly only when the reporter's Build Source matches the installed
    build — compare the bundle's build line against the local install; the tool prints both the
    dump-side module path and the local `--dll` it disassembles, so a mismatch is visible.
+   On a mismatch, pass `--dll` the archived DLL of the report's build (step 7), then carry the fault RVA
+   to the installed build: `python tools/native_build_match.py --old <that DLL> --oracle` first
+   (exit 1: do not carry on this pair; exit 2, no map for that build: the pair is unscored), then
+   `--rva 0x<rva>`. Only `MATCHED ... (hash)` carries the exact offset, and it means identical code,
+   not proven identity: decompile both addresses and compare before you name the site
+   ([native-build-match.md](../../../docs/features/native-build-match.md)).
 3. Game-side timeline: newest `Logs/taom_debug_*.log` (game bin) + newest
    `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_*.txt` — last lines date the
    crash relative to gameplay events (charge orders, scene loads).
@@ -77,7 +88,10 @@ A battle frozen with threads spinning at a `lock xadd`: TAOM guards the engine's
    for managed assemblies only — native modules are merely *listed* in `_native_dlls.txt`).
    Consequence: the open player report `crashz/report.json` (untracked; `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`)
    **cannot currently be triaged locally** — there is no v1.4.7 image to disassemble against.
-   Copy both `TaleWorlds.Native.dll` files aside before the next update lands.
+   Archive both before the next update lands: `python tools/native_archive.py` copies each installed
+   client and wEditor DLL by SHA-256 into `$TAOM_NATIVE_ARCHIVE` (default `E:\Decompiled_Bannerlord\_native`)
+   with its engine-method map and matcher index, and `--status` lists what is saved. On the laptop set
+   `TAOM_NATIVE_ARCHIVE` and `TAOM_GHIDRA_PROJECTS` first. A plain copy of both DLLs is the fallback.
 
 ## Phase 2 — Name the site (offline, fully scripted)
 
@@ -96,15 +110,58 @@ and the caller chain with each caller's strings. `--dump` first prints the excep
 and a return-address stack scan of the faulting thread (locating the stack through MemoryList
 when the per-thread descriptor Rva is 0, which is what TW's CrashDumper writes), then chains
 into this same pipeline when the faulting module matches `--dll` — otherwise it prints the
-module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Hand-decode the few instructions around the
-crash row (the tool shows them); the common patterns:
+module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Then decompile
+the function with `python tools/native_decompile.py --rva 0x<fault_offset>` (the triage output ends
+with the exact line, also when the RVA is in a leaf function that has no `.pdata` entry, which
+triage cannot bound; `--callers 1` adds the callers' C; the first run on a new binary analyses it
+for minutes, once: [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
+Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent (the
+laptop has none). When the site implements a managed engine call, the output says which
+(`engine method: IMBAgent.X = x`): that is the managed call TAOM can see, and `/research` can follow
+it from there. The common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
   a key. Fix: make the table TOTAL
+  **The missing key is usually still in a register:** `--dump` prints the faulting thread's registers
+  (on the 1.5.x line the melee-table miss at `+0x6590B9` kept its clip index in `r9`). Then read the
+  table's BUILDER before changing any data: xref the table global and name the owning class from its
+  vtable's RTTI (`tools/native_sig_author.py xref` / `rtti`), then read the insert's condition in the
+  builder's C (`native_decompile.py --rva <builder>`).
 - faulting address ≈ heap, or an index register holding float bits → **corrupted record**
   consumed downstream; check binding targets (phantom-animation sweep) and route around if
   engine-internal (Patch47 pattern)
+
+## Phase 2b: A hang (the game spins, nothing crashes)
+
+No exception means no Event Log offset and no stream `--dump` can decode, so take the stack from a
+full dump (proven on #599):
+
+1. **Confirm the process is the game.** The Modding Kit also runs as
+   `TaleWorlds.MountAndBlade.Launcher.exe`, from `bin\Win64_Shipping_wEditor`, and legitimate editor work (the
+   settlement distance cache) sits at "Not Responding" for minutes, so a process name proves nothing. Read the
+   image path, `(Get-CimInstance Win32_Process -Filter "ProcessId=<pid>").ExecutablePath`: the game runs from
+   `bin\Win64_Shipping_Client`. Match the PID to the session's `rgl_log_<pid>.txt` in
+   `C:\ProgramData\Mount and Blade II Bannerlord\logs`, whose last lines also show whether the game ended
+   normally. Never tell the user to end a process you have not identified.
+2. **Spot the spin.** `Get-Process Bannerlord` kept `Responding` true through a game-loop spin
+   (#599), so do not wait for "Not Responding". Sample `Threads[].TotalProcessorTime` twice, 2 to 3 s apart: the game-loop thread holds
+   nearly all the lifetime CPU and is still climbing. `[MemSample]` lines prove nothing (a timer).
+3. **Dump.** `procdump -accepteula -ma <pid> E:\<dir>\hang.dmp` (Sysinternals, on the desktop's PATH, not on the laptop's as of 2026-11-04; about 11 GB).
+4. **Stack.** `WinDbgX -z <dmp> -c '$$><E:\<dir>\stack.wds'`, where the script (written with the Write
+   tool, never a heredoc) opens with `.logopen <log>`, runs `~~[0x<tid>]s; k 60; .loadby sos clr;
+   !clrstack -a` and ends `.logclose; q`. Poll the log, then `Stop-Process DbgX.Shell` (the window
+   outlives `q`). Never put a quoted `.printf` on the `-c` line: WinDbgX splits its own command line
+   on the quotes. Set `_NT_SYMBOL_PATH=srv*E:\symcache*https://msdl.microsoft.com/download/symbols`
+   for ntdll and kernel frames (caches live on E:, never C:).
+5. **Read the native frames as C.** Each `TaleWorlds_Native+0x<off>` frame's offset is an RVA:
+   `python tools/native_decompile.py --rva 0x<off>`. Read the stuck loop's exit condition in the C,
+   then find what should have set it. Without Ghidra (the laptop), name each frame with
+   `python tools/native_crash_triage.py --rva 0x<off>` instead.
+
+Heap values from the same log: `!do <obj>` for fields, `!DumpArray -details -length 3` for a struct
+array's layout, and `da poi(<address>)` to print the ASCII text a pointer stored at `<address>`
+points to.
 
 ## Phase 3 — Live debugger forensics (when a repro is available)
 
