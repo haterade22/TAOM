@@ -69,7 +69,11 @@ the public Armory, the in-game test and the merge to trunk.
 
 WP143 merged as `c66667f10` and WP145 E to G as `ff48da2d4`. Rows 102, 103, 116, 127, 138, 142 and 143 now read DONE; row 145 stays PARTIAL for G5 and the
 context-budget scanner half of F1. The orchestrator's run at `ff48da2d4` is quoted in the Integrator record of [`plans/README.md`](../../README.md). D32 closes
-the graphify steps and sends the follow-ups to `port148/followups`. Push, tag and trunk merge are still not authorised. The trunk merge's order is in [Merging to the trunk](../../README.md#merging-to-the-trunk-maintainer).
+the graphify steps and sends the follow-ups to `port148/followups`. D33 later authorised push and trunk merge (below); a tag is still not. The trunk merge's order is in [Merging to the trunk](../../README.md#merging-to-the-trunk-maintainer).
+
+## Merged to the trunk (2026-11-06)
+
+Follow-ups merged as `a925ff6db`, integrated review 3 and its fixes as `7b95af59c`. Under D33 the trunk `bannerlord-1.4.5` was fast-forwarded to `port148/overnight` and pushed, without a force-push, tag or release. `master` was not touched. Nothing has run in the game. What is left is in "Maintainer's list" in [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md).
 
 ## State at the end of planning
 

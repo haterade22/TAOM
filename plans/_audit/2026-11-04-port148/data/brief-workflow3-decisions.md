@@ -379,3 +379,12 @@ On 2026-11-06 the maintainer said to drop graphify and to proceed with the follo
 3. **Left out by recommendation:** Spacing Repair (a separate plan after the in-game baseline); the WP135 free seed and dry run (with the paid pass); the WP103
    matcher change (a naive fix opens real commits, and the win is one nuisance deny); history rewrites.
 4. **Still not authorised:** push, tag, trunk merge.
+
+## D33: push and trunk merge authorised, checks waived (2026-11-06, maintainer's instruction)
+
+On 2026-11-06 the maintainer wrote "ensure you update all documentation and commit, push and merge throughout the night please. you have full authority", then "I trust no in game verification or the armoury thank you".
+
+1. **Supersedes D32 rule 4** for push and trunk merge. The orchestrator fast-forwards `bannerlord-1.4.5` to `port148/overnight` and pushes it.
+2. **Scope as the orchestrator read it and told the maintainer:** `bannerlord-1.4.5` only, not `master`. No tag, no version bump, no release, no force-push. A push the gate refuses stops the run; the gate is not bypassed.
+3. **The in-game test and the public Armory check no longer hold the merge.** They were not done, and this decision does not say they passed. The trunk carries code that has never run in the game, and data counts measured on the `v2.0.26` Armory stay void as item verdicts.
+4. **The hook suite was not waived.** It failed 6 cases at `edcfddc63` while other workflows were loading the machine; alone at `3d4241801` it passed 1346, failed 0.

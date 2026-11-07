@@ -1,6 +1,6 @@
 # Overnight run report, 2026-11-05
 
-This report grew with the run. The first 19 work packages are in the sections up to "In-game checks owed"; later merges up to `b84c3011a` (WP145 A-D), the second integrated review, the verification at the tip and the symptom map are under "After the first report" and the sections that follow it. For merges after `b84c3011a`, including WP142, see the ledger in [`plans/README.md`](../../README.md). All of it is on the local branch `port148/overnight`. The trunk `bannerlord-1.4.5` did not move and nothing was pushed. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
+This report grew with the run. The first 19 work packages are in the sections up to "In-game checks owed"; later merges up to `b84c3011a` (WP145 A-D), the second integrated review, the verification at the tip and the symptom map are under "After the first report" and the sections that follow it. For merges after `b84c3011a`, including WP142, see the ledger in [`plans/README.md`](../../README.md). The work landed on `port148/overnight`; the trunk `bannerlord-1.4.5` was fast-forwarded to it and pushed on 2026-11-06 under D33, so statements below that the trunk did not move describe the time they were written. The outcome and what is left are under "Final stretch and trunk merge", at the end. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
 
 ## Work packages
 
@@ -903,3 +903,51 @@ Not verified: any native behaviour beyond what the docs cite from RVA reads, and
 - Nameplates (C4): change a fade slider in MCM on the map; the fade follows it, after a clean launch too.
 - Game menu and party screen (D3): both open and draw as before, the party screen's formation area in particular.
 - Mixed Formations (C5): the new `[MixedFormations] layout suspended` log line appears once per formation when a formation turns cavalry, and the Debug Mode hint text reads correctly in MCM.
+
+## Final stretch and trunk merge (2026-11-06)
+
+### What landed after `b84c3011a`
+
+| Step | Merge | Note |
+|---|---|---|
+| Integrated review 2 fixes | `6ac230b05` | |
+| WP108 B4, WP102 Step 2, WP136 Part B remainder (D30) | `42843a4f3`, `7a7af3d47`, `ae1860762` | Work that needed no protected file |
+| WP102 rest, WP103 | `d247b6fdb`, `ee75c9a0f` | Protected-file lane, D31 |
+| WP127 C and M, WP115 B and C5, WP122 C4, WP140 D, WP116 | `c5a0eb430`, `3737d668b`, `65d312cda`, `3bf81fc5b`, `200fe82fd` | D31 |
+| WP138, WP142, WP143, WP145 E to G | `9e8d18814`, `5199471c8`, `c66667f10`, `ff48da2d4` | D31 |
+| Follow-ups (D32) | `a925ff6db` | WP137 steps, WP139 D1, the release skill, the manual patch report and others |
+| Integrated review 3 fixes | `7b95af59c` | 27 confirmed findings, 4 refuted; the cold review of the fixes raised 8 more, also fixed |
+
+The D31 session override let agents edit protected files. It was machine-wide, because hooks get no session id, so it unlocked every session on the laptop while it existed. It has been deleted.
+
+### Verification at `3d4241801`, nothing else running
+
+- Debug and Release builds: 0 errors, 2505 warnings. Tests in each: 13484 total, 13476 passed, 8 skipped, 0 failed.
+- Hook suite: 1346 passed, 0 failed. Security audit, binding snapshot, reviewctl and a forced restore: exit 0.
+- Lint: exit 0, 7 findings (`claude_budget` 1, `adr_symbols` 6), unchanged. The six name symbols in ADR amendment lines that never existed.
+- Tool tests: 4343 run, failures 2, errors 1, skipped 26. The three are the baseline names: `test_audit_map_scene_memory`, `test_no_generator_writes_a_retired_id` and `test_missing_id_becomes_a_warning_under_the_code`.
+- The run at `edcfddc63` failed 6 hook cases (three over the 3000 ms budget, three escaped-command cases). No file behind those cases changed from the green run at `ff48da2d4`, and the suite is green alone, so they are read as machine load. That cause is inferred; the same load was not reproduced on purpose.
+
+### Gaps found and left
+
+- Three commit gates skip a commit whose text has no `git ... commit` on one segment when it follows plumbing such as `git -C . commit-graph write; g=git; $g commit -m x`. Base gated this only by accident.
+- A backslash-escaped space in a global option (`git -C a\ b reset --hard`) still hides the subcommand from the confirm gates. Same at base.
+- `git \<newline> commit -m ...` passes the subject gate's Claude hook. `.githooks/commit-msg` catches it now that `core.hooksPath` is set.
+- `export GIT_DIR=...` and PowerShell `$env:GIT_DIR` in an earlier statement are not read by the repo-aware gates.
+- `CLAUDE.md:178` and the xslt-check skill keep an XSLT count that does not match this laptop (17 stylesheets seen). Unchecked on the desktop.
+
+### Maintainer's list
+
+Nothing here holds the trunk any more. In rough order of cost if forgotten:
+
+1. **Restart Claude Code sessions**, then the live checks in [plan 142](../../142-docs-process-sync.md). Hooks and settings changed.
+2. **Archive the v1.4.8 native pair before the next game update:** set `TAOM_NATIVE_ARCHIVE` and `TAOM_GHIDRA_PROJECTS` (WP137 Maintainer steps). Both are unset on this laptop, and the pair is lost if the game updates first. WP137 steps 2 to 5 and 7 are owed.
+3. **In-game test.** Waived as a merge condition by D33, not done. The checks are listed per WP above. The save and freeze work is diagnostics plus mitigations until a real session shows it working; nothing is proven cured.
+4. **Public Armory.** `BROKEN_ROSTER_REF` and `BROKEN_SETTLEMENT_REF` need a re-run on it. With `core.hooksPath` set, a commit or clean merge staging ModuleData XML or XSLT is refused on this laptop until it is installed. The deferred data steps also wait on it: WP108 B5, WP133 B2, WP134, WP141 A5, WP101 B7.
+5. **Rulings:** the Sauron knockdown (recommendation: accept as documented) and the VanillaTuning licence.
+6. **`enabledPlugins`:** after the merge, set the six values to false, keeping any the desktop uses. Left for the maintainer.
+7. **Do not run `rebalance_troops --apply` on ranged troops** without reading #617's ladder note.
+8. **Installs and leftovers:** Ruff, ShellCheck and Gitleaks (WP122 C2, C3, C5); WP121 Kit parts; WP115 M2, M3, M5; WP138 L1 to L5 and the WP142 and WP143 live checks; the paid translation pass (WP135).
+9. **GitHub issues owed**, including one for `3d81168cb`: none was created during this programme, because the GitHub MCP server needs authorising.
+10. **MCP:** WP116 removed `github`, `git` and `filesystem` from `.mcp.json`. On this session `ilspy` and `taom-moduledata` failed to connect, and `github`, `imagine` and `context7` need authorising.
+11. **Stash:** `stash@{0}` in the main checkout is untouched and still the maintainer's to judge.
