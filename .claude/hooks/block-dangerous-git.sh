@@ -92,9 +92,10 @@ long_is() {
 SEGMENTS=$(taom_hook_segments block-dangerous-git)
 
 # The git global options the stripper in the loop below skips. A value is a run of unquoted characters
-# and quoted spans, so `-C 'E:/a b'` and `-c x.y="a b"` keep their spaces. A value with a lone quote
+# and quoted spans, so `-C 'E:/a b'` and `-c x.y="a b"` keep their spaces, and a backslash takes the
+# character after it, so `-C a\ b` does too (integrated review 3). A value with a lone quote
 # matches only the bare form, which reads it up to the first blank as it always did.
-GIT_GLOBAL_VALUE='([^[:space:]"'\'']|"[^"]*"|'\''[^'\'']*'\'')+'
+GIT_GLOBAL_VALUE='([^[:space:]"'\''\\]|\\.|"[^"]*"|'\''[^'\'']*'\'')+'
 GIT_GLOBAL_FLAGS='--no-pager|-p|--paginate|--bare|--no-replace-objects|--literal-pathspecs'
 GIT_GLOBAL_QUOTED="^(-c[[:space:]]+$GIT_GLOBAL_VALUE|-C[[:space:]]+$GIT_GLOBAL_VALUE|--git-dir[=[:space:]]$GIT_GLOBAL_VALUE|--work-tree[=[:space:]]$GIT_GLOBAL_VALUE|$GIT_GLOBAL_FLAGS)[[:space:]]+(.*)\$"
 GIT_GLOBAL_BARE="^(-c[[:space:]]+[^[:space:]]+|-C[[:space:]]+[^[:space:]]+|--git-dir[=[:space:]][^[:space:]]+|--work-tree[=[:space:]][^[:space:]]+|$GIT_GLOBAL_FLAGS)[[:space:]]+(.*)\$"

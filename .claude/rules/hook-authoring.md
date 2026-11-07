@@ -44,17 +44,19 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 
 ```bash
 taom_commit_plumbing_only && { echo '{}'; exit 0; }   # _pybin.sh: commit-tree etc, a different command
-case "$COMMAND" in
-    *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
-    *) echo '{}'; exit 0 ;;
-esac
+taom_names_commit || { echo '{}'; exit 0; }           # _pybin.sh: `git commit`, `git -C x commit`, any blanks
 ```
+
+`taom_names_commit` is the old `*"git commit"* | *"git -"*" commit"*` substring test, asked again with
+blanks of any length when it misses, a backslash-newline counted as a blank: the substrings alone let
+`git \<newline> commit` and `git  commit` skip every commit gate (integrated review 3).
 
 Never reject plumbing with a raw `*"git commit-"*` test: a message naming commit-tree, or an earlier
 `git commit-graph`, then skips the gate on a real commit. `taom_commit_plumbing_only` asks
 `_shellwords.py is-commit`, which says plumbing only when it read the whole command, found a plumbing
-call and no commit, and the text nowhere has `git` then `commit` on one segment, so a commit behind
-`eval` or `xargs` stays gated beside plumbing; whatever it cannot follow is gated (`tools/test_hooks.sh` 7q).
+call and no commit, and the text nowhere has the word `commit` on its own (not `commit-`), so a commit
+behind `eval`, `xargs` or git in a variable (`g=git; $g commit`) stays gated beside plumbing; whatever
+it cannot follow is gated (`tools/test_hooks.sh` 7q).
 
 **MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
 

@@ -165,7 +165,7 @@ spread) the cheapest remaining correction.
 
 **Why not just add settlements?** Because the engine's `rglConcurrentQueue` assert caps loaded
 prefab entities at 131,072 globally, across every loaded module. `tools/check_prefab_budget.py` sums
-every module and reads 130,468 on the laptop, 604 spare, with NavalDLC in the sum. Treat adding
+every module and reads 130,439 on the laptop on 2026-11-07, 633 spare, with NavalDLC in the sum. Treat adding
 settlements as needing a fresh measurement first rather than as either safe or blocked. It was not
 attempted here.
 

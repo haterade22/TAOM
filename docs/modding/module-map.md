@@ -360,7 +360,7 @@ the `Prefabs` / `Prefabs_Unused` split you see today
 ([editor-rglconcurrentqueue-assert-2026-07.md](../investigations/editor-rglconcurrentqueue-assert-2026-07.md)).
 
 `python tools/check_prefab_budget.py` sums every installed module, because the queue is global.
-Measured:
+Measured on the laptop, 2026-11-07, all three TAOM modules at v2.0.29.5:
 
 | Module | `<game_entity>` in `Prefabs/` |
 |---|---|
@@ -368,14 +368,14 @@ Measured:
 | `Native` | 23,828 |
 | `NavalDLC` | 9,867 |
 | `SandBox` | 2,847 |
-| `LOTRLOME_Armory` | 48 |
 | `StoryMode` | 39 |
+| `LOTRLOME_Armory` | 19 |
 | `TAOM` | 9 |
-| **Total** | **130,468 of 131,072, 604 spare** |
+| **Total** | **130,439 of 131,072, 633 spare** |
 
-<!-- measured: for m in */; do grep -ho '<game_entity' "$m"Prefabs/*.xml 2>/dev/null | wc -l; done 2026-09-05 -->
+<!-- measured: python tools/check_prefab_budget.py 2026-11-07 -->
 
-It prints `TOTAL: 130468 entities in 7 modules (cap 131072, warn 120000)` and a `WARN` line, and exits 1
+It prints `TOTAL: 130439 entities in 7 modules (cap 131072, warn 120000)` and a `WARN` line, and exits 1
 in that band. Only `--dir <folder>` counts a single folder (`TOTAL: 93830 entities in 141 files` and `OK`
 for `TAOM_Map/Prefabs`), and that is not the budget. `Prefabs_Unused/` holds another 91,023 entities
 that are parked, not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
@@ -628,7 +628,7 @@ All measured 2026-09-05 against the live install and, where noted, the repo.
 | `Main_map` file sizes; 348,743,509 bytes for `SceneEditData/Main_map/terrain_ed.bin`; 5 packs and 13.5 GB in `AssetPackages/` | `ls -la` on each |
 | 1,896 files in `Assets/`, 1,574 in `AssetSources/`, 3,069 in `RuntimeDataCache/` | `find <dir> -type f \| wc -l` |
 | 93,830 entities in `Prefabs/` (141 files), 91,023 in `Prefabs_Unused/` (69 files) | `grep -ho '<game_entity' <dir>/*.xml \| wc -l` |
-| 130,468 of 131,072 across all modules, 604 spare | `for m in */; do grep -ho '<game_entity' "$m"Prefabs/*.xml 2>/dev/null \| wc -l; done` |
+| 130,439 of 131,072 across all modules, 633 spare (2026-11-07) | `python tools/check_prefab_budget.py` |
 | 25 XML in `ModuleData/Languages/` across 12 language folders | `find ModuleData/Languages -name '*.xml' \| wc -l` |
 | Cache rebuild 431.76 s, 988 settlements, 221 fortifications | `cat ModuleData/DistanceCaches/last_rebuild_report.json` |
 | 9 `{==` against 3,269 `{=` | `grep -o '{==' <file> \| wc -l` |

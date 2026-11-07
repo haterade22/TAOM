@@ -55,10 +55,7 @@ COMMAND=$(taom_hook_command posix check-commit-subject-version)
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Plumbing (`git commit-tree`, `commit-graph`) reaches the parser below,
 # which finds no commit call in it and allows.
-case "$COMMAND" in
-    *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
-    *) echo '{}'; exit 0 ;;
-esac
+taom_names_commit || { echo '{}'; exit 0; }   # _pybin.sh: `git commit`, `git -C x commit`, any blanks
 
 # The top level of the repository the commit runs in (_pybin.sh taom_git_repo_dir): its <Version> is
 # the one the label must name. Until 2026-10-16 this was the project root plus the command's own cd or

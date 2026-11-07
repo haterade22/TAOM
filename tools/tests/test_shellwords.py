@@ -76,14 +76,19 @@ class IsCommitTests(unittest.TestCase):
                     "git -C . commit-graph write; cmd /c git commit -m x",
                     "git -C . commit-graph write; git -c alias.commit-x=commit commit-x",
                     'git -C . commit-graph write; eval "git -C . commit -m x"',
-                    "git -C . commit-graph write; sudo bash <<EOF\ngit commit -m x\nEOF"):
+                    "git -C . commit-graph write; sudo bash <<EOF\ngit commit -m x\nEOF",
+                    # git reached by a variable: no `git` on the commit's segment (integrated review 3)
+                    "git -C . commit-graph write; g=git; $g commit -m x",
+                    'git commit-graph write; G=git; "$G" commit -m x',
+                    "git commit-tree T -m y; ${GIT:-git} commit -m x"):
             self.assertTrue(sw.is_commit(cmd, "Bash"), cmd)
         self.assertTrue(sw.is_commit('git -C . commit-graph write; iex "git commit -m x"', "PowerShell"))
 
     def test_plumbing_with_no_commit_word_beside_it_still_passes(self):
         for cmd in ("git commit-graph write --reachable | tee git-commit-graph.log",
                     "git -C . commit-graph write; git -C . commit-tree T -m y",
-                    "git commit-tree T -m y | xargs git update-ref HEAD"):
+                    "git commit-tree T -m y | xargs git update-ref HEAD",
+                    "git commit-tree T -m y > commit-tree.out"):
             self.assertFalse(sw.is_commit(cmd, "Bash"), cmd)
 
     def test_what_the_reader_cannot_follow_stays_gated(self):
@@ -667,6 +672,36 @@ class GitRepoTests(unittest.TestCase):
         self.assertEqual(self.dirs("env GIT_DIR=/e/main/.git git commit -m x"), ["E:/main"])
         self.assertEqual(self.dirs("GIT_DIR=/e/a/.git git --git-dir=/e/b/.git commit -m x"), ["E:/b"])
 
+    def test_an_exported_git_dir_names_the_repo_of_a_later_commit(self):
+        # An export, or a PowerShell $env: assignment, in an earlier statement reaches every later git
+        # call in the same shell (integrated review 3); a plain assignment is not exported.
+        self.assertEqual(self.dirs("export GIT_DIR=/e/main/.git; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/m/.git/worktrees/x GIT_WORK_TREE=/e/x && git commit -m y"), ["E:/x"])
+        self.assertEqual(self.dirs("GIT_DIR=/e/main/.git; export GIT_DIR; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; GIT_DIR=/e/main/.git; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs('export GIT_DIR=/e/main/.git; bash -c "git commit -m x"'), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/main/.git\ngit commit -m x"), ["E:/main"])
+
+    def test_an_exported_git_dir_yields_to_the_call_and_to_its_scope(self):
+        self.assertEqual(self.dirs("GIT_DIR=/e/main/.git; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; git --git-dir=/e/b/.git commit -m x"), ["E:/b"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; GIT_DIR=/e/b/.git git commit -m x"), ["E:/b"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; unset GIT_DIR; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; export -n GIT_DIR; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("(export GIT_DIR=/e/a/.git); git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("git commit -m x; export GIT_DIR=/e/a/.git"), ["E:/w"])
+
+    def test_a_powershell_env_assignment_names_the_repo_of_a_later_commit(self):
+        for cmd in ("$env:GIT_DIR = 'E:/main/.git'; git commit -m x", '$env:GIT_DIR="E:/main/.git"; git commit -m x',
+                    "$Env:git_dir='E:/main/.git'\ngit commit -m x", "${env:GIT_DIR} = 'E:/main/.git'; git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd, tool="PowerShell"), ["E:/main"])
+        for cmd in ("$env:GIT_DIR = 'E:/main/.git'; $env:GIT_DIR = $null; git commit -m x",
+                    "$env:GIT_DIR = 'E:/main/.git'; Remove-Item Env:GIT_DIR; git commit -m x",
+                    "$env:GIT_DIR = Join-Path E:/main .git; git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd, tool="PowerShell"), ["E:/w"])
+
     def test_c_option_after_another_option_counts(self):
         self.assertEqual(self.dirs("git -c user.name=x -C sub commit -m y"), ["E:/w/sub"])
 
@@ -764,6 +799,20 @@ class GitRepoTests(unittest.TestCase):
         calls = sw.git_invocations(text, bodies, "commit")
         self.assertEqual(calls, [(["<<", "__TAOM_HEREDOC_0__", "-F", "-"], None)])
         self.assertEqual(sw.expand_heredoc("__TAOM_HEREDOC_0__", bodies), "feat-x")
+
+    def test_a_line_continuation_joins_the_words_as_bash_does(self):
+        # bash drops a backslash-newline outside single quotes, so `git \\<newline> commit` is a commit
+        # (integrated review 3); inside single quotes both characters stay.
+        bn = "\\\n"
+        for cmd in ("git " + bn + "commit -m x", "git " + bn + "  commit -m x", "git -C . " + bn + " commit -m x",
+                    "git" + bn + " commit -m x"):
+            with self.subTest(cmd=cmd):
+                text, bodies = sw.strip_heredocs(cmd)
+                self.assertEqual([args for args, _ in sw.git_invocations(text, bodies, "commit")], [["-m", "x"]])
+        text, bodies = sw.strip_heredocs('git commit -m "a' + bn + 'b"')
+        self.assertEqual([args for args, _ in sw.git_invocations(text, bodies, "commit")], [["-m", "ab"]])
+        text, bodies = sw.strip_heredocs("git commit -m 'a" + bn + "b'")
+        self.assertEqual([args for args, _ in sw.git_invocations(text, bodies, "commit")], [["-m", "a" + bn + "b"]])
 
     def test_strict_mode_still_raises_on_bad_quoting(self):
         with self.assertRaises(ValueError):

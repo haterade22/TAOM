@@ -3670,8 +3670,8 @@ nc_stage() {  # $1 the repository: stage the DLL there
     git -C "$1" add "$NC_DLL" 2>/dev/null
 }
 nc_win() { cygpath -m "$1" 2>/dev/null || printf '%s' "$1"; }
-nc_run() {  # $1 the payload's cwd, $2 the command; the session always started in main
-    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+nc_run() {  # $1 the payload's cwd, $2 the command, $3 the tool (Bash); the session always started in main
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[3],"tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" "${3:-Bash}" \
         | CLAUDE_PROJECT_DIR="$NC_M" timeout -k 2 30 bash "$REPO/.claude/hooks/check-native-dll-crt.sh" 2>/dev/null
 }
 mkdir -p "$NC_M" "$NC_F"
@@ -3714,6 +3714,20 @@ for row in "--git-dir and --work-tree|git --git-dir=$NC_MW/.git --work-tree=$NC_
         && ok "check-native-dll-crt denies a DLL staged in main, reached from the worktree by $label" \
         || bad "check-native-dll-crt missed a DLL staged in main, reached from the worktree by $label: $(printf '%s' "$OUT" | head -c 160)"
 done
+# The same git directory set in an earlier statement reaches the commit too (integrated review 3):
+# bash's export and PowerShell's $env: assignment. A plain assignment is not exported, so the
+# commit stays in the worktree, which holds no DLL.
+for row in "export|Bash|deny|export GIT_DIR=$NC_MW/.git GIT_WORK_TREE=$NC_MW; git commit -m x" \
+           "export of an assigned variable|Bash|deny|GIT_DIR=$NC_MW/.git; export GIT_DIR; git commit -m x" \
+           "\$env:GIT_DIR|PowerShell|deny|\$env:GIT_DIR = '$NC_MW/.git'; git commit -m x" \
+           "a plain assignment|Bash|allow|GIT_DIR=$NC_MW/.git; git commit -m x" \
+           "an export then unset|Bash|allow|export GIT_DIR=$NC_MW/.git; unset GIT_DIR; git commit -m x"; do
+    label="${row%%|*}"; rest="${row#*|}"; tool="${rest%%|*}"; rest="${rest#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(nc_run "$NC_WW" "$cmd" "$tool")
+    [[ "$(decision_of "$OUT")" == "$want" ]] \
+        && ok "check-native-dll-crt $want: main's git directory set by $label, commit from the worktree" \
+        || bad "check-native-dll-crt expected $want for $label: $(printf '%s' "$OUT" | head -c 160)"
+done
 git -C "$NC_F" init -q 2>/dev/null
 nc_stub "$NC_F"
 nc_stage "$NC_F"
@@ -3752,6 +3766,12 @@ PC_CASES=(
   "1|Bash|git -C . commit-graph write; powershell -c \"git commit -m x\""
   "1|PowerShell|git -C . commit-graph write; iex \"git commit -m x\""
   "1|PowerShell|git commit -m 'about git commit-tree'"
+  "1|Bash|git -C . commit-graph write; g=git; \$g commit -m x"
+  "1|Bash|git commit-graph write; G=git; \"\$G\" commit -m x"
+  "1|Bash|git "$'\\\n'"commit -m x"
+  "1|Bash|git -C . "$'\\\n'"  commit -m x"
+  "1|Bash|git  commit -m x"
+  "0|Bash|git commit-graph write --reachable | tee git-commit-graph.log"
   "0|Bash|git commit-tree HEAD^{tree} -m x"
   "0|Bash|git commit-graph write"
   "0|Bash|git -C . commit-tree HEAD -m x"
@@ -3773,6 +3793,10 @@ PC_SUBJECT=(
   "deny|git commit -m \"feat: no label, about git commit-tree\""
   "deny|git commit-graph write && git commit -m \"feat: bad\""
   "deny|git commit -m \"feat: no label\" -m \"see git commit-graph docs\""
+  "deny|git "$'\\\n'"commit -m \"feat: no label\""
+  "deny|git "$'\\\n'"  commit -m \"feat: no label\""
+  "deny|git -C . "$'\\\n'" commit -m \"feat: no label\""
+  "deny|git  commit -m \"feat: no label\""
   "allow|git commit-tree HEAD^{tree} -m \"x\""
   "allow|git commit-graph write"
   "allow|git -C . commit-tree HEAD -m \"x\""
@@ -3812,6 +3836,16 @@ QV_ROWS=(
   "block-broad-git-add.sh|ask|git -C E:/nospace add -A"
   "block-broad-git-add.sh|allow|git -C \"E:/a b\" add a.txt"
   "block-broad-git-add.sh|allow|git -c user.name=\"A B\" commit -m \"fix: add -a flag\""
+  # A backslash-escaped space is part of the value too (integrated review 3).
+  "block-dangerous-git.sh|ask|git -C a\\ b reset --hard"
+  "block-dangerous-git.sh|ask|git -c x.y=a\\ b clean -f"
+  "block-dangerous-git.sh|ask|git --git-dir=E:/a\\ b/.git checkout -- ."
+  "block-dangerous-git.sh|ask|git --work-tree E:/a\\ b\\ c reset --hard"
+  "block-dangerous-git.sh|ask|git -C E:\\\\repos\\\\x reset --hard"
+  "block-dangerous-git.sh|allow|git -C a\\ b status"
+  "block-broad-git-add.sh|ask|git -C a\\ b add -A"
+  "block-broad-git-add.sh|ask|git -c x.y=a\\ b commit -a -m x"
+  "block-broad-git-add.sh|allow|git -C a\\ b add a.txt"
 )
 for entry in "${QV_ROWS[@]}"; do
     hook="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
@@ -3819,6 +3853,34 @@ for entry in "${QV_ROWS[@]}"; do
     got=$(decision_of "$OUT")
     [[ "$got" == "$want" ]] && ok "$hook $got: $cmd" || bad "$hook expected $want, got $got: $cmd"
 done
+
+# ---------------------------------------------------------------------------
+head2 "7s. the context-budget scanner reads the main checkout's memory from a sibling worktree"
+# A session in a sibling worktree loads the main checkout's memory, so the scan must read that file.
+SC_H="$SANDBOX/sc-home"
+SC_M="$SANDBOX/scanmain"
+SC_W="$SANDBOX/scansibling"
+SC_S=".claude/skills/context-budget"
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain/memory"
+printf 'one line\n' > "$SC_H/.claude/projects/e--x-scanmain/memory/MEMORY.md"
+git init -q "$SC_M" \
+    && git -C "$SC_M" -c user.name=t -c user.email=t@t commit -q --allow-empty -m base \
+    && git -C "$SC_M" worktree add -q "$SC_W"
+mkdir -p "$SC_W/$SC_S"
+cp "$SC_S/scan.sh" "$SC_W/$SC_S/"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/$SC_S/scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain/memory/MEMORY.md' <<< "$SC_OUT" \
+    && ok "scan.sh reads the main checkout's MEMORY.md from a sibling worktree" \
+    || bad "scan.sh missed the main checkout's MEMORY.md from a sibling worktree: $(printf '%s' "$SC_OUT" | grep -i memory | head -2)"
+# The fallback search for a memory folder ends at the checkout's own name, so another project that holds the name is not read.
+rm -rf "$SC_H/.claude/projects/e--x-scanmain"
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain-old/memory"
+printf 'another project\n' > "$SC_H/.claude/projects/e--x-scanmain-old/memory/MEMORY.md"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/$SC_S/scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain-old/memory/MEMORY.md' <<< "$SC_OUT" \
+    && bad "scan.sh read another project's MEMORY.md through its fallback" \
+    || ok "scan.sh's fallback does not read another project that holds the checkout's name"
+rm -rf "$SC_H" "$SC_W" && git -C "$SC_M" worktree prune 2>/dev/null; rm -rf "$SC_M"
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

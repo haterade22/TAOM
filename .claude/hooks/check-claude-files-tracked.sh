@@ -41,10 +41,7 @@ COMMAND=$(taom_hook_command posix check-claude-files-tracked)
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
 taom_commit_plumbing_only && { echo '{}'; exit 0; }
-case "$COMMAND" in
-    *"git commit"* | *"git -"*" commit"* ) ;;
-    *) echo '{}'; exit 0 ;;
-esac
+taom_names_commit || { echo '{}'; exit 0; }   # _pybin.sh: `git commit`, `git -C x commit`, any blanks
 
 # DO NOT skip --amend. This hook checks working-tree state (files on disk
 # vs git tracking), which is not amend-dependent. A gitignored file on disk

@@ -24,8 +24,9 @@ Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|g
             lines (push_candidates). A payload that is no JSON object prints unread, which the hook
             answers from the raw text, never with a silent allow
   git-repo  the directory of every `git <subcommand>` (default commit) in the command, one per line
-            (a cd or -C before it joined onto the payload's cwd, or the cwd; a --git-dir or a GIT_DIR=
-            in front of the call moves it, an `export GIT_DIR` is not read), then a line `--`, then
+            (a cd or -C before it joined onto the payload's cwd, or the cwd; a --git-dir, a GIT_DIR=
+            in front of the call, or an earlier `export GIT_DIR=` or PowerShell `$env:GIT_DIR =` moves
+            it), then a line `--`, then
             the payload's cwd (_pybin.sh taom_git_repo_dir resolves each to its work tree's top level)
   commit-plan  what the `git commit` calls record, for check-doc-config-drift.sh (#987): a first line
             `amend` when any call amends HEAD, else `new`; then, when every call is a path commit
@@ -807,10 +808,15 @@ def commands(cmd, tool, blind=False, depth=0, inherited=None):
 def strip_comments(text):
     """POSIX text without its comments, which start at a # that starts a word outside quotes, as in
     segments(). shlex's own comment handling ends a word at any #, so it read `git commit -m fix#12 -n`
-    as `git commit -m fix`, losing the flag, and joined the next line to the same call."""
+    as `git commit -m fix`, losing the flag, and joined the next line to the same call. A
+    backslash-newline outside single quotes is dropped as bash drops it: shlex kept the newline as a
+    word, so `git \\<newline> commit` read as no commit (integrated review 3)."""
     out, q, i, n, word_start = [], "", 0, len(text), True
     while i < n:
         c = text[i]
+        if c == "\\" and q != "'" and text[i + 1:i + 2] == "\n":
+            i += 2                      # a line continuation: bash drops both characters, in "" too
+            continue
         if c == "\\" and q != "'":
             out.append(text[i:i + 2])
             i += 2
@@ -895,25 +901,101 @@ def _chdir_target(group):
     return None
 
 
-def git_invocations(text, bodies, subcommand="commit", base=None, partial=False, depth=0):
+# The variables that move the repository a git call judges, as an earlier statement sets them for every
+# later call in the same shell (integrated review 3): bash's export and unset, PowerShell's $env:
+# assignment (to_posix leaves `'$env:NAME' = ; <value>`) and Remove-Item Env:NAME. declare -x, set -a
+# and a value computed at run time (Join-Path, $(...)) are not read: the call is then judged where it
+# runs, as before.
+GIT_ENV_NAMES = ("GIT_DIR", "GIT_WORK_TREE")
+PS_ENV_TARGET = re.compile(r"^\$\{?env:(git_dir|git_work_tree)\}?$", re.I)
+PS_ENV_ITEM = re.compile(r"^env:[\\/]?(git_dir|git_work_tree)$", re.I)
+PS_REMOVE = {"remove-item", "ri", "rm", "del", "erase", "rd", "rmdir"}
+
+
+def _env_statement(head, env, shell_vars, ps_pending):
+    """Apply one statement's effect on the exported git variables to env (in place). head is the
+    statement from its command word on, or the whole group when it is only assignments; ps_pending is
+    the variable a PowerShell `$env:NAME =` just before it names, whose value this statement prints.
+    Returns the variable this statement leaves pending that way, or None. A value that holds $ is only
+    known at run time, so the variable is dropped and the call judged where it runs."""
+    if ps_pending:
+        value = head[1] if len(head) == 2 and head[0] == "echo" else head[0] if len(head) == 1 else None
+        if value is None or "$" in value or value == "":
+            env.pop(ps_pending, None)       # $null, '' or a value only known at run time
+        else:
+            env[ps_pending] = value
+        return None
+    if len(head) == 2 and head[1] == "=":
+        m = PS_ENV_TARGET.match(head[0])
+        if m:
+            return m.group(1).upper()
+    name = os.path.basename(head[0]).lower() if head else ""
+    if name == "export":
+        unexport = False
+        for w in head[1:]:
+            if w.startswith("-"):
+                unexport = unexport or "n" in w
+                continue
+            var, eq, value = w.partition("=")
+            if var not in GIT_ENV_NAMES:
+                continue
+            if unexport:
+                env.pop(var, None)
+            elif eq and "$" not in value:
+                env[var] = shell_vars[var] = value
+            elif eq:
+                env.pop(var, None)
+                shell_vars.pop(var, None)
+            elif var in shell_vars:
+                env[var] = shell_vars[var]
+    elif name == "unset":
+        for w in head[1:]:
+            env.pop(w, None)
+            shell_vars.pop(w, None)
+    elif name in PS_REMOVE:
+        for w in head[1:]:
+            m = PS_ENV_ITEM.match(w)
+            if m:
+                env.pop(m.group(1).upper(), None)
+    elif head and all(ASSIGNMENT.match(w) for w in head):
+        for w in head:
+            var, _eq, value = w.partition("=")
+            if var in GIT_ENV_NAMES:
+                exported = var in env       # assigning an exported variable changes what children see
+                if "$" in value:
+                    shell_vars.pop(var, None)
+                    env.pop(var, None)
+                    continue
+                shell_vars[var] = value
+                if exported:
+                    env[var] = value
+    return None
+
+
+def git_invocations(text, bodies, subcommand="commit", base=None, partial=False, depth=0, env=None):
     """[(args, repo)] for every `git ... <subcommand>` in POSIX text whose heredocs strip_heredocs
     took out: args is the argument list after the subcommand, repo the directory the call runs in.
     That is base, moved by each cd before the call (a cd inside ( ) ends at its ), and then by the
     call's own -C. A commit whose stdin is piped from a command that only prints one word (a
     PowerShell here-string piped to `git commit -F -`, plan 027) gets that word first as a heredoc
     placeholder, so `-F -` reads it. With subcommand None, every git call matches, and args is every
-    word after `git`, global options included. Raises ValueError on quoting bash would reject, unless
-    partial."""
+    word after `git`, global options included. env holds the GIT_DIR and GIT_WORK_TREE an enclosing
+    shell exported; an export or $env: assignment in the text adds to it for the calls after it, until
+    the ( ) it sits in closes. Raises ValueError on quoting bash would reject, unless partial."""
     found = []
     group, prev, sep = [], [], ""
     cwd, stack, pushed = base, [], []
+    env, shell_vars, ps_pending = dict(env or {}), {}, None
     for t in command_tokens(text, partial) + [";"]:
         if t and set(t) <= CMD_SEP:
             if group:
                 k = command_index(group, "Bash")
                 head = group[k:] or group                       # `{ cd x; ...` moves too
                 name = os.path.basename(head[0]).lower()
-                if any(w.lstrip("(") in CHILD_WRAPPERS for w in group[:k]):
+                child = any(w.lstrip("(") in CHILD_WRAPPERS for w in group[:k])
+                if not child:
+                    ps_pending = _env_statement(head, env, shell_vars, ps_pending)
+                if child:
                     pass                                        # `timeout 5 cd x` changes a child's directory only
                 elif name in CHDIR or name in PUSHD:
                     target = _chdir_target(head)
@@ -923,7 +1005,7 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
                         cwd = join_dir(cwd, target)
                 elif name in POPD and pushed:
                     cwd = pushed.pop()
-                calls = _git_call(group, bodies, subcommand, cwd, partial, depth)
+                calls = _git_call(group, bodies, subcommand, cwd, partial, depth, env)
                 piped = piped_text(prev) if sep == "|" and subcommand else None
                 if piped is not None:
                     bodies.append(piped)
@@ -934,9 +1016,9 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
             # parenthesis in it opens or closes a subshell's directory scope (Codex review 2026-10-16).
             for ch in t:
                 if ch == "(":
-                    stack.append(cwd)
+                    stack.append((cwd, dict(env)))
                 elif ch == ")" and stack:
-                    cwd = stack.pop()
+                    cwd, env = stack.pop()
             prev, group, sep = group, [], t
         else:
             group.append(t)
@@ -993,7 +1075,7 @@ def _named_repo(git_dir, work_tree, repo):
     return join_dir(repo, work_tree) if work_tree and path != ".git" else repo
 
 
-def _git_call(g, bodies, subcommand, cwd, partial, depth):
+def _git_call(g, bodies, subcommand, cwd, partial, depth, env=None):
     # Bash's wrappers and grammar are skipped whatever the tool: the commit gates cannot tell, and
     # a PowerShell `timeout 60 git commit` runs no commit, so judging it only over-blocks (#985).
     i = command_index(g, "Bash")
@@ -1006,10 +1088,11 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
     if _is_shell(word) and depth < 2:
         k = shell_script_index(g[i:])
         # The script's heredocs were taken out with the whole command, so its placeholders index bodies.
-        return git_invocations(g[i + k], bodies, subcommand, cwd, partial, depth + 1) if k is not None else []
+        return git_invocations(g[i + k], bodies, subcommand, cwd, partial, depth + 1, env) if k is not None else []
     if word not in ("git", "git.exe"):
         return []
-    named = {w.partition("=")[0]: w.partition("=")[2] for w in g[:i] if w.startswith(("GIT_DIR=", "GIT_WORK_TREE="))}
+    named = dict(env or {})                 # an earlier export, then the call's own prefix over it
+    named.update({w.partition("=")[0]: w.partition("=")[2] for w in g[:i] if w.startswith(("GIT_DIR=", "GIT_WORK_TREE="))})
     i += 1
     repo = cwd
     if subcommand is None:
@@ -1134,16 +1217,19 @@ def _git_subcommand(words):
     return words[i] if i < len(words) else ""
 
 
-# The words of a commit in text the reader could not parse into a call: git, then commit on the same
-# segment, heredoc bodies included. commit-tree and commit-graph are not it.
-COMMIT_WORDS = re.compile(r"\bgit\b[^;&|\n]*\bcommit\b(?!-)", re.I)
+# The word of a commit in text the reader could not parse into a call, heredoc bodies included:
+# commit, but not commit-tree or commit-graph. It needs no git beside it, because git reached by a
+# variable (`g=git; $g commit -m x`) puts none on the commit's segment (integrated review 3); a
+# plumbing call whose text holds the word anywhere else is gated, which over-blocks on the safe side.
+COMMIT_WORDS = re.compile(r"\bcommit\b(?!-)", re.I)
 
 
 def is_commit(cmd, tool):
     """Whether a commit gate judges a command whose text names `git commit-`. False only when the whole
     command was read, it holds a plumbing call (commit-tree, commit-graph) and no `git commit`, and its
-    text nowhere has the words of a commit. So a commit behind a runner the reader does not peel (sudo,
-    eval, xargs, cmd /c, an alias) stays True with a plumbing call beside it, and a message such as
+    text nowhere has the word commit on its own (COMMIT_WORDS). So a commit behind a runner the reader
+    does not peel (sudo, eval, xargs, cmd /c, an alias, git in a variable) stays True with a plumbing
+    call beside it, and a message such as
     `git commit-tree T -m "after git commit"` is gated too, which over-blocks on the safe side. A
     mention with no plumbing call stays True, as a mention of `git commit` does at the gates' raw test,
     and so does bad quoting or a text too long to read."""
