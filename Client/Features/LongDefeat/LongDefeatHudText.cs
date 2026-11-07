@@ -71,8 +71,60 @@ internal static class LongDefeatHudText
             return hint + "   " + new TextObject("{=TAOM_LD_Hud_HintVolley}N  Loose the Elven Volley").ToString();
 
         return view.ShopOpen && view.BoonOffer.Count > 0
-            ? hint + "   " + new TextObject("{=TAOM_LD_Hud_BoonAwaits}A boon awaits: press B").ToString()
+            ? hint + "   " + BoonAwaits()
             : hint;
+    }
+
+    internal static string BoonAwaits() => new TextObject("{=TAOM_LD_Hud_BoonAwaits}A boon awaits: press B").ToString();
+
+    /// <summary>The themed rail's class line: the class's localized name alone, empty when the lord plays none.</summary>
+    internal static string ClassLabel(string rawClassName) => rawClassName.Length == 0 ? string.Empty : OfferName(rawClassName);
+
+    /// <summary>The themed rail's gold: the number alone, beside the purse icon.</summary>
+    internal static string GoldValue(int gold) => gold.ToString("N0", CultureInfo.CurrentCulture);
+
+    internal static string TabReinforcements() => new TextObject("{=TAOM_LD_Hud_TabReinforcements}Reinforcements").ToString();
+
+    internal static string NextWaveIn(float seconds) => new TextObject("{=TAOM_LD_Hud_NextWaveIn}Next wave in {TIME}").SetTextVariable("TIME", Clock(seconds)).ToString();
+
+    internal static string ShopHint() => new TextObject("{=TAOM_LD_Hud_ShopHint}Select a row to recruit").ToString();
+
+    internal static string NoOffers() => new TextObject("{=TAOM_LD_Hud_NoOffers}No reinforcements are for sale here.").ToString();
+
+    internal static string PickSubtitle() => new TextObject("{=TAOM_LD_Hud_PickSubtitle}Select one blessing").ToString();
+
+    internal static string KeyHorn() => new TextObject("{=TAOM_LD_Hud_KeyHorn}Sound the horn").ToString();
+
+    internal static string KeySpeed(int speed) => new TextObject("{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x").SetTextVariable("SPEED", speed).ToString();
+
+    internal static string KeysLocked() => new TextObject("{=TAOM_LD_Hud_KeysLocked}Shop and horn available between waves").ToString();
+
+    /// <summary>
+    /// The key strip's N entry, from the run's own volley state: during a wave the strip's volley line (ready, the seconds to the next use, or why the last shot was withheld); outside one, owned but
+    /// waiting for a wave; not owned, either buyable here or not sold at all.
+    /// </summary>
+    internal static string KeyVolley(RunView view)
+    {
+        var volleys = view.Volleys;
+        if (volleys.Owned)
+        {
+            if (view.Phase != RunPhase.Wave)
+                return new TextObject("{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave").ToString();
+            // A shot withheld moments ago says why; otherwise the label follows the run's own Ready, which is also false
+            // while a shot is armed and waiting for the director, so a spent cooldown alone never reads "ready".
+            if (volleys.Withheld != null && volleys.WithheldSecondsAgo < WithheldShownSeconds)
+                return VolleyLine(view);
+            if (volleys.Ready)
+                return new TextObject("{=TAOM_LD_Hud_VolleyReady}Elven Volley ready").ToString();
+            return volleys.SecondsLeft > 0f
+                ? new TextObject("{=TAOM_LD_Hud_VolleyIn}Elven Volley in {SECONDS} s").SetTextVariable("SECONDS", WholeSeconds(volleys.SecondsLeft)).ToString()
+                : new TextObject("{=TAOM_LD_Hud_VolleyWithheld}The volley cannot be loosed now").ToString();
+        }
+
+        var row = view.Fort.Volley;
+        return row.Available || row.Level > 0
+            ? new TextObject("{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought").ToString()
+            : new TextObject("{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here").ToString();
     }
 
     /// <summary>How long a withheld volley's reason stays on the strip, in wave seconds.</summary>

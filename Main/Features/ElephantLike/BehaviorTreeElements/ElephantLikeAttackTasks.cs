@@ -88,9 +88,9 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
     // charge impact (chargeImpactSound, Mike the same day).
     private void Hit(Agent victim, Agent creature, Agent rider)
     {
-        // ADOD_Beasts parity: only a SHIELD block reduces the damage; weapon parries take full damage.
-        // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
-        bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
+        // ADOD_Beasts parity: only a SHIELD block reduces the damage; weapon parries take full damage. The shield must
+        // face the creature: one raised toward another enemy does not cover a charge from behind.
+        bool blocking = CustomAttacksUtils.ShieldBlocks(victim, creature.Position);
         float riderMultiplier = Profile.RiderMultiplier?.Invoke(rider) ?? 1f;
         int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat, riderMultiplier);
         Agent owner = rider.IsActive() ? rider : creature;

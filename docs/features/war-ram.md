@@ -158,7 +158,7 @@ profiles pass nothing and keep the sweep. The history below is why the radius an
 **The kick was an AoE with a knockdown, and that is what made the per-hit numbers misleading.**
 `ElephantLikeAttackTasks` scans `GetNearbyAgents(creature.Position, AttackRadius)` and sweeps **every**
 enemy inside it, rolling damage independently per victim and passing `knockDown: !blocking`, so
-everyone caught who is not actively shield-blocking goes prone. At the original 3.5f that was close to
+everyone caught who is not actively shield-blocking goes prone (since 2026-11-06 a shield counts only when its bearer faces the ram, `CustomAttacksUtils.ShieldBlocks`). At the original 3.5f that was close to
 the base war elephant's 4f, meaning one dwarf on a goat cleared a formation on a shorter cooldown than
 the elephant had.
 

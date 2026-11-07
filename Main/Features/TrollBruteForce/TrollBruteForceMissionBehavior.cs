@@ -54,7 +54,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         // action whose binding or clip is gone resolves to a valid index and plays nothing.
         if (TrollBruteForceCombat.Action == ActionIndexCache.act_none)
             _logger.LogError($"[TrollBruteForce] {TrollBruteForceConfig.ActionName} resolved to act_none - " +
-                "LOTRLOME_Armory action_types drift? Trolls will not smash.");
+                "LOTRLOME_Armory action_types drift? Trolls will not smash (the ready decorator refuses the smash).");
         else
         {
             foreach (var pair in TrollBruteForceConfig.ActionSetsByMonster)

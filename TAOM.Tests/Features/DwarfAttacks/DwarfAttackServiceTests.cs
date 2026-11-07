@@ -275,24 +275,6 @@ public class DwarfAttackServiceTests
         Assert.IsFalse(_service.IsWithinHeight(heightDifference));
     }
 
-    // --- shield: a raised shield blocks only a dwarf in front of its bearer ---
-
-    [TestMethod]
-    public void ShieldBlocks_RaisedTowardTheDwarf_IsTrue()
-    {
-        Assert.IsTrue(_service.ShieldBlocks(shieldRaised: true, victimFacingDot: 0.9f));
-    }
-
-    [DataTestMethod]
-    [DataRow(true, -0.9f)]           // raised against someone else, the dwarf hits his back
-    [DataRow(true, ShieldFacingDot)] // at the edge of the cover
-    [DataRow(false, 0.9f)]           // no shield raised
-    [DataRow(true, float.NaN)]
-    public void ShieldBlocks_OtherwiseOrNotFinite_IsFalse(bool shieldRaised, float victimFacingDot)
-    {
-        Assert.IsFalse(_service.ShieldBlocks(shieldRaised, victimFacingDot));
-    }
-
     [TestMethod]
     public void MayAttack_AnAiDwarfOnFoot_IsTrue()
     {

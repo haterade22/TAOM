@@ -368,6 +368,7 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
 
 ## Changelog
 
+- 2026-11-06: a ring victim's raised shield now applies `shieldBlockedMultiplier` and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-23: the scream is the clip Mike supplied (`TAOM_Nazgul Scream 2`), one variation in place
   of the three generated takes.
 - 2026-09-23: Codex review 130 fixes: an identity list's null or blank entry is removed with a

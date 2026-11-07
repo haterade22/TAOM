@@ -139,7 +139,7 @@ public sealed class SignatureStrikeRunner
             if (ReferenceEquals(victim, request.PrimaryVictim))
                 continue;
 
-            var blocking = victim.GetCurrentActionType(1) == Agent.ActionCodeType.DefendShield;
+            var blocking = CustomAttacksUtils.ShieldBlocks(victim, attacker.Position);    // only toward the striker
             var damage = _service.ComputeRingDamage(effect.DamageBasis, effect.DamageFraction, falloff, blocking);
             if (damage <= 0)
             {

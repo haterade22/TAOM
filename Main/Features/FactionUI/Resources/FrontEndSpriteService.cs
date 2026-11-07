@@ -47,7 +47,7 @@ public sealed class FrontEndSpriteService
     private readonly IModLogger _logger;
 
     private readonly ImageGroup _menu = new(FrontEndImageGroups.MainMenu, FrontEndSpriteKind.MenuChrome, "main menu", "TAOMMainMenu");
-    private readonly ImageGroup _creation = new(FrontEndImageGroups.CharacterCreation, FrontEndSpriteKind.Chrome, "character creation", "TAOMCharCreation", "TAOMFactionScreen", "TAOMEscapeMenu", "TAOMCampaignNavigation", "TAOMCampaignTime", "TAOMCampaignStats", "TAOMCampaignMuster", "TAOMCharacterDeveloper", "TAOMEncyclopedia");
+    private readonly ImageGroup _creation = new(FrontEndImageGroups.CharacterCreation, FrontEndSpriteKind.Chrome, "character creation", "TAOMCharCreation", "TAOMFactionScreen", "TAOMEscapeMenu", "TAOMCampaignNavigation", "TAOMCampaignTime", "TAOMCampaignStats", "TAOMCampaignMuster", "TAOMCharacterDeveloper", "TAOMEncyclopedia", "TAOMLongDefeat");
     private readonly ImageGroup _art = new(FrontEndImageGroups.FactionArt, FrontEndSpriteKind.Art, "faction art");
     private readonly ImageGroup[] _groups;
 
@@ -93,9 +93,14 @@ public sealed class FrontEndSpriteService
     }
 
     /// <summary>A themed screen is about to load: makes the groups it draws available, and keeps them
-    /// from being released for at least <see cref="ReleaseDelayTicks"/> ticks.</summary>
+    /// from being released for at least <see cref="ReleaseDelayTicks"/> ticks. Every requested image is
+    /// registered before any brush file is read, and when any was registered, the brush files of every
+    /// loaded group are read again: the engine binds a brush layer's sprite once, when its file is parsed,
+    /// and a brush file can name another group's images (TAOMEscapeMenu, read with the chrome, names the
+    /// main menu's mm_panel and mm_divider). An acquire that registers nothing reads no brush file.</summary>
     public void Acquire(FrontEndImageGroups groups)
     {
+        var registered = false;
         foreach (var group in _groups)
         {
             if ((groups & group.Flag) == 0)
@@ -107,9 +112,18 @@ public sealed class FrontEndSpriteService
             EnsureResident();
             if (!LoadAll(group.Kind, group.Images))
                 continue;
+            registered = true;
+            _logger.LogInfo($"[FactionUI] front-end images loaded: {group.Label}, {group.Images.Count} images, {MegaBytes(group.Images.Values):F1} MB");
+        }
+
+        if (!registered)
+            return;
+        foreach (var group in _groups)
+        {
+            if (group.Images.Count == 0)
+                continue;
             foreach (var brushFile in group.BrushFiles)
                 _adapter.LoadBrushFile(brushFile);
-            _logger.LogInfo($"[FactionUI] front-end images loaded: {group.Label}, {group.Images.Count} images, {MegaBytes(group.Images.Values):F1} MB");
         }
     }
 

@@ -4902,4 +4902,15 @@
 	<string id="taom_ency_reset" text="{=taom_ency_reset}Reset" />
 	<string id="taom_ency_open_entry" text="{=taom_ency_open_entry}Open entry" />
 
+	<string id="TAOM_LD_Hud_TabReinforcements" text="{=TAOM_LD_Hud_TabReinforcements}Reinforcements" />
+	<string id="TAOM_LD_Hud_NextWaveIn" text="{=TAOM_LD_Hud_NextWaveIn}Next wave in {TIME}" />
+	<string id="TAOM_LD_Hud_ShopHint" text="{=TAOM_LD_Hud_ShopHint}Select a row to recruit" />
+	<string id="TAOM_LD_Hud_NoOffers" text="{=TAOM_LD_Hud_NoOffers}No reinforcements are for sale here." />
+	<string id="TAOM_LD_Hud_PickSubtitle" text="{=TAOM_LD_Hud_PickSubtitle}Select one blessing" />
+	<string id="TAOM_LD_Hud_KeyHorn" text="{=TAOM_LD_Hud_KeyHorn}Sound the horn" />
+	<string id="TAOM_LD_Hud_KeySpeed" text="{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x" />
+	<string id="TAOM_LD_Hud_KeysLocked" text="{=TAOM_LD_Hud_KeysLocked}Shop and horn available between waves" />
+	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
+	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
+	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
 </strings>

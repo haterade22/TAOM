@@ -197,8 +197,9 @@ counter increment; the `[Check]` line is written once per attack kind per proces
 - 2026-11-06, deep review ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md)): the trees no longer take the agent's
   tree slot (dwarves had lost Stand Fast); the player's own dwarf is excluded after an AI hand-over; a height limit;
   the shield counts only toward the dwarf; an attack with a missing action never starts; combat missions only.
+- 2026-11-06: the shield rule moved to `TAOM.Core.Combat.ShieldCover`, shared with the troll ring, the elephant-like attacks and the signature strike rings; the dwarves' behaviour is unchanged.
 
 ## GitHub Issue
 
 - **Issue:** #1087
-- **Status:** Open
+- **Status:** Closed (in-game check owed: `triage-needs-ingame`)

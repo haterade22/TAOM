@@ -7733,6 +7733,17 @@
     <string id="taom_ency_filters" text="Filters" />
     <string id="taom_ency_reset" text="Reset" />
     <string id="taom_ency_open_entry" text="Open entry" />
+    <string id="TAOM_LD_Hud_TabReinforcements" text="Reinforcements" />
+    <string id="TAOM_LD_Hud_NextWaveIn" text="Next wave in {TIME}" />
+    <string id="TAOM_LD_Hud_ShopHint" text="Select a row to recruit" />
+    <string id="TAOM_LD_Hud_NoOffers" text="No reinforcements are for sale here." />
+    <string id="TAOM_LD_Hud_PickSubtitle" text="Select one blessing" />
+    <string id="TAOM_LD_Hud_KeyHorn" text="Sound the horn" />
+    <string id="TAOM_LD_Hud_KeySpeed" text="Speed {SPEED}x" />
+    <string id="TAOM_LD_Hud_KeysLocked" text="Shop and horn available between waves" />
+    <string id="TAOM_LD_Hud_KeyVolleyIdle" text="Elven Volley in a wave" />
+    <string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="Elven Volley not bought" />
+    <string id="TAOM_LD_Hud_KeyVolleyNotSold" text="Elven Volley not sold here" />
   </strings>
 
 </base>

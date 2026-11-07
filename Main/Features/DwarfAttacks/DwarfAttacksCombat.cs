@@ -23,7 +23,7 @@ internal static class DwarfAttacksCombat
 
     internal static ActionIndexCache For(DwarfAttack attack) => attack == DwarfAttack.HeadButt ? HeadButt : DropKick;
 
-    /// <summary>False when the Armory lost the action: playing act_none would clear the dwarf's channel 0.</summary>
+    /// <summary>False when the Armory lost the action: it resolved to act_none, which plays no attack.</summary>
     internal static bool IsResolved(DwarfAttack attack) => For(attack) != ActionIndexCache.act_none;
 
     /// <summary>An unresolved action never counts, or an empty channel 0 would read as "already attacking".</summary>

@@ -92,12 +92,6 @@ public static class DwarfAttacksConfig
     /// <summary>A victim blocking with a shield takes this share and is never floored.</summary>
     public const float ShieldBlockedMultiplier = 0.5f;
 
-    /// <summary>
-    /// A raised shield blocks only a dwarf in front of its bearer: the cosine between the bearer's look direction and
-    /// the direction to the dwarf must be strictly above this (the front half).
-    /// </summary>
-    public const float ShieldFacingDot = 0f;
-
     /// <summary>Knock-back impulse, independent of damage: the butt staggers, the kick throws.</summary>
     public const float HeadButtBlowMagnitude = 25f;
 

@@ -31,8 +31,8 @@ public sealed class DwarfAttackService
     }
 
     /// <summary>
-    /// True when the attack may start: its action resolved (a missing Armory action resolves to act_none, and playing
-    /// act_none clears the dwarf's channel) and it is off cooldown.
+    /// True when the attack may start: its action resolved (a missing Armory action resolves to act_none, which plays
+    /// no attack, and the ready test would read an idle dwarf's empty channel as attacking) and it is off cooldown.
     /// </summary>
     public bool IsReady(DwarfAttack attack, bool actionResolved, float? lastFired, float now) =>
         actionResolved && IsOffCooldown(attack, lastFired, now);
@@ -50,13 +50,6 @@ public sealed class DwarfAttackService
     /// <summary>True when an enemy is on the dwarf's level, within <see cref="DwarfAttacksConfig.MaxHeightDifference"/>.</summary>
     public bool IsWithinHeight(float heightDifference) =>
         FiniteFloatValidator.IsFinite(heightDifference) && Math.Abs(heightDifference) <= MaxHeightDifference;
-
-    /// <summary>
-    /// True when the victim's raised shield covers the dwarf: <paramref name="victimFacingDot"/> is the cosine between the
-    /// victim's look direction and the direction to the dwarf.
-    /// </summary>
-    public bool ShieldBlocks(bool shieldRaised, float victimFacingDot) =>
-        shieldRaised && FiniteFloatValidator.IsFinite(victimFacingDot) && victimFacingDot > ShieldFacingDot;
 
     /// <summary>
     /// The attack for the dwarf's nearest enemy: the head butt in close, the drop kick in its band, nothing between

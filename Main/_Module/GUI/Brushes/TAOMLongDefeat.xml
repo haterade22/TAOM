@@ -1,0 +1,194 @@
+<Brushes>
+  <!-- The themed Long Defeat HUD and panel (TAOMLongDefeatHud, TAOMLongDefeatPanel). Loaded with the FactionUI chrome group
+       (FrontEndSpriteService), after its runtime sprites are registered. Only existing FactionUI sprites and fonts. -->
+
+  <Brush Name="TAOM.LD.Title" Font="FS_Garamond" FontSize="32" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.Subtitle" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.Timer" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.Purse" Font="FS_Garamond" FontSize="26" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.GoldIcon">
+    <Layers><BrushLayer Name="Default" Sprite="cb_stats_gold" ImageFit.Type="Contain" ImageFit.HorizontalAlignment="Center" ImageFit.VerticalAlignment="Center" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.LD.Rule">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#AD8849FF" AlphaFactor="0.55" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.LD.RowRule">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#AD8849FF" AlphaFactor="0.22" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.LD.Accent">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#D9B25EFF" /></Layers>
+  </Brush>
+
+  <!-- Tabs: plain text, the selected one gold with an underline. -->
+  <Brush Name="TAOM.LD.Tab" TransitionDuration="0.1">
+    <Styles><Style Name="Default" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.TabText" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5D58EFF" />
+      <Style Name="Pressed" FontColor="#CBA45CFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.TabTextSelected" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F5D58EFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+
+  <!-- A purchase row: the whole row is the button. A faint gold wash on hover, none when the row cannot be bought. -->
+  <Brush Name="TAOM.LD.Row" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Fill" Sprite="BlankWhiteSquare" Color="#BB9345FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Fill" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Fill" AlphaFactor="0.12" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Fill" AlphaFactor="0.2" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Fill" AlphaFactor="0" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.LD.RowName" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5E3B4FF" />
+      <Style Name="Disabled" FontColor="#ECE1C7FF" TextAlphaFactor="0.45" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.RowDetail" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Top" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Disabled" FontColor="#C4BBA4FF" TextAlphaFactor="0.45" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.RowPrice" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Right" TextVerticalAlignment="Center" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5D58EFF" />
+      <Style Name="Disabled" FontColor="#C4BBA4FF" TextAlphaFactor="0.55" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.Hint" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+
+  <!-- Boon cards: name, category in gold, effect, and the trade-off in red. -->
+  <Brush Name="TAOM.LD.BoonName" Font="FS_Garamond" FontSize="23" TextHorizontalAlignment="Left" TextVerticalAlignment="Center" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5E3B4FF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.BoonCategory" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9A53FFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.BoonText" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.BoonDrawback" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#E5533DFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.BoonHover" TransitionDuration="0.12">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#D9B25EFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.7" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- The narrow fs_confirm plate (the escape menu's), at its own 7.27:1 aspect. -->
+  <Brush Name="TAOM.LD.Button">
+    <Layers><BrushLayer Name="Plate" Sprite="fs_confirm" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Plate" AlphaFactor="0.9" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Plate" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Plate" AlphaFactor="1" ColorFactor="0.85" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Plate" AlphaFactor="0.35" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.LD.ButtonText" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E9E1CCFF" TextGlowColor="#000000A0" TextGlowRadius="0.12" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#F6E7B4FF" TextGlowColor="#E2BE7855" TextGlowRadius="0.28" TextBlur="0.2" />
+      <Style Name="Pressed" FontColor="#D8BC78FF" />
+      <Style Name="Disabled" FontColor="#E1D9C4FF" TextAlphaFactor="0.35" />
+    </Styles>
+  </Brush>
+  <!-- The footer's plain text close: key letter and word, no plate. -->
+  <Brush Name="TAOM.LD.TextButton" TransitionDuration="0.1">
+    <Styles><Style Name="Default" /></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.LD.FooterText" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Left" TextVerticalAlignment="Center" TransitionDuration="0.1">
+    <Styles>
+      <Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" />
+      <Style Name="Hovered" FontColor="#F5D58EFF" />
+      <Style Name="Pressed" FontColor="#CBA45CFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.ScrollHandle"><Layers><BrushLayer Name="Default" Sprite="ec_list_scroll" /></Layers></Brush>
+
+  <!-- HUD rail and lines over the battle. Text with no panel behind it carries a dark glow. -->
+  <Brush Name="TAOM.LD.HudWave" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudClass" Font="FS_Garamond" FontSize="16" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudAttackers" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9533FFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudValue" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudTimer" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F5D58EFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudDivider">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#AD8849FF" AlphaFactor="0.6" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.LD.HudLine" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" TextGlowColor="#000000D0" TextGlowRadius="0.25" TextBlur="0.2" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudCommander" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E5603FFF" TextGlowColor="#000000D0" TextGlowRadius="0.25" TextBlur="0.2" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudNotice" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#FF9A7AFF" TextGlowColor="#000000D0" TextGlowRadius="0.25" TextBlur="0.2" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.HudKeep" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextGlowColor="#000000D0" TextGlowRadius="0.25" TextBlur="0.2" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.KeepTrack">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#0B0D10FF" AlphaFactor="0.75" /></Layers>
+  </Brush>
+  <Brush Name="TAOM.LD.KeepFill">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#C8352AFF" /></Layers>
+  </Brush>
+
+  <!-- Key strip: a usable key in ivory, a key that does nothing now in grey. -->
+  <Brush Name="TAOM.LD.Key" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#ECE1C7FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.KeyOff" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#8E887AFF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+
+  <!-- End of run. -->
+  <Brush Name="TAOM.LD.EndTitle" Font="FS_CinzelWide" FontSize="30" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.EndText" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Center" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#E7DFC8FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.LD.EndMuted" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#C4BBA4FF" TextOutlineAmount="0" TextGlowRadius="0" /></Styles>
+  </Brush>
+</Brushes>

@@ -27,7 +27,7 @@ Before renaming, retyping or moving a member in the tables, grep this file, and 
 | `ElephantLike.BehaviorTreeElements.ElephantLikeAttackTaskBase.Hit` (private) | Harmony patch | `:45` | `Main/Features/ElephantLike/BehaviorTreeElements/ElephantLikeAttackTasks.cs`:89 |
 | `Warg.WargAttackService.CalculateWargAttackDamage` | patch, after a fit test: returns `int`, first parameter named `target`, a `float armorEffectivenessPercent` | `:51`, 253-255 | `Main/Features/Warg/WargAttackService.cs`:27 |
 | `Spider.SpiderAttackService.CalculateSpiderBiteDamage` | same fit test | `:52`, 253-255 | `Main/Features/Spider/SpiderAttackService.cs`:26 |
-| `AdvancedCombat.CustomAttacksUtils.TakeDamage`, the 8-parameter overload | patch found by exact parameter types; the prefix binds by NAME: `victim`, `damage`, `knockDown`, `damageType` | `:276-285`, 330-331 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`:140-141 |
+| `AdvancedCombat.CustomAttacksUtils.TakeDamage`, the 8-parameter overload | patch found by exact parameter types; the prefix binds by NAME: `victim`, `damage`, `knockDown`, `damageType` | `:276-285`, 330-331 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`:152-153 |
 | `Adapters.AgentAdapter.GetUnderlyingAgent()` | reflection: an instance method returning `Agent`, to unwrap the warg and spider `IAgentAdapter` target | `:420-432` | `Main/Adapters/AgentAdapter.cs`:58 |
 | `TaomCombatSimulationModel.SimulateHit` (9 parameters) | the auto-resolve postfix walks `Campaign.Current.Models.CombatSimulationModel.GetType()` upward and patches the most-derived declared override; arguments by position (`__0`, `__1`) | `AutoResolvePatch.cs`:40-44, 52-59, 98-112 | `Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs`:30 |
 

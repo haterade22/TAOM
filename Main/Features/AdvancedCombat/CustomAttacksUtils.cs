@@ -124,6 +124,18 @@ public class CustomAttacksUtils
         }
     }
 
+    /// <summary>
+    /// True when <paramref name="victim"/> holds a shield up toward <paramref name="attackerPosition"/>: the rule is
+    /// <see cref="TAOM.Core.Combat.ShieldCover"/>; this reads the engine. Only a shield block counts, not a weapon parry.
+    /// </summary>
+    public static bool ShieldBlocks(Agent victim, Vec3 attackerPosition)
+    {
+        if (victim.GetCurrentActionType(1) != ActionCodeType.DefendShield) return false;
+        Vec3 look = victim.LookDirection;
+        Vec3 toAttacker = attackerPosition - victim.Position;
+        return TAOM.Core.Combat.ShieldCover.Faces(look.x, look.y, toAttacker.x, toAttacker.y);
+    }
+
     public static void TakeDamage(Agent victim, int damage, float magnitude = 50f, bool knockDown = false)
     {
         TakeDamage(victim, victim, damage, magnitude, knockDown);

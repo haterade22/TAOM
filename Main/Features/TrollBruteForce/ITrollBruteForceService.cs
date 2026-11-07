@@ -15,10 +15,12 @@ public interface ITrollBruteForceService
     bool IsBruteForceTroll(string? monsterId);
 
     /// <summary>
-    /// True when the smash never fired or <see cref="TrollBruteForceConfig.CooldownSeconds"/> of mission time have
-    /// passed (inclusive). A stamp in the future reads as on cooldown.
+    /// True when the smash may start: its action resolved (a missing Armory action resolves to act_none, which plays
+    /// no smash, and the busy test would read an idle troll's empty channel as smashing) and it is off cooldown: never
+    /// fired, or <see cref="TrollBruteForceConfig.CooldownSeconds"/> of mission time passed (inclusive; a stamp in the
+    /// future reads as on cooldown).
     /// </summary>
-    bool IsOffCooldown(float? lastFired, float now);
+    bool IsReady(bool actionResolved, float? lastFired, float now);
 
     /// <summary>
     /// True when the troll is free (not <paramref name="busy"/>) and its nearest enemy is within the scaled trigger
