@@ -3651,6 +3651,70 @@ grep -q 'MEMORY.md is' <<< "$(mb_sibling startup)" \
 rm -rf "$MB_P" "$MB_H" "$MB_M" "$MB_W"
 
 # ---------------------------------------------------------------------------
+head2 "7p. check-native-dll-crt judges the repository the commit runs in"
+# It kept `cd "$CLAUDE_PROJECT_DIR"` when its siblings moved to taom_git_repo_dir, so a session started
+# in the main checkout never saw a DLL staged in a worktree, and a DLL staged in main denied a worktree
+# commit that does not hold it. The stub linter reports a dynamic CRT and leaves a marker.
+NC_M="$SANDBOX/nc-main"; NC_W="$SANDBOX/nc-wt"; NC_F="$SANDBOX/nc-foreign"
+NC_DLL="Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll"
+nc_stub() {  # $1 the repository: a pe_inspect that always finds a dynamic CRT
+    mkdir -p "$1/tools"
+    printf 'import os\nopen(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ran.txt"), "w").close()\nprint("VCRUNTIME140.dll")\n' > "$1/tools/pe_inspect.py"
+}
+nc_stage() {  # $1 the repository: stage the DLL there
+    mkdir -p "$1/${NC_DLL%/*}"
+    printf 'MZ' > "$1/$NC_DLL"
+    git -C "$1" add "$NC_DLL" 2>/dev/null
+}
+nc_win() { cygpath -m "$1" 2>/dev/null || printf '%s' "$1"; }
+nc_run() {  # $1 the payload's cwd, $2 the command; the session always started in main
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$NC_M" timeout -k 2 30 bash "$REPO/.claude/hooks/check-native-dll-crt.sh" 2>/dev/null
+}
+mkdir -p "$NC_M" "$NC_F"
+git -C "$NC_M" init -q 2>/dev/null
+nc_stub "$NC_M"
+git -C "$NC_M" add tools/pe_inspect.py 2>/dev/null
+git -C "$NC_M" -c user.name=t -c user.email=t@t commit -q -m init 2>/dev/null
+git -C "$NC_M" worktree add -q --detach "$NC_W" 2>/dev/null
+NC_MW=$(nc_win "$NC_M"); NC_WW=$(nc_win "$NC_W")
+nc_stage "$NC_W"
+for row in "payload cwd|$NC_WW|git commit -m x" \
+           "git -C|$NC_MW|git -C \"$NC_WW\" commit -m x" \
+           "cd &&|$NC_MW|cd \"$NC_WW\" && git commit -m x"; do
+    label="${row%%|*}"; rest="${row#*|}"; cwd="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(nc_run "$cwd" "$cmd")
+    [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'VCRUNTIME140' <<< "$OUT" \
+        && ok "check-native-dll-crt denies a DLL staged in the worktree, reached by $label" \
+        || bad "check-native-dll-crt missed a DLL staged in the worktree, reached by $label: $(printf '%s' "$OUT" | head -c 160)"
+done
+OUT=$(nc_run "$NC_MW" "git commit -m x")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-native-dll-crt allows a commit in main while the DLL is staged only in the worktree" \
+    || bad "check-native-dll-crt judged the worktree for a commit in main: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(nc_run "$NC_MW" "git -C \"$NC_WW\" commit -m a; git -C \"$NC_MW\" commit -m b")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'more than one repository' <<< "$OUT" \
+    && ok "check-native-dll-crt denies a command that commits in two repositories" \
+    || bad "check-native-dll-crt judged one repository of a two-repository command: $(printf '%s' "$OUT" | head -c 160)"
+git -C "$NC_W" reset -q 2>/dev/null
+nc_stage "$NC_M"
+OUT=$(nc_run "$NC_WW" "git commit -m x")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-native-dll-crt allows a worktree commit while the DLL is staged only in main" \
+    || bad "check-native-dll-crt judged main for a worktree commit: $(printf '%s' "$OUT" | head -c 160)"
+git -C "$NC_F" init -q 2>/dev/null
+nc_stub "$NC_F"
+nc_stage "$NC_F"
+OUT=$(nc_run "$(nc_win "$NC_F")" "git commit -m x")
+if [[ "$(decision_of "$OUT")" == allow && ! -e "$NC_F/tools/ran.txt" ]]; then
+    ok "check-native-dll-crt leaves another repository alone and runs none of its code"
+else
+    bad "check-native-dll-crt judged another repository or ran its tools/pe_inspect.py"
+fi
+git -C "$NC_M" worktree remove --force "$NC_W" 2>/dev/null
+rm -rf "$NC_M" "$NC_W" "$NC_F"
+
+# ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"
 if (( FAIL > 0 )); then

@@ -54,7 +54,12 @@ case "$COMMAND" in
     *) echo '{}'; exit 0 ;;
 esac
 
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# The top level of the repository the commit runs in, not always the project root (_pybin.sh
+# taom_git_repo_dir). A commit in another repository is not this gate's: its tools/*.py are not
+# TAOM's to run.
+COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-native-dll-crt; exit 0; }
+cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
+taom_is_project_repo "$COMMIT_REPO" || { echo '{}'; exit 0; }
 
 DLL="Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll"
 
