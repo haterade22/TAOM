@@ -51,7 +51,7 @@ public class ReflectionSiteBindingTests
     // --- CompanionTactics role tooltips (RoleTooltipDecorator.cs) + manual patch (ManualPatchApplicator.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
-    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:48 (manual patch)")]
+    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:55 (manual patch)")]
     // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153 (TargetMethod)")]
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157 (____characterScene)")]

@@ -125,6 +125,12 @@ internal sealed class PatchCategoryApplier
     }
 
     /// <summary>
+    /// Names failed manual patches in the next phase summary. ManualPatchApplicator has already
+    /// logged each one, so this adds no log line.
+    /// </summary>
+    internal void RecordManualFailures(IEnumerable<string> labels) => _failed.AddRange(labels);
+
+    /// <summary>
     /// One player-facing line naming every category that failed since the last call, or null when
     /// none did. Clears the list, so each phase reports only its own failures. A localized
     /// TextObject built here but rendered by the caller; the category ids stay literal.

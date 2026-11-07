@@ -1974,14 +1974,16 @@ public class SubModule : MBSubModuleBase
         FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);
         _patches.EndPhase("GameInit");
         _patches.WriteHeldCategoryLines(Features.LoadTimeStamps.LoadTimeStampsHooks.DetailEnabled);
-        ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_game_init}game initialization"));
         onceStamp?.Mark("patch_categories");
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
         // ManualPatchApplicator (ADR-002); apply order unchanged. Each one is contained on its own: a missing
-        // target logs a warning, a throw logs a [PatchApply] error (ManualPatchApplicator.TryPatch).
-        ManualPatchApplicator.ApplyAll(_harmony);
+        // target logs a warning, a throw logs a [PatchApply] error (ManualPatchApplicator.TryPatch) and joins
+        // the categories' failures in the one report below.
+        var manualFailed = ManualPatchApplicator.ApplyAll(_harmony);
+        _patches.RecordManualFailures(manualFailed);
+        ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_game_init}game initialization"));
         onceStamp?.Mark("manual_patches");
 
         // Harmony census — LAST, so it sees every patch TAOM and every other mod has applied.
