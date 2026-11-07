@@ -42,10 +42,10 @@ From the repository root:
 python -m unittest tools.tests.test_cube_map_remesh tools.tests.test_quad_remesh_job
 ```
 
-Expected: **30 tests passed**.
+Expected: **32 tests passed**.
 
 The independent engine has 14 tests for validation, topology, exact projection, materials, scale,
-and fallback behavior. The Exoside bridge has 16 tests for settings, progress, wait-loop branches,
+and fallback behavior. The Exoside bridge has 18 tests for settings, progress, wait-loop branches,
 locks, artifacts, and process cleanup.
 
 ## License

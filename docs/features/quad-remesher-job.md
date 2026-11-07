@@ -52,14 +52,14 @@ A licensed engine is required at
 | File | Purpose |
 | --- | --- |
 | `tools/blender/quad_remesh_job.py` | Locking, settings, process management, artifact preservation, and Blender integration |
-| `tools/tests/test_quad_remesh_job.py` | Sixteen tests for settings, progress, locks, artifacts, and process cleanup |
+| `tools/tests/test_quad_remesh_job.py` | Eighteen tests for settings, progress, locks, artifacts, and process cleanup |
 | `tools/examples/remesh_active.py` | Command-line example for the active Blender mesh |
 | `tools/quad_toolkit/LICENSE.txt` | GPL-2.0-or-later license for the distributed toolkit |
 | `tools/quad_toolkit/NOTICE.txt` | Source and provenance notices |
 
 ## Tests
 
-- `python -m unittest tools.tests.test_quad_remesh_job`: sixteen passing tests.
+- `python -m unittest tools.tests.test_quad_remesh_job`: eighteen passing tests.
 - Real Blender 5.2.3 LTS to Exoside to Blender round trip: 98 vertices and 96 faces.
 - All four pre-existing official bridge files matched their original SHA-256 hashes afterward.
 
@@ -67,7 +67,7 @@ A licensed engine is required at
 
 This is a Blender asset tool and is not deployed into Bannerlord.
 
-1. Run `python -m unittest tools.tests.test_quad_remesh_job`. Expect sixteen passing tests.
+1. Run `python -m unittest tools.tests.test_quad_remesh_job`. Expect eighteen passing tests.
 2. Run `tools/examples/remesh_active.py` in Blender with one active mesh and a licensed engine.
 3. Expect `remesh-example-report.json` to show `"status": "ok"` and a nonzero face count.
 4. Confirm the previous official bridge files retain their pre-run hashes.
