@@ -60,7 +60,7 @@
     <TroopWeight id="lindon_imladris_marchwarden" weight="3.0" />
     <TroopWeight id="lindon_imladris_outrider" weight="3.0" />
     <TroopWeight id="lindon_imladris_warden" weight="3.0" />
-    <!-- Level 21 to 36 (2.0) -->
+    <!-- Level 26 to 36 (2.0) -->
     <TroopWeight id="lindon_imladris_guardsman" weight="2.0" />
     <TroopWeight id="lindon_imladris_marksman" weight="2.0" />
     <TroopWeight id="lindon_imladris_nobleman" weight="2.0" />
