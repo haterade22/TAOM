@@ -41,7 +41,7 @@ Research TaleWorlds sealed types by decompiling DLLs and providing actionable an
 # Decompile a type (cache-aware) and grep it in one line:
 rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 ```
-`taom-src` runs `ilspycmd` against the installed DLLs and caches under `~/.taom-src/<version>/`. Use it first.
+`taom-src` runs `ilspycmd` against the installed DLLs and caches under `~/.taom-src/<version>-<stamp>/`. Use it first.
 
 ### Fallback: CLI
 ```powershell
