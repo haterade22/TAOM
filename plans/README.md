@@ -261,6 +261,16 @@ Work no WP takes, recorded so nobody assumes otherwise.
 | `tools/check_rdc_entries.py` verdicts (WP141 follow-up, from the WP136 review) | DONE on `port148/integration-fixes`, with `audit_action_set_parity.py` and `validate_mesh_refs.py`. Asked for: return 2 for a missing `RuntimeDataCache` or `Assets` folder and for zero packages, so `banner-rdc` and `rdc-entries` print NOT RUN rather than FAIL; resolve `DEFAULT_MODULE` through `_gamedir` (it hardcodes `E:\`); add a `data_gates` test for that verdict; give `docs/reference/banner-icon-generation.md`, the read-first doc for both rows, an RDC section (it has none). |
 | In-game checks in each plan | The maintainer's; each plan lists its own. WP139 adds a tool to track them. |
 
+### Merging to the trunk (maintainer)
+
+Not authorised yet; this is the order for when it is. The fast-forward deletes the main checkout's tracked `.claude/settings.local.json` from disk, so step 2 is not optional.
+
+1. From a clean main checkout on `bannerlord-1.4.5`: `git merge --ff-only port148/overnight`.
+2. Copy `taom-port/scratch/142/settings.local.main.json` to `.claude/settings.local.json` (WP142 M2). Fallback: `git restore --source=1b00d1acd -- .claude/settings.local.json`, as [development-machines.md](../docs/reference/development-machines.md) documents. A bare `git show` only prints to stdout.
+3. `git config core.hooksPath .githooks`, because it is unset in the main checkout today.
+4. Restart Claude Code and run the live checks in [plan 142](142-docs-process-sync.md) ("Live checks owed by the maintainer": `/mcp`, the Serena pin).
+5. Never pop, apply or drop `stash@{0}`.
+
 ### Considered and not ported
 
 Of the 1,114 classified commits, 230 are features, 81 are troop, kingdom or other content, 72 are bookkeeping, 45 fix
