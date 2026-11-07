@@ -75,6 +75,10 @@ the graphify steps and sends the follow-ups to `port148/followups`. D33 later au
 
 Follow-ups merged as `a925ff6db`, integrated review 3 and its fixes as `7b95af59c`. Under D33 the trunk `bannerlord-1.4.5` was fast-forwarded to `port148/overnight` and pushed, without a force-push, tag or release. `master` was not touched. Nothing has run in the game. What is left is in "Maintainer's list" in [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md).
 
+## Public-build wave (2026-11-07)
+
+Under D34 the Armory-gated steps (WP108 B5, WP133 B2, WP134 A2 troop half, C3, C4, the WP101 B7 and WP141 A5 re-runs) and the code leftovers (WP145 G5, the F1 scanner, three gate gaps, docs recounts) landed through `port148/wave9` and were pushed to the trunk. Details in [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md), "Public-build wave".
+
 ## State at the end of planning
 
 Planning is finished; execution starts with WP101. No plan has been executed: conflict lists come from simulation against

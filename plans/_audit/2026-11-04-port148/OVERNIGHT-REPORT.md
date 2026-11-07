@@ -943,7 +943,7 @@ Nothing here holds the trunk any more. In rough order of cost if forgotten:
 1. **Restart Claude Code sessions**, then the live checks in [plan 142](../../142-docs-process-sync.md). Hooks and settings changed.
 2. **Archive the v1.4.8 native pair before the next game update:** set `TAOM_NATIVE_ARCHIVE` and `TAOM_GHIDRA_PROJECTS` (WP137 Maintainer steps). Both are unset on this laptop, and the pair is lost if the game updates first. WP137 steps 2 to 5 and 7 are owed.
 3. **In-game test.** Waived as a merge condition by D33, not done. The checks are listed per WP above. The save and freeze work is diagnostics plus mitigations until a real session shows it working; nothing is proven cured.
-4. **Public Armory.** `BROKEN_ROSTER_REF` and `BROKEN_SETTLEMENT_REF` need a re-run on it. With `core.hooksPath` set, a commit or clean merge staging ModuleData XML or XSLT is refused on this laptop until it is installed. The deferred data steps also wait on it: WP108 B5, WP133 B2, WP134, WP141 A5, WP101 B7.
+4. **Public Armory.** Done 2026-11-07 (D34): installed at v2.0.29.5, the deferred data steps landed, see "Public-build wave" below. What is left from it is listed there.
 5. **Rulings:** the Sauron knockdown (recommendation: accept as documented) and the VanillaTuning licence.
 6. **`enabledPlugins`:** after the merge, set the six values to false, keeping any the desktop uses. Left for the maintainer.
 7. **Do not run `rebalance_troops --apply` on ranged troops** without reading #617's ladder note.
@@ -951,3 +951,32 @@ Nothing here holds the trunk any more. In rough order of cost if forgotten:
 9. **GitHub issues owed**, including one for `3d81168cb`: none was created during this programme, because the GitHub MCP server needs authorising.
 10. **MCP:** WP116 removed `github`, `git` and `filesystem` from `.mcp.json`. On this session `ilspy` and `taom-moduledata` failed to connect, and `github`, `imagine` and `context7` need authorising.
 11. **Stash:** `stash@{0}` in the main checkout is untouched and still the maintainer's to judge.
+
+## Public-build wave (2026-11-07)
+
+The maintainer installed the public build (TAOM, TAOM_Map and LOTRLOME_Armory v2.0.29.5). Two lanes ran with a cold review each; every finding was MINOR and fixed.
+
+| Lane | Commits | What |
+|---|---|---|
+| `port148/armory` | `2b14ffcfa` to `4c44d7895` | WP108 B5 audit (0 dead item ids; the troll allowlist retired), WP133 B2 (Lindon and Blue Craig banners), WP134 A2 troop weights, C3 (generated lords use TAOM kits), C4 (three lesser Nazgul), the Gondor generator's three missing spear ids, the map scene memory tests under unittest, the laptop baseline |
+| `port148/leftovers` | `d2928f8c1` to `ce9d9eb21` | WP145 G5 (`tools/assert_auto_ignore.py`), the F1 context-budget scanner, commit gates reading git through a variable or split lines, an escaped space in `-C`, an exported `GIT_DIR`, and recounted XSLT and validator coverage |
+
+Merged as `9023bd9ed` and `3819c9799` on `port148/wave9`, then fast-forwarded onto `bannerlord-1.4.5` and pushed.
+
+### Verification at `3819c9799`, nothing else running
+
+- Debug and Release builds: 0 errors, 2505 warnings. Tests in each: 13492 total, 13484 passed, 8 skipped, 0 failed.
+- Hook suite: 1390 passed, 0 failed. Audit, binding snapshot, reviewctl and restore: exit 0.
+- Tool tests: 4393 run, OK, 26 skipped. The three baseline failures are gone: the Gondor generator wrote retired ids (a real defect), and the map scene memory tests needed pytest.
+- Lint: exit 0, 7 findings, unchanged. Validator: 0 errors, 111 warnings.
+
+### Left from this wave
+
+- WP134 A2 survival-bonus half (`battle_balance_config.json` lindon 0.4 and its tests).
+- `tools/ranged_ladders.json` plans band-suffixed ids; the public Armory ships tier-suffixed ones, so `generate_ranged_ladder_items.py --verify` reports 260 problems. Needs an owner: re-plan the JSON or retire the generator.
+- 111 validator warnings need balance or kit rulings: UPGRADE_ARMOUR_REGRESSION 4, RANGED_LADDER_INVERSION 7, CROSS_CULTURE_ARMOUR_INVERSION 7, INCONSISTENT_ARMOUR_SLOT 93. The polearm audit also warns on 87 rosters outside the #526 ratchet.
+- WP145 F1's archive-following MEMORY.md link walker was not ported; it needs the ADR-011 link check this line lacks.
+- Remaining gate gaps: `declare -x`, `typeset -x` and `set -a` are not read; the subject gate still misses `g=git; $g commit`.
+- Stale counts still in `docs/reference/moduledata-validator-codes.md:64`, the troll allowlist lines in `docs/features/armoury-mesh-cleanup.md` and `docs/modding/validation-and-testing.md`, the Rivendell band comment in `troop_weights.xml` and the 21 s timing comment in `check-moduledata-validation.sh`.
+- Every validator run warns that SandBoxCore has no `.tpac`; check that install on the laptop.
+- In-game checks for every step above.

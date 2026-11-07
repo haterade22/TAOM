@@ -388,3 +388,12 @@ On 2026-11-06 the maintainer wrote "ensure you update all documentation and comm
 2. **Scope as the orchestrator read it and told the maintainer:** `bannerlord-1.4.5` only, not `master`. No tag, no version bump, no release, no force-push. A push the gate refuses stops the run; the gate is not bypassed.
 3. **The in-game test and the public Armory check no longer hold the merge.** They were not done, and this decision does not say they passed. The trunk carries code that has never run in the game, and data counts measured on the `v2.0.26` Armory stay void as item verdicts.
 4. **The hook suite was not waived.** It failed 6 cases at `edcfddc63` while other workflows were loading the machine; alone at `3d4241801` it passed 1346, failed 0.
+
+## D34: the public build is the laptop's data baseline (2026-11-07, maintainer's instruction)
+
+On 2026-11-07 the maintainer installed the public build on the laptop and wrote "I downloaded the public build so you now have the map and armoury, go forth and implement!".
+
+1. TAOM, TAOM_Map and LOTRLOME_Armory are installed at v2.0.29.5. Data counts measured on it are item verdicts again; counts taken on the `v2.0.26` Armory stay void (D20, D25).
+2. The laptop baseline is in `docs/reference/development-machines.md`: 0 errors, 111 warnings, and BROKEN_ITEM_REF, BROKEN_ROSTER_REF, BROKEN_SETTLEMENT_REF and LANDLESS_CULTURE all 0.
+3. The installed TAOM module is now the public build, not this trunk. Nothing in this programme deploys to the game.
+4. D33 still covers the merge and the push of `bannerlord-1.4.5`; no tag, release or force-push.
