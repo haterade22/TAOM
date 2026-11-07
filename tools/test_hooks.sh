@@ -3670,8 +3670,8 @@ nc_stage() {  # $1 the repository: stage the DLL there
     git -C "$1" add "$NC_DLL" 2>/dev/null
 }
 nc_win() { cygpath -m "$1" 2>/dev/null || printf '%s' "$1"; }
-nc_run() {  # $1 the payload's cwd, $2 the command; the session always started in main
-    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+nc_run() {  # $1 the payload's cwd, $2 the command, $3 the tool (Bash); the session always started in main
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[3],"tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" "${3:-Bash}" \
         | CLAUDE_PROJECT_DIR="$NC_M" timeout -k 2 30 bash "$REPO/.claude/hooks/check-native-dll-crt.sh" 2>/dev/null
 }
 mkdir -p "$NC_M" "$NC_F"
@@ -3713,6 +3713,20 @@ for row in "--git-dir and --work-tree|git --git-dir=$NC_MW/.git --work-tree=$NC_
     [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'VCRUNTIME140' <<< "$OUT" \
         && ok "check-native-dll-crt denies a DLL staged in main, reached from the worktree by $label" \
         || bad "check-native-dll-crt missed a DLL staged in main, reached from the worktree by $label: $(printf '%s' "$OUT" | head -c 160)"
+done
+# The same git directory set in an earlier statement reaches the commit too (integrated review 3):
+# bash's export and PowerShell's $env: assignment. A plain assignment is not exported, so the
+# commit stays in the worktree, which holds no DLL.
+for row in "export|Bash|deny|export GIT_DIR=$NC_MW/.git GIT_WORK_TREE=$NC_MW; git commit -m x" \
+           "export of an assigned variable|Bash|deny|GIT_DIR=$NC_MW/.git; export GIT_DIR; git commit -m x" \
+           "\$env:GIT_DIR|PowerShell|deny|\$env:GIT_DIR = '$NC_MW/.git'; git commit -m x" \
+           "a plain assignment|Bash|allow|GIT_DIR=$NC_MW/.git; git commit -m x" \
+           "an export then unset|Bash|allow|export GIT_DIR=$NC_MW/.git; unset GIT_DIR; git commit -m x"; do
+    label="${row%%|*}"; rest="${row#*|}"; tool="${rest%%|*}"; rest="${rest#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(nc_run "$NC_WW" "$cmd" "$tool")
+    [[ "$(decision_of "$OUT")" == "$want" ]] \
+        && ok "check-native-dll-crt $want: main's git directory set by $label, commit from the worktree" \
+        || bad "check-native-dll-crt expected $want for $label: $(printf '%s' "$OUT" | head -c 160)"
 done
 git -C "$NC_F" init -q 2>/dev/null
 nc_stub "$NC_F"

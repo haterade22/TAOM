@@ -672,6 +672,36 @@ class GitRepoTests(unittest.TestCase):
         self.assertEqual(self.dirs("env GIT_DIR=/e/main/.git git commit -m x"), ["E:/main"])
         self.assertEqual(self.dirs("GIT_DIR=/e/a/.git git --git-dir=/e/b/.git commit -m x"), ["E:/b"])
 
+    def test_an_exported_git_dir_names_the_repo_of_a_later_commit(self):
+        # An export, or a PowerShell $env: assignment, in an earlier statement reaches every later git
+        # call in the same shell (integrated review 3); a plain assignment is not exported.
+        self.assertEqual(self.dirs("export GIT_DIR=/e/main/.git; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/m/.git/worktrees/x GIT_WORK_TREE=/e/x && git commit -m y"), ["E:/x"])
+        self.assertEqual(self.dirs("GIT_DIR=/e/main/.git; export GIT_DIR; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; GIT_DIR=/e/main/.git; git commit -m x"), ["E:/main"])
+        self.assertEqual(self.dirs('export GIT_DIR=/e/main/.git; bash -c "git commit -m x"'), ["E:/main"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/main/.git\ngit commit -m x"), ["E:/main"])
+
+    def test_an_exported_git_dir_yields_to_the_call_and_to_its_scope(self):
+        self.assertEqual(self.dirs("GIT_DIR=/e/main/.git; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; git --git-dir=/e/b/.git commit -m x"), ["E:/b"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; GIT_DIR=/e/b/.git git commit -m x"), ["E:/b"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; unset GIT_DIR; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("export GIT_DIR=/e/a/.git; export -n GIT_DIR; git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("(export GIT_DIR=/e/a/.git); git commit -m x"), ["E:/w"])
+        self.assertEqual(self.dirs("git commit -m x; export GIT_DIR=/e/a/.git"), ["E:/w"])
+
+    def test_a_powershell_env_assignment_names_the_repo_of_a_later_commit(self):
+        for cmd in ("$env:GIT_DIR = 'E:/main/.git'; git commit -m x", '$env:GIT_DIR="E:/main/.git"; git commit -m x',
+                    "$Env:git_dir='E:/main/.git'\ngit commit -m x", "${env:GIT_DIR} = 'E:/main/.git'; git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd, tool="PowerShell"), ["E:/main"])
+        for cmd in ("$env:GIT_DIR = 'E:/main/.git'; $env:GIT_DIR = $null; git commit -m x",
+                    "$env:GIT_DIR = 'E:/main/.git'; Remove-Item Env:GIT_DIR; git commit -m x",
+                    "$env:GIT_DIR = Join-Path E:/main .git; git commit -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(self.dirs(cmd, tool="PowerShell"), ["E:/w"])
+
     def test_c_option_after_another_option_counts(self):
         self.assertEqual(self.dirs("git -c user.name=x -C sub commit -m y"), ["E:/w/sub"])
 
