@@ -82,8 +82,8 @@ Reflects over the test bin's `TAOM.dll` that Step 2 built and compares the resul
 `docs/reference/taleworlds-api-snapshot/`. Exit 1 with a `DRIFT:` line means a patch target or
 GameModel base changed and the snapshot was not regenerated, so `tools/engine_body_diff.py` would
 miss that method at the next engine bump. Fix it with `pwsh tools/snapshot_api_surface.ps1` and
-commit the result with the change. Any other failure (no `pwsh`, no game install) is NOT RUN, not a
-pass.
+commit the result with the change. DRIFT blocks: `Ready for commit` is NO while it stands. Any other
+failure (no `pwsh`, no game install) is NOT RUN, which has not passed.
 
 ## Step 2e: Data gates
 
