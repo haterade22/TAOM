@@ -34,11 +34,15 @@ CLOSING_LIST = re.compile(
     re.I)
 CODE_SPAN = re.compile(r"(`+)[^\n]*?\1")
 MAX_SUBJECT = 72
+# git commit -v hands this hook the staged diff below this line, whatever core.commentChar is. git
+# always follows it with a comment line in the same character (its words are translated, the character
+# is not); git commit -m keeps a lone lookalike as message text, so a lookalike cuts nothing.
+SCISSORS = re.compile(r"(?m)^(\S+) -{24} >8 -{24}\r?\n\1")
 
 
 def check(message, version):
     """Return the list of problems with the message; empty when it passes."""
-    lines = [line for line in message.splitlines() if not line.startswith("#")]
+    lines = [line for line in SCISSORS.split(message, maxsplit=1)[0].splitlines() if not line.startswith("#")]
     text = "\n".join(lines)
     subject = next((line.strip() for line in lines if line.strip()), None)
     if subject is None or subject.startswith(("fixup! ", "squash! ", "amend! ")):

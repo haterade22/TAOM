@@ -69,10 +69,12 @@ fi
 # (E:\repos\TAOM\docs\adrs\x.md), so a forward-slash pattern never matched it and the ADR guard
 # below was dead on the dev machine: ADR-012 and two ADR edits went through unchallenged on
 # 2026-09-26 (#677). Separators become /, and case folds because NTFS ignores it
-# (Settings.Local.json is the same file). tools/test_hooks.sh 7g holds every spelling.
+# (Settings.Local.json is the same file). tools/test_hooks.sh 7g pins the spellings this handles; a
+# trailing dot or space and an NTFS stream suffix are not among them, since they take deliberate evasion.
 NORM_PATH=${FILE_PATH//\\//}
 NORM_PATH=${NORM_PATH,,}
-# docs/./adrs and docs/x/../adrs name the same file as docs/adrs.
+# docs//adrs, docs/./adrs and docs/x/../adrs name the same file as docs/adrs.
+while [[ "$NORM_PATH" == *//* ]]; do NORM_PATH=${NORM_PATH//\/\//\/}; done
 while [[ "$NORM_PATH" == */./* ]]; do NORM_PATH=${NORM_PATH//\/.\//\/}; done
 while [[ "$NORM_PATH" =~ ^(.*/)?[^/]+/\.\./(.*)$ ]]; do NORM_PATH="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"; done
 BASENAME=${FILE_PATH//\\//}

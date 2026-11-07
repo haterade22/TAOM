@@ -123,6 +123,37 @@ class GateTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("usage", out)
 
+    def test_no_tpac_at_all_fails_and_does_not_blame_the_usage_set(self):
+        for name in os.listdir(self.assets):
+            os.remove(os.path.join(self.assets, name))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("no movement row that binds a clip", out)
+        self.assertIn("none of the 3 bound measured-gait clips was checked: 3 not found in a live tpac", out)
+
+    def test_every_bound_clip_missing_from_present_tpacs_fails_with_the_same_cause(self):
+        for stem in ("x_trot_anm", "x_trot_strafe_anm", "x_trot_stand_anm"):
+            os.remove(os.path.join(self.assets, stem + ".tpac"))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("no movement row that binds a clip", out)
+        self.assertIn("3 not found in a live tpac", out)
+
+    def test_every_counted_clip_exempt_fails_and_names_the_exemption(self):
+        os.remove(os.path.join(self.assets, "x_trot_anm.tpac"))
+        os.remove(os.path.join(self.assets, "x_trot_strafe_anm.tpac"))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("no movement row that binds a clip", out)
+        self.assertIn("1 exempt, 2 not found in a live tpac", out)
+
+    def test_a_set_that_binds_no_movement_row_keeps_the_usage_message(self):
+        self._write("usage.xml", USAGE.replace('act_x_trot"', 'act_x_a"').replace('act_x_strafe"', 'act_x_b"')
+                    .replace('act_x_trot_stand"', 'act_x_c"'))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("has no movement row that binds a clip", out)
+
     def test_an_absent_usage_set_fails(self):
         self._write("usage.xml", "<monster_usage_sets></monster_usage_sets>")
         code, out = self._run()

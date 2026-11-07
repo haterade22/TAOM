@@ -5,7 +5,7 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|is-commit|bypass < the hook payload (JSON)
   posix     the command as POSIX-shell text
   bypass    the spelling that skips the commit hooks, as block-no-verify.sh names it, or an empty line
   commands  the posix text split at ; & | and newlines outside quotes (a # comment dropped), each
@@ -24,12 +24,15 @@ Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|g
             lines (push_candidates). A payload that is no JSON object prints unread, which the hook
             answers from the raw text, never with a silent allow
   git-repo  the directory of every `git <subcommand>` (default commit) in the command, one per line
-            (a cd or -C before it joined onto the payload's cwd, or the cwd), then a line `--`, then
+            (a cd or -C before it joined onto the payload's cwd, or the cwd; a --git-dir or a GIT_DIR=
+            in front of the call moves it, an `export GIT_DIR` is not read), then a line `--`, then
             the payload's cwd (_pybin.sh taom_git_repo_dir resolves each to its work tree's top level)
   commit-plan  what the `git commit` calls record, for check-doc-config-drift.sh (#987): a first line
             `amend` when any call amends HEAD, else `new`; then, when every call is a path commit
             (`git commit -m x -- <paths>`, or paths after the message, without -a or -i), one path per
             line, which the commit records from the working copy, not the index
+  is-commit `no` when the command only runs commit plumbing (is_commit), else `yes`; _pybin.sh
+            taom_commit_plumbing_only asks it when the text names `git commit-`
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -441,6 +444,8 @@ def push_candidates(cmd, tool):
 
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1[ \t]*\r?\n(.*?)\r?\n[ \t]*\2\b", re.S)
 CMD_SEP = set(";|&\n()")
+# The global options that say where the repository is, by the environment variable they override.
+GIT_LOCATION_OPTS = {"--git-dir": "GIT_DIR", "--work-tree": "GIT_WORK_TREE"}
 GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
                        "--config-env", "--attr-source"}
 # Commands that change the shell's directory: bash's, and PowerShell's as to_posix() leaves them. A push
@@ -975,6 +980,19 @@ def _env_chdir(prefix, cwd):
     return cwd
 
 
+def _named_repo(git_dir, work_tree, repo):
+    """The directory to judge for a git call with --git-dir or GIT_DIR. The index lives in the git
+    directory, so it is the folder holding that .git; for a git directory of another shape (a linked
+    worktree's) it is the work tree named beside it, else repo. A work tree named alone moves nothing:
+    git still finds the index from repo."""
+    if not git_dir:
+        return repo
+    path = join_dir(repo, git_dir).replace("\\", "/").rstrip("/")
+    if path.endswith("/.git"):
+        return path[:-5] or repo
+    return join_dir(repo, work_tree) if work_tree and path != ".git" else repo
+
+
 def _git_call(g, bodies, subcommand, cwd, partial, depth):
     # Bash's wrappers and grammar are skipped whatever the tool: the commit gates cannot tell, and
     # a PowerShell `timeout 60 git commit` runs no commit, so judging it only over-blocks (#985).
@@ -991,6 +1009,7 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
         return git_invocations(g[i + k], bodies, subcommand, cwd, partial, depth + 1) if k is not None else []
     if word not in ("git", "git.exe"):
         return []
+    named = {w.partition("=")[0]: w.partition("=")[2] for w in g[:i] if w.startswith(("GIT_DIR=", "GIT_WORK_TREE="))}
     i += 1
     repo = cwd
     if subcommand is None:
@@ -998,9 +1017,12 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
     while i < len(g) and g[i].startswith("-"):
         if g[i] == "-C" and i + 1 < len(g):
             repo = join_dir(repo, g[i + 1])
+        name, eq, value = g[i].partition("=")
+        if name in GIT_LOCATION_OPTS:
+            named[GIT_LOCATION_OPTS[name]] = value if eq else " ".join(g[i + 1:i + 2])
         i += 2 if g[i] in GIT_OPTS_WITH_VALUE else 1
     if i < len(g) and g[i] == subcommand:
-        return [(g[i + 1:], repo)]
+        return [(g[i + 1:], _named_repo(named.get("GIT_DIR"), named.get("GIT_WORK_TREE"), repo))]
     return []
 
 
@@ -1102,6 +1124,43 @@ def commit_plan(cmd, tool, cwd=""):
     if not calls:                                # eval, xargs, exec: a commit the reader cannot see
         return None, []
     return amend, ([] if plain else paths)
+
+
+def _git_subcommand(words):
+    """The subcommand in the words after `git`, past its global options, or ""."""
+    i = 0
+    while i < len(words) and words[i].startswith("-"):
+        i += 2 if words[i] in GIT_OPTS_WITH_VALUE else 1
+    return words[i] if i < len(words) else ""
+
+
+# The words of a commit in text the reader could not parse into a call: git, then commit on the same
+# segment, heredoc bodies included. commit-tree and commit-graph are not it.
+COMMIT_WORDS = re.compile(r"\bgit\b[^;&|\n]*\bcommit\b(?!-)", re.I)
+
+
+def is_commit(cmd, tool):
+    """Whether a commit gate judges a command whose text names `git commit-`. False only when the whole
+    command was read, it holds a plumbing call (commit-tree, commit-graph) and no `git commit`, and its
+    text nowhere has the words of a commit. So a commit behind a runner the reader does not peel (sudo,
+    eval, xargs, cmd /c, an alias) stays True with a plumbing call beside it, and a message such as
+    `git commit-tree T -m "after git commit"` is gated too, which over-blocks on the safe side. A
+    mention with no plumbing call stays True, as a mention of `git commit` does at the gates' raw test,
+    and so does bad quoting or a text too long to read."""
+    posix = to_posix(cmd, tool)
+    if len(posix) > REPO_SCAN_MAX or posix.count("<<") > HEREDOC_MAX_OPENERS:
+        return True
+    text, bodies = strip_heredocs(posix)
+    text = decode_ansi_c(text)
+    try:
+        if git_invocations(text, bodies, "commit"):
+            return True
+        calls = git_invocations(text, bodies, None)
+    except ValueError:
+        return True
+    if COMMIT_WORDS.search(decode_ansi_c(posix)):
+        return True
+    return not any(_git_subcommand(words).startswith("commit-") for words, _repo in calls)
 
 
 # ---- the spellings that skip the commit hooks (block-no-verify.sh, 2026-11-03) -------------------
@@ -1241,8 +1300,8 @@ def read_cwd(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan", "bypass"):
-        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < payload.json\n")
+    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan", "is-commit", "bypass"):
+        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|is-commit|bypass < payload.json\n")
         return 2
     raw = sys.stdin.buffer.read().decode("utf-8", "replace")
     payload = read_payload(raw)
@@ -1261,6 +1320,11 @@ def main(argv):
             amend, paths = None, []
         head = "unknown" if amend is None else "amend" if amend else "new"
         text = "\n".join([head] + [p.replace("\n", "") for p in paths])
+    elif mode == "is-commit":
+        try:
+            text = "yes" if payload is None or is_commit(cmd, tool) else "no"
+        except Exception:                    # a gate never loses a commit to this reader's own fault
+            text = "yes"
     elif mode == "verdict" and payload is None:
         text = "unread"
     elif mode == "verdict":

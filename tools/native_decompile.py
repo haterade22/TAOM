@@ -3,7 +3,7 @@
 
 Three ways in, one per question:
   --rva            a crash site, after native_crash_triage.py has named it (the decompiler
-                   step of /native-crash-triage once the plan 137 skill edits land)
+                   step of /native-crash-triage)
   --engine-method  research: what a managed `[EngineMethod]` call really does. The name
                    resolves through the engine's id registration (native_engine_methods.py)
   --string         research: which native code uses a string (an attribute the engine

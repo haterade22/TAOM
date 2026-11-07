@@ -37,8 +37,8 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    only, one row per install path, and does not re-check the installed DLL, so compare each row's `sha16`
    with the installed file
    (`python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest()[:16])" <dll>`).
-   The OLD pair is in the archive only if it was archived before the update (v1.4.8 build 119303 by the
-   maintainer run of plan 137); if it is missing it is gone: record that and expect `oracle=unscored`. The
+   The OLD pair is in the archive only if it was archived before the update (for v1.4.8 build 119303
+   that is plan 137's Maintainer step 3, which the laptop had not run on 2026-11-06); if it is missing it is gone: record that and expect `oracle=unscored`. The
    cost of not having one is already booked: the open player report (untracked; read it with
    `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged
    against a local binary.
@@ -157,7 +157,7 @@ writes one `.diff` per changed member and prints `rows_in_file=N parsed=N unpars
 on any unparsed or unresolved row (a changed row is information, not a failure) and 2 on bad input, such as
 the same `BuildInfo.GameVersion` on both sides. A `TargetMethods()` patch appears in the snapshot by its
 first target only, so diff its other targets by hand. (On 2026-11-04 the tool parsed every row of this
-line's snapshot: 230, 108 and 47 rows, 0 unparsed.)
+line's snapshot, 0 unparsed. Row counts move with the snapshot, so compare `unparsed`, not the totals.)
 
 ## Phase 4 — Re-verify TAOM against the new engine
 

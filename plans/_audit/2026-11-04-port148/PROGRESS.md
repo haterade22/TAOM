@@ -69,7 +69,7 @@ the public Armory, the in-game test and the merge to trunk.
 
 WP143 merged as `c66667f10` and WP145 E to G as `ff48da2d4`. Rows 102, 103, 116, 127, 138, 142 and 143 now read DONE; row 145 stays PARTIAL for G5 and the
 context-budget scanner half of F1. The orchestrator's run at `ff48da2d4` is quoted in the Integrator record of [`plans/README.md`](../../README.md). D32 closes
-the graphify steps and sends the follow-ups to `port148/followups`. Push, tag and trunk merge are still not authorised.
+the graphify steps and sends the follow-ups to `port148/followups`. Push, tag and trunk merge are still not authorised. The trunk merge's order is in [Merging to the trunk](../../README.md#merging-to-the-trunk-maintainer).
 
 ## State at the end of planning
 

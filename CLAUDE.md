@@ -128,7 +128,7 @@ do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
 [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first",
 **(2)** "you cannot invoke skills or spawn agents — recommend them in your report", **(3)** the
 relevant tool reminder (`pwsh tools/taom-src.ps1 path <Type>` for signatures;
-`dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`), **(4)** explicit scope
+`dotnet … -p:DisableModuleCopy=true -p:ModuleId=`, not `./build.ps1`), **(4)** explicit scope
 (`Main/IoC.cs` / `Main/SubModule.cs` are single-owner — recommend, don't edit), **(5)** which
 convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems once
 ([agent-teams.md](./docs/ai-includes/agent-teams.md) "Case studies"). Read-only agents (`Explore`/`Plan`)
@@ -161,7 +161,7 @@ Full file/path map (source XMLs, per-language files, tools, cache, validation te
 
 ## Key Paths
 
-Full feature/component map (103 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
+Full feature/component map: **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
 Layout: `Main/` (.NET Framework 4.7.2) · `Main/Features/<Name>/` · `TAOM.Tests/` ·
 `Main/_Module/ModuleData/<feature>/` · adapters `Main/Adapters/` · core `Main/Core/`.
 `.claude/` tree: `skills/`, `rules/`, `agents/`, `hooks/`; Codex config `.codex/config.toml`,
@@ -175,7 +175,7 @@ instructions `AGENTS.md`.
 | **Prefab entity cap** | The engine's `rglConcurrentQueue` assert (131,072) is a **global** queue across every loaded module, Modding Kit only. `tools/check_prefab_budget.py` sums every module (`--dir` counts one folder): `WARN`, exit 1, above 120,000 (#359). |
 | **A fix in a dependency module** | `LOTRLOME_Armory` / `TAOM_Map` fixes are real but **unversioned** — a module reinstall silently reverts them, and "untracked here" is not "unfixed" (7 issues closed on this in the 2026-08-08 triage). Always land an in-repo validator gate alongside the external edit. |
 | **Two machines; laptop data has a baseline** | Every `E:\` path in these docs is the DESKTOP. A partial or stale `TAOM_Map`/`LOTRLOME_Armory` fails every reference into it (2026-09-06: 6,894 broken items, none real). Never "fix" the repo to quiet one: see the baseline in [machines](docs/reference/development-machines.md) |
-| **Three-module data surface** | Data spans this repo plus the LIVE `TAOM_Map` and `LOTRLOME_Armory` installs: 1,057 XML, 16 XSLT. `validate_moduledata.py` ref-sweeps all 382 Armory ModuleData XML and none of TAOM_Map's 44, leaving its 1,012 `Culture.` refs unchecked; CI's well-formedness gate reaches 8 of the 16 XSLT, all in-repo. Matrix: `docs/features/moduledata-validation.md`. |
+| **Three-module data surface** | Data spans this repo plus the LIVE `TAOM_Map` and `LOTRLOME_Armory` installs: 1,057 XML, 16 XSLT. `validate_moduledata.py` ref-sweeps all 382 Armory ModuleData XML and none of TAOM_Map's 44, leaving its 1,012 `Culture.` refs unchecked; `check_external_xslt.py` gates every XSLT, locally (no CI). Matrix: `docs/features/moduledata-validation.md`. |
 | **NavalTravel** | PARKED 2026-06-26, DISABLED at the wiring level (#120/#296). Re-enable = 3 `SubModule.cs` blocks. |
 | **NativeSkinFixes** | PARKED 2026-07-08, DISABLED at the wiring level. |
 | **ShaderPrecompilation** | ACTIVE again 2026-09-11 (#560). Roster walks in batches of 1,000 (preload compiles every ROSTER character's equipment; the old 3,000/side cap with soldiers x2 dropped TAOM's troops). Scene passes OFF via a RENAMED property (`EnableShaderPrecompileScenePasses`): json2 persists the old `true`, so a flipped default never reaches existing installs. Rename, never flip. |
@@ -273,7 +273,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 **Every commit subject carries the module version** (user rule, 2026-09-13):
 `<type>[(scope)]: vX.Y.Z - <description>`, where `vX.Y.Z` is exactly the `<Version>` in
 `Main/_Module/SubModule.xml` as committed. The version moves ONLY in a `/release` commit, whose
-subject names the new one (`chore(release): v2.0.29 - TAOM v2.0.29`). Why: a crash bundle reports
+subject names the new one (`chore(release): vX.Y.Z - TAOM vX.Y.Z`). Why: a crash bundle reports
 `TaomVersion` from that file and between releases every pushed commit reads as the same version;
 `git log --grep 'v2.0.28 - '` now lists exactly the commits a v2.0.28 build can contain.
 Enforced by `.claude/hooks/check-commit-subject-version.sh` (refuses a subject without the label or
@@ -337,7 +337,7 @@ documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 
-7 servers (5 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,
+5 project servers (`.mcp.json`, incl. `imagine`) and 2 plugin servers (context7, playwright). Full server table, configuration,
 and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/reference/mcp-servers.md)**.
 
 ### MCP Usage Guide

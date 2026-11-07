@@ -19,8 +19,8 @@ Validate XSLT file against SandBoxCore source data.
    reach them: `TAOM_Map/ModuleData/settlements.xslt`, and the Armory's `action_sets.xslt`,
    `action_types.xslt`, `Animations/action_sets.xslt`, `crafting_templates.xslt`,
    `monster_usage_sets.xslt`, `MonsterUsage/LOTR/lotr_monster_usage_spider.xslt`,
-   `weapon_descriptions.xslt`. The CI `validate-xml` job globs the same repo path, and it cannot be
-   extended to cover them because those modules are not in the checkout. To check one of the eight,
+   `weapon_descriptions.xslt`. `tools/check_external_xslt.py` (the `xslt` data gate, `/verify` Step 2e,
+   local only; no CI runs) checks every stylesheet is well-formed. To check one of the eight here,
    pass an absolute path under
    `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\<module>\ModuleData\` and apply
    the same steps by hand. See

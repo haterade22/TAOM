@@ -2856,6 +2856,9 @@ CP_CASES=(
   '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
   '2|E:/repos/TAOM/docs/./adrs/010-knowledge-base-architecture.md'
   '2|E:/repos/TAOM/docs/x/../adrs/010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs//adrs/010-knowledge-base-architecture.md'
+  '2|E:\repos\TAOM\docs\\adrs\010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs///adrs//./010-knowledge-base-architecture.md'
   '2|/e/repos/TAOM/docs/adrs/README.md'
   '2|docs/adrs/011-knowledge-delivery-tiers.md'
   '2|docs\adrs\011-knowledge-delivery-tiers.md'
@@ -3649,6 +3652,173 @@ grep -q 'MEMORY.md is' <<< "$(mb_sibling startup)" \
     && bad "session-start read the MEMORY.md of a project that only contains the name" \
     || ok "session-start reads only the project named for the main checkout"
 rm -rf "$MB_P" "$MB_H" "$MB_M" "$MB_W"
+
+# ---------------------------------------------------------------------------
+head2 "7p. check-native-dll-crt judges the repository the commit runs in"
+# It kept `cd "$CLAUDE_PROJECT_DIR"` when its siblings moved to taom_git_repo_dir, so a session started
+# in the main checkout never saw a DLL staged in a worktree, and a DLL staged in main denied a worktree
+# commit that does not hold it. The stub linter reports a dynamic CRT and leaves a marker.
+NC_M="$SANDBOX/nc-main"; NC_W="$SANDBOX/nc-wt"; NC_F="$SANDBOX/nc-foreign"
+NC_DLL="Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll"
+nc_stub() {  # $1 the repository: a pe_inspect that always finds a dynamic CRT
+    mkdir -p "$1/tools"
+    printf 'import os\nopen(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ran.txt"), "w").close()\nprint("VCRUNTIME140.dll")\n' > "$1/tools/pe_inspect.py"
+}
+nc_stage() {  # $1 the repository: stage the DLL there
+    mkdir -p "$1/${NC_DLL%/*}"
+    printf 'MZ' > "$1/$NC_DLL"
+    git -C "$1" add "$NC_DLL" 2>/dev/null
+}
+nc_win() { cygpath -m "$1" 2>/dev/null || printf '%s' "$1"; }
+nc_run() {  # $1 the payload's cwd, $2 the command; the session always started in main
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$NC_M" timeout -k 2 30 bash "$REPO/.claude/hooks/check-native-dll-crt.sh" 2>/dev/null
+}
+mkdir -p "$NC_M" "$NC_F"
+git -C "$NC_M" init -q 2>/dev/null
+nc_stub "$NC_M"
+git -C "$NC_M" add tools/pe_inspect.py 2>/dev/null
+git -C "$NC_M" -c user.name=t -c user.email=t@t commit -q -m init 2>/dev/null
+git -C "$NC_M" worktree add -q --detach "$NC_W" 2>/dev/null
+NC_MW=$(nc_win "$NC_M"); NC_WW=$(nc_win "$NC_W")
+nc_stage "$NC_W"
+for row in "payload cwd|$NC_WW|git commit -m x" \
+           "git -C|$NC_MW|git -C \"$NC_WW\" commit -m x" \
+           "cd &&|$NC_MW|cd \"$NC_WW\" && git commit -m x"; do
+    label="${row%%|*}"; rest="${row#*|}"; cwd="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(nc_run "$cwd" "$cmd")
+    [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'VCRUNTIME140' <<< "$OUT" \
+        && ok "check-native-dll-crt denies a DLL staged in the worktree, reached by $label" \
+        || bad "check-native-dll-crt missed a DLL staged in the worktree, reached by $label: $(printf '%s' "$OUT" | head -c 160)"
+done
+OUT=$(nc_run "$NC_MW" "git commit -m x")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-native-dll-crt allows a commit in main while the DLL is staged only in the worktree" \
+    || bad "check-native-dll-crt judged the worktree for a commit in main: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(nc_run "$NC_MW" "git -C \"$NC_WW\" commit -m a; git -C \"$NC_MW\" commit -m b")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'more than one repository' <<< "$OUT" \
+    && ok "check-native-dll-crt denies a command that commits in two repositories" \
+    || bad "check-native-dll-crt judged one repository of a two-repository command: $(printf '%s' "$OUT" | head -c 160)"
+git -C "$NC_W" reset -q 2>/dev/null
+nc_stage "$NC_M"
+OUT=$(nc_run "$NC_WW" "git commit -m x")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-native-dll-crt allows a worktree commit while the DLL is staged only in main" \
+    || bad "check-native-dll-crt judged main for a worktree commit: $(printf '%s' "$OUT" | head -c 160)"
+# A commit aimed at main through a git directory records main's index, wherever the cwd is.
+for row in "--git-dir and --work-tree|git --git-dir=$NC_MW/.git --work-tree=$NC_MW commit -m x" \
+           "GIT_DIR and GIT_WORK_TREE|GIT_DIR=$NC_MW/.git GIT_WORK_TREE=$NC_MW git commit -m x"; do
+    label="${row%%|*}"; cmd="${row#*|}"
+    OUT=$(nc_run "$NC_WW" "$cmd")
+    [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'VCRUNTIME140' <<< "$OUT" \
+        && ok "check-native-dll-crt denies a DLL staged in main, reached from the worktree by $label" \
+        || bad "check-native-dll-crt missed a DLL staged in main, reached from the worktree by $label: $(printf '%s' "$OUT" | head -c 160)"
+done
+git -C "$NC_F" init -q 2>/dev/null
+nc_stub "$NC_F"
+nc_stage "$NC_F"
+OUT=$(nc_run "$(nc_win "$NC_F")" "git commit -m x")
+if [[ "$(decision_of "$OUT")" == allow && ! -e "$NC_F/tools/ran.txt" ]]; then
+    ok "check-native-dll-crt leaves another repository alone and runs none of its code"
+else
+    bad "check-native-dll-crt judged another repository or ran its tools/pe_inspect.py"
+fi
+git -C "$NC_M" worktree remove --force "$NC_W" 2>/dev/null
+rm -rf "$NC_M" "$NC_W" "$NC_F"
+
+# ---------------------------------------------------------------------------
+head2 "7q. the commit gates tell commit plumbing from a commit that mentions it"
+# A raw `*"git commit-"*` arm let any commit whose text held those words skip all five gates: a message
+# naming commit-tree, an earlier commit-graph call. Plumbing now passes only when _shellwords.py
+# is-commit read the whole command, found a plumbing call and no commit, and the text has no `git ...
+# commit` words on one segment, which keeps a commit behind eval or xargs gated; anything it cannot follow
+# is gated. The trace shows whether a state gate got past its commit test (as in 7e).
+pc_reaches() {  # $1 hook, $2 tool, $3 command: 1 when the gate got past its commit test
+    pre_payload "$2" "$3" | timeout -k 2 60 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" \
+        bash -x "$REPO/.claude/hooks/$1" >/dev/null 2>"$SANDBOX/pc.trace"
+    if grep -qE '^\+ cd ' "$SANDBOX/pc.trace"; then echo 1; else echo 0; fi
+}
+PC_CASES=(
+  "1|Bash|git commit -m \"feat: no label, about git commit-tree\""
+  "1|Bash|git commit-graph write && git commit -m \"feat: bad\""
+  "1|Bash|git commit -m \"feat: no label\" -m \"see git commit-graph docs\""
+  "1|Bash|git -C . commit-graph write; git -C . commit -m \"feat: bad\""
+  "1|Bash|sudo git commit -m \"about git commit-tree\""
+  "1|Bash|eval \"git commit -m x; git commit-tree y\""
+  "1|Bash|git commit-tree HEAD -m \"an unclosed quote"
+  "1|Bash|git -C . commit-graph write; eval \"git commit -m x\""
+  "1|Bash|git -C . commit-tree T -m y | xargs git commit -m"
+  "1|Bash|git commit-graph write; sudo git commit -m x"
+  "1|Bash|git -C . commit-graph write; powershell -c \"git commit -m x\""
+  "1|PowerShell|git -C . commit-graph write; iex \"git commit -m x\""
+  "1|PowerShell|git commit -m 'about git commit-tree'"
+  "0|Bash|git commit-tree HEAD^{tree} -m x"
+  "0|Bash|git commit-graph write"
+  "0|Bash|git -C . commit-tree HEAD -m x"
+  "0|Bash|git -C . commit-graph write"
+  "0|PowerShell|git commit-graph write"
+  "0|Bash|git log --grep commit"
+  "0|Bash|git -C . commit-graph write; git -C . commit-tree T -m y"
+)
+for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh; do
+    for entry in "${PC_CASES[@]}"; do
+        want="${entry%%|*}"; rest="${entry#*|}"; tool="${rest%%|*}"; cmd="${rest#*|}"
+        got=$(pc_reaches "$hook" "$tool" "$cmd")
+        [[ "$got" == "$want" ]] && ok "$hook [$tool] gates=$got: $cmd" \
+            || bad "$hook [$tool] expected gates=$want, got $got: $cmd"
+    done
+done
+rm -f "$SANDBOX/pc.trace"
+PC_SUBJECT=(
+  "deny|git commit -m \"feat: no label, about git commit-tree\""
+  "deny|git commit-graph write && git commit -m \"feat: bad\""
+  "deny|git commit -m \"feat: no label\" -m \"see git commit-graph docs\""
+  "allow|git commit-tree HEAD^{tree} -m \"x\""
+  "allow|git commit-graph write"
+  "allow|git -C . commit-tree HEAD -m \"x\""
+)
+for entry in "${PC_SUBJECT[@]}"; do
+    want="${entry%%|*}"; cmd="${entry#*|}"
+    OUT=$(pre_payload Bash "$cmd" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$REPO" bash "$REPO/.claude/hooks/check-commit-subject-version.sh" 2>/dev/null)
+    got=$(decision_of "$OUT")
+    [[ "$got" == "$want" ]] && ok "check-commit-subject-version $got: $cmd" \
+        || bad "check-commit-subject-version expected $want, got $got: $cmd"
+done
+
+# ---------------------------------------------------------------------------
+head2 "7r. the confirm gates read past a quoted global option value that holds a space"
+# Their stripper took an option's value as `[^[:space:]]+`, so `git -C 'E:/a b' reset --hard` stopped
+# at `b' reset --hard`, no verb matched, and the gate allowed silently.
+QV_ROWS=(
+  "block-dangerous-git.sh|ask|git -C \"E:/a b\" reset --hard"
+  "block-dangerous-git.sh|ask|git -C 'E:/a b' clean -fdx"
+  "block-dangerous-git.sh|ask|git -c x.y='a b' reset --hard"
+  "block-dangerous-git.sh|ask|git -c user.name=\"A B\" clean -f"
+  "block-dangerous-git.sh|ask|git --git-dir='E:/a b/.git' checkout -- ."
+  "block-dangerous-git.sh|ask|git --git-dir 'E:/a b/.git' reset --hard"
+  "block-dangerous-git.sh|ask|git --work-tree='E:/a b' reset --hard"
+  "block-dangerous-git.sh|ask|git --work-tree 'E:/a b' clean -f"
+  "block-dangerous-git.sh|ask|git -C \"E:/a b\" -c x.y='c d' --no-pager reset --hard"
+  "block-dangerous-git.sh|ask|git -C E:/nospace reset --hard"
+  "block-dangerous-git.sh|ask|git -C it's reset --hard"
+  "block-dangerous-git.sh|allow|git -C \"E:/a b\" status"
+  "block-dangerous-git.sh|allow|git -C \"E:/a b\" commit -m \"say why reset --hard is gated\""
+  "block-broad-git-add.sh|ask|git -C \"E:/a b\" add -A"
+  "block-broad-git-add.sh|ask|git --work-tree 'E:/a b' add -A"
+  "block-broad-git-add.sh|ask|git --git-dir='E:/a b/.git' add ."
+  "block-broad-git-add.sh|ask|git -c x.y='a b' add -u"
+  "block-broad-git-add.sh|ask|git -c user.name=\"A B\" commit -a -m x"
+  "block-broad-git-add.sh|ask|git -C 'E:/a b' commit -a -m x"
+  "block-broad-git-add.sh|ask|git -C E:/nospace add -A"
+  "block-broad-git-add.sh|allow|git -C \"E:/a b\" add a.txt"
+  "block-broad-git-add.sh|allow|git -c user.name=\"A B\" commit -m \"fix: add -a flag\""
+)
+for entry in "${QV_ROWS[@]}"; do
+    hook="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    OUT=$(pre_payload Bash "$cmd" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/$hook" 2>/dev/null)
+    got=$(decision_of "$OUT")
+    [[ "$got" == "$want" ]] && ok "$hook $got: $cmd" || bad "$hook expected $want, got $got: $cmd"
+done
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

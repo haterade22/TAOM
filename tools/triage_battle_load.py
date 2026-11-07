@@ -724,12 +724,12 @@ def _classify_render_wait(terminal: PhaseEvent, silent_s: int | None,
             v.summary += (f" TAOM's freeze sampler saw no compile_shader line reach the engine log "
                           f"in {freeze['max_silent_s']}s of silence: the main thread is not "
                           "compiling, which points to a wedge (next step: a hang dump, "
-                          "/native-crash-triage Phase 2b once the plan 137 skill edits land).")
+                          "/native-crash-triage Phase 2b).")
         v.notes.append(
             "Next evidence: count compile_shader lines in the player's FULL "
             "rgl_log_<pid>.txt (not rgl_log_errors) during the silent window. Compiles "
             "still landing means a cold cache; none means the main thread wedged, and the "
-            "next step is a hang dump (/native-crash-triage Phase 2b once the plan 137 skill edits land).")
+            "next step is a hang dump (/native-crash-triage Phase 2b).")
         v.notes.append(
             "Why the falling samples mislead: the WaitingForRender line is written on "
             "render-wait frames, at most once a second (one per frame when frames run "

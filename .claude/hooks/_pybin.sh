@@ -190,6 +190,19 @@ except Exception:
 ' 2>/dev/null
 }
 
+# Whether the command only runs commit plumbing (`git commit-tree`, `git commit-graph`), which a commit
+# gate must skip. The text alone cannot say: `git commit -m "about git commit-tree"`, `git commit-graph
+# write && git commit` and `git -C . commit-graph write; eval "git commit"` are commits. Python only when
+# the words are there; any answer but `no`, including no Python, is gated. It reads the hook's $INPUT and
+# $COMMAND.
+taom_commit_plumbing_only() {
+    case "$COMMAND" in
+        *"git commit-"* | *"git -"*" commit-"*) ;;
+        *) return 1 ;;
+    esac
+    [ "$(printf '%s' "$INPUT" | "${PYBIN:-false}" "$TAOM_HOOKS_DIR/_shellwords.py" is-commit 2>/dev/null)" = no ]
+}
+
 # The segments a confirm gate judges (#985), one per line, each from its command word on: the quote-aware
 # split with wrappers and grammar read past, plus the quote-blind pieces (`_shellwords.py commands
 # --blind`), so nothing the old sed split caught goes unasked. $1 is the gate's name for the stderr note;

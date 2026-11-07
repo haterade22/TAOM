@@ -1,6 +1,6 @@
 # Overnight run report, 2026-11-05
 
-This report grew with the run. The first 19 work packages are in the sections up to "In-game checks owed"; every later merge, the second integrated review, the verification at the tip and the symptom map are under "After the first report" and the sections that follow it. All of it is on the local branch `port148/overnight`. The trunk `bannerlord-1.4.5` did not move and nothing was pushed. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
+This report grew with the run. The first 19 work packages are in the sections up to "In-game checks owed"; later merges up to `b84c3011a` (WP145 A-D), the second integrated review, the verification at the tip and the symptom map are under "After the first report" and the sections that follow it. For merges after `b84c3011a`, including WP142, see the ledger in [`plans/README.md`](../../README.md). All of it is on the local branch `port148/overnight`. The trunk `bannerlord-1.4.5` did not move and nothing was pushed. **No line of this has run in the game yet**: every result below comes from builds, unit tests, binding tests and reviews.
 
 ## Work packages
 

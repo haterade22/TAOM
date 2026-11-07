@@ -100,7 +100,7 @@ GATES = (
          (".claude/rules/xslt.md",), dotnet=True),
     Gate("armory-refs", "Armory items, crafting pieces, weapon descriptions", ARMORY_GLOBS,
          ("python", "tools/audit_armory_refs.py", "--report", "-"), (ARMORY_DOC,),
-         note="meshes, collision bodies, dead item ids, and the companion checks of /armory-audit"),
+         note="catalogue drift, meshes, collision bodies, roster impact, dead item ids, generator drift"),
     Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS,
          ("python", "tools/audit_polearm_shield_parity.py"), ("docs/features/weapon-xml-pipeline.md",)),
     Gate("mesh-refs", "Armory weapons and pieces", ARMORY_GLOBS,

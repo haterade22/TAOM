@@ -91,6 +91,14 @@ long_is() {
 # pieces, so nothing the old sed split caught goes unasked. Without Python it falls back to that sed split.
 SEGMENTS=$(taom_hook_segments block-dangerous-git)
 
+# The git global options the stripper in the loop below skips. A value is a run of unquoted characters
+# and quoted spans, so `-C 'E:/a b'` and `-c x.y="a b"` keep their spaces. A value with a lone quote
+# matches only the bare form, which reads it up to the first blank as it always did.
+GIT_GLOBAL_VALUE='([^[:space:]"'\'']|"[^"]*"|'\''[^'\'']*'\'')+'
+GIT_GLOBAL_FLAGS='--no-pager|-p|--paginate|--bare|--no-replace-objects|--literal-pathspecs'
+GIT_GLOBAL_QUOTED="^(-c[[:space:]]+$GIT_GLOBAL_VALUE|-C[[:space:]]+$GIT_GLOBAL_VALUE|--git-dir[=[:space:]]$GIT_GLOBAL_VALUE|--work-tree[=[:space:]]$GIT_GLOBAL_VALUE|$GIT_GLOBAL_FLAGS)[[:space:]]+(.*)\$"
+GIT_GLOBAL_BARE="^(-c[[:space:]]+[^[:space:]]+|-C[[:space:]]+[^[:space:]]+|--git-dir[=[:space:]][^[:space:]]+|--work-tree[=[:space:]][^[:space:]]+|$GIT_GLOBAL_FLAGS)[[:space:]]+(.*)\$"
+
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
 # 65,536 to 65,663 bytes of text, and a killed gate fails open (#681). An empty segment is dropped,
 # which is harmless: it is no git invocation.
@@ -106,8 +114,8 @@ for seg in "${SEG_LIST[@]}"; do
   [[ "$seg" =~ ^git([[:space:]]|$) ]] || continue
   rest="${seg#git}"; rest="${rest#"${rest%%[![:space:]]*}"}"
   # strip git global flags that precede the subcommand
-  while [[ "$rest" =~ ^(-c[[:space:]]+[^[:space:]]+|-C[[:space:]]+[^[:space:]]+|--git-dir[=[:space:]][^[:space:]]+|--work-tree[=[:space:]][^[:space:]]+|--no-pager|-p|--paginate|--bare|--no-replace-objects|--literal-pathspecs)[[:space:]]+(.*)$ ]]; do
-    rest="${BASH_REMATCH[2]}"; rest="${rest#"${rest%%[![:space:]]*}"}"
+  while [[ "$rest" =~ $GIT_GLOBAL_QUOTED || "$rest" =~ $GIT_GLOBAL_BARE ]]; do
+    rest="${BASH_REMATCH[-1]}"; rest="${rest#"${rest%%[![:space:]]*}"}"
   done
 
   # `rest` now begins with the git subcommand + its args. Match destructive forms.
