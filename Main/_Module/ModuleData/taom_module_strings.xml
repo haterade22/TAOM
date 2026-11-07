@@ -4913,4 +4913,5 @@
 	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
+
 </strings>
