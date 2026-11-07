@@ -107,6 +107,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
 | context-mode | `context-mode` `mksglu/context-mode` | Elastic-2.0 | behavioural-port | `docs/ai-includes/agent-operating-manual.md` (execution model item 6) | cleared |
 | claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
+| ponytail | `ponytail` `DietrichGebert/ponytail` | MIT | behavioural-port | `.claude/rules/think-before-coding.md` ("Reuse ladder"; see detail) | cleared |
+| mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); `.claude/skills/context-save/SKILL.md` (the suggested-skills field); see detail | cleared |
 
 <!-- provenance-register-end -->
 
@@ -650,6 +652,23 @@ nothing was installed or run. Five ideas were rebuilt on the TAOM side: frontmat
 checks, two review-lens prompts, dangerous-sink rules, a canary test that must turn a run red, and
 token and cache accounting. The record describes ideas ported, not files copied. Record:
 [`docs/reviews/adopt-claude-plugins-official-2026-10-26.md`](../reviews/adopt-claude-plugins-official-2026-10-26.md).
+
+### ponytail
+
+Upstream: https://github.com/DietrichGebert/ponytail. Its decision ladder was rewritten for TAOM as the
+"Reuse ladder" in `.claude/rules/think-before-coding.md`. No ponytail code or file was vendored, so no
+MIT notice is carried. Record:
+[`docs/reviews/adopt-ponytail-2026-06-18.md`](../reviews/adopt-ponytail-2026-06-18.md).
+
+### mattpocock/skills
+
+Upstream: https://github.com/mattpocock/skills. Two reviews, both reading markdown only. The
+`improve-codebase-architecture` skill gave the shallow-module lens and the deepening deletion test, which
+are now one bullet in `.claude/skills/improve/references/audit-playbook.md`. The `handoff` skill gave one
+field, suggested skills for the next session, in `.claude/skills/context-save/SKILL.md`; `teach` was
+skipped. No text or file was vendored, so no MIT notice is carried. Records:
+[`docs/reviews/adopt-mattpocock-improve-architecture-2026-06-22.md`](../reviews/adopt-mattpocock-improve-architecture-2026-06-22.md),
+[`docs/reviews/adopt-mattpocock-teach-handoff-2026-06-22.md`](../reviews/adopt-mattpocock-teach-handoff-2026-06-22.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
