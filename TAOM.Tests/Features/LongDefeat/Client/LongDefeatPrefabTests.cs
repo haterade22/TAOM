@@ -11,25 +11,36 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.LongDefeat.Client;
 
 /// <summary>
-/// Pins the two movies to their view models, as <c>FordsCommandPrefabTests</c> does: a binding that names nothing is a silent no-op in
-/// Gauntlet, and a root <c>DataSource</c> is never read. Both movies bind the one <see cref="LongDefeatHudVM"/>. Reads attribute data
-/// only, so it runs without the game.
+/// Pins the movies to their view models, as <c>FordsCommandPrefabTests</c> does: a binding that names nothing is a silent no-op in
+/// Gauntlet, and a root <c>DataSource</c> is never read. The two LongDefeat movies and their FactionUI themes, which load in their place
+/// unless the theme fails, all bind the one <see cref="LongDefeatHudVM"/>. Reads attribute data only, so it runs without the game.
 /// </summary>
 [TestClass]
 public class LongDefeatPrefabTests
 {
     private static readonly string[] Grammar = { "Prefab", "Window", "Children", "ItemTemplate" };
 
-    private static XElement Root(string name) =>
-        XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "GUI", "PreFabs", "LongDefeat", name + ".xml")).Root!.Element("Window")!.Elements().Single();
+    private static XElement Root(string name, string folder = "LongDefeat") =>
+        XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "GUI", "PreFabs", folder, name + ".xml")).Root!.Element("Window")!.Elements().Single();
 
     private static readonly string[] Movies = { "LongDefeatHud", "LongDefeatPanel" };
 
+    // The FactionUI theme loads these in place of the two movies over the same LongDefeatHudVM (FrontEndMovieService), so a property only a
+    // themed movie binds is live, and a themed binding must resolve like any other.
+    private static readonly string[] ThemedMovies = { "TAOMLongDefeatHud", "TAOMLongDefeatPanel" };
+
+    private static IEnumerable<XElement> EveryMovieRoot() =>
+        Movies.Select(m => Root(m)).Concat(ThemedMovies.Select(m => Root(m, "FactionUI")));
+
+    private static IEnumerable<XElement> HudRoots() => new[] { Root("LongDefeatHud"), Root("TAOMLongDefeatHud", "FactionUI") };
+
+    private static IEnumerable<XElement> PanelRoots() => new[] { Root("LongDefeatPanel"), Root("TAOMLongDefeatPanel", "FactionUI") };
+
     [TestMethod]
-    public void BothMovies_ParseWithOneRootWidget_AndNoRootDataSource()
+    public void EveryMovie_ParsesWithOneRootWidget_AndNoRootDataSource()
     {
-        foreach (var movie in Movies)
-            Assert.IsNull(Root(movie).Attribute("DataSource"), movie + ": GauntletMovie.LoadMovie reads no DataSource on the root view");
+        foreach (var root in EveryMovieRoot())
+            Assert.IsNull(root.Attribute("DataSource"), root.Name.LocalName + ": GauntletMovie.LoadMovie reads no DataSource on the root view");
     }
 
     [TestMethod]
@@ -39,8 +50,8 @@ public class LongDefeatPrefabTests
         var failures = new List<string>();
         var bound = new Dictionary<Type, HashSet<string>>();
 
-        foreach (var movie in Movies)
-            Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
+        foreach (var root in EveryMovieRoot())
+            Walk(root, typeof(LongDefeatHudVM), failures, bound);
 
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
         Assert.IsTrue(bound.Values.Sum(v => v.Count) > 15, "the walk found too few bindings to be walking the prefabs");
@@ -52,8 +63,8 @@ public class LongDefeatPrefabTests
     {
         var failures = new List<string>();
         var bound = new Dictionary<Type, HashSet<string>>();
-        foreach (var movie in Movies)
-            Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
+        foreach (var root in EveryMovieRoot())
+            Walk(root, typeof(LongDefeatHudVM), failures, bound);
 
         foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM), typeof(LongDefeatFortVM) })
         {
@@ -85,7 +96,7 @@ public class LongDefeatPrefabTests
     [TestMethod]
     public void TheHud_TakesNoEvents_SoTheAgentKeepsTheMouseAndTheOrderBar()
     {
-        var offenders = Root("LongDefeatHud").DescendantsAndSelf()
+        var offenders = HudRoots().SelectMany(r => r.DescendantsAndSelf())
             .Where(e => !Grammar.Contains(e.Name.LocalName) && (string?)e.Attribute("DoNotAcceptEvents") != "true")
             .Select(e => e.Name.LocalName + " " + ((string?)e.Attribute("Text") ?? ""))
             .ToList();
@@ -96,13 +107,16 @@ public class LongDefeatPrefabTests
     [TestMethod]
     public void EveryPanelButton_PassesNoEventsToItsChildren_AndNamesAClickCommand()
     {
-        var buttons = Root("LongDefeatPanel").Descendants().Where(e => e.Name.LocalName == "ButtonWidget").ToList();
-
-        Assert.IsTrue(buttons.Count >= 6, "pick, reroll, buy, horn, close, leave");
-        foreach (var button in buttons)
+        foreach (var panel in PanelRoots())
         {
-            Assert.AreEqual("true", (string?)button.Attribute("DoNotPassEventsToChildren"), "a button with content children needs it or its text swallows the click");
-            Assert.IsNotNull(button.Attribute("Command.Click"));
+            var buttons = panel.Descendants().Where(e => e.Name.LocalName == "ButtonWidget").ToList();
+
+            Assert.IsTrue(buttons.Count >= 6, "pick, reroll, buy, horn, close, leave");
+            foreach (var button in buttons)
+            {
+                Assert.AreEqual("true", (string?)button.Attribute("DoNotPassEventsToChildren"), "a button with content children needs it or its text swallows the click");
+                Assert.IsNotNull(button.Attribute("Command.Click"));
+            }
         }
     }
 
@@ -139,9 +153,12 @@ public class LongDefeatPrefabTests
     public void TheHudShowsTheVolleyLine_AndItsPanelRowOnlyBuys()
     {
         Assert.IsTrue(Root("LongDefeatHud").Descendants().Any(e => (string?)e.Attribute("Text") == "@VolleyText"));
-        var commands = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("Command.Click")).Where(c => c != null).ToList();
-        CollectionAssert.Contains(commands, "ExecuteBuyVolley");
-        Assert.IsFalse(commands.Any(c => c!.Contains("FireVolley")), "N looses the volley; the panel never does (D24)");
+        foreach (var panel in PanelRoots())
+        {
+            var commands = panel.Descendants().Select(e => (string?)e.Attribute("Command.Click")).Where(c => c != null).ToList();
+            CollectionAssert.Contains(commands, "ExecuteBuyVolley");
+            Assert.IsFalse(commands.Any(c => c!.Contains("FireVolley")), "N looses the volley; the panel never does (D24)");
+        }
     }
 
     [TestMethod]
