@@ -124,7 +124,7 @@ Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 
 
 Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `/lint-docs` to confirm clean — and re-run `metrics` to verify the signal improved.
 
-**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. **That is now closed:** `tools/check_doc_graph_ratchet.py` gates orphans and components against `tools/doc_graph_baseline.json` in the `validate-xml` CI job. Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
+**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. `tools/check_doc_graph_ratchet.py` compares orphans and components against `tools/doc_graph_baseline.json`, but it is hand-run and ungated: the `validate-xml` CI job that ran it was removed on 2026-10-05, and no hook or `/verify` step calls it. Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### Agent / session entry points
 
@@ -164,13 +164,13 @@ it"; reach for this tool via `/doc-graph`.
   written when `taom_schema.py` was the sole owner of game-data refs and nothing needed to join the
   two. The non-goal should be revisited deliberately when that phase is written, not quietly
   dropped. See the [ADR-010 2026-08-18 amendment](../adrs/010-knowledge-base-architecture.md).
-- **Nothing ran this tool, and that is now fixed.** `graph_query.py` appeared in zero hooks and zero
+- **Nothing runs this tool on its own.** `graph_query.py` appeared in zero hooks and zero
   CI jobs, and between 2026-06-08 and 2026-08-18 the isolated-doc count went from 64 to 153 with
-  nobody noticing. `tools/check_doc_graph_ratchet.py` plus `tools/doc_graph_baseline.json` now gate
-  it in the `validate-xml` job. It passes today with no slack, and has not yet had a regression to
-  catch: the committed baseline was lowered to 152 orphans and 155 components on 2026-08-21, after
-  this session's cross-links closed one of each. Lowering it further is the work; the gate only ever
-  stops it going back up.
+  nobody noticing. `tools/check_doc_graph_ratchet.py` plus `tools/doc_graph_baseline.json` hold the
+  numbers, but the ratchet is hand-run and ungated: its `validate-xml` CI job was removed on
+  2026-10-05 and no hook or `/verify` step calls it. On 2026-11-06 it printed
+  `orphans 21 <= 22, components 26 <= 26`. Lowering the baseline further is the work; the ratchet
+  stops it going back up only when someone runs it.
 
 ## Changelog
 

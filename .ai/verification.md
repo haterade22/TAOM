@@ -26,9 +26,11 @@ Do not use the deploying default of `build.ps1` as a review-time check. The game
 and .NET Framework 4.7.2 targeting pack are local dependencies, not provided by a
 generic hosted runner. Missing prerequisites mean not run, not passed.
 
-Capture test totals, failures and skips. Empty discovery is not success. The
-existing Python CI job checks its discovery floor; record skips affecting the
-assigned scope as incomplete evidence. The ModuleData validator can auto-skip
+Capture test totals, failures and skips. Empty discovery is not success. No CI
+runs, so nothing checks the Python discovery count for you: read the `Ran N tests`
+line yourself; a missing line or fewer than 1,200 tests means discovery broke
+(`/verify` Step 2b). Record skips affecting the assigned scope as incomplete
+evidence. The ModuleData validator can auto-skip
 engine-dependent checks without the game install: exit zero alone is insufficient.
 Review the validator's documented coverage limits before asserting correctness.
 

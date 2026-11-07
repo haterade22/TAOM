@@ -813,7 +813,7 @@ Counts measured 2026-08-18:
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI (8 of 8) + `check_external_xslt.py`; `/xslt-check` maps 6 of 8 |
+| TAOM | this repo | 259 / 338 | 8 | `xml-schemas` gate (`validate_xml_schemas.py`): engine-registered files only, 94 on 2026-11-06; the CI sweep of `Main/_Module/ModuleData/**` ended 2026-10-05 | full (259 files), plus schema contracts | `check_external_xslt.py` (8 of 8); `/xslt-check` maps 6 of 8 |
 | TAOM_Map | game install | 44 / 313 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
 | LOTRLOME_Armory | game install | 382 / 406 | 7 | `check_external_xslt.py` | **full (382 files)** via `extra_ref_roots` | `check_external_xslt.py` |
 | total | | 685 / **1,057** | **16** | | **685 files swept** | **16 of 16** |
@@ -875,10 +875,10 @@ the live file.
 [`tools/check_external_xslt.py`](../../tools/check_external_xslt.py) now gates all 16 across the
 three modules: XML well-formedness always, a root-element check (a stylesheet the engine will
 silently ignore is worse than a broken one), and a real stylesheet compile when `lxml` is present.
-It is a developer-side script by necessity, since CI cannot see the live modules. The limitation
+It runs on the developer's machine through `/verify` Step 2e (`tools/data_gates.py`), because those
+modules are not in the checkout; no CI runs (removed 2026-10-05). The limitation
 below is why it exists. `/xslt-check` resolves its target
-under `Main/_Module/ModuleData/`, and the CI `validate-xml` job globs that same repo path, so
-neither reaches them; CI *structurally* cannot, because those modules are not in the checkout. Two
+under `Main/_Module/ModuleData/`, so it does not reach them. Two
 are read narrowly for unrelated purposes and both fail open: `audit_mount_parity.py` string-replaces
 `action_sets.xml` to `action_sets.xslt` and regexes out chariot animations behind an `os.path.exists`
 guard, and `weapon_xml/verify.py` regex-checks only the piece ids a given `build_weapon_xml.py` run
