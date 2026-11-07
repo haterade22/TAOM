@@ -101,6 +101,27 @@ public class ShippedBannerBearerConfigTests
             CollectionAssert.DoesNotContain(config.ExcludedRaces, race, $"'{race}' must stay eligible to carry a banner");
     }
 
+    // The derived scan below reaches only cultures whose infantry appear in taom_partyTemplates.xml, which misses
+    // lothlorien, battania (Khand), shaghana and abanissa. This pin keeps every major culture's row required.
+    // Real culture StringIds: the re-skinned vanilla cultures keep their vanilla ids (Rohirrim = vlandia,
+    // Dunlendings = empire, Haradrim = aserai, Easterlings = khuzait, Dale = sturgia, Variag/Khand = battania).
+    private static readonly string[] MajorCultures =
+    {
+        "gondor", "vlandia", "sturgia", "erebor", "rivendell", "lothlorien", "mirkwood",
+        "isengard", "mordor", "dolguldur", "gundabad", "goblin", "mistymountainorcs",
+        "khuzait", "battania", "aserai", "umbar", "shaghana", "abanissa", "empire",
+    };
+
+    [TestMethod]
+    public void ShippedConfig_MapsEveryMajorCultureToABanner()
+    {
+        var banners = _sut.GetConfig().CultureBanners;
+
+        var missing = MajorCultures.Where(c => !banners.TryGetValue(c, out var item) || string.IsNullOrWhiteSpace(item)).ToList();
+
+        Assert.AreEqual(0, missing.Count, "Major cultures with no CultureBanners row: " + string.Join(", ", missing));
+    }
+
     // BannerBearers keys on a formation's majority TROOP culture (BannerBearerAssignmentMissionLogic), so the cultures
     // that need a row are the cultures of the infantry troops that any party template can field, lords' parties included.
     // A culture whose troops may never carry a standard goes here, with the reason. None does on this line
