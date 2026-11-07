@@ -59,16 +59,21 @@ Measured on the laptop on 2026-09-06: 6,894 `BROKEN_ITEM_REF`, 414 `LANDLESS_CUL
 `SETTLEMENT_ECONOMY_FLOOR`, with `TAOM_Map\ModuleData` holding no `settlements.xml` at all. None of
 it was a repo defect.
 
-Re-measured on the laptop on 2026-11-04 with `LOTRLOME_Armory` still at `v2.0.26` (2026-09-07), the
-public Armory not yet installed, and `TAOM_Map` at `v2.0.27`: on the merged `bannerlord-1.4.5` tree
-`validate_moduledata.py` reported 3768 errors, 3768 of them `BROKEN_ITEM_REF`, 120 warnings and 0
-`LANDLESS_CULTURE`. That run is a PROVISIONAL laptop baseline (decision D25 of the 2026-11-04 port
-programme; per-code counts in `plans/README.md`): the data half is owed until the public Armory is
-installed, and no item verdict rests on it. A laptop result above it still deserves a look.
+Measured on the laptop on 2026-11-07 with the public build installed: `TAOM`, `TAOM_Map` and
+`LOTRLOME_Armory` all at `v2.0.29.5`, game `v1.4.8`, both extra roots swept (498 ModuleData XML files: 454 Armory, 44 TAOM_Map).
+On the `bannerlord-1.4.5` port tree `validate_moduledata.py` reported 0 errors and 111 warnings:
+93 `INCONSISTENT_ARMOUR_SLOT`, 7 `RANGED_LADDER_INVERSION`, 7 `CROSS_CULTURE_ARMOUR_INVERSION` and
+4 `UPGRADE_ARMOUR_REGRESSION`. `BROKEN_ITEM_REF`, `BROKEN_ROSTER_REF`, `BROKEN_SETTLEMENT_REF` and
+`LANDLESS_CULTURE` are all 0, the ModuleData commit gate's `--code` list exits 0, and
+`audit_polearm_shield_parity.py` passes (11 rosters KNOWN under the #526 ratchet). That run is the
+laptop baseline; a laptop result above it deserves a look before it is blamed on the machine. The
+112th warning, a `GENERATOR_RETIRED_ITEM_REF` on `tools/generate_gondor_troops.py`, was a real
+repo defect and was fixed the same day.
 
-WP108 Step B4 (2026-11-05) adds the collision-body passes, which read 3 `COLLISION_BODY_BORROWED` on
-this Armory, so the same run now prints 3771 errors: 3768 `BROKEN_ITEM_REF` plus those 3, void under
-D20, with warnings unchanged at 120. Compare later runs with 3771, not 3768.
+History: on 2026-11-04, with `LOTRLOME_Armory` still at `v2.0.26`, the same tree read 3768 errors
+(all `BROKEN_ITEM_REF`) and 120 warnings, and 3771 after WP108 added the collision-body passes.
+That was a PROVISIONAL baseline (decision D25 of the 2026-11-04 port programme), void for item
+verdicts, and it is superseded by the run above.
 
 Before believing a content failure, check that the module it points into is actually populated. The
 cheap version is a file count under `Modules\<name>\ModuleData`; a handful of files where there

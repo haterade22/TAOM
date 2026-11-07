@@ -18,7 +18,7 @@ namespace TAOM.Tests.Features.UncapturableHeroes;
 /// 2026-08-26: six of the Nine (<c>lord_1_15</c>, <c>lord_1_155</c>, <c>lord_1_16</c>,
 /// <c>lord_1_28</c>, <c>lord_1_38</c>, <c>lord_1_48</c>) carry no <c>race</c> attribute in
 /// <c>lords.xslt</c>, so they inherit vanilla race 0 (human); the other three
-/// (<c>lord_1_48_1/_2/_3</c>) are <c>race="uruk"</c> in <c>characters/lords.xml</c>. A race-keyed
+/// (<c>lord_1_48_1/_2/_3</c>) are <c>race="uruk"</c> in <c>lords.xslt</c>. A race-keyed
 /// list would free six of the Nine, and adding <c>uruk</c> to catch the rest would protect every
 /// uruk lord in the game. The hero-set axis is the only one that covers all nine.
 /// </summary>

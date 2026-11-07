@@ -112,15 +112,14 @@ DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 # same family still errors, which is the point: `lotr_troll_greaves` appearing
 # tomorrow must not inherit this pass.
 KNOWN_DEAD_MESHES = {
-    "lotr_troll_armor":
-        "2026-09-01: art deleted from Assets/Mordor/troll and AssetSources, both "
-        "empty. No donor exists: armour meshes are skinned to the human rig and "
-        "cave_troll uses its own skeleton. Item kept because deleting it and its "
-        "18 refs would take the troll from 95 to 0 armour in every slot.",
-    "lotr_troll_bracers":
-        "2026-09-01: same deletion, same reasoning as lotr_troll_armor.",
-    "lotr_troll_helmet":
-        "2026-09-01: same deletion, same reasoning as lotr_troll_armor.",
+    # Empty by design. An entry here downgrades a MISSING_MESH error to a warning, so it
+    # is an accepted loss of art, never a mute: add one only with a date and a reason,
+    # and retire it the moment the art returns (STALE_DEAD_MESH_ALLOWLIST says so).
+    #
+    # Retired 2026-11-07 (WP108): lotr_troll_armor / lotr_troll_bracers / lotr_troll_helmet.
+    # The art was deleted 2026-09-01 and the items were kept so the cave troll kept its
+    # armour. The stale check against the public 1.4.8 Armory (v2.0.29.5) reported
+    # all three entries stale, so with them gone, losing that art again errors.
 }
 
 

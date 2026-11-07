@@ -159,6 +159,8 @@ authored.
 | `IsKingdomRulerTemplate` | 88 | the ruler of a kingdom |
 | `IsTeenagerEquipmentTemplate` | 44 | teenager |
 
+`lord_template_rosters.xslt` takes `IsLordTemplate` and `IsKingdomRulerTemplate` off vanilla's adult, teen and ruler rosters of the six renamed cultures (`vlandia`, `empire`, `aserai`, `khuzait`, `sturgia`, `battania`), so `taom_lord_template_equipment.xml` is their only such pool; child templates keep their flags. It rewrites only rosters merged before it, so its `SubModule.xml` node must stay the last `EquipmentRosters` node. `LordTemplateRosterTests` pins both, and fails if a pool the engine requests goes empty.
+
 ## Child elements
 
 <!-- engine-table type="TaleWorlds.Core.MBEquipmentRoster" file="Core/TaleWorlds.Core/TaleWorlds.Core/MBEquipmentRoster.cs" method="Deserialize" inert="" -->

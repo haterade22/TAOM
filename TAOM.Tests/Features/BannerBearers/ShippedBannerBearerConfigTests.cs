@@ -101,27 +101,59 @@ public class ShippedBannerBearerConfigTests
             CollectionAssert.DoesNotContain(config.ExcludedRaces, race, $"'{race}' must stay eligible to carry a banner");
     }
 
+    // The derived scan below reaches only cultures whose infantry appear in taom_partyTemplates.xml, which misses
+    // lothlorien, battania (Khand), shaghana and abanissa. This pin keeps every major culture's row required.
+    // Real culture StringIds: the re-skinned vanilla cultures keep their vanilla ids (Rohirrim = vlandia,
+    // Dunlendings = empire, Haradrim = aserai, Easterlings = khuzait, Dale = sturgia, Variag/Khand = battania).
+    private static readonly string[] MajorCultures =
+    {
+        "gondor", "vlandia", "sturgia", "erebor", "rivendell", "lothlorien", "mirkwood",
+        "isengard", "mordor", "dolguldur", "gundabad", "goblin", "mistymountainorcs",
+        "khuzait", "battania", "aserai", "umbar", "shaghana", "abanissa", "empire",
+    };
+
     [TestMethod]
     public void ShippedConfig_MapsEveryMajorCultureToABanner()
     {
-        var config = _sut.GetConfig();
+        var banners = _sut.GetConfig().CultureBanners;
 
-        // Real culture StringIds. The six re-skinned vanilla cultures keep their VANILLA ids —
-        // spcultures.xslt overrides <name>, never the id. Rohirrim = vlandia, Dunlendings =
-        // empire, Haradrim = aserai, Easterlings/Rhun = khuzait, Barding/Dale = sturgia,
-        // Variag/Khand = battania.
-        var majorCultures = new[]
-        {
-            "gondor", "vlandia", "sturgia", "erebor", "rivendell", "lothlorien", "mirkwood",
-            "isengard", "mordor", "dolguldur", "gundabad", "goblin", "mistymountainorcs",
-            "khuzait", "battania", "aserai", "umbar", "shaghana", "abanissa", "empire",
-        };
+        var missing = MajorCultures.Where(c => !banners.TryGetValue(c, out var item) || string.IsNullOrWhiteSpace(item)).ToList();
 
-        foreach (var culture in majorCultures)
-        {
-            Assert.IsTrue(config.CultureBanners.ContainsKey(culture), $"culture '{culture}' has no banner mapping");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(config.CultureBanners[culture]), $"culture '{culture}' maps to an empty banner");
-        }
+        Assert.AreEqual(0, missing.Count, "Major cultures with no CultureBanners row: " + string.Join(", ", missing));
+    }
+
+    // BannerBearers keys on a formation's majority TROOP culture (BannerBearerAssignmentMissionLogic), so the cultures
+    // that need a row are the cultures of the infantry troops that any party template can field, lords' parties included.
+    // A culture whose troops may never carry a standard goes here, with the reason. None does on this line
+    // (the 1.5.x troll-culture entry has no troops here, and a stale entry fails the test).
+    private static readonly Dictionary<string, string> NoBannerByDesign = new Dictionary<string, string>();
+
+    [TestMethod]
+    public void ShippedConfig_MapsEveryInfantryTroopCultureToABanner()
+    {
+        var troopCultures = new Dictionary<string, (string Culture, string Group)>();
+        foreach (var folder in new[] { "troops", "characters" })
+            foreach (var file in Directory.GetFiles(Path.Combine(ModuleDataPath, folder), "*.xml"))
+                foreach (var npc in System.Xml.Linq.XDocument.Load(file).Descendants("NPCCharacter"))
+                    troopCultures[(string?)npc.Attribute("id") ?? ""] =
+                        (((string?)npc.Attribute("culture") ?? "").Replace("Culture.", ""), (string?)npc.Attribute("default_group") ?? "");
+
+        var templated = System.Xml.Linq.XDocument.Load(Path.Combine(ModuleDataPath, "taom_partyTemplates.xml"))
+            .Descendants("PartyTemplateStack").Select(e => ((string?)e.Attribute("troop") ?? "").Replace("NPCCharacter.", ""))
+            .Distinct().ToList();
+
+        var cultures = templated.Where(id => troopCultures.TryGetValue(id, out var info) && info.Group == "Infantry" && info.Culture.Length > 0)
+            .Select(id => troopCultures[id].Culture).Distinct().OrderBy(c => c).ToList();
+        Assert.IsTrue(cultures.Count >= 15, "the infantry troop culture scan found only " + cultures.Count + " cultures");
+
+        var banners = _sut.GetConfig().CultureBanners;
+        var missing = cultures.Where(c => !NoBannerByDesign.ContainsKey(c)
+            && (!banners.TryGetValue(c, out var item) || string.IsNullOrWhiteSpace(item))).ToList();
+        var stale = NoBannerByDesign.Keys.Where(k => !cultures.Contains(k) || (banners.TryGetValue(k, out var row) && !string.IsNullOrWhiteSpace(row))).ToList();
+
+        Assert.AreEqual(0, missing.Count,
+            "Infantry troop cultures with no CultureBanners row (their formations raise no banner): " + string.Join(", ", missing));
+        Assert.AreEqual(0, stale.Count, "NoBannerByDesign entries that no longer apply: " + string.Join(", ", stale));
     }
 
     // ---- Culture-id regression pins (deep-review 2026-07-16 CRITICAL) -----------
@@ -238,7 +270,7 @@ public class ShippedBannerBearerConfigTests
     [TestMethod]
     public void ShippedConfig_DefaultBannerIsEmpty_SoUnmappedCulturesGetNoBanner()
     {
-        // Fail closed. 38 cultures are registered; only the 28 in CultureBanners are TAOM's.
+        // Fail closed. Only the cultures in CultureBanners are TAOM's.
         // The remainder are vanilla leftovers still referenced by live TAOM data (looters,
         // sea_raiders, forest_bandits, desert_bandits, mountain_bandits, steppe_bandits, nord,
         // vakken, darshi) plus neutral_culture. Any non-empty default hands a banner to ALL of

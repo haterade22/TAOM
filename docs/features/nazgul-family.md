@@ -124,6 +124,8 @@ so a skill_template-only scope would miss him — he is canonically the second o
 
 ## Tests
 
+`LesserNazgulDefinitionTests` (2) pins that `lords.xslt` alone defines `lord_1_48_1/2/3`, with race `uruk`, age 20 and one Nazgul kit. A `characters/lords.xml` row is a second definition: it wins each attribute it states and unions its equipment sets with the template's, so a campaign picked the kit at random.
+
 `NazgulRegistryTests` (19 cases) covers the pure decision: all 9 wraith ids → true; Sauron / Boromir /
 Galadriel / a Dunland lord → false; `lord_1_4` (prefix of `lord_1_48`) and `lord_1_485` (superstring)
 → false (exact-set match, not substring); null / empty → false; case-insensitive match. The model +

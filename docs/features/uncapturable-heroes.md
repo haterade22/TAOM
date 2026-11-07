@@ -34,7 +34,7 @@ ordinary Mordor lord. Race gets you one of them:
 |---|---|---|
 | `lord_1_17` Sauron | `race="sauron"`, the only one in the mod | `lords.xslt:1060` |
 | `lord_1_15` (Witch-King), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38`, `lord_1_48` (Khamûl) | **none**, so vanilla race 0 (human) | `lords.xslt` templates at `:888`, `:942`, `:996`, `:1594`, `:2086`, `:3550` |
-| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `characters/lords.xml:24974`, `:25025`, `:25076` |
+| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `lords.xslt` templates |
 
 So a race list frees six of the Nine, and adding `uruk` to catch the other three would protect every
 uruk lord in the game. **The compiled `nazgul_nine` hero set is the only axis that covers all nine**,

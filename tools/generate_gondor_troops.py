@@ -597,10 +597,9 @@ def equip_dol_amroth_infantry(t: Troop):
 
 def equip_dol_amroth_cavalry(t: Troop):
     tier = t.tier
-    if tier <= 5:
-        t.weapons = ["wm_gondor_swanknight_speara"]
-    else:
-        t.weapons = ["wm_gondor_swanknight_spearb"]
+    # The Armory retired wm_gondor_swanknight_spear{a,b} (KEYforce drop, 2026-09-25);
+    # wm_gondor_spear_b_swan is the replacement his own kits use.
+    t.weapons = ["wm_gondor_spear_b_swan"]
     t.shield = "gond_shield_two_swan"
     t.horse = "noble_horse_imperial"
     t.horse_harness = "gondor_swan_horse_armor_1" if tier <= 5 else "gondor_swan_horse_armor_2"
@@ -622,7 +621,7 @@ def equip_pinnath_gelin(t: Troop, is_ranged=False, is_spear=False):
     if is_ranged:
         t.weapons = ["composite_steppe_bow" if tier <= 4 else "steppe_war_bow", GENERIC_ARROWS, GENERIC_ARROWS]
     elif is_spear:
-        t.weapons = ["wm_gondor_spear_b" if tier <= 4 else "wm_gondor_pg_speara"]
+        t.weapons = ["wm_gondor_spear_b" if tier <= 4 else "wm_gondor_spear_b_pg"]
         t.shield = "gond_shield_three_green"
     else:
         t.weapons = [GENERIC_SWORDS[tier]]
