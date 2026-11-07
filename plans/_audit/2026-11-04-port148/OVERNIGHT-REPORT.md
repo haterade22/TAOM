@@ -468,7 +468,7 @@ Owed after the fix branch:
 - Skill and hook edits the new qualifiers point at: plan 137 and plan 139 .claude hunks, WP108 Step B4, CLAUDE.md:187 and :225 with WP143. Reword or remove the 'once ... land' qualifiers then.
 - CHANGELOG.md entry for this branch (never staged, per the rules).
 - In game, nothing is run: an old German save showing six Umbar names, a real hollow hero across save and load, a real harmony.Patch failure. /deep-review was not run (cannot invoke skills); recommend /deep-review on efe9c6bfd, e84268475 and 95acf768c before merge.
-- Known limits left as they are: a restored human race on an unregistered hollow character still takes the twin's race (nothing tells it from the unsaved default); a manual patch failure is logged but not added to the patch failure report; the Exit Stall Sampler hint stays an unregistered MCM literal.
+- Known limits left as they are: a restored human race on an unregistered hollow character still takes the twin's race (nothing tells it from the unsaved default); a manual patch failure is logged but not added to the patch failure report (closed later by 3d81168cb, whose `ManualPatchApplicator.TryPatch` adds it); the Exit Stall Sampler hint stays an unregistered MCM literal.
 - Not acted on, noted in delta-974e60bb2.md: DreadMissionGate.cs:38 and MountDespawnMissionGate.cs:33 read only GameNetwork.IsSessionActive (read from source for BannerlordCoop only: Dread is owner-gated by DreadAgentGate, MountDespawn and BattleCorpses are per-peer presentation; Bannerlord Together and a two-peer run unverified; no action under D7); the 1.5.x Spacing Repair in Marshal's Word is a possible future work package.
 - What switches MSB3270 warnings on is not established.
 
