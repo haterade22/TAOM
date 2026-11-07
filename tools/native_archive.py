@@ -10,7 +10,8 @@ engine-method map and the matcher index.
         [--game-dir DIR] [--archive-dir DIR]
 
 The foreground check is stat-only and silent when nothing changed. With --detach changed DLLs are
-archived by a detached child and the call returns at once. Nothing is ever overwritten or deleted in the archive. Always exits 0, except an argparse
+archived by a detached child and the call returns at once. Nothing is ever overwritten or deleted
+in the archive. Always exits 0, except an argparse
 error (2): a failure here is advice, never a block.
 """
 import argparse
