@@ -190,7 +190,7 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 ### Infrastructure & tooling
 - [composition-root](features/composition-root.md): `Main/Composition`, a feature owns its wiring in one `<Name>Module.cs` listed once in `FeatureModules.All`
 - [ingame-verdicts](features/ingame-verdicts.md): `tools/ingame_verdict.py` judges owed in-game checks from a play session's logs
-- [armory-ref-audit](features/armory-ref-audit.md): `tools/audit_armory_refs.py`, the one command after any Armory sync, with a committed report
+- [armory-ref-audit](features/armory-ref-audit.md): `tools/audit_armory_refs.py`, the one command after any Armory sync, writing a report that is committed after the first run on the public Armory
 - [ghidra-native-decompile](features/ghidra-native-decompile.md): `tools/native_decompile.py` prints native engine code as C through headless Ghidra
 - [native-build-match](features/native-build-match.md): `tools/native_build_match.py` carries a native RVA from an archived engine build to a newer one
 - [graphify-code-graph](features/graphify-code-graph.md): `tools/graphify_taom.py` builds and queries the code graph kept outside the repo
