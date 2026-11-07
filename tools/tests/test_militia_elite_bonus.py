@@ -83,30 +83,40 @@ class EliteMilitiaBonusTests(unittest.TestCase):
         """Against the committed troop files: each elite militia sits exactly the bonus above its
         basic sibling on every skill the sibling has above the floor (a basic skill floored at 0
         hides part of the step, so there only 0 < diff <= bonus is provable). A Bow or Crossbow a
-        ranged ladder launcher owns is exempt from the step: the veteran only has to match the basic."""
+        ranged ladder launcher owns is exempt from the step: the veteran sits above the basic, by at most
+        30 for each ladder band its launcher climbs."""
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         import ranged_ladder as rl
         troops = rl.load_ranged_troops()
         elite = rb.elite_militia_troop_ids()
         token_cls = {"bow": "Bow", "xbow": "Crossbow"}
 
-        def ladder_skills(t):
+        def ladder_bands(t):
             # Since #617 a militia archer's Bow or Crossbow comes from its ranged ladder, not the
-            # flat militia step. 1.5.x also pins the value to rl.skill_cell; that check waits for
-            # #617's tooling, which this line does not have.
-            return {token_cls[m.group(1)] for st in t.sets for i in st.values()
-                    for m in [re.match(r"^ladder_.+_(bow|xbow)_t\d+$", i)] if m}
+            # flat militia step. 1.5.x pins the value to rl.skill_cell; this line has no such table,
+            # so the ceiling below is what the committed troops measure, not a spec.
+            bands = {}
+            for st in t.sets:
+                for item in st.values():
+                    m = re.match(r"^ladder_.+_(bow|xbow)_t(\d+)$", item)
+                    if m:
+                        skill = token_cls[m.group(1)]
+                        bands[skill] = max(bands.get(skill, 0), int(m.group(2)))
+            return bands
 
         checked = 0
         for vet_id in sorted(elite):
             basic_id = vet_id.replace("_veteran", "")
             self.assertIn(basic_id, troops, vet_id)
             vet, basic = troops[vet_id].skills, troops[basic_id].skills
-            owned = ladder_skills(troops[vet_id]) | ladder_skills(troops[basic_id])
+            vet_bands, basic_bands = ladder_bands(troops[vet_id]), ladder_bands(troops[basic_id])
+            owned = set(vet_bands) | set(basic_bands)
             for skill in rb.SKILL_NAMES:
                 b, v = basic.get(skill, 0), vet.get(skill, 0)
                 if skill in owned:
-                    self.assertGreaterEqual(v, b, f"{vet_id} {skill}")
+                    climbed = vet_bands.get(skill, 0) - basic_bands.get(skill, 0)
+                    self.assertGreater(v, b, f"{vet_id} {skill}")
+                    self.assertLessEqual(v - b, 30 * climbed, f"{vet_id} {skill}")
                     continue
                 if b >= rb.MILITIA_ELITE_BONUS:
                     self.assertEqual(v, b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill}")
