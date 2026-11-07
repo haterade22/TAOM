@@ -72,6 +72,19 @@ failure without editing any source (`TAOM.Tests/Infrastructure/VerifyCanaryTests
 PASSES only when the run exits non-zero AND its output contains `VERIFY_CANARY_TRIPPED`. An exit 0
 or a missing token means the runner cannot report failures, so the whole verify FAILS.
 
+## Step 2d: API snapshot reproduces
+
+```bash
+pwsh -NoProfile -File tools/snapshot_api_surface.ps1 -Check 2>&1
+```
+
+Reflects over the test bin's `TAOM.dll` that Step 2 built and compares the result with
+`docs/reference/taleworlds-api-snapshot/`. Exit 1 with a `DRIFT:` line means a patch target or
+GameModel base changed and the snapshot was not regenerated, so `tools/engine_body_diff.py` would
+miss that method at the next engine bump. Fix it with `pwsh tools/snapshot_api_surface.ps1` and
+commit the result with the change. Any other failure (no `pwsh`, no game install) is NOT RUN, not a
+pass.
+
 ## Step 2e: Data gates
 
 ```bash
@@ -137,6 +150,7 @@ VERIFICATION REPORT
 Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
+API snapshot: [REPRODUCES/DRIFT/NOT RUN]
 Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
 Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
