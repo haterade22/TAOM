@@ -233,6 +233,38 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
+    public void RoundTwoResults_SetRoundThreesPackPrices()
+    {
+        // Round robin 2 on 329e841d2 (balance-log.md): Dol Guldur won 0 of 12 and Rivendell 3 of 12, each for the second round;
+        // Mirkwood and Easterlings won 10 of 12.
+        var factions = (JObject)JObject.Parse(File.ReadAllText(ConfigFile("factions.json")))["factions"]!;
+        float Weight(string faction, string offer) => (float)factions[faction]!["units"]!.Single(u => (string?)u["id"] == offer)["eliteWeight"]!;
+        IEnumerable<float> Weights(string faction) => factions[faction]!["units"]!.Select(u => (float)u["eliteWeight"]!);
+
+        foreach (var offer in new[] { "foul", "warriors", "fighters", "crawlers" })
+            Assert.AreEqual(0.65f, Weight("dolguldur", offer), 0.001f, "Dol Guldur " + offer + ": 0.8 lost 12 of 12");
+        Assert.AreEqual(0.75f, Weight("dolguldur", "bowmen"), 0.001f);
+        foreach (var offer in new[] { "swordsmen", "fellbows", "fell_fangs", "warg_riders", "khamul_knights" })
+            Assert.AreEqual(0.8f, Weight("dolguldur", offer), 0.001f, "Dol Guldur " + offer);
+        Assert.AreEqual(1.0f, Weight("dolguldur", "shadow_guard"), 0.001f);
+        Assert.AreEqual(1.2f, Weight("dolguldur", "spider_riders"), 0.001f);
+
+        Assert.IsTrue(Weights("rivendell").All(w => Math.Abs(w - 1.1f) < 0.001f), "Rivendell: 1.25 lost 72 towers in 12 matches");
+
+        foreach (var offer in new[] { "sentinels", "borderwardens", "thingols_heirs" })
+            Assert.AreEqual(1.15f, Weight("mirkwood", offer), 0.001f, "Mirkwood's archers did most of its killing");
+        Assert.AreEqual(1.0f, Weight("mirkwood", "silvan_levy"), 0.001f);
+        Assert.AreEqual(1.0f, Weight("mirkwood", "elk_riders"), 0.001f);
+
+        Assert.IsTrue(Weights("easterlings").All(w => Math.Abs(w - 1.1f) < 0.001f), "Easterlings: 1.0 won 10 of 12");
+
+        // Gundabad won 3 of 12 with its lanes full, so it gets better troops, not more: every upgrade at the base price, from 1.25.
+        var gundabadUpgrades = ((JObject)factions["gundabad"]!["upgradeCost"]!).Properties().ToList();
+        Assert.AreEqual(6, gundabadUpgrades.Count);
+        Assert.IsTrue(gundabadUpgrades.All(p => Math.Abs((float)p.Value - 1.0f) < 0.001f), "Gundabad: every upgrade at 1.0");
+    }
+
+    [TestMethod]
     public void ShippedFactions_AreTheThirteenDesigned()
     {
         var catalog = Load(Substitute.For<IModLogger>());

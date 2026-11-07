@@ -136,6 +136,17 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void RoundTwoResults_GiveTheLosingFactionsLargerFreeWaves()
+    {
+        // Round robin 2 on 329e841d2 (balance-log.md): Dol Guldur won 0 of 12 and Isengard 3 of 12, each for the second round.
+        // Gundabad's lanes were already full (76.8 of 90 on average), so a larger wave would only wait: it gets cheaper upgrades instead.
+        foreach (var wave in Shipped("dolguldur").FreeWaves)
+            Assert.AreEqual(12, wave.Units.Sum(u => u.Count), $"Dol Guldur's wave from minute {wave.FromMinute}: two more uruks");
+        foreach (var wave in Shipped("isengard").FreeWaves)
+            Assert.AreEqual(12, wave.Units.Sum(u => u.Count), $"Isengard's wave from minute {wave.FromMinute}: a lower price did not move it, so one more uruk and one more spearman");
+    }
+
+    [TestMethod]
     public void EveryFaction_GuardsItsHeroesWithThreeToSixOfItsOwnEliteTroops()
     {
         // Mike, 2026-11-05: "When summoning a hero unit for every culture they should be summoned with specific elite troops that guard them."

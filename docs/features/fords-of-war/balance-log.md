@@ -342,7 +342,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.** Round 2 runs on the build that carries this change and the evening's changes together.
 
-### Rohan's riders made weaker (this change)
+### Rohan's riders made weaker
 
 **Why:** Mike, 2026-11-06: "Reduce the strength of the cheap riders [if] Rohan is 10 and 0." In round 2 on `329e841d2`, after 21 of 78 pairs, Rohan won 10 of 10, 9 of them by the keep, in 27.0 minutes on average, with a gold trade of 1.37 (`python tools/fords_round_robin.py summary --build 329e841d2`, 2026-11-06 07:40). Before its cheap cavalry, Rohan won 9 of 12 in round 1.
 
@@ -352,6 +352,54 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result: not measured.** Round 2 keeps `329e841d2` to the end, so its other pairs stay on one build; the next round measures this change.
 
+### Round robin 2 on `329e841d2`
+
+**Seen:** all 78 pairs played once at 4x, 2026-11-06 04:18 to 2026-11-07 03:11, with pauses while Mike and other sessions used the game, from `python tools/fords_round_robin.py summary --build 329e841d2`. The build carries round 1's changes, Rohan's cheap cavalry, Dol Guldur's uruk army and hero guards. It does not carry the weaker Rohan riders above or the check 12 fix (`a8447bc83`).
+
+| Faction | Won | Lost | Won by keep | Won on time | Gold trade | Towers taken | Towers lost | Minutes |
+|---|---|---|---|---|---|---|---|---|
+| Rohan | 12 | 0 | 11 | 1 | 1.32 | 75 | 13 | 26.2 |
+| Mirkwood | 10 | 2 | 9 | 1 | 1.88 | 64 | 37 | 29.3 |
+| Easterlings | 10 | 2 | 8 | 2 | 1.41 | 62 | 18 | 31.0 |
+| Erebor | 9 | 3 | 6 | 3 | 0.98 | 63 | 25 | 33.7 |
+| Gondor | 8 | 4 | 2 | 6 | 1.12 | 38 | 29 | 36.8 |
+| Mordor | 6 | 6 | 0 | 6 | 0.48 | 24 | 31 | 39.8 |
+| Dale | 5 | 7 | 2 | 3 | 1.26 | 33 | 43 | 34.6 |
+| Umbar | 5 | 7 | 2 | 3 | 1.06 | 35 | 36 | 35.6 |
+| Harad | 4 | 8 | 3 | 1 | 1.04 | 29 | 45 | 33.3 |
+| Rivendell | 3 | 9 | 2 | 1 | 1.19 | 24 | 72 | 29.0 |
+| Gundabad | 3 | 9 | 2 | 1 | 0.91 | 34 | 46 | 35.9 |
+| Isengard | 3 | 9 | 0 | 3 | 0.64 | 21 | 55 | 34.9 |
+| Dol Guldur | 0 | 12 | 0 | 0 | 0.83 | 19 | 71 | 29.1 |
+
+- **Round 1's changes:** Erebor's dearer elites moved it from 11 wins to 9, and its gold trade from 1.08 to 0.98. Isengard's cheaper foot left it at 3 wins, with a gold trade of 0.64 where it was 0.62. Mirkwood's free waves of more spearmen moved it from 11 wins to 10. Harad's militia moved it from 3 wins to 4.
+- **The evening's changes:** Rohan's cheap cavalry took it from 9 wins to 12. Dol Guldur's uruk army raised its gold trade from 0.70 to 0.83 and its towers taken from 12 to 19, but it won none. Hero guards did not lift Rivendell, which can field three heroes at once: it won 3 again and lost 72 towers, the most of any faction.
+- **Tower damage:** the four strongest factions dealt 57,000 to 70,000 tower damage a match, and Dol Guldur 18,600, Isengard 23,000 and Rivendell 26,400. Heroes made much of the gap: Mirkwood's dealt 23,500 a match and Rohan's 16,700, where Dol Guldur's and Isengard's dealt about 2,700. Dol Guldur spent 411 gold a match on heroes. The AI buys a hero only after it has defended its worst lane, so a side that is always behind rarely fields one.
+- **Sides:** West won 42 and East 36.
+- **Length:** 30 matches ended before minute 30 (18.5 at the shortest), 17 between 30 and 40, and 31 on the time limit. The median was 33.7 minutes, the same as round 1.
+- **Crashes:** none in 78 matches. Check 12 failed in 7 matches, each with Dol Guldur, Gundabad or Isengard warg riders, on a build without its fix. Check 8 failed in 3 (Rivendell v Erebor, Erebor v Easterlings, Dale v Dol Guldur).
+
+### Round 3 values (this change)
+
+**Why:** Dol Guldur, Isengard, Gundabad and Rivendell were among the bottom five in both rounds (in round 2, Dol Guldur 0 wins and the other three 3 each), and Mirkwood and Easterlings won 10 of 12. Rohan's cut is already in and waits for this round.
+
+**Changed:**
+
+- **Dol Guldur:** every pack costs about 0.8 of its old price: the foul, warriors, veteran warriors and crawlers 0.65 (from 0.8), the bowmen 0.75 (from 0.9), the swordsmen, fell archers, fell fangs, warg riders and Khamul's knights 0.8 (from 1.0), the shadow guard 1.0 (from 1.25) and the spider riders 1.2 (from 1.5). Each free wave brings 12, with two more uruks. It lost towers in every match, and free bodies in the lane defend them.
+- **Isengard:** each of its five free waves brings 12, with one more uruk and one more spearman. Its cheaper foot in round 1 did not move it, so this round gives it bodies it does not buy.
+- **Gundabad:** its six upgrades cost the base price, down from 1.25 of it. Its lanes were already full in round 2 (76.8 of 90 troops a lane on average, `WaveScheduler` holds a wave that does not fit), so a larger free wave would only wait; better troops can still help. It bought about three upgrades a match. Its weak towers and fixed waves stay as its traits say.
+- **Rivendell:** its five packs cost 1.1 of the full price for their level, down from 1.25. It won its fights (gold trade 1.19) but lost the most towers, because it had too few soldiers.
+- **Mirkwood:** its three archer packs cost 1.15, up from 1.0; the levy and elk riders stay at 1.0. Its archers did most of its killing.
+- **Easterlings:** its eight packs cost 1.1, up from 1.0. It was not changed in round 1 and rose from 9 wins to 10.
+
+No trait text changes: each changed value is a price or a free wave count that no trait line states. Dol Guldur's four cheapest packs now cost less for their level than Gundabad's, whose trait lists cheap packs as a strength.
+
+**Gold trade in round 3:** a kill pays a bounty from the troop's unit value, which is its pack price over its pack size, and the review's gold trade uses the same value. So the new prices also change the bounties (a Mirkwood sentinel, also its hero guard, pays 24 where it paid 21; a Dol Guldur shadow guard 28 where it paid 35) and part of each changed faction's gold trade. Compare wins, towers and tower damage across rounds, not gold trade alone.
+
+**Undo:** each change is one value in `factions.json`; the old values are above.
+
+**Result: not measured.** Round 3 runs on the build that carries this change, the weaker Rohan riders and the check 12 fix. If Rohan still wins more than 9 of 12, its riders are cut again.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
@@ -359,6 +407,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 - **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
 - **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.
+- **Troop caps in trait text:** `WaveScheduler` divides `unitCapBonus` across the three lanes with integer division, so Isengard fields at most 222 (48 fewer than 270, where its trait says 50) and the elves 120 (their trait says 150). Not changed by round 3.
 - **Spears:** 0.73 to 0.79 gold trade in every set of matches. No lane here brings them the cavalry they are for.
 - **A small army's attack:** Rivendell dealt 7 tower damage in 45 minutes before the limit, and 9,727 in 15 minutes with it. Read it again in the next long match.
 - **A horde's late gold:** with every lane full, every hero out and its cycle's upgrades bought, Mordor has nothing to spend on. It ended a 45-minute match on 8,973 gold.

@@ -323,40 +323,40 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_urukhai_fighter", "count": 5 },
-            { "troop": "fow_isengard_militia_spearman", "count": 3 },
+            { "troop": "fow_urukhai_fighter", "count": 6 },
+            { "troop": "fow_isengard_militia_spearman", "count": 4 },
             { "troop": "fow_isengard_militia_archer", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 5,
           "units": [
-            { "troop": "fow_urukhai_warrior", "count": 5 },
-            { "troop": "fow_urukhai_spearman", "count": 3 },
+            { "troop": "fow_urukhai_warrior", "count": 6 },
+            { "troop": "fow_urukhai_spearman", "count": 4 },
             { "troop": "fow_urukhai_skirmisher", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_urukhai_swordman", "count": 5 },
-            { "troop": "fow_urukhai_spearman", "count": 3 },
+            { "troop": "fow_urukhai_swordman", "count": 6 },
+            { "troop": "fow_urukhai_spearman", "count": 4 },
             { "troop": "fow_urukhai_arbalest", "count": 2, "role": "Ranged" }
           ]
         },
         {
           "fromMinute": 15,
           "units": [
-            { "troop": "fow_urukhai_infantry", "count": 5 },
-            { "troop": "fow_urukhai_veteranspearman", "count": 3 },
+            { "troop": "fow_urukhai_infantry", "count": 6 },
+            { "troop": "fow_urukhai_veteranspearman", "count": 4 },
             { "troop": "fow_urukhai_crossbowman", "count": 2 }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_urukhai_veteraninfantry", "count": 5 },
-            { "troop": "fow_urukhai_veteranpikeman", "count": 3 },
+            { "troop": "fow_urukhai_veteraninfantry", "count": 6 },
+            { "troop": "fow_urukhai_veteranpikeman", "count": 4 },
             { "troop": "fow_urukhai_veterancrossbowman", "count": 2, "role": "Ranged" }
           ]
         }
@@ -375,11 +375,11 @@
         { "text": "{=TAOM_FOW_Trait_Rivendell_SlowWaves}Free troops come at half the usual rate.", "strength": false }
       ],
       "units": [
-        { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
-        { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.25 },
-        { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.25 },
-        { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.25 },
-        { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.25 }
+        { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
+        { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.1 },
+        { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.1 },
+        { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.1 },
+        { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.1 }
       ],
       "heroGuard": { "troop": "fow_imladris_blademaster", "count": 3, "role": "Infantry" },
       "heroes": [
@@ -531,7 +531,7 @@
       "name": "{=TAOM_FOW_Faction_Gundabad}Gundabad",
       "culture": "gundabad",
       "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "impalers", "up:melee_damage", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
-      "upgradeCost": { "melee_damage": 1.25, "missile_damage": 1.25, "melee_armour": 1.25, "missile_armour": 1.25, "siegecraft": 1.25, "fortify": 1.25 },
+      "upgradeCost": { "melee_damage": 1.0, "missile_damage": 1.0, "melee_armour": 1.0, "missile_armour": 1.0, "siegecraft": 1.0, "fortify": 1.0 },
       "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Gundabad_Waves}Free waves come twice as often.", "strength": true },
@@ -632,18 +632,18 @@
         { "text": "{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three.", "strength": false }
       ],
       "units": [
-        { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.8 },
-        { "id": "warriors", "troop": "fow_dg_uruk_warrior", "role": "Infantry", "packSize": 10, "level": 16, "eliteWeight": 0.8 },
-        { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 0.8 },
-        { "id": "swordsmen", "troop": "fow_dg_uruk_swordsman", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
-        { "id": "bowmen", "troop": "fow_dg_uruk_bowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 0.9 },
-        { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.25 },
-        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.8 },
-        { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
-        { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.5 },
-        { "id": "khamul_knights", "troop": "fow_dg_khamul_veiled_knight", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 1.0 }
+        { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.65 },
+        { "id": "warriors", "troop": "fow_dg_uruk_warrior", "role": "Infantry", "packSize": 10, "level": 16, "eliteWeight": 0.65 },
+        { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 0.65 },
+        { "id": "swordsmen", "troop": "fow_dg_uruk_swordsman", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 0.8 },
+        { "id": "bowmen", "troop": "fow_dg_uruk_bowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 0.75 },
+        { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 0.8 },
+        { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 0.8 },
+        { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
+        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.65 },
+        { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 0.8 },
+        { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.2 },
+        { "id": "khamul_knights", "troop": "fow_dg_khamul_veiled_knight", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.8 }
       ],
       "creatures": {
         "cooldownSeconds": 45,
@@ -661,14 +661,14 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_dg_uruk_foul", "count": 8 },
+            { "troop": "fow_dg_uruk_foul", "count": 10 },
             { "troop": "fow_dg_goblin_crawler", "count": 2 }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_dg_uruk_warrior", "count": 6 },
+            { "troop": "fow_dg_uruk_warrior", "count": 8 },
             { "troop": "fow_dg_goblin_skirmisher", "count": 2 },
             { "troop": "fow_dg_uruk_skirmisher", "count": 2, "role": "Ranged" }
           ]
@@ -676,7 +676,7 @@
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_dg_uruk_veteran_warrior", "count": 6 },
+            { "troop": "fow_dg_uruk_veteran_warrior", "count": 8 },
             { "troop": "fow_dg_goblin_impaler", "count": 2 },
             { "troop": "fow_dg_uruk_bowman", "count": 2 }
           ]
@@ -695,14 +695,14 @@
         { "text": "{=TAOM_FOW_Trait_Easterlings_Towers}Towers fire 15% slower.", "strength": false }
       ],
       "units": [
-        { "id": "levy", "troop": "fow_easterling_militia", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
-        { "id": "halberds", "troop": "fow_easterling_halberdier_new", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
-        { "id": "archers", "troop": "fow_easterling_archer_new", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
-        { "id": "horse_archers", "troop": "fow_kharaghul_horse_archer", "role": "HorseArcher", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
-        { "id": "cataphracts", "troop": "fow_far_rhun_cataphract", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
-        { "id": "iron_legion", "troop": "fow_far_rhun_iron_legionary", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
-        { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.0 }
+        { "id": "levy", "troop": "fow_easterling_militia", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.1 },
+        { "id": "halberds", "troop": "fow_easterling_halberdier_new", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.1 },
+        { "id": "archers", "troop": "fow_easterling_archer_new", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.1 },
+        { "id": "horse_archers", "troop": "fow_kharaghul_horse_archer", "role": "HorseArcher", "packSize": 4, "level": 26, "eliteWeight": 1.1 },
+        { "id": "cataphracts", "troop": "fow_far_rhun_cataphract", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.1 },
+        { "id": "iron_legion", "troop": "fow_far_rhun_iron_legionary", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
+        { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.1 },
+        { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.1 }
       ],
       "heroGuard": { "troop": "fow_dragon_wrath_infantry", "count": 4, "role": "Infantry" },
       "heroes": [
@@ -805,10 +805,10 @@
       ],
       "units": [
         { "id": "silvan_levy", "troop": "fow_mirkwood_recruit", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
-        { "id": "sentinels", "troop": "fow_mirkwood_sentinels", "role": "Ranged", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
+        { "id": "sentinels", "troop": "fow_mirkwood_sentinels", "role": "Ranged", "packSize": 3, "level": 41, "eliteWeight": 1.15 },
         { "id": "elk_riders", "troop": "fow_mirkwood_rochenlas", "role": "Cavalry", "packSize": 2, "level": 41, "eliteWeight": 1.0 },
-        { "id": "borderwardens", "troop": "fow_mirkwood_borderwardens", "role": "Ranged", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
-        { "id": "thingols_heirs", "troop": "fow_mirkwood_thingolheir", "role": "Ranged", "packSize": 2, "level": 51, "eliteWeight": 1.0 }
+        { "id": "borderwardens", "troop": "fow_mirkwood_borderwardens", "role": "Ranged", "packSize": 3, "level": 46, "eliteWeight": 1.15 },
+        { "id": "thingols_heirs", "troop": "fow_mirkwood_thingolheir", "role": "Ranged", "packSize": 2, "level": 51, "eliteWeight": 1.15 }
       ],
       "heroGuard": { "troop": "fow_mirkwood_sentinels", "count": 3, "role": "Ranged" },
       "heroes": [
