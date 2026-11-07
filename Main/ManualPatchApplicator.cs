@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerColorPersistence.Hooks;
@@ -13,16 +14,18 @@ namespace TAOM;
 /// <c>[HarmonyPatch]</c> attribute binding + <c>PatchCategory</c>: each resolves its target via
 /// <c>AccessTools</c> at apply time and, when the target is not found, logs a warning and keeps
 /// vanilla behaviour. A throw from <c>harmony.Patch</c> or from resolving the target is contained
-/// per patch by <see cref="TryPatch"/> and logged as a <c>[PatchApply]</c> error, like a failed
-/// category: it would otherwise leave through <c>MBGameManager</c>'s submodule loop, which has no
+/// per patch by <see cref="TryPatch"/>, logged as a <c>[PatchApply]</c> error and returned by name
+/// for the game-init failure notice, like a failed category: it would otherwise leave through
+/// <c>MBGameManager</c>'s submodule loop, which has no
 /// catch on v1.4.8, and skip the Harmony census after it. Extracted from
 /// <c>SubModule.OnGameInitializationFinished</c> (ADR-002); called once per process from that same
 /// callback, order unchanged.
 /// </summary>
 internal static class ManualPatchApplicator
 {
-    /// <summary>Runs one manual patch; false when it threw (logged, never rethrown).</summary>
-    internal static bool TryPatch(string label, IModLogger logger, Action apply)
+    /// <summary>Runs one manual patch; false when it threw (logged, label added to
+    /// <paramref name="failed"/>, never rethrown).</summary>
+    internal static bool TryPatch(string label, IModLogger logger, ICollection<string> failed, Action apply)
     {
         try
         {
@@ -31,19 +34,23 @@ internal static class ManualPatchApplicator
         }
         catch (Exception ex)
         {
+            failed.Add(label);
             logger.LogError($"[PatchApply] manual patch {label} FAILED: {ex}");
             return false;
         }
     }
 
-    internal static void ApplyAll(Harmony harmony)
+    /// <summary>Applies every manual patch; returns the labels of those that threw. A missing target
+    /// is a warning, not a failure, so it is not among them.</summary>
+    internal static IReadOnlyList<string> ApplyAll(Harmony harmony)
     {
         var logger = IoC.Resolve<IModLogger>();
+        var failed = new List<string>();
 
         // CompanionTactics — manual patch for the PRIVATE method
         // OrderOfBattleHeroItemVM.GetCaptainTooltip (private in v1.3.15, can't use
         // [HarmonyPatch] attribute binding).
-        TryPatch("[CompanionTactics] GetCaptainTooltip", logger, () =>
+        TryPatch("[CompanionTactics] GetCaptainTooltip", logger, failed, () =>
         {
             var captainTooltipTarget = AccessTools.Method(typeof(OrderOfBattleHeroItemVM), "GetCaptainTooltip");
             if (captainTooltipTarget != null)
@@ -55,7 +62,7 @@ internal static class ManualPatchApplicator
         });
 
         // The three guard patches read this service; without it they stay off.
-        var guardsReady = TryPatch("[SettlementGuards] Initialize", logger, () =>
+        var guardsReady = TryPatch("[SettlementGuards] Initialize", logger, failed, () =>
         {
             var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
             GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
@@ -66,7 +73,7 @@ internal static class ManualPatchApplicator
         if (guardsReady)
         {
             // Manual patches for private GuardsCampaignBehavior methods (SandBox.dll)
-            TryPatch("[SettlementGuards] TakeGuardAgentData", logger, () =>
+            TryPatch("[SettlementGuards] TakeGuardAgentData", logger, failed, () =>
             {
                 var takeGuardTarget = GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod();
                 if (takeGuardTarget != null)
@@ -77,7 +84,7 @@ internal static class ManualPatchApplicator
                     logger.LogWarning("[SettlementGuards] TakeGuardAgentDataFromGarrisonTroopList not found — custom guards will not apply");
             });
 
-            TryPatch("[SettlementGuards] GetSuitableSpear", logger, () =>
+            TryPatch("[SettlementGuards] GetSuitableSpear", logger, failed, () =>
             {
                 var spearTarget = GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod();
                 if (spearTarget != null)
@@ -88,7 +95,7 @@ internal static class ManualPatchApplicator
                     logger.LogWarning("[SettlementGuards] GetSuitableSpear not found — culture-specific spears will not apply");
             });
 
-            TryPatch("[SettlementGuards] InitializeGarrisonCharacters", logger, () =>
+            TryPatch("[SettlementGuards] InitializeGarrisonCharacters", logger, failed, () =>
             {
                 var garrisonScrubTarget = GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.TargetMethod();
                 if (garrisonScrubTarget != null)
@@ -101,7 +108,7 @@ internal static class ManualPatchApplicator
         }
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
-        TryPatch("[BannerColor] AddCharacterToPartyIcon", logger, () =>
+        TryPatch("[BannerColor] AddCharacterToPartyIcon", logger, failed, () =>
         {
             var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();
             if (mobilePartyTarget != null)
@@ -113,7 +120,7 @@ internal static class ManualPatchApplicator
         });
 
         // Manual patch for AgentVisuals.Create (TaleWorlds.MountAndBlade.View.dll)
-        TryPatch("[BannerColor] AgentVisuals.Create", logger, () =>
+        TryPatch("[BannerColor] AgentVisuals.Create", logger, failed, () =>
         {
             var agentVisualsCreateTarget = AgentVisuals_Create_Patch.TargetMethod();
             if (agentVisualsCreateTarget != null)
@@ -125,7 +132,7 @@ internal static class ManualPatchApplicator
         });
 
         // Manual patches for MapConversationTableau (private methods in SandBox.View.dll)
-        TryPatch("[BannerColor] SpawnOpponentLeader", logger, () =>
+        TryPatch("[BannerColor] SpawnOpponentLeader", logger, failed, () =>
         {
             var leaderTarget = MapConversationTableau_SpawnOpponentLeader_Patch.TargetMethod();
             if (leaderTarget != null)
@@ -136,7 +143,7 @@ internal static class ManualPatchApplicator
                 logger.LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentLeader not found — conversation tableau leader colors will not apply");
         });
 
-        TryPatch("[BannerColor] SpawnOpponentBodyguard", logger, () =>
+        TryPatch("[BannerColor] SpawnOpponentBodyguard", logger, failed, () =>
         {
             var bodyguardTarget = MapConversationTableau_SpawnOpponentBodyguard_Patch.TargetMethod();
             if (bodyguardTarget != null)
@@ -146,5 +153,7 @@ internal static class ManualPatchApplicator
             else
                 logger.LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentBodyguardCharacter not found — conversation tableau bodyguard colors will not apply");
         });
+
+        return failed;
     }
 }

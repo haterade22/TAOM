@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,7 +21,7 @@ public class ManualPatchApplicatorTests
     {
         var logger = Substitute.For<IModLogger>();
 
-        var ok = ManualPatchApplicator.TryPatch("[Feature] Target.Method", logger,
+        var ok = ManualPatchApplicator.TryPatch("[Feature] Target.Method", logger, new List<string>(),
             () => throw new InvalidOperationException("no such target"));
 
         Assert.IsFalse(ok);
@@ -33,12 +34,39 @@ public class ManualPatchApplicatorTests
     {
         var logger = Substitute.For<IModLogger>();
         var calls = 0;
+        var failed = new List<string>();
 
-        var ok = ManualPatchApplicator.TryPatch("[Feature] Target.Method", logger, () => calls++);
+        var ok = ManualPatchApplicator.TryPatch("[Feature] Target.Method", logger, failed, () => calls++);
 
         Assert.IsTrue(ok);
         Assert.AreEqual(1, calls);
         logger.DidNotReceiveWithAnyArgs().LogError(default!);
+        Assert.AreEqual(0, failed.Count);
+    }
+
+    [TestMethod]
+    public void TryPatch_ThrowingPatch_AddsItsLabelToFailed()
+    {
+        var failed = new List<string> { "[Feature] Earlier" };
+
+        ManualPatchApplicator.TryPatch("[Feature] Target.Method", Substitute.For<IModLogger>(), failed,
+            () => throw new InvalidOperationException("no such target"));
+
+        CollectionAssert.AreEqual(new[] { "[Feature] Earlier", "[Feature] Target.Method" }, failed);
+    }
+
+    // ApplyAll needs the IoC container and a real Harmony, so the wiring is read from source: a guard that collects
+    // into anything but the returned list drops its failure from the report with no compile error.
+    [TestMethod]
+    public void ApplyAll_EveryTryPatch_CollectsIntoTheReturnedList()
+    {
+        var src = RepoPaths.ReadSource("Main/ManualPatchApplicator.cs", stripComments: true);
+
+        var guards = Regex.Matches(src, @"\bTryPatch\(""").Count;
+        Assert.IsTrue(guards >= 9, $"Only {guards} TryPatch calls found; the scan broke, it did not pass.");
+        Assert.AreEqual(guards, Regex.Matches(src, @"\bTryPatch\(""[^""]+"", logger, failed, ").Count,
+            "A TryPatch does not collect into ApplyAll's list.");
+        StringAssert.Contains(src, "return failed;");
     }
 
     [TestMethod]

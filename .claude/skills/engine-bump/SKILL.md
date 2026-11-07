@@ -24,13 +24,60 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    `tools/native_crash_triage.py` defaults to the shipping client DLL, so a client crash is unaffected, but an
    offset from the wEditor `TaleWorlds.Native.dll` holds only for that binary's version:
    every offset taken before that jump was against a v1.4.5 image, and it moved with no signal.
-   Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
-   them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
-   aside now** — that copy is the only baseline the NEXT bump will have. The cost of not having one
-   is already booked: the open player report (untracked; read it with
-   `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
-3. `taom-src` auto-detects the new version (fresh cache under `~/.taom-src/v<new>/`) — old
-   caches remain but are unused.
+   Steam overwrites in place, so **archive both builds**: `python tools/native_archive.py` (no flags)
+   copies each installed client and wEditor `TaleWorlds.Native.dll` by SHA-256 into `$TAOM_NATIVE_ARCHIVE`
+   (default `E:\Decompiled_Bannerlord\_native`) as
+   `TaleWorlds.Native.v<ver>.{client,wEditor}.dll`, caches its engine-method map while that build's managed
+   DLLs are still installed, pre-builds the matcher index, and scores `--oracle` against the previous
+   archived build of the same kind. On the laptop, which has no E: drive, set `TAOM_NATIVE_ARCHIVE` and
+   `TAOM_GHIDRA_PROJECTS` first: without the first the default folder cannot be created, the tool prints
+   `NOTE: native archive UNCHECKED`, exits 0 and copies nothing, so an update can overwrite the old pair
+   unarchived. On the 1.5.x line the session-start hook runs it; on this line run it
+   as soon as the update is noticed. Then `python tools/native_archive.py --status`: it shows saved state
+   only, one row per install path, and does not re-check the installed DLL, so compare each row's `sha16`
+   with the installed file
+   (`python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest()[:16])" <dll>`).
+   The OLD pair is in the archive only if it was archived before the update (v1.4.8 build 119303 by the
+   maintainer run of plan 137); if it is missing it is gone: record that and expect `oracle=unscored`. The
+   cost of not having one is already booked: the open player report (untracked; read it with
+   `git show 1b00d1acd:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be triaged
+   against a local binary.
+3. `taom-src` auto-detects the new build: a fresh cache and DLL index under `~/.taom-src/v<new>-<stamp>/`,
+   and the old caches stay unused. The stamp is `TaleWorlds.Library.dll`'s UTC write time, because a Steam
+   hotfix can keep the version string. Pass a short or fully qualified type name. A mod's own copy of an
+   engine assembly (`Modules\Coop`) searches last (#1038), so only a type that copy alone still holds
+   resolves from it. The tool prints only the cache path; `~/.taom-src/sources.json` names the DLL it read.
+4. **Warm the native decompiler, and read its map check.** Each new binary gets a fresh Ghidra project,
+   so on a machine with Ghidra run `python tools/native_decompile.py --engine-method get_current_action_type`
+   once for the client and once with `--dll` on the wEditor DLL: the first crash then decompiles in
+   seconds, not minutes. Any `WARNING: engine-method map:` line means the map is incomplete for that
+   binary, most likely because the registration sweep met an instruction form it does not read:
+   `--engine-method` refuses that assembly and the project is not seeded until
+   `tools/native_engine_methods.py` reads every id. Fix the sweep before trusting native answers for that
+   build. Without Ghidra (the laptop) the same completeness check runs as
+   `TAOM_GHIDRA_IT=1 python -m unittest tools.tests.test_native_engine_methods.InstalledEngineTests`; its
+   address and count pins need a row for the new build (v1.4.8: 686, 1,542 and 33 methods). Native
+   offsets quoted in docs and RCAs belong to their old binary; re-derive one by engine method or string,
+   not by offset ([ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)), or carry
+   it: `native_archive.py --status` shows the stored oracle result (`oracle=ok vs <old>`, or `oracle=wrong`
+   with counts); without one, run `python tools/native_build_match.py --old <archived old client DLL> --oracle`
+   once (exit 1, a wrong match: do not use it on this pair; exit 2, no map for the old build: the pair is
+   unscored), then `--rva <old offset>`. Only `MATCHED ... (hash)` gives an exact offset, and it means
+   identical code, not proven identity: read the new address with `native_decompile.py --rva` before it
+   goes into a pin ([native-build-match.md](../../../docs/features/native-build-match.md)).
+5. **Resolve the shipped DLLs against the new engine, not just a fresh build.** A fresh compile binds
+   whatever overload the new engine offers, so it hides a removed member that a released `TAOM.dll`
+   still calls (on the 1.5.x line v1.5.4 removed a `TooltipProperty` constructor and every gate stayed
+   green). Run `pwsh tools/check_engine_member_refs.ps1 -Dll <every shipped engine-referencing DLL, comma-joined>`:
+   the `TAOM.dll` and `TAOM.Dependencies.dll` players run (the release package, or
+   `<game>\Modules\{TAOM,TAOM.Dependencies}\bin\Win64_Shipping_Client\` when that is the public build).
+   This line keeps no old reference assemblies, so there is no `-Baseline` and every miss counts as new
+   (exit 1): a miss means that build needs a rebuild before players take the update. Negative control: a
+   fresh build of HEAD (`TAOM.Tests/bin/Debug/net472/TAOM.dll`) must report `0 unresolved` (v1.4.8,
+   2026-11-04: 3,267 refs for a build of `1b00d1acd`, 3,257 for the installed public build). The checker
+   reads member and type references only, so it cannot see an override of a changed abstract member (the
+   source compile of HEAD catches that) or an enum or const value the compiler baked into a caller (only a
+   type diff shows it; a rebuild fixes it).
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 
@@ -93,8 +140,7 @@ only "does the signature still resolve". A member whose signature is unchanged a
 does something else passes every gate. Enumerate the bound surface from the API snapshot
 (`docs/reference/taleworlds-api-snapshot/{patch-targets,gamemodel-bases,reflection-sites}.md`) plus
 the XML `Deserialize` loaders, extract each member's body from the archived and the fresh
-decompile, and diff them (`python tools/engine_body_diff.py --help`
-gives its arguments). Rank the CHANGED rows and hand them to review agents in
+decompile, and diff them (`tools/engine_body_diff.py`, run as below). Rank the CHANGED rows and hand them to review agents in
 batches of six to ten with the diff, the TAOM override and the question "does TAOM re-implement a
 term that moved". **Full-replacement GameModel overrides first**: an additive override (`base.`
 then TAOM on top) inherits a body change for free, a replacement inherits nothing, and the two are
@@ -102,6 +148,16 @@ indistinguishable to a signature gate. On the 1.5.x line, v1.5.2 calibration: 51
 (`TaomPartyWageModel.GetTroopRecruitmentCost`, a replacement still carrying the v1.4.8 perk
 shape), one abstract-new patch target that `HarmonyPatchBindingTests` had passed because an
 abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-diff-ranked.md`.
+
+**Running the body diff.** Regenerate the API snapshot first (Phase 4 item 1's generator, after a
+TAOM.Tests build) so new members are compared, then run
+`python tools/engine_body_diff.py --old-suffix _v<OLD> --out <root>\_diff_<OLD>_to_<NEW>\bound_members`
+(`--root` defaults to `E:\Decompiled_Bannerlord`; the laptop passes `--root C:\Decompiled_Bannerlord`). It
+writes one `.diff` per changed member and prints `rows_in_file=N parsed=N unparsed=N` per input. It exits 1
+on any unparsed or unresolved row (a changed row is information, not a failure) and 2 on bad input, such as
+the same `BuildInfo.GameVersion` on both sides. A `TargetMethods()` patch appears in the snapshot by its
+first target only, so diff its other targets by hand. (On 2026-11-04 the tool parsed every row of this
+line's snapshot: 230, 108 and 47 rows, 0 unparsed.)
 
 ## Phase 4 — Re-verify TAOM against the new engine
 

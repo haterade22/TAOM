@@ -156,6 +156,56 @@ public class PatchCategoryApplierTests
         Assert.AreEqual("Patch_M", Variable(second, "GROUPS"));
     }
 
+    [TestMethod]
+    public void RecordManualFailures_JoinTheNextSummary_AfterTheCategoriesAndOnlyOnce()
+    {
+        var sut = ApplierFailingOn("Patch_B");
+        sut.TryApply("Patch_B");
+
+        sut.RecordManualFailures(new[] { "[Feature] One", "[Feature] Two" });
+
+        var first = sut.TakeFailureSummary(new TextObject("game initialization"));
+        Assert.IsNotNull(first);
+        Assert.AreEqual("Patch_B, [Feature] One, [Feature] Two", Variable(first!, "GROUPS"));
+        Assert.IsNull(sut.TakeFailureSummary(new TextObject("mission start")));
+    }
+
+    [TestMethod]
+    public void RecordManualFailures_AloneMakeASummary_AndAddNoLogLine()
+    {
+        var sut = ApplierFailingOn();
+
+        sut.RecordManualFailures(new[] { "[Feature] One" });
+
+        var summary = sut.TakeFailureSummary(new TextObject("game initialization"));
+        Assert.IsNotNull(summary);
+        Assert.AreEqual("[Feature] One", Variable(summary!, "GROUPS"));
+        _logger.DidNotReceiveWithAnyArgs().LogError(default!);
+    }
+
+    [TestMethod]
+    public void RecordManualFailures_NoLabels_NoSummary()
+    {
+        var sut = ApplierFailingOn();
+
+        sut.RecordManualFailures(new string[0]);
+
+        Assert.IsNull(sut.TakeFailureSummary(new TextObject("game initialization")));
+    }
+
+    // The game-init report drains the list, so a manual patch that fails after it is named by nothing.
+    [TestMethod]
+    public void SubModuleSource_GameInitReport_FollowsTheManualPatches()
+    {
+        var code = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
+        var apply = code.IndexOf("var manualFailed = ManualPatchApplicator.ApplyAll(_harmony);", StringComparison.Ordinal);
+        var record = code.IndexOf("_patches.RecordManualFailures(manualFailed);", StringComparison.Ordinal);
+        var report = code.IndexOf("ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_game_init}game initialization\"));", StringComparison.Ordinal);
+
+        Assert.IsTrue(apply >= 0 && apply < record && record < report,
+            $"Expected ApplyAll, then RecordManualFailures, then the report; found them at {apply}, {record}, {report}.");
+    }
+
     internal static string Variable(TextObject text, string tag)
     {
         Assert.IsTrue(text.GetVariableValue(tag, out var value), "no " + tag + " variable");

@@ -110,17 +110,29 @@ headers, player-facing framing (what changed for them, not which class was refac
 explicit ⚠️ line whenever MCM-persisted settings mean **existing players keep old values** and must
 reset them by hand.
 
+First, before writing a line of either note, run
+`python tools/ingame_verdict.py --owed --sessions 10` and read its output
+([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). It never blocks the release. Ten
+sessions let a two-session check such as #1011 pass, and per check the newest PASS or FAIL wins. A
+FAIL (exit 1) is evidence against the logged build the output names: name it to Mike before Phase 6,
+because holding the release for it is the maintainer's call. Exit 3 (`git` missing or `gh` failed) means the
+testers' checklist says the verdicts are missing. Every owed check that is not PASS goes into the
+testers' checklist below, one line each: the issue, the check id, its verdict and its `needs` text,
+FAIL lines first. They are developer text, so they stay out of the Discord note.
+
 Source the content from the section Phase 4 just wrote into `CHANGELOG.md`. It runs to thousands
 of lines, so list it first: `awk '/^## v/{n++} n==1 && /^###/' CHANGELOG.md` prints its group and
 subject lines only. Open the bodies you need (`git show -s --format=%b <sha>`), and grep the
 section for `MCM` before writing the persisted-settings line.
 
 Write the testers' checklist too: `python tools/ingame_ledger.py --since <previous tag> --format md`
-into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release. Issue titles are
+into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, followed by an "Owed checks not PASS" section with the verdict lines from the run above. Issue titles are
 developer text, so they stay out of the Discord note.
 
-Add one line to the release note naming the TAOM_Map and LOTRLOME_Armory the release ships, copied
-from the `modules:` line of Phase 8 step 3, plus any `PAIRING SIGNAL` it printed.
+Add one line to the release note naming the TAOM_Map and LOTRLOME_Armory the release ships. Run
+`python tools/check_release_pairing.py --modules <the folder you will package from> --game-root "<game>"`
+now and copy its `modules:` line, plus any `PAIRING SIGNAL`, into the note. A non-zero exit here does
+not stop the note (`PIN_MISSING` is expected until a pin is recorded); Phase 8 still gates.
 
 ## Phase 6 — Commit
 
@@ -205,7 +217,8 @@ change (#371). When Mike says the packages and release folders are the maintaine
    what remains.
 5. The maintainer packages (an outward-facing action). Then re-run steps 2 and 3 with `--source` and
    `--modules` pointing at the channel's `Modules` folder (desktop: `E:\LOTRAOM_Releases\<channel>\Modules`)
-   and `--game-root "<game>"` before the maintainer uploads it.
+   and `--game-root "<game>"` before the maintainer uploads it. A `modules:` line from that folder
+   that differs from the release note's means the note is wrong: stop and ask the maintainer.
 
 ## Gotchas
 

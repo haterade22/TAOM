@@ -12,6 +12,7 @@
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
+| **elevenlabs** | Project | Voice design for kingdom voices; needs `ELEVENLABS_API_KEY`. See `docs/features/kingdom-voices.md`. | `.mcp.json` |
 | **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
 | **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
 
@@ -42,7 +43,7 @@ did; they were documented across nine sites until 2026-08-31. The real names are
 
 ## TaleWorlds Research — Lookup Order
 
-**Always use `taom-src` first.** It runs `ilspycmd` against the installed DLLs (version auto-detected from `Version.xml`) and caches under `~/.taom-src/<version>/`. The `E:\Decompiled_Bannerlord\` dump matches the pin and is fine for browsing namespaces/patterns; for authoritative signatures prefer `taom-src` against the installed DLLs (the dump can lag after an engine bump).
+**Always use `taom-src` first.** It runs `ilspycmd` against the installed DLLs (version from `Version.xml`, build stamp from `TaleWorlds.Library.dll`) and caches under `~/.taom-src/<version>-<stamp>/`. The `E:\Decompiled_Bannerlord\` dump matches the pin and is fine for browsing namespaces/patterns; for authoritative signatures prefer `taom-src` against the installed DLLs (the dump can lag after an engine bump).
 
 | Step | Action | When |
 |------|--------|------|
@@ -50,6 +51,7 @@ did; they were documented across nine sites until 2026-08-31. The real names are
 | 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles the installed (v1.4.7) DLL on cache miss, returns absolute path | **For signature verification** (Harmony patch, GameModel override, adapter, API call) — authoritative; run after you understand the process conceptually |
 | 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the dump | Finding which DLL a class lives in, exploring a namespace tree |
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
+| 4. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C, through headless Ghidra | When the managed trail ends at an `[EngineMethod]`, or the engine parses the data itself. [ghidra-native-decompile.md](../features/ghidra-native-decompile.md) |
 
 See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
 ```bash

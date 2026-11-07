@@ -39,6 +39,17 @@ Decompile and analyze: `$ARGUMENTS`
    - Collection types and modification safety
    - Event timing and state change ordering
 
+3a. **Follow the call into native code when the managed trail ends.** A chain that bottoms out in an
+   `[EngineMethod("x")]` member of an engine interface (`MBAPI.IMB*`, `EngineApplicationInterface.I*`,
+   `LibraryApplicationInterface.I*`) has its real behaviour in `TaleWorlds.Native.dll`, and so does data
+   the engine parses itself (action sets, monster usage, skins). Decompile it:
+   `python tools/native_decompile.py --engine-method IMBAgent.GetCurrentActionType` (also accepts the
+   engine name `get_current_action_type`, `MBAgent.get_current_action_type`, a namespace-qualified
+   interface, the `enm_IMono_*` member and the `IMono_MBAgent::` assert form), or `--string <attribute,
+   file or assert text>` for the native code that reads it. Cite the RVA and engine version with the C:
+   native addresses hold for that binary only.
+   [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md).
+
 4. **Document findings** — Summarize:
    - Key methods and their signatures
    - Properties (read-only vs read-write)

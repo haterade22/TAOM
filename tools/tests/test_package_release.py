@@ -1096,6 +1096,16 @@ class TestRequireBuildCli(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stderr)
             self.assertIn("TAOM/bin/Win64_Shipping_Server/TAOM.dll", r.stdout)
 
+    def test_refuses_a_file_the_commit_does_not_track(self):
+        # A prefab deleted in a later commit still ships from an install that deploys never
+        # pruned (#1024). The unit tests call stale_module_files directly; this one proves the gate does.
+        with tempfile.TemporaryDirectory() as td:
+            src = self._modules(td, f"{STAMP}+{self.head}")
+            _write(src, "TAOM/GUI/PreFabs/NoSuchPrefabAtHead_1024.xml", 10)
+            r = self._gate(src, td)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM/GUI/PreFabs/NoSuchPrefabAtHead_1024.xml", r.stderr)
+
     def test_refuses_when_a_requested_module_is_absent(self):
         # Planning skips a missing module folder; the gate must not certify the rest.
         with tempfile.TemporaryDirectory() as td:

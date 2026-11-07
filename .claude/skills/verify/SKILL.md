@@ -72,6 +72,19 @@ failure without editing any source (`TAOM.Tests/Infrastructure/VerifyCanaryTests
 PASSES only when the run exits non-zero AND its output contains `VERIFY_CANARY_TRIPPED`. An exit 0
 or a missing token means the runner cannot report failures, so the whole verify FAILS.
 
+## Step 2d: API snapshot reproduces
+
+```bash
+pwsh -NoProfile -File tools/snapshot_api_surface.ps1 -Check 2>&1
+```
+
+Reflects over the test bin's `TAOM.dll` that Step 2 built and compares the result with
+`docs/reference/taleworlds-api-snapshot/`. Exit 1 with a `DRIFT:` line means a patch target or
+GameModel base changed and the snapshot was not regenerated, so `tools/engine_body_diff.py` would
+miss that method at the next engine bump. Fix it with `pwsh tools/snapshot_api_surface.ps1` and
+commit the result with the change. DRIFT blocks: `Ready for commit` is NO while it stands. Any other
+failure (no `pwsh`, no game install) is NOT RUN, which has not passed.
+
 ## Step 2e: Data gates
 
 ```bash
@@ -127,6 +140,26 @@ python tools/check_provenance.py
 
 Every miss goes under Issues: a register Derivation or Status outside its closed set, a shipped non-TAOM binary with no `redistributed` row, or an adoption record the register does not name. A zero does not prove intent ([provenance.md](../../rules/provenance.md)).
 
+## Step 6: Owed in-game verdicts (information only)
+
+```bash
+python tools/ingame_verdict.py --owed --sessions 10 2>&1
+```
+
+It asks `gh` for the issues labelled `triage-needs-ingame`, reads the ten newest game sessions' logs
+against each one that has a `tools/ingame_checks/<issue>.toml`, and prints a verdict per check
+([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). Report each issue's verdict,
+every FAIL with its reason, the newest session's `summary` line once and each `WARNING: errors=`
+line once. Give the `no manifest:` list as a count only.
+
+This step never fails verify and never changes "Ready for commit". NOT REACHED (exit 4) is the
+normal state before anyone has played the build. A FAIL (exit 1) is evidence against the logged
+build named in the output; whether it touches this tree is for investigation and Mike. Exit 3 (`git`
+missing or `gh` failed; the message says which) is NOT RUN; a build sha `git` cannot compare leaves
+that session NOT REACHED. Ten sessions let a two-session check such as #1011 pass, and per check the
+newest PASS or FAIL wins. Exit 2 is a malformed manifest, which Step 2b's `test_ingame_verdict` also
+fails on. Never pass `--post` here: it comments on public issues.
+
 ## Output Format
 
 Produce a concise verification report:
@@ -137,10 +170,12 @@ VERIFICATION REPORT
 Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
+API snapshot: [REPRODUCES/DRIFT/NOT RUN]
 Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
 Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
 CHANGELOG:  [Untouched/HAND-EDITED]
+In-game:    [I issues judged: P PASS, F FAIL, N NOT REACHED / NOT RUN (gh)] (information only)
 Provenance: [N misses]
 
 Ready for commit: [YES/NO]

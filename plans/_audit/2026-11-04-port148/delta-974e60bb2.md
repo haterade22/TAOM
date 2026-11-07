@@ -24,5 +24,5 @@ Both were re-checked on the installed v1.4.8 and written by hand for this line, 
 
 ## Noted, not acted on
 
-- `Main/Features/DreadAura/Hooks/DreadMissionGate.cs:38` and `Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs:33` read only `GameNetwork.IsSessionActive`. Given fact 1 that is a possible co-op gap. It is unverified, and out of scope under D7.
+- `Main/Features/DreadAura/Hooks/DreadMissionGate.cs:38` and `Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs:33` read only `GameNetwork.IsSessionActive`. Co-op status: read from source for BannerlordCoop only: Dread is owner-gated by DreadAgentGate, MountDespawn and BattleCorpses are per-peer presentation; Bannerlord Together and a two-peer run unverified; no action under D7.
 - The 1.5.x Spacing Repair in Marshal's Word is a possible future work package. It is not ported.

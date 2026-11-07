@@ -41,7 +41,7 @@ Research TaleWorlds sealed types by decompiling DLLs and providing actionable an
 # Decompile a type (cache-aware) and grep it in one line:
 rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 ```
-`taom-src` runs `ilspycmd` against the installed DLLs and caches under `~/.taom-src/<version>/`. Use it first.
+`taom-src` runs `ilspycmd` against the installed DLLs and caches under `~/.taom-src/<version>-<stamp>/`. Use it first.
 
 ### Fallback: CLI
 ```powershell
@@ -70,6 +70,13 @@ When researching a class, use progressive refinement (max 3 cycles):
 3. **Cycle 3 (Targeted):** If gaps remain, search for specific patterns (e.g., where a method is called, how an event is fired).
 
 Stop when you have enough context to answer the research question. Don't decompile everything — 3 high-relevance classes beats 10 shallow reads.
+
+**When the trail ends at an `[EngineMethod]`** (an `MBAPI.IMB*`, `EngineApplicationInterface.I*` or
+`LibraryApplicationInterface.I*` call) or at data the engine parses
+itself, the behaviour is native: run `python tools/native_decompile.py --engine-method <name>` or
+`--string <text>` and report the C with its RVA and engine version, never an inference from the
+method's name. Method: [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md)
+"Native engine code".
 
 ## Decompilation Fallback Chain
 
