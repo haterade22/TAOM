@@ -62,6 +62,19 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    unscored), then `--rva <old offset>`. Only `MATCHED ... (hash)` gives an exact offset, and it means
    identical code, not proven identity: read the new address with `native_decompile.py --rva` before it
    goes into a pin ([native-build-match.md](../../../docs/features/native-build-match.md)).
+5. **Resolve the shipped DLLs against the new engine, not just a fresh build.** A fresh compile binds
+   whatever overload the new engine offers, so it hides a removed member that a released `TAOM.dll`
+   still calls (on the 1.5.x line v1.5.4 removed a `TooltipProperty` constructor and every gate stayed
+   green). Run `pwsh tools/check_engine_member_refs.ps1 -Dll <every shipped engine-referencing DLL, comma-joined>`:
+   the `TAOM.dll` and `TAOM.Dependencies.dll` players run (the release package, or
+   `<game>\Modules\{TAOM,TAOM.Dependencies}\bin\Win64_Shipping_Client\` when that is the public build).
+   This line keeps no old reference assemblies, so there is no `-Baseline` and every miss counts as new
+   (exit 1): a miss means that build needs a rebuild before players take the update. Negative control: a
+   fresh build of HEAD (`TAOM.Tests/bin/Debug/net472/TAOM.dll`) must report `0 unresolved` (v1.4.8,
+   2026-11-04: 3,267 refs for a build of `1b00d1acd`, 3,257 for the installed public build). The checker
+   reads member and type references only, so it cannot see an override of a changed abstract member (the
+   source compile of HEAD catches that) or an enum or const value the compiler baked into a caller (only a
+   type diff shows it; a rebuild fixes it).
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 
@@ -124,8 +137,7 @@ only "does the signature still resolve". A member whose signature is unchanged a
 does something else passes every gate. Enumerate the bound surface from the API snapshot
 (`docs/reference/taleworlds-api-snapshot/{patch-targets,gamemodel-bases,reflection-sites}.md`) plus
 the XML `Deserialize` loaders, extract each member's body from the archived and the fresh
-decompile, and diff them (`python tools/engine_body_diff.py --help`
-gives its arguments). Rank the CHANGED rows and hand them to review agents in
+decompile, and diff them (`tools/engine_body_diff.py`, run as below). Rank the CHANGED rows and hand them to review agents in
 batches of six to ten with the diff, the TAOM override and the question "does TAOM re-implement a
 term that moved". **Full-replacement GameModel overrides first**: an additive override (`base.`
 then TAOM on top) inherits a body change for free, a replacement inherits nothing, and the two are
@@ -133,6 +145,16 @@ indistinguishable to a signature gate. On the 1.5.x line, v1.5.2 calibration: 51
 (`TaomPartyWageModel.GetTroopRecruitmentCost`, a replacement still carrying the v1.4.8 perk
 shape), one abstract-new patch target that `HarmonyPatchBindingTests` had passed because an
 abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-diff-ranked.md`.
+
+**Running the body diff.** Regenerate the API snapshot first (Phase 4 item 1's generator, after a
+TAOM.Tests build) so new members are compared, then run
+`python tools/engine_body_diff.py --old-suffix _v<OLD> --out <root>\_diff_<OLD>_to_<NEW>\bound_members`
+(`--root` defaults to `E:\Decompiled_Bannerlord`; the laptop passes `--root C:\Decompiled_Bannerlord`). It
+writes one `.diff` per changed member and prints `rows_in_file=N parsed=N unparsed=N` per input. It exits 1
+on any unparsed or unresolved row (a changed row is information, not a failure) and 2 on bad input, such as
+the same `BuildInfo.GameVersion` on both sides. A `TargetMethods()` patch appears in the snapshot by its
+first target only, so diff its other targets by hand. (On 2026-11-04 the tool parsed every row of this
+line's snapshot: 230, 108 and 47 rows, 0 unparsed.)
 
 ## Phase 4 — Re-verify TAOM against the new engine
 
