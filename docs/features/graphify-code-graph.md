@@ -120,7 +120,7 @@ On the 1.5.x line:
 | `/deep-review` Step 1 | `affected` on every changed public type | callers outside the diff, for the completeness and data-flow lenses; a `Blast radius:` line in the report |
 | `/investigate` Phase 1 | `explain` + `affected` on the failing type | the Phase 3 pattern-match candidate list |
 | `/new-feature` | `explain` + `affected` on every type the feature extends | extend-versus-modify, before the first file |
-| `feature-builder`, `refactoring-specialist` | `affected` before changing or moving a type | the refactor's move set; more than five dependents means a design change |
+| `feature-builder` | `affected` before changing or moving a type | the refactor's move set; more than five dependents means a design change |
 | Codex (`.agents/skills/taom-build`, `taom-review`, `taom-research`) and AGENTS.md | the same wrapper | the same caller trace |
 
 ## Tests

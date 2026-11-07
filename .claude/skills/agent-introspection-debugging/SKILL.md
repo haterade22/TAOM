@@ -18,7 +18,7 @@ This is the **harness/agent failure** companion to `/investigate` (TAOM-specific
 ## When to use
 
 - An agent run hits its retry budget (e.g., `/build-fix` 4-attempt limit)
-- A subagent (`/deep-review`, `feature-builder`, `codex-rescue`) reports failures with no useful output
+- A subagent (`/deep-review`, `feature-builder`, `deep-reviewer`) reports failures with no useful output
 - Multiple consecutive tool calls return errors with no forward progress
 - Context growth or drift is degrading output quality (e.g., responses become repetitive, instructions ignored)
 - File-system or environment state mismatch between expectation and reality
@@ -108,7 +108,7 @@ If the failure mode was novel and recurring is plausible, propose adding it to:
 - `/freeze` / `/unfreeze` — Phase 3 recoveries that scope-lock or release
 - `/context-save` / `/context-restore` — Phase 3 recoveries for context exhaustion
 - `/compact` — same
-- `/codex-rescue` — when the in-session agent can't recover, hand off to Codex (out-of-band, fresh context)
+- `/codex-verify`: when the in-session agent can't recover, hand off to Codex (out-of-band, fresh context; costs money, so explicit user intent only)
 
 ## Notes
 
