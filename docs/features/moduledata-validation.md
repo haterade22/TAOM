@@ -595,7 +595,7 @@ name on any item a mission preloads freezes the main thread on the first frame a
 screen drops (#352 on this line, #599 on the 1.5.x line). Patch90
 ([preload-body-guard.md](preload-body-guard.md)) is the runtime guard; this is the desk gate. A
 missing visual mesh cannot hang: `MetaMesh.GetCopy(name, false, true)` returns null and the preload
-drops it (`PreloadHelper.cs:211-228`), so the item only renders invisible.
+drops it (`TaleWorlds.MountAndBlade.View.PreloadHelper.cs:200-217` in the taom-src cache), so the item only renders invisible.
 
 `validate_mesh_refs.py` owns the ref extraction and the tpac TOC scan (Tier B meshes, Tier C
 PhysicsShapes); this pass turns its `MISSING_BODY` into an error and its `MISSING_MESH` into a
