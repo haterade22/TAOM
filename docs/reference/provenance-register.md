@@ -121,6 +121,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | kepano (Steph Ango): kepano-obsidian, obsidian-skills, defuddle | `kepano/kepano-obsidian` `kepano/obsidian-skills` `kepano/defuddle` | MIT | comparison-only | (none) | cleared |
 | Auto Ontology | `auto-ontology` `NVIDIA/auto-ontology` | Apache-2.0 | comparison-only | `.claude/rules/evidence-over-claims.md` C.4 (the idea that a capped result proves no complete list, read in its `query-validation.md` on 2026-11-08; the sentence is TAOM's own) | cleared |
 | T3 Code | `pingdotgg/t3code` `t3code` | MIT | comparison-only | (none) | cleared |
+| claude-mem | `claude-mem` `thedotmack/claude-mem` | Apache-2.0 | comparison-only | (none) | cleared |
 | claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
 
@@ -1014,6 +1015,15 @@ nothing was installed or run. Five ideas were rebuilt on the TAOM side: frontmat
 checks, two review-lens prompts, dangerous-sink rules, a canary test that must turn a run red, and
 token and cache accounting. The record describes ideas ported, not files copied. Record:
 [`docs/reviews/adopt-claude-plugins-official-2026-10-26.md`](../reviews/adopt-claude-plugins-official-2026-10-26.md).
+
+### claude-mem
+
+Upstream: https://github.com/thedotmack/claude-mem, `3ab6e1a` · Apache-2.0. Evaluated on 2026-11-08
+and rejected: it conflicts with ADR-011's rule that durable knowledge lives in the repository, and its
+plugin injects stored text into later sessions and calls a model for every observed session. Its hooks
+and selected source files were read from a shallow clone for the security pass; nothing was installed,
+run or ported. Record:
+[`docs/reviews/adopt-claude-mem-2026-11-08.md`](../reviews/adopt-claude-mem-2026-11-08.md).
 
 ---
 

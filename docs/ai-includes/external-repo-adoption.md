@@ -20,7 +20,7 @@ A watched repo (listed in `docs/reviews/upstream-watch.json`, today yotthani's t
 
 ## The cycle
 
-1. **Identify.** WebFetch the README + GitHub API metadata. Be skeptical of star counts and small-model summaries — verify claims from raw files. Note what it actually is, its domain, its license, and how recently it's maintained.
+1. **Identify.** Search [adoption-history.md](../reviews/adoption-history.md) for the source first, and report any earlier verdict before the new review. WebFetch the README + GitHub API metadata. Be skeptical of star counts and small-model summaries — verify claims from raw files. Note what it actually is, its domain, its license, and how recently it's maintained.
 2. **Security pass FIRST** (standing requirement — gating). Pull the runnable surface verbatim and read it:
    - `package.json` lifecycle scripts (`postinstall`/`preinstall`/`prepare`/`prepack` — the #1 supply-chain vector); install scripts (`install.sh`/`.ps1`, npx installers); hooks; any `*.js`/`*.py`/`*.sh` that runs on install or on tool events.
    - Flag: outbound network, piping a downloaded script into a shell, `eval`/`Function()`, base64-decode-then-run, reads of credentials / env / ssh / tokens, telemetry / phone-home, obfuscation, opt-in closed-source SDKs.
