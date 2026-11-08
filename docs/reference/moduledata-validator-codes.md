@@ -71,11 +71,11 @@ nothing and gates nothing. Run `python tools/validate_moduledata.py` by hand aft
   roster authored there would be entirely unvalidated. Today it defines items and monsters and
   nothing else; keep it that way, or extend the schema passes first.
 - **Touching any XSLT?** Run `python tools/check_external_xslt.py`. It is the only gate that reaches
-  all 16 stylesheets across the three modules (#462): well-formedness always, plus a real stylesheet
+  all 18 stylesheets across the three modules (#462): well-formedness always, plus a real stylesheet
   compile when lxml is present. CI cannot do this, because the two live modules are not in the
   checkout. Note no pass *interprets* a stylesheet: `TAOM_Map/ModuleData/settlements.xslt` is opened
   only to regex for the empty `<xsl:template match="Settlement"/>` strip, and `/xslt-check` reads
-  from `Main/_Module/ModuleData/` only, its mapping table covering 6 of the repo's 8
+  from `Main/_Module/ModuleData/` only, its mapping table covering 7 of the repo's 9
   (`action_strings.xslt` and `comment_strings.xslt` are absent). For `spcultures.xslt` run
   `CulturePartyTemplateTests`; everything else is a manual transform-and-diff.
 

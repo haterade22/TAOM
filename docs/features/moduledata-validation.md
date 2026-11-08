@@ -813,10 +813,10 @@ Counts measured 2026-11-07 on the public 2.0.29.5 install (the 2026-08-18 figure
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 338 / 385 | 8 | `xml-schemas` gate (`validate_xml_schemas.py`): engine-registered files only, 94 on 2026-11-06; the CI sweep of `Main/_Module/ModuleData/**` ended 2026-10-05 | full (338 files), plus schema contracts | `check_external_xslt.py` (8 of 8); `/xslt-check` maps 6 of 8 |
+| TAOM | this repo | 338 / 385 | 9 | `xml-schemas` gate (`validate_xml_schemas.py`): engine-registered files only, 94 on 2026-11-06; the CI sweep of `Main/_Module/ModuleData/**` ended 2026-10-05 | full (338 files), plus schema contracts | `check_external_xslt.py` (9 of 9); `/xslt-check` maps 7 of 9 |
 | TAOM_Map | game install | 44 / 308 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
 | LOTRLOME_Armory | game install | 454 / 467 | 8 | `check_external_xslt.py` | **full (454 files)** via `extra_ref_roots` | `check_external_xslt.py` |
-| total | | 836 / **1,160** | **17** | | **836 files swept** | **17 of 17** |
+| total | | 836 / **1,160** | **18** | | **836 files swept** | **18 of 18** |
 
 The two columns matter: the validator only ever reads `ModuleData`, so the left number is its
 ceiling and the right one is the module's whole XML surface. Of TAOM's 338 ModuleData files, 217
@@ -875,7 +875,7 @@ exists to prevent, and the tests use synthetic fixtures, so they pin the detecto
 the live file.
 
 **The 8 external stylesheets had no validation path until #462.**
-[`tools/check_external_xslt.py`](../../tools/check_external_xslt.py) now gates all 16 across the
+[`tools/check_external_xslt.py`](../../tools/check_external_xslt.py) now gates all 18 across the
 three modules: XML well-formedness always, a root-element check (a stylesheet the engine will
 silently ignore is worse than a broken one), and a real stylesheet compile when `lxml` is present.
 It runs on the developer's machine through `/verify` Step 2e (`tools/data_gates.py`), because those

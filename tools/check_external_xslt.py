@@ -122,8 +122,9 @@ def main() -> int:
     game_modules = Path(args.game_modules)
     if not game_modules.exists():
         print(f"ERROR: Bannerlord Modules folder not found: {game_modules}\n"
-              f"       The repo's stylesheets can still be checked, but the 8 live ones\n"
-              f"       cannot, and a partial run must not report clean.", file=sys.stderr)
+              f"       The repo's stylesheets can still be checked, but the live ones in\n"
+              f"       TAOM_Map and LOTRLOME_Armory cannot, and a partial run must not\n"
+              f"       report clean.", file=sys.stderr)
         return 2
 
     report = run(Path(args.moduledata), game_modules)

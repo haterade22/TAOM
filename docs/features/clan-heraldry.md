@@ -126,7 +126,7 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 ## Tests / Verification
 
 - `python tools/validate_moduledata.py` → **PASS**, 0 errors (no broken troop/template refs).
-- `python tools/check_external_xslt.py` → **PASS** on all 17 stylesheets across the three modules.
+- `python tools/check_external_xslt.py` → **PASS** on every stylesheet across the three modules (18 on 2026-11-07).
 - Transform `spclans.xslt` over the installed `SandBox/ModuleData/spclans.xml` with lxml and assert
   the emitted `color`/`color2` plus the passthrough attributes. Reading the stylesheet text cannot
   prove passthrough survived, which is the failure mode `/xslt-check` alone would miss.

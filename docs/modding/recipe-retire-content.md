@@ -202,7 +202,7 @@ Code: No code changes needed
    `BanditSpawnCampaignBehavior` indexes a hideout dictionary by clan culture with a hard indexer, so
    leaving those five clans in with no hideouts of their culture is a new-game crash. Later that
    comment is the only thing saying why the strip cannot be reverted.
-3. Check the strip by hand. No validator models XSLT: of the 16 stylesheets across the three modules,
+3. Check the strip by hand. No validator models XSLT: of the 18 stylesheets across the three modules,
    exactly one is ever opened by any validator, `TAOM_Map/ModuleData/settlements.xslt`, and only for a
    single yes or no question ([tools/README.md](../../tools/README.md), the XSLT note). Transform the
    vanilla file yourself and count what came out.
