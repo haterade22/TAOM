@@ -44,7 +44,7 @@ to clips on the wolf's skeleton. The warg usage set, the action types, the rider
   (`tools/gen_dire_wolf_anim_clips.ps1`). The generator fails on any warg binding it does not map.
 - **Behavior:** `WargConfig.WargMonsterIds` holds `dire_wolf`, which attaches the behavior tree and the rider hand
   posing. `WargConfig.ImpactBoneIds` picks the wolf's bite bones by Monster id, because the warg's hard-coded bone
-  indices mean nothing on this skeleton. `RiderlessMountRule` lists it too, and a test holds that list to `WargConfig`.
+  indices mean nothing on this skeleton. Fords of War's `RiderlessMountRule` removes every riderless mount, so it needs no list.
 - **Skeleton item:** the GUID stays the pack's, because the masters reference it. It would collide only if the
   ADOD_Beasts module loaded beside the Armory, and TAOM's module set does not include it.
 - **Dedicated server:** `DsAssetPackages/taom_creature_skeletons.tpac` holds the wolf skeleton, so that Monsters bone
@@ -209,7 +209,7 @@ Costs: `special_resources/troop_resource_costs.xml`. Size: `taom_body_length` on
 
 - `TAOM.Tests/Features/Warg/DireWolfTroopDataTests.cs`: the lines, the wolf and saddle in every battle roster, the
   costs, the War Spoils rows and the marketplace.
-- `TAOM.Tests/Features/Warg/WargMonsterIdTests.cs`, `TAOM.Tests/Features/FordsOfWar/Domain/RiderlessMountRuleTests.cs`.
+- `TAOM.Tests/Features/Warg/WargMonsterIdTests.cs`.
 - `tools/tests/test_apply_dire_wolf_armory.py`, `test_apply_dire_wolf_skeleton.py`, `test_gen_dire_wolf_anim_clips.py`,
   `test_verify_mount_assets.py`.
 - Gates: `python tools/verify_mount_assets.py dire_wolf`, `python tools/audit_mount_parity.py`,

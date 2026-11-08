@@ -1383,3 +1383,11 @@ The shield facing rule moved from the dwarf attacks into `TAOM.Core.Combat.Shiel
 - **Why missed:** the sentence was written from the case in hand and copied with the code.
 - **Prevent:** before writing a shared rule's comment, list each consumer's value (grep its config) and say what differs, or say nothing about it; state engine behaviour only as far as it was traced.
 - **Source:** [rca-shield-cover-2026-11-06.md](../rca-shield-cover-2026-11-06.md), S1 and S5.
+
+### A damage rule in the model misses every blow written outside it (Fords pierce rule, 2026-11-07)
+
+The Fords of War pierce rule against cavalry went into the Custom Battle damage model. Codex found that `CustomAttacksUtils.TakeDamage` (warg and spider bites, a signature strike's splash, the dwarf, troll and elephant-like attacks) writes `InflictedDamage` with `DamageCalculated = true`, so the engine registers those blows without the model; two lenses found that the engine runs the model on a shield-blocked blow too, where the damage is the shield's.
+
+- **Why missed:** the rule was placed where the modelled blows pass, and nobody listed the other paths a blow's damage takes.
+- **Prevent:** before a damage rule ships, grep every write of `InflictedDamage` and every `DamageCalculated = true`, and read the blocked case in `Mission.GetAttackCollisionResults`; say in the rule's doc which paths it covers.
+- **Source:** [rca-fords-pierce-cavalry-2026-11-07.md](../rca-fords-pierce-cavalry-2026-11-07.md), findings 1 and 2.

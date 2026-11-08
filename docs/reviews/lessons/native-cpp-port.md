@@ -90,6 +90,18 @@ The probe's summary said every address is proven inside a mapped section before 
   still skips without `TAOM_GHIDRA_IT=1`: read its skip count, never its exit code.
 - **Source:** `docs/reviews/rca-engine-bump-v1.5.5-2026-10-14.md` F10; issue #806.
 
+### A state change that clears a native index can leave its flag set: reset through the engine's own reset (#1096, 2026-11-07)
+The corpse delete writes a soldier's target index to -1 and leaves the "target is valid" flag, and the next AI tick reads agent
+slot -1 (`0x6B716E`). The managed `SetTargetAgent(null)` only queues -1 and leaves the flag too; `InvalidateTargetAgent` reaches
+the same native reset a rout does, which clears both.
+- **Why missed:** a rout, a delete and a forced target all look like "the target changes"; only the decompile shows which of them
+  write the flag. The review also caught a reason ("a soldier may chase a fleeing enemy") written from the word "routed" rather
+  than from the state machine, where Routed is a removal state.
+- **Prevent:** before clearing native AI state from managed code, decompile each managed call down to the fields it writes, and
+  pick the one that writes the flag the faulting read trusts. Before giving a reason for a state rule, read what that state means
+  to the engine (`Mission.OnAgentRemoved` lists the removal states).
+- **Source:** [rca-dead-target-reset-2026-11-07.md](../rca-dead-target-reset-2026-11-07.md) findings 1 and 4.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

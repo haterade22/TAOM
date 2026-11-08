@@ -6,7 +6,7 @@ using TAOM.Features.FordsOfWar.Domain;
 namespace TAOM.Features.FordsOfWar.Hooks;
 
 /// <summary>
-/// The army upgrades and the hero factors on each blow, called from the Custom Battle damage model, so a level reaches the units already on the field with no stat refresh. Inert outside a match:
+/// The army upgrades, the hero factors and (through <see cref="FordsPierceHooks"/>) the pierce rule against cavalry on each blow, called from the Custom Battle damage model, so a level reaches the units already on the field with no stat refresh. Inert outside a match:
 /// no factors are set, and every other Custom Battle passes straight through. Tower gunners gain nothing from the damage tracks, because towers have their own feats. Blows can run
 /// off the main thread, so the factors are immutable values read once per blow.
 /// </summary>
@@ -31,11 +31,15 @@ internal static class FordsUpgradeHooks
     /// <summary>Blows that the hero factors raised, and blows that they lowered, since the match started.</summary>
     internal static (long Raised, long Lowered) HeroCounts => (Interlocked.Read(ref _heroHitsRaised), Interlocked.Read(ref _heroHitsLowered));
 
+    /// <summary>Whether a match has set its factors; false in every other battle.</summary>
+    internal static bool IsLive => _west != null;
+
     /// <summary>Whether a troop is one of this match's heroes.</summary>
     internal static bool IsHero(string? troopId) => _heroes?.IsHero(troopId) == true;
 
-    internal static void Set(CombatUpgradeFactors west, CombatUpgradeFactors east, HeroCombatFactors heroes)
+    internal static void Set(CombatUpgradeFactors west, CombatUpgradeFactors east, HeroCombatFactors heroes, float pierceVsMounted)
     {
+        FordsPierceHooks.Set(pierceVsMounted);
         _west = west;
         _east = east;
         _heroes = heroes;
@@ -65,6 +69,7 @@ internal static class FordsUpgradeHooks
         _west = null;
         _east = null;
         _heroes = null;
+        FordsPierceHooks.Clear();
         Interlocked.Exchange(ref _hitsRaised, 0);
         Interlocked.Exchange(ref _hitsLowered, 0);
         Interlocked.Exchange(ref _heroHitsRaised, 0);
@@ -109,12 +114,14 @@ internal static class FordsUpgradeHooks
         if (hero != 1f)
             Interlocked.Increment(ref _heroHitsLowered);
 
+        var taken = hero * FordsPierceHooks.Factor(in attack, in collision);
+
         var factor = (body == null ? null : FactorsOf(body))?.Defence(collision.IsMissile) ?? 1f;
         if (factor == 1f)
-            return damage * hero;
+            return damage * taken;
 
         Interlocked.Increment(ref _hitsLowered);
-        return damage * factor * hero;
+        return damage * factor * taken;
     }
 
     private static CombatUpgradeFactors? FactorsOf(Agent agent)

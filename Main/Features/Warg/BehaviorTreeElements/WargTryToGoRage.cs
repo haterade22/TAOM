@@ -5,6 +5,7 @@ using BehaviorTreeWrapper.BlackBoardClasses;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
 using System;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.FordsOfWar;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
 
@@ -27,11 +28,15 @@ public class WargTryToGoRage : BannerlordConstantEventListener, IBTBannerlordBas
 
     Random _random = new();
 
+    // Mike, 2026-11-07: no rage in a Fords of War match, where it is not needed. This listener is the only code that starts a rage,
+    // and it is built with its tree when the warg joins the mission, so the mission is read once here.
+    private readonly bool _rageAllowed = !FordsOfWarMission.IsActive(Mission.Current);
+
     public override void Notify(object[] data)
     {
         Agent affectorAgent = (Agent)data[0];
         Blow blow = (Blow)data[2];
-        if (RageAttackAmount.GetValue() > 0
+        if (!_rageAllowed || RageAttackAmount.GetValue() > 0
             || blow.IsFallDamage
             || blow.IsMissile) return;
         if (blow.InflictedDamage > WargConfig.minDamageReceivedForRage

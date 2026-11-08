@@ -8,7 +8,7 @@ namespace TAOM.Features.FordsOfWar;
 
 /// <summary>
 /// The 1 Hz look at the field for the run report: how far each stream has pushed, whether a held lane (its front unit within 10 m of
-/// the hold point, measured along the lane's axis) stands inside a tower's fire and which tower covers it, how many enemy melee units
+/// the hold point, measured along the lane's axis; a Seize's hold at a capture point or camp is not a lane hold) stands inside a tower's fire and which tower covers it, how many enemy melee units
 /// stand at each tower and how close anyone came to each capture point. Engine-free (it reads the units the battlefield adapter
 /// already measured) but outside the pure diagnostics folder because it reads <see cref="FordsUnitSample"/>. Distances are 2D. No
 /// LINQ and no allocation per unit. It also counts, per stream, the units the engine holds alarmed and, for a stream whose applied
@@ -64,7 +64,7 @@ internal static class FordsFieldProbe
                 continue;
 
             var stream = LaneStreams.Index(side, lane, lanes);
-            if (pair.Value.Kind == LaneCommandKind.HoldAt)
+            if (pair.Value.Kind == LaneCommandKind.HoldAt && !IsObjective(layout, pair.Value.Target))
             {
                 holdAt[stream] = pair.Value.Target;
                 holdAxis[stream] = AxisAt(layout, lane, pair.Value.Target);
@@ -155,7 +155,7 @@ internal static class FordsFieldProbe
             }
         }
 
-        return new FordsFieldSample(LanesOf(lanes, live, inFire, front, holdFront, holdFrontToPoint, applied, standing, coverIndex, alarmed, attack, march),
+        return new FordsFieldSample(LanesOf(lanes, live, inFire, front, holdFront, holdFrontToPoint, standing, coverIndex, alarmed, attack, march),
             TowersOf(standing, meleeNear), PointsOf(points, nearest, view), liveBySide[0], liveBySide[1], backlog);
     }
 
@@ -255,6 +255,27 @@ internal static class FordsFieldProbe
         return -1;
     }
 
+    /// <summary>
+    /// A lane on Seize holds at the capture point or camp itself (<see cref="LaneMarchRules"/>' Seize command takes the layout's own
+    /// position, and the director records the rules' command, not a fallback waypoint), so an exact match is a Seize, not a lane hold.
+    /// </summary>
+    private static bool IsObjective(MapLayout layout, Vec3f target)
+    {
+        foreach (var point in layout.CapturePoints)
+        {
+            if (point.Position == target)
+                return true;
+        }
+
+        foreach (var camp in layout.Camps)
+        {
+            if (camp.Position == target)
+                return true;
+        }
+
+        return false;
+    }
+
     private static bool IsMelee(UnitRole role) => role == UnitRole.Infantry || role == UnitRole.Spear || role == UnitRole.Cavalry;
 
     /// <summary>The lane's direction at the hold point: the segment of the lane's own path nearest to it. Zero when the lane has no path.</summary>
@@ -279,19 +300,17 @@ internal static class FordsFieldProbe
         return along < 0f ? -along : along;
     }
 
+    /// <summary>A stream is settled only when <see cref="Sample"/> measured it against a lane hold: holdFrontToPoint stays at MaxValue otherwise.</summary>
     private static List<FordsLaneSample> LanesOf(int lanes, int[] live, int[] inFire, float[] front, float[] holdFront, float[] holdFrontToPoint,
-        IReadOnlyDictionary<(MatchSide, int), LaneCommand> applied, List<TowerSlot> standing, int[] coverIndex, int[] alarmed, AttackTally attack,
-        MarchTally march)
+        List<TowerSlot> standing, int[] coverIndex, int[] alarmed, AttackTally attack, MarchTally march)
     {
         var result = new List<FordsLaneSample>(live.Length);
         for (var side = 0; side < LaneStreams.Sides; side++)
         {
             for (var lane = 0; lane < lanes; lane++)
             {
-                var key = ((MatchSide)side, lane);
                 var stream = LaneStreams.Index((MatchSide)side, lane, lanes);
-                var holding = applied.TryGetValue(key, out var command) && command.Kind == LaneCommandKind.HoldAt;
-                var settled = holding && holdFrontToPoint[stream] <= HoldArrivalMetres;
+                var settled = holdFrontToPoint[stream] <= HoldArrivalMetres;
                 var hold = settled && holdFront[stream] != float.MaxValue ? holdFront[stream] : -1f;
                 var cover = coverIndex[stream] >= 0 ? standing[coverIndex[stream]].Id : null;
                 var target = attack.Index[stream] >= 0 ? standing[attack.Index[stream]].Id : null;

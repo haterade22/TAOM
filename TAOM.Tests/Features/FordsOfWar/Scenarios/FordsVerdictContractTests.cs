@@ -9,7 +9,9 @@ namespace TAOM.Tests.Features.FordsOfWar.Scenarios;
 
 /// <summary>
 /// One row per (check, part) that the rules emit: the scenario that makes a working producer PASS it, and the fault that makes a
-/// broken producer FAIL it, or <c>PassOnly</c> for a part with no FAIL branch (it can pass or stay unseen, never fail).
+/// broken producer FAIL it, or <c>PassOnly</c> for a part with no FAIL branch (it can pass or stay unseen, never fail). A
+/// <c>FailOnly</c> part has no PASS branch: a working producer leaves it unseen, and only the named fault reaches it (check 12's rage
+/// start, since no warg rages in a Fords match from 2026-11-07).
 /// A row names scenarios from <see cref="FordsScenarios"/>, and each is run: a claim that no scenario backs fails the test.
 /// Check 11 "hits" is <c>NotDrivable</c>: <c>FordsVolleyHits.Read</c> takes the engine's blow structs, so no scenario runs it, and the
 /// scenario towers hand the report hits whose ratio is 1.0 by construction. That row claims no scenario backing.
@@ -19,6 +21,8 @@ namespace TAOM.Tests.Features.FordsOfWar.Scenarios;
 public class FordsVerdictContractTests
 {
     private const string PassOnly = "PassOnly";
+
+    private const string FailOnly = "FailOnly";
 
     /// <summary>No scenario drives this part: <c>FordsVolleyHits.Read</c> takes engine structs, and the scenario towers synthesize hits whose ratio is 1.0 by construction.</summary>
     private const string NotDrivable = "NotDrivable";
@@ -66,9 +70,9 @@ public class FordsVerdictContractTests
         new(10, "ownSide", "S1", "hp-drift"),
         new(11, "item", "S1", "item-missing"),
         new(11, "hits", NotDrivable, NotDrivable),
-        new(12, "started", "S1", PassOnly),
-        new(12, "restored", "S1", "warg-stranded"),
-        new(12, "returned", "S1", "warg-not-returned"),
+        new(12, "started", FailOnly, "S3-warg"),
+        new(12, "restored", "S3-warg", "warg-stranded"),
+        new(12, "returned", "S3-warg", "warg-not-returned"),
         new(13, "capture", "S1", PassOnly),
         new(13, "contested", "S1", PassOnly),
         new(14, "keep", "S1", PassOnly),
@@ -105,7 +109,7 @@ public class FordsVerdictContractTests
     public void EveryPassScenario_MakesItsPartPass()
     {
         var wrong = new List<string>();
-        foreach (var c in Table.Where(c => c.PassScenario != NotDrivable))
+        foreach (var c in Table.Where(c => c.PassScenario != NotDrivable && c.PassScenario != FailOnly))
         {
             var sc = FordsScenarios.Get(c.PassScenario);
             var result = sc.Result(c.Check, c.Part);
@@ -134,7 +138,7 @@ public class FordsVerdictContractTests
     [TestMethod]
     public void APassOnlyPart_IsNeverFailedByAnyScenarioOrFault()
     {
-        var names = Table.SelectMany(c => new[] { c.PassScenario, c.FailFault }).Where(n => n != PassOnly && n != NotDrivable).Distinct().ToList();
+        var names = Table.SelectMany(c => new[] { c.PassScenario, c.FailFault }).Where(n => n != PassOnly && n != NotDrivable && n != FailOnly).Distinct().ToList();
         var failed = new List<string>();
         foreach (var c in Table.Where(c => c.FailFault == PassOnly))
         {
@@ -146,5 +150,22 @@ public class FordsVerdictContractTests
         }
 
         Assert.AreEqual(0, failed.Count, "a part marked PassOnly has a FAIL branch: " + string.Join("; ", failed));
+    }
+
+    [TestMethod]
+    public void AFailOnlyPart_IsNeverPassedByAnyScenarioOrFault()
+    {
+        var names = Table.SelectMany(c => new[] { c.PassScenario, c.FailFault }).Where(n => n != PassOnly && n != NotDrivable && n != FailOnly).Distinct().ToList();
+        var passed = new List<string>();
+        foreach (var c in Table.Where(c => c.PassScenario == FailOnly))
+        {
+            foreach (var name in names)
+            {
+                if (FordsScenarios.Get(name).Result(c.Check, c.Part) == FordsResult.Pass)
+                    passed.Add(c.Check + "." + c.Part + " passed in " + name);
+            }
+        }
+
+        Assert.AreEqual(0, passed.Count, "a part marked FailOnly has a PASS branch: " + string.Join("; ", passed));
     }
 }

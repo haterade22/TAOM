@@ -40,7 +40,7 @@ internal static class FordsSnapshotBuilder
             var center = new Vec3f(members.Average(m => m.Position.X), members.Average(m => m.Position.Y),
                 members.Average(m => m.Position.Z));
             lanes.Add(new LaneSnapshot(group.Key.Side, group.Key.Lane, members.Count, center,
-                NearestEnemy(samples, group.Key.Side, center), members.ConvertAll(m => m.Position)));
+                NearestEnemy(samples, group.Key.Side, center), members.ConvertAll(m => m.Position), members.ConvertAll(m => m.Key)));
         }
 
         return lanes;

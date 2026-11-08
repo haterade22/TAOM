@@ -681,6 +681,12 @@ DUMP_CREATED = re.compile(r"^Dump file created at (.+?\.dmp)\.?\s*$", re.M)
 UPLOADER_STARTED = "Starting Crash Uploader"
 
 
+def wants_dump(reason):
+    """True when the game gets a full procdump before it is stopped: a crash, and a stall, since a hung mission frame raises no exception and
+    only a dump names the loop it spins in (/native-crash-triage, "A hang"; 2026-11-07, three stalls in one round, none dumped)."""
+    return reason.startswith(("crash", "stall"))
+
+
 def save_engine_dump(watchdog_log, target, state, say):
     """Copies the engine's dump of this game to target and returns True when target holds it. The game's own watchdog_log_<pid>.txt names
     the dump and decides when: the Watchdog writes it twice (a stack-only pass, then the full one) at the same path, then writes "Starting
@@ -848,8 +854,8 @@ def run_once(args, game, modules):
         dump_state = {}
         wait_after_crash(proc, args.keep_on_crash, say,
                          on_poll=lambda: save_engine_dump(Path(LOGS_DIR) / f"watchdog_log_{proc.pid}.txt", folder / "engine_dump.dmp", dump_state, say))
-        if proc.poll() is None:
-            dump_crash(proc.pid, folder, say)
+    if wants_dump(reason) and proc.poll() is None:
+        dump_crash(proc.pid, folder, say)
     if reason == "done":
         try:
             proc.wait(EXIT_GRACE_SECONDS)

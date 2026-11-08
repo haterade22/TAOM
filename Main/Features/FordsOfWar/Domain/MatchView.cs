@@ -20,8 +20,14 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     int IncomePerMinute = 0, string FactionName = "", IReadOnlyList<MatchView.CampView>? Camps = null, float OrderCooldownSeconds = 0f,
     IReadOnlyList<string>? AiBuyCycle = null, IReadOnlyList<MatchView.UpgradeView>? Upgrades = null, string EnemyFactionName = "", float? NextFreeHeroIn = null, bool EndedOnTime = false)
 {
+    /// <summary>
+    /// A lane as one commander sees it. NearOwnValue is the summed value of the lane's own units within the pressure radius of its lead,
+    /// NearEnemyValue and NearEnemyCount the same for enemy units of any lane; all three are 0 for a lane with no lead.
+    /// AtOwnTower is true when the lead stands within fire range of the lane's outermost standing own tower (the keep when none stands).
+    /// </summary>
     internal sealed record LaneView(int Index, bool Owned, LaneOrder Order, float CooldownLeft, int OwnLive, int EnemyLive,
-        int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false);
+        int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false, float NearOwnValue = 0f, float NearEnemyValue = 0f,
+        int NearEnemyCount = 0, bool AtOwnTower = false);
 
     /// <summary>Gondor's rotation as the panel shows it. CanAffordCall is the gold test only.</summary>
     internal sealed record RegionView(string Id, string Name, float SecondsLeft, float TotalSeconds, string NextId, string NextName, int CallFee,

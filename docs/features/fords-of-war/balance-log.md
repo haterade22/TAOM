@@ -400,6 +400,55 @@ No trait text changes: each changed value is a price or a free wave count that n
 
 **Result: not measured.** Round 3 runs on the build that carries this change, the weaker Rohan riders and the check 12 fix. If Rohan still wins more than 9 of 12, its riders are cut again.
 
+### Culture tactics (round 4)
+
+**Why:** Mike, 2026-11-07: "I feel like Isengard for example should fight in more formations. Advance as a formation, get close and
+then attack, etc. Same with dwarves. That is where their strength is formations and coordinated attacks." Until now every lane of
+every faction marched in the engine's default Line and broke into a charge at 25 m, so no culture fought differently from another.
+
+**Changed:** ten factions get a `tactics` block in `factions.json` (the table is in the feature doc, Lane rules, "Culture tactics").
+Isengard, Erebor, Gondor and the Easterlings close the last 20 m in a shield wall and charge only at 5 to 8 m. Rivendell,
+Mirkwood and Dale advance as one formation from 45 to 55 m and charge at 8 to 10 m. Rohan marches in a wedge and charges at 40 m;
+Mordor and Gundabad march loose and charge at 35 m. Harad, Dol Guldur and Umbar keep the old behaviour, so they are the control.
+The walls start at 20 m, not 40 m, because a wall walks at about 0.3 of its units' top speed and a longer approach crawls under
+fire. In the engine a wall also sets its units' ranged weight to 0, where the normal move behaviour gives 0.02 to 0.04, so whether a
+wall costs arrows is unmeasured. Loose and Skein let a formation move at 0.9 of its
+units' average top speed against 0.8 for Line, so those lanes walk about an eighth faster than before.
+
+**What to watch:** whether the walls win their fights (gold trade, kills per body) or lose them while they walk the last 20 m at
+about 0.3 of their top speed; whether match length moves away from 30 minutes; and the `[LaneState]` lines with `branch=Close` and
+`arr=`, which show how often each lane closed in formation. A lane is one mixed formation: the engine puts shield bearers in the
+front rank while the lane marches, but archers and riders stand in the same wall.
+
+**Undo:** delete a faction's `tactics` line in `factions.json` to give it the old behaviour back; delete every one to undo the change in
+play. The code without any block sends no arrangement order and charges at the engage range, as before.
+
+### Regroup under your own tower (round 4)
+
+**Why:** the AI fed outnumbered lanes into the enemy and never used its own towers. A lane that was losing kept pushing until it was gone, while the tower behind it stood unused.
+
+**Changed:** two parts. In `AiCommander`, a lane outside the assault and not on Seize goes to Fall back when the units within 40 m of its lead (`PressureRadius`) hold at least `RegroupMinEnemy` (10) enemies worth more than `FallBackRatio` (1.6) times its own value there, and returns to Push when at least 10 enemies are still near and their value is at most `ReturnRatio` (1.1) times its own, or when the lead has reached its tower's fire range with no enemy within 40 m, or when nobody is left in the lane. A lane that outran the enemy but is not home yet stays on Fall back. Units of any lane count on both sides, and a hero counts as 250 (`HeroPressureValue`) instead of its price, so one hero neither forces a regroup nor blocks one. The comparison is value near the lead, not headcount: a lane count includes units at the base and ignores quality, and Rivendell and Mirkwood cap a lane at 40 against 90 to 123 for the others, so a headcount rule would keep the elves retreating. The AI releases only a Fall back it ordered itself, orders wait for the lane cooldown, and the assault pick skips a lane on Fall back. In `LaneMarchRules`, a lane on Fall back whose nearest enemy is in charge range and stands within fire range of the lane's outermost standing tower (the keep when none stands) now charges; once charging it keeps fighting out to 15 m past that range. The AI logs each order as `[FordsOfWar][Ai] regroup side=<..> lane=<n> own=<value> enemy=<value> n=<count>`, and `regroup end` when it releases.
+
+**What to watch:** match length against the 30 to 40 minute target (a side that regroups may stall the push); tower kills per side; and the gold trade of the side that is behind, which should lose less per fight now. How often `regroup` and `regroup end` alternate on one lane: many pairs would mean the two ratios sit too close. The per-lane `Charge` and `MoveTo` `CommandsGiven` counts of lanes that logged a regroup (`FordsRunReport.Mission.cs`), to see whether they turned and fought or only walked. Check 9's `bypass` on lanes that regrouped, since an AI Fall back is a MoveTo and the probe reads a MoveTo with a standing tower ahead as a lane marching past it.
+
+**Known limits:** a wall faction regroups in its march arrangement, because the Close branch is not reached under Fall back. While every lane is on Fall back and no lane is under threat, the AI still buys the next entry of its buy cycle for the lane with the most room; with every lane full it buys only a due upgrade or beast. A hero bought then goes to lane 0, the older fallback.
+
+**Undo:** set `FallBackRatio` in `AiCommander.cs` so high that the rule never fires (for example 1000), which turns off the AI half. The tower fight in `LaneMarchRules` only matters on a Fall back lane, so a person's Fall back keeps it; remove the `FightsAtOwnTower` test in `Evaluate` to undo that half.
+
+### Pierce against cavalry (round 4)
+
+**Why:** Rohan won all 12 of its matches in round 2, and spears traded 0.73 to 0.79 gold in every set of matches (see "Spears" below). Mike, 2026-11-07: spearmen and pikemen should counter cavalry, and the simplest rule is that cavalry and horses take more from pierce damage, in this mode only.
+
+**Changed:** `pierceVsMountedFactor` 2 in `match.json`: a horse or a rider takes twice the damage of a pierce blow. It covers spears and pikes in either grip, arrows, crossbow bolts, javelins, tower arrows and couched lances, and the scripted bites and splash below. A blow a shield blocks keeps its shield damage. Mike offered 2 or 3; 2 because the rule also reaches every bow and every tower, so the round shows whether the low end is already enough.
+
+**Who it hits:** every rider and every mount, ridden or riderless: horses, camels, elk, wargs, spiders, Erebor's war rams, and Harad's war elephant and mumak (the packs are in `factions.json`; seat and howdah crew stand on foot and do not count). Rohan fields the most riders. Horse archers also take twice the damage from foot archers. The doubled damage also makes a dismount, a horse rearing and a failed shrug-off more likely, through the engine's own rules.
+
+**Scripted blows:** warg and spider bites, creature attacks and signature strike splash now go through the damage model in a match, as every other blow does. So the army upgrades and the hero factors reach them for the first time: Sauron's splash deals 3 times what it did, and a side's melee damage upgrades raise its wargs' bites. A warg bite on a horse or camel already did twice the damage (`WargAttackService`), so in a match it now does 4 times.
+
+**Undo:** set `pierceVsMountedFactor` to 1 in `match.json`. That turns off only the pierce rule: scripted blows still go through the damage model in a match, so the upgrades and hero factors keep reaching them. Undoing that part means reverting the `FordsScriptedBlows.Damage` call in `CustomAttacksUtils.TakeDamage`.
+
+**Result: not measured.** Round 4 measures it, on the build after round 3's.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.

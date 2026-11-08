@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace TAOM.Features.FordsOfWar.Domain;
@@ -27,9 +28,19 @@ internal sealed class AiCommander
 
     private const float BuybackMinLeftSeconds = 10f;
 
+    /// <summary>A lane outside the assault falls back to its own tower when the units near its lead are worth more than this multiple of its own there.</summary>
+    internal const float FallBackRatio = 1.6f;
+
+    /// <summary>A lane the AI sent back returns to Push once the enemy value near its lead is at most this multiple of its own; between the two ratios it stays put.</summary>
+    internal const float ReturnRatio = 1.1f;
+
+    /// <summary>The fewest enemy units near a lane's lead that can send it back: a skirmish of a few soldiers is not an outnumbered lane.</summary>
+    internal const int RegroupMinEnemy = 10;
+
     private readonly FordsAiProfile _profile;
     private readonly IFordsRandom _random;
     private readonly Dictionary<int, string> _assaultTargets = new();
+    private readonly HashSet<int> _regrouping = new();
     private const string UpgradeEntry = "up:";
     private const string BeastEntry = "beast:";
 
@@ -107,7 +118,7 @@ internal sealed class AiCommander
     /// <summary>The lane we are not losing with the best own-to-enemy ratio; the lowest index wins a tie.</summary>
     private static MatchView.LaneView? PickAssaultLane(List<MatchView.LaneView> lanes) =>
         lanes
-            .Where(l => l.Threat <= l.OwnLive)
+            .Where(l => l.Threat <= l.OwnLive && l.Order != LaneOrder.FallBack)
             .OrderByDescending(l => (l.OwnLive + 1f) / (l.EnemyLive + 1f))
             .ThenBy(l => l.Index)
             .FirstOrDefault();
@@ -154,13 +165,19 @@ internal sealed class AiCommander
     /// keeps Push until the lane's own count drops below <see cref="ReleaseFraction"/> of the threshold or the tower it was
     /// sent at falls. One lane outside the assault at a time seizes an open objective when no enemy is at its tower; the match
     /// returns it to Push once the objective is held, and it breaks off early when the enemy outnumbers it at its tower. Never
-    /// overrides Fall back, and only off cooldown.
+    /// overrides a Fall back a person gave, and only off cooldown. A lane outside the assault that the enemy outnumbers past
+    /// <see cref="FallBackRatio"/> is sent to Fall back (regroup under its own tower); the AI releases only its own Fall back, to
+    /// Push, once the ratio is down to <see cref="ReturnRatio"/>.
     /// </summary>
     private void SetOrders(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, List<AiAction> actions)
     {
         var seizing = lanes.Any(l => l.Order == LaneOrder.Seize);
         foreach (var lane in lanes)
         {
+            // A lane off FallBack is nobody's regroup any more, whatever else happens to it this visit.
+            if (lane.Order != LaneOrder.FallBack)
+                _regrouping.Remove(lane.Index);
+
             if (lane.Order == LaneOrder.Seize)
             {
                 if (lane.Threat > lane.OwnLive && lane.CooldownLeft <= 0f)
@@ -172,22 +189,54 @@ internal sealed class AiCommander
                 _assaultTargets.Remove(lane.Index);
 
             var isAssault = assault != null && lane.Index == assault.Index;
+            if (lane.Order == LaneOrder.FallBack)
+            {
+                if (_regrouping.Contains(lane.Index) && ReadyToReturn(lane) && lane.CooldownLeft <= 0f)
+                    actions.Add(AiAction.SetOrder(lane.Index, LaneOrder.Push, RegroupLine(view, "regroup end", lane)));
+
+                continue;
+            }
+
             if (isAssault && lane.OwnLive >= view.AssaultThreshold && !_assaultTargets.ContainsKey(lane.Index))
                 _assaultTargets[lane.Index] = NextEnemyTowerId(view, lane);
+
+            if (!isAssault && !_assaultTargets.ContainsKey(lane.Index) && lane.NearOwnValue > 0f && lane.NearEnemyCount >= RegroupMinEnemy
+                && lane.NearEnemyValue > FallBackRatio * lane.NearOwnValue && lane.CooldownLeft <= 0f)
+            {
+                _regrouping.Add(lane.Index);
+                actions.Add(AiAction.SetOrder(lane.Index, LaneOrder.FallBack, RegroupLine(view, "regroup", lane)));
+                continue;
+            }
 
             var building = isAssault && lane.OwnLive < view.AssaultThreshold && !_assaultTargets.ContainsKey(lane.Index);
             var wanted = building ? LaneOrder.Hold : LaneOrder.Push;
             if (!seizing && !isAssault && !_assaultTargets.ContainsKey(lane.Index) && lane.CanSeize && lane.Threat <= 0
-                && lane.OwnLive >= SeizeMinUnits && lane.Order != LaneOrder.FallBack && lane.CooldownLeft <= 0f)
+                && lane.OwnLive >= SeizeMinUnits && lane.CooldownLeft <= 0f)
             {
                 wanted = LaneOrder.Seize;
                 seizing = true;
             }
 
-            if (lane.Order != wanted && lane.Order != LaneOrder.FallBack && lane.CooldownLeft <= 0f)
+            if (lane.Order != wanted && lane.CooldownLeft <= 0f)
                 actions.Add(AiAction.SetOrder(lane.Index, wanted));
         }
     }
+
+    /// <summary>
+    /// A regrouping lane goes back to Push when it holds its own in contact (at least <see cref="RegroupMinEnemy"/> enemies near, as for
+    /// the Fall back, and no longer much stronger), when it reached its tower and nobody followed it, or when nobody is left in it, so its
+    /// next wave does not spawn into a retreat. Fewer enemies are not contact: on a retreat the lead is the rear guard, and the first
+    /// pursuers to catch up would release the lane away from its tower. Without contact and away from its tower the lane keeps going home.
+    /// </summary>
+    private static bool ReadyToReturn(MatchView.LaneView lane) =>
+        (lane.NearEnemyCount >= RegroupMinEnemy && lane.NearEnemyValue <= ReturnRatio * lane.NearOwnValue)
+        || (lane.AtOwnTower && lane.NearEnemyCount == 0)
+        || lane.OwnLive == 0;
+
+    private static string RegroupLine(MatchView view, string what, MatchView.LaneView lane) =>
+        $"[FordsOfWar][Ai] {what} side={view.Side} lane={lane.Index} own={Value(lane.NearOwnValue)} enemy={Value(lane.NearEnemyValue)} n={lane.NearEnemyCount}";
+
+    private static string Value(float value) => value.ToString("0.0", CultureInfo.InvariantCulture);
 
     /// <summary>
     /// The upgrade or beast when the cycle's next entry names one, with its price: moves past an upgrade at its top level and a beast whose timer still runs.
@@ -314,7 +363,14 @@ internal sealed class AiCommander
     private void BuildAssault(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, int gold, List<AiAction> actions)
     {
         if (assault == null)
-            return;
+        {
+            // Every lane is on Fall back: the purchase follows the same dispatch, aimed at the lane with the most room. Not while a lane is
+            // under threat, because Defend has already taken the cycle's next entry for it and a second buy would skip the entries after.
+            if (view.AiBuyCycle is not { Count: > 0 } || !lanes.All(l => l.Threat <= l.OwnLive))
+                return;
+
+            assault = lanes.OrderBy(l => l.OwnLive).ThenBy(l => l.Index).First();
+        }
 
         if (view.AiBuyCycle is { Count: > 0 } cycle)
         {

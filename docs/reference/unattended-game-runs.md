@@ -117,9 +117,11 @@ For a balance reading rather than a pass or fail, run `python tools/fords_match_
   idle gate is why a person is not in the middle of something else.
 - **The deploy replaces the maintainer's.** Building from a worktree changes what `Modules/TAOM` holds. Say which build you deployed in the report.
 - **Logs are pruned.** The launcher copies them out; the folder under `E:/Temp/fords-runs` is the record.
-- **A crash dump is tried, not promised.** On a crash the launcher runs `procdump -accepteula -ma <pid>` into `crash.dmp` in the run folder
-  (about 60 s, 180 s limit) before it kills the game, and says in `runner_log.txt` when procdump is missing, times out or leaves no dump. A dump counts as written when `crash.dmp` exists and is not empty, because procdump v12.01 exits 0xFFFFFFFE for success and for a missing pid alike; its own output is in `procdump.log` beside it. The Watchdog
-  may block the attach (`native-crash-triage` says so), and only a real crash settles it. A value of `--keep-on-crash` above 0 waits for a person to answer the Watchdog dialog first.
+- **A crash dump is tried, not promised.** On a crash, and on a stall (the status heartbeat unchanged for 10 minutes), the launcher runs `procdump -accepteula -ma <pid>` into `crash.dmp` in the run folder
+  (about 60 s, 180 s limit) before it kills the game, and says in `runner_log.txt` when procdump is missing, times out or leaves no dump. A dump counts as written when `crash.dmp` exists and is not empty, because procdump v12.01 exits 0xFFFFFFFE for success and for a missing pid alike; its own output is in `procdump.log` beside it. The first real
+  crash (2026-11-07, run `20261107-175526`) wrote a full dump with no exception stream, because the Watchdog holds the exception: find the
+  faulting thread with WinDbg `~* r rip` and subtract the `TaleWorlds_Native` base. A stall is a hung mission frame, which raises nothing,
+  so the dump is the only record of the loop it spins in (`native-crash-triage`, "A hang"). A value of `--keep-on-crash` above 0 waits for a person to answer the Watchdog dialog first.
 - **A killed game leaves `safely_exited = 0`.** The launcher resets it; if a session aborts the launcher by hand, check the value before the next start.
 - **One game at a time.** The preflight refuses while a game runs, including the maintainer's.
 

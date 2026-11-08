@@ -309,4 +309,52 @@ public class AiBuyCycleTests
         CollectionAssert.AreEqual(cycle, Match(cycle).GetView(EastSlot).AiBuyCycle!.ToList());
         Assert.IsNull(Match(null).GetView(EastSlot).AiBuyCycle);
     }
+
+    // With every lane on Fall back no lane is the assault, and the purchase still follows the cycle: an upgrade or beast first.
+
+    private static MatchView AllOnFallBack(MatchView view) =>
+        view with { Lanes = view.Lanes.Select(l => l with { Order = LaneOrder.FallBack }).ToList() };
+
+    [TestMethod]
+    public void Decide_EveryLaneOnFallBackAndAnUpgradeIsDue_BuysTheUpgradeFirst()
+    {
+        var match = Match(new[] { "up:melee_damage", Offers[0].OfferId });
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        var bought = Spent(ai, AllOnFallBack(LanesHolding(match, 10, 10)), 10f).Single();
+
+        Assert.AreEqual(AiActionKind.BuyUpgrade, bought.Kind);
+        Assert.AreEqual("melee_damage", bought.Id);
+    }
+
+    [TestMethod]
+    public void Decide_EveryLaneOnFallBackAndABeastIsDue_CallsTheBeast()
+    {
+        var match = BeastMatch(new[] { "beast:mumak", Offers[0].OfferId }, 5000);
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        var actions = ai.Decide(AllOnFallBack(LanesHolding(match, 10, 10)), 10f);
+
+        Assert.AreEqual("mumak", actions.Single(a => a.Kind == AiActionKind.CallCreature).Id);
+    }
+
+    [TestMethod]
+    public void Decide_EveryLaneOnFallBackAndFull_StillBuysADueUpgrade()
+    {
+        var match = Match(new[] { "up:melee_damage" });
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        var bought = Spent(ai, AllOnFallBack(LanesHolding(match, 80, 80)), 10f).Single();
+
+        Assert.AreEqual(AiActionKind.BuyUpgrade, bought.Kind);
+    }
+
+    [TestMethod]
+    public void Decide_EveryLaneOnFallBackAndFullWithOnlyPacksDue_BuysNothing()
+    {
+        var match = Match(new[] { Offers[0].OfferId });
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Assert.AreEqual(0, Spent(ai, AllOnFallBack(LanesHolding(match, 80, 80)), 10f).Count);
+    }
 }

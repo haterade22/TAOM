@@ -1839,3 +1839,11 @@ A new reflection catalogue row copied the code comment: only the engine's full r
 - **Why missed:** the row reused the old comment's words and checked only that the line numbers existed.
 - **Prevent:** before writing what an engine line does, read the method that contains it and the condition around it. Before reflecting on a private collection behind a "read-only" property, read the property's return type and its base classes: `MBReadOnlyList<T>` is a `List<T>` on v1.5.6.
 - **Source:** [rca-1091-followups-2026-11-06.md](../rca-1091-followups-2026-11-06.md) row 3.
+
+### An arrangement order also changes the units' behaviour set, and a new threshold needs hysteresis (Fords culture tactics, 2026-11-07)
+
+`Formation.SetArrangementOrder` does more than shape the formation. Under a non-charge order a ShieldWall, Square or Circle switches every unit to `DefensiveArrangementMove`, whose ranged weight is 0 (`HumanAIComponent.RefreshBehaviorValues`); the 0.3 speed of a wall applies only while units hold their places; and in a wall the front-rank sort of shield bearers stops, because its interval is 0 (`LineFormation.SwitchFrontUnitTypesToFrontRows`). The first draft chose arrangements by their look and wrote all three effects wrong. The same draft added a Close/Charge line on the nearest enemy's distance, a value that jumps whenever an enemy dies, with no second threshold, so a melee flipped back into its wall; and a Close target built from the enemy's position with its height changed on every frame on a slope.
+
+- **Why missed:** the arrangement was read as geometry, and the new range was tested on fixed distances only.
+- **Prevent:** before sending an arrangement, read `ArrangementOrder.OnApply`, `OnCancel` and the behaviour set `RefreshBehaviorValues` picks for it. A branch triggered by a jumping value gets a latch or a second threshold, and a target built from a moving agent is kept until the agent moves a set distance from it, with a test where only the noise changes.
+- **Source:** [rca-fords-culture-tactics-2026-11-07.md](../rca-fords-culture-tactics-2026-11-07.md), findings 1 and 3, R1.

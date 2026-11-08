@@ -16,6 +16,9 @@ internal sealed class MatchEffects
 
     public List<MatchEvent> Events { get; } = new();
 
+    /// <summary>Log lines the match wants written (an AI regroup order); they never reach the command panel.</summary>
+    public List<string> Notes { get; } = new();
+
     public List<TowerHeal> Heals { get; } = new();
 
     public List<CampOrder> CampOrders { get; } = new();

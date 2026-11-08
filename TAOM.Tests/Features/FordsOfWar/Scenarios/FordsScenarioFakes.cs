@@ -209,6 +209,8 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
 
     public void Charge(MatchSide side, int lane) => FormationOf(side, lane).Kind = OrderKind.Charge;
 
+    public bool SetArrangement(MatchSide side, int lane, LaneArrangement arrangement) => true;
+
     public bool AttackTower(MatchSide side, int lane, string towerId)
     {
         if (TowerPosition?.Invoke(towerId) == null)

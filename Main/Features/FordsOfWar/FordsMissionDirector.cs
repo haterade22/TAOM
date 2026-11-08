@@ -65,6 +65,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private readonly Dictionary<AgentKey, UnitRecord> _units = new();
     private readonly Dictionary<(MatchSide, int), LaneCommand> _applied = new();
     private readonly Dictionary<(MatchSide, int), LaneCommand> _sent = new();
+    private readonly Dictionary<(MatchSide, int), LaneArrangement> _arranged = new();
     private readonly Dictionary<(MatchSide, int), LaneCommand> _refused = new();
     private readonly Dictionary<(MatchSide, int), int> _ranks = new();
     private readonly List<PendingSpawn> _backlog = new();
@@ -229,7 +230,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             var snapshot = FordsSnapshotBuilder.Build(dt, samples, IsHero, StandingTowers(), _layout.CapturePoints,
                 _plan.Config.Towers, _plan.Config.Capture, t => match.FireRange(t.Id));
             effects = match.Tick(snapshot);
-            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East), _heroCombat);
+            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East), _heroCombat, _plan.Config.PierceVsMountedFactor);
             phase = match.Phase;
         }
 
@@ -434,7 +435,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         LogBalance();
         var upgradeHits = FordsUpgradeHooks.Counts;
         var heroHits = FordsUpgradeHooks.HeroCounts;
-        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} ownTowerShots={FordsUpgradeHooks.OwnTowerShots} (totals)");
+        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} ownTowerShots={FordsUpgradeHooks.OwnTowerShots} mountedPierce={FordsPierceHooks.Hits} (totals)");
         FordsUpgradeHooks.Clear();
         _report.BindGunnerLookup(null);
         _report.BindTowerLookup(null);
@@ -683,6 +684,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             var fired = target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth, volley.Rock) : 0;
             _report.Volley(target != null, fired, volley.Rock && _towers.RockLoaded);
         }
+
+        foreach (var note in effects.Notes)
+            _logger.LogInfo(note);
 
         if (effects.Events.Count > 0)
         {
@@ -975,6 +979,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private void ApplyCommand(FormationCommand command)
     {
         var key = (command.Side, command.Lane);
+        ApplyArrangement(command);
         if (_applied.TryGetValue(key, out var last) && last == command.Command)
             return;
 
@@ -1002,6 +1007,22 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.LaneCommand(command.Side, command.Lane, command.Command.Kind, true);
         _applied[key] = command.Command;
         _sent[key] = sent;
+    }
+
+    /// <summary>
+    /// The tactic's arrangement, given before the movement order and only when it changed: each change runs a pass over every unit
+    /// of the formation (shield use, agent properties, behaviour values; entering or leaving a wall also sets each unit's
+    /// defensiveness), and a change into or out of Square, Column or Skein also rebuilds the arrangement. One the adapter could not
+    /// give (the lane has no formation) is asked again on the next tick.
+    /// </summary>
+    private void ApplyArrangement(FormationCommand command)
+    {
+        var key = (command.Side, command.Lane);
+        if (command.Arrangement is not { } arrangement || (_arranged.TryGetValue(key, out var had) && had == arrangement))
+            return;
+
+        if (_battlefield.SetArrangement(command.Side, command.Lane, arrangement))
+            _arranged[key] = arrangement;
     }
 
     private void ReportOffNavmesh(FormationCommand command)

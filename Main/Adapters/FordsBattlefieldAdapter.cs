@@ -27,11 +27,8 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 
     private LaneFaceBars? _laneBars;
     private int _thrownTopUps;
-    private int _horsesRemoved;
-    private int _horsesSpared;
-    private int _wargsRemoved;
-    private int _wargsSpared;
-    private readonly Dictionary<string, int> _riderlessOthersPeak = new();
+    private readonly Dictionary<string, int> _mountsRemoved = new();
+    private readonly Dictionary<string, int> _mountsSpared = new();
     private int _housekeepPasses;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
@@ -95,26 +92,22 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         RemoveRiderlessMounts();
 
         if (++_housekeepPasses % HousekeepPassesPerLine == 0)
-            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} wargsRemoved={_wargsRemoved} wargsSpared={_wargsSpared} (totals) riderlessOthersPeak={(_riderlessOthersPeak.Count == 0 ? "-" : string.Join(",", _riderlessOthersPeak.Select(p => p.Key + ":" + p.Value)))}");
+            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} mountsRemoved={ByKind(_mountsRemoved)} mountsSpared={ByKind(_mountsSpared)} (totals)");
     }
 
+    private static string ByKind(Dictionary<string, int> counts) => counts.Count == 0 ? "-" : string.Join(",", counts.Select(p => p.Key + ":" + p.Value));
+
+    private static void Count(Dictionary<string, int> counts, string kind) => counts[kind] = (counts.TryGetValue(kind, out var n) ? n : 0) + 1;
+
     /// <summary>
-    /// Horses and wargs, which only run around the field with no rider. A warg in a rage keeps its rider, so an empty one has lost it. Other riderless mounts stay, and the Housekeep line
-    /// names the most of each kind that stood at once. See <see cref="RiderlessMountRule"/> for why a mount a soldier holds or has chosen stays; the spared counts say how often that guard
-    /// held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
+    /// Every riderless mount, of any kind (<see cref="RiderlessMountRule"/>). A warg in a rage keeps its rider, so an empty one has lost it. A mount a soldier holds or has chosen stays;
+    /// the Housekeep line counts, per Monster id, the mounts removed and how often that guard held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
     /// </summary>
     private void RemoveRiderlessMounts()
     {
-        foreach (var kind in _mission.MountsWithoutRiders
-                     .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && !RiderlessMountRule.IsSwept(p.Key.Monster?.StringId))
-                     .GroupBy(p => p.Key.Monster?.StringId ?? "?"))
-        {
-            _riderlessOthersPeak[kind.Key] = Math.Max(_riderlessOthersPeak.TryGetValue(kind.Key, out var peak) ? peak : 0, kind.Count());
-        }
-
         // A copy: removing a mount changes the engine's list.
         var candidates = _mission.MountsWithoutRiders
-            .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && RiderlessMountRule.IsSwept(p.Key.Monster?.StringId) && p.Value.ElapsedSeconds >= RiderlessMountRule.WaitSeconds)
+            .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Value.ElapsedSeconds >= RiderlessMountRule.WaitSeconds)
             .ToList();
         if (candidates.Count == 0)
             return;
@@ -134,22 +127,15 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 
         foreach (var pair in candidates)
         {
-            var warg = RiderlessMountRule.IsWarg(pair.Key.Monster?.StringId);
+            var kind = pair.Key.Monster?.StringId ?? "?";
             if (RiderlessMountRule.MayFade(pair.Value.ElapsedSeconds, claimed.Contains(pair.Key.Index)))
             {
                 pair.Key.FadeOut(false, false);
-                if (warg)
-                    _wargsRemoved++;
-                else
-                    _horsesRemoved++;
-            }
-            else if (warg)
-            {
-                _wargsSpared++;
+                Count(_mountsRemoved, kind);
             }
             else
             {
-                _horsesSpared++;
+                Count(_mountsSpared, kind);
             }
         }
     }
@@ -316,6 +302,23 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     {
         if (_formations.TryGetValue((side, lane), out var formation))
             formation.SetMovementOrder(MovementOrder.MovementOrderCharge);
+    }
+
+    public bool SetArrangement(MatchSide side, int lane, LaneArrangement arrangement)
+    {
+        if (!_formations.TryGetValue((side, lane), out var formation))
+            return false;
+
+        formation.SetArrangementOrder(arrangement switch
+        {
+            LaneArrangement.Loose => ArrangementOrder.ArrangementOrderLoose,
+            LaneArrangement.ShieldWall => ArrangementOrder.ArrangementOrderShieldWall,
+            LaneArrangement.Square => ArrangementOrder.ArrangementOrderSquare,
+            LaneArrangement.Column => ArrangementOrder.ArrangementOrderColumn,
+            LaneArrangement.Skein => ArrangementOrder.ArrangementOrderSkein,
+            _ => ArrangementOrder.ArrangementOrderLine,
+        });
+        return true;
     }
 
     public bool AttackTower(MatchSide side, int lane, string towerId)

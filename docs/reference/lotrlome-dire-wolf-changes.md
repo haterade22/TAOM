@@ -105,7 +105,7 @@ edit to that file, so remove the wolf blocks by hand unless nothing else changed
 
 1. Repoint the rosters of the six troops at another mount and remove them from the repo's upgrade targets. A troop id
    stays once a save can hold it.
-2. Remove the War Spoils cost rows, the marketplace rows, `dire_wolf` from `WargConfig` and `RiderlessMountRule`, and
+2. Remove the War Spoils cost rows, the marketplace rows, `dire_wolf` from `WargConfig`, and
    the wolf rows in `verify_mount_assets.py` and `audit_mount_parity.py`.
 3. Remove the wolf blocks from the live files in the Data table, and delete the new Monster file.
 4. Delete `Assets/creature/direwolf/`, `AssetSources/creature/direwolf/` and the package entries in `RuntimeDataCache/`.

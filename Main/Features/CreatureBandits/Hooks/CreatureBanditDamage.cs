@@ -14,7 +14,7 @@ namespace TAOM.Features.CreatureBandits.Hooks;
 /// at each hit so an MCM change applies at once, with the melee kind corrected as vanilla corrects it (a charge, kick
 /// or bash is Blunt). TAOM's own scripted blows
 /// (CustomAttacksUtils.TakeDamage: troll brute force, signature strikes, warg and ridden-spider bites) never reach this
-/// step, so these rules do not apply to them: a known limitation, invisible at the 100% melee defaults, and a bandit
+/// step outside a Fords of War match (FordsScriptedBlows), so these rules do not apply to them: a known limitation, invisible at the 100% melee defaults, and a bandit
 /// troll takes those blows whole, as armour never reduced them either. A bandit troll
 /// (#694), humanoid and so no creature, takes <see cref="CreatureBanditsConfig.TrollBanditDamageTaken"/> of each hit
 /// instead of armour; a string-set lookup per hit, and 1 for every other victim.

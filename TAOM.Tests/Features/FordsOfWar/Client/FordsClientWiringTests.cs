@@ -315,6 +315,42 @@ public class FordsClientWiringTests
     }
 
     [TestMethod]
+    public void TheDamageReduction_MultipliesAPierceBlowOnCavalry_AndTheShutdownLineCountsIt()
+    {
+        var hooks = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsUpgradeHooks.cs", stripComments: true);
+        var pierce = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsPierceHooks.cs", stripComments: true);
+        var scriptedBlows = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsScriptedBlows.cs", stripComments: true);
+        StringAssert.Contains(pierce, "MountedPierceRule.Factor(", "the rule decides the factor");
+        StringAssert.Contains(pierce, "TaomAgentApplyDamageModel.BluntByVanillaRule(", "a bash, a kick or a horse charge is blunt whatever DamageType says");
+        StringAssert.Contains(pierce, "DoesVictimHaveMountAgent", "a rider counts, not only the horse");
+        StringAssert.Contains(pierce, "!collision.AttackBlockedWithShield", "a blocked blow keeps its shield damage: the rule is for the soldier and the horse");
+        var reduce = hooks.IndexOf("public static float Reduce(", StringComparison.Ordinal);
+        var outsideAMatch = hooks.IndexOf("if (_west == null)", reduce, StringComparison.Ordinal);
+        Assert.IsTrue(outsideAMatch > reduce && outsideAMatch < hooks.IndexOf("FordsPierceHooks.Factor(in attack", reduce, StringComparison.Ordinal),
+            "Fords of War only (Mike, 2026-11-07): every other Custom Battle returns before the rule");
+        var scripted = scriptedBlows.IndexOf("internal static int Damage(", StringComparison.Ordinal);
+        var live = scriptedBlows.IndexOf("if (!FordsUpgradeHooks.IsLive)", StringComparison.Ordinal);
+        Assert.IsTrue(scripted >= 0 && live > scripted && live < scriptedBlows.IndexOf("CalculateDamage(", StringComparison.Ordinal),
+            "a scripted blow outside a Fords match keeps its damage");
+        StringAssert.Contains(hooks, "internal static bool IsLive => _west != null;", "live means the same as the modelled blow's early return");
+        StringAssert.Contains(scriptedBlows, "AgentApplyDamageModel.CalculateDamage(in attack, in collision, damage)", "a scripted blow in a match goes through the damage model");
+        StringAssert.Contains(scriptedBlows, "FordsPierceHooks.ScriptedDamage(", "and through the pierce rule with its own damage type");
+        var utils = RepoPaths.ReadSource("Main/Features/AdvancedCombat/CustomAttacksUtils.cs", stripComments: true);
+        var write = utils.IndexOf("blow.InflictedDamage = FordsScriptedBlows.Damage(attacker, victim, damage, damageType, in attackCollisionDataForDebugPurpose);", StringComparison.Ordinal);
+        Assert.IsTrue(write > utils.IndexOf("GetAttackCollisionDataForDebugPurpose(", StringComparison.Ordinal) && write < utils.IndexOf("RegisterBlow(attacker, victim", StringComparison.Ordinal),
+            "warg and spider bites and signature splash write their damage directly, so it goes through the hook before the blow is registered");
+        Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(utils, @"blow\.InflictedDamage\s*=").Count, "one write of the damage");
+        var clear = hooks.IndexOf("internal static void Clear()", StringComparison.Ordinal);
+        Assert.IsTrue(hooks.IndexOf("FordsPierceHooks.Clear();", clear, StringComparison.Ordinal) > clear, "the match's end turns the rule off");
+        var pierceClear = pierce.IndexOf("internal static void Clear()", StringComparison.Ordinal);
+        Assert.IsTrue(pierceClear >= 0 && pierce.IndexOf("_factor = 1f;", pierceClear, StringComparison.Ordinal) > pierceClear, "the factor goes back to 1");
+        StringAssert.Contains(hooks, "FordsPierceHooks.Set(pierceVsMounted);", "the match's factor reaches the rule");
+        var director = RepoPaths.ReadSource("Main/Features/FordsOfWar/FordsMissionDirector.cs", stripComments: true);
+        StringAssert.Contains(director, "PierceVsMountedFactor", "the factor comes from match.json");
+        StringAssert.Contains(director, "mountedPierce=", "the shutdown line proves the seam ran");
+    }
+
+    [TestMethod]
     public void TheDamageReduction_ZeroesATowerShotOnItsOwnSide()
     {
         var src = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsUpgradeHooks.cs", stripComments: true);

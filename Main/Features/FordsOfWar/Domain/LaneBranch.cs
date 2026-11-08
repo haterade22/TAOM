@@ -10,4 +10,7 @@ internal enum LaneBranch
     Hold,
     March,
     Seize,
+
+    /// <summary>An enemy inside the faction's close range: the lane closes on it as one formation (<see cref="LaneTactic"/>).</summary>
+    Close,
 }
