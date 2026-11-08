@@ -48,4 +48,6 @@ and API behaviour as much as counts and hashes. The traps behind past fabricatio
 3. **Trusting your own earlier result from memory.** A cancelled or errored call leaves no trace but
    your belief that it ran. Re-run `git log`, re-read the file.
 4. **Reporting an empty search as absence.** No hit proves absence only inside what was searched:
-   name the scope (which build, which modules, which folders) with the negative result.
+   name the scope (which build, which modules, which folders) with the negative result. A capped
+   result (a Grep `head_limit`, `truncated: true`) proves neither a complete list nor a total: say it
+   was capped, or re-run it uncapped.
