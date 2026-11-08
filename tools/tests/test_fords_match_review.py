@@ -35,7 +35,7 @@ def facts(**changes):
         "gold": {"West": {"earned": 5000, "spent": 5000, "left": 100}, "East": {"earned": 5000, "spent": 5000, "left": 100}},
         "troops": {}, "faction_of": {}, "upgrades": {"West": ["a"], "East": ["a"]}, "heroes": {"West": 1, "East": 1},
         "poison": {}, "poison_factions": [], "creatures": {}, "free_troops": set(), "spawned": {}, "esc_pauses": 0, "shader_compiles": 0,
-        "perf": {"avg": 5.0, "p95": 8.0}, "errors": [], "warnings": 0, "wargs": 0, "riderless_others": "-", "speed": 1,
+        "perf": {"avg": 5.0, "p95": 8.0}, "errors": [], "warnings": 0, "riderless_others": "-", "mounts_faded": None, "speed": 1,
     }
     base.update(changes)
     return base
@@ -92,9 +92,26 @@ class ParseLogTests(unittest.TestCase):
     def test_upgrades_keep_their_english_name_and_the_blow_totals_are_not_upgrades(self):
         self.assertEqual(self.parsed["upgrades"], {"West": ["Missile damage"], "East": []})
 
-    def test_the_last_housekeep_line_gives_wargs_and_other_mounts(self):
-        self.assertEqual(self.parsed["wargs"], 42)
+    def test_an_old_housekeep_line_gives_the_horses_and_wargs_faded_and_the_mounts_left(self):
+        self.assertEqual(self.parsed["mounts_faded"], "horses:0,wargs:42")
         self.assertEqual(self.parsed["riderless_others"], "spider:4")
+
+    def test_a_housekeep_line_that_counts_every_kind_gives_the_mounts_faded(self):
+        # Mike, 2026-11-07: every riderless mount fades, so the line counts per Monster id; an older line still parses as above.
+        line = "[2026-11-07 17:30:36] [INFO] [FordsOfWar][Housekeep] thrownTopUps=71 mountsRemoved=horse:22,taom_war_elephant:1 mountsSpared=- (totals)"
+        earlier = line.replace("horse:22,taom_war_elephant:1", "horse:2")
+        parsed = r.parse_log(earlier + "\n" + line)
+        self.assertEqual(parsed["mounts_faded"], "horse:22,taom_war_elephant:1", "the last line stands for the match")
+        self.assertEqual(parsed["riderless_others"], "-")
+
+    def test_the_report_names_the_mounts_faded_and_no_warg_count_of_its_own(self):
+        report = r.render(facts(mounts_faded="horse:22,warg:6"), [])
+        self.assertIn("Mounts faded: horse:22,warg:6.", report)
+        self.assertNotIn("Wargs faded", report)
+        self.assertNotIn("left standing", report)
+
+    def test_the_report_says_when_a_log_has_no_housekeep_line(self):
+        self.assertIn("Mounts faded: no Housekeep line.", r.render(facts(), []))
 
     def test_the_fastest_speed_of_the_match_is_read(self):
         self.assertEqual(self.parsed["speed"], 1)

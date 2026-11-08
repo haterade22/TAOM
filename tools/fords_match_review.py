@@ -43,7 +43,10 @@ TROOP = re.compile(r"\[Balance\] troop=(\S+) kills=(\d+) deaths=(\d+) valueKille
 GOLD = re.compile(r"\[Balance\] side=(\w+) slot=\d+ (earned=\d+ spent=\d+ left=\d+.*)")
 POISON = re.compile(r"\[Balance\] poison side=(\w+) doses=(\d+) damage=(\d+)")
 UPGRADE = re.compile(r"\[Upgrade\] side=(\w+) track=(?:\{=[^}]*\})?(.+?) price=\d+")
-HOUSEKEEP = re.compile(r"\[Housekeep\] .*?wargsRemoved=(\d+) .*?riderlessOthersPeak=(\S+)")
+# Builds before 2026-11-07 faded horses and wargs only; "wargs" there counts warg, fell_warg and dire_wolf together.
+HOUSEKEEP = re.compile(r"\[Housekeep\] .*?horsesRemoved=(\d+) .*?wargsRemoved=(\d+) .*?riderlessOthersPeak=(\S+)")
+# From 2026-11-07 every riderless mount fades, and the line counts them per Monster id.
+MOUNTS = re.compile(r"\[Housekeep\] .*?mountsRemoved=(\S+)")
 SPEED = re.compile(r"\[FordsOfWar\]\[Speed\] speed=(\d+)")
 
 
@@ -51,7 +54,7 @@ def parse_log(text):
     """What the [FordsOfWar] lines of one match's log say. The last Summary and Housekeep lines stand for the match."""
     facts = {
         "mt": 0.0, "deaths": dict.fromkeys(SIDES, 0), "towers_lost": dict.fromkeys(SIDES, 0), "troops": {}, "gold": {}, "poison": {},
-        "upgrades": {side: [] for side in SIDES}, "wargs": 0, "riderless_others": "-", "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0, "speed": 1, "speed_changes": 0,
+        "upgrades": {side: [] for side in SIDES}, "riderless_others": "-", "mounts_faded": None, "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0, "speed": 1, "speed_changes": 0,
     }
     for line in text.splitlines():
         if (found := SUMMARY.search(line)):
@@ -67,8 +70,10 @@ def parse_log(text):
         elif (found := UPGRADE.search(line)):
             facts["upgrades"][found[1]].append(found[2])
         elif (found := HOUSEKEEP.search(line)):
-            facts["wargs"] = int(found[1])
-            facts["riderless_others"] = found[2]
+            facts["mounts_faded"] = f"horses:{found[1]},wargs:{found[2]}"
+            facts["riderless_others"] = found[3]
+        elif (found := MOUNTS.search(line)):
+            facts["mounts_faded"] = found[1]
         elif (found := SPEED.search(line)):
             facts["speed"] = max(facts["speed"], int(found[1]))
             facts["speed_changes"] += 1
@@ -345,7 +350,9 @@ def render(facts, found):
         lines.append(f"| gold {key} | {facts['gold'].get('West', {}).get(key, '-')} | {facts['gold'].get('East', {}).get(key, '-')} |")
     lines.append(f"| upgrades | {', '.join(facts['upgrades']['West']) or '-'} | {', '.join(facts['upgrades']['East']) or '-'} |")
     lines.append(f"| poison | {facts['poison'].get('West', '-')} | {facts['poison'].get('East', '-')} |")
-    lines += ["", f"Wargs faded: {facts['wargs']}. Other riderless peak: {facts['riderless_others']}. Warnings: {facts['warnings']}. Errors outside the mode: {facts.get('other_errors', 0)}. "
+    lines += ["", f"Mounts faded: {facts.get('mounts_faded') or 'no Housekeep line'}."
+              + (f" Riderless left standing, peak: {facts['riderless_others']}." if facts.get("riderless_others", "-") != "-" else "")
+              + f" Warnings: {facts['warnings']}. Errors outside the mode: {facts.get('other_errors', 0)}. "
               f"Frames: average {facts['perf']['avg']:.1f} ms, worst p95 {facts['perf']['p95']:.1f} ms. Shader compiles: {facts['shader_compiles']}.", ""]
     lines += ["| troop | kills | deaths | value killed | value lost |", "|---|---|---|---|---|"]
     for troop, row in sorted(facts["troops"].items(), key=lambda p: -p[1]["valueKilled"]):

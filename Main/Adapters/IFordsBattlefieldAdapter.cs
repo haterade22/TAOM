@@ -26,7 +26,7 @@ internal interface IFordsBattlefieldAdapter
     /// <summary>The navmesh ids each lane's units may not walk on, applied at spawn (null: no bars). Set before the first spawn.</summary>
     void SetLaneBars(LaneFaceBars? bars);
 
-    /// <summary>Tops up every unit's thrown weapons (the engine's AmmoSupplyLogic covers only arrows and bolts) and removes horses with no rider. Main thread.</summary>
+    /// <summary>Tops up every unit's thrown weapons (the engine's AmmoSupplyLogic covers only arrows and bolts) and removes every riderless mount (RiderlessMountRule). Main thread.</summary>
     void Housekeep();
 
     void SetCorpseFadeOutSeconds(float seconds);

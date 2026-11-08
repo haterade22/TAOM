@@ -582,10 +582,10 @@ the mode's noon fallback.
 - **Lane IDs.** `laneFaceIds` lists one navmesh face group per lane. `LaneFaceBars` bars each lane's units and mounts from the other lanes'
   groups and the tower-top group by `Agent.SetAgentExcludeStateForFaceGroupId`, which leaves room for five sets (the engine's limit is six).
   Cross paths and rings use group 0, which nobody is barred from. Not sealed yet: a run still logs up to 8% of unit time on a foreign group.
-- **Housekeeping.** Every 3 s `IFordsBattlefieldAdapter.Housekeep` refills thrown weapons and fades riderless horses. Other riderless creatures
-  stay. The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map. A horse fades only after 20 s with no rider and
+- **Housekeeping.** Every 3 s `IFordsBattlefieldAdapter.Housekeep` refills thrown weapons and fades every riderless mount, whatever its kind.
+  The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map. A mount fades only after 20 s with no rider and
   only when no soldier holds it or has chosen it (`RiderlessMountRule`), because the engine's fade does not unlink a rider from its mount. The `[Housekeep]` line's
-  `horsesSpared` counts how often that guard held a horse back. Riderless wargs go the same way (`wargsRemoved`, `wargsSpared`). Other riderless mounts stay, and `riderlessOthersPeak` names the most of each kind that stood at once.
+  `mountsSpared` counts, per Monster id, how often that guard held a mount back, and `mountsRemoved` the mounts faded (for example `horse:22,taom_war_elephant:1`). Every kind goes, wargs, spiders, war elephants and mumakil included (Mike, 2026-11-07): soldiers never choose a riderless mount as a target, because the engine takes a mount's side from its rider and a riderless one is nobody's enemy, so only stray blows reached it and a riderless beast stood on the field for the rest of the match. A howdah or mumakil crew stands on a platform that releases its seats when the beast is gone, as on a death: each archer is set down at the beast's position and rejoins the side's Ranged formation, which is lane 1's (outside the unit registry, so no bounty or tally). Whether the crew of a fading mumakil reach the ground needs a game run.
   At the end of a match the `[FordsOfWar][Balance]` lines give each troop's kills, deaths and the gold value of both, and each commander's gold earned, spent and left.
 
 ## Layout fitting
