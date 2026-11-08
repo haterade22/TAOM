@@ -37,9 +37,24 @@ public class FordsMatchConfigLoadTests
         Assert.AreEqual(d.Lanes, actual.Lanes);
         Assert.AreEqual(d.Capture, actual.Capture);
         Assert.AreEqual(d.CountdownSeconds, actual.CountdownSeconds);
+        Assert.AreEqual(d.PierceVsMountedFactor, actual.PierceVsMountedFactor);
         CollectionAssert.AreEquivalent(d.AiProfiles.Keys.ToList(), actual.AiProfiles.Keys.ToList());
         foreach (var pair in d.AiProfiles)
             Assert.AreEqual(pair.Value, actual.AiProfiles[pair.Key], pair.Key);
+    }
+
+    [TestMethod]
+    public void Match_PierceVsMountedFactor_IsRead()
+    {
+        Assert.AreEqual(3f, Load("{ \"pierceVsMountedFactor\": 3 }").PierceVsMountedFactor);
+    }
+
+    [TestMethod]
+    public void Match_PierceVsMountedFactor_OutOfRange_KeepsTheDefaultWithOneWarning()
+    {
+        Assert.AreEqual(FordsMatchConfig.Default.PierceVsMountedFactor, Load("{ \"pierceVsMountedFactor\": 50 }").PierceVsMountedFactor);
+
+        AssertOneWarningNaming("pierceVsMountedFactor");
     }
 
     [TestMethod]

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using TAOM.Core.Validation;
+using TAOM.Features.FordsOfWar.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -142,7 +143,7 @@ public class CustomAttacksUtils
     }
 
     /// <param name="damageType">The blow's damage type: Pierce unless the caller asks otherwise, and only the antler attacks do
-    /// (Blunt: the great elk's, #636, and the Animalia elk's and moose's, #646). The damage is written directly, so armour never reduces it whatever the type. The type
+    /// (Blunt: the great elk's, #636, and the Animalia elk's and moose's, #646). The damage is written directly, so armour never reduces it whatever the type; in a Fords of War match it goes through the damage model first (FordsScriptedBlows.Damage). The type
     /// sets the combat log's wording and, for Blunt, the killed-or-wounded rule, which <see cref="ComposeWeaponFlags"/>
     /// keeps lethal.</param>
     /// <param name="chargeImpactSound">Play a creature's charge impact instead of the sound the engine picks from the
@@ -190,7 +191,6 @@ public class CustomAttacksUtils
         blow.BaseMagnitude = magnitude;
         blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
         blow.WeaponRecord.WeaponFlags |= ComposeWeaponFlags(damageType);
-        blow.InflictedDamage = damage;
         blow.SwingDirection = victim.LookDirection;
         MatrixFrame frame = victim.Frame;
         blow.SwingDirection = frame.rotation.TransformToParent(new Vec3(-1f, 0f, 0f, -1f));
@@ -257,6 +257,10 @@ public class CustomAttacksUtils
             victim.Velocity,
             Vec3.Up
         );
+
+        // The engine registers this blow without its damage model. In a Fords of War match the damage goes through the model
+        // first (FordsScriptedBlows.Damage); everywhere else it is written unchanged.
+        blow.InflictedDamage = FordsScriptedBlows.Damage(attacker, victim, damage, damageType, in attackCollisionDataForDebugPurpose);
 
         // Named, because fifteen of these are bools read by position: crushedThrough prints "Crushed through!"
         // (CombatLogData.cs:185) and was passed knockDown until 2026-09-23, so every creature knockdown the player saw

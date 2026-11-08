@@ -32,7 +32,8 @@ internal static class FordsMatchConfigReader
             ReadAiProfiles(s.Group(root, "aiProfiles", ""), d.AiProfiles, s),
             s.Float(root, "", "countdownSeconds", d.CountdownSeconds, 0f, 300f),
             FordsUpgradesReader.Read(root["upgrades"], d.UpgradesOrDefault, s),
-            s.Float(root, "", "timeLimitMinutes", d.TimeLimitMinutes, 0f, 600f));
+            s.Float(root, "", "timeLimitMinutes", d.TimeLimitMinutes, 0f, 600f),
+            s.Float(root, "", "pierceVsMountedFactor", d.PierceVsMountedFactor, 0f, 10f));
     }
 
     private static FordsEconomyConfig ReadEconomy(JObject? g, FordsEconomyConfig d, FordsConfigScope s) => new(

@@ -26,6 +26,12 @@ public class FordsMatchConfigDefaultsTests
     }
 
     [TestMethod]
+    public void Default_PierceVsMounted_DoublesAPierceBlowOnCavalry()
+    {
+        Assert.AreEqual(2f, C.PierceVsMountedFactor);
+    }
+
+    [TestMethod]
     public void Default_Waves_MatchSpec()
     {
         Assert.AreEqual(40f, C.Waves.FreeWaveIntervalSeconds);

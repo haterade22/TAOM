@@ -20,7 +20,7 @@ namespace TAOM.Features.CombatMechanics.Models;
 // added wins.
 //
 // Campaign-only, so absent here: the career passives (TaomAgentApplyDamageModel reads heroes, which Custom Battle does not
-// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades and the Long Defeat damage factors (the wave's, and the boons' damage and damage taken), each a Custom Game mode's own and inert in any other battle.
+// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades, hero factors and pierce rule against cavalry, and the Long Defeat damage factors (the wave's, and the boons' damage and damage taken), each a Custom Game mode's own and inert in any other battle.
 // Where the Custom Battle base answers differently from
 // SandBox's (the stagger threshold, the crush-through flag test, the shield damage factor and the missile flags), TAOM's
 // delegate sits on the Custom Battle answer, as the campaign's sits on SandBox's: docs/features/combat-mechanics.md,

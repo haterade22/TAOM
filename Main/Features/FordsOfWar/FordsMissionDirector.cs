@@ -230,7 +230,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             var snapshot = FordsSnapshotBuilder.Build(dt, samples, IsHero, StandingTowers(), _layout.CapturePoints,
                 _plan.Config.Towers, _plan.Config.Capture, t => match.FireRange(t.Id));
             effects = match.Tick(snapshot);
-            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East), _heroCombat);
+            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East), _heroCombat, _plan.Config.PierceVsMountedFactor);
             phase = match.Phase;
         }
 
@@ -435,7 +435,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         LogBalance();
         var upgradeHits = FordsUpgradeHooks.Counts;
         var heroHits = FordsUpgradeHooks.HeroCounts;
-        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} ownTowerShots={FordsUpgradeHooks.OwnTowerShots} (totals)");
+        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} ownTowerShots={FordsUpgradeHooks.OwnTowerShots} mountedPierce={FordsPierceHooks.Hits} (totals)");
         FordsUpgradeHooks.Clear();
         _report.BindGunnerLookup(null);
         _report.BindTowerLookup(null);

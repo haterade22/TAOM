@@ -423,6 +423,20 @@ front rank while the lane marches, but archers and riders stand in the same wall
 **Undo:** delete a faction's `tactics` line in `factions.json` to give it the old behaviour back; delete every one to undo the change in
 play. The code without any block sends no arrangement order and charges at the engage range, as before.
 
+### Pierce against cavalry (round 4)
+
+**Why:** Rohan won all 12 of its matches in round 2, and spears traded 0.73 to 0.79 gold in every set of matches (see "Spears" below). Mike, 2026-11-07: spearmen and pikemen should counter cavalry, and the simplest rule is that cavalry and horses take more from pierce damage, in this mode only.
+
+**Changed:** `pierceVsMountedFactor` 2 in `match.json`: a horse or a rider takes twice the damage of a pierce blow. It covers spears and pikes in either grip, arrows, crossbow bolts, javelins, tower arrows and couched lances, and the scripted bites and splash below. A blow a shield blocks keeps its shield damage. Mike offered 2 or 3; 2 because the rule also reaches every bow and every tower, so the round shows whether the low end is already enough.
+
+**Who it hits:** every rider and every mount, ridden or riderless: horses, camels, elk, wargs, spiders, Erebor's war rams, and Harad's war elephant and mumak (the packs are in `factions.json`; seat and howdah crew stand on foot and do not count). Rohan fields the most riders. Horse archers also take twice the damage from foot archers. The doubled damage also makes a dismount, a horse rearing and a failed shrug-off more likely, through the engine's own rules.
+
+**Scripted blows:** warg and spider bites, creature attacks and signature strike splash now go through the damage model in a match, as every other blow does. So the army upgrades and the hero factors reach them for the first time: Sauron's splash deals 3 times what it did, and a side's melee damage upgrades raise its wargs' bites. A warg bite on a horse or camel already did twice the damage (`WargAttackService`), so in a match it now does 4 times.
+
+**Undo:** set `pierceVsMountedFactor` to 1 in `match.json`. That turns off only the pierce rule: scripted blows still go through the damage model in a match, so the upgrades and hero factors keep reaching them. Undoing that part means reverting the `FordsScriptedBlows.Damage` call in `CustomAttacksUtils.TakeDamage`.
+
+**Result: not measured.** Round 4 measures it, on the build after round 3's.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.

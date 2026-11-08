@@ -60,7 +60,7 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
     private static AttackTypeMask HitMask(in AttackInformation attackInformation, in AttackCollisionData collisionData)
         => AttackTypeMaskMatch.ForHit(collisionData.IsMissile, collisionData.DamageType, BluntByVanillaRule(in attackInformation, in collisionData));
 
-    // Shared with the creature bandits' damage-taken rule (#692, CreatureBanditDamage).
+    // Shared with the creature bandits' damage-taken rule (#692, CreatureBanditDamage) and the Fords of War pierce rule (FordsPierceHooks).
     internal static bool BluntByVanillaRule(in AttackInformation attackInformation, in AttackCollisionData collisionData)
         => attackInformation.AttackerWeapon.IsEmpty
         || MissionCombatMechanicsHelper.IsCollisionBoneDifferentThanWeaponAttachBone(in collisionData, attackInformation.WeaponAttachBoneIndex)

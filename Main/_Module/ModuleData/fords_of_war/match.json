@@ -1,6 +1,7 @@
 {
   "countdownSeconds": 10,
   "timeLimitMinutes": 40,
+  "pierceVsMountedFactor": 2,
   "economy": {
     "startingGold": 600,
     "incomePerMinute": 120,
