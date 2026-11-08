@@ -106,7 +106,8 @@ PY="$PYBIN"
 # desktop, 2026-09-21). The laptop's measured total is in the WP108 validator commit.
 # SCHEMA_INVALID adds about 0.5 s (1.5.x desktop, 2026-09-21).
 #
-# The validator ran in ~4s before WP108's mesh and body pass, and about 21 s on the laptop since. 16.5s of the old 27s figure was one
+# The validator ran in ~4s before WP108's mesh and body pass. This command (27 codes)
+# took 13.5 to 16.0 s warm on the laptop, 3 runs, 2026-11-07. 16.5s of the old 27s figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
 # file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
 # left deliberately generous. Headroom costs nothing unless the work overruns, and being
