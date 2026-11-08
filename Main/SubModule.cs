@@ -631,8 +631,6 @@ public class SubModule : MBSubModuleBase
         _patches.EndPhase("OnSubModuleLoad");
         // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
         // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
-
-        InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
 
     protected override void OnBeforeInitialModuleScreenSetAsRoot()
