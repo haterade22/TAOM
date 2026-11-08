@@ -432,11 +432,11 @@
         { "id": "miners", "troop": "fow_erebor_reg_miner", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
         { "id": "bowmen", "troop": "fow_erebor_reg_bowman", "role": "Ranged", "packSize": 5, "level": 26, "eliteWeight": 1.0 },
         { "id": "rams", "troop": "fow_ironpass_ram_rider", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 1.0 },
-        { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.4 },
-        { "id": "mattocks", "troop": "fow_erebor_reg_mattock_warrior", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.4 },
-        { "id": "shield_guard", "troop": "fow_erebor_noble_shield_guard", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.4 },
-        { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.4 },
-        { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.4 }
+        { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.55 },
+        { "id": "mattocks", "troop": "fow_erebor_reg_mattock_warrior", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.55 },
+        { "id": "shield_guard", "troop": "fow_erebor_noble_shield_guard", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.55 },
+        { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.55 },
+        { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.55 }
       ],
       "heroGuard": { "troop": "fow_erebor_noble_royal_warden", "count": 4, "role": "Infantry" },
       "heroes": [
@@ -474,7 +474,7 @@
     "harad": {
       "name": "{=TAOM_FOW_Faction_Harad}Harad",
       "culture": "aserai",
-      "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "beast:war_elephant", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "beast:mumak", "lancers"],
+      "aiBuyCycle": ["bowmen", "serpent_archers", "up:siegecraft", "footmen", "beast:war_elephant", "bowmen", "serpent_guard", "up:melee_armour", "camel_riders", "serpent_archers", "beast:mumak", "lancers"],
       "upgradeCost": { "siegecraft": 0.75 },
       "feats": { "towerHitPoints": 0.85, "poisonPerSecond": 3, "poisonSeconds": 8 },
       "traits": [
@@ -537,7 +537,7 @@
       "name": "{=TAOM_FOW_Faction_Gundabad}Gundabad",
       "culture": "gundabad",
       "tactics": { "march": "Loose", "chargeRange": 35 },
-      "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "impalers", "up:melee_damage", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
+      "aiBuyCycle": ["bone_breakers", "archers", "ravagers", "up:melee_damage", "bone_breakers", "impalers", "archers", "wolf_riders", "ravagers"],
       "upgradeCost": { "melee_damage": 1.0, "missile_damage": 1.0, "melee_armour": 1.0, "missile_armour": 1.0, "siegecraft": 1.0, "fortify": 1.0 },
       "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
       "traits": [
@@ -630,7 +630,7 @@
     "dolguldur": {
       "name": "{=TAOM_FOW_Faction_DolGuldur}Dol Guldur",
       "culture": "dolguldur",
-      "aiBuyCycle": ["foul", "crawlers", "up:melee_damage", "warriors", "beast:fell_wargs", "bowmen", "fighters", "spider_riders", "up:missile_armour", "swordsmen", "warg_riders", "fellbows", "beast:fell_wargs", "fell_fangs", "khamul_knights", "shadow_guard"],
+      "aiBuyCycle": ["fighters", "bowmen", "up:melee_damage", "shadow_guard", "beast:fell_wargs", "fellbows", "fighters", "spider_riders", "up:missile_armour", "swordsmen", "bowmen", "beast:fell_wargs", "fell_fangs", "khamul_knights", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
       "feats": { "enemyTowerFireRate": 0.75, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
@@ -709,9 +709,9 @@
         { "id": "archers", "troop": "fow_easterling_archer_new", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.1 },
         { "id": "horse_archers", "troop": "fow_kharaghul_horse_archer", "role": "HorseArcher", "packSize": 4, "level": 26, "eliteWeight": 1.1 },
         { "id": "cataphracts", "troop": "fow_far_rhun_cataphract", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.1 },
-        { "id": "iron_legion", "troop": "fow_far_rhun_iron_legionary", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
-        { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.1 },
-        { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.1 }
+        { "id": "iron_legion", "troop": "fow_far_rhun_iron_legionary", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
+        { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.25 },
+        { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.25 }
       ],
       "heroGuard": { "troop": "fow_dragon_wrath_infantry", "count": 4, "role": "Infantry" },
       "heroes": [

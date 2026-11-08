@@ -400,6 +400,53 @@ No trait text changes: each changed value is a price or a free wave count that n
 
 **Result: not measured.** Round 3 runs on the build that carries this change, the weaker Rohan riders and the check 12 fix. If Rohan still wins more than 9 of 12, its riders are cut again.
 
+### Round robin 3 on `c24803f6e`
+
+**Seen:** all 78 pairs at 4x, 2026-11-07 07:22 to 2026-11-08 01:10, from `python tools/fords_round_robin.py summary --build c24803f6e`. The per-troop records are in [rounds/round3_c24803f6e.json](rounds/round3_c24803f6e.json). The build carries round 3's values and the weaker Rohan riders.
+
+| Faction | Won | Lost | Won by keep | Won on time | Gold trade | Towers taken | Towers lost | Minutes |
+|---|---|---|---|---|---|---|---|---|
+| Rohan | 12 | 0 | 8 | 4 | 1.37 | 74 | 26 | 30.1 |
+| Erebor | 11 | 1 | 10 | 1 | 1.08 | 74 | 12 | 30.0 |
+| Easterlings | 10 | 2 | 6 | 4 | 1.28 | 55 | 21 | 32.2 |
+| Mordor | 8 | 4 | 0 | 8 | 0.46 | 25 | 28 | 40.2 |
+| Mirkwood | 7 | 5 | 6 | 1 | 1.75 | 58 | 45 | 31.2 |
+| Umbar | 6 | 6 | 1 | 5 | 1.07 | 29 | 33 | 37.9 |
+| Rivendell | 5 | 7 | 5 | 0 | 1.28 | 37 | 55 | 27.2 |
+| Isengard | 5 | 7 | 0 | 5 | 0.64 | 27 | 37 | 37.2 |
+| Dale | 4 | 8 | 2 | 2 | 1.20 | 26 | 45 | 34.1 |
+| Harad | 3 | 9 | 2 | 1 | 1.08 | 23 | 48 | 34.1 |
+| Gondor | 3 | 9 | 1 | 2 | 1.05 | 26 | 43 | 37.1 |
+| Gundabad | 3 | 9 | 2 | 1 | 0.89 | 30 | 48 | 35.7 |
+| Dol Guldur | 1 | 11 | 1 | 0 | 0.87 | 24 | 67 | 31.2 |
+
+- **Round 3's changes:** Isengard's bigger free waves moved it from 3 wins to 5, and Rivendell's cheaper packs from 3 to 5, with towers lost down from 72 to 55. Mirkwood's dearer archers moved it from 10 wins to 7. Dol Guldur's cheaper packs moved it from 0 wins to 1 and its towers taken from 19 to 24. Gundabad's upgrades left it at 3. Easterlings stayed at 10.
+- **Rohan's weaker riders:** it still won all 12, but only 8 by the keep where round 2 had 11, and it lost 26 towers where it had lost 13.
+- **Noise:** each pair plays once. Gondor fell from 8 wins to 3 with no change of its own, so a move of two or three wins proves little. Across the three rounds the factions that stay at one end are Rohan (9, 12, 12), Erebor (11, 9, 11) and Easterlings (9, 10, 10), and Dol Guldur (0, 0, 1), Gundabad (3, 3, 3) and Harad (3, 4, 3).
+- **Tower damage per match:** Erebor 68,600, Rohan 66,900, Easterlings 54,600 and Mirkwood 54,000; the others 24,100 to 39,200, with Harad, Dol Guldur and Gondor lowest. Every faction fielded about 3 heroes a match, as in round 2, so the number of heroes does not separate the factions. That count says nothing about what the heroes did.
+- **Troops that traded worst, in the packs the AI bought:** Gundabad's snagas 0.36 kills per death and hunters 0.31, against 2.55 for its bone breakers; Dol Guldur's foul uruks and warriors 0.50 and crawlers 0.28, against 2.63 for its shadow guard and 1.88 for its bowmen; Harad's levies 0.47, against 2.16 for its bowmen and 4.65 for its serpent archers.
+- **Sides:** West won 43 and East 35.
+- **Length:** 29 matches ended before minute 30 (19.5 at the shortest), 15 between 30 and 40, and 34 on the time limit. The median was 35.3 minutes. These counts use the `mt` clock that the round data file records; the Minutes column above uses `winner_mt`, and that moves two matches across minute 30.
+- **Stability:** five matches failed and were replayed, so the 78 counted runs are the replays: one native crash at `0x6B716E` (run 20261107-175526, Easterlings v Rivendell), two mission stalls where the status file did not change for 10 minutes (20261107-115553 Erebor v Rohan at 300 s, 20261107-170217 Rivendell v Erebor at 750 s), and two game exits before the done file with no site named (20261107-182706 Erebor v Harad, code 0 at 660 s, no clean module unload line; 20261107-082439 Gondor v Gundabad, code 4294967295 at 2,132 s, clean unload line present). The round data commit's "no crash" is wrong: only the counted runs had none. The crash has its fix in `0931c1e12`; the stalls have no dump yet, and the runner takes one from `7fdc22a33` on.
+- **Check 8** failed in four counted runs: Gondor v Isengard, Gundabad v Erebor and Mirkwood v Easterlings on East1 at `tower_west_1_0`, and Rivendell v Gondor on East2 at `tower_west_2_0`. Gundabad v Erebor was traced to a lane holding on Seize, which `1c275b73f` stops counting as a lane hold. The other three runs also log Seize rows, but nobody traced them row by row, so round 4 has to show that the fix covers them.
+
+### Round 4 values (this change)
+
+**Why:** round 4 also carries double pierce damage against cavalry, culture tactics and the AI regroup, so only the factions at one end across all three rounds change, and the changes are small enough to read beside those.
+
+**Changed:**
+
+- **Rohan:** nothing. The last entry said its riders are cut again if it wins more than 9 of 12, and it won 12. Round 4 doubles pierce damage against every horse and rider, which Mike asked for; a higher price on top could not be told apart from it. If Rohan still wins more than 9 of 12 in round 4, its riders go up.
+- **Erebor:** the five elite packs cost 1.55 of the full price for their level, up from 1.4. The pierce rule touches only its rams, and it lost the fewest towers (12).
+- **Easterlings:** the iron legion, dragon guard and obsidian knights cost 1.25, up from 1.1. The iron legion and dragon guard made over 4 kills per death; the knights made 1.84 and rise with them as the third elite pack.
+- **Dol Guldur, Gundabad and Harad:** the AI's buy cycle no longer buys the packs that traded worst (Dol Guldur's foul uruks, warriors, crawlers and warg raiders, the last at 0.76 kills per death; Gundabad's snagas, hunters and brawlers; Harad's levies). It buys more of the packs that traded best instead. Free waves still bring Dol Guldur's three foot troops and Gundabad's snagas and hunters. They do not bring Gundabad's brawlers or Harad's levies, so an AI side fields none of those two in round 4, and Gundabad's AI buys far fewer bodies than before. A person playing the faction can still buy every pack.
+
+No trait text changes: each changed value is a price or the AI's buying order. A pack's `eliteWeight` also sets its value per troop, so the dearer packs pay a larger kill bounty, count for more in the AI regroup pressure, and lower their own side's gold trade by construction.
+
+**Undo:** set Erebor's five elite `eliteWeight` values back to 1.4 and the three Easterling ones to 1.1 in `factions.json`. The three old buy cycles: Dol Guldur `foul, crawlers, up:melee_damage, warriors, beast:fell_wargs, bowmen, fighters, spider_riders, up:missile_armour, swordsmen, warg_riders, fellbows, beast:fell_wargs, fell_fangs, khamul_knights, shadow_guard`; Gundabad `snagas, hunters, brawlers, snagas, impalers, up:melee_damage, ravagers, hunters, archers, wolf_riders, bone_breakers`; Harad `levies, bowmen, up:siegecraft, footmen, beast:war_elephant, levies, serpent_archers, up:melee_armour, camel_riders, serpent_guard, beast:mumak, lancers`.
+
+**Result: not measured.** Round 4 runs on the build that carries this change.
+
 ### Culture tactics (round 4)
 
 **Why:** Mike, 2026-11-07: "I feel like Isengard for example should fight in more formations. Advance as a formation, get close and

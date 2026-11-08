@@ -256,12 +256,37 @@ public class ShippedFordsConfigTests
         Assert.AreEqual(1.0f, Weight("mirkwood", "silvan_levy"), 0.001f);
         Assert.AreEqual(1.0f, Weight("mirkwood", "elk_riders"), 0.001f);
 
-        Assert.IsTrue(Weights("easterlings").All(w => Math.Abs(w - 1.1f) < 0.001f), "Easterlings: 1.0 won 10 of 12");
+        foreach (var offer in new[] { "levy", "halberds", "archers", "horse_archers", "cataphracts" })
+            Assert.AreEqual(1.1f, Weight("easterlings", offer), 0.001f, "Easterlings " + offer + ": 1.0 won 10 of 12");
 
         // Gundabad won 3 of 12 with its lanes full, so it gets better troops, not more: every upgrade at the base price, from 1.25.
         var gundabadUpgrades = ((JObject)factions["gundabad"]!["upgradeCost"]!).Properties().ToList();
         Assert.AreEqual(6, gundabadUpgrades.Count);
         Assert.IsTrue(gundabadUpgrades.All(p => Math.Abs((float)p.Value - 1.0f) < 0.001f), "Gundabad: every upgrade at 1.0");
+    }
+
+    [TestMethod]
+    public void RoundThreeResults_SetRoundFoursValues()
+    {
+        // Round robin 3 on c24803f6e (balance-log.md): over three rounds Erebor won 11, 9, 11 and Easterlings 9, 10, 10 of 12;
+        // Dol Guldur won 0, 0, 1, Gundabad 3, 3, 3 and Harad 3, 4, 3.
+        var factions = (JObject)JObject.Parse(File.ReadAllText(ConfigFile("factions.json")))["factions"]!;
+        float Weight(string faction, string offer) => (float)factions[faction]!["units"]!.Single(u => (string?)u["id"] == offer)["eliteWeight"]!;
+        IEnumerable<string> Cycle(string faction) => factions[faction]!["aiBuyCycle"]!.Select(e => (string)e!);
+
+        foreach (var offer in new[] { "fighters", "mattocks", "shield_guard", "legionaries", "royal_wardens" })
+            Assert.AreEqual(1.55f, Weight("erebor", offer), 0.001f, "Erebor " + offer);
+        foreach (var offer in new[] { "iron_legion", "dragon_guard", "obsidian_knights" })
+            Assert.AreEqual(1.25f, Weight("easterlings", offer), 0.001f, "Easterlings " + offer);
+
+        // The AI stops buying the packs that traded worst. Free waves still bring some of those troops, not Gundabad's brawlers or Harad's levies.
+        foreach (var (faction, worst) in new[]
+        {
+            ("dolguldur", new[] { "foul", "warriors", "crawlers" }),
+            ("gundabad", new[] { "snagas", "hunters", "brawlers" }),
+            ("harad", new[] { "levies" }),
+        })
+            CollectionAssert.AreEqual(Array.Empty<string>(), Cycle(faction).Intersect(worst).ToArray(), faction + " still buys its worst packs");
     }
 
     [TestMethod]
