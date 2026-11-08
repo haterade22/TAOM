@@ -980,3 +980,9 @@ Merged as `9023bd9ed` and `3819c9799` on `port148/wave9`, then fast-forwarded on
 - Stale counts still in `docs/reference/moduledata-validator-codes.md:64`, the troll allowlist lines in `docs/features/armoury-mesh-cleanup.md` and `docs/modding/validation-and-testing.md`, the Rivendell band comment in `troop_weights.xml` and the 21 s timing comment in `check-moduledata-validation.sh`.
 - Every validator run warns that SandBoxCore has no `.tpac`; check that install on the laptop.
 - In-game checks for every step above.
+
+## Code-only wave (2026-11-08)
+
+- Landed: four docs commits (`4ef8e38d7`, `ae8038ec8`, `7f31df84e`, `494d12b2e`). The validator, stylesheet (18: 9 repo, 8 Armory, 1 TAOM_Map) and sweep (836 files) counts are corrected across the docs, `tools/README.md` and CLAUDE.md. The troll dead-mesh allowlist is described as history, and the ModuleData gate's timing comment reads 13.5 to 16.0 s.
+- Parked, D35: the hook-gate commits on `port148/wave10` (`01cda13fc` to `7dcbf7d75`). Merging them needs the maintainer's word and a third cold review of `7dcbf7d75`.
+- Verification at `494d12b2e`: tests 13484 of 13492 passed, 0 failed, in Debug and Release; tool tests 4393 OK. The hook suite had 2 failures in session-start rows, timing under load; both passed alone.

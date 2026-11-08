@@ -397,3 +397,11 @@ On 2026-11-07 the maintainer installed the public build on the laptop and wrote 
 2. The laptop baseline is in `docs/reference/development-machines.md`: 0 errors, 111 warnings, and BROKEN_ITEM_REF, BROKEN_ROSTER_REF, BROKEN_SETTLEMENT_REF and LANDLESS_CULTURE all 0.
 3. The installed TAOM module is now the public build, not this trunk. Nothing in this programme deploys to the game.
 4. D33 still covers the merge and the push of `bannerlord-1.4.5`; no tag, release or force-push.
+
+## D35: code only; the hook-gate rewrite is parked (2026-11-08)
+
+On 2026-11-07 the maintainer wrote "All I wanted was code, no need to change xmls, etc" (the five data commits already pushed stay) and then "proceed with your best recommendation".
+
+1. From here on the programme changes code, tools, tests, hooks and docs only. ModuleData XML, XSLT, `SubModule.xml` nodes and data JSON change only on the maintainer's request.
+2. The wave meant to close the remaining gate gaps (`declare -x`, `typeset -x`, `set -a`, `g=git; $g commit`, a piped export) grew `.claude/hooks/_shellwords.py` from 1,432 to 1,994 lines. Two cold review rounds in a row found new MAJOR bypasses introduced by the fixes, each a command the trunk denies. The gaps closed were pre-existing and need deliberate obfuscation. Under `simplicity-criterion.md` (a guard for a speculative security case needs the maintainer's word first) those eight commits are parked on `port148/wave10`, ending at `7dcbf7d75`, which has had no review. They are kept, not merged.
+3. The docs half of that wave landed on its own.
