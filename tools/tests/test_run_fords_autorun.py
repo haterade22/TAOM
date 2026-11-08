@@ -939,6 +939,18 @@ class SaveEngineDumpTests(unittest.TestCase):
         self.assertIn(str(path), self.said[-1])
 
 
+class WantsDumpTests(unittest.TestCase):
+    """A hung mission frame raises no exception, so the only stack of the loop it spins in is a dump taken before the stop."""
+
+    def test_a_crash_and_a_stall_take_a_dump(self):
+        self.assertTrue(r.wants_dump("crash: Watchdog asks for a dump"))
+        self.assertTrue(r.wants_dump("stall: the status heartbeat did not change for 10 minutes"))
+
+    def test_a_clean_end_an_early_exit_and_a_timeout_take_none(self):
+        for reason in ("done", "the game exited (code 0) before the done file", "timeout: no done file before wall_limit plus 15 minutes"):
+            self.assertFalse(r.wants_dump(reason), reason)
+
+
 class DumpCrashTests(unittest.TestCase):
     """procdump v12.01 returns 0xFFFFFFFE for a dump it wrote and for a pid it never found, so the file decides."""
 
