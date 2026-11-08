@@ -94,6 +94,12 @@ Test: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 
 ---
 
+## Design it twice (only when Mike asks for it)
+
+When Mike wants alternatives for a module's interface, spawn two or three `architect` agents in one message. Give each the same read-only brief (the files, the ADR-002 and ADR-007 limits, the engine types behind the seam) and one different constraint: the fewest entry points; the most common caller made trivial; the most variation across callers. Each reports the interface, one caller's usage, what the interface hides, and its trade-offs. The main session compares them and recommends one design or a hybrid. It costs an agent per design, so it stays off by default ([model-effort-selection.md](../../.claude/rules/model-effort-selection.md)). From mattpocock/skills `DESIGN-IT-TWICE.md` (MIT).
+
+---
+
 ## Briefing convention: point, never paraphrase (MANDATORY for port work)
 
 A builder brief may cite source files and line ranges; it must NOT paraphrase what those lines do

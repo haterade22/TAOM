@@ -14,11 +14,14 @@ FILES: the list in your spawn prompt.
 
 9. **Two-edit test check:** judge each new or changed test by two edits. Break the behaviour: the test must fail, and one that still passes proves nothing (causes: the expected value is computed by the code under test, the assertion checks data the test itself built, a restated constant). Change only the internals: the test must still pass, and one that fails is pinned to the implementation. A `DidNotReceive()` assertion needs a paired positive case that shows the path can call it. A self-check or verdict rule needs one test on evidence its real producers made, in the engine's call order, that PASSes it, and one injected fault that FAILs it; a hand-built evidence record proves only the rule's arithmetic (`rca-fords-of-war-2026-10-31.md` addendum).
 
+10. **Spec check:** read the body of the issue that item 4 found (`gh issue view <N>`), or the request or plan named in your spawn prompt. Report, quoting the line for each: (a) a requirement missing or partial, (b) behaviour the diff adds that nobody asked for, (c) a requirement that looks implemented but looks wrong. With no issue or request, write "no spec" and go on.
+
 OUTPUT FORMAT:
 - ✅ Tests: [X test files, Y test methods]
 - ✅/❌ Feature Doc: [exists at path / MISSING]
 - ✅/❌ GitHub Issue: [#N title / MISSING]
 - ✅/❌ IoC: [registered / MISSING registrations]
 - ✅/❌ Gates: [no silenced test or allowlist entry / list each one with no stated reason]
+- ✅/❌ Spec: [no gaps / no spec / list each finding with its quoted line]
 
 Overall: COMPLETE / INCOMPLETE — [list what's missing]

@@ -117,7 +117,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Ruff | `Ruff` `astral-sh/ruff` | MIT | interop-only | `ruff.toml`, `tools/tests/test_python_lint_gate.py` (see detail) | cleared |
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 | ponytail | `ponytail` `DietrichGebert/ponytail` | MIT | behavioural-port | `.claude/rules/think-before-coding.md` ("Reuse before writing", the ordered reuse ladder; see detail) | cleared |
-| mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); a suggested-skills field for the since-removed `/context-save`; see detail | cleared |
+| mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); a suggested-skills field for the since-removed `/context-save`; additions to `/deep-review` lens 4, `/investigate`, `/issue`, `external-skill-ports.md`, `agent-teams.md`, `000-template.md` and `session-phase-boundaries.md`; see detail | cleared |
 | pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
 | kepano (Steph Ango): kepano-obsidian, obsidian-skills, defuddle | `kepano/kepano-obsidian` `kepano/obsidian-skills` `kepano/defuddle` | MIT | comparison-only | (none) | cleared |
 | Auto Ontology | `auto-ontology` `NVIDIA/auto-ontology` | Apache-2.0 | comparison-only | `.claude/rules/evidence-over-claims.md` C.4 (the idea that a capped result proves no complete list, read in its `query-validation.md` on 2026-11-08; the sentence is TAOM's own) | cleared |
@@ -992,7 +992,7 @@ vendored, so no MIT notice is carried, and the plugin was never installed. Recor
 
 ### mattpocock/skills
 
-Upstream: https://github.com/mattpocock/skills. Two reviews, both reading markdown only. The
+Upstream: https://github.com/mattpocock/skills. The two 2026-06-22 reviews read markdown only. The
 `improve-codebase-architecture` skill gave the shallow-module lens and the deepening deletion test, which
 are now one bullet in `.claude/skills/improve/references/audit-playbook.md`. The `handoff` skill gave one
 field, suggested skills for the next session, which went into `/context-save` (that skill was removed
@@ -1000,6 +1000,12 @@ later, in commit `8b1083127`); `teach` was skipped. No text or file was vendored
 carried. Records:
 [`docs/reviews/adopt-mattpocock-improve-architecture-2026-06-22.md`](../reviews/adopt-mattpocock-improve-architecture-2026-06-22.md),
 [`docs/reviews/adopt-mattpocock-teach-handoff-2026-06-22.md`](../reviews/adopt-mattpocock-teach-handoff-2026-06-22.md).
+
+A review on 2026-11-08 at `4ae2317dd` restated ideas from `code-review`, `diagnosing-bugs`, `writing-for-agents`,
+`PHASE-BOUNDARIES.md`, `DESIGN-IT-TWICE.md`, `wayfinder` and `domain-modeling` in TAOM's words, as short additions to existing files and one
+new page. No upstream file was vendored and nothing was installed, so no MIT notice is carried; the additions name the
+source inline. Record:
+[`docs/reviews/adopt-mattpocock-skills-2026-11-08.md`](../reviews/adopt-mattpocock-skills-2026-11-08.md).
 
 ### pstack
 

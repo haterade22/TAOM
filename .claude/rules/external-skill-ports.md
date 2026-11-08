@@ -27,6 +27,8 @@ Write `description:` as triggering conditions, ideally starting with "Use whenâ€
 
 A skill holds the steps and the traps of its procedure; history and long reference go in a doc it points to. Keep a body under 20 KB: after `/compact` only about 5,000 tokens of a body return, roughly 20 KB of prose, so put what must survive first.
 
+End every step on a completion criterion the agent can check; a vague bound invites stopping early. Test each sentence: does it change what the model does by default? If not, delete the whole sentence. State the target behaviour first, and keep a prohibition for a hard guardrail paired with its target. (From mattpocock/skills `writing-for-agents`, MIT; the source has no automated eval for these.)
+
 ### Cross-references
 
 Every `/name` a skill body cites resolves to `.claude/skills/<name>/SKILL.md`, and every rule, ADR and `docs/` path it cites exists. A skill cites no memory file: `python tools/lint_docs.py --fail-on-drift` fails on a `feedback_` token (`dead-memory-ref`). `python tools/lint_docs.py --quick` checks markdown links only, not a bare `/name`.

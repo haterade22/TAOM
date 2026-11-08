@@ -66,6 +66,8 @@ A crash reported only by logs: read every line of both logs, collapsing repeats 
    - Specific culture/race/feature interaction?
    - Mission start vs campaign map only?
 
+   Done when you name the one check that goes red on this bug and show one run of it. Try in this order: a filtered `dotnet test`, a tool on a fixture, `/game-run` when a driver covers the path, then a named manual check for Mike. With no check (a crash known only from logs), write that down: Phase 6 then reports the fix as unproven.
+
 5. **Check the simpler-fix-first list.** Before investigating engine internals, check whether the bug is in:
    - `skins.xml` / `monsters.xml` / `action_sets.xml` (race + animation issues)
    - `taom_*.xml` data files (XML schema or value problems)
@@ -74,13 +76,13 @@ A crash reported only by logs: read every line of both logs, collapsing repeats 
 
 6. **Verify TaleWorlds API signatures.** The decompile dump at `E:\Decompiled_Bannerlord\` can lag the installed game after an engine bump. Before assuming a method exists or has a particular signature, run `pwsh tools/taom-src.ps1 path <Type>` (or `ilspycmd`) against the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`. If dump and installed disagree, trust installed. For a large surface, follow `docs/ai-includes/taleworlds-research-guide.md`.
 
-Output: **"Root-cause hypothesis: ..."** — a specific, testable claim about *what* is wrong and *why*.
+Output: **three ranked root-cause hypotheses**, each a specific claim about *what* is wrong and *why*, with its prediction: "If X is the cause, then changing Y removes the symptom." Drop one that has no prediction, even if fewer than three remain. One is enough when the stack trace names the site.
 
 ---
 
 ## Phase 2: Scope Lock (auto-freeze)
 
-Once you have a hypothesis, lock edit scope to the affected directory. Unlike a casual edit-restrict, this skill's own PreToolUse hooks (declared in this SKILL.md's frontmatter) ARE active while `/investigate` is running, so writing the state file here will fire them — that's why this skill can auto-engage freeze without separately invoking `/freeze`.
+Once you have ranked hypotheses, lock edit scope to the first one's directory, and widen it when you test the next. Unlike a casual edit-restrict, this skill's own PreToolUse hooks (declared in this SKILL.md's frontmatter) ARE active while `/investigate` is running, so writing the state file here will fire them, which is why this skill can auto-engage freeze without separately invoking `/freeze`.
 
 ```bash
 SCOPE="<e.g. Main/Features/CareerSystem/>"
@@ -140,11 +142,11 @@ If WebSearch is needed for a Bannerlord modding pattern, **sanitize the error fi
 
 ## Phase 4: Hypothesis Testing
 
-Before writing ANY fix, verify your hypothesis.
+Before writing ANY fix, test the hypotheses in rank order.
 
-1. **Confirm.** Add a temporary log line, assertion, or debug output at the suspected root cause. Reproduce. Does evidence match?
+1. **Confirm.** Add a temporary log line, assertion, or debug output at the suspected root cause. Tag every temporary line with one unique prefix (`[DEBUG-a4f2]`), and remove them all by a search for that prefix before Phase 6. Reproduce. Does evidence match?
 
-2. **If wrong:** return to Phase 1. Do NOT guess your way to a fix. The cost of a second investigation is minutes; the cost of a wrong fix is hours.
+2. **If wrong:** test the next hypothesis, and return to Phase 1 only when the list is spent. Do NOT guess your way to a fix. The cost of a second investigation is minutes; the cost of a wrong fix is hours.
 
 3. **3-strike rule.** If three hypotheses fail in sequence, first write down the premise they share, and run one observation that would come out differently if that premise were false. Then **STOP** and use `AskUserQuestion`:
    ```
@@ -191,7 +193,7 @@ Once root cause is confirmed:
 
 ## Phase 6: Verification & Report
 
-Reproduce the original bug scenario and confirm it's fixed. **Not optional.** For Bannerlord, this often means a game run. A check a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
+Reproduce the original bug scenario and confirm it's fixed. **Not optional.** With no red check from Phase 1, report Status DONE_WITH_CONCERNS and write "no red check" under Evidence. For Bannerlord, this often means a game run. A check a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
 
 Run the test suite. Paste the output.
 
@@ -205,7 +207,7 @@ Root cause:        [what was actually wrong, in TAOM terms]
 Phase that found it: [Phase 3 pattern match | Phase 4 hypothesis | etc.]
 Fix:               [what changed, file:line references]
 Evidence:          [test output, in-game repro result if applicable]
-Regression test:   [TAOM.Tests/.../FooTests.cs:line]
+Regression test:   [TAOM.Tests/.../FooTests.cs:line, or "no seam" and why]
 Files touched:     [N]
 Related:           [docs/reviews items]
 Status:            DONE | DONE_WITH_CONCERNS | BLOCKED

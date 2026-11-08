@@ -32,6 +32,7 @@ Same procedure, with these sections:
 - `## Design`: architecture decisions, extension points used (GameModel, Harmony, CampaignBehavior), alternatives considered.
 - `## Implementation`: key files, patterns used, configuration format, IoC registration.
 - `## Testing`: test coverage summary, how to verify it works in-game.
+- For a feature that spans more than one session, add `## Not yet specified` (in-scope questions you cannot yet state precisely; each becomes a task once you can) and `## Out of scope` (work ruled out, with the reason; it returns only if the goal changes).
 
 ## Steps
 
