@@ -269,6 +269,12 @@ $ python tools/audit_polearm_shield_parity.py
 PASS: no shield roster carries a Polearm its primary usage forbids.
 ```
 
+The three `KNOWN_DEAD_MESH` warnings in that transcript are history. They were the troll set
+(`lotr_troll_armor`, `_bracers`, `_helmet`), allowlisted while the art was missing. Commit
+`2b14ffcfa` retired the entries on 2026-11-07, because the public Armory v2.0.29.5 ships the art,
+and `KNOWN_DEAD_MESHES` in `tools/validate_mesh_refs.py` is now empty. On the laptop that day,
+`python tools/validate_mesh_refs.py --game <install>` printed `0 error(s), 0 warning(s), 0 info`.
+
 Three things to read out of that transcript rather than skim past.
 
 1. **The registry line is the install check.** `Registry: 5,900 items ...` is how you know the game
@@ -388,13 +394,15 @@ a future reader can tell drift from breakage.
 | `python tools/validate_moduledata.py` | 0 | 0 errors, 94 warnings, all `INCONSISTENT_ARMOUR_SLOT` |
 | `python tools/validate_all_troop_refs.py` | 0 | 10 cultures swept, 647 troops, 1,713 armour refs, 0 missing |
 | `python tools/audit_item_refs.py` | 0 | 5,910 item ids, 2,955 referenced, 0 broken |
-| `python tools/validate_mesh_refs.py` | 0 | 0 errors, 3 `KNOWN_DEAD_MESH` warnings (the troll set) |
+| `python tools/validate_mesh_refs.py` | 0 | 0 errors, 3 `KNOWN_DEAD_MESH` warnings (the troll set; allowlist retired 2026-11-07, 0 warnings since) |
 | `python tools/audit_polearm_shield_parity.py` | 0 | PASS, with two-hander warnings on the Mordor Numenorean rosters |
 | `python tools/check_external_xslt.py` | 0 | PASS, 17 stylesheets clean |
 | `python tools/generate_armory_catalogue.py --check` | 0 | catalogue reproduces exactly, 4,839 rows |
 | `python tools/audit_action_set_parity.py` | 0 | humanoid sets clean; 9 creature sets excluded from the human audit |
 
-The 94 warnings and the 3 dead meshes are known and accepted, not new. If your run shows more,
+The 94 warnings and the 3 dead meshes were known and accepted, not new. The dead meshes are gone
+since 2026-11-07 (`2b14ffcfa` emptied `KNOWN_DEAD_MESHES`), so a `KNOWN_DEAD_MESH` warning today
+is a new one. If your run shows more,
 compare against this table before assuming the tool broke.
 
 ## Numbers in this chapter
@@ -410,7 +418,7 @@ All measured 2026-09-05 from the repo root.
 | 0 errors, 94 warnings | `python tools/validate_moduledata.py` |
 | 5,900 items / 5,291 NPCCharacters / 40 cultures / 476 party templates / 121 body properties | the `Registry:` line of the same run |
 | 5,910 item ids, 2,955 referenced, 0 broken | `python tools/audit_item_refs.py` |
-| 3 `KNOWN_DEAD_MESH` warnings | `python tools/validate_mesh_refs.py` |
+| 3 `KNOWN_DEAD_MESH` warnings (0 since the 2026-11-07 retirement) | `python tools/validate_mesh_refs.py` |
 | 4,839 catalogue rows | `python tools/generate_armory_catalogue.py --check` |
 | 19 `--code` entries in the commit hook | `grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh \| wc -l` |
 | 16 troop files on disk, 16 registered, 10 swept, 6 unswept | `ls Main/_Module/ModuleData/troops/troops_*.xml \| wc -l`; `rg -c 'XmlName id="NPCCharacters" path="troops/' Main/_Module/SubModule.xml`; the `cultures` list at `tools/validate_all_troop_refs.py:80-97` |

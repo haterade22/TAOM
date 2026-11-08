@@ -61,7 +61,7 @@ The last column is not a detail. The hook matches on staged `Main/_Module/Module
 (`check-moduledata-validation.sh:65`) and neither live module is in git, so editing them stages
 nothing and gates nothing. Run `python tools/validate_moduledata.py` by hand after any edit there.
 
-- **Editing TAOM_Map's `settlements.xml`?** Its 1,012 `Culture.` refs are checked since #462, but
+- **Editing TAOM_Map's `settlements.xml`?** Its 1,002 `Culture.` refs (2026-11-07) are checked since #462, but
   only when you run the validator yourself: the file is not in git, so the commit hook never fires on
   it. That file is the sole input to `settled_cultures`, so a bad id there corrupts the
   `LANDLESS_CULTURE` verdict with no other diagnostic. Run `python tools/validate_moduledata.py`

@@ -164,7 +164,7 @@ Disposition:
 | Black Númenórean `ar_ardunian_elite_{helmet,shoses,hand}` | 3 | deleted |
 | `ar_ardunian_elite_armour` (25 Umbar characters) | 1 | re-meshed to `sm_md_num_inf_chest_elite_a` |
 | Easterling crafting pieces | 6 | re-meshed to `sm_rh_loke_*` / `wm_harad_spear_a01_handle` |
-| `lotr_troll_armor` / `_bracers` / `_helmet` | 3 | kept, gated (see below) |
+| `lotr_troll_armor` / `_bracers` / `_helmet` | 3 | kept, gated; art returned 2026-11-07 (see below) |
 | Hand-authored `_slim` duplicates (9 Gondor, Theodred, 3 `m_northern_armor_*`) | 13 | deleted in a follow-up pass, see below |
 
 **`moriaorc_v*` is a new finding.** Those 15 dead meshes appear nowhere in the
@@ -198,24 +198,32 @@ Before anyone tries to close the female-model gap in XML: 637 `_slim` meshes shi
 LOTR-authored) against ONE `_female` and five LOTR-authored `_converted`. The flag is close to
 inert here. The gap is missing art, not a wrong attribute.
 
-### The troll, and why it is kept rather than cleaned
+### The troll, and why it was kept rather than cleaned (resolved 2026-11-07)
 
-No troll armour art survives in either tree, and armour meshes are skinned to the human
-rig, so no donor can fit the `cave_troll` skeleton. Deleting the three items and their 18
+In the 2026-09-01 wave no troll armour art survived in either tree, and armour meshes are
+skinned to the human rig, so no donor can fit the `cave_troll` skeleton. Deleting the three items and their 18
 references would take a level-51 unit that fields up to 118 at a time from 95 armour to 0
-in every slot, which is a balance change rather than a cleanup. They are kept and recorded
-in `validate_mesh_refs.KNOWN_DEAD_MESHES`, which reports them as `KNOWN_DEAD_MESH`
+in every slot, which is a balance change rather than a cleanup. They were kept and recorded
+in `validate_mesh_refs.KNOWN_DEAD_MESHES`, which reported them as `KNOWN_DEAD_MESH`
 (WARNING) with the reason and the decision date instead of `MISSING_MESH` (ERROR).
 
 That allowlist is exact-name-only, never a prefix, so a *new* dead mesh in the same family
 still errors. It also audits itself: `STALE_DEAD_MESH_ALLOWLIST` fires if the art returns
 or if nothing references the entry any more, so the entry cannot quietly outlive its reason.
 
+**Retired 2026-11-07 (2b14ffcfa).** Against the public 1.4.8 Armory (v2.0.29.5) the stale
+check named all three entries: that build ships the art. `KNOWN_DEAD_MESHES` is now empty, so
+losing that art a second time errors as `MISSING_MESH`. On the laptop install that day,
+`python tools/validate_mesh_refs.py --game <install> --code KNOWN_DEAD_MESH --code
+STALE_DEAD_MESH_ALLOWLIST --code MISSING_MESH` printed `0 error(s), 0 warning(s), 0 info`
+with 3980/3980 unique visual meshes present, and `troops_mordor.xml` still names the three
+items 18 times.
+
 ## Outstanding
 
 | Item | Consumers | Status |
 |---|---|---|
-| `lotr_troll_armor` / `_bracers` / `_helmet` | `troops/troops_mordor.xml` | Dead mesh, still equipped, no donor exists. Accepted and gated, not outstanding work. Needs new art to resolve. |
+| `lotr_troll_armor` / `_bracers` / `_helmet` | `troops/troops_mordor.xml` | Resolved 2026-11-07: the art ships in the public Armory v2.0.29.5 and the allowlist entries were retired (2b14ffcfa). Was: dead mesh, still equipped, no donor. |
 | 11 imported-not-cooked meshes | goat bardings, Khamûl bardings, `gondor_horse_plate_armor` | Was "needs a pack re-cook". The Armory no longer HAS a cooked tree, so re-check whether this still means anything. |
 | In-game verification of the 2026-09-01 wave | | Not yet done. Needs a full restart. |
 

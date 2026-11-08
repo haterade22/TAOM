@@ -828,9 +828,12 @@ authoritative for it, so do not count it twice. Counts measured 2026-11-07; the 
 ModuleData XML are swept for dangling refs, and it contributes to two registries, not one: items via
 `item_roots`, and `<Monster>` declarations via `build_harness_registries`, which feeds
 `mount_family_types`. What it does *not* get is TAOM's schema contracts (duplicate ids, enums,
-civilian `equipmentType`), because those describe TAOM's own files. That is currently free: the
-Armory defines 3,727 items and 63 monsters and **zero** NPCCharacters, EquipmentRosters, party
-templates, cultures or body properties, so the passes that skip it have nothing to miss. That is an
+civilian `equipmentType`), because those describe TAOM's own files. That is currently free: on
+2026-08-18 the Armory defined 3,727 items and 63 monsters (counting method not recorded). On the
+public 2.0.29.5 install, 2026-11-07, counting `<Item>`, `<CraftedItem>` and `<Monster>` opens that
+carry an `id`, after `taom_schema._read_stripped` removes comments, gives 3,511 items, 371 crafted
+items and 80 monsters, and **zero** NPCCharacters, EquipmentRosters, party templates, cultures or
+body properties, so the passes that skip it have nothing to miss. That is an
 assumption about today's data, not a guarantee, and `/author-armor`'s workflow makes it plausible
 someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
 
