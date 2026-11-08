@@ -27,40 +27,6 @@ public class CareerMenuService : ICareerMenuService
 
     public string SelectedCareerStringId { get; private set; }
 
-    private static readonly Dictionary<string, Func<SkillObject>> SkillMap =
-        new Dictionary<string, Func<SkillObject>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["OneHanded"] = () => DefaultSkills.OneHanded,
-            ["TwoHanded"] = () => DefaultSkills.TwoHanded,
-            ["Polearm"] = () => DefaultSkills.Polearm,
-            ["Bow"] = () => DefaultSkills.Bow,
-            ["Crossbow"] = () => DefaultSkills.Crossbow,
-            ["Throwing"] = () => DefaultSkills.Throwing,
-            ["Riding"] = () => DefaultSkills.Riding,
-            ["Athletics"] = () => DefaultSkills.Athletics,
-            ["Crafting"] = () => DefaultSkills.Crafting,
-            ["Scouting"] = () => DefaultSkills.Scouting,
-            ["Tactics"] = () => DefaultSkills.Tactics,
-            ["Roguery"] = () => DefaultSkills.Roguery,
-            ["Charm"] = () => DefaultSkills.Charm,
-            ["Leadership"] = () => DefaultSkills.Leadership,
-            ["Trade"] = () => DefaultSkills.Trade,
-            ["Steward"] = () => DefaultSkills.Steward,
-            ["Medicine"] = () => DefaultSkills.Medicine,
-            ["Engineering"] = () => DefaultSkills.Engineering,
-        };
-
-    private static readonly Dictionary<string, Func<CharacterAttribute>> AttributeMap =
-        new Dictionary<string, Func<CharacterAttribute>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Vigor"] = () => DefaultCharacterAttributes.Vigor,
-            ["Control"] = () => DefaultCharacterAttributes.Control,
-            ["Endurance"] = () => DefaultCharacterAttributes.Endurance,
-            ["Cunning"] = () => DefaultCharacterAttributes.Cunning,
-            ["Social"] = () => DefaultCharacterAttributes.Social,
-            ["Intelligence"] = () => DefaultCharacterAttributes.Intelligence,
-        };
-
     public CareerMenuService(
         ICareerRegistry registry,
         ICareerMenuDataProvider dataProvider,
@@ -275,8 +241,8 @@ public class CareerMenuService : ICareerMenuService
             (NarrativeMenuOptionArgs args) =>
             {
                 // Resolve at runtime when game is initialized
-                var skills = ResolveSkills(skillNames);
-                var attribute = ResolveAttribute(attributeName);
+                var skills = CharacterCreationBonusResolver.ResolveSkills(skillNames, _logger, logNullResolution: false);
+                var attribute = CharacterCreationBonusResolver.ResolveAttribute(attributeName, _logger, logNullResolution: false);
                 if (skills.Length > 0)
                 {
                     args.SetAffectedSkills(skills);
@@ -327,39 +293,5 @@ public class CareerMenuService : ICareerMenuService
                 "spawnpoint_player_1",
                 "", "", null, true, isFemale)
         };
-    }
-
-    private SkillObject[] ResolveSkills(string[] skillNames)
-    {
-        if (skillNames == null || skillNames.Length == 0)
-            return Array.Empty<SkillObject>();
-
-        var resolved = new List<SkillObject>();
-        foreach (var name in skillNames)
-        {
-            if (SkillMap.TryGetValue(name, out var factory))
-            {
-                var skill = factory();
-                if (skill != null)
-                    resolved.Add(skill);
-            }
-            else
-            {
-                _logger.LogWarning($"Unknown skill name: '{name}'");
-            }
-        }
-        return resolved.ToArray();
-    }
-
-    private CharacterAttribute ResolveAttribute(string attributeName)
-    {
-        if (string.IsNullOrEmpty(attributeName))
-            return null;
-
-        if (AttributeMap.TryGetValue(attributeName, out var factory))
-            return factory();
-
-        _logger.LogWarning($"Unknown attribute name: '{attributeName}'");
-        return null;
     }
 }

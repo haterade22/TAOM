@@ -110,8 +110,8 @@ Options without `string_id` prefixed with `taom_` are treated as vanilla and rem
 
 Each option carries `(focus_to_add, skill_level_to_add, attribute_level_to_add)`. The engine
 applies these at menu-selection time via `NarrativeMenuOptionArgs` — the **narrative stages**
-through [NarrativeMenuBuilder.BuildOption](../../Main/Features/CharacterCreation/NarrativeMenuBuilder.cs#L61),
-and the **career stage** through [CareerMenuService.BuildOptionForCareer](../../Main/Features/CharacterCreation/CareerMenuService.cs#L260)
+through [NarrativeMenuBuilder.BuildOption](../../Main/Features/CharacterCreation/NarrativeMenuBuilder.cs#L27),
+and the **career stage** through [CareerMenuService.BuildOptionForCareer](../../Main/Features/CharacterCreation/CareerMenuService.cs#L227)
 — so by `OnCharacterCreationFinalize` the Hero already has the points. The per-pick value is
 identical to vanilla's defaults `(1, 10, 1)`.
 
@@ -168,6 +168,7 @@ just a new campaign.
 | `Main/Features/CharacterCreation/CultureCreationDataProvider.cs` | Parses cultures.json |
 | `Main/Features/CharacterCreation/NarrativeDataProvider.cs` | Parses narrative menu JSON files with concurrent cache |
 | `Main/Features/CharacterCreation/NarrativeMenuBuilder.cs` | Builds `NarrativeMenuOption` objects from `NarrativeOptionDefinition` list |
+| `Main/Features/CharacterCreation/CharacterCreationBonusResolver.cs` | Shared case-insensitive skill and attribute resolution for narrative and career options. Narrative resolves while building; career resolves in the option-args callback. Null-result logging remains specific to each path |
 | `Main/Features/CharacterCreation/EquipmentRosterProvider.cs` | Looks up `MBEquipmentRoster` by string ID |
 | `Main/Features/CharacterCreation/Models/CultureCreationData.cs` | POCO: culture metadata including race, settlement, body defaults |
 | `Main/Features/CharacterCreation/Models/NarrativeOptionDefinition.cs` | POCO: one narrative backstory choice |
@@ -208,7 +209,10 @@ just a new campaign.
 | `TAOM.Tests/Features/CharacterCreation/CharacterCreationContentServiceTests.cs` | `RegisterCustomCultures`, `RegisterNarrativeMenus`, `OnCharacterCreationFinalize`, `SetPlayerRace` (16 tests including FaceGen-preservation, invalid-ID fallback, case-insensitive matching) |
 | `TAOM.Tests/Features/CharacterCreation/CultureCreationDataProviderTests.cs` | JSON parsing, missing file handling, `GetCultureData` lookup |
 | `TAOM.Tests/Features/CharacterCreation/NarrativeDataProviderTests.cs` | JSON parsing, caching, `GetMenuOptionsForCulture` filtering, missing file handling |
-| `TAOM.Tests/Features/CharacterCreation/NarrativeMenuBuilderTests.cs` | Option construction, empty input handling |
+| `TAOM.Tests/Features/CharacterCreation/NarrativeMenuBuilderTests.cs` | Roster ids, empty and unknown bonus names, null-name exceptions, and invalid-option skip-and-continue behavior |
+| `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs` | Career option construction, deferred bonus resolution, repeated callback warnings, and null-name exceptions |
+| `TAOM.Tests/Features/CharacterCreation/CharacterCreationBonusResolverTests.cs` | Shared resolver ordering, duplicates, case handling, invocation counts, null results, unknown names, and exception propagation |
+| `TAOM.Tests/Features/CharacterCreation/CharacterCreationBonusResolverWiringTests.cs` | All 24 engine-factory mapping declarations, case-insensitive maps, consumer timing/logger/null policies, and duplicate-map removal |
 | `TAOM.Tests/Features/CharacterCreation/CultureRaceFilterServiceTests.cs` | 24 tests: per-culture allow-lists, fallback, case-insensitive matching, empty-array handling |
 | `TAOM.Tests/Features/CharacterCreation/FaceGenRaceSelectorRebuilderTests.cs` | 19 tests for pure helpers: `BuildGlobalIndexMap`, `MapFilteredIndexToGlobal`, `MapGlobalIndexToFiltered`, `ShouldForceSwitchToDefault`, round-trip property |
 | `TAOM.Tests/Features/CharacterCreation/CCBodyPropertiesProviderTests.cs` | XML parsing, 128-hex validation, missing file handling, duplicate-id last-wins, malformed XML |
@@ -418,8 +422,17 @@ Beyond the LOTRLOME data layer, vanilla `CharacterCreationCampaignBehavior.AgeSe
 
 The Postfix's scope is deliberately limited to the age-30 code path. Vanilla references `act_childhood_athlete` in two other locations (`CharacterCreationCampaignBehavior.cs:1599` + `:2016`, both youth backstory option handlers); those are untouched. If a future report surfaces broken poses at those backstory options, repeat the same Postfix recipe targeting `MerchantsParentsOptionOnSelect` / whichever specific method.
 
+## How to verify in game
+
+For the shared bonus resolver (#1097):
+
+1. Start a new campaign and reach a narrative option that grants skill, focus and attribute bonuses. Select it and confirm its effect text and the final review values match the option, with no unknown-name warnings or resolution errors.
+2. Continue to the career menu. Select a career and confirm its equipment preview, the review-stage equipment and the final career assignment still work. Current career data grants zero stat bonuses, so this checks the deferred callback boundary rather than a factory-specific value.
+3. Repeat a narrative selection and a career selection after changing choices. Confirm each selection applies once, with no duplicated bonuses, missing options or warnings from valid names.
+
 ## Changelog
 
+- 2026-11-08, `refactor(character-creation)` #1097: narrative and career options now share one skill and attribute resolver, preserving their original resolution timing and null-result logging policies.
 - 2026-09-03, `feat(player-switcher)` #514: the five narrative stages plus age selection are now
   walked automatically when the player has chosen a lord to take over, landing them on the career
   stage. No file in this feature changed except making `CareerMenuService.CareerMenuId` public so

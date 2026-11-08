@@ -98,7 +98,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [long-defeat](features/long-defeat.md): the wave survival mode on the siege maps (#1079), with its [leaderboard plan](features/long-defeat/leaderboard-plan.md) (#1080). Phase 1 is on trunk and owes its in-game proof: `taom.ld_start`, or `python tools/run_long_defeat.py` with nobody at the keyboard. Its `[Check] id=taom.long-defeat.*` lines judge each run, and the doc holds Mike's decisions for the later phases
 
 ### Career & progression
-- [career-system](features/career-system.md): 70 careers across 25 culture ids, XML-driven defs, ability + passive systems, career screen UI
+- [career-system](features/career-system.md): 91 careers across 32 culture ids, XML-driven defs, ability + passive systems, career screen UI
 - [career-forks-generator](features/career-forks-generator.md): `tools/generate_career_forks.py`: writes one kingdom's forked career trees (`max_picks` groups, `tree_version`, `point_levels`) from a JSON spec, refusing to write on any rule error
 - [career-cc-selection](features/career-cc-selection.md) — CC career-selection stage + archetype-driven starting equipment
 - [troop-progression](features/troop-progression.md) — tier-by-tier upgrade rules, MaxCharacterTier 10

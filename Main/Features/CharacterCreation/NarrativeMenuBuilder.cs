@@ -15,40 +15,6 @@ public class NarrativeMenuBuilder
     private readonly IModLogger _logger;
     private readonly IEquipmentRosterProvider _equipmentRosterProvider;
 
-    private static readonly Dictionary<string, Func<SkillObject>> SkillMap =
-        new Dictionary<string, Func<SkillObject>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["OneHanded"] = () => DefaultSkills.OneHanded,
-            ["TwoHanded"] = () => DefaultSkills.TwoHanded,
-            ["Polearm"] = () => DefaultSkills.Polearm,
-            ["Bow"] = () => DefaultSkills.Bow,
-            ["Crossbow"] = () => DefaultSkills.Crossbow,
-            ["Throwing"] = () => DefaultSkills.Throwing,
-            ["Riding"] = () => DefaultSkills.Riding,
-            ["Athletics"] = () => DefaultSkills.Athletics,
-            ["Crafting"] = () => DefaultSkills.Crafting,
-            ["Scouting"] = () => DefaultSkills.Scouting,
-            ["Tactics"] = () => DefaultSkills.Tactics,
-            ["Roguery"] = () => DefaultSkills.Roguery,
-            ["Charm"] = () => DefaultSkills.Charm,
-            ["Leadership"] = () => DefaultSkills.Leadership,
-            ["Trade"] = () => DefaultSkills.Trade,
-            ["Steward"] = () => DefaultSkills.Steward,
-            ["Medicine"] = () => DefaultSkills.Medicine,
-            ["Engineering"] = () => DefaultSkills.Engineering,
-        };
-
-    private static readonly Dictionary<string, Func<CharacterAttribute>> AttributeMap =
-        new Dictionary<string, Func<CharacterAttribute>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Vigor"] = () => DefaultCharacterAttributes.Vigor,
-            ["Control"] = () => DefaultCharacterAttributes.Control,
-            ["Endurance"] = () => DefaultCharacterAttributes.Endurance,
-            ["Cunning"] = () => DefaultCharacterAttributes.Cunning,
-            ["Social"] = () => DefaultCharacterAttributes.Social,
-            ["Intelligence"] = () => DefaultCharacterAttributes.Intelligence,
-        };
-
     public NarrativeMenuBuilder(IModLogger logger, IEquipmentRosterProvider equipmentRosterProvider)
     {
         _logger = logger;
@@ -60,8 +26,8 @@ public class NarrativeMenuBuilder
 
     public NarrativeMenuOption BuildOption(NarrativeOptionDefinition definition)
     {
-        var skills = ResolveSkills(definition.Skills);
-        var attribute = ResolveAttribute(definition.Attribute);
+        var skills = CharacterCreationBonusResolver.ResolveSkills(definition.Skills, _logger, logNullResolution: true);
+        var attribute = CharacterCreationBonusResolver.ResolveAttribute(definition.Attribute, _logger, logNullResolution: true);
         var cultureId = definition.CultureId;
         var occupationType = definition.OccupationType;
         var titleType = definition.TitleType;
@@ -128,47 +94,6 @@ public class NarrativeMenuBuilder
             }
         }
         return added;
-    }
-
-    private SkillObject[] ResolveSkills(string[] skillNames)
-    {
-        if (skillNames == null || skillNames.Length == 0)
-            return Array.Empty<SkillObject>();
-
-        var resolved = new List<SkillObject>();
-        foreach (var name in skillNames)
-        {
-            if (SkillMap.TryGetValue(name, out var factory))
-            {
-                var skill = factory();
-                if (skill != null)
-                    resolved.Add(skill);
-                else
-                    _logger.LogWarning($"Skill '{name}' resolved to null — game may not be initialized");
-            }
-            else
-            {
-                _logger.LogWarning($"Unknown skill name: '{name}'");
-            }
-        }
-        return resolved.ToArray();
-    }
-
-    private CharacterAttribute ResolveAttribute(string attributeName)
-    {
-        if (string.IsNullOrEmpty(attributeName))
-            return null;
-
-        if (AttributeMap.TryGetValue(attributeName, out var factory))
-        {
-            var attr = factory();
-            if (attr == null)
-                _logger.LogWarning($"Attribute '{attributeName}' resolved to null — game may not be initialized");
-            return attr;
-        }
-
-        _logger.LogWarning($"Unknown attribute name: '{attributeName}'");
-        return null;
     }
 
     private void UpdateYouthEquipment(CharacterCreationManager manager, string titleType)

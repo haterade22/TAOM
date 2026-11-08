@@ -2604,3 +2604,11 @@ Three new catch blocks raised the silent-catch ratchet over its baseline. The 89
 - **Why missed:** the filter was built from the changed types. `SilentCatchRatchetTests`, `BannedConstructsGateTests` and the other gates under `TAOM.Tests/Infrastructure` read every source file and belong to no feature.
 - **Prevent:** a filtered run that touches a catch, a `#if`, an entry point or a service signature also names `FullyQualifiedName~SilentCatch|FullyQualifiedName~BannedConstructs|FullyQualifiedName~EntryPointLineCount|FullyQualifiedName~ServiceSignature`. A delegated warning or an `ExceptionDispatchInfo` rethrow counts as silent to the scanner: mark the intended fallback with `swallow-ok:` and put `throw;` after `Throw()`.
 - **Source:** [rca-1091-followups-2026-11-06.md](../rca-1091-followups-2026-11-06.md) row 1.
+
+### Real game DLLs do not supply `Game.Current`: characterize factories through their consumers (#1097, 2026-11-08)
+
+`DefaultSkills` and `DefaultCharacterAttributes` resolve their values through `Game.Current`. A `RequiresGame` test loads the real assemblies but does not create a live `Game`, so a direct mapping test throws instead of proving parity. Comparing each getter with itself would also be a vacuous oracle.
+
+- **Why missed:** the initial resolver plan assumed the test category initialized the engine catalog, and tests written only against a new helper could not characterize the old consumers.
+- **Prevent:** run unknown-name, empty-input and exception characterization through the existing consumers before extraction. Pin the factory declarations with `RepoPaths.ReadSource`, use uninitialized engine objects only as reference-identity tokens, and use counting factories to prove invocation order, one call per occurrence and exception propagation. Drive the option-args callback and the catch-and-continue boundary, not only the extracted helper.
+- **Source:** #1097 and its independent plan reviews; v1.5.6 `DefaultSkills.cs:43-79` and `DefaultCharacterAttributes.cs:19-31`; `CharacterCreationBonusResolverTests`, `CharacterCreationBonusResolverWiringTests`, `CareerMenuServiceTests` and `NarrativeMenuBuilderTests`.

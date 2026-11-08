@@ -20,7 +20,7 @@ A culture that appears in no career's `EligibleCultures` would produce an empty 
 
 ### Solution Approach
 
-- **Extension point:** `CharacterCreationManager.AddNewMenu()` — inserts a NarrativeMenu with `InputMenuId = "narrative_adulthood_menu"` so the CC flow naturally traverses to it after adulthood.
+- **Extension point:** `CharacterCreationManager.AddNewMenu()` inserts a NarrativeMenu with `InputMenuId = "narrative_age_selection_menu"`, so the CC flow naturally traverses to it after age selection.
 - **Data source:** Career definitions from `ICareerRegistry` (display names, descriptions, eligible cultures) + CC bonus data from `career_menu.json` (skills, attributes).
 - **Fallback safety:** A universal "No specialization" option is always present but only visible for cultures with no eligible careers, preventing the empty-menu crash.
 
@@ -65,7 +65,8 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CharacterCreation/CareerMenuService.cs` | Builds NarrativeMenu with career options, stores player selection |
+| `Main/Features/CharacterCreation/CareerMenuService.cs` | Builds NarrativeMenu with career options, stores player selection, resolves bonuses in the option-args callback |
+| `Main/Features/CharacterCreation/CharacterCreationBonusResolver.cs` | Shared case-insensitive skill and attribute factories and resolution. Career keeps silent null-result behavior; narrative keeps null-result warnings |
 | `Main/Features/CharacterCreation/ICareerMenuService.cs` | Service interface |
 | `Main/Features/CharacterCreation/CareerMenuDataProvider.cs` | Loads and caches `career_menu.json` |
 | `Main/Features/CharacterCreation/ICareerMenuDataProvider.cs` | Data provider interface |
@@ -83,8 +84,11 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 
 ## Tests
 
-- `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs`: 14 tests covering option building, culture filtering, selection storage, fallback option, registry edge cases
+- `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs`: 17 tests covering option building, culture filtering, selection storage, fallback behavior, deferred resolution and callback exceptions
+- `TAOM.Tests/Features/CharacterCreation/CharacterCreationBonusResolverTests.cs`: 12 tests covering ordering, duplicates, case handling, invocation counts, null results and exception propagation
+- `TAOM.Tests/Features/CharacterCreation/CharacterCreationBonusResolverWiringTests.cs`: 31 cases covering all 24 mapping declarations, consumer timing/logger/null policies and duplicate-map removal
 - `TAOM.Tests/Features/CharacterCreation/CareerMenuDataProviderTests.cs` — 9 tests covering JSON loading, parsing, caching, error handling, career lookup
+- In-game follow-up for #1097: [character-creation verification](character-creation.md#how-to-verify-in-game)
 
 ## How to Add a Career to CC
 
@@ -191,7 +195,7 @@ The art is not tied to the 91 careers one to one: new-faction careers reuse port
 
 ## Performance
 
-Character creation runs once per new game. All data is loaded and cached on first access. No hot-path concerns.
+Character creation runs once per new game. All data is loaded and cached on first access. No hot-path concerns. The resolver shares factory delegates, not their results: each recognized occurrence invokes its factory, and repeated callback invocations resolve again.
 
 ## GitHub Issues
 
@@ -204,6 +208,15 @@ Character creation runs once per new game. All data is loaded and cached on firs
 - **Review Log:** Review #24 in `docs/reviews/REVIEW-LOG.md`
 - **Findings:** 1 HIGH (empty menu crash — fixed), 1 MEDIUM (test gap — fixed)
 
+## Changelog
+
+- 2026-11-08, `refactor(character-creation)` #1097: career and narrative options share `CharacterCreationBonusResolver`, preserving deferred career resolution and each path's null-result logging policy. Career test coverage now includes the option-args callback and exception behavior.
+- 2026-10-14 (#769): `ICareerCreationHandler.OnCareerSelected` (character creation, a career switch, a co-op join, a hero switch, and the legacy-save fallback `AssignFallbackCareerIfMissing`) stamps the tree version through `CareerTreeVersion.Stamp`, so a new player's picks are not refunded as an old save on the first load. A career switch costs gold only when the old career holds a fork pick (`CareerSwitchService.GetSwitchCost`, the registry's `GetRetrainCost`, 1000 + 250 x level by default), otherwise it is free.
+- 2026-05-30, Zeroed the Career CC stage bonuses (`career_menu.json`, 49 entries): `focus/skill_level/attribute_to_add → 0` and `skills`/`attribute` arrays cleared, so a selected career renders a clean zero-bonus line; career still drives specialization + starting equipment.
+- 2026-05-20, `CareerMenuService.UpdateCareerEquipmentPreview` now applies the culture-default → career-roster two-step chain so the review-stage 3D preview matches the chosen career, and switching careers mid-CC starts from a clean slate (#206).
+- 2026-05-19, Removed orphan `career_menu.json` entries for the disabled WIP careers `far_harad_halftroll` and `cave_troll_master`, fixing the `EveryJsonEntry_HasMatchingCareerInXml` cross-reference test.
+- 2026-04-14, Initial feature: added the 6th "Career" narrative stage after adulthood, culture-filtered career options with CC skill/attribute bonuses, 50 `career_menu.json` entries, and a "No specialization" fallback that prevents the empty-menu crash (#84).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -214,10 +227,3 @@ Character creation runs once per new game. All data is loaded and cached on firs
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
-## Changelog
-
-- 2026-10-14 (#769): `ICareerCreationHandler.OnCareerSelected` (character creation, a career switch, a co-op join, a hero switch, and the legacy-save fallback `AssignFallbackCareerIfMissing`) stamps the tree version through `CareerTreeVersion.Stamp`, so a new player's picks are not refunded as an old save on the first load. A career switch costs gold only when the old career holds a fork pick (`CareerSwitchService.GetSwitchCost`, the registry's `GetRetrainCost`, 1000 + 250 x level by default), otherwise it is free.
-- 2026-05-30 — Zeroed the Career CC stage bonuses (`career_menu.json`, 49 entries): `focus/skill_level/attribute_to_add → 0` and `skills`/`attribute` arrays cleared, so a selected career renders a clean zero-bonus line; career still drives specialization + starting equipment.
-- 2026-05-20 — `CareerMenuService.UpdateCareerEquipmentPreview` now applies the culture-default → career-roster two-step chain so the review-stage 3D preview matches the chosen career, and switching careers mid-CC starts from a clean slate (#206).
-- 2026-05-19 — Removed orphan `career_menu.json` entries for the disabled WIP careers `far_harad_halftroll` and `cave_troll_master`, fixing the `EveryJsonEntry_HasMatchingCareerInXml` cross-reference test.
-- 2026-04-14 — Initial feature: added the 6th "Career" narrative stage after adulthood, culture-filtered career options with CC skill/attribute bonuses, 50 `career_menu.json` entries, and a "No specialization" fallback that prevents the empty-menu crash (#84).

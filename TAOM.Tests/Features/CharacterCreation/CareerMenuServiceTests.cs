@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -197,7 +199,51 @@ public class CareerMenuServiceTests
         // No assertion needed beyond "did not throw".
     }
 
+    [TestMethod]
+    public void BuildCareerMenuOptions_UnknownBonusNames_DefersResolutionAtBuildTime()
+    {
+        SetupCareers(MakeCareer("ranger_of_ithilien", "Ranger", "Desc.", "gondor"));
+        SetupOptionData("ranger_of_ithilien", new[] { "NotASkill" }, "NotAnAttribute");
+
+        var options = _sut.BuildCareerMenuOptions();
+
+        Assert.AreEqual(2, options.Count);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CareerOptionArgs_UnknownBonusNames_WarnOnEachInvocation()
+    {
+        SetupCareers(MakeCareer("ranger_of_ithilien", "Ranger", "Desc.", "gondor"));
+        SetupOptionData("ranger_of_ithilien", new[] { "NotASkill" }, "NotAnAttribute");
+        var option = _sut.BuildCareerMenuOptions()[0];
+
+        InvokeOptionArgs(option);
+        InvokeOptionArgs(option);
+
+        _logger.Received(2).LogWarning("Unknown skill name: 'NotASkill'");
+        _logger.Received(2).LogWarning("Unknown attribute name: 'NotAnAttribute'");
+    }
+
+    [TestMethod]
+    public void CareerOptionArgs_NullSkillName_ThrowsArgumentNullException()
+    {
+        SetupCareers(MakeCareer("ranger_of_ithilien", "Ranger", "Desc.", "gondor"));
+        SetupOptionData("ranger_of_ithilien", new string[] { null! }, "Cunning");
+        var option = _sut.BuildCareerMenuOptions()[0];
+
+        Assert.ThrowsException<ArgumentNullException>(() => InvokeOptionArgs(option));
+    }
+
     // --- Helpers ---
+
+    private static void InvokeOptionArgs(NarrativeMenuOption option)
+    {
+        var field = typeof(NarrativeMenuOption).GetField(
+            "_getNarrativeMenuOptionArgs", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var callback = (GetNarrativeMenuOptionArgsDelegate)field.GetValue(option)!;
+        callback(option.Args);
+    }
 
     private void SetupCareers(params CareerDefinition[] careers)
     {
