@@ -4,6 +4,7 @@
 # in translation caches and feature docs, and a variable in vendored BCL code.
 # Added 2026-11-02: the test constant HitKey = "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit", a probe key.
 # Added 2026-11-03: line 5 of this file, which quotes that constant.
+# Added 2026-11-08: RCA prose where the word keys runs up to a plan file name.
 # Format: <commit>:<file>:<rule>:<line>. Add a line only after reading the match.
 066dcaf01ed6ac62a561097d09e067a2a8069fa7:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
 0bd6abf330bbe8a605fdfef459ecdbb36aa8614d:tools/translation_cache/it.json:generic-api-key:5905
@@ -12,6 +13,7 @@
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/fr.json:generic-api-key:3832
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/it.json:generic-api-key:3677
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/it.json:generic-api-key:4267
+219ac1b73c186e82b784535fd16212f3c9fa5919:docs/reviews/rca-long-defeat-phase2-2026-11-05.md:generic-api-key:136
 21e0807f98599b7c8bcf81c370f3d352d7d8de22:Main/Features/FireAndTribute/Hooks/FireAndTributeBehavior.cs:generic-api-key:20
 21e0807f98599b7c8bcf81c370f3d352d7d8de22:docs/features/fire-and-tribute.md:generic-api-key:120
 43206df6d0964365b7c1b748fefa73b81f67aed5:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
