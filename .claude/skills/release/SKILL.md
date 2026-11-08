@@ -108,7 +108,8 @@ show the user the message, and never delete a hand-written heading without their
 `docs/releases/vX.Y.Z-discord.md`, following `docs/releases/v2.0.15-discord.md`: emoji section
 headers, player-facing framing (what changed for them, not which class was refactored), and an
 explicit ⚠️ line whenever MCM-persisted settings mean **existing players keep old values** and must
-reset them by hand.
+reset them by hand. Write the prose by [writing-tells.md](../../../docs/reference/writing-tells.md);
+the emoji headers stay.
 
 First, before writing a line of either note, run
 `python tools/ingame_verdict.py --owed --sessions 10` and read its output

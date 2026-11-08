@@ -21,15 +21,20 @@ changing instead.
 When a reply mixes levels, tag the load-bearing claims inline as well. `[Guessing]` is an invitation
 to go verify; presenting a guess as `[Certain]` is the failure.
 
+**In a reply, lead with the decision.** Keep only the reasoning that could change the reader's mind;
+the diagnosis belongs in the issue or doc. The required evidence stays beside its claim.
+
+**STE100 text** (chat, status, procedures, code comments): where Part 2 conflicts with STE, STE wins.
+
 **In a live session** (Mike running the game, a console and a shell at once), send one command or
 action per message and wait for "done". Explanation can be a paragraph; the executable part is one
 line. Run timers yourself.
 
 ## Part 2: produced prose
 
-Covers commit bodies, CHANGELOG entries, issues and PRs, feature docs, RCAs and doc paragraphs; not
-code comments or chat. It applies to new writing. The fix for AI-sounding prose is almost always
-more specific and concrete.
+Covers commit bodies, CHANGELOG entries, issues and PRs, feature docs, RCAs and doc paragraphs. The
+tells below also apply to chat, status and code comments, but never to player-facing strings. It
+applies to new writing. The fix for AI-sounding prose is almost always more specific and concrete.
 
 **No em or en dash** (U+2014, U+2013; AGENTS.md "Human prose" lists the substitutes), the loudest
 single tell. If no substitute reads well, restructure the sentence. Hyphens (`--RunTests`, `v1.4.8`, `kebab-case`) are fine.
@@ -38,15 +43,23 @@ Exempt: code spans and blocks, URLs and link targets, verbatim quotes from outsi
 `<!-- lint-allow-dash -->`), and existing prose you are not rewriting. `python tools/lint_docs.py`
 reports dashes on new markdown lines (report-only); commit bodies are on you.
 
-**The other tells:** significance inflation, vague attributions ("experts believe"), reflexive
-threes, AI vocabulary (testament, landscape, showcasing, delve, additionally), filler ("in order
-to"), stacked hedges, generic conclusions, staccato punchlines, aphorism formulas ("X is the
-language of Y"), signposting ("let's dive in"), chatbot closers ("I hope this helps!"). Replace each
-with the concrete claim.
+**Tells, strongest first.** One sighting justifies an edit:
 
-**More tells:** metaphor nouns (substrate, wedge, ratchet, north star: use the concrete word);
-a feeling instead of the mechanism or a number; passive voice that hides the actor (name who
-validates, parses or writes); over-compression (dropped articles, arrows: write whole sentences).
+1. A contrast that only adds weight ("not just X but Y", or split over two sentences). Keep one that
+   corrects a real belief or states a real constraint.
+2. A one-line closer or fragment that repeats the point.
+3. A saying in place of the claim ("at its core", "X is the language of Y").
+4. A run-up before the point ("let's dive in", "here's the thing").
+5. An answer to an objection nobody raised.
+
+**Also:** reflexive threes, stacked hedges, inflated significance, vague attribution ("experts
+believe"), AI vocabulary (testament, landscape, showcasing, delve, additionally), "serves as" for
+"is", text about the document instead of its subject, chatbot closers, filler ("in order to"),
+metaphor nouns (substrate, wedge, ratchet, north star), a feeling instead of a mechanism or number,
+passive voice that hides the actor, over-compression (dropped articles, arrows).
+
+**After a rewrite,** compare it with the draft: an added fact or a lost claim is an error. Full list
+and keep conditions: [writing-tells.md](../../docs/reference/writing-tells.md).
 
 **TAOM house style stays:** boldface, inline `**Label:**` headers, tables and backticked paths are
 deliberate semantic markers.

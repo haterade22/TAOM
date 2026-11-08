@@ -110,6 +110,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
 | ralph-claude-code | `ralph-claude-code` `frankbria/ralph-claude-code` | MIT | behavioural-port | `.claude/rules/working-discipline.md` (no-progress breaker), `tools/loop_progress.py`, `.claude/skills/improve/workflows/execute.js` (run breaker), the Dead ends sections, `.claude/rules/hook-authoring.md` (digits-only arithmetic) (#996, #998) | cleared |
 | impeccable | `impeccable` `pbakaus/impeccable` | Apache-2.0 | behavioural-port | `docs/reference/gauntlet-screen-checklist.md` (condensed from `critique.md`, `craft-floor.md`, `harden.md`), `tools/loc_length_report.py` (the translation-budget idea) (#1007) | cleared |
+| Humanizer | `humanizer` `blader/humanizer` | MIT | behavioural-port | `docs/reference/writing-tells.md`, `.claude/rules/output-style.md` (the tell order and the reply rule) | cleared |
 | dev-quality-gates | `dev-quality-gates` `mokevnin/dev-quality-gates` | CC0-1.0 | comparison-only | (none: the five gates of #1020 are TAOM's own, chosen from its list and patterns) | cleared |
 | ShellCheck | `ShellCheck` `koalaman/shellcheck` | GPL-3.0 | interop-only | `tools/tests/test_shell_lint_gate.py` runs the installed tool (see detail) | cleared |
 | Gitleaks | `Gitleaks` `gitleaks/gitleaks` | MIT | interop-only | `/security-scan` runs the installed tool; `.gitleaksignore` (see detail) | cleared |
