@@ -181,7 +181,9 @@ Once root cause is confirmed:
    ```
    No build errors. No test regressions. Paste the output. Use `./build.ps1` only when a game check follows, and never while Bannerlord runs.
 
-5. **Blast-radius gate.** If the fix touches >5 files, `AskUserQuestion`:
+5. **Search siblings for the same failure.** Search the sibling adapters, consumers and similar paths of the fixed code. Verify each suspect. In the report, list the clean ones with the reason, and group the confirmed ones by root cause. A confirmed sibling with the same root cause is part of this fix: apply steps 1 to 4 to it. A different root cause gets its own issue.
+
+6. **Blast-radius gate.** If the fix touches >5 files, `AskUserQuestion`:
    ```
    This fix touches N files. Large blast radius for a bug fix.
    A) Proceed — root cause genuinely spans these files
@@ -208,6 +210,7 @@ Phase that found it: [Phase 3 pattern match | Phase 4 hypothesis | etc.]
 Fix:               [what changed, file:line references]
 Evidence:          [test output, in-game repro result if applicable]
 Regression test:   [TAOM.Tests/.../FooTests.cs:line, or "no seam" and why]
+Siblings:          [clean: path, reason | confirmed: by root cause | none, with the scope searched]
 Files touched:     [N]
 Related:           [docs/reviews items]
 Status:            DONE | DONE_WITH_CONCERNS | BLOCKED

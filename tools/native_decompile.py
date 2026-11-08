@@ -335,8 +335,8 @@ def find_strings(dll, text):
     return [found[k] for k in sorted(found)]
 
 
-def report_strings(backend, found, out=print, engine_map=None):
-    """Each string's referencing functions, as C."""
+def report_strings(backend, found, out=print, engine_map=None, bodies=True):
+    """Each string's referencing functions, as C (only their rows when `bodies` is false)."""
     for rva, text, enc in found[:MAX_STRINGS]:
         fns = backend.referencing_functions(rva)
         out(f"\nstring {text!r} at 0x{rva:X} ({enc}): {len(fns)} referencing function(s)")
@@ -346,15 +346,21 @@ def report_strings(backend, found, out=print, engine_map=None):
             out(f"\n--- {fn.name}  entry 0x{fn.entry_rva:X} ---")
             for line in _engine_lines(engine_map, fn.entry_rva):
                 out(line)
-            out(backend.decompile(fn).rstrip())
+            if bodies:
+                out(backend.decompile(fn).rstrip())
         if len(fns) > MAX_CALLERS:
             out(f"\n... (+{len(fns) - MAX_CALLERS} more referencing functions not decompiled)")
     if len(found) > MAX_STRINGS:
         out(f"\n... (+{len(found) - MAX_STRINGS} more strings contain the text; narrow it)")
 
 
-def report(backend, rva, levels, out=print, engine_map=None):
-    """Print the function containing `rva` as C, then `levels` of callers as C."""
+def report(backend, rva, levels, out=print, engine_map=None, bodies=True):
+    """Print the function containing `rva` as C, then `levels` of callers as C. With `bodies`
+    false, print the same rows and decompile nothing."""
+    def body(function):
+        if bodies:
+            out(backend.decompile(function).rstrip())
+
     fn = backend.function_at(rva)
     if fn is None:
         raise ToolError(f"RVA 0x{rva:X} is not inside any function Ghidra found; "
@@ -366,13 +372,13 @@ def report(backend, rva, levels, out=print, engine_map=None):
     for line in _engine_lines(engine_map, fn.entry_rva):
         out(line)
     out("")
-    out(backend.decompile(fn).rstrip())
+    body(fn)
     thunk = backend.thunk_target(fn)
     if thunk is not None:  # the function is one jump; the code worth reading is its target
         out(f"\nthunk to: {thunk.name}  entry 0x{thunk.entry_rva:X}")
         for line in _engine_lines(engine_map, thunk.entry_rva):
             out(line)
-        out(backend.decompile(thunk).rstrip())
+        body(thunk)
 
     seen = {fn.entry_rva} | ({thunk.entry_rva} if thunk else set())
     frontier = [fn]
@@ -386,7 +392,7 @@ def report(backend, rva, levels, out=print, engine_map=None):
                 out(f"\n--- {c.name}  entry 0x{c.entry_rva:X} ---")
                 for line in _engine_lines(engine_map, c.entry_rva):
                     out(line)
-                out(backend.decompile(c).rstrip())
+                body(c)
                 nxt.append(c)
             if len(calls) > MAX_CALLERS:
                 out(f"\n... (+{len(calls) - MAX_CALLERS} more callers not decompiled)")
@@ -422,6 +428,8 @@ def main(argv=None, backend_factory=None, map_factory=None):
                     help="module on disk (default: shipping TaleWorlds.Native.dll)")
     ap.add_argument("--callers", type=int, default=0,
                     help="caller levels to decompile as well (default 0)")
+    ap.add_argument("--summary", action="store_true",
+                    help="print the function and caller rows without their C, to choose what to read")
     ap.add_argument("--project-dir", default=DEFAULT_PROJECT_DIR,
                     help=f"where the analysed Ghidra projects live (default {DEFAULT_PROJECT_DIR})")
     argv = sys.argv[1:] if argv is None else list(argv)
@@ -484,9 +492,12 @@ def main(argv=None, backend_factory=None, map_factory=None):
         factory = backend_factory or GhidraBackend
         with factory(dll, project_dir, key, engine_map=engine_map) as backend:
             if found is not None:
-                report_strings(backend, found, engine_map=engine_map)
+                report_strings(backend, found, engine_map=engine_map, bodies=not args.summary)
             else:
-                report(backend, rva, args.callers, engine_map=engine_map)
+                report(backend, rva, args.callers, engine_map=engine_map, bodies=not args.summary)
+        if args.summary:
+            print("\nsummary only, no C printed. Read one function: "
+                  f'python tools/native_decompile.py --rva 0x<entry> --dll "{dll}"')
     except ToolError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2

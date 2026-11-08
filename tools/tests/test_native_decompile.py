@@ -178,6 +178,7 @@ class ReportTests(unittest.TestCase):
         text = self._report(0x1050, 1)
         self.assertIn("L1 callers of 0x1040: 1", text)
         self.assertIn("--- FUN_180002000  entry 0x2000 ---", text)
+        self.assertIn("void FUN_180002000(void) {}", text)
         self.assertNotIn("FUN_180003000", text)
 
     def test_two_levels_climb_to_the_grandcaller(self):
@@ -470,6 +471,7 @@ class StringModeTests(unittest.TestCase):
         self.assertEqual(code, 0, err)
         self.assertIn("string 'monster_usage.cpp' at 0x2000 (ascii): 1 referencing function(s)", out)
         self.assertIn("--- FUN_180001040  entry 0x1040 ---", out)
+        self.assertIn("void FUN_180001040(void) {}", out)
 
     def test_a_substring_reports_the_whole_string(self):
         _, out, _ = self._run("usage", refs={0x2000: [0x1040]})
@@ -500,6 +502,119 @@ class StringModeTests(unittest.TestCase):
         code, _, err = _run_main(argv, backend, map_error="none")
         self.assertEqual(code, 2)
         self.assertIn("--callers", err)
+
+
+class NoDecompileBackend(FakeBackend):
+    """Fails on any decompile, so a test proves --summary does none of that work."""
+
+    def decompile(self, fn):
+        raise AssertionError(f"decompiled {fn.name}")
+
+
+class SummaryTests(unittest.TestCase):
+    CRASH = ReportTests.CRASH
+    CALLER = ReportTests.CALLER
+
+    def _report(self, backend, rva=0x1050, levels=1):
+        lines = []
+        nd.report(backend, rva, levels, out=lines.append, bodies=False, engine_map=ENGINE_MAP)
+        return "\n".join(lines)
+
+    def test_keeps_every_row_and_prints_no_c(self):
+        text = self._report(NoDecompileBackend([self.CRASH, self.CALLER], callers={0x1040: [0x2000]}))
+        self.assertIn("function: FUN_180001040  entry 0x1040  size 0x40  (rva at +0x10)", text)
+        self.assertIn("L1 callers of 0x1040: 1", text)
+        self.assertIn("--- FUN_180002000  entry 0x2000 ---", text)
+        self.assertIn("engine method: IMBMission.GetName", text)
+
+    def test_keeps_the_engine_method_label(self):
+        text = self._report(NoDecompileBackend([self.CRASH]))
+        self.assertIn("engine method: IMBAgent.GetCurrentActionType", text)
+
+    def test_keeps_the_caller_cap_row(self):
+        many = [nd.Function(f"FUN_{0x5000 + i * 0x100:X}", 0x5000 + i * 0x100, 0x10)
+                for i in range(nd.MAX_CALLERS + 2)]
+        text = self._report(NoDecompileBackend([self.CRASH, *many],
+                                               callers={0x1040: [f.entry_rva for f in many]}))
+        self.assertEqual(text.count("\n--- FUN_"), nd.MAX_CALLERS)
+        self.assertIn("(+2 more callers not decompiled)", text)
+
+    def test_climbs_caller_levels_without_decompiling(self):
+        grand = ReportTests.GRAND
+        text = self._report(NoDecompileBackend([self.CRASH, self.CALLER, grand],
+                                               callers={0x1040: [0x2000], 0x2000: [0x3000]}), levels=2)
+        self.assertIn("--- FUN_180003000  entry 0x3000 ---", text)
+
+    def test_names_a_thunk_target_without_decompiling_it(self):
+        target = nd.Function("IMBAgent_Real", 0x2000, 0x80)
+        text = self._report(NoDecompileBackend([self.CRASH, target], thunks={0x1040: 0x2000}), levels=0)
+        self.assertIn("thunk to: IMBAgent_Real  entry 0x2000", text)
+        self.assertIn("engine method: IMBMission.GetName", text)
+
+    def test_the_default_still_prints_c(self):
+        lines = []
+        nd.report(FakeBackend([self.CRASH], code={0x1040: "int body;\n"}), 0x1050, 0, out=lines.append)
+        self.assertIn("int body;", "\n".join(lines))
+
+    def test_string_report_keeps_rows_and_prints_no_c(self):
+        lines = []
+        nd.report_strings(NoDecompileBackend([self.CRASH], refs={0x2000: [0x1040]}),
+                          [(0x2000, "monster_usage.cpp", "ascii")], out=lines.append, bodies=False,
+                          engine_map=ENGINE_MAP)
+        text = "\n".join(lines)
+        self.assertIn("1 referencing function(s)", text)
+        self.assertIn("--- FUN_180001040  entry 0x1040 ---", text)
+        self.assertIn("engine method: IMBAgent.GetCurrentActionType", text)
+
+    def test_string_report_keeps_both_cap_rows(self):
+        fns = [nd.Function(f"FUN_{0x5000 + i * 0x100:X}", 0x5000 + i * 0x100, 0x10)
+               for i in range(nd.MAX_CALLERS + 1)]
+        found = [(0x2000 + i, f"text{i}", "ascii") for i in range(nd.MAX_STRINGS + 1)]
+        lines = []
+        nd.report_strings(NoDecompileBackend(fns, refs={0x2000: [f.entry_rva for f in fns]}), found,
+                          out=lines.append, bodies=False)
+        text = "\n".join(lines)
+        self.assertIn("(+1 more referencing functions not decompiled)", text)
+        self.assertIn("(+1 more strings contain the text; narrow it)", text)
+
+
+class SummaryCliTests(unittest.TestCase):
+    def setUp(self):
+        self._dir = tempfile.TemporaryDirectory()
+        self.dll = Path(self._dir.name) / "Win64_Shipping_Client" / "TaleWorlds.Native.dll"
+        self.dll.parent.mkdir()
+        self.dll.write_bytes(_build_pe())
+
+    def tearDown(self):
+        self._dir.cleanup()
+
+    def _run(self, *args, backend):
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"), *args]
+        return _run_main(argv, backend, engine_map=ENGINE_MAP)
+
+    def test_rva_mode_says_no_c_was_printed_and_how_to_read_one(self):
+        code, out, err = self._run("--rva", "0x1050", "--summary",
+                                   backend=NoDecompileBackend([ReportTests.CRASH]))
+        self.assertEqual(code, 0, err)
+        self.assertIn("summary only", out)
+        self.assertIn(f'--rva 0x<entry> --dll "{self.dll}"', out)
+
+    def test_engine_method_mode_honours_it(self):
+        code, out, err = self._run("--engine-method", "IMBAgent.GetCurrentActionType", "--summary",
+                                   backend=NoDecompileBackend([ReportTests.CRASH]))
+        self.assertEqual(code, 0, err)
+        self.assertIn("function: FUN_180001040", out)
+
+    def test_string_mode_honours_it(self):
+        code, out, err = self._run("--string", "monster_usage.cpp", "--summary",
+                                   backend=NoDecompileBackend([ReportTests.CRASH], refs={0x2000: [0x1040]}))
+        self.assertEqual(code, 0, err)
+        self.assertIn("--- FUN_180001040  entry 0x1040 ---", out)
+
+    def test_without_the_flag_nothing_says_summary(self):
+        code, out, err = self._run("--rva", "0x1050", backend=FakeBackend([ReportTests.CRASH]))
+        self.assertEqual(code, 0, err)
+        self.assertNotIn("summary only", out)
 
 
 class SeedTests(unittest.TestCase):

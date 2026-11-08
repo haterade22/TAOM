@@ -3,7 +3,7 @@
 ## Overview
 
 `tools/native_decompile.py` prints native engine code from `TaleWorlds.Native.dll` as decompiled C,
-using headless Ghidra 12.1 through PyGhidra. It answers three questions, one flag each:
+using headless Ghidra 12.2 through PyGhidra. It answers three questions, one flag each:
 
 | Flag | Question | Used by |
 |---|---|---|
@@ -41,13 +41,13 @@ included. Issue [#688](https://github.com/haterade22/TAOM/issues/688); adoption 
   registered for 2,282 methods, including `get_current_action_type`'s at `0x6E19B0`.
 - 33 of those addresses are shared (a `return false` stub at `0x28F10` serves 35 methods), so a label
   taken from any one method would be wrong for the rest.
-- PyGhidra pins a JPype with no wheel for the system Python 3.14; the only 3.13 on the desktop is
-  the Microsoft Store build, which redirects `AppData` writes.
+- Ghidra ships JPype wheels only up to CPython 3.13, and the system Python is 3.14; the only 3.13 on
+  the desktop is the Microsoft Store build, which redirects `AppData` writes.
 
 ### Solution approach
 
 ```
-python tools/native_decompile.py --rva X | --engine-method NAME | --string TEXT  [--dll D] [--callers N]
+python tools/native_decompile.py --rva X | --engine-method NAME | --string TEXT  [--dll D] [--callers N] [--summary]
         |  checks the DLL and $GHIDRA_INSTALL_DIR; no pyghidra here? re-run under the E: venv
         v
 key = <build folder>-<sha256[:16]>                     e.g. Win64_Shipping_Client-45be32c57c451f78
@@ -96,12 +96,24 @@ is up the tool leaves through `os._exit`, because a failed OSGi start leaves a n
 `FelixDispatchQueue` thread that would hold the process open
 ([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md), install trap 3).
 
+**The key holds no Ghidra version.** A project made by an older Ghidra stays in use after an upgrade.
+This is harmless for the versions tested: a 12.1.4 project opens read-only under 12.2 with the same
+33,339 functions, and four of five pinned decompiles match the fresh 12.2 analysis exactly (the fifth
+inverts one branch, same logic). The key stays as it is because `native_build_match.py` and the cached
+maps share it. For the result of a newer analysis, move that project's `.gpr` and `.rep` away and rerun.
+
 **Leaf functions.** A frameless x64 leaf function needs no unwind data, so `native_crash_triage.py`
 cannot bound it; triage says so and still prints the `decompile:` line, and Ghidra names the function
 (`0x404B17` is inside a 0x23-byte `this->field` accessor on v1.5.3).
 
 **Upgrade note.** `GhidraProject.importProgram(File)`, used only on a first run, is deprecated for
-removal since Ghidra 12.0; at the next Ghidra upgrade move the import to `ProgramLoader.builder()`.
+removal since Ghidra 12.0 and still present in 12.2. Move to `ProgramLoader.builder()` only when it is
+removed. Its body holds the program for the `GhidraProject` consumer and calls a private
+`initializeProgram`, and the later `saveAs` depends on that, so the replacement must keep both.
+
+**Function counts across versions.** 12.2 can absorb a tail function into its only caller
+(`0x788C50` and `0x78AB50` on v1.5.6, 33,337 functions against 33,339 on 12.1.4). `--rva` inside one
+names the absorbing function, with a negative `rva at` offset.
 
 ## Configuration
 
@@ -123,8 +135,8 @@ has none of it; the tool exits 2 there naming that page. The map also needs `ils
 
 ## Dependencies
 
-- Ghidra 12.1.4 and Temurin JDK 25 under `E:\Tools` (neither ships with TAOM)
-- PyGhidra 3.1.0 and JPype 1.5.2 from Ghidra's own `pypkg\dist`, and capstone 5.0.9, in the venv
+- Ghidra 12.2 and Temurin JDK 25 under `E:\Tools` (neither ships with TAOM)
+- PyGhidra 3.2.0 and JPype 1.5.2 from Ghidra's own `pypkg\dist`, and capstone 5.0.9, in the venv
 - `ilspycmd` for the managed half of the map; `native_crash_triage.Pe` for PE parsing
 
 ## Tests
@@ -152,7 +164,7 @@ has none of it; the tool exits 2 there naming that page. The map also needs `ils
   not skip): Ghidra's entries equal `.pdata` starts for three
   functions; a lone `.gpr` exits 2; the map resolves every id with no problem (v1.5.6: 687 + 1,563 + 33)
   and three known addresses;
-  `IMBAgent.SetAttackState` decompiles at its pinned address (`0x6E05B0` on v1.5.6); the string
+  `IMBAgent.SetAttackState` decompiles at its pinned address (`0x6E16F0` on v1.5.6, changeset 125270); the string
   `IMono_MBAgent::weapon_equipped` leads to `IMBAgent_WeaponEquipped` at its pinned address, the function
   the id map predicts; and `--rva` four bytes into `IMBAgent.GetCurrentActionType` decompiles inside a
   function only seeding created; a thunked engine method shows the code it jumps to, and a stub that jumps to an import does not crash. About 30 s for the first six.
@@ -177,6 +189,11 @@ strings and 8 functions each, the rest counted).
 
 **An editor crash.** Pass the wEditor DLL with `--dll`; it gets its own project and map.
 
+**Choose before you read.** Add `--summary` to any mode to print the function, caller and string rows,
+the engine-method labels and the "+N more" rows, with no C and no decompile call. Then read the functions
+worth reading with `--rva 0x<entry>` and the same `--dll`. Use it first on `--callers` and `--string`, where the C can run to
+thousands of lines (Performance table). The idea comes from rea's `detail: "summary"` (#1098).
+
 Cite native findings with the RVA and engine version: they hold for that binary only.
 
 ## Performance
@@ -190,6 +207,7 @@ Measured 2026-09-26 on the desktop, v1.5.3 client DLL (14,209,376 bytes):
 | Seeding an analysed project | the whole seeding run took 8.5 s | 947 functions created, 1,960 addresses named, 2,282 methods mapped; naming the 100 single-owner thunks later took one more re-seed |
 | Any later run, any mode | 3 to 5 s wall, with load | venv re-run, JVM start, read-only open, decompile |
 | `--callers 1` on a lookup helper | about 1,900 lines of output | at most 8 callers per function per level |
+| The same run with `--summary` (2026-11-08) | 19 lines against 1,902 | v1.5.3 archive, `--rva 0x6590B9`; 4 s against 6 s |
 
 The first real target was the `+0x6590B9` melee-table crash from `/native-crash-triage`: 26 lines of
 C show the bucket-chain walk and the null record pointer it returns on a miss, the pattern the skill
@@ -197,6 +215,7 @@ describes as "hash-map miss dereferencing its end-sentinel".
 
 ## Changelog
 
+- 2026-11-08: `--summary`, and the move to Ghidra 12.2 (#1098).
 - 2026-09-26: `--engine-method` and `--string`, the engine-method map, seeding, and the wiring into
   `/research`, `/investigate`, `/native-crash-triage` (with a hang procedure), `/engine-bump`, the
   review lens and the lookup tables (#688). Review fixes before commit: the join no longer lets a
@@ -208,6 +227,8 @@ describes as "hash-map miss dereferencing its end-sentinel".
 
 - **Issue:** #688, [tools: headless Ghidra decompile for native crash triage](https://github.com/haterade22/TAOM/issues/688)
 - **Status:** Open
+- **Issue:** #1098, [`--summary` and the Ghidra 12.2 upgrade](https://github.com/haterade22/TAOM/issues/1098)
+- **Status:** Closed with this commit's push
 
 ---
 

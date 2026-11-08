@@ -91,7 +91,7 @@ into this same pipeline when the faulting module matches `--dll` — otherwise i
 module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Then decompile
 the function with `python tools/native_decompile.py --rva 0x<fault_offset>` (the triage output ends
 with the exact line, also when the RVA is in a leaf function that has no `.pdata` entry, which
-triage cannot bound; `--callers 1` adds the callers' C; the first run on a new binary analyses it
+triage cannot bound; `--callers 1` adds the callers' C, and `--summary` lists them without it; the first run on a new binary analyses it
 for minutes, once: [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
 Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent. When
 the site implements a managed engine call, the output says which (`engine method: IMBAgent.X = x`):

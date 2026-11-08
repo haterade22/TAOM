@@ -103,7 +103,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic layout in `Main/Features/RealmBorders/Domain/BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
 | rtk (Rust Token Killer) | `rtk` `rtk-ai/rtk` `Rust Token Killer` | Apache-2.0 (the CLI in `src/`; `engine/` and `proxy/` are BUSL-1.1 and nothing derives from them) | behavioural-port | `.claude/hooks/_shellwords.py` (`command_index`, `peel`); `tools/harness_retro.py` (`command_family`, report section 9) | cleared |
 | CodeGraph | `codegraph` `colbymchenry/codegraph` `@colbymchenry/codegraph` | MIT | behavioural-port | `tools/graphify_taom.py` (interface callers in `affected`, the `tests` verb, answer-scoped staleness, `refresh --detach`); see detail | cleared |
-| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail); rule lines in `.claude/rules/{evidence-over-claims,simplicity-criterion,working-discipline}.md`, `.claude/skills/issue/SKILL.md` and `docs/ai-includes/perf-method.md` section 4 (comparison-only) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail); rule lines in `.claude/rules/{evidence-over-claims,simplicity-criterion,working-discipline}.md`, `.claude/skills/issue/SKILL.md`, `docs/ai-includes/perf-method.md` section 4, `tools/native_decompile.py --summary`, `.claude/skills/investigate/SKILL.md` Phase 5 step 5 and `.claude/skills/deep-review/lenses/tooling.md` item 19 (comparison-only) | cleared |
 | context-mode | `context-mode` `mksglu/context-mode` | Elastic-2.0 | behavioural-port | `docs/ai-includes/agent-operating-manual.md` (execution model item 6) | cleared |
 | Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and `/release` Phase 1 item 7 and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
 | Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
@@ -838,8 +838,8 @@ import. There is no row for it because there is nothing to declare, and that is 
 ### Ghidra
 
 Upstream: https://github.com/NationalSecurityAgency/ghidra · Apache-2.0. Installed 2026-09-26 as
-12.1.4 at `E:\Tools\ghidra_12.1.4_PUBLIC`, with the PyGhidra 3.1.0 it bundles in a venv at
-`E:\Tools\ghidra-venv` (#688). `tools/native_decompile.py` drives the installed tool through
+12.1.4 (#688) and upgraded 2026-11-08 to 12.2 at `E:\Tools\ghidra_12.2_PUBLIC`, with the PyGhidra 3.2.0
+it bundles in a venv at `E:\Tools\ghidra-venv` (#1098). `tools/native_decompile.py` drives the installed tool through
 PyGhidra's public API and copies no Ghidra code; PyGhidra's `api.py` and `core.py` were read only to
 choose the calls. Nothing from Ghidra ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry
 is owed. Remove with the two `E:\Tools` folders; the tool then exits 2 naming the setup doc. Adoption
@@ -985,7 +985,11 @@ that document was read, not rea's code, and the masking of x64 displacements is 
 so the derivation is a behavioural port of a documented method. Five rule lines restate ideas from
 rea's `AGENTS.md` and its reverse-engineering skill in TAOM's words (comparison-only). No rea text or
 code was copied, so no MIT notice is carried. Record:
-[`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md).
+[`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md). A re-review on 2026-11-08 at
+`25d3c7237`, also through the API only, restated three more ideas in TAOM's words (comparison-only): the summary
+delivery of decompiled code, the search of sibling code after a fix, and the regression classes for caches and partial
+failure. No text or code was copied. Record:
+[`docs/reviews/adopt-rea-ghidra-2026-11-08.md`](../reviews/adopt-rea-ghidra-2026-11-08.md).
 
 ### ponytail
 

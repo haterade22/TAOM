@@ -51,6 +51,11 @@ FOR EVERY SCRIPT, READ-ONLY GATES INCLUDED:
    every run does, so review it as the behaviour; that default must not be the permissive one.
 18. A gate that lists its covered files, skills or ids by hand says nothing about the next one
    added. Derive the set from the repo; if that cannot work, the gate says why and who extends the list.
+19. A parser, cache or comparison tool: a cache key holds everything that changes the result when the
+   payload bytes are equal (tool version, options), or the doc states why a stale entry is harmless. A
+   failure on one item keeps the finished items in the report and says how many were covered; a partial
+   result is never cached as complete. A limit and a read failure in one run are both reported, and
+   reaching a limit never reads as complete.
 
 WHY: deep-review 2026-05-28 (scene tooling): BOM handling differed across a new script family and
 no core lens saw it (RCA `docs/reviews/rca-scene-tooling-2026-05-28.md`). Deep review 2026-09-18:

@@ -4926,3 +4926,19 @@ Two new writers for the live Armory, `bind_dwarf_attack_actions.py` and `gen_dwa
 - **Why missed:** each tool was written from the shape of the closest sibling, and the sibling chosen (`gen_troll_anim_clips.ps1`) has no guard either.
 - **Prevent:** a new writer to the live install copies `_gamedir.game_or_kit_running` (Python) or `Assert-GameAndKitClosed` (PowerShell) and exits 2; its planning loop parses every output in every mode before any write; run the reviewer's mutant script, not only the tests, before calling the tests done.
 - **Source:** [rca-dwarf-attacks-2026-11-06.md](../rca-dwarf-attacks-2026-11-06.md), F11 to F13.
+
+### A Ghidra script that names functions overwrites names a tool seeded (RTTI spike, 2026-11-08)
+
+`RecoverClassesFromRTTIScript` on a seeded v1.5.6 project recovered 597 classes and made class-member C far easier to read. It also replaced 111 of the 2,061 seeded engine-method names with wrong ones: `IDebug_RenderDebugText` at `0x4A8890` became `rglString_base`. The three known functions tried first showed no change, because none is a class member, so a spot check of familiar addresses saw neither the gain nor the harm.
+
+- **Why it nearly passed:** the count that looked best, default-named functions down from 18,626 to 14,834, says nothing about which names were replaced.
+- **Prevent:** before any step that renames functions in a project, dump name and address, and diff after it. Count the non-default names that changed. Run such a step before seeding, or re-apply the seed afterwards.
+- **Source:** [adopt-rea-ghidra-2026-11-08.md](../adopt-rea-ghidra-2026-11-08.md).
+
+### A "run this next" hint repeats every selector of the run that printed it (#1098, 2026-11-08)
+
+The first `--summary` footer said to read one function with `--rva 0x<entry>`. After a run with `--dll <archived build>`, that advice falls back to the installed DLL, where the same RVA holds other code, and the tool exits 0. An archived-build run was the very case the feature doc measured. `native_crash_triage.py` already prints the DLL in its own `decompile:` line.
+
+- **Why missed:** the hint was written for the default binary, and the test asserted only the flag name.
+- **Prevent:** a printed follow-up command carries each option that chose the input, and a test asserts the option with its value.
+- **Source:** [adopt-rea-ghidra-2026-11-08.md](../adopt-rea-ghidra-2026-11-08.md), review table.
