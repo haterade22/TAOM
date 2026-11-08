@@ -56,6 +56,15 @@ public static class EnlistmentRescueCheats
             sb.AppendLine($"Main.Settlement:  {main?.CurrentSettlement?.StringId ?? "<none>"}");
             sb.AppendLine($"Main.MapEvent:    {(main?.MapEvent == null ? "<none>" : "IN ONE")}");
             sb.AppendLine($"Main.Army:        {main?.Army?.LeaderParty?.StringId ?? "<none>"}");
+            sb.AppendLine($"Main.SettleSiege: {(main?.CurrentSettlement == null ? "-" : main.CurrentSettlement.IsUnderSiege.ToString())}");
+
+            // The map camera pins to MainParty.CurrentSettlement while it follows the main party
+            // (MapCameraView, v1.5.6), and any left click on the map switches it to the main party.
+            // ParkNear points it at the commander instead. This line tells "the party is stuck"
+            // from "the camera follows the wrong party".
+            var cameraParty = Campaign.Current?.CameraFollowParty;
+            var cameraIsMain = cameraParty != null && main != null && cameraParty == main.Party;
+            sb.AppendLine($"Camera follows:   {cameraParty?.Id ?? "<none>"}{(cameraIsMain ? " (main party)" : "")}");
 
             // The one that strands people. An open encounter holds the map, blocks every future
             // encounter, and blocks ServiceMaintenanceService.TryBreakBattleLatch.
