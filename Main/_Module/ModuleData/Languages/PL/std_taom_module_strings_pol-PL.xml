@@ -7364,7 +7364,6 @@
 
     <string id="TAOM_FOW_Trait_Elves_FarSight" text="Far Sight: elven towers fire 50% further than any others." />
 
-    <string id="TAOM_FOW_Trait_Elves_Few" text="Only 150 troops in the field, and only five kinds." />
 
     <string id="TAOM_FOW_Trait_Mirkwood_Archers" text="The finest archers in Middle-earth." />
 
@@ -7760,6 +7759,15 @@
     <string id="TAOM_LD_Hud_KeyVolleyNotSold" text="Elven Volley not sold here" />
     <string id="taom_rf_reason_coop_off" text="Refuges are not available in a shared campaign." />
     <string id="taom_sl_caravan_meet_other" text="A supply caravan passes on toward its lord." />
+    <string id="TAOM_FOW_Trait_DolGuldur_Sorcery" text="Sorcery: your units deal twice the damage to towers." />
+    <string id="TAOM_FOW_Trait_DolGuldur_Tribute" text="Tribute: 30% more income." />
+    <string id="TAOM_FOW_Trait_Gundabad_Packs" text="Packs hold half as many troops again, at the same price." />
+    <string id="TAOM_FOW_Trait_Harad_Spice" text="Spice Roads: 35% more income." />
+    <string id="TAOM_FOW_Trait_Gondor_Engineers" text="Engineers: your units deal 50% more damage to towers." />
+    <string id="TAOM_FOW_Trait_Dale_Merchants" text="Merchants of Dale: 25% more income." />
+    <string id="TAOM_FOW_Trait_Elves_FewSix" text="Only 150 troops in the field, and only six kinds." />
+    <string id="aom_rohan_westfold_spearman_name" text="[Rohan] Westfold Spearman" />
+    <string id="aom_imladris_spearman_name" text="[Rivendell] Imladris Spearman" />
   </strings>
 
 </base>

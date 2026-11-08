@@ -4542,7 +4542,6 @@
 	<string id="TAOM_FOW_Trait_Elves_FarSight" text="{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others." />
 	<string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="{=TAOM_FOW_Trait_Rivendell_SlowWaves}Free troops come at half the usual rate." />
 	<string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="{=TAOM_FOW_Trait_Mirkwood_SlowWaves}Free troops come a third less often." />
-	<string id="TAOM_FOW_Trait_Elves_Few" text="{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds." />
 	<string id="TAOM_FOW_Trait_Mirkwood_Archers" text="{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth." />
 	<string id="TAOM_FOW_Trait_Umbar_Bounty" text="{=TAOM_FOW_Trait_Umbar_Bounty}Kills pay a quarter more." />
 	<string id="TAOM_FOW_Trait_Umbar_Plunder" text="{=TAOM_FOW_Trait_Umbar_Plunder}Plunder: camps pay 3 times as much and capture points twice as much." />
@@ -4552,6 +4551,15 @@
 	<string id="TAOM_FOW_Faction_Harad" text="{=TAOM_FOW_Faction_Harad}Harad" />
 	<string id="TAOM_FOW_Faction_Rivendell" text="{=TAOM_FOW_Faction_Rivendell}Rivendell" />
 	<string id="TAOM_FOW_Trait_Erebor_Gold" text="{=TAOM_FOW_Trait_Erebor_Gold}Mountain Gold: 40% more income." />
+	<string id="aom_rohan_westfold_spearman_name" text="{=aom_rohan_westfold_spearman_name}[Rohan] Westfold Spearman" />
+	<string id="aom_imladris_spearman_name" text="{=aom_imladris_spearman_name}[Rivendell] Imladris Spearman" />
+	<string id="TAOM_FOW_Trait_DolGuldur_Sorcery" text="{=TAOM_FOW_Trait_DolGuldur_Sorcery}Sorcery: your units deal twice the damage to towers." />
+	<string id="TAOM_FOW_Trait_DolGuldur_Tribute" text="{=TAOM_FOW_Trait_DolGuldur_Tribute}Tribute: 30% more income." />
+	<string id="TAOM_FOW_Trait_Gundabad_Packs" text="{=TAOM_FOW_Trait_Gundabad_Packs}Packs hold half as many troops again, at the same price." />
+	<string id="TAOM_FOW_Trait_Harad_Spice" text="{=TAOM_FOW_Trait_Harad_Spice}Spice Roads: 35% more income." />
+	<string id="TAOM_FOW_Trait_Gondor_Engineers" text="{=TAOM_FOW_Trait_Gondor_Engineers}Engineers: your units deal 50% more damage to towers." />
+	<string id="TAOM_FOW_Trait_Dale_Merchants" text="{=TAOM_FOW_Trait_Dale_Merchants}Merchants of Dale: 25% more income." />
+	<string id="TAOM_FOW_Trait_Elves_FewSix" text="{=TAOM_FOW_Trait_Elves_FewSix}Only 150 troops in the field, and only six kinds." />
 	<string id="TAOM_FOW_Trait_Erebor_Slow" text="{=TAOM_FOW_Trait_Erebor_Slow}Free waves come a quarter later, with few bows and no horses." />
 	<string id="TAOM_FOW_Trait_Erebor_Stonewrights" text="{=TAOM_FOW_Trait_Erebor_Stonewrights}Stonewrights: your towers mend 4 times as fast." />
 	<string id="TAOM_FOW_Trait_Gundabad_Cheap" text="{=TAOM_FOW_Trait_Gundabad_Cheap}Packs cost a quarter less." />

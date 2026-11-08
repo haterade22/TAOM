@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FordsOfWar.Domain;
 using static TAOM.Tests.Features.FordsOfWar.Domain.FordsMatchFixture;
@@ -66,6 +67,19 @@ public class TowerAssaultLimitTests
         new(Config(c => c with { Towers = c.Towers with { AssaultDamagePerSecond = perSecond } }), Layout(), Factions(), Slots("slow"), new SeededFordsRandom(7));
 
     private static TowerHit Blow(UnitRole role, int raw = 30) => new(FordsTestLayout.WestOuter0, false, role, raw, MatchSide.East);
+
+    [TestMethod]
+    public void AdjustTowerDamage_ATowerDamageFeat_RaisesTheLimitWithTheBlow()
+    {
+        var factions = Factions().ToDictionary(p => p.Key, p => p.Value);
+        factions[MatchSide.East] = factions[MatchSide.East] with { Feats = new FactionFeats { DamageToTowers = 2f } };
+        var match = new FordsMatch(Config(c => c with { Towers = c.Towers with { AssaultDamagePerSecond = 50f } }), Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
+
+        Assert.AreEqual(60, match.AdjustTowerDamage(Blow(UnitRole.Infantry), out _), "twice the blow");
+        Assert.AreEqual(40, match.AdjustTowerDamage(Blow(UnitRole.Infantry), out _), "twice the limit of 50");
+        Assert.AreEqual(0, match.AdjustTowerDamage(Blow(UnitRole.Infantry), out var third));
+        Assert.AreEqual(TowerDamageReason.Crowded, third);
+    }
 
     [TestMethod]
     public void AdjustTowerDamage_TooManyBlowsAtOnce_StopAtTheLimit_AndSayWhy()

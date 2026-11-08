@@ -6,10 +6,11 @@
       "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 8 },
       "aiBuyCycle": ["Infantry", "Ranged", "up:fortify", "Spear", "Cavalry", "up:melee_armour", "Infantry", "Ranged", "up:missile_damage"],
       "upgradeCost": { "fortify": 0.75 },
-      "feats": { "towerHitPoints": 1.4 },
+      "feats": { "damageToTowers": 1.5, "towerHitPoints": 1.4 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Gondor_Regions}A new region answers the call every 30 seconds. Pay to call one by name.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Gondor_Walls}Towers have 40% more hit points.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Gondor_Engineers}Engineers: your units deal 50% more damage to towers.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Gondor_Core}Only militia are always at hand.", "strength": false }
       ],
       "units": [
@@ -179,7 +180,7 @@
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
       "tactics": { "march": "Skein", "chargeRange": 40 },
-      "aiBuyCycle": ["spear_riders", "militia", "up:melee_damage", "lancers", "yeomen", "sword_riders", "up:melee_armour", "militia", "horse_archers", "kings_knights", "up:melee_damage", "spear_riders", "riders_of_rohan"],
+      "aiBuyCycle": ["spear_riders", "militia", "up:melee_damage", "lancers", "yeomen", "sword_riders", "up:melee_armour", "spearmen", "horse_archers", "kings_knights", "up:melee_damage", "spear_riders", "riders_of_rohan"],
       "upgradeCost": { "melee_damage": 0.75, "siegecraft": 1.25 },
       "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 1.3 },
       "traits": [
@@ -189,13 +190,14 @@
         { "text": "{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers.", "strength": false }
       ],
       "units": [
-        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.65 },
-        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.65 },
-        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 0.65 },
-        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 0.5 },
-        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 0.65 },
-        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.65 },
+        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.7 },
+        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 8, "level": 16, "eliteWeight": 0.7 },
+        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 0.7 },
+        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 0.55 },
+        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 0.7 },
+        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.7 },
         { "id": "militia", "troop": "fow_rohan_westfold_militiaman", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.7 },
+        { "id": "spearmen", "troop": "fow_rohan_westfold_spearman", "role": "Spear", "packSize": 10, "level": 11, "eliteWeight": 0.7 },
         { "id": "yeomen", "troop": "fow_rohan_eastfold_skirmisher", "role": "Ranged", "packSize": 10, "level": 11, "eliteWeight": 0.7 }
       ],
       "heroGuard": { "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "count": 4, "role": "Cavalry" },
@@ -370,17 +372,18 @@
       "name": "{=TAOM_FOW_Faction_Rivendell}Rivendell",
       "culture": "rivendell",
       "tactics": { "march": "Loose", "close": "Loose", "closeRange": 50, "chargeRange": 10 },
-      "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
+      "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "spearmen", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
       "upgradeCost": { "missile_damage": 0.85, "melee_armour": 0.85 },
       "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 2 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Elves_FewSix}Only 150 troops in the field, and only six kinds.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Rivendell_SlowWaves}Free troops come at half the usual rate.", "strength": false }
       ],
       "units": [
         { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.1 },
+        { "id": "spearmen", "troop": "fow_imladris_spearman", "role": "Spear", "packSize": 4, "level": 21, "eliteWeight": 1.1 },
         { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.1 },
         { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.1 },
         { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.1 },
@@ -420,7 +423,7 @@
       "name": "{=TAOM_FOW_Faction_Erebor}Erebor",
       "culture": "erebor",
       "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 5 },
-      "aiBuyCycle": ["miners", "fighters", "up:melee_armour", "miners", "mattocks", "rams", "fighters", "up:missile_armour", "bowmen", "shield_guard", "up:melee_armour", "legionaries", "royal_wardens"],
+      "aiBuyCycle": ["miners", "fighters", "up:melee_armour", "spearmen", "mattocks", "rams", "fighters", "up:missile_armour", "bowmen", "shield_guard", "up:melee_armour", "legionaries", "royal_wardens"],
       "upgradeCost": { "melee_armour": 0.75, "missile_armour": 0.75, "missile_damage": 1.25 },
       "feats": { "income": 1.4, "towerRegen": 4, "waveInterval": 1.25 },
       "traits": [
@@ -430,6 +433,7 @@
       ],
       "units": [
         { "id": "miners", "troop": "fow_erebor_reg_miner", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "spearmen", "troop": "fow_erebor_militia_veteran_spearman", "role": "Spear", "packSize": 8, "level": 16, "eliteWeight": 1.0 },
         { "id": "bowmen", "troop": "fow_erebor_reg_bowman", "role": "Ranged", "packSize": 5, "level": 26, "eliteWeight": 1.0 },
         { "id": "rams", "troop": "fow_ironpass_ram_rider", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 1.0 },
         { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.55 },
@@ -474,11 +478,12 @@
     "harad": {
       "name": "{=TAOM_FOW_Faction_Harad}Harad",
       "culture": "aserai",
-      "aiBuyCycle": ["bowmen", "serpent_archers", "up:siegecraft", "footmen", "beast:war_elephant", "bowmen", "serpent_guard", "up:melee_armour", "camel_riders", "serpent_archers", "beast:mumak", "lancers"],
+      "aiBuyCycle": ["bowmen", "serpent_archers", "up:siegecraft", "footmen", "militia_spears", "beast:war_elephant", "bowmen", "serpent_guard", "up:melee_armour", "camel_riders", "serpent_archers", "beast:mumak", "lancers"],
       "upgradeCost": { "siegecraft": 0.75 },
-      "feats": { "towerHitPoints": 0.85, "poisonPerSecond": 3, "poisonSeconds": 8 },
+      "feats": { "income": 1.35, "towerHitPoints": 0.85, "poisonPerSecond": 3, "poisonSeconds": 8 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Harad_Beasts}Call a war elephant or a mûmak every 2 minutes.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Harad_Spice}Spice Roads: 35% more income.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Harad_Poison}Poisoned arrows: a struck soldier loses 3 hit points a second for 8 seconds, through any armour.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold.", "strength": false }
@@ -539,10 +544,11 @@
       "tactics": { "march": "Loose", "chargeRange": 35 },
       "aiBuyCycle": ["bone_breakers", "archers", "ravagers", "up:melee_damage", "bone_breakers", "impalers", "archers", "wolf_riders", "ravagers"],
       "upgradeCost": { "melee_damage": 1.0, "missile_damage": 1.0, "melee_armour": 1.0, "missile_armour": 1.0, "siegecraft": 1.0, "fortify": 1.0 },
-      "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
+      "feats": { "packSize": 1.5, "waveInterval": 0.5, "towerHitPoints": 0.7 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Gundabad_Waves}Free waves come twice as often.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Gundabad_Cheap}Packs cost a quarter less.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Gundabad_Packs}Packs hold half as many troops again, at the same price.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Gundabad_Fade}Free waves never improve, and towers have 30% fewer hit points.", "strength": false }
       ],
       "units": [
@@ -578,9 +584,10 @@
       "tactics": { "march": "Line", "close": "Line", "closeRange": 45, "chargeRange": 10 },
       "aiBuyCycle": ["bowmen", "pikes", "up:missile_damage", "longbows", "militia", "crossbows", "up:siegecraft", "longbows", "hearthguard", "black_arrows", "up:missile_damage", "riders", "black_arrows"],
       "upgradeCost": { "missile_damage": 0.75, "melee_armour": 1.25 },
-      "feats": { "rangedDamageToTowers": 4 },
+      "feats": { "income": 1.25, "rangedDamageToTowers": 4 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Dale_Arrows}Black Arrows: your archers deal 4 times the damage to towers.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Dale_Merchants}Merchants of Dale: 25% more income.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders.", "strength": false }
       ],
@@ -630,11 +637,13 @@
     "dolguldur": {
       "name": "{=TAOM_FOW_Faction_DolGuldur}Dol Guldur",
       "culture": "dolguldur",
-      "aiBuyCycle": ["fighters", "bowmen", "up:melee_damage", "shadow_guard", "beast:fell_wargs", "fellbows", "fighters", "spider_riders", "up:missile_armour", "swordsmen", "bowmen", "beast:fell_wargs", "fell_fangs", "khamul_knights", "shadow_guard"],
+      "aiBuyCycle": ["fighters", "bowmen", "up:melee_damage", "shadow_guard", "beast:fell_wargs", "fellbows", "impalers", "spider_riders", "up:missile_armour", "swordsmen", "bowmen", "beast:fell_wargs", "fell_fangs", "khamul_knights", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
-      "feats": { "enemyTowerFireRate": 0.75, "poisonPerSecond": 2, "poisonSeconds": 6 },
+      "feats": { "damageToTowers": 2, "income": 1.3, "enemyTowerFireRate": 0.75, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Sorcery}Sorcery: your units deal twice the damage to towers.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Tribute}Tribute: 30% more income.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_FellWargs}Call a fell warg every 45 seconds.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Venom}Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three.", "strength": false }
@@ -648,7 +657,7 @@
         { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 0.8 },
         { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 0.8 },
         { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
-        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.65 },
+        { "id": "impalers", "troop": "fow_dg_goblin_impaler", "role": "Spear", "packSize": 10, "level": 21, "eliteWeight": 0.65 },
         { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 0.8 },
         { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.2 },
         { "id": "khamul_knights", "troop": "fow_dg_khamul_veiled_knight", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.8 }
@@ -804,17 +813,18 @@
       "name": "{=TAOM_FOW_Faction_Mirkwood}Mirkwood",
       "culture": "mirkwood",
       "tactics": { "march": "Loose", "close": "Loose", "closeRange": 55, "chargeRange": 8 },
-      "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "borderwardens", "up:missile_armour", "silvan_levy", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
+      "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "borderwardens", "up:missile_armour", "spearmen", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
       "upgradeCost": { "missile_damage": 0.75, "missile_armour": 0.85 },
       "feats": { "towerRange": 1.5, "unitCapBonus": -150, "waveInterval": 1.5 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Elves_FewSix}Only 150 troops in the field, and only six kinds.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Mirkwood_SlowWaves}Free troops come a third less often.", "strength": false }
       ],
       "units": [
         { "id": "silvan_levy", "troop": "fow_mirkwood_recruit", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
+        { "id": "spearmen", "troop": "fow_mirkwood_militia_veteran_spearman", "role": "Spear", "packSize": 4, "level": 16, "eliteWeight": 1.0 },
         { "id": "sentinels", "troop": "fow_mirkwood_sentinels", "role": "Ranged", "packSize": 3, "level": 41, "eliteWeight": 1.15 },
         { "id": "elk_riders", "troop": "fow_mirkwood_rochenlas", "role": "Cavalry", "packSize": 2, "level": 41, "eliteWeight": 1.0 },
         { "id": "borderwardens", "troop": "fow_mirkwood_borderwardens", "role": "Ranged", "packSize": 3, "level": 46, "eliteWeight": 1.15 },

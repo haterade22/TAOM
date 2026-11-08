@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -112,6 +113,83 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void EveryFaction_CanBuyAFootSpearPack_AndItsAiBuysSpears()
+    {
+        // Mike, 2026-11-08: every culture needs a unit with a spear; a spear counters cavalry under the pierce rule.
+        foreach (var faction in Catalog().Factions)
+        {
+            var spears = faction.Units.Where(u => u.Role == UnitRole.Spear).Select(u => u.OfferId).ToList();
+            Assert.IsTrue(spears.Count > 0, faction.FactionId + " offers no spear pack");
+            Assert.IsTrue(faction.AiBuyCycle!.Any(e => e == "Spear" || spears.Contains(e)), faction.FactionId + "'s AI never buys its spears");
+        }
+    }
+
+    [TestMethod]
+    public void TheNewSpearPacks_HaveTheirSizesAndPrices()
+    {
+        var factions = JObject.Parse(File.ReadAllText(Fords("factions.json")))["factions"]!;
+
+        foreach (var (faction, offer, size, weight) in new[]
+        {
+            ("rohan", "spearmen", 10, 0.7f), ("rivendell", "spearmen", 4, 1.1f), ("erebor", "spearmen", 8, 1f), ("mirkwood", "spearmen", 4, 1f), ("dolguldur", "impalers", 10, 0.65f),
+        })
+        {
+            var unit = factions[faction]!["units"]!.Single(u => (string?)u["id"] == offer);
+            Assert.AreEqual("Spear", (string?)unit["role"], faction);
+            Assert.AreEqual(size, (int)unit["packSize"]!, faction);
+            Assert.AreEqual(weight, (float)unit["eliteWeight"]!, 0.001f, faction);
+        }
+    }
+
+    [TestMethod]
+    public void TheLastPlacedFactions_HaveTheirNewPros()
+    {
+        // Round robins 1 to 3 and the first 19 pairs of round 4 (balance-log.md); Mike, 2026-11-08: help them with feats.
+        FactionFeats Feats(string id)
+        {
+            Assert.IsTrue(Catalog().TryGetFaction(id, out var faction), id);
+            return faction.Feats!;
+        }
+
+        Assert.AreEqual(2f, Feats("dolguldur").DamageToTowers, 0.001f);
+        Assert.AreEqual(1.3f, Feats("dolguldur").Income, 0.001f);
+        Assert.AreEqual(1.5f, Feats("gundabad").PackSize, 0.001f);
+        Assert.AreEqual(1.35f, Feats("harad").Income, 0.001f);
+        Assert.AreEqual(1.5f, Feats("gondor").DamageToTowers, 0.001f);
+        Assert.AreEqual(1.25f, Feats("dale").Income, 0.001f);
+
+        foreach (var (faction, key) in new[]
+        {
+            ("dolguldur", "TAOM_FOW_Trait_DolGuldur_Sorcery"), ("dolguldur", "TAOM_FOW_Trait_DolGuldur_Tribute"), ("gundabad", "TAOM_FOW_Trait_Gundabad_Packs"),
+            ("harad", "TAOM_FOW_Trait_Harad_Spice"), ("gondor", "TAOM_FOW_Trait_Gondor_Engineers"), ("dale", "TAOM_FOW_Trait_Dale_Merchants"),
+        })
+        {
+            Assert.IsTrue(Catalog().TryGetFaction(faction, out var f), faction);
+            Assert.IsTrue(f.Traits!.Any(t => t.Strength && t.Text.Contains(key)), key + " is not a pro of " + faction);
+        }
+    }
+
+    [TestMethod]
+    public void PackSizeFeat_AddsTroops_AtTheOldPrice()
+    {
+        var raw = JObject.Parse(File.ReadAllText(Fords("factions.json")))["factions"]!["gundabad"]!["units"]!.Single(u => (string?)u["id"] == "snagas");
+        Assert.IsTrue(Catalog().TryGetFaction("gundabad", out var gundabad));
+        var snagas = gundabad.Units.Single(u => u.OfferId == "snagas");
+
+        Assert.AreEqual(16, (int)raw["packSize"]!, "the data keeps the base size");
+        Assert.AreEqual(24, snagas.PackSize, "1.5 times the base size");
+        Assert.AreEqual(TroopPricing.PackPrice((int)raw["level"]!, false, (float)raw["eliteWeight"]!, 16), snagas.PackPrice, "the base size sets the price");
+    }
+
+    [TestMethod]
+    public void PackSizeFeat_LeavesOtherFactionsAlone()
+    {
+        Assert.IsTrue(Catalog().TryGetFaction("mordor", out var mordor));
+
+        Assert.AreEqual(24, mordor.Units.Single(u => u.OfferId == "orc_rabble").PackSize);
+    }
+
+    [TestMethod]
     public void Rohan_IsMostlyRiders_AndItsRidersBarelyHurtTowers()
     {
         Assert.IsTrue(Catalog().TryGetFaction("rohan", out var rohan));
@@ -183,7 +261,7 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
-    public void DolGuldur_FieldsMostlyUruks_WithKhamulCavalry_SpiderRidersToBuy_AndAGoblinSwarm()
+    public void DolGuldur_FieldsMostlyUruks_WithKhamulCavalry_SpiderRidersToBuy_AndAGoblinSpearPack()
     {
         // Mike, 2026-11-05: "a lot more Dol Guldur Uruks as units instead of Goblins, maybe one or two goblins for swarm", three rows,
         // Khamul cavalry and spider riders. Spiders are bought, so the creature call keeps only the fell wargs.
@@ -192,7 +270,7 @@ public class ShippedFordsRosterTests
 
         Assert.AreEqual(12, dg.Units.Count, "three rows of four");
         Assert.IsTrue(troops.Count(t => t.StartsWith("fow_dg_uruk_")) >= 7, string.Join(",", troops));
-        Assert.IsTrue(troops.Count(t => t.StartsWith("fow_dg_goblin_")) <= 1, "one goblin swarm pack");
+        Assert.IsTrue(troops.Count(t => t.StartsWith("fow_dg_goblin_")) <= 1, "one goblin spear pack");
         Assert.IsTrue(dg.Units.Any(u => u.Role == UnitRole.Cavalry && u.TroopId.StartsWith("fow_dg_khamul_")), "Khamul cavalry");
         Assert.IsTrue(troops.Contains("fow_goblin_spider_rider"), "spider riders in the buy grid");
         Assert.IsFalse(dg.Creatures!.Offers.Any(c => c.TroopId == "fow_goblin_spider_rider"), "spiders are not also a creature call");
@@ -279,7 +357,8 @@ public class ShippedFordsRosterTests
         {
             Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRange < elf.FeatsOrNone.TowerRange), elf.FactionId + " longest towers");
             Assert.IsTrue(others.All(f => f.FeatsOrNone.UnitCapBonus > elf.FeatsOrNone.UnitCapBonus), elf.FactionId + " fewest troops");
-            Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) > elf.Units.Count), elf.FactionId + " fewest kinds on show");
+            // The spear pack every culture must have (Mike, 2026-11-08) gives the elves six kinds, the same as Gondor shows with a rotation.
+            Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) >= elf.Units.Count), elf.FactionId + " no more kinds on show than anyone");
             Assert.IsTrue(elf.Units.All(o => o.PackSize <= 5), elf.FactionId + " a low count per troop");
             Assert.IsTrue(elf.FreeWaves.All(w => w.Units.Sum(u => u.Count) <= 5), elf.FactionId + " a small free wave");
         }

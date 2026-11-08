@@ -41,6 +41,9 @@ internal sealed record FactionFeats
     /// <summary>Heroes this faction may have alive above the side limit.</summary>
     public int HeroSlotBonus { get; init; }
 
+    /// <summary>The troops in each pack this faction buys, at the pack's old price. Regional offers and creatures do not change.</summary>
+    public float PackSize { get; init; } = 1f;
+
     /// <summary>This faction's passive income.</summary>
     public float Income { get; init; } = 1f;
 

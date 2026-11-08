@@ -225,9 +225,9 @@ public class ShippedFordsConfigTests
         static IEnumerable<float> RiderWeights(JToken faction) =>
             faction["units"]!.Where(u => (string?)u["role"] == "Cavalry").Select(u => (float)u["eliteWeight"]!);
 
-        // Mike, 2026-11-05: cheap riders. Mike, 2026-11-06: weaker after Rohan won 10 of 10 at 0.5, so 0.65; still the cheapest.
-        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w == 0.65f), "every Rohan rider pack costs 0.65 of the full price for its level");
-        Assert.AreEqual(0.5f, (float)factions["rohan"]!["units"]!.Single(u => (string?)u["id"] == "horse_archers")["eliteWeight"]!, "the horse archers cost 0.5");
+        // Mike, 2026-11-05: cheap riders. Mike, 2026-11-06: weaker after Rohan won 10 of 10 at 0.5, so 0.65. 2026-11-08: won 10 of 11 under double pierce damage, so 0.7; still the cheapest.
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w == 0.7f), "every Rohan rider pack costs 0.7 of the full price for its level");
+        Assert.AreEqual(0.55f, (float)factions["rohan"]!["units"]!.Single(u => (string?)u["id"] == "horse_archers")["eliteWeight"]!, "the horse archers cost 0.55");
         var cheapestElsewhere = factions.Properties().Where(p => p.Name != "rohan").SelectMany(p => RiderWeights(p.Value)).Min();
         Assert.IsTrue(RiderWeights(factions["rohan"]!).Max() < cheapestElsewhere, "no other faction's riders are as cheap for their level");
     }
@@ -241,7 +241,7 @@ public class ShippedFordsConfigTests
         float Weight(string faction, string offer) => (float)factions[faction]!["units"]!.Single(u => (string?)u["id"] == offer)["eliteWeight"]!;
         IEnumerable<float> Weights(string faction) => factions[faction]!["units"]!.Select(u => (float)u["eliteWeight"]!);
 
-        foreach (var offer in new[] { "foul", "warriors", "fighters", "crawlers" })
+        foreach (var offer in new[] { "foul", "warriors", "fighters", "impalers" })
             Assert.AreEqual(0.65f, Weight("dolguldur", offer), 0.001f, "Dol Guldur " + offer + ": 0.8 lost 12 of 12");
         Assert.AreEqual(0.75f, Weight("dolguldur", "bowmen"), 0.001f);
         foreach (var offer in new[] { "swordsmen", "fellbows", "fell_fangs", "warg_riders", "khamul_knights" })
@@ -282,7 +282,7 @@ public class ShippedFordsConfigTests
         // The AI stops buying the packs that traded worst. Free waves still bring some of those troops, not Gundabad's brawlers or Harad's levies.
         foreach (var (faction, worst) in new[]
         {
-            ("dolguldur", new[] { "foul", "warriors", "crawlers" }),
+            ("dolguldur", new[] { "foul", "warriors" }),
             ("gundabad", new[] { "snagas", "hunters", "brawlers" }),
             ("harad", new[] { "levies" }),
         })

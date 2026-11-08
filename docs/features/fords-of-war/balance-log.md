@@ -447,6 +447,37 @@ No trait text changes: each changed value is a price or the AI's buying order. A
 
 **Result: not measured.** Round 4 runs on the build that carries this change.
 
+### Round 4, stopped at 22 of 78 pairs (`78009c0a4`)
+
+**Seen:** 22 pairs at 4x, 2026-11-08 09:58 to 13:40, from `python tools/fords_round_robin.py summary --build 78009c0a4`. The queue plays Gondor and Rohan first, so every match has one of them. The round stopped because the next change replaces this build.
+
+| Faction | Played | Won | Lost | Gold trade | Towers taken | Towers lost |
+|---|---|---|---|---|---|---|
+| Rohan | 11 | 10 | 1 | 1.30 | 54 | 10 |
+| Gondor | 12 | 2 | 10 | 0.97 | 32 | 57 |
+| Every other faction | 1 or 2 | 0 to 1 | 0 to 2 | 0.51 to 1.45 | 3 to 8 | 3 to 10 |
+
+- **Rohan** still won 10 of 11 under double pierce damage, so the rule in this log (above 9 of 12, its riders go up) applies.
+- **Gondor** won 2 of 12, after 3 of 12 in round 3, with no change of its own. The cause is not known.
+- **Stability:** all 22 matches passed, with no crash, no stall and no check 8 FAIL. The dead target sweep of `0931c1e12` reset up to 17,684 targets in a match. Round 3 had one crash at `0x6B716E` in 83 runs, so 22 clean runs are evidence and not proof.
+
+### Round 5 values: spears for every culture, pros for the last placed (this change)
+
+**Why:** Mike, 2026-11-08: every culture needs a unit with a spear, and the factions performing worst get feats, shown as pros, such as double damage to towers, more gold and larger packs.
+
+**Changed:**
+
+- **Spear packs:** Rohan `spearmen` (10, level 11, 0.7), Rivendell `spearmen` (4, level 21, 1.1), Erebor `spearmen` (8, level 16, 1.0), Mirkwood `spearmen` (4, level 16, 1.0) and Dol Guldur `impalers` (10, level 21, 0.65). Each AI cycle swaps a repeated pack for it. Dol Guldur's impalers replace its crawlers, because it already fills all 12 unit keys; crawlers still come in its free waves. Harad's AI now also buys its militia spears, the one spear pack an AI never bought. Rohan and Rivendell had no foot spear troop, so `fow_rohan_westfold_spearman` and `fow_imladris_spearman` are new, with a spear and sidearm and no shield.
+- **Pros:** Dol Guldur `damageToTowers` 2 and `income` 1.3, won 0, 0, 1 of 12; Gundabad `packSize` 1.5, won 3, 3, 3; Harad `income` 1.35, won 3, 4, 3; Gondor `damageToTowers` 1.5, won 7, 8, 3 and 2 of 12 so far; Dale `income` 1.25, won 5, 5, 4. Harad's income stays under Erebor's 1.4, because being the richest is Erebor's identity. Isengard and Rivendell rose from 3 wins to 5 and get nothing yet.
+- **The tower assault limit** now rises with the attacker's `damageToTowers`. It capped ordinary blows at a fixed rate per tower, so a crowd would not have delivered the feat. This also lifts Isengard's limit by 15%.
+- **Rohan:** the five rider packs cost 0.7, up from 0.65, and the horse archers 0.55, up from 0.5. The raise is small because every AI now fields spears against it. Rohan's riders must stay the cheapest (Gundabad's wolf riders are 0.75).
+
+**Expected side effect, not measured:** `packSize` lowers a Gundabad troop's gold value, so its AI lanes can read themselves as weaker and fall back sooner under the regroup rule.
+
+**Undo:** remove the five new pros from `feats` and `traits`. Set Rohan's riders back to 0.65 and its horse archers to 0.5. Delete the five spear offers and their cycle entries (Rohan `militia`, Erebor `miners`, Mirkwood `silvan_levy`, Rivendell `swordguard` and Dol Guldur `fighters` go back into the second slot), and restore `{ "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.65 }`. Remove `militia_spears` from Harad's cycle. In `FordsMatch.AdjustTowerDamage`, pass `wear` alone to the limit.
+
+**Result: not measured.** Round 5 runs on the build that carries this change. Spears in a real fight against cavalry are an owed in-game check.
+
 ### Culture tactics (round 4)
 
 **Why:** Mike, 2026-11-07: "I feel like Isengard for example should fight in more formations. Advance as a formation, get close and

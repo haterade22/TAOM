@@ -85,8 +85,9 @@ internal static class FordsFactionsReader
         }
 
         name = FordsConfigScope.Text(f["name"]) ?? id;
-        faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
-            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s),
+        var feats = ReadFeats(id, f["feats"], s);
+        faction = new FactionCatalog(id, culture, WithPackSizeFeat(units, feats), ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
+            feats, ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s),
             ReadHeroGuard(id, f["heroGuard"], s), FordsTacticsReader.Read(id, f["tactics"], s));
         return true;
     }
@@ -149,6 +150,15 @@ internal static class FordsFactionsReader
         return cycle.Count == 0 ? null : cycle;
     }
 
+    /// <summary>The pack size feat adds troops and leaves the price, which the base size already set.</summary>
+    private static List<UnitOffer> WithPackSizeFeat(List<UnitOffer> units, FactionFeats? feats)
+    {
+        var factor = feats?.PackSize ?? 1f;
+        if (Math.Abs(factor - 1f) < 0.001f)
+            return units;
+        return units.Select(o => o with { PackSize = Math.Min(MaxPackSize, Math.Max(1, (int)Math.Round(o.PackSize * factor, MidpointRounding.AwayFromZero))) }).ToList();
+    }
+
     private static FactionFeats? ReadFeats(string faction, JToken? token, FordsConfigScope s)
     {
         if (token == null)
@@ -198,6 +208,7 @@ internal static class FordsFactionsReader
             UnitCapBonus = Bonus("unitCapBonus"),
             HeroSlotBonus = Bonus("heroSlotBonus"),
             Income = Factor("income", 1f),
+            PackSize = Factor("packSize", 1f),
             Bounty = Factor("bounty", 1f),
         };
     }

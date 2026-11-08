@@ -96,6 +96,10 @@ internal sealed class TowerDamageRules
         return attack * defence;
     }
 
+    /// <summary>The attacker's tower damage feat alone: 1 for a blow with no known side.</summary>
+    public float DamageFeat(TowerHit hit) =>
+        hit.AttackerSide is { } side && _feats.TryGetValue(side, out var feats) ? feats.DamageToTowers : 1f;
+
     private double FeatFactor(TowerHit hit)
     {
         if (!(hit.AttackerSide is { } side) || !_feats.TryGetValue(side, out var feats))

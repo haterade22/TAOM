@@ -309,18 +309,18 @@ is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a 
 | Faction | Culture | Offers | Heroes |
 |---|---|---|---|
 | `gondor` | `gondor` | 2 always on (militia spears and archers), plus 12 regional bands of 4 | Imrahil `lord_1_9` 1000, Boromir `lord_1_75` 900, Faramir `lord_1_34` 800 |
-| `rohan` | `vlandia` | 8 | Theoden `lord_4_1` 1000, Eomer `lord_4_3_1` 900, Erkenbrand `lord_4_16` 800 |
+| `rohan` | `vlandia` | 9 | Theoden `lord_4_1` 1000, Eomer `lord_4_3_1` 900, Erkenbrand `lord_4_16` 800 |
 | `mordor` | `mordor` | 8, plus 4 creatures (warg raiders, goblin spider riders, hill troll, cave troll) | Sauron `lord_1_17` 2400, the Witch-King `lord_1_15` 1600, Nazgul `lord_1_48_1` 1000 |
 | `isengard` | `isengard` | 8, with `hill_troll` as the Siege unit | Saruman `lord_I1_0` 2000, Lurtz `lord_I4_1` 1000, Ugluk `lord_I1_1` 900 |
-| `rivendell` | `rivendell` | 5 | `lord_R1_1` 2400, `lord_R2_1` 1800, `lord_R1_3` 1000 |
-| `erebor` | `erebor` | 8 | `lord_E1_1` 2000, `lord_E1_2` 1200, `lord_E1_5` 900 |
+| `rivendell` | `rivendell` | 6 | `lord_R1_1` 2400, `lord_R2_1` 1800, `lord_R1_3` 1000 |
+| `erebor` | `erebor` | 9 | `lord_E1_1` 2000, `lord_E1_2` 1200, `lord_E1_5` 900 |
 | `harad` | `aserai` | 8, plus 2 beasts (war elephant, mumak) | `lord_A9_u` 1400, `lord_3_3_1` 1000, `lord_A9_l` 800 |
 | `gundabad` | `gundabad` | 8 | `lord_G1_1` 1400, `lord_G1_2` 1000, `lord_G1_3` 800 |
 | `dale` | `sturgia` | 8 | `lord_2_7_1` 1400, `lord_S9_u` 1000, `lord_S9_l` 800 |
-| `dolguldur` | `dolguldur` | 12 in three rows (7 uruk packs, Khamul's shadow guard and veiled knights, warg raiders, spider riders, one goblin swarm), plus 1 creature (fell wargs) | `lord_D1_2` 1400, `lord_D1_4` 1000, `lord_D1_5` 800 |
+| `dolguldur` | `dolguldur` | 12 in three rows (7 uruk packs, Khamul's shadow guard and veiled knights, warg raiders, spider riders, one goblin spear pack), plus 1 creature (fell wargs) | `lord_D1_2` 1400, `lord_D1_4` 1000, `lord_D1_5` 800 |
 | `easterlings` | `khuzait` | 8 | `lord_K8_u` 1400, `lord_K9_l` 1000, `lord_6_25` 800 |
 | `umbar` | `umbar` | 8 | `lord_U1_1` 1400, `lord_U2_1` 1000, `lord_U3_1` 800 |
-| `mirkwood` | `mirkwood` | 5 | `lord_M1_1` 2200, `lord_M1_11` 1600, `lord_M1_3` 900 |
+| `mirkwood` | `mirkwood` | 6 | `lord_M1_1` 2200, `lord_M1_11` 1600, `lord_M1_3` 900 |
 
 Only Isengard sells a Siege unit; Mordor's trolls come through its creature call. Most factions have free-wave tiers at minutes 0, 10 and 20;
 Isengard's step up every 5 minutes (0, 5, 10, 15 and 20) and Gundabad has one tier. Hero
@@ -433,23 +433,23 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 | Faction | Strength | Weakness | Feats | Mechanic |
 |---|---|---|---|---|
-| Rohan | The best and cheapest cavalry: six of eight offers are riders at 0.65 of the full price for their level (the horse archers 0.5, `eliteWeight`; the foot 0.7), the two lowest-level rider packs hold 8, every free wave brings 4 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
-| Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
+| Rohan | The best and cheapest cavalry: six of nine offers are riders at 0.7 of the full price for their level (the horse archers 0.55, `eliteWeight`; the foot 0.7), the two lowest-level rider packs hold 8, every free wave brings 4 riders, and 7 of the AI's 10 pack buys are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
+| Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone), `damageToTowers` 1.5 (Engineers) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75, the largest free waves (25 or more a wave) | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
-| Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150, `waveInterval` 2 | None yet |
+| Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only six offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150, `waveInterval` 2 | None yet |
 | Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |
-| Harad | Saves gold for one great beast at a time, then guards it; poisoned arrows | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85, `poisonPerSecond` 3, `poisonSeconds` 8 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
-| Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
-| Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows) | None yet |
-| Dol Guldur | Walks under slowed towers; an uruk army in three rows, with Khamul's cavalry and spider riders to buy and a goblin swarm pack; free waves of 12, uruks with two goblins; calls fell wargs; venomed arrows; its three cheapest uruk packs and the swarm cost 0.65 of the full price, its other packs 0.75 to 1.2 | Few strong soldiers: its best come in packs of three | `enemyTowerFireRate` 0.75 (The Shadow), no income penalty, `poisonPerSecond` 2, `poisonSeconds` 6 | Creature call on a 45 s timer |
+| Harad | Saves gold for one great beast at a time, then guards it; poisoned arrows | Weaker towers; a fallen beast is a heavy loss of gold | `income` 1.35 (Spice Roads), `towerHitPoints` 0.85, `poisonPerSecond` 3, `poisonSeconds` 8 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
+| Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7, `packSize` 1.5 | None yet |
+| Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows), `income` 1.25 (Merchants) | None yet |
+| Dol Guldur | Walks under slowed towers; an uruk army in three rows, with Khamul's cavalry and spider riders to buy and a goblin spear pack; free waves of 12, uruks with two goblins; calls fell wargs; venomed arrows; its three cheapest uruk packs and the goblin spear pack cost 0.65 of the full price, its other packs 0.75 to 1.2 | Few strong soldiers: its best come in packs of three | `damageToTowers` 2 (Sorcery), `income` 1.3 (Tribute), `enemyTowerFireRate` 0.75 (The Shadow), `poisonPerSecond` 2, `poisonSeconds` 6 | Creature call on a 45 s timer |
 | Easterlings | Answers the enemy fastest with a mixed army of horse archers and iron legions | Weaker tower fire | `orderCooldown` 0.5 (Discipline), `towerFireRate` 0.85 | None yet |
 | Umbar | Gets rich from the map: raids camps and holds capture points | Less income; no troop above level 31 | `campReward` 3, `captureIncome` 2 (Plunder), `bounty` 1.25, `income` 0.8 | None yet |
-| Mirkwood | Holds at range with the finest archers (skills x1.2) | 150 troops and only five offers; elk riders are its only cavalry | `towerRange` 1.5 (Far Sight), `unitCapBonus` -150, `waveInterval` 1.5 | None yet |
+| Mirkwood | Holds at range with the finest archers (skills x1.2) | 150 troops and only six offers; elk riders are its only cavalry | `towerRange` 1.5 (Far Sight), `unitCapBonus` -150, `waveInterval` 1.5 | None yet |
 
 - **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerRange` (every rule that reads a tower's fire range uses it, and a lane on Hold stands back by the extra reach), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
   `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
-  property, one line in the reader and one use in a rule. `towerRegen` scales how fast towers mend after the quiet delay, and `heroSlotBonus` adds to the side's limit of heroes alive. `rangedDamageToTowers` scales the side's missiles, on top of the shared `rangedDamageFactor`. `enemyTowerFireRate` scales the volleys of the other side's towers. `orderCooldown` scales the time before a lane takes a new order. `campReward` and `captureIncome` scale the gold from camps and capture points.
+  property, one line in the reader and one use in a rule. `towerRegen` scales how fast towers mend after the quiet delay, and `heroSlotBonus` adds to the side's limit of heroes alive. `rangedDamageToTowers` scales the side's missiles, on top of the shared `rangedDamageFactor`. `enemyTowerFireRate` scales the volleys of the other side's towers. `orderCooldown` scales the time before a lane takes a new order. `campReward` and `captureIncome` scale the gold from camps and capture points. `packSize` multiplies the troops in each pack the faction buys and leaves the price, which the base size set; regional offers and creatures keep their size. A troop's gold value is the pack price over the larger size, so these troops count for less in bounties and AI pressure. `damageToTowers` also scales the per-tower assault limit, so the feat reaches a crowded tower.
 - **Poison** (`poisonPerSecond`, `poisonSeconds`, `PoisonRules`): a faction with these feats poisons a soldier struck by its arrows or bolts. Poison takes hit points through any armour, so it answers heavy elites. Another hit refreshes the time and a stronger poison replaces a weaker one, so doses never stack. A shield block, a tower gunner's arrow and a mount carry no poison. A lethal dose kills with the archer as the killer, while the archer lives. Harad has 3 a second for 8 s and Dol Guldur 2 a second for 6 s. The `[FordsOfWar][Balance] poison` line gives the doses and the damage per side.
 - **Upgrades** (`match.json` `upgrades`, `UpgradeBook`, `FordsUpgradeHooks`, key U hides the panel, Shift+F1 to F6 or a click buys): gold buys three levels on each of six tracks for the whole army: melee damage, missile
   damage, melee armour, missile armour, siegecraft and fortify. The damage and armour tracks work per blow in `TaomCustomBattleDamageModel`, so a level reaches the units already on the field with no stat refresh. Tower gunners gain nothing from the damage tracks.
@@ -480,7 +480,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 ## The roster
 
-`fords_of_war/fords_troops.xml` holds the mode's own troops: one `fow_<campaign id>` copy of each troop `factions.json` and `maps.json` name. A balance edit there can never
+`fords_of_war/fords_troops.xml` holds the mode's own troops: one `fow_<campaign id>` copy of each troop `factions.json` and `maps.json` name, and two mode-only spearmen with no campaign troop (`fow_rohan_westfold_spearman` from `fow_rohan_westfold_militiaman`, `fow_imladris_spearman` from `fow_imladris_recruit`, 2026-11-08). A balance edit there can never
 reach a campaign, because `SubModule.xml` loads the file for CustomGame only. A script made the copies on 2026-11-02, so the file is now the source and nothing regenerates it.
 That script took each faction's offers from low or high campaign troops, multiplied skills by faction (Rohan riders up, Rohan foot and Mordor orcs down, Uruks and Numenoreans
 up), and took the spear off the King's Riders so they fight with sword and shield.
@@ -989,6 +989,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-08: every culture can buy a foot spear pack (new packs for Rohan, Rivendell, Erebor, Mirkwood and Dol Guldur, whose crawlers make way for it), and the factions at the bottom gain pros: Dol Guldur, Gondor, Harad, Gundabad, Dale. New feat: `packSize`.
 - 2026-11-08: round 4 values: Erebor's elites and three Easterling elites dearer, and the AI of Dol Guldur, Gundabad and Harad stops buying its worst-trading packs.
 - 2026-11-07: the AI regroups under its own tower: a lane outside the assault that the units near its lead outvalue by more than 1.6 to 1 falls back, returns to Push at 1.1 to 1, and a Fall back lane fights when an enemy comes within its tower's fire range (`AiCommander.FallBackRatio`, `ReturnRatio`, `RegroupMinEnemy`).
 - 2026-11-07: check 8 no longer judges a Seize's hold at a capture point or camp as a lane hold.

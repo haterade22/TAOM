@@ -466,7 +466,7 @@ internal sealed partial class FordsMatch
             effective = (int)Math.Round(effective * wear, MidpointRounding.AwayFromZero);
             if (hit.AttackerRole != UnitRole.Hero && hit.AttackerRole != UnitRole.Siege)
             {
-                effective = _assaultLimit.Take(hit.TowerId, effective, _clock.Elapsed, wear);
+                effective = _assaultLimit.Take(hit.TowerId, effective, _clock.Elapsed, wear * _damage.DamageFeat(hit));
                 if (effective == 0)
                     reason = TowerDamageReason.Crowded;
             }

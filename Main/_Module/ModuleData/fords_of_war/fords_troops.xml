@@ -17908,4 +17908,318 @@
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_rohan_westfold_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_rohan_westfold_spearman_name}[Rohan] Westfold Spearman"
+        occupation="Soldier"
+        culture="Culture.vlandia">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_rohan" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="30" />
+            <skill id="Riding" value="21" />
+            <skill id="OneHanded" value="42" />
+            <skill id="TwoHanded" value="38" />
+            <skill id="Polearm" value="56" />
+            <skill id="Bow" value="4" />
+            <skill id="Crossbow" value="1" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rohan_spear_a" />
+        <equipment slot="Item1" id="Item.wm_rohan_ws_axe_1h_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.cts_rohan_helmet4d" />
+                <equipment
+                    slot="Body"
+                    id="Item.rohan_militia_armour_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rohan_militia_pauldron_both" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.cts_rohan_armguard4" />
+                <equipment
+                    slot="Leg"
+                    id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="empire_troop_civilian_template_t1"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_imladris_spearman"
+        is_obsolete="true"
+        race="elf"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_imladris_spearman_name}[Rivendell] Imladris Spearman"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.rivendell">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_rivendell" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="45" />
+            <skill
+                id="OneHanded"
+                value="160" />
+            <skill
+                id="TwoHanded"
+                value="150" />
+            <skill
+                id="Polearm"
+                value="170" />
+            <skill
+                id="Bow"
+                value="55" />
+            <skill
+                id="Crossbow"
+                value="50" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_gloves_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_gd_ano_bracer_noble_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_gloves1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_gloves1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather1" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_gf_knight_broadsword" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_mask_hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_light_tier4" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_gloves1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_leather1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
 </NPCCharacters>
