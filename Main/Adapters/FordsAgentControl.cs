@@ -34,8 +34,8 @@ internal static class FordsAgentControl
     }
 
     /// <summary>
-    /// The engine's own call: it ends the engine's fast forward, and the Controller setter makes the soldier the main agent. A soldier can still
-    /// mount a loose warg during a fight, and its rage turns vanilla's controller off until the rage ends, so a take turns it back on.
+    /// The engine's own call: it ends the engine's fast forward, and the Controller setter makes the soldier the main agent. A warg's rage turns
+    /// vanilla's controller off, and no warg rages in a Fords match (2026-11-07), so turning it back on here is a guard only.
     /// </summary>
     internal static void Take(Mission mission, Agent agent)
     {

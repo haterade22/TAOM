@@ -138,7 +138,7 @@ public class FordsTelemetryLogicTests
         Assert.IsTrue(_report.Run.Closed);
         Assert.AreEqual(1, _report.Run.Warg.Started);
         var check12 = _lines.Last(l => l.Contains("final=0 check=12"));
-        StringAssert.Contains(check12, "started=PASS(started=1");
+        StringAssert.Contains(check12, "started=FAIL(started=1", "no warg rages in a Fords match, so a start FAILs");
     }
 
     [TestMethod]

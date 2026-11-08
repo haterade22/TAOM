@@ -155,8 +155,6 @@ internal static class FordsScenarios
             case 105: sc.CameraInput = Input(); break;
             case 60: sc.Pause(5.0); sc.Report.OptionsRequested(); break;
             case 70: sc.GoldFromConsole("500"); break;
-            case 80: sc.RageStart(sc.AddRider()); break;
-            case 82: sc.RageEnd(sc.Riders[0]); break;
             case 150: sc.KillHero(MatchSide.West, FordsScenario.HeroA); break;
             case 200: sc.StrikeTower("tower_east_0_1", west?.Handle, false, 100); break;
             case 210: sc.StrikeTower("tower_west_1_0", west?.Handle, false, 100); break;

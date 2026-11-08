@@ -72,9 +72,6 @@ public class FordsScenarioTests
     [DataRow(10, "ownSide")]
     [DataRow(11, "item")]
     [DataRow(11, "hits")]
-    [DataRow(12, "started")]
-    [DataRow(12, "restored")]
-    [DataRow(12, "returned")]
     [DataRow(13, "capture")]
     [DataRow(13, "contested")]
     [DataRow(14, "keep")]
@@ -208,7 +205,8 @@ public class FordsScenarioTests
         var sc = FordsScenarios.Get("S3-warg");
 
         Assert.AreEqual(FordsResult.Pass, sc.Result(12, "returned"), sc.Numbers(12, "returned"));
-        Assert.IsFalse(sc.Rows.Single(r => r.Check == 12).Parts.Any(p => p.Result == FordsResult.Fail));
+        // Since 2026-11-07 the rage start itself FAILs (no warg rages in a Fords match), so only the restore and return parts are judged here.
+        Assert.IsFalse(sc.Rows.Single(r => r.Check == 12).Parts.Where(p => p.Name != "started").Any(p => p.Result == FordsResult.Fail));
         Assert.AreEqual(90.0, sc.Wall - sc.Mt, 1e-6, "the wall clock ran 90 s ahead of the mission clock");
     }
 

@@ -239,17 +239,18 @@ internal static partial class FordsVerdicts
     private static FordsVerdictRow Check12(FordsRunEvidence run)
     {
         var w = run.Warg;
-        var started = w.Started > 0 ? FordsResult.Pass : FordsResult.NotSeen;
+        // No warg rages in a Fords match (Mike, 2026-11-07; WargTryToGoRage), so a start means that gate broke.
+        var started = w.Started > 0 ? FordsResult.Fail : FordsResult.NotSeen;
         var restored = w.NullFormation > 0 || w.Stranded > 0 ? FordsResult.Fail : w.Restored > 0 ? FordsResult.Pass : FordsResult.NotSeen;
         var returned = w.NotReturned > 0 ? FordsResult.Fail : w.Returned > 0 ? FordsResult.Pass : FordsResult.NotSeen;
 
         return Row(12, new[]
         {
-            Part("started", started, "started=" + w.Started + (w.Started == 0 ? " (field a warg rider)" : "")),
+            Part("started", started, "started=" + w.Started),
             Part("restored", restored, "restored=" + w.Restored + " nullFormation=" + w.NullFormation + " stranded=" + w.Stranded),
             Part("returned", returned, "returned=" + w.Returned + " notReturned=" + w.NotReturned),
         }, "riderInactive=" + w.RiderInactive + " superseded=" + w.Superseded + " open=" + w.Open + " maxReturnSeconds=" + N(w.MaxReturnSeconds),
-            "A raging warg's rider kept a formation to go back to and was never left on foot without one (stranded), and every restored rider was back in it within 60 mission seconds (within max(15 m, half the width + 5 m) plus the formation's depth of the formation's front-middle, or within 15 m of a formation mate that is not itself a raging rider, since a lane formation strings out along its lane). A rider whose rage restarted before it returned is counted as superseded: it still counts toward the restored part (its reset restored it), and only its return goes unjudged.",
+            "No warg started a rage, since rage is off in a Fords match. If one does, the start FAILs, and the rest still judges the episode: a raging warg's rider kept a formation to go back to and was never left on foot without one (stranded), and every restored rider was back in it within 60 mission seconds (within max(15 m, half the width + 5 m) plus the formation's depth of the formation's front-middle, or within 15 m of a formation mate that is not itself a raging rider, since a lane formation strings out along its lane). A rider whose rage restarted before it returned is counted as superseded: it still counts toward the restored part (its reset restored it), and only its return goes unjudged.",
             "The warg did not wander off between returns.");
     }
 }

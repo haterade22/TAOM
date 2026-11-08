@@ -875,12 +875,15 @@ public class FordsVerdictTests
         var run = Run();
         Assert.AreEqual(FordsResult.NotSeen, Result(run, 12));
         Assert.IsFalse(Row(new FordsSessionEvidence(), run, 12).Parts.Single(p => p.Name == "started").Numbers.Contains("wargsFielded"));
-        StringAssert.Contains(Row(new FordsSessionEvidence(), run, 12).Parts.Single(p => p.Name == "started").Numbers, "field a warg rider");
+        Assert.IsFalse(Row(new FordsSessionEvidence(), run, 12).Parts.Single(p => p.Name == "started").Numbers.Contains("field a warg rider"),
+            "no warg rages in a Fords match since 2026-11-07, so nothing a tester fields can change the row");
 
         run.Warg.Started = 4;
         run.Warg.Restored = 4;
         run.Warg.Returned = 4;
-        Assert.AreEqual(FordsResult.Pass, Result(run, 12));
+        Assert.AreEqual(FordsResult.Fail, PartOf(Row(new FordsSessionEvidence(), run, 12), "started"), "a rage start in a Fords match means the gate broke");
+        Assert.AreEqual(FordsResult.Fail, Result(run, 12));
+        Assert.AreEqual(FordsResult.Pass, PartOf(Row(new FordsSessionEvidence(), run, 12), "returned"));
 
         run.Warg.NotReturned = 1;
         Assert.AreEqual(FordsResult.Fail, PartOf(Row(new FordsSessionEvidence(), run, 12), "returned"));

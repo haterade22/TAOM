@@ -68,7 +68,11 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 ### Rage Mode Flow
 
-1. Warg takes >10 damage from enemy within 10 units
+No warg rages in a Fords of War match (Mike, 2026-11-07: "it is not needed for this"). `WargTryToGoRage`, the only code that
+starts a rage, reads `FordsOfWarMission.IsActive` once when its tree is built and starts none there (`WargRageFordsTests`). The
+bite attacks and the riderless handling are unchanged.
+
+1. Warg takes more than 10 damage from a blow that is neither a missile nor a fall, from an agent within 20 m (`Notify` checks no team)
 2. 10% chance to enter rage, for 2 attacks
 3. Player: loses control, sees "Your warg entered into a rage" message
 4. AI: rider leaves formation, warg navigates to enemy
@@ -119,7 +123,7 @@ step 3 above never happens.
 | `Main/Features/Warg/WargConfig.cs` | Constants |
 | `Main/Features/Warg/WargRiderHandManager.cs` | Player hand positioning on warg mane |
 | `Main/Features/Warg/WargIoC.cs` | Registers IWargAttackService |
-| `Main/Features/Warg/WargRageLog.cs` | Counts and logs each rage episode for the Fords of War run report (start, restored formation, returned, stranded, superseded); holds no engine type in a signature (`WargRageLogTests` gates that). Fed from `PrepareOnFirstCall` (rage start), `CleanIfEnemyDied.ResetAiControlledAgent` (rage end and warg death) and the telemetry logic (the 1 Hz watch) |
+| `Main/Features/Warg/WargRageLog.cs` | Counts and logs each rage episode for the Fords of War run report (start, restored formation, returned, stranded, superseded); holds no engine type. It is armed only in a Fords match, where no warg rages since 2026-11-07, so it records something only when that gate breaks in a signature (`WargRageLogTests` gates that). Fed from `PrepareOnFirstCall` (rage start), `CleanIfEnemyDied.ResetAiControlledAgent` (rage end and warg death) and the telemetry logic (the 1 Hz watch) |
 | `Main/Features/Warg/BehaviorTreeElements/` | BT nodes (decorators, tasks, listeners) |
 
 ## Dependencies
@@ -175,7 +179,7 @@ step 3 above never happens.
 | The mission's first callback that returns early (once per mission, on the thread that raised it) | `[BehaviorTree] OnAgentRemoved had no tree listener, so it returned before building arguments or parking a replay; every such skip this mission is counted in the mission-end summary.` | the callback's name |
 | Mission end (`OnEndMissionInternal`) | `[BehaviorTree] Mission end: 3 callbacks skipped with no tree listener (OnAgentRemoved 2, OnAgentHit 1); 1 parked off-thread for the mission tick.` | total skips; per callback with a nonzero count, in the class's callback order; replays parked off the main thread for the next mission tick. With no skip the parenthesis is left out. |
 
-`WargRageLog` writes INFO lines prefixed `[Warg][Rage]` to the same log, one per episode event (`WargRageLog.Write`; `WargRageLogTests` pins the logic, not each literal):
+`WargRageLog` writes INFO lines prefixed `[Warg][Rage]` to the same log, one per episode event (in a Fords match only, so since 2026-11-07 only when a rage starts despite the gate) (`WargRageLog.Write`; `WargRageLogTests` pins the logic, not each literal):
 
 | When | Line body |
 |---|---|
