@@ -1,0 +1,48 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.AdvancedCombat;
+
+namespace TAOM.Tests.Features.AdvancedCombat;
+
+/// <summary>
+/// Pins <see cref="CreatureMounts.IsCreatureMount"/>, the predicate the dismount-before-death guard
+/// (Patch47, <c>Agent_Die_SpiderDismount_Patch</c>) keys on. A player CTD on v2.0.29.5 (2026-11-07) died
+/// inside native <c>Agent.Die</c> from a warg bite in a battle of wargs and war rams while the guard
+/// covered spiders alone.
+/// </summary>
+[TestClass]
+public class CreatureMountsTests
+{
+    [DataTestMethod]
+    [DataRow("horse")]
+    [DataRow("horse_2")]
+    [DataRow("camel")]
+    [DataRow("mule")]
+    public void IsCreatureMount_VanillaMount_ReturnsFalse(string monsterId)
+    {
+        Assert.IsFalse(CreatureMounts.IsCreatureMount(monsterId));
+    }
+
+    [DataTestMethod]
+    [DataRow("spider")]
+    [DataRow("warg")]
+    [DataRow("fell_warg")]
+    [DataRow("taom_war_ram")]
+    [DataRow("taom_elk")]
+    [DataRow("taom_animalia_elk")]
+    [DataRow("taom_animalia_moose")]
+    [DataRow("taom_war_elephant")]
+    [DataRow("taom_mumakil")]
+    [DataRow("chariot")]
+    public void IsCreatureMount_TaomCreature_ReturnsTrue(string monsterId)
+    {
+        Assert.IsTrue(CreatureMounts.IsCreatureMount(monsterId));
+    }
+
+    [DataTestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    public void IsCreatureMount_NoMonster_ReturnsFalse(string? monsterId)
+    {
+        Assert.IsFalse(CreatureMounts.IsCreatureMount(monsterId));
+    }
+}

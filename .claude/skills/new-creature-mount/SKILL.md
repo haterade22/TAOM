@@ -62,8 +62,10 @@ horse's hit-reaction clip (its type, `actt_mount_strike = 52`, is outside the ha
    = `project.mbproj` standard `soln_*` ids ONLY (subfolder XML copies are dead decoys).
 6. **Item + troop** (Phase 6), then **C#** (Phase 7): clone the elephant's
    MissionBehavior/BT wiring (attach keyed on `Monster.StringId`, never character id); pure
-   attack service; mount-lock in `TaomAgentStatCalculateModel`; **extend Patch47's monster
-   predicate** so riders dying on the new mount take the dismount-before-death path.
+   attack service; mount-lock in `TaomAgentStatCalculateModel`. Patch47's dismount-before-death
+   covers every mount Monster outside `CreatureMounts.VanillaMounts` with no edit: add the new id
+   as a DataRow to `CreatureMountsTests.IsCreatureMount_TaomCreature_ReturnsTrue`, and never add it
+   to that list. Patch48 (non-lethal dismount hit) is still spider-only: decide it per creature.
 
 ## Validation gates (run BEFORE any battle test — parity-audit-first beats per-crash fixing)
 

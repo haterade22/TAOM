@@ -714,7 +714,7 @@ standing per the spider's three crash sites:
 |---|---|
 | `CanAttack` → `Agent_ai::set_attack_entity` | **clean** — the elephant Monster never declared `CanAttack` (parity audit 2026-06-12) |
 | jump-map miss (`monster_usage.cpp`) | **fixed proactively 2026-06-12** — `act_elephant_jump_start` was already `actt_dash`, but the jump rows were the same front+none-only template; expanded to the 45-row / 9-direction total table (same edit as the spider's) |
-| mounted-death Die-path AV | **covered for spiders only** — Patch47 keys on `IsSpiderMonster`. If a mahout death on 1.4.6 reproduces the melee-death AV, generalize Patch47 to elephant mounts (one service predicate) |
+| mounted-death Die-path AV | **covered** since 2026-11-08: Patch47 keys on `CreatureMounts.IsCreatureMount`, so a mahout and a dying elephant take the dismount-before-death path too. The code is present; the elephant sever has never run in a battle |
 
 **Owed:** an elephant battle on 1.4.6 (charge + melee + mahout deaths). Not fielded since the
 bump as of 2026-06-12.
