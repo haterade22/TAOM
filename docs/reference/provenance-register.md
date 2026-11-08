@@ -123,10 +123,10 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | agent-browser | `agent-browser` `vercel-labs/agent-browser` | Apache-2.0 | behavioural-port | `tools/run_skill_evals.py`, `tools/evals/**` (ideas only: a routing eval with a negative control, and a hostile case that must prove delivery; no text or code; [record](../reviews/adopt-agent-browser-2026-11-08.md)) | cleared |
 | Auto Ontology | `auto-ontology` `NVIDIA/auto-ontology` | Apache-2.0 | comparison-only | `.claude/rules/evidence-over-claims.md` C.4 (the idea that a capped result proves no complete list, read in its `query-validation.md` on 2026-11-08; the sentence is TAOM's own) | cleared |
 | T3 Code | `pingdotgg/t3code` `t3code` | MIT | comparison-only | (none) | cleared |
-| claude-mem | `claude-mem` `thedotmack/claude-mem` | Apache-2.0 | comparison-only | (none) | cleared |
 | claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
 | Claude Code Game Studios | `Claude-Code-Game-Studios` `Donchitos/Claude-Code-Game-Studios` | MIT | comparison-only | `.claude/skills/deep-review/lenses/tooling.md` items 12, 17 and 18, `.claude/skills/game-run/SKILL.md` phases 4, 5 and 7 (ideas in TAOM's words); see [the record](../reviews/adopt-game-studios-2026-11-08.md) | cleared |
 | jakubkrehel skills | `jakubkrehel/skills` | MIT | comparison-only | (none) | cleared |
+| claude-mem | `claude-mem` `thedotmack/claude-mem` | Apache-2.0 | comparison-only | (none) | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
 
 <!-- provenance-register-end -->
