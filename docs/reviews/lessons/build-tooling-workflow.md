@@ -4932,7 +4932,7 @@ Two new writers for the live Armory, `bind_dwarf_attack_actions.py` and `gen_dwa
 `RecoverClassesFromRTTIScript` on a seeded v1.5.6 project recovered 597 classes and made class-member C far easier to read. It also replaced 111 of the 2,061 seeded engine-method names with wrong ones: `IDebug_RenderDebugText` at `0x4A8890` became `rglString_base`. The three known functions tried first showed no change, because none is a class member, so a spot check of familiar addresses saw neither the gain nor the harm.
 
 - **Why it nearly passed:** the count that looked best, default-named functions down from 18,626 to 14,834, says nothing about which names were replaced.
-- **Prevent:** before any step that renames functions in a project, dump name and address, and diff after it. Count the non-default names that changed. Run such a step before seeding, or re-apply the seed afterwards.
+- **Prevent:** before any step that renames functions in a project, dump name and address, and diff after it. Count the non-default names that changed. Reordering does not repair them, because `_seed` names only default-named functions: re-apply the names after the step, and run it on a copy until that exists.
 - **Source:** [adopt-rea-ghidra-2026-11-08.md](../adopt-rea-ghidra-2026-11-08.md).
 
 ### A "run this next" hint repeats every selector of the run that printed it (#1098, 2026-11-08)

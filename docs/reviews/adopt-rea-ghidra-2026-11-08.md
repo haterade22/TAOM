@@ -83,7 +83,7 @@ marked "PROTOTYPE" by its authors.
 - **Cost:** the project grew from 214 MB to 438 MB.
 - **No change** to the three other known functions tried (`0x153C80`, `0x6E0360`, `0x4A1930`), which are not class members.
 
-**Verdict:** worth a separate issue. An adoption must run the script before seeding, or re-apply the seeded names afterwards, and must check what the other 3,792 renames
+**Verdict:** worth a separate issue. Mike chose on 2026-11-08 not to adopt it now and to keep an on-demand procedure in the [feature doc](../features/ghidra-native-decompile.md#rtti-class-recovery-on-demand). A later adoption must repair the seeded names after the script (order alone cannot, because `_seed` names only default-named functions), and must check what the other 3,792 renames
 got right. Any `rglString`-family name on a function that does more than string work is suspect, and the 744 `rglString` plus 453 `scalar` renames are the place to
 sample. The output project is kept at `E:\ghidra\TAOM-12.2-spike` until Mike decides.
 

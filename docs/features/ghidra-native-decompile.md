@@ -196,6 +196,67 @@ thousands of lines (Performance table). The idea comes from rea's `detail: "summ
 
 Cite native findings with the RVA and engine version: they hold for that binary only.
 
+## RTTI class recovery (on demand)
+
+**Status:** measured on 2026-11-08 and not part of the tool. Ghidra's `RecoverClassesFromRTTIScript` reads the C++ type data in
+the DLL and applies class names and types. Numbers: [review](../reviews/adopt-rea-ghidra-2026-11-08.md).
+
+**When to use it:** a crash site, hang frame or research target is class-member code, the C is too hard to follow, and the
+class identity matters. The sign is virtual dispatch through a raw pointer:
+`(*(code *)((undefined **)*param_1)[0x1f])(param_1)`. Do not use it for thin `[EngineMethod]` wrappers or free functions: three
+such functions came out unchanged.
+
+**Procedure.** About 10 minutes per binary. Close Bannerlord first.
+
+1. Find the project key in the `ghidra project:` line of any `native_decompile.py` run.
+2. Copy `<key>.gpr`, `<key>.rep` and `<key>.engine-methods.json` from `E:\ghidra\TAOM` to a new folder such as `E:\ghidra\TAOM-rtti`.
+   Never run the script on `E:\ghidra\TAOM`: the script overwrites engine-method names (below).
+3. Save the script below outside the repo. Run it with `E:\Tools\ghidra-venv\Scripts\python.exe <script> E:\ghidra\TAOM-rtti <key>`.
+   These are the calls the spike ran; on the v1.5.6 client it took 506 s.
+4. Read the result with `python tools/native_decompile.py --rva 0x<site> --project-dir E:\ghidra\TAOM-rtti`.
+
+```python
+import os, sys
+import pyghidra
+
+location, key = sys.argv[1:3]
+pyghidra.start()
+from java.lang import Object
+
+script = os.path.join(os.environ["GHIDRA_INSTALL_DIR"], "Ghidra", "Features", "Decompiler",
+                      "ghidra_scripts", "RecoverClassesFromRTTIScript.java")
+project = pyghidra.open_project(location, key, create=False)
+consumer = Object()
+program = pyghidra.consume_program(project, "/TaleWorlds.Native.dll", consumer)[0]
+out, err = pyghidra.ghidra_script(script, project, program, echo_stdout=False, echo_stderr=False)
+print(out[-3000:], err[-1000:])
+program.save("TAOM RTTI recovery", pyghidra.task_monitor())
+program.release(consumer)
+sys.stdout.flush()
+os._exit(0)
+```
+
+**How far to trust the output:**
+
+- The `function:` line can be wrong. The script renamed 111 of the 2,061 seeded engine-method implementations:
+  `0x4A8890` printed `rglString_base::rglString_base`. The `engine method:` line below it comes from the
+  engine-method map, not from Ghidra, and still named `IDebug.RenderDebugText`. When the two disagree, believe the map.
+- Why those 111 were renamed is UNVERIFIED. Treat any `rglString`-family name on a function that does more than string work as suspect.
+- `vfunctionN` gives a class and a vtable slot, not a meaning. The script's authors mark it "PROTOTYPE", and without a PDB its
+  member types are guesses from the decompiler, such as `offset_0x68`.
+- Cite the RVA and engine version, as for any native finding. The copy is disposable, and it about doubles the project (214 MB to 438 MB).
+
+**If this becomes routine,** make it a step of first-run analysis under a new issue. That change needs all of the following:
+
+- **Name repair after the script.** Order alone cannot fix the names. `_seed` names only functions still called `FUN_` or `thunk_FUN_`,
+  so if the script runs first, seeding skips what it renamed; if seeding runs first, the script overwrites the names. After the script,
+  set the name on every single-owner address and return that function to the global namespace with `setParentNamespace` (not yet tried).
+- **A new `SEED_VERSION`,** so analysed projects pick up the change.
+- **A sample of the other 3,792 renames,** starting with the 744 `rglString` and 453 `scalar` names, to measure how many are right.
+- **A decision on disk use,** at about twice the size per binary.
+
+The tool needs no output change: it already prints `Class::name` on the `function:` line.
+
 ## Performance
 
 Measured 2026-09-26 on the desktop, v1.5.3 client DLL (14,209,376 bytes):
