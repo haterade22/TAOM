@@ -23,6 +23,9 @@ are in each script's docstring; the scripts are listed in [tools/README.md](../.
 ## Before you start
 
 - A GitHub issue for the asset (AGENTS.md "Documentation duty").
+- If the FBX does not exist yet, read "Generating the source" in
+  [ue-to-bannerlord-asset-pipeline.md](../../../docs/reference/ue-to-bannerlord-asset-pipeline.md)
+  before you spend a generation.
 - Staging goes to `E:\LOTRAOMAssets\_export\<asset>\`. Writing into a live module's `AssetSources\`
   needs Mike's word, and never overwrites a file without a backup.
 - Blender: `"%LOCALAPPDATA%\Microsoft\WindowsApps\blender-launcher.exe"` (written `blender-launcher`

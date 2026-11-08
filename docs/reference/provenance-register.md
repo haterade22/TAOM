@@ -128,6 +128,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | jakubkrehel skills | `jakubkrehel/skills` | MIT | comparison-only | (none) | cleared |
 | claude-mem | `claude-mem` `thedotmack/claude-mem` | Apache-2.0 | comparison-only | (none) | cleared |
 | HyperFrames | `heygen-com/hyperframes` `hyperframes` | Apache-2.0 | comparison-only | (none) | cleared |
+| ArtCraft | `storytold/artcraft` | MIT OR Apache-2.0 | comparison-only | `docs/reference/ue-to-bannerlord-asset-pipeline.md` "Generating the source" (fal's Tripo option names, found through its fal binding and confirmed on fal's page; the text is TAOM's own) | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
 
 <!-- provenance-register-end -->
@@ -1035,6 +1036,16 @@ plugin injects stored text into later sessions and calls a model for every obser
 and selected source files were read from a shallow clone for the security pass; nothing was installed,
 run or ported. Record:
 [`docs/reviews/adopt-claude-mem-2026-11-08.md`](../reviews/adopt-claude-mem-2026-11-08.md).
+
+### ArtCraft
+
+Upstream: https://github.com/storytold/artcraft, `79d87b2b5` · MIT OR Apache-2.0. Evaluated on
+2026-11-08 and not installed. Its `NOTICE` excludes the bundled sounds, memes, skyboxes, motion data
+and Mixamo renders from that license, so nothing may be copied from
+`frontend/apps/artcraft/app/public/resources/`. Selected files were read through the GitHub API;
+nothing was cloned, built or run. No code was ported. Its fal binding led TAOM to the Tripo option
+names, which were confirmed on fal's own page and written in TAOM's words. Record:
+[`docs/reviews/adopt-artcraft-2026-11-08.md`](../reviews/adopt-artcraft-2026-11-08.md).
 
 ---
 

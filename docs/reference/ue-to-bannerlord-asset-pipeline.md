@@ -77,6 +77,21 @@ the source and remesh report in staging. The independent engine requires rebuilt
 
 ## Single-prop path — Tripo AI assets (2026-07-25 throne; 2026-07-28 Gondor ships)
 
+**Generating the source (read on 2026-11-08, not yet tested by TAOM).** fal's API page for Tripo
+H3.1 multi-view (`tripo3d/h3.1/multiview-to-3d`) lists the inputs below. These are fal's names: check
+the single-image page before you rely on them there, and Tripo's own site can differ. No TAOM asset
+has used them yet. Review: [adopt-artcraft-2026-11-08.md](../reviews/adopt-artcraft-2026-11-08.md).
+
+| Input | Effect |
+|---|---|
+| `face_limit` | Target face count. If unset, the model chooses the count. Set it from the triangle budget of the asset being replaced |
+| `quad` | Quad topology instead of triangles. A `quad` result does not replace the remesh step above until a trial shows that it can |
+| `image_urls` | 2 to 4 views of one object, in the order front, left, back, right. The front view is required |
+| `geometry_quality`, `texture_quality` | `standard` (default) or `detailed` |
+
+The result's `model_urls` holds `glb`, `fbx`, `base_model` and `pbr_model` variants. The path below
+starts from the FBX.
+
 A Tripo-generated FBX (single mesh, embedded `.fbm` JPEG textures: basecolor/normal/roughness/
 metallic, no AO, ~1-unit normalized scale) is a different beast from a UE kit: the batch stages
 above don't apply, but the auto-UV atlas is hundreds of fragmented islands — unpaintable in
