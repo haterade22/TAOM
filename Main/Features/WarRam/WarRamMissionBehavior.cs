@@ -20,11 +20,10 @@ namespace TAOM.Features.WarRam;
 /// single kick attack on top of it.
 ///
 /// Unlike the war elephant/spider/Mumakil, the war ram carries NO mount-lock (it is a player-rideable
-/// culture mount, see the shipping ram_rider career) and gets no Patch47 dismount-before-death entry
-/// (Patch47 is SPIDER-only, not elephant):
-/// it inherits vanilla's rider-death surface whole via base_monster="horse", so the elephant/spider's
-/// problem (a Monster with no vanilla rider-death surface) does not apply here. A ridden-death in-game
-/// test is what would justify revisiting that decision, not a structural gap in this file.
+/// culture mount, see the shipping ram_rider career). Patch47's dismount-before-death covers it since
+/// 2026-11-08 (CreatureMounts.IsCreatureMount): base_monster="horse" was thought to spare it the native
+/// mounted-death fault, which was never tested in game; a player CTD in Agent.Die in a battle of wargs and war
+/// rams (victim not logged) made the guard cover every creature mount.
 ///
 /// Agent.Tick auto-ticks attached agent components since v1.4.5; this behavior does NOT manually tick
 /// the BT component (the warg/spider double-tick regression class), matching the Mumakil wiring below.

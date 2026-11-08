@@ -24,8 +24,9 @@ namespace TAOM.Features.Spider.Hooks;
 ///
 /// NOTE: the Harad war-elephant shares this rider-on-non-vanilla-mount architecture and likely has the same
 /// latent fault on a mahout dismount-on-hit; it has not surfaced (mahouts are rarely melee-reachable atop the
-/// elephant). If it ever does, extend the guard with <c>IsElephantMonster</c> here. Kept spider-only to match
-/// Patch47's scope and the only debugger-proven crash.
+/// elephant). Kept spider-only: the only debugger-proven hit crash. Patch47 widened to every creature mount on
+/// 2026-11-08; widening this one too is an open decision, since it would stop ram, warg, elk and chariot riders
+/// from ever being knocked off (the ram is remountable by design, docs/features/war-ram.md).
 /// </summary>
 [HarmonyPatch(typeof(Agent), "HandleBlowAux")]
 [HarmonyPatchCategory("Patch48_SpiderHitDismountGuard")]

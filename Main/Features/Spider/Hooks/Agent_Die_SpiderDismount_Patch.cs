@@ -1,11 +1,13 @@
 using HarmonyLib;
+using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Spider.Hooks;
 
 /// <summary>
-/// Severs the rider↔spider mount link an instant before native <c>Agent.Die</c> runs.
+/// Severs the rider↔creature mount link an instant before native <c>Agent.Die</c> runs (spider first, every
+/// creature mount since 2026-11-08, see <see cref="CreatureMounts"/>).
 ///
 /// WHY: a rider dying while mounted on the spider AVs inside native Die() (2026-06-11 RCA,
 /// docs/features/spider.md). Every observable data surface was equalized with the working
@@ -13,7 +15,7 @@ namespace TAOM.Features.Spider.Hooks;
 /// inheritance — all engine-probe-verified) and the mount is provably healthy at the crash
 /// instant (Active, full HP, link intact, gait data readable). The remaining failure is
 /// internal to the engine's mounted-death path for non-vanilla mounts, so we route around it:
-/// dismounted riders die on the proven on-foot path; a dying spider frees its rider first so
+/// dismounted riders die on the proven on-foot path; a dying creature mount frees its rider first so
 /// the mount dies riderless (the authored falls path). Vanilla mounts are untouched.
 ///
 /// The hard dismount is the engine's own private <c>SetMountAgent(null)</c> (the native
@@ -25,11 +27,15 @@ namespace TAOM.Features.Spider.Hooks;
 public static class Agent_Die_SpiderDismount_Patch
 {
     private static System.Reflection.MethodInfo _setMountAgent;
-    private static ISpiderAttackService _service;
 
     public static void Initialize()
     {
-        _setMountAgent = AccessTools.Method(typeof(Agent), "SetMountAgent");
+        // Pinned by ReflectionSiteBindingTests: a rename at an engine bump would switch the guard off for
+        // every creature mount, so say so once instead of failing silent.
+        _setMountAgent = AccessTools.Method(typeof(Agent), "SetMountAgent", new[] { typeof(Agent) });
+        if (_setMountAgent == null)
+            TaleWorlds.Library.Debug.Print("[TAOM] Patch47: Agent.SetMountAgent(Agent) not found; creature riders die mounted, unguarded",
+                0, TaleWorlds.Library.Debug.DebugColor.Red);
     }
 
     [HarmonyPrefix]
@@ -37,26 +43,25 @@ public static class Agent_Die_SpiderDismount_Patch
     {
         try
         {
-            var svc = _service ??= IoC.Resolve<ISpiderAttackService>();
-            if (svc == null || _setMountAgent == null) return;
+            if (_setMountAgent == null) return;
 
-            // Rider dying on a spider -> hard-dismount so native Die takes the on-foot path.
+            // Every creature mount, not just the spider (CreatureMounts says why): a v2.0.29.5 player CTD
+            // (2026-11-07) died in native Die from a warg bite while this guard was spider-only.
+            // Rider dying on a creature -> hard-dismount so native Die takes the on-foot path.
             Agent mount = __instance.MountAgent;
-            if (mount != null && svc.IsSpiderMonster(mount.Monster?.StringId))
+            if (mount != null && CreatureMounts.IsCreatureMount(mount.Monster?.StringId))
             {
                 _setMountAgent.Invoke(__instance, new object[] { null });
                 return;
             }
 
-            // Spider mount dying with a rider -> free the rider first so the mount dies
+            // Creature mount dying with a rider -> free the rider first so the mount dies
             // riderless (the authored falls path) instead of the untested ridden-death path.
-            if (svc.IsSpiderMonster(__instance.Monster?.StringId))
+            // Rider first: only a mount has one, so the predicate is only ever asked about a mount.
+            Agent rider = __instance.RiderAgent;
+            if (rider != null && CreatureMounts.IsCreatureMount(__instance.Monster?.StringId))
             {
-                Agent rider = __instance.RiderAgent;
-                if (rider != null)
-                {
-                    _setMountAgent.Invoke(rider, new object[] { null });
-                }
+                _setMountAgent.Invoke(rider, new object[] { null });
             }
         }
         catch
