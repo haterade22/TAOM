@@ -449,6 +449,24 @@ play. The code without any block sends no arrangement order and charges at the e
 
 **Result: not measured.** Round 4 measures it, on the build after round 3's.
 
+### A fast simulator, tried and dropped
+
+**Why:** a round robin takes about 13 hours of game time. A model that predicted it in seconds would let a change be tried many times before a round.
+
+**What was built:** a C# console tool that drove the real `FordsMatch` rules from `TAOM.dll` (waves, gold, bounties, upgrades, heroes, tower damage) on a one-dimensional lane per lane, with a hit point, damage and range figure per role and per troop. It played all 78 pairs in about 7 seconds. A Python fit then tuned each troop's strength, toughness and the march speed until the simulated kills per troop, deaths per troop, tower damage per class and first tower fall matched the round robin's.
+
+**Test:** a two-fold cross-validation on the 52 round 2 matches whose run folders survived. The model was fitted on one half of the pairs and predicted the winners of the other half, then the halves swapped. The baseline was one strength number per faction fitted on the same half.
+
+| Predictor | Winners right | Brier score |
+|---|---|---|
+| Simulator | 31 of 52 | 0.347 |
+| One strength per faction | 35 of 52 | 0.184 |
+| A coin toss | 26 of 52 | 0.250 |
+
+**Result:** dropped. The fitted model matched the game's averages but picked worse winners than one number per faction, and its win chances scored worse than a coin toss. The faction totals show why: Erebor killed 1.21 troops for each one it lost in the game and 0.77 in the model, and Dale and Harad were much stronger in the model than in the game. What decides a fight in the game (formations, armour against each damage type, how the AI moves) is not in a one-lane model, and adding it would mean rebuilding the engine's combat.
+
+**What stays:** `tools/fords_round_data.py` writes a round's matches as per-troop records, and each round's file is committed under [rounds/](rounds/). On 2026-11-07, 252 run folders under `E:/Temp/fords-runs` were found deleted, cause unknown; round 1's matches were all lost and round 2 kept 52 of 78. The round robin itself is a good measure: round 1's wins predicted round 2's to within 0.92 wins per faction on average (rank correlation 0.94), though the build changed between the rounds.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
