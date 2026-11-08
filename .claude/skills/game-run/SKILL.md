@@ -55,7 +55,7 @@ deployed ModuleData file, after backing it up; Phase 6 restores it. A failed bui
 python tools/run_fords_autorun.py --live-seconds 120 $ARGUMENTS
 ```
 
-120 mission seconds is a smoke; the game default is 600, and an argument of the same name overrides it.
+120 mission seconds is a smoke; the game default is 600, and an argument of the same name overrides it. If the change alters something drawn on the screen, add `--screenshots 30,90` (live seconds, UI included).
 
 Start it in the background (`run_in_background`) and wait for its exit notice rather than polling. Its limit is the wall limit
 (2400 s by default, or `--wall-limit`) plus 15 minutes; set the Bash timeout above that, never below. The game owns the screen while it
@@ -74,6 +74,8 @@ is the run's.
 
 With `--control-check`, also read the `[FordsOfWar][Control]` lines in the copied TAOM log: `took`, `returned`, `fell`, and a `rejoin` line 10 seconds after each return. The launcher does not judge them, so quote each one in the report. The run proves the take, the hand-back and the fall; the feel of the fight and the pointer pick stay a player's to check, and the match runs at 1x while a soldier is held, so it is not a balance sample.
 
+With `--screenshots`, the Fords runner leaves PNG files in the run folder: Read each one and quote what it shows against the claim. A `[[human]]` row stays a person's to check.
+
 A failed row is a finding to investigate, not to explain away. A crash goes to `/native-crash-triage` or `/investigate`.
 
 ## Phase 6: Restore
@@ -84,5 +86,5 @@ Confirm the file matches the backup. If the maintainer's own deploy mattered, sa
 ## Phase 7: Report
 
 Tell the maintainer, in prose: the run folder, the verdicts (pass, fail and not-seen counts, each FAIL with its reason), the build
-deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen, no feel of a soldier fight or the pointer pick, Fords only).
+deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen unless you read its PNG files, no feel of a soldier fight or the pointer pick, Fords only).
 Every run is reported, including one the launcher refused.

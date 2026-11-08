@@ -30,7 +30,8 @@ FOR EVERY SCRIPT, READ-ONLY GATES INCLUDED:
 11. Optional dependencies (lxml and the like) degrade loudly, and the tests skip rather than
    error when the dependency is absent (a machine without the dependency must skip, not error).
 12. Tests: each guard tested in both directions on a synthetic tree; every test asserts what its
-   name claims; run them and quote the result.
+   name claims; run them and quote the result. An assertion must not pass by accident: a check
+   for `unity` also matches `community`, so assert a distinctive token.
 13. For hooks: the timeout is measured against the slow path, the hook fails open but never
    silent, and a hook that consumes another hook's output has a two-direction case in
    `tools/test_hooks.sh`. Run `bash tools/test_hooks.sh`.
@@ -46,6 +47,10 @@ FOR EVERY SCRIPT, READ-ONLY GATES INCLUDED:
    from input (`BASH_ENV`, `PYTHONPATH`, `PYTHONSTARTUP`, `GIT_SSH_COMMAND` and similar); XML from outside
    the repo (a download, a user file) is parsed without entity expansion. The repo's own ModuleData parsed
    with `ElementTree` is fine.
+17. A key or setting the tool reads: name what writes it. With no writer, the default branch is what
+   every run does, so review it as the behaviour; that default must not be the permissive one.
+18. A gate that lists its covered files, skills or ids by hand says nothing about the next one
+   added. Derive the set from the repo; if that cannot work, the gate says why and who extends the list.
 
 WHY: deep-review 2026-05-28 (scene tooling): BOM handling differed across a new script family and
 no core lens saw it (RCA `docs/reviews/rca-scene-tooling-2026-05-28.md`). Deep review 2026-09-18:
