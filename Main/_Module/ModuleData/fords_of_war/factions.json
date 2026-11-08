@@ -3,6 +3,7 @@
     "gondor": {
       "name": "{=TAOM_FOW_Faction_Gondor}Gondor",
       "culture": "gondor",
+      "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 8 },
       "aiBuyCycle": ["Infantry", "Ranged", "up:fortify", "Spear", "Cavalry", "up:melee_armour", "Infantry", "Ranged", "up:missile_damage"],
       "upgradeCost": { "fortify": 0.75 },
       "feats": { "towerHitPoints": 1.4 },
@@ -177,6 +178,7 @@
     "rohan": {
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
+      "tactics": { "march": "Skein", "chargeRange": 40 },
       "aiBuyCycle": ["spear_riders", "militia", "up:melee_damage", "lancers", "yeomen", "sword_riders", "up:melee_armour", "militia", "horse_archers", "kings_knights", "up:melee_damage", "spear_riders", "riders_of_rohan"],
       "upgradeCost": { "melee_damage": 0.75, "siegecraft": 1.25 },
       "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 1.3 },
@@ -232,6 +234,7 @@
     "mordor": {
       "name": "{=TAOM_FOW_Faction_Mordor}Mordor",
       "culture": "mordor",
+      "tactics": { "march": "Loose", "chargeRange": 35 },
       "aiBuyCycle": ["orc_rabble", "orc_rabble", "orc_impalers", "beast:warg_pack", "orc_hunters", "orc_rabble", "uruk_warriors", "up:melee_damage", "orc_rabble", "orc_hunters", "beast:hill_troll", "orc_rabble", "uruk_crossbows", "orc_rabble", "orc_impalers", "up:melee_armour", "baraddur_guard", "orc_rabble", "beast:cave_troll", "num_knights", "orc_rabble", "temple_guard"],
       "upgradeCost": { "melee_damage": 0.85, "melee_armour": 1.25, "missile_armour": 1.25 },
       "feats": { "unitCapBonus": 100, "waveInterval": 0.75 },
@@ -295,6 +298,7 @@
     "isengard": {
       "name": "{=TAOM_FOW_Faction_Isengard}Isengard",
       "culture": "isengard",
+      "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 6 },
       "aiBuyCycle": ["fighters", "spearmen", "up:siegecraft", "crossbowmen", "pikemen", "white_hand", "up:melee_damage", "crossbowmen", "berserkers", "up:siegecraft", "warg_riders", "fighters", "hill_troll"],
       "upgradeCost": { "siegecraft": 0.75, "melee_damage": 0.85 },
       "feats": { "damageToTowers": 1.15, "unitCapBonus": -50 },
@@ -365,6 +369,7 @@
     "rivendell": {
       "name": "{=TAOM_FOW_Faction_Rivendell}Rivendell",
       "culture": "rivendell",
+      "tactics": { "march": "Loose", "close": "Loose", "closeRange": 50, "chargeRange": 10 },
       "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
       "upgradeCost": { "missile_damage": 0.85, "melee_armour": 0.85 },
       "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 2 },
@@ -414,6 +419,7 @@
     "erebor": {
       "name": "{=TAOM_FOW_Faction_Erebor}Erebor",
       "culture": "erebor",
+      "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 5 },
       "aiBuyCycle": ["miners", "fighters", "up:melee_armour", "miners", "mattocks", "rams", "fighters", "up:missile_armour", "bowmen", "shield_guard", "up:melee_armour", "legionaries", "royal_wardens"],
       "upgradeCost": { "melee_armour": 0.75, "missile_armour": 0.75, "missile_damage": 1.25 },
       "feats": { "income": 1.4, "towerRegen": 4, "waveInterval": 1.25 },
@@ -530,6 +536,7 @@
     "gundabad": {
       "name": "{=TAOM_FOW_Faction_Gundabad}Gundabad",
       "culture": "gundabad",
+      "tactics": { "march": "Loose", "chargeRange": 35 },
       "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "impalers", "up:melee_damage", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
       "upgradeCost": { "melee_damage": 1.0, "missile_damage": 1.0, "melee_armour": 1.0, "missile_armour": 1.0, "siegecraft": 1.0, "fortify": 1.0 },
       "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
@@ -568,6 +575,7 @@
     "dale": {
       "name": "{=TAOM_FOW_Faction_Dale}Dale",
       "culture": "sturgia",
+      "tactics": { "march": "Line", "close": "Line", "closeRange": 45, "chargeRange": 10 },
       "aiBuyCycle": ["bowmen", "pikes", "up:missile_damage", "longbows", "militia", "crossbows", "up:siegecraft", "longbows", "hearthguard", "black_arrows", "up:missile_damage", "riders", "black_arrows"],
       "upgradeCost": { "missile_damage": 0.75, "melee_armour": 1.25 },
       "feats": { "rangedDamageToTowers": 4 },
@@ -686,6 +694,7 @@
     "easterlings": {
       "name": "{=TAOM_FOW_Faction_Easterlings}Easterlings",
       "culture": "khuzait",
+      "tactics": { "march": "Line", "close": "ShieldWall", "closeRange": 20, "chargeRange": 8 },
       "aiBuyCycle": ["levy", "archers", "up:melee_armour", "halberds", "horse_archers", "iron_legion", "up:melee_damage", "cataphracts", "archers", "up:missile_damage", "dragon_guard", "obsidian_knights"],
       "upgradeCost": { "melee_damage": 0.9, "missile_damage": 0.9, "melee_armour": 0.9, "missile_armour": 0.9, "siegecraft": 0.9, "fortify": 0.9 },
       "feats": { "orderCooldown": 0.5, "towerFireRate": 0.85 },
@@ -794,6 +803,7 @@
     "mirkwood": {
       "name": "{=TAOM_FOW_Faction_Mirkwood}Mirkwood",
       "culture": "mirkwood",
+      "tactics": { "march": "Loose", "close": "Loose", "closeRange": 55, "chargeRange": 8 },
       "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "borderwardens", "up:missile_armour", "silvan_levy", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
       "upgradeCost": { "missile_damage": 0.75, "missile_armour": 0.85 },
       "feats": { "towerRange": 1.5, "unitCapBonus": -150, "waveInterval": 1.5 },

@@ -87,7 +87,8 @@ internal sealed partial class FordsMatch
         _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes, feats);
         _orders = new LaneOrderBook(config.Lanes, feats);
-        _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain);
+        _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain,
+            factions.ToDictionary(f => f.Key, f => f.Value.Tactic ?? LaneTactic.None));
         _capture = new CapturePointRules(config.Capture, config.Economy, layout.CapturePoints);
         _camps = new CampRules(layout, LaneOwner);
         _seize = new SeizeRules(layout, _camps, _capture);

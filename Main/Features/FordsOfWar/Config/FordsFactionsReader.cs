@@ -87,7 +87,7 @@ internal static class FordsFactionsReader
         name = FordsConfigScope.Text(f["name"]) ?? id;
         faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
             ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s),
-            ReadHeroGuard(id, f["heroGuard"], s));
+            ReadHeroGuard(id, f["heroGuard"], s), FordsTacticsReader.Read(id, f["tactics"], s));
         return true;
     }
 

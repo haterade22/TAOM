@@ -400,6 +400,29 @@ No trait text changes: each changed value is a price or a free wave count that n
 
 **Result: not measured.** Round 3 runs on the build that carries this change, the weaker Rohan riders and the check 12 fix. If Rohan still wins more than 9 of 12, its riders are cut again.
 
+### Culture tactics (round 4)
+
+**Why:** Mike, 2026-11-07: "I feel like Isengard for example should fight in more formations. Advance as a formation, get close and
+then attack, etc. Same with dwarves. That is where their strength is formations and coordinated attacks." Until now every lane of
+every faction marched in the engine's default Line and broke into a charge at 25 m, so no culture fought differently from another.
+
+**Changed:** ten factions get a `tactics` block in `factions.json` (the table is in the feature doc, Lane rules, "Culture tactics").
+Isengard, Erebor, Gondor and the Easterlings close the last 20 m in a shield wall and charge only at 5 to 8 m. Rivendell,
+Mirkwood and Dale advance as one formation from 45 to 55 m and charge at 8 to 10 m. Rohan marches in a wedge and charges at 40 m;
+Mordor and Gundabad march loose and charge at 35 m. Harad, Dol Guldur and Umbar keep the old behaviour, so they are the control.
+The walls start at 20 m, not 40 m, because a wall walks at about 0.3 of its units' top speed and a longer approach crawls under
+fire. In the engine a wall also sets its units' ranged weight to 0, where the normal move behaviour gives 0.02 to 0.04, so whether a
+wall costs arrows is unmeasured. Loose and Skein let a formation move at 0.9 of its
+units' average top speed against 0.8 for Line, so those lanes walk about an eighth faster than before.
+
+**What to watch:** whether the walls win their fights (gold trade, kills per body) or lose them while they walk the last 20 m at
+about 0.3 of their top speed; whether match length moves away from 30 minutes; and the `[LaneState]` lines with `branch=Close` and
+`arr=`, which show how often each lane closed in formation. A lane is one mixed formation: the engine puts shield bearers in the
+front rank while the lane marches, but archers and riders stand in the same wall.
+
+**Undo:** delete a faction's `tactics` line in `factions.json` to give it the old behaviour back; delete every one to undo the change in
+play. The code without any block sends no arrangement order and charges at the engage range, as before.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.

@@ -27,7 +27,7 @@ internal sealed partial class FordsMatch
                 var decision = _march.Evaluate(SituationOf(side, lane.Index, seen));
                 decisions.Add(decision);
                 if (decision.Command.Kind != LaneCommandKind.None)
-                    effects.Commands.Add(new FormationCommand(side, lane.Index, decision.Command));
+                    effects.Commands.Add(new FormationCommand(side, lane.Index, decision.Command, decision.Arrangement));
             }
         }
 
@@ -52,13 +52,16 @@ internal sealed partial class FordsMatch
         // A lane fights its own lane's enemies: a neighbour's wave across the gap must not pull it out of its lane. At the keep the lanes meet.
         var seize = order == LaneOrder.Seize ? _seize.TargetOf(side, lane) : null;
         var anyLane = target == null || target.Kind == TowerKind.Keep || seize != null;
-        var enemy = lead is { } found ? NearestEnemyFrom(side, lane, anyLane, found.Position, seen.NearestEnemyDistance) : seen.NearestEnemyDistance;
+        Vec3f? enemyAt = null;
+        var enemy = lead is { } found
+            ? NearestEnemyFrom(side, lane, anyLane, found.Position, seen.NearestEnemyDistance, out enemyAt)
+            : seen.NearestEnemyDistance;
         var attackers = target == null ? -1 : UnitsNear(side, true, target);
         var defenders = target == null ? -1 : UnitsNear(side, false, target);
 
         return new LaneSituation(side, lane, order, seen.LiveUnits, center, enemy, target?.Id, distance,
             target == null || _chain.IsLocked(target.Id), lead?.Position, lead?.Arc ?? 0f, lead?.Count ?? 0, centerDistance,
-            attackers, defenders, seize, seize == null ? float.MaxValue : NearestUnitTo(seize.Position, seen, center));
+            attackers, defenders, seize, seize == null ? float.MaxValue : NearestUnitTo(seize.Position, seen, center), enemyAt);
     }
 
     private static float NearestUnitTo(Vec3f point, LaneSnapshot lane, Vec3f center)
@@ -110,11 +113,13 @@ internal sealed partial class FordsMatch
     /// Distance from <paramref name="point"/> to the nearest unit of the other side in <paramref name="ownLane"/> (every lane when
     /// <paramref name="anyLane"/>), from the unit positions of this tick's lanes.
     /// <paramref name="fallback"/> (the engine's centre-based figure) stands in when no enemy position was reported.
+    /// <paramref name="at"/> is where that enemy stands, null with the fallback or no enemy.
     /// </summary>
-    private float NearestEnemyFrom(MatchSide side, int ownLane, bool anyLane, Vec3f point, float fallback)
+    private float NearestEnemyFrom(MatchSide side, int ownLane, bool anyLane, Vec3f point, float fallback, out Vec3f? at)
     {
         var best = float.MaxValue;
         var any = false;
+        at = null;
         foreach (var lane in _seenLanes.Values)
         {
             if (lane.Side == side || lane.UnitPositions == null)
@@ -128,7 +133,10 @@ internal sealed partial class FordsMatch
             {
                 var distance = position.Distance2D(point);
                 if (distance < best)
+                {
                     best = distance;
+                    at = position;
+                }
             }
         }
 

@@ -79,6 +79,9 @@ internal interface IFordsBattlefieldAdapter
 
     void Charge(MatchSide side, int lane);
 
+    /// <summary>Gives the lane's formation an arrangement (its faction's tactic). False when the lane has no formation yet.</summary>
+    bool SetArrangement(MatchSide side, int lane, LaneArrangement arrangement);
+
     /// <summary>Orders the lane's formation to attack a tower entity. False when the tower has no live entity.</summary>
     bool AttackTower(MatchSide side, int lane, string towerId);
 

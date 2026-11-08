@@ -318,6 +318,23 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
             formation.SetMovementOrder(MovementOrder.MovementOrderCharge);
     }
 
+    public bool SetArrangement(MatchSide side, int lane, LaneArrangement arrangement)
+    {
+        if (!_formations.TryGetValue((side, lane), out var formation))
+            return false;
+
+        formation.SetArrangementOrder(arrangement switch
+        {
+            LaneArrangement.Loose => ArrangementOrder.ArrangementOrderLoose,
+            LaneArrangement.ShieldWall => ArrangementOrder.ArrangementOrderShieldWall,
+            LaneArrangement.Square => ArrangementOrder.ArrangementOrderSquare,
+            LaneArrangement.Column => ArrangementOrder.ArrangementOrderColumn,
+            LaneArrangement.Skein => ArrangementOrder.ArrangementOrderSkein,
+            _ => ArrangementOrder.ArrangementOrderLine,
+        });
+        return true;
+    }
+
     public bool AttackTower(MatchSide side, int lane, string towerId)
     {
         if (!_formations.TryGetValue((side, lane), out var formation) || _towerEntity(towerId) is not GameEntity entity)

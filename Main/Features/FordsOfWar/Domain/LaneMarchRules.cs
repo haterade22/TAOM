@@ -7,7 +7,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <summary>
 /// What a lane formation does next. The checks run in this order and the first that applies wins: no units, fall back,
 /// siege (under Push, lead within fire range of the next enemy tower and local attackers there outnumber its defenders 1.5 to 1: attack the tower), enemy within
-/// engage range (charge), seize (go to the objective, and charge at a camp once a unit is in its alert range), next enemy tower in
+/// the side's charge range (charge; the engage range unless the faction's <see cref="LaneTactic"/> names another; a charging lane
+/// keeps charging out to its close range), enemy within its close range (close on it as one formation), seize (go to the objective, and charge at a camp once a unit is in its alert range), next enemy tower in
 /// reach and open (attack it, unless holding), hold, march on.
 /// A tower is in reach when the lead is within attack range of it or has come level with it along the lane, so a lead that
 /// was carried past a standing tower (by a charge, say) attacks it instead of marching on.
@@ -23,6 +24,16 @@ internal sealed class LaneMarchRules
     private readonly Dictionary<int, LanePath> _paths;
     private readonly Dictionary<(MatchSide, int), int> _marchIndex = new();
     private readonly Dictionary<(MatchSide, int), string> _siege = new();
+    private readonly IReadOnlyDictionary<MatchSide, LaneTactic> _tactics;
+    private readonly HashSet<(MatchSide, int)> _charging = new();
+    private readonly Dictionary<(MatchSide, int), Vec3f> _closeTarget = new();
+
+    /// <summary>
+    /// Metres the nearest enemy must move from a closing lane's target before the target follows it (or the side's charge range,
+    /// when that is smaller, so a lead that reaches the target is always within charge range of the enemy). The order then changes
+    /// only when the enemy has moved, not on every tick or with every change of the ground's height.
+    /// </summary>
+    internal const float CloseRetargetDistance = 5f;
 
     /// <summary>Attackers per defender near the target tower that starts a siege.</summary>
     internal const float SiegeEnterRatio = 1.5f;
@@ -37,11 +48,13 @@ internal sealed class LaneMarchRules
     /// </summary>
     internal const float SiegeStayMargin = 15f;
 
-    public LaneMarchRules(FordsLaneConfig lanes, FordsTowerConfig towers, MapLayout layout, TowerChain chain)
+    public LaneMarchRules(FordsLaneConfig lanes, FordsTowerConfig towers, MapLayout layout, TowerChain chain,
+        IReadOnlyDictionary<MatchSide, LaneTactic>? tactics = null)
     {
         _lanes = lanes;
         _towers = towers;
         _chain = chain;
+        _tactics = tactics ?? new Dictionary<MatchSide, LaneTactic>();
         _paths = new Dictionary<int, LanePath>();
         foreach (var lane in layout.Lanes)
             _paths[lane.Index] = new LanePath(lane.Path);
@@ -61,6 +74,11 @@ internal sealed class LaneMarchRules
         var lead = s.Lead ?? s.Center;
         var leadArc = s.Lead != null ? s.LeadArc : s.Center is { } c && path != null ? path.ArcPosition(c) : 0f;
         var leadCount = s.Lead != null ? s.LeadCount : s.LiveUnits;
+        var tactic = _tactics.TryGetValue(s.Side, out var own) ? own : LaneTactic.None;
+        var key = (s.Side, s.Lane);
+        // A charging lane keeps charging while the enemy stays inside its close range, so a melee does not flap back into the
+        // close arrangement each time the nearest enemy falls. Without a close phase both radii are the charge range, as before.
+        var chargeRange = _charging.Contains(key) ? tactic.CloseAt(_lanes.EngageRange) : tactic.ChargeAt(_lanes.EngageRange);
 
         var branch = LaneBranch.None;
         var command = LaneCommand.None;
@@ -79,15 +97,20 @@ internal sealed class LaneMarchRules
                 branch = LaneBranch.AttackTower;
                 command = LaneCommand.AttackTower(s.NextEnemyTowerId!);
             }
-            else if (s.NearestEnemyDistance <= _lanes.EngageRange)
+            else if (s.NearestEnemyDistance <= chargeRange)
             {
                 branch = LaneBranch.Charge;
                 command = LaneCommand.Charge;
             }
+            else if (s.NearestEnemyDistance <= tactic.CloseAt(_lanes.EngageRange) && Close(s, path, leadArc, tactic) is { } close)
+            {
+                branch = LaneBranch.Close;
+                command = close;
+            }
             else if (s.Order == LaneOrder.Seize && s.Seize != null)
             {
                 branch = LaneBranch.Seize;
-                command = s.Seize.IsCamp && s.SeizeDistance <= CampRules.AlertRange ? LaneCommand.Charge : LaneCommand.HoldAt(s.Seize.Position);
+                command = SeizeCommand(s, s.Seize);
             }
             else if (s.Order != LaneOrder.Hold && s.NextEnemyTowerId != null && !s.NextEnemyTowerLocked
                 && TowerInReach(s, path, leadArc))
@@ -110,13 +133,61 @@ internal sealed class LaneMarchRules
         if (!siege)
             _siege.Remove((s.Side, s.Lane));
 
+        if (branch == LaneBranch.Charge)
+            _charging.Add(key);
+        else
+            _charging.Remove(key);
+
+        if (branch == LaneBranch.Close && command.Kind == LaneCommandKind.MoveTo)
+            _closeTarget[key] = command.Target;
+        else
+            _closeTarget.Remove(key);
+
         if (branch != LaneBranch.March)
             _marchIndex.Remove((s.Side, s.Lane));
 
         return new LaneDecision(s.Side, s.Lane, branch, s.Order, s.LiveUnits, s.Center, lead, leadArc, leadCount,
             s.NearestEnemyDistance, s.NextEnemyTowerId, s.NextEnemyTowerDistance, s.CenterTowerDistance, s.NextEnemyTowerLocked,
-            waypoint, command, s.NearAttackers, s.NearDefenders, siege, s.Seize?.Id);
+            waypoint, command, s.NearAttackers, s.NearDefenders, siege, s.Seize?.Id, tactic.ArrangementFor(branch));
     }
+
+    /// <summary>
+    /// Close on the nearest enemy as one formation: move to where it stands, ground it walked on, and keep that target until the
+    /// enemy is more than <see cref="CloseRetargetDistance"/> from it. A held lane keeps its hold point and a seizing lane its
+    /// objective; both only take the close arrangement. Null, so the next branch decides, when there is no enemy position, no path or
+    /// no point to hold, when a seizing lane would charge a camp anyway, and when the lead is within attack range of the next enemy
+    /// tower or the lead or the target is level with or past it along the lane: that tower comes first, and a Move past it is what
+    /// check 9 fails.
+    /// </summary>
+    private LaneCommand? Close(LaneSituation s, LanePath? path, float leadArc, LaneTactic tactic)
+    {
+        if (s.Order == LaneOrder.Hold)
+            return Hold(s, path) is { Kind: not LaneCommandKind.None } hold ? hold : null;
+
+        if (s.Order == LaneOrder.Seize && s.Seize != null)
+            return SeizeCommand(s, s.Seize) is { Kind: not LaneCommandKind.Charge } seize ? seize : null;
+
+        if (path == null || s.NearestEnemy is not { } enemy || s.NextEnemyTowerDistance <= _towers.AttackRange)
+            return null;
+
+        var keep = Math.Min(CloseRetargetDistance, tactic.ChargeAt(_lanes.EngageRange));
+        var target = _closeTarget.TryGetValue((s.Side, s.Lane), out var last) && last.Distance2D(enemy) <= keep ? last : enemy;
+        if (s.NextEnemyTowerId != null && _chain.Slot(s.NextEnemyTowerId) is { } tower)
+        {
+            var towerArc = path.ArcPosition(tower.Position);
+            if (LevelOrPast(s.Side, leadArc, towerArc) || LevelOrPast(s.Side, path.ArcPosition(target), towerArc))
+                return null;
+        }
+
+        return LaneCommand.MoveTo(target);
+    }
+
+    /// <summary>Whether an arc along the lane (from the West end) is level with or past a tower's, seen from the side's own base.</summary>
+    private static bool LevelOrPast(MatchSide side, float arc, float towerArc) => side == MatchSide.West ? arc >= towerArc : arc <= towerArc;
+
+    /// <summary>Charge a camp once a unit is inside its alert range, else hold at the objective.</summary>
+    private static LaneCommand SeizeCommand(LaneSituation s, SeizeTarget seize) =>
+        seize.IsCamp && s.SeizeDistance <= CampRules.AlertRange ? LaneCommand.Charge : LaneCommand.HoldAt(seize.Position);
 
     /// <summary>
     /// Whether the lane is besieging its next enemy tower. Only under Push, with an open tower and known local counts. It starts
@@ -188,8 +259,7 @@ internal sealed class LaneMarchRules
         if (tower == null || path == null)
             return false;
 
-        var towerArc = path.ArcPosition(tower.Position);
-        return s.Side == MatchSide.West ? leadArc >= towerArc : leadArc <= towerArc;
+        return LevelOrPast(s.Side, leadArc, path.ArcPosition(tower.Position));
     }
 
     /// <summary>Retreat to the lane waypoint nearest the outermost standing own tower, else the keep, else the base end.</summary>

@@ -264,6 +264,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | `feats`, `traits`, `upgradeCost`, `aiBuyCycle` | object, list, object, list | The faction's feats (see Factions), the strength and weakness lines the panel shows, price factors per upgrade track, and the AI's repeating buy order |
 | `rotation` | object | Call of the Regions (Gondor): `seconds`, `callFee` and `regions[]`, each with its own `units[]` |
 | `creatures` | object | The creature call: `cooldownSeconds` and `units[]`, with the same fields as the offers |
+| `tactics` | object | How the faction's lanes meet the enemy (see Lane rules, "Culture tactics"): `march` and `close` name an arrangement (`Line`, `Loose`, `ShieldWall`, `Square`, `Column`, `Skein`), `closeRange` and `chargeRange` are metres from 1 to 100. Every key is optional; a block with a bad value is dropped with one warning |
 
 ### Current Values
 
@@ -339,11 +340,13 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   is built, into per-segment float arrays (start, direction, length, squared length, arc at start) and an arc per vertex; the arc
   position, the lead group, the waypoint index and the hold point read them and give the same numbers as `LaneGeometry.ArcPosition`.
 - **What reads the lead.** The `towers.attackRange` test, the level-or-past test below, the `lanes.engageRange` test (nearest
-  enemy, measured from the lead) and the march waypoint. A lane whose lead is within 20 m of its next open enemy tower attacks it
+  enemy, measured from the lead; a faction's `tactics` replace it with their charge and close ranges, see "Culture tactics") and
+  the march waypoint. A lane whose lead is within 20 m of its next open enemy tower attacks it
   even when stragglers trail.
 - **Tower in reach.** The next enemy tower counts as in reach when the lead is within `towers.attackRange` of it, or when the lead's
   arc is level with or past the tower's arc (West: lead arc at or above the tower's; East: at or below). A lead carried past a
-  standing tower, by a Charge for example, therefore attacks it once no enemy is within engage range, instead of marching on. There
+  standing tower, by a Charge for example, therefore attacks it once it stops charging (a charging lane of a faction with tactics
+  keeps charging until no enemy is within its close range; the close step stands aside there), instead of marching on. There
   is no march cap. A locked tower, a Hold order and a lane without a path never attack. Check 9's `bypass` part does not read the
   rules' lead: at each 1 Hz look the field probe counts, for a stream whose applied command is a MoveTo and that has a next standing
   enemy tower (the outermost standing tower of the other side in its lane, else that side's keep), the units whose arc along the
@@ -351,7 +354,8 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   when more than half of a marching stream's units are past the tower on two looks in a row.
 - **Forward-only march.** A waypoint counts as reached when `LeadArc >= arc(waypoint) - lanes.waypointReachRadius` (East
   mirrors it). Per side and lane the rules keep the waypoint index and never step it backward while the lane marches. The
-  index resets on Fall back, Hold, Charge, an `AttackTower` command and an empty lane.
+  index resets on every branch other than March (Fall back, Siege, Charge, Close, Seize, an `AttackTower` command, Hold) and on an
+  empty lane.
 - **Siege.** Entry: under Push, the lead is within `towers.fireRange` of the lane's next enemy tower, and the units of the side's lanes that target that tower and stand within fire range of it number at least 1.5 times the tower owner's units there (defenders count from every lane, so a neighbouring lane's wave walking past does not start a siege). Exit: the defenders there outnumber those units, or the lead is more than 15 m beyond the fire range; the lane then needs the full 1.5 to 1 again, and entry is tighter than the exit line so a lead hovering at it does not flip the order. A siege outranks Charge and, for an unguarded tower, also March between 20 and 45 m. It clears when the tower falls or the target changes, and the player's lanes follow the same rule as the AI's. What units do: units already fighting keep fighting unless they are more than about 30 m from the tower (the engine favours a unit's current behaviour); the others strike the tower, and a unit walking to it does not stop for an enemy until it is within about 8 m. The lane's archers stop shooting at units; those carrying a melee weapon walk in and strike the tower. These follow from the engine's AI scoring and still need a game run to confirm. The lane state log line shows `near=<attackers>/<defenders> siege=<true|false>`.
 - **Bounded Hold.** A held lane forms up `lanes.holdDistanceBeforeTower` (60 m) of lane before the enemy tower, or at the lane
   midpoint when that is nearer its own base, and at the midpoint when the next target is a keep. The point is snapped to the path
@@ -363,11 +367,58 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   ended tick). Its `ToLogBody()` renders `order= live= branch= center=(x,y) lead=(x,y) leadArc= leadCount= enemy= tower=
   towerDist= centerTowerDist= locked= wp= target=(x,y) near=<attackers>/<defenders> siege=<true|false>` in invariant culture with one decimal and `-` for an absent or non-finite
   value (`towerDist` is from the lead, `centerTowerDist` from the centre); on an `AttackTower` decision `target=` is the tower id.
-  The director appends `cmd=` (the kind of the command it last sent the engine) and `sent=` (that command's target: a point, an
+  A faction with tactics adds `arr=` (the arrangement the decision asks for). The director appends `cmd=` (the kind of the command it last sent the engine) and `sent=` (that command's target: a point, an
   AttackTower's tower id, or `-`), in one format for every line. The rules' own request is already in the body (`branch=`,
   `target=`), so a refused move that fell back to the nearest waypoint, or an AttackTower that became a Move to where the tower
   stood, reads as `branch=AttackTower ... cmd=MoveTo sent=(x,y)`. The line is a `[FordsOfWar][LaneState]` line, at most once per
   5 mission seconds per side and lane; a stream with no decision yet writes none.
+
+### Culture tactics
+
+Mike, 2026-11-07: Isengard and the dwarves should "advance as a formation, get close and then attack". A faction's `tactics` block
+(`LaneTactic`, read by `FordsTacticsReader`) changes the engage step of the lane rules into two steps, for both the player's lanes
+and the AI's:
+
+- **Charge** when the nearest enemy is within `chargeRange` of the lead (the match's `lanes.engageRange`, 25 m, when the block
+  names none). A lane that charges keeps charging until the enemy is beyond its close range, so a melee does not drop back into the
+  close arrangement each time the nearest enemy falls.
+- **Close** (`LaneBranch.Close`) when the nearest enemy is within `closeRange` but outside `chargeRange`. The lane takes its `close`
+  arrangement and moves to where that enemy stands, so it meets the enemy as one formation. It keeps that target until the enemy is
+  more than 5 m from it (`LaneMarchRules.CloseRetargetDistance`, or the charge range when that is smaller), so the order changes only
+  when the enemy has moved, and a lead that reaches the target is within charge range. The target is ground the enemy walked on, so
+  the navmesh check accepts it. A lane under Hold keeps its hold point and a lane under Seize its objective; both only form up. The
+  lane does not close when its lead is within `towers.attackRange` of the next enemy tower, or when the lead or the target is level
+  with or past that tower along the lane: the tower comes first, and a Move past it is what check 9 fails. The siege and fall back steps come
+  before the close step; Seize and the tower attack come after it.
+- **Arrangement.** The `march` arrangement applies on every other branch, a charge included; a block that names only `close` uses
+  Line there, so a wall never outlives its close phase. A faction with no block, or no arrangement at all, sends no arrangement
+  order and keeps the engine's default, Line (`Formation.ResetAux`, `Formation.cs` line 2885, run from `Reset`).
+- **Engine call.** `FordsMissionDirector.ApplyArrangement` sends `Formation.SetArrangementOrder` through
+  `IFordsBattlefieldAdapter.SetArrangement`, before the movement order and only when the arrangement changed.
+- **What a shield wall does in the engine.** While the formation keeps its shape it moves at about 0.3 of its units' average top
+  speed (Line 0.8, Loose and Skein 0.9; `ArrangementOrder` constructor, applied only while the units hold their places in the formation, `Formation.cs`
+  line 1484), so a charge is not slowed. The front rank holds shields to the front, the flank files to the side and the inner ranks
+  up (`ArrangementOrder.GetShieldDirectionOfUnit`). While a formation has space between its units, about every 0.5 s the engine
+  moves shield bearers into the front rank, or units that brace when cavalry charges from the front
+  (`LineFormation.SwitchFrontUnitTypesToFrontRows`). A shield wall has no space between its units, so that sort stops once the wall
+  forms: the wall keeps the order the march left, and a unit that joins it is not moved forward. A wall also switches its units to
+  the engine's defensive move behaviour, which sets ranged attack to a weight of 0 (`HumanAIComponent.RefreshBehaviorValues`). Under
+  any Move order the normal move behaviour already gives ranged attack only 0.02 to 0.04 (Default and Charge: 2 to 5), so whether
+  archers shoot less in a wall is native and unmeasured. Entering or leaving a wall also sets each unit's defensiveness, whose effect
+  is native and unread. Because a wall walks at about 0.3 of top speed, the shipped walls form only when the lead is within 20 m.
+
+| Faction | March | Close | Close range | Charge range | Intent |
+|---|---|---|---|---|---|
+| Isengard | Line | ShieldWall | 20 | 6 | Uruk-hai close in a wall and strike at contact |
+| Erebor | Line | ShieldWall | 20 | 5 | The dwarf phalanx |
+| Gondor | Line | ShieldWall | 20 | 8 | The tower guard's wall |
+| Easterlings | Line | ShieldWall | 20 | 8 | Iron legions |
+| Rivendell | Loose | Loose | 50 | 10 | Advance open, strike late |
+| Mirkwood | Loose | Loose | 55 | 8 | Archers advance open, strike late |
+| Dale | Line | Line | 45 | 10 | Bowmen keep the line |
+| Rohan | Skein | none | none | 40 | Riders march in a wedge and charge from 40 m |
+| Mordor, Gundabad | Loose | none | none | 35 | The swarm charges early |
+| Harad, Dol Guldur, Umbar | none | none | none | 25 | No tactic yet |
 
 ## Factions
 
@@ -482,8 +533,9 @@ team (at most eight camps). The default camp is 2 `fow_hill_troll` for a reward 
   objective. A Seize with nothing open is refused (`CommandResult.NothingToSeize`) and costs no cooldown.
 - **What the lane does.** The objective is the open one nearest the lane's centre when the order is given, and it stays until it is held,
   so a lane does not turn round on the way. The lane holds at the objective (`LaneBranch.Seize`, a `HoldAt` command). At a camp it charges
-  once one of its units is inside the alert range. Under Seize an enemy of any lane within `lanes.engageRange` draws a Charge, because the
-  objective lies between lanes. It does not break off to attack a tower and never sieges, because a siege needs Push.
+  once one of its units is inside the alert range. Under Seize an enemy of any lane within `lanes.engageRange` (a faction's charge range,
+  see "Culture tactics") draws a Charge, because the objective lies between lanes; within a faction's close range the lane takes its close
+  arrangement and keeps its objective. It does not break off to attack a tower and never sieges, because a siege needs Push.
 - **Back to Push.** When the side owns the point, or the camp is cleared by anyone, `IssueLaneCommands` returns the lane to Push by
   `LaneOrderBook.Release`. The cooldown of the Seize order keeps running. Any other order given by hand drops the objective.
 - **The AI uses the same order** from the same view (`MatchView.LaneView.CanSeize`). One lane at a time seizes: a lane outside the assault,
@@ -867,6 +919,13 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Known limitations
 
+- **A shield wall is a mixed formation.** A lane is one formation of every class its waves bring. The engine moves shield bearers
+  to the front rank while the lane marches with space between its units, and stops once the wall forms, so a lane with enough of
+  them shows a shield front, but archers and riders stand in the same wall. Split
+  formations per lane would need up to two more formations a lane, against the engine's 8 regular formations a team.
+- **Archers in a shield wall: unverified in game.** The engine's source says a wall's units take the defensive move behaviour, with
+  a ranged weight of 0, where the normal move behaviour gives 0.02 to 0.04. Whether archers shoot less while their lane closes in a
+  wall, near the lead or trailing behind it, needs a game run.
 - **The same native crash four times, engine side, unfixed; mechanism named, trigger not.** Fourth occurrence: Erebor v Rohan, 15:00 on 2026-11-05, mission time about 241 s, same RVA and registers; the crash uploader deleted its dump (the launcher now saves `engine_dump.dmp`). **Mechanism** (three dumps read, `E:/Temp/fords-crash-0x6B716E`; Codex reached the same reading): the faulting agent is an AI soldier on foot whose AI flag `+0x19c` still says its target is valid while the target index is -1, so `FUN_1806b6600` reads the agent slot before the array (`rsi - rdi = 0x20F0 = 0x2D50 - 0xC60`), which is zero. Deleting an agent (`FUN_1805bced0`) sets every AI's target on it to -1 (`FUN_1805d6720`) but leaves the flag, and the per-agent AI tick (`FUN_1806a75a0`, worker thread) can read the flag before its refresh (`FUN_18069ce50`) clears it: an engine bug. **Trigger, open:** something deletes an agent that a soldier still targets without routing it first. The riderless sweep's fade cannot: `Agent.FadeOut` routs the agent first (`FUN_1805eb120` calls `FUN_1805f02b0` with state 2), and the rout resets each soldier's target and flag together (`FUN_1805d6640`) before the fade starts. A death resets no soldier that targets the dead agent (`FUN_1805f02b0` acts only for Routed and Deleted), so the open candidates are the delete of a dead agent and 4x speed. Which path deletes a killed agent in single player is unread (the third branch of `FUN_1805fbb80`); the 4 s `CorpseFadeSeconds` setting's only reader removes corpse records without calling the agent delete. Third occurrence: run `20261105-143340` (Rohan v Rivendell, round robin build `92973f27a`, 4x, 14:37, mission time about 557 s) faulted at the same RVA `0x6B716E` (Event Log), with `r8` = 0 and a read of `0xC` again (`native_crash_triage.py --dump`). Its last log lines show Rohan riders dying on their horses and riderless chargers taking missiles. Two of the three crashes were Rohan matches, the faction with the most horses; that fits the riderless mount idea, and still names no cause. Dump: `E:/Temp/fords-runs/20261105-143340/crash.dmp`. Second occurrence: run `20261105-104403` (Rohan v Mordor, round robin build `92973f27a`, 4x, about 10:46, mission time 190 to 300 s) faulted at RVA `0x6B716E` on changeset 125270, `movss xmm13, [r8+0xC]` with `r8` = 0, agent index 150 whose last blows struck a riderless horse. `python tools/native_build_match.py` carries the first crash's `0x6B4C4E` (changeset 125053) to `0x6B716E` (MATCHED, hash): the same site. The agent records match field for field (`+0x55c` = -1, state 1, flags `0x18cf98`, a soldier on foot). A riderless mount fade fits the second crash but not the first (no fade in the 31 s before it), so the cause stays unnamed. Full dump: `E:/Temp/fords-runs/20261105-104403/crash.dmp`, analysis in `E:/Temp/fords-crash-74588`. The round robin retries a crashed pair once.
 - **First occurrence.** Run `20261103-225059` (Dol Guldur v Erebor, 4x, about 760 s, 348 agents, no Kit open) died on an AI worker thread at `TaleWorlds.Native.dll` RVA `0x6B4C4E`, `FUN_1806b40e0`: it reads the target agent's record through index -1, slot -1 holds null, and the read of `[null + 0xC]` faults. Its caller `FUN_1806b2030` enters when its move state is 1, with no check on the index, and the agent's AI mode was 5. `IMBAgent_GetTargetAgent` reads the same two fields (`+0x1504`, `+0x225c`), so that index is the AI's target. The agent was an Erebor spearman (slot 68). No TAOM call on this path sets a target, so it looks like an engine fault in a large fight, not proven: one occurrence in about 25 matches. Compare the offset if a crash repeats, but only against a crash on the same engine changeset: this run was on changeset 125053, and the hotfix to 125270 on 2026-11-04 changed the native DLL (see "Hotfix: changeset 125270" in [v1.5.6-impact.md](../migration/v1.5.6-impact.md)). The launcher cannot get a dump from the Watchdog's dialog without a person, and answering Yes may upload to TaleWorlds, so take one with `procdump -ma <pid>` while the launcher waits; a full dump takes about 60 s.
 - **The white ground in Fords runs is closed (Mike, 2026-11-03).** It comes from his local ReShade setup, not TAOM: 28 of 28 runs with his setup were white at the countdown, and an empty ReShade base path gave 0.2 percent. Run no white tests and do not raise it unless he asks. If he does, the unproven lead is the `DPX` effect active in his `ReShadePreset.ini`, plus `obs_capture.addon64`; dlss5-bridge, renodx and swapchain_override alone each gave 0.3 percent near-white, without the shaders folder.
@@ -918,6 +977,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-07: culture tactics: a faction's `tactics` block sets its lanes' march and close arrangements and the ranges at which they close in formation and charge; Isengard, Erebor, Gondor and the Easterlings close in a shield wall.
 - 2026-11-05: Fords of War is the only map (Mike); the four generated maps left `maps.json`.
 - 2026-11-04: a time limit: at minute 40 the side holding more of the field wins (`timeLimitMinutes`, `TimeVictory`).
 - 2026-11-04: no bowmen on a tower: a hidden, neutral owner per tower, so no archer aims at it, and a rock every third volley (`towers.rockEveryVolleys`, `fow_tower_rock`); `towers.gunnersPerTower` is gone. Not yet run.
