@@ -99,5 +99,6 @@ internal static class FeatureModules
         new Features.LongDefeat.LongDefeatModule(),
         new Features.SeatOfSeeing.SeatOfSeeingModule(),
         new Features.MarshalsWord.MarshalsWordModule(),
+        new Features.DeadTargetReset.DeadTargetResetModule(),
     };
 }

@@ -105,7 +105,7 @@ public class CoopMissionRolePolicyTests
         Assert.AreEqual(30, added.Count, "AddTaomBehavior(new ...) call sites in SubModule.cs changed; recount and update the table");
 
         var declared = FeatureModules.All.SelectMany(m => m.MissionBehaviors).Select(d => d.BehaviorType.Name).ToList();
-        Assert.AreEqual(13, declared.Count, "module mission behavior declarations changed; update the table");
+        Assert.AreEqual(14, declared.Count, "module mission behavior declarations changed; update the table");
 
         // Added outside AddTaomBehavior: the load-phase closer (SubModule), the custom battle patches, the
         // host review launcher. All local by construction.

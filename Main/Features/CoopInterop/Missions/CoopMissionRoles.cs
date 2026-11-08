@@ -16,6 +16,7 @@ using TAOM.Features.CreatureBandits.Diagnostics;
 using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.CustomBattles;
+using TAOM.Features.DeadTargetReset.Hooks;
 using TAOM.Features.DreadAura.Hooks;
 using TAOM.Features.DwarfAttacks;
 using TAOM.Features.Elephant;
@@ -90,6 +91,7 @@ public static class CoopMissionRoles
         [nameof(CreatureSiegeRoleMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(CreatureBanditMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(RaceAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
+        [nameof(DeadTargetResetMissionBehavior)] = CoopMissionRole.AgentOwner,
 
         // Local: this peer's own view, log or files.
         // TAOM.Client [DefaultView] types, added by the engine (ADR-013); ClientViewRows_MatchTheClientTypeNames pins the strings.

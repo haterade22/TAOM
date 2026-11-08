@@ -1,0 +1,19 @@
+# In-game checks for #1096, read by tools/ingame_verdict.py. The line comes from
+# Main/Features/DeadTargetReset/Hooks/DeadTargetResetMissionBehavior.cs at the end of every mission: how many once-a-second
+# sweeps ran and how many dead or unconscious targets they reset. The crash it prevents (TaleWorlds.Native 0x6B716E) leaves
+# no log line, so the absence of that crash over a round of matches is a human claim.
+issue = 1096
+title = "CTD at TaleWorlds.Native 0x6B716E: a corpse delete leaves a soldier's stale target flag"
+fixed_in = "6791dbc75"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.dead-target.reset"
+needs = "any battle in which soldiers die, ended normally (an unattended Fords of War match is enough)"
+reached = ['\[DeadTarget\] mission end: sweeps=\d+ reset=\d+']
+pass = ['\[DeadTarget\] mission end: sweeps=[1-9]\d* reset=[1-9]\d*$']
+fail = ['\[DeadTarget\] sweep failed']
+absence = "not-reached"
+
+[[human]]
+claim = "an unattended Fords of War round at 4x shows no crash at TaleWorlds.Native.dll RVA 0x6B716E (before the fix: five in about 110 matches)"
