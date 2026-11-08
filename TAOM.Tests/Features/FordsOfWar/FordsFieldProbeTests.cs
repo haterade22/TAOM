@@ -14,7 +14,7 @@ public class FordsFieldProbeTests
 {
     private static readonly FordsMatchFacts Facts = new(FireRange: 60f, AttackRange: 12f, CaptureRadius: 20f, Lanes: 2, MaxLivePerSide: 100, MaxAlivePerSide: 3);
 
-    private readonly MapLayout _layout = FordsTestLayout.Create();
+    private MapLayout _layout = FordsTestLayout.Create();
     private readonly List<FordsUnitSample> _units = new();
     private readonly Dictionary<AgentKey, UnitRecord> _records = new();
     private readonly HashSet<string> _fallen = new();
@@ -111,6 +111,41 @@ public class FordsFieldProbeTests
         var lane = LaneOf(Sample(), MatchSide.West, 0);
 
         Assert.IsFalse(lane.HoldSettled);
+    }
+
+    // A lane on Seize holds at the objective itself (LaneMarchRules.SeizeCommand). That is no lane hold, and measured along the lane's axis
+    // an objective off the lane looked reached by units that stood beside a tower (run 20261107-185556, check 8).
+    [TestMethod]
+    public void HoldSettled_AHoldAtACapturePoint_IsNotALaneHold()
+    {
+        _layout = _layout with { CapturePoints = new List<CapturePointSlot> { new("pt_a", new Vec3f(560f, 40f, 0f)) } };
+        _applied[(MatchSide.West, 0)] = LaneCommand.HoldAt(new Vec3f(560f, 40f, 0f));
+        Unit(1, MatchSide.West, 0, 556f, 0f);
+
+        var lane = LaneOf(Sample(), MatchSide.West, 0);
+
+        Assert.IsFalse(lane.HoldSettled, "along the axis the front is 4 m from the point, but the hold is a Seize");
+        Assert.AreEqual(-1f, lane.HoldFront);
+    }
+
+    [TestMethod]
+    public void HoldSettled_AHoldAtACamp_IsNotALaneHold()
+    {
+        _layout = _layout with { Camps = new List<CampSlot> { new("camp_a", new Vec3f(560f, 40f, 0f), "troop", 5, 100) } };
+        _applied[(MatchSide.West, 0)] = LaneCommand.HoldAt(new Vec3f(560f, 40f, 0f));
+        Unit(1, MatchSide.West, 0, 556f, 0f);
+
+        Assert.IsFalse(LaneOf(Sample(), MatchSide.West, 0).HoldSettled);
+    }
+
+    [TestMethod]
+    public void HoldSettled_ALaneHoldNextToACapturePoint_IsStillALaneHold()
+    {
+        _layout = _layout with { CapturePoints = new List<CapturePointSlot> { new("pt_a", new Vec3f(560f, 40f, 0f)) } };
+        _applied[(MatchSide.West, 0)] = LaneCommand.HoldAt(new Vec3f(560f, 0f, 0f));
+        Unit(1, MatchSide.West, 0, 556f, 0f);
+
+        Assert.IsTrue(LaneOf(Sample(), MatchSide.West, 0).HoldSettled);
     }
 
     [TestMethod]

@@ -186,7 +186,10 @@ internal sealed class LaneMarchRules
     /// <summary>Whether an arc along the lane (from the West end) is level with or past a tower's, seen from the side's own base.</summary>
     private static bool LevelOrPast(MatchSide side, float arc, float towerArc) => side == MatchSide.West ? arc >= towerArc : arc <= towerArc;
 
-    /// <summary>Charge a camp once a unit is inside its alert range, else hold at the objective.</summary>
+    /// <summary>
+    /// Charge a camp once a unit is inside its alert range, else hold at the objective. The hold aims at the layout slot's own position:
+    /// <c>FordsFieldProbe</c> (outside the domain) tells a Seize hold from a lane hold by that exact position, so keep it if you change the target.
+    /// </summary>
     private static LaneCommand SeizeCommand(LaneSituation s, SeizeTarget seize) =>
         seize.IsCamp && s.SeizeDistance <= CampRules.AlertRange ? LaneCommand.Charge : LaneCommand.HoldAt(seize.Position);
 
