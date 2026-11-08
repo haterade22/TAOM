@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: route-improve
+description: A repository-wide audit request
+tags: [routing]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: Audit the whole repository and tell me what we should work on next.
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?improve"'

@@ -1,0 +1,24 @@
+schema_version: "1.1"
+name: route-investigate
+description: A managed exception goes to investigate, not the native triage
+tags: [routing]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: >-
+    The campaign map throws a NullReferenceException from our party tick service every time a
+    lord is captured. Why is this broken?
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?investigate"'
+  - name: native-triage-not-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?native-crash-triage"'
+    min: 0
+    max: 0

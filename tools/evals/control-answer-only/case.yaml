@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: control-answer-only
+description: Negative control, a plain question fires no skill
+tags: [control]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: In one sentence, how does a Harmony Prefix differ from a Postfix? Change nothing.
+graders:
+  - name: no-skill-fired
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0

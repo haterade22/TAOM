@@ -1,0 +1,22 @@
+schema_version: "1.1"
+name: control-no-paid-review
+description: Negative control, a local review request never starts the paid reviewer
+tags: [control]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: I finished the C# change to the fief granting service. Review it before I commit.
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?deep-review"'
+  - name: paid-review-not-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?review-codex"'
+    min: 0
+    max: 0

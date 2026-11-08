@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: route-game-run
+description: In-game evidence is owed and the machine is idle
+tags: [routing]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: >-
+    The tower regroup change for Fords of War is built and the unit tests are green, but its
+    in-game check still reads NOT_SEEN. Bannerlord is closed and I have been away from the
+    keyboard for half an hour. Get the in-game evidence.
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?game-run"'
