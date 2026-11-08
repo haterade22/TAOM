@@ -86,10 +86,60 @@ internal sealed partial class FordsMatch
             .Select(TowerViewOf)
             .ToList();
 
+        var near = PressureOf(side, lane);
         return new MatchView.LaneView(lane, commander != null && commander.Lanes.Contains(lane), _orders.Order(side, lane),
             _orders.CooldownLeft(side, lane, now), LiveInLane(side, lane), LiveInLane(enemy, lane), ThreatOn(side, lane), towers,
-            _seize.HasOpen(side, lane));
+            _seize.HasOpen(side, lane), near.Own, near.Enemy, near.Count, near.AtTower);
     }
+
+    /// <summary>Metres around a lane's lead within which units count as the fight the lane is in.</summary>
+    internal const float PressureRadius = 40f;
+
+    /// <summary>What a hero counts for in a pressure sum, about one strong elite: its price (800 to 2400) would make one hero force a regroup, or forbid one on the other side.</summary>
+    internal const float HeroPressureValue = 250f;
+
+    /// <summary>
+    /// The value of the side's own units and the value and number of the other side's units, of any lane in both cases, within
+    /// <see cref="PressureRadius"/> of the lane's lead, from the last tick's positions and the recorded unit values; whether the lead
+    /// stands at the lane's own tower. All zero (and false) for a lane with no lead. A unit the match has no record of is worth 0.
+    /// </summary>
+    private (float Own, float Enemy, int Count, bool AtTower) PressureOf(MatchSide side, int lane)
+    {
+        if (!_seenLanes.TryGetValue((side, lane), out var seen) || seen.UnitPositions == null
+            || _march.LeadOf(side, lane, seen.UnitPositions) is not { } lead)
+            return default;
+
+        float own = 0f;
+        float enemy = 0f;
+        var count = 0;
+        foreach (var other in _seenLanes.Values)
+        {
+            if (other.UnitPositions == null)
+                continue;
+
+            for (var i = 0; i < other.UnitPositions.Count; i++)
+            {
+                if (!(other.UnitPositions[i].Distance2D(lead.Position) <= PressureRadius))
+                    continue;
+
+                if (other.Side == side)
+                {
+                    own += ValueOf(other, i);
+                    continue;
+                }
+
+                enemy += ValueOf(other, i);
+                count++;
+            }
+        }
+
+        return (own, enemy, count, _march.IsAtOwnTower(side, lane, lead.Position));
+    }
+
+    private float ValueOf(LaneSnapshot lane, int index) =>
+        lane.UnitKeys != null && index < lane.UnitKeys.Count && _units.TryGetValue(lane.UnitKeys[index], out var unit)
+            ? (unit.Role == UnitRole.Hero ? HeroPressureValue : unit.Value)
+            : 0f;
 
     private MatchView.TowerView TowerViewOf(TowerSlot slot) =>
         new(slot.Id, slot.Owner, slot.Lane, slot.Order, slot.Kind, _chain.HitPoints(slot.Id), _chain.MaxHitPoints(slot.Id),

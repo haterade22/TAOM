@@ -685,6 +685,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             _report.Volley(target != null, fired, volley.Rock && _towers.RockLoaded);
         }
 
+        foreach (var note in effects.Notes)
+            _logger.LogInfo(note);
+
         if (effects.Events.Count > 0)
         {
             _session.PushEvents(effects.Events);

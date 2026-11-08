@@ -5,7 +5,8 @@ using System.Linq;
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// What a lane formation does next. The checks run in this order and the first that applies wins: no units, fall back,
+/// What a lane formation does next. The checks run in this order and the first that applies wins: no units, fall back
+/// (unless the nearest enemy is in charge range and stands within fire range of the tower the lane retreats to: then the lane fights there, by the charge check below),
 /// siege (under Push, lead within fire range of the next enemy tower and local attackers there outnumber its defenders 1.5 to 1: attack the tower), enemy within
 /// the side's charge range (charge; the engage range unless the faction's <see cref="LaneTactic"/> names another; a charging lane
 /// keeps charging out to its close range), enemy within its close range (close on it as one formation), seize (go to the objective, and charge at a camp once a unit is in its alert range), next enemy tower in
@@ -87,7 +88,7 @@ internal sealed class LaneMarchRules
         if (s.LiveUnits > 0 && s.Center != null)
         {
             siege = UpdateSiege(s);
-            if (s.Order == LaneOrder.FallBack)
+            if (s.Order == LaneOrder.FallBack && !FightsAtOwnTower(s, lead, chargeRange))
             {
                 branch = LaneBranch.FallBack;
                 command = FallBack(s, path);
@@ -269,20 +270,42 @@ internal sealed class LaneMarchRules
         if (path == null || path.Count == 0)
             return LaneCommand.None;
 
-        var anchor = _chain.AliveTowers(s.Side, s.Lane).FirstOrDefault()?.Position ?? StandingKeep(s.Side);
+        var anchor = OwnAnchor(s.Side, s.Lane)?.Position;
         if (anchor is not { } point)
             return LaneCommand.MoveTo(s.Side == MatchSide.West ? path[0] : path[path.Count - 1]);
 
         return LaneCommand.MoveTo(path[LaneGeometry.NearestIndex(path, point)]);
     }
 
-    private Vec3f? StandingKeep(MatchSide side)
+    /// <summary>The outermost standing own tower of the lane, else the standing keep; null when neither stands.</summary>
+    private TowerSlot? OwnAnchor(MatchSide side, int lane) => _chain.AliveTowers(side, lane).FirstOrDefault() ?? StandingKeep(side);
+
+    /// <summary>Whether a lead stands within fire range of the lane's outermost standing own tower (the keep when none stands).</summary>
+    public bool IsAtOwnTower(MatchSide side, int lane, Vec3f lead) =>
+        OwnAnchor(side, lane) is { } anchor && lead.Distance2D(anchor.Position) <= _chain.FireRange(anchor.Id);
+
+    /// <summary>
+    /// Whether a lane on Fall back stands its ground: the nearest enemy is within the charge range and stands within the anchor
+    /// tower's fire range (the lead's position when the enemy's is unknown). A lane already charging keeps fighting out to
+    /// <see cref="SiegeStayMargin"/> beyond that range, so an enemy stepping across the line does not flip the command. Outside
+    /// that the lane keeps walking back.
+    /// </summary>
+    private bool FightsAtOwnTower(LaneSituation s, Vec3f? lead, float chargeRange)
+    {
+        if (!(s.NearestEnemyDistance <= chargeRange) || OwnAnchor(s.Side, s.Lane) is not { } anchor || (s.NearestEnemy ?? lead) is not { } from)
+            return false;
+
+        var reach = _chain.FireRange(anchor.Id) + (_charging.Contains((s.Side, s.Lane)) ? SiegeStayMargin : 0f);
+        return from.Distance2D(anchor.Position) <= reach;
+    }
+
+    private TowerSlot? StandingKeep(MatchSide side)
     {
         foreach (var id in _chain.Ids)
         {
             var slot = _chain.Slot(id);
             if (slot != null && slot.Kind == TowerKind.Keep && slot.Owner == side && !_chain.IsDestroyed(id))
-                return slot.Position;
+                return slot;
         }
 
         return null;

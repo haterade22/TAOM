@@ -423,6 +423,18 @@ front rank while the lane marches, but archers and riders stand in the same wall
 **Undo:** delete a faction's `tactics` line in `factions.json` to give it the old behaviour back; delete every one to undo the change in
 play. The code without any block sends no arrangement order and charges at the engage range, as before.
 
+### Regroup under your own tower (round 4)
+
+**Why:** the AI fed outnumbered lanes into the enemy and never used its own towers. A lane that was losing kept pushing until it was gone, while the tower behind it stood unused.
+
+**Changed:** two parts. In `AiCommander`, a lane outside the assault and not on Seize goes to Fall back when the units within 40 m of its lead (`PressureRadius`) hold at least `RegroupMinEnemy` (10) enemies worth more than `FallBackRatio` (1.6) times its own value there, and returns to Push when at least 10 enemies are still near and their value is at most `ReturnRatio` (1.1) times its own, or when the lead has reached its tower's fire range with no enemy within 40 m, or when nobody is left in the lane. A lane that outran the enemy but is not home yet stays on Fall back. Units of any lane count on both sides, and a hero counts as 250 (`HeroPressureValue`) instead of its price, so one hero neither forces a regroup nor blocks one. The comparison is value near the lead, not headcount: a lane count includes units at the base and ignores quality, and Rivendell and Mirkwood cap a lane at 40 against 90 to 123 for the others, so a headcount rule would keep the elves retreating. The AI releases only a Fall back it ordered itself, orders wait for the lane cooldown, and the assault pick skips a lane on Fall back. In `LaneMarchRules`, a lane on Fall back whose nearest enemy is in charge range and stands within fire range of the lane's outermost standing tower (the keep when none stands) now charges; once charging it keeps fighting out to 15 m past that range. The AI logs each order as `[FordsOfWar][Ai] regroup side=<..> lane=<n> own=<value> enemy=<value> n=<count>`, and `regroup end` when it releases.
+
+**What to watch:** match length against the 30 to 40 minute target (a side that regroups may stall the push); tower kills per side; and the gold trade of the side that is behind, which should lose less per fight now. How often `regroup` and `regroup end` alternate on one lane: many pairs would mean the two ratios sit too close. The per-lane `Charge` and `MoveTo` `CommandsGiven` counts of lanes that logged a regroup (`FordsRunReport.Mission.cs`), to see whether they turned and fought or only walked. Check 9's `bypass` on lanes that regrouped, since an AI Fall back is a MoveTo and the probe reads a MoveTo with a standing tower ahead as a lane marching past it.
+
+**Known limits:** a wall faction regroups in its march arrangement, because the Close branch is not reached under Fall back. While every lane is on Fall back and no lane is under threat, the AI still buys the next entry of its buy cycle for the lane with the most room; with every lane full it buys only a due upgrade or beast. A hero bought then goes to lane 0, the older fallback.
+
+**Undo:** set `FallBackRatio` in `AiCommander.cs` so high that the rule never fires (for example 1000), which turns off the AI half. The tower fight in `LaneMarchRules` only matters on a Fall back lane, so a person's Fall back keeps it; remove the `FightsAtOwnTower` test in `Evaluate` to undo that half.
+
 ### Pierce against cavalry (round 4)
 
 **Why:** Rohan won all 12 of its matches in round 2, and spears traded 0.73 to 0.79 gold in every set of matches (see "Spears" below). Mike, 2026-11-07: spearmen and pikemen should counter cavalry, and the simplest rule is that cavalry and horses take more from pierce damage, in this mode only.

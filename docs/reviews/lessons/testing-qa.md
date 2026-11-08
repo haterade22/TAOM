@@ -2612,3 +2612,10 @@ Three new catch blocks raised the silent-catch ratchet over its baseline. The 89
 - **Why missed:** the initial resolver plan assumed the test category initialized the engine catalog, and tests written only against a new helper could not characterize the old consumers.
 - **Prevent:** run unknown-name, empty-input and exception characterization through the existing consumers before extraction. Pin the factory declarations with `RepoPaths.ReadSource`, use uninitialized engine objects only as reference-identity tokens, and use counting factories to prove invocation order, one call per occurrence and exception propagation. Drive the option-args callback and the catch-and-continue boundary, not only the extracted helper.
 - **Source:** #1097 and its independent plan reviews; v1.5.6 `DefaultSkills.cs:43-79` and `DefaultCharacterAttributes.cs:19-31`; `CharacterCreationBonusResolverTests`, `CharacterCreationBonusResolverWiringTests`, `CareerMenuServiceTests` and `NarrativeMenuBuilderTests`.
+### A hand-made view holds only inputs its producer can make (Fords of War regroup, 2026-11-07)
+
+The regroup release fired anywhere once no enemy was near, because the producer then reports an enemy value of 0. The test that should have caught it built the view by hand with no enemy near and an enemy value of 250, so it passed. Three more tests fed a value with a count of 0, and one passed with the guard it named deleted.
+
+- **Why missed:** the tests set the `LaneView` fields one by one with `with { }`, and no one checked each combination against `FordsMatch.PressureOf`, which adds the value and the count together.
+- **Prevent:** a test that builds a view or snapshot by hand uses only field combinations the producer can return (no count, then no value), and at least one test per rule goes through the producer itself. For each guard, ask whether the test still fails with the guard deleted. A rule's entry and exit read the same inputs at the same threshold, or the test list names the case where they differ.
+- **Source:** [rca-fords-regroup-2026-11-07.md](../rca-fords-regroup-2026-11-07.md) rows 7, 10, 13 and 14.

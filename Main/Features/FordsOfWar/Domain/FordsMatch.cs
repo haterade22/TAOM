@@ -53,6 +53,7 @@ internal sealed partial class FordsMatch
     private readonly HashSet<string> _fallen = new();
     private readonly List<SpawnRequest> _pendingSpawns = new();
     private readonly List<MatchEvent> _pendingEvents = new();
+    private readonly List<string> _pendingNotes = new();
 
     private readonly Dictionary<(MatchSide, int), LaneSnapshot> _seenLanes = new();
     private readonly Dictionary<string, int> _seenThreats = new();
@@ -516,6 +517,8 @@ internal sealed partial class FordsMatch
     {
         effects.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
+        effects.Notes.AddRange(_pendingNotes);
+        _pendingNotes.Clear();
         effects.Winner = _winner;
         return effects;
     }
@@ -630,7 +633,8 @@ internal sealed partial class FordsMatch
                 TryBuyback(slot, action.Id);
                 break;
             case AiActionKind.SetOrder:
-                TrySetLaneOrder(slot, action.Lane, action.Order);
+                if (TrySetLaneOrder(slot, action.Lane, action.Order) == CommandResult.Ok && action.Note.Length > 0)
+                    _pendingNotes.Add(action.Note);
                 break;
             case AiActionKind.CallCreature:
                 TryCallCreature(slot, action.Lane, action.Id);

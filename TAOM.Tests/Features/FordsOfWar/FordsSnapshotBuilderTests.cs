@@ -49,6 +49,17 @@ public class FordsSnapshotBuilderTests
     }
 
     [TestMethod]
+    public void Build_LaneUnits_ReportsEachUnitsKeyAtItsPositionsIndex()
+    {
+        var snapshot = Build(new[] { Sample(1, MatchSide.West, 0, 0f, 0f), Sample(2, MatchSide.West, 0, 10f, 4f) });
+
+        var lane = snapshot.Lanes.Single();
+
+        for (var i = 0; i < lane.UnitPositions!.Count; i++)
+            Assert.AreEqual(lane.UnitPositions[i].X == 0f ? new AgentKey(1) : new AgentKey(2), lane.UnitKeys![i]);
+    }
+
+    [TestMethod]
     public void Build_EnemyAcrossTheLane_ReportsNearestEnemyDistanceFromTheCenter()
     {
         var snapshot = Build(new[]

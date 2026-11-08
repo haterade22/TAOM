@@ -483,4 +483,476 @@ public class AiCommanderTests
 
         Assert.IsTrue(actions.Any(a => a.Kind == AiActionKind.SetOrder && a.Lane == 1 && a.Order == LaneOrder.Push));
     }
+
+    // Regroup under your own tower: a lane outside the assault that the units near its lead badly outvalue falls back, and returns once the odds ease.
+
+    /// <summary>One lane of a hand-made view. Own, Enemy and Count are the values near the lead; OwnLive and EnemyLive are the whole-lane headcounts the assault pick reads.</summary>
+    private sealed record RegroupLane(int Index, LaneOrder Order, float Own, float Enemy, int Count, float Cooldown = 0f, bool AtTower = false,
+        int OwnLive = 10, int EnemyLive = 10);
+
+    private static RegroupLane Assault() => new(0, LaneOrder.Push, 100f, 50f, 3, OwnLive: 30, EnemyLive: 5);
+
+    private static MatchView RegroupView(params RegroupLane[] set)
+    {
+        var view = Create(Config(), Slots("slow")).GetView(EastSlot);
+        var lanes = view.Lanes
+            .Select(l => set.Where(x => x.Index == l.Index)
+                .Select(x => l with
+                {
+                    Order = x.Order, OwnLive = x.OwnLive, EnemyLive = x.EnemyLive, CooldownLeft = x.Cooldown,
+                    NearOwnValue = x.Own, NearEnemyValue = x.Enemy, NearEnemyCount = x.Count, AtOwnTower = x.AtTower,
+                })
+                .FirstOrDefault() ?? l)
+            .ToList();
+        return view with { Lanes = lanes };
+    }
+
+    private static RegroupLane Pressed(LaneOrder order = LaneOrder.Push, float cooldown = 0f) =>
+        new(1, order, 100f, 250f, 12, cooldown);
+
+    private static AiAction? OrderFor(IEnumerable<AiAction> actions, int lane) =>
+        actions.FirstOrDefault(a => a.Kind == AiActionKind.SetOrder && a.Lane == lane);
+
+    /// <summary>The AI sends lane 1 back at 5 s, as the first step of a sequence.</summary>
+    private static AiCommander ARegroupingAi()
+    {
+        var ai = Ai();
+        var first = OrderFor(ai.Decide(RegroupView(Assault(), Pressed()), 5f), 1);
+        Assert.AreEqual(LaneOrder.FallBack, first?.Order);
+        return ai;
+    }
+
+    [TestMethod]
+    public void Decide_NonAssaultLaneOutvaluedPastTheFallBackRatio_OrdersFallBack()
+    {
+        var order = OrderFor(Ai().Decide(RegroupView(Assault(), Pressed()), 5f), 1);
+
+        Assert.IsNotNull(order);
+        Assert.AreEqual(LaneOrder.FallBack, order!.Order);
+        Assert.AreEqual("[FordsOfWar][Ai] regroup side=East lane=1 own=100.0 enemy=250.0 n=12", order.Note);
+    }
+
+    [TestMethod]
+    public void Decide_NonAssaultLaneOutvaluedBelowTheFallBackRatio_KeepsItsOrder()
+    {
+        var view = RegroupView(Assault(), Pressed() with { Enemy = 150f });
+
+        Assert.IsNull(OrderFor(Ai().Decide(view, 5f), 1));
+    }
+
+    // Headcount alone does not send a lane back: a full 40-unit elven lane against 100 is level near its lead.
+    [TestMethod]
+    public void Decide_LaneOutnumberedInHeadcountButLevelNearItsLead_IsNotOrderedToFallBack()
+    {
+        var view = RegroupView(Assault(), Pressed() with { Enemy = 100f, OwnLive = 40, EnemyLive = 100 });
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    // An empty lane has nobody to regroup.
+    [TestMethod]
+    public void Decide_ALaneWithNoValueNearItsLead_IsNotOrderedToFallBack()
+    {
+        var view = RegroupView(Assault(), Pressed() with { Own = 0f });
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    // A skirmish of a few soldiers is not an outnumbered lane, however the values compare.
+    [TestMethod]
+    public void Decide_ASmallSkirmishPastTheRatio_IsNotOrderedToFallBack()
+    {
+        var view = RegroupView(Assault(), Pressed() with { Count = AiCommander.RegroupMinEnemy - 1 });
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    [TestMethod]
+    public void Decide_TheMinimumEnemyCountPastTheRatio_OrdersFallBack()
+    {
+        var view = RegroupView(Assault(), Pressed() with { Count = AiCommander.RegroupMinEnemy });
+
+        Assert.AreEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsNeverOrderedToFallBack()
+    {
+        var view = RegroupView(Assault() with { Own = 100f, Enemy = 250f, Count = 12 }, Pressed() with { Enemy = 400f });
+
+        var actions = Ai().Decide(view, 5f);
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(actions, 0)?.Order);
+        Assert.AreEqual(LaneOrder.FallBack, OrderFor(actions, 1)?.Order);
+    }
+
+    [TestMethod]
+    public void Decide_ASeizingLaneIsNeverOrderedToFallBack()
+    {
+        var view = RegroupView(Assault(), Pressed(LaneOrder.Seize));
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    [TestMethod]
+    public void Decide_OutvaluedLaneOnCooldown_GetsNoOrder()
+    {
+        var view = RegroupView(Assault(), Pressed(cooldown: 3f));
+
+        Assert.IsNull(OrderFor(Ai().Decide(view, 5f), 1));
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneBetweenTheRatios_StaysOnFallBack()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 130f }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneAtTheReturnRatio_GoesBackToPush()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 110f }), 10f);
+
+        var order = OrderFor(actions, 1);
+        Assert.AreEqual(LaneOrder.Push, order?.Order);
+        Assert.AreEqual("[FordsOfWar][Ai] regroup end side=East lane=1 own=100.0 enemy=110.0 n=12", order!.Note);
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneAtItsTowerWithNobodyFollowing_GoesBackToPush()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { AtTower = true, Count = 0, Enemy = 0f }), 10f);
+
+        Assert.AreEqual(LaneOrder.Push, OrderFor(actions, 1)?.Order);
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneAtItsTowerWithEnemiesStillNear_StaysOnFallBack()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { AtTower = true, Count = 2 }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneWithNobodyFollowingButNotYetAtItsTower_StaysOnFallBack()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { AtTower = false, Count = 0, Enemy = 0f }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneReadyToReturnButOnCooldown_WaitsForTheCooldown()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack, cooldown: 4f) with { Enemy = 80f }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_AFallBackTheAiDidNotOrder_IsNeverReleased()
+    {
+        var view = RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 80f });
+
+        Assert.IsNull(OrderFor(Ai().Decide(view, 5f), 1));
+    }
+
+    [TestMethod]
+    public void Decide_APlayerFallBackAfterTheAiReleasedItsOwn_IsNeverReleased()
+    {
+        var ai = ARegroupingAi();
+        var release = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 80f }), 10f);
+        Assert.AreEqual(LaneOrder.Push, OrderFor(release, 1)?.Order);
+        ai.Decide(RegroupView(Assault(), Pressed() with { Enemy = 80f }), 15f);
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 80f }), 20f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    // The AI asks for Push but the match refuses it (the order is still FallBack on the next visit): the lane is still the AI's to release.
+    [TestMethod]
+    public void Decide_ReleaseNotYetAccepted_IsAskedForAgain()
+    {
+        var ai = ARegroupingAi();
+        var view = RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 80f });
+        Assert.AreEqual(LaneOrder.Push, OrderFor(ai.Decide(view, 10f), 1)?.Order);
+
+        Assert.AreEqual(LaneOrder.Push, OrderFor(ai.Decide(view, 15f), 1)?.Order);
+    }
+
+    // The AI sends a lane back, a person takes it to Seize, the AI visits, then the person sends it back: that last one is the person's.
+    [TestMethod]
+    public void Decide_AiFallBackThenPersonSeizeThenPersonFallBack_IsNeverReleased()
+    {
+        var ai = ARegroupingAi();
+        ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.Seize) with { Enemy = 80f }), 10f);
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 80f }), 15f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_AssaultPick_SkipsALaneOnFallBack()
+    {
+        var view = RegroupView(Assault() with { Order = LaneOrder.FallBack }, new RegroupLane(1, LaneOrder.Push, 50f, 50f, 1));
+
+        var actions = Ai().Decide(view, 5f);
+
+        Assert.IsTrue(actions.Any(a => a.Kind == AiActionKind.BuyPack && a.Lane == 1));
+        Assert.IsFalse(actions.Any(a => a.Kind == AiActionKind.BuyPack && a.Lane == 0));
+    }
+
+    [TestMethod]
+    public void Decide_EveryLaneOnFallBackWithABuyCycle_StillBuysTheNextCycleEntry()
+    {
+        var view = RegroupView(Assault() with { Order = LaneOrder.FallBack }, new RegroupLane(1, LaneOrder.FallBack, 50f, 50f, 1));
+
+        var actions = Ai().Decide(view with { AiBuyCycle = new[] { "inf" } }, 5f);
+
+        Assert.IsTrue(actions.Any(a => a.Kind == AiActionKind.BuyPack));
+    }
+
+    [TestMethod]
+    public void Tick_AiRegroupOrder_ReportsItsLogLineAndSetsTheLaneToFallBack()
+    {
+        var match = Create();
+        match.RegisterUnit(1, Unit(1, MatchSide.East, EastSlot, lane: 1, value: 100));
+        for (var i = 0; i < 12; i++)
+            match.RegisterUnit(1, Unit(100 + i, MatchSide.West, WestSlot, lane: 1, value: 200));
+
+        var lanes = new[]
+        {
+            Live(MatchSide.East, 0, 20), Live(MatchSide.West, 0, 5),
+            new LaneSnapshot(MatchSide.East, 1, 1, new Vec3f(700f, 50f, 0f), 10f, new[] { new Vec3f(700f, 50f, 0f) }, new[] { Key(1) }),
+            new LaneSnapshot(MatchSide.West, 1, 12, new Vec3f(690f, 50f, 0f), 10f,
+                Enumerable.Range(0, 12).Select(i => new Vec3f(690f, 50f, 0f)).ToList(), Enumerable.Range(0, 12).Select(i => Key(100 + i)).ToList()),
+        };
+
+        var effects = match.Tick(Snap(6f, lanes));
+
+        CollectionAssert.Contains(effects.Notes, "[FordsOfWar][Ai] regroup side=East lane=1 own=100.0 enemy=2400.0 n=12");
+        Assert.AreEqual(LaneOrder.FallBack, match.GetView(EastSlot).Lanes[1].Order);
+    }
+
+    // The view: value and count of the units within 40 m of the lane's lead, enemy units of any lane.
+
+    private static FordsMatch PressureMatch(float eastLeadX, int westInRange = 12)
+    {
+        var match = Create(Config(), Slots("slow"));
+        for (var i = 0; i < 3; i++)
+            match.RegisterUnit(1, Unit(1 + i, MatchSide.East, EastSlot, lane: 1, value: 100));
+        match.RegisterUnit(1, Unit(50, MatchSide.East, EastSlot, lane: 1, value: 999));
+        for (var i = 0; i < 14; i++)
+            match.RegisterUnit(1, Unit(100 + i, MatchSide.West, WestSlot, lane: i % 2, value: 50));
+
+        var east = new List<Vec3f> { new(eastLeadX, 50f, 0f), new(eastLeadX, 50f, 0f), new(eastLeadX, 50f, 0f), new(eastLeadX + 300f, 50f, 0f) };
+        var west = Enumerable.Range(0, 14).Select(i => i < westInRange ? new Vec3f(eastLeadX - 30f, 50f, 0f) : new Vec3f(100f, 50f, 0f)).ToList();
+        var even = Enumerable.Range(0, 14).Where(i => i % 2 == 0).ToList();
+        var odd = Enumerable.Range(0, 14).Where(i => i % 2 == 1).ToList();
+        match.Tick(Snap(0.5f, new[]
+        {
+            new LaneSnapshot(MatchSide.East, 1, 4, new Vec3f(eastLeadX, 50f, 0f), 10f, east, new[] { Key(1), Key(2), Key(3), Key(50) }),
+            new LaneSnapshot(MatchSide.West, 0, 7, new Vec3f(eastLeadX, 0f, 0f), 10f, even.Select(i => west[i]).ToList(), even.Select(i => Key(100 + i)).ToList()),
+            new LaneSnapshot(MatchSide.West, 1, 7, new Vec3f(eastLeadX, 50f, 0f), 10f, odd.Select(i => west[i]).ToList(), odd.Select(i => Key(100 + i)).ToList()),
+        }));
+        return match;
+    }
+
+    [TestMethod]
+    public void View_LaneWithALead_CountsValueAndEnemiesWithinThePressureRadiusOfTheLead()
+    {
+        var lane = PressureMatch(700f).GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(300f, lane.NearOwnValue, "the far straggler is outside the radius");
+        Assert.AreEqual(600f, lane.NearEnemyValue, "12 West units at 50, from either lane");
+        Assert.AreEqual(12, lane.NearEnemyCount);
+    }
+
+    [TestMethod]
+    public void View_EnemyBeyondThePressureRadius_IsNotCounted()
+    {
+        var lane = PressureMatch(700f, westInRange: 0).GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(0, lane.NearEnemyCount);
+        Assert.AreEqual(0f, lane.NearEnemyValue);
+    }
+
+    [TestMethod]
+    public void View_LaneWithoutPositions_HasNoPressureNumbers()
+    {
+        var match = Create(Config(), Slots("slow"));
+        match.Tick(Snap(0.5f, new[] { Live(MatchSide.East, 1, 10), Live(MatchSide.West, 1, 20) }));
+
+        var lane = match.GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(0f, lane.NearOwnValue);
+        Assert.AreEqual(0f, lane.NearEnemyValue);
+        Assert.AreEqual(0, lane.NearEnemyCount);
+        Assert.IsFalse(lane.AtOwnTower);
+    }
+
+    [TestMethod]
+    public void View_LeadWithinFireRangeOfTheOuterOwnTower_IsAtOwnTower_AndBeyondIsNot()
+    {
+        Assert.IsTrue(PressureMatch(660f).GetView(EastSlot).Lanes[1].AtOwnTower, "East outer tower at 640");
+        Assert.IsFalse(PressureMatch(700f).GetView(EastSlot).Lanes[1].AtOwnTower, "60 m from it");
+    }
+
+    // The release rule: favourable contact, a lane that reached its tower with nobody behind it, or a lane with nobody left.
+
+    [TestMethod]
+    public void Decide_RegroupingLaneWithNobodyLeft_GoesBackToPush()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Own = 0f, OwnLive = 0, Enemy = 0f, Count = 0 }), 10f);
+
+        Assert.AreEqual(LaneOrder.Push, OrderFor(actions, 1)?.Order);
+    }
+
+    // The lane outran the enemy but is not home: with nobody in contact the ratio proves nothing.
+    [TestMethod]
+    public void Decide_RegroupingLaneWithNoEnemyNearAndAwayFromItsTower_StaysOnFallBack()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(), Pressed(LaneOrder.FallBack) with { Enemy = 0f, Count = 0, AtTower = false }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    // On a retreat the lead is the rear guard: the first few pursuers are not contact, so the lane keeps going home.
+    [TestMethod]
+    public void Decide_RegroupingLaneAwayFromItsTowerWithAFewPursuersNear_StaysOnFallBack()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(),
+            Pressed(LaneOrder.FallBack) with { Enemy = 20f, Count = AiCommander.RegroupMinEnemy - 1, AtTower = false }), 10f);
+
+        Assert.IsNull(OrderFor(actions, 1));
+    }
+
+    [TestMethod]
+    public void Decide_RegroupingLaneWithTheMinimumEnemyCountAtTheReturnRatio_GoesBackToPush()
+    {
+        var ai = ARegroupingAi();
+
+        var actions = ai.Decide(RegroupView(Assault(),
+            Pressed(LaneOrder.FallBack) with { Enemy = 110f, Count = AiCommander.RegroupMinEnemy }), 10f);
+
+        Assert.AreEqual(LaneOrder.Push, OrderFor(actions, 1)?.Order);
+    }
+
+    // The same through the match: the enemy is beyond 40 m and the lead is 60 m from its tower, so the lane stays back.
+    [TestMethod]
+    public void Tick_RegroupingLaneWithTheEnemyBeyondThePressureRadius_StaysOnFallBack()
+    {
+        var match = Create();
+        match.RegisterUnit(1, Unit(1, MatchSide.East, EastSlot, lane: 1, value: 100));
+        for (var i = 0; i < 12; i++)
+            match.RegisterUnit(1, Unit(100 + i, MatchSide.West, WestSlot, lane: 1, value: 200));
+
+        LaneSnapshot[] Lanes(float westX) => new[]
+        {
+            Live(MatchSide.East, 0, 20), Live(MatchSide.West, 0, 5),
+            new LaneSnapshot(MatchSide.East, 1, 1, new Vec3f(700f, 50f, 0f), 10f, new[] { new Vec3f(700f, 50f, 0f) }, new[] { Key(1) }),
+            new LaneSnapshot(MatchSide.West, 1, 12, new Vec3f(westX, 50f, 0f), 10f,
+                Enumerable.Range(0, 12).Select(i => new Vec3f(westX, 50f, 0f)).ToList(), Enumerable.Range(0, 12).Select(i => Key(100 + i)).ToList()),
+        };
+
+        match.Tick(Snap(6f, Lanes(690f)));
+        Assert.AreEqual(LaneOrder.FallBack, match.GetView(EastSlot).Lanes[1].Order);
+
+        match.Tick(Snap(60f, Lanes(300f)));
+        var lane = match.GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(0, lane.NearEnemyCount);
+        Assert.IsFalse(lane.AtOwnTower);
+        Assert.AreEqual(LaneOrder.FallBack, lane.Order);
+    }
+
+    // Pressure: heroes weigh a fixed amount, and the units physically near the lead count whichever lane they belong to.
+
+    private sealed record FieldUnit(MatchSide Side, int Lane, int Key, int Value, float X, UnitRole Role = UnitRole.Infantry);
+
+    private static FordsMatch Field(params FieldUnit[] units)
+    {
+        var match = Create(Config(), Slots("slow"));
+        foreach (var u in units)
+            match.RegisterUnit(1, Unit(u.Key, u.Side, u.Side == MatchSide.East ? EastSlot : WestSlot, u.Lane, u.Value, u.Role,
+                u.Role == UnitRole.Hero ? "hero_" + u.Key : null));
+
+        var lanes = units.GroupBy(u => (u.Side, u.Lane)).Select(g => new LaneSnapshot(g.Key.Side, g.Key.Lane, g.Count(),
+            new Vec3f(g.First().X, 50f, 0f), 10f, g.Select(u => new Vec3f(u.X, 50f, 0f)).ToList(), g.Select(u => Key(u.Key)).ToList())).ToList();
+        if (!units.Any(u => u.Side == MatchSide.East && u.Lane == 0))
+            lanes.Add(Live(MatchSide.East, 0, 100));
+
+        match.Tick(Snap(0.5f, lanes));
+        return match;
+    }
+
+    private static IEnumerable<FieldUnit> Troops(MatchSide side, int lane, int firstKey, int count, int value, float x) =>
+        Enumerable.Range(0, count).Select(i => new FieldUnit(side, lane, firstKey + i, value, x));
+
+    [TestMethod]
+    public void View_AnEnemyHeroNearTheLead_CountsAsHeroPressureValueWhateverItsPrice()
+    {
+        var units = Troops(MatchSide.East, 1, 1, 30, 10, 700f)
+            .Concat(Troops(MatchSide.West, 1, 100, 9, 10, 690f))
+            .Append(new FieldUnit(MatchSide.West, 1, 200, 2000, 690f, UnitRole.Hero));
+
+        var lane = Field(units.ToArray()).GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(9 * 10f + FordsMatch.HeroPressureValue, lane.NearEnemyValue);
+        Assert.AreEqual(10, lane.NearEnemyCount);
+    }
+
+    [TestMethod]
+    public void Decide_OneEnemyHeroPlusNineCheapUnitsAgainstAThirtyUnitLane_DoesNotSendItBack()
+    {
+        var units = Troops(MatchSide.East, 1, 1, 30, 10, 700f)
+            .Concat(Troops(MatchSide.West, 1, 100, 9, 10, 690f))
+            .Append(new FieldUnit(MatchSide.West, 1, 200, 2000, 690f, UnitRole.Hero));
+        var view = Field(units.ToArray()).GetView(EastSlot);
+
+        Assert.AreNotEqual(LaneOrder.FallBack, OrderFor(Ai().Decide(view, 5f), 1)?.Order);
+    }
+
+    [TestMethod]
+    public void View_AnOwnHeroNearTheLead_CountsAsHeroPressureValue()
+    {
+        var units = Troops(MatchSide.East, 1, 1, 2, 10, 700f).Append(new FieldUnit(MatchSide.East, 1, 50, 900, 700f, UnitRole.Hero));
+
+        var lane = Field(units.ToArray()).GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(20f + FordsMatch.HeroPressureValue, lane.NearOwnValue);
+    }
+
+    [TestMethod]
+    public void View_OwnUnitsOfAnotherLaneNearTheLead_CountToo()
+    {
+        var units = Troops(MatchSide.East, 1, 1, 3, 100, 700f).Concat(Troops(MatchSide.East, 0, 50, 2, 40, 710f)).Concat(Troops(MatchSide.East, 0, 60, 2, 40, 100f));
+
+        var lane = Field(units.ToArray()).GetView(EastSlot).Lanes[1];
+
+        Assert.AreEqual(380f, lane.NearOwnValue, "three of lane 1 and the two of lane 0 within 40 m; the two at 100 m are out");
+    }
 }

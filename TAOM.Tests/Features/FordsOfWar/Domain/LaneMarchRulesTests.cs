@@ -133,6 +133,137 @@ public class LaneMarchRulesTests
     }
 
     [TestMethod]
+    public void Decide_FallBackLeadUnderItsOwnTowerWithAnEnemyInEngageRange_Charges()
+    {
+        var (rules, _) = Setup();
+
+        var decision = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 340f, nearestEnemy: 10f));
+
+        Assert.AreEqual(LaneCommand.Charge, decision.Command);
+        Assert.AreEqual(LaneBranch.Charge, decision.Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackLeadUnderItsOwnTowerButTheEnemyIsFar_StillMovesBack()
+    {
+        var (rules, _) = Setup();
+
+        var decision = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 340f, nearestEnemy: Config.Lanes.EngageRange + 1f));
+
+        Assert.AreEqual(LaneBranch.FallBack, decision.Branch);
+        Assert.AreEqual(LaneCommandKind.MoveTo, decision.Command.Kind);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackLeadFarFromItsTowerWithAnEnemyAtThreeMetres_StillMovesBack()
+    {
+        var (rules, _) = Setup();
+
+        var decision = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 500f, nearestEnemy: 3f));
+
+        Assert.AreEqual(LaneBranch.FallBack, decision.Branch);
+        Assert.AreEqual(LaneCommandKind.MoveTo, decision.Command.Kind);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackLeadJustOutsideTheTowerFireRange_StillMovesBack()
+    {
+        var (rules, chain) = Setup();
+        var edge = 360f + chain.FireRange(FordsTestLayout.WestOuter0) + 1f;
+
+        var decision = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: edge, nearestEnemy: 10f));
+
+        Assert.AreEqual(LaneBranch.FallBack, decision.Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackAfterTheOuterTowerFell_MeasuresFromTheNextTower()
+    {
+        var (rules, chain) = Setup();
+        chain.OnDestroyed(FordsTestLayout.WestOuter0);
+
+        var nearOld = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 340f, nearestEnemy: 10f));
+        var nearNext = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 220f, nearestEnemy: 10f));
+
+        Assert.AreEqual(LaneBranch.FallBack, nearOld.Branch);
+        Assert.AreEqual(LaneBranch.Charge, nearNext.Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackWithEveryTowerGone_MeasuresFromTheKeep()
+    {
+        var (rules, chain) = Setup();
+        chain.OnDestroyed(FordsTestLayout.WestOuter0);
+        chain.OnDestroyed(FordsTestLayout.WestInner0);
+
+        var nearKeep = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 60f, nearestEnemy: 10f));
+        var farFromKeep = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 200f, nearestEnemy: 10f));
+
+        Assert.AreEqual(LaneBranch.Charge, nearKeep.Branch);
+        Assert.AreEqual(LaneBranch.FallBack, farFromKeep.Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackChargeThenTheLeadLeavesTheTower_GoesBackToMoving()
+    {
+        var (rules, _) = Setup();
+
+        var charging = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 340f, nearestEnemy: 10f));
+        var left = rules.Evaluate(Situation(order: LaneOrder.FallBack, leadX: 500f, nearestEnemy: 10f));
+
+        Assert.AreEqual(LaneBranch.Charge, charging.Branch);
+        Assert.AreEqual(LaneBranch.FallBack, left.Branch);
+    }
+
+    // The fight at the tower is measured from where the enemy stands, not from the lead.
+
+    private static LaneSituation FallBackFacing(float enemyX, float leadX = 300f) =>
+        Situation(order: LaneOrder.FallBack, leadX: leadX, nearestEnemy: 10f) with { NearestEnemy = new Vec3f(enemyX, 0f, 0f) };
+
+    [TestMethod]
+    public void Decide_FallBackEnemyInsideTheTowerFireRange_Charges()
+    {
+        var (rules, chain) = Setup();
+        var inside = 360f + chain.FireRange(FordsTestLayout.WestOuter0) - 1f;
+
+        Assert.AreEqual(LaneBranch.Charge, rules.Evaluate(FallBackFacing(inside)).Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackColdLaneWithTheEnemyJustOutsideTheFireRange_DoesNotStartTheFight()
+    {
+        var (rules, chain) = Setup();
+        var outside = 360f + chain.FireRange(FordsTestLayout.WestOuter0) + 1f;
+
+        Assert.AreEqual(LaneBranch.FallBack, rules.Evaluate(FallBackFacing(outside)).Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackChargingLaneWhoseEnemyStepsPastTheFireRange_KeepsChargingToTheStayMargin()
+    {
+        var (rules, chain) = Setup();
+        var fire = chain.FireRange(FordsTestLayout.WestOuter0);
+
+        var start = rules.Evaluate(FallBackFacing(360f + fire - 1f));
+        var stepped = rules.Evaluate(FallBackFacing(360f + fire + 1f));
+        var far = rules.Evaluate(FallBackFacing(360f + fire + LaneMarchRules.SiegeStayMargin + 1f));
+
+        Assert.AreEqual(LaneBranch.Charge, start.Branch);
+        Assert.AreEqual(LaneBranch.Charge, stepped.Branch);
+        Assert.AreEqual(LaneBranch.FallBack, far.Branch);
+    }
+
+    [TestMethod]
+    public void Decide_FallBackLeadInsideTheFireRangeButTheEnemyFiftyMetresFromTheTower_DoesNotStartTheFight()
+    {
+        var (rules, _) = Setup();
+
+        var decision = rules.Evaluate(FallBackFacing(enemyX: 310f, leadX: 316f));
+
+        Assert.AreEqual(LaneBranch.FallBack, decision.Branch);
+    }
+
+    [TestMethod]
     public void Decide_FallBackOnAnUnknownLane_IsNone()
     {
         var (rules, _) = Setup();
