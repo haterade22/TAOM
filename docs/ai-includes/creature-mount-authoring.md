@@ -448,7 +448,7 @@ monster leaves null native entries → spawn AV.
 | Single target vs radial | `ElephantLikeCombatProfile(..., singleTarget: true)` makes the shared attack task hit only the enemy faced most squarely inside the radius (`SingleVictimPick`, nearer on a tie; a ridden mount is never picked, its rider is); default is the radial sweep | The war ram sets it; elephant and mumakil do not (#618) |
 | Eager `ActionIndexCache` + `AnyUnresolved()` drift guard | resolve attack clips at mission start; log if any → `act_none` | Armory rename = silent `act_none` = the "slide" |
 | Mount-lock | `TaomAgentStatCalculateModel`: `CanAgentRideMount=false` + `MountDifficulty=999` for the monster id | players can't steal the mount; the assigned rider's cavalry spawn ignores it |
-| **Patch47 `Agent_Die_SpiderDismount_Patch`** | Prefix on `Agent.Die`: a rider dying on the creature is hard-dismounted via cached private `SetMountAgent(null)` → dies the proven on-foot death; a dying creature frees its rider first | the 1.4.6 native mounted-death path still AVs on (at least melee) deaths — Die-path read of float-bits-as-index from a corrupted action record (debugger-proven 2026-06-12). Patch47 routes around it and was wrongly indicted once (the charge crash fired without it too); it is REQUIRED |
+| **Patch47 `Agent_Die_SpiderDismount_Patch`** | Prefix on `Agent.Die`: a rider dying on the creature is hard-dismounted via cached private `SetMountAgent(null)` → dies the proven on-foot death; a dying creature frees its rider first. Covers every mount Monster outside `CreatureMounts.VanillaMounts` with no edit: add the new id as a DataRow to `CreatureMountsTests.IsCreatureMount_TaomCreature_ReturnsTrue`, and never add it to that list. Patch48 (non-lethal dismount hit) uses the same predicate, so a hit cannot knock the creature's rider off | the 1.4.6 native mounted-death path still AVs on (at least melee) deaths — Die-path read of float-bits-as-index from a corrupted action record (debugger-proven 2026-06-12). Patch47 routes around it and was wrongly indicted once (the charge crash fired without it too); it is REQUIRED |
 | `SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with graceful mount-skip | keep; demote to LogDebug at ship |
 
 ## Phase 8 — Validation instruments (run them ALL before battle-testing)
@@ -470,7 +470,7 @@ offsets against the previous version's known sites before assuming your last cha
 crash. **Include a mounted-death pass in the control battle** — kill the ridden creature, and kill
 its rider while mounted. That is the one path a data-only creature can regress on with zero managed
 diff (1.4.6 melee-death Die-path AV → Patch47; v1.4.8 native rein fix → the rein-attribute
-invariant under Phase 2, still unverified). Keep the previous decompile as
+invariant under Phase 2, still unverified). Since 2026-11-08 Patch47 dismounts first, so on the `Agent.Die` route this pass tests the sever, not the native mounted branches. Keep the previous decompile as
 `_shipping_build_vX.Y.Z` (the 1.4.5 baseline lives at
 `E:\Decompiled_Bannerlord\_shipping_build_v1.4.5`) — managed diffs scope the blast radius fast
 (1.4.6: combat assembly byte-identical; all changes native-internal).

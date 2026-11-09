@@ -117,7 +117,7 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 
 ### Player-ridden mûmakil attack too (#643, 2026-09-23)
 
-The trample and the tusk swings fire under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down, a mounted victim is dismounted.
+The trample and the tusk swings fire under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down; a rider on a vanilla mount is dismounted, and a rider on a creature mount stays mounted (Patch48).
 
 **The blow is the rider's**, the creature's only once the rider has gone (the warg's rule), and the combat log reads Pierce instead of Blunt; the engine evidence for both is in [elephant.md](elephant.md), "Player-ridden elephants attack too". On a 3x beast the rider sits high, which lifts the hit's position, and with it the hit sound, well above the victim.
 
@@ -165,7 +165,7 @@ agent died" — native, no managed diff, in a path that runs on **mounted-agent 
 **UNVERIFIED — no crash is predicted, and nothing offline settles it.** `tools/audit_mount_parity.py`
 does not check reins (zero occurrences of "rein"; it always exits 0), and the Mûmakil is not in its
 Section A attribute-presence comparison at all, which compares spider vs warg vs elephant only.
-**Owed:** a battle where a *ridden* Mûmakil is killed and where its rider dies while mounted. Full
+**Owed:** a battle where a *ridden* Mûmakil is killed and where its rider dies while mounted. Since 2026-11-08 Patch47 dismounts first, so on the `Agent.Die` route this pass tests the sever, not the native mounted branches. Full
 measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
 rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
 

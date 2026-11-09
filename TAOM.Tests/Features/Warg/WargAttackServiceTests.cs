@@ -406,6 +406,88 @@ public class WargAttackServiceTests
         Assert.IsNotNull(service);
     }
 
+    // -------------------------------------------------------------------------
+    // HandleWargTargetHit: the catch names the victim (2026-11-08 CTD logged neither victim nor mount)
+    // -------------------------------------------------------------------------
+
+    private static IAgentAdapter ThrowingVictim()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        target.IsActive().Returns(true);
+        target.IsFadingOut().Returns(false);
+        target.State.Returns<AgentState>(_ => throw new InvalidOperationException("boom"));
+        return target;
+    }
+
+    private static IAgentAdapter RiderlessAttacker()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        attacker.RiderAgent.Returns((IAgentAdapter)null);
+        return attacker;
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_PipelineThrows_LogNamesVictimMonsterAndMount()
+    {
+        var mount = Substitute.For<IAgentAdapter>();
+        mount.GetMonsterStringId().Returns("taom_war_ram");
+        var target = ThrowingVictim();
+        target.Name.Returns("Dwarf Rider");
+        target.GetMonsterStringId().Returns("dwarf");
+        target.MountAgent.Returns(mount);
+
+        _sut.HandleWargTargetHit(RiderlessAttacker(), target, 0);
+
+        _logger.Received(1).LogError(Arg.Is<string>(s =>
+            s.Contains("Dwarf Rider") && s.Contains("monster=dwarf") && s.Contains("mount=taom_war_ram")));
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_MountSeveredDuringBlow_LogStillNamesMount()
+    {
+        // Patch47 clears the link inside Agent.Die, so a read in the catch would see no mount.
+        var mount = Substitute.For<IAgentAdapter>();
+        mount.GetMonsterStringId().Returns("warg");
+        IAgentAdapter currentMount = mount;
+        var target = Substitute.For<IAgentAdapter>();
+        target.IsActive().Returns(true);
+        target.IsFadingOut().Returns(false);
+        target.GetMonsterStringId().Returns("orc");
+        target.MountAgent.Returns(_ => currentMount);
+        target.State.Returns<AgentState>(_ =>
+        {
+            currentMount = null;
+            throw new InvalidOperationException("boom");
+        });
+
+        _sut.HandleWargTargetHit(RiderlessAttacker(), target, 0);
+
+        _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("monster=orc") && s.Contains("mount=warg")));
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_PipelineThrowsAndVictimUnmounted_LogSaysNoMount()
+    {
+        var target = ThrowingVictim();
+        target.GetMonsterStringId().Returns("human");
+        target.MountAgent.Returns((IAgentAdapter)null);
+
+        _sut.HandleWargTargetHit(RiderlessAttacker(), target, 0);
+
+        _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("monster=human") && s.Contains("mount=none")));
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_VictimUnreadableInCatch_StillLogsAndDoesNotThrow()
+    {
+        var target = ThrowingVictim();
+        target.GetMonsterStringId().Returns<string>(_ => throw new InvalidOperationException("unreadable"));
+
+        _sut.HandleWargTargetHit(RiderlessAttacker(), target, 0);
+
+        _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("victim=unreadable")));
+    }
+
     [TestMethod]
     public void Constructor_NullAdapterFactory_DoesNotThrow()
     {

@@ -81,8 +81,8 @@ quarters it (15) and saves the knockdown.
 - **It fires under any rider, the player included** (#643, the warg's rule): the charge is automatic and the rider
   keeps steering. The engine's own charge collision carries on underneath.
 
-**No mount-lock and no Patch47 entry**, as with the ram: Mirkwood's markets sell the elk (see Markets), so a
-player can ride one, and the horse's rider-death surface is inherited whole.
+**No mount-lock**, as with the ram: Mirkwood's markets sell the elk (see Markets), so a player can ride one.
+Patch47's dismount-before-death covers it since 2026-11-08 (`CreatureMounts.IsCreatureMount`), and Patch48 stops a hit knocking its rider off.
 
 ### Component Diagram
 

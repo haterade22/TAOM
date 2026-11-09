@@ -17,7 +17,7 @@ Both are **native AccessViolations**. The managed debug log and the native `rgl_
 - **The defender Trebuchet** (`TaomSiegeEventModel`) — `SiegeEventModel.GetAvailableDefenderSiegeEngines` is **dead API in 1.4.5/1.4.6/1.4.7** (zero call sites). The override never runs; the fire pot is a plain vanilla `FireCatapult` projectile. *(Side effect: the SiegeDefense "defenders get Trebuchets" feature is silently non-functional on 1.4.5+ — separate issue.)*
 - **Generic "dwarf blow → AV"** — the player's all-dwarf army took casualties for 6 minutes with no crash, so the fault is a *specific* blow, not any blow.
 
-**Surviving hypothesis:** a custom-race (dwarf) agent takes a *specific* blow — the player's wounding hit, or the fire-pot AoE hit — through native `Agent.HandleBlowAux` / `Agent.Die`. This is the same fault family the spider **Patch47** (`Die`) / **Patch48** (`HandleBlowAux`) guard, but both are gated to `IsSpiderMonster`, so a plain dwarf is unguarded. This feature captures the distinguishing blow attribute (flags, damage type, missile/fall, victim race/health) so the fix can be precise, not a blanket guard.
+**Surviving hypothesis:** a custom-race (dwarf) agent takes a *specific* blow — the player's wounding hit, or the fire-pot AoE hit — through native `Agent.HandleBlowAux` / `Agent.Die`. This is the same fault family the spider **Patch47** (`Die`) / **Patch48** (`HandleBlowAux`) guard, but both are gated to creature mounts (since 2026-11-08), so a plain dwarf is unguarded. This feature captures the distinguishing blow attribute (flags, damage type, missile/fall, victim race/health) so the fix can be precise, not a blanket guard.
 
 ## How it works
 
@@ -45,6 +45,7 @@ Design notes:
 
 **Reading the result — the last `[BlowDiag]` line before the log stops:**
 - `blow`/`DIE` on the **dwarf/player** with a distinguishing `flags=`/`dmgType=` → confirmed native blow-reaction AV (Patch47/48 family). Fix: extend the spider-guard pattern to the dwarf / the specific fatal flag — strip the offending `BlowFlag` or hard-guard the native reaction for that race, evidence-driven, not a blanket knockdown disable.
+- On a fatal hit to a creature-mount rider, read mount state from the `DIE` line. `Agent.HandleBlow` calls `Die` before `HandleBlowAux`, so the `blow` line of that hit is written after Patch47 severs the link and shows no mount.
 - `siege-shot` with `item='<null>'` and no blow after → the launch/projectile-item path.
 - `siege-shot` then **nothing** → the impact particle/decal/effect faulted pre-blow in native → escalate to the Windows Event Log fault offset + `python tools/native_crash_triage.py --rva 0x<offset>`, and/or a fire-asset/scene audit.
 

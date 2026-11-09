@@ -1805,8 +1805,8 @@ public class SubModule : MBSubModuleBase
 
         // Patch48: the non-lethal sibling of Patch47. A CanDismount melee hit on a mounted Spider Rider AVs in
         // native HandleBlowAux (reading 0x3) — the same broken non-vanilla mounted-dismount path Patch47 routes
-        // around on death. Strips CanDismount for spider riders so the native dismount never fires (the rider
-        // stays on the locked mount; damage still applies). Debugger-proven 2026-06-15. See docs/features/spider.md.
+        // around on death. Strips CanDismount for every creature-mount rider since 2026-11-08 so the native dismount
+        // never fires (the rider stays mounted; damage still applies). Spider fault debugger-proven 2026-06-15. See docs/features/spider.md.
         TryPatchCategory("Patch48_SpiderHitDismountGuard");
 
         // Patch50: Finalizer swallowing a vanilla NRE in Agent.CheckToDropFlaggedItem (Agent.cs:3595),
