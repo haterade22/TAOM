@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-11-09T02:22:25Z",
+  "modules": {
+    "TAOM_Map": {
+      "version": "v2.4.0",
+      "files": 49,
+      "fingerprint": "sha256:6e9d81ad9c79c6a2cef5ef993ecc31738bb24bdf922f82e1f3100c36eeef5aa1"
+    },
+    "LOTRLOME_Armory": {
+      "version": "v2.4.0",
+      "files": 464,
+      "fingerprint": "sha256:1c3827bf3679a3d34c522622788b63e05c7d348550e993fd69bd4c9ebd876e2c"
+    }
+  },
+  "pairing_signals": {
+    "taom_body_length": [
+      "ModuleData/Monsters/LOTR/lotr_monster_animalia.xml",
+      "ModuleData/Monsters/LOTR/lotr_monster_elk.xml"
+    ]
+  }
+}
