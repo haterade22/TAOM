@@ -1750,6 +1750,12 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.Initialize(
             IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch84_SiegeAftermathMenuGuard");
+        // Patch142 (#1099): a sally-out check never opens the player's meeting with a party that has nobody
+        // to speak for it. The target runs from the hourly settlement tick and MapEventStarted, so the standard batch is early enough.
+        TAOM.Features.MapEventGuard.Hooks.Patch142_SallyOutEmptyPartyGuard.Initialize(
+            IoC.Resolve<TAOM.Features.MapEventGuard.SallyOutGuardService>(),
+            IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch142_SallyOutEmptyPartyGuard");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

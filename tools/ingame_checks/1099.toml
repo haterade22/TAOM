@@ -1,0 +1,19 @@
+# In-game checks for #1099, read by tools/ingame_verdict.py. The line comes from
+# Main/Features/MapEventGuard/Hooks/Patch142_SallyOutEmptyPartyGuard.cs when the guard stops a sally-out check.
+# It proves the guard ran on the player's battle. Vanilla's strength test runs later, so it does not prove a sally
+# would have started. The enlistment menu fix closes the known way in, so most sessions never reach the line.
+issue = 1099
+title = "CTD: a sally-out opens a meeting with an empty party"
+fixed_in = "6abb50e29"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.map-event-guard.sally-skip"
+needs = "a sally-out check (hourly tick or MapEventStarted) with the besieger leader in the player's battle and nobody left in that party (no known way to force it)"
+reached = ['\[Check\] id=taom\.map-event-guard\.sally-skip result=pass ']
+pass = ['\[Check\] id=taom\.map-event-guard\.sally-skip result=pass settlement=\S+ leader=\S+$']
+fail = ['\[MapEventGuard\] the sally-out guard threw']
+absence = "not-reached"
+
+[[human]]
+claim = "an enlisted player who wins a battle and captures a lord in the post-battle conversation sees the encounter menu after the conversation, the battle closes, service continues, and no NullReferenceException appears in CreateConversationTableau"

@@ -116,6 +116,11 @@ public class CoopVetoClassificationTests
             "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
             "text variables and a background mesh only, the prefix returns false solely on the null " +
             "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
+        ["Patch142_SallyOutEmptyPartyGuard"] = new(CoopVeto.ReviewedSafe,
+            "Crash guard (#1099). It stops a sally-out check only when the besieger leader is in the main party's " +
+            "map event and has nobody left; the live-battle branch still runs. It reads only " +
+            "map events and rosters and no TAOM SyncData or MCM value. BannerlordCoop clients return before the target, " +
+            "so only the server runs it."),
         ["MBMusicManagerActivateMenuModePatch"] = new(CoopVeto.ReviewedSafe,
             "Patch95_FactionUI (#704): skips PsaiCore.MenuModeEnter, the main-menu music theme, while " +
             "the themed menu video plays its own audio. Music is each peer's own audio output; the " +

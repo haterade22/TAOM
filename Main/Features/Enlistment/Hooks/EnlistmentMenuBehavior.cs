@@ -126,7 +126,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _maintenance.OnWaitMenuFrame(dt.ToSeconds, elapsed, CampaignTime.Now.ToHours);
     }
 
-    private void OnConversationEnded(IEnumerable<CharacterObject> characters)
+    internal void OnConversationEnded(IEnumerable<CharacterObject> characters)
     {
         // Replaces the donor's MapState.OnMapConversationOver patch: after any map
         // conversation while attached, re-assert the wait menu.
@@ -140,7 +140,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         // own "take leave" option is hidden by its !alreadyOnLeave condition, so he cannot get back
         // to the town until the column moves. Post-#510 that state also holds a live settlement
         // encounter behind a TAOM menu, which blocks the battle latch for its duration.
-        if (_store.Record.OnTownLeave)
+        // In a map event the battle menu is all that closes it: MapEventManager.Tick skips the player's event (#1099).
+        if (_store.Record.OnTownLeave || _attachment.GetPresenceFlags().IsInMapEvent)
             return;
         if (_gameMenu.CurrentMenuId != EnlistmentMenuService.ServiceWaitMenuId)
             _gameMenu.Activate(EnlistmentMenuService.ServiceWaitMenuId);
