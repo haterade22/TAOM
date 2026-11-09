@@ -12,7 +12,7 @@ Decisions baked in (confirmed with the user):
     get their own template.
   * Lore-aware: Khamul's "shadow" troops -> fighter_rhun (Easterling-aligned);
     *_militia* levies in the orc cultures keep their current (human) template.
-  * Umbar -> fighter_haradrim (no dedicated fighter_umbar exists).
+  * Umbar -> fighter_umbar (the Harad face range with no war paint, #1100).
   * Dale: left unchanged (no fighter_dale template).
 
 Formatting is preserved byte-for-byte except the single value string per troop:
@@ -48,7 +48,7 @@ SINGLE = {
     "troops_erebor.xml": "fighter_erebor",
     "troops_rivendell.xml": "fighter_rivendell",
     "troops_mirkwood.xml": "fighter_mirkwood",
-    "troops_umbar.xml": "fighter_haradrim",
+    "troops_umbar.xml": "fighter_umbar",
 }
 
 # Round-robin: assign variants cyclically by troop order (visual variety).

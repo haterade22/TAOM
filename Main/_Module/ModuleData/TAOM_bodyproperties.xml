@@ -7,7 +7,46 @@
 			age="28.76"
 			weight="0.2701"
 			build="0.3113"
-			key="0029A80AC0CC1842A8600B776A6999B7568A885129BD6595B77794A986746767072650130B9B74665400700001B00000000000000000001B0000000059701040" />
+			key="0029A80AC0FC1842A8600B776A6999B7568A885129BD6595B77794A986746767072650130B9B74665400700001B00000000000000000001B0000000059701040" />
+    <BodyPropertiesMax
+			version="4"
+			age="39.11"
+			weight="0.2701"
+			build="0.36"
+			key="0036E80F00883947C8700C76A97898B65575855248DC13A4C864486976936759063660350C8886775400B00000D00000000000000000003C000000002F888000" />
+    <hair_tags>
+      <hair_tag
+				name="empire" />
+      <hair_tag
+				name="sturgia" />
+      <hair_tag
+				name="battania" />
+      <hair_tag
+				name="khuzait" />
+    </hair_tags>
+    <beard_tags>
+      <beard_tag
+				name="empire" />
+      <beard_tag
+				name="sturgia" />
+      <beard_tag
+				name="battania" />
+      <beard_tag
+				name="khuzait" />
+    </beard_tags>
+    <tattoo_tags>
+      <tattoo_tag
+				name="harad" />
+    </tattoo_tags>
+  </BodyProperty>
+  <BodyProperty
+		id="fighter_umbar">
+    <BodyPropertiesMin
+			version="4"
+			age="28.76"
+			weight="0.2701"
+			build="0.3113"
+			key="0029A80AC0FC1842A8600B776A6999B7568A885129BD6595B77794A986746767072650130B9B74665400700001B00000000000000000001B0000000059701040" />
     <BodyPropertiesMax
 			version="4"
 			age="39.11"

@@ -12,7 +12,7 @@
     <!-- Culture.aserai -->
     <NPCCharacter id="lord_3_3_1" name="{=aom_lord_3_3_1_name}Tariq" age="19" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">
         <face>
-            <BodyProperties version="4" age="30.2" weight="0" build="0" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
+            <BodyProperties version="4" age="30.2" weight="0" build="0" key="001C900FE6A4180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -20,7 +20,7 @@
                 <beard_tag name="aserai" />
             </beard_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -60,12 +60,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_13_1" name="{=aom_lord_3_13_1_name}Sira" is_female="true" age="37" voice="softspoken" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E65A430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -105,12 +105,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_13_2" name="{=aom_lord_3_13_2_name}Razana" age="17" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills" is_female="true">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CD0881003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -150,12 +150,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_14_1" name="{=aom_lord_3_14_1_name}Sasaitha" age="25" is_female="true" voice="softspoken" default_group="HorseArcher" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CD0881003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -195,12 +195,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_15_1" name="{=aom_lord_3_15_1_name}Shimra" age="26" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_mumak_rider_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CD2880004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CE8C40004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -240,12 +240,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_15_2" name="{=aom_lord_3_15_2_name}Bushila" age="5" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CD2E4000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CE2D0000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -278,12 +278,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_16_1" name="{=aom_lord_3_16_1_name}Farina" age="24" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CD1883007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CE3DC3007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -323,12 +323,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_17_1" name="{=aom_lord_3_17_1_name}Shaima" age="26" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FC0B4000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FE4E8000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -368,12 +368,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_17_2" name="{=aom_lord_3_17_2_name}Sanit" age="6" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FC044200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FE5F0200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -404,12 +404,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_18_1" name="{=aom_lord_3_18_1_name}Farzana" age="22" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E502C10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E66FC10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -449,12 +449,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_18_2" name="{=aom_lord_3_18_2_name}Hafisa" age="20" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B40FC10014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B678410014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -494,12 +494,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_18_3" name="{=aom_lord_3_18_3_name}Zuad" age="18" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B52FC3011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B68903011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -539,7 +539,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_18_4" name="{=aom_lord_3_18_4_name}Jalfar" age="7" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E40CC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E5FDC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -547,7 +547,7 @@
                 <beard_tag name="aserai" />
             </beard_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -580,12 +580,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_19_1" name="{=aom_lord_3_19_1_name}Salma" age="46" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_cav_skills">
         <face>
-            <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C80880001597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0" />
+            <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C808A2981597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -625,12 +625,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_19_2" name="{=aom_lord_3_19_2_name}Zulaika" age="22" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_cav_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FD1B40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FE3A40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -670,12 +670,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_19_3" name="{=aom_lord_3_19_3_name}Sulhana" age="20" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_cav_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FC00010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FE4B010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -715,12 +715,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_20_1" name="{=aom_lord_3_20_1_name}Judira" age="35" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CD21410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CE6C410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -760,12 +760,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_20_2" name="{=aom_lord_3_20_2_name}Azina" age="16" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_desert_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FD114000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FE7D0000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -805,12 +805,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_21_1" name="{=aom_lord_3_21_1_name}Ashisa" age="25" is_female="true" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CD1A0000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CE8DC000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -853,12 +853,12 @@
             <!--face_key
 			value="001971249300340a9772c4c436aa7887a435497444328e72db8c48519d57749a0007a13480ba29780000387a00000aeb00000033000000000000000000005000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A215820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A22E820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -898,12 +898,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_22_2" name="{=aom_lord_3_22_2_name}Suna" age="19" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E52143001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E63F03001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -943,12 +943,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_22_3" name="{=aom_lord_3_22_3_name}Zanuwa" age="17" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CC014101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE4FC101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -988,12 +988,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_3_22_4" name="{=aom_lord_3_22_4_name}Hajara" age="13" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E5088200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -1027,12 +1027,12 @@
             <!--face_key
 			value="001971249300340a9772c4c436aa7887a435497444328e72db8c48519d57749a0007a13480ba29780000387a00000aeb00000033000000000000000000005000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CD114300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE690300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -1073,7 +1073,7 @@
     <NPCCharacter id="lord_A9_l" name="{=aom_lord_A9_l_name}Caradan" age="19" voice="earnest" is_female="false" default_group="Infantry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
             <!-- PLACEHOLDER FACE KEY -->
-            <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CD114300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
+            <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CE4E8300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -1081,7 +1081,7 @@
                 <beard_tag name="aserai" />
             </beard_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -1121,12 +1121,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_A9_s" name="{=aom_lord_A9_s_name}Thiqa" age="42" voice="earnest" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E5088200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -1166,12 +1166,12 @@
     </NPCCharacter>
     <NPCCharacter id="lord_A9_c" name="{=aom_lord_A9_c_name}Dhila" age="19" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E401410059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3" />
+            <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E62B010059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -1211,7 +1211,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_A9_u" name="{=aom_lord_A9_u_name}Qaban" age="29" voice="earnest" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_haradrim_cav_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CC014101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE5F0101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -1219,7 +1219,7 @@
                 <beard_tag name="aserai" />
             </beard_tags>
             <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
+                <tattoo_tag name="harad" />
             </tattoo_tags>
         </face>
         <skills>
@@ -29524,7 +29524,7 @@
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
 			/-->
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -29575,7 +29575,7 @@
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
 			/-->
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -29626,7 +29626,7 @@
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
 			/-->
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -29677,7 +29677,7 @@
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"
 			/-->
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
@@ -36175,7 +36175,7 @@
 
     <NPCCharacter id="lord_U2_1" name="{=aom_lord_U2_1_name}Azraphel" age="41" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />
@@ -36215,7 +36215,7 @@
 
     <NPCCharacter id="lord_U3_1" name="{=aom_lord_U3_1_name}Belkazar" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="OneHanded" value="240" />
@@ -36255,7 +36255,7 @@
 
     <NPCCharacter id="lord_U4_1" name="{=aom_lord_U4_1_name}Pharakhôn" age="50" voice="softspoken" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />
@@ -36295,7 +36295,7 @@
 
     <NPCCharacter id="lord_U5_1" name="{=aom_lord_U5_1_name}Inkaldôr" age="28" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="OneHanded" value="240" />
@@ -36335,7 +36335,7 @@
 
     <NPCCharacter id="lord_U6_1" name="{=aom_lord_U6_1_name}Zimrathôr" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />
@@ -36616,9 +36616,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -36661,9 +36658,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -36706,9 +36700,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -36751,9 +36742,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37031,9 +37019,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37076,9 +37061,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37121,9 +37103,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37166,9 +37145,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37446,9 +37422,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37491,9 +37464,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37536,9 +37506,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37581,9 +37548,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37861,9 +37825,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37906,9 +37867,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37951,9 +37909,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -37996,9 +37951,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38276,9 +38228,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38321,9 +38270,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38366,9 +38312,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38411,9 +38354,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38691,9 +38631,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38736,9 +38673,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38781,9 +38715,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -38826,9 +38757,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39106,9 +39034,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39151,9 +39076,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39196,9 +39118,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39241,9 +39160,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39521,9 +39437,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39566,9 +39479,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39611,9 +39521,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39656,9 +39563,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39936,9 +39840,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -39981,9 +39882,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40026,9 +39924,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40071,9 +39966,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40354,9 +40246,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40399,9 +40288,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40444,9 +40330,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40489,9 +40372,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40769,9 +40649,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40814,9 +40691,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40859,9 +40733,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -40904,9 +40775,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41184,9 +41052,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41229,9 +41094,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41274,9 +41136,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41319,9 +41178,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41599,9 +41455,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41644,9 +41497,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41689,9 +41539,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -41734,9 +41581,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42014,9 +41858,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42059,9 +41900,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42104,9 +41942,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42149,9 +41984,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42429,9 +42261,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42474,9 +42303,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42519,9 +42345,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42564,9 +42387,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42844,9 +42664,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42889,9 +42706,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42934,9 +42748,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -42979,9 +42790,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -43259,9 +43067,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -43304,9 +43109,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -43349,9 +43151,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />
@@ -43394,9 +43193,6 @@
             <hair_tags>
                 <hair_tag name="aserai" />
             </hair_tags>
-            <tattoo_tags>
-                <tattoo_tag name="Cleanface" />
-            </tattoo_tags>
         </face>
         <skills>
             <skill id="OneHanded" value="60" />

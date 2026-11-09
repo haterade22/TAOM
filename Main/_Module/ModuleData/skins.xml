@@ -1,0 +1,1121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Harad war paint by yotthani, #1100. The entries are APPENDED to the human tattoo lists, so a face key's
+     tattoo number stays valid. Append only: never reorder or remove an entry. Engine limit: 64 per list.
+     The child skins carry unnamed entries, as NavalDLC does, so the numbers align across ages and a child's
+     harad tag finds a match. Their zero_probability must equal Native's value for that skin.
+     Details: docs/features/harad-war-paint.md -->
+<skins>
+	<race
+		id="human">
+		<skin
+			name="man">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="0">
+				<tattoo_material
+					name="tattoo_harad_a"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradA" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_b"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradA2" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_c"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradB" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_d"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradHunter" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_e"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradRitual" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_f"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_g"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradAsym" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_h"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradScarred" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="woman">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="0">
+				<tattoo_material
+					name="tattoo_harad_w1"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradCrown" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w2"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradFilm" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w3"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradPriestess" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w4"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradElegant" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w5"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradWarrior" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w6"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradDots" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material
+					name="tattoo_harad_w7"
+					tags="capon">
+					<style_tags>
+						<style_tag
+							name="HaradRitualElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_2_male">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="0">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA2" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradB" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradHunter" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitual" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradAsym" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradScarred" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_2_female">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="0">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradCrown" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradFilm" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradPriestess" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElegant" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradWarrior" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradDots" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitualElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_1_male">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA2" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradB" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradHunter" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitual" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradAsym" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradScarred" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_1_female">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradCrown" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradFilm" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradPriestess" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElegant" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradWarrior" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradDots" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitualElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_3_male">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA2" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradB" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradHunter" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitual" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradAsym" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradScarred" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="kid_3_female">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradCrown" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradFilm" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradPriestess" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElegant" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradWarrior" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradDots" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitualElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="toddler_male">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradA2" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradB" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradHunter" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitual" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradAsym" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradScarred" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+		<skin
+			name="toddler_female">
+			<tattoo_materials
+				group_id="8"
+				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradCrown" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradFilm" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradPriestess" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradElegant" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradWarrior" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradDots" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="HaradRitualElite" />
+						<style_tag
+							name="aserai" />
+						<style_tag
+							name="harad" />
+					</style_tags>
+				</tattoo_material>
+			</tattoo_materials>
+			<tattoo_color_gradient_points>
+				<tattoo_color_gradient_point
+					point="0.60, 0.02, 0.05" />
+				<tattoo_color_gradient_point
+					point="0.18, 0.00, 0.01" />
+				<tattoo_color_gradient_point
+					point="0.42, 0.14, 0.03" />
+				<tattoo_color_gradient_point
+					point="0.55, 0.22, 0.10" />
+				<tattoo_color_gradient_point
+					point="0.80, 0.45, 0.02" />
+				<tattoo_color_gradient_point
+					point="0.75, 0.55, 0.12" />
+				<tattoo_color_gradient_point
+					point="0.72, 0.66, 0.52" />
+				<tattoo_color_gradient_point
+					point="0.06, 0.05, 0.30" />
+				<tattoo_color_gradient_point
+					point="0.00, 0.38, 0.36" />
+				<tattoo_color_gradient_point
+					point="0.05, 0.55, 0.55" />
+				<tattoo_color_gradient_point
+					point="0.40, 0.05, 0.35" />
+				<tattoo_color_gradient_point
+					point="0.03, 0.03, 0.04" />
+			</tattoo_color_gradient_points>
+		</skin>
+	</race>
+</skins>

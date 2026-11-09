@@ -65,8 +65,8 @@ The Exoside bridge is a behavioral port of the GPL-2.0-or-later Blender bridge b
 |---|---|
 | `Main/_Module/GUI/SpriteParts/**` | Sprite art (1,023 files) |
 | `Main/_Module/GUI/SpriteData/**` | Sprite atlases and their metadata (227 files) |
-| `Main/_Module/Assets/**` | Banner icons, Gauntlet UI assets, main map textures (121 files) |
-| `Main/_Module/AssetSources/**` | Layered art sources (52 PNG, 34 PSD) |
+| `Main/_Module/Assets/**` except `tattoos/` | Banner icons, Gauntlet UI assets, main map textures (121 files) |
+| `Main/_Module/AssetSources/**` except `tattoos/` | Layered art sources (52 PNG, 34 PSD) |
 | `Main/_Module/ModuleData/**` | Game data: troops, cultures, items, settlements, lore strings (346 files) |
 | `tools/factionmap_output/**` image outputs | The world map renders (98 files) |
 | `tools/runes/**` image outputs | Rune art (6 files) |
@@ -79,6 +79,7 @@ The Exoside bridge is a behavioral port of the GPL-2.0-or-later Blender bridge b
 | `Main/_Module/ModuleSounds/**` | **Third-party audio** (436 files). Not TAOM's to license. Redistributed as part of a non-commercial fan project |
 | `Main/_Module/GUI/Fonts/**` | **Third-party fonts** (Aniron, Minion Pro, Ringbearer). Not TAOM's to license |
 | `Main/_Module/GUI/FactionUI/RuntimeFonts/**` | **Third-party fonts** (Cinzel and EB Garamond under OFL-1.1, licence text beside each; Ringbearer). Not TAOM's to license |
+| `Main/_Module/Assets/tattoos/**`, `Main/_Module/AssetSources/tattoos/**` | **Yotthani's Harad war paint** (15 designs). Not TAOM's to license. See [provenance-register.md](docs/reference/provenance-register.md) |
 | `Main/_Module/AssetPackages/**` | **Commissioned art, redistributed as delivered.** The four Yotthani meshes (`fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring`). Cleared for TAOM's use; not TAOM's to sublicense onward |
 | `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (ships in `LOTRLOME_Armory/Prefabs`, not in the TAOM module, since 2026-09-18; renamed from `taom_howdah_agent` 2026-09-19) | **Purchased asset** (ADOD_Beasts), reworked by TAOM 2026-09-18. Cleared for TAOM's use; not TAOM's to sublicense onward |
 | `Main/_Module/Shaders/Sources/**` | **Derived from TaleWorlds shader sources** (18 files). Modding Kit "Generate Shader" output for TAOM's `taom_deformer_*` shader assets: each is the native `bow_deformer`, `longbow_deformer` or `crossbow_deformer` pass file with the metallic-workflow defines changed. Not TAOM's to license. TAOM.dll copies them into the game's `Shaders/Sources` at startup (#916) |

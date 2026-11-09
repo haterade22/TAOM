@@ -2364,3 +2364,15 @@ A player saw two halberds in one Barad-Dur Guard set and the same Black Numenore
 - **Why missed:** the fixer's tests checked each swap alone; no test gave it two weapons of one class in one troop. The UI shows set 1 only, so the collapse stayed out of sight for weeks.
 - **Prevent:** `pick_substitute` takes the troop's kept and already-chosen ids and skips them (`test_two_weapons_of_one_troop_never_collapse_onto_one_replacement`). Before a hand repair of a Mordor low-tier roster, run `generate_career_kits.py --verify`: the career kit takes the most-carried low-tier polearm, so a rotation can move a player kit.
 - **Source:** [rca-black-uruk-weapons-2026-11-07.md](../rca-black-uruk-weapons-2026-11-07.md).
+### A tattoo entry names the material the Kit declared, and a miss draws nothing and logs nothing (Harad war paint, #1100)
+- **Why missed:** All 15 entries in `skins.xml` named `tattoo_harad_a_mat`, copied from yotthani's package, while the Kit had named its materials `tattoo_harad_a`. The face editor listed the tiles and the head stayed bare, with no line in either log. The load log showed the file opening, so an XSLT was not the fix.
+- **Prevent:** read the material name out of each `_mtl.tpac` and compare it with the XML. `tools/tests/test_harad_war_paint.py` now does this.
+- **Source:** #1100.
+### The Kit picks a texture's type from its name: a name ending in `_h` imports as a height map (Harad war paint, #1100)
+- **Why missed:** `tattoo_harad_h` imported as `heightmap` in BC4, one channel, while its 14 siblings imported as `albedo` in DXT5. The design would have lost its colour and coverage channels. Package size gave it away: 507 bytes against 518, and a cache entry half the size.
+- **Prevent:** after a batch import, read the type from each `_tex.tpac` rather than from one sample in the inspector. The same test rejects `heightmap`.
+- **Source:** #1100.
+### A tag paints nothing on a lord with a fixed key, so scan by culture and write the key (Harad war paint, #1100)
+- **Why missed:** the plan counted characters on `fighter_haradrim`, and its test iterated the same set. 53 `Culture.aserai` lords have their own key and no preset, 25 of them only in `lords.xslt`, which the `*.xml` scan never read. An original character with equal minimum and maximum keys does not roll, so changing their tag alone would also have done nothing. The first draft of the review decoded KeyPart8 bits 19 to 24 as the tattoo colour; those bits are the height multiplier.
+- **Prevent:** derive the target set from the culture, in every file that defines the character, including XSLT. Map a key field through the order of `FaceGenerationParams` and the decoder `FUN_18057b4e0`: the design is KeyPart1 bits 24 to 29 and the colour bits 18 to 23.
+- **Source:** #1100, `rca-harad-war-paint-2026-11-08.md`.

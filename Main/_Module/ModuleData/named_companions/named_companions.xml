@@ -404,6 +404,9 @@
 	<NPCCharacter id="named_companion_igor" name="{=nc_igor_name}Igor Fahlun, the Lost" age="27" voice="earnest" culture="Culture.aserai" race="human" default_group="Cavalry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
 			<face>
 				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+				<tattoo_tags>
+					<tattoo_tag name="harad" />
+				</tattoo_tags>
 	</face>
 			<skills>
 				<skill id="OneHanded" value="200"/>

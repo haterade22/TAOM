@@ -12,7 +12,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -134,7 +134,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -274,7 +274,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -436,7 +436,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -564,7 +564,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -677,7 +677,7 @@
         occupation="Bandit"
         culture="Culture.umbar_corsairs">
         <face>
-            <face_key_template value="BodyProperty.fighter_haradrim" />
+            <face_key_template value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -711,7 +711,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -839,7 +839,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -949,7 +949,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1077,7 +1077,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1247,7 +1247,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1393,7 +1393,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1503,7 +1503,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1655,7 +1655,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1789,7 +1789,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill
@@ -1942,7 +1942,7 @@
         culture="Culture.umbar">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_haradrim" />
+                value="BodyProperty.fighter_umbar" />
         </face>
         <skills>
             <skill

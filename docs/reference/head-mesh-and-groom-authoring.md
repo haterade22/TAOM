@@ -200,7 +200,7 @@ cause below was proven in game (2026-08-10) [yotthani]:
   one-entry list as empty in its own copy of the skin record (`:609`, `tattoos == 1 ? 0 : tattoos`); the same author ruled the tattoo list out on the same day: `KopfMessung.cs@6265f4a2:11-13` lists the "Tattoo-Liste" among four guesses, "alle im Spiel widerlegt" (`HeadFit.cs:67-68` says the same), and the measured cause is the head mesh colour (next bullet). So the one-entry list is a refuted guess for Saruman's black head, not its cause. Scars are tattoo entries (the engine tests the name for `scar`, see
   [race-face-and-hand-morphs.md](race-face-and-hand-morphs.md)). Upstream also added Harad war paint as 8 male and 7 female `tattoo_material` entries (the comment calls the male ones clones of `tattoo_male_a_mat` and names no source for the female ones), under `group_id="8" zero_probability="0"`; its XML
   comment says "only B = black, R+B = palette colour, G+B = white" (`bn faces/FaceLearner/ModuleData/skins.xml@6265f4a2:108-110`
-  and `:198-199`, dated 2026-10-20; the channel code is the author's probe, not checked against the engine).
+  and `:198-199`, dated 2026-10-20; the channel code is the author's probe, not checked against the engine). TAOM imports these designs as [Harad war paint](../features/harad-war-paint.md) (#1100).
 - **A foreign race can draw a vanilla-shader head near-black** [yotthani, measured in game on 2026-10-04,
   `bn faces/FaceLearner/Core/KopfMessung.cs@6265f4a2:10-27` and `HeadFit.cs:67-73`; no engine version stated]. The
   measurement: on TAOM's `saruman` race "setzt die Engine die Farbe der Kopf-Meshes auf FF050202 (fast schwarz)", and

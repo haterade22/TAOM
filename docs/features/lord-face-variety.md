@@ -58,7 +58,8 @@ In `Main/_Module/ModuleData/characters/lords.xml` the shared explicit `<BodyProp
 
 | Group | Heroes | Template |
 |-------|--------|----------|
-| Harad women (Shaghana, Abanissa) and `lord_U1_1`, `lord_U1_11`, `lord_U1_12`, `lord_U1_13` (Umbar) | 72 | `fighter_haradrim` |
+| Harad women (Shaghana, Abanissa) | 68 | `fighter_haradrim` |
+| `lord_U1_1`, `lord_U1_11`, `lord_U1_12`, `lord_U1_13` (Umbar) | 4 | `fighter_umbar` |
 | Misty Mountain orcs (race `orc`) | 90 men, 60 women | `fighter_gundabad` |
 | Gundabad `pale_uruk` | 70 men, 30 women | `fighter_gundabad` |
 | Goblins (Goblin and Bluecraig clans) | 60 men, 20 women | `fighter_gundabad` |

@@ -9657,7 +9657,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.85" key="0028280FD7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C000000000000000000000000000000000000000000F47140"/>
+                <BodyProperties version="4" weight="0.6" build="0.85" key="0028280FE09023C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C000000000000000000000000000000000000000000F47140"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -9712,7 +9715,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.75" key="0022500FD13C0001A7E3C8A64757B4876BA6785E867C96D8249D763F3BB7D86400000C5401A663680000000000000CE600000000000000000000000000286000"/>
+                <BodyProperties version="4" weight="0.5" build="0.75" key="0022500FE5BC0001A7E3C8A64757B4876BA6785E867C96D8249D763F3BB7D86400000C5401A663680000000000000CE600000000000000000000000000286000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -9766,7 +9772,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7762" build="0.7083" key="0028F40E5A000189869C5A8B7780749AAB77564639947345843A8657994575E505BBC0560B9687970000000000000CE600000000000000000000000001680000"/>
+                <BodyProperties version="4" weight="0.7762" build="0.7083" key="0028F40E65980189869C5A8B7780749AAB77564639947345843A8657994575E505BBC0560B9687970000000000000CE600000000000000000000000001680000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -9821,7 +9830,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="002DD40E40000001869C5A8B7786749AAB77564639947345843A8657994575E5000E00040E9687970000000000000CE600000000000000000000000001E00000"/>
+                <BodyProperties version="4" key="002DD40E67980001869C5A8B7786749AAB77564639947345843A8657994575E5000E00040E9687970000000000000CE600000000000000000000000001E00000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -9874,7 +9886,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.85" key="001CE008800023959B83263A29717DE32CD881249354432699A85C598A0A58590588805708986484000000000000000000000000000000000000000035085041"/>
+                <BodyProperties version="4" weight="0.6" build="0.85" key="001CE0089FB023959B83263A29717DE32CD881249354432699A85C598A0A58590588805708986484000000000000000000000000000000000000000035085041"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -9928,7 +9943,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.526" build="0.7128" key="0022B00880003012988235094C712BA509598337A14534159A897A068A1E4933034B80350473C822000000000000000000000000000000000000000038807044"/>
+                <BodyProperties version="4" weight="0.526" build="0.7128" key="0022B008A0BC3012988235094C712BA509598337A14534159A897A068A1E4933034B80350473C822000000000000000000000000000000000000000038807044"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -9983,7 +10001,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3981" build="0.2729" key="0022D80B400020128982510588A2A7348A60717AC375A0229E99C736896F575501A466130A1CB332000000000000000000000000000000000000000007542043"/>
+                <BodyProperties version="4" weight="0.3981" build="0.2729" key="0022D80B68A420128982510588A2A7348A60717AC375A0229E99C736896F575501A466130A1CB332000000000000000000000000000000000000000007542043"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -10037,7 +10058,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5262" build="0.6404" key="001CC80A00000341AB86473C7577ACD8BB5C83453698737279B68E18780D2B26029A86240968931500000000000000000000000000000000000000001D3C3002"/>
+                <BodyProperties version="4" weight="0.5262" build="0.6404" key="001CC80A21C40341AB86473C7577ACD8BB5C83453698737279B68E18780D2B26029A86240968931500000000000000000000000000000000000000001D3C3002"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -10091,7 +10115,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5959" build="0.39" key="002DD008800017569A8325164C717EB41DB68247C1766706898A77398C1C655704469045046695710000000000000000000000000000000000000000308850C5"/>
+                <BodyProperties version="4" weight="0.5959" build="0.39" key="002DD008A2D017569A8325164C717EB41DB68247C1766706898A77398C1C655704469045046695710000000000000000000000000000000000000000308850C5"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -10144,7 +10171,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7171" build="0.6445" key="001CF40880002959988044094881DCF25D518415A18656179A8899478D2C5A5304AAB0460A3CC435000000000000000000000000000000000000000037402000"/>
+                <BodyProperties version="4" weight="0.7171" build="0.6445" key="001CF408A3DC2959988044094881DCF25D518415A18656179A8899478D2C5A5304AAB0460A3CC435000000000000000000000000000000000000000037402000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -10199,7 +10229,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="002DDC0E4000040497D3427635D69CA7A837954A579662459958A8898646766A0007600307B767790000000000000CE600000000000000000000000000500000"/>
+                <BodyProperties version="4" key="002DDC0E6284040497D3427635D69CA7A837954A579662459958A8898646766A0007600307B767790000000000000CE600000000000000000000000000500000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -10253,7 +10286,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.5337" key="00268C0C110030026982442CABD127719C46724BA187A130BBA3EA457A6C57470288B6240802B35C000000000000000000000000000000000000000059044001"/>
+                <BodyProperties version="4" weight="0.7" build="0.5337" key="00268C0C239030026982442CABD127719C46724BA187A130BBA3EA457A6C57470288B6240802B35C000000000000000000000000000000000000000059044001"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -10308,7 +10344,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7751" build="0.2584" key="0022D80A800030055C816132B9B2D7429B34737A82668521BAD6A558884D5C690394C635093568AC00000000000000000000000000000000000000002B2C2044"/>
+                <BodyProperties version="4" weight="0.7751" build="0.2584" key="0022D80AA49830055C816132B9B2D7429B34737A82668521BAD6A558884D5C690394C635093568AC00000000000000000000000000000000000000002B2C2044"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -10361,7 +10400,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5519" build="0.7167" key="0022F80880002794C782350B3B71AFB7098A8017A2755525A9B9AD468B0C5D68055B80570564A704000000000000000000000000000000000000000060A87042"/>
+                <BodyProperties version="4" weight="0.5519" build="0.7167" key="0022F808A1982794C782350B3B71AFB7098A8017A2755525A9B9AD468B0C5D68055B80570564A704000000000000000000000000000000000000000060A87042"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -10415,7 +10457,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7752" build="0.5081" key="001C980880001612BC80243829815A955AA18339B27543258DB878188B178D450368C0350659885500000000000000000000000000000000000000006AD07081"/>
+                <BodyProperties version="4" weight="0.7752" build="0.5081" key="001C9808A2A41612BC80243829815A955AA18339B27543258DB878188B178D450368C0350659885500000000000000000000000000000000000000006AD07081"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10468,7 +10513,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.6" key="003F000FD6FC29DA0CFC208F1001FBEF2D01FA0000F01110500B1EF068E672B006B970670B0D87810000000000000000000000000000000000000000217800C2"/>
+                <BodyProperties version="4" weight="0.5" build="0.6" key="003F000FE3B029DA0CFC208F1001FBEF2D01FA0000F01110500B1EF068E672B006B970670B0D87810000000000000000000000000000000000000000217800C2"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -10521,7 +10569,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.65" build="0.8" key="001CD808800003D2998335193B81CD944A998317B1718116AA98A7278C098A440399903509299520000000000000000000000000000000000000000057281041"/>
+                <BodyProperties version="4" weight="0.65" build="0.8" key="001CD808A4BC03D2998335193B81CD944A998317B1718116AA98A7278C098A440399903509299520000000000000000000000000000000000000000057281041"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -10574,7 +10625,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.68" build="0.85" key="0022EC08800018D57881460A2B7129E25BAA85149355561688997A298E1A795304689046064BC72600000000000000000000000000000000000000001CC070C5"/>
+                <BodyProperties version="4" weight="0.68" build="0.85" key="0022EC08A5C418D57881460A2B7129E25BAA85149355561688997A298E1A795304689046064BC72600000000000000000000000000000000000000001CC070C5"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10628,7 +10682,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.8" key="001CA40880001141A982443A39718ED53DA28416A353712599A86A478E184657066AA068065A8854000000000000000000000000000000000000000008C040C4"/>
+                <BodyProperties version="4" weight="0.7" build="0.8" key="001CA408A6D01141A982443A39718ED53DA28416A353712599A86A478E184657066AA068065A8854000000000000000000000000000000000000000008C040C4"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -10682,7 +10739,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.72" build="0.82" key="0016C80880001597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0"/>
+                <BodyProperties version="4" weight="0.72" build="0.82" key="0016C808A0E81597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10736,7 +10796,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3371" build="0.6152" key="0028B00880001A14A78244373A714DB139C2813792826026AA79AC688B185E4503295035024675B0000000000000000000000000000000000000000068486084"/>
+                <BodyProperties version="4" weight="0.3371" build="0.6152" key="0028B008A1F01A14A78244373A714DB139C2813792826026AA79AC688B185E4503295035024675B0000000000000000000000000000000000000000068486084"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10790,7 +10853,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7348" build="0.4839" key="001CD40A00001582C9823315378118F46C84843482727016978A6A088D2B4E480487B04608774A7100000000000000000000000000000000000000003F182083"/>
+                <BodyProperties version="4" weight="0.7348" build="0.4839" key="001CD40A22FC1582C9823315378118F46C84843482727016978A6A088D2B4E480487B04608774A7100000000000000000000000000000000000000003F182083"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10844,7 +10910,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1088" build="0.5139" key="0000AC04C00016450E8A2E038706E098A87480B0D19560016758100A8FE00A450098260309798B0600000000000000000000000000000000000000003B343002"/>
+                <BodyProperties version="4" weight="0.1088" build="0.5139" key="0000AC04E38416450E8A2E038706E098A87480B0D19560016758100A8FE00A450098260309798B0600000000000000000000000000000000000000003B343002"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -10898,7 +10967,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7114" build="0.7083" key="001670045300340A9772C4C436AA7887A435497444328E72DB8C48519D57749A05BBB1570BBA29780000387A00000AEB00000033000000000000000001705000"/>
+                <BodyProperties version="4" weight="0.7114" build="0.7083" key="001670046490340A9772C4C436AA7887A435497444328E72DB8C48519D57749A05BBB1570BBA29780000387A00000AEB00000033000000000000000001705000"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -10953,7 +11025,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0" key="001C900FC0FC180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044"/>
+                <BodyProperties version="4" weight="0" build="0" key="001C900FE6A4180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -11008,7 +11083,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E504430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E65A430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11063,7 +11141,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028D40B51FC000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028D40B66B0000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11118,7 +11199,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CD0881003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11173,7 +11257,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CD2880004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CE8C40004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -11228,7 +11315,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CD2E4000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CE2D0000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills/>
             <Traits>
@@ -11256,7 +11346,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CD1883007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CE3DC3007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11311,7 +11404,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FC0B4000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FE4E8000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11366,7 +11462,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FC044200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FE5F0200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills/>
             <Traits>
@@ -11394,7 +11493,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E502C10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E66FC10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11449,7 +11551,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B40FC10014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B678410014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11504,7 +11609,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B52FC3011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B68903011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -11559,7 +11667,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E40CC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E5FDC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills/>
             <Traits>
@@ -11587,7 +11698,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C80880001597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0"/>
+                <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C808A2981597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11642,7 +11756,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FD1B40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FE3A40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11697,7 +11814,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FC00010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FE4B010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11752,7 +11872,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CD21410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CE6C410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11807,7 +11930,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FD114000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FE7D0000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11862,7 +11988,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CD1A0000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CE8DC000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -11917,7 +12046,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A215820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A22E820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11972,7 +12104,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E52143001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E63F03001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -12027,7 +12162,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CC014101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE4FC101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -12082,7 +12220,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E5088200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills/>
             <Traits>
@@ -12110,7 +12251,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CD114300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE690300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -12164,7 +12308,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.7" key="003F880FC03C314064666A926C75C85988588A453C598D6A663AC7AB7D9B6B7A00035AC80396C8950000037F0000000F00000037049140010000000000283140"/>
+                <BodyProperties version="4" weight="0.4" build="0.7" key="003F880FDF84314064666A926C75C85988588A453C598D6A663AC7AB7D9B6B7A00035AC80396C8950000037F0000000F00000037049140010000000000283140"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -19733,7 +19880,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E401410059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3"/>
+                <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E62B010059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -19788,7 +19938,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CD114300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CE4E8300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -19843,7 +19996,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E5088200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -19898,7 +20054,10 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CC014101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE5F0101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <tattoo_tags>
+                    <tattoo_tag name="harad" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
