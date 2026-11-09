@@ -1416,3 +1416,9 @@ The new `HandleWargTargetHit` log read the victim's mount in its `catch`. Patch4
 - **Why missed:** the tests stubbed a mount that never changed, so they passed. The port review had already recorded the same hazard for the `blow` diagnostic line.
 - **Prevent:** in a catch around a call that mutates its subject, read the fields you will log before the call, and write a test that changes the field during the call. When a guard's scope changes, grep the effect's words (`dismounted`, `unhorse`) as well as the patch name.
 - **Source:** `docs/reviews/rca-creature-mount-death-dismount-2026-11-08.md`.
+
+### A prefix inside `PlayerEncounter.Init` must leave the encounter open (Patch73, #1104, 2026-11-09)
+`SupplyCaravanEncounterPatch` called `PlayerEncounter.Finish()` from a `DoMeeting` prefix. `DoMeeting` runs inside `Init`, and `RestartPlayerEncounter` reads `PlayerEncounter.Current` on the line after `Init` (v1.5.6 `EncounterManager.cs:339-340`), so that read throws after the prefix has returned and its catch cannot see it.
+- **Why missed:** the patch copied the teardown from vanilla's own menu init and checked that the calls matched. Vanilla runs that teardown only on its leave branch, and nobody read the caller above the menu.
+- **Prevent:** before a prefix ends or replaces shared state, read the callers up the stack to the frame that owns that state, and read what each does after the call returns. In a meeting prefix, open a menu and end the encounter from its Leave option, as Patch73, Patch75 and Patch143 do.
+- **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`.

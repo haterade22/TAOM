@@ -86,8 +86,8 @@ Lens 5, Lens 2 and Lens 7 reviewed the uncommitted follow-ups at tier 1. No find
 - A battle without the commander now pays kill XP, merit band and spoils, because the merit sampler keys on `EnlistedBattle`. A reload into the same battle already did this.
 - If the player's own battle ends while the commander is fighting, the state holds at `EnlistedBattle` until the commander's battle ends. The window needs time to pass on a menu that stops it.
 - `IsMainPartyIn` stays in place of `mapEvent.IsPlayerMapEvent`: the same file uses that helper for the sibling check.
-- FOLLOW-UP (no issue: filing is public and needs Mike's word): HIGH, existing code. `SupplyCaravanEncounterPatch.cs:58` calls `PlayerEncounter.Finish()` from the `DoMeeting` prefix, inside `Init`. `EncounterManager.cs:340` then reads `PlayerEncounter.Current`, which `Finish` set to null. What catches that throw is unverified. Refuge's shape, a menu that leaves the encounter open, is the model.
-- FOLLOW-UP (no issue: no producer found, and a guard for a speculative case needs Mike's word): the failed-join rollback at `ServiceBattleService.cs:226` has no in-event gate, so it could put the wait menu over a live event.
+- Resolved (#1104): HIGH, existing code. `SupplyCaravanEncounterPatch` called `PlayerEncounter.Finish()` from the `DoMeeting` prefix, inside `Init`. `EncounterManager.cs:340` then reads `PlayerEncounter.Current`, which `Finish` set to null. The prefix now opens a menu that leaves the encounter open, and the menu's Leave option ends it. What caught that throw stays unverified. A later review narrowed who reaches it: a single player with the feature on, only on a large frame step (`rca-supply-caravan-meeting-2026-11-09.md`).
+- Resolved: the failed-join rollback in `ServiceBattleService` now reasserts the service menu only outside a map event. No producer of this state is known.
 
 ## Not verified
 

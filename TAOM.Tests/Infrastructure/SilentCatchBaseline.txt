@@ -2,7 +2,7 @@
 # A catch is silent when its body neither logs, rethrows, calls Outcomes.Swallowed nor carries a
 # "// swallow-ok: <reason>" comment. Counts only fall: fix a catch, then lower its line in the same commit.
 # Format: <count> <repo-relative path>, sorted by path (ordinal), counts of 1 or more.
-# Files: 154. Silent catches: 217.
+# Files: 153. Silent catches: 216.
 1 Client/Features/ManyHammers/Hooks/ManyHammersCalls.cs
 1 Main/Features/AdvancedCombat/Hooks/Agent_CheckToDropFlaggedItem_Guard_Patch.cs
 1 Main/Features/AnimationVariety/Hooks/AnimVarietyMissionBehavior.cs
@@ -150,7 +150,6 @@
 1 Main/Features/StagedSiege/Hooks/StagedSiegeSpawnFramePatch.cs
 1 Main/Features/StagedSiege/Hooks/StagedSiegeSpawnSettingsPatch.cs
 1 Main/Features/StaleCharacterRepair/Hooks/Patch83_StaleCharacterRepair.cs
-1 Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs
 2 Main/Features/TaomBuildings/Hooks/Patch108_TaomBuildings.cs
 1 Main/Features/TaomBuildings/Hooks/TaomBuildingUiHooks.cs
 1 Main/Features/TimeAcceleration/Hooks/MapScreen_IsParleyClickReleased_TurboClick_Patch.cs

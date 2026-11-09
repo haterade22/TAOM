@@ -1128,3 +1128,15 @@ A guest loads the server's save, so a TAOM book that means "the player's refuges
 **Prevent:** when the target menu's init can move on by itself, use `SwitchTo` and accept where it lands. `EnsureMenuOpen` fits menus whose init does nothing.
 
 **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`, finding 15.
+
+### A crash hypothesis names the check that fires first on its route (#1104, 2026-11-09)
+The Patch73 defect was ranked first for a crash at supply delivery, because a player might click the caravan as it arrives. Delivery fires at 1.2 map units and runs before the encounter check each frame. The meeting radius is `Max(0.5, dt * 10)`, so a single player with the feature on reaches the defect only on a large frame step.
+- **Why missed:** the ranking came from what a player might do, and the review that rated the defect HIGH read only the encounter chain.
+- **Prevent:** before ranking a hypothesis, list the checks that can end the route first, compare their numbers and their order in the tick, and write the condition under which the route is reached.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.
+
+### A guard on "is in a map event" asks who put the party there (#1099, 2026-11-09)
+A failed-join guard skipped the army undo for any party in an event. `MobileParty.SetAttachedToInternal` copies the commander's event side onto a merged party, so the join's own merge made every such rollback read as in-event and the undo never ran.
+- **Why missed:** the unit tests stubbed the flag, and the merge left no trace in the fake.
+- **Prevent:** before gating on an engine state, list every writer of that state on the path, the current method included. Model a writer in the test fake when the method itself can set the state.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.

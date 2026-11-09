@@ -1,43 +1,62 @@
+using System;
 using HarmonyLib;
-using TAOM.Features.CoopInterop;
+using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.SupplyLines.Components;
 using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.SupplyLines.Hooks;
 
 /// <summary>
-/// Prefix on the static <see cref="PlayerEncounter"/>.<c>DoMeeting</c>: meeting your own supply
-/// caravan never opens vanilla's meeting flow. The caravan's <c>PartyComponent.Leader</c> is null,
-/// so vanilla's <c>ConversationHelper.GetConversationCharacterPartyLeader</c> would strike a
-/// stranger conversation with the highest-tier roster troop (a template guard or a purchased
-/// recruit), and an empty roster hands the conversation a null partner (Codex round-1 P2).
+/// Prefix on the static <see cref="PlayerEncounter"/>.<c>DoMeeting</c>: meeting a supply caravan never opens
+/// vanilla's meeting flow. The caravan's <c>PartyComponent.Leader</c> is null, so vanilla's
+/// <c>ConversationHelper.GetConversationCharacterPartyLeader</c> would strike a stranger conversation with the
+/// highest-tier roster troop (a template guard or a purchased recruit), and an empty roster hands the conversation a
+/// null partner (Codex round-1 P2).
 ///
-/// <para>Instead the encounter is finished on the spot with a one-line info message, exactly the
-/// teardown vanilla's own leave path runs from the same menu-init context
-/// (<c>game_menu_encounter_meeting_on_init</c>: <c>PlayerEncounter.Finish()</c> +
-/// <c>SetMoveModeHold()</c>, verified against the installed 1.4.8). The caravan itself needs no
-/// dialog: delivery is proximity-driven and the route visual already narrates progress.</para>
+/// <para>The prefix opens <see cref="SupplyCaravanMeetingMenu"/> and leaves the encounter open. <c>DoMeeting</c> runs
+/// inside <c>PlayerEncounter.Init</c>, and <c>EncounterManager.RestartPlayerEncounter</c> reads the current encounter
+/// on the line after <c>Init</c> (v1.5.6 <c>EncounterManager.cs:339-340</c>), so the encounter ends from the menu's
+/// Leave option and never from here (#1104).</para>
 ///
-/// <para>Coexists with Refuge's prefix on the same method (Patch75): each guard acts only on its
-/// own component type, so at most one ever returns false for a given encounter.</para>
+/// <para>Coexists with Patch75 and Patch143 on the same method: once a bool prefix returns false, Harmony skips the
+/// later bool prefixes, so at most one returns false for a given encounter. When the menu does not open, vanilla's
+/// meeting runs and Patch143 still guards an empty party.</para>
 ///
-/// <para>CO-OP (#1086): a guest's caravans are the host's, so a guest who meets one gets the same
-/// teardown (vanilla's meeting would still find no leader) with a line that does not call it theirs.</para>
+/// <para>Delivery fires at 1.2 map units and runs before the encounter check each frame. The meeting radius is
+/// <c>Max(0.5, dt * 10)</c>, so a single player with the feature on reaches this prefix only on a large frame step
+/// (dt over 0.12, for example 16x turbo below about 33 fps). A co-op guest, or a player with the feature off, reaches
+/// it at normal speed.</para>
 /// </summary>
 [HarmonyPatch(typeof(PlayerEncounter), "DoMeeting")]
 [HarmonyPatchCategory("Patch73_SupplyLines")]
 public static class SupplyCaravanEncounterPatch
 {
-    private static ICoopSessionProvider? _coop;
+    internal const string MeetingCheckId = "taom.supply-lines.caravan-meeting";
+
+    private static IGameMenuAdapter? _menus;
+    private static IOutcomeLog? _outcomes;
 
     /// <summary>The line shown when the player meets a supply caravan: theirs, or a host's in a shared campaign.</summary>
     internal static string MeetingLine(bool defersToHost) => defersToHost
         ? "{=taom_sl_caravan_meet_other}A supply caravan passes on toward its lord."
         : "{=taom_sl_caravan_meet}Your supply caravan presses on toward your position.";
+
+    /// <summary>Skips vanilla only when the caravan's menu verifiably opened.</summary>
+    internal static bool RunsVanilla(bool isSupplyCaravan, string? partyId, IGameMenuAdapter menus, IOutcomeLog outcomes)
+    {
+        if (!isSupplyCaravan)
+            return true;
+
+        if (menus.EnsureMenuOpen(SupplyCaravanMeetingMenu.MenuId))
+        {
+            outcomes.Pass(MeetingCheckId, "", $"party={partyId}");
+            return false;
+        }
+
+        outcomes.Fail(MeetingCheckId, "menu-not-open", $"party={partyId}");
+        return true;
+    }
 
     [HarmonyPrefix]
     public static bool Prefix()
@@ -45,23 +64,16 @@ public static class SupplyCaravanEncounterPatch
         try
         {
             var party = PlayerEncounter.EncounteredMobileParty;
-            if (party?.PartyComponent is not SupplyCaravanComponent)
-                return true;
-
-            // Only the wording depends on the role, so a failed resolve keeps the teardown and the owner's line.
-            bool defers = false;
-            try { defers = (_coop ??= TAOM.IoC.Resolve<ICoopSessionProvider>())?.ShouldDeferToHost == true; }
-            catch { /* swallow-ok: only the wording depends on the role; the teardown and the owner's line stand */ }
-            InformationManager.DisplayMessage(new InformationMessage(
-                new TextObject(MeetingLine(defers)).ToString(),
-                Colors.Green));
-            PlayerEncounter.Finish();
-            MobileParty.MainParty?.SetMoveModeHold();
-            return false;
+            return RunsVanilla(
+                party?.PartyComponent is SupplyCaravanComponent,
+                party?.StringId,
+                _menus ??= TAOM.IoC.Resolve<IGameMenuAdapter>(),
+                _outcomes ??= TAOM.IoC.Resolve<IOutcomeLog>());
         }
-        catch
+        catch (Exception ex)
         {
             // A failed guard must degrade to vanilla's meeting, never to a dead encounter.
+            Outcomes.Swallowed("SupplyLines", "caravan meeting", ex);
             return true;
         }
     }

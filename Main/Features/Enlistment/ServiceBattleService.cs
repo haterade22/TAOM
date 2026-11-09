@@ -123,10 +123,11 @@ public class ServiceBattleService : IServiceBattleService
         // parties in encounter detection, and a party that acquires a MapEventSide without a
         // live PlayerEncounter freezes its map event PERMANENTLY (the engine ticks every map
         // event except the player's). Proceeding on a failed restore is how that happens, so
-        // fall through to the rollback instead of joining half-present.
+        // fall through to the failed-join handling below instead of joining half-present.
+        bool mergedIntoArmy = false;
         if (!_attachment.RestorePresence())
         {
-            _logger?.LogError($"[Enlistment] cannot join commander battle ({trigger}) — presence restore failed; rolling back rather than joining a battle half-present");
+            _logger?.LogError($"[Enlistment] cannot join commander battle ({trigger}) — presence restore failed; not joining a battle half-present");
         }
         else
         {
@@ -139,7 +140,8 @@ public class ServiceBattleService : IServiceBattleService
         // Best-effort by design. A commander with no kingdom cannot have an army raised for him, and
         // that is not a reason to miss the battle: without the merge the player still fights, just
         // on his own team as before (#443). Never let a cosmetic placement fix cost a join.
-        if (!_army.JoinCommanderArmy(_store.Record.CommanderHeroId))
+        mergedIntoArmy = _army.JoinCommanderArmy(_store.Record.CommanderHeroId);
+        if (!mergedIntoArmy)
             _logger?.LogInfo("[Enlistment] army merge unavailable — joining on the ally-team path (see #443)");
 
         // EnsureEncounterAgainst refuses to seed while a DIFFERENT PlayerEncounter.Current
@@ -194,6 +196,18 @@ public class ServiceBattleService : IServiceBattleService
 
         }
 
+        // A party in an event with no army merge from this method stays in that battle and in EnlistedBattle,
+        // as the join-success branch above leaves it. Leaving the army or parking would pull it out or
+        // deactivate it (#551). A merge above also copies the commander's event side onto the party,
+        // and the rollback below undoes that one. The engine opens `encounter` when no menu is up (#1021).
+        if (!mergedIntoArmy && _encounter.IsMainPartyInMapEvent)
+        {
+            _logger?.LogWarning($"[Enlistment] could not join commander battle ({trigger}) while already in a live event; staying in that battle");
+            if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+                _gameMenu.ExitToLast();
+            return;
+        }
+
         // Rollback (the donor's wasHiddenServiceMode contract): never strand a visible, active
         // main party in battle state after a failed join. Finish() first — leaving an orphaned
         // PlayerEncounter behind blocks the main party from ever entering another encounter.
@@ -205,7 +219,7 @@ public class ServiceBattleService : IServiceBattleService
         _army.LeaveArmy();
 
         // Only clean up an encounter that is OURS. Everything after this runs on every rollback
-        // path regardless of the verdict — the player must always end up parked with a menu.
+        // path regardless of the verdict: the player ends up parked, with a menu unless still in a map event.
         var rollbackVerdict = _ownership.Evaluate(
             EncounterFinishIntent.JoinRollback, _encounter.GetOwnership(commanderPartyId));
         if (rollbackVerdict == EncounterFinishVerdict.Finish)
@@ -223,7 +237,10 @@ public class ServiceBattleService : IServiceBattleService
         }
 
         _attachment.EnsureParked(_store.Record.CommanderHeroId);
-        ReassertServiceMenu("a failed join");
+
+        // Inside a map event the service menu would cover the battle the player is still in (#1099).
+        if (!_encounter.IsMainPartyInMapEvent)
+            ReassertServiceMenu("a failed join");
     }
 
     public void OnCommanderBattleEnded(bool mainPartyWasInEndingEvent)

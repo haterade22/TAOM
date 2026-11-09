@@ -93,7 +93,7 @@ public class CoopVetoClassificationTests
             "Player-local UI redirect, the caravan sibling of RefugeEncounterPatch: when the LOCAL " +
             "player bumps a supply caravan (the condition checks the component, not the owner, so a co-op " +
             "guest meeting the host's caravan gets the same line, #1086), the meeting conversation (which would strike a " +
-            "stranger dialog off a Leader-less roster) is replaced by an info line plus the same " +
+            "stranger dialog off a Leader-less roster) is replaced by a one-option menu whose Leave runs the " +
             "Finish+hold teardown vanilla's leave path runs. DoMeeting only runs for the local " +
             "player's encounter, the condition reads the encountered party's component type " +
             "(replicated party state, identical on every peer), and no shared campaign mutation is " +

@@ -773,13 +773,19 @@ This is the one place the patch deliberately departs from the service it replace
 Click-through guard for supply caravans. A caravan's `PartyComponent.Leader` is
 null, so vanilla's meeting flow would strike a stranger conversation with the highest-tier roster
 troop, or hand the conversation a null partner on an empty roster (Codex round-1 P2). The prefix
-shows a one-line info message and finishes the encounter with the same teardown vanilla's own
-leave path runs (`PlayerEncounter.Finish()` + `SetMoveModeHold()`, verified against installed
-1.4.8), then skips the meeting. Coexists with Patch75's prefix on the same method: each guard acts
-only on its own component type, so at most one returns false for a given encounter. A failed guard
-degrades to vanilla's meeting (never to a dead encounter). A co-op guest's caravans are the host's, so
-a guest gets the same teardown with `{=taom_sl_caravan_meet_other}` instead of the owner's line
-(`SupplyCaravanEncounterPatchTests`, #1091). Co-op disposition: ReviewedSafe
+opens `SupplyCaravanMeetingMenu` and skips the meeting only when that menu opened. The menu's Leave
+option runs `PlayerEncounter.Finish()` and `SetMoveModeHold()`. The prefix must never end the
+encounter itself: `DoMeeting` runs inside `PlayerEncounter.Init`, and `RestartPlayerEncounter`
+reads `PlayerEncounter.Current` on the next line (v1.5.6 `EncounterManager.cs:339-340`, #1104).
+Coexists with Patch75 and Patch143 on the same method: once a bool prefix returns false, Harmony
+skips the later bool prefixes, so at most one returns false for a given encounter. A failed guard
+degrades to vanilla's meeting (never to a dead encounter), and Patch143 runs after it. Delivery fires
+at 1.2 map units and runs before the encounter check each frame. The meeting radius is
+`Max(0.5, dt * 10)` (`PartyBase.GetEncounterTargetPoint`), so a single player with the feature on
+reaches this prefix only on a large frame step (`dt` over 0.12, for example 16x turbo below about
+33 fps); a co-op guest, or a player with the feature off, reaches it at normal speed. A co-op guest's
+caravans are the host's, so a guest gets the same menu with `{=taom_sl_caravan_meet_other}` instead of
+the owner's line (`SupplyCaravanEncounterPatchTests`, #1091). Co-op disposition: ReviewedSafe
 (player-local UI redirect, condition reads replicated party state; `CoopVetoClassificationTests`).
 
 ## Patch74_FieldCampNameplateIcon
