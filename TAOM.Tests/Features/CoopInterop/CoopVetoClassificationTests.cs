@@ -92,7 +92,7 @@ public class CoopVetoClassificationTests
         ["SupplyCaravanEncounterPatch"] = new(CoopVeto.ReviewedSafe,
             "Player-local UI redirect, the caravan sibling of RefugeEncounterPatch: when the LOCAL " +
             "player bumps a supply caravan (the condition checks the component, not the owner, so a co-op " +
-            "guest meeting the host's caravan gets the same line, #1086), the meeting conversation (which would strike a " +
+            "guest meeting the host's caravan gets the same menu with guest wording, #1086), the meeting conversation (which would strike a " +
             "stranger dialog off a Leader-less roster) is replaced by a one-option menu whose Leave runs the " +
             "Finish+hold teardown vanilla's leave path runs. DoMeeting only runs for the local " +
             "player's encounter, the condition reads the encountered party's component type " +

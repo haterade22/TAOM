@@ -817,11 +817,14 @@ public class ServiceBattleServiceTests
         MakeEnlisted();
         _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
         _encounter.IsMainPartyInMapEvent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true, playerInMapEvent: true));
         _gameMenu.CurrentMenuId.Returns("encounter");
 
         _service.OnCommanderBattleStarted("lord_party_1");
 
         _army.Received(1).LeaveArmy();
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
         _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
     }
 

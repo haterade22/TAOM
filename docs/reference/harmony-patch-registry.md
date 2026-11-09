@@ -780,10 +780,12 @@ reads `PlayerEncounter.Current` on the next line (v1.5.6 `EncounterManager.cs:33
 Coexists with Patch75 and Patch143 on the same method: once a bool prefix returns false, Harmony
 skips the later bool prefixes, so at most one returns false for a given encounter. A failed guard
 degrades to vanilla's meeting (never to a dead encounter), and Patch143 runs after it. Delivery fires
-at 1.2 map units and runs before the encounter check each frame. The meeting radius is
+at 1.2 map units and runs before the encounter check each frame. Outside an army the meeting radius is
 `Max(0.5, dt * 10)` (`PartyBase.GetEncounterTargetPoint`), so a single player with the feature on
 reaches this prefix only on a large frame step (`dt` over 0.12, for example 16x turbo below about
-33 fps); a co-op guest, or a player with the feature off, reaches it at normal speed. A co-op guest's
+33 fps). In an army the radius starts at `0.5 * sqrt(attached parties + 1)`, so a player who leads five
+or more attached parties reaches it at normal speed; a co-op guest, or a player with the feature off,
+also reaches it at normal speed. A co-op guest's
 caravans are the host's, so a guest gets the same menu with `{=taom_sl_caravan_meet_other}` instead of
 the owner's line (`SupplyCaravanEncounterPatchTests`, #1091). Co-op disposition: ReviewedSafe
 (player-local UI redirect, condition reads replicated party state; `CoopVetoClassificationTests`).

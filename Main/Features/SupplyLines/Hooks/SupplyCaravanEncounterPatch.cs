@@ -23,10 +23,12 @@ namespace TAOM.Features.SupplyLines.Hooks;
 /// later bool prefixes, so at most one returns false for a given encounter. When the menu does not open, vanilla's
 /// meeting runs and Patch143 still guards an empty party.</para>
 ///
-/// <para>Delivery fires at 1.2 map units and runs before the encounter check each frame. The meeting radius is
-/// <c>Max(0.5, dt * 10)</c>, so a single player with the feature on reaches this prefix only on a large frame step
-/// (dt over 0.12, for example 16x turbo below about 33 fps). A co-op guest, or a player with the feature off, reaches
-/// it at normal speed.</para>
+/// <para>Delivery fires at 1.2 map units and runs before the encounter check each frame. Outside an army the meeting
+/// radius is <c>Max(0.5, dt * 10)</c>, so a single player with the feature on reaches this prefix only on a large frame
+/// step (dt over 0.12, for example 16x turbo below about 33 fps). In an army the radius starts at
+/// <c>0.5 * sqrt(attached parties + 1)</c>, so a player who leads five or more attached parties reaches it at normal
+/// speed (v1.5.6 <c>PartyBase.cs:663-666</c>). A co-op guest, or a player with the feature off, reaches it at normal
+/// speed.</para>
 /// </summary>
 [HarmonyPatch(typeof(PlayerEncounter), "DoMeeting")]
 [HarmonyPatchCategory("Patch73_SupplyLines")]

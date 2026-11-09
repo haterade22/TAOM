@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -77,6 +78,8 @@ public class SupplyCaravanEncounterPatchTests
         string source = File.ReadAllText(
             RepoPaths.RepoPath("Main", "Features", "SupplyLines", "Hooks", "SupplyCaravanEncounterPatch.cs"));
 
-        Assert.IsFalse(source.Contains("PlayerEncounter.Finish("), "the prefix must leave the encounter open");
+        // A comment about this rule must not fail the test, and spaces inside the call must not hide one.
+        string code = Regex.Replace(source, @"//.*", "");
+        Assert.IsFalse(Regex.IsMatch(code, @"PlayerEncounter\s*\.\s*Finish\s*\("), "the prefix must leave the encounter open");
     }
 }

@@ -6,6 +6,7 @@ Running scorecard. Numbers are not unique keys; rows since 2026-09-24 carry "(at
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| (at merge) | 2026-11-09 | Supply Lines caravan meeting menu and failed-join stay branch (#1104, #1099), commit `218f4ee31` | issues-found (0 CRITICAL, 0 HIGH, 0 MEDIUM, 2 LOW, 5 LOW observations; the defect suspects disputed on the ordinary paths) | agree (5 confirmed and fixed, 2 left open with no known producer) | 5 | 0 | 0 | gpt-6-astra, ultra, read-only sandbox; RCA `rca-supply-caravan-meeting-2026-11-09.md` |
 | (at merge) | 2026-11-01 | Fords of War: the night batch `d4fb51a50..c2c3a6f28` (review A) and the whole feature at `c2c3a6f28` (review B), on `E:/repos/taom-fords-of-war` | issues-found (A: 0 CRITICAL, 0 HIGH, 2 MEDIUM; B: 0 CRITICAL, 0 HIGH, 3 MEDIUM; 23 and 34 suspects disputed with evidence) | agree (all five confirmed and fixed; review A's remedy for F1 corrected, because Bannerlord exits -1 after a normal quit) | 5 | 0 | 0 (the F1 remedy error was Claude's, caught against in-game runs Codex could not see) | gpt-6-astra, ultra; RCA `rca-fords-of-war-2026-10-31.md` |
 | (at merge) | 2026-10-27 | Bannerlord v1.5.6 engine bump (#1036), Hidden Hosts field-parley veto (#1037), turbo click fix Patch124 (#1040), uncommitted on base `59251a28d` | issues-found (ultra: 1 MEDIUM, 1 LOW; xhigh: 1 real, rated MEDIUM) | agree (MasksParley and GameText fixed; the one-frame latch lag kept as a known limitation) | 3 | 0 | 1 MEDIUM (the Ctrl click scope; engine-compatibility lens) | codex ultra pre-review, codex xhigh adversarial; RCA `rca-engine-bump-v1-5-6-2026-10-27.md` |
 | (at merge) | 2026-10-22 | TAOM.Client submodule B3 of ADR-013 (#968), commit `03d9db8dc` plus the uncommitted follow-up: stale client/core pairs in additive bins, the isolation tripwire, the release gate | issues-found (0 CRITICAL, 0 HIGH, 3 MEDIUM) | agree (F1 to F3 fixed; the S5 pin added; the malformed-manifest note is by design) | 3 | 0 | 2 defects in the fix pass (the Game Pass delete gated on a flag CopyModule ignores; comments overstating the abort), found by the Claude lenses | gpt-6-astra, xhigh; RCA `rca-taom-client-b3-2026-10-22.md` |
@@ -5607,3 +5608,19 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 - **Codex:** `xhigh`, twice, on Mike's word. 4 MEDIUM on the fixes, 7 MEDIUM and 6 LOW on the gates and tools.
 - **Confirmed:** 12 rows, C1 to C12, in `docs/reviews/rca-follow-ups-2026-11-04.md`. Eleven are fixed in `38e5e6274` and `ff2114556`, one is a recorded follow-up, and the rest are rejected with reasons there.
 - **In-game:** nothing was run. The owed checks are in the RCA.
+
+## Review (number assigned at merge): Codex pass on the Supply Lines caravan meeting (2026-11-09)
+
+- **Scope:** commit `218f4ee31` only, base `d1572fcc1`.
+- **Codex:** `ultra`, read-only sandbox, on Mike's word. 2 LOW defects and 5 LOW observations.
+- **Confirmed:** 5 rows, findings 10 to 14 in `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`. Two observations stay open there with no known producer.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 10 | Reachability text omitted the army radius | Other: incomplete read of an engine method | Readers stopped at the first formula that explained the number | Lesson in `lessons/campaign-mechanics.md` |
+| 11 | Source pin missed a spaced call and failed on a comment | Other: weak gate | Plain text search | Test blanks comments and allows whitespace |
+| 12 | Merged-still-in-event test used two event states | Other: inconsistent fake | Copied the shared default after the earlier fix | Both reads agree, `Finish` asserted absent |
+| 13 | Manifest did not read the prefix's catch | Other: manifest gap | Listed two of three exits | `fail` reads the `[Swallowed]` site |
+| 14 | `ReviewedSafe` reason said a guest gets the same line | Other: stale text | Reason predated the guest line | Reason corrected |
+
+- **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1104.toml` and `1099.toml`.

@@ -1,8 +1,9 @@
 # In-game checks for #1104, read by tools/ingame_verdict.py.
 # Written by Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs when the player meets a supply caravan.
-# Delivery fires at 1.2 map units and runs before the encounter check each frame. The meeting radius is
-# Max(0.5, dt * 10), so a single player with the feature on writes this line only on a large frame step.
-# NOT REACHED is the normal result in that case.
+# Delivery fires at 1.2 map units and runs before the encounter check each frame. Outside an army the meeting
+# radius is Max(0.5, dt * 10), so a single player with the feature on writes this line only on a large frame step.
+# In an army the radius starts at 0.5 * sqrt(attached parties + 1), so a player who leads five or more attached
+# parties writes it at normal speed. NOT REACHED is the normal result for everyone else.
 issue = 1104
 title = "Supply Lines: clicking a caravan ends the encounter inside PlayerEncounter.Init"
 fixed_in = "d1572fcc1"   # trunk before the fix: the manifest ships with the emitter
@@ -13,7 +14,10 @@ id = "taom.supply-lines.caravan-meeting"
 needs = "a meeting with a supply caravan: with an order in transit, turn Supply Lines off in MCM and click the caravan (a co-op guest who clicks the host's caravan also reaches it)"
 reached = ['\[Check\] id=taom\.supply-lines\.caravan-meeting result=(pass|fail) ']
 pass = ['\[Check\] id=taom\.supply-lines\.caravan-meeting result=pass party=\S+$']
-fail = ['\[Check\] id=taom\.supply-lines\.caravan-meeting result=fail ']
+fail = [
+  '\[Check\] id=taom\.supply-lines\.caravan-meeting result=fail ',
+  '\[Swallowed\] feature=SupplyLines site=caravan_meeting',
+]
 absence = "not-reached"
 
 [[human]]

@@ -1130,7 +1130,7 @@ A guest loads the server's save, so a TAOM book that means "the player's refuges
 **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`, finding 15.
 
 ### A crash hypothesis names the check that fires first on its route (#1104, 2026-11-09)
-The Patch73 defect was ranked first for a crash at supply delivery, because a player might click the caravan as it arrives. Delivery fires at 1.2 map units and runs before the encounter check each frame. The meeting radius is `Max(0.5, dt * 10)`, so a single player with the feature on reaches the defect only on a large frame step.
+The Patch73 defect was ranked first for a crash at supply delivery, because a player might click the caravan as it arrives. Delivery fires at 1.2 map units and runs before the encounter check each frame. Outside an army the meeting radius is `Max(0.5, dt * 10)`, so such a single player with the feature on reaches the defect only on a large frame step.
 - **Why missed:** the ranking came from what a player might do, and the review that rated the defect HIGH read only the encounter chain.
 - **Prevent:** before ranking a hypothesis, list the checks that can end the route first, compare their numbers and their order in the tick, and write the condition under which the route is reached.
 - **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.
@@ -1140,3 +1140,9 @@ A failed-join guard skipped the army undo for any party in an event. `MobilePart
 - **Why missed:** the unit tests stubbed the flag, and the merge left no trace in the fake.
 - **Prevent:** before gating on an engine state, list every writer of that state on the path, the current method included. Model a writer in the test fake when the method itself can set the state.
 - **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.
+
+### A limit read from an engine formula covers every branch of that method (#1104, 2026-11-09)
+`PartyBase.GetEncounterTargetPoint` has an army branch. Two review lenses and the RCA quoted only the branch for a party outside an army, so the docs said a single player reaches Patch73 only on a large frame step. A player who leads five or more attached parties reaches it at normal speed, because the army radius is `0.5 * sqrt(attached parties + 1)`.
+- **Why missed:** each reader stopped at the first formula that explained the number in hand. The same formula had already been corrected once in this review, and that correction did not prompt a read of the whole method.
+- **Prevent:** before a doc says "only when X" from an engine formula, read the whole method, then cover each branch or scope the claim to the branch you read.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`, Codex pass.
