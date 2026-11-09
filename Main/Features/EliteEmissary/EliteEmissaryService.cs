@@ -4,6 +4,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.EliteEmissary.Domain;
 using TAOM.Features.SpecialResources;
+using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.EliteEmissary;
 
@@ -15,11 +16,17 @@ namespace TAOM.Features.EliteEmissary;
 /// </summary>
 public sealed class EliteEmissaryService : IEliteEmissaryService
 {
+    private const string GoldPurchaseCheckId = "taom.elite-emissary.gold-purchase";
+    private const string GoldLogName = "gold";
+
     private readonly IEliteEmissaryConfigProvider _config;
     private readonly IEliteEmissarySettingsProvider _settings;
     private readonly ISpecialResourceService _resourceService;
     private readonly ISpecialResourceConfigProvider _resourceConfig;
     private readonly IPlayerPartyAdapter _party;
+    private readonly IArmouryPlayerAdapter _player;
+    private readonly ISpecialResourceSettingsProvider _goldOption;
+    private readonly IOutcomeLog _outcomes;
     private readonly IModLogger _logger;
 
     public EliteEmissaryService(
@@ -28,6 +35,9 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         ISpecialResourceService resourceService,
         ISpecialResourceConfigProvider resourceConfig,
         IPlayerPartyAdapter party,
+        IArmouryPlayerAdapter player,
+        ISpecialResourceSettingsProvider goldOption,
+        IOutcomeLog outcomes,
         IModLogger logger)
     {
         _config = config;
@@ -35,6 +45,9 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         _resourceService = resourceService;
         _resourceConfig = resourceConfig;
         _party = party;
+        _player = player;
+        _goldOption = goldOption;
+        _outcomes = outcomes;
         _logger = logger;
     }
 
@@ -48,7 +61,11 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
 
     public bool HasPurchasableOffers(string ownerKingdomId, string ownerCultureId)
     {
-        if (_resourceService.ResolveResource(ownerKingdomId, ownerCultureId) == null)
+        var resource = _resourceService.ResolveResource(ownerKingdomId, ownerCultureId);
+        if (resource == null)
+            return false;
+
+        if (_goldOption.EliteTroopsCostGoldOnly && !BuyerUsesResource(resource))
             return false;
 
         foreach (var troopId in GetCultureOffers(ownerCultureId))
@@ -69,7 +86,8 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
             return EmissaryOfferList.NoResourceAvailable;
         }
 
-        var balance = _resourceService.GetCurrentAmount(heroId, ownerKingdomId, ownerCultureId);
+        var sellsForGold = _goldOption.EliteTroopsCostGoldOnly;
+        var balance = sellsForGold ? (double)_player.Gold : _resourceService.GetCurrentAmount(heroId, ownerKingdomId, ownerCultureId);
         var offers = new List<EmissaryTroopOffer>();
 
         foreach (var troopId in GetCultureOffers(ownerCultureId))
@@ -82,12 +100,14 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
                 continue;
             }
 
-            var maxAffordable = (int)(balance / merchantCost);
-            offers.Add(new EmissaryTroopOffer(troopId, merchantCost, canAfford: balance >= merchantCost, maxAffordableQuantity: maxAffordable));
+            var price = UnitPrice(merchantCost, sellsForGold);
+            var maxAffordable = (int)(balance / price);
+            offers.Add(new EmissaryTroopOffer(troopId, price, canAfford: balance >= price, maxAffordableQuantity: maxAffordable));
         }
 
-        _logger.LogInfo($"[EliteEmissary] Offer list for culture '{ownerCultureId}': {offers.Count} troop(s), resource={resource.DisplayName}, balance={balance:F0}");
-        return EmissaryOfferList.ForResource(resource.Id, resource.DisplayName, resource.IconSpriteName, balance, offers);
+        var resourceName = sellsForGold ? null : resource.DisplayName;
+        _logger.LogInfo($"[EliteEmissary] Offer list for culture '{ownerCultureId}': {offers.Count} troop(s), resource={resourceName ?? GoldLogName}, balance={balance:F0}");
+        return EmissaryOfferList.ForResource(resource.Id, resourceName, resource.IconSpriteName, balance, offers);
     }
 
     public EmissaryPurchaseResult Purchase(string heroId, string ownerKingdomId, string ownerCultureId, string troopId, int quantity)
@@ -113,24 +133,53 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
             return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.NotOffered, troopId, quantity);
         }
 
-        var totalCost = merchantCost * quantity;
+        var sellsForGold = _goldOption.EliteTroopsCostGoldOnly;
+        var exactCost = (long)UnitPrice(merchantCost, sellsForGold) * quantity;
+        var totalCost = (int)Math.Min(exactCost, int.MaxValue);
+        var resourceName = sellsForGold ? null : resource.DisplayName;
+        var currency = resourceName ?? GoldLogName;
 
-        if (!_resourceService.CanAffordMerchantPurchase(heroId, ownerKingdomId, ownerCultureId, troopId, quantity))
+        var canAfford = sellsForGold
+            ? _player.Gold >= exactCost
+            : _resourceService.CanAffordMerchantPurchase(heroId, ownerKingdomId, ownerCultureId, troopId, quantity);
+        if (!canAfford)
         {
-            _logger.LogInfo($"[EliteEmissary] Purchase blocked (Unaffordable): {troopId} x{quantity} costs {totalCost} {resource.DisplayName}");
-            return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Unaffordable, troopId, quantity, totalCost, resource.DisplayName);
+            _logger.LogInfo($"[EliteEmissary] Purchase blocked (Unaffordable): {troopId} x{quantity} costs {totalCost} {currency}");
+            return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Unaffordable, troopId, quantity, totalCost, resourceName);
         }
 
         // Grant BEFORE charge: a failed grant (no party / unknown troop id) then never charges.
         if (!_party.GrantTroop(troopId, quantity))
         {
             _logger.LogError($"[EliteEmissary] Purchase failed (grant): could not add {troopId} x{quantity} to party — no charge applied");
-            return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Failed, troopId, quantity, totalCost, resource.DisplayName);
+            return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Failed, troopId, quantity, totalCost, resourceName);
         }
 
-        _resourceService.ChargeMerchantPurchase(heroId, ownerKingdomId, ownerCultureId, troopId, quantity);
-        _logger.LogInfo($"[EliteEmissary] PURCHASE: {troopId} x{quantity} for {totalCost} {resource.DisplayName} (settlement faction kingdom='{ownerKingdomId}' culture='{ownerCultureId}')");
-        return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Success, troopId, quantity, totalCost, resource.DisplayName);
+        if (sellsForGold)
+            ChargeGold(troopId, quantity, totalCost);
+        else
+            _resourceService.ChargeMerchantPurchase(heroId, ownerKingdomId, ownerCultureId, troopId, quantity);
+        _logger.LogInfo($"[EliteEmissary] PURCHASE: {troopId} x{quantity} for {totalCost} {currency} (settlement faction kingdom='{ownerKingdomId}' culture='{ownerCultureId}')");
+        return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Success, troopId, quantity, totalCost, resourceName);
+    }
+
+    private int UnitPrice(int merchantCost, bool sellsForGold) =>
+        sellsForGold ? merchantCost * _goldOption.EmissaryGoldPerResource : merchantCost;
+
+    private bool BuyerUsesResource(SpecialResource ownerResource) =>
+        _resourceService.ResolveResource(_player.KingdomId, _player.CultureId)?.Id == ownerResource.Id;
+
+    private void ChargeGold(string troopId, int quantity, int totalCost)
+    {
+        var detail = FormattableString.Invariant($"troop={troopId} qty={quantity} gold={totalCost}");
+        if (_player.ChargeGold(totalCost))
+        {
+            _outcomes.Pass(GoldPurchaseCheckId, "", detail);
+            return;
+        }
+
+        _logger.LogError($"[EliteEmissary] Gold charge refused after the grant: {detail}");
+        _outcomes.Fail(GoldPurchaseCheckId, "", detail);
     }
 
     private IReadOnlyList<string> GetCultureOffers(string cultureId)

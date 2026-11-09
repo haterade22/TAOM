@@ -11,18 +11,21 @@ public sealed class EmissaryOfferList
     public bool NoResource { get; }
 
     public string ResourceId { get; }
+
+    /// <summary>The resource name, or null when the emissary sells for gold (the presenter names the currency).</summary>
     public string ResourceDisplayName { get; }
     public string IconSpriteName { get; }
 
-    /// <summary>The player's current balance of the owner faction's resource (0 when NoResource).</summary>
-    public float PlayerBalance { get; }
+    /// <summary>The player's current balance of the owner faction's resource, or gold under the gold-only option
+    /// (0 when NoResource).</summary>
+    public double PlayerBalance { get; }
 
     public IReadOnlyList<EmissaryTroopOffer> Offers { get; }
 
     public bool HasOffers => Offers != null && Offers.Count > 0;
 
     private EmissaryOfferList(bool noResource, string resourceId, string resourceDisplayName,
-        string iconSpriteName, float playerBalance, IReadOnlyList<EmissaryTroopOffer> offers)
+        string iconSpriteName, double playerBalance, IReadOnlyList<EmissaryTroopOffer> offers)
     {
         NoResource = noResource;
         ResourceId = resourceId;
@@ -33,7 +36,7 @@ public sealed class EmissaryOfferList
     }
 
     public static EmissaryOfferList ForResource(string resourceId, string resourceDisplayName,
-        string iconSpriteName, float playerBalance, IReadOnlyList<EmissaryTroopOffer> offers) =>
+        string iconSpriteName, double playerBalance, IReadOnlyList<EmissaryTroopOffer> offers) =>
         new(false, resourceId, resourceDisplayName, iconSpriteName, playerBalance, offers);
 
     /// <summary>Owner faction has no special resource — the menu option hides (or shows disabled).</summary>

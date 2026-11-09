@@ -14,16 +14,19 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 {
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
+    private readonly ISpecialResourceSettingsProvider _settings;
     private List<SpecialResource> _resources;
     private Dictionary<string, SpecialResource> _byKingdom;
     private Dictionary<string, SpecialResource> _byCulture;
     private Dictionary<string, SpecialResource> _byId;
     private Dictionary<string, TroopResourceCostEntry> _troopCosts;
+    private Dictionary<string, TroopResourceCostEntry> _goldOnlyTroopCosts;
 
-    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger)
+    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger, ISpecialResourceSettingsProvider settings = null)
     {
         _pathService = pathService;
         _logger = logger;
+        _settings = settings;
     }
 
     public IReadOnlyList<SpecialResource> GetAllResources()
@@ -53,7 +56,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     public TroopResourceCostEntry GetTroopCost(string troopId)
     {
         EnsureLoaded();
-        return _troopCosts.TryGetValue(troopId, out var entry) ? entry : null;
+        var costs = _settings?.EliteTroopsCostGoldOnly == true ? _goldOnlyTroopCosts : _troopCosts;
+        return costs.TryGetValue(troopId, out var entry) ? entry : null;
     }
 
     private void EnsureLoaded()
@@ -66,6 +70,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         _byCulture = new Dictionary<string, SpecialResource>();
         _byId = new Dictionary<string, SpecialResource>();
         _troopCosts = new Dictionary<string, TroopResourceCostEntry>();
+        _goldOnlyTroopCosts = new Dictionary<string, TroopResourceCostEntry>();
 
         LoadResources();
         LoadTroopCosts();
@@ -163,7 +168,10 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     merchantCost: (int)ParseFloat(el, "merchant_cost", 0f));
 
                 if (!string.IsNullOrEmpty(entry.TroopId))
+                {
                     _troopCosts[entry.TroopId] = entry;
+                    _goldOnlyTroopCosts[entry.TroopId] = entry.AsMerchantOnly();
+                }
             }
 
             _logger.LogInfo($"SpecialResourceConfigProvider: Loaded {_troopCosts.Count} troop cost entries");

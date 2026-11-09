@@ -1391,3 +1391,11 @@ The Fords of War pierce rule against cavalry went into the Custom Battle damage 
 - **Why missed:** the rule was placed where the modelled blows pass, and nobody listed the other paths a blow's damage takes.
 - **Prevent:** before a damage rule ships, grep every write of `InflictedDamage` and every `DamageCalculated = true`, and read the blocked case in `Mission.GetAttackCollisionResults`; say in the rule's doc which paths it covers.
 - **Source:** [rca-fords-pierce-cavalry-2026-11-07.md](../rca-fords-pierce-cavalry-2026-11-07.md), findings 1 and 2.
+
+### A quantity derived from a balance goes back through the purchase at the limits (#1108, 2026-11-09)
+
+The emissary's gold offer held the purse in a `float` and multiplied price by quantity in an `int`. Above 16,777,216 gold the float rounds, so the offered maximum could be one too many, and at `int.MaxValue` gold the total wrapped negative. The affordability check passed, the troops were granted, the charge was refused and the result was `Success`.
+
+- **Why missed:** the first pass saw the float and called it a display problem, because the purchase compares ints. Nobody multiplied the offered maximum by the price.
+- **Prevent:** hold money in an integer type or a `double`, never a `float`. Compute an `int` price times an `int` quantity in `long` before comparing it. Test the round trip: build the offer at the largest balance and pass its maximum to the purchase.
+- **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md), row 8.

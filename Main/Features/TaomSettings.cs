@@ -3023,4 +3023,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("{=taom_dwarf_attacks_mcm_damage}Dwarf Attack Damage (%)", 0, TAOM.Features.DwarfAttacks.DwarfAttacksConfig.MaxDamagePercent, Order = 1, RequireRestart = false,
         HintText = "{=taom_dwarf_attacks_mcm_damage_hint}The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100.")]
     public int DwarfAttacksDamagePercent { get; set; } = TAOM.Features.DwarfAttacks.DwarfAttacksConfig.DefaultDamagePercent;
+
+    // --- Special Resources (#1108) ---
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyBool("{=taom_specres_mcm_gold_only}Elite Troops Cost Gold Only", Order = 0, RequireRestart = false,
+        HintText = "{=taom_specres_mcm_gold_only_hint}When on, your troops cost no special resource to upgrade, recruit or keep, and none of them desert for lack of it. Gold and wages still apply. The Elite Emissary sells for gold, to a buyer of its own resource group only. You still earn the resource, and the armoury still takes it. When you turn this off, the charges return, and elite troops desert again at a zero balance. Default: off.")]
+    public bool EliteTroopsCostGoldOnly { get; set; } = false;
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyInteger("{=taom_specres_mcm_gold_rate}Emissary Gold Per Resource", SpecialResources.SpecialResourceSettingsProvider.MinGoldPerResource, SpecialResources.SpecialResourceSettingsProvider.MaxGoldPerResource, Order = 1, RequireRestart = false,
+        HintText = "{=taom_specres_mcm_gold_rate_hint}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200.")]
+    public int EmissaryGoldPerResource { get; set; } = SpecialResources.SpecialResourceSettingsProvider.DefaultGoldPerResource;
 }

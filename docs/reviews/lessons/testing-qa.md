@@ -2619,3 +2619,11 @@ The regroup release fired anywhere once no enemy was near, because the producer 
 - **Why missed:** the tests set the `LaneView` fields one by one with `with { }`, and no one checked each combination against `FordsMatch.PressureOf`, which adds the value and the count together.
 - **Prevent:** a test that builds a view or snapshot by hand uses only field combinations the producer can return (no count, then no value), and at least one test per rule goes through the producer itself. For each guard, ask whether the test still fails with the guard deleted. A rule's entry and exit read the same inputs at the same threshold, or the test list names the case where they differ.
 - **Source:** [rca-fords-regroup-2026-11-07.md](../rca-fords-regroup-2026-11-07.md) rows 7, 10, 13 and 14.
+
+### A wiring test that registers its own fake cannot prove the feature registers the real one (#1108, 2026-11-09)
+
+`Registration_GivesTheProviderTheSettings` ran the feature's IoC and then registered a fake with `IfAlreadyRegistered.Replace`. With the feature's registration deleted, the fake filled the gap and the test stayed green. The parameter is optional, so a missing registration would otherwise resolve to null with no error.
+
+- **Why missed:** the fake was needed to turn the toggle on, the test passed, and nobody deleted the line the test names.
+- **Prevent:** assert `IsRegistered<T>()` before the replacement, or resolve the real type. For a wiring test, delete the registration it names and watch it fail.
+- **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) row 7.

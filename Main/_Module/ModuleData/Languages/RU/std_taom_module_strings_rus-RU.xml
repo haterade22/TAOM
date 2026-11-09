@@ -7759,6 +7759,10 @@
     <string id="aom_rohan_westfold_spearman_name" text="[Rohan] Westfold Spearman" />
     <string id="aom_imladris_spearman_name" text="[Rivendell] Imladris Spearman" />
     <string id="taom_empty_meeting_text" text="There is nobody left in that party to speak for it." />
+    <string id="taom_specres_mcm_gold_only" text="Elite Troops Cost Gold Only" />
+    <string id="taom_specres_mcm_gold_only_hint" text="When on, your troops cost no special resource to upgrade, recruit or keep, and none of them desert for lack of it. Gold and wages still apply. The Elite Emissary sells for gold, to a buyer of its own resource group only. You still earn the resource, and the armoury still takes it. When you turn this off, the charges return, and elite troops desert again at a zero balance. Default: off." />
+    <string id="taom_specres_mcm_gold_rate" text="Emissary Gold Per Resource" />
+    <string id="taom_specres_mcm_gold_rate_hint" text="With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200." />
   </strings>
 
 </base>

@@ -719,3 +719,11 @@ The brief for the Arnor review said the new troops were "upgrade-only, nothing e
 - **Why missed:** the brief's "Deliberate choices" list mixed the maintainer's decisions with my own unchecked conclusions, and a search limited to two item prefixes was reported as "none exists". A claim relayed from one lens was written down before a second source was read.
 - **Prevent:** under "Deliberate choices" list only what the maintainer decided; put your own readings in SCOPE NOTES as questions; name the scope of every "none exists". When two lenses disagree on an engine or data fact, read the source yourself before you write either claim into code or a doc (`/deep-review` "Brief with decisions and facts you read").
 - **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) findings F2 and F8.
+
+### Before you state why a guard exists, read the path that feeds its value (#1108, 2026-11-09)
+
+The gold-only option's rate check carried the comment "a dedicated server fills the rate from a file", and the doc said only that file could set a bad rate. `ServerSettingsReader.cs:75` refuses an out-of-range value in that file before the provider sees it. The approved plan stated the reason, and I copied it into the comment and the doc. Two sentences in `special-resources.md` had the same origin: "a mismatch changes balances only" and "does not change the map bar".
+
+- **Why missed:** the comment and docs were written from the plan's summary. No step read the code that feeds the value or writes the effect, and the maintainer's approval of the plan looked like evidence for each sentence in it.
+- **Prevent:** a reason or an effect stated in a comment or doc is a claim about the producer. Read the line that proves it, or state only what the code does. A plan's reason is a hypothesis until a read confirms it.
+- **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) rows 3 to 5.

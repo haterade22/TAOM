@@ -228,6 +228,35 @@ balance to zero in one screen and start desertion the next day; and
 authored creature pricing (one unit eats about eighteen maximum battle payouts a day); it is a balance
 question, not a defect, and the daily toast now makes it visible.
 
+## Gold-only option (#1108)
+
+Players asked for a way to get elite troops for gold alone. **Elite Troops Cost Gold Only**
+(`EliteTroopsCostGoldOnly`, MCM group "Special Resources", default off, no restart needed) provides it.
+
+While the option is on, `SpecialResourceConfigProvider.GetTroopCost` returns each row with `upgrade_cost`,
+`recruit_cost` and `daily_upkeep` at zero and `merchant_cost` unchanged. Every reader has handled that
+merchant-only shape since #558, so the upgrade gate (Patch26), the recruit gate and charge (Patch51, and the
+prisoner recruit charge), upkeep, desertion, the map-bar warning and the encyclopedia badge carry no branch
+of their own. The zeroed rows are built once at load, because the map bar reads this path at 5 to 10 Hz. The
+game's gold prices, XP costs and wages still apply. The [Elite Emissary](elite-emissary.md) sells for gold
+while the option is on.
+
+The option does not change earning, the amount on the map bar or saved balances, and nothing it does is saved.
+The bar's upkeep rows and red warning go away, because no upkeep is due. The armoury
+still charges resource plus gold (`ArmouryUpgradeService`). The career passives
+`SpecialResourceUpkeepModifier` and `SpecialResourceUpgradeCostModifier` have nothing to modify while it is
+on. Turning it off restores every charge, and a party with upkeep troops at a zero balance deserts again from
+the next daily tick. AI lords pay none of these costs either way.
+
+Under co-op the option is per peer, like other `TaomSettings` toggles: Patch26 and Patch51 read the client's
+MCM value, and a dedicated server reads `taom-server-settings.json`. The authority holds the balances and reads
+its own value for the recruit charge and daily upkeep, so a mismatch changes what each peer's gates allow and
+what the authority charges. A mismatch cannot cost troops, because remote desertion is off during a session.
+Both settings are simulation-relevant, so `SettingsFingerprint`
+hashes them and the "Special Resources" code in each peer's log shows a mismatch.
+
+Owed in game: the claims in `tools/ingame_checks/1108.toml`.
+
 ## Key Files
 
 | File | Purpose |
@@ -237,7 +266,9 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/ISpecialResourceStorageService.cs` | Storage interface |
 | `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict persistence |
 | `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId, GetById, GetTroopCost) |
-| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing |
+| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing; returns the merchant-only rows while the gold-only option is on (#1108) |
+| `Main/Features/SpecialResources/ISpecialResourceSettingsProvider.cs` | The gold-only option's toggle and emissary gold rate (#1108) |
+| `Main/Features/SpecialResources/SpecialResourceSettingsProvider.cs` | MCM over the compiled defaults for the gold-only option; range-checks the emissary gold rate (#1108) |
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior: subscribes the events, seeds, forwards each event to the earning service (276-line ratchet) |
 | `Main/Features/SpecialResources/SpecialResourceEarningService.cs` | Who earns, pays and ticks for each event: the single-player branches moved unchanged, plus the co-op authority's per-player earning and daily tick (#967 C1) |
 | `Main/Features/SpecialResources/SpecialResourceEarningModels.cs` | Plain data between adapter and service: `EarnerRef`, `VictorySnapshot`, `RaidOrHideoutSnapshot`, `DailyTickInput`, `DailyOutcome`, `EarningNotice`, `RecruitContext`, `RecruitChargeNotice` |
@@ -300,6 +331,8 @@ question, not a defect, and the daily toast now makes it visible.
 - `RecruitGatePatchTests.cs`: 4 tests (#600). `RecruitCartGrouping` counts duplicates, skips nulls, keeps first-seen order; the `ExecuteDone` prefix carries Patch51's category and targets `ExecuteDone`
 - `TroopResourceCostDataTests.cs`: tests reading the shipped XML: every `resource_id` names a configured resource, every badged row reaches a `SpecialResources\` icon sprite, every Gondor troop at level 41 or above carries an `upgrade_cost` and a `daily_upkeep`, no tree troop's `daily_upkeep` exceeds the 0.4 band ceiling, every volunteer-pooled upkeep troop carries a `recruit_cost` (#600), and no troop in `troops_arthedain.xml` has a row (#963). Ered Luin's troops have no row either, by the
 comment in `troop_resource_costs.xml`, but no test pins that
+- `SpecialResourceGoldOnlyTests.cs`: the gold-only option (#1108) through the real provider, service and storage over real XML: the row with the toggle on, off and flipped live, the IoC wiring, and the recruit, upgrade, upkeep, desertion and badge readers, each with a toggle-off case that proves the fixture reaches the gate
+- `SpecialResourceSettingsProviderTests.cs`: the toggle's default and MCM read-through, the rate at both limits, and an out-of-range rate falling back to 200 with one warning (#1108)
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
@@ -477,6 +510,7 @@ resource's `starting_amount` is 0 (a seed then only records the pair).
 
 ## Changelog
 
+- 2026-11-09 (#1108): the MCM option Elite Troops Cost Gold Only removes the special-resource troop costs and makes the Elite Emissary sell for gold. See "Gold-only option". Owed in game.
 - 2026-10-21 (#967 C1): earning moved out of `SpecialResourcesBehavior` into `SpecialResourceEarningService` (behavior 615 to 276 lines, pinned by `SpecialResourcesBehaviorLineCountTests`). The co-op authority now credits each registered remote player for battle, siege, raid, hideout and tournament wins and ticks their daily income and upkeep; its own `MainHero` earns nothing during a session, and prisoner income pays nobody until C2. `SpecialResourceEarnPolicy.MayCreditMainHero` is replaced by `SpecialResourceEarnPolicy.MayEarn`, and in a session the player registry alone decides who is a player. Single-player behaviour is unchanged. See "Per-player earning under co-op (#967 C1)".
 - 2026-10-08 (#771): one party-screen subscriber per process. `ScreenManager.OnPushScreen` is a static event, so a behavior left subscribed by a save load without a Game Over never became garbage, and after N loads each party-screen open wrote N `[SpecRes] PartyScreen session BEGUN` lines. `SpecialResourcesBehavior` now keeps its handler in a private static field of the engine's `ScreenManager.OnPushScreenEvent` type, removing the previous one before adding its own; the next campaign's `RegisterEvents` or a Game Over (a no-heir death) removes it and clears the field. `TroopCountDiagnosticsBehavior` (a singleton) removes its handler before adding it, so its dump is written once. No unit test covers it (campaign entry point). The in-game check is still owed: load a save three times in one session, open the party screen once, and expect one `[SpecRes] PartyScreen session BEGUN` line and one `[TroopCountDiag]` dump.
 - 2026-10-09 (#790): a "send troops" hideout clear paid `per_hideout_clear` twice; it now pays

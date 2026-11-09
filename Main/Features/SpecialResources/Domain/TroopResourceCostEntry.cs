@@ -31,4 +31,8 @@ public sealed class TroopResourceCostEntry
         RecruitCost = recruitCost;
         MerchantCost = merchantCost;
     }
+
+    /// <summary>This row as the gold-only option reads it (#1108): the emissary price stays and no troop cost remains.</summary>
+    public TroopResourceCostEntry AsMerchantOnly() =>
+        new(TroopId, ResourceId, upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: MerchantCost);
 }

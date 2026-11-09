@@ -32,6 +32,8 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- EliteEmissary -->
 	<string id="taom_emissary_coop_guest" text="{=taom_emissary_coop_guest}The emissary only deals with the host of this campaign." />
-
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- EliteEmissary -->
+	<string id="taom_emissary_denars" text="{=taom_emissary_denars}denars" />
 
 </strings>

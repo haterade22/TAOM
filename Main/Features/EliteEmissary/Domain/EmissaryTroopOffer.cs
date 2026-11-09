@@ -6,8 +6,9 @@ public sealed class EmissaryTroopOffer
 {
     public string TroopId { get; }
 
-    /// <summary>One-time <c>merchant_cost</c> per unit, in the settlement faction's special resource.</summary>
-    public int MerchantCost { get; }
+    /// <summary>One-time price per unit: <c>merchant_cost</c> in the settlement faction's special resource, or
+    /// its gold price under the gold-only option.</summary>
+    public int UnitPrice { get; }
 
     /// <summary>True if the player can afford at least ONE of this troop right now.</summary>
     public bool CanAfford { get; }
@@ -15,10 +16,10 @@ public sealed class EmissaryTroopOffer
     /// <summary>How many the player can afford at the current balance (floor(balance / cost)).</summary>
     public int MaxAffordableQuantity { get; }
 
-    public EmissaryTroopOffer(string troopId, int merchantCost, bool canAfford, int maxAffordableQuantity)
+    public EmissaryTroopOffer(string troopId, int unitPrice, bool canAfford, int maxAffordableQuantity)
     {
         TroopId = troopId;
-        MerchantCost = merchantCost;
+        UnitPrice = unitPrice;
         CanAfford = canAfford;
         MaxAffordableQuantity = maxAffordableQuantity;
     }

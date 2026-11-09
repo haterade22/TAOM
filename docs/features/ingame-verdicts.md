@@ -175,7 +175,9 @@ verified through another path.
 3. **Test it** with a fake `IOutcomeLog`: one test per pass, fail and skip branch.
 4. **The manifest:** `tools/ingame_checks/<issue>.toml` with `fixed_in` set to the fix commit the
    issue names (the manifest ships with the emitter, so the emitter's own sha is not known yet;
-   `970.toml` names `40385aa5b`, not the later commit that added its `[Check]` lines). A build
+   `970.toml` names `40385aa5b`, not the later commit that added its `[Check]` lines). Name a commit
+   already on origin: an amend or a rebase rewrites a local one, and every later build then reads as
+   older than the pin. A build
    between the fix and the emitter writes no `[Check]` line, so every `reached` pattern must be a
    `[Check]` line, or the check sets `absence = "not-reached"`; otherwise `absence` defaults to
    `fail` and such a build gets a false FAIL. Then the `[Check]` pattern with each dot escaped (`id=taom\.castle-recruit\.ai-off`),

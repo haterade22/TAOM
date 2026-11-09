@@ -5624,3 +5624,15 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 14 | `ReviewedSafe` reason said a guest gets the same line | Other: stale text | Reason predated the guest line | Reason corrected |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1104.toml` and `1099.toml`.
+
+## Review (number assigned at merge): gold-only elite troops (#1108), tier-1 deep review (two waves, convergence) and one Codex gpt-6-astra `ultra` pass (2026-11-09)
+
+- **Scope:** the uncommitted #1108 change on top of `d0d95bf27`.
+- **Codex:** `ultra`, on Mike's word. 0 CRITICAL, 0 HIGH, 1 MEDIUM, confirmed. 0 false positives. Known Suspects: S1, S3 and S5 CONFIRMED, S2, S4 and S6 DISPUTED; I checked S1, S5 and the TAOM side of the co-op observation against the source.
+- **Confirmed:** 16 rows in `docs/reviews/rca-gold-only-elite-troops-2026-11-09.md`, all fixed. Three design proposals applied.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 8 | The offered maximum overflowed the gold total, so the emissary granted unpaid troops and returned `Success` | Logic error | The float was recorded as a display problem; nobody multiplied the maximum by the price | `double` balance, `long` total, four RED-first tests, lesson in `lessons/gamemodels-services.md` |
+
+- **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1108.toml`.

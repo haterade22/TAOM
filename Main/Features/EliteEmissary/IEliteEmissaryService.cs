@@ -7,7 +7,7 @@ namespace TAOM.Features.EliteEmissary;
 /// faction offers, whether the player can afford it, and executing the resource-for-troops purchase.
 /// Speaks only strings + Domain records — sealed TaleWorlds types stay in the behavior/adapters
 /// (ADR-002/007). The resource charged is the SETTLEMENT OWNER's, resolved from the kingdom/culture
-/// the behavior passes in (so conquest flips both the list and the currency).
+/// the behavior passes in (so conquest flips both the list and the currency). With the gold-only option (#1108) the currency is gold.
 /// </summary>
 public interface IEliteEmissaryService
 {
@@ -18,7 +18,8 @@ public interface IEliteEmissaryService
     bool IsKeySettlement(string settlementId);
 
     /// <summary>True if the owner culture has at least one sellable (merchant_cost &gt; 0) offer AND
-    /// the faction maps to a special resource — drives the "purchase elite units" dialog visibility.</summary>
+    /// the faction maps to a special resource. With the gold-only option (#1108), the buyer's resolved resource
+    /// must also be the owner's. Drives the "purchase elite units" dialog visibility.</summary>
     bool HasPurchasableOffers(string ownerKingdomId, string ownerCultureId);
 
     /// <summary>Builds the offer list for the settlement OWNER faction, with the player's per-troop
@@ -26,7 +27,7 @@ public interface IEliteEmissaryService
     /// the faction maps to no resource.</summary>
     EmissaryOfferList BuildOfferList(string heroId, string ownerKingdomId, string ownerCultureId);
 
-    /// <summary>Executes a purchase: afford-check → grant troops → charge the owner resource (grant
+    /// <summary>Executes a purchase: afford-check → grant troops → charge the owner resource, or gold with the gold-only option (grant
     /// before charge, so a failed grant never charges). Never throws — returns a typed result.</summary>
     EmissaryPurchaseResult Purchase(string heroId, string ownerKingdomId, string ownerCultureId, string troopId, int quantity);
 }

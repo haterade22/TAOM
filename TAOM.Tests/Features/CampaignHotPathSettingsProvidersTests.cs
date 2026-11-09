@@ -161,6 +161,8 @@ public class CampaignHotPathSettingsProvidersTests
 
     // #910: the smithing model asks for the cap once per smelting-list item and per smelt; the accessor takes the settings once.
     [DataRow(typeof(SmithsMeasureSettingsProvider))]
+    // #1108: the map bar reads every troop's cost row at each refresh (5 to 10 Hz), and each read asks the toggle.
+    [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -194,6 +196,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(IShadowfaxScreensSettingsProvider), typeof(ShadowfaxScreensSettingsProvider))]
     [DataRow(typeof(IFiefManagementSettingsProvider), typeof(FiefManagementSettingsProvider))]
     [DataRow(typeof(IEyeOfSauronSettings), typeof(EyeOfSauronSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.SpecialResources.ISpecialResourceSettingsProvider), typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     [DataRow(typeof(IWatchfulHoldsSettings), typeof(WatchfulHoldsSettingsProvider))]
     [DataRow(typeof(IHiddenHostsSettings), typeof(HiddenHostsSettingsProvider))]
     [DataRow(typeof(IUnderTheEavesSettings), typeof(UnderTheEavesSettingsProvider))]

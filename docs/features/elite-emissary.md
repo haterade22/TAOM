@@ -117,6 +117,15 @@ co-op refusal was added 2026-08-03 from field testing.
   `BuyCondition` are not co-op-gated, so a guest still sees "Speak with the faction emissary", has the
   conversation, browses the offers and picks a quantity, and is turned away only on confirm — unlike
   the disguise/war gate above, which hides the option outright.
+- **Selling for gold** (#1108). With Elite Troops Cost Gold Only on
+  ([special-resources.md](special-resources.md) "Gold-only option"), the price is `merchant_cost` times
+  `EmissaryGoldPerResource`, and `Purchase` checks and charges the purse through `IArmouryPlayerAdapter`. A
+  price built from the troop's level would flatten the authored ratios: a Mumakil rider would cost what a
+  level 51 foot soldier costs. The self-gating described above comes only from the resource, so gold would
+  let any player at peace buy any faction's elites. `HasPurchasableOffers`, which `MenuCondition` and
+  `BuyCondition` both call, therefore returns false unless the buyer's resolved resource equals the settlement
+  owner's. That keeps today's reach, including the shared War Spoils group. The service passes no resource
+  name in this mode, and the presenter shows "denars".
 
 ## Configuration
 
@@ -166,7 +175,17 @@ level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 
 - `EnableEliteEmissary` (master, default on).
 - `HideEmissaryWhenNoResource` (default on) — hide the option at settlements whose owner faction has no
-  special resource; off = show it disabled with a hint.
+  special resource; off = show it disabled with a hint. With Elite Troops Cost Gold Only on, this also covers a
+  buyer whose resource differs from the owner's.
+
+### MCM: group "Special Resources" (#1108)
+
+- `EliteTroopsCostGoldOnly` (default off): the emissary sells for gold.
+- `EmissaryGoldPerResource` (50 to 1000, default 200): gold per unit of `merchant_cost`. A rate outside that
+  range falls back to 200 with one warning. `ServerSettingsReader` refuses such a value in
+  `taom-server-settings.json` before it reaches this check. At 200 a level 41
+  offer costs 3,600 gold (a notable's level 41 recruit costs 2,100), a level 51 offer 9,000, the elephant rider
+  14,000 and the Mumakil rider 560,000.
 
 ## Key Files
 
@@ -191,14 +210,16 @@ level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 - `ICoopSessionProvider` (CoopInterop) — the authority check on purchase. Taken by both
   `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` (the behavior only forwards it to the
   presenter it constructs).
-- MCM (`TaomSettings`), `IPathService`, `IModLogger`.
+- `IArmouryPlayerAdapter` (the buyer's kingdom, culture and purse) and `ISpecialResourceSettingsProvider`: the gold-only option (#1108).
+- MCM (`TaomSettings`), `IPathService`, `IModLogger`, `IOutcomeLog`.
 - No Harmony patch, no GameModel override, no SyncData.
 
 ## Tests
 
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryServiceTests.cs` — offer build, afford-gray, owner
   resolution, the full Purchase decision tree (Invalid / NoResource / NotOffered / Unaffordable / Success /
-  grant-fail), grant-before-charge ordering.
+  grant-fail), grant-before-charge ordering, and the gold-only option: price at a non-default rate, the purse
+  in place of the balance, each state of the buyer gate, the check line, and parity with the option off.
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryConfigProviderTests.cs` — valid/missing/malformed XML,
   unknown-culture drop, unpriced-troop drop, enabled flag.
 - `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — the two `*MerchantPurchase`
@@ -226,6 +247,7 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 
 ## Changelog
 
+- 2026-11-09 (#1108): with the MCM option Elite Troops Cost Gold Only on, the emissary sells for gold and serves only a buyer who holds the settlement owner's resource. Owed in game.
 - 2026-08-03 — Purchases are declined on a non-authoritative co-op peer before the resource is charged, with a new `{=taom_emissary_coop_guest}` message (not yet registered in `taom_emissary_strings.xml`, not yet translated). `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` both gained an `ICoopSessionProvider` parameter.
 - 2026-06-25 — Feature created. 11 cultures authored, L36+ elites, verified capitals.
 
