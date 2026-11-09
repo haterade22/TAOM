@@ -1847,3 +1847,19 @@ A new reflection catalogue row copied the code comment: only the engine's full r
 - **Why missed:** the arrangement was read as geometry, and the new range was tested on fixed distances only.
 - **Prevent:** before sending an arrangement, read `ArrangementOrder.OnApply`, `OnCancel` and the behaviour set `RefreshBehaviorValues` picks for it. A branch triggered by a jumping value gets a latch or a second threshold, and a target built from a moving agent is kept until the agent moves a set distance from it, with a test where only the noise changes.
 - **Source:** [rca-fords-culture-tactics-2026-11-07.md](../rca-fords-culture-tactics-2026-11-07.md), findings 1 and 3, R1.
+
+### A direct `Mission.SpawnAgent` needs its own capacity check, and a deduped catch hides how often it failed (#1107, 2026-11-09)
+
+The howdah and mumakil crew spawners called `Mission.SpawnAgent` from a mission tick, outside vanilla's spawn budget. In a Custom Battle at battle size 800, 55 mumakil crews of 8 spawned and the next crew spawn raised an `AccessViolationException`. No log line prints the agent count: 800 mounted troops plus 440 crew match the engine's 2,040 slots exactly, which is an inference. At a full pool the native spawn takes slot -1 and writes over the native mission. The other 142 mumakils and all 262 howdahs spawned no crew either: `catch (Exception)` kept the drain going, and the per-type `_loggedErrors` set printed only the first failure per spawner.
+
+- **Why missed:** `mumakil.md` listed the agent budget as an open risk with an unverified cap, and nobody closed it after section 3 of `mission-frame-threads-and-native-costs.md` verified the limit. Crew were only ever tried in small battles.
+- **Prevent:** a direct `Mission.SpawnAgent` caller calls `CrewAgentBudget.HasRoom` first (gate: `CrewAgentBudgetTests`, which proves the call exists in the same method, not that it guards the spawn). When a log shows one error from a deduped catch, count the successes before you believe the failure happened once.
+- **Source:** #1107.
+
+### State what a gate's matcher sees, and name the vanilla path that holds a check (#1107, 2026-11-09)
+
+The first text of the #1107 fix said that every spawn outside vanilla's budget calls `HasRoom`, and that vanilla compares the live count before it spawns. The gate matches only a direct `Mission.SpawnAgent`, five other sites spawn through `SpawnTroopWithAgentBuildData` or `SpawnTroop` with no check, and only vanilla's reinforcements read the live count.
+
+- **Why missed:** each sentence was generalized from one site, the two crew spawners and `TryReinforcementSpawn`. No step compared them with the other spawn sites or with the initial spawn path.
+- **Prevent:** a doc line that names a gate says what its matcher covers. A claim that vanilla "checks X first" names the method that does it, after you read every sibling path.
+- **Source:** #1107, found independently by Codex, the data flow lens and the engine compatibility lens.

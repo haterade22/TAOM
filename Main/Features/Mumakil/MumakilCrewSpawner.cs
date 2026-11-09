@@ -4,6 +4,7 @@ using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.Elephant;
+using TAOM.Features.ElephantLike;
 using TaleWorlds.Engine;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -152,11 +153,22 @@ internal sealed class MumakilCrewSpawner
 
         int spawned = 0;
         int seatIndex = -1;
+        bool atAgentLimit = false;
+        int maxAgents = DefaultBattleMissionAgentSpawnLogic.MaxNumberOfAgentsForMission;
         foreach (StandingPoint sp in platform.StandingPoints)
         {
             seatIndex++;
             if (!(sp is TaomMumakilStandingPoint seat) || seat.IsDisabled || seat.MovingAgent != null)
                 continue;
+
+            // SpawnAgent has no capacity check: at a full agent pool the native spawn writes over the mission (#1107).
+            if (!CrewAgentBudget.HasRoom(mission.AllAgents.Count, maxAgents))
+            {
+                atAgentLimit = true;
+                if (_loggedErrors.Add("MumakilCrew:agent-limit"))
+                    _logger.LogWarning($"{platform.LogTag} crew stopped at the engine's {maxAgents}-agent limit; this seat and the rest of this tower's seats stay empty");
+                break;
+            }
 
             MatrixFrame frame = seat.GameEntity.GetGlobalFrame();
             // A small lift keeps the feet off the deck body on the first frame; the seat holds them after that.
@@ -194,9 +206,9 @@ internal sealed class MumakilCrewSpawner
             spawned++;
         }
 
-        if (spawned == 0)
-            _logger.LogWarning($"{platform.LogTag} no available seats for crew spawn.");
-        else
+        if (spawned > 0)
             _logger.LogInfo($"{platform.LogTag} crew spawned: {spawned} archer(s) across the decks");
+        else if (!atAgentLimit)
+            _logger.LogWarning($"{platform.LogTag} no available seats for crew spawn.");
     }
 }

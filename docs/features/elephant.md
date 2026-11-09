@@ -1025,6 +1025,7 @@ tested) gates the lines marked (toggle); the rest always log.
 | `[Howdah#n] crew spawn:` / `Spawning crew` / `crew force-spawned: N archer(s)` | next mission tick, always | the crew spawn, one line per archer with its position |
 | `[Howdah#n] crew not spawned:` | next mission tick, always | the elephant or mahout was gone by the tick, or the mahout had no origin |
 | `[Howdah#n] crew spawn failed:` / `crew character '...' not found` / `no available seats` | next mission tick, always | an exception in the spawn, `harad_howdah_crew` missing from the data, or every seat already taken |
+| `[Howdah#n] crew stopped at the engine's N-agent limit` | next mission tick, once per mission | `AllAgents.Count` reached the engine's limit (`CrewAgentBudget.HasRoom`, #1107). That seat and the rest of this howdah's seats stay empty; a howdah drained later gets a crew if a slot is free |
 
 **What the crew do and do not count for** (verified on the 1.5.3 engine, #627 delta review). The crew are the
 elephant's crew, not roster troops. The scoreboard lists them under the mahout's party as Howdah Archers (`harad_howdah_crew`) (one built per
