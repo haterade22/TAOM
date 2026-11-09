@@ -44,8 +44,12 @@ public class WargAttackService : IWargAttackService
         if (attacker.RiderAgent != null && attacker.RiderAgent.IsSameTeam(victimTeamSource))
             return;
 
+        string mountBeforeBlow = "unread";
         try
         {
+            // Patch47 clears the mount link inside Agent.Die, so the catch cannot read the mount after the blow.
+            mountBeforeBlow = target.MountAgent?.GetMonsterStringId() ?? "none";
+
             if (target.State != AgentState.Active && target.State != AgentState.Routed)
                 return;
 
@@ -90,7 +94,21 @@ public class WargAttackService : IWargAttackService
         }
         catch (Exception e)
         {
-            _logger.LogError($"[Warg] HandleWargTargetHit error: {e.GetType().Name}: {e.Message}\n{e.StackTrace}");
+            _logger.LogError($"[Warg] HandleWargTargetHit error ({DescribeVictim(target, mountBeforeBlow)}): {e.GetType().Name}: {e.Message}\n{e.StackTrace}");
+        }
+    }
+
+    // A native fault can leave the agent half-killed, and an exception thrown from this catch would leave the
+    // mission tick (a hang on the next frame), so the description never throws.
+    private static string DescribeVictim(IAgentAdapter target, string mountBeforeBlow)
+    {
+        try
+        {
+            return $"victim='{target.Name}' monster={target.GetMonsterStringId()} mount={mountBeforeBlow}";
+        }
+        catch (Exception) // swallow-ok: the caller logs the original exception with this fallback text
+        {
+            return "victim=unreadable";
         }
     }
 

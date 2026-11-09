@@ -17,7 +17,7 @@ Both are **native AccessViolations**. The managed debug log and the native `rgl_
 - **The defender Trebuchet** (`TaomSiegeEventModel`) — `SiegeEventModel.GetAvailableDefenderSiegeEngines` is **dead API in 1.4.5/1.4.6/1.4.7** (zero call sites). The override never runs; the fire pot is a plain vanilla `FireCatapult` projectile. *(Side effect: the SiegeDefense "defenders get Trebuchets" feature is silently non-functional on 1.4.5+ — separate issue.)*
 - **Generic "dwarf blow → AV"** — the player's all-dwarf army took casualties for 6 minutes with no crash, so the fault is a *specific* blow, not any blow.
 
-**Surviving hypothesis:** a custom-race (dwarf) agent takes a *specific* blow — the player's wounding hit, or the fire-pot AoE hit — through native `Agent.HandleBlowAux` / `Agent.Die`. This is the same fault family the spider **Patch47** (`Die`) / **Patch48** (`HandleBlowAux`) guard, but Patch48 is gated to `IsSpiderMonster` and Patch47 to creature mounts (since 2026-11-08), so a plain dwarf is unguarded. This feature captures the distinguishing blow attribute (flags, damage type, missile/fall, victim race/health) so the fix can be precise, not a blanket guard.
+**Surviving hypothesis:** a custom-race (dwarf) agent takes a *specific* blow — the player's wounding hit, or the fire-pot AoE hit — through native `Agent.HandleBlowAux` / `Agent.Die`. This is the same fault family the spider **Patch47** (`Die`) / **Patch48** (`HandleBlowAux`) guard, but both are gated to creature mounts (since 2026-11-08), so a plain dwarf is unguarded. This feature captures the distinguishing blow attribute (flags, damage type, missile/fall, victim race/health) so the fix can be precise, not a blanket guard.
 
 ## How it works
 

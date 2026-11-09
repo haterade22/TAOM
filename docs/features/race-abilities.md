@@ -212,7 +212,9 @@ reduction instead.
   neither protects, speeds or strengthens the mount (Combat Mechanics already scales charge damage by the rider's
   culture). A rider is never knocked back or down as such. A blow that can dismount him rolls his dismount
   resistance first; if he keeps his seat, a blow that can knock down rolls his knockdown resistance; either
-  unhorses him. So Variag Ferocity guards both rolls and Wainrider Wall only the second. No horse or chariot charge
+  unhorses him. So Variag Ferocity guards both rolls and Wainrider Wall only the second. Both rolls end in `CanDismount`, and
+  Patch48 strips that flag from a chariot or other creature rider (2026-11-08), so neither roll can unhorse that rider
+  and Wainrider Wall's roll has no effect for a charioteer. No horse or chariot charge
   strikes a mounted soldier at all (read in the engine's native code, not yet seen in play), so Wainrider Wall's
   damage reduction and knockdown resistance meet a charge only once he is on foot. The swing bonuses work in the
   saddle, Variag Ferocity's melee bonus covers the couched lance, and thrown spears get no bonus. Whether the

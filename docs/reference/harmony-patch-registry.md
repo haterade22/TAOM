@@ -444,7 +444,7 @@ Spider rider-death AV mitigation. A rider dying seated on the non-vanilla spider
 
 **Target:** `Agent.HandleBlowAux` (private, Prefix)
 
-Non-lethal sibling of Patch47 (debugger-proven + in-game-confirmed 2026-06-15). A finite real-melee `CanDismount` hit on a SURVIVING mounted Spider Rider AVs inside native `Agent.HandleBlowAux` reading `0x3` (`MeleeHitCallback -> Mission.RegisterBlow -> Agent.RegisterBlow -> HandleBlow -> HandleBlowAux`). Same broken non-vanilla mounted-dismount path; Patch47 only covers death. Prefix strips `BlowFlags.CanDismount` when the victim's mount is the spider Monster -> native dismount never fires, rider stays on the locked mount, damage still applies. Delegates `IsSpiderMonster` to `ISpiderAttackService`. Spider-only (elephant mahout latent).
+Non-lethal sibling of Patch47 (debugger-proven + in-game-confirmed 2026-06-15). A finite real-melee `CanDismount` hit on a SURVIVING mounted Spider Rider AVs inside native `Agent.HandleBlowAux` reading `0x3` (`MeleeHitCallback -> Mission.RegisterBlow -> Agent.RegisterBlow -> HandleBlow -> HandleBlowAux`). Same broken non-vanilla mounted-dismount path; Patch47 only covers death. Prefix strips `BlowFlags.CanDismount` when the victim's mount is a creature mount (`CreatureMounts.IsCreatureMount`, since 2026-11-08; the spider before that) -> native dismount never fires, rider stays mounted, damage still applies. A hit can no longer knock a creature rider off; dismounting by choice is unchanged. The category keeps its spider name.
 
 ## Patch49_ArmyGatheringNreGuard
 

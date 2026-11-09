@@ -4,8 +4,8 @@ using TAOM.Features.AdvancedCombat;
 namespace TAOM.Tests.Features.AdvancedCombat;
 
 /// <summary>
-/// Pins <see cref="CreatureMounts.IsCreatureMount"/>, the predicate the dismount-before-death guard
-/// (Patch47, <c>Agent_Die_SpiderDismount_Patch</c>) keys on. A player CTD on v2.0.29.5 (2026-11-07) died
+/// Pins <see cref="CreatureMounts.IsCreatureMount"/>, the predicate both dismount guards key on
+/// (Patch47 <c>Agent_Die_SpiderDismount_Patch</c>, Patch48 <c>Agent_HandleBlowAux_SpiderDismountGuard_Patch</c>). A player CTD on v2.0.29.5 (2026-11-07) died
 /// inside native <c>Agent.Die</c> from a warg bite in a battle of wargs and war rams while the guard
 /// covered spiders alone.
 /// </summary>

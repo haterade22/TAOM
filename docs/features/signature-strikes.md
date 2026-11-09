@@ -187,7 +187,7 @@ The MCM cooldown multiplier applies live.
 | `strikes.*.damageFraction` | float 0..1 | Share of the hit's damage a ring victim takes before falloff |
 | `strikes.*.worldHitBaseDamage` | int 0..500 | Damage basis on a ground hit; 0 = a ground hit does nothing for this direction |
 | `strikes.*.magnitude` | float 0..500 | Blow impulse on ring victims |
-| `strikes.*.knockDown` | bool | Ring victims fall (riders dismount); the struck agent always falls |
+| `strikes.*.knockDown` | bool | Ring victims fall (a rider on a vanilla mount dismounts; Patch48 keeps a creature rider mounted); the struck agent always falls |
 | `strikes.*.knockBack` | bool | Ring victims and the struck agent are staggered back |
 | `strikes.*.fearMorale` | float 0..100 | One-shot morale drain on ring victims and the struck agent before tier and race resistance; 0 = none |
 | `strikes.*.sound` | string | A `module_sounds.xml` name played once per strike; letters, digits and `_ : / . -` only, blank for none |

@@ -42,9 +42,9 @@ Lenses 1, 3, 4 and 6 were SKIPPED BY TIER (tier 1 first wave, no CRITICAL or HIG
   dying, a warg rider dying, the player dying on a war ram, a mahout dying.
 - On the desktop with Ghidra: the callback-slot names Lens 2 tagged [Likely], and the native offset of any
   repeat crash mapped onto `die` (0x600b00 to 0x6023b1 in DLL sha256[:16] 2a5e0e0b15513ebb).
-- FOLLOW-UP no issue: Patch48 widening is a gameplay decision for the maintainer, asked in this session.
-- FOLLOW-UP no issue: `HandleWargTargetHit`'s `catch (Exception)` swallowed the access violation and kept a
-  broken battle running (24 follow-on parallel-tick faults, then a crash at mission end); a separate change.
+- Patch48 widening: decided and done on 2026-11-08, see "Decisions after the port review".
+- `HandleWargTargetHit`'s `catch (Exception)` swallowed the access violation and kept a broken battle running
+  (24 follow-on parallel-tick faults, then a crash at mission end): see "Decisions after the port review".
 
 ## v1.5.6 port (2026-11-08, issue #1101)
 
@@ -82,7 +82,7 @@ Patch47 here, so finding 6 needs no edit there. `ElkMissionBehavior`, `AnimaliaM
   from 0x590C90 is also used as a table index with no check; `docs/features/spider.md` records a 1.4.6 fault of
   that shape (`RAX+RCX*4`). Clearing the link skips both branches. No crash offset connects this to the report.
 - That any creature except the spider reaches a fault on v1.5.6.
-- Which thread reaches `Agent.Die` on the blow path.
+- Which thread reaches `Agent.Die` on the melee blow path. The warg bite path runs on the main thread: `AdvancedCombatBehavior.OnMissionTick` marks it with `MissionThreadGuard.MarkMainThread()`, then calls `TickBoneChecks`.
 - The in-game checks listed above, now owed on v1.5.6 (#1101), and the behaviour differences below.
 
 **What the sever changes, each unverified in game:**
@@ -99,7 +99,7 @@ Patch47 here, so finding 6 needs no edit there. `ElkMissionBehavior`, `AnimaliaM
 ## v1.5.6 port review findings
 
 Tier 1 review of the port: Lens 5 Data flow and Lens 2 Engine compatibility. No CRITICAL or HIGH. Codex did not run
-(the brief: no paid run without the maintainer's word), so that pass is owed before merge.
+(the brief: no paid run without the maintainer's word), and none was authorized before the maintainer asked for the merge (2026-11-08).
 
 | # | Sev | Finding | Category | Why missed | Preventive action |
 |---|-----|---------|----------|------------|-------------------|
@@ -117,3 +117,39 @@ not by the other work the skipped branch did.
 **Why each agent missed these:** on 1.4.8, Lens 2 proved the branches were skipped and Lens 5 traced readers of the
 link; neither was asked what the branch did for a surviving agent. On this port both lenses found them. Lenses 1, 3, 4
 and 6 were SKIPPED BY TIER.
+
+## Decisions after the port review (2026-11-08)
+
+**Patch48 is widened to every creature mount** (the maintainer's decision). It uses the same predicate as Patch47. On
+v1.5.6, native reads `CanDismount` (bit 11 of the blow flags) at 0x602170, and the dismount path it enables at 0x5EC2F0
+uses the same unguarded action lookup as the mounted-death branches. Only the spider's hit crash is proven. The cost is
+that a hit can no longer knock a ram, warg, elk or chariot rider off; dismounting and remounting by choice are unchanged.
+
+**The `catch (Exception)` in `HandleWargTargetHit` stays.** The bite callback runs from the mission tick. `Mission.OnTick`
+sets `tickCompleted = false` (`Mission.cs:3750`) and the next frame waits on it (`:3597`), so a rethrow would risk a hang,
+as `lessons/harmony-il.md` records for the co-op safety nets. The catch now names the victim's Monster and the mount read before the blow, the fact
+this report lacked. Trade-off: one helper of about ten lines, paid only on the failure path.
+
+**Patch47's second branch stays as it is** until the in-game check owed in #1101 shows a surviving rider misbehaving.
+
+## Patch48 and warg log review findings (2026-11-08)
+
+Tier 1 review of the Patch48 widening and the warg log: Lens 5 Data flow and Lens 2 Engine compatibility. No CRITICAL or
+HIGH, and neither lens found an engine incompatibility. Lenses 1, 3, 4 and 6 were SKIPPED BY TIER. Codex did not run.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|-----|---------|----------|------------|-------------------|
+| 1 | MED | `DescribeVictim` read the mount in the catch, after Patch47's sever cleared `_cachedMountAgent`, so a creature rider who faulted in native die logged `mount=none` | diagnostic | The new tests stubbed a mount that never changes, so nothing modelled the sever | The mount id is read before the blow; `HandleWargTargetHit_MountSeveredDuringBlow_LogStillNamesMount` clears the mount during the call |
+| 2 | LOW | Patch48's comment said native attempts the dismount whenever the blow carries `CanDismount`; the attempt also needs an Active humanoid rider and no shrug-off | imprecise-comment | Text carried over from the spider-only guard | Comment corrected |
+| 3 | LOW | `war-ram.md`, `elephant.md`, `mumakil.md`, `signature-strikes.md`, `fords-of-war.md` and `race-abilities.md` still promised that a hit dismounts a creature rider | stale-rationale | They describe the effect in words and do not name Patch48, so the category grep did not find them | Clause added to each; the lesson below says to grep the effect's words |
+| 4 | LOW | `CreatureMounts.cs` and its test named only Patch47 as a consumer | stale-comment | The widening edit listed the patch file and not the predicate's own comment | Both patches named |
+| 5 | LOW | `warg-combat.md` gave a test count with no date | stale-count | Tests were added and the count named no command or date | Count updated and dated |
+
+**Repeat offender:** finding 1 is the hazard that finding 7 of the port review recorded for the `blow` line: state read
+after the blow sees the sever. The port review recorded it one change earlier, and I did not apply it to the new log line.
+
+**Not proven:** only `TaleWorlds.MountAndBlade.Launcher.exe.config` in `bin/Win64_Shipping_Client` sets
+`legacyCorruptedStateExceptionsPolicy`, so whether a managed `catch` sees an access violation depends on the host exe
+(UNVERIFIED). Patch48 on a rider of any creature except the spider has not run in game.
+
+- FOLLOW-UP no issue: `SpiderAttackService.cs:80-84`, `BehaviorTreesCore.cs:74-77` and `SignatureStrikesMissionLogic.cs:109-111` also log no victim when a hit throws; this predates the fix and no report needs it yet.

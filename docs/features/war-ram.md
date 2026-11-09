@@ -242,9 +242,12 @@ A v2.0.29.5 player CTD then died inside native `Agent.Die` from a warg bite in a
 and the player's war rams, so Patch47 now dismounts before death on every creature mount
 (`CreatureMounts.IsCreatureMount`). The victim was not logged, so which mount it rode is unproven.
 
+**Patch48 covers the ram too (2026-11-08).** A hit that carries `CanDismount` no longer knocks a ram rider
+off. Dismounting and remounting by choice are unchanged.
+
 ### Player-ridden rams attack too (#643, 2026-09-23)
 
-The head-butt fires under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down, a mounted victim is dismounted.
+The head-butt fires under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down; a rider on a vanilla mount is dismounted, and a rider on a creature mount stays mounted (Patch48).
 
 **The blow is the rider's**, the ram's only once the rider has gone (the warg's rule), and the combat log reads Pierce instead of Blunt; the engine evidence for both is in [elephant.md](elephant.md), "Player-ridden elephants attack too". The head-butt keeps its own Pierce band and does not scale with the rider's charge bonus; the elk's antler charge does ([elk.md](elk.md)).
 
@@ -524,6 +527,8 @@ validator plus a naked or riderless troop means "file not loaded", not "data def
 7. **Rider dies while mounted**, and **ram dies while ridden**. These are the paths that regress with
    zero managed diff, and the reason gotcha #18 exists
 8. Player dwarf dismounts and remounts. This is what the `CanRide` flip buys
+9. Hit a ram rider with a blow that unhorses a horse rider, such as a couched lance. Expect damage and
+   no dismount (Patch48, owed in #1101)
 
 Any CTD goes to `/native-crash-triage`, never a blind retry.
 
