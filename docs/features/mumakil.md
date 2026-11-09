@@ -165,7 +165,7 @@ agent died" — native, no managed diff, in a path that runs on **mounted-agent 
 **UNVERIFIED — no crash is predicted, and nothing offline settles it.** `tools/audit_mount_parity.py`
 does not check reins (zero occurrences of "rein"; it always exits 0), and the Mûmakil is not in its
 Section A attribute-presence comparison at all, which compares spider vs warg vs elephant only.
-**Owed:** a battle where a *ridden* Mûmakil is killed and where its rider dies while mounted. Full
+**Owed:** a battle where a *ridden* Mûmakil is killed and where its rider dies while mounted. Since 2026-11-08 Patch47 dismounts first, so on the `Agent.Die` route this pass tests the sever, not the native mounted branches. Full
 measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
 rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
 

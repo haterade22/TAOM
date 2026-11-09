@@ -438,7 +438,7 @@ Dwarf tournament dismount — Postfix on the public `TournamentFightMissionContr
 
 **Target:** `Agent.Die` (Prefix)
 
-Spider rider-death AV mitigation. A rider dying seated on the non-vanilla spider mount AVs inside native `Agent.Die` (1.4.6 melee-death: Die-path reads float-bits-as-index from a corrupted action record, debugger-proven). Prefix hard-dismounts via the engine's private `SetMountAgent(null)` (cached `AccessTools`) so the rider dies the proven on-foot death; a dying spider frees its rider first. Spider-only; body try/catch'd.
+Spider rider-death AV mitigation. A rider dying seated on the non-vanilla spider mount AVs inside native `Agent.Die` (1.4.6 melee-death: Die-path reads float-bits-as-index from a corrupted action record, debugger-proven). Prefix hard-dismounts via the engine's private `SetMountAgent(null)` (cached `AccessTools`) so the rider dies the proven on-foot death; a dying creature frees its rider first. Covers every creature mount since 2026-11-08 (`CreatureMounts.IsCreatureMount`: any mount Monster but `horse`, `horse_2`, `camel`, `mule`), after a v2.0.29.5 player CTD died in native `Die` from a warg bite in a battle of wargs and war rams. The category keeps its spider name so old crash notes still find it. The native link clearing and `die`'s mounted branches were re-read on v1.5.6 ([RCA](../reviews/rca-creature-mount-death-dismount-2026-11-08.md)). A rider freed from a dying creature skips native's fall action and usage re-check; the effect is unverified in game. Body try/catch'd.
 
 ## Patch48_SpiderHitDismountGuard
 

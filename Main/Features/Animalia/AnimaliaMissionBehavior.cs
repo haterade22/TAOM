@@ -16,8 +16,8 @@ namespace TAOM.Features.Animalia;
 /// own profile. The great elk's wiring (<see cref="TAOM.Features.Elk.ElkMissionBehavior"/>) for two animals. MUST be
 /// <c>: MissionLogic</c>, NEVER <c>: MissionBehavior</c> (the looter-battle NRE rule, pinned by
 /// BehaviorTreeMissionLogicInheritanceTests). The attach key is the Monster's StringId, never a character id: the
-/// horse-slot mount agent has no Character. No mount-lock and no Patch47 entry: base_monster="horse" inherits vanilla's
-/// rider-death surface whole, as on the ram and the great elk.
+/// horse-slot mount agent has no Character. No mount-lock. Patch47's dismount-before-death covers it since 2026-11-08
+/// (CreatureMounts.IsCreatureMount), as on the ram and the great elk.
 /// </summary>
 public class AnimaliaMissionBehavior : MissionLogic
 {

@@ -17,9 +17,8 @@ namespace TAOM.Features.Elk;
 /// attach key is <c>Monster.StringId == "taom_elk"</c>, NEVER the character id: the horse-slot mount agent has no
 /// Character (the engine builds it with null, v1.5.3 Mission.cs:4611), and the only character on hand is the elf RIDER's.
 ///
-/// Like the ram, the elk carries NO mount-lock (Mirkwood's markets sell it, so a player can ride one) and gets no
-/// Patch47 dismount-before-death entry: base_monster="horse" inherits vanilla's rider-death surface whole. A
-/// ridden-death in-game test is what would reopen that, not a structural gap here.
+/// Like the ram, the elk carries NO mount-lock (Mirkwood's markets sell it, so a player can ride one). Patch47's
+/// dismount-before-death covers it since 2026-11-08 (CreatureMounts.IsCreatureMount), as on every creature mount.
 ///
 /// The trees tick from BehaviorTreeMissionLogic.OnMissionTick on the main thread; the component's own OnTick is a
 /// deliberate no-op since #592 (Agent.Tick runs on the async AI thread). This behavior never ticks a tree itself.

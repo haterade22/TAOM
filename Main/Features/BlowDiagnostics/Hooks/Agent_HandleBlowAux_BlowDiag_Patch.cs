@@ -12,7 +12,7 @@ namespace TAOM.Features.BlowDiagnostics.Hooks;
 ///
 /// WHY: a dwarf (custom race) taking a specific blow — a wounding hit, or a fire-pot AoE hit —
 /// AVs inside native HandleBlowAux with no managed stack (the same fault family the spider
-/// Patch47/48 guard, but those are spider-gated so a plain dwarf is unguarded). The last
+/// Patch47/48 guard, but those key on creature mounts and spiders so a plain dwarf is unguarded). The last
 /// [BlowDiag] line before the log stops names the fatal blow. Sibling of Patch48; separate class
 /// so the spider guard is untouched. Runs at Priority.First so it records the PRISTINE blow
 /// before Patch48 can strip CanDismount. Off by default (per-hit hot path).

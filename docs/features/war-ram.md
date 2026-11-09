@@ -236,9 +236,11 @@ and the five `new_animation_clip*` clips in the Kit the same day.
 player-rideable culture mount with a career built around it, so it is deliberately not gated. This
 matches the chariot, which is also left remountable on purpose.
 
-**No Patch47 entry.** The spider and elephant needed the dismount-before-death patch because their
-Monsters lacked vanilla's rider-death surface. The ram inherits that surface whole through
-`base_monster="horse"`. A ridden-death in-game test is what would justify revisiting this.
+**Patch47 covers the ram (2026-11-08).** The ram was left out on the reasoning that
+`base_monster="horse"` gives it vanilla's rider-death surface, an inference never tested in game.
+A v2.0.29.5 player CTD then died inside native `Agent.Die` from a warg bite in a battle of 122 wargs
+and the player's war rams, so Patch47 now dismounts before death on every creature mount
+(`CreatureMounts.IsCreatureMount`). The victim was not logged, so which mount it rode is unproven.
 
 ### Player-ridden rams attack too (#643, 2026-09-23)
 
