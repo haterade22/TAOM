@@ -438,6 +438,8 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `HiddenHostsBehavior` (the Hidden Hosts hint popup) is deliberately ungated: it writes two saved hint flags and shows a popup, this peer's own presentation.
 
+`EmptyMeetingMenuBehavior` (the Leave menu Patch143 opens) is deliberately ungated: it only registers a menu at session launch, and that menu must exist on any peer whose meeting the guard can stop (#1099).
+
 `HiddenHostsPlainSightBehavior` (the remembered sightings) is deliberately ungated: it stamps this peer's memory rows, per-player presentation like the `HiddenHostsMemoryBehavior` rows below.
 
 `CareerCampaignBehavior` (the career book repair, migration and death clear) is deliberately ungated: it writes only the TAOM career book, this peer's save data, deterministically from the data and the save, and touches no engine object. Per-hero career state on the server is the career relay (#967).

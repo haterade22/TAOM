@@ -116,6 +116,9 @@ public class CoopVetoClassificationTests
             "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
             "text variables and a background mesh only, the prefix returns false solely on the null " +
             "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
+        ["Patch143_EmptyMeetingGuard"] = new(CoopVeto.ReviewedSafe,
+            "Crash guard (#1099). It replaces only a meeting whose partner has no speaker, which would throw on every peer. " +
+            "It reads the encounter and rosters and no TAOM SyncData or MCM value, and its Leave option is vanilla's own exit."),
         ["Patch142_SallyOutEmptyPartyGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1099). It stops a sally-out check only when the besieger leader is in the main party's " +
             "map event and has nobody left; the live-battle branch still runs. It reads only " +

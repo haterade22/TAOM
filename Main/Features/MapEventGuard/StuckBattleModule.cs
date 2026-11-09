@@ -9,8 +9,7 @@ namespace TAOM.Features.MapEventGuard;
 
 /// <summary>
 /// The stuck AI battle guard (#748, docs/features/map-event-guard.md "Stuck AI battles"): an hourly sweep that
-/// ends map battles the engine can never finish. No patch, no saved data. The feature's one IoC-registered sibling,
-/// the sally-out guard (#1099), registers its service here; Patch142 is applied from SubModule.
+/// ends map battles the engine can never finish. No patch, no saved data.
 /// </summary>
 internal sealed class StuckBattleModule : TaomFeatureModule
 {
@@ -27,7 +26,6 @@ internal sealed class StuckBattleModule : TaomFeatureModule
     {
         registrator.Register<IStuckBattleAdapter, StuckBattleAdapter>(Reuse.Singleton);
         registrator.Register<StuckBattleService>(Reuse.Singleton);
-        registrator.Register<SallyOutGuardService>(Reuse.Singleton);
     }
 
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;

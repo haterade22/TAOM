@@ -11,6 +11,9 @@ public interface IServiceBattleService
     /// <summary>The commander's party entered a map event. Party id comes from the thin behavior's boundary conversion.</summary>
     void OnCommanderBattleStarted(string commanderPartyId);
 
+    /// <summary>The main party entered a map event its commander is not in: record the battle state (#1099).</summary>
+    void OnPlayerBattleStarted();
+
     /// <summary>
     /// Retry the join for a commander already in a map event. Raised hourly by the reconciler
     /// when the commander is fighting and the player is not in the event — the recovery path for

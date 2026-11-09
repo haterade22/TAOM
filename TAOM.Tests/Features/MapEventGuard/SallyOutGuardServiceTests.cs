@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Enlistment;
 using TAOM.Features.MapEventGuard;
 using TAOM.Tests.Features.LoadTimeStamps;
 using TAOM.Tests.Infrastructure;
@@ -17,6 +18,7 @@ public class SallyOutGuardServiceTests
 {
     private IModLogger _logger = null!;
     private IOutcomeLog _outcomes = null!;
+    private IGameMenuAdapter _menus = null!;
     private SallyOutGuardService _service = null!;
 
     [TestInitialize]
@@ -24,7 +26,8 @@ public class SallyOutGuardServiceTests
     {
         _logger = Substitute.For<IModLogger>();
         _outcomes = Substitute.For<IOutcomeLog>();
-        _service = new SallyOutGuardService(_outcomes, _logger);
+        _menus = Substitute.For<IGameMenuAdapter>();
+        _service = new SallyOutGuardService(_outcomes, _logger, _menus);
     }
 
     private static ISallySiegeAdapter Siege(
@@ -93,6 +96,37 @@ public class SallyOutGuardServiceTests
     }
 
     [TestMethod]
+    public void ShouldStopSally_StoppedOnTheServiceWaitMenu_ReopensTheBattleMenu()
+    {
+        _menus.CurrentMenuId.Returns(EnlistmentMenuService.ServiceWaitMenuId);
+
+        _service.ShouldStopSally(Siege());
+
+        _menus.Received(1).SwitchTo("encounter");
+        _menus.DidNotReceive().EnsureMenuOpen(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ShouldStopSally_StoppedOnAnotherMenu_LeavesIt()
+    {
+        _menus.CurrentMenuId.Returns("encounter");
+
+        _service.ShouldStopSally(Siege());
+
+        _menus.DidNotReceive().SwitchTo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ShouldStopSally_NotStoppedOnTheServiceWaitMenu_LeavesIt()
+    {
+        _menus.CurrentMenuId.Returns(EnlistmentMenuService.ServiceWaitMenuId);
+
+        _service.ShouldStopSally(Siege(roster: new[] { (12, false) }));
+
+        _menus.DidNotReceive().SwitchTo(Arg.Any<string>());
+    }
+
+    [TestMethod]
     public void ShouldStopSally_RepeatedStopOfOneParty_WarnsOnce()
     {
         _service.ShouldStopSally(Siege());
@@ -107,7 +141,7 @@ public class SallyOutGuardServiceTests
     public void ShouldStopSally_Stopped_WritesTheCheckLineTheManifestReads()
     {
         var logger = Substitute.For<IModLogger>();
-        var service = new SallyOutGuardService(new OutcomeLog(logger, new FakeStampClock(), () => 0), logger);
+        var service = new SallyOutGuardService(new OutcomeLog(logger, new FakeStampClock(), () => 0), logger, _menus);
 
         service.ShouldStopSally(Siege());
 

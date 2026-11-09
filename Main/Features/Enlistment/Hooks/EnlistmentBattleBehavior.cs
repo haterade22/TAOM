@@ -93,16 +93,16 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         var commanderPartyId = FindCommanderPartyIdIn(mapEvent);
         if (commanderPartyId == null)
         {
+            if (IsMainPartyIn(mapEvent))
+                _battle.OnPlayerBattleStarted();
             // GATE SHAPE RULE (every [EnlistDiag] gate in this feature): the gate is an
             // `if (_diagSettings?.IsEnabled == true)` wrapping EXACTLY ONE logging statement. Never a
             // block, never guarding a `return`, never above a state mutation. `?.` + `== true` so a
             // null provider fails quiet. The `return` below is CONTROL FLOW and stays OUTSIDE the gate.
             //
-            // Gating the STATEMENT (not just the log level) is what removes CountInvolved's full
-            // InvolvedParties walk when the toggle is off — C# never evaluates the arguments of a
-            // statement that does not execute. Honest limit: FindCommanderPartyIdIn above ALSO
-            // enumerates InvolvedParties and runs unconditionally because it is load-bearing, so
-            // this removes one of the two enumerations, not both.
+            // Gating the STATEMENT (not just the log level) is what removes CountInvolved's full InvolvedParties walk when
+            // the toggle is off: C# never evaluates the arguments of a statement that does not execute. Honest limit:
+            // FindCommanderPartyIdIn above ALSO enumerates InvolvedParties, load-bearing, so this removes one of the two.
             // INFO, not DEBUG — the toggle controls the volume, the level controls durability. When
             // this fires it has to survive a hard CTD rather than sit in FileLogger's async queue.
             //

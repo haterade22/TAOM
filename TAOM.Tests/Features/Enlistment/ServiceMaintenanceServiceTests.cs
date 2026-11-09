@@ -732,6 +732,19 @@ public class ServiceMaintenanceServiceTests
     }
 
     [TestMethod]
+    public void Pump_AttachedInAMapEvent_LeavesTheBattleMenu()
+    {
+        // #1099: this state is reachable, and the wait menu would stop the battle from ever closing.
+        MakeEnlisted();
+        Presence(parked: true, inMapEvent: true, encounter: true);
+        _gameMenu.CurrentMenuId.Returns("encounter");
+
+        PumpExpensive();
+
+        _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
     public void Pump_OnAMenuWeDoNotOwn_LeavesItAlone()
     {
         MakeEnlisted();

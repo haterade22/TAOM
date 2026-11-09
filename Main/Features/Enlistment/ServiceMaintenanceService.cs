@@ -448,6 +448,10 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         if (record.State != EnlistmentState.EnlistedAttached)
             return;
 
+        // MapEventManager.Tick skips the player's own map event unless it is a raid, so the battle menu must stay up (#1099).
+        if (presence.IsInMapEvent)
+            return;
+
         // Two shapes are legitimate service now: parked outside the column, or INSIDE the
         // commander's settlement — where the party is deliberately active and visible, so
         // LooksParked is false. Gating on parked alone would abandon the menu for the whole

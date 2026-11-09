@@ -4926,5 +4926,8 @@
 	<string id="taom_rf_reason_coop_off" text="{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign." />
 	<!-- SupplyLines -->
 	<string id="taom_sl_caravan_meet_other" text="{=taom_sl_caravan_meet_other}A supply caravan passes on toward its lord." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- MapEventGuard -->
+	<string id="taom_empty_meeting_text" text="{=taom_empty_meeting_text}There is nobody left in that party to speak for it." />
 
 </strings>

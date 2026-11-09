@@ -56,10 +56,38 @@ finding 7, and the garrison test before it. The plan named the lesson file and r
 
 ## Open items
 
-- FOLLOW-UP (no issue: Mike decides whether to file): why the state read `EnlistedAttached` during the battle (`taom_debug.log:576`). `EnlistmentLoadNormalizer.cs:97` should have repaired it on load and its line is absent. The fix tests `IsInMapEvent`, so it does not depend on this.
-- FOLLOW-UP (no issue: speculative until a producer exists): `ServiceMaintenanceService.EnsureServiceMenu` has no `IsInMapEvent` gate. Lenses 5 and 6 found no caller that reaches it with the battle menu up.
-- FOLLOW-UP (no issue: Mike decides): if a second producer of this state exists, a Patch142 skip leaves the battle open and the player stays on the wait menu until discharge. The warning says so. Whether a skip should also restore the encounter menu is new behaviour with no known caller.
-- FOLLOW-UP (no issue: frequency unknown): an empty, leaderless party can reach the same null outside `CheckSallyOut`, through an allied AI encounter (Codex suspect 3, Lens 5). The player's own sally button stays unguarded by Mike's decision.
+- Resolved: why the state read `EnlistedAttached`. The load sweep at 22:41:46 ran with an open encounter and no map event, so the #577 repair had nothing to act on. The battle began after that, the commander was not in it, and no edge set the battle state. `ServiceBattleService.OnPlayerBattleStarted` now does. The exact caller that started the battle is inferred: `game_menu_encounter_meeting_on_init` calls `StartBattle` when no battle exists.
+- Resolved: `ServiceMaintenanceService.EnsureServiceMenu` now returns during a map event, with `Pump_AttachedInAMapEvent_LeavesTheBattleMenu`.
+- Resolved: a Patch142 stop reopens `encounter` when the service wait menu covers it.
+- Resolved: `Patch143_EmptyMeetingGuard` replaces any meeting with no speaker with a one-option Leave menu. It does not call `Finish`, because `RestartPlayerEncounter` reads `PlayerEncounter.Current` after the meeting returns.
+
+## Second review: the four follow-ups
+
+Lens 5, Lens 2 and Lens 7 reviewed the uncommitted follow-ups at tier 1. No finding in the change was above LOW. Lens 2 reported one HIGH in existing Supply Lines code, recorded below. No second wave ran, because that file is outside this change. Codex did not run: both approved runs were spent on the first fix.
+
+| # | Sev | Finding | Found by | Why missed | Fix and proof |
+|---|---|---|---|---|---|
+| 14 | LOW | Three texts said Patch143 covers the player's sally button. While the besieger leader is at the settlement, the button's encounter goes to `encounter` and does not reach `DoMeeting`. Whether `FinalizeEvent` can remove the leader first is unverified. | Lens 5, Lens 2 | The claim came from the guard's position in the meeting code. The route through `GetEncounterGameMenu` was not traced. | Patch comment, registry and open item corrected. |
+| 15 | LOW | `EnsureMenuOpen` was the wrong call for the reopen. `SwitchToMenu` runs the init at once, and on a decided battle init can leave `encounter`. The adapter then activates it a second time. | Lens 2 | The call was copied from a sibling whose target menu has a harmless init. | `SwitchTo`. `ShouldStopSally_StoppedOnTheServiceWaitMenu_ReopensTheBattleMenu`, red then green. |
+| 16 | LOW | The manifest's `fail` list missed the "could not open its menu" line, and the header named the wrong emitter. | Lens 7, Lens 5 | The manifest was written for the catch path only. | One combined pattern. `ShouldDivertMeeting_MenuWouldNotOpen_ReturnsFalseAndReportsNoPass` matches the line against the manifest, red then green. |
+| 17 | LOW | `taom_empty_meeting_leave` duplicated vanilla's translated `{=3sRdGQou}Leave`. | Lens 7 | `/localize` starts from a new key, and no step asks whether vanilla has the word. | Vanilla key used, 13 rows deleted. |
+| 18 | LOW | The registry said a null check covers a Supply Lines teardown. A prefix that returned false skips later prefixes, so the check never ran for that case. | Lens 2 | Harmony's skip was not read. | Registry corrected, the redundant check deleted. |
+| 19 | LOW | The adapter summary said it reads what vanilla is about to get. `DoMeetingInternal` has two army branches that read no partner. | Lens 5, Lens 2 | Same slip as finding 14. | Summary corrected. |
+| 20 | LOW | Two comments said only the battle menu closes the player's event. `MapEventManager.cs:59` still ticks a raid, and the vanilla sally check also closes that event. | Lens 2 | The rule was written from the non-raid crash. | Comments now state the tick rule. No behaviour changes. A first correction kept the word "only", and the Lens 2 re-check rejected it. |
+| 21 | LOW | `map-event-guard.md` said "the other two" with four rows in the table. | Lens 2 | The row was added without a read of the sentence below it. | Sentence rewritten. |
+| 22 | LOW | The `EnlistedBattle` edge had no in-game check. | Lens 5 | The manifest was extended only for the new patch. | `taom.enlistment.own-battle-state` added. |
+
+**Why the three lenses split this way.** Lens 7 read the data and manifest, so it found findings 16 and 17. Lenses 5 and 2 read the engine routes, so they found the rest. Lens 3, Lens 4, Lens 6 and Lens 1 did not run (tier 1 first wave).
+
+**Root-cause pattern.** Findings 14, 18, 19 and 20 repeat finding 9: a claim about a route, written from where the code sits. The lesson is in `lessons/campaign-mechanics.md`.
+
+**Not changed.**
+
+- A battle without the commander now pays kill XP, merit band and spoils, because the merit sampler keys on `EnlistedBattle`. A reload into the same battle already did this.
+- If the player's own battle ends while the commander is fighting, the state holds at `EnlistedBattle` until the commander's battle ends. The window needs time to pass on a menu that stops it.
+- `IsMainPartyIn` stays in place of `mapEvent.IsPlayerMapEvent`: the same file uses that helper for the sibling check.
+- FOLLOW-UP (no issue: filing is public and needs Mike's word): HIGH, existing code. `SupplyCaravanEncounterPatch.cs:58` calls `PlayerEncounter.Finish()` from the `DoMeeting` prefix, inside `Init`. `EncounterManager.cs:340` then reads `PlayerEncounter.Current`, which `Finish` set to null. What catches that throw is unverified. Refuge's shape, a menu that leaves the encounter open, is the model.
+- FOLLOW-UP (no issue: no producer found, and a guard for a speculative case needs Mike's word): the failed-join rollback at `ServiceBattleService.cs:226` has no in-event gate, so it could put the wait menu over a live event.
 
 ## Not verified
 

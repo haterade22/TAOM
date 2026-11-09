@@ -60,6 +60,32 @@ public class ServiceBattleServiceTests
             encounteredPartyId: "lord_party_1", encounteredPartyIsCommanderRelated: true));
     }
 
+    [TestMethod]
+    public void OnPlayerBattleStarted_Attached_RecordsTheBattleStateAndTouchesNothingElse()
+    {
+        MakeEnlisted();
+
+        _service.OnPlayerBattleStarted();
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _gameMenu.DidNotReceive().EnsureMenuOpen(Arg.Any<string>());
+        _partyAdapter.DidNotReceive().RestorePresence();
+    }
+
+    [TestMethod]
+    [DataRow(EnlistmentState.EnlistedBattle)]
+    [DataRow(EnlistmentState.EnlistedPlayerCaptive)]
+    [DataRow(EnlistmentState.CommanderUnavailable)]
+    public void OnPlayerBattleStarted_AnyOtherState_LeavesTheState(EnlistmentState state)
+    {
+        MakeEnlisted(state);
+
+        _service.OnPlayerBattleStarted();
+
+        Assert.AreEqual(state, _store.Record.State);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
     {
         _store.Record.State = state;

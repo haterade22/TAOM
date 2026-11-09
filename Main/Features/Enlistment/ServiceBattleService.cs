@@ -41,6 +41,15 @@ public class ServiceBattleService : IServiceBattleService
     public void OnCommanderBattleStarted(string commanderPartyId) =>
         TryJoin(commanderPartyId, "MapEventStarted");
 
+    // Every gate keyed on EnlistedBattle reads the wrong state otherwise, as after #577's reload. In crash bundle
+    // 9d1db520 a restored encounter started its battle after the load check had run, and the commander was not in it.
+    public void OnPlayerBattleStarted()
+    {
+        if (_store.Record.State == EnlistmentState.EnlistedAttached
+            && _machine.TryTransition(EnlistmentState.EnlistedBattle))
+            _logger?.LogInfo("[Enlistment] the player entered a battle the commander is not in; state is EnlistedBattle (#1099)");
+    }
+
     // Hourly recovery: the reconciler saw the commander fighting while the player was not in the
     // event. Without this the single MapEventStarted edge is the only chance to ever join, so a
     // miss (save-load mid-battle, a throw, enlisting into an already-running fight) stranded the

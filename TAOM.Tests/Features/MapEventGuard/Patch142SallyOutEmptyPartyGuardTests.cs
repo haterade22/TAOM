@@ -37,7 +37,7 @@ public class Patch142SallyOutEmptyPartyGuardTests
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
-        Patch142_SallyOutEmptyPartyGuard.Initialize(new SallyOutGuardService(Substitute.For<IOutcomeLog>(), _logger), _logger);
+        Patch142_SallyOutEmptyPartyGuard.Initialize(new SallyOutGuardService(Substitute.For<IOutcomeLog>(), _logger, Substitute.For<TAOM.Adapters.IGameMenuAdapter>()), _logger);
     }
 
     [TestCleanup]

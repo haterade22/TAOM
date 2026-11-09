@@ -1108,3 +1108,23 @@ A guest loads the server's save, so a TAOM book that means "the player's refuges
 - **Why missed:** the state gate (`EnlistedAttached`) looked like the guard, and the twin rule at `EnlistmentMenuService.cs:123` covered redirects only, not a direct `Activate`.
 - **Prevent:** any code that opens a service or wait menu tests `IsInMapEvent` first, whatever the state machine says. A crash stack with no TAOM frame can still have a TAOM cause: read the menu lines before it in `rgl_log.txt`.
 - **Source:** [rca-sally-empty-party-2026-11-08.md](../rca-sally-empty-party-2026-11-08.md), row 1.
+
+### A state repaired at load misses the battle that starts after the load check (#1099, 2026-11-08)
+
+`EnlistmentLoadNormalizer` restored `EnlistedBattle` only for a party already in a map event at `OnGameLoaded`. A saved encounter with no battle yet passed that check, a battle started when the menu ran, and `OnMapEventStarted` promoted the state only when the commander was in the event. **Rule:** a state derived from an engine fact needs a writer on the edge that creates the fact, as well as a repair at load.
+
+### A claim that a guard covers a route names the line that sends the route there (#1099, 2026-11-08)
+
+**Why missed:** a `DoMeeting` prefix was described as covering the player's sally button because the button starts a party encounter. `DefaultEncounterGameMenuModel.cs:164-178` sends that encounter to `encounter`, so the prefix never sees it. The same slip produced two more wrong claims in one review, and an earlier finding in the same RCA.
+
+**Prevent:** before a comment or doc says a guard covers a route, follow the route to the line that reaches the guard, and cite it. Encounter routes go through `GetEncounterGameMenu`. A bool prefix that returned false also skips every later prefix on that method.
+
+**Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`, findings 14, 18, 19, 20.
+
+### `GameMenu.SwitchToMenu` runs the new menu's init before it returns (#1099, 2026-11-08)
+
+**Why missed:** a reopen of `encounter` used `EnsureMenuOpen`, which treats "the menu is not current afterwards" as a failed open and activates again. `MenuContext.SwitchToMenu` calls `HandleStates`, which runs on_init at once (`MenuContext.cs:56-59,89`). On a decided battle that init can finish the encounter or open another menu.
+
+**Prevent:** when the target menu's init can move on by itself, use `SwitchTo` and accept where it lands. `EnsureMenuOpen` fits menus whose init does nothing.
+
+**Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`, finding 15.

@@ -7846,6 +7846,7 @@
     <string id="TAOM_FOW_Trait_Elves_FewSix" text="Only 150 troops in the field, and only six kinds." />
     <string id="aom_rohan_westfold_spearman_name" text="[Rohan] Westfold Spearman" />
     <string id="aom_imladris_spearman_name" text="[Rivendell] Imladris Spearman" />
+    <string id="taom_empty_meeting_text" text="There is nobody left in that party to speak for it." />
   </strings>
 
 </base>

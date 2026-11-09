@@ -1,5 +1,5 @@
-# In-game checks for #1099, read by tools/ingame_verdict.py. The line comes from
-# Main/Features/MapEventGuard/Hooks/Patch142_SallyOutEmptyPartyGuard.cs when the guard stops a sally-out check.
+# In-game checks for #1099, read by tools/ingame_verdict.py. The first line comes from
+# Main/Features/MapEventGuard/SallyOutGuardService.cs when Patch142 stops a sally-out check.
 # It proves the guard ran on the player's battle. Vanilla's strength test runs later, so it does not prove a sally
 # would have started. The enlistment menu fix closes the known way in, so most sessions never reach the line.
 issue = 1099
@@ -13,6 +13,23 @@ needs = "a sally-out check (hourly tick or MapEventStarted) with the besieger le
 reached = ['\[Check\] id=taom\.map-event-guard\.sally-skip result=pass ']
 pass = ['\[Check\] id=taom\.map-event-guard\.sally-skip result=pass settlement=\S+ leader=\S+$']
 fail = ['\[MapEventGuard\] the sally-out guard threw']
+absence = "not-reached"
+
+# Written by Main/Features/MapEventGuard/EmptyMeetingGuardService.cs when Patch143 opens the Leave menu.
+[[check]]
+id = "taom.map-event-guard.empty-meeting"
+needs = "a player meeting with a party that has no leader hero and no men (no known way to force it)"
+reached = ['\[Check\] id=taom\.map-event-guard\.empty-meeting result=pass ']
+pass = ['\[Check\] id=taom\.map-event-guard\.empty-meeting result=pass party=\S+$']
+fail = ['\[MapEventGuard\] (the )?empty-meeting guard (threw|could not open its menu)']
+absence = "not-reached"
+
+# Written by Main/Features/Enlistment/ServiceBattleService.cs when a battle without the commander sets the battle state.
+[[check]]
+id = "taom.enlistment.own-battle-state"
+needs = "while enlisted and attached, the player enters a battle the commander is not in"
+reached = ['\[Enlistment\] the player entered a battle the commander is not in']
+pass = ['\[Enlistment\] the player entered a battle the commander is not in; state is EnlistedBattle']
 absence = "not-reached"
 
 [[human]]

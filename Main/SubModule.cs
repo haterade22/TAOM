@@ -1756,6 +1756,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.MapEventGuard.SallyOutGuardService>(),
             IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch142_SallyOutEmptyPartyGuard");
+        // Patch143 (#1099): no route opens the player's meeting with a party nobody can speak for.
+        TAOM.Features.MapEventGuard.Hooks.Patch143_EmptyMeetingGuard.Initialize(
+            IoC.Resolve<TAOM.Features.MapEventGuard.EmptyMeetingGuardService>(),
+            IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch143_EmptyMeetingGuard");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

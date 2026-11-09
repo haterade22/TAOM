@@ -140,7 +140,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         // own "take leave" option is hidden by its !alreadyOnLeave condition, so he cannot get back
         // to the town until the column moves. Post-#510 that state also holds a live settlement
         // encounter behind a TAOM menu, which blocks the battle latch for its duration.
-        // In a map event the battle menu is all that closes it: MapEventManager.Tick skips the player's event (#1099).
+        // The battle menu must stay up in a map event: MapEventManager.Tick skips the player's event unless it is a raid (#1099).
         if (_store.Record.OnTownLeave || _attachment.GetPresenceFlags().IsInMapEvent)
             return;
         if (_gameMenu.CurrentMenuId != EnlistmentMenuService.ServiceWaitMenuId)

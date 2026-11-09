@@ -10,9 +10,10 @@ sits under a pure-vanilla `NullReferenceException` whose stack contains no TAOM 
 | `Patch82_MapEventObserverInvariant` | A `MapEvent` with a `BattleObserver` also has a `TroopUpgradeTracker` | CTD on the next simulation tick, `MapEventSide.AllocateTroops` (#551) |
 | `Patch84_SiegeAftermathMenuGuard` | `SiegeAftermathCampaignBehavior._besiegerParty` and its `CurrentSettlement` are non-null when an aftermath menu opens | CTD returning to the map after a siege, `menu_settlement_taken_player_participant_on_init` (#557) |
 | `Patch142_SallyOutEmptyPartyGuard` | A sally-out check with the besieger leader in the player's battle has someone left in that party after `Finish` | NRE in `CreateConversationTableau`, then `MapConversationTableau.OnTick` on every frame (#1099). A skip leaves that battle open, so it applies only to an empty leader |
+| `Patch143_EmptyMeetingGuard` | A player meeting with a party that has no leader hero and no men | NRE in `CreateConversationTableau`, then `MapConversationTableau.OnTick` on every frame (#1099). A one-option Leave menu replaces the meeting |
 
-These are backstops, not features. Patch142 stops a sally check only in the empty-leader case above. The other two change nothing a player can see, and on a healthy campaign
-each prefix returns on its first comparison.
+These are backstops, not features. Patch142 and Patch143 act only in the empty-party cases above. Patch82 and Patch84 change nothing a player can see, and on a healthy campaign
+vanilla runs unchanged.
 
 One more guard is a campaign behavior, not a patch: the stuck AI battle sweep (see
 [Stuck AI battles](#stuck-ai-battles)) ends map battles the engine can never finish on its own.
@@ -294,15 +295,20 @@ print, let an in-game hour pass, and print again.
 | `Main/Features/MapEventGuard/SallyOutGuardService.cs` | The Patch142 rule, its `[Check]` line and its warning |
 | `Main/Features/MapEventGuard/SallySiegeSnapshot.cs` | Engine-free data for one sally-out check |
 | `Main/Adapters/SallySiegeAdapter.cs`, `ISallySiegeAdapter.cs` | The engine reads behind the sally-out check |
+| `Main/Features/MapEventGuard/Hooks/Patch143_EmptyMeetingGuard.cs` | The prefix on `PlayerEncounter.DoMeeting` |
+| `Main/Features/MapEventGuard/EmptyMeetingGuardService.cs` | The Patch143 rule, its `[Check]` line and its warning |
+| `Main/Features/MapEventGuard/Hooks/EmptyMeetingMenuBehavior.cs` | Registers the one-option Leave menu |
+| `Main/Adapters/EmptyMeetingAdapter.cs`, `IEmptyMeetingAdapter.cs` | The meeting partner read and the exit |
+| `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu |
 | `Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs` | `LogSiegeAftermathContext`, the siege-only diagnostic that will close #557's open question |
-| `Main/SubModule.cs` | `Initialize(...)` plus `PatchCategory(...)` for all three categories in the `OnGameInitializationFinished` batch, and `ResetForUnload` |
+| `Main/SubModule.cs` | `Initialize(...)` plus `PatchCategory(...)` for all four categories in the `OnGameInitializationFinished` batch, and `ResetForUnload` |
 
 Patch82 and Patch84 have no service, no adapter and no IoC registration. Patch82 is a null comparison
 and a property write. Patch84 takes a decision, in pure methods on plain values that are tested
 without the game; a service would add an adapter over the engine reads for one caller and hold
 nothing the patch does not (`simplicity-criterion.md`). Patch142 follows ADR-002 (Mike, 2026-11-08):
 `SallyOutGuardService` holds the rule, `SallySiegeAdapter` does the engine reads, and
-`StuckBattleModule` registers the service. The stuck-battle sweep writes to the
+`EncounterGuardModule` registers the service. Patch143 has the same shape. The stuck-battle sweep writes to the
 battles it judges and has a second reader in the console command, so it has the full stack.
 
 ## Dependencies
@@ -316,6 +322,7 @@ battles it judges and has a second reader in the console command, so it has the 
 - `TAOM.Tests/Features/MapEventGuard/SallyOutGuardServiceTests.cs`: the Patch142 rule on plain values, the warning throttle and the manifest's pass line.
 - `TAOM.Tests/Features/MapEventGuard/SallySiegeAdapterTests.cs`: the engine reads on identity-only objects.
 - `TAOM.Tests/Features/MapEventGuard/Patch142SallyOutEmptyPartyGuardTests.cs`: the prefix, the manifest's fail line and the Harmony patch of the real target.
+- `TAOM.Tests/Features/MapEventGuard/EmptyMeetingGuardServiceTests.cs` and `Patch143EmptyMeetingGuardTests.cs`: the Patch143 rule, the prefix, the manifest lines and the Harmony patch at `Priority.Last`.
 - `TAOM.Tests/Features/MapEventGuard/Patch82MapEventObserverInvariantBindingTests.cs` holds 5 tests. The
   target method and its arity plus overload count; both accessors of the internal `BattleObserver`;
   the public, reference-typed `TroopUpgradeTracker`; the continued existence of
@@ -360,8 +367,11 @@ Search the TAOM debug log for `[MapEventGuard]`:
 - `cleared a dangling BattleObserver ...` means Patch82 caught a real break. Something removed the main
   party from a live map event while its battle UI stayed attached. Find that, because the guard is
   the floor, not the fix.
-- `stopped a sally-out check ...` means Patch142 kept the #1099 meeting from opening. The player's battle stays open, and the line names the settlement and the leader. Find the path that left that battle open, because `EnlistmentMenuBehavior.OnConversationEnded` no longer does.
+- `stopped a sally-out check ...` means Patch142 kept the #1099 meeting from opening. The line names the settlement and the leader. If the service wait menu covered the battle menu, the guard reopened `encounter`. Find the path that left that battle open, because `EnlistmentMenuBehavior.OnConversationEnded` no longer does.
 - `the sally-out guard threw ...` means Patch142 failed and vanilla ran.
+- `stopped a meeting with nobody to speak for the party` means Patch143 opened the Leave menu in place of a meeting. The line names the party. Find what left that party empty.
+- `the empty-meeting guard threw ...` means Patch143 failed and vanilla ran.
+- `empty-meeting guard could not open its menu` means the Leave menu did not open and vanilla ran the meeting. Expect the #1099 crash after it.
 - `repaired the '<menu>' siege aftermath menu ...` means Patch84 caught the #557 crash. The line names
   which of vanilla's two dereferences was null plus the army and attachment state. A null
   `besiegerParty` means vanilla skipped its `OnMapEventEnded` assignment block, which means the main
@@ -402,6 +412,8 @@ would act on.
 - 2026-10-06: added the stuck AI battle sweep, from a player's report and diagnosis (#748). Not yet
   verified in game.
 - 2026-11-08: added `Patch142_SallyOutEmptyPartyGuard`, from a player's crash bundles (#1099). Not yet
+  verified in game.
+- 2026-11-08: added `Patch143_EmptyMeetingGuard` and the Patch142 battle-menu restore (#1099 follow-ups). Not yet
   verified in game.
 
 ## GitHub Issue
