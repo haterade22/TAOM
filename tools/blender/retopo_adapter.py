@@ -88,36 +88,23 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         domain = mesh.attribute_domain(attribute_name)
         if domain not in {"POINT", "FACE"}:
             continue
-        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces) if domain == "FACE" else None
-        if expected_count is not None and len(values) != expected_count:
+        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces)
+        if len(values) != expected_count:
             continue
         if attribute_name in {"source_position", "pattern_center"}:
-            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain=domain or "POINT")
+            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain=domain)
             for item, value in zip(attribute.data, values):
                 item.vector = value
         elif attribute_name in {"point_guide", "open_seam", "simplify_on"}:
-            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain=domain or "POINT")
+            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain=domain)
             for item, value in zip(attribute.data, values):
                 item.value = bool(value)
-        elif (
-            domain == "POINT"
-            or (
-                domain is None
-                and (
-                    attribute_name in {"source_vertex", "source_part"}
-                    or (attribute_name == "pattern_id" and "source_position" in mesh.attributes)
-                )
-            )
-        ):
+        elif domain == "POINT":
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
-        elif domain == "FACE" or len(values) == len(mesh.faces):
+        else:
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="FACE")
-            for item, value in zip(attribute.data, values):
-                item.value = int(value)
-        elif len(values) == len(mesh.vertices):
-            attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
     for attribute_name, values in mesh.edge_attributes.items():

@@ -136,7 +136,9 @@ def main():
         assert face_source_output.data.attributes["source_position"].domain == "FACE"
         assert face_source_output.data.attributes["point_guide"].domain == "FACE"
         unsupported = roundtrip.copy()
+        unsupported.attributes["point_guide"] = [True] * len(unsupported.vertices)
         unsupported.attribute_domains["point_guide"] = "CORNER"
+        assert "point_guide" in unsupported.attributes
         unsupported_output = mesh_to_blender(unsupported, "TAOM_UnsupportedDomain")
         assert "point_guide" not in unsupported_output.data.attributes
         point_variant = roundtrip.copy()

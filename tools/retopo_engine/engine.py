@@ -201,6 +201,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {}
         return result, []
 
+    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
     result.attribute_domains = mesh.resolved_attribute_domains()
     point_attribute_names = {
         name for name in mesh.attributes if mesh.attribute_domain(name) == "POINT"
@@ -464,7 +465,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                 return Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
         raise ValueError("non-manifold edge has no incident face")
 
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     bad_edges = [debug_edge(edge) for edge in bad_edges]
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
@@ -704,6 +705,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
         if len(_mirror_axes(guide)) > 1:
             return guide.copy()
     result = guide.copy()
+    unresolved_names = {name for name in guide.attributes if guide.attribute_domain(name) not in {"POINT", "FACE"}}
     result.attribute_domains = guide.resolved_attribute_domains()
     point_attribute_names = {
         name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
@@ -780,7 +782,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
                 target = result.edge_attributes.setdefault(name, {})
                 if edge in values and mirrored_edge not in target:
                     target[mirrored_edge] = values[edge]
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -1189,6 +1191,7 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
             edge = Mesh.edge_key(first, new_face[(index + 1) % len(new_face)])
             group_edges.setdefault(group, set()).add(edge)
         cursor += len(face)
+    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
     result = Mesh(
         vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name,
         attribute_domains=mesh.resolved_attribute_domains(),
@@ -1209,7 +1212,7 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
                 edge = Mesh.edge_key(endpoint_groups[first][group], endpoint_groups[second][group])
                 if edge in group_edges.get(group, set()):
                     result.edge_attributes[name][edge] = value
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     return result
 
 
@@ -1217,6 +1220,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     if distance <= 0:
         return mesh
     result = mesh.copy()
+    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
     result.attribute_domains = mesh.resolved_attribute_domains()
     protected = {
         index
@@ -1280,6 +1284,8 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     result.faces = faces
     result.uv = uv
     for name, values in result.attributes.items():
+        if name in unresolved_names:
+            continue
         domain = result.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == original_face_count):
             result.attributes[name] = [values[index] for index in kept_faces]
@@ -1293,7 +1299,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         }
         for name, values in result.edge_attributes.items()
     }
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     return result
 
 
@@ -1323,6 +1329,7 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 directed.append((first, second, face_index))
     for first, second, _ in directed:
         faces.append((first, second, second + count, first + count))
+    unresolved_names = {name for name in guide.attributes if guide.attribute_domain(name) not in {"POINT", "FACE"}}
     result = Mesh(
         vertices=vertices, faces=faces, uv_name=guide.uv_name,
         attribute_domains=guide.resolved_attribute_domains(),
@@ -1361,7 +1368,7 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 uv.extend(result.uv[cursor + index] for index in reversed(range(len(face))))
                 cursor += len(face)
             result.uv = uv
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     return result
 
 

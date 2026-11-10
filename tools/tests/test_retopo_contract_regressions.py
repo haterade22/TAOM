@@ -688,6 +688,30 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual("POINT", result.attribute_domains["weight"])
         self.assertEqual(len(result.vertices), len(result.attributes["weight"]))
 
+    def test_reconstruction_drops_unresolved_and_unsupported_attributes(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2, 3)],
+            uv=[(0, 0), (1, 0), (1, 1), (0, 1)],
+            attributes={
+                "source_vertex": [0, 1, 2, 3],
+                "weight": [9, 8, 7, 6, 5, 4],
+                "corner_tag": [1, 1, 1, 1],
+            },
+            attribute_domains={"corner_tag": "CORNER"},
+        )
+        results = [
+            engine.mirror_guides(mesh, axes=("x",)),
+            engine._separate(mesh, [0]),
+            engine.merge_output_seams(mesh, 0.01),
+            engine.thicken(mesh, 0.1),
+            engine.subdivide_quads(mesh),
+        ]
+        for result in results:
+            self.assertNotIn("weight", result.attributes)
+            self.assertNotIn("corner_tag", result.attributes)
+            self.assertIn("source_vertex", result.attributes)
+
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
             Mesh(
@@ -695,7 +719,7 @@ class ContractRegressionTests(unittest.TestCase):
                 faces=[(0, 1, 4, 3), (1, 2, 5, 4)],
                 uv=[(0, 0), (0.5, 0), (0.5, 1), (0, 1), (0.5, 0), (1, 0), (1, 1), (0.5, 1)],
                 attributes={"pattern_id": [0, 1, 2, 3, 4, 5]},
-                attribute_domains={"pattern_id": "POINT"},
+                attribute_domains={},
             ),
             [0, 1],
         )
@@ -723,7 +747,6 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], merged_equal.attributes["source_vertex"])
         guide = differential.ring_guide()
         guide.attributes["pattern_id"] = list(range(16))
-        guide.attribute_domains["pattern_id"] = "POINT"
         thickened = engine.thicken(guide, 0.1)
         self.assertEqual(list(range(16)) * 2, thickened.attributes["pattern_id"])
         self.assertEqual("POINT", thickened.attribute_domains["pattern_id"])

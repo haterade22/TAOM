@@ -199,12 +199,13 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
             attributes[name] = remapped
         elif domain == "FACE":
             attributes[name] = [values[face_index] for face_index in range(len(mesh.faces)) for _ in range(4)]
+    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
     result = Mesh(
         vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name,
         attributes=attributes, edge_attributes=edge_attributes,
         attribute_domains=mesh.resolved_attribute_domains(),
     )
-    result.discard_unresolved_attributes()
+    result.discard_unresolved_attributes(unresolved_names)
     return result
 
 

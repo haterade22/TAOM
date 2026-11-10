@@ -76,9 +76,9 @@ class Mesh:
             if (domain := self.attribute_domain(name)) is not None
         }
 
-    def discard_unresolved_attributes(self):
-        for name in list(self.attributes):
-            if self.attribute_domain(name) is None:
+    def discard_unresolved_attributes(self, names):
+        for name in names:
+            if name in self.attributes:
                 del self.attributes[name]
                 self.attribute_domains.pop(name, None)
 
