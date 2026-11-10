@@ -4950,3 +4950,27 @@ The first `--summary` footer said to read one function with `--rva 0x<entry>`. A
 - **Why missed:** the plan said "prints the new keys per group", and the printed line was taken as the safeguard. The new output was not put through the checks the tool already runs on its neighbours.
 - **Prevent:** when a tool shows a value so that a bad input shows, give the bad case the tool's own verdict (a refusal, an INCONCLUSIVE reason, an exit code), and test that case. Ask the same question of every new line added beside existing checks.
 - **Source:** [rca-shadow-instrumentation-2026-11-09.md](../rca-shadow-instrumentation-2026-11-09.md) row 1.
+
+### The tag waits for the tool suite, and a release note is linked before it (v2.0.37, 2026-11-10)
+
+v2.0.37 was tagged while the gate run on the release tree was still in the Python tool suite, and the run was stopped to save the wait. The suite has one red test at the tag: `test_doc_graph_ratchet`, because the release commit added two release notes that nothing links. The C# suite, the binding gate and the build were green, so the release looked verified.
+
+- **Why missed:** `/release` wrote the notes and had no step for `docs/INDEX.md`. The two earlier releases left their notes unlinked too, and the ratchet's baseline had room for exactly one more file.
+- **Prevent:** `/release` Phase 5 links the note from `docs/INDEX.md` and runs `check_doc_graph_ratchet.py`. Let `/verify` finish before the tag: the suite that is still running is the one that has not passed. An earlier lesson says the same of baselines ("Wait for long suites with one command").
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 3.
+
+### Land a commit on a shared checkout without writing another session's files (v1.5.7 bump, 2026-11-10)
+
+`git merge --ff-only` into the trunk checkout was refused, because another session had unstaged edits in 18 files the bump changes. A scratch script merged the bump's change into each of those working copies, set the index entry to the new blob and fast-forwarded. It read each file once and wrote it a few seconds later with no second read: a save by the other session in that window would have been overwritten, and the script's own check would still have passed. No loss was found afterwards.
+
+- **Why missed:** "Never write a reconstructed shared file to disk" was read as "do not lose their edits", which a three-way merge satisfies. The rule is about who writes the file.
+- **Prevent:** when a fast-forward is refused over another session's edits, do not write their files. Push the branch to the remote trunk and let the other session take it with its own pull, or wait until the overlap is committed. A plain fast-forward is fine when no file the commit changes is dirty in that checkout: check the overlap first.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 4.
+
+### Stop a background run by its own script path, and list the matches first (v1.5.7 bump, 2026-11-10)
+
+To stop this session's gate run, a process filter matched the command text `unittest discover -s tools/tests`. Another session ran the same command from its own folder, and its three shell processes and one Python process were stopped too.
+
+- **Why missed:** the filter named what the run does, and several sessions do the same thing at once. The earlier lesson on stopping a queue lists script names that only one session used.
+- **Prevent:** match on the full path of the session's own script, or on its worktree path in the command line. Print the matching processes with their parents before stopping any, and stop by process id.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 18.

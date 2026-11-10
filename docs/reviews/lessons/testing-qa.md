@@ -2650,3 +2650,10 @@ The first `OfOwnClan` test only checked the source text for `return Of(clan);`. 
 - **Why missed:** the test copied its siblings and the summary's claim instead of reading which getters are field-backed; nobody reread the slice windows when a method was inserted.
 - **Prevent:** read the getter chain with `taom-src`; where it ends in fields, stage the object with `FormatterServices.GetUninitializedObject` and set the fields (`FactionSidesTests.LordServing`), and add a contrast case so the staging itself is proven. A source slice ends at the next method's header, never two methods down. Prove either kind with a mutation run.
 - **Source:** [rca-sworn-anew-own-clan-2026-11-10.md](../rca-sworn-anew-own-clan-2026-11-10.md), rows 1 and 2.
+### A source-scan gate counts the matches it could not read, and fails on any (v1.5.7 bump, 2026-11-10)
+
+`PartyMemberSizeLimitCallShapeTests` scans TAOM's source for a bool literal passed by position to one engine method. Its first form matched one call per line and missed a nested call in an argument (Codex). The rewrite reads balanced brackets, and it still missed a call inside an interpolation hole, where one of the live calls stood (`CareerPerkCheats.cs:88`). Each fix widened what the scanner reads, and nothing said what it still skipped.
+
+- **Why missed:** the shape cases came from the calls that existed and from the last review's finding. A scanner that blanks strings treats a call in `$"{...}"` as text, and a clean result reads the same as an unread call.
+- **Prevent:** give a source scan a second count that needs no parsing (the method name with its bracket in the comment-free source) and fail when it differs from the calls the scanner read. Then a shape the scanner cannot read fails the gate. Here: `TaomCallers_AreAllReadByTheScanner`.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), findings 1 and 2.

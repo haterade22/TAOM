@@ -1879,3 +1879,11 @@ v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool incl
 - **Why missed:** it was found, because the two signatures were compared before the fix. The compiler, the binding gate and `check_engine_member_refs.ps1` all pass such a call, so nothing but a read of every caller finds it.
 - **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
 - **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).
+
+### A comment that states an engine rule is bound to the engine: grep it at every bump (v1.5.7 bump, 2026-11-10)
+
+v1.5.7 made `MenuHelper.EncounterAttackConsequence` skip the hostile action against a caravan or villager leader party. TAOM patches neither that method nor its caller, so the member diff, the binding gate and the patch-note table all read "Inherited". Three Enlistment comments still said that Attack always declares the war, and `OathSitOutRule` rests on that rule. An independent sweep of the engine diff found it, not the bump's own steps.
+
+- **Why missed:** the bound surface is patches, models, reflection sites and loaders. A comment or a rule that restates what vanilla does has no row there, and a grep for the member's name in code finds nothing when only a comment names it.
+- **Prevent:** for each engine member the diff shows as changed, grep its name across TAOM's source with comments, and across `docs/features/`. Judge every hit that states the old behaviour as fact. `/engine-bump` Phase 3 has the step.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 6.
