@@ -296,6 +296,66 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(14, len(result.edges()))
         self.assertTrue(set(result.faces[3]) & set(result.faces[4]))
 
+    def test_healthy_triangle_mesh_is_unchanged_by_repair(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2), (0, 2, 3)],
+        )
+        result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], bad_edges)
+        self.assertEqual(mesh.vertices, result.vertices)
+        self.assertEqual(mesh.faces, result.faces)
+        self.assertEqual(1, len(result.connected_components()))
+
+    def test_retained_fan_repairs_preserve_all_manifold_connectors(self):
+        cases = [
+            (
+                [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (1, 0, 1), (0, 0, 1), (1, -1, 0), (0, -1, 0), (0, 1, 1), (1, -1, 1)],
+                [(0, 1, 2, 3), (0, 1, 4, 5), (0, 1, 6, 7), (0, 3, 8, 5), (1, 4, 9, 6)],
+                [(0, 3), (1, 3), (1, 4), (2, 4)],
+            ),
+            (
+                [(index, 0, 0) for index in range(10)],
+                [(0, 1, 2, 3), (1, 0, 4, 5), (0, 1, 6, 7), (0, 3, 8, 7), (1, 2, 9, 5)],
+                [(0, 3), (2, 3), (0, 4), (1, 4)],
+            ),
+        ]
+        for vertices, faces, connected_pairs in cases:
+            with self.subTest(faces=faces):
+                mesh = Mesh(vertices=vertices, faces=faces)
+                result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+                self.assertEqual([], engine.non_manifold_edges(result))
+                for first, second in connected_pairs:
+                    first_edges = {Mesh.edge_key(result.faces[first][index], result.faces[first][(index + 1) % 4]) for index in range(4)}
+                    second_edges = {Mesh.edge_key(result.faces[second][index], result.faces[second][(index + 1) % 4]) for index in range(4)}
+                    self.assertTrue(first_edges & second_edges, (first, second))
+
+    def test_repair_preserves_original_loose_vertices_and_line_attributes(self):
+        mesh = Mesh(
+            vertices=[(9, 9, 9), (0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 1, 1), (0, -1, 0)],
+            faces=[(1, 2, 3, 4), (2, 1, 5, 6), (1, 2, 4, 6)],
+            lines=[(2, 4)],
+            attributes={"point_guide": [True] * 7},
+            edge_attributes={"crease_edge": {(2, 4): 1.0, (1, 2): 0.5}},
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertIn((9.0, 9.0, 9.0), result.vertices)
+        self.assertEqual(len(result.vertices), len(result.attributes["point_guide"]))
+        self.assertEqual(1.0, result.edge_attributes["crease_edge"][result.lines[0]])
+        self.assertEqual([], engine.non_manifold_edges(result))
+
+    def test_debug_edges_follow_real_descendant_faces(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (-1, 0, 0)],
+            faces=[(0, 2, 5), (0, 1, 2), (1, 0, 3), (0, 1, 4)],
+        )
+        original_bad = engine.non_manifold_edges(mesh)
+        result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertTrue(set(bad_edges) <= set(result.edges()))
+        self.assertEqual(set(bad_edges), set(result.edge_attributes["bad_mesh"]))
+        for original, returned in zip(original_bad, bad_edges):
+            self.assertEqual(tuple(mesh.vertices[index] for index in original), tuple(result.vertices[index] for index in returned))
+
     def test_inspection_without_repair_preserves_loose_data_and_debug_indices(self):
         mesh = Mesh(
             vertices=[(9, 9, 9), (0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 1, 1), (0, -1, 0)],

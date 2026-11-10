@@ -266,7 +266,23 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
         )
         retained = set(sorted(index for index in preserved if index in face_indices)[:2])
-        for old in edge:
+
+        def connector_cost(old):
+            cost = 0
+            for face_index in face_indices:
+                if face_index in retained:
+                    continue
+                for candidate in face_edges[face_index]:
+                    if old not in candidate or candidate in protected_edges:
+                        continue
+                    cost += sum(
+                        candidate in other_edges
+                        for other_index, other_edges in enumerate(face_edges)
+                        if other_index != face_index
+                    )
+            return cost
+
+        for old in sorted(edge, key=connector_cost):
             parents = {index: index for index in range(len(result.faces))}
 
             def root(index):
@@ -301,6 +317,12 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                     groups = [incident]
                 for group in groups:
                     if all(index in retained for index in group):
+                        continue
+                    if retained.intersection(fan) and not any(
+                        Mesh.edge_key(result.faces[face_index][corner], result.faces[face_index][(corner + 1) % len(result.faces[face_index])]) == edge
+                        for face_index in group
+                        for corner in range(len(result.faces[face_index]))
+                    ):
                         continue
                     replacement = len(result.vertices)
                     result.vertices.append(result.vertices[old])
@@ -347,8 +369,15 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             for name, values in mesh.edge_attributes.items():
                 if original_edge in values:
                     edge_attributes[name][new_edge] = values[original_edge]
+    for line in result.lines:
+        for name, values in mesh.edge_attributes.items():
+            if line in values:
+                edge_attributes[name][line] = values[line]
     result.edge_attributes = edge_attributes
+    originally_used = {index for face in mesh.faces for index in face} | {index for edge in mesh.lines for index in edge}
+    originally_loose = set(range(len(mesh.vertices))) - originally_used
     used = {index for face in result.faces for index in face} | {index for edge in result.lines for index in edge}
+    used.update(originally_loose)
     ordered = sorted(used)
     remap = {old: new for new, old in enumerate(ordered)}
     result.vertices = [result.vertices[index] for index in ordered]
@@ -366,12 +395,17 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         for name, values in result.edge_attributes.items()
     }
 
-    def debug_index(old):
-        if old in remap:
-            return remap[old]
-        return min(remap.values(), key=lambda other: math.dist(mesh.vertices[old], result.vertices[other]))
+    def debug_edge(original_edge):
+        for face_index, original_face in enumerate(mesh.faces):
+            for corner, first in enumerate(original_face):
+                second = original_face[(corner + 1) % len(original_face)]
+                if Mesh.edge_key(first, second) != original_edge:
+                    continue
+                new_face = result.faces[face_index]
+                return Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
+        raise ValueError("non-manifold edge has no incident face")
 
-    bad_edges = [Mesh.edge_key(debug_index(first), debug_index(second)) for first, second in bad_edges]
+    bad_edges = [debug_edge(edge) for edge in bad_edges]
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
 
