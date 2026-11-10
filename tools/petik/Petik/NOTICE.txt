@@ -1,0 +1,23 @@
+Petik 2.0.7
+Copyright Mihai Dobrin
+Source: https://blendermarket.com/products/petik
+
+The add-on is redistributed under GNU GPL-3.0-or-later, as declared by the upstream
+blender_manifest.toml. The upstream distribution did not include a separate LICENSE
+file; the corresponding license text is supplied in LICENSE.txt.
+
+TAOM made three compatibility changes on 2026-11-09:
+- __init__.py imports both modules explicitly before reloading them.
+- Patch.refresh passes self.context instead of an undefined name.
+- The optional menu method references MdUtilMultiPetik instead of an undefined operator.
+
+petik_preferences.py and blender_manifest.toml remain byte-identical to upstream.
+No other executable Petik logic was changed.
+
+Upstream SHA-256 evidence:
+- __init__.py: 70394d62ab45732773d59e7bee1e80604a543474dcf64e46944b76d37f0e48c2
+- op_md_petik.py: f7fe9402aeaaa8830d280a42ae397b9348dc45a507a8129f83932c30fa4b2a4f
+- petik_preferences.py: ccb19ce5774fd476eab9ff8f69a367b4dd3cb956db31d3d65776c20c4da3187d
+- blender_manifest.toml: 703fc30de41b22ba7df5f8841f09859cffdf88de7ee9d60875a2b1f33a8a6940
+
+This directory is a separate add-on from the MIT-licensed TAOM retopology engine.

@@ -1,0 +1,16 @@
+TAOM Retopology Toolkit
+
+The independent TAOM engine, Blender adapter, operators, packaging tools, tests,
+and original workflow text are MIT licensed.
+
+Petik 2.0.7 is a separate add-on by Mihai Dobrin, redistributed under
+GNU GPL-3.0-or-later with three recorded compatibility fixes. Its source and license are under Petik/ in its installable
+archive and tools/petik/Petik/ in the source archive.
+
+Retopo Planes 1.6.3 by Nodes Interactive was used only as a behavioral reference.
+No Retopo Planes .blend file, Geometry Nodes groups, node layout, demo meshes,
+textures, materials, presets, activation data, or other product assets are included.
+The TAOM engine was independently implemented from docs/research/retopo-planes-1-6-3-clean-room.md.
+
+Exoside Quad Remesher is an optional separate licensed dependency for TAOM's other
+retopology backend. No Exoside binaries or license data are included.
