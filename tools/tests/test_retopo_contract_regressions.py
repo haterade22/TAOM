@@ -498,9 +498,9 @@ class ContractRegressionTests(unittest.TestCase):
         source.attribute_domains["point_guide"] = "POINT"
         guide = Mesh(
             vertices=[(0.1, 0.1, 0), (0.9, 0.1, 0), (0.9, 0.9, 0), (0.1, 0.9, 0)],
-            faces=[],
+            faces=[(0, 1, 2, 3)] * 4,
             attributes={"point_guide": [True] * 4},
-            attribute_domains={"point_guide": "CORNER"},
+            attribute_domains={"point_guide": "FACE"},
         )
         result = engine.retopologize(
             source, guide,
@@ -509,6 +509,36 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(differential.unit_guide().vertices, result.vertices)
         self.assertNotIn("point_guide", result.attributes)
         self.assertNotIn("point_guide", result.attribute_domains)
+
+    def test_direct_initialization_and_snap_ignore_invalid_markers(self):
+        source = differential.curved_grid()
+        for domain in ("CORNER", "FACE"):
+            with self.subTest(source_domain=domain):
+                source.attributes["point_guide"] = [True] * len(source.vertices)
+                source.attribute_domains["point_guide"] = domain
+                flat = engine.flatten_to_patterns(source)
+                result = engine.initialize_planes(flat, RetopoSettings())
+                self.assertEqual(differential.unit_guide().vertices, result.vertices)
+                self.assertNotIn("point_guide", result.attributes)
+        source.attributes.pop("point_guide")
+        source.attribute_domains.pop("point_guide")
+        flat = engine.flatten_to_patterns(source)
+        for domain, values in (("CORNER", [True] * len(flat.vertices)), ("POINT", [True])):
+            with self.subTest(direct_domain=domain, direct_length=len(values)):
+                invalid = flat.copy()
+                invalid.attributes["point_guide"] = values
+                invalid.attribute_domains["point_guide"] = domain
+                result = engine.initialize_planes(invalid, RetopoSettings())
+                self.assertEqual(differential.unit_guide().vertices, result.vertices)
+        guide = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2, 3)],
+            attributes={"point_guide": [True, True, True, True]},
+            attribute_domains={"point_guide": "CORNER"},
+        )
+        snapped = engine.snap_guides_to_pattern(guide, differential.unit_guide(), 0.001)
+        self.assertNotIn("point_guide", snapped.attributes)
+        self.assertNotIn("point_guide", snapped.attribute_domains)
 
     def test_density_plane_ids_distinguish_unequal_components(self):
         guide = Mesh(

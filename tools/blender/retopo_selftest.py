@@ -168,12 +168,24 @@ def main():
         activate(point_output)
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         assert all(polygon.material_index == 0 for polygon in bpy.context.active_object.data.polygons)
+        assert len(bpy.context.active_object.data.materials) == len(bpy.context.active_object.data.polygons)
         settings.output_generated_planes = False
-        settings.debug_material = "None"
-        settings.guide_collection = guides
         distinct = roundtrip.copy()
         distinct.attributes["pattern_id"] = [10, 11, 12, 13]
         distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")
+        distinct.attributes["retopo_plane_id"] = [0, 1, 2, 3]
+        distinct_plane_output = mesh_to_blender(distinct, "TAOM_DistinctPlaneIds")
+        distinct_guides = bpy.data.collections.new("TAOM_DistinctGuides")
+        bpy.context.scene.collection.children.link(distinct_guides)
+        distinct_guides.objects.link(distinct_plane_output)
+        settings.guide_collection = distinct_guides
+        settings.output_generated_planes = True
+        activate(distinct_plane_output)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1, 2, 3]
+        settings.output_generated_planes = False
+        settings.debug_material = "Retopo Planes"
+        settings.guide_collection = guides
         mixed = combine_objects([distinct_output, point_output])
         assert mixed.attributes["pattern_id"] == [10, 11, 12, 13, 0, 0, 0, 0]
         invalid = combined.copy()

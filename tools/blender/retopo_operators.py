@@ -166,7 +166,7 @@ def _debug_materials(output, settings):
         "Retopo Planes": "retopo_plane_id",
     }
     values = output.data.attributes.get(attribute_names[settings.debug_material])
-    count = max((item.value for item in values.data), default=0) + 1 if values else len(output.data.polygons)
+    count = max((item.value for item in values.data), default=0) + 1 if values and values.domain == "FACE" else len(output.data.polygons)
     materials = []
     for index in range(max(1, count)):
         randomizer = random.Random(settings.debug_material_seed + index)

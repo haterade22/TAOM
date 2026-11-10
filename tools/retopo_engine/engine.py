@@ -529,7 +529,7 @@ def _ordered_loop(mesh: Mesh, loop, indices):
 
 
 def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
-    explicit = mesh.attributes.get("point_guide", [])
+    explicit = mesh.attributes.get("point_guide", []) if mesh.attribute_domain("point_guide") == "POINT" and len(mesh.attributes["point_guide"]) == len(mesh.vertices) else []
     marked = [index for index in loop if index < len(explicit) and explicit[index]]
     if marked and len(marked) <= 4:
         return _ordered_loop(mesh, loop, marked)
@@ -1445,6 +1445,8 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
     working = _normalized_copy(guide)
     if settings.initialize_planes:
         marked = working.attributes.get("point_guide", [])
+        if working.attribute_domain("point_guide") != "POINT" or len(marked) != len(working.vertices):
+            marked = []
         manual_points = [point for index, point in enumerate(working.vertices) if index < len(marked) and marked[index]]
         working = initialize_planes(flat, settings)
         if len(manual_points) >= 4:
