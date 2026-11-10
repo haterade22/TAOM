@@ -176,7 +176,7 @@ def _debug_materials(output, settings):
         material.diffuse_color = (*color, 1.0)
         materials.append(material)
         output.data.materials.append(material)
-    if values:
+    if values and values.domain == "FACE":
         for polygon, item in zip(output.data.polygons, values.data):
             polygon.material_index = item.value % len(materials)
 

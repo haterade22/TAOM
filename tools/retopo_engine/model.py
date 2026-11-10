@@ -53,6 +53,8 @@ class Mesh:
         )
 
     def attribute_domain(self, name: str) -> str | None:
+        if name not in self.attributes:
+            return None
         explicit = self.attribute_domains.get(name)
         if explicit is not None:
             return explicit

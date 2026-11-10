@@ -163,7 +163,7 @@ def flatten_to_patterns(
     boundary_vertices = {index for edge in flat.boundary_edges() for index in edge}
     valence = Counter(vertex for face in flat.faces for vertex in face)
     flat.attributes["open_seam"] = [index in boundary_vertices for index in range(len(flat.vertices))]
-    if "point_guide" in source.attributes:
+    if source.attribute_domain("point_guide") == "POINT" and len(source.attributes["point_guide"]) == len(source.vertices):
         flat.attributes["point_guide"] = [
             bool(source.attributes["point_guide"][vertex]) for vertex in flat.attributes["source_vertex"]
         ]
@@ -959,6 +959,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     for name in list(result.attributes):
         if name not in point_attribute_names and name not in face_attribute_names:
             del result.attributes[name]
+    result.discard_unresolved_attributes(unresolved_names)
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -1078,8 +1079,8 @@ def neutralize_crease(guide: Mesh, edges) -> Mesh:
 
 def snap_guides_to_pattern(guide: Mesh, flat: Mesh, distance: float) -> Mesh:
     if distance <= 0:
-        return guide.copy()
-    result = guide.copy()
+        return _normalized_copy(guide)
+    result = _normalized_copy(guide)
     borders = flat.boundary_edges()
     for index, vertex in enumerate(result.vertices):
         candidates = [
@@ -1441,11 +1442,11 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
     validate_guides(guide, allow_empty=settings.initialize_planes)
     surface = SourceSurface(source)
     flat = flatten_to_patterns(source)
-    working = guide.copy()
+    working = _normalized_copy(guide)
     if settings.initialize_planes:
+        marked = working.attributes.get("point_guide", [])
+        manual_points = [point for index, point in enumerate(working.vertices) if index < len(marked) and marked[index]]
         working = initialize_planes(flat, settings)
-        marked = guide.attributes.get("point_guide", [])
-        manual_points = [point for index, point in enumerate(guide.vertices) if index < len(marked) and marked[index]]
         if len(manual_points) >= 4:
             for face in working.faces:
                 if len(face) != 4:

@@ -159,6 +159,18 @@ def main():
         assert combined_point.attributes["retopo_plane_id"] == [2] * len(point_output.data.vertices)
         assert combined_point.attribute_domains["part_id"] == "POINT"
         assert combined_point.attribute_domains["retopo_plane_id"] == "POINT"
+        point_guides = bpy.data.collections.new("TAOM_PointGuides")
+        bpy.context.scene.collection.children.link(point_guides)
+        point_guides.objects.link(point_output)
+        settings.guide_collection = point_guides
+        settings.output_generated_planes = True
+        settings.debug_material = "Retopo Planes"
+        activate(point_output)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert all(polygon.material_index == 0 for polygon in bpy.context.active_object.data.polygons)
+        settings.output_generated_planes = False
+        settings.debug_material = "None"
+        settings.guide_collection = guides
         distinct = roundtrip.copy()
         distinct.attributes["pattern_id"] = [10, 11, 12, 13]
         distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")

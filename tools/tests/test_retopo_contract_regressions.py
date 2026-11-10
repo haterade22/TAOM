@@ -492,6 +492,24 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(guide.vertices, result.vertices)
         self.assertEqual(1, len(result.faces))
 
+    def test_invalid_guide_markers_do_not_change_generated_geometry(self):
+        source = differential.curved_grid()
+        source.attributes["point_guide"] = [True]
+        source.attribute_domains["point_guide"] = "POINT"
+        guide = Mesh(
+            vertices=[(0.1, 0.1, 0), (0.9, 0.1, 0), (0.9, 0.9, 0), (0.1, 0.9, 0)],
+            faces=[],
+            attributes={"point_guide": [True] * 4},
+            attribute_domains={"point_guide": "CORNER"},
+        )
+        result = engine.retopologize(
+            source, guide,
+            RetopoSettings(initialize_planes=True, output_generated_planes=True),
+        )
+        self.assertEqual(differential.unit_guide().vertices, result.vertices)
+        self.assertNotIn("point_guide", result.attributes)
+        self.assertNotIn("point_guide", result.attribute_domains)
+
     def test_density_plane_ids_distinguish_unequal_components(self):
         guide = Mesh(
             vertices=[(0, 0, 0), (0.4, 0, 0), (0.4, 1, 0), (0, 1, 0), (0.6, 0, 0), (1, 0, 0), (1, 1, 0), (0.6, 1, 0)],
@@ -715,6 +733,8 @@ class ContractRegressionTests(unittest.TestCase):
             engine.merge_output_seams(weld_mesh, 0.01),
             engine.thicken(mesh, 0.1),
             engine.subdivide_quads(mesh),
+            engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1),
+            engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1, across_patterns=False),
             engine.inspect_topology(repair_mesh, fix_split_edges=True)[0],
             engine.inspect_topology(mesh, fix_split_edges=True)[0],
             engine.inspect_topology(mesh, fix_split_edges=False)[0],

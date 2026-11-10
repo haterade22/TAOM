@@ -45,6 +45,7 @@ whose lengths match their elements. Mixed-domain face combinations default to ze
 source and guide attributes only on the point domain; pattern, part, and plane identifiers may use
 point or face domains. Wrong-length and unsupported attributes and their domain declarations are
 removed at operation entry, and loose-line endpoints follow the same vertex remap as faces.
+Debug materials use face-domain identifiers only.
 
 The behavioral input and acceptance matrix are in
 [retopo-planes-1-6-3-clean-room.md](../research/retopo-planes-1-6-3-clean-room.md). The independent
@@ -124,7 +125,7 @@ and guide objects are preserved when generating a new output.
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Validity exceptions and reference density counts are explicit.
   Dedicated UV-bearing contract cases cover inspector face and metadata associations.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: fifty-seven regression tests for topology,
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: fifty-eight regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
