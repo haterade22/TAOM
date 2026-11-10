@@ -27,6 +27,18 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertTrue(all(len(face) == 4 for face in result.faces))
         self.assertEqual(16, len(result.boundary_edges()))
 
+    def test_initialization_keeps_disconnected_triangulated_patterns_separate(self):
+        source = Mesh(
+            vertices=[
+                (0, 0, 0), (1, 0, 0), (0, 1, 0),
+                (3, 0, 0), (4, 0, 0), (3, 1, 0),
+            ],
+            faces=[(0, 1, 2), (3, 4, 5)],
+        )
+        result = engine.initialize_planes(source, RetopoSettings())
+        self.assertEqual(2, len(result.connected_components()))
+        self.assertTrue(all(len(face) == 4 for face in result.faces))
+
     def test_seam_merge_joins_distinct_uv_islands_and_preserves_bevel_weight(self):
         mesh = Mesh(
             vertices=[(0, 0, 0), (0, 0, 0), (1, 0, 0), (1, 1, 0)],

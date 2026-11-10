@@ -306,6 +306,28 @@ def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
 
 def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
     settings.validate()
+    components = flat.connected_components()
+    if len(components) > 1:
+        combined = Mesh(vertices=[], faces=[], uv_name=flat.uv_name)
+        for component in components:
+            used = sorted({index for face_index in component for index in flat.faces[face_index]})
+            remap = {old: new for new, old in enumerate(used)}
+            part = Mesh(
+                vertices=[flat.vertices[index] for index in used],
+                faces=[tuple(remap[index] for index in flat.faces[face_index]) for face_index in component],
+                uv_name=flat.uv_name,
+                attributes={
+                    name: [values[index] for index in used]
+                    for name, values in flat.attributes.items()
+                    if len(values) == len(flat.vertices)
+                },
+            )
+            initialized = initialize_planes(part, settings)
+            offset = len(combined.vertices)
+            combined.vertices.extend(initialized.vertices)
+            combined.faces.extend(tuple(index + offset for index in face) for face in initialized.faces)
+            combined.uv.extend(initialized.uv)
+        return combined
     loops = _boundary_loops(flat)
     if not loops:
         raise ValueError("plane initialization requires an open pattern border")

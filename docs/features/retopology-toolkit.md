@@ -109,8 +109,8 @@ and guide objects are preserved when generating a new output.
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Non-identical tessellation cases are explicitly separated.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: eight regression tests for weld
-  representatives, non-quad ring initialization, seam protection, thickness metadata and UVs,
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: nine regression tests for weld
+  representatives, non-quad rings, disconnected patterns, seam protection, thickness metadata and UVs,
   independent smoothing, sharp thresholds, generated-plane corners, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
   instance-context patch refresh, and the registered menu operator.
