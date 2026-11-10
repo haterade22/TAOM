@@ -1,0 +1,252 @@
+<Prefab>
+  <!--
+    TAOM.Realms: the encyclopedia page of one title (TitleEncyclopediaPageVM), every rank alike. The kingdom page's folio
+    (TAOMEncyclopediaFactionPage.xml): the overview plate (pennant, name and rank, the title's rows, the holder by right),
+    the seat and vassal plates below it and a full-height column on the right with the player's actions and the chronicle.
+    Placeholder layout from TAOM's existing encyclopedia sprites and brushes; no art of its own. No bookmark: a title is not
+    a registered game object.
+  -->
+  <Window>
+    <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
+      <Children>
+        <Widget Id="TitleFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaStonePanelWidget Id="TitleOverviewPanel" SuggestedWidth="1330" SuggestedHeight="300" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+              </Children>
+            </EncyclopediaStonePanelWidget>
+            <EncyclopediaStonePanelWidget Id="TitleSeatPanel" SuggestedWidth="570" SuggestedHeight="396" PositionYOffset="318" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+              </Children>
+            </EncyclopediaStonePanelWidget>
+            <EncyclopediaStonePanelWidget Id="TitleVassalsPanel" SuggestedWidth="740" SuggestedHeight="396" PositionXOffset="590" PositionYOffset="318" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+              </Children>
+            </EncyclopediaStonePanelWidget>
+            <EncyclopediaStonePanelWidget Id="TitleActionsPanel" SuggestedWidth="378" SuggestedHeight="714" PositionXOffset="1350" Sprite="ec_panel_9" DoNotAcceptEvents="true">
+              <Children>
+              </Children>
+            </EncyclopediaStonePanelWidget>
+
+            <!--Pennant: the kingdom page's pennant stack, bound to the title's banner (the holder's clan, else the realm's).-->
+            <Widget Id="TitlePennant" SuggestedWidth="170" SuggestedHeight="277" PositionXOffset="40" PositionYOffset="12" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+                  <Children>
+                    <EncyclopediaMaskedImageWidget DataSource="{Banner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35" />
+                  </Children>
+                </Widget>
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+            <ImageWidget SuggestedWidth="1" SuggestedHeight="244" PositionXOffset="236" PositionYOffset="28" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+
+            <!--Name and rank-->
+            <TextWidget SuggestedWidth="720" SuggestedHeight="52" PositionXOffset="304" PositionYOffset="20" Text="@NameText" Brush="TAOM.Encyclopedia.Title" Brush.FontSize="38" Brush.TextHorizontalAlignment="Left" DoNotAcceptEvents="true" />
+            <TextWidget SuggestedWidth="720" SuggestedHeight="28" PositionXOffset="304" PositionYOffset="70" Text="@RankText" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="21" Brush.TextHorizontalAlignment="Left" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="720" SuggestedHeight="3" PositionXOffset="304" PositionYOffset="101" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+
+            <!--The title's rows: liege title, realm, the actual ruler or fief owner, laws, claims, offices. A link is gold.-->
+            <ScrollablePanel Id="InfoScrollablePanel" SuggestedWidth="712" SuggestedHeight="155" PositionXOffset="304" PositionYOffset="118" InnerPanel="InfoRect\InfoList" ClipRect="InfoRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\InfoScrollbar" AutoHideScrollBars="true">
+              <Children>
+                <Widget Id="InfoRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel Id="InfoList" DataSource="{InfoRows}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="3" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" VerticalAlignment="Top" Text="@LabelText" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="19" Brush.TextHorizontalAlignment="Left" DoNotAcceptEvents="true" />
+                            <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteClick" IsEnabled="@IsLink" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@ValueText" IsVisible="@IsLink" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Left" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@ValueText" IsHidden="@IsLink" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Left" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </ListPanel>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="InfoScrollbar" SuggestedWidth="8" SuggestedHeight="151" PositionXOffset="1024" PositionYOffset="120" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+              <Children>
+                <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="40" Sprite="ec_list_scroll" />
+              </Children>
+            </ScrollbarWidget>
+            <ImageWidget SuggestedWidth="1" SuggestedHeight="244" PositionXOffset="1052" PositionYOffset="28" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+
+            <!--Holder by right: the kingdom page's leader medallion, linked to the hero's page, the styled name beneath it.-->
+            <TextWidget SuggestedWidth="220" SuggestedHeight="30" PositionXOffset="1080" PositionYOffset="22" Text="@HolderHeading" Brush="TAOM.Encyclopedia.FilterHeading" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+            <Widget Id="HolderCard" SuggestedWidth="220" SuggestedHeight="146" PositionXOffset="1080" PositionYOffset="60" IsVisible="@HasHolder">
+              <Children>
+                <ButtonWidget Id="Holder" DataSource="{Holder}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                  <Children>
+                    <Widget SuggestedWidth="140" SuggestedHeight="140" HorizontalAlignment="Center" PositionYOffset="2" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsChild" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsHidden="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                              <Children>
+                                <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                              </Children>
+                            </Widget>
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsDead" DoNotAcceptEvents="true" ClipContents="true">
+                              <Children>
+                                <EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" Brush.SaturationFactor="-100" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroFriendMask" />
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
+                        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_mask" Brush.Color="#211D19FF" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+                        <ImageWidget SuggestedWidth="62" SuggestedHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="Encyclopedia\portrait_baby" IsVisible="@IsChild" DoNotAcceptEvents="true" />
+                        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_friend_rim" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                    <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </Widget>
+            <TextWidget SuggestedWidth="220" SuggestedHeight="146" PositionXOffset="1080" PositionYOffset="60" Text="@VacantText" IsHidden="@HasHolder" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+            <TextWidget SuggestedWidth="236" SuggestedHeight="72" PositionXOffset="1072" PositionYOffset="210" Text="@HolderText" IsVisible="@HasHolder" Brush="TAOM.Encyclopedia.ListMutedCentered" Brush.FontSize="20" DoNotAcceptEvents="true" />
+
+            <!--Seat: the fief of a fief title, else the realm's capital or the holder's best fief beneath it. The picture opens the settlement's page, the owner line the owner's.-->
+            <Widget Id="TitleSeat" SuggestedWidth="570" SuggestedHeight="396" PositionYOffset="318" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget SuggestedWidth="522" SuggestedHeight="36" PositionXOffset="24" PositionYOffset="14" Text="@SeatHeading" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="21" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@HasSeat" DoNotAcceptEvents="true">
+                  <Children>
+                    <Widget DataSource="{Seat}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                      <Children>
+                        <ButtonWidget SuggestedWidth="400" SuggestedHeight="272" HorizontalAlignment="Center" PositionYOffset="56" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <EncyclopediaPictureWidget SuggestedWidth="376" SuggestedHeight="232" HorizontalAlignment="Center" PictureFile="@PictureFile" FrameMask="ec_fief_arch_mask" FrameRim="ec_fief_arch_rim" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="36" PositionYOffset="236" Text="@NameText" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="22" DoNotAcceptEvents="true" />
+                            <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget SuggestedWidth="460" SuggestedHeight="32" HorizontalAlignment="Center" PositionYOffset="336" Command.Click="ExecuteOwnerLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="@OwnerText" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="20" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+                <TextWidget SuggestedWidth="522" SuggestedHeight="272" PositionXOffset="24" PositionYOffset="56" Text="@NoSeatText" IsHidden="@HasSeat" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+
+            <!--Vassal titles: each name opens that title's page, its holder by right beside it.-->
+            <Widget Id="TitleVassals" SuggestedWidth="740" SuggestedHeight="396" PositionXOffset="590" PositionYOffset="318" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget SuggestedWidth="692" SuggestedHeight="36" PositionXOffset="24" PositionYOffset="14" Text="@VassalsHeading" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="21" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="660" SuggestedHeight="2" PositionXOffset="40" PositionYOffset="54" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+                <ScrollablePanel Id="VassalsScrollablePanel" SuggestedWidth="660" SuggestedHeight="310" PositionXOffset="40" PositionYOffset="66" InnerPanel="VassalsRect\VassalsList" ClipRect="VassalsRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\VassalsScrollbar" AutoHideScrollBars="true" IsVisible="@HasVassals">
+                  <Children>
+                    <Widget Id="VassalsRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                      <Children>
+                        <ListPanel Id="VassalsList" DataSource="{Vassals}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                              <Children>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="340" VerticalAlignment="Top" Text="@NameText" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Left" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" MarginLeft="12" Text="@HolderText" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="20" Brush.TextHorizontalAlignment="Left" />
+                                  </Children>
+                                </ListPanel>
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+                <ScrollbarWidget Id="VassalsScrollbar" SuggestedWidth="8" SuggestedHeight="306" PositionXOffset="708" PositionYOffset="68" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="40" Sprite="ec_list_scroll" />
+                  </Children>
+                </ScrollbarWidget>
+                <TextWidget SuggestedWidth="660" SuggestedHeight="310" PositionXOffset="40" PositionYOffset="66" Text="@NoVassalsText" IsHidden="@HasVassals" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+
+            <!--Right column: the player's actions (gold when open, muted with the reason when refused), the title tree, the chronicle.-->
+            <TextWidget SuggestedWidth="330" SuggestedHeight="40" PositionXOffset="1374" PositionYOffset="20" Text="@ActionsHeading" Brush="TAOM.Encyclopedia.FilterHeading" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="330" SuggestedHeight="2" PositionXOffset="1374" PositionYOffset="64" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+            <ScrollablePanel Id="ActionsScrollablePanel" SuggestedWidth="326" SuggestedHeight="300" PositionXOffset="1370" PositionYOffset="76" InnerPanel="ActionsRect\ActionsList" ClipRect="ActionsRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\ActionsScrollbar" AutoHideScrollBars="true" IsVisible="@HasActions">
+              <Children>
+                <Widget Id="ActionsRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel Id="ActionsList" DataSource="{Actions}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="10" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="6" Command.Click="ExecuteAction" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@LabelText" IsVisible="@IsAvailable" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="22" Brush.TextHorizontalAlignment="Left" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@LabelText" IsHidden="@IsAvailable" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="22" Brush.TextHorizontalAlignment="Left" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@DetailText" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="ActionsScrollbar" SuggestedWidth="8" SuggestedHeight="296" PositionXOffset="1704" PositionYOffset="78" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+              <Children>
+                <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="40" Sprite="ec_list_scroll" />
+              </Children>
+            </ScrollbarWidget>
+            <TextWidget SuggestedWidth="326" SuggestedHeight="300" PositionXOffset="1370" PositionYOffset="76" Text="@NoActionsText" IsHidden="@HasActions" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+
+            <ButtonWidget SuggestedWidth="330" SuggestedHeight="36" PositionXOffset="1374" PositionYOffset="386" Command.Click="ExecuteOpenTree" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="@TreeButtonText" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="22" DoNotAcceptEvents="true" />
+              </Children>
+            </ButtonWidget>
+
+            <TextWidget SuggestedWidth="330" SuggestedHeight="40" PositionXOffset="1374" PositionYOffset="436" Text="@ChronicleHeading" Brush="TAOM.Encyclopedia.FilterHeading" Brush.TextHorizontalAlignment="Center" DoNotAcceptEvents="true" />
+            <ImageWidget SuggestedWidth="330" SuggestedHeight="2" PositionXOffset="1374" PositionYOffset="480" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+            <ScrollablePanel Id="ChronicleScrollablePanel" SuggestedWidth="326" SuggestedHeight="204" PositionXOffset="1370" PositionYOffset="490" InnerPanel="ChronicleRect\ChronicleList" ClipRect="ChronicleRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\ChronicleScrollbar" AutoHideScrollBars="true" IsVisible="@HasChronicle">
+              <Children>
+                <Widget Id="ChronicleRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel Id="ChronicleList" DataSource="{Chronicle}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="10" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="3" Brush="TAOM.Encyclopedia.TextButton" Command.Click="ExecuteClick" IsEnabled="@IsLink" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@ValueText" IsVisible="@IsLink" Brush="TAOM.Encyclopedia.ListActionText" Brush.FontSize="19" Brush.TextHorizontalAlignment="Left" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@ValueText" IsHidden="@IsLink" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="19" Brush.TextHorizontalAlignment="Left" />
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="ChronicleScrollbar" SuggestedWidth="8" SuggestedHeight="200" PositionXOffset="1704" PositionYOffset="492" AlignmentAxis="Vertical" Handle="Handle" MinValue="0" MaxValue="100">
+              <Children>
+                <ImageWidget Id="Handle" SuggestedWidth="8" SuggestedHeight="40" Sprite="ec_list_scroll" />
+              </Children>
+            </ScrollbarWidget>
+            <TextWidget SuggestedWidth="326" SuggestedHeight="204" PositionXOffset="1370" PositionYOffset="490" Text="@NoChronicleText" IsHidden="@HasChronicle" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+        <!--Previous and Next page: the shared row every detail page has.-->
+        <TAOMEncyclopediaPageNavigation />
+      </Children>
+    </BrushWidget>
+  </Window>
+</Prefab>

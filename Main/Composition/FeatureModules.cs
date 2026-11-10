@@ -103,5 +103,6 @@ internal static class FeatureModules
         new Features.DeadTargetReset.DeadTargetResetModule(),
         new Features.KingdomAllegiance.KingdomAllegianceModule(),
         new Features.WarPledge.WarPledgeModule(),
+        new Features.Realms.RealmsModule(),
     };
 }

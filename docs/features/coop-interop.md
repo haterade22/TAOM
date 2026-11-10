@@ -400,6 +400,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `EnlistmentQuartermasterBehavior` | the kit request (`IsAuthority`) | Player action. |
 | `EnlistmentDutyBehavior` | `OnHourlyTick`, `OnDailyTick` (`IsAuthority`) | Duty orchestration. |
 | `EnlistmentAssignmentDialogBehavior` | the assignment line (`IsAuthority`) | Player action. Guests never get the enlist offer (`ShouldDeferToHost` in `EnlistmentDialogBehavior`), and under BannerlordCoop the human host is a loopback client, so the enlistment player actions work for no human player in a session. |
+| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). |
 
 **What makes any peer earn at all is the participation fix in the same change.** The victory gate
 used to ask whether the player IS the winning side's `LeaderParty.LeaderHero`, conflating

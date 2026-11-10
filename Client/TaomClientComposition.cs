@@ -8,6 +8,7 @@ using TAOM.Client.Features.HallOfFire;
 using TAOM.Client.Features.HostReview;
 using TAOM.Client.Features.LongDefeat;
 using TAOM.Client.Features.MarshalsWord;
+using TAOM.Client.Features.Realms;
 using TAOM.Client.Features.ShaderCompileNotice;
 using TAOM.Client.Features.ShaderPrecompilation;
 using TAOM.Composition;
@@ -22,6 +23,7 @@ using TAOM.Features.HostReview;
 using TAOM.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Autorun;
 using TAOM.Features.MarshalsWord;
+using TAOM.Features.Realms;
 using TAOM.Features.Refuge;
 using TAOM.Features.Refuge.Visuals;
 using TAOM.Features.ShaderCompileNotice;
@@ -63,5 +65,6 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<FamilyTreePopup>(Reuse.Singleton);
         registrator.Register<IQuestJournalAdapter, QuestJournalAdapter>(Reuse.Singleton);
         registrator.Register<ICampaignPresentationAdapter, CampaignPresentationAdapter>(Reuse.Singleton);
+        registrator.Register<IRealmsPopupAdapter, RealmsPopupAdapter>(Reuse.Singleton);
     }
 }
