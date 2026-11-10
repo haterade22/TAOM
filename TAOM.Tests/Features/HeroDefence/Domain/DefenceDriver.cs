@@ -37,6 +37,11 @@ internal sealed class DefenceDriver
 
     /// <summary>Each entry of <paramref name="packsPerWave"/> lists one wave's pack sizes; the last entry repeats.</summary>
     public DefenceDriver(DefenceRules? rules = null, params int[][] packsPerWave)
+        : this(rules, null, packsPerWave)
+    {
+    }
+
+    private DefenceDriver(DefenceRules? rules, HeroLevels? levels, int[][] packsPerWave)
     {
         var waves = packsPerWave.Length > 0 ? packsPerWave : new[] { new[] { 2 } };
         Run = new HeroDefenceRun(new DefencePlan(
@@ -45,12 +50,20 @@ internal sealed class DefenceDriver
             Map,
             wave => new WaveBrief(wave, waves[System.Math.Min(wave - 1, waves.Length - 1)]
                 .Select(size => new CreepPack(CreepClass.Infantry, Enumerable.Repeat(Soldier(), size).ToList()))
-                .ToList())));
+                .ToList()))
+        {
+            Levels = levels ?? new HeroLevels(),
+        });
     }
+
+    public static DefenceDriver WithLevels(HeroLevels levels, DefenceRules? rules = null) => new(rules, levels, System.Array.Empty<int[]>());
 
     public HeroDefenceRun Run { get; }
 
     public List<AgentKey> Live { get; } = new();
+
+    /// <summary>Every batch the run released, in order.</summary>
+    public List<CreepBatch> Batches { get; } = new();
 
     public static CreepSpec Soldier(int level = 1, bool mounted = false, CreepRank rank = CreepRank.Soldier) =>
         new("troop", level, rank, mounted);
@@ -64,6 +77,7 @@ internal sealed class DefenceDriver
         var fx = Run.Tick(new DefenceSnapshot(dt, field));
         foreach (var batch in fx.CreepBatches)
         {
+            Batches.Add(batch);
             foreach (var creep in batch.Pack.Creeps)
             {
                 var key = new AgentKey(_nextKey++);

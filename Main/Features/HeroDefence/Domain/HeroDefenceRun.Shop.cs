@@ -22,7 +22,40 @@ internal sealed partial class HeroDefenceRun
 
         Gold -= hero.Def.Price;
         hero.State = DefenceHeroState.Owned;
+        hero.Level = 1;
         return BuyResult.Bought;
+    }
+
+    /// <summary>
+    /// Buys the next level in a pause. A placed hero is reset at its post, so the director spawns it with the new level's numbers. A
+    /// price of <see cref="int.MaxValue"/> (a bad setting, or a price past the purse's cap) is never sold, even from a full purse:
+    /// the level is refused as <see cref="LevelResult.NotEnoughGold"/>.
+    /// </summary>
+    public LevelResult TryLevelHero(string heroId)
+    {
+        if (_phase != DefencePhase.Pause)
+            return LevelResult.WrongPhase;
+
+        var hero = Find(heroId);
+        if (hero == null)
+            return LevelResult.UnknownHero;
+
+        if (hero.State == DefenceHeroState.NotOwned)
+            return LevelResult.NotOwned;
+
+        if (hero.Level >= _plan.Levels.MaxLevel)
+            return LevelResult.TopLevel;
+
+        var price = _plan.Levels.PriceOf(hero.Def.Price, hero.Level + 1);
+        if (price == int.MaxValue || price > Gold)
+            return LevelResult.NotEnoughGold;
+
+        Gold -= price;
+        hero.Level++;
+        if (hero.State == DefenceHeroState.Placed)
+            Need(hero, HeroWork.Reset);
+
+        return LevelResult.Levelled;
     }
 
     /// <summary>The first placement orders a spawn. A later placement in a pause moves the hero, free of charge.</summary>
@@ -46,15 +79,9 @@ internal sealed partial class HeroDefenceRun
 
         hero.Post = probe.Point;
         if (isNew)
-        {
             hero.State = DefenceHeroState.Placed;
-            _pending.HeroSpawns.Add(hero.Order);
-        }
-        else
-        {
-            _pending.HeroMoves.Add(hero.Order);
-        }
 
+        Need(hero, isNew ? HeroWork.Spawn : HeroWork.Move);
         return PlaceResult.Placed;
     }
 

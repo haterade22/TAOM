@@ -79,10 +79,23 @@ internal enum StartResult
     NoHeroPlaced,
 }
 
+internal enum LevelResult
+{
+    Levelled,
+    WrongPhase,
+    UnknownHero,
+    NotOwned,
+    TopLevel,
+    NotEnoughGold,
+}
+
 internal sealed record HeroDef(string Id, HeroClass Class, int Price);
 
-/// <summary>Where the director must spawn, move or reset one hero.</summary>
-internal sealed record HeroOrder(string HeroId, Vec3f Post);
+/// <summary>
+/// Where the director must spawn, move or reset one hero, and the level whose numbers it gets. A hero has at most one order in a
+/// tick, made from its post and level at the end of the tick.
+/// </summary>
+internal sealed record HeroOrder(string HeroId, Vec3f Post, int Level);
 
 internal sealed record CreepSpec(string TroopId, int Level, CreepRank Rank, bool Mounted);
 
@@ -97,8 +110,11 @@ internal sealed record CreepPack(CreepClass Class, IReadOnlyList<CreepSpec> Cree
     public float DamageBonus { get; init; }
 }
 
-/// <summary>One pack that the director must spawn into one formation slot.</summary>
-internal sealed record CreepBatch(int Slot, CreepPack Pack);
+/// <summary>
+/// One pack that the director must spawn into one formation slot. A later pack can take the same slot, so <see cref="PackId"/>, unique in
+/// the run, names the pack.
+/// </summary>
+internal sealed record CreepBatch(int PackId, int Slot, CreepPack Pack);
 
 /// <summary>One wave, in arrival order, with what it adds to its creeps.</summary>
 internal sealed record WaveBrief(int Wave, IReadOnlyList<CreepPack> Packs)
@@ -126,7 +142,10 @@ internal sealed record WaveBrief(int Wave, IReadOnlyList<CreepPack> Packs)
 internal sealed record DefenceMap(Vec3f Entry, Vec3f Exit, IReadOnlyDictionary<int, GroundZone> Zones);
 
 /// <summary>Everything a run needs. <see cref="Briefs"/> gives the same brief for the same wave, so a preview and its wave cannot differ.</summary>
-internal sealed record DefencePlan(DefenceRules Rules, IReadOnlyList<HeroDef> Heroes, DefenceMap Map, Func<int, WaveBrief> Briefs);
+internal sealed record DefencePlan(DefenceRules Rules, IReadOnlyList<HeroDef> Heroes, DefenceMap Map, Func<int, WaveBrief> Briefs)
+{
+    public HeroLevels Levels { get; init; } = new();
+}
 
 /// <summary>What the engine layer read at a clicked point. A <see cref="FaceGroup"/> of -1 means the point is off the navmesh.</summary>
 internal sealed record PlacementProbe(Vec3f Point, int FaceGroup, bool InsideBoundary, bool LinksToRoad);

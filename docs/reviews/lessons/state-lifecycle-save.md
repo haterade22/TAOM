@@ -1345,3 +1345,11 @@ The time limit ended matches through the same phase as a fallen keep, but the to
 - **Why missed:** the new end reused the old end's plumbing, and nobody listed what runs after it.
 - **Prevent:** when adding an end path, list the hooks and timers that outlive the end, gate each on the end phase, and record the end's kind in the run evidence.
 - **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).
+
+### An effect list carries final state and ids that are never reused (Hero Defence levels and packs, 2026-11-09)
+
+Four review findings had one shape: a value was recorded once and read later, after the state it described had changed. A hero order took the post and level of the call that made it, and the same tick then moved or levelled the hero again. A formation slot named a pack, and the next pack took the slot. A removal loop read the run's end flag as "this creep is handled" after its own first step ended the run. A stall mark taken over one set of creeps was compared with a mean over fewer.
+
+- **Why missed:** each call wrote its effect at once, and every test ticked between two calls, so no test held two calls on one thing inside one tick.
+- **Prevent:** build an effect list once, at the end of the tick, from final state: one entry per thing, with a rule for which kind includes which. Name a thing that another layer reports back by an id that is never reused, not by a slot or an index. A loop over a group finishes the group after a step ends the run, and drops only the scoring. When the set behind a running mean changes, the mark moves by the jump, so the gain so far still counts. Test two calls on one thing inside one tick.
+- **Source:** [rca-hero-defence-levels-packs-2026-11-09.md](../rca-hero-defence-levels-packs-2026-11-09.md) rows P1 to P4.

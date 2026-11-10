@@ -2627,3 +2627,19 @@ Five review findings had one shape: the rule held on the path it was written for
 - **Why missed:** a sibling path was added after the rule's first test (a pin, a fallback, a default, a phase change inside one tick), and it got no test of its own.
 - **Prevent:** for each rule, list every path that reaches it (pinned and drawn, with and without the optional part, file value and compiled default, a state change inside one call) and give each path a test. For arithmetic, add a test at the top and the bottom of each accepted range.
 - **Source:** [rca-hero-defence-s12-2026-11-09.md](../rca-hero-defence-s12-2026-11-09.md) rows R2, R3, R5, R9 and R13.
+
+### A refusal test asserts the result, the state and every effect list (Hero Defence levels and packs, 2026-11-09)
+
+Five tests passed for the wrong reason. A bad price setting sold free levels, and its test checked only that gold did not rise. "Orders nothing" checked one effect list of three. "Returns at its level" checked the level but no return order. A pause guard test had no creep for the guard to protect, so deleting the guard changed nothing.
+
+- **Why missed:** each test asserted the one effect in its name, and no one asked whether the test still fails with the guard deleted or with the action wrongly allowed.
+- **Prevent:** a test of a refusal asserts the returned result, the unchanged state (level, gold, lives) and every effect list. A guard test sets up the thing the guard protects (a live creep, a placed hero), so the test fails when the guard is gone. A fallback value that could also mean success (0 for a free item) is a separate result, or a value out of reach.
+- **Source:** [rca-hero-defence-levels-packs-2026-11-09.md](../rca-hero-defence-levels-packs-2026-11-09.md) rows P5 and P10. Related: "A hand-made view holds only inputs its producer can make".
+
+### A fix gets its own check on every path, and a RED from a stub needs a mutant (Hero Defence levels and packs, 2026-11-09)
+
+The first fix pass of a review was green on 38,296 tests and still missed four sibling paths: a hero who fell between Ready and the next tick kept its order, a third loop could take the last life, a stall mark fix threw away a marching pack's gain when creeps left often, and an out-of-reach price could be bought from a purse at its cap. Two new tests had failed first only because the stub gave every pack id the value 0; against the old rule they passed.
+
+- **Why missed:** each fix was checked by the test written for it, which drives the path the finding described. A failing test was taken as proof without asking what made it fail.
+- **Prevent:** after a fix pass, check the fixes themselves: for each finding, list every path that reaches the fixed rule (every loop, every phase change between two calls, the extreme of every capped value) and give each a test. When a test is RED only because a member or value is new, run it once against a mutant of the rule (the old comparison, the guard removed) and keep it only if the mutant fails.
+- **Source:** [rca-hero-defence-levels-packs-2026-11-09.md](../rca-hero-defence-levels-packs-2026-11-09.md) rows Q1 to Q6. Related: "Every rule gets a test on each path that reaches it".

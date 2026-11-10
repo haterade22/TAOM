@@ -282,7 +282,7 @@ public class HeroDefenceRunWaveTests
 
         var fx = driver.KillAllAndClear();
 
-        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point), fx.HeroResets.Single());
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point, 1), fx.HeroResets.Single());
         Assert.AreEqual(0, fx.HeroSpawns.Count);
     }
 
@@ -296,7 +296,7 @@ public class HeroDefenceRunWaveTests
         driver.End(CreepEnd.Culled);
         var fx = driver.Tick();
 
-        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point), fx.HeroSpawns.Single());
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point, 1), fx.HeroSpawns.Single());
         Assert.AreEqual(0, fx.HeroResets.Count);
         Assert.AreEqual(DefenceHeroState.Placed, driver.Run.StateOf(Melee));
         Assert.AreEqual(gold + 125, driver.Run.Gold, "the return costs nothing");
@@ -352,7 +352,7 @@ public class HeroDefenceRunWaveTests
 
         driver.Run.HeroDown(Melee);
 
-        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point), driver.Tick().HeroSpawns.Single());
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(100f).Point, 1), driver.Tick().HeroSpawns.Single());
         Assert.AreEqual(DefenceHeroState.Placed, driver.Run.StateOf(Melee));
     }
 
@@ -647,6 +647,32 @@ public class HeroDefenceRunWaveTests
 
         Assert.AreEqual(DefencePhase.Pause, driver.Run.Phase);
         Assert.AreEqual(1, driver.Run.WavesCleared);
+    }
+
+    [TestMethod]
+    public void Tick_WaveLimitTakesTheLastLife_StillRemovesEveryCreep()
+    {
+        var driver = new DefenceDriver(new DefenceRules { StartingLives = 1 }, new[] { 3 }).InWave();
+        driver.Run.HeroDown(Melee);
+
+        var fx = driver.Tick(190f);
+
+        Assert.AreEqual(DefencePhase.Ended, driver.Run.Phase, "the limit is 180 + 3 x 3 creeps");
+        Assert.AreEqual(3, fx.Removals.Count, "the run ends on the first leak, and the other two still leave the field");
+        Assert.AreEqual(0, driver.Live.Count);
+    }
+
+    [TestMethod]
+    public void Tick_TwoLeaksInOneReadingTakeTheLastLife_BothLeaveTheField()
+    {
+        var driver = new DefenceDriver(new DefenceRules { StartingLives = 1 }).InWave();
+        var atExit = new FieldReading(driver.Live.Select(key => new UnitSample(key, Exit)).ToList());
+
+        var fx = driver.Tick(0.1f, atExit);
+
+        Assert.AreEqual(DefencePhase.Ended, driver.Run.Phase);
+        Assert.AreEqual(2, fx.Removals.Count, "the first leak ends the run, and the second creep at the exit still leaves");
+        Assert.AreEqual(0, driver.Live.Count);
     }
 
     [TestMethod]

@@ -11,6 +11,15 @@ namespace TAOM.Features.HeroDefence.Domain;
 /// </summary>
 internal sealed partial class HeroDefenceRun
 {
+    /// <summary>The engine work a hero needs at the end of the tick. A later kind includes an earlier one: a reset also puts the hero at its post.</summary>
+    private enum HeroWork
+    {
+        None,
+        Move,
+        Reset,
+        Spawn,
+    }
+
     private sealed class HeroEntry
     {
         public HeroEntry(HeroDef def) => Def = def;
@@ -21,7 +30,12 @@ internal sealed partial class HeroDefenceRun
 
         public Vec3f? Post { get; set; }
 
-        public HeroOrder Order => new(Def.Id, Post!.Value);
+        /// <summary>0 until bought. A fall or a wave clear keeps it.</summary>
+        public int Level { get; set; }
+
+        public HeroWork Work { get; set; }
+
+        public HeroOrder Order => new(Def.Id, Post!.Value, Level);
     }
 
     private readonly DefencePlan _plan;
@@ -63,6 +77,9 @@ internal sealed partial class HeroDefenceRun
 
     public Vec3f? PostOf(string heroId) => Find(heroId)?.Post;
 
+    /// <summary>The hero's level: 1 when bought, 0 for a hero not owned or not in the roster.</summary>
+    public int LevelOf(string heroId) => Find(heroId)?.Level ?? 0;
+
     /// <summary>Advances the run by one engine tick. A bad <c>Dt</c> (zero, negative, NaN, infinite) changes nothing.</summary>
     public DefenceEffects Tick(DefenceSnapshot s)
     {
@@ -76,6 +93,7 @@ internal sealed partial class HeroDefenceRun
         if (_phase == DefencePhase.Wave)
             TickWave(s with { Dt = dt });
 
+        FlushHeroOrders();
         var effects = _pending;
         _pending = new DefenceEffects();
         return effects;
@@ -89,12 +107,44 @@ internal sealed partial class HeroDefenceRun
             return;
 
         if (_phase == DefencePhase.Pause)
-            _pending.HeroSpawns.Add(hero.Order);
+            Need(hero, HeroWork.Spawn);
         else
             hero.State = DefenceHeroState.Fallen;
     }
 
     private HeroEntry? Find(string heroId) => _roster.FirstOrDefault(hero => hero.Def.Id == heroId);
+
+    private static void Need(HeroEntry hero, HeroWork work)
+    {
+        if (work > hero.Work)
+            hero.Work = work;
+    }
+
+    /// <summary>
+    /// Gives each hero at most one order in the tick, made from its post and level at the end of the tick. A hero who fell before
+    /// the tick (after Ready in the same pause) gets none: the clear spawns it.
+    /// </summary>
+    private void FlushHeroOrders()
+    {
+        foreach (var hero in _roster)
+        {
+            var work = hero.State == DefenceHeroState.Placed ? hero.Work : HeroWork.None;
+            switch (work)
+            {
+                case HeroWork.Spawn:
+                    _pending.HeroSpawns.Add(hero.Order);
+                    break;
+                case HeroWork.Reset:
+                    _pending.HeroResets.Add(hero.Order);
+                    break;
+                case HeroWork.Move:
+                    _pending.HeroMoves.Add(hero.Order);
+                    break;
+            }
+
+            hero.Work = HeroWork.None;
+        }
+    }
 
     /// <summary>Returns the part of <paramref name="dt"/> after the pause ran out, so the wave is charged only for its own time.</summary>
     private float TickPause(float dt)

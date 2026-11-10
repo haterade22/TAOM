@@ -84,8 +84,22 @@ public class HeroDefenceRunShopTests
 
         var fx = driver.Tick();
         Assert.AreEqual(DefenceHeroState.Placed, driver.Run.StateOf(Melee));
-        Assert.AreEqual(new HeroOrder(Melee, OnRoad(120f).Point), fx.HeroSpawns.Single());
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(120f).Point, 1), fx.HeroSpawns.Single());
         Assert.AreEqual(0, fx.HeroMoves.Count);
+    }
+
+    [TestMethod]
+    public void TryPlaceHero_TwiceBeforeATick_OrdersOneSpawnAtTheLastPost()
+    {
+        var driver = new DefenceDriver();
+        driver.Run.TryBuyHero(Melee);
+        driver.Run.TryPlaceHero(Melee, OnRoad(120f));
+
+        driver.Run.TryPlaceHero(Melee, OnRoad(200f));
+
+        var fx = driver.Tick();
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(200f).Point, 1), fx.HeroSpawns.Single());
+        Assert.AreEqual(0, fx.HeroMoves.Count, "the hero is not on the field yet, so there is nothing to move");
     }
 
     [TestMethod]
@@ -99,7 +113,7 @@ public class HeroDefenceRunShopTests
         Assert.AreEqual(PlaceResult.Placed, driver.Run.TryPlaceHero(Melee, OnRoad(200f)));
 
         var fx = driver.Tick();
-        Assert.AreEqual(new HeroOrder(Melee, OnRoad(200f).Point), fx.HeroMoves.Single());
+        Assert.AreEqual(new HeroOrder(Melee, OnRoad(200f).Point, 1), fx.HeroMoves.Single());
         Assert.AreEqual(0, fx.HeroSpawns.Count);
         Assert.AreEqual(goldBefore, driver.Run.Gold);
         Assert.AreEqual(OnRoad(200f).Point, driver.Run.PostOf(Melee));

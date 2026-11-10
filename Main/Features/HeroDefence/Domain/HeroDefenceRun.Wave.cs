@@ -10,10 +10,14 @@ internal sealed partial class HeroDefenceRun
     /// <summary>A team has 8 regular formations, and one pack fills one formation.</summary>
     private const int PackSlots = 8;
 
-    private readonly Dictionary<AgentKey, (CreepSpec Creep, int Slot)> _alive = new();
+    private readonly Dictionary<AgentKey, (CreepSpec Creep, int Slot, int PackId)> _alive = new();
     private readonly int[] _slotCounts = new int[PackSlots];
 
+    /// <summary>The pack last released into each slot.</summary>
+    private readonly int[] _slotPack = new int[PackSlots];
+
     private WaveBrief _brief = new(0, Array.Empty<CreepPack>());
+    private int _lastPackId;
     private int _packNext;
     private float _packClock;
     private float _waveSeconds;
@@ -31,7 +35,7 @@ internal sealed partial class HeroDefenceRun
         if (_alive.ContainsKey(key))
             return;
 
-        _alive[key] = (creep, slot);
+        _alive[key] = (creep, slot, _slotPack[slot]);
         _slotCounts[slot]++;
         _waveSpawned++;
     }
@@ -39,24 +43,63 @@ internal sealed partial class HeroDefenceRun
     /// <summary>A creep left the field. It counts once per key, so a late engine callback for a removed creep changes nothing.</summary>
     public void CreepGone(AgentKey key, CreepEnd end)
     {
-        if (Result != null || !_alive.TryGetValue(key, out var entry))
+        if (Result != null || !Unregister(key, out var creep))
             return;
 
-        _alive.Remove(key);
-        _slotCounts[entry.Slot]--;
         switch (end)
         {
             case CreepEnd.Killed:
                 Kills++;
-                AddGold(Bounty(entry.Creep));
+                AddGold(Bounty(creep));
                 break;
             case CreepEnd.Leaked:
                 _pending.Removals.Add(key);
-                LoseLives(entry.Creep);
+                LoseLives(creep);
                 break;
             case CreepEnd.Culled:
                 _pending.Removals.Add(key);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// The director calls this with a batch's <see cref="CreepBatch.PackId"/> when that pack's <see cref="PackStallClock"/> runs out. The
+    /// pack ends by the wave-limit split: with a hero standing it goes for free, with none it leaks. Outside a wave, or for a pack with
+    /// no live creep (an old pack whose slot a new pack took), nothing changes.
+    /// </summary>
+    public void PackStalled(int packId)
+    {
+        if (_phase != DefencePhase.Wave || Result != null)
+            return;
+
+        var end = AnyHeroStanding ? CreepEnd.Culled : CreepEnd.Leaked;
+        EndGroup(_alive.Where(entry => entry.Value.PackId == packId).Select(entry => entry.Key), end);
+    }
+
+    /// <summary>Removes a creep from the books. False for a key that is not alive.</summary>
+    private bool Unregister(AgentKey key, out CreepSpec creep)
+    {
+        if (!_alive.TryGetValue(key, out var entry))
+        {
+            creep = null!;
+            return false;
+        }
+
+        _alive.Remove(key);
+        _slotCounts[entry.Slot]--;
+        creep = entry.Creep;
+        return true;
+    }
+
+    /// <summary>Culls or leaks a group of creeps. If a leak takes the last life, the rest of the group still leaves the field, with no score.</summary>
+    private void EndGroup(IEnumerable<AgentKey> keys, CreepEnd end)
+    {
+        foreach (var key in keys.ToList())
+        {
+            if (Result == null)
+                CreepGone(key, end);
+            else if (Unregister(key, out _))
+                _pending.Removals.Add(key);
         }
     }
 
@@ -100,17 +143,16 @@ internal sealed partial class HeroDefenceRun
         ReleaseNextPack(s.Dt);
     }
 
-    /// <summary>A NaN or infinite position fails the distance test, so a bad reading never costs a life.</summary>
+    /// <summary>
+    /// A NaN or infinite position fails the distance test, so a bad reading never costs a life. Every creep at the exit leaves, also
+    /// after one of them takes the last life.
+    /// </summary>
     private void ObserveLeaks(FieldReading? field)
     {
         if (field == null)
             return;
 
-        foreach (var sample in field.Creeps)
-        {
-            if (sample.Position.Distance2D(_plan.Map.Exit) < _r.ExitRadiusMetres)
-                CreepGone(sample.Key, CreepEnd.Leaked);
-        }
+        EndGroup(field.Creeps.Where(sample => sample.Position.Distance2D(_plan.Map.Exit) < _r.ExitRadiusMetres).Select(sample => sample.Key), CreepEnd.Leaked);
     }
 
     private void ReleaseNextPack(float dt)
@@ -123,7 +165,9 @@ internal sealed partial class HeroDefenceRun
         if (slot < 0)
             return;
 
-        _pending.CreepBatches.Add(new CreepBatch(slot, _brief.Packs[_packNext]));
+        _lastPackId++;
+        _slotPack[slot] = _lastPackId;
+        _pending.CreepBatches.Add(new CreepBatch(_lastPackId, slot, _brief.Packs[_packNext]));
         _packNext++;
         _packClock = _r.PackGapSeconds;
     }
@@ -135,8 +179,7 @@ internal sealed partial class HeroDefenceRun
     private void ExpireWave()
     {
         var end = AnyHeroStanding ? CreepEnd.Culled : CreepEnd.Leaked;
-        foreach (var key in _alive.Keys.ToList())
-            CreepGone(key, end);
+        EndGroup(_alive.Keys, end);
 
         if (end == CreepEnd.Leaked)
         {
@@ -166,12 +209,12 @@ internal sealed partial class HeroDefenceRun
         {
             if (hero.State == DefenceHeroState.Placed)
             {
-                _pending.HeroResets.Add(hero.Order);
+                Need(hero, HeroWork.Reset);
             }
             else if (hero.State == DefenceHeroState.Fallen)
             {
                 hero.State = DefenceHeroState.Placed;
-                _pending.HeroSpawns.Add(hero.Order);
+                Need(hero, HeroWork.Spawn);
             }
         }
     }
