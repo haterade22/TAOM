@@ -186,16 +186,7 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
         edge_attributes[name] = children
     attributes = {}
     for name, values in mesh.attributes.items():
-        domain = mesh.attribute_domains.get(name)
-        if domain is None:
-            if name in {"source_vertex", "source_part", "point_guide", "open_seam", "simplify_on", "source_position", "pattern_center"}:
-                domain = "POINT"
-            elif name == "pattern_id" and "source_position" in mesh.attributes:
-                domain = "POINT"
-            elif len(values) == len(mesh.faces):
-                domain = "FACE"
-            elif len(values) == len(mesh.vertices):
-                domain = "POINT"
+        domain = mesh.attribute_domain(name)
         if domain == "POINT":
             remapped = [False] * len(new_vertices) if name in {"point_guide", "open_seam", "simplify_on"} else [None] * len(new_vertices)
             for old, new in vertex_map.items():

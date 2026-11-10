@@ -85,7 +85,7 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         layer.active = True
         layer.active_render = True
     for attribute_name, values in mesh.attributes.items():
-        domain = mesh.attribute_domains.get(attribute_name)
+        domain = mesh.attribute_domain(attribute_name)
         expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces) if domain == "FACE" else None
         if expected_count is not None and len(values) != expected_count:
             continue

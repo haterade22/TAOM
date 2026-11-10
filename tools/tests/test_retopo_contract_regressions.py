@@ -625,6 +625,34 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([0, 1, 2, 3, 0, 0, 1, 2, 0, 4, 5, 6, 7], result.attributes["source_vertex"])
         self.assertEqual([False] * 13, result.attributes["point_guide"])
 
+    def test_undeclared_known_point_domains_are_consistent(self):
+        size = 4
+        vertices = [
+            ((3 + math.cos(math.tau * i / size) * math.cos(math.tau * j / size), 3 + math.sin(math.tau * i / size) * math.cos(math.tau * j / size), math.sin(math.tau * j / size)))
+            for i in range(size) for j in range(size)
+        ]
+        faces = [
+            (i * size + j, ((i + 1) % size) * size + j, ((i + 1) % size) * size + (j + 1) % size, i * size + (j + 1) % size)
+            for i in range(size) for j in range(size)
+        ]
+        guide = Mesh(
+            vertices=vertices,
+            faces=faces,
+            attributes={"source_vertex": list(range(16)), "point_guide": [True] + [False] * 15},
+        )
+        center = guide.vertices[5]
+        filled = engine.auto_fill(guide, [center], 1)
+        self.assertEqual(len(filled.vertices), len(filled.attributes["source_vertex"]))
+        self.assertEqual(1, sum(filled.attributes["point_guide"]))
+        mirrored = engine.mirror_guides(guide, axes=("x",))
+        self.assertEqual(len(mirrored.vertices), len(mirrored.attributes["source_vertex"]))
+        self.assertEqual(2, sum(mirrored.attributes["point_guide"]))
+        subdivided = engine.subdivide_quads(guide)
+        self.assertEqual(list(range(16)), subdivided.attributes["source_vertex"][:16])
+        self.assertEqual(1, sum(subdivided.attributes["point_guide"]))
+        merged = engine.merge_output_seams(filled, 0.01)
+        self.assertEqual(len(merged.vertices), len(merged.attributes["source_vertex"]))
+
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
             Mesh(

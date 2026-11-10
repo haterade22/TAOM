@@ -202,15 +202,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         return result, []
 
     point_attribute_names = {
-        name
-        for name, values in mesh.attributes.items()
-        if mesh.attribute_domains.get(name) == "POINT"
-        or (
-            name not in mesh.attribute_domains
-            and len(values) == len(mesh.vertices)
-            and name not in {"part_id", "retopo_plane_id"}
-            and (name != "pattern_id" or "source_position" in mesh.attributes)
-        )
+        name for name in mesh.attributes if mesh.attribute_domain(name) == "POINT"
     }
     face_order = sorted(
         range(len(mesh.faces)),
@@ -711,25 +703,10 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             return guide.copy()
     result = guide.copy()
     point_attribute_names = {
-        name
-        for name, values in guide.attributes.items()
-        if guide.attribute_domains.get(name) == "POINT"
-        or (
-            name not in guide.attribute_domains
-            and len(values) == len(guide.vertices)
-            and name not in {"part_id", "retopo_plane_id"}
-            and (name != "pattern_id" or "source_position" in guide.attributes)
-        )
+        name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
     }
     face_attribute_names = {
-        name
-        for name, values in guide.attributes.items()
-        if guide.attribute_domains.get(name) == "FACE"
-        or (
-            name not in guide.attribute_domains
-            and len(values) == len(guide.faces)
-            and (name != "pattern_id" or "source_position" not in guide.attributes)
-        )
+        name for name in guide.attributes if guide.attribute_domain(name) == "FACE"
     }
 
     def face_signature(mesh, face):
@@ -810,24 +787,10 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     validate_guides(guide)
     points = [tuple(point) for point in point_guides]
     face_attribute_names = {
-        name
-        for name, values in guide.attributes.items()
-        if guide.attribute_domains.get(name) == "FACE"
-        or (
-            name not in guide.attribute_domains
-            and len(values) == len(guide.faces)
-            and (name != "pattern_id" or "source_position" not in guide.attributes)
-        )
+        name for name in guide.attributes if guide.attribute_domain(name) == "FACE"
     }
     point_attribute_names = {
-        name
-        for name, values in guide.attributes.items()
-        if guide.attribute_domains.get(name) == "POINT"
-        or (
-            name not in guide.attribute_domains
-            and len(values) == len(guide.vertices)
-            and name not in face_attribute_names
-        )
+        name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
     }
 
     def subdivide(current):
@@ -1312,12 +1275,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     result.faces = faces
     result.uv = uv
     for name, values in result.attributes.items():
-        domain = result.attribute_domains.get(name)
-        if domain is None and (
-            name in {"source_vertex", "source_part", "point_guide", "open_seam", "simplify_on", "source_position", "pattern_center"}
-            or (name == "pattern_id" and "source_position" in result.attributes)
-        ):
-            domain = "POINT"
+        domain = result.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == original_face_count):
             result.attributes[name] = [values[index] for index in kept_faces]
         elif domain == "POINT" or (domain is None and len(values) == original_vertex_count):
@@ -1361,7 +1319,7 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
         faces.append((first, second, second + count, first + count))
     result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name, attribute_domains=dict(guide.attribute_domains))
     for name, values in guide.attributes.items():
-        domain = guide.attribute_domains.get(name)
+        domain = guide.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == len(guide.faces)):
             result.attributes[name] = values + values + [values[face_index] for _, _, face_index in directed]
         elif domain == "POINT" or (domain is None and len(values) == len(guide.vertices)):
