@@ -49,6 +49,7 @@ public sealed class FrontEndSpriteService
     private readonly ImageGroup _menu = new(FrontEndImageGroups.MainMenu, FrontEndSpriteKind.MenuChrome, "main menu", "TAOMMainMenu");
     private readonly ImageGroup _creation = new(FrontEndImageGroups.CharacterCreation, FrontEndSpriteKind.Chrome, "character creation", "TAOMCharCreation", "TAOMFactionScreen", "TAOMEscapeMenu", "TAOMCampaignNavigation", "TAOMCampaignTime", "TAOMCampaignStats", "TAOMCampaignMuster", "TAOMCharacterDeveloper", "TAOMEncyclopedia", "TAOMLongDefeat");
     private readonly ImageGroup _art = new(FrontEndImageGroups.FactionArt, FrontEndSpriteKind.Art, "faction art");
+    private readonly ImageGroup _battleHud = new(FrontEndImageGroups.BattleHud, FrontEndSpriteKind.BattleHud, "battle HUD");
     private readonly ImageGroup[] _groups;
 
     private readonly Dictionary<string, LoadedImage> _resident = new(StringComparer.Ordinal);
@@ -66,7 +67,7 @@ public sealed class FrontEndSpriteService
         _adapter = adapter;
         _paths = paths;
         _logger = logger;
-        _groups = new[] { _menu, _creation, _art };
+        _groups = new[] { _menu, _creation, _art, _battleHud };
     }
 
     /// <summary>True when the runtime sprites folder has an image of this name, loaded or not.</summary>
@@ -106,7 +107,7 @@ public sealed class FrontEndSpriteService
             if ((groups & group.Flag) == 0)
                 continue;
             group.IdleTicks = 0;
-            if (!_adapter.IsUiReady || group.BrushFiles.Length == 0)
+            if (!_adapter.IsUiReady || !group.LoadsOnAcquire)
                 continue;
 
             EnsureResident();
@@ -271,6 +272,7 @@ public sealed class FrontEndSpriteService
         FrontEndSpriteKind.MenuChrome => _menu,
         FrontEndSpriteKind.Chrome => _creation,
         FrontEndSpriteKind.Art => _art,
+        FrontEndSpriteKind.BattleHud => _battleHud,
         _ => null,
     };
 
@@ -427,6 +429,10 @@ public sealed class FrontEndSpriteService
         /// <summary>The brush files that name this group's images, re-read once they are registered.
         /// Empty for the art, which no brush names: it is bound by data, one image at a time.</summary>
         public string[] BrushFiles { get; }
+
+        /// <summary>Whether <see cref="Acquire"/> loads the whole group. The art loads one image at a
+        /// time as shown; the battle HUD names no brush file but draws every one of its few icons.</summary>
+        public bool LoadsOnAcquire => BrushFiles.Length > 0 || Kind == FrontEndSpriteKind.BattleHud;
 
         public Dictionary<string, LoadedImage> Images { get; } = new(StringComparer.Ordinal);
 

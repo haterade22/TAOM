@@ -32,6 +32,8 @@ public static class FrontEndSpriteCatalog
             return FrontEndSpriteKind.SkillIcon;
         if (spriteName.StartsWith("mm_", StringComparison.Ordinal))
             return FrontEndSpriteKind.MenuChrome;
+        if (spriteName.StartsWith("bh_", StringComparison.Ordinal))
+            return FrontEndSpriteKind.BattleHud;
         foreach (var prefix in ArtPrefixes)
         {
             if (spriteName.StartsWith(prefix, StringComparison.Ordinal))

@@ -135,6 +135,13 @@ public sealed class FrontEndMovieService
             case "LongDefeatPanel" when dataSourceTypeName == "LongDefeatHudVM":
                 return Themed(movieName, "TAOM" + movieName, CreationFrame);
 
+            // The circular battle HUD (#1095) is a UIExtenderEx extension of the native AgentStatus prefab,
+            // which this movie includes. The native movie loads unchanged; only its icon hold is taken, so
+            // the bh_* images are registered before the movie binds them and released after it closes.
+            case "MainAgentHUD" when dataSourceTypeName == "MissionAgentStatusVM":
+                _sprites.Acquire(FrontEndImageGroups.BattleHud);
+                return new MovieSwap(movieName, movieName, FrontEndImageGroups.BattleHud);
+
             default:
                 return null;
         }
