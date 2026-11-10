@@ -529,6 +529,36 @@ class ContractRegressionTests(unittest.TestCase):
         result = engine.merge_output_seams(mesh, 0.5)
         self.assertTrue(all(len(face) == 4 for face in result.faces))
 
+    def test_repair_is_canonical_across_face_order(self):
+        faces = [(1, 3, 5, 4), (2, 5, 4, 3), (0, 6, 2, 5), (5, 2, 4, 6), (5, 4, 0, 1), (3, 1, 0, 2)]
+        vertices = [(index, 0, 0) for index in range(7)]
+        first, _ = engine.inspect_topology(Mesh(vertices=vertices, faces=faces), fix_split_edges=True)
+        order = (5, 0, 2, 3, 1, 4)
+        second, _ = engine.inspect_topology(Mesh(vertices=vertices, faces=[faces[index] for index in order]), fix_split_edges=True)
+        self.assertEqual(len(first.vertices), len(second.vertices))
+        self.assertEqual(len(first.boundary_edges()), len(second.boundary_edges()))
+        assert_manifold_connectors_preserved(self, Mesh(vertices=vertices, faces=faces), first)
+
+    def test_duplicate_triangle_pairs_keep_their_manifold_edges(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)],
+            faces=[(2, 0, 3), (0, 2, 3), (2, 3, 1)],
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        assert_manifold_connectors_preserved(self, mesh, result)
+
+    def test_mirror_does_not_swap_asymmetric_edge_attributes(self):
+        guide = Mesh(
+            vertices=[(-1, 0, 0), (1, 0, 0), (1, 1, 0), (-1, 1, 0), (-3, 0, 0), (-3, 1, 0)],
+            faces=[(0, 1, 2, 3), (4, 0, 3, 5)],
+        )
+        guide.edge_attributes["crease_edge"] = {edge: 0.0 for edge in guide.edges()}
+        guide.edge_attributes["crease_edge"][(0, 3)] = 0.8
+        mirrored = engine.mirror_guides(guide, axes=("x",))
+        self.assertEqual(0.8, mirrored.edge_attributes["crease_edge"][(0, 3)])
+        self.assertEqual(0.0, mirrored.edge_attributes["crease_edge"][(1, 2)])
+
     def test_mirror_and_separation_preserve_edge_attributes(self):
         guide = differential.unit_guide()
         guide.edge_attributes["bevel_weight_edge"] = {edge: 1.0 for edge in guide.edges()}

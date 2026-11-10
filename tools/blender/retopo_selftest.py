@@ -179,15 +179,18 @@ def main():
             [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)],
             [(0, 1, 2), (1, 0, 3), (0, 1, 4)],
         )
+        non_manifold.matrix_world = Matrix.Translation((3.0, 4.0, 5.0))
         activate(non_manifold)
         assert bpy.ops.taom.inspect_topology(only_debug=True) == {"FINISHED"}
         debug = bpy.context.active_object
         assert len(debug.data.edges) == 1
         assert len(debug.data.polygons) == 0
+        assert debug.matrix_world == non_manifold.matrix_world
         activate(non_manifold)
         assert bpy.ops.taom.inspect_topology(fix_split_edges=True) == {"FINISHED"}
         repaired = bpy.context.active_object
         assert len(repaired.data.vertices) == 9
+        assert repaired.matrix_world == non_manifold.matrix_world
         assert repaired["non_manifold_edges"] == 1
         transformed_guides = bpy.data.collections.new("TAOM_Selftest_TransformedGuides")
         bpy.context.scene.collection.children.link(transformed_guides)

@@ -404,13 +404,13 @@ class TAOM_OT_inspect_topology(bpy.types.Operator):
         result, bad_edges = engine.inspect_topology(mesh_from_blender(active), self.fix_split_edges)
         if self.only_debug:
             result = Mesh(vertices=result.vertices, faces=[], uv_name=result.uv_name)
-            output = mesh_to_blender(result, active.name + "_Inspector", edges=bad_edges)
+            output = mesh_to_blender(result, active.name + "_Inspector", edges=bad_edges, matrix_world=active.matrix_world)
         else:
-            output = mesh_to_blender(result, active.name + "_Inspected")
+            output = mesh_to_blender(result, active.name + "_Inspected", matrix_world=active.matrix_world)
             if bad_edges:
                 collection = _helper_collection(output)
                 debug_mesh = Mesh(vertices=result.vertices, faces=[], uv_name=result.uv_name)
-                helper = mesh_to_blender(debug_mesh, "TAOM Non-Manifold Edges", collection, edges=bad_edges)
+                helper = mesh_to_blender(debug_mesh, "TAOM Non-Manifold Edges", collection, edges=bad_edges, matrix_world=active.matrix_world)
                 helper["taom_retopology_helper"] = True
                 helper.show_in_front = True
         output["non_manifold_edges"] = len(bad_edges)

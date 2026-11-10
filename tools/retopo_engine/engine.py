@@ -197,6 +197,16 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
         return result, bad_edges
 
+    face_order = sorted(
+        range(len(mesh.faces)),
+        key=lambda index: (tuple(mesh.vertices[vertex] for vertex in mesh.faces[index]), mesh.faces[index]),
+    )
+    result.faces = [mesh.faces[index] for index in face_order]
+    result.uv = [
+        coordinate
+        for face_index in face_order
+        for coordinate in mesh.uv[sum(len(face) for face in mesh.faces[:face_index]):sum(len(face) for face in mesh.faces[:face_index + 1])]
+    ]
     if all(len(face) == 3 for face in mesh.faces):
         incident_faces = {
             face_index
@@ -210,6 +220,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             face_index
             for component_faces in components.values()
             if len(bad_edges) == 1 and len(component_faces) == 3
+            and len({frozenset(mesh.faces[index]) for index in component_faces}) == 3
             and all(face_index in incident_faces for face_index in component_faces)
             for face_index in component_faces
         }
@@ -225,7 +236,10 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
 
     protected_edges = set(bad_edges)
     while non_manifold_edges(result):
-        edge = non_manifold_edges(result)[0]
+        edge = min(
+            non_manifold_edges(result),
+            key=lambda candidate: tuple(sorted(result.vertices[index] for index in candidate)),
+        )
         face_edges = [
             {
                 Mesh.edge_key(face[index], face[(index + 1) % len(face)])
@@ -367,7 +381,13 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                     first_edge = Mesh.edge_key(first_face[first_corner], first_face[(first_corner + 1) % len(first_face)])
                     second_edge = Mesh.edge_key(second_face[second_corner], second_face[(second_corner + 1) % len(second_face)])
                     broken += first_edge != second_edge
-                score = (broken, len(created), -len(retained), retained, order)
+                positions = result.vertices + [result.vertices[old] for old in created]
+                signature = tuple(sorted(
+                    tuple(sorted(positions[index] for index in face))
+                    for face in simulated
+                ))
+                residual = len(non_manifold_edges(Mesh(vertices=[], faces=simulated)))
+                score = (broken, residual, len(created), -len(retained), signature)
                 if best_score is None or score < best_score:
                     best = simulated, created
                     best_score = score
@@ -384,6 +404,11 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             new_face = result.faces[face_index]
             protected_edges.add(Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)]))
 
+    original_order_faces = [None] * len(mesh.faces)
+    for canonical_index, original_index in enumerate(face_order):
+        original_order_faces[original_index] = result.faces[canonical_index]
+    result.faces = original_order_faces
+    result.uv = list(mesh.uv)
     original_vertex_count = len(result.vertices)
     edge_attributes = {name: {} for name in mesh.edge_attributes}
     for face_index, new_face in enumerate(result.faces):
@@ -422,7 +447,10 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     }
 
     def debug_edge(original_edge):
-        for face_index, original_face in enumerate(mesh.faces):
+        if original_edge in result.edges():
+            return original_edge
+        for face_index in face_order:
+            original_face = mesh.faces[face_index]
             for corner, first in enumerate(original_face):
                 second = original_face[(corner + 1) % len(original_face)]
                 if Mesh.edge_key(first, second) != original_edge:
@@ -715,14 +743,24 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             return position_indices[key]
 
         for face in unique_faces:
-            result.faces.append(tuple(mirrored_index(index) for index in face))
+            mirrored_face = tuple(mirrored_index(index) for index in face)
+            result.faces.append(mirrored_face)
             signatures.add(face_signature(component, face))
+            for corner, first in enumerate(face):
+                second = face[(corner + 1) % len(face)]
+                original_edge = Mesh.edge_key(first, second)
+                new_edge = Mesh.edge_key(mirrored_face[corner], mirrored_face[(corner + 1) % len(face)])
+                for name, values in component.edge_attributes.items():
+                    target = result.edge_attributes.setdefault(name, {})
+                    if original_edge in values and new_edge not in target:
+                        target[new_edge] = values[original_edge]
         for edge in component.lines:
-            result.lines.append(tuple(mirrored_index(index) for index in edge))
-        for name, values in component.edge_attributes.items():
-            target = result.edge_attributes.setdefault(name, {})
-            for (first, second), value in values.items():
-                target[Mesh.edge_key(mirrored_index(first), mirrored_index(second))] = value
+            mirrored_edge = tuple(mirrored_index(index) for index in edge)
+            result.lines.append(mirrored_edge)
+            for name, values in component.edge_attributes.items():
+                target = result.edge_attributes.setdefault(name, {})
+                if edge in values and mirrored_edge not in target:
+                    target[mirrored_edge] = values[edge]
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 

@@ -2,10 +2,12 @@
 
 ## Status
 
-Complete public capability coverage verified. This matrix expands the earlier behavioral
-specification into an exhaustive adoption contract. Every row has original-product differential
-evidence or a real Blender runtime test with an independent expected result. No percentage claim is
-based on file count or test count alone.
+Complete public capability coverage is verified, with explicitly documented geometry-layout
+differences. This matrix expands the earlier behavioral specification into an exhaustive adoption
+contract. Every row has original-product differential evidence or a real Blender runtime test with
+an independent expected result. No percentage claim is based on file count or test count alone.
+Coverage and differential parity are separate claims: the high-sharp density layout below remains
+a measured difference, not an exact geometry match.
 
 Complete vertex positions, oriented connectivity, and geometry-UV associations match for the base,
 subdivision, UV, ring, X mirror, separation, positive thickness, and inspector fixtures. The oracle
