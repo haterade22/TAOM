@@ -57,6 +57,16 @@ def main():
         assert len(flat.data.vertices) == 9
         assert len(flat.data.polygons) == 4
         assert "source_position" in flat.data.attributes
+        alternate_uv = source.data.uv_layers.new(name="GarmentUV")
+        for loop, coordinate in zip(alternate_uv.data, [(0.25, 0.5)] * 16):
+            loop.uv = coordinate
+        source.data.uv_layers.active_index = 0
+        activate(source)
+        assert bpy.ops.taom.flatten_patterns(uv_name="GarmentUV") == {"FINISHED"}
+        named_flat = bpy.context.active_object
+        assert named_flat.data.uv_layers.active.name == "GarmentUV"
+        assert all(abs(vertex.co.x - 0.25) < 1e-6 and abs(vertex.co.y - 0.5) < 1e-6 for vertex in named_flat.data.vertices)
+        assert source.data.uv_layers.active_index == 0
 
         guides = bpy.data.collections.new("TAOM_Selftest_Guides")
         bpy.context.scene.collection.children.link(guides)

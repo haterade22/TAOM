@@ -119,7 +119,7 @@ and guide objects are preserved when generating a new output.
 - `python -m ruff check tools/retopo_engine tools/blender/retopo_adapter.py
   tools/blender/retopo_operators.py tools/tests/test_retopo_engine.py`: static checks.
 - Real Blender 5.2.3 LTS: `tools/blender/retopo_selftest.py` verifies registration, flattening,
-  reprojection, a real UV layer, initialized quads, source/guide preservation, non-quad rejection,
+  named UV selection with two layers, reprojection, a real UV layer, initialized quads, source/guide preservation, non-quad rejection,
   and inspector debug/repair. `tools/blender/petik_selftest.py` verifies 3 to 6-sided patches,
   alternative solutions, control-line editing, selected loops, modal controls, reset/undo, preference
   swaps, visibility, ray casting, snapping, and view normals. Both reports require `"status": "ok"`.
