@@ -73,7 +73,20 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
         return changed;
     }
 
+    // The caller checks victory next, and that check counts each side's kingdoms. The enrolled sets are only
+    // as fresh as the last sweep, and since War Pledge (#1113) a kingdom's side can change inside a day, so
+    // this sweeps: a realm that took a side today is in the count. The engine marks the kingdom eliminated
+    // before it raises KingdomDestroyed (v1.5.7 DestroyKingdomAction.ApplyInternal, line 9), so it is off
+    // the live list and the sweep does not enroll it again.
     public bool RemoveKingdom(MomentumWarState state, string kingdomId)
+    {
+        if (!Drop(state, kingdomId))
+            return false;
+        SweepEnrollment(state);
+        return true;
+    }
+
+    private bool Drop(MomentumWarState state, string kingdomId)
     {
         bool removed = state.Free.RemoveKingdom(kingdomId) || state.Evil.RemoveKingdom(kingdomId);
         if (removed)
@@ -112,7 +125,7 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
         bool changed = false;
         foreach (var id in side.KingdomIds.Where(id => !live.Contains(id) || ResolveSide(id) != enrolledSide).ToList())
         {
-            if (RemoveKingdom(state, id))
+            if (Drop(state, id))
                 changed = true;
         }
         return changed;
