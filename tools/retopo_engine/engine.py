@@ -201,6 +201,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {}
         return result, []
 
+    result.attribute_domains = {name: mesh.attribute_domain(name) for name in mesh.attributes}
     point_attribute_names = {
         name for name in mesh.attributes if mesh.attribute_domain(name) == "POINT"
     }
@@ -702,6 +703,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
         if len(_mirror_axes(guide)) > 1:
             return guide.copy()
     result = guide.copy()
+    result.attribute_domains = {name: guide.attribute_domain(name) for name in guide.attributes}
     point_attribute_names = {
         name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
     }
@@ -786,12 +788,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
     points = [tuple(point) for point in point_guides]
-    face_attribute_names = {
-        name for name in guide.attributes if guide.attribute_domain(name) == "FACE"
-    }
-    point_attribute_names = {
-        name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
-    }
+    resolved_domains = {name: guide.attribute_domain(name) for name in guide.attributes}
+    face_attribute_names = {name for name, domain in resolved_domains.items() if domain == "FACE"}
+    point_attribute_names = {name for name, domain in resolved_domains.items() if domain == "POINT"}
 
     def subdivide(current):
         result = subdivide_quads(current)
@@ -911,12 +910,14 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         return current
 
     if across_patterns:
-        result = fill(guide.copy(), points)
+        working = guide.copy()
+        working.attribute_domains = dict(resolved_domains)
+        result = fill(working, points)
     else:
         result = Mesh(
             vertices=[], faces=[], uv_name=guide.uv_name,
             attributes={name: [] for name in guide.attributes},
-            attribute_domains=dict(guide.attribute_domains),
+            attribute_domains=dict(resolved_domains),
         )
         for component in guide.connected_components():
             used = sorted({index for face_index in component for index in guide.faces[face_index]})
@@ -933,7 +934,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 vertices=[guide.vertices[index] for index in used],
                 faces=[tuple(remap[index] for index in guide.faces[face_index]) for face_index in component],
                 attributes=attributes,
-                attribute_domains=dict(guide.attribute_domains),
+                attribute_domains=dict(resolved_domains),
             )
             filled = fill(part, points)
             offset = len(result.vertices)
@@ -1188,7 +1189,7 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
         cursor += len(face)
     result = Mesh(
         vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name,
-        attribute_domains=dict(mesh.attribute_domains),
+        attribute_domains={name: mesh.attribute_domain(name) for name in mesh.attributes},
     )
     for name, values in mesh.attributes.items():
         domain = mesh.attribute_domains.get(name)
@@ -1213,6 +1214,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     if distance <= 0:
         return mesh
     result = mesh.copy()
+    result.attribute_domains = {name: mesh.attribute_domain(name) for name in mesh.attributes}
     protected = {
         index
         for edge, value in result.edge_attributes.get("bevel_weight_edge", {}).items()
@@ -1317,7 +1319,10 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 directed.append((first, second, face_index))
     for first, second, _ in directed:
         faces.append((first, second, second + count, first + count))
-    result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name, attribute_domains=dict(guide.attribute_domains))
+    result = Mesh(
+        vertices=vertices, faces=faces, uv_name=guide.uv_name,
+        attribute_domains={name: guide.attribute_domain(name) for name in guide.attributes},
+    )
     for name, values in guide.attributes.items():
         domain = guide.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == len(guide.faces)):

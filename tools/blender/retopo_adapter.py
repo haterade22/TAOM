@@ -90,17 +90,22 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         if expected_count is not None and len(values) != expected_count:
             continue
         if attribute_name in {"source_position", "pattern_center"}:
-            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain="POINT")
+            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain=domain or "POINT")
             for item, value in zip(attribute.data, values):
                 item.vector = value
         elif attribute_name in {"point_guide", "open_seam", "simplify_on"}:
-            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain="POINT")
+            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain=domain or "POINT")
             for item, value in zip(attribute.data, values):
                 item.value = bool(value)
         elif (
-            attribute_name in {"source_vertex", "source_part"}
-            or domain == "POINT"
-            or (domain is None and attribute_name == "pattern_id" and "source_position" in mesh.attributes)
+            domain == "POINT"
+            or (
+                domain is None
+                and (
+                    attribute_name in {"source_vertex", "source_part"}
+                    or (attribute_name == "pattern_id" and "source_position" in mesh.attributes)
+                )
+            )
         ):
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
