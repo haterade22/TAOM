@@ -134,13 +134,17 @@ into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, f
 release note in Phase 6. A tester who confirms a check closes the loop: remove the label from that
 issue.
 
+Last, add one line for the release note to `docs/INDEX.md` ("Player-facing copy"), with a link to
+the testers' checklist in it, and run `python tools/check_doc_graph_ratchet.py`. A note that nothing
+links is an orphan, and the tool suite fails on it (`test_doc_graph_ratchet`).
+
 ## Phase 6 — Commit
 
 First, `git rev-parse HEAD` must print the SHA Phase 4 ended at. If another commit landed since,
 the section misses it: `git checkout -- CHANGELOG.md` and run Phase 4 again.
 
 Stage **explicitly** with `git add <paths>`, never `-A`: the Phase 3 version files, `CHANGELOG.md`
-(Phase 4), the release note and the testers' checklist (Phase 5). A shared file routinely holds two sessions' edits.
+(Phase 4), the release note, the testers' checklist and the `docs/INDEX.md` line (Phase 5). A shared file routinely holds two sessions' edits.
 
 ```
 chore(release): vX.Y.Z - TAOM vX.Y.Z
