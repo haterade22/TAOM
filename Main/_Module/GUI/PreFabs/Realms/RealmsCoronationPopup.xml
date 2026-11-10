@@ -1,0 +1,87 @@
+<Prefab>
+	<!--
+		TAOM.Realms: the coronation's event window ("The Return of the King"), opened once when Aragorn is crowned. Bound to
+		CoronationPopupVM (src/TAOM.Realms/UI/Popups), loaded by RealmsPopupLayer at layer order 320. PLACEHOLDER layout until
+		the event art is made: the claimants popup's frame; on the left the illustration (the <Coronation image> sprite) or,
+		without one, the new house's banner as TAOM's encyclopedia pennant at 4x the tree card's; on the right the story text
+		and what changed; at the bottom the TAOM Open entry button, which closes the window like the close button and Escape.
+	-->
+	<Constants>
+		<Constant Name="Popup.CloseButton.Width" BrushLayer="Default" BrushName="Popup.CloseButton" BrushValueType="Width"/>
+		<Constant Name="Popup.CloseButton.Height" BrushLayer="Default" BrushName="Popup.CloseButton" BrushValueType="Height"/>
+	</Constants>
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+			<Children>
+
+				<!--Dim: covers and holds the mouse for the whole screen-->
+				<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC"/>
+
+				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Canvas">
+					<Children>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="640" Brush="Frame1.Border" IsEnabled="true">
+							<Children>
+
+								<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+									<Children>
+										<Standard.Background />
+									</Children>
+								</Widget>
+
+								<!--Illustration: the event art, or the new house's banner in its place-->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="360" SuggestedHeight="480" MarginLeft="40" MarginTop="110" Sprite="BlankWhiteSquare_9" Color="#00000066">
+									<Children>
+										<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="@ImageSprite" IsVisible="@HasImage" DoNotAcceptEvents="true"/>
+										<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="216" SuggestedHeight="352" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="@HasNoImage" DoNotAcceptEvents="true">
+											<Children>
+												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+													<Children>
+														<EncyclopediaMaskedImageWidget DataSource="{Banner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35"/>
+													</Children>
+												</Widget>
+												<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true"/>
+												<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true"/>
+											</Children>
+										</Widget>
+									</Children>
+								</Widget>
+
+								<!--Story and what changed-->
+								<ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="520" MarginLeft="440" MarginTop="120" StackLayout.LayoutMethod="VerticalTopToBottom">
+									<Children>
+										<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="22" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Text" DoNotAcceptEvents="true"/>
+										<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" MarginTop="24" MarginBottom="16" Sprite="BlankWhiteSquare_9" Color="#C4BBA466"/>
+										<ListPanel DataSource="{Lines}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+											<ItemTemplate>
+												<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="8" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="19" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Text" DoNotAcceptEvents="true"/>
+											</ItemTemplate>
+										</ListPanel>
+									</Children>
+								</ListPanel>
+
+								<!--Long live the King-->
+								<ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="46" MarginLeft="555" MarginBottom="40" VerticalAlignment="Bottom" Command.Click="ExecuteClose" Brush="TAOM.Encyclopedia.OpenEntry" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+									<Children>
+										<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.OpenEntryText" Brush.FontSize="22" Text="@ButtonText"/>
+									</Children>
+								</ButtonWidget>
+
+								<!--Heading-->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="436" SuggestedHeight="100" HorizontalAlignment="Center" VerticalAlignment="Top" Sprite="StdAssets\tabbar_long">
+									<Children>
+										<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="390" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="8" Brush="Kingdom.DecisionTitleBig.Text" Brush.FontSize="22" Text="@Heading"/>
+									</Children>
+								</Widget>
+
+							</Children>
+						</BrushWidget>
+					</Children>
+				</BrushWidget>
+
+				<!--Close-->
+				<ButtonWidget Id="ClosePopupWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Popup.CloseButton.Width" SuggestedHeight="!Popup.CloseButton.Height" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="450" PositionYOffset="-270" Brush="Popup.CloseButton" Command.Click="ExecuteClose"/>
+
+			</Children>
+		</Widget>
+	</Window>
+</Prefab>

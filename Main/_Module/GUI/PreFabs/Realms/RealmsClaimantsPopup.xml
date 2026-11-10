@@ -1,0 +1,96 @@
+<Prefab>
+	<!--
+		TAOM.Realms: everyone claiming a title. Bound to ClaimantsPopupVM (src/TAOM.Realms/UI/Popups), loaded by RealmsPopupLayer
+		at layer order 320. The frame is the title tree popup's, smaller; the cards are TAOM's encyclopedia noble portrait
+		(TAOMEncyclopediaSettlementPortrait, bound to the native HeroVM: portrait, name, link to the hero page, hint), with the
+		kind of claim under each. The scroll area is the tree popup's, so a long list pans the same way.
+	-->
+	<Constants>
+		<Constant Name="Popup.CloseButton.Width" BrushLayer="Default" BrushName="Popup.CloseButton" BrushValueType="Width"/>
+		<Constant Name="Popup.CloseButton.Height" BrushLayer="Default" BrushName="Popup.CloseButton" BrushValueType="Height"/>
+	</Constants>
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+			<Children>
+
+				<!--Dim: covers and holds the mouse for the whole screen-->
+				<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC"/>
+
+				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Canvas">
+					<Children>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="640" Brush="Frame1.Border" IsEnabled="true">
+							<Children>
+
+								<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+									<Children>
+										<Standard.Background />
+									</Children>
+								</Widget>
+
+								<!--Claimants-->
+								<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="100" MarginBottom="20" MarginLeft="20" MarginRight="20">
+									<Children>
+
+										<EncyclopediaTroopScrollablePanel Id="ClaimantsScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" InnerPanel="ClaimantsRect\InnerPanel" ClipRect="ClaimantsRect" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalScrollbar="..\ClaimantsHorizontalScrollbar" VerticalScrollbar="..\ClaimantsVerticalScrollbar" PanWithMouseEnabled="true" AutoHideScrollBars="true">
+											<Children>
+												<Widget Id="ClaimantsRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" DoNotAcceptEvents="true" ClipContents="true">
+													<Children>
+														<Widget Id="InnerPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
+															<Children>
+																<GridWidget Id="ClaimantsGrid" DataSource="{Claimants}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10" MarginBottom="40" DefaultCellWidth="170" DefaultCellHeight="210" ColumnCount="5">
+																	<ItemTemplate>
+																		<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="170" SuggestedHeight="210">
+																			<Children>
+																				<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+																					<Children>
+																						<TAOMEncyclopediaSettlementPortrait DataSource="{Hero}" />
+																						<TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="2" MarginLeft="6" MarginRight="6" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="17" Brush.TextHorizontalAlignment="Center" Text="@KindText"/>
+																					</Children>
+																				</ListPanel>
+																			</Children>
+																		</Widget>
+																	</ItemTemplate>
+																</GridWidget>
+															</Children>
+														</Widget>
+													</Children>
+												</Widget>
+											</Children>
+										</EncyclopediaTroopScrollablePanel>
+
+										<ScrollbarWidget Id="ClaimantsVerticalScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="4" MarginBottom="20" MarginTop="15" AlignmentAxis="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Handle="ClaimantsVerticalScrollbarHandle" MinValue="0" MaxValue="100">
+											<Children>
+												<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed"/>
+												<BrushWidget Id="ClaimantsVerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
+											</Children>
+										</ScrollbarWidget>
+
+										<ScrollbarWidget Id="ClaimantsHorizontalScrollbar" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="40" MarginRight="55" MarginBottom="8" MarginTop="15" AlignmentAxis="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Handle="ClaimantsHorizontalScrollbarHandle" MinValue="0" MaxValue="100">
+											<Children>
+												<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed"/>
+												<BrushWidget Id="ClaimantsHorizontalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="8" VerticalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
+											</Children>
+										</ScrollbarWidget>
+
+									</Children>
+								</Widget>
+
+								<!--Title-->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="436" SuggestedHeight="100" HorizontalAlignment="Center" VerticalAlignment="Top" Sprite="StdAssets\tabbar_long">
+									<Children>
+										<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="390" SuggestedHeight="30" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="8" Brush="Kingdom.DecisionTitleBig.Text" Brush.FontSize="22" Text="@Title"/>
+									</Children>
+								</Widget>
+
+							</Children>
+						</BrushWidget>
+					</Children>
+				</BrushWidget>
+
+				<!--Close-->
+				<ButtonWidget Id="ClosePopupWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Popup.CloseButton.Width" SuggestedHeight="!Popup.CloseButton.Height" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="450" PositionYOffset="-270" Brush="Popup.CloseButton" Command.Click="ExecuteClose"/>
+
+			</Children>
+		</Widget>
+	</Window>
+</Prefab>

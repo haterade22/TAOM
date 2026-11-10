@@ -430,6 +430,7 @@ engineering detail in `features/` and link outward from here.
 - [releases/enlistment-discord.md](releases/enlistment-discord.md) — Enlistment + Battlefield Promotions feature announcement (#375/#376). Every number in it is quoted from the shipped config; re-verify against `enlistment_config.json` / `field_commission_config.json` before posting if either has been retuned since
 - [scenes/minas-tirith-plan-discord.md](scenes/minas-tirith-plan-discord.md): the Minas Tirith scene plan reformatted for Discord; the working copy is [scenes/minas-tirith-plan.md](scenes/minas-tirith-plan.md)
 - [releases/player-switcher-discord.md](releases/player-switcher-discord.md): Play as an Existing Lord feature announcement (#514). Single player-facing message in raw Discord markdown, 3,308 characters against the 4,000 Nitro cap. Keeps the takeover path and the wanderer-adoption path as separate bullets, because the August round-up conflated them and described only the adoption path
+- [releases/realms-discord.md](releases/realms-discord.md): Realms feature announcement (feudal titles, claims, vassals, offices, the Return of the King). Single player-facing message in raw Discord markdown, 3720 characters against the 4,000 Nitro cap. Every number is quoted from the shipped realms_titles.xml; re-verify before posting if it has been retuned, and post only once the merge into TAOM ships
 
 ## Modder handbook (ModuleData, file by file)
 
