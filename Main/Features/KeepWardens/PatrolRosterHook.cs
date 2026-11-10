@@ -25,7 +25,7 @@ public sealed class PatrolRosterHook : IPatrolRosterHook
         for (var i = 0; i < counts.Length; i++)
             counts[i] = baseRoster.GetElementNumber(i);
 
-        var limit = (int)Campaign.Current.Models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party).ResultNumber;
+        var limit = (int)Campaign.Current.Models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, party.IsCurrentlyAtSea).ResultNumber;
         var fitted = _service.Fit(counts, limit);
         if (ReferenceEquals(fitted, counts))
             return baseRoster;

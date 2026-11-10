@@ -490,6 +490,10 @@ class InstalledEngineTests(unittest.TestCase):
             "v1.5.6": {"addresses": (("get_current_action_type", 0x6E3A40), ("set_attack_state", 0x6E16F0),
                                      ("set_scripted_target_entity", 0x6E45D0)),
                        "counts": {"MountAndBlade": 686, "Engine": 1563, "DotNet": 33}},
+            # v1.5.7 (changeset 125802) keeps the v1.5.6 method counts.
+            "v1.5.7": {"addresses": (("get_current_action_type", 0x6E3A70), ("set_attack_state", 0x6E1720),
+                                     ("set_scripted_target_entity", 0x6E4600)),
+                       "counts": {"MountAndBlade": 686, "Engine": 1563, "DotNet": 33}},
         }
         version = nd.engine_version(dll)
         if version not in pins:

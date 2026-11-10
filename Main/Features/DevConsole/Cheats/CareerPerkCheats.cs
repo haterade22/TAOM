@@ -78,14 +78,14 @@ public static class CareerPerkCheats
         Probe(snapshot, "max hitpoints", () => models.CharacterStatsModel.MaxHitpoints(hero.CharacterObject, true));
         Probe(snapshot, "party speed", () => party.SpeedExplained);
         Probe(snapshot, "seeing range", () => party.SeeingRangeExplanation);
-        Probe(snapshot, "party size limit (tooltip value)", () => models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, true));
+        Probe(snapshot, "party size limit (tooltip value)", () => models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, party.IsCurrentlyAtSea, includeDescriptions: true));
         // The tooltip value above skips the TroopWeight penalty and is not cut to an int. The next line is
-        // what the engine enforces if it recomputed now: PartyBase.PartySizeLimit is
-        // (int)GetPartyMemberSizeLimit(this, false).ResultNumber. Only a gap between that value and the
-        // cached line below means the cache is stale until a roster bump (#768).
+        // what the engine enforces if it recomputed now: v1.5.7 PartyBase.PartySizeLimit is
+        // (int)GetPartyMemberSizeLimit(this, IsMobile && MobileParty.IsCurrentlyAtSea).ResultNumber. Only a gap
+        // between that value and the cached line below means the cache is stale until a roster bump (#768).
         try
         {
-            snapshot.Probes.Add($"party size limit (enforcement value now) {(int)models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, false).ResultNumber}");
+            snapshot.Probes.Add($"party size limit (enforcement value now) {(int)models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, party.IsCurrentlyAtSea).ResultNumber}");
         }
         catch (Exception ex)
         {
