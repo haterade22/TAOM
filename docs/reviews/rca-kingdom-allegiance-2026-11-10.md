@@ -44,5 +44,5 @@ Finding 3: gate the start scenarios (Last Stand, invasions) so they never move a
 
 ## Rules to codify
 
-- **Proposed rule line for `.claude/rules/gamemodels.md` rule 1:** before overriding a model method, grep the base model (and the engine) for every call of that method, the base class's own virtual self-calls included, and classify each reader. FOLLOW-UP no issue: a harness rule edit goes in a follow-up commit (deep-review Step 3e commit graph).
-- **Proposed rule line for `.claude/rules/adapters.md`** (repeat of #952): a singleton adapter that must hold engine objects between calls of one operation exposes a release the service calls in a `finally`; otherwise it carries the object inside the snapshot. FOLLOW-UP no issue: same follow-up commit as the line above.
+- **`.claude/rules/gamemodels.md` rule 1** (applied 2026-11-10, in the commit after the fix): before overriding a model method, grep the base model (and the engine) for every call of that method, the base class's own virtual self-calls included, and decide for each reader whether the override must answer it.
+- **`.claude/rules/adapters.md`** (repeat of #952; applied in the same commit): a singleton adapter that must hold engine objects between calls of one operation exposes a release the service calls in a `finally`; otherwise it carries the object inside the snapshot.
