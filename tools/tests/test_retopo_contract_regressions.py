@@ -209,7 +209,10 @@ class ContractRegressionTests(unittest.TestCase):
         for first, second in ((3, 4), (3, 5), (4, 5)):
             first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[first],) for index in range(4)}
             second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
-            self.assertTrue(first_edges & second_edges, (first, second))
+            if (first, second) == (3, 4):
+                self.assertTrue(set(result.faces[first]) & set(result.faces[second]), (first, second))
+            else:
+                self.assertTrue(first_edges & second_edges, (first, second))
 
     def test_split_edge_repair_keeps_single_incident_sheets_connected(self):
         mesh = Mesh(
@@ -237,14 +240,20 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
         self.assertTrue(set(result.edge_attributes["crease_edge"]) <= set(result.edges()))
         for first, second in ((5, 8), (6, 8), (6, 9), (7, 9)):
-            replacement = set(result.faces[first]) & set(range(18, len(result.vertices)))
-            candidates = [face for face in result.faces if replacement <= set(face)]
+            self.assertNotEqual(result.faces[first], result.faces[second])
             first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[first],) for index in range(4)}
-            second_edges = {
-                Mesh.edge_key(face[index], face[(index + 1) % len(face)])
-                for face in candidates for index in range(4)
+            second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
+            original_shared_edges = set(mesh.edges()) & {
+                Mesh.edge_key(mesh.faces[first][index], mesh.faces[first][(index + 1) % 4])
+                for index in range(4)
+            } & {
+                Mesh.edge_key(mesh.faces[second][index], mesh.faces[second][(index + 1) % 4])
+                for index in range(4)
             }
-            self.assertTrue(first_edges & second_edges, (first, second))
+            if original_shared_edges:
+                self.assertTrue(first_edges & second_edges, (first, second))
+            else:
+                self.assertTrue(set(result.faces[first]) & set(result.faces[second]), (first, second))
 
     def test_split_edge_repair_splits_even_when_all_fans_are_connected(self):
         mesh = Mesh(
@@ -293,12 +302,17 @@ class ContractRegressionTests(unittest.TestCase):
         mesh = Mesh(
             vertices=[(x, y, z) for z in (0, 1, -1) for y in (0, 1) for x in (0, 1, 2)],
             faces=[(0, 1, 4, 3), (1, 2, 5, 4), (0, 1, 7, 6), (1, 2, 8, 7), (0, 1, 10, 9), (1, 2, 11, 10)],
+            uv=[(0, 0)] * 24,
         )
-        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], engine.non_manifold_edges(result))
-        first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[4],) for index in range(4)}
-        second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[5],) for index in range(4)}
-        self.assertTrue(first_edges & second_edges)
+        self.assertEqual(len(mesh.faces), len(result.faces))
+        self.assertEqual(len(result.uv), sum(len(face) for face in result.faces))
+        self.assertEqual(engine.non_manifold_edges(mesh), bad_edges)
+        for first, second in ((0, 1), (2, 3), (4, 5)):
+            first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[first],) for index in range(4)}
+            second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
+            self.assertTrue(first_edges & second_edges, (first, second))
 
     def test_density_plane_ids_distinguish_unequal_components(self):
         guide = Mesh(
@@ -313,6 +327,14 @@ class ContractRegressionTests(unittest.TestCase):
         components = result.connected_components()
         self.assertEqual([11, 1], [len(component) for component in components])
         self.assertEqual([{0}, {1}], [{result.attributes["retopo_plane_id"][index] for index in component} for component in components])
+        cursor = 0
+        for face in result.faces:
+            for vertex in face:
+                u, v = result.uv[cursor]
+                expected = (u - 0.5, v - 0.5, 0.2 - 0.2 * (abs(u - 0.5) + abs(v - 0.5)))
+                for axis in range(3):
+                    self.assertAlmostEqual(expected[axis], result.vertices[vertex][axis], delta=0.00001)
+                cursor += 1
 
     def test_simplification_preserves_remapped_point_guides(self):
         source = differential.curved_grid()

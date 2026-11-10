@@ -192,28 +192,67 @@ def non_manifold_edges(mesh: Mesh):
 def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     bad_edges = non_manifold_edges(mesh)
     result = mesh.copy()
-    if fix_split_edges:
-        adjacency = {edge: [] for edge in bad_edges}
+    if not fix_split_edges:
+        result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
+        return result, bad_edges
+
+    if all(len(face) == 3 for face in mesh.faces):
         for face_index, face in enumerate(mesh.faces):
-            for index, vertex in enumerate(face):
-                edge = Mesh.edge_key(vertex, face[(index + 1) % len(face)])
-                if edge in adjacency:
-                    adjacency[edge].append(face_index)
+            replacements = {}
+            for old in face:
+                replacements[old] = len(result.vertices)
+                result.vertices.append(result.vertices[old])
+                for name, values in result.attributes.items():
+                    values.append(values[old])
+            result.faces[face_index] = tuple(replacements[index] for index in face)
+
+    protected_edges = set(bad_edges)
+    while non_manifold_edges(result):
+        edge = non_manifold_edges(result)[0]
         face_edges = [
             {
                 Mesh.edge_key(face[index], face[(index + 1) % len(face)])
                 for index in range(len(face))
             }
-            for face in mesh.faces
+            for face in result.faces
         ]
-        vertex_faces = {index: [] for index in range(len(mesh.vertices))}
-        for face_index, face in enumerate(mesh.faces):
+        face_indices = [index for index, edges in enumerate(face_edges) if edge in edges]
+        original_faces = {index: result.faces[index] for index in face_indices}
+        vertex_faces = {index: [] for index in range(len(result.vertices))}
+        for face_index, face in enumerate(result.faces):
             for vertex in face:
                 vertex_faces[vertex].append(face_index)
-        assigned = {}
-        face_sources = list(range(len(mesh.faces)))
-        for edge, face_indices in adjacency.items():
-            parents = {index: index for index in range(len(mesh.faces))}
+        parents = {index: index for index in range(len(result.faces))}
+
+        def root(index):
+            while parents[index] != index:
+                parents[index] = parents[parents[index]]
+                index = parents[index]
+            return index
+
+        candidates = set(vertex_faces[edge[0]]) | set(vertex_faces[edge[1]])
+        for first in candidates:
+            for second in candidates:
+                if second <= first:
+                    continue
+                shared = face_edges[first] & face_edges[second]
+                if any(
+                    candidate not in protected_edges and any(vertex in candidate for vertex in edge)
+                    for candidate in shared
+                ):
+                    first_root, second_root = root(first), root(second)
+                    if first_root != second_root:
+                        parents[second_root] = first_root
+        fans = {}
+        for face_index in candidates:
+            fans.setdefault(root(face_index), []).append(face_index)
+        preserved = max(
+            (fan for fan in fans.values() if any(index in face_indices for index in fan)),
+            key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
+        )
+        retained = set(sorted(index for index in preserved if index in face_indices)[:2])
+        for old in edge:
+            parents = {index: index for index in range(len(result.faces))}
 
             def root(index):
                 while parents[index] != index:
@@ -221,44 +260,38 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                     index = parents[index]
                 return index
 
-            candidates = set(vertex_faces[edge[0]]) | set(vertex_faces[edge[1]])
+            candidates = vertex_faces[old]
             for first in candidates:
                 for second in candidates:
                     if second <= first:
                         continue
                     shared = face_edges[first] & face_edges[second]
                     if any(
-                        candidate != edge and any(vertex in candidate for vertex in edge)
+                        candidate not in protected_edges and old in candidate
                         for candidate in shared
                     ):
                         first_root, second_root = root(first), root(second)
                         if first_root != second_root:
                             parents[second_root] = first_root
             fans = {}
-            for face_index in range(len(mesh.faces)):
+            for face_index in candidates:
                 fans.setdefault(root(face_index), []).append(face_index)
-            preserved = max(
-                (fan for fan in fans.values() if any(index in face_indices for index in fan)),
-                key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
-            )
-            preserved_root = root(preserved[0])
-            preserved_incident = sorted(index for index in fans[preserved_root] if index in face_indices)
-            retained = set(preserved_incident[:2])
-            for fan_root, fan in fans.items():
+            for fan in fans.values():
                 incident = sorted(index for index in fan if index in face_indices)
-                if not incident:
+                if not incident or all(index in retained for index in incident):
                     continue
-                groups = [incident] if len(incident) <= 2 else [[index] for index in incident]
+                if retained.intersection(fan) or len(incident) > 2:
+                    groups = [[index] for index in incident]
+                else:
+                    groups = [incident]
                 for group in groups:
-                    if fan_root == preserved_root and all(index in retained for index in group):
+                    if all(index in retained for index in group):
                         continue
-                    replacements = {}
-                    for old in edge:
-                        replacements[old] = len(result.vertices)
-                        result.vertices.append(mesh.vertices[old])
-                        for name, values in result.attributes.items():
-                            values.append(values[old])
-                    if len(incident) <= 2:
+                    replacement = len(result.vertices)
+                    result.vertices.append(result.vertices[old])
+                    for name, values in result.attributes.items():
+                        values.append(values[old])
+                    if len(groups) == 1:
                         target_faces = fan
                     else:
                         target_faces = []
@@ -272,67 +305,58 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                                 if candidate in target_faces or (candidate in incident and candidate != group[0]):
                                     continue
                                 if any(
-                                    candidate_edge != edge and any(vertex in candidate_edge for vertex in edge)
+                                    candidate_edge != edge and candidate_edge not in protected_edges and old in candidate_edge
                                     for candidate_edge in face_edges[current] & face_edges[candidate]
                                 ):
                                     pending.append(candidate)
                     for face_index in target_faces:
-                        new_face = tuple(replacements.get(index, index) for index in mesh.faces[face_index])
-                        if face_index in assigned:
-                            if face_index in face_indices:
-                                combined = {**replacements, **assigned[face_index]}
-                                result.faces[face_index] = tuple(combined.get(index, index) for index in mesh.faces[face_index])
-                                assigned[face_index] = combined
-                            elif assigned[face_index] != replacements:
-                                result.faces.append(new_face)
-                                face_sources.append(face_index)
-                        else:
-                            result.faces[face_index] = new_face
-                            assigned[face_index] = replacements
-    if fix_split_edges:
-        for bad_edge in non_manifold_edges(result):
-            incident = [
-                face_index for face_index, face in enumerate(result.faces)
-                if bad_edge[0] in face and bad_edge[1] in face
-            ]
-            for face_index in incident[2:]:
-                replacements = {}
-                for old in bad_edge:
-                    replacements[old] = len(result.vertices)
-                    result.vertices.append(result.vertices[old])
-                    for name, values in result.attributes.items():
-                        values.append(values[old])
-                result.faces[face_index] = tuple(replacements.get(index, index) for index in result.faces[face_index])
-        original_vertex_count = len(mesh.vertices)
-        edge_attributes = {name: {} for name in mesh.edge_attributes}
-        for face_index, new_face in enumerate(result.faces):
-            original_face = mesh.faces[face_sources[face_index]]
-            for corner, first in enumerate(original_face):
-                second = original_face[(corner + 1) % len(original_face)]
-                original_edge = Mesh.edge_key(first, second)
-                new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
-                for name, values in mesh.edge_attributes.items():
-                    if original_edge in values:
-                        edge_attributes[name][new_edge] = values[original_edge]
-        result.edge_attributes = edge_attributes
-        used = set(range(original_vertex_count)) | {index for face in result.faces for index in face} | {index for edge in result.lines for index in edge}
-        ordered = sorted(used)
-        remap = {old: new for new, old in enumerate(ordered)}
-        result.vertices = [result.vertices[index] for index in ordered]
-        result.faces = [tuple(remap[index] for index in face) for face in result.faces]
-        result.lines = [tuple(remap[index] for index in edge) for edge in result.lines]
-        for name, values in result.attributes.items():
-            if len(values) == original_vertex_count:
-                result.attributes[name] = [values[index] for index in ordered]
-        result.edge_attributes = {
-            name: {
-                Mesh.edge_key(remap[first], remap[second]): value
-                for (first, second), value in values.items()
-                if first in remap and second in remap
-            }
-            for name, values in result.edge_attributes.items()
+                        result.faces[face_index] = tuple(
+                            replacement if index == old else index for index in result.faces[face_index]
+                        )
+        for face_index, original_face in original_faces.items():
+            corner = next(
+                index for index, vertex in enumerate(original_face)
+                if Mesh.edge_key(vertex, original_face[(index + 1) % len(original_face)]) == edge
+            )
+            new_face = result.faces[face_index]
+            protected_edges.add(Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)]))
+
+    original_vertex_count = len(result.vertices)
+    edge_attributes = {name: {} for name in mesh.edge_attributes}
+    for face_index, new_face in enumerate(result.faces):
+        original_face = mesh.faces[face_index]
+        for corner, first in enumerate(original_face):
+            second = original_face[(corner + 1) % len(original_face)]
+            original_edge = Mesh.edge_key(first, second)
+            new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
+            for name, values in mesh.edge_attributes.items():
+                if original_edge in values:
+                    edge_attributes[name][new_edge] = values[original_edge]
+    result.edge_attributes = edge_attributes
+    used = {index for face in result.faces for index in face} | {index for edge in result.lines for index in edge}
+    ordered = sorted(used)
+    remap = {old: new for new, old in enumerate(ordered)}
+    result.vertices = [result.vertices[index] for index in ordered]
+    result.faces = [tuple(remap[index] for index in face) for face in result.faces]
+    result.lines = [tuple(remap[index] for index in edge) for edge in result.lines]
+    for name, values in result.attributes.items():
+        if len(values) == original_vertex_count:
+            result.attributes[name] = [values[index] for index in ordered]
+    result.edge_attributes = {
+        name: {
+            Mesh.edge_key(remap[first], remap[second]): value
+            for (first, second), value in values.items()
+            if first in remap and second in remap
         }
-        bad_edges = [Mesh.edge_key(remap[first], remap[second]) for first, second in bad_edges]
+        for name, values in result.edge_attributes.items()
+    }
+
+    def debug_index(old):
+        if old in remap:
+            return remap[old]
+        return min(remap.values(), key=lambda other: math.dist(mesh.vertices[old], result.vertices[other]))
+
+    bad_edges = [Mesh.edge_key(debug_index(first), debug_index(second)) for first, second in bad_edges]
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
 

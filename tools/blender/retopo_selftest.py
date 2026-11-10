@@ -215,7 +215,7 @@ def main():
         mirrored = bpy.context.active_object
         assert "point_guide" in mirrored.data.attributes
         assert len(mirrored.data.attributes["point_guide"].data) == len(mirrored.data.vertices)
-        assert sum(item.value for item in mirrored.data.attributes["point_guide"].data) > 0
+        assert sum(item.value for item in mirrored.data.attributes["point_guide"].data) == 4
         return {
             "status": "ok",
             "flatten_vertices": len(flat.data.vertices),
