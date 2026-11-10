@@ -715,3 +715,9 @@ An engine-ordering claim (`MapEventSide.Clear()` nulls the main party's map even
 - **Prevent:** a guard justified by engine ordering cites the decompiled lines, and its test fixtures are built from the shapes those lines produce.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `rca-enlistment-battle-encounter-rule-2026-10-26.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before a toggle stands down a charge, list every way into the thing being charged (#1109, 2026-11-09)
+Gold mode moved the elite recruit charge from `OnUnitRecruited` (resource) into `GetTroopRecruitmentCost` (gold) and stood the event handler down. The party screen's prisoner recruit never calls that model, so eight elites became free from prisoners. v1.4.8 raises `OnUnitRecruited` from three places, one of them inside `RecruitPrisonersCampaignBehavior`'s own listener, and this was the second time TAOM missed that raiser (finding 6 of `rca-special-resources-outflow-2026-09-11.md`).
+- **Why missed:** the plan asked where the new charge goes and not which paths the old charge covered; the research read the recruit VM and `RecruitmentCampaignBehavior` and stopped at two raisers.
+- **Prevent:** when a change moves a charge from one seam to another, list every path the OLD seam caught (for an event: grep `CampaignEventDispatcher.Instance.<Event>(` across the whole decompile; for a model method: its engine callers and `Main/` callers) and give each path a line in the plan: covered by the new seam, charged separately, or accepted. The raisers of `OnUnitRecruited` are in `docs/reference/engine/campaignevents-and-campaignbehavior.md`.
+- **Source:** `docs/reviews/rca-special-resources-gold-mode-2026-11-09.md` findings 1, 2 and 4.
