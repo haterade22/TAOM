@@ -169,9 +169,9 @@ public class EliteEmissaryServiceTests
         var a = list.Offers[0]; // cost 30
         var b = list.Offers[1]; // cost 50
         Assert.IsTrue(a.CanAfford);
-        Assert.AreEqual(1, a.MaxAffordableQuantity);
+        Assert.AreEqual(1, a.MaxQuantity);
         Assert.IsFalse(b.CanAfford);
-        Assert.AreEqual(0, b.MaxAffordableQuantity);
+        Assert.AreEqual(0, b.MaxQuantity);
     }
 
     [TestMethod]
@@ -179,8 +179,8 @@ public class EliteEmissaryServiceTests
     {
         _resourceService.GetCurrentAmount(Hero, Kingdom, Culture).Returns(95f);
         var list = _service.BuildOfferList(Hero, Kingdom, Culture);
-        Assert.AreEqual(3, list.Offers[0].MaxAffordableQuantity); // 95 / 30 = 3
-        Assert.AreEqual(1, list.Offers[1].MaxAffordableQuantity); // 95 / 50 = 1
+        Assert.AreEqual(3, list.Offers[0].MaxQuantity); // 95 / 30 = 3
+        Assert.AreEqual(1, list.Offers[1].MaxQuantity); // 95 / 50 = 1
     }
 
     [TestMethod]
@@ -290,12 +290,13 @@ public class EliteEmissaryServiceTests
         cap: 500f, startingAmount: 0f, dailyPerTown: 0.2f,
         perBattleVictoryBase: 14f, perRaid: 12f, perSiegeVictory: 20f, perPrisoner: 2f);
 
-    private void TurnGoldOn(int rate = 200, int gold = 0)
+    private void TurnGoldOn(int rate = 200, int gold = 0, int freeSlots = int.MaxValue)
     {
         _goldOption.EliteTroopsCostGoldOnly.Returns(true);
         _goldOption.EmissaryGoldPerResource.Returns(rate);
         _player.Gold.Returns(gold);
         _player.ChargeGold(Arg.Any<int>()).Returns(true);
+        _party.GetMainPartyFreeSlots().Returns(freeSlots);
         SetBuyer(Kingdom, Culture);
     }
 
@@ -377,8 +378,8 @@ public class EliteEmissaryServiceTests
         var list = _service.BuildOfferList(Hero, Kingdom, Culture);
 
         Assert.AreEqual(12000f, list.PlayerBalance);
-        Assert.AreEqual(2, list.Offers[0].MaxAffordableQuantity);
-        Assert.AreEqual(1, list.Offers[1].MaxAffordableQuantity);
+        Assert.AreEqual(2, list.Offers[0].MaxQuantity);
+        Assert.AreEqual(1, list.Offers[1].MaxQuantity);
     }
 
     [TestMethod]
@@ -464,7 +465,7 @@ public class EliteEmissaryServiceTests
 
         var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
 
-        Assert.AreEqual(7158278, offer.MaxAffordableQuantity);
+        Assert.AreEqual(7158278, offer.MaxQuantity);
     }
 
     [TestMethod]
@@ -495,7 +496,7 @@ public class EliteEmissaryServiceTests
     {
         TurnGoldOn(rate: 50, gold: int.MaxValue);
         _resourceConfig.GetTroopCost("gondor_a").Returns(Cost("gondor_a", 6));
-        var max = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].MaxAffordableQuantity;
+        var max = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].MaxQuantity;
         _party.GrantTroop("gondor_a", max).Returns(true);
 
         var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", max);
@@ -554,5 +555,204 @@ public class EliteEmissaryServiceTests
         _resourceService.Received(1).ChargeMerchantPurchase(Hero, Kingdom, Culture, "gondor_a", 1);
         AssertNoGoldTaken();
         _outcomes.DidNotReceive().Pass(GoldCheckId, Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    // ── Gold-only: the party limit ──
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_RoomBelowTheGoldLimit_CapsAtTheRoomAndNamesTheParty()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 2);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(2, offer.MaxQuantity);
+        Assert.IsTrue(offer.CanAfford);
+        Assert.IsTrue(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_PartyFull_OffersNoneButStaysAffordable()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 0);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(0, offer.MaxQuantity);
+        Assert.IsTrue(offer.CanAfford);
+        Assert.IsTrue(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_GoldBelowTheRoom_KeepsTheGoldLimit()
+    {
+        TurnGoldOn(rate: 100, gold: 6000, freeSlots: 50);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(2, offer.MaxQuantity);
+        Assert.IsFalse(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_GoldEqualsTheRoom_IsNotLimitedByTheParty()
+    {
+        TurnGoldOn(rate: 100, gold: 6000, freeSlots: 2);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(2, offer.MaxQuantity);
+        Assert.IsFalse(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_NoGoldAndNoRoom_ReportsTheGoldNotTheParty()
+    {
+        TurnGoldOn(rate: 100, gold: 0, freeSlots: 0);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.IsFalse(offer.CanAfford);
+        Assert.IsFalse(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOff_NeverReadsTheParty()
+    {
+        _resourceService.GetCurrentAmount(Hero, Kingdom, Culture).Returns(100f);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(3, offer.MaxQuantity);
+        Assert.IsFalse(offer.LimitedByPartySize);
+        _party.DidNotReceive().GetMainPartyFreeSlots();
+        _party.DidNotReceive().GetPartySlotsPerTroop(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOn_MoreThanTheRoom_PartyFullAndNothingMoves()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 2);
+        _party.GrantTroop("gondor_a", 3).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 3);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.PartyFull, r.Status);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+        AssertNoGoldTaken();
+        AssertNoResourceTaken();
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOn_ExactlyTheRoom_Succeeds()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 2);
+        _party.GrantTroop("gondor_a", 2).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 2);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        _player.Received(1).ChargeGold(6000);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOn_NoGoldAndNoRoom_ReportsTheGold()
+    {
+        TurnGoldOn(rate: 100, gold: 0, freeSlots: 0);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 1);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Unaffordable, r.Status);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOff_MoreThanTheRoom_StillSucceeds()
+    {
+        _party.GetMainPartyFreeSlots().Returns(0);
+        _resourceService.CanAffordMerchantPurchase(Hero, Kingdom, Culture, "gondor_a", 3).Returns(true);
+        _party.GrantTroop("gondor_a", 3).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 3);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        _party.DidNotReceive().GetMainPartyFreeSlots();
+        _party.DidNotReceive().GetPartySlotsPerTroop(Arg.Any<string>());
+    }
+
+    // ── Gold-only: Troop Weight. The free slots are weighted, so one troop fills its weight. ──
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_HeavyTroop_RoomIsTheFreeSlotsOverItsWeight()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 10);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(3f);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(3, offer.MaxQuantity);
+        Assert.IsTrue(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_TroopHeavierThanTheRoom_OffersNoneButStaysAffordable()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 10);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(20f);
+
+        var offer = _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0];
+
+        Assert.AreEqual(0, offer.MaxQuantity);
+        Assert.IsTrue(offer.CanAfford);
+        Assert.IsTrue(offer.LimitedByPartySize);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOn_InfiniteWeight_OffersNone()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 10);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(float.PositiveInfinity);
+
+        Assert.AreEqual(0, _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].MaxQuantity);
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(0f)]
+    [DataRow(-2f)]
+    [DataRow(0.5f)]
+    [DataRow(1f)]
+    public void BuildOfferList_GoldOn_SlotsPerTroopNotAboveOne_FillsOneSlotEach(float slots)
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 4);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(slots);
+
+        Assert.AreEqual(4, _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].MaxQuantity);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOn_HeavyTroop_MoreThanTheWeightedRoom_PartyFullAndNothingMoves()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 10);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(3f);
+        _party.GrantTroop("gondor_a", 4).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 4);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.PartyFull, r.Status);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+        AssertNoGoldTaken();
+    }
+
+    [TestMethod]
+    public void Purchase_GoldOn_HeavyTroop_ExactlyTheWeightedRoom_Succeeds()
+    {
+        TurnGoldOn(rate: 100, gold: 100000, freeSlots: 10);
+        _party.GetPartySlotsPerTroop("gondor_a").Returns(3f);
+        _party.GrantTroop("gondor_a", 3).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 3);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        _player.Received(1).ChargeGold(9000);
     }
 }

@@ -29,5 +29,7 @@
     <string id="taom_emissary_failed" text="사절이 거래를 완료할 수 없었습니다." />
     <string id="taom_emissary_coop_guest" text="사절은 이 캠페인의 호스트와만 거래합니다." />
     <string id="taom_emissary_denars" text="denars" />
+    <string id="taom_emissary_party_full" text="Your party has no room for these troops." />
+    <string id="taom_emissary_offer_room" text="Your party has room for {MAX}." />
   </strings>
 </base>

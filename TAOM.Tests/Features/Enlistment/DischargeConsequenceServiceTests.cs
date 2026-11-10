@@ -346,6 +346,8 @@ public class DischargeConsequenceServiceTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
         container.RegisterInstance(Substitute.For<ICoopPresenceProvider>());
+        // TroopWeightIoC registers it in Main/IoC.cs; IPlayerPartyAdapter reads troop weights (#1108).
+        container.RegisterInstance(Substitute.For<global::TAOM.Features.TroopWeight.ITroopWeightService>());
         EnlistmentIoC.RegisterEnlistmentFeature(container);
         global::TAOM.Features.Enlistment.Duties.DutiesIoC.RegisterEnlistmentDutiesFeature(container);
 

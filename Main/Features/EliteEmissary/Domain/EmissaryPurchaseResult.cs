@@ -13,6 +13,8 @@ public enum EmissaryPurchaseStatus
     Invalid,
     /// <summary>Charge/afford passed but the roster grant failed (no party, unknown troop id).</summary>
     Failed,
+    /// <summary>Under the gold-only option, the quantity is more than the party's free slots.</summary>
+    PartyFull,
 }
 
 /// <summary>Typed outcome of <see cref="IEliteEmissaryService.Purchase"/> — never throws; the boundary

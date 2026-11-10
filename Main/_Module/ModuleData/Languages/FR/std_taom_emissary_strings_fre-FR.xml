@@ -29,5 +29,7 @@
     <string id="taom_emissary_failed" text="L'émissaire n'a pas pu conclure la transaction." />
     <string id="taom_emissary_coop_guest" text="L'émissaire ne traite qu'avec l'hôte de cette campagne." />
     <string id="taom_emissary_denars" text="denars" />
+    <string id="taom_emissary_party_full" text="Your party has no room for these troops." />
+    <string id="taom_emissary_offer_room" text="Your party has room for {MAX}." />
   </strings>
 </base>
