@@ -171,6 +171,12 @@ public class AiPartySizeService : IAiPartySizeService
         ApplyRelief(ref consumption, TaomSettings.Instance?.AiPartyFoodRelief ?? DefaultFoodRelief, ForageText);
     }
 
+    // AI wage relief (#461). MakeClanFinancialEvaluation sets an AI clan's PaymentLimit from its
+    // leader's gold (200-600 in the bottom bracket), which a large party blows past immediately;
+    // HasUnpaidWages then pins to 1.0, worth a flat -20 morale, and vanilla's morale desertion
+    // starts eating the party regardless of its size limit. TaomPartyWageModel.GetTotalWage calls
+    // this and not GetCharacterWage, so Campaign.AverageWage (which the garrison-donation math
+    // divides by) keeps reading true per-head cost.
     public void ApplyAiWageRelief(MobileParty party, ref ExplainedNumber wage)
     {
         if (!IsEnabled() || party == null)

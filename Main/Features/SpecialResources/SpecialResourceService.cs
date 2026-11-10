@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
 using TAOM.Features.CareerSystem;
@@ -14,16 +16,19 @@ public class SpecialResourceService : ISpecialResourceService
     private readonly ISpecialResourceStorageService _storage;
     private readonly IModLogger _logger;
     private readonly ICareerPassiveService _passiveService;
+    private readonly SpecialResourceGoldSettings _goldSettings;
+    private TextObject _goldUpkeepText;
     private readonly HashSet<string> _loggedResolveKeys = new();
     private float _pendingSpend;
     private bool _inSession;
 
-    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage, IModLogger logger, ICareerPassiveService passiveService = null)
+    public SpecialResourceService(ISpecialResourceConfigProvider config, ISpecialResourceStorageService storage, IModLogger logger, ICareerPassiveService passiveService = null, SpecialResourceGoldSettings goldSettings = null)
     {
         _config = config;
         _storage = storage;
         _logger = logger;
         _passiveService = passiveService;
+        _goldSettings = goldSettings;
     }
 
     public SpecialResource ResolveResource(string kingdomId, string cultureId)
@@ -514,6 +519,62 @@ public class SpecialResourceService : ISpecialResourceService
         _logger.LogInfo($"[SpecRes] CHEAT GRANT: {amount:+0.##;-0.##;0} {resource.DisplayName} | {before:F0}→{after:F0} (cap {resource.Cap:F0})");
         return new ResourceGrantResult(true, resource.Id, resource.DisplayName, before, after, resource.Cap);
     }
+
+    public bool IsGoldMode => _goldSettings != null && !_goldSettings.UseSpecialResources;
+
+    public int GoldPerResourcePoint => _goldSettings?.GoldPerResourcePoint ?? SpecialResourceGoldSettings.DefaultGoldPerPoint;
+
+    // Gold mode (#1109). The resource-only career passives (upkeep modifier, upgrade-cost modifier,
+    // gain) deliberately do nothing here: the price is the configured points x the rate, and the
+    // vanilla factors already on the ExplainedNumber scale it because it goes in with Add.
+    public void ApplyGoldUpgradeSurcharge(bool isMainParty, string upgradeTargetId, ref ExplainedNumber cost)
+    {
+        if (!isMainParty || !IsGoldMode || upgradeTargetId == null) return;
+
+        var points = _config.GetTroopCost(upgradeTargetId)?.UpgradeCost ?? 0;
+        cost.Add(SpecialResourceGoldPrice.ToGold(points, GoldPerResourcePoint));
+    }
+
+    public int GetGoldRecruitSurcharge(bool isMainHeroBuyer, string troopId)
+    {
+        if (!isMainHeroBuyer || !IsGoldMode || troopId == null) return 0;
+
+        var points = _config.GetTroopCost(troopId)?.RecruitCost ?? 0;
+        return SpecialResourceGoldPrice.ToGold(points, GoldPerResourcePoint);
+    }
+
+    public int GetGoldPrisonerRecruitCharge(IEnumerable<string> troopIds)
+    {
+        if (!IsGoldMode || troopIds == null) return 0;
+
+        // Summed in double, so a large prisoner batch saturates in ToGold instead of wrapping an int.
+        double points = 0d;
+        foreach (var troopId in troopIds)
+        {
+            if (troopId == null) continue;
+            var perUnit = _config.GetTroopCost(troopId)?.RecruitCost ?? 0;
+            if (perUnit > 0) points += perUnit;
+        }
+        return SpecialResourceGoldPrice.ToGold(points, GoldPerResourcePoint);
+    }
+
+    public void ApplyGoldUpkeepSurcharge(bool isMainParty, IEnumerable<TroopUpkeepInfo> roster, ref ExplainedNumber wage)
+    {
+        if (!isMainParty || !IsGoldMode || roster == null) return;
+
+        // Summed in double and priced once, so a rounding step is not paid per troop type.
+        double points = 0d;
+        foreach (var troop in roster)
+        {
+            if (troop == null || troop.Count <= 0) continue;
+            var perUnit = _config.GetTroopCost(troop.TroopId)?.DailyUpkeep ?? 0f;
+            if (FiniteFloatValidator.IsFinite(perUnit) && perUnit > 0f)
+                points += (double)perUnit * troop.Count;
+        }
+        wage.Add(SpecialResourceGoldPrice.ToGold(points, GoldPerResourcePoint), GoldUpkeepText);
+    }
+
+    private TextObject GoldUpkeepText => _goldUpkeepText ??= new TextObject("{=taom_res_gold_upkeep}Elite troop upkeep");
 
     private void AddCapped(string heroId, SpecialResource resource, float amount)
     {

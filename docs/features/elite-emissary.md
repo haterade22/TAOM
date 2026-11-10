@@ -160,6 +160,16 @@ Omitted (no special-resource mapping): goblin, mistymountainorcs.
 - `HideEmissaryWhenNoResource` (default on) — hide the option at settlements whose owner faction has no
   special resource; off = show it disabled with a hint.
 
+### Gold mode (#1109)
+
+With MCM "Use Special Resources" off (see [special-resources.md](special-resources.md#gold-mode-1109)) the emissary sells for gold and no resource moves:
+
+- The price is `merchant_cost` x "Gold Per Resource Point" (`SpecialResourceGoldPrice.ToGold`; a quantity is priced once as `merchant_cost x quantity x rate`). The list's balance is the player's gold, read through `IPlayerPartyAdapter.GetMainHeroGold`.
+- The player may buy a faction's elites only when their own resolved resource is that faction's (`BuyerSharesResource`). On a mismatch `HasPurchasableOffers` is false, so the menu option hides when `HideEmissaryWhenNoResource` is on (default) and otherwise shows disabled through the existing "no elite trade" path; `BuildOfferList` returns `NoResourceAvailable` and `Purchase` returns `NotOffered`.
+- One purchase may cost at most `SpecialResourceGoldPrice.MaxGold` (10,000,000): past it `ToGold` saturates and would undercharge, so the offer's maximum quantity stops at `MaxGold / price` and a larger quantity is refused as Unaffordable before anything is granted.
+- Purchase checks gold >= total, grants the troops, then debits through `IPlayerPartyAdapter.TryDebitMainHeroGold` (false for an amount <= 0, no hero, or too little gold; it calls `GiveGoldAction.ApplyBetweenCharacters`). `ChargeMerchantPurchase` is never called. A failed debit after a successful grant is logged as an error.
+- `EmissaryOfferList.ForGold` and `EmissaryPurchaseResult.PaidInGold` carry the mode to the presenter, whose `Currency` helper prints `{=taom_emissary_gold}gold` where it printed the resource name.
+
 ## Key Files
 
 | File | Purpose |
@@ -171,7 +181,7 @@ Omitted (no special-resource mapping): goblin, mistymountainorcs.
 | `Main/Features/EliteEmissary/Hooks/EliteEmissaryBehavior.cs` | Menu options + dialog wiring + key-settlement validation |
 | `Main/Features/EliteEmissary/Hooks/EliteEmissaryInquiryPresenter.cs` | The two-step purchase inquiry (boundary) + the non-authority refusal |
 | `Main/Adapters/SettlementOwnerAdapter.cs` | Settlement → owner kingdom/culture |
-| `Main/Adapters/PlayerPartyAdapter.cs` | Grant troops to the main party roster |
+| `Main/Adapters/PlayerPartyAdapter.cs` | Grant troops to the main party roster; main hero kingdom, culture and gold reads and the gold debit (#1109) |
 | `Main/Features/SpecialResources/...` | `MerchantCost` field + `*MerchantPurchase` methods |
 | `Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml` | Key settlements + culture offers |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | `merchant_cost` prices |
@@ -191,6 +201,7 @@ Omitted (no special-resource mapping): goblin, mistymountainorcs.
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryServiceTests.cs` — offer build, afford-gray, owner
   resolution, the full Purchase decision tree (Invalid / NoResource / NotOffered / Unaffordable / Success /
   grant-fail), grant-before-charge ordering.
+- Gold twins in `EliteEmissaryServiceTests` (#1109, 12 tests): buyer resource matches, differs or is unresolved, the gold price and balance, the afford boundary at gold equals price, grant before debit with no resource charge, no grant or debit when unaffordable or not offered, and a failed debit logging an error.
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryConfigProviderTests.cs` — valid/missing/malformed XML,
   unknown-culture drop, unpriced-troop drop, enabled flag.
 - `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — the two `*MerchantPurchase`
@@ -220,6 +231,7 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 
 ## Changelog
 
+- 2026-11-09 (#1109): gold mode. With "Use Special Resources" off the emissary sells at `merchant_cost` x rate in gold, to a buyer whose own resource is the owner faction's. New key `taom_emissary_gold`.
 - 2026-08-03 — Purchases are declined on a non-authoritative co-op peer before the resource is charged, with a new `{=taom_emissary_coop_guest}` message (not yet registered in `taom_emissary_strings.xml`, not yet translated). `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` both gained an `ICoopSessionProvider` parameter.
 - 2026-06-25 — Feature created. 11 cultures authored, L36+ elites, verified capitals.
 

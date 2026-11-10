@@ -9,6 +9,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.AiPartySize;
 using TAOM.Features.CulturalFeats;
+using TAOM.Features.SpecialResources;
 
 namespace TAOM.Features.TroopProgression.Models;
 
@@ -21,17 +22,20 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     private readonly ICareerPassiveService _careerPassives;
     private readonly IWageModifierService _wageModifiers;
     private readonly IAiPartySizeService _aiPartySize;
+    private readonly ISpecialResourceService _specialResources;
 
     public TaomPartyWageModel(
         ITroopCostService costService,
         ICareerPassiveService careerPassives,
         IWageModifierService wageModifiers,
-        IAiPartySizeService aiPartySize)
+        IAiPartySizeService aiPartySize,
+        ISpecialResourceService specialResources)
     {
         _costService = costService;
         _careerPassives = careerPassives;
         _wageModifiers = wageModifiers;
         _aiPartySize = aiPartySize;
+        _specialResources = specialResources;
     }
 
     public override int MaxWagePaymentLimit => 20000;
@@ -65,13 +69,9 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             ref result, garrisonInputs, partyInputs, rohanMountedWageBonus, mountedWageShare, CultureText);
 
         _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.TroopWages);
-        // AI wage relief (#461). MakeClanFinancialEvaluation sets an AI clan's PaymentLimit from its
-        // leader's gold (200-600 in the bottom bracket), which a large party blows past immediately;
-        // HasUnpaidWages then pins to 1.0, worth a flat -20 morale, and vanilla's morale desertion
-        // starts eating the party regardless of its size limit. Deliberately applied here and not in
-        // GetCharacterWage, so Campaign.AverageWage — which the garrison-donation math divides by —
-        // keeps reading true per-head cost.
+        // Why the relief is here and not in GetCharacterWage: AiPartySizeService.ApplyAiWageRelief.
         _aiPartySize.ApplyAiWageRelief(mobileParty, ref result);
+        _specialResources.ApplyGoldUpkeepSurcharge(mobileParty.IsMainParty, PartyUpkeepReader.Enumerate(troopRoster), ref result);
         return result;
     }
 
@@ -88,7 +88,7 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             feats,
             CultureText,
             buyerPerks);
-        return new ExplainedNumber(cost, includeDescriptions: false);
+        return new ExplainedNumber(cost + _specialResources.GetGoldRecruitSurcharge(buyerHero != null && buyerHero == Hero.MainHero, troop.StringId), includeDescriptions: false);
     }
 
     private static WageFeatInputs ResolveGarrisonInputs(MobileParty mobileParty)

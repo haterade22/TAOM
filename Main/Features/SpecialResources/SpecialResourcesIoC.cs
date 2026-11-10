@@ -9,6 +9,7 @@ public static class SpecialResourcesIoC
     {
         container.Register<ISpecialResourceConfigProvider, SpecialResourceConfigProvider>(Reuse.Singleton);
         container.Register<ISpecialResourceStorageService, SpecialResourceStorageService>(Reuse.Singleton);
+        container.Register<SpecialResourceGoldSettings>(Reuse.Singleton);
         container.Register<ISpecialResourceService, SpecialResourceService>(Reuse.Singleton);
         container.Register<IOnPartyUpgradeResourceCheck, PartyUpgradeResourceCheckHook>(Reuse.Singleton);
         container.Register<IOnRecruitmentResourceGate, RecruitmentResourceGateHook>(Reuse.Singleton);

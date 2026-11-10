@@ -235,7 +235,9 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (8 events, desertion, notifications) |
 | `Main/Features/SpecialResources/SpecialResourceEarnPolicy.cs` | The pure earn decisions: participation victory, dedicated-server suppression, which event types pay the battle credit |
 | `Main/Features/SpecialResources/SpecialResourceMessages.cs` | Pure builders for the four outflow messages (daily, overdraft, upgrade spend, recruit charge) |
-| `Main/Features/SpecialResources/PartyUpkeepReader.cs` | Reads the party roster and town count off engine objects for the tick, the tooltip and the console dump |
+| `Main/Features/SpecialResources/PartyUpkeepReader.cs` | Reads the party roster and town count off engine objects for the tick, the tooltip and the console dump; `Enumerate(TroopRoster)` is the deferred iterator behind the gold-mode wage surcharge (#1109) and `GetHeroIds` is the shared kingdom/culture read |
+| `Main/Features/SpecialResources/SpecialResourceGoldPrice.cs` | Pure `ToGold(points, rate)`: the one points-to-gold conversion of gold mode (#1109) |
+| `Main/Features/SpecialResources/SpecialResourceGoldSettings.cs` | The two MCM knobs of gold mode, null-safe and clamped (#1109) |
 | `Main/Features/SpecialResources/Domain/DailyResourceBreakdown.cs` | Earning, upkeep, net, per-troop upkeep lines, `DaysUntilDepleted` |
 | `Main/Features/SpecialResources/SpecialResourcesIoC.cs` | DryIoc registrations |
 | `Main/Features/SpecialResources/Domain/SpecialResource.cs` | Resource definition (KingdomIds/CultureIds lists) |
@@ -283,6 +285,7 @@ question, not a defect, and the daily toast now makes it visible.
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
 - `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6, plus the 2 `GetById` tests for a known and an unknown or null id) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record
 - `SpecialResourceTroopBadgeTests.cs`: 14 tests (#590). The predicate for each cost field alone, the merchant-only row shape and a null row; the rows for a captain, an elephant rider and a ram in their fixed order with zero fields omitted; the paid-in note only when the player's resource differs; no digit baked into any label
+- Gold mode (#1109): `SpecialResourceGoldPriceTests` (5: multiply, half-away rounding, NaN, non-positive inputs, saturation), `SpecialResourceGoldSettingsTests` (5: defaults, toggle, clamp both ends), `SpecialResourceServiceGoldModeTests` (22: the toggle, the upkeep, upgrade and recruit surcharges for main and other parties, resource mode never enumerating the roster, a NaN upkeep row, the pinned decision that a wage factor scales the surcharge, and the prisoner charge with its saturation), `SpecialResourceGoldModeHookTests` (6: the two hook seams), `SpecialResourcesGoldModeWiringTests` (7 source pins: tick, `CanEarn`, `OnUnitRecruited`, the map bar, and the prisoner behavior's event, order and registration), `GoldModeModelWiringTests` (5 source pins on the two GameModels), the gold-wiring test in `SpecialResourcesWiringTests`, and 4 gold tests in `SpecialResourceTroopBadgeTests`
 - `RecruitGatePatchTests.cs`: 4 tests (#600). `RecruitCartGrouping` counts duplicates, skips nulls, keeps first-seen order; the `ExecuteDone` prefix carries Patch51's category and targets `ExecuteDone`
 - `TroopResourceCostDataTests.cs`: 5 tests reading the shipped XML: every `resource_id` names a configured resource, every badged row reaches a `SpecialResources\` icon sprite, every Gondor troop at level 41 or above carries an `upgrade_cost` and a `daily_upkeep`, no tree troop's `daily_upkeep` exceeds the 0.4 band ceiling, and every volunteer-pooled upkeep troop carries a `recruit_cost` (#600)
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
@@ -387,6 +390,48 @@ ends up controlling, resolving it from the character-creation culture and the li
 - Center-screen notification: "X elite troops deserted — your [Resource] are depleted!"
 - Uses vanilla `TroopRoster.AddToCounts(character, -count)` for roster removal
 
+## Gold mode (#1109)
+
+With the MCM toggle "Use Special Resources" off, the elite troops are paid for in gold instead. The default is on, which is today's behaviour, and nothing below runs.
+
+**Settings** (`TaomSettings`, group "Special Resources"; read through `SpecialResourceGoldSettings`, which caches `TaomSettings.Instance` on its first non-null read):
+
+| Setting | Default | Range | Meaning |
+|---|---|---|---|
+| `UseSpecialResources` | true | on/off | off = gold mode |
+| `GoldPerResourcePoint` | 100 | 1 to 1000 (clamped on read) | gold per point of `upgrade_cost`, `recruit_cost`, `daily_upkeep` and `merchant_cost` |
+
+`ISpecialResourceService.IsGoldMode` is the one gating read; every consumer already held the service, so no constructor changed except the two GameModels. `SpecialResourceService` takes the settings as an optional last constructor parameter (null = resource mode). `SpecialResourceGoldPrice.ToGold(points, rate)` is the one conversion: round half away from zero, 0 unless both inputs are positive (NaN gives 0), saturating at `MaxGold` (10,000,000, exact in `ExplainedNumber`'s float).
+
+**What stands down and what takes over** (main party only, balances kept while off):
+
+| Surface | Gold mode |
+|---|---|
+| Daily tick (earning, upkeep, desertion) | `OnDailyTickHero` returns before the service is called; `_isFirstTickAfterLoad` stays true, so switching back on gets the grace tick |
+| Battle, raid, siege, prisoner, tournament, hideout earning | `CanEarn()` returns false (before the dedicated-server log line) |
+| Recruit charge (`OnUnitRecruited`) | returns before `ChargeRecruitCost` |
+| Party-screen prisoner recruit | `SpecialResourceGoldPrisonerBehavior` listens to `OnMainPartyPrisonerRecruitedEvent` and takes `recruit_cost` x rate per recruited unit in gold (`GetGoldPrisonerRecruitCharge`). That path never prices through `GetTroopRecruitmentCost`; it listens to the prisoner event and not `OnUnitRecruited`, which also fires for volunteers and mercenaries whose price already holds the surcharge |
+| Party-screen upgrade gate (Patch26, three patches) and volunteer recruit gate (Patch51, two patches) | `PartyUpgradeResourceCheckHook` returns cost 0 and no resource name; `RecruitmentResourceGateHook.EvaluateCart` returns `Allowed` |
+| Map-bar entry | hidden through the no-resource branch (`var resource = _service.IsGoldMode ? null : _lastResource`) |
+| Upgrade cost | `TaomPartyTroopUpgradeModel.GetGoldCostForUpgrade` adds `upgrade_cost` of the upgrade target x rate when `party == PartyBase.MainParty` |
+| Recruit cost | `TaomPartyWageModel.GetTroopRecruitmentCost` adds `recruit_cost` x rate when `buyerHero == Hero.MainHero`: the volunteer screen, tavern mercenaries and Supply Lines troop orders |
+| Daily upkeep | `TaomPartyWageModel.GetTotalWage` adds the roster's `daily_upkeep` x count x rate when `mobileParty.IsMainParty`, from the `troopRoster` ARGUMENT (wage-limit desertion calls it with another roster); the iterator is deferred, so resource mode never walks the roster |
+| Elite Emissary | sells at `merchant_cost` x rate in gold, see [elite-emissary.md](elite-emissary.md) |
+| Encyclopedia badge | the coin sprite (`General\Icons\Coin@2x`), "Costs extra gold", the same rows priced in gold, no "paid in your own resource" note |
+
+**Accepted behaviour, decided with the maintainer**
+
+- The surcharge goes in with `ExplainedNumber.Add`, so every factor on the number scales it (Frugal, the TAOM wage feats, the career `TroopWages` and `TroopUpgradeCost` passives), the same as vanilla gold. `ExplainedNumber` computes `BaseNumber + BaseNumber * SumOfFactors`, so the order of the calls does not matter. The resource-only career passives (`SpecialResourceUpkeepModifier`, `SpecialResourceUpgradeCostModifier`, `SpecialResourceGain`) do nothing in gold mode.
+- `GetTroopRecruitmentCost` has no party argument, so `buyerHero == Hero.MainHero` is the only signal. Two AI-driven paths can still carry the surcharge when the player owns the town: garrison auto-recruit (`GarrisonRecruitmentCampaignBehavior`, billed as `AutoRecruitmentExpenses / 5`) and the `LordNeedsGarrisonTroops` quest reward. Both move only for a troop with a `recruit_cost`. Closing them needs a context flag set at each call site, which is a new patch for a small gain.
+- Unpaid gold wages replace resource desertion: vanilla's unpaid-wage morale penalty and morale desertion apply instead of the 10% a day resource desertion.
+- `MaxWagePaymentLimit` (20000) is a sentinel, not a cap. UNVERIFIED, latent: an old save whose main party stored a payment limit of 10000 reads as limited and could lose up to 20 troops a day once gold-mode `TotalWage` passes 10000. The same risk exists today; gold mode makes it easier to hit. A follow-up should check a real save.
+- `IncidentsCampaignBehaviour` prices one incident at `MainParty.TotalWage * -7`, so it scales with the surcharge.
+- `RecruitVolunteerTroopVM` prices a recruit once in its constructor, so flipping the toggle while the screen is open charges the stale price; the next open reprices. UNVERIFIED whether MCM can be opened from that screen.
+- Prisoner recruits are charged like resource mode charges them, and like it they are not gated (#563): the party screen closes whatever the gold, and `GiveGoldAction` takes at most the gold the hero holds, as the resource floors at zero. Vanilla's own gold-removed message reports the payment. v1.4.8 raises `OnUnitRecruited` from three places: `RecruitmentVM.cs:895` (volunteers), `RecruitmentCampaignBehavior.cs:795` (mercenaries) and `RecruitPrisonersCampaignBehavior.cs:126-131` (prisoners, once per unit, on `OnMainPartyPrisonerRecruited`); the comments at `SpecialResourcesBehavior.cs:69-73` and `SpecialResourceService.cs:251-254` are right.
+- Supply Lines prices troops through `GetTroopRecruitmentCost(troop, Hero.MainHero)` and then applies its own markup (plus 15 percent per tier above 1, and 1.5 at war), so a Supply Lines order of a troop with a `recruit_cost` carries the surcharge times that markup, about 2.6 at tier 6 during a war. Resource mode never charged `recruit_cost` there (its delivery raises no `OnUnitRecruited`). Kept on the maintainer's word.
+- The recruit screen's cart preview adds `TroopWage` (`GetCharacterWage`, deliberately free of the surcharge), so it shows less than the next day's wage for an elite with a `daily_upkeep`; the party wage tooltip shows the real amount once the troop has joined.
+- `taom.print_special_resources` still prints the resource breakdown, which gold mode does not charge.
+
 ## Performance
 
 - IoC.Resolve cached in MapBarMixin constructor (not per-refresh)
@@ -399,6 +444,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ## Changelog
 
+- 2026-11-09 (#1109): gold mode. The MCM toggle "Use Special Resources" (default on) switches the elite troops to gold: upgrade, recruit and daily upkeep are `upgrade_cost`, `recruit_cost` and `daily_upkeep` x "Gold Per Resource Point" (default 100) through the two GameModels, the Elite Emissary sells at `merchant_cost` x rate in gold, earning, desertion and the map-bar entry stand down, and the badge shows a coin. Main party only; balances are kept while off. Party-screen prisoner recruits pay `recruit_cost` x rate in gold through `SpecialResourceGoldPrisonerBehavior`. Three keys: `taom_res_gold_upkeep`, `taom_res_badge_title_gold`, `taom_emissary_gold` (the upgrade surcharge carries no label: vanilla builds the upgrade cost without descriptions, so none could show). Owed in game: toggle off, open the party screen, the recruit screen and the encyclopedia.
 - 2026-10-09 (#790): a "send troops" hideout clear paid per_hideout_clear twice; it now pays only when the hideout event is finalized. No unit test covers it (campaign entry point). Owed in game: one send-troops clear writes one [SpecRes] HIDEOUT: line, also after saving in its success menu and loading.
 - 2026-10-09 (#770): a raid no longer also pays the battle credit for a militia-only fight. `SpecialResourceEarnPolicy.PaysBattleCredit(type, beatAFieldParty)` is false for a raid, forced supplies and forced volunteers unless the enemy side held a non-militia, non-villager party that started with healthy troops, so a real fight against a lord inside those events (defending your own village, a lord inside a village you raid, an army raid in which a lord's party is beaten) pays. `per_raid` is paid once, only when the village state is Looted and the player is on the winning side, so a resisted raid no longer pays it twice, and the tournament, hideout and raid toasts show the earned delta, so a `per_raid="0"` culture sees none. Tests in `SpecialResourceEarnPolicyTests`. Owed in game: a raid with a same-faction lord inside shows one BATTLE and one RAID line; defending your own village from an enemy lord raid and winning shows one BATTLE line and no RAID; a militia-only raid shows no BATTLE and one RAID; a Rohan raid with no lord shows no BATTLE line, a `RAID: +0` line and no toast.
 - 2026-10-08 (#767): the career gain scales every earning source (battle, raid, siege, prisoners, tournament, hideout) as well as the daily town income, through one public `ScaleEarned` that the map-bar tooltip also reads. Upkeep has one computation (`BuildUpkeepLines`) shared by the breakdown and desertion, so a non-finite upkeep modifier charges the configured upkeep and a troop whose career-modified upkeep is zero no longer deserts or triggers warnings. The six earning methods share one `Earn` helper. Tests in `SpecialResourceGainTests`.

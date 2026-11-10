@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
 
@@ -17,6 +18,32 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
     }
 
     public string GetMainHeroId() => Hero.MainHero?.StringId;
+
+    public string GetMainHeroKingdomId() => Hero.MainHero?.Clan?.Kingdom?.StringId;
+
+    public string GetMainHeroCultureId() => Hero.MainHero?.Culture?.StringId;
+
+    public int GetMainHeroGold() => Hero.MainHero?.Gold ?? 0;
+
+    public bool TryDebitMainHeroGold(int amount)
+    {
+        var hero = Hero.MainHero;
+        // GiveGoldAction clamps the amount to the giver's gold and does not reject a negative one
+        // (a negative amount would mint gold), so both are refused here.
+        if (hero == null || amount <= 0 || hero.Gold < amount)
+            return false;
+
+        try
+        {
+            GiveGoldAction.ApplyBetweenCharacters(hero, null, amount, disableNotification: true);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[EliteEmissary] TryDebitMainHeroGold({amount}) failed: {ex.Message}");
+            return false;
+        }
+    }
 
     public bool GrantTroop(string troopId, int count)
     {

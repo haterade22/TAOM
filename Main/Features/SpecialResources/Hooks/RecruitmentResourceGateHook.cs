@@ -12,5 +12,5 @@ public class RecruitmentResourceGateHook : IOnRecruitmentResourceGate
     }
 
     public RecruitGateResult EvaluateCart(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart)
-        => _service.CanAffordRecruit(heroId, kingdomId, cultureId, cart);
+        => _service.IsGoldMode ? RecruitGateResult.Allowed : _service.CanAffordRecruit(heroId, kingdomId, cultureId, cart);
 }

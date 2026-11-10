@@ -2433,6 +2433,8 @@
     <string id="taom_res_badge_upkeep" text="일일 유지비" />
     <string id="taom_res_badge_emissary" text="정예 사절 가격" />
     <string id="taom_res_badge_paid_in" text="승급, 모병, 유지비는 보유한 {RESOURCE}(으)로 지불됩니다" />
+    <string id="taom_res_badge_title_gold" text="Costs extra gold" />
+    <string id="taom_res_gold_upkeep" text="Elite troop upkeep" />
     <string id="taom_patch_apply_failed" text="TAOM: {PHASE} 단계에서 패치 그룹 적용에 실패했습니다: {GROUPS}. 해당 그룹의 일부 수정 사항은 이번 세션에서 비활성화됩니다. 원인은 TAOM 로그에 기록되어 있습니다." />
     <string id="taom_patch_apply_phase_startup" text="시작" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
 
 namespace TAOM.Features.SpecialResources;
 
@@ -29,6 +30,29 @@ internal static class PartyUpkeepReader
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// The roster GetTotalWage was handed (the party's MemberRoster, or the desertion model's
+    /// troopsToDesert) as upkeep inputs, one element at a time and only while the caller walks it
+    /// (#1109): the wage model hands this to the gold-mode surcharge, which does not enumerate in
+    /// resource mode. Heroes carry no cost row and are skipped.
+    /// </summary>
+    public static IEnumerable<TroopUpkeepInfo> Enumerate(TroopRoster roster)
+    {
+        if (roster == null) yield break;
+
+        foreach (var element in roster.GetTroopRoster())
+        {
+            if (element.Character != null && !element.Character.IsHero)
+                yield return new TroopUpkeepInfo(element.Character.StringId, element.Number);
+        }
+    }
+
+    public static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
+    {
+        kingdomId = hero?.Clan?.Kingdom?.StringId;
+        cultureId = hero?.Culture?.StringId;
     }
 
     public static int CountOwnedTowns(Hero hero)

@@ -2852,6 +2852,8 @@
 	<string id="taom_res_badge_upkeep" text="{=taom_res_badge_upkeep}Upkeep per day" />
 	<string id="taom_res_badge_emissary" text="{=taom_res_badge_emissary}Elite Emissary price" />
 	<string id="taom_res_badge_paid_in" text="{=taom_res_badge_paid_in}Upgrades, recruits and upkeep are paid in your own {RESOURCE}" />
+	<string id="taom_res_badge_title_gold" text="{=taom_res_badge_title_gold}Costs extra gold" />
+	<string id="taom_res_gold_upkeep" text="{=taom_res_gold_upkeep}Elite troop upkeep" />
 
 
 

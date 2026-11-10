@@ -178,4 +178,41 @@ public class SpecialResourceTroopBadgeTests
         foreach (var row in SpecialResourceTroopBadge.Rows(cost))
             AssertNoBakedNumber(row.Key);
     }
+
+    // ── Gold mode (#1109): the same rows priced in gold, behind a coin ──
+
+    [TestMethod]
+    public void RowsInGold_MultipliesEachAmountByRate()
+    {
+        var cost = new TroopResourceCostEntry("ironpass_ram_breaker", "gems", upgradeCost: 2, dailyUpkeep: 0.1f, recruitCost: 10, merchantCost: 10);
+
+        var rows = SpecialResourceTroopBadge.RowsInGold(cost, 100);
+
+        CollectionAssert.AreEqual(
+            new List<string> { "{=taom_res_badge_upgrade}", "{=taom_res_badge_recruit}", "{=taom_res_badge_upkeep}", "{=taom_res_badge_emissary}" },
+            rows.Select(r => r.Key.Value.Substring(0, r.Key.Value.IndexOf('}') + 1)).ToList());
+        CollectionAssert.AreEqual(new List<string> { "200", "1000", "10", "1000" }, rows.Select(r => r.Value).ToList());
+    }
+
+    [TestMethod]
+    public void RowsInGold_OmitsEveryZeroField_AndNullCostIsEmpty()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_vanguard", "war_spoils", upgradeCost: 2, dailyUpkeep: 0f);
+
+        Assert.AreEqual(1, SpecialResourceTroopBadge.RowsInGold(cost, 50).Count);
+        Assert.AreEqual(0, SpecialResourceTroopBadge.RowsInGold(null, 50).Count);
+    }
+
+    [TestMethod]
+    public void TitleInGold_UsesGoldKey()
+    {
+        var title = SpecialResourceTroopBadge.TitleInGold();
+
+        StringAssert.StartsWith(title.Value, "{=taom_res_badge_title_gold}");
+        AssertNoBakedNumber(title);
+    }
+
+    [TestMethod]
+    public void GoldSprite_IsTheVanillaCoinOfTheTaomSpriteSheet() =>
+        Assert.AreEqual("General\\Icons\\Coin@2x", SpecialResourceTroopBadge.GoldSprite);
 }

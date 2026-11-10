@@ -1105,7 +1105,7 @@ public class SubModule : MBSubModuleBase
         var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
-        campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
+        campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize, IoC.Resolve<ISpecialResourceService>()));
         campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment, IoC.Resolve<ICastleRecruitmentService>()));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
@@ -1211,7 +1211,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomCaravanModel(culturalFeats, IoC.Resolve<TAOM.Features.CaravanTrade.ICaravanTradeService>()));
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
-        campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopCostService>()));
+        campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopCostService>(), IoC.Resolve<ISpecialResourceService>()));
         var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
         campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), aiPartySize, IoC.Resolve<IModLogger>()));
         campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize));
@@ -1261,6 +1261,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.CoopInterop.IDedicatedServerProvider>());
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
+        campaignStarter.AddBehavior(new SpecialResourceGoldPrisonerBehavior(specialResourceService, specialResourceLogger));
 
         // TEMPORARY: troop-count diagnostic (special-currency undercount investigation). Dumps the
         // main party's raw + weighted counts to the log on party-screen open. Remove with the behavior.
