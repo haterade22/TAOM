@@ -227,6 +227,8 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         if (cost == null) return;
 
         var totalCost = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count);
+        if (!(totalCost > 0f)) return;
+
         _storage.Add(heroId, resource.Id, -totalCost);
         _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }

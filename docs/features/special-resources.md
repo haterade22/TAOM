@@ -250,7 +250,7 @@ the next daily tick. AI lords pay none of these costs either way.
 
 Under co-op the option is per peer, like other `TaomSettings` toggles: Patch26 and Patch51 read the client's
 MCM value, and a dedicated server reads `taom-server-settings.json`. The authority holds the balances and reads
-its own value for the recruit charge and daily upkeep, so a mismatch changes what each peer's gates allow and
+its own value for the recruit charge, the upgrade charge and daily upkeep, so a mismatch changes what each peer's gates allow and
 what the authority charges. A mismatch cannot cost troops, because remote desertion is off during a session.
 Both settings are simulation-relevant, so `SettingsFingerprint`
 hashes them and the "Special Resources" code in each peer's log shows a mismatch.
@@ -434,6 +434,12 @@ ends up controlling, resolving it from the character-creation culture and the li
 Under BannerlordCoop the server raises `OnUnitRecruited` for a guest's recruitment, and the event carries no party. Patch113 (`CoopRecruitAttributionPatch`) brackets Coop's `HandleOnRecruitmentDone` with `RecruitAttributionScope`, and `SpecialResourcesBehavior.OnUnitRecruited` hands the scoped party's leader to `RecruitChargePolicy.ChoosePayer` (since #967 C1 through `SpecialResourceEarningService.ChargeRecruit`): a client pays nothing, a scoped recruit charges that party's leader (or nobody, never the host), a dedicated server without a scope charges nobody, a live session without a scope charges nobody (the authority's own `MainHero` pays nothing during a session), and anything else charges `Hero.MainHero` as before. The toast shows only when the payer is this machine's `MainHero`.
 
 **Not effective yet:** a guest's affordability gate (Patch51) reads a stale client balance, and the server's charge floors at zero, until balances are server-owned. Coop's prisoner and mercenary recruit paths never raise `OnUnitRecruited`, so their `recruit_cost` is never charged under co-op, host included. Both are tracked in #967. Single-player is unchanged. Detail: [coop-interop.md](coop-interop.md), [harmony-patch-registry.md](../reference/harmony-patch-registry.md).
+
+## Co-op upgrade charge (#967 C2)
+
+Coop's client replaces `PartyScreenLogic.DoneLogic`. Its prefix calls `Reset(true)`, which raises `AfterReset`, so `SpecialResourcesBehavior.OnPartyScreenReset` cancels the queued spend and the client commits nothing. On the server, `TryApplyTroopRosterDeltas` changes the roster, and `PartyDoneLogicHandler.ApplyUpgradedTroopHistory` stands in for `OnPlayerUpgradedTroops`: it grants the leader's upgrade XP. Patch144 (`CoopUpgradeChargePatch`) runs after that method and charges each target troop's `upgrade_cost` to the player Coop applied the screen for, through `SpecialResourceEarningService.ChargeCoopUpgrades` and `SpendForUpgrade`. The payer rule is `RecruitChargePolicy.ChoosePayer` with that player in the scope position, so a client pays nothing. The first charge seeds a guest's starting amount.
+
+**Not effective yet:** a guest sees the charge only at the next join, because the client balance stays stale until #967 C4. Until then the client's Patch26 gate and clamp read a balance that upgrades never lowered, and the server's charge floors at zero. #967 C5 makes careers server-owned, and until then the server may not hold a guest's career discount, so a guest can pay the full price. With Elite Troops Cost Gold Only on at the server, each row's `upgrade_cost` reads 0 and nothing is charged. Single-player is unchanged.
 
 ## Per-player earning under co-op (#967 C1)
 

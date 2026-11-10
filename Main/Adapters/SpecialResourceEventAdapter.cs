@@ -36,6 +36,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
     private bool _hideoutFailureLogged;
     private bool _dailyFailureLogged;
     private bool _recruitFailureLogged;
+    private bool _heroLookupFailureLogged;
 
     public SpecialResourceEventAdapter(
         IPlayerControlQuery playerControl,
@@ -213,6 +214,19 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
         }
     }
 
+    public EarnerRef DescribeHero(string heroId)
+    {
+        try
+        {
+            return heroId == null ? null : Describe(Hero.Find(heroId), null);
+        }
+        catch (Exception ex)
+        {
+            LogReadFailure(ref _heroLookupFailureLogged, "a hero by id", ex);
+            return null;
+        }
+    }
+
     public int ApplyDesertion(Hero hero, IReadOnlyList<TroopDesertionEntry> desertions)
     {
         var party = hero?.PartyBelongedTo;
@@ -288,7 +302,9 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
     {
         if (hero == null) return null;
 
-        var isLocal = hero == Hero.MainHero;
+        // Hero.MainHero reads Game.Current.PlayerTroop unguarded, and Coop's source says it is null on a dedicated
+        // server, where DescribeHero (Patch144) runs. So read the local hero null-safe.
+        var isLocal = hero == (Game.Current?.PlayerTroop as CharacterObject)?.HeroObject;
         // The local hero's party is the one the old code counted: the hero's own party, if any.
         var men = isLocal ? hero.PartyBelongedTo?.MemberRoster?.TotalManCount : partyManCount;
         return new EarnerRef(

@@ -401,6 +401,29 @@ public class SpecialResourceBreakdownTests
         _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
     }
 
+    // A merchant-only row, which is every row under the gold-only option: a co-op server must not write or
+    // log a zero charge for each upgrade.
+    [TestMethod]
+    public void SpendForUpgrade_RowWithoutUpgradeCost_WritesNothing()
+    {
+        CostRow("mordor_uruk_captain", dailyUpkeep: 0f, upgradeCost: 0, merchantCost: 20);
+
+        _service.SpendForUpgrade("hero1", "empire_s", null, "mordor_uruk_captain", 2);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void SpendForUpgrade_CareerModifierNaN_WritesNothing()
+    {
+        CostRow("mordor_uruk_captain", dailyUpkeep: 0f, upgradeCost: 4);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpgradeCostModifier).Returns(float.NaN);
+
+        _service.SpendForUpgrade("hero1", "empire_s", null, "mordor_uruk_captain", 2);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
     // A configured per-unit upkeep that is not finite or not above zero is not an upkeep row. The config
     // provider already turns NaN and Infinity into its 0 default, so these pin the service's own gate.
     private static readonly float[] UnusableUpkeep =

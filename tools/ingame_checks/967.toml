@@ -1,0 +1,19 @@
+# In-game checks for #967 C2, read by tools/ingame_verdict.py. The line is written by the authority: on a
+# dedicated server, run the reader with --ds-engine <stage>\engine; an in-process server writes it to the taom log.
+# Written by Main/Features/CoopInterop/Hooks/CoopUpgradeChargePatch.cs when a player's upgrade is charged.
+# NOT REACHED is the normal result without a co-op session, or with Elite Troops Cost Gold Only on at the server.
+issue = 967
+title = "Co-op: a player's troop upgrade charges upgrade_cost on the server"
+fixed_in = "fc7cd73c4"   # trunk on origin before the patch: the manifest ships with the emitter
+logs = ["taom-ds", "taom"]
+
+[[check]]
+id = "taom.coop.upgrade-charge"
+needs = "a co-op session on a dedicated server: as a guest with enough special resource, upgrade a troop into an elite that has an upgrade_cost, then press Done on the party screen"
+reached = ['\[Check\] id=taom\.coop\.upgrade-charge result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.coop\.upgrade-charge result=pass hero=\S+ charged=[\d.]+$']
+fail = ['\[Check\] id=taom\.coop\.upgrade-charge result=fail ']
+absence = "not-reached"
+
+[[human]]
+claim = "after the guest leaves and joins again, the guest's balance is lower by the upgrade_cost of the upgrade"

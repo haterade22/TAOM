@@ -1235,12 +1235,15 @@ public class SubModule : MBSubModuleBase
         var specialResourceService = IoC.Resolve<ISpecialResourceService>();
         var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
         var specialResourceLogger = IoC.Resolve<IModLogger>();
+        var specialResourceEarning = IoC.Resolve<SpecialResourceEarningService>();
+        var specialResourceEvents = IoC.Resolve<ISpecialResourceEventAdapter>();
         var specialResourceBehavior = new SpecialResourcesBehavior(
             specialResourceService, specialResourceStorage, specialResourceLogger,
-            IoC.Resolve<SpecialResourceEarningService>(),
-            IoC.Resolve<ISpecialResourceEventAdapter>());
+            specialResourceEarning, specialResourceEvents);
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
+        // Patch144 charges co-op upgrades with this campaign's earning service, the one the behavior holds.
+        Features.CoopInterop.Hooks.CoopUpgradeChargePatch.Initialize(specialResourceEvents, specialResourceEarning);
 
         // TEMPORARY: troop-count diagnostic (special-currency undercount investigation). Dumps the
         // main party's raw + weighted counts to the log on party-screen open. Remove with the behavior.
@@ -1862,6 +1865,7 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch34_QuickActions");
         TryPatchCategory("Patch109_TelcharsMark");
         TryPatchCategory("Patch113_CoopRecruitAttribution");
+        TryPatchCategory("Patch144_CoopUpgradeCharge");
         TryPatchCategory("Patch35_CompanionTactics");
         TryPatchCategory("Patch36_FiefManagement");
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(
