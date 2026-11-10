@@ -10,6 +10,119 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.4.1 (2026-11-10)
+
+Commits since v2.4.0: 4 (4 with the version label, 0 without).
+
+### Features
+
+#### feat(special-resources): v2.4.0 - option to pay elite troops in gold
+
+`bcd0f6fb`
+
+Players asked to turn special resources (Castar, War Spoils, Gems and
+the rest) off and pay for elite troops in gold instead (#1109). The MCM
+group "Special Resources" adds two settings:
+
+- Use Special Resources (default on, so nothing changes on update).
+- Gold Per Resource Point (default 100, 1 to 1000).
+
+With the toggle off, every resource price becomes gold at that rate:
+
+- Upgrading into an elite costs its upgrade_cost x rate on top of the
+  game's own gold price, in the party screen's own cost, check and
+  charge.
+- Recruiting an elite volunteer or tavern mercenary adds its
+  recruit_cost x rate to the recruit price. Supply Lines orders carry
+  it too, times their own tier and war markup.
+- Recruiting an elite from prisoners charges recruit_cost x rate in
+  gold when the party screen closes. Like the resource charge it is
+  not gated (#563): it takes at most the gold you hold.
+- Elite upkeep is added to the party's daily wages and shows as
+  "Elite troop upkeep" in the wage tooltip. Unpaid wages follow the
+  game's own rules; there is no resource desertion.
+- The Elite Emissary sells for merchant_cost x rate in gold, and only
+  to a player whose own resource is the owner faction's, so gold does
+  not open every faction's elites. One purchase stops at 10,000,000.
+- No resource is earned, the map-bar entry is hidden and the
+  encyclopedia badge shows a coin with the gold prices.
+
+Only the player's main party pays the extra gold; AI lords pay what
+they paid before. Balances are kept while the toggle is off and come
+back when it is switched on, with one grace day before upkeep.
+
+Known limitation: the recruit price has no party argument, so garrison
+auto-recruit in your own towns and the LordNeedsGarrisonTroops quest
+reward also carry the gold recruit price for the troops that have one.
+The recruit screen's wage preview leaves the gold upkeep out until the
+troop has joined.
+
+Three new strings (taom_res_gold_upkeep, taom_res_badge_title_gold,
+taom_emissary_gold) are English in all 12 languages until the
+translator runs.
+
+Deep review (tier 1: data flow, engine compatibility, XML) found no
+CRITICAL or HIGH; its findings are fixed or documented in
+docs/reviews/rca-special-resources-gold-mode-2026-11-09.md.
+
+Research: DefaultPartyTroopUpgradeModel.GetGoldCostForUpgrade,
+PartyWageModel.GetTroopRecruitmentCost and GetTotalWage callers,
+RecruitPrisonersCampaignBehavior, GiveGoldAction, ExplainedNumber
+(installed v1.4.8 DLLs)
+Save-compat: no save data; both settings are MCM and read live
+Not-tested: in game; owed checks are listed on #1109
+
+### Documentation
+
+#### docs: v2.4.0 - link the v2.4.0 release notes from the index
+
+`708a6a10`
+
+The v2.4.0 release added docs/releases/v2.4.0-discord.md and
+v2.4.0-testers.md without a row in docs/INDEX.md, so the trunk failed
+tools/tests/test_doc_graph_ratchet.py (orphans 23 against 22,
+components 28 against 26). The release verified the tree before the
+release commit wrote the notes, and nothing ran the tool tests after.
+
+Both notes now sit in the index beside the other release notes, and
+the /release skill's Phase 5 says to add those rows.
+
+#### docs(reviews): v2.4.0 - record the gold mode review and its lessons
+
+`2de1ca08`
+
+The #1109 deep review found eight elites free to recruit from
+prisoners in gold mode, the second time TAOM missed the prisoner
+raiser of OnUnitRecruited (the first was #558). The engine process doc
+now lists all three v1.4.8 raisers: the volunteer screen, dialog
+mercenaries and RecruitPrisonersCampaignBehavior's own listener.
+
+Two lessons join the master record: list every path an old charge
+covered before a toggle stands it down (campaign-mechanics), and add
+an ExplainedNumber label only when its creator asked for descriptions
+(gamemodels-services). The incident report is
+docs/reviews/rca-special-resources-gold-mode-2026-11-09.md.
+
+### Chores
+
+#### chore(release): v2.4.0 - pin the shipped Map and Armory, reseed troops
+
+`7383cc5a`
+
+tools/release_pins.json is the first pin on this line. It records the
+ModuleData fingerprints of the TAOM_Map and LOTRLOME_Armory that ship
+with v2.4.0 (TAOM_Map v2.4.0 sha256:6e9d81ad9c79, 49 files;
+LOTRLOME_Armory v2.4.0 sha256:1c3827bf3679, 464 files), so the next
+release's pairing check can tell whether either package changed. It
+was recorded after the build at the tag passed the stamp, package,
+validator and Armory reference checks.
+
+tools/shipped_troop_ids.txt now names v2.4.0 as the baseline of the
+TROOP_ID_REMOVED gate: 857 troop ids from 16 files, the same ids the
+branch baseline held.
+
+Not-tested: none (tool data)
+
 ## v2.4.0 (2026-11-08)
 
 Commits since v2.0.28: 815 (710 with the version label, 105 without).
