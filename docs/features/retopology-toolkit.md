@@ -110,7 +110,7 @@ and guide objects are preserved when generating a new output.
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Validity exceptions and reference density counts are explicit.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: thirty-seven regression tests for topology,
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: forty regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,

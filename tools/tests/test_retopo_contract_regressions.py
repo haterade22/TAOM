@@ -4,6 +4,22 @@ import unittest
 from tools.retopo_engine import Mesh, RetopoSettings, differential, engine
 
 
+def assert_manifold_connectors_preserved(test, mesh, result):
+    incidence = {}
+    for face_index, face in enumerate(mesh.faces):
+        for corner, vertex in enumerate(face):
+            edge = Mesh.edge_key(vertex, face[(corner + 1) % len(face)])
+            incidence.setdefault(edge, []).append((face_index, corner))
+    for edge, faces in incidence.items():
+        if len(faces) != 2 or edge in engine.non_manifold_edges(mesh):
+            continue
+        descendants = []
+        for face_index, corner in faces:
+            face = result.faces[face_index]
+            descendants.append(Mesh.edge_key(face[corner], face[(corner + 1) % len(face)]))
+        test.assertEqual(descendants[0], descendants[1], edge)
+
+
 class ContractRegressionTests(unittest.TestCase):
     def test_weld_preserves_faces_and_never_duplicates_a_corner(self):
         result = engine.flatten_to_patterns(differential.curved_grid(), simplify=True, merge_distance=0.01)
@@ -295,6 +311,53 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(13, len(result.vertices))
         self.assertEqual(14, len(result.edges()))
         self.assertTrue(set(result.faces[3]) & set(result.faces[4]))
+
+    def test_triangle_components_preserve_internal_manifold_edges(self):
+        cases = [
+            (
+                [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, 0), (-1, 0, 0)],
+                [(0, 1, 2), (1, 0, 3), (0, 1, 4), (0, 2, 3), (0, 2, 5)],
+            ),
+            (
+                [(0, 0, 0), (1, 0, 0), (2, 0, 0), (1, 1, 0), (1, 0, 1), (1, -1, 0)],
+                [(0, 1, 3), (1, 2, 3), (1, 0, 4), (2, 1, 4), (0, 1, 5), (1, 2, 5)],
+            ),
+        ]
+        for vertices, faces in cases:
+            with self.subTest(faces=faces):
+                mesh = Mesh(vertices=vertices, faces=faces)
+                result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+                self.assertEqual([], engine.non_manifold_edges(result))
+                assert_manifold_connectors_preserved(self, mesh, result)
+
+    def test_retained_face_choice_preserves_connectors_for_every_face_order(self):
+        vertices = [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (1, 0, 1), (0, 0, 1), (1, -1, 0), (0, -1, 0), (0, 1, 1), (1, -1, 1)]
+        incident = [(0, 1, 2, 3), (0, 1, 4, 5), (0, 1, 6, 7)]
+        for order in ((0, 1, 2), (0, 2, 1), (1, 0, 2), (1, 2, 0), (2, 0, 1), (2, 1, 0)):
+            with self.subTest(order=order):
+                faces = [incident[index] for index in order] + [(0, 3, 8, 5), (1, 4, 9, 6)]
+                mesh = Mesh(vertices=vertices, faces=faces)
+                result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+                self.assertEqual([], engine.non_manifold_edges(result))
+                assert_manifold_connectors_preserved(self, mesh, result)
+
+    def test_mixed_fan_repairs_preserve_all_manifold_connectors(self):
+        cases = [
+            (
+                [(index, 0, 0) for index in range(6)],
+                [(1, 0, 4), (5, 2, 0), (1, 0, 5), (1, 0, 2, 3), (1, 3, 4)],
+            ),
+            (
+                [(index, 0, 0) for index in range(6)],
+                [(0, 5, 4, 1), (4, 2, 1, 0), (0, 1, 5, 3), (3, 1, 5, 4), (3, 1, 4, 0)],
+            ),
+        ]
+        for vertices, faces in cases:
+            with self.subTest(faces=faces):
+                mesh = Mesh(vertices=vertices, faces=faces)
+                result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+                self.assertEqual([], engine.non_manifold_edges(result))
+                assert_manifold_connectors_preserved(self, mesh, result)
 
     def test_healthy_triangle_mesh_is_unchanged_by_repair(self):
         mesh = Mesh(

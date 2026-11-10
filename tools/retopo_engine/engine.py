@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import replace
+from itertools import combinations
 import math
 
 from .geometry import (
@@ -208,7 +209,8 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         split_faces = {
             face_index
             for component_faces in components.values()
-            if all(face_index in incident_faces for face_index in component_faces)
+            if len(bad_edges) == 1 and len(component_faces) == 3
+            and all(face_index in incident_faces for face_index in component_faces)
             for face_index in component_faces
         }
         for face_index in sorted(split_faces):
@@ -261,95 +263,119 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         fans = {}
         for face_index in candidates:
             fans.setdefault(root(face_index), []).append(face_index)
-        preserved = max(
-            (fan for fan in fans.values() if any(index in face_indices for index in fan)),
-            key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
-        )
-        retained = set(sorted(index for index in preserved if index in face_indices)[:2])
+        retained_candidates = set()
+        for fan in fans.values():
+            incident = sorted(index for index in fan if index in face_indices)
+            for size in (1, 2):
+                retained_candidates.update(combinations(incident, size))
+        connectors = []
+        for candidate in set().union(*face_edges):
+            if candidate in protected_edges or not any(vertex in candidate for vertex in edge):
+                continue
+            incident = [index for index, edges in enumerate(face_edges) if candidate in edges]
+            if len(incident) != 2:
+                continue
+            corners = []
+            for face_index in incident:
+                face = result.faces[face_index]
+                corner = next(
+                    index for index, vertex in enumerate(face)
+                    if Mesh.edge_key(vertex, face[(index + 1) % len(face)]) == candidate
+                )
+                corners.append((face_index, corner))
+            connectors.append(corners)
 
-        def connector_cost(old):
-            cost = 0
-            for face_index in face_indices:
-                if face_index in retained:
-                    continue
-                for candidate in face_edges[face_index]:
-                    if old not in candidate or candidate in protected_edges:
-                        continue
-                    cost += sum(
-                        candidate in other_edges
-                        for other_index, other_edges in enumerate(face_edges)
-                        if other_index != face_index
-                    )
-            return cost
+        def simulate(retained, order):
+            simulated = list(result.faces)
+            created = []
+            for old in order:
+                parents = {index: index for index in range(len(result.faces))}
 
-        for old in sorted(edge, key=connector_cost):
-            parents = {index: index for index in range(len(result.faces))}
+                def root(index):
+                    while parents[index] != index:
+                        parents[index] = parents[parents[index]]
+                        index = parents[index]
+                    return index
 
-            def root(index):
-                while parents[index] != index:
-                    parents[index] = parents[parents[index]]
-                    index = parents[index]
-                return index
-
-            candidates = vertex_faces[old]
-            for first in candidates:
-                for second in candidates:
-                    if second <= first:
+                candidates = vertex_faces[old]
+                for first in candidates:
+                    for second in candidates:
+                        if second <= first:
+                            continue
+                        shared = face_edges[first] & face_edges[second]
+                        if any(
+                            candidate not in protected_edges and old in candidate
+                            for candidate in shared
+                        ):
+                            first_root, second_root = root(first), root(second)
+                            if first_root != second_root:
+                                parents[second_root] = first_root
+                fans = {}
+                for face_index in candidates:
+                    fans.setdefault(root(face_index), []).append(face_index)
+                for fan in fans.values():
+                    incident = sorted(index for index in fan if index in face_indices)
+                    if not incident or all(index in retained for index in incident):
                         continue
-                    shared = face_edges[first] & face_edges[second]
-                    if any(
-                        candidate not in protected_edges and old in candidate
-                        for candidate in shared
-                    ):
-                        first_root, second_root = root(first), root(second)
-                        if first_root != second_root:
-                            parents[second_root] = first_root
-            fans = {}
-            for face_index in candidates:
-                fans.setdefault(root(face_index), []).append(face_index)
-            for fan in fans.values():
-                incident = sorted(index for index in fan if index in face_indices)
-                if not incident or all(index in retained for index in incident):
-                    continue
-                if retained.intersection(fan) or len(incident) > 2:
-                    groups = [[index] for index in incident]
-                else:
-                    groups = [incident]
-                for group in groups:
-                    if all(index in retained for index in group):
-                        continue
-                    if retained.intersection(fan) and not any(
-                        Mesh.edge_key(result.faces[face_index][corner], result.faces[face_index][(corner + 1) % len(result.faces[face_index])]) == edge
-                        for face_index in group
-                        for corner in range(len(result.faces[face_index]))
-                    ):
-                        continue
-                    replacement = len(result.vertices)
-                    result.vertices.append(result.vertices[old])
-                    for name, values in result.attributes.items():
-                        values.append(values[old])
-                    if len(groups) == 1:
-                        target_faces = fan
+                    if retained.intersection(fan) or len(incident) > 2:
+                        groups = [[index] for index in incident]
                     else:
-                        target_faces = []
-                        pending = [group[0]]
-                        while pending:
-                            current = pending.pop()
-                            if current in target_faces:
-                                continue
-                            target_faces.append(current)
-                            for candidate in fan:
-                                if candidate in target_faces or (candidate in incident and candidate != group[0]):
+                        groups = [incident]
+                    for group in groups:
+                        if all(index in retained for index in group):
+                            continue
+                        if retained.intersection(fan) and not any(
+                            Mesh.edge_key(simulated[face_index][corner], simulated[face_index][(corner + 1) % len(simulated[face_index])]) == edge
+                            for face_index in group
+                            for corner in range(len(simulated[face_index]))
+                        ):
+                            continue
+                        replacement = len(result.vertices) + len(created)
+                        created.append(old)
+                        if len(groups) == 1:
+                            target_faces = fan
+                        else:
+                            target_faces = []
+                            pending = [group[0]]
+                            while pending:
+                                current = pending.pop()
+                                if current in target_faces:
                                     continue
-                                if any(
-                                    candidate_edge != edge and candidate_edge not in protected_edges and old in candidate_edge
-                                    for candidate_edge in face_edges[current] & face_edges[candidate]
-                                ):
-                                    pending.append(candidate)
-                    for face_index in target_faces:
-                        result.faces[face_index] = tuple(
-                            replacement if index == old else index for index in result.faces[face_index]
-                        )
+                                target_faces.append(current)
+                                for candidate in fan:
+                                    if candidate in target_faces or (candidate in incident and candidate != group[0]):
+                                        continue
+                                    if any(
+                                        candidate_edge != edge and candidate_edge not in protected_edges and old in candidate_edge
+                                        for candidate_edge in face_edges[current] & face_edges[candidate]
+                                    ):
+                                        pending.append(candidate)
+                        for face_index in target_faces:
+                            simulated[face_index] = tuple(
+                                replacement if index == old else index for index in simulated[face_index]
+                            )
+            return simulated, created
+
+        best = None
+        best_score = None
+        for retained in sorted(retained_candidates):
+            for order in (edge, tuple(reversed(edge))):
+                simulated, created = simulate(set(retained), order)
+                broken = 0
+                for (first, first_corner), (second, second_corner) in connectors:
+                    first_face, second_face = simulated[first], simulated[second]
+                    first_edge = Mesh.edge_key(first_face[first_corner], first_face[(first_corner + 1) % len(first_face)])
+                    second_edge = Mesh.edge_key(second_face[second_corner], second_face[(second_corner + 1) % len(second_face)])
+                    broken += first_edge != second_edge
+                score = (broken, len(created), -len(retained), retained, order)
+                if best_score is None or score < best_score:
+                    best = simulated, created
+                    best_score = score
+        result.faces = best[0]
+        for old in best[1]:
+            result.vertices.append(result.vertices[old])
+            for name, values in result.attributes.items():
+                values.append(values[old])
         for face_index, original_face in original_faces.items():
             corner = next(
                 index for index, vertex in enumerate(original_face)
