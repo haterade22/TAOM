@@ -476,7 +476,46 @@ No trait text changes: each changed value is a price or the AI's buying order. A
 
 **Undo:** remove the five new pros from `feats` and `traits`. Set Rohan's riders back to 0.65 and its horse archers to 0.5. Delete the five spear offers and their cycle entries (Rohan `militia`, Erebor `miners`, Mirkwood `silvan_levy`, Rivendell `swordguard` and Dol Guldur `fighters` go back into the second slot), and restore `{ "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.65 }`. Remove `militia_spears` from Harad's cycle. In `FordsMatch.AdjustTowerDamage`, pass `wear` alone to the limit.
 
-**Result: not measured.** Round 5 runs on the build that carries this change. Spears in a real fight against cavalry are an owed in-game check.
+**Result:** 75 of 78 pairs, below. Spears in a real fight against cavalry are still an owed in-game check.
+
+### Round robin 5, parked at 75 of 78 pairs (`fcc7c39c8`)
+
+**Seen:** 75 pairs at 4x, 2026-11-08 14:54 to 2026-11-09 09:18, from `python tools/fords_round_robin.py summary --build fcc7c39c8`. The per-troop records are in [rounds/round5_fcc7c39c8.json](rounds/round5_fcc7c39c8.json). The queue stopped twice while Mike used the computer, and Mike parked the feature on 2026-11-10 with three pairs unplayed: Easterlings v Umbar, Mirkwood v Easterlings and Umbar v Mirkwood. So those three factions played 10 matches and the others 12. The build carries round 4's systems (double pierce damage against cavalry, culture tactics, the AI regroup) and round 5's values. Round 3 is the last complete round, and it had none of those systems, so a move against round 3 can have more than one cause.
+
+| Faction | Played | Won | Lost | Won by keep | Won on time | Gold trade | Towers taken | Towers lost | Minutes |
+|---|---|---|---|---|---|---|---|---|---|
+| Gundabad | 12 | 11 | 1 | 2 | 9 | 1.27 | 50 | 19 | 39.5 |
+| Rohan | 12 | 10 | 2 | 4 | 6 | 1.17 | 55 | 15 | 37.0 |
+| Erebor | 12 | 9 | 3 | 6 | 3 | 0.82 | 57 | 41 | 32.3 |
+| Mirkwood | 10 | 7 | 3 | 6 | 1 | 1.73 | 35 | 39 | 30.4 |
+| Harad | 12 | 7 | 5 | 2 | 5 | 1.15 | 38 | 33 | 37.7 |
+| Easterlings | 10 | 6 | 4 | 4 | 2 | 1.15 | 43 | 25 | 34.4 |
+| Rivendell | 12 | 6 | 6 | 5 | 1 | 1.32 | 48 | 51 | 31.9 |
+| Umbar | 10 | 5 | 5 | 2 | 3 | 1.12 | 27 | 25 | 37.0 |
+| Dol Guldur | 12 | 5 | 7 | 3 | 2 | 0.91 | 43 | 49 | 33.3 |
+| Dale | 12 | 3 | 9 | 0 | 3 | 1.09 | 22 | 46 | 36.4 |
+| Isengard | 12 | 3 | 9 | 0 | 3 | 0.56 | 34 | 52 | 35.2 |
+| Gondor | 12 | 2 | 10 | 1 | 1 | 0.92 | 28 | 55 | 35.1 |
+| Mordor | 12 | 1 | 11 | 0 | 1 | 0.53 | 13 | 43 | 39.6 |
+
+- **The pros:** Gundabad's `packSize` 1.5 took it from 3 wins to 11, 9 of them on time, so the feat is too strong. Harad's income took it from 3 wins to 7, and Dol Guldur's tower damage and income from 1 to 5: both now sit in the middle. Gondor's `damageToTowers` 1.5 did not help (2 wins, 28 towers taken), and Dale's income did not either (3 wins).
+- **Rohan** won 10 of 12 after its riders went from 0.65 to 0.7 of the full price. Both losses were on time, to Gundabad and Umbar. That is still above the rule of this log (more than 9 of 12, its riders go up).
+- **Mordor** fell from 8 wins to 1 with no change of its own. Its troops traded as in round 3 (0.38 kills per death, 0.37 in round 3), but all 8 of its round 3 wins were on time, and it now takes fewer towers (13, from 25) and loses more (43, from 28). It gives the fewest regroup orders of any AI (2.7 a match; Rohan 15.4). The cause is not named.
+- **Archers in a shield wall:** the ranged troops of the four factions whose lanes close in a shield wall traded much worse than in round 3. Gondor's bowmen fell from 1.90 kills per death to 1.25, Isengard's crossbowmen from 1.54 to 1.03 and its veteran crossbowmen from 2.12 to 1.32, Erebor's skirmishers from 2.48 to 1.20 and its bowmen from 2.25 to 1.54, and the Easterlings' skirmishers from 1.53 to 1.07. The archers of the loose factions held or rose (Mirkwood's sentinels 10.00 to 10.95, Rivendell's marksmen 10.64 to 10.76), and so did Harad's, which has no tactic (serpent archers 4.65 to 4.74). This fits the engine reading in the feature doc (a shield wall sets its units' ranged weight to 0) and is the first measure of it. It is not proof, because each faction's opponents changed too. Gondor and Isengard, two of the four wall factions, are at the bottom.
+- **Spears:** the new foot spear troops traded 0.58 kills per death (Rohan's westfold spearmen), 1.14 (Rivendell's spearmen) and 0.73 (Dol Guldur's goblin impalers). The pierce rule doubled a blow on a mount or rider a median of 650 times a match (`mountedPierce`, at most 5,737). What the spears add against cavalry is not separated from the rule.
+- **Length:** 17 matches ended before minute 30, 18 between minutes 30 and 40, and 40 on the time limit; the median was 40.5 minutes (round 3: 29, 15, 34 and 35.3, on the same `mt` clock). More than half the matches reached the limit, the most of any round. Ten of the 40 had Gundabad in them. The AI gave 1,478 regroup orders in the 75 matches.
+- **Sides:** West won 46 and East 29 (round 3: 43 and 35).
+- **Stability:** one crash in 76 runs, at a new site: Erebor v Harad (run `20261109-045456`) crashed after the match had ended, and the retry passed. See "A crash at `+0x565D8D`" under Known limitations in the feature doc. No run stalled, no counted run had a check 8 FAIL, and no run crashed at `0x6B716E`. With round 4, that makes 98 runs on builds with the dead target fix (`0931c1e12`) and no `0x6B716E`, where round 3 had 1 in 83. The dead target sweep reset a median of 15,056 targets a match.
+
+### Round 6, proposed and not applied
+
+**Why not applied:** Mike parked the feature on 2026-11-10. A value change that no round measures would leave the next session a build whose numbers nobody has seen. Apply these together at the start of round 6, on one build, and then play all 78 pairs. Each is one value in `factions.json` unless it says otherwise.
+
+1. **Gundabad:** `packSize` 1.5 to 1.25. It won 11 of 12, 9 on time.
+2. **Rohan:** the five rider packs 0.7 to 0.73 and the horse archers 0.55 to 0.58. The rule above applies (10 of 12), and the riders stay cheaper than Gundabad's wolf riders (0.75).
+3. **Gondor and Isengard:** `tactics.close` from `ShieldWall` to `Line`. Their lanes still close as one formation and charge late, so they keep the formation fighting Mike asked for, but without the wall that stops their archers. Erebor and the Easterlings keep the wall as the control, so the round shows whether the wall is the cause.
+4. **Mordor:** no value change yet. First read its 11 losses: when its towers fell, which lanes, and whether its creatures (warg raiders 0.14 kills per death, both trolls) die to the pierce rule. Then decide.
+5. **Match length:** no change in round 6, because Gundabad's cut should end more of its matches. If round 6 still has more than a third of its matches on the time limit, start the wall wear at minute 12 instead of 15 (`towers.wearStartMinutes` in `match.json`).
 
 ### Culture tactics (round 4)
 
@@ -547,13 +586,15 @@ play. The code without any block sends no arrangement order and charges at the e
 
 ## Open questions
 
-- **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
+- **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet. Round 5 moved away from it: 40 of 75 matches ended on the time limit (see "Round 6, proposed and not applied", item 5).
+- **Mordor's fall in round 5:** from 8 wins to 1 with the same troop trade. See the round 5 record.
+- **West wins more:** 43 to 35 in round 3 and 46 to 29 in round 5. Every pair plays once, with the scheduled faction on the West side, so this can be the map or the schedule. Not read.
 - **Reaching the keep:** see "Wall wear" and "Lost lanes" above. Attackers now reach a keep once its lanes clear. What limits match length now is how late the first towers fall, at about 25 minutes in those wins.
 - **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
 - **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.
 - **Troop caps in trait text:** `WaveScheduler` divides `unitCapBonus` across the three lanes with integer division, so Isengard fields at most 222 (48 fewer than 270, where its trait says 50) and the elves 120 (their trait says 150). Not changed by round 3.
-- **Spears:** 0.73 to 0.79 gold trade in every set of matches. No lane here brings them the cavalry they are for.
+- **Spears:** 0.73 to 0.79 gold trade in every set of matches up to round 3. No lane here brings them the cavalry they are for. Since round 5 every culture has a foot spear pack, and what they add against riders is not separated from the pierce rule (see the round 5 record).
 - **A small army's attack:** Rivendell dealt 7 tower damage in 45 minutes before the limit, and 9,727 in 15 minutes with it. Read it again in the next long match.
 - **A horde's late gold:** with every lane full, every hero out and its cycle's upgrades bought, Mordor has nothing to spend on. It ended a 45-minute match on 8,973 gold.
 - **Mordor's heroes:** 0.4 to 1.5 kills per minute in `200151` and `200628`, where Rivendell's made 1.7 to 5.4. In `201138` Sauron made 4.6 and the Nazgul 0.9.
