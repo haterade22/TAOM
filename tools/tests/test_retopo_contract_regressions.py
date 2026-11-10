@@ -595,17 +595,35 @@ class ContractRegressionTests(unittest.TestCase):
     def test_auto_fill_subdivision_preserves_point_and_face_metadata(self):
         guide = differential.unit_guide()
         guide.attributes.update({
-            "source_vertex": [0, 1, 2, 3],
+            "source_vertex": [10, 20, 30, 40],
             "point_guide": [True, False, False, True],
             "pattern_id": [9],
+            "corner_tag": [1, 1, 1, 1],
         })
-        guide.attribute_domains.update({"source_vertex": "POINT", "point_guide": "POINT", "pattern_id": "FACE"})
+        guide.attribute_domains.update({"point_guide": "POINT", "pattern_id": "FACE", "corner_tag": "CORNER"})
         result = engine.auto_fill(guide, [(0.5, 0.5, 0)], 1)
         self.assertEqual(9, len(result.vertices))
         self.assertEqual(4, len(result.faces))
-        self.assertEqual(len(result.vertices), len(result.attributes["source_vertex"]))
-        self.assertEqual(len(result.vertices), len(result.attributes["point_guide"]))
+        self.assertEqual([10, 20, 30, 40, 10, 10, 20, 30, 10], result.attributes["source_vertex"])
+        self.assertEqual([True, False, False, True, False, False, False, False, False], result.attributes["point_guide"])
         self.assertEqual([9] * 4, result.attributes["pattern_id"])
+        self.assertNotIn("corner_tag", result.attributes)
+
+    def test_auto_fill_separates_metadata_by_component(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (3, 0, 0), (4, 0, 0), (4, 1, 0), (3, 1, 0)],
+            faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+            attributes={
+                "pattern_id": [100, 200],
+                "source_vertex": list(range(8)),
+                "point_guide": [False] * 8,
+            },
+            attribute_domains={"pattern_id": "FACE"},
+        )
+        result = engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1, across_patterns=False)
+        self.assertEqual([100, 100, 100, 100, 200], result.attributes["pattern_id"])
+        self.assertEqual([0, 1, 2, 3, 0, 0, 1, 2, 0, 4, 5, 6, 7], result.attributes["source_vertex"])
+        self.assertEqual([False] * 13, result.attributes["point_guide"])
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
@@ -631,6 +649,15 @@ class ContractRegressionTests(unittest.TestCase):
         )
         self.assertEqual([0, 1, 2, 3, 5, 6, 7], merged.attributes["source_vertex"])
         self.assertEqual([10, 20], merged.attributes["pattern_id"])
+        positions = [(0, 0, 0), (2, 0, 0), (2, 2, 0), (0, 2, 0), (1, 1, 0), (1, 0.3, 0)]
+        source_faces = [(0, 1, 5), (1, 4, 5), (4, 0, 5), (1, 2, 4), (2, 3, 4), (3, 0, 4)]
+        equal_counts = Mesh(
+            vertices=positions + [(-x, -y, z) for x, y, z in positions],
+            faces=source_faces + [tuple(index + 6 for index in face) for face in source_faces],
+            attributes={"source_vertex": list(range(12))},
+        )
+        merged_equal = engine.merge_output_seams(equal_counts, 0.01)
+        self.assertEqual([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], merged_equal.attributes["source_vertex"])
         guide = differential.ring_guide()
         guide.attributes["pattern_id"] = list(range(16))
         guide.attribute_domains["pattern_id"] = "POINT"

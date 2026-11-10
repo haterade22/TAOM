@@ -867,9 +867,11 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 parent_attributes = {name: current.attributes[name][0] for name in face_attribute_names}
                 current.vertices.extend([first, second])
                 for name in point_attribute_names:
-                    current.attributes[name].extend([
-                        current.attributes[name][face[0]], current.attributes[name][face[2]],
-                    ])
+                    current.attributes[name].extend(
+                        [False, False] if name in {"point_guide", "open_seam", "simplify_on"} else [
+                            current.attributes[name][face[0]], current.attributes[name][face[2]],
+                        ]
+                    )
                 current.faces = [
                     (face[0], len(current.vertices) - 2, len(current.vertices) - 1, face[3]),
                     (len(current.vertices) - 2, face[1], face[2], len(current.vertices) - 1),
@@ -928,7 +930,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 parent = min(parent_indices, key=lambda index: math.dist(coordinate, current.vertices[index]))
                 current.vertices.append(coordinate)
                 for name in point_attribute_names:
-                    current.attributes[name].append(current.attributes[name][parent])
+                    current.attributes[name].append(
+                        False if name in {"point_guide", "open_seam", "simplify_on"} else current.attributes[name][parent]
+                    )
                 return len(current.vertices) - 1
 
             first_new = vertex_at(projected, (first, second))
@@ -976,6 +980,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 result.attributes[name].extend(filled.attributes[name])
             for name in face_attribute_names:
                 result.attributes[name].extend(filled.attributes[name])
+    for name in list(result.attributes):
+        if name not in point_attribute_names and name not in face_attribute_names:
+            del result.attributes[name]
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -1306,6 +1313,11 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     result.uv = uv
     for name, values in result.attributes.items():
         domain = result.attribute_domains.get(name)
+        if domain is None and (
+            name in {"source_vertex", "source_part", "point_guide", "open_seam", "simplify_on", "source_position", "pattern_center"}
+            or (name == "pattern_id" and "source_position" in result.attributes)
+        ):
+            domain = "POINT"
         if domain == "FACE" or (domain is None and len(values) == original_face_count):
             result.attributes[name] = [values[index] for index in kept_faces]
         elif domain == "POINT" or (domain is None and len(values) == original_vertex_count):
