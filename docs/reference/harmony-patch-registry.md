@@ -1888,6 +1888,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** A postfix with no skip, so `CoopVetoClassificationTests` needs no entry. `SpecialResourceEarningService.ChargeCoopUpgrades` uses `RecruitChargePolicy`, so only the authority charges. Limits are in [special-resources.md](../features/special-resources.md) "Co-op upgrade charge". **Tests:** `CoopUpgradeChargePatchTests` (real Harmony on a local fake), `SpecialResourceEarningServiceCoopTests`, and `CoopMissionBindingTests` (LiveInstall), which pins the installed method's parameter types and order against the postfix's. **Check:** `tools/ingame_checks/967.toml`, not yet seen in a game.
 
+## Patch145_KingdomAllegiance
+
+**Target:** `private void TaleWorlds.CampaignSystem.CampaignBehaviors.CharacterRelationCampaignBehavior.UpdateFriendshipAndEnemies(CampaignGameStarter campaignGameStarter)` (v1.5.6, confirmed with `taom-src` on 2026-11-10, `CharacterRelationCampaignBehavior.cs:196-281`; unchanged in v1.5.7). Postfix. One class `Patch145_FriendshipSeeding_Postfix` in `Main/Features/KingdomAllegiance/Hooks/`, category `Patch145_KingdomAllegiance` (ProcessLoad, declared by `KingdomAllegianceModule`). #1111, 2026-11-10. **ACTIVE**
+
+**Why.** The target rolls a random relation for pairs of lords once, at new-game creation, weighted by distance and clan tier, and never reads the Free/Evil side, so a Gondor lord can start as a friend of a Mordor lord. The postfix asks `KingdomAllegianceService.FlipOpposedFriendships`, which turns each positive Free-vs-Evil relation into a negative one of the same size (`FactionSideRules.AreOpposed`; each lord sided by their own clan through `FactionSides.OfOwnClan`).
+
+**Why a postfix and not a listener.** The only caller is vanilla's own listener registration on `CampaignEvents.OnNewGameCreatedEvent` (`:35`). Listeners run newest first ([harmony-il.md](../reviews/lessons/harmony-il.md) "Campaign-event listener dispatch is LIFO"), so a TAOM listener on the same event would run before the roll.
+
+**What it reads and writes.** `AllegianceRelationAdapter` takes the lords the target takes, from both `AliveHeroes` and `DeadOrDisabledHeroes` (a lord, not the main hero, with a map faction the main hero does not lead; a dead lord's encyclopedia page lists their living friends), reads the raw pair value (`CharacterRelationManager.GetHeroRelation`) and writes with `Hero.SetPersonalRelation`: no event, no notice. The engine keys one value per pair in either order (`HeroRelations.GetHashCodes`), so one write per pair is enough. Main thread, once per new game. The adapter is a process singleton, so the service calls its `Release` in a `finally` and no campaign's heroes outlive the run. The postfix catches every exception and keeps vanilla's relations.
+
+**Co-op.** A co-op peer deferring to the host skips the flip (a `skip` check line). Coop runs the behavior's `RegisterEvents` on the server only (`DisableCharacterRelationCampaignBehavior`, prefix `=> ModInformation.IsServer`), so the roll and this postfix run at the host's new game, and Coop's `CharacterRelationManagerPatches` send each relation write to the clients. **Tests:** `KingdomAllegianceServiceTests`, `KingdomAllegianceWiringTests`. **Check:** `tools/ingame_checks/1111.toml`, not yet seen in a game.
+
 ## TAOM.EncyclopediaTroopNames
 
 **Lives in TAOM.Client** (`Client/Features/FactionUI/Campaign/EncyclopediaTroopNames.cs`, eight nested classes): every target but one is in `TaleWorlds.CampaignSystem.ViewModelCollection`, which a dedicated server cannot load (ADR-013).

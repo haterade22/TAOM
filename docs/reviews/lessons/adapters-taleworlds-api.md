@@ -1864,6 +1864,14 @@ The first text of the #1107 fix said that every spawn outside vanilla's budget c
 - **Prevent:** a doc line that names a gate says what its matcher covers. A claim that vanilla "checks X first" names the method that does it, after you read every sibling path.
 - **Source:** #1107, found independently by Codex, the data flow lens and the engine compatibility lens.
 
+### Repeat: a singleton adapter kept a campaign's heroes after its run (#1111, 2026-11-10)
+
+`AllegianceRelationAdapter`, registered Singleton and held in a patch static, kept the `List<Hero>` it read for the new-game friendship flip, so every lord of that campaign stayed reachable after a later load. This repeats "A singleton adapter holds no engine objects between calls" (#952) above.
+
+- **Why missed:** the adapter needs the list between `ReadLords` and the writes, and its comment said "one instance serves one run" while the module registered it Singleton. The #952 entry lives only in this file; no rule line and no gate points a new adapter at it.
+- **Prevent:** an adapter that must hold engine objects across the calls of one operation exposes a release the service calls in a `finally`, with a test for the fault path. A rule line for `adapters.md` is proposed in the RCA.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 2.
+
 ### A parameter inserted before one of the same type compiles at the old call sites with a changed meaning (v1.5.7 bump, 2026-11-10)
 
 v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool includeDescriptions = false)` to `(PartyBase, bool isCurrentlyAtSea, bool includeDescriptions = false)`. The override stopped compiling and the one-argument caller failed behind it, but `CareerPerkCheats` passed `(party.Party, true)` and still compiled: its `true` now meant "at sea", with descriptions off.

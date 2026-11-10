@@ -4,6 +4,8 @@ using TaleWorlds.Localization;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.CulturalFeats;
 using TAOM.Features.Diplomacy.Hooks;
+using TAOM.Features.KingdomAllegiance;
+using TAOM.Features.KingdomAllegiance.Models;
 using TAOM.Features.Relations;
 
 namespace TAOM.Features.Diplomacy.Models;
@@ -14,16 +16,33 @@ public class TaomDiplomacyModel : DefaultDiplomacyModel
     private readonly ICoopSessionProvider _coop;
     private readonly IOnAllianceAction _allianceHook;
     private readonly IPersonalRelationService _personalRelations;
+    private readonly KingdomAllegianceService _allegiance;
+    private readonly AllegianceFactsReader _allegianceFacts;
 
     public TaomDiplomacyModel(
         IWarOfTheRingService wotrService, ICoopSessionProvider coop, IOnAllianceAction allianceHook,
-        IPersonalRelationService personalRelations)
+        IPersonalRelationService personalRelations, KingdomAllegianceService allegiance,
+        AllegianceFactsReader allegianceFacts)
     {
         _wotrService = wotrService;
         _coop = coop;
         _allianceHook = allianceHook;
         _personalRelations = personalRelations;
+        _allegiance = allegiance;
+        _allegianceFacts = allegianceFacts;
     }
+
+    /// <summary>
+    /// Kingdom Allegiance (#1111): the clan's side of every AI join and defection barter (<c>JoinKingdomAsClanBarterable</c>, from
+    /// <c>DiplomaticBartersBehavior</c>). An AI clan of the opposed side gets vanilla's own never-join value; anything else is vanilla.
+    /// </summary>
+    public override float GetScoreOfClanToJoinKingdom(Clan clan, Kingdom kingdom) =>
+        _allegiance.JoinVeto(_allegianceFacts.Read(clan, kingdom)) ?? base.GetScoreOfClanToJoinKingdom(clan, kingdom);
+
+    /// <summary>Kingdom Allegiance (#1111): the mercenary clan's side of <c>MercenaryJoinKingdomBarterable</c>, same rule.</summary>
+    public override float GetScoreOfMercenaryToJoinKingdom(Clan mercenaryClan, Kingdom kingdom) =>
+        _allegiance.JoinVeto(_allegianceFacts.Read(mercenaryClan, kingdom))
+        ?? base.GetScoreOfMercenaryToJoinKingdom(mercenaryClan, kingdom);
 
     /// <summary>
     /// #370 — the THIRD site reading <c>ShouldBlockPeace</c>, and the one the review agent itself

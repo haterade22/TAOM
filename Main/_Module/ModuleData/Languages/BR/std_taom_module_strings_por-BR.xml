@@ -8097,6 +8097,8 @@
     <string id="taom_specres_mcm_gold_rate_hint" text="With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200." />
     <string id="taom_arachnophobia_mcm_mode" text="Arachnophobia Mode" />
     <string id="taom_arachnophobia_mcm_mode_hint" text="Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off." />
+    <string id="taom_kingdom_allegiance_mcm_enabled" text="Enable Kingdom Allegiance" />
+    <string id="taom_kingdom_allegiance_mcm_enabled_hint" text="When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only." />
   </strings>
 
 </base>

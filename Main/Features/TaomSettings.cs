@@ -2798,6 +2798,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Enable Sworn Anew", Order = 0, RequireRestart = false,
         HintText = "When enabled (default), a captured lord can be asked to join your kingdom, in a conversation or from the party screen, and serves it instead of being ransomed. The lord must hold a clan of another kingdom (not its ruler, and not a mercenary or minor clan), must be held by your party or in a settlement your clan owns, and must not be a lord who can never be captured, such as Sauron and the Nazgul. A Free Peoples lord is never asked to join an Evil realm, and an Evil lord is never asked to join a Free one. The base game's blood feud rule still applies. When off, the base game's rules apply: only a kingdom's ruler can recruit a captured lord, through its 'join us, and be set free' line, which checks no realm. When on, both lines pass this check, and the ruler-only line also needs the lord held by your party or in your clan's dungeon. Applies at once, no restart.")]
     public bool SwornAnewEnabled { get; set; } = TAOM.Features.SwornAnew.SwornAnewSettingsProvider.DefaultEnabled;
+    // --- Kingdom Allegiance (docs/features/kingdom-allegiance.md, #1111) ---
+    //
+    // Read at each AI join score and once at new-game relation seeding, through KingdomAllegianceSettingsProvider's one cached
+    // settings reference, so it needs no restart. GroupOrder 86 is used by no other group. A new setting, so the default (on)
+    // reaches every install.
+
+    [SettingPropertyGroup("World/Kingdom Allegiance", GroupOrder = 86)]
+    [SettingPropertyBool("{=taom_kingdom_allegiance_mcm_enabled}Enable Kingdom Allegiance", Order = 0, RequireRestart = false,
+        HintText = "{=taom_kingdom_allegiance_mcm_enabled_hint}When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only.")]
+    public bool KingdomAllegianceEnabled { get; set; } = TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider.DefaultEnabled;
     // --- Provender-master (docs/features/provender.md, #908) ---
     //
     // Standing orders and morale options for the hero in the party's Quartermaster role. Every value is read when an order is

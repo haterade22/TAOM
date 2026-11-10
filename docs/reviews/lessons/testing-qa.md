@@ -2634,3 +2634,11 @@ The regroup release fired anywhere once no enemy was near, because the producer 
 - **Why missed:** the earlier lesson asks for a pin on each forwarding line. These seams are branches, and the pin recorded only the order its author cared about.
 - **Prevent:** for a branch, pin the condition text, the call with its arguments, the exit, and any guard it must precede. Before you keep a pin, name one edit that breaks the behaviour and check that the pin fails on it.
 - **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), finding 4.
+
+### A skip line in a manifest's fail list turns NOT REACHED into FAIL (#1111, 2026-11-10)
+
+`tools/ingame_checks/1111.toml` listed the check's `result=skip` line under `fail`. `judge_segment` checks fail patterns first, so a session with the switch off read FAIL, not NOT REACHED with its reason.
+
+- **Why missed:** the skip was read as a failed setup; the NOT REACHED meaning in `ingame-verdicts.md` was not reread, and the manifest was not run through `judge_segment`.
+- **Prevent:** match only the pass line in `reached`, keep skip lines out of `fail` (the `1011.toml` shape), and run `judge_segment` on a synthetic skip, pass and fault line before the manifest ships.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 4.

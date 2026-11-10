@@ -207,7 +207,9 @@ Models: 69. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 - `Int32 GetRelationChangeAfterClanLeaderIsDead(Hero deadLeader, Hero relationHero)`
 - `Int32 GetRelationChangeAfterVotingInSettlementOwnerPreliminaryDecision(Hero supporter, Boolean hasHeroVotedAgainstOwner)`
 - `Int32 GetRelationCostOfDisbandingArmy(Boolean isLeaderParty)`
+- `Single GetScoreOfClanToJoinKingdom(Clan clan, Kingdom kingdom)`
 - `Single GetScoreOfDeclaringWar(IFaction factionDeclaresWar, IFaction factionDeclaredWar, Clan evaluatingClan, ref TextObject reason, Boolean includeReason)`
+- `Single GetScoreOfMercenaryToJoinKingdom(Clan clan, Kingdom kingdom)`
 - `Boolean IsAtConstantWar(IFaction faction1, IFaction faction2)`
 
 ## TaomEquipmentSelectionModel : DefaultEquipmentSelectionModel

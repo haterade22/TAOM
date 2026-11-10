@@ -1,0 +1,34 @@
+# In-game checks for #1111 (Kingdom Allegiance), read by tools/ingame_verdict.py. The [Check] line comes from
+# Main/Features/KingdomAllegiance/KingdomAllegianceService.cs (FlipOpposedFriendships), called by Patch145 once per new
+# campaign: a pass with the lord count, the Free-vs-Evil pair count and the pairs flipped; a skip when the switch is off or
+# the peer defers to a co-op host. The reached pattern matches the pass line only, so a skip-only session reads NOT REACHED
+# with the feature's reason (docs/features/ingame-verdicts.md), as 1011.toml does. The join veto only counts: the [Session]
+# summary writes the counter taom.kingdom-allegiance.join-vetoed (pass = AI join, defection or mercenary scores vetoed). The
+# service registers the counter when it is built, so a session with no veto writes pass=0, which is reached but not a pass.
+# A fault in AllegianceFactsReader.Read writes one [Swallowed] line per process.
+issue = 1111
+title = "Lords serve and befriend across the Free/Evil line (orc lords in Gondor)"
+fixed_in = "c012d3905"   # trunk before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.kingdom-allegiance.friendships-flipped"
+needs = "a new campaign with Kingdom Allegiance on (default)"
+reached = ['\[Check\] id=taom\.kingdom-allegiance\.friendships-flipped result=pass ']
+pass = ['\[Check\] id=taom\.kingdom-allegiance\.friendships-flipped result=pass lords=[1-9][0-9]* opposed=[1-9][0-9]* flipped=[0-9]+$']
+fail = ['\[KingdomAllegiance\] Patch145 postfix failed']
+absence = "not-reached"
+
+[[check]]
+id = "taom.kingdom-allegiance.join-vetoed"
+needs = "a campaign run at speed for 30 or more days, so AI clans weigh joins, defections and mercenary hires"
+reached = ['\[Session\] counter id=taom\.kingdom-allegiance\.join-vetoed pass=[0-9]+']
+pass = ['\[Session\] counter id=taom\.kingdom-allegiance\.join-vetoed pass=[1-9][0-9]*']
+fail = ['\[Swallowed\] feature=KingdomAllegiance site=AllegianceFactsReader\.Read ']
+absence = "not-reached"
+
+[[human]]
+claim = "in a new campaign, no Gondor, Rohan or Elf lord lists a Mordor, Isengard or orc lord as a friend in the encyclopedia, and the reverse"
+
+[[human]]
+claim = "after 60 or more days, no orc, Mordor, Isengard, Easterling or Harad clan appears in the clan list of Gondor, Rohan, Dale, Erebor or an Elf realm, and no Free clan in an Evil realm's list"

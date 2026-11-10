@@ -1407,3 +1407,11 @@ The gold-only emissary's first party cap was `PartySizeLimit - NumberOfAllMember
 - **Why missed:** I read the engine's two numbers and not the TAOM model that writes the limit. The weights live in another feature's XML.
 - **Prevent:** before a capacity check, list every writer of the limit, TAOM's models included (`csharp-architecture.md` "Writers before gates"), and ask what one unit fills. Test with a unit heavier than one slot.
 - **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), row 1.
+
+### An overridden model method is also read by the base model's own other methods (#1111, 2026-11-10)
+
+`TaomDiplomacyModel` vetoed `GetScoreOfMercenaryToJoinKingdom` for opposed realms, with the barterables as the census of its callers. Vanilla's `DefaultDiplomacyModel.GetScoreOfMercenaryToLeaveKingdom` (v1.5.7 `:426`) subtracts the join score of the clan's current realm through a virtual self-call, so the veto pushed opposed mercenaries that already served out of their realm, and on a move into a second opposed realm the two vetoes cancelled.
+
+- **Why missed:** the callers came from the plan, which listed the barterables only. Nobody grepped the base model for its own calls of the method it overrides.
+- **Prevent:** before overriding a model method, grep the base model and the engine for every call of that method, the base class's own virtual self-calls included, and decide for each reader whether the override must answer it. Exempt the inputs a second reader asks about (here, the realm the clan already serves) and test that exemption.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 1.

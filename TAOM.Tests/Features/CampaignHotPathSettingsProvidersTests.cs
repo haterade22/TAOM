@@ -163,6 +163,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(SmithsMeasureSettingsProvider))]
     // #1108: the map bar reads every troop's cost row at each refresh (5 to 10 Hz), and each read asks the toggle.
     [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
+    // #1111: the diplomacy model asks the switch at every AI join, defection and mercenary score of the daily clan tick.
+    [DataRow(typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -223,6 +225,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.NotableServices.INotableServicesSettingsProvider), typeof(TAOM.Features.NotableServices.NotableServicesSettingsProvider))]
     [DataRow(typeof(TAOM.Features.InnRounds.IInnRoundsSettingsProvider), typeof(TAOM.Features.InnRounds.InnRoundsSettingsProvider))]
     [DataRow(typeof(ISmithsMeasureSettingsProvider), typeof(SmithsMeasureSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.KingdomAllegiance.IKingdomAllegianceSettingsProvider), typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -390,6 +393,18 @@ public class CampaignHotPathSettingsProvidersTests
 
         Assert.IsFalse(sut.IsAiEnabled);
         Assert.AreEqual(5, sut.NotablesPerCastle);
+    }
+
+    [TestMethod]
+    public void KingdomAllegiance_ReadsThroughTheCachedSettings()
+    {
+        var mcm = new TaomSettings();
+        var sut = new TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider(mcm);
+        Assert.IsTrue(sut.Enabled);
+
+        mcm.KingdomAllegianceEnabled = false;
+
+        Assert.IsFalse(sut.Enabled);
     }
 
     [TestMethod]
