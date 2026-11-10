@@ -40,6 +40,7 @@ class RetopologyToolkitPackageTests(unittest.TestCase):
             "docs/research/retopo-planes-complete-capability-matrix.md",
             "tools/tests/test_retopo_engine.py",
             "tools/tests/test_retopo_differential.py",
+            "tools/tests/test_retopo_contract_regressions.py",
             "tools/tests/test_petik_compat.py",
             "tools/tests/test_package_retopology_toolkit.py",
             "tools/tests/fixtures/retopo_reference.json",
@@ -50,12 +51,13 @@ class RetopologyToolkitPackageTests(unittest.TestCase):
 
     def test_petik_preserves_upstream_files_except_recorded_compat_fixes(self):
         expected = {
-            "petik_preferences.py": "ccb19ce5774fd476eab9ff8f69a367b4dd3cb956db31d3d65776c20c4da3187d",
-            "blender_manifest.toml": "703fc30de41b22ba7df5f8841f09859cffdf88de7ee9d60875a2b1f33a8a6940",
+            "petik_preferences.py": "6a3a17b0266033ecdd059daebd4ac7299bffce7e437c3cd9913fd51acf324497",
+            "blender_manifest.toml": "838e5f8f31c2a71f6ab125bf61f91d4935b74b340f1b0f2ef9914801bf2c1468",
         }
         for name, digest in expected.items():
             source = ROOT / "tools/petik/Petik" / name
-            self.assertEqual(digest, hashlib.sha256(source.read_bytes()).hexdigest())
+            normalized = source.read_bytes().replace(b"\r\n", b"\n")
+            self.assertEqual(digest, hashlib.sha256(normalized).hexdigest())
         notice = (ROOT / "tools/petik/Petik/NOTICE.txt").read_text(encoding="utf-8")
         for digest in (
             "70394d62ab45732773d59e7bee1e80604a543474dcf64e46944b76d37f0e48c2",
@@ -125,6 +127,7 @@ class RetopologyToolkitPackageTests(unittest.TestCase):
         for token in (
             "tools.tests.test_retopo_engine",
             "tools.tests.test_retopo_differential",
+            "tools.tests.test_retopo_contract_regressions",
             "tools.tests.test_package_retopology_toolkit",
             "tools/blender/retopo_selftest.py",
             "tools/blender/petik_selftest.py",

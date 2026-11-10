@@ -1,4 +1,5 @@
 """Exercise Petik patch generation, control lines, and modal operators in Blender."""
+import importlib
 import inspect
 import json
 import math
@@ -163,7 +164,7 @@ def modal_cases():
         evaluated_depsgraph_get=bpy.context.evaluated_depsgraph_get,
         active_object=bpy.context.active_object,
         scene=bpy.context.scene,
-        area=SimpleNamespace(tag_redraw=lambda: None),
+        area=SimpleNamespace(tag_redraw=lambda: None, width=800, height=600),
     )
     multi = fake_operator(petik.MdUtilMultiPetik)
     assert multi.invoke(context, SimpleNamespace()) == {"RUNNING_MODAL"}
@@ -173,6 +174,38 @@ def modal_cases():
     old_size = multi.interface_size
     assert multi.modal(context, modal_event("NUMPAD_PLUS", value="PRESS") ) == {"RUNNING_MODAL"}
     assert multi.interface_size > old_size
+    assert multi.modal(context, modal_event("H", value="PRESS") ) == {"RUNNING_MODAL"}
+    assert multi.hide_ui == 1
+    loose = multi.bm.verts.new((2, 2, 0))
+    multi.bm.select_history.clear()
+    multi.bm.select_history.add(loose)
+    multi.rightmouse_pressed = True
+    multi.rightmouse_ctrl = True
+    right_click = modal_event("RIGHTMOUSE")
+    right_click.mouse_region_x = -1
+    right_click.mouse_region_y = -1
+    assert multi.modal(context, right_click) == {"RUNNING_MODAL"}
+    assert multi.line_ini == loose
+    drawn = []
+    original_blf = petik.blf
+    petik.blf = SimpleNamespace(
+        SHADOW=0,
+        enable=lambda *args: None,
+        shadow=lambda *args: None,
+        shadow_offset=lambda *args: None,
+        size=lambda *args: None,
+        color=lambda *args: None,
+        position=lambda *args: None,
+        draw=lambda *args: drawn.append(args[1]),
+    )
+    try:
+        multi.hide_ui = 2
+        multi.draw_callback_2d(multi, context)
+    finally:
+        petik.blf = original_blf
+    assert "H - hide UI" in drawn
+    assert "Ctrl Scroll - modify control points count" in drawn
+    assert "Ctrl Right Click - Select active control point" in drawn
     assert multi.modal(context, modal_event("ESC", value="PRESS") ) == {"CANCELLED"}
 
     preferences = bpy.context.preferences.addons["Petik"].preferences
@@ -206,14 +239,45 @@ def modal_cases():
     assert line.modal(context, modal_event("TWO", value="PRESS") ) == {"RUNNING_MODAL"}
     assert len(line.lines[0].control_points) == 2
     assert line.modal(context, modal_event("R", value="PRESS") ) == {"RUNNING_MODAL"}
+    line.snap_type = 0
+    line.selected_line = 0
+    wheel = modal_event("WHEELUPMOUSE")
+    wheel.ctrl = True
+    assert line.modal(context, wheel) == {"RUNNING_MODAL"}
+    assert len(line.lines[0].control_points) == 3
+    wheel = modal_event("WHEELDOWNMOUSE")
+    wheel.shift = True
+    old_ratio = line.lines[0].eagle_eye_ratio
+    assert line.modal(context, wheel) == {"RUNNING_MODAL"}
+    assert line.lines[0].eagle_eye_ratio < old_ratio
     assert line.modal(context, modal_event("Q", value="PRESS") ) == {"CANCELLED"}
     bpy.ops.object.mode_set(mode="OBJECT")
     petik.visible_objects_and_duplis = original_visibility
-    return {"multi_modal": True, "line_modal": True, "line_count": len(line.lines)}
+    return {
+        "multi_modal": True,
+        "line_modal": True,
+        "line_count": len(line.lines),
+        "help_lines": len(drawn),
+        "right_click": True,
+        "wheel_control_points": 3,
+    }
 
 
 def main():
+    expected_keymaps = [
+        ("mdutil.multi_petik", "X", True, True, True),
+        ("mdutil.petik_line", "Z", True, True, True),
+    ]
     bpy.ops.preferences.addon_enable(module="Petik")
+    actual_keymaps = sorted(
+        (item.idname, item.type, item.ctrl, item.alt, item.shift)
+        for _, item in Petik.addon_keymaps
+    )
+    assert actual_keymaps == expected_keymaps, actual_keymaps
+    bpy.ops.preferences.addon_disable(module="Petik")
+    importlib.reload(Petik)
+    bpy.ops.preferences.addon_enable(module="Petik")
+    assert len(Petik.addon_keymaps) == 2
     out.write_text(json.dumps({"progress": "registered"}, indent=2), encoding="utf-8")
     try:
         matrix = {}
@@ -244,7 +308,9 @@ def main():
         bpy.ops.preferences.addon_disable(module="Petik")
 
 
-out = Path(__file__).resolve().with_name("petik_selftest_report.json")
+out_dir = Path(__file__).resolve().parents[2] / "TestResults" / "Blender"
+out_dir.mkdir(parents=True, exist_ok=True)
+out = out_dir / "petik_selftest_report.json"
 try:
     report = main()
 except BaseException:

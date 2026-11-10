@@ -34,6 +34,7 @@ PACKAGE_FILES = [
     "tools/tests/__init__.py",
     "tools/tests/test_retopo_engine.py",
     "tools/tests/test_retopo_differential.py",
+    "tools/tests/test_retopo_contract_regressions.py",
     "tools/tests/test_petik_compat.py",
     "tools/tests/test_package_retopology_toolkit.py",
     "tools/tests/fixtures/retopo_reference.json",

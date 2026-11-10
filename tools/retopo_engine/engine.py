@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import replace
 import math
 
 from .geometry import (
@@ -246,11 +247,23 @@ def _boundary_loops(mesh: Mesh):
     return loops
 
 
+def _ordered_loop(mesh: Mesh, loop, indices):
+    center = average(mesh.vertices[index] for index in loop)
+    return sorted(
+        indices,
+        key=lambda index: math.atan2(
+            mesh.vertices[index][1] - center[1], mesh.vertices[index][0] - center[0]
+        ),
+    )
+
+
 def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
     explicit = mesh.attributes.get("point_guide", [])
     marked = [index for index in loop if index < len(explicit) and explicit[index]]
     if marked and len(marked) <= 4:
-        return marked
+        if len(marked) == 4:
+            return sorted(marked, key=lambda index: (mesh.vertices[index][0], mesh.vertices[index][1]))
+        return _ordered_loop(mesh, loop, marked)
     selected = []
     threshold = math.pi * settings.angle_threshold * (0.5 + settings.median_corners_threshold)
     for position, index in enumerate(loop):
@@ -274,7 +287,7 @@ def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
     ]
     filtered = [index for index in selected if index in pool]
     if len(filtered) >= 4:
-        return filtered
+        return _ordered_loop(mesh, loop, filtered)
     ordered = sorted(pool or loop, key=lambda index: (mesh.vertices[index][1], mesh.vertices[index][0]))
     candidates = ordered[:2] + ordered[-2:]
     result = []
@@ -288,7 +301,7 @@ def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
             key=lambda index: min(math.dist(mesh.vertices[index], mesh.vertices[other]) for other in result),
         )
         result.append(farthest)
-    return result
+    return _ordered_loop(mesh, loop, result)
 
 
 def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
@@ -296,8 +309,40 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
     loops = _boundary_loops(flat)
     if not loops:
         raise ValueError("plane initialization requires an open pattern border")
-    if len(loops) > 1 and all(len(face) == 4 for face in flat.faces):
-        result = flat.copy()
+    if len(loops) > 1:
+        if all(len(face) == 4 for face in flat.faces):
+            result = flat.copy()
+            result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
+            return result
+        adjacency = {}
+        for first, second in flat.boundary_edges():
+            adjacency.setdefault(first, set()).add(second)
+            adjacency.setdefault(second, set()).add(first)
+        closed_simple_loops = [
+            loop for loop in loops
+            if all(len(adjacency[index]) == 2 for index in loop)
+        ]
+        outer = max(closed_simple_loops or loops, key=lambda loop: abs(signed_area(loop, flat.vertices)))
+        remaining = sorted(
+            {index for face in flat.faces for index in face} - set(outer),
+            key=lambda index: math.atan2(
+                flat.vertices[index][1] - average(flat.vertices[item] for item in outer)[1],
+                flat.vertices[index][0] - average(flat.vertices[item] for item in outer)[0],
+            ),
+        )
+        inner = remaining or min(loops, key=len)
+        count = max(len(outer), len(inner))
+        vertices = [flat.vertices[index] for index in outer + inner]
+        faces = []
+        for index in range(count):
+            following = (index + 1) % count
+            faces.append((
+                index,
+                following,
+                len(outer) + following % len(inner),
+                len(outer) + index % len(inner),
+            ))
+        result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
         result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
         return result
     vertices = []
@@ -308,8 +353,6 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
             offset = len(vertices)
             vertices.extend(flat.vertices[index] for index in corners)
             face = tuple(range(offset, offset + 4))
-            if signed_area(face, vertices) < 0:
-                face = tuple(reversed(face))
             faces.append(face)
             continue
         ordered = loop
@@ -394,7 +437,8 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
              2 * center[1] - vertex[1] if axis == "y" else vertex[1], vertex[2])
             for vertex in component.vertices
         ]
-        component.faces = [tuple(reversed(face)) for face in component.faces]
+        if axis == "x":
+            component.faces = [tuple(reversed(face)) for face in component.faces]
         offset = len(result.vertices)
         result.vertices.extend(component.vertices)
         result.faces.extend(tuple(index + offset for index in face) for face in component.faces)
@@ -520,7 +564,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     return result
 
 
-def apply_density(guide: Mesh, settings: RetopoSettings) -> Mesh:
+def requested_density_counts(guide: Mesh, settings: RetopoSettings):
     settings.validate()
     validate_guides(guide)
     creases = guide.edge_attributes.get("crease_edge", {})
@@ -543,13 +587,19 @@ def apply_density(guide: Mesh, settings: RetopoSettings) -> Mesh:
             and settings.base_density >= 50
         ):
             counts[edge] = max(
-                counts[edge], round(settings.base_density * 0.04 * settings.density_add)
+                counts[edge],
+                round(settings.base_density * 0.07 * settings.density_add * (1.7 - settings.density_add_threshold)),
             )
+    return counts
+
+
+def density_edge_counts(guide: Mesh, settings: RetopoSettings):
+    counts = requested_density_counts(guide, settings)
     incident = {index: [] for index in range(len(guide.vertices))}
     for edge in guide.edges():
         for vertex in edge:
             incident[vertex].append(edge)
-    for _ in range(max(1, len(guide.faces) * 4)):
+    for _ in range(max(1, settings.loop_iteration or len(guide.faces) * 4)):
         previous = dict(counts)
         for face in guide.faces:
             edges = [Mesh.edge_key(face[index], face[(index + 1) % 4]) for index in range(4)]
@@ -570,7 +620,47 @@ def apply_density(guide: Mesh, settings: RetopoSettings) -> Mesh:
                             counts[first, second] = counts[candidate] = value
         if not settings.auto_density or counts == previous:
             break
+    return counts
+
+
+def apply_density(guide: Mesh, settings: RetopoSettings) -> Mesh:
+    counts = density_edge_counts(guide, settings)
     return tessellate(guide, {edge: count for edge, count in counts.items() if count > 1})
+
+
+def polyloop_guides(guide: Mesh) -> Mesh:
+    validate_guides(guide)
+    return Mesh(vertices=guide.vertices, faces=[], lines=guide.edges(), uv_name=guide.uv_name)
+
+
+def sibling_contact_edges(guide: Mesh):
+    edge_faces = {edge: 0 for edge in guide.edges()}
+    for face in guide.faces:
+        for index, first in enumerate(face):
+            edge_faces[Mesh.edge_key(first, face[(index + 1) % len(face)])] += 1
+    contacts = {edge for edge, count in edge_faces.items() if count == 2}
+    positional = {}
+    for edge in guide.boundary_edges():
+        coordinates = tuple(sorted(
+            tuple(round(value, 6) for value in guide.vertices[vertex])
+            for vertex in edge
+        ))
+        if coordinates in positional:
+            contacts.update((edge, positional[coordinates]))
+        else:
+            positional[coordinates] = edge
+    return contacts
+
+
+def mismatch_edges(guide: Mesh, settings: RetopoSettings):
+    counts = requested_density_counts(guide, settings)
+    mismatches = set()
+    for face in guide.faces:
+        edges = [Mesh.edge_key(face[index], face[(index + 1) % 4]) for index in range(4)]
+        for first, second in ((0, 2), (1, 3)):
+            if counts[edges[first]] != counts[edges[second]]:
+                mismatches.update((edges[first], edges[second]))
+    return mismatches
 
 
 def neutralize_crease(guide: Mesh, edges) -> Mesh:
@@ -626,10 +716,14 @@ class SourceSurface:
             raise ValueError(f"source does not contain a complete UV map named {source.uv_name}")
         self.uv_name = source.uv_name
         self.triangles = []
+        self.vertex_positions = {}
         patterns = _pattern_faces(source)
         parts = _part_faces(source)
         cursor = 0
         for face_index, face in enumerate(source.faces):
+            for index, vertex in enumerate(face):
+                key = tuple(round(value, 12) for value in source.uv[cursor + index])
+                self.vertex_positions.setdefault(key, {})[vertex] = source.vertices[vertex]
             for index in range(1, len(face) - 1):
                 indices = (face[0], face[index], face[index + 1])
                 uv = (source.uv[cursor], source.uv[cursor + index], source.uv[cursor + index + 1])
@@ -653,6 +747,9 @@ class SourceSurface:
             raise ValueError("source UV map contains no projectable triangles")
         _, weights, positions, pattern, part = best
         position = tuple(sum(weights[index] * positions[index][axis] for index in range(3)) for axis in range(3))
+        key = tuple(round(value, 12) for value in coordinate)
+        if key in self.vertex_positions:
+            position = average(self.vertex_positions[key].values())
         return position, pattern, part
 
 
@@ -705,24 +802,21 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         if value > 0
         for index in edge
     }
-    cursor = 0
     remap = list(range(len(result.vertices)))
-    representatives = {}
-    for face in result.faces:
-        for vertex in face:
-            coordinate = result.uv[cursor]
-            cursor += 1
-            key = tuple(round(value, 8) for value in coordinate)
-            if key in representatives:
-                other = representatives[key]
-                if (
-                    vertex not in protected
-                    and other not in protected
-                    and math.dist(result.vertices[vertex], result.vertices[other]) <= distance
-                ):
-                    remap[vertex] = other
-            else:
-                representatives[key] = vertex
+    representatives = []
+    for vertex, position in enumerate(result.vertices):
+        found = None
+        if vertex not in protected:
+            for other in representatives:
+                if other in protected:
+                    continue
+                if math.dist(position, result.vertices[other]) <= distance:
+                    found = other
+                    break
+        if found is None:
+            found = vertex
+            representatives.append(vertex)
+        remap[vertex] = found
     unique = sorted(set(remap))
     indices = {old: new for new, old in enumerate(unique)}
     result.vertices = [result.vertices[index] for index in unique]
@@ -735,23 +829,51 @@ def merge_output_seams(mesh: Mesh, distance: float) -> Mesh:
 
 
 def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
-    if not math.isfinite(thickness) or thickness < 0:
-        raise ValueError("thickness must be finite and non-negative")
+    if not math.isfinite(thickness):
+        raise ValueError("thickness must be finite")
     if not math.isfinite(offset) or not -1 <= offset <= 1:
         raise ValueError("offset must be between -1 and 1")
     normals = vertex_normals(guide)
     front = [add(vertex, multiply(normal, thickness * (offset + 1) / 2)) for vertex, normal in zip(guide.vertices, normals)]
     back = [add(vertex, multiply(normal, thickness * (offset - 1) / 2)) for vertex, normal in zip(guide.vertices, normals)]
     count = len(guide.vertices)
-    vertices = front + back
-    faces = list(guide.faces) + [tuple(index + count for index in reversed(face)) for face in guide.faces]
-    for first, second in guide.boundary_edges():
-        faces.append((first, first + count, second + count, second))
+    vertices = back + front
+    faces = [tuple(reversed(face)) for face in guide.faces] + [
+        tuple(index + count for index in face) for face in guide.faces
+    ]
+    boundary = set(guide.boundary_edges())
+    directed = []
+    for face_index, face in enumerate(guide.faces):
+        for index, first in enumerate(face):
+            second = face[(index + 1) % len(face)]
+            if Mesh.edge_key(first, second) in boundary:
+                directed.append((first, second, face_index))
+    for first, second, _ in directed:
+        faces.append((first, second, second + count, first + count))
     result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name)
+    for name, values in guide.attributes.items():
+        if len(values) == len(guide.faces):
+            result.attributes[name] = values + values + [values[face_index] for _, _, face_index in directed]
+        elif len(values) == len(guide.vertices):
+            result.attributes[name] = values + values
+        else:
+            result.attributes[name] = list(values)
+    result.edge_attributes = {
+        name: dict(values) for name, values in guide.edge_attributes.items()
+    }
     if guide.uv:
-        result.uv = list(guide.uv) + list(guide.uv)
-        for first, second in guide.boundary_edges():
-            result.uv.extend([(0.0, 0.0)] * 4)
+        front_uv = list(guide.uv)
+        back_uv = []
+        offset = 0
+        for face in guide.faces:
+            back_uv.extend(guide.uv[offset + index] for index in reversed(range(len(face))))
+            offset += len(face)
+        result.uv = back_uv + front_uv
+        face_uv = _face_uv_maps(guide)
+        for first, second, face_index in directed:
+            first_uv = face_uv[face_index][first]
+            second_uv = face_uv[face_index][second]
+            result.uv.extend([first_uv, second_uv, second_uv, first_uv])
     return result
 
 
@@ -776,6 +898,30 @@ def diagnose(guide: Mesh, settings: RetopoSettings, source: Mesh | None):
     }
 
 
+def morph_preview(source: Mesh, guide: Mesh, settings: RetopoSettings) -> Mesh:
+    preview_settings = replace(
+        settings,
+        fit_uv=False,
+        thickness_enabled=False,
+        separate_patterns=False,
+        separate_parts=False,
+    )
+    projected = retopologize(source, guide, preview_settings)
+    flat = [None] * len(projected.vertices)
+    cursor = 0
+    for face in projected.faces:
+        for vertex in face:
+            if flat[vertex] is None:
+                flat[vertex] = projected.uv[cursor]
+            cursor += 1
+    result = projected.copy()
+    result.vertices = [
+        lerp((flat[index][0], flat[index][1], 0.0), vertex, settings.morph_2d_3d)
+        for index, vertex in enumerate(projected.vertices)
+    ]
+    return result
+
+
 def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = None) -> Mesh:
     settings = settings or RetopoSettings()
     settings.validate()
@@ -797,7 +943,7 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
             across_patterns=settings.auto_fill,
         )
     if settings.output_generated_planes:
-        working.uv = [working.vertices[index][:2] for face in working.faces for index in face]
+        working.uv = []
         return working
     working = snap_guides_to_pattern(working, flat, settings.snapping_distance * 0.001)
     working = apply_density(working, settings)
@@ -815,6 +961,8 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
         parts.append(part)
     result = Mesh(vertices=positions, faces=list(working.faces), uv_name=source.uv_name)
     result.uv = [working.vertices[index][:2] for face in working.faces for index in face]
+    if settings.smooth_low_poly and not settings.smooth_uvs:
+        result.vertices = smooth(result, settings.smooth_low_poly).vertices
     face_patterns = []
     face_parts = []
     for face in working.faces:
@@ -829,6 +977,8 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
         for face_index in component:
             face_planes[face_index] = plane
     result.attributes["retopo_plane_id"] = face_planes
+    if "bevel_weight_edge" in working.edge_attributes:
+        result.edge_attributes["bevel_weight_edge"] = dict(working.edge_attributes["bevel_weight_edge"])
     if settings.fit_uv:
         result.uv = _fit_uv(result.uv)
     result = _merge_seams(result, settings.seams_merge_distance)

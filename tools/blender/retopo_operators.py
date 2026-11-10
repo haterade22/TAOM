@@ -39,29 +39,30 @@ class TAOM_RetopoSettings(bpy.types.PropertyGroup):
     guide_collection: PointerProperty(name="Retopo Planes", type=bpy.types.Collection)
     scale_gui: FloatProperty(name="Scale GUI", default=1.0, min=0.0, max=10.0)
     offset_3d_cloth: FloatProperty(name="Offset 3D Cloth", default=0.0, soft_min=-10.0, soft_max=10.0)
+    loop_iteration: IntProperty(name="LoopIteration", default=0, min=0, max=50)
     initialize_planes: BoolProperty(name="Initialize Planes", default=False)
     angle_threshold: FloatProperty(name="Angle Threshold", default=0.55, min=0.0, max=1.0)
     corners_threshold: FloatProperty(name="Corners Threshold", default=0.5, min=0.0, max=1.0)
     median_corners_threshold: FloatProperty(name="Median Corners Threshold", default=0.5, min=0.0, max=1.0)
     auto_fill_prepass: BoolProperty(name="Auto Fill Prepass (Point Guides)", default=False)
     auto_fill: BoolProperty(name="Auto Fill", default=False)
-    auto_fill_max_iterations: IntProperty(name="Auto Fill Max Iterations", default=5, min=0, max=100)
+    auto_fill_max_iterations: IntProperty(name="Auto Fill Max Iterations", default=5, min=0, max=50)
     output_generated_planes: BoolProperty(name="Output Generated Planes", default=False)
-    base_density: FloatProperty(name="Base Density", default=25.0, min=0.0, soft_max=100.0)
+    base_density: FloatProperty(name="Base Density", default=25.0, min=0.0, max=100.0)
     snapping_distance: FloatProperty(name="Snapping Distance", default=1.0, min=0.0, soft_max=100.0)
     seams_merge_distance: FloatProperty(name="Seams Merge Distance", default=0.003, min=0.0, soft_max=1.0, precision=5)
-    smooth_low_poly: IntProperty(name="Smooth LowPoly", default=0, min=0, max=100)
+    smooth_low_poly: IntProperty(name="Smooth LowPoly", default=0, min=0, max=20)
     auto_density: BoolProperty(name="Auto Density", default=True)
     full_crease_control: BoolProperty(name="Full Crease Control", default=False)
-    density_add: IntProperty(name="Density Add", default=2, min=0, max=100)
+    density_add: IntProperty(name="Density Add", default=2, min=0)
     density_add_threshold: FloatProperty(name="Density Add Threshold", default=0.7, min=0.0, max=1.0)
-    subdiv_reproject: IntProperty(name="SubDiv + Reproject", default=0, min=0, max=8)
+    subdiv_reproject: IntProperty(name="SubDiv + Reproject", default=0, min=0, max=6)
     smooth_uvs: BoolProperty(name="Smooth UVs", default=True)
     fit_uv: BoolProperty(name="Fit UVs to 1st Tile", default=True)
     separate_patterns: BoolProperty(name="Separate Patterns", default=False)
     separate_parts: BoolProperty(name="Separate Parts", default=True)
     thickness_enabled: BoolProperty(name="Thickness Enabled", default=False)
-    thickness: FloatProperty(name="Thickness", default=0.005, min=0.0, soft_max=1.0, precision=5)
+    thickness: FloatProperty(name="Thickness", default=0.005, soft_max=1.0, precision=5)
     thickness_offset: FloatProperty(name="Thickness Offset", default=-1.0, min=-1.0, max=1.0)
     hide_debug: BoolProperty(name="Hide Debug", default=False)
     points_guide: BoolProperty(name="Points Guide", default=True)
@@ -88,7 +89,7 @@ class TAOM_RetopoSettings(bpy.types.PropertyGroup):
     manual_density: BoolProperty(name="Manual Density (Crease)", default=True)
     show_snapping_distance: BoolProperty(name="Snapping Distance", default=True)
     preview_source_cloth: BoolProperty(name="Preview Source Cloth", default=False)
-    debug_material_seed: IntProperty(name="Debug Mat Seed", default=0)
+    debug_material_seed: IntProperty(name="Debug Mat Seed", default=0, min=0)
     ui_hue: FloatProperty(name="UI Hue", default=0.0, min=0.0, max=1.0)
 
 
@@ -191,20 +192,35 @@ def _sync_helpers(output, source, flat, guide, settings, result):
             edge.use_edge_sharp = (edge.vertices[0], edge.vertices[1]) in boundaries or (edge.vertices[1], edge.vertices[0]) in boundaries
     _debug_materials(output, settings)
     collection = _helper_collection(output)
+    if settings.morph_2d_3d > 0:
+        preview_mesh = engine.morph_preview(mesh_from_blender(source, evaluated=True), guide, settings)
+        preview = mesh_to_blender(preview_mesh, "TAOM Morph Preview", collection)
+        preview["taom_retopology_helper"] = True
+        preview.show_in_front = True
     if settings.hide_debug:
         return
-    helper_mesh = None
     if settings.points_guide:
         points = [flat.vertices[index] for index, value in enumerate(flat.attributes.get("point_guide", [])) if value]
         helper_mesh = Mesh(vertices=points, faces=[])
         helper = mesh_to_blender(helper_mesh, "TAOM Point Guides", collection)
         helper.show_in_front = True
         helper["taom_retopology_helper"] = True
-    if settings.mismatch_lines or settings.polyloops or settings.sibling_contact:
-        edges = flat.boundary_edges()
-        helper = mesh_to_blender(flat, "TAOM Contact Guides", collection, edges=edges)
+    if settings.mismatch_lines:
+        edges = engine.mismatch_edges(guide, settings)
+        if edges:
+            helper = mesh_to_blender(guide, "TAOM Mismatch Lines", collection, edges=edges)
+            helper.show_in_front = True
+            helper["taom_retopology_helper"] = True
+    if settings.polyloops:
+        helper = mesh_to_blender(engine.polyloop_guides(guide), "TAOM PolyLoops", collection)
         helper.show_in_front = True
         helper["taom_retopology_helper"] = True
+    if settings.sibling_contact:
+        edges = engine.sibling_contact_edges(guide)
+        if edges:
+            helper = mesh_to_blender(guide, "TAOM Sibling Contact", collection, edges=edges)
+            helper.show_in_front = True
+            helper["taom_retopology_helper"] = True
     if settings.preview_source_cloth:
         preview = bpy.data.objects.new("TAOM Source Preview", source.data.copy())
         collection.objects.link(preview)
@@ -212,10 +228,11 @@ def _sync_helpers(output, source, flat, guide, settings, result):
         preview["taom_retopology_helper"] = True
     if not settings.hide_viewport_info:
         if settings.edge_count:
+            counts = engine.density_edge_counts(guide, settings)
             for index, edge in enumerate(guide.edges()):
                 first, second = edge
                 location = tuple((a + b) * 0.5 for a, b in zip(guide.vertices[first], guide.vertices[second]))
-                _text(collection, f"TAOM Edge {index}", str(index), location, 0.02 * settings.scale_gui)
+                _text(collection, f"TAOM Edge {index}", str(counts[edge]), location, 0.02 * settings.scale_gui)
         if settings.manual_density:
             for index, edge in enumerate(guide.edges()):
                 value = guide.edge_attributes.get("crease_edge", {}).get(edge)
@@ -240,7 +257,7 @@ class TAOM_OT_flatten_patterns(bpy.types.Operator):
         source = _active_mesh(context)
         try:
             flat = engine.flatten_to_patterns(
-                mesh_from_blender(source, evaluated=True),
+                mesh_from_blender(source, evaluated=True, uv_name=self.uv_name or None),
                 uv_name=self.uv_name or None,
                 simplify=self.simplify,
                 merge_distance=self.merge_distance,
@@ -317,7 +334,8 @@ class TAOM_OT_mirror_guides(bpy.types.Operator):
     def execute(self, context):
         active = _active_mesh(context)
         axes = ("x", "y") if self.axis == "xy" else (self.axis,)
-        result = engine.mirror_guides(mesh_from_blender(active), axes=axes)
+        source_mesh = mesh_from_blender(_source(context), evaluated=True)
+        result = engine.mirror_guides(mesh_from_blender(active), axes=axes, source=source_mesh)
         obj = mesh_to_blender(result, active.name + "_Mirrored")
         _activate(obj)
         return {"FINISHED"}
@@ -437,7 +455,7 @@ class TAOM_PT_retopology(bpy.types.Panel):
         layout.operator("taom.inspect_topology")
         layout.operator("taom.validate_retopology")
         for name in (
-            "scale_gui", "offset_3d_cloth", "initialize_planes", "angle_threshold",
+            "scale_gui", "offset_3d_cloth", "loop_iteration", "initialize_planes", "angle_threshold",
             "corners_threshold", "median_corners_threshold", "auto_fill_prepass", "auto_fill",
             "auto_fill_max_iterations", "output_generated_planes", "base_density",
             "snapping_distance", "seams_merge_distance", "smooth_low_poly", "auto_density",

@@ -91,7 +91,6 @@ def weld(mesh: Mesh, distance: float, protected_edges: set[Edge] | None = None) 
                     break
         if found is None:
             found = index
-            representatives.append(index)
             cells.setdefault(cell, []).append(index)
         representatives.append(found)
     unique = sorted(set(representatives))

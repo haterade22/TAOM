@@ -213,7 +213,7 @@ class DensityTests(unittest.TestCase):
 
     def test_bevel_weight_keeps_seam_vertices_unmerged(self):
         mesh = Mesh(
-            vertices=[(0, 0, 0), (0, 0, 0), (1, 0, 0), (1, 1, 0)],
+            vertices=[(0, 0, 0), (0, 0, 0), (2, 0, 0), (2, 2, 0)],
             faces=[(0, 2, 3, 1)],
             uv=[(0, 0)] * 4,
         )
@@ -334,6 +334,41 @@ class ThicknessAndDiagnosticsTests(unittest.TestCase):
         self.assertEqual(32, len(result.vertices))
         self.assertEqual(32, len(result.faces))
         self.assertTrue(all(len(face) == 4 for face in result.faces))
+
+    def test_negative_thickness_is_supported(self):
+        result = engine.thicken(unit_guide(), thickness=-0.05, offset=0.0)
+        self.assertEqual(8, len(result.vertices))
+        self.assertEqual(6, len(result.faces))
+        self.assertTrue(all(len(face) == 4 for face in result.faces))
+
+    def test_original_numeric_limits_are_enforced(self):
+        for settings in (
+            RetopoSettings(base_density=101),
+            RetopoSettings(subdiv_reproject=7),
+            RetopoSettings(auto_fill_max_iterations=51),
+            RetopoSettings(smooth_low_poly=21),
+            RetopoSettings(debug_material_seed=-1),
+        ):
+            with self.subTest(settings=settings):
+                with self.assertRaises(ValueError):
+                    settings.validate()
+
+    def test_loop_iteration_bounds_density_reconciliation(self):
+        guide = unit_guide()
+        guide.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        settings = RetopoSettings(base_density=20, loop_iteration=1)
+        settings.validate()
+        with self.assertRaisesRegex(ValueError, "loop_iteration"):
+            RetopoSettings(loop_iteration=51).validate()
+        self.assertEqual(2, len(engine.apply_density(guide, settings).faces))
+
+    def test_morph_preview_is_separate_from_final_reprojection(self):
+        final = engine.retopologize(curved_source(), unit_guide(), RetopoSettings(subdiv_reproject=1, morph_2d_3d=0.5))
+        preview = engine.morph_preview(curved_source(), unit_guide(), RetopoSettings(subdiv_reproject=1, morph_2d_3d=0.5))
+        center = min(preview.vertices, key=lambda vertex: math.dist(vertex[:2], (0.25, 0.25)))
+        self.assertAlmostEqual(0.1, center[2])
+        self.assertAlmostEqual(0.25, center[0])
+        self.assertIn((0.0, 0.0, 0.2), final.vertices)
 
     def test_diagnostic_report_names_all_invalid_inputs(self):
         report = engine.diagnose(

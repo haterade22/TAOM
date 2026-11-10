@@ -150,6 +150,7 @@ def cases():
         case("fit_uv", curved_grid(), unit_guide(), fit_uv=True),
         case("thickness", curved_grid(), unit_guide(), thickness_enabled=True, thickness=0.05, thickness_offset=0.0, fit_uv=False),
         case("thickness_offset", curved_grid(), unit_guide(), thickness_enabled=True, thickness=0.05, thickness_offset=1.0, fit_uv=False),
+        case("thickness_negative", curved_grid(), unit_guide(), thickness_enabled=True, thickness=-0.05, thickness_offset=0.0, fit_uv=False),
         case("initialize", curved_grid(), unit_guide(), initialize_planes=True, output_generated_planes=True),
         case("two_guides", curved_grid(), two_guide(), fit_uv=False, separate_parts=False),
         case("smooth_uv_off", curved_grid(), two_guide(), smooth_low_poly=1, smooth_uvs=False, fit_uv=False, separate_parts=False),
@@ -217,4 +218,7 @@ def summary(mesh):
         "sample_vertices": mesh.vertices[:12],
         "sample_faces": mesh.faces[:12],
         "sample_uv": mesh.uv[:12],
+        "geometry_vertices": mesh.vertices,
+        "geometry_faces": mesh.faces,
+        "geometry_uv": mesh.uv,
     }

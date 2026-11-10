@@ -51,6 +51,10 @@ def main():
     output_object = mesh_to_blender(result, source.name + "_Retopo")
     output_object["engine"] = "TAOM independent UV retopology"
     output.parent.mkdir(parents=True, exist_ok=True)
+    report_path = output.with_name("retopo-report.json")
+    if report_path.exists():
+        report_path.unlink()
+    bpy.ops.wm.save_as_mainfile(filepath=str(output))
     report = {
         "status": "ok",
         "source": source.name,
@@ -60,8 +64,7 @@ def main():
         "uv_name": result.uv_name,
         "output": str(output),
     }
-    output.with_name("retopo-report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    bpy.ops.wm.save_as_mainfile(filepath=str(output))
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

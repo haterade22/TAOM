@@ -101,13 +101,17 @@ and guide objects are preserved when generating a new output.
 
 ## Tests
 
-- `python -m unittest tools.tests.test_retopo_engine`: 34 tests covering flattening, attributes,
+- `python -m unittest tools.tests.test_retopo_engine`: 38 tests covering flattening, attributes,
   initialization, holes, mirroring, local and connected fill, density, snapping, reprojection,
-  separation, thickness, non-manifold inspection, and split-edge repair.
+  separation, positive and negative thickness, numeric limits, loop iteration, morph preview,
+  non-manifold inspection, and split-edge repair.
 - `python -m unittest tools.tests.test_retopo_differential`: original-product comparisons for base
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
-  thickness, and inspector behavior. Non-identical tessellation cases are explicitly separated from
-  exact topology and bounds checks.
+  thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
+  connectivity, and geometry-UV associations. Non-identical tessellation cases are explicitly separated.
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: eight regression tests for weld
+  representatives, non-quad ring initialization, seam protection, thickness metadata and UVs,
+  independent smoothing, sharp thresholds, generated-plane corners, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
   instance-context patch refresh, and the registered menu operator.
 - `python -m unittest tools.tests.test_package_retopology_toolkit`: source manifest, reproducibility,
@@ -119,6 +123,12 @@ and guide objects are preserved when generating a new output.
   and inspector debug/repair. `tools/blender/petik_selftest.py` verifies 3 to 6-sided patches,
   alternative solutions, control-line editing, selected loops, modal controls, reset/undo, preference
   swaps, visibility, ray casting, snapping, and view normals. Both reports require `"status": "ok"`.
+  The TAOM test also requires a named `TAOM Morph Preview`, separate mismatch, polyloop and sibling
+  helpers, computed density labels, and an unchanged final reprojection. Petik also verifies add-on
+  reload, both registered hotkeys, help drawing, right-click handling, and mouse-wheel editing.
+- The freshly installed KEYforce archives pass the material, preview, thickness, generated-plane,
+  pattern, seam, mirror, auto-fill, crease, validation, and clean-disable matrix. The packaged
+  headless example produces a staged `.blend` and writes success only after the save completes.
 - The complete public contract and evidence requirements are in
   [retopo-planes-complete-capability-matrix.md](../research/retopo-planes-complete-capability-matrix.md).
 

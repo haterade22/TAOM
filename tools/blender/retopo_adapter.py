@@ -8,7 +8,7 @@ except ImportError:
     from .retopo_engine import Mesh, RetopoSettings
 
 
-def mesh_from_blender(obj, evaluated=False):
+def mesh_from_blender(obj, evaluated=False, uv_name=None):
     if obj is None or obj.type != "MESH":
         raise ValueError("a mesh object is required")
     if evaluated:
@@ -20,7 +20,7 @@ def mesh_from_blender(obj, evaluated=False):
     try:
         vertices = [tuple(vertex.co) for vertex in data.vertices]
         faces = [tuple(polygon.vertices) for polygon in data.polygons]
-        layer = data.uv_layers.active
+        layer = data.uv_layers.get(uv_name) if uv_name else data.uv_layers.active
         uv = [tuple(loop.uv) for loop in layer.data] if layer else []
         face_edges = {
             Mesh.edge_key(face[index], face[(index + 1) % len(face)])
@@ -76,27 +76,30 @@ def mesh_to_blender(mesh, name, collection=None, edges=None):
             loop.uv = coordinate
         layer.active = True
         layer.active_render = True
-    for name, values in mesh.attributes.items():
-        if len(values) == len(mesh.faces):
-            attribute = data.attributes.new(name=name, type="INT", domain="FACE")
+    for attribute_name, values in mesh.attributes.items():
+        if attribute_name in {"source_position", "pattern_center"}:
+            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain="POINT")
+            for item, value in zip(attribute.data, values):
+                item.vector = value
+        elif attribute_name in {"point_guide", "open_seam", "simplify_on"}:
+            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain="POINT")
+            for item, value in zip(attribute.data, values):
+                item.value = bool(value)
+        elif attribute_name in {"source_vertex", "source_part"} or (attribute_name == "pattern_id" and "source_position" in mesh.attributes):
+            attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
+            for item, value in zip(attribute.data, values):
+                item.value = int(value)
+        elif len(values) == len(mesh.faces):
+            attribute = data.attributes.new(name=attribute_name, type="INT", domain="FACE")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
         elif len(values) == len(mesh.vertices):
-            if name in {"source_position", "pattern_center"}:
-                attribute = data.attributes.new(name=name, type="FLOAT_VECTOR", domain="POINT")
-                for item, value in zip(attribute.data, values):
-                    item.vector = value
-            elif name in {"point_guide", "open_seam", "simplify_on"}:
-                attribute = data.attributes.new(name=name, type="BOOLEAN", domain="POINT")
-                for item, value in zip(attribute.data, values):
-                    item.value = bool(value)
-            else:
-                attribute = data.attributes.new(name=name, type="INT", domain="POINT")
-                for item, value in zip(attribute.data, values):
-                    item.value = int(value)
-    for name, values in mesh.edge_attributes.items():
-        attribute_type = "BOOLEAN" if name in {"sharp_edge", "part_border"} else "FLOAT"
-        attribute = data.attributes.new(name=name, type=attribute_type, domain="EDGE")
+            attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
+            for item, value in zip(attribute.data, values):
+                item.value = int(value)
+    for attribute_name, values in mesh.edge_attributes.items():
+        attribute_type = "BOOLEAN" if attribute_name in {"sharp_edge", "part_border"} else "FLOAT"
+        attribute = data.attributes.new(name=attribute_name, type=attribute_type, domain="EDGE")
         for item_index, item in enumerate(attribute.data):
             edge = Mesh.edge_key(*data.edges[item_index].vertices)
             if edge in values:
@@ -137,7 +140,7 @@ def replace_mesh(obj, mesh):
 
 def settings_from_property(properties):
     names = (
-        "scale_gui", "offset_3d_cloth", "initialize_planes", "angle_threshold",
+        "scale_gui", "offset_3d_cloth", "loop_iteration", "initialize_planes", "angle_threshold",
         "corners_threshold", "median_corners_threshold", "auto_fill_prepass", "auto_fill",
         "auto_fill_max_iterations", "output_generated_planes", "base_density",
         "snapping_distance", "seams_merge_distance", "smooth_low_poly", "auto_density",

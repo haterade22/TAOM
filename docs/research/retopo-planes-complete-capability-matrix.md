@@ -7,17 +7,24 @@ specification into an exhaustive adoption contract. Every row has original-produ
 evidence or a real Blender runtime test with an independent expected result. No percentage claim is
 based on file count or test count alone.
 
-Exact topology and bounds match for the base, subdivision, UV, initialization, ring, mirror,
-separation, thickness, and inspector fixtures. Add-only crease and high-sharp use non-identical
+Complete vertex positions, oriented connectivity, and geometry-UV associations match for the base,
+subdivision, UV, initialization, ring, mirror, separation, thickness, and inspector fixtures. The
+oracle compares complete synthetic meshes, not truncated samples. Add-only crease and high-sharp use non-identical
 tessellation and are checked for all-quad output, density direction, components, and bounds within
 1%. The hex auto-fill solver uses a different central two-quad layout and is checked for its exact
 6-vertex, 2-quad result rather than outer-corner identity. These distinctions are acceptance
 requirements, not silent parity claims.
 
+The numeric contract enforces the original maxima for base density, subdivision, smoothing, auto-fill,
+loop iteration, and debug seed. Negative thickness is supported. The morph slider creates a separate
+preview mesh and never changes the fully reprojected final output.
+
 Petik evidence includes real BMesh 3 to 6-sided quad patches, alternative solutions, control-line
 editing, selected-loop discovery, modal controls, reset/undo, preference swaps, visibility, real
-ray casting, snapping, and view normals. Background-only RNA modal-handler registration is isolated
-by the test context, while the modal methods themselves run unchanged.
+ray casting, snapping, and view normals. Registration and reload, both hotkeys, help drawing,
+right-click handling, and mouse-wheel control-point and snap-distance changes are also exercised.
+Background-only RNA modal-handler registration is isolated by the test context, while the modal
+methods themselves run unchanged.
 
 Reference input remains `RetopoPlanes1.6.3vBlender5.1.blend`, SHA-256
 `6e00e628d0638fbab315076baf1db466c6b93e583f2a5123dcf50ff510441b64`, inspected with automatic

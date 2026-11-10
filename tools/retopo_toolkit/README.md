@@ -57,14 +57,14 @@ It writes `retopo-report.json` beside the staged output.
 From the `retopo-toolkit` directory:
 
 ```bat
-python -m unittest tools.tests.test_retopo_engine tools.tests.test_retopo_differential tools.tests.test_petik_compat tools.tests.test_package_retopology_toolkit
+python -m unittest tools.tests.test_retopo_engine tools.tests.test_retopo_differential tools.tests.test_retopo_contract_regressions tools.tests.test_petik_compat tools.tests.test_package_retopology_toolkit
 python -m ruff check tools/retopo_engine tools/blender/retopo_adapter.py tools/blender/retopo_operators.py tools/tests/test_retopo_engine.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_selftest.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/petik_selftest.py
 ```
 
-The Blender runs write `tools/blender/retopo_selftest_report.json` and
-`tools/blender/petik_selftest_report.json`; require `"status": "ok"` in both.
+The Blender runs write `TestResults/Blender/retopo_selftest_report.json` and
+`TestResults/Blender/petik_selftest_report.json`; require `"status": "ok"` in both.
 Generated self-test reports and staged meshes are not package inputs.
 
 ## Rebuild the ZIP

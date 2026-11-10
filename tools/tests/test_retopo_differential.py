@@ -10,6 +10,39 @@ ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = ROOT / "tools/tests/fixtures/retopo_reference.json"
 
 
+def canonical_vertices(vertices):
+    return sorted(tuple(round(value, 5) for value in vertex) for vertex in vertices)
+
+
+def canonical_faces(vertices, faces):
+    canonical = []
+    for face in faces:
+        coordinates = [tuple(round(value, 5) for value in vertices[index]) for index in face]
+        rotations = [tuple(coordinates[index:] + coordinates[:index]) for index in range(len(coordinates))]
+        canonical.append(min(rotations))
+    return sorted(canonical)
+
+
+def canonical_uv_faces(vertices, faces, uv):
+    if not uv:
+        return []
+    canonical = []
+    cursor = 0
+    for face in faces:
+        if cursor + len(face) > len(uv):
+            break
+        items = []
+        for index in face:
+            items.append((
+                tuple(round(value, 5) for value in vertices[index]),
+                tuple(round(value, 5) for value in uv[cursor]),
+            ))
+            cursor += 1
+        rotations = [tuple(items[index:] + items[:index]) for index in range(len(items))]
+        canonical.append(min(rotations))
+    return sorted(canonical)
+
+
 class RetopoDifferentialTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -25,8 +58,12 @@ class RetopoDifferentialTests(unittest.TestCase):
         for key in ("vertices", "edges", "faces", "face_sizes", "components", "uv_name"):
             self.assertEqual(expected[key], actual[key], key)
         self.assert_bounds_close(expected["bounds"], actual["bounds"], "bounds")
-        if expected["sample_uv"]:
+        self.assertEqual(canonical_vertices(expected["geometry_vertices"]), canonical_vertices(actual["geometry_vertices"]))
+        self.assertEqual(canonical_faces(expected["geometry_vertices"], expected["geometry_faces"]), canonical_faces(actual["geometry_vertices"], actual["geometry_faces"]))
+        self.assertIn(len(expected["geometry_uv"]), {0, sum(len(face) for face in expected["geometry_faces"])})
+        if expected["geometry_uv"]:
             self.assert_bounds_close(expected["uv_bounds"], actual["uv_bounds"], "uv_bounds")
+            self.assertEqual(canonical_uv_faces(expected["geometry_vertices"], expected["geometry_faces"], expected["geometry_uv"]), canonical_uv_faces(actual["geometry_vertices"], actual["geometry_faces"], actual["geometry_uv"]))
 
     def test_reference_cases_have_no_errors(self):
         failures = {name: value.get("error") for name, value in self.reference["cases"].items() if "error" in value}

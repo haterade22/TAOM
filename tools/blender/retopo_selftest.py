@@ -84,6 +84,35 @@ def main():
         assert any(abs(vertex.co.z - 0.2) < 1e-5 for vertex in output.data.vertices)
         assert [tuple(vertex.co) for vertex in source.data.vertices] == original_source
         assert len(guide.data.vertices) == 4
+        settings.morph_2d_3d = 0.5
+        settings.hide_debug = False
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        output = bpy.context.active_object
+        preview = bpy.data.objects.get("TAOM Morph Preview")
+        assert preview is not None, "morph preview helper was not created"
+        assert len(preview.data.vertices) == len(output.data.vertices)
+        assert any(abs(vertex.co.z - 0.1) < 1e-5 for vertex in preview.data.vertices)
+        assert any(abs(vertex.co.z - 0.2) < 1e-5 for vertex in output.data.vertices)
+        settings.morph_2d_3d = 0.0
+        settings.base_density = 20
+        crease = guide.data.attributes.new(name="crease_edge", type="FLOAT", domain="EDGE")
+        bottom = next(edge for edge in guide.data.edges if all(guide.data.vertices[index].co.y == 0 for index in edge.vertices))
+        crease.data[bottom.index].value = 0.5
+        mesh_object(
+            "TAOM_Selftest_ContactGuide",
+            [(1, 0, 0), (2, 0, 0), (2, 1, 0), (1, 1, 0)],
+            [(0, 1, 2, 3)],
+            collection=guides,
+        )
+        settings.mismatch_lines = True
+        settings.polyloops = True
+        settings.sibling_contact = True
+        settings.edge_count = True
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        for name in ("TAOM Mismatch Lines", "TAOM PolyLoops", "TAOM Sibling Contact"):
+            assert bpy.data.objects.get(name) is not None, name
+        assert bpy.data.objects["TAOM Edge 0"].data.body == "2"
+        settings.hide_debug = True
 
         activate(flat)
         result = bpy.ops.taom.initialize_planes()
@@ -135,7 +164,9 @@ def main():
         retopo_operators.unregister()
 
 
-out = Path(__file__).resolve().with_name("retopo_selftest_report.json")
+out_dir = Path(__file__).resolve().parents[2] / "TestResults" / "Blender"
+out_dir.mkdir(parents=True, exist_ok=True)
+out = out_dir / "retopo_selftest_report.json"
 try:
     report = main()
 except BaseException:

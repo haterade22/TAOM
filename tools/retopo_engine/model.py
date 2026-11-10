@@ -97,6 +97,7 @@ class Mesh:
 class RetopoSettings:
     scale_gui: float = 1.0
     offset_3d_cloth: float = 0.0
+    loop_iteration: int = 0
     initialize_planes: bool = False
     angle_threshold: float = 0.55
     corners_threshold: float = 0.5
@@ -150,16 +151,23 @@ class RetopoSettings:
         for name, value in finite_nonnegative.items():
             if not math.isfinite(value) or value < 0:
                 raise ValueError(f"{name} must be finite and non-negative")
-        for name in ("smooth_low_poly", "subdiv_reproject", "auto_fill_max_iterations"):
+        if self.base_density > 100:
+            raise ValueError("base_density must not exceed 100")
+        for name, maximum in (
+            ("smooth_low_poly", 20), ("subdiv_reproject", 6),
+            ("auto_fill_max_iterations", 50), ("loop_iteration", 50),
+        ):
             value = getattr(self, name)
-            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
-                raise ValueError(f"{name} must be a non-negative integer")
+            if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= maximum:
+                raise ValueError(f"{name} must be between 0 and {maximum}")
         for name in ("density_add", "debug_material_seed"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
                 raise ValueError(f"{name} must be an integer")
         if self.density_add < 0:
             raise ValueError("density_add must be non-negative")
+        if self.debug_material_seed < 0:
+            raise ValueError("debug_material_seed must be non-negative")
         for name in (
             "angle_threshold", "corners_threshold", "median_corners_threshold",
             "density_add_threshold", "morph_2d_3d", "ui_hue",
@@ -167,8 +175,8 @@ class RetopoSettings:
             value = getattr(self, name)
             if not math.isfinite(value) or not 0 <= value <= 1:
                 raise ValueError(f"{name} must be between 0 and 1")
-        if not math.isfinite(self.thickness) or self.thickness < 0:
-            raise ValueError("thickness must be finite and non-negative")
+        if not math.isfinite(self.thickness):
+            raise ValueError("thickness must be finite")
         if not math.isfinite(self.thickness_offset) or not -1 <= self.thickness_offset <= 1:
             raise ValueError("thickness_offset must be between -1 and 1")
         if self.debug_material not in {"Patterns", "Parts", "Retopo Planes", "None"}:
