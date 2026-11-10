@@ -204,9 +204,13 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     point_attribute_names = {
         name
         for name, values in mesh.attributes.items()
-        if len(values) == len(mesh.vertices)
-        and name not in {"part_id", "retopo_plane_id"}
-        and (name != "pattern_id" or "source_position" in mesh.attributes)
+        if mesh.attribute_domains.get(name) == "POINT"
+        or (
+            name not in mesh.attribute_domains
+            and len(values) == len(mesh.vertices)
+            and name not in {"part_id", "retopo_plane_id"}
+            and (name != "pattern_id" or "source_position" in mesh.attributes)
+        )
     }
     face_order = sorted(
         range(len(mesh.faces)),

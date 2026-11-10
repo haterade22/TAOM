@@ -576,6 +576,7 @@ class ContractRegressionTests(unittest.TestCase):
         mesh = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, -1)],
             faces=[(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2), (0, 1, 4)],
+            uv=[(face * 10 + corner, 0) for face in range(5) for corner in range(3)],
             attributes={
                 "pattern_id": [10, 11, 12, 13, 14],
                 "part_id": [20, 21, 22, 23, 24],
@@ -588,6 +589,33 @@ class ContractRegressionTests(unittest.TestCase):
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             self.assertEqual(mesh.attributes[name], result.attributes[name])
         self.assertEqual(len(result.vertices), len(result.attributes["source_vertex"]))
+        for face_index, face in enumerate(mesh.faces):
+            self.assertEqual(mesh.uv[face_index * 3:face_index * 3 + 3], result.uv[face_index * 3:face_index * 3 + 3])
+            self.assertEqual([mesh.vertices[index] for index in face], [result.vertices[index] for index in result.faces[face_index]])
+
+    def test_repair_uses_explicit_attribute_domains(self):
+        point_mesh = differential.non_manifold()
+        point_mesh.attributes = {"pattern_id": [10, 11, 12, 13, 14], "source_vertex": [0, 1, 2, 3, 4]}
+        point_mesh.attribute_domains = {"pattern_id": "POINT", "source_vertex": "POINT"}
+        point_result, _ = engine.inspect_topology(point_mesh, fix_split_edges=True)
+        self.assertEqual([10, 11, 14, 10, 11, 12, 11, 10, 13], point_result.attributes["pattern_id"])
+        self.assertEqual("POINT", point_result.attribute_domains["pattern_id"])
+        face_mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, -1)],
+            faces=[(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2), (0, 1, 4)],
+            attributes={
+                "pattern_id": [10, 11, 12, 13, 14],
+                "part_id": [20, 21, 22, 23, 24],
+                "retopo_plane_id": [30, 31, 32, 33, 34],
+                "source_position": [(0, 0, 0)] * 5,
+            },
+            attribute_domains={"pattern_id": "FACE", "part_id": "FACE", "retopo_plane_id": "FACE", "source_position": "POINT"},
+        )
+        face_result, _ = engine.inspect_topology(face_mesh, fix_split_edges=True)
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            self.assertEqual(face_mesh.attributes[name], face_result.attributes[name])
+            self.assertEqual("FACE", face_result.attribute_domains[name])
+        self.assertEqual(len(face_result.vertices), len(face_result.attributes["source_position"]))
 
     def test_repair_is_canonical_across_face_order(self):
         faces = [(1, 3, 5, 4), (2, 5, 4, 3), (0, 6, 2, 5), (5, 2, 4, 6), (5, 4, 0, 1), (3, 1, 0, 2)]
