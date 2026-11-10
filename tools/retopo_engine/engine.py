@@ -912,6 +912,17 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         result.attribute_domains = dict(current.attribute_domains)
         return result
 
+    def split_edge(current, parent, new_vertex):
+        parent = Mesh.edge_key(*parent)
+        for values in current.edge_attributes.values():
+            if parent not in values:
+                continue
+            value = values[parent]
+            values[Mesh.edge_key(parent[0], new_vertex)] = value
+            values[Mesh.edge_key(parent[1], new_vertex)] = value
+            if parent not in current.edges():
+                del values[parent]
+
     def fill(current, candidate_points):
         if max_iterations == 0:
             return current
@@ -953,6 +964,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 ]
                 for name in face_attribute_names:
                     current.attributes[name] = [parent_attributes[name]] * 2
+                split_edge(current, (face[0], face[1]), len(current.vertices) - 2)
+                split_edge(current, (face[2], face[3]), len(current.vertices) - 1)
                 return current
         for _ in range(max_iterations):
             missing = [
@@ -1019,6 +1032,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 current.attributes[name].extend([parent_attributes[name]] * 2)
             current.faces.append((first, first_new, opposite_new, fourth))
             current.faces.append((first_new, second, third, opposite_new))
+            split_edge(current, (first, second), first_new)
+            split_edge(current, (third, fourth), opposite_new)
             break
         return current
 
@@ -1030,6 +1045,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         result = Mesh(
             vertices=[], faces=[], uv_name=guide.uv_name,
             attributes={name: [] for name in guide.attributes},
+            edge_attributes={name: {} for name in guide.edge_attributes},
             attribute_domains=dict(resolved_domains),
         )
         for component in guide.connected_components():
@@ -1046,17 +1062,30 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             part = Mesh(
                 vertices=[guide.vertices[index] for index in used],
                 faces=[tuple(remap[index] for index in guide.faces[face_index]) for face_index in component],
+                lines=[(remap[first], remap[second]) for first, second in guide.lines if first in remap and second in remap],
                 attributes=attributes,
+                edge_attributes={
+                    name: {
+                        Mesh.edge_key(remap[first], remap[second]): value
+                        for (first, second), value in values.items()
+                        if first in remap and second in remap
+                    }
+                    for name, values in guide.edge_attributes.items()
+                },
                 attribute_domains=dict(resolved_domains),
             )
             filled = fill(part, points)
             offset = len(result.vertices)
             result.vertices.extend(filled.vertices)
             result.faces.extend(tuple(index + offset for index in face) for face in filled.faces)
+            result.lines.extend((first + offset, second + offset) for first, second in filled.lines)
             for name in point_attribute_names:
                 result.attributes[name].extend(filled.attributes[name])
             for name in face_attribute_names:
                 result.attributes[name].extend(filled.attributes[name])
+            for name, values in filled.edge_attributes.items():
+                target = result.edge_attributes.setdefault(name, {})
+                target.update({(first + offset, second + offset): value for (first, second), value in values.items()})
     for name in list(result.attributes):
         if name not in point_attribute_names and name not in face_attribute_names:
             del result.attributes[name]

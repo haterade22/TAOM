@@ -657,6 +657,16 @@ class ContractRegressionTests(unittest.TestCase):
                 )
                 with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
                     engine.initialize_planes(malformed, RetopoSettings())
+        invalid_alignment = Mesh(
+            vertices=[(3, 0, 0), (0.5, 1, 0), (0, 3, 0), (-1, 1, 0), (-3, 0, 0), (-1, -1, 0), (0, -3, 0), (1, -1, 0)]
+            + [(1 + 0.1 * math.cos(math.tau * index / 8), 0.1 * math.sin(math.tau * index / 8), 0) for index in range(8)],
+            faces=[triangle for index in range(8) for triangle in (
+                (index, (index + 1) % 8, 8 + (index + 1) % 8),
+                (index, 8 + (index + 1) % 8, 8 + index),
+            )],
+        )
+        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+            engine.initialize_planes(invalid_alignment, RetopoSettings())
         guide = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2, 3)],
@@ -924,6 +934,15 @@ class ContractRegressionTests(unittest.TestCase):
         line_result = engine.merge_output_seams(line_mesh, 0.01)
         self.assertEqual([(0, 6)], line_result.lines)
         engine.subdivide_quads(line_result)
+        attributed = differential.two_guide()
+        attributed.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(auto_fill_across_patterns=across_patterns):
+                filled = engine.auto_fill(attributed, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                self.assertTrue(filled.edge_attributes["crease_edge"])
+                self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
+                subdivided = engine.subdivide_quads(filled)
+                self.assertEqual({0.5}, set(subdivided.edge_attributes["crease_edge"].values()))
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
