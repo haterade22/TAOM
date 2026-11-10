@@ -50,6 +50,8 @@ Side resolution is `IAlignmentService.GetKingdomSide(kingdomId)` (keyed on kingd
 
 Each sweep also **reconciles** the enrolled sets against the current world: it drops any enrolled kingdom that is no longer live (a `KingdomDestroyed` missed while the feature was toggled off) OR whose current side no longer matches where it's enrolled (an `alignment.json` edit — e.g. Khand/`battania` flipped to Neutral — or a runtime culture change). The enroll loop then re-adds it to the correct side if it moved Free↔Evil. Without this, a kingdom enrolled before its alignment changed stayed stuck on the old side on an existing save.
 
+An enrolled kingdom that is destroyed is removed at `KingdomDestroyed`, and the same call then sweeps (`MomentumEnrollmentService.RemoveKingdom`, #1113). The victory check that follows counts each side's kingdoms. Since War Pledge a kingdom's side can change inside a day, so a realm that took a side after the last daily sweep must be in that count. The engine marks the kingdom eliminated before it raises the event (`DestroyKingdomAction.ApplyInternal`, v1.5.7 line 9), so the sweep does not enroll it again.
+
 ### Victory ↔ phase-machine integration
 
 `WarPhase` gained a terminal `WarEnded` value and `IWarOfTheRingService` gained `EndWar(WarOutcome)` / `Outcome`. All three peace-block layers (`TaomDiplomacyModel.IsAtConstantWar`, `TaomKingdomDecisionPermissionModel`, the `MakePeaceAction` prefix) route through `IsWarOfTheRingActive` / `ShouldBlockPeace`, which key off `CurrentPhase == FullWar` — so flipping the phase to `WarEnded` lifts all three at once with **zero patch changes**.

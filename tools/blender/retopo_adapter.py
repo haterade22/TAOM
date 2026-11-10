@@ -51,9 +51,9 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
                 mesh.attribute_domains[name] = "POINT"
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "FACE":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "FACE"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("crease_edge", "sharp_edge", "bevel_weight_edge"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "EDGE":
@@ -134,6 +134,8 @@ def combine_objects(objects, name="Combined guides"):
         "source_vertex": 0,
         "source_part": 0,
         "pattern_id": 0,
+        "part_id": 0,
+        "retopo_plane_id": 0,
         "point_guide": False,
         "open_seam": False,
         "simplify_on": False,

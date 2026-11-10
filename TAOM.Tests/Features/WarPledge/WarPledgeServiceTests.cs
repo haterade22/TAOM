@@ -33,6 +33,7 @@ public class WarPledgeServiceTests
         var joined = sut.TryJoin("cardolan", FactionSide.Free, byAi: true, dryRun: false, out var reason);
 
         Assert.IsTrue(joined, reason);
+        Assert.IsFalse(reason.Contains("did not end"), reason);
         Assert.AreEqual(FactionSide.Free, _f.Alignment.GetKingdomSide("cardolan"));
         Assert.IsTrue(_f.Alliance.Wars.Contains(Key("cardolan", "empire_s")));
         Assert.IsTrue(_f.Alliance.Wars.Contains(Key("cardolan", "isengard")));
@@ -129,16 +130,17 @@ public class WarPledgeServiceTests
     }
 
     [TestMethod]
-    public void TryJoin_APeaceTheEngineRefuses_WritesAFailLine()
+    public void TryJoin_APeaceTheEngineRefuses_WritesAFailLineAndSaysSoInTheReason()
     {
         var sut = _f.Build();
         _f.Alliance.Wars.Add(Key("cardolan", "empire_w"));
         _f.Alliance.RefusedPeace = Key("cardolan", "empire_w");
 
-        sut.TryJoin("cardolan", FactionSide.Free, byAi: true, dryRun: false, out _);
+        sut.TryJoin("cardolan", FactionSide.Free, byAi: true, dryRun: false, out var reason);
 
         _f.Outcomes.Received(1).Fail(WarPledgeService.JoinedCheckId, "cardolan",
             "side=free by=ai wars=2 expected=2 peace=0 stuck=1");
+        StringAssert.Contains(reason, "1 war(s) with its side did not end.");
     }
 
     [TestMethod]
@@ -380,6 +382,20 @@ public class WarPledgeServiceTests
 
         CollectionAssert.AreEquivalent(
             new[] { "war " + Key("cardolan", "empire_s"), "war " + Key("cardolan", "isengard") }, _f.Alliance.Calls);
+    }
+
+    // A war the realm already fights with a realm of the other side is counted and not declared again.
+    [TestMethod]
+    public void TryJoin_AWarWithTheOtherSideIsAlreadyDeclared_CountsItAndDoesNotDeclareItAgain()
+    {
+        var sut = _f.Build();
+        _f.Alliance.Wars.Add(Key("cardolan", "empire_s"));
+
+        sut.TryJoin("cardolan", FactionSide.Free, byAi: true, dryRun: false, out _);
+
+        CollectionAssert.AreEquivalent(new[] { "war " + Key("cardolan", "isengard") }, _f.Alliance.Calls);
+        _f.Outcomes.Received(1).Pass(WarPledgeService.JoinedCheckId, "cardolan",
+            "side=free by=ai wars=2 expected=2 peace=0 stuck=0");
     }
 
     // Once the pledge is stored the model holds the realm at war with the other side, so the engine's
@@ -720,6 +736,17 @@ public class WarPledgeServiceTests
         Assert.AreEqual(WarPledgeStore.NoCourtingDay, _f.Store.NextCourtingDay);
     }
 
+    // Day 0 is a day: only a negative day is refused.
+    [TestMethod]
+    public void RunDailyCourting_DayZero_SetsTheAnchor()
+    {
+        var sut = BuildCourting(balance: -80, nextCourtingDay: WarPledgeStore.NoCourtingDay);
+
+        sut.RunDailyCourting(0);
+
+        Assert.AreEqual(30, _f.Store.NextCourtingDay);
+    }
+
     [TestMethod]
     public void RunDailyCourting_ADayNearTheIntLimit_DoesNotWrapTheCourtingDay()
     {
@@ -778,5 +805,30 @@ public class WarPledgeServiceTests
         Assert.AreEqual(FactionSide.Neutral, status.Rows[0].PledgedSide);
         Assert.IsNull(status.Rows[5].Lean, "a realm pledged by the console has no lean row");
         Assert.AreEqual(FactionSide.Evil, status.Rows[5].PledgedSide);
+    }
+
+    // The test above reads the fixture's defaults. This one reads every switch off, another phase and other
+    // config numbers, so a status that printed fixed values would fail.
+    [TestMethod]
+    public void Status_SwitchesOffAnotherPhaseAndOtherConfigNumbers_ReportsThemAsTheyAre()
+    {
+        _f.LosingBalance = 40;
+        _f.DaysBetweenAiJoins = 12;
+        _f.Settings.Enabled.Returns(false);
+        _f.MomentumSettings.MomentumEnabled.Returns(false);
+        _f.WotrSettings.WarOfTheRingEnabled.Returns(false);
+        var sut = _f.Build(WarPhase.IsengardWar);
+        _f.Momentum.SliderValue.Returns(40);
+
+        var status = sut.Status();
+
+        Assert.IsFalse(status.Enabled);
+        Assert.IsFalse(status.MomentumEnabled);
+        Assert.IsFalse(status.WarOfTheRingEnabled);
+        Assert.AreEqual(WarPhase.IsengardWar, status.Phase);
+        Assert.AreEqual(40, status.Balance);
+        Assert.AreEqual(FactionSide.Evil, status.CourtingSide);
+        Assert.AreEqual(40, status.LosingBalance);
+        Assert.AreEqual(12, status.DaysBetweenAiJoins);
     }
 }

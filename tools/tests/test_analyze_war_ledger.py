@@ -297,6 +297,83 @@ class MetricTests(unittest.TestCase):
         m = metrics([free, load, evil, load, free])
         self.assertEqual(m["pledges"], [(60, "cardolan", "free", "console")])
 
+    # A load of a save made on the pledge day, before the pledge, keeps the pledge line: that day is kept
+    # from both runs. A pledge has no end, so a kingdom line read after it that carries another side is
+    # from a run in which the load took the pledge back.
+    def test_a_pledge_a_same_day_load_took_back_is_dropped_by_a_later_kingdom_line_of_another_side(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load, kl(61, "cardolan", side="neutral")])
+        self.assertEqual(m["pledges"], [])
+        self.assertEqual(dict(awl.flat_metrics(m))["realms_pledged"], 0)
+
+    def test_a_later_kingdom_line_of_the_pledged_side_keeps_the_pledge(self):
+        m = metrics([kl(60, "cardolan", side="neutral"), ev_pledge(60, "cardolan", "free"),
+                     kl(61, "cardolan", side="free")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "ai")])
+
+    def test_a_kingdom_line_is_judged_against_the_last_pledge_line_read(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load,
+                     ev_pledge(60, "cardolan", "evil", by="console"), kl(61, "cardolan", side="evil")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "evil", "console")])
+
+    def test_another_realms_kingdom_line_does_not_drop_a_pledge(self):
+        m = metrics([ev_pledge(60, "cardolan", "free"), kl(61, "rhudaur", side="neutral")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "ai")])
+
+    # A kingdom line of a day before the pledge says nothing about it, whatever order the lines are read in.
+    def test_a_kingdom_line_of_an_earlier_day_does_not_drop_a_pledge(self):
+        m = metrics([ev_pledge(60, "cardolan", "free"), kl(59, "cardolan", side="neutral")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "ai")])
+
+    # A save made before that day's ledger tick writes the day's kingdom lines again after the load.
+    def test_a_kingdom_line_of_the_pledge_day_read_after_a_load_drops_the_pledge(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load, kl(60, "cardolan", side="neutral")])
+        self.assertEqual(m["pledges"], [])
+
+    def test_a_pledge_taken_back_brings_no_older_pledge_line_of_its_realm_back_and_leaves_other_realms(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(40, "arthedain", "free"), ev_pledge(60, "cardolan", "free", by="console"), load,
+                     ev_pledge(60, "cardolan", "evil", by="console"), load, kl(61, "cardolan", side="neutral")])
+        self.assertEqual(m["pledges"], [(40, "arthedain", "free", "ai")])
+
+    # The pledge line stays stored, so a later load of a save that holds the pledge lists it again. The load
+    # writes no second pledge line: only the kingdom lines after it say which run the log is in.
+    def test_a_later_load_of_a_save_that_holds_the_pledge_lists_it_again(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        lines = [ev_pledge(60, "cardolan", "free", by="console"), load, kl(61, "cardolan", side="neutral")]
+        self.assertEqual(metrics(lines)["pledges"], [])
+        lines += [load]
+        self.assertEqual(metrics(lines)["pledges"], [(60, "cardolan", "free", "console")],
+                         "the load dropped the day-61 line, so nothing contradicts the pledge")
+        lines += [kl(61, "cardolan", side="free")]
+        self.assertEqual(metrics(lines)["pledges"], [(60, "cardolan", "free", "console")])
+
+    def test_a_load_of_a_later_day_from_the_run_that_holds_the_pledge_lists_it_again(self):
+        lines = [ev_pledge(60, "cardolan", "free", by="console"), f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60",
+                 kl(61, "cardolan", side="neutral"), f"{PFX}[WarLedger] v=1 t=load cid=c1 day=62",
+                 kl(63, "cardolan", side="free")]
+        self.assertEqual(metrics(lines)["pledges"], [(60, "cardolan", "free", "console")])
+
+    # A load keeps its own day from both runs, for this record as for every other one.
+    def test_a_load_keeps_the_side_a_kingdom_line_of_its_own_day_carried(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load, kl(60, "cardolan", side="neutral"), load])
+        self.assertEqual(m["pledges"], [])
+
+    def test_a_realm_that_pledges_again_after_a_load_took_its_pledge_back_is_listed(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load, kl(61, "cardolan", side="neutral"),
+                     ev_pledge(62, "cardolan", "evil")])
+        self.assertEqual(m["pledges"], [(62, "cardolan", "evil", "ai")])
+
+    # Until a kingdom line of that realm is read after the load, the log cannot say that the pledge is gone.
+    def test_a_pledge_a_load_took_back_stays_listed_while_no_later_kingdom_line_of_its_realm_is_read(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load, kl(61, "rhudaur", side="neutral")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "console")])
+
     # A kingdom's side changes on the day it pledges, so the first capital loss of a side is read on every
     # loss, not only on a kingdom's first one.
     def test_capital_loss_per_side_counts_a_loss_after_the_kingdom_changed_side(self):

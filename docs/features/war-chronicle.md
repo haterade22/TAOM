@@ -395,7 +395,7 @@ Counts measured by grepping `[TestMethod]` and `[DataTestMethod]` attribute line
 | `PrisonerEscapeAdapterTests` | `TAOM.Tests/Adapters/` | 9 |
 | `KingdomWarSnapshotAdapterTests` | same | 11 |
 
-`WarChronicleSettingsProvider` is also a row in `CampaignHotPathSettingsProvidersTests`, and `CastleRecruitmentServiceTests` covers the castle consumer. The analyzer has 90 Python tests (`def test_` count) in `tools/tests/test_analyze_war_ledger.py`, the load-marker cases among them (`LoadMarkerTests`).
+`WarChronicleSettingsProvider` is also a row in `CampaignHotPathSettingsProvidersTests`, and `CastleRecruitmentServiceTests` covers the castle consumer. The analyzer has 116 Python tests (`def test_` count, 2026-11-10) in `tools/tests/test_analyze_war_ledger.py`, the load-marker cases among them (`LoadMarkerTests`).
 
 ## Known limitations
 

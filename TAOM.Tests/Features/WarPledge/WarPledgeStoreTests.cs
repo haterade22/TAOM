@@ -183,6 +183,8 @@ public class WarPledgeStoreTests
     [DataRow("cardolan=Free;umbar;rhudaur=Evil", DisplayName = "no separator")]
     [DataRow("cardolan=Free;umbar=7;rhudaur=Evil", DisplayName = "a number is not a side name")]
     [DataRow("cardolan=Free;;rhudaur=Evil;", DisplayName = "empty rows")]
+    [DataRow("cardolan=Free;umbar=Evil=x;rhudaur=Evil", DisplayName = "three fields")]
+    [DataRow("cardolan=Free;umbar=evil;rhudaur=Evil", DisplayName = "a side name in another case")]
     public void LoadFrom_ABadRow_IsSkippedAlone(string rows)
     {
         _sut.LoadFrom(rows, 10);
@@ -191,6 +193,18 @@ public class WarPledgeStoreTests
         Assert.IsTrue(_sut.IsPledged("cardolan"));
         Assert.IsTrue(_sut.IsPledged("rhudaur"));
         Assert.IsFalse(_sut.IsPledged("umbar"));
+    }
+
+    // Spaces around an id or a side name are not part of it.
+    [TestMethod]
+    public void LoadFrom_SpacesAroundAField_AreTrimmed()
+    {
+        _sut.LoadFrom(" cardolan = Free ; rhudaur= Evil", 10);
+
+        Assert.IsTrue(_sut.TryGetSide("cardolan", out var cardolan));
+        Assert.AreEqual(FactionSide.Free, cardolan);
+        Assert.IsTrue(_sut.TryGetSide("rhudaur", out var rhudaur));
+        Assert.AreEqual(FactionSide.Evil, rhudaur);
     }
 
     [TestMethod]
