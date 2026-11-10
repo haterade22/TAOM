@@ -1,7 +1,7 @@
-# Troop ids shipped in v2.0.37: the baseline of the TROOP_ID_REMOVED gate.
+# Troop ids shipped in v2.0.38: the baseline of the TROOP_ID_REMOVED gate.
 # Regenerate after a release: python tools/validate_moduledata.py --regenerate-shipped-troop-ids
 # One id per line. [exceptions] rows are `id | reason` for a break the maintainer accepted.
-# tag: v2.0.37
+# tag: v2.0.38
 anduinvale_axe_lord
 anduinvale_axe_warrior
 anduinvale_axeman
