@@ -1,0 +1,65 @@
+{
+  "rules": {
+    "startingGold": 1000,
+    "startingLives": 100,
+    "firstPauseSeconds": 90,
+    "pauseSeconds": 45,
+    "maxPlaced": 6,
+    "earlyGoldPerSecond": 2,
+    "earlyGoldCap": 90,
+    "waveBonusBase": 100,
+    "waveBonusPerWave": 25,
+    "bountyBase": 2,
+    "bountyPerLevel": 0.25,
+    "bountyMountedPercent": 50,
+    "packGapSeconds": 6,
+    "exitRadiusMetres": 8,
+    "waveLimitBaseSeconds": 180,
+    "waveLimitPerCreepSeconds": 3,
+    "minPostGapMetres": 3,
+    "roadEndClearMetres": 30
+  },
+  "ranks": {
+    "soldier": { "lives": 1 },
+    "captain": { "lives": 5, "bounty": 100, "health": 2 },
+    "lieutenant": { "lives": 10, "bounty": 200, "health": 3 },
+    "general": { "lives": 20, "bounty": 350, "health": 4 }
+  },
+  "opening": [ "mordor", "erebor" ],
+  "count": { "start": 30, "perWave": 6, "max": 180, "packSize": 20 },
+  "troops": { "perLevel": 2, "nearestLowerLevels": 15, "highLevelPercent": 60 },
+  "bands": [
+    { "fromWave": 1, "low": 1, "high": 6 },
+    { "fromWave": 2, "low": 11, "high": 11 },
+    { "fromWave": 3, "low": 11, "high": 16 },
+    { "fromWave": 5, "low": 16, "high": 21 },
+    { "fromWave": 7, "low": 21, "high": 26 },
+    { "fromWave": 10, "low": 26, "high": 31 },
+    { "fromWave": 13, "low": 31, "high": 36 },
+    { "fromWave": 16, "low": 36, "high": 41 },
+    { "fromWave": 20, "low": 41, "high": 46 },
+    { "fromWave": 24, "low": 46, "high": 51 }
+  ],
+  "growth": {
+    "healthPerWave": 0.05,
+    "damagePerWave": 0.03,
+    "maxFactor": 20,
+    "armourPercentPerWave": 1,
+    "armourPercentMax": 60,
+    "swingPercentPerWave": 0.5,
+    "swingPercentMax": 25,
+    "gapHealthPerLevel": 0.015,
+    "gapDamagePerLevel": 0.01
+  },
+  "leaders": { "everyWaves": 4 },
+  "powers": {
+    "schedule": [
+      { "fromWave": 5, "count": 1 },
+      { "fromWave": 10, "count": 2 },
+      { "fromWave": 15, "count": 3 },
+      { "fromWave": 20, "count": 4 },
+      { "fromWave": 25, "count": 5 }
+    ],
+    "pool": [ "lash", "drums", "eye", "discipline", "hide" ]
+  }
+}

@@ -2619,3 +2619,11 @@ The regroup release fired anywhere once no enemy was near, because the producer 
 - **Why missed:** the tests set the `LaneView` fields one by one with `with { }`, and no one checked each combination against `FordsMatch.PressureOf`, which adds the value and the count together.
 - **Prevent:** a test that builds a view or snapshot by hand uses only field combinations the producer can return (no count, then no value), and at least one test per rule goes through the producer itself. For each guard, ask whether the test still fails with the guard deleted. A rule's entry and exit read the same inputs at the same threshold, or the test list names the case where they differ.
 - **Source:** [rca-fords-regroup-2026-11-07.md](../rca-fords-regroup-2026-11-07.md) rows 7, 10, 13 and 14.
+
+### Every rule gets a test on each path that reaches it (Hero Defence Slices 1 and 2, 2026-11-09)
+
+Five review findings had one shape: the rule held on the path it was written for and failed on a sibling path. A drawn culture checked entry and a pinned one did not; a leader replaced a soldier only when an infantry pack existed; the tick that ended the pause charged its time to the wave as well; the default opening was empty while the file's was right; the rotation varied the signature inside the bag but not across the catalog. Every rule had tests, and each drove only the main path.
+
+- **Why missed:** a sibling path was added after the rule's first test (a pin, a fallback, a default, a phase change inside one tick), and it got no test of its own.
+- **Prevent:** for each rule, list every path that reaches it (pinned and drawn, with and without the optional part, file value and compiled default, a state change inside one call) and give each path a test. For arithmetic, add a test at the top and the bottom of each accepted range.
+- **Source:** [rca-hero-defence-s12-2026-11-09.md](../rca-hero-defence-s12-2026-11-09.md) rows R2, R3, R5, R9 and R13.

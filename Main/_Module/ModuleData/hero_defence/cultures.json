@@ -1,0 +1,40 @@
+{
+  "signatures": {
+    "horse": { "order": [ "Cavalry", "HorseArcher", "Infantry", "Ranged" ], "countFactor": 0.75, "firstPower": "drums" },
+    "bows": { "order": [ "Ranged", "HorseArcher", "Infantry", "Cavalry" ], "countFactor": 1, "firstPower": "eye" },
+    "wall": { "order": [ "Infantry", "Ranged", "Cavalry", "HorseArcher" ], "countFactor": 1, "firstPower": "hide" },
+    "horde": { "order": [ "Infantry", "Ranged", "Cavalry", "HorseArcher" ], "shuffled": true, "countFactor": 1.25, "firstPower": "lash" },
+    "host": { "order": [ "Infantry", "Ranged", "Cavalry", "HorseArcher" ], "countFactor": 0.7, "firstPower": "discipline" }
+  },
+  "cultures": {
+    "vlandia": { "signature": "horse", "mix": { "infantry": 25, "ranged": 5, "cavalry": 55, "horseArcher": 15 }, "leaders": [ "lord_4_16", "lord_4_7", "lord_4_1" ] },
+    "khuzait": { "signature": "horse", "mix": { "infantry": 35, "ranged": 15, "cavalry": 35, "horseArcher": 15 }, "leaders": [ "lord_6_25", "lord_K9_l", "lord_K8_u" ] },
+    "aserai": { "signature": "horse", "mix": { "infantry": 30, "ranged": 30, "cavalry": 40, "horseArcher": 0 }, "leaders": [ "lord_A9_l", "lord_3_3_1", "lord_A9_u" ] },
+    "southrhovanion": { "signature": "horse", "mix": { "infantry": 40, "ranged": 20, "cavalry": 20, "horseArcher": 20 }, "leaders": [ "lord_SRH2_1", "lord_SRH1_2", "lord_SRH1_1" ] },
+    "cardolan": { "signature": "horse", "mix": { "infantry": 45, "ranged": 25, "cavalry": 30, "horseArcher": 0 }, "leaders": [ "lord_CA2_1", "lord_CA1_2", "lord_CA1_1" ] },
+
+    "sturgia": { "signature": "bows", "mix": { "infantry": 30, "ranged": 55, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_S9_l", "lord_S9_u", "lord_2_7_1" ] },
+    "mirkwood": { "signature": "bows", "mix": { "infantry": 30, "ranged": 60, "cavalry": 10, "horseArcher": 0 }, "leaders": [ "lord_M1_4", "lord_M1_3", "lord_M1_1" ] },
+    "lothlorien": { "signature": "bows", "mix": { "infantry": 30, "ranged": 55, "cavalry": 5, "horseArcher": 10 }, "leaders": [ "lord_L2_1", "lord_L1_3", "lord_L1_2" ] },
+    "umbar": { "signature": "bows", "mix": { "infantry": 50, "ranged": 40, "cavalry": 10, "horseArcher": 0 }, "leaders": [ "lord_U3_1", "lord_U2_1", "lord_U1_1" ] },
+
+    "erebor": { "signature": "wall", "mix": { "infantry": 75, "ranged": 20, "cavalry": 5, "horseArcher": 0 }, "leaders": [ "lord_E1_5", "lord_E1_2", "lord_E1_1" ] },
+    "eredluin": { "signature": "wall", "mix": { "infantry": 70, "ranged": 30, "cavalry": 0, "horseArcher": 0 }, "leaders": [ "lord_EL2_1", "lord_EL1_2", "lord_EL1_1" ] },
+    "gondor": { "signature": "wall", "mix": { "infantry": 50, "ranged": 30, "cavalry": 20, "horseArcher": 0 }, "leaders": [ "lord_1_45", "lord_1_52", "lord_1_9" ] },
+    "isengard": { "signature": "wall", "mix": { "infantry": 55, "ranged": 30, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_I3_2", "lord_I3_3", "lord_I1_0" ] },
+    "angaladh": { "signature": "wall", "mix": { "infantry": 75, "ranged": 25, "cavalry": 0, "horseArcher": 0 }, "leaders": [ "lord_AND2_1", "lord_AND1_2", "lord_AND1_1" ] },
+    "dorwinion": { "signature": "wall", "mix": { "infantry": 60, "ranged": 25, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_DO2_1", "lord_DO1_2", "lord_DO1_1" ] },
+
+    "mordor": { "signature": "horde", "mix": { "infantry": 60, "ranged": 25, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_M13_2", "lord_M13_5", "lord_1_17" ] },
+    "goblin": { "signature": "horde", "mix": { "infantry": 65, "ranged": 20, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_GB1_3", "lord_GB2_2", "lord_GB1_1" ] },
+    "gundabad": { "signature": "horde", "mix": { "infantry": 55, "ranged": 15, "cavalry": 20, "horseArcher": 10 }, "leaders": [ "lord_G1_3", "lord_G1_2", "lord_G1_1" ] },
+    "dolguldur": { "signature": "horde", "mix": { "infantry": 55, "ranged": 25, "cavalry": 20, "horseArcher": 0 }, "leaders": [ "lord_D1_5", "lord_D1_4", "lord_D1_2" ] },
+    "empire": { "signature": "horde", "mix": { "infantry": 55, "ranged": 20, "cavalry": 15, "horseArcher": 10 }, "leaders": [ "lord_NE8_l", "lord_NE7_u", "lord_1_1_17" ] },
+    "rhudaur": { "signature": "horde", "mix": { "infantry": 60, "ranged": 30, "cavalry": 10, "horseArcher": 0 }, "leaders": [ "lord_RH2_1", "lord_RH1_2", "lord_RH1_1" ] },
+    "anduinvale": { "signature": "horde", "mix": { "infantry": 65, "ranged": 20, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_AV2_1", "lord_AV1_2", "lord_AV1_1" ] },
+
+    "rivendell": { "signature": "host", "mix": { "infantry": 40, "ranged": 25, "cavalry": 25, "horseArcher": 10 }, "leaders": [ "lord_R1_3", "lord_R1_4", "lord_R2_1" ] },
+    "lindon": { "signature": "host", "mix": { "infantry": 40, "ranged": 25, "cavalry": 25, "horseArcher": 10 }, "leaders": [ "lord_LN1_3", "lord_LN1_2", "lord_LN1_1" ] },
+    "arthedain": { "signature": "host", "mix": { "infantry": 55, "ranged": 30, "cavalry": 15, "horseArcher": 0 }, "leaders": [ "lord_AN2_1", "lord_AN1_2", "lord_AN1_1" ] }
+  }
+}
