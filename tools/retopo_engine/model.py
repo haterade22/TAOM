@@ -52,6 +52,23 @@ class Mesh:
             attribute_domains=dict(self.attribute_domains),
         )
 
+    def attribute_domain(self, name: str) -> str | None:
+        explicit = self.attribute_domains.get(name)
+        if explicit is not None:
+            return explicit
+        values = self.attributes[name]
+        if name in {"source_vertex", "source_part", "point_guide", "open_seam", "simplify_on", "source_position", "pattern_center"}:
+            return "POINT"
+        if name == "pattern_id" and "source_position" in self.attributes:
+            return "POINT"
+        if name in {"part_id", "retopo_plane_id"} and len(values) == len(self.faces):
+            return "FACE"
+        if len(values) == len(self.faces):
+            return "FACE"
+        if len(values) == len(self.vertices):
+            return "POINT"
+        return None
+
     def edges(self) -> list[Edge]:
         face_edges = {
             self.edge_key(face[index], face[(index + 1) % len(face)])
