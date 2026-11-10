@@ -1879,3 +1879,22 @@ v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool incl
 - **Why missed:** it was found, because the two signatures were compared before the fix. The compiler, the binding gate and `check_engine_member_refs.ps1` all pass such a call, so nothing but a read of every caller finds it.
 - **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
 - **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).
+
+### A comment that states an engine rule is bound to the engine: grep it at every bump (v1.5.7 bump, 2026-11-10)
+
+v1.5.7 made `MenuHelper.EncounterAttackConsequence` skip the hostile action against a caravan or villager leader party. TAOM patches neither that method nor its caller, so the member diff, the binding gate and the patch-note table all read "Inherited". Three Enlistment comments still said that Attack always declares the war, and `OathSitOutRule` rests on that rule. An independent sweep of the engine diff found it, not the bump's own steps.
+
+- **Why missed:** the bound surface is patches, models, reflection sites and loaders. A comment or a rule that restates what vanilla does has no row there, and a grep for the member's name in code finds nothing when only a comment names it.
+- **Prevent:** for each engine member the diff shows as changed, grep its name across TAOM's source with comments, and across `docs/features/`. Judge every hit that states the old behaviour as fact. `/engine-bump` Phase 3 has the step.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 6.
+### The first faction of a declaration carries the blame: order the arguments by who acted (War Pledge, 2026-11-10)
+`DeclareWarAction.ApplyByDefault(a, b)` hands `a` to `AllianceCampaignBehavior.ApplyBrokenAlliancePenalty` as the kingdom whose ruler loses 100 relation with the other ruler, and who takes a trait hit when that ruler is the player (v1.5.7 `AllianceCampaignBehavior.cs:582-590`). War Pledge first reused the Full War reconcile, which declares each pair in kingdom-list order, so a realm the AI pledged could charge the break to the ruler of the realm it turned on, a player included.
+- **Why missed:** the reuse was judged on which wars it declares, not on what the action and its listeners do with the order of the two factions. Repeat of "Read every branch of an engine method you call for its side effect".
+- **Prevent:** before reusing a loop that calls a two-faction engine action, read what the action and each listener do with the first faction (penalties, political stagnation, notices), and pass the faction that acted as the first one. Pin the order with a fake that records the declarer.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 5.
+
+### A thread claim cites the engine line that proves the overlap (War Pledge, 2026-11-10)
+The first War Pledge text said the daily tick writes a pledge while the party AI worker reads a side. In v1.5.7 `Campaign.RealTick` calls `WaitAsyncTasks()` (Campaign.cs:907) before `Campaign.Tick` fires the daily events, so the two cannot overlap. The store's copy-on-write design was still right, because a gate requires a read-only path and a console command's timing against the task is not known. But four comments and the feature doc stated a race that does not exist, and none named the second worker route into the store (`MobilePartyAi` through `FactionManager.IsAtWarAgainstFaction` and `IsAtConstantWar` to `DiplomacyService.GetRelationshipTier`).
+- **Why missed:** the claim was written from a gate's comment after the gate failed, without reading where the worker starts and where the main thread waits for it.
+- **Prevent:** a sentence that says two things run at the same time names the line that starts the worker and the line where the writer waits for it, or says that no such line was found. For the campaign map: the late AI task starts in `MapScreen.OnPostFrameTick` and is awaited at the top of `Campaign.RealTick`. Any model the party AI queries (`IsAtConstantWar` included) is a worker-side reader.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 4.

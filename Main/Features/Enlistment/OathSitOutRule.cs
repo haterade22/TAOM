@@ -10,7 +10,11 @@ public enum OathSitOutReason
     /// <summary>The commander's realm is at war with the player's own faction (#832).</summary>
     OwnCrown = 1,
 
-    /// <summary>The player's kingdom is not at war with the foe (#960); choosing Attack there would declare a kingdom war via BeHostileAction.</summary>
+    /// <summary>
+    /// The player's kingdom is not at war with the foe (#960); choosing Attack there would declare a kingdom war via
+    /// BeHostileAction. Since Bannerlord v1.5.7 the menu skips that action when the opposing leader party is a caravan
+    /// or villager party, and the rule still sits those battles out (#1112, decision owed).
+    /// </summary>
     Vassal = 2,
 }
 

@@ -85,7 +85,9 @@ public static class CareerPerkCheats
         // between that value and the cached line below means the cache is stale until a roster bump (#768).
         try
         {
-            snapshot.Probes.Add($"party size limit (enforcement value now) {(int)models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, party.IsCurrentlyAtSea).ResultNumber}");
+            // A local, because PartyMemberSizeLimitCallShapeTests cannot read a call inside an interpolation hole.
+            var enforced = (int)models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, party.IsCurrentlyAtSea).ResultNumber;
+            snapshot.Probes.Add($"party size limit (enforcement value now) {enforced}");
         }
         catch (Exception ex)
         {

@@ -770,6 +770,10 @@ def main(argv=None) -> int:
                     help="rewrite the manifest from the dump (needs the dump)")
     args = ap.parse_args(argv)
 
+    if not Path(args.docs).is_dir():
+        print(f"ERROR: handbook folder not found: {args.docs}", file=sys.stderr)
+        return 2
+
     dump_root = resolve_dump_root(args.dump_root)
     if args.update and not dump_root.is_dir():
         print(f"ERROR: --update needs the decompile dump, and none was found at {dump_root}\n"

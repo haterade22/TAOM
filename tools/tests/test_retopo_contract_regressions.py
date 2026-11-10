@@ -626,7 +626,7 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([False] * 13, result.attributes["point_guide"])
 
     def test_undeclared_known_point_domains_are_consistent(self):
-        size = 4
+        size = 6
         vertices = [
             ((3 + math.cos(math.tau * i / size) * math.cos(math.tau * j / size), 3 + math.sin(math.tau * i / size) * math.cos(math.tau * j / size), math.sin(math.tau * j / size)))
             for i in range(size) for j in range(size)
@@ -638,20 +638,79 @@ class ContractRegressionTests(unittest.TestCase):
         guide = Mesh(
             vertices=vertices,
             faces=faces,
-            attributes={"source_vertex": list(range(16)), "point_guide": [True] + [False] * 15},
+            attributes={"source_vertex": list(range(36)), "point_guide": [True] + [False] * 35},
         )
-        center = guide.vertices[5]
-        filled = engine.auto_fill(guide, [center], 1)
+        first, second, third, fourth = (guide.vertices[index] for index in guide.faces[0])
+        normal = engine.normalize(engine.cross(engine.subtract(second, first), engine.subtract(fourth, first)))
+        center = engine.add(engine.average((first, second, third, fourth)), engine.multiply(normal, 0.34))
+        composite = guide.copy()
+        composite.vertices.extend([(100, 0, 0), (101, 0, 0), (101, 1, 0), (100, 1, 0)])
+        composite.faces.append((36, 37, 38, 39))
+        composite.attributes["source_vertex"].extend(range(36, 40))
+        composite.attributes["point_guide"].extend([False] * 4)
+        composite.attributes["pattern_id"] = list(range(40))
+        filled = engine.auto_fill(composite, [center], 1, across_patterns=False)
+        self.assertGreater(len(filled.faces), len(composite.faces))
+        self.assertEqual(list(range(36)), filled.attributes["pattern_id"][:36])
         self.assertEqual(len(filled.vertices), len(filled.attributes["source_vertex"]))
         self.assertEqual(1, sum(filled.attributes["point_guide"]))
         mirrored = engine.mirror_guides(guide, axes=("x",))
         self.assertEqual(len(mirrored.vertices), len(mirrored.attributes["source_vertex"]))
         self.assertEqual(2, sum(mirrored.attributes["point_guide"]))
         subdivided = engine.subdivide_quads(guide)
-        self.assertEqual(list(range(16)), subdivided.attributes["source_vertex"][:16])
+        self.assertEqual(list(range(36)), subdivided.attributes["source_vertex"][:36])
         self.assertEqual(1, sum(subdivided.attributes["point_guide"]))
-        merged = engine.merge_output_seams(filled, 0.01)
-        self.assertEqual(len(merged.vertices), len(merged.attributes["source_vertex"]))
+        merged = engine.merge_output_seams(
+            Mesh(
+                vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, -1, 0), (0, -1, 0)],
+                faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+                attributes={"source_vertex": list(range(8))},
+            ),
+            0.01,
+        )
+        self.assertEqual(6, len(merged.vertices))
+        self.assertEqual([0, 1, 2, 3, 6, 7], merged.attributes["source_vertex"])
+
+    def test_repair_freezes_undeclared_point_domain_after_count_change(self):
+        vertices = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+        faces = [(0, 1, 2), (1, 0, 3), (0, 1, 4), (1, 0, 5)]
+        for _ in range(4):
+            offset = len(vertices)
+            vertices.extend([(6, 0, 0), (7, 0, 0), (6, 1, 0), (5, 0, 0), (6, -1, 0), (6, 0, 1)])
+            faces.extend(tuple(offset + index for index in face) for face in (
+                (0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2),
+                (4, 1, 2), (4, 2, 5), (4, 5, 1), (4, 3, 5),
+            ))
+        mesh = Mesh(vertices=vertices, faces=faces, attributes={"weight": list(range(30))})
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual(52, len(result.vertices))
+        self.assertEqual(36, len(result.faces))
+        self.assertEqual("POINT", result.attribute_domains["weight"])
+        self.assertEqual(len(result.vertices), len(result.attributes["weight"]))
+
+    def test_reconstruction_drops_unresolved_and_unsupported_attributes(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2, 3)],
+            uv=[(0, 0), (1, 0), (1, 1), (0, 1)],
+            attributes={
+                "source_vertex": [0, 1, 2, 3],
+                "weight": [9, 8, 7, 6, 5, 4],
+                "corner_tag": [1, 1, 1, 1],
+            },
+            attribute_domains={"corner_tag": "CORNER"},
+        )
+        results = [
+            engine.mirror_guides(mesh, axes=("x",)),
+            engine._separate(mesh, [0]),
+            engine.merge_output_seams(mesh, 0.01),
+            engine.thicken(mesh, 0.1),
+            engine.subdivide_quads(mesh),
+        ]
+        for result in results:
+            self.assertNotIn("weight", result.attributes)
+            self.assertNotIn("corner_tag", result.attributes)
+            self.assertIn("source_vertex", result.attributes)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
@@ -660,7 +719,7 @@ class ContractRegressionTests(unittest.TestCase):
                 faces=[(0, 1, 4, 3), (1, 2, 5, 4)],
                 uv=[(0, 0), (0.5, 0), (0.5, 1), (0, 1), (0.5, 0), (1, 0), (1, 1), (0.5, 1)],
                 attributes={"pattern_id": [0, 1, 2, 3, 4, 5]},
-                attribute_domains={"pattern_id": "POINT"},
+                attribute_domains={},
             ),
             [0, 1],
         )
@@ -688,7 +747,6 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], merged_equal.attributes["source_vertex"])
         guide = differential.ring_guide()
         guide.attributes["pattern_id"] = list(range(16))
-        guide.attribute_domains["pattern_id"] = "POINT"
         thickened = engine.thicken(guide, 0.1)
         self.assertEqual(list(range(16)) * 2, thickened.attributes["pattern_id"])
         self.assertEqual("POINT", thickened.attribute_domains["pattern_id"])

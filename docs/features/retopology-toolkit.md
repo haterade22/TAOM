@@ -39,7 +39,9 @@ before vertex-length matching, except known point attributes and `pattern_id` pa
 `source_position`. Subdivision keeps original vertex values, uses the lower-index edge endpoint and
 first face corner for generated source values, and uses the nearest parent for edge splits. New
 `point_guide`, `open_seam`, and `simplify_on` values are false, so generated vertices do not become
-manual guides. Mixed-domain face combinations default to zero, and export rejects stale arrays.
+manual guides. Domains resolve once at operation entry and inferred values stay explicit through
+reconstruction. Unsupported attributes are discarded, and export accepts only point or face arrays
+whose lengths match their elements. Mixed-domain face combinations default to zero.
 
 The behavioral input and acceptance matrix are in
 [retopo-planes-1-6-3-clean-room.md](../research/retopo-planes-1-6-3-clean-room.md). The independent
@@ -119,7 +121,7 @@ and guide objects are preserved when generating a new output.
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Validity exceptions and reference density counts are explicit.
   Dedicated UV-bearing contract cases cover inspector face and metadata associations.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: fifty-five regression tests for topology,
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: fifty-seven regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
