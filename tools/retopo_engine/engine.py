@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import replace
-from itertools import combinations
+from itertools import combinations, permutations
 import math
 
 from .geometry import (
@@ -1276,10 +1276,10 @@ def morph_preview(source: Mesh, guide: Mesh, settings: RetopoSettings) -> Mesh:
                 flat[vertex] = projected.uv[cursor]
             cursor += 1
     result = projected.copy()
-    result.vertices = [
-        lerp((flat[index][0], flat[index][1], 0.0), vertex, settings.morph_2d_3d)
-        for index, vertex in enumerate(projected.vertices)
-    ]
+    result.vertices = []
+    for index, vertex in enumerate(projected.vertices):
+        coordinate = flat[index] if flat[index] is not None else vertex[:2]
+        result.vertices.append(lerp((coordinate[0], coordinate[1], 0.0), vertex, settings.morph_2d_3d))
     return result
 
 
@@ -1292,6 +1292,20 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
     working = guide.copy()
     if settings.initialize_planes:
         working = initialize_planes(flat, settings)
+        marked = guide.attributes.get("point_guide", [])
+        manual_points = [point for index, point in enumerate(guide.vertices) if index < len(marked) and marked[index]]
+        if len(manual_points) >= 4:
+            for face in working.faces:
+                if len(face) != 4:
+                    continue
+                center = average(working.vertices[index] for index in face)
+                candidates = sorted(manual_points, key=lambda point: math.dist(center, point))[:8]
+                assignment = min(
+                    permutations(candidates, 4),
+                    key=lambda points: sum(math.dist(working.vertices[index], point) for index, point in zip(face, points)),
+                )
+                for index, point in zip(face, assignment):
+                    working.vertices[index] = point
     unused = set(range(len(working.vertices))) - {index for face in working.faces for index in face}
     if unused:
         axes = _mirror_axes(working)

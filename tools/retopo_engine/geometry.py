@@ -205,14 +205,13 @@ def tessellate(mesh: Mesh, edge_cuts: dict[Edge, int]) -> Mesh:
     lookup = {}
     edge_attributes = {name: {} for name in mesh.edge_attributes}
 
-    def index_for(point):
-        key = tuple(round(value, 9) for value in point)
+    def index_for(point, key):
         if key not in lookup:
             lookup[key] = len(vertices)
             vertices.append(point)
         return lookup[key]
 
-    for face in mesh.faces:
+    for face_index, face in enumerate(mesh.faces):
         if len(face) != 4:
             raise ValueError("density tessellation requires quad faces")
         counts = [
@@ -223,9 +222,33 @@ def tessellate(mesh: Mesh, edge_cuts: dict[Edge, int]) -> Mesh:
         rows = max(counts[1], counts[3])
         grid = {}
         corners = [mesh.vertices[index] for index in face]
+        corner_keys = {
+            (0, 0): ("vertex", face[0]),
+            (columns, 0): ("vertex", face[1]),
+            (columns, rows): ("vertex", face[2]),
+            (0, rows): ("vertex", face[3]),
+        }
         for row in range(rows + 1):
             for column in range(columns + 1):
-                grid[column, row] = index_for(coons_point(corners, column / columns, row / rows))
+                key = corner_keys.get((column, row))
+                if key is None and row == 0:
+                    side, fraction = 0, column / columns
+                elif key is None and column == columns:
+                    side, fraction = 1, row / rows
+                elif key is None and row == rows:
+                    side, fraction = 2, 1.0 - column / columns
+                elif key is None and column == 0:
+                    side, fraction = 3, 1.0 - row / rows
+                else:
+                    side = None
+                if key is None and side is not None:
+                    first, second = face[side], face[(side + 1) % 4]
+                    if first > second:
+                        fraction = 1.0 - fraction
+                    key = ("edge", Mesh.edge_key(first, second), round(fraction, 9))
+                elif key is None:
+                    key = ("face", face_index, column, row)
+                grid[column, row] = index_for(coons_point(corners, column / columns, row / rows), key)
         paths = (
             [grid[column, 0] for column in range(columns + 1)],
             [grid[columns, row] for row in range(rows + 1)],

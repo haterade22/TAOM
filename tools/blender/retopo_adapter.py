@@ -46,6 +46,10 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            attribute = data.attributes.get(name)
+            if attribute and attribute.domain == "FACE":
+                mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
         for name in ("crease_edge", "sharp_edge", "bevel_weight_edge"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "EDGE":
@@ -128,15 +132,26 @@ def combine_objects(objects, name="Combined guides"):
         "open_seam": False,
         "simplify_on": False,
     }
-    for obj in objects:
-        mesh = mesh_from_blender(obj)
+    meshes = [(obj, mesh_from_blender(obj)) for obj in objects]
+    face_attribute_names = {
+        name
+        for _, mesh in meshes
+        for name in ("pattern_id", "part_id", "retopo_plane_id")
+        if name in mesh.attributes and len(mesh.attributes[name]) == len(mesh.faces)
+    }
+    for obj, mesh in meshes:
         offset = len(vertices)
         vertices.extend(tuple(obj.matrix_world @ vertex.co) for vertex in obj.data.vertices)
         faces.extend(tuple(index + offset for index in face) for face in mesh.faces)
         lines.extend(tuple(index + offset for index in edge) for edge in mesh.lines)
         for attribute_name, default in attribute_defaults.items():
+            if attribute_name in face_attribute_names:
+                continue
             target = attributes.setdefault(attribute_name, [])
             target.extend(mesh.attributes.get(attribute_name, [default] * len(mesh.vertices)))
+        for attribute_name in face_attribute_names:
+            target = attributes.setdefault(attribute_name, [])
+            target.extend(mesh.attributes.get(attribute_name, [0] * len(mesh.faces)))
         for attribute_name, values in mesh.edge_attributes.items():
             target = edge_attributes.setdefault(attribute_name, {})
             for (first, second), value in values.items():

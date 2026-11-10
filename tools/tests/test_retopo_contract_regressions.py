@@ -451,6 +451,45 @@ class ContractRegressionTests(unittest.TestCase):
             second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
             self.assertTrue(first_edges & second_edges, (first, second))
 
+    def test_density_does_not_weld_coincident_independent_planes(self):
+        guide = Mesh(
+            vertices=[(0, 0, 0), (0.5, 0, 0), (0.5, 1, 0), (0, 1, 0), (0.5, 0, 0), (1, 0, 0), (1, 1, 0), (0.5, 1, 0)],
+            faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+        )
+        guide.edge_attributes["bevel_weight_edge"] = {(1, 2): 1.0, (4, 7): 1.0}
+        guide.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        result = engine.retopologize(
+            differential.curved_grid(), guide,
+            RetopoSettings(
+                base_density=20, fit_uv=False, separate_parts=False, separate_patterns=False,
+                seams_merge_distance=0, snapping_distance=0,
+            ),
+        )
+        self.assertEqual(2, len(result.connected_components()))
+        self.assertEqual(2, len(set(result.attributes["retopo_plane_id"])))
+        self.assertEqual(2, len(result.edge_attributes["bevel_weight_edge"]))
+
+    def test_morph_preview_tolerates_mirror_control_vertices(self):
+        result = engine.morph_preview(
+            differential.mirror_source(), differential.mirror_guide(),
+            RetopoSettings(morph_2d_3d=0.5, fit_uv=False),
+        )
+        self.assertTrue(all(math.isfinite(value) for vertex in result.vertices for value in vertex))
+        self.assertEqual(2, len(result.faces))
+
+    def test_initialize_planes_uses_marked_manual_corner_points(self):
+        guide = Mesh(
+            vertices=[(0.1, 0.1, 0), (0.9, 0.1, 0), (0.9, 0.9, 0), (0.1, 0.9, 0)],
+            faces=[],
+            attributes={"point_guide": [True] * 4},
+        )
+        result = engine.retopologize(
+            differential.curved_grid(), guide,
+            RetopoSettings(initialize_planes=True, output_generated_planes=True),
+        )
+        self.assertEqual(guide.vertices, result.vertices)
+        self.assertEqual(1, len(result.faces))
+
     def test_density_plane_ids_distinguish_unequal_components(self):
         guide = Mesh(
             vertices=[(0, 0, 0), (0.4, 0, 0), (0.4, 1, 0), (0, 1, 0), (0.6, 0, 0), (1, 0, 0), (1, 1, 0), (0.6, 1, 0)],

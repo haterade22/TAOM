@@ -112,6 +112,14 @@ def main():
         assert output.data.uv_layers.active is not None
         assert output.data.uv_layers.active.name == "UVMap"
         assert any(abs(vertex.co.z - 0.2) < 1e-5 for vertex in output.data.vertices)
+        from tools.blender.retopo_adapter import combine_objects, mesh_from_blender
+        roundtrip = mesh_from_blender(output)
+        combined = combine_objects([output])
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            assert output.data.attributes[name].domain == "FACE"
+            expected = [item.value for item in output.data.attributes[name].data]
+            assert roundtrip.attributes[name] == expected
+            assert combined.attributes[name] == expected
         assert [tuple(vertex.co) for vertex in source.data.vertices] == original_source
         assert len(guide.data.vertices) == 4
         settings.morph_2d_3d = 0.5
