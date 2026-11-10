@@ -24,14 +24,14 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     private readonly LongDefeatRunHost _host;
     private readonly Func<float> _missionTime;
 
-    internal LongDefeatMissionLogic(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, ILongDefeatMenuAdapter menu,
+    internal LongDefeatMissionLogic(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, Action leave,
         string missionKey, LongDefeatRunRecords? records = null)
     {
         _missionTime = () => Mission.CurrentTime;
 
         // One registry for the mission: the field adapter records each attacker's role, the effects adapter finds the commander by it.
         var registry = new LongDefeatAgentRegistry();
-        _host = new LongDefeatRunHost(plan, session, logger, outcomes, menu, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger, registry), records,
+        _host = new LongDefeatRunHost(plan, session, logger, outcomes, leave, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger, registry), records,
             () => new LongDefeatEffectsAdapter(Mission, registry));
     }
 
@@ -114,8 +114,8 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         _host.OnAgentFleeing(affectedAgent);
     }
 
-    // Crossing the boundary reaches RetreatMission (MissionBoundaryCrossingHandler.cs:133-150). EndGame, not EndMission: with the manager
-    // ending, the engine shows the main menu instead of the Custom Battle screen under it. The end report is written by the exit that follows.
+    // Crossing the boundary reaches RetreatMission (MissionBoundaryCrossingHandler.cs:133-150). The Long Defeat's launcher binds the exit to EndGame, not EndMission: with the manager
+    // ending, the engine shows the main menu instead of the Custom Battle screen under it. A story mission binds its own EndMission. The end report is written by the exit that follows.
     public override void OnRetreatMission()
     {
         base.OnRetreatMission();

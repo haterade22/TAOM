@@ -1,0 +1,50 @@
+# In-game checks for #1105 (Story Missions), read by tools/ingame_verdict.py. Slice 1 hosts the Helm's Deep defence inside a loaded campaign. The ended line below comes from
+# Main/Features/StoryMissions/StoryEndWatch.cs. The Long Defeat director writes its check lines for the same run with the mission key "storyN", but the launcher
+# hands it HostedRunOutcomeLog, which writes them as taom.story-missions.hosted.<name> instead of taom.long-defeat.<name>, so a story run never lands on the rows of
+# tools/ingame_checks/1079.toml (its HUD rows would read as fails: a story mission has no HUD). This manifest reads the hosted boot line and the ended line.
+#
+# fixed_in is the trunk commit the slice was built on: the manifest ships with the emitter.
+issue = 1105
+title = "Story Missions: campaign-hosted one-shot battles (slice 1, the Helm's Deep defence)"
+fixed_in = "c4a5d80a8"
+logs = ["taom"]
+
+[[check]]
+id = "taom.story-missions.hosted.boot"
+needs = "the same run: the hosted Long Defeat run booted in the campaign (deployment finished, siege team AI, a main agent, IsFriendlyMission false)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=fail']
+absence = "not-reached"
+
+# Written once per story mission, about five seconds after the run's result, or at an exit that came first: with a result the verdict (a retreat is
+# reason=Abandoned, a loss that reads NOT REACHED here because the pass pattern names only the three ways a run ends by itself), without one a skip with reason=left,
+# and after a fault a fail.
+[[check]]
+id = "taom.story-missions.ended"
+needs = "in a loaded campaign: taom.story_open helms_deep_defend (add auto for the bot), choose Open the mission, and let the wave end by a win or a loss"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "after the mission the player stands on the campaign map again with no encounter, no menu stuck open and no prisoner or party change: win and loss both"
+
+[[human]]
+claim = "five campaign days pass cleanly after the return, then a save and a reload load clean"
+
+[[human]]
+claim = "in a campaign that is not ironman (ironman disables the item): Exit to Main Menu in the middle of the mission, then Continue from the last save, loads clean"
+
+[[human]]
+claim = "a retreat (walk out of the boundary for ten seconds) ends the mission, returns to the story menu and then the map, and writes the ended line with reason=Abandoned"
+
+[[human]]
+claim = "Escape, then Photo Mode, then Escape returns to the battle, and the order bar still works"
+
+[[human]]
+claim = "taom.story_open typed in a town or camp menu, during an encounter, or while enlisted is refused with a message and opens nothing"
+
+[[human]]
+claim = "the garrison and the Uruk wave look as they do in the Long Defeat on this scene (Rohan defenders on the walls, Uruks with ram and towers), and the order bar works. They are the campaign troops, not the Long Defeat's fow_ copies, so their skills differ"

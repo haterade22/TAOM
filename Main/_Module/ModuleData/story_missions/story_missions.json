@@ -1,0 +1,26 @@
+{
+  "missions": [
+    {
+      "id": "helms_deep_defend",
+      "name": "{=!}Helm's Deep: hold the walls",
+      "scene": "taom_rohan_castle_helms_deep_forceatmo",
+      "side": "Defend",
+      "defenderCulture": "vlandia",
+      "attackerCulture": "isengard",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
+        { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
+      ],
+      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "roster": {
+        "waves": [
+          { "count": 110, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 50 },
+            { "troop": "isengard_militia_spearman", "class": "Infantry", "weight": 25 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    }
+  ]
+}

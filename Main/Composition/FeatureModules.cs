@@ -98,6 +98,7 @@ internal static class FeatureModules
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
         new Features.FordsOfWar.FordsOfWarModule(),
         new Features.LongDefeat.LongDefeatModule(),
+        new Features.StoryMissions.StoryMissionsModule(),
         new Features.SeatOfSeeing.SeatOfSeeingModule(),
         new Features.MarshalsWord.MarshalsWordModule(),
         new Features.DeadTargetReset.DeadTargetResetModule(),

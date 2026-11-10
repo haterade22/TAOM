@@ -111,7 +111,7 @@ internal static partial class FortressesReader
             towers, ReadVolley(o["volley"], id, s), ReadPlace(o["armoury"], id, "armoury", ArmouryFallback, s), ReadPlace(o["yard"], id, "yard", YardFallback, s));
     }
 
-    private static bool IsSceneName(string scene)
+    internal static bool IsSceneName(string scene)
     {
         if (scene.Length > MaxSceneLength)
             return false;
@@ -125,7 +125,7 @@ internal static partial class FortressesReader
         return true;
     }
 
-    private static List<GarrisonRow> ReadGarrison(JArray? array, string fortress, LongDefeatConfigScope s)
+    internal static List<GarrisonRow> ReadGarrison(JArray? array, string fortress, LongDefeatConfigScope s)
     {
         var rows = new List<GarrisonRow>();
         if (array == null)
@@ -157,7 +157,7 @@ internal static partial class FortressesReader
         return rows;
     }
 
-    private static KeepPoint? ReadKeep(JToken? token, string fortress, float defaultRadius, LongDefeatConfigScope s)
+    internal static KeepPoint? ReadKeep(JToken? token, string fortress, float defaultRadius, LongDefeatConfigScope s)
     {
         if (token == null || token.Type == JTokenType.Null)
             return null;
@@ -191,7 +191,7 @@ internal static partial class FortressesReader
     }
 
     // The block LongDefeatRecorder.Export writes: {"foot": {x,y,z,fx,fy}, "archers": {...}}, each point optional. One bad value reverts the whole block with one warning.
-    private static MusterPoints? ReadMuster(JToken? token, string fortress, LongDefeatConfigScope s)
+    internal static MusterPoints? ReadMuster(JToken? token, string fortress, LongDefeatConfigScope s)
     {
         if (token == null || token.Type == JTokenType.Null)
             return null;

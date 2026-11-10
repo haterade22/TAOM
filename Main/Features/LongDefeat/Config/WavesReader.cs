@@ -65,7 +65,7 @@ internal static class WavesReader
         return new WavesConfig(ordered, bounties, rosters);
     }
 
-    private static RunRules KeepAboveStragglers(RunRules rules, IEnumerable<WavePlan> rosters, LongDefeatConfigScope s)
+    internal static RunRules KeepAboveStragglers(RunRules rules, IEnumerable<WavePlan> rosters, LongDefeatConfigScope s)
     {
         var floor = 0;
         foreach (var plan in rosters)
@@ -80,7 +80,7 @@ internal static class WavesReader
         return rules with { KeepMinAttackers = floor };
     }
 
-    private static RunRules ReadRules(JObject? o, LongDefeatConfigScope s)
+    internal static RunRules ReadRules(JObject? o, LongDefeatConfigScope s)
     {
         var d = RunRules.Default;
         const string p = "rules";
@@ -134,7 +134,7 @@ internal static class WavesReader
         return result;
     }
 
-    private static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s)
+    internal static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s)
     {
         var label = $"rosters.{id}";
         if (roster == null)

@@ -1791,6 +1791,7 @@ The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed(
 - **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
 - **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.
+- **Repeat (Story Missions, #1105, 2026-11-10):** the story list was built from the Long Defeat's list and Host Review's, and kept neither the HUD's veto nor Host Review's Photo Mode view. Its dev menu also copied Host Review's mission host but not `HostReviewService.GetBlock`, so it opened over encounters and other menus. The lesson was in this file, but path rules do not load in a sibling worktree, and nothing machine-checked it. **Gate:** `PhotoModeEscapeMenuGateTests` fails any `[ViewMethod]` list with the singleplayer escape menu and neither the Photo Mode view nor a view that refuses it. A copied launcher or menu entry also copies its precedent's refusals, each with a test. Source: [rca-story-missions-slice1-2026-11-10.md](../rca-story-missions-slice1-2026-11-10.md), rows 1 and 2.
 
 ### A co-op battle is not a network session to the engine: read `ICoopSessionProvider` (Seat of Seeing, 2026-11-04)
 

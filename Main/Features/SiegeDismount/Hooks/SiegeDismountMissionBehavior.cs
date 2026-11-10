@@ -1,5 +1,6 @@
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Features.StoryMissions.Hooks;
 
 namespace TAOM.Features.SiegeDismount.Hooks;
 
@@ -35,7 +36,8 @@ public class SiegeDismountMissionBehavior : MissionBehavior
         base.AfterStart();
 
         var mission = Mission.Current;
-        var isSiegeBattle = mission?.IsSiegeBattle ?? false;
+        // A story mission writes nothing to the campaign (#1105), and its lord spawns on foot anyway.
+        var isSiegeBattle = (mission?.IsSiegeBattle ?? false) && mission?.GetMissionBehavior<StoryMissionLogic>() == null;
         var sceneName = mission?.SceneName;
 
         _service.OnMissionStart(isSiegeBattle, sceneName);
