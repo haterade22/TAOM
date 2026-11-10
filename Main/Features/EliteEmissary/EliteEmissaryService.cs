@@ -93,6 +93,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
 
         var sellsForGold = _goldOption.EliteTroopsCostGoldOnly;
         var balance = sellsForGold ? (double)_player.Gold : _resourceService.GetCurrentAmount(heroId, ownerKingdomId, ownerCultureId);
+        var freeSlots = sellsForGold ? _party.GetMainPartyFreeSlots() : int.MaxValue;
         var offers = new List<EmissaryTroopOffer>();
 
         foreach (var troopId in GetCultureOffers(ownerCultureId))
@@ -107,7 +108,9 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
 
             var price = UnitPrice(merchantCost, sellsForGold);
             var maxAffordable = (int)(balance / price);
-            offers.Add(new EmissaryTroopOffer(troopId, price, canAfford: balance >= price, maxAffordableQuantity: maxAffordable));
+            var room = sellsForGold ? RoomFor(troopId, freeSlots) : int.MaxValue;
+            var limitedByParty = room < maxAffordable;
+            offers.Add(new EmissaryTroopOffer(troopId, price, canAfford: balance >= price, maxQuantity: limitedByParty ? room : maxAffordable, limitedByPartySize: limitedByParty));
         }
 
         var resourceName = sellsForGold ? null : resource.DisplayName;
@@ -153,6 +156,13 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
             return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Unaffordable, troopId, quantity, totalCost, resourceName);
         }
 
+        var room = sellsForGold ? RoomFor(troopId, _party.GetMainPartyFreeSlots()) : int.MaxValue;
+        if (quantity > room)
+        {
+            _logger.LogInfo($"[EliteEmissary] Purchase blocked (PartyFull): {troopId} x{quantity}, the party has room for {room}");
+            return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.PartyFull, troopId, quantity, totalCost, resourceName);
+        }
+
         // Grant BEFORE charge: a failed grant (no party / unknown troop id) then never charges.
         if (!_party.GrantTroop(troopId, quantity))
         {
@@ -170,6 +180,16 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
 
     private int UnitPrice(int merchantCost, bool sellsForGold) =>
         sellsForGold ? merchantCost * _goldOption.EmissaryGoldPerResource : merchantCost;
+
+    // How many of this troop fit in the free slots. Under Troop Weight the slots are weighted and one troop
+    // fills its weight, so a weight-3 elite takes 3 slots. A weight that is not above 1 (light, unset, NaN)
+    // fills one slot; an infinite weight fits none.
+    private int RoomFor(string troopId, int freeSlots)
+    {
+        var slotsPerTroop = _party.GetPartySlotsPerTroop(troopId);
+        if (!(slotsPerTroop > 1f)) return freeSlots;
+        return (int)Math.Floor(freeSlots / (double)slotsPerTroop);
+    }
 
     private bool BuyerUsesResource(SpecialResource ownerResource) =>
         _resourceService.ResolveResource(_player.KingdomId, _player.CultureId)?.Id == ownerResource.Id;

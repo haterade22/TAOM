@@ -126,6 +126,18 @@ co-op refusal was added 2026-08-03 from field testing.
   `BuyCondition` both call, therefore returns false unless the buyer's resolved resource equals the settlement
   owner's. That keeps today's reach, including the shared War Spoils group. The service passes no resource
   name in this mode, and the presenter shows "denars".
+- **Party limit under gold.** With the option on, `BuildOfferList` caps each offer at the room the party has
+  for that troop, and `Purchase` returns `PartyFull` above it before anything moves. The room is the free slots
+  (`PartySizeLimit - NumberOfAllMembers`, on the party `GrantTroop` fills) divided by the slots one troop fills
+  (`GetPartySlotsPerTroop`), rounded down. Under Troop Weight the engine limit is already reduced by the
+  party's weight surplus (`TroopWeightService.ApplyPartySizeWeightPenalty`), so the free slots are weighted
+  and one troop fills its weight: 10 free slots hold 3 troops of weight 3, and no Mumakil (weight 20). With
+  Troop Weight off, or for a weight not above 1, a troop fills one slot. A resource balance kept the quantity
+  small, and gold does not: at the default rate, 1,000,000 gold buys 111 level 51 troops at once. The list says
+  "Your party has room for N" when the room sets the maximum, and a full party greys the offer. This is
+  stricter than vanilla's recruit screen, which allows an over-limit recruit after a confirmation. With the
+  option off, the emissary still sells past the limit, as it always did. To remove the cap, delete the
+  `freeSlots` read in `BuildOfferList` and the `PartyFull` branch in `Purchase`.
 
 ## Configuration
 
@@ -219,7 +231,8 @@ level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryServiceTests.cs` — offer build, afford-gray, owner
   resolution, the full Purchase decision tree (Invalid / NoResource / NotOffered / Unaffordable / Success /
   grant-fail), grant-before-charge ordering, and the gold-only option: price at a non-default rate, the purse
-  in place of the balance, each state of the buyer gate, the check line, and parity with the option off.
+  in place of the balance, each state of the buyer gate, the check line, the party limit (room below, equal to
+  and above the gold limit, a full party), and parity with the option off.
 - `TAOM.Tests/Features/EliteEmissary/EliteEmissaryConfigProviderTests.cs` — valid/missing/malformed XML,
   unknown-culture drop, unpriced-troop drop, enabled flag.
 - `TAOM.Tests/Features/SpecialResources/SpecialResourceServiceTests.cs` — the two `*MerchantPurchase`
@@ -247,6 +260,7 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 
 ## Changelog
 
+- 2026-11-09 (#1108 follow-up): with the option on, the emissary sells no more than the party's free slots. Owed in game.
 - 2026-11-09 (#1108): with the MCM option Elite Troops Cost Gold Only on, the emissary sells for gold and serves only a buyer who holds the settlement owner's resource. Owed in game.
 - 2026-08-03 — Purchases are declined on a non-authoritative co-op peer before the resource is charged, with a new `{=taom_emissary_coop_guest}` message (not yet registered in `taom_emissary_strings.xml`, not yet translated). `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` both gained an `ICoopSessionProvider` parameter.
 - 2026-06-25 — Feature created. 11 cultures authored, L36+ elites, verified capitals.

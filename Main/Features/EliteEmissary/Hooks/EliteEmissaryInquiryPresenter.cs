@@ -21,6 +21,8 @@ namespace TAOM.Features.EliteEmissary.Hooks;
 /// </summary>
 public sealed class EliteEmissaryInquiryPresenter
 {
+    private const string PartyFullText = "{=taom_emissary_party_full}Your party has no room for these troops.";
+
     private readonly IEliteEmissaryService _service;
     private readonly ISettlementOwnerAdapter _ownerAdapter;
     private readonly ICoopSessionProvider _coopSession;
@@ -82,15 +84,12 @@ public sealed class EliteEmissaryInquiryPresenter
                     .SetTextVariable("RESOURCE", currency)
                     .ToString();
 
-                var hint = (offer.CanAfford
-                    ? new TextObject("{=taom_emissary_offer_afford}You can afford up to {MAX}.").SetTextVariable("MAX", offer.MaxAffordableQuantity)
-                    : new TextObject("{=taom_emissary_offer_cant}Not enough {RESOURCE}.").SetTextVariable("RESOURCE", currency))
-                    .ToString();
+                var hint = OfferHint(offer, currency);
 
                 // Per-element portraits are skipped — v1.4.6's InquiryElement image type is the abstract
                 // TaleWorlds.Core.ImageIdentifiers.ImageIdentifier; name + cost in the title is the safe
                 // text-only baseline (QuickActions does the same). Portraits can be added later.
-                elements.Add(new InquiryElement(offer, title, null, offer.CanAfford, hint));
+                elements.Add(new InquiryElement(offer, title, null, offer.MaxQuantity > 0, hint));
             }
 
             if (elements.Count == 0)
@@ -137,7 +136,7 @@ public sealed class EliteEmissaryInquiryPresenter
             var troopName = character?.Name?.ToString() ?? offer.TroopId;
 
             var quantities = new List<int>();
-            foreach (var q in new[] { 1, 5, 10, offer.MaxAffordableQuantity })
+            foreach (var q in new[] { 1, 5, 10, offer.MaxQuantity })
                 if (q >= 1 && !quantities.Contains(q))
                     quantities.Add(q);
             quantities.Sort();
@@ -145,7 +144,7 @@ public sealed class EliteEmissaryInquiryPresenter
             var elements = new List<InquiryElement>();
             foreach (var q in quantities)
             {
-                var enabled = q <= offer.MaxAffordableQuantity;
+                var enabled = q <= offer.MaxQuantity;
                 var label = new TextObject("{=taom_emissary_qty_line}{QTY} (×{COST} = {TOTAL} {RESOURCE})")
                     .SetTextVariable("QTY", q)
                     .SetTextVariable("COST", offer.UnitPrice)
@@ -153,7 +152,7 @@ public sealed class EliteEmissaryInquiryPresenter
                     .SetTextVariable("RESOURCE", resourceName)
                     .ToString();
                 var hint = enabled ? string.Empty
-                    : new TextObject("{=taom_emissary_offer_cant}Not enough {RESOURCE}.").SetTextVariable("RESOURCE", resourceName).ToString();
+                    : offer.LimitedByPartySize ? RoomFor(offer.MaxQuantity) : NotEnough(resourceName);
                 elements.Add(new InquiryElement(q, label, null, enabled, hint));
             }
 
@@ -227,6 +226,9 @@ public sealed class EliteEmissaryInquiryPresenter
             case EmissaryPurchaseStatus.NoResource:
                 Notify("{=taom_emissary_no_resource}There is no emissary trade in this settlement.");
                 break;
+            case EmissaryPurchaseStatus.PartyFull:
+                Notify(PartyFullText, Colors.Red);
+                break;
             default:
                 Notify("{=taom_emissary_failed}The emissary could not complete the deal.");
                 break;
@@ -235,6 +237,20 @@ public sealed class EliteEmissaryInquiryPresenter
 
     private static string CurrencyName(string resourceName) =>
         resourceName ?? new TextObject("{=taom_emissary_denars}denars").ToString();
+
+    private static string OfferHint(EmissaryTroopOffer offer, string currency)
+    {
+        if (!offer.CanAfford) return NotEnough(currency);
+        if (!offer.LimitedByPartySize)
+            return new TextObject("{=taom_emissary_offer_afford}You can afford up to {MAX}.").SetTextVariable("MAX", offer.MaxQuantity).ToString();
+        return offer.MaxQuantity > 0 ? RoomFor(offer.MaxQuantity) : new TextObject(PartyFullText).ToString();
+    }
+
+    private static string NotEnough(string currency) =>
+        new TextObject("{=taom_emissary_offer_cant}Not enough {RESOURCE}.").SetTextVariable("RESOURCE", currency).ToString();
+
+    private static string RoomFor(int max) =>
+        new TextObject("{=taom_emissary_offer_room}Your party has room for {MAX}.").SetTextVariable("MAX", max).ToString();
 
     private static void Notify(string textKeyOrLiteral) => Notify(textKeyOrLiteral, Colors.White);
 

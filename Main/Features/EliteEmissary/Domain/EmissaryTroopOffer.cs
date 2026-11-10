@@ -13,14 +13,19 @@ public sealed class EmissaryTroopOffer
     /// <summary>True if the player can afford at least ONE of this troop right now.</summary>
     public bool CanAfford { get; }
 
-    /// <summary>How many the player can afford at the current balance (floor(balance / cost)).</summary>
-    public int MaxAffordableQuantity { get; }
+    /// <summary>How many the player can buy now: floor(balance / price) and, under the gold-only option, at
+    /// most the party's free slots.</summary>
+    public int MaxQuantity { get; }
 
-    public EmissaryTroopOffer(string troopId, int unitPrice, bool canAfford, int maxAffordableQuantity)
+    /// <summary>True when the party's free slots, not the balance, set <see cref="MaxQuantity"/>.</summary>
+    public bool LimitedByPartySize { get; }
+
+    public EmissaryTroopOffer(string troopId, int unitPrice, bool canAfford, int maxQuantity, bool limitedByPartySize)
     {
         TroopId = troopId;
         UnitPrice = unitPrice;
         CanAfford = canAfford;
-        MaxAffordableQuantity = maxAffordableQuantity;
+        MaxQuantity = maxQuantity;
+        LimitedByPartySize = limitedByPartySize;
     }
 }

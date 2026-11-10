@@ -28,3 +28,12 @@ claim = "with the option on, the emissary at Minas Tirith lists prices in denars
 
 [[human]]
 claim = "with the option on and Hide Emissary Without Resource at its default, the capital of a faction at peace that uses a different resource shows no emissary option"
+
+[[human]]
+claim = "with the option on and a nearly full party, the emissary offers no more troops than the party's free slots and says so, and a full party greys the offer"
+
+[[human]]
+claim = "with the option and Troop Weight on, 10 free slots let the emissary sell 3 troops of weight 3 (a listed troop at level 41 or above), and the party size after the purchase is still within its limit"
+
+[[human]]
+claim = "with the option off, the emissary still sells past the party limit"
