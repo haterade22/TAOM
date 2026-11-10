@@ -710,6 +710,27 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
         if len(_mirror_axes(guide)) > 1:
             return guide.copy()
     result = guide.copy()
+    point_attribute_names = {
+        name
+        for name, values in guide.attributes.items()
+        if guide.attribute_domains.get(name) == "POINT"
+        or (
+            name not in guide.attribute_domains
+            and len(values) == len(guide.vertices)
+            and name not in {"part_id", "retopo_plane_id"}
+            and (name != "pattern_id" or "source_position" in guide.attributes)
+        )
+    }
+    face_attribute_names = {
+        name
+        for name, values in guide.attributes.items()
+        if guide.attribute_domains.get(name) == "FACE"
+        or (
+            name not in guide.attribute_domains
+            and len(values) == len(guide.faces)
+            and (name != "pattern_id" or "source_position" not in guide.attributes)
+        )
+    }
 
     def face_signature(mesh, face):
         return tuple(sorted(
@@ -736,8 +757,11 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             for vertex in component.vertices
         ]
         component.faces = [tuple(reversed(face)) for face in component.faces]
-        unique_faces = [face for face in component.faces if face_signature(component, face) not in signatures]
-        if not unique_faces:
+        unique_face_indices = [
+            index for index, face in enumerate(component.faces)
+            if face_signature(component, face) not in signatures
+        ]
+        if not unique_face_indices:
             continue
         position_indices = {
             tuple(round(value, 9) for value in vertex): index
@@ -750,13 +774,16 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
                 position_indices[key] = len(result.vertices)
                 result.vertices.append(component.vertices[old])
                 for name, values in result.attributes.items():
-                    if len(component.attributes.get(name, [])) == len(component.vertices):
+                    if name in point_attribute_names:
                         values.append(component.attributes[name][old])
             return position_indices[key]
 
-        for face in unique_faces:
+        for face_index in unique_face_indices:
+            face = component.faces[face_index]
             mirrored_face = tuple(mirrored_index(index) for index in face)
             result.faces.append(mirrored_face)
+            for name in face_attribute_names:
+                result.attributes[name].append(component.attributes[name][face_index])
             signatures.add(face_signature(component, face))
             for corner, first in enumerate(face):
                 second = face[(corner + 1) % len(face)]
@@ -782,6 +809,23 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
     points = [tuple(point) for point in point_guides]
+    face_attribute_names = {
+        name
+        for name, values in guide.attributes.items()
+        if guide.attribute_domains.get(name) == "FACE"
+        or (
+            name not in guide.attribute_domains
+            and len(values) == len(guide.faces)
+            and (name != "pattern_id" or "source_position" not in guide.attributes)
+        )
+    }
+
+    def subdivide(current):
+        result = subdivide_quads(current)
+        for name in face_attribute_names:
+            result.attributes[name] = [value for value in current.attributes[name] for _ in range(4)]
+        result.attribute_domains = dict(current.attribute_domains)
+        return result
 
     def fill(current, candidate_points):
         if max_iterations == 0:
@@ -796,7 +840,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             )
         ]
         if len(current.faces) == 1 and len(nearby_points) in {1, 4}:
-            current = subdivide_quads(current)
+            current = subdivide(current)
             for point in nearby_points:
                 nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
@@ -810,11 +854,14 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 min(current.vertices[face[0]][0], current.vertices[face[1]][0]) <= center[0] <= max(current.vertices[face[0]][0], current.vertices[face[1]][0])
                 and min(current.vertices[face[2]][0], current.vertices[face[3]][0]) <= center[0] <= max(current.vertices[face[2]][0], current.vertices[face[3]][0])
             ):
+                parent_attributes = {name: current.attributes[name][0] for name in face_attribute_names}
                 current.vertices.extend([first, second])
                 current.faces = [
                     (face[0], len(current.vertices) - 2, len(current.vertices) - 1, face[3]),
                     (len(current.vertices) - 2, face[1], face[2], len(current.vertices) - 1),
                 ]
+                for name in face_attribute_names:
+                    current.attributes[name] = [parent_attributes[name]] * 2
                 return current
         for _ in range(max_iterations):
             missing = [
@@ -849,7 +896,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 break
             distance, point, face_index, edge_index, projected, length = best
             if distance >= length * 0.49:
-                current = subdivide_quads(current)
+                current = subdivide(current)
                 nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
                 continue
@@ -869,7 +916,11 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
 
             first_new = vertex_at(projected)
             opposite_new = vertex_at(opposite)
+            parent_attributes = {name: current.attributes[name][face_index] for name in face_attribute_names}
             current.faces.pop(face_index)
+            for name in face_attribute_names:
+                current.attributes[name].pop(face_index)
+                current.attributes[name].extend([parent_attributes[name]] * 2)
             current.faces.append((first, first_new, opposite_new, fourth))
             current.faces.append((first_new, second, third, opposite_new))
             break
@@ -1130,8 +1181,16 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
             edge = Mesh.edge_key(first, new_face[(index + 1) % len(new_face)])
             group_edges.setdefault(group, set()).add(edge)
         cursor += len(face)
-    result = Mesh(vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name)
-    result.attributes = {name: list(values) for name, values in mesh.attributes.items()}
+    result = Mesh(
+        vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name,
+        attribute_domains=dict(mesh.attribute_domains),
+    )
+    for name, values in mesh.attributes.items():
+        domain = mesh.attribute_domains.get(name)
+        if domain == "POINT":
+            result.attributes[name] = [values[old] for old, _ in lookup]
+        else:
+            result.attributes[name] = list(values)
     endpoint_groups = {}
     for (old, group), new in lookup.items():
         endpoint_groups.setdefault(old, {})[group] = new
@@ -1207,11 +1266,15 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
             uv.extend(clean_uv)
             kept_faces.append(face_index)
     original_face_count = len(result.faces)
+    original_vertex_count = len(result.vertices)
     result.faces = faces
     result.uv = uv
     for name, values in result.attributes.items():
-        if len(values) == original_face_count:
+        domain = result.attribute_domains.get(name)
+        if domain == "FACE" or (domain is None and len(values) == original_face_count):
             result.attributes[name] = [values[index] for index in kept_faces]
+        elif domain == "POINT" or (domain is None and len(values) == original_vertex_count):
+            result.attributes[name] = [values[index] for index in unique]
     result.edge_attributes = {
         name: {
             Mesh.edge_key(indices[remap[first]], indices[remap[second]]): value
@@ -1249,11 +1312,12 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 directed.append((first, second, face_index))
     for first, second, _ in directed:
         faces.append((first, second, second + count, first + count))
-    result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name)
+    result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name, attribute_domains=dict(guide.attribute_domains))
     for name, values in guide.attributes.items():
-        if len(values) == len(guide.faces):
+        domain = guide.attribute_domains.get(name)
+        if domain == "FACE" or (domain is None and len(values) == len(guide.faces)):
             result.attributes[name] = values + values + [values[face_index] for _, _, face_index in directed]
-        elif len(values) == len(guide.vertices):
+        elif domain == "POINT" or (domain is None and len(values) == len(guide.vertices)):
             result.attributes[name] = values + values
         else:
             result.attributes[name] = list(values)

@@ -86,6 +86,9 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         layer.active_render = True
     for attribute_name, values in mesh.attributes.items():
         domain = mesh.attribute_domains.get(attribute_name)
+        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces) if domain == "FACE" else None
+        if expected_count is not None and len(values) != expected_count:
+            continue
         if attribute_name in {"source_position", "pattern_center"}:
             attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain="POINT")
             for item, value in zip(attribute.data, values):
@@ -168,7 +171,12 @@ def combine_objects(objects, name="Combined guides"):
             target.extend(mesh.attributes.get(attribute_name, [default] * len(mesh.vertices)))
         for attribute_name in face_attribute_names:
             target = attributes.setdefault(attribute_name, [])
-            target.extend(mesh.attributes.get(attribute_name, [0] * len(mesh.faces)))
+            if mesh.attribute_domains.get(attribute_name) == "FACE" or (
+                attribute_name not in mesh.attribute_domains and attribute_name in mesh.attributes
+            ):
+                target.extend(mesh.attributes[attribute_name])
+            else:
+                target.extend([0] * len(mesh.faces))
         for attribute_name, values in mesh.edge_attributes.items():
             target = edge_attributes.setdefault(attribute_name, {})
             for (first, second), value in values.items():

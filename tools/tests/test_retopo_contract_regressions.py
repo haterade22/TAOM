@@ -561,6 +561,60 @@ class ContractRegressionTests(unittest.TestCase):
                         new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % 3])
                         self.assertEqual(mesh.edge_attributes["crease_edge"][original_edge], result.edge_attributes["crease_edge"][new_edge])
 
+    def test_face_attributes_follow_auto_fill_and_mirror(self):
+        guide = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (2, 0, 0), (2, 1, 0)],
+            faces=[(0, 1, 2, 3), (1, 4, 5, 2)],
+            attributes={
+                "retopo_plane_id": [7, 8],
+                "pattern_id": [10, 11],
+                "part_id": [20, 21],
+                "source_vertex": [0] * 6,
+            },
+            attribute_domains={
+                "retopo_plane_id": "FACE", "pattern_id": "FACE", "part_id": "FACE", "source_vertex": "POINT",
+            },
+        )
+        filled = engine.auto_fill(guide, [(0.3, 0, 0)], 5)
+        self.assertEqual(3, len(filled.faces))
+        for name, expected in (("retopo_plane_id", [8, 7, 7]), ("pattern_id", [11, 10, 10]), ("part_id", [21, 20, 20])):
+            self.assertEqual(expected, filled.attributes[name])
+        mirrored = engine.mirror_guides(guide, axes=("x",))
+        self.assertEqual(4, len(mirrored.faces))
+        for name, expected in (("retopo_plane_id", [7, 8, 7, 8]), ("pattern_id", [10, 11, 10, 11]), ("part_id", [20, 21, 20, 21])):
+            self.assertEqual(expected, mirrored.attributes[name])
+
+    def test_reconstruction_preserves_explicit_attribute_domains(self):
+        separated = engine._separate(
+            Mesh(
+                vertices=[(0, 0, 0), (0.5, 0, 0), (1, 0, 0), (0, 1, 0), (0.5, 1, 0), (1, 1, 0)],
+                faces=[(0, 1, 4, 3), (1, 2, 5, 4)],
+                uv=[(0, 0), (0.5, 0), (0.5, 1), (0, 1), (0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+                attributes={"pattern_id": [0, 1, 2, 3, 4, 5]},
+                attribute_domains={"pattern_id": "POINT"},
+            ),
+            [0, 1],
+        )
+        self.assertEqual([0, 1, 4, 3, 1, 2, 5, 4], separated.attributes["pattern_id"])
+        self.assertEqual("POINT", separated.attribute_domains["pattern_id"])
+        merged = engine.merge_output_seams(
+            Mesh(
+                vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (-1, 0, 0), (-1, -1, 0), (0, -1, 0)],
+                faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+                attributes={"source_vertex": list(range(8)), "pattern_id": [10, 20]},
+                attribute_domains={"source_vertex": "POINT", "pattern_id": "FACE"},
+            ),
+            0.01,
+        )
+        self.assertEqual([0, 1, 2, 3, 5, 6, 7], merged.attributes["source_vertex"])
+        self.assertEqual([10, 20], merged.attributes["pattern_id"])
+        guide = differential.ring_guide()
+        guide.attributes["pattern_id"] = list(range(16))
+        guide.attribute_domains["pattern_id"] = "POINT"
+        thickened = engine.thicken(guide, 0.1)
+        self.assertEqual(list(range(16)) * 2, thickened.attributes["pattern_id"])
+        self.assertEqual("POINT", thickened.attribute_domains["pattern_id"])
+
     def test_mirror_normalizes_loose_line_attribute_keys(self):
         guide = Mesh(
             vertices=[(3, 0, 0), (1, 0, 0), (2, 0, 0), (2, 1, 0), (1, 1, 0)],
