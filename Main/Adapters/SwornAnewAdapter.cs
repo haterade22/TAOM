@@ -12,7 +12,8 @@ namespace TAOM.Adapters;
 /// Boundary implementation of <see cref="ISwornAnewAdapter"/>. Every value is a raw fact of the engine, read the way vanilla's own
 /// <c>DefaultDefectionModel</c> and <c>LordDefectionCampaignBehavior.conversation_player_start_defection_with_prisoner_on_condition</c>
 /// read it. The campaign statics are read through <c>Campaign.Current</c> first (adapters.md: <c>Hero.MainHero</c> and
-/// <c>PartyBase.MainParty</c> throw without one). Both sides come from <c>FactionSides</c>, the id and culture of one entity. A read
+/// <c>PartyBase.MainParty</c> throw without one). Both sides come from <c>FactionSides</c>, the id and culture of one entity: the lord by their own clan, never their realm,
+/// as Kingdom Allegiance sides them (#1114), and the player by the player's realm. A read
 /// that faults is logged and answers null (or false).
 /// </summary>
 public sealed class SwornAnewAdapter : ISwornAnewAdapter
@@ -54,7 +55,7 @@ public sealed class SwornAnewAdapter : ISwornAnewAdapter
                 HeldByMainParty: main != null && hero.PartyBelongedToAsPrisoner == main,
                 InPlayerClanSettlement: heldIn != null && heldIn == Clan.PlayerClan,
                 OnRansomScreen: GameStateManager.Current?.LastOrDefault<PartyState>()?.PartyScreenMode == PartyScreenHelper.PartyScreenMode.Ransom,
-                LordSide: FactionSides.OfHero(hero),
+                LordSide: FactionSides.OfOwnClan(hero),
                 PlayerSide: FactionSides.OfPlayer());
         }
         catch (Exception ex)

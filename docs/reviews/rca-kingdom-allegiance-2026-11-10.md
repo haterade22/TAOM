@@ -22,7 +22,7 @@ The finding that changed behaviour: vanilla's mercenary leave score subtracts th
 | 10 | LOW | The doc and the registry called Coop's use of `CharacterRelationCampaignBehavior` UNVERIFIED. Coop runs its `RegisterEvents` on the server only and turns off `DiplomaticBartersBehavior` on every peer (`DisableCharacterRelationCampaignBehavior.cs:15-20`, `DisableDiplomaticBartersBehavior.cs:6-11`). Lens 2 F6. | Unverified left in place | The Coop source on this machine was not opened. | Doc and registry state what Coop does. |
 | 11 | LOW | The doc said the player can "still recruit an orc lord into a Free realm through a conversation barter". A vassal player's defection persuasion reads the clan join score for the AI-led realm (dump `:208265`, `:208953`), so the veto applies. Lens 5 F4. | Doc against code | The exemption was described from the service's inputs, not from the conversation's realm. | The doc names the realm the player rules, and the vassal case. |
 
-**Pre-existing, not fixed here:** Sworn Anew sides a lord by their realm (`FactionSides.OfHero`, `SwornAnewAdapter.cs:57`), this feature by their own clan, so an orc lord serving Gondor reads Free there and Evil here (Lens 5 F6). Recorded under Known Limits in the feature doc. FOLLOW-UP no issue: the maintainer decides whether the two gates should share one definition; filing waits for that word.
+**Pre-existing, not fixed here:** Sworn Anew sides a lord by their realm (`FactionSides.OfHero`, `SwornAnewAdapter.cs:57`), this feature by their own clan, so an orc lord serving Gondor reads Free there and Evil here (Lens 5 F6). FOLLOW-UP #1114: the maintainer chose one definition (2026-11-10), so Sworn Anew now sides the lord by their own clan as well.
 
 ## Not applied
 
