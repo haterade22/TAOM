@@ -69,7 +69,7 @@ permission because it is already an ordinary mesh.
 
 ## Configuration
 
-The panel exposes the full contract from the clean-room specification:
+The panel exposes the full contract from the behavioral specification:
 
 - **Planes Assist:** initialization angle and corner thresholds, point-guide prepass, connected auto
   fill, bounded iterations, and generated-plane output.
@@ -93,25 +93,26 @@ and guide objects are preserved when generating a new output.
 | `tools/blender/retopo_adapter.py` | Blender mesh, UV, and attribute conversion |
 | `tools/blender/retopo_operators.py` | Add-on operators, diagnostics, materials, helpers, and panel |
 | `tools/blender/retopo_selftest.py` | Real Blender end-to-end verification |
+| `tools/blender/retopo_installable_selftest.py` | Reproducible nested-archive installation and clean-disable verification |
 | `tools/blender/retopo_reference_differential.py` | Original-product differential case capture |
 | `tools/blender/petik_selftest.py` | Petik topology, projection, and modal verification |
-| `tools/petik/Petik/` | Petik 2.0.7 with three recorded compatibility fixes, GPL license, and notice |
+| `tools/petik/Petik/` | Petik 2.0.7 with five recorded compatibility fixes, GPL license, and notice |
 | `tools/package_retopology_toolkit.py` | Deterministic KEYforce source and installable-archive builder |
-| `docs/research/retopo-planes-1-6-3-clean-room.md` | Frozen behavior specification and acceptance matrix |
+| `docs/research/retopo-planes-1-6-3-clean-room.md` | Behavior specification and acceptance matrix |
 
 ## Tests
 
-- `python -m unittest tools.tests.test_retopo_engine`: 38 tests covering flattening, attributes,
+- `python -m unittest tools.tests.test_retopo_engine`: 39 tests covering flattening, attributes,
   initialization, holes, mirroring, local and connected fill, density, snapping, reprojection,
   separation, positive and negative thickness, numeric limits, loop iteration, morph preview,
   non-manifold inspection, and split-edge repair.
 - `python -m unittest tools.tests.test_retopo_differential`: original-product comparisons for base
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
-  connectivity, and geometry-UV associations. Non-identical tessellation cases are explicitly separated.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: nine regression tests for weld
-  representatives, non-quad rings, disconnected patterns, seam protection, thickness metadata and UVs,
-  independent smoothing, sharp thresholds, generated-plane corners, and preview density/contact guides.
+  connectivity, and geometry-UV associations. Validity exceptions and independent density counts are explicit.
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: eighteen regression tests for topology,
+  source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
+  self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
   instance-context patch refresh, and the registered menu operator.
 - `python -m unittest tools.tests.test_package_retopology_toolkit`: source manifest, reproducibility,
@@ -155,7 +156,7 @@ mesh-for-mesh parity is made without a corresponding differential fixture.
 
 ## Changelog
 
-- 2026-11-09: added the clean-room specification, independent engine, Blender adapter and panel,
+- 2026-11-09: added the behavioral specification, independent engine, Blender adapter and panel,
   GPL Petik package with recorded compatibility fixes, deterministic KEYforce packaging, and
   real-runtime verification.
 

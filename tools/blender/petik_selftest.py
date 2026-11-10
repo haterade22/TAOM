@@ -142,6 +142,56 @@ def fake_operator(cls):
     return operator
 
 
+def multi_line_cases():
+    bpy.ops.object.mode_set(mode="EDIT")
+    bm = bmesh.new()
+    sides = []
+    for x in (0, 2):
+        first = bm.verts.new((x, 0, 0))
+        second = bm.verts.new((x + 1, 0, 0))
+        sides.append((first, second))
+    context = SimpleNamespace(
+        active_object=bpy.context.active_object,
+        area=SimpleNamespace(tag_redraw=lambda: None),
+    )
+    original_snap = petik.get_snap_point
+    petik.get_snap_point = lambda context, active_objects, point, point_normal, eagle_eye_ratio, snap=True: point
+    lines = [
+        petik.PatchLine([first, second], False, bm, context, 1, 3, first.normal, False, 0.1, [])
+        for first, second in sides
+    ]
+    operator = fake_operator(petik.MdUtilPetikLine)
+    operator.context = context
+    operator.lines = lines
+    operator.selected_line = -1
+    operator.active_objects = [bpy.context.active_object]
+    snapped = []
+    petik.get_snap_point = lambda context, active_objects, point, point_normal, eagle_eye_ratio, snap=True: snapped.append(point.x) or point
+    try:
+        for line in lines:
+            operator.snap_points(line, snap_verts=False)
+    finally:
+        petik.get_snap_point = original_snap
+    assert snapped == [0.5, 2.5], snapped
+    bm.free()
+
+    bm = bmesh.new()
+    vertices = [bm.verts.new((x, y, 0)) for x, y in ((0, 0), (1, 0), (1, 1), (0, 1))]
+    for index in range(4):
+        edge = bm.edges.new((vertices[index], vertices[(index + 1) % 4]))
+        edge.select = True
+        vertices[index].select = True
+    bm.verts.index_update()
+    bm.edges.index_update()
+    operator.bm = bm
+    loops = operator.get_selected_vertex_loops()
+    bm.free()
+    assert len(loops) == 1 and len(loops[0]) == 5, loops
+    assert loops[0][0] == loops[0][-1], loops
+    bpy.ops.object.mode_set(mode="OBJECT")
+    return {"snapped_lines": snapped, "closed_loop_vertices": len(loops[0])}
+
+
 def modal_event(event_type, value="PRESS"):
     return SimpleNamespace(
         type=event_type,
@@ -288,6 +338,7 @@ def main():
         out.write_text(json.dumps({"progress": "alternative"}, indent=2), encoding="utf-8")
         control = control_line_case()
         out.write_text(json.dumps({"progress": "control_line"}, indent=2), encoding="utf-8")
+        multi_lines = multi_line_cases()
         operator = fake_operator(petik.MdUtilMultiPetik)
         cycles = operator.chordless_cycles([(0, 1), (1, 2), (2, 3), (3, 0), (0, 2)])
         assert any(len(cycle) == 3 for cycle in cycles)
@@ -300,6 +351,7 @@ def main():
             "patch_matrix": matrix,
             "alternative": alternatives,
             "control_line": control,
+            "multi_lines": multi_lines,
             "chordless_cycles": len(cycles),
             "projection": projection,
             "modal": modal,

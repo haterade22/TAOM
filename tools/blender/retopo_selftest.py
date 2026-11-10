@@ -57,15 +57,18 @@ def main():
         assert len(flat.data.vertices) == 9
         assert len(flat.data.polygons) == 4
         assert "source_position" in flat.data.attributes
+        shifted_coordinates = [(loop.uv.x + 0.25, loop.uv.y + 0.5) for loop in source.data.uv_layers.active.data]
         alternate_uv = source.data.uv_layers.new(name="GarmentUV")
-        for loop, coordinate in zip(alternate_uv.data, [(0.25, 0.5)] * 16):
+        for loop, coordinate in zip(alternate_uv.data, shifted_coordinates):
             loop.uv = coordinate
         source.data.uv_layers.active_index = 0
         activate(source)
         assert bpy.ops.taom.flatten_patterns(uv_name="GarmentUV") == {"FINISHED"}
         named_flat = bpy.context.active_object
         assert named_flat.data.uv_layers.active.name == "GarmentUV"
-        assert all(abs(vertex.co.x - 0.25) < 1e-6 and abs(vertex.co.y - 0.5) < 1e-6 for vertex in named_flat.data.vertices)
+        assert len(named_flat.data.vertices) == 9
+        assert min(vertex.co.x for vertex in named_flat.data.vertices) == 0.25
+        assert min(vertex.co.y for vertex in named_flat.data.vertices) == 0.5
         assert source.data.uv_layers.active_index == 0
 
         guides = bpy.data.collections.new("TAOM_Selftest_Guides")
@@ -78,10 +81,26 @@ def main():
         )
         settings = bpy.context.scene.taom_retopology
         settings.source_object = source
-        settings.guide_collection = guides
-        settings.subdiv_reproject = 1
+        named_guides = bpy.data.collections.new("TAOM_Selftest_NamedGuides")
+        bpy.context.scene.collection.children.link(named_guides)
+        named_guide = mesh_object(
+            "TAOM_Selftest_NamedGuide",
+            [(0.25, 0.5, 0), (1.25, 0.5, 0), (1.25, 1.5, 0), (0.25, 1.5, 0)],
+            [(0, 1, 2, 3)],
+            collection=named_guides,
+        )
+        settings.guide_collection = named_guides
         settings.fit_uv = False
         settings.separate_parts = False
+        activate(named_guide)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        named_output = bpy.context.active_object
+        assert named_output.data.uv_layers.active.name == "GarmentUV"
+        assert min(loop.uv.x for loop in named_output.data.uv_layers.active.data) >= 0.25
+        assert min(loop.uv.y for loop in named_output.data.uv_layers.active.data) >= 0.5
+        settings.source_uv_name = "UVMap"
+        settings.guide_collection = guides
+        settings.subdiv_reproject = 1
         activate(guide)
         result = bpy.ops.taom.retopologize()
         assert result == {"FINISHED"}, result
@@ -121,7 +140,9 @@ def main():
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         for name in ("TAOM Mismatch Lines", "TAOM PolyLoops", "TAOM Sibling Contact"):
             assert bpy.data.objects.get(name) is not None, name
-        assert bpy.data.objects["TAOM Edge 0"].data.body == "2"
+            assert len(bpy.data.objects[name].data.polygons) == 0, name
+        helpers = bpy.data.collections[bpy.context.active_object.name + " Helpers"]
+        assert any(obj.data.body == "2" for obj in helpers.objects if obj.name.startswith("TAOM Edge"))
         settings.hide_debug = True
 
         activate(flat)
@@ -159,6 +180,24 @@ def main():
         repaired = bpy.context.active_object
         assert len(repaired.data.vertices) == 9
         assert repaired["non_manifold_edges"] == 1
+        transformed_guides = bpy.data.collections.new("TAOM_Selftest_TransformedGuides")
+        bpy.context.scene.collection.children.link(transformed_guides)
+        transformed_guide = mesh_object(
+            "TAOM_Selftest_TransformedGuide",
+            [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            [(0, 1, 2, 3)],
+            collection=transformed_guides,
+        )
+        transformed_guide.location = (0.25, 0.25, 0)
+        source.location = (5, 6, 0)
+        settings.guide_collection = transformed_guides
+        settings.subdiv_reproject = 0
+        activate(transformed_guide)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        transformed_output = bpy.context.active_object
+        assert transformed_output.matrix_world == source.matrix_world
+        assert min(loop.uv.x for loop in transformed_output.data.uv_layers.active.data) >= 0.25
+        assert min(loop.uv.y for loop in transformed_output.data.uv_layers.active.data) >= 0.25
         return {
             "status": "ok",
             "flatten_vertices": len(flat.data.vertices),

@@ -1,3 +1,5 @@
+"""Mesh and setting models for the behavioral contract in docs/research/retopo-planes-1-6-3-clean-room.md."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -166,8 +168,8 @@ class RetopoSettings:
                 raise ValueError(f"{name} must be an integer")
         if self.density_add < 0:
             raise ValueError("density_add must be non-negative")
-        if self.debug_material_seed < 0:
-            raise ValueError("debug_material_seed must be non-negative")
+        if not 0 <= self.debug_material_seed <= 2147483647:
+            raise ValueError("debug_material_seed must be between 0 and 2147483647")
         for name in (
             "angle_threshold", "corners_threshold", "median_corners_threshold",
             "density_add_threshold", "morph_2d_3d", "ui_hue",

@@ -1,4 +1,4 @@
-"""Blender data adapter for TAOM's independent retopology engine."""
+"""Blender adapter for the behavioral contract in docs/research/retopo-planes-1-6-3-clean-room.md."""
 
 import bpy
 
@@ -65,7 +65,7 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
             evaluated_obj.to_mesh_clear()
 
 
-def mesh_to_blender(mesh, name, collection=None, edges=None):
+def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
     data = bpy.data.meshes.new(name)
     data.from_pydata(mesh.vertices, edges if edges is not None else mesh.lines, mesh.faces)
     data.update()
@@ -105,6 +105,8 @@ def mesh_to_blender(mesh, name, collection=None, edges=None):
             if edge in values:
                 item.value = values[edge]
     obj = bpy.data.objects.new(name, data)
+    if matrix_world is not None:
+        obj.matrix_world = matrix_world
     (collection or bpy.context.scene.collection).objects.link(obj)
     obj["taom_retopology_mesh"] = True
     return obj
@@ -118,7 +120,7 @@ def combine_objects(objects, name="Combined guides"):
     for obj in objects:
         mesh = mesh_from_blender(obj)
         offset = len(vertices)
-        vertices.extend(mesh.vertices)
+        vertices.extend(tuple(obj.matrix_world @ vertex.co) for vertex in obj.data.vertices)
         faces.extend(tuple(index + offset for index in face) for face in mesh.faces)
         lines.extend(tuple(index + offset for index in edge) for edge in mesh.lines)
         for attribute_name, values in mesh.edge_attributes.items():

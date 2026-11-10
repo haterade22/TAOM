@@ -1,3 +1,5 @@
+"""Geometry helpers for the behavioral contract in docs/research/retopo-planes-1-6-3-clean-room.md."""
+
 from __future__ import annotations
 
 import math
@@ -175,7 +177,14 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
                 face_map[face_index],
                 edge_map[Mesh.edge_key(vertex, previous)],
             ))
-    return Mesh(vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name)
+    edge_attributes = {}
+    for name, values in mesh.edge_attributes.items():
+        children = {}
+        for edge, value in values.items():
+            for endpoint in edge:
+                children[Mesh.edge_key(vertex_map[endpoint], edge_map[edge])] = value
+        edge_attributes[name] = children
+    return Mesh(vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name, edge_attributes=edge_attributes)
 
 
 def coons_point(corners, u, v):
@@ -194,6 +203,7 @@ def tessellate(mesh: Mesh, edge_cuts: dict[Edge, int]) -> Mesh:
     vertices = []
     faces = []
     lookup = {}
+    edge_attributes = {name: {} for name in mesh.edge_attributes}
 
     def index_for(point):
         key = tuple(round(value, 9) for value in point)
@@ -211,14 +221,24 @@ def tessellate(mesh: Mesh, edge_cuts: dict[Edge, int]) -> Mesh:
         ]
         columns = max(counts[0], counts[2])
         rows = max(counts[1], counts[3])
-        if columns == rows == 1:
-            faces.append(tuple(index_for(mesh.vertices[index]) for index in face))
-            continue
         grid = {}
         corners = [mesh.vertices[index] for index in face]
         for row in range(rows + 1):
             for column in range(columns + 1):
                 grid[column, row] = index_for(coons_point(corners, column / columns, row / rows))
+        paths = (
+            [grid[column, 0] for column in range(columns + 1)],
+            [grid[columns, row] for row in range(rows + 1)],
+            [grid[column, rows] for column in range(columns, -1, -1)],
+            [grid[0, row] for row in range(rows, -1, -1)],
+        )
+        for side, path in enumerate(paths):
+            original_edge = Mesh.edge_key(face[side], face[(side + 1) % 4])
+            for first, second in zip(path, path[1:]):
+                child_edge = Mesh.edge_key(first, second)
+                for name, values in mesh.edge_attributes.items():
+                    if original_edge in values:
+                        edge_attributes[name][child_edge] = values[original_edge]
         for row in range(rows):
             for column in range(columns):
                 faces.append((
@@ -227,7 +247,7 @@ def tessellate(mesh: Mesh, edge_cuts: dict[Edge, int]) -> Mesh:
                     grid[column + 1, row + 1],
                     grid[column, row + 1],
                 ))
-    return Mesh(vertices=vertices, faces=faces, uv_name=mesh.uv_name)
+    return Mesh(vertices=vertices, faces=faces, uv_name=mesh.uv_name, edge_attributes=edge_attributes)
 
 
 def smooth(mesh: Mesh, iterations: int, factor: float = 0.5, preserve_boundary: bool = True) -> Mesh:

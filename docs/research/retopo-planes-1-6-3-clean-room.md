@@ -1,11 +1,12 @@
-# Retopo Planes 1.6.3 clean-room behavioral specification
+# Retopo Planes 1.6.3 behavioral specification
 
 ## Status and boundary
 
-This is the frozen behavioral input for TAOM's independent garment retopology engine. The source
+This is the behavioral input for TAOM's independently structured garment retopology engine. The source
 product was inspected to identify its public contract and to measure small synthetic outputs. Its
 node graph, demo meshes, packed textures, materials, and layout are not implementation inputs and
-must not be copied into TAOM or the KEYforce package.
+must not be copied into TAOM or the KEYforce package. Subsequent measured comparisons classify the
+work as a behavioral port, not as the single-pass clean-room procedure.
 
 Source inspected once before this specification was frozen:
 

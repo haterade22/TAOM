@@ -4,7 +4,7 @@ The independent TAOM engine, Blender adapter, operators, packaging tools, tests,
 and original workflow text are MIT licensed.
 
 Petik 2.0.7 is a separate add-on by Mihai Dobrin, redistributed under
-GNU GPL-3.0-or-later with three recorded compatibility fixes. Its source and license are under Petik/ in its installable
+GNU GPL-3.0-or-later with five recorded compatibility fixes. Its source and license are under Petik/ in its installable
 archive and tools/petik/Petik/ in the source archive.
 
 Retopo Planes 1.6.3 by Nodes Interactive was used only as a behavioral reference.

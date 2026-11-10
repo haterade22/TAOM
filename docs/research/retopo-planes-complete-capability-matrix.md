@@ -2,18 +2,19 @@
 
 ## Status
 
-Complete public capability coverage verified. This matrix expands the earlier clean-room
+Complete public capability coverage verified. This matrix expands the earlier behavioral
 specification into an exhaustive adoption contract. Every row has original-product differential
 evidence or a real Blender runtime test with an independent expected result. No percentage claim is
 based on file count or test count alone.
 
 Complete vertex positions, oriented connectivity, and geometry-UV associations match for the base,
-subdivision, UV, initialization, ring, mirror, separation, thickness, and inspector fixtures. The
-oracle compares complete synthetic meshes, not truncated samples. Add-only crease and high-sharp use non-identical
-tessellation and are checked for all-quad output, density direction, components, and bounds within
-1%. The hex auto-fill solver uses a different central two-quad layout and is checked for its exact
-6-vertex, 2-quad result rather than outer-corner identity. These distinctions are acceptance
-requirements, not silent parity claims.
+subdivision, UV, ring, X mirror, separation, positive thickness, and inspector fixtures. The oracle
+compares complete synthetic meshes, not truncated samples. TAOM deliberately corrects three invalid
+captured behaviors: bow-tie initialization, inverted Y-mirror normals, and inside-out negative
+thickness. Those exceptions retain position and UV comparisons and independently require nonzero
+area, outward normals, or positive volume. Density uses an independent baseline and increasing
+upper-crease contract with exact expected face counts. The hex auto-fill solver uses a different
+central two-quad layout and is checked for its exact 6-vertex, 2-quad result.
 
 The numeric contract enforces the original maxima for base density, subdivision, smoothing, auto-fill,
 loop iteration, and debug seed. Negative thickness is supported. The morph slider creates a separate
@@ -36,11 +37,11 @@ interfaces, named data, and independently authored synthetic outputs are the imp
 | Product entry point | Required TAOM capability | Evidence |
 | --- | --- | --- |
 | `3DtoPatterns` modifier | Named UV flattening, original-position retention, source IDs, part/pattern IDs, open seams, point guides, simplification and merge tolerance | Existing unit and Blender tests |
-| `RetopoPlanes` modifier and collection asset | Complete guided garment workflow below | Expanded differential suite required |
-| `0RetopoInspector` modifier | Highlight edges with more than two adjacent faces, optional split-edge repair, debug-only output, GUI scale and hue | New tests required |
+| `RetopoPlanes` modifier and collection asset | Complete guided garment workflow below | Full synthetic differential suite, independent validity checks, and installed Blender matrix |
+| `0RetopoInspector` modifier | Highlight edges with more than two adjacent faces, optional split-edge repair, debug-only output, GUI scale and hue | Differential cases, face-fan regression, and Blender debug/repair test |
 | `Crease To 0.5` geometry-node tool | Set selected edge crease values to 0.5 | Existing operator test |
-| Petik `mdutil.multi_petik` | Variable-sided multi-patch creation and editing | Interactive and generated-topology matrix required |
-| Petik `mdutil.petik_line` | Selected-loop control curves and editable line density | Interactive and generated-line matrix required |
+| Petik `mdutil.multi_petik` | Variable-sided multi-patch creation and editing | Blender 3 to 6-sided patch and modal matrix |
+| Petik `mdutil.petik_line` | Selected-loop control curves and editable line density | Open and closed loops, multi-line snapping, and modal matrix |
 
 ## Main modifier contract
 

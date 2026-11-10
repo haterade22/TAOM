@@ -4279,7 +4279,6 @@ class MdUtilPetikLine(bpy.types.Operator):
 
     def snap_points(self, line, snap_verts=True):
 
-        line = self.lines[self.selected_line]
         for cp in line.control_points:
             cp.update_location(
                 get_snap_point(self.context, self.active_objects, cp.co, cp.normal, line.eagle_eye_ratio))
@@ -4310,13 +4309,12 @@ class MdUtilPetikLine(bpy.types.Operator):
         loops = []
         used_verts = set()
 
-        # Find all start vertices (vertices with exactly one selected edge)
-        start_verts = [v for v in selected_verts if sum(1 for e in v.link_edges if e in selected_edges) == 1]
+        open_start_verts = [v for v in selected_verts if sum(1 for e in v.link_edges if e in selected_edges) == 1]
+        remaining_verts = [v for v in selected_verts if v.index not in used_verts]
 
-        # Traverse loops starting from each start vertex
-        for start_vert in start_verts:
+        for start_vert in open_start_verts + remaining_verts:
             if start_vert.index in used_verts:
-                continue  # Skip vertices that are already part of a loop
+                continue
 
             loop = []
             current_vert = start_vert
@@ -4326,26 +4324,26 @@ class MdUtilPetikLine(bpy.types.Operator):
             while current_vert:
 
                 loop.append(current_vert.index)
-                used_verts.add(current_vert.index)  # Mark vertex as used
+                used_verts.add(current_vert.index)
 
-                # Find the next edge and vertex in the loop
                 next_edge = next((e for e in current_vert.link_edges if e in selected_edges and e != previous_edge),
                                  None)
-                if not next_edge:  # End of loop
+                if not next_edge:
                     break
 
                 next_vert = next_edge.other_vert(current_vert)
                 if next_vert.index in used_verts:
-                    valid = False
+                    if next_vert == start_vert and len(loop) > 2:
+                        loop.append(start_vert.index)
+                    else:
+                        valid = False
                     break
 
-                # Stop if we complete the loop or hit another start vertex
-                if next_vert in start_verts and next_vert != start_vert:
+                if next_vert in open_start_verts and next_vert != start_vert:
                     loop.append(next_vert.index)
                     used_verts.add(next_vert.index)
                     break
 
-                # Update for the next iteration
                 previous_edge = next_edge
                 current_vert = next_vert
 

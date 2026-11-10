@@ -9,6 +9,7 @@ import bpy
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.retopo_engine import RetopoSettings, engine  # noqa: E402
+from tools.retopo_engine.staging import report_path_for_output  # noqa: E402
 from tools.blender.retopo_adapter import combine_objects, mesh_from_blender, mesh_to_blender  # noqa: E402
 
 
@@ -48,12 +49,12 @@ def main():
     result = engine.retopologize(
         mesh_from_blender(source, evaluated=True), combine_objects(guides), settings
     )
-    output_object = mesh_to_blender(result, source.name + "_Retopo")
+    output_object = mesh_to_blender(result, source.name + "_Retopo", matrix_world=source.matrix_world)
     output_object["engine"] = "TAOM independent UV retopology"
     output.parent.mkdir(parents=True, exist_ok=True)
-    report_path = output.with_name("retopo-report.json")
-    if report_path.exists():
-        report_path.unlink()
+    report_path = report_path_for_output(output)
+    if report_path.exists() and not args.overwrite:
+        raise FileExistsError(f"report exists: {report_path}; pass --overwrite to replace it")
     bpy.ops.wm.save_as_mainfile(filepath=str(output))
     report = {
         "status": "ok",

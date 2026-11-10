@@ -50,7 +50,8 @@ blender-launcher -b scene.blend --python-exit-code 1 -P tools/examples/retopo_ac
 ```
 
 The script refuses to overwrite the input or an existing output unless `--overwrite` is explicit.
-It writes `retopo-report.json` beside the staged output.
+It writes `<output-stem>-retopo-report.json` beside the staged output and applies the same overwrite
+policy to that report.
 
 ## Verify the extracted source
 
@@ -61,10 +62,12 @@ python -m unittest tools.tests.test_retopo_engine tools.tests.test_retopo_differ
 python -m ruff check tools/retopo_engine tools/blender/retopo_adapter.py tools/blender/retopo_operators.py tools/tests/test_retopo_engine.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_selftest.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/petik_selftest.py
+blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_installable_selftest.py
 ```
 
-The Blender runs write `TestResults/Blender/retopo_selftest_report.json` and
-`TestResults/Blender/petik_selftest_report.json`; require `"status": "ok"` in both.
+The Blender runs write `TestResults/Blender/retopo_selftest_report.json`,
+`TestResults/Blender/petik_selftest_report.json`, and
+`TestResults/Blender/installable_report.json`; require `"status": "ok"` in all three.
 Generated self-test reports and staged meshes are not package inputs.
 
 ## Rebuild the ZIP
@@ -81,9 +84,9 @@ outputs, proprietary reference files, demo content, or generated meshes.
 ## License and provenance
 
 The independent TAOM engine, adapter, operators, examples, tests, and packaging code are MIT
-licensed. Petik is a separate GPL-3.0-or-later add-on with three recorded compatibility fixes and
+licensed. Petik is a separate GPL-3.0-or-later add-on with five recorded compatibility fixes and
 its own source, license, and notice. See `LICENSE.txt`, `NOTICE.txt`, and each installable archive.
 
-Retopo Planes 1.6.3 was used only as a behavioral reference under the recorded clean-room procedure.
+Retopo Planes 1.6.3 was used as a behavioral reference and for measured synthetic output comparisons.
 No original node graph or product asset is redistributed. The implementation is not claimed to be
 byte-identical to the proprietary solver; assisted output still requires artist review.

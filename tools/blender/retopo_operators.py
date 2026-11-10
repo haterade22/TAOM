@@ -1,4 +1,4 @@
-"""Blender operators and panel for the independent TAOM retopology workflow."""
+"""Blender operators for the behavioral contract in docs/research/retopo-planes-1-6-3-clean-room.md."""
 
 import colorsys
 import random
@@ -36,6 +36,7 @@ except ImportError:
 
 class TAOM_RetopoSettings(bpy.types.PropertyGroup):
     source_object: PointerProperty(name="Source garment", type=bpy.types.Object)
+    source_uv_name: StringProperty(name="Source UV Map", default="")
     guide_collection: PointerProperty(name="Retopo Planes", type=bpy.types.Collection)
     scale_gui: FloatProperty(name="Scale GUI", default=1.0, min=0.0, max=10.0)
     offset_3d_cloth: FloatProperty(name="Offset 3D Cloth", default=0.0, soft_min=-10.0, soft_max=10.0)
@@ -89,7 +90,7 @@ class TAOM_RetopoSettings(bpy.types.PropertyGroup):
     manual_density: BoolProperty(name="Manual Density (Crease)", default=True)
     show_snapping_distance: BoolProperty(name="Snapping Distance", default=True)
     preview_source_cloth: BoolProperty(name="Preview Source Cloth", default=False)
-    debug_material_seed: IntProperty(name="Debug Mat Seed", default=0, min=0)
+    debug_material_seed: IntProperty(name="Debug Mat Seed", default=0, min=0, max=2147483647)
     ui_hue: FloatProperty(name="UI Hue", default=0.0, min=0.0, max=1.0)
 
 
@@ -193,8 +194,8 @@ def _sync_helpers(output, source, flat, guide, settings, result):
     _debug_materials(output, settings)
     collection = _helper_collection(output)
     if settings.morph_2d_3d > 0:
-        preview_mesh = engine.morph_preview(mesh_from_blender(source, evaluated=True), guide, settings)
-        preview = mesh_to_blender(preview_mesh, "TAOM Morph Preview", collection)
+        preview_mesh = engine.morph_preview(mesh_from_blender(source, evaluated=True, uv_name=_settings(bpy.context).source_uv_name or None), guide, settings)
+        preview = mesh_to_blender(preview_mesh, "TAOM Morph Preview", collection, matrix_world=source.matrix_world)
         preview["taom_retopology_helper"] = True
         preview.show_in_front = True
     if settings.hide_debug:
@@ -208,7 +209,8 @@ def _sync_helpers(output, source, flat, guide, settings, result):
     if settings.mismatch_lines:
         edges = engine.mismatch_edges(guide, settings)
         if edges:
-            helper = mesh_to_blender(guide, "TAOM Mismatch Lines", collection, edges=edges)
+            helper_mesh = Mesh(vertices=guide.vertices, faces=[], lines=edges)
+            helper = mesh_to_blender(helper_mesh, "TAOM Mismatch Lines", collection, edges=edges)
             helper.show_in_front = True
             helper["taom_retopology_helper"] = True
     if settings.polyloops:
@@ -218,12 +220,14 @@ def _sync_helpers(output, source, flat, guide, settings, result):
     if settings.sibling_contact:
         edges = engine.sibling_contact_edges(guide)
         if edges:
-            helper = mesh_to_blender(guide, "TAOM Sibling Contact", collection, edges=edges)
+            helper_mesh = Mesh(vertices=guide.vertices, faces=[], lines=edges)
+            helper = mesh_to_blender(helper_mesh, "TAOM Sibling Contact", collection, edges=edges)
             helper.show_in_front = True
             helper["taom_retopology_helper"] = True
     if settings.preview_source_cloth:
         preview = bpy.data.objects.new("TAOM Source Preview", source.data.copy())
         collection.objects.link(preview)
+        preview.matrix_world = source.matrix_world
         preview.location.z += settings.offset_3d_cloth
         preview["taom_retopology_helper"] = True
     if not settings.hide_viewport_info:
@@ -265,6 +269,7 @@ class TAOM_OT_flatten_patterns(bpy.types.Operator):
             obj = mesh_to_blender(flat, source.name + "_Patterns")
             obj["source_object"] = source.name
             _settings(context).source_object = source
+            _settings(context).source_uv_name = self.uv_name or source.data.uv_layers.active.name
             _activate(obj)
             return {"FINISHED"}
         except ValueError as error:
@@ -296,7 +301,7 @@ class TAOM_OT_retopologize(bpy.types.Operator):
         source = _source(context)
         settings = settings_from_property(_settings(context))
         try:
-            source_mesh = mesh_from_blender(source, evaluated=True)
+            source_mesh = mesh_from_blender(source, evaluated=True, uv_name=_settings(context).source_uv_name or None)
             flat = engine.flatten_to_patterns(source_mesh)
             guide = _guide_mesh(context)
             if settings.only_patterns:
@@ -315,6 +320,7 @@ class TAOM_OT_retopologize(bpy.types.Operator):
             else:
                 output = mesh_to_blender(result, source.name + "_Retopo")
             output["taom_retopology_output"] = True
+            output.matrix_world = source.matrix_world
             output["guide_vertices"] = len(guide.vertices)
             output["guide_faces"] = len(guide.faces)
             output["engine"] = "TAOM independent UV retopology"
@@ -334,7 +340,7 @@ class TAOM_OT_mirror_guides(bpy.types.Operator):
     def execute(self, context):
         active = _active_mesh(context)
         axes = ("x", "y") if self.axis == "xy" else (self.axis,)
-        source_mesh = mesh_from_blender(_source(context), evaluated=True)
+        source_mesh = mesh_from_blender(_source(context), evaluated=True, uv_name=_settings(context).source_uv_name or None)
         result = engine.mirror_guides(mesh_from_blender(active), axes=axes, source=source_mesh)
         obj = mesh_to_blender(result, active.name + "_Mirrored")
         _activate(obj)
@@ -348,7 +354,7 @@ class TAOM_OT_auto_fill(bpy.types.Operator):
 
     def execute(self, context):
         active = _active_mesh(context)
-        flat = engine.flatten_to_patterns(mesh_from_blender(_source(context), evaluated=True))
+        flat = engine.flatten_to_patterns(mesh_from_blender(_source(context), evaluated=True, uv_name=_settings(context).source_uv_name or None))
         points = [flat.vertices[index] for index, value in enumerate(flat.attributes["point_guide"]) if value]
         result = engine.auto_fill(
             mesh_from_blender(active), points, _settings(context).auto_fill_max_iterations
@@ -442,6 +448,7 @@ class TAOM_PT_retopology(bpy.types.Panel):
         layout = self.layout
         settings = _settings(context)
         layout.prop(settings, "source_object")
+        layout.prop(settings, "source_uv_name")
         layout.prop(settings, "guide_collection")
         layout.operator("taom.flatten_patterns")
         layout.operator("taom.initialize_planes")

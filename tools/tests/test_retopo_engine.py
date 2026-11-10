@@ -165,6 +165,19 @@ class DensityTests(unittest.TestCase):
         settings = RetopoSettings(base_density=4, full_crease_control=True)
         self.assertEqual(1, len(engine.apply_density(guide, settings).faces))
 
+    def test_base_density_and_upper_full_crease_control_change_resolution(self):
+        low = engine.apply_density(unit_guide(), RetopoSettings(base_density=25))
+        high = engine.apply_density(unit_guide(), RetopoSettings(base_density=100))
+        self.assertGreater(len(high.faces), len(low.faces))
+        guide = unit_guide()
+        results = {}
+        for value in (0.25, 0.5, 0.75, 1.0):
+            guide.edge_attributes["crease_edge"] = {edge: value for edge in guide.edges()}
+            results[value] = len(engine.apply_density(guide, RetopoSettings(base_density=100, full_crease_control=True)).faces)
+        self.assertLess(results[0.25], results[0.5])
+        self.assertLess(results[0.5], results[0.75])
+        self.assertLess(results[0.75], results[1.0])
+
     def test_sharp_edge_adds_configured_cuts(self):
         guide = unit_guide()
         guide.edge_attributes["sharp_edge"] = {(0, 1): True}
@@ -348,6 +361,7 @@ class ThicknessAndDiagnosticsTests(unittest.TestCase):
             RetopoSettings(auto_fill_max_iterations=51),
             RetopoSettings(smooth_low_poly=21),
             RetopoSettings(debug_material_seed=-1),
+            RetopoSettings(debug_material_seed=2147483648),
         ):
             with self.subTest(settings=settings):
                 with self.assertRaises(ValueError):
