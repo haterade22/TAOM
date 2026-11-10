@@ -539,6 +539,11 @@ class ContractRegressionTests(unittest.TestCase):
         valid_direct.attribute_domains["point_guide"] = "POINT"
         valid_direct_result = engine.initialize_planes(valid_direct, RetopoSettings())
         self.assertNotEqual(differential.unit_guide().vertices, valid_direct_result.vertices)
+        face_marked = flat.copy()
+        face_marked.attributes["point_guide"] = [False, True, False, True]
+        face_marked.attribute_domains["point_guide"] = "FACE"
+        face_marked_result = engine.initialize_planes(face_marked, RetopoSettings())
+        self.assertEqual(differential.unit_guide().vertices, face_marked_result.vertices)
         first = engine.flatten_to_patterns(differential.curved_grid())
         second = first.copy()
         second.vertices = [(x + 2, y, z) for x, y, z in second.vertices]
@@ -563,6 +568,21 @@ class ContractRegressionTests(unittest.TestCase):
         initialized_ring = engine.initialize_planes(ring, RetopoSettings())
         self.assertEqual({"corner_tag", "short_point"} & initialized_ring.attributes.keys(), set())
         self.assertEqual({"corner_tag", "short_point", "orphan"} & initialized_ring.attribute_domains.keys(), set())
+        annulus = differential.ring_guide()
+        annulus.faces = [triangle for face in annulus.faces for triangle in ((face[0], face[1], face[2]), (face[0], face[2], face[3]))]
+        initialized_annulus = engine.initialize_planes(annulus, RetopoSettings())
+        self.assertEqual((16, 8, 16), (len(initialized_annulus.vertices), len(initialized_annulus.faces), len(initialized_annulus.boundary_edges())))
+
+        def orientation(first, second, third):
+            return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+
+        def intersects(first, second, third, fourth):
+            return orientation(first, second, third) * orientation(first, second, fourth) < 0 and orientation(third, fourth, first) * orientation(third, fourth, second) < 0
+
+        for face in initialized_annulus.faces:
+            points = [initialized_annulus.vertices[index] for index in face]
+            self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+            self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
         guide = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2, 3)],
@@ -792,9 +812,16 @@ class ContractRegressionTests(unittest.TestCase):
         repair_mesh.attribute_domains["corner_tag"] = "CORNER"
         mismatched_axis = mesh.copy()
         mismatched_axis.lines = [(0, 1)]
+        two_axes = mesh.copy()
+        two_axes.vertices.extend([(0.25, 0.5, 0), (0.5, 0.25, 0)])
+        two_axes.attributes["source_vertex"] = list(range(6))
+        two_axes.attribute_domains["weight"] = "FACE"
+        two_axes.lines = [(1, 4), (2, 5)]
         results = [
             engine.mirror_guides(mesh, axes=("x",)),
             engine.mirror_guides(mismatched_axis, axes=("y",), source=differential.curved_grid()),
+            engine.mirror_guides(two_axes, axes=("x", "y"), source=differential.curved_grid()),
+            engine.snap_guides_to_pattern(mesh, differential.unit_guide(), 0),
             engine._separate(mesh, [0]),
             engine.merge_output_seams(weld_mesh, 0.01),
             engine.thicken(mesh, 0.1),

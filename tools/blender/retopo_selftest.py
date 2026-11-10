@@ -184,6 +184,18 @@ def main():
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1, 2, 3]
         settings.output_generated_planes = False
+        from tools.retopo_engine import differential
+        pattern_mesh = differential.two_islands()
+        pattern_mesh.uv = [(u + (1 if index >= 4 else 0), v) for index, (u, v) in enumerate(pattern_mesh.uv)]
+        pattern_source = mesh_to_blender(pattern_mesh, "TAOM_PatternPreviewSource")
+        settings.source_object = pattern_source
+        settings.only_patterns = True
+        settings.debug_material = "Patterns"
+        activate(pattern_source)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1]
+        settings.only_patterns = False
+        settings.source_object = source
         settings.debug_material = "Retopo Planes"
         settings.guide_collection = guides
         mixed = combine_objects([distinct_output, point_output])

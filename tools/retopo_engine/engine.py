@@ -618,6 +618,25 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
             if all(len(adjacency[index]) == 2 for index in loop)
         ]
         outer = max(closed_simple_loops or loops, key=lambda loop: abs(signed_area(loop, flat.vertices)))
+        if len(loops) == 2:
+            inner_loop = loops[1] if outer is loops[0] else loops[0]
+            if len(inner_loop) == len(outer):
+                candidates = []
+                for oriented in (inner_loop, list(reversed(inner_loop))):
+                    for shift in range(len(oriented)):
+                        aligned = oriented[shift:] + oriented[:shift]
+                        vertices = [flat.vertices[index] for index in outer + aligned]
+                        faces = []
+                        for index in range(len(outer)):
+                            following = (index + 1) % len(outer)
+                            faces.append((index, following, len(outer) + following, len(outer) + index))
+                        invalid = sum(signed_area(face, vertices) <= 0 for face in faces)
+                        cost = sum(math.dist(flat.vertices[first], flat.vertices[second]) for first, second in zip(outer, aligned))
+                        candidates.append((invalid, cost, vertices, faces))
+                _, _, vertices, faces = min(candidates, key=lambda candidate: candidate[:2])
+                result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
+                result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
+                return result
         remaining = sorted(
             {index for face in flat.faces for index in face} - set(outer),
             key=lambda index: math.atan2(
