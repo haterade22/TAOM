@@ -596,4 +596,56 @@ public class FrontEndSpriteServiceTests
         Assert.AreEqual(0, _adapter.LoadedTextures.Count);
         Assert.AreEqual(0, _adapter.BrushFileLoads.Count);
     }
+
+    // ── Battle HUD (#1095): its own small group, never the character-creation frame ───────────
+
+    [TestMethod]
+    public void Classify_BattleHudPrefix_IsBattleHud()
+    {
+        Assert.AreEqual(FrontEndSpriteKind.BattleHud, FrontEndSpriteCatalog.Classify("bh_band_mask"));
+    }
+
+    [TestMethod]
+    public void Acquire_BattleHud_LoadsOnlyTheBattleHudImages()
+    {
+        AddSprite("bh_band_mask");
+
+        _sut.Acquire(FrontEndImageGroups.BattleHud);
+
+        Assert.IsTrue(_adapter.IsSpriteRegistered("bh_band_mask"));
+        Assert.IsFalse(_adapter.IsSpriteRegistered("cc_panel_bg"), "a battle never loads the creation frame");
+        Assert.IsFalse(_adapter.IsSpriteRegistered("mm_logo"));
+    }
+
+    [TestMethod]
+    public void Acquire_CharacterCreation_DoesNotLoadBattleHudImages()
+    {
+        AddSprite("bh_band_mask");
+
+        _sut.Acquire(CharacterCreation);
+
+        Assert.IsFalse(_adapter.IsSpriteRegistered("bh_band_mask"));
+    }
+
+    [TestMethod]
+    public void Tick_BattleHudHeld_KeepsItsImages()
+    {
+        AddSprite("bh_band_mask");
+        _sut.Acquire(FrontEndImageGroups.BattleHud);
+
+        TickPastReleaseDelay(FrontEndImageGroups.BattleHud);
+
+        Assert.IsTrue(_adapter.IsSpriteRegistered("bh_band_mask"));
+    }
+
+    [TestMethod]
+    public void Tick_BattleHudNoLongerHeld_ReleasesItsImagesAfterTheDelay()
+    {
+        AddSprite("bh_band_mask");
+        _sut.Acquire(FrontEndImageGroups.BattleHud);
+
+        TickPastReleaseDelay();
+
+        Assert.IsFalse(_adapter.IsSpriteRegistered("bh_band_mask"));
+    }
 }

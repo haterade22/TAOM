@@ -4,30 +4,30 @@ using Bannerlord.UIExtenderEx.Prefabs2;
 
 namespace TAOM.Features.CareerSystem.UI;
 
-// Issue #382 — the career ability energy bar, docked above the bottom-right health
-// cluster inside Native's AgentStatus prefab. Living inside that prefab is the point:
-// it inherits the root's IsVisible="@IsCombatUIActive" and the prioritized/passive
-// shrink animation, so it appears and disappears exactly with the combat HUD.
+// Issues #382 and #1095: the circular battle HUD, in place of the native health cluster, inside
+// Native's AgentStatus prefab. Living inside that prefab is the point: it inherits the root's
+// IsVisible="@IsCombatUIActive" and the prioritized/passive slide, so it appears, hides and moves
+// exactly with the combat HUD. Its own IsVisible follows native ShowAgentHealthBar, the flag that
+// showed the native health bar it replaces (BattleHudNativeSuppressionPrefabs hides that bar).
 //
-// Container safety (gui-ui.md checklist, verified 2026-08-05 against the installed
-// v1.4.7 DLLs): MissionGauntletAgentStatus does no widget-child traversal at all, and
-// the only positional/typed child access in the mission HUD widget assembly is the
-// damage-feed ListPanel (MissionAgentDamageFeedWidget.GetChild(i) typed cast) — which
-// this patch does not touch. The insertion parent is the plain
-// Widget[@VisualDefinition='AgentStatus'] container.
+// Container safety (gui-ui.md checklist, verified 2026-08-05 against the installed v1.4.7 DLLs):
+// MissionGauntletAgentStatus does no widget-child traversal at all, and the only positional/typed
+// child access in the mission HUD widget assembly is the damage-feed ListPanel, which this patch does
+// not touch. The insertion parent is the plain Widget[@VisualDefinition='AgentStatus'] container.
 //
-// Geometry + brush choices come from the externally-measured reference implementation
-// (TAOM-Career-UX-Upstream-2026-08-05): native ShieldHealthBar Canvas/Frame/Fill brushes
-// (a flat rectangle reads as misaligned at every offset — the native fill brush carries
-// the bevel and rounded cap), fill insets L12/R10/Y4 with 169 usable units, MarginBottom
-// 208 clearing the weapon-icon row, MarginRight 95 per the shipped reference XML.
+// The ammo capsule (bh_ammo_capsule) is the first child, so the ring widget's backing disk and shell
+// rim draw over its top and it tucks under the circle at 6 o'clock (BattleHudGeometry.AmmoCapsuleTop).
+// Its number is native's own AgentAmmoTextWidget bound to AmmoCount and IsAmmoCountAlertEnabled, so the
+// low-ammo alert is unchanged; the native counter is hidden (BattleHudHideNativeAmmoCounter).
+// TaomBattleHudRingWidget draws the rings, rims, centre disk and leaf; the career glyph and the
+// configured activation key sit on top. Every widget ignores events, so clicks pass to the scene.
 [PrefabExtension("AgentStatus",
     "descendant::Widget[@VisualDefinition='AgentStatus']/Children")]
 internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Child;
 
-    // First child, as shipped: it draws under every vanilla sibling, including the lance and brace row (AgentStatus.xml:109) whose box overlaps the bar.
+    // First child, as shipped: it draws under every vanilla sibling.
     public override int Index => 0;
 
     [PrefabExtensionXmlDocument]
@@ -35,68 +35,46 @@ internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
     {
         var doc = new XmlDocument();
         doc.LoadXml(@"
-<Widget Id=""TaomCareerEnergyBar"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-        SuggestedWidth=""!Mission.MainAgentHUD.ShieldHealthBar.Frame.Width""
-        SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Frame.Height""
-        HorizontalAlignment=""Right"" VerticalAlignment=""Bottom""
-        MarginRight=""95"" MarginBottom=""208""
-        IsVisible=""@IsCareerBarVisible"" DoNotAcceptEvents=""true"">
+<Widget Id=""TaomBattleHud"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+        SuggestedWidth=""160"" SuggestedHeight=""160""
+        HorizontalAlignment=""Right"" VerticalAlignment=""Bottom"" MarginRight=""28"" MarginBottom=""28""
+        IsVisible=""@ShowAgentHealthBar"" DoNotAcceptEvents=""true"" DoNotPassEventsToChildren=""true"">
   <Children>
-    <BrushWidget Id=""TaomCareerBarCanvas"" DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                 SuggestedWidth=""!Mission.MainAgentHUD.ShieldHealthBar.Canvas.Width""
-                 SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Canvas.Height""
-                 HorizontalAlignment=""Left"" VerticalAlignment=""Center""
-                 Brush=""Mission.MainAgentHUD.ShieldHealthBar.Canvas"">
+    <Widget Id=""TaomBattleHudAmmo"" DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+            SuggestedWidth=""110"" SuggestedHeight=""26.6"" HorizontalAlignment=""Center"" VerticalAlignment=""Top""
+            PositionYOffset=""@HudAmmoTop"" Sprite=""bh_ammo_capsule"" IsVisible=""@HudShowAmmo"">
       <Children>
-        <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed""
-                SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Fill.Height""
-                HorizontalAlignment=""Left"" VerticalAlignment=""Center"" PositionYOffset=""4""
-                MarginLeft=""12"" MarginRight=""10"" Sprite=""BlankWhiteSquare_9"" Color=""#0B0A08C8"" />
-        <BrushWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                     SuggestedWidth=""@BarFillWidth"" SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Fill.Height""
-                     HorizontalAlignment=""Left"" VerticalAlignment=""Center"" PositionYOffset=""4"" MarginLeft=""12""
-                     Brush=""Mission.MainAgentHUD.ShieldHealthBar.Fill"" Color=""#B8912FFF"" IsVisible=""@IsBarReady"" />
-        <BrushWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                     SuggestedWidth=""@BarFillWidth"" SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Fill.Height""
-                     HorizontalAlignment=""Left"" VerticalAlignment=""Center"" PositionYOffset=""4"" MarginLeft=""12""
-                     Brush=""Mission.MainAgentHUD.ShieldHealthBar.Fill"" Color=""#FACC61FF"" IsVisible=""@IsBarActive"" />
-        <BrushWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                     SuggestedWidth=""@BarFillWidth"" SuggestedHeight=""!Mission.MainAgentHUD.ShieldHealthBar.Fill.Height""
-                     HorizontalAlignment=""Left"" VerticalAlignment=""Center"" PositionYOffset=""4"" MarginLeft=""12""
-                     Brush=""Mission.MainAgentHUD.ShieldHealthBar.Fill"" Color=""#574726FF"" IsVisible=""@IsBarCooldown"" />
-      </Children>
-    </BrushWidget>
-
-    <BrushWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
-                 Brush=""Mission.MainAgentHUD.ShieldHealthBar.Frame"" />
-
-    <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-            SuggestedWidth=""58"" SuggestedHeight=""58"" VerticalAlignment=""Center"" HorizontalAlignment=""Left""
-            PositionXOffset=""-38"" IsVisible=""@HasCareerGlyph"">
-      <Children>
-        <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
-                Sprite=""BlankWhiteCircle"" Color=""#8A7038FF"" />
         <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                SuggestedWidth=""50"" SuggestedHeight=""50"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
-                Sprite=""BlankWhiteCircle"" Color=""#14120EFF"" />
+                SuggestedWidth=""24"" SuggestedHeight=""24"" HorizontalAlignment=""Left"" VerticalAlignment=""Center""
+                MarginLeft=""8"" Sprite=""bh_ammo_quiver"" IsVisible=""@HudAmmoIsQuiver"" />
         <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-                SuggestedWidth=""36"" SuggestedHeight=""36"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
-                Sprite=""@CareerGlyphSprite"" Color=""#B9A87CFF"" />
+                SuggestedWidth=""24"" SuggestedHeight=""24"" HorizontalAlignment=""Left"" VerticalAlignment=""Center""
+                MarginLeft=""8"" Sprite=""bh_ammo_javelin"" IsVisible=""@HudAmmoIsJavelin"" />
+        <AgentAmmoTextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+                SuggestedWidth=""48"" SuggestedHeight=""26.6"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
+                PositionXOffset=""@HudAmmoNumberOffsetX"" IntText=""@AmmoCount"" IsAlertEnabled=""@IsAmmoCountAlertEnabled""
+                Brush=""AgentAmmoCount.Text"" Brush.FontSize=""22""
+                Brush.TextHorizontalAlignment=""Center"" Brush.TextVerticalAlignment=""Center"" />
       </Children>
     </Widget>
 
+    <TaomBattleHudRingWidget Id=""TaomBattleHudRings"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
+        DoNotAcceptEvents=""true""
+        HealthFill=""@HudHealthFill"" HorseFill=""@HudHorseFill"" ShieldFill=""@HudShieldFill""
+        HasHorse=""@HudHasHorse"" HasShield=""@HudHasShield""
+        HasAbility=""@HasCareerAbility"" AbilityFill=""@AbilityFill"" IsAbilityReady=""@IsAbilityReady""
+        IsAbilityActive=""@IsAbilityActive"" IsAbilityCooldown=""@IsAbilityCooldown"" />
+
     <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
-            SuggestedWidth=""30"" SuggestedHeight=""22"" HorizontalAlignment=""Right"" VerticalAlignment=""Center""
-            PositionXOffset=""34"" Sprite=""BlankWhiteSquare_9"" Color=""#2B2620FF""
-            IsVisible=""@HasActivationKey"">
-      <Children>
-        <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
-                    Text=""@ActivationKeyText"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
-                    Brush=""Mission.MainAgentHUD.TakenDamageFeed.Text"" Brush.FontSize=""18""
-                    Brush.TextHorizontalAlignment=""Center"" Brush.TextVerticalAlignment=""Center""
-                    Brush.FontColor=""#E8C877FF"" />
-      </Children>
-    </Widget>
+            SuggestedWidth=""31"" SuggestedHeight=""31"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
+            PositionYOffset=""-9"" Sprite=""@CareerGlyphSprite"" Color=""#F0E2C0FF"" IsVisible=""@HasCareerGlyph"" />
+
+    <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+                SuggestedWidth=""40"" SuggestedHeight=""18"" HorizontalAlignment=""Center"" VerticalAlignment=""Center""
+                PositionYOffset=""19"" Text=""@ActivationKeyText"" IsVisible=""@HasActivationKey""
+                Brush=""Mission.MainAgentHUD.TakenDamageFeed.Text"" Brush.FontSize=""16""
+                Brush.TextHorizontalAlignment=""Center"" Brush.TextVerticalAlignment=""Center""
+                Brush.FontColor=""#F4E6C4FF"" />
   </Children>
 </Widget>");
         return doc;
