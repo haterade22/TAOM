@@ -112,7 +112,7 @@ def main():
         assert output.data.uv_layers.active is not None
         assert output.data.uv_layers.active.name == "UVMap"
         assert any(abs(vertex.co.z - 0.2) < 1e-5 for vertex in output.data.vertices)
-        from tools.blender.retopo_adapter import combine_objects, mesh_from_blender
+        from tools.blender.retopo_adapter import combine_objects, mesh_from_blender, mesh_to_blender
         roundtrip = mesh_from_blender(output)
         combined = combine_objects([output])
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
@@ -120,6 +120,22 @@ def main():
             expected = [item.value for item in output.data.attributes[name].data]
             assert roundtrip.attributes[name] == expected
             assert combined.attributes[name] == expected
+        combined_output = mesh_to_blender(combined, "TAOM_CombinedRoundtrip")
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            assert combined_output.data.attributes[name].domain == "FACE"
+        point_variant = roundtrip.copy()
+        point_variant.attributes["pattern_id"] = [7] * len(point_variant.vertices)
+        point_variant.attribute_domains["pattern_id"] = "POINT"
+        point_output = mesh_to_blender(point_variant, "TAOM_PointPattern")
+        distinct = roundtrip.copy()
+        distinct.attributes["pattern_id"] = [10, 11, 12, 13]
+        distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")
+        mixed = combine_objects([distinct_output, point_output])
+        assert mixed.attributes["pattern_id"] == [10, 11, 12, 13, 0, 0, 0, 0]
+        invalid = combined.copy()
+        invalid.attributes["part_id"] = [99]
+        rejected = mesh_to_blender(invalid, "TAOM_InvalidFaceMetadata")
+        assert "part_id" not in rejected.data.attributes
         assert [tuple(vertex.co) for vertex in source.data.vertices] == original_source
         assert len(guide.data.vertices) == 4
         settings.morph_2d_3d = 0.5

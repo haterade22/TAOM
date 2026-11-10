@@ -20,6 +20,7 @@ class Mesh:
     uv_name: str = "UVMap"
     attributes: dict[str, list] = field(default_factory=dict)
     edge_attributes: dict[str, dict[Edge, object]] = field(default_factory=dict)
+    attribute_domains: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         self.vertices = [tuple(float(value) for value in vertex) for vertex in self.vertices]
@@ -27,6 +28,7 @@ class Mesh:
         self.lines = [self.edge_key(*edge) for edge in self.lines]
         self.uv = [tuple(float(value) for value in coordinate) for coordinate in self.uv]
         self.attributes = {name: list(values) for name, values in self.attributes.items()}
+        self.attribute_domains = dict(self.attribute_domains)
         self.edge_attributes = {
             name: {self.edge_key(*edge): value for edge, value in values.items()}
             for name, values in self.edge_attributes.items()
@@ -47,6 +49,7 @@ class Mesh:
             edge_attributes={
                 name: dict(values) for name, values in self.edge_attributes.items()
             },
+            attribute_domains=dict(self.attribute_domains),
         )
 
     def edges(self) -> list[Edge]:

@@ -1,5 +1,6 @@
 import math
 import unittest
+from unittest import mock
 
 from tools.retopo_engine import Mesh, RetopoSettings, differential, engine
 
@@ -364,7 +365,8 @@ class ContractRegressionTests(unittest.TestCase):
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2), (0, 2, 3)],
         )
-        result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
+        with mock.patch.object(engine, "_part_faces", side_effect=AssertionError("healthy mesh must not scan components")):
+            result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], bad_edges)
         self.assertEqual(mesh.vertices, result.vertices)
         self.assertEqual(mesh.faces, result.faces)
@@ -559,6 +561,110 @@ class ContractRegressionTests(unittest.TestCase):
                         new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % 3])
                         self.assertEqual(mesh.edge_attributes["crease_edge"][original_edge], result.edge_attributes["crease_edge"][new_edge])
 
+    def test_face_attributes_follow_auto_fill_and_mirror(self):
+        guide = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (2, 0, 0), (2, 1, 0)],
+            faces=[(0, 1, 2, 3), (1, 4, 5, 2)],
+            attributes={
+                "retopo_plane_id": [7, 8],
+                "pattern_id": [10, 11],
+                "part_id": [20, 21],
+                "source_vertex": list(range(6)),
+                "point_guide": [True, False, False, False, False, True],
+            },
+            attribute_domains={
+                "retopo_plane_id": "FACE", "pattern_id": "FACE", "part_id": "FACE",
+                "source_vertex": "POINT", "point_guide": "POINT",
+            },
+        )
+        filled = engine.auto_fill(guide, [(0.3, 0, 0)], 5)
+        self.assertEqual(3, len(filled.faces))
+        for name, expected in (("retopo_plane_id", [8, 7, 7]), ("pattern_id", [11, 10, 10]), ("part_id", [21, 20, 20])):
+            self.assertEqual(expected, filled.attributes[name])
+        self.assertEqual(len(filled.vertices), len(filled.attributes["source_vertex"]))
+        self.assertEqual(len(filled.vertices), len(filled.attributes["point_guide"]))
+        across_components = engine.auto_fill(guide, [(0.3, 0, 0)], 5, across_patterns=False)
+        for name, expected in (("retopo_plane_id", [8, 7, 7]), ("pattern_id", [11, 10, 10]), ("part_id", [21, 20, 20])):
+            self.assertEqual(expected, across_components.attributes[name])
+        self.assertEqual(len(across_components.vertices), len(across_components.attributes["source_vertex"]))
+        mirrored = engine.mirror_guides(guide, axes=("x",))
+        self.assertEqual(4, len(mirrored.faces))
+        for name, expected in (("retopo_plane_id", [7, 8, 7, 8]), ("pattern_id", [10, 11, 10, 11]), ("part_id", [20, 21, 20, 21])):
+            self.assertEqual(expected, mirrored.attributes[name])
+
+    def test_auto_fill_subdivision_preserves_point_and_face_metadata(self):
+        guide = differential.unit_guide()
+        guide.attributes.update({
+            "source_vertex": [10, 20, 30, 40],
+            "point_guide": [True, False, False, True],
+            "pattern_id": [9],
+            "corner_tag": [1, 1, 1, 1],
+        })
+        guide.attribute_domains.update({"point_guide": "POINT", "pattern_id": "FACE", "corner_tag": "CORNER"})
+        result = engine.auto_fill(guide, [(0.5, 0.5, 0)], 1)
+        self.assertEqual(9, len(result.vertices))
+        self.assertEqual(4, len(result.faces))
+        self.assertEqual([10, 20, 30, 40, 10, 10, 20, 30, 10], result.attributes["source_vertex"])
+        self.assertEqual([True, False, False, True, False, False, False, False, False], result.attributes["point_guide"])
+        self.assertEqual([9] * 4, result.attributes["pattern_id"])
+        self.assertNotIn("corner_tag", result.attributes)
+
+    def test_auto_fill_separates_metadata_by_component(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (3, 0, 0), (4, 0, 0), (4, 1, 0), (3, 1, 0)],
+            faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+            attributes={
+                "pattern_id": [100, 200],
+                "source_vertex": list(range(8)),
+                "point_guide": [False] * 8,
+            },
+            attribute_domains={"pattern_id": "FACE"},
+        )
+        result = engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1, across_patterns=False)
+        self.assertEqual([100, 100, 100, 100, 200], result.attributes["pattern_id"])
+        self.assertEqual([0, 1, 2, 3, 0, 0, 1, 2, 0, 4, 5, 6, 7], result.attributes["source_vertex"])
+        self.assertEqual([False] * 13, result.attributes["point_guide"])
+
+    def test_reconstruction_preserves_explicit_attribute_domains(self):
+        separated = engine._separate(
+            Mesh(
+                vertices=[(0, 0, 0), (0.5, 0, 0), (1, 0, 0), (0, 1, 0), (0.5, 1, 0), (1, 1, 0)],
+                faces=[(0, 1, 4, 3), (1, 2, 5, 4)],
+                uv=[(0, 0), (0.5, 0), (0.5, 1), (0, 1), (0.5, 0), (1, 0), (1, 1), (0.5, 1)],
+                attributes={"pattern_id": [0, 1, 2, 3, 4, 5]},
+                attribute_domains={"pattern_id": "POINT"},
+            ),
+            [0, 1],
+        )
+        self.assertEqual([0, 1, 4, 3, 1, 2, 5, 4], separated.attributes["pattern_id"])
+        self.assertEqual("POINT", separated.attribute_domains["pattern_id"])
+        merged = engine.merge_output_seams(
+            Mesh(
+                vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (-1, 0, 0), (-1, -1, 0), (0, -1, 0)],
+                faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+                attributes={"source_vertex": list(range(8)), "pattern_id": [10, 20]},
+                attribute_domains={"pattern_id": "FACE"},
+            ),
+            0.01,
+        )
+        self.assertEqual([0, 1, 2, 3, 5, 6, 7], merged.attributes["source_vertex"])
+        self.assertEqual([10, 20], merged.attributes["pattern_id"])
+        positions = [(0, 0, 0), (2, 0, 0), (2, 2, 0), (0, 2, 0), (1, 1, 0), (1, 0.3, 0)]
+        source_faces = [(0, 1, 5), (1, 4, 5), (4, 0, 5), (1, 2, 4), (2, 3, 4), (3, 0, 4)]
+        equal_counts = Mesh(
+            vertices=positions + [(-x, -y, z) for x, y, z in positions],
+            faces=source_faces + [tuple(index + 6 for index in face) for face in source_faces],
+            attributes={"source_vertex": list(range(12))},
+        )
+        merged_equal = engine.merge_output_seams(equal_counts, 0.01)
+        self.assertEqual([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], merged_equal.attributes["source_vertex"])
+        guide = differential.ring_guide()
+        guide.attributes["pattern_id"] = list(range(16))
+        guide.attribute_domains["pattern_id"] = "POINT"
+        thickened = engine.thicken(guide, 0.1)
+        self.assertEqual(list(range(16)) * 2, thickened.attributes["pattern_id"])
+        self.assertEqual("POINT", thickened.attribute_domains["pattern_id"])
+
     def test_mirror_normalizes_loose_line_attribute_keys(self):
         guide = Mesh(
             vertices=[(3, 0, 0), (1, 0, 0), (2, 0, 0), (2, 1, 0), (1, 1, 0)],
@@ -569,6 +675,51 @@ class ContractRegressionTests(unittest.TestCase):
         result = engine.mirror_guides(guide, axes=("x",))
         self.assertTrue(all(edge == Mesh.edge_key(*edge) for edge in result.edge_attributes["crease_edge"]))
         self.assertEqual(2, len(result.edge_attributes["crease_edge"]))
+
+    def test_repair_preserves_face_domains_when_vertex_count_crosses_face_count(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, -1)],
+            faces=[(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2), (0, 1, 4)],
+            uv=[(face * 10 + corner, 0) for face in range(5) for corner in range(3)],
+            attributes={
+                "pattern_id": [10, 11, 12, 13, 14],
+                "part_id": [20, 21, 22, 23, 24],
+                "retopo_plane_id": [30, 31, 32, 33, 34],
+                "source_vertex": [0, 1, 2, 3, 4],
+            },
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            self.assertEqual(mesh.attributes[name], result.attributes[name])
+        self.assertEqual(len(result.vertices), len(result.attributes["source_vertex"]))
+        for face_index, face in enumerate(mesh.faces):
+            self.assertEqual(mesh.uv[face_index * 3:face_index * 3 + 3], result.uv[face_index * 3:face_index * 3 + 3])
+            self.assertEqual([mesh.vertices[index] for index in face], [result.vertices[index] for index in result.faces[face_index]])
+
+    def test_repair_uses_explicit_attribute_domains(self):
+        point_mesh = differential.non_manifold()
+        point_mesh.attributes = {"pattern_id": [10, 11, 12, 13, 14], "source_vertex": [0, 1, 2, 3, 4]}
+        point_mesh.attribute_domains = {"pattern_id": "POINT", "source_vertex": "POINT"}
+        point_result, _ = engine.inspect_topology(point_mesh, fix_split_edges=True)
+        self.assertEqual([10, 11, 14, 10, 11, 12, 11, 10, 13], point_result.attributes["pattern_id"])
+        self.assertEqual("POINT", point_result.attribute_domains["pattern_id"])
+        face_mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, -1)],
+            faces=[(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2), (0, 1, 4)],
+            attributes={
+                "pattern_id": [10, 11, 12, 13, 14],
+                "part_id": [20, 21, 22, 23, 24],
+                "retopo_plane_id": [30, 31, 32, 33, 34],
+                "source_position": [(0, 0, 0)] * 5,
+            },
+            attribute_domains={"pattern_id": "FACE", "part_id": "FACE", "retopo_plane_id": "FACE", "source_position": "POINT"},
+        )
+        face_result, _ = engine.inspect_topology(face_mesh, fix_split_edges=True)
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            self.assertEqual(face_mesh.attributes[name], face_result.attributes[name])
+            self.assertEqual("FACE", face_result.attribute_domains[name])
+        self.assertEqual(len(face_result.vertices), len(face_result.attributes["source_position"]))
 
     def test_repair_is_canonical_across_face_order(self):
         faces = [(1, 3, 5, 4), (2, 5, 4, 3), (0, 6, 2, 5), (5, 2, 4, 6), (5, 4, 0, 1), (3, 1, 0, 2)]

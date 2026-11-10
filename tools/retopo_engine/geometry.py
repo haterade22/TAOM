@@ -184,7 +184,35 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
             for endpoint in edge:
                 children[Mesh.edge_key(vertex_map[endpoint], edge_map[edge])] = value
         edge_attributes[name] = children
-    return Mesh(vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name, edge_attributes=edge_attributes)
+    attributes = {}
+    for name, values in mesh.attributes.items():
+        domain = mesh.attribute_domains.get(name)
+        if domain is None:
+            if name in {"source_vertex", "source_part", "point_guide", "open_seam", "simplify_on", "source_position", "pattern_center"}:
+                domain = "POINT"
+            elif name == "pattern_id" and "source_position" in mesh.attributes:
+                domain = "POINT"
+            elif len(values) == len(mesh.faces):
+                domain = "FACE"
+            elif len(values) == len(mesh.vertices):
+                domain = "POINT"
+        if domain == "POINT":
+            remapped = [False] * len(new_vertices) if name in {"point_guide", "open_seam", "simplify_on"} else [None] * len(new_vertices)
+            for old, new in vertex_map.items():
+                remapped[new] = values[old]
+            if name not in {"point_guide", "open_seam", "simplify_on"}:
+                for edge, new in edge_map.items():
+                    remapped[new] = values[edge[0]]
+                for face_index, new in face_map.items():
+                    remapped[new] = values[mesh.faces[face_index][0]]
+            attributes[name] = remapped
+        elif domain == "FACE":
+            attributes[name] = [values[face_index] for face_index in range(len(mesh.faces)) for _ in range(4)]
+    return Mesh(
+        vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name,
+        attributes=attributes, edge_attributes=edge_attributes,
+        attribute_domains=dict(mesh.attribute_domains),
+    )
 
 
 def coons_point(corners, u, v):

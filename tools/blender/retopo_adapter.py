@@ -38,18 +38,22 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [tuple(item.vector) for item_index, item in enumerate(attribute.data)]
+                mesh.attribute_domains[name] = "POINT"
         for name in ("source_vertex", "source_part", "pattern_id"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
+                mesh.attribute_domains[name] = "POINT"
         for name in ("point_guide", "open_seam", "simplify_on"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
+                mesh.attribute_domains[name] = "POINT"
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "FACE":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
+                mesh.attribute_domains[name] = "FACE"
         for name in ("crease_edge", "sharp_edge", "bevel_weight_edge"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "EDGE":
@@ -81,6 +85,10 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         layer.active = True
         layer.active_render = True
     for attribute_name, values in mesh.attributes.items():
+        domain = mesh.attribute_domains.get(attribute_name)
+        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces) if domain == "FACE" else None
+        if expected_count is not None and len(values) != expected_count:
+            continue
         if attribute_name in {"source_position", "pattern_center"}:
             attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain="POINT")
             for item, value in zip(attribute.data, values):
@@ -89,11 +97,15 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
             attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = bool(value)
-        elif attribute_name in {"source_vertex", "source_part"} or (attribute_name == "pattern_id" and "source_position" in mesh.attributes):
+        elif (
+            attribute_name in {"source_vertex", "source_part"}
+            or domain == "POINT"
+            or (domain is None and attribute_name == "pattern_id" and "source_position" in mesh.attributes)
+        ):
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
-        elif len(values) == len(mesh.faces):
+        elif domain == "FACE" or len(values) == len(mesh.faces):
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="FACE")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
@@ -137,7 +149,15 @@ def combine_objects(objects, name="Combined guides"):
         name
         for _, mesh in meshes
         for name in ("pattern_id", "part_id", "retopo_plane_id")
-        if name in mesh.attributes and len(mesh.attributes[name]) == len(mesh.faces)
+        if name in mesh.attributes
+        and (
+            mesh.attribute_domains.get(name) == "FACE"
+            or (
+                name not in mesh.attribute_domains
+                and len(mesh.attributes[name]) == len(mesh.faces)
+                and (name != "pattern_id" or "source_position" not in mesh.attributes)
+            )
+        )
     }
     for obj, mesh in meshes:
         offset = len(vertices)
@@ -151,12 +171,26 @@ def combine_objects(objects, name="Combined guides"):
             target.extend(mesh.attributes.get(attribute_name, [default] * len(mesh.vertices)))
         for attribute_name in face_attribute_names:
             target = attributes.setdefault(attribute_name, [])
-            target.extend(mesh.attributes.get(attribute_name, [0] * len(mesh.faces)))
+            if mesh.attribute_domains.get(attribute_name) == "FACE" or (
+                attribute_name not in mesh.attribute_domains and attribute_name in mesh.attributes
+            ):
+                target.extend(mesh.attributes[attribute_name])
+            else:
+                target.extend([0] * len(mesh.faces))
         for attribute_name, values in mesh.edge_attributes.items():
             target = edge_attributes.setdefault(attribute_name, {})
             for (first, second), value in values.items():
                 target[Mesh.edge_key(first + offset, second + offset)] = value
-    return Mesh(vertices=vertices, faces=faces, lines=lines, attributes=attributes, edge_attributes=edge_attributes)
+    attribute_domains = {name: "POINT" for name in attribute_defaults if name not in face_attribute_names}
+    attribute_domains.update({name: "FACE" for name in face_attribute_names})
+    for _, mesh in meshes:
+        for name, domain in mesh.attribute_domains.items():
+            if name not in face_attribute_names:
+                attribute_domains.setdefault(name, domain)
+    return Mesh(
+        vertices=vertices, faces=faces, lines=lines, attributes=attributes,
+        edge_attributes=edge_attributes, attribute_domains=attribute_domains,
+    )
 
 
 def replace_mesh(obj, mesh):

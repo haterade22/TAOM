@@ -33,6 +33,14 @@ The pure Python engine is independent of Blender. `tools/blender/retopo_adapter.
 meshes and attributes, while `tools/blender/retopo_operators.py` provides the TAOM sidebar and
 operators. Outputs are real meshes, not evaluated proprietary node graphs.
 
+Meshes carry explicit `attribute_domains` through copying, repair, auto fill, mirroring, separation,
+seam merging, thickness, and Blender conversion. Undeclared attributes use face-length matching
+before vertex-length matching, except known point attributes and `pattern_id` paired with
+`source_position`. Subdivision keeps original vertex values, uses the lower-index edge endpoint and
+first face corner for generated source values, and uses the nearest parent for edge splits. New
+`point_guide`, `open_seam`, and `simplify_on` values are false, so generated vertices do not become
+manual guides. Mixed-domain face combinations default to zero, and export rejects stale arrays.
+
 The behavioral input and acceptance matrix are in
 [retopo-planes-1-6-3-clean-room.md](../research/retopo-planes-1-6-3-clean-room.md). The independent
 implementation does not claim identical internal algorithms or byte-identical meshes.
@@ -110,7 +118,8 @@ and guide objects are preserved when generating a new output.
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Validity exceptions and reference density counts are explicit.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: forty-eight regression tests for topology,
+  Dedicated UV-bearing contract cases cover inspector face and metadata associations.
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: fifty-four regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
