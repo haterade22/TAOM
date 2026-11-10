@@ -529,6 +529,47 @@ class ContractRegressionTests(unittest.TestCase):
         result = engine.merge_output_seams(mesh, 0.5)
         self.assertTrue(all(len(face) == 4 for face in result.faces))
 
+    def test_triangle_repair_preserves_face_identity_uv_and_metadata(self):
+        source_faces = [(0, 1, 2), (1, 0, 3), (0, 1, 4)]
+        vertices = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)]
+        for order in ((0, 1, 2), (0, 2, 1), (1, 0, 2), (1, 2, 0), (2, 0, 1), (2, 1, 0)):
+            with self.subTest(order=order):
+                faces = [source_faces[index] for index in order]
+                uv = [(face * 10 + corner, 0) for face in range(3) for corner in range(3)]
+                mesh = Mesh(
+                    vertices=vertices,
+                    faces=faces,
+                    uv=uv,
+                    attributes={"pattern_id": [10, 11, 12], "part_id": [20, 21, 22], "retopo_plane_id": [30, 31, 32]},
+                    edge_attributes={"crease_edge": {edge: index / 10 for index, edge in enumerate(sorted({Mesh.edge_key(face[i], face[(i + 1) % 3]) for face in faces for i in range(3)}))}},
+                )
+                result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
+                self.assertEqual([], engine.non_manifold_edges(result))
+                self.assertTrue(set(bad_edges) <= set(result.edges()))
+                for original, returned in zip(engine.non_manifold_edges(mesh), bad_edges):
+                    self.assertEqual({mesh.vertices[index] for index in original}, {result.vertices[index] for index in returned})
+                for face_index, face in enumerate(mesh.faces):
+                    self.assertEqual([mesh.vertices[index] for index in face], [result.vertices[index] for index in result.faces[face_index]])
+                    self.assertEqual(mesh.uv[face_index * 3:face_index * 3 + 3], result.uv[face_index * 3:face_index * 3 + 3])
+                    for name in ("pattern_id", "part_id", "retopo_plane_id"):
+                        self.assertEqual(mesh.attributes[name], result.attributes[name])
+                    for corner, vertex in enumerate(face):
+                        original_edge = Mesh.edge_key(vertex, face[(corner + 1) % 3])
+                        new_face = result.faces[face_index]
+                        new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % 3])
+                        self.assertEqual(mesh.edge_attributes["crease_edge"][original_edge], result.edge_attributes["crease_edge"][new_edge])
+
+    def test_mirror_normalizes_loose_line_attribute_keys(self):
+        guide = Mesh(
+            vertices=[(3, 0, 0), (1, 0, 0), (2, 0, 0), (2, 1, 0), (1, 1, 0)],
+            faces=[(1, 2, 3, 4)],
+            lines=[(0, 1)],
+            edge_attributes={"crease_edge": {(0, 1): 0.7}},
+        )
+        result = engine.mirror_guides(guide, axes=("x",))
+        self.assertTrue(all(edge == Mesh.edge_key(*edge) for edge in result.edge_attributes["crease_edge"]))
+        self.assertEqual(2, len(result.edge_attributes["crease_edge"]))
+
     def test_repair_is_canonical_across_face_order(self):
         faces = [(1, 3, 5, 4), (2, 5, 4, 3), (0, 6, 2, 5), (5, 2, 4, 6), (5, 4, 0, 1), (3, 1, 0, 2)]
         vertices = [(index, 0, 0) for index in range(7)]

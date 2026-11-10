@@ -192,6 +192,7 @@ def main():
         assert len(repaired.data.vertices) == 9
         assert repaired.matrix_world == non_manifold.matrix_world
         assert repaired["non_manifold_edges"] == 1
+        assert bpy.data.objects["TAOM Non-Manifold Edges"].matrix_world == non_manifold.matrix_world
         transformed_guides = bpy.data.collections.new("TAOM_Selftest_TransformedGuides")
         bpy.context.scene.collection.children.link(transformed_guides)
         transformed_guide = mesh_object(

@@ -202,11 +202,6 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         key=lambda index: (tuple(mesh.vertices[vertex] for vertex in mesh.faces[index]), mesh.faces[index]),
     )
     result.faces = [mesh.faces[index] for index in face_order]
-    result.uv = [
-        coordinate
-        for face_index in face_order
-        for coordinate in mesh.uv[sum(len(face) for face in mesh.faces[:face_index]):sum(len(face) for face in mesh.faces[:face_index + 1])]
-    ]
     if all(len(face) == 3 for face in mesh.faces):
         incident_faces = {
             face_index
@@ -224,15 +219,18 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             and all(face_index in incident_faces for face_index in component_faces)
             for face_index in component_faces
         }
-        for face_index in sorted(split_faces):
-            face = mesh.faces[face_index]
+        for canonical_index, original_index in enumerate(face_order):
+            if original_index not in split_faces:
+                continue
+            face = mesh.faces[original_index]
             replacements = {}
             for old in face:
                 replacements[old] = len(result.vertices)
                 result.vertices.append(result.vertices[old])
                 for name, values in result.attributes.items():
-                    values.append(values[old])
-            result.faces[face_index] = tuple(replacements[index] for index in face)
+                    if len(values) == len(result.vertices) - 1:
+                        values.append(values[old])
+            result.faces[canonical_index] = tuple(replacements[index] for index in face)
 
     protected_edges = set(bad_edges)
     while non_manifold_edges(result):
@@ -395,7 +393,8 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         for old in best[1]:
             result.vertices.append(result.vertices[old])
             for name, values in result.attributes.items():
-                values.append(values[old])
+                if len(values) == len(result.vertices) - 1:
+                    values.append(values[old])
         for face_index, original_face in original_faces.items():
             corner = next(
                 index for index, vertex in enumerate(original_face)
@@ -447,8 +446,6 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     }
 
     def debug_edge(original_edge):
-        if original_edge in result.edges():
-            return original_edge
         for face_index in face_order:
             original_face = mesh.faces[face_index]
             for corner, first in enumerate(original_face):
@@ -755,7 +752,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
                     if original_edge in values and new_edge not in target:
                         target[new_edge] = values[original_edge]
         for edge in component.lines:
-            mirrored_edge = tuple(mirrored_index(index) for index in edge)
+            mirrored_edge = Mesh.edge_key(*(mirrored_index(index) for index in edge))
             result.lines.append(mirrored_edge)
             for name, values in component.edge_attributes.items():
                 target = result.edge_attributes.setdefault(name, {})

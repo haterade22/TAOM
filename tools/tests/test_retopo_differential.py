@@ -161,6 +161,15 @@ class RetopoDifferentialTests(unittest.TestCase):
                     self.assertEqual(expected["faces"], actual["faces"])
                     if not only_debug:
                         self.assertEqual(expected["vertices"], actual["vertices"])
+                        self.assertEqual(canonical_vertices(expected["geometry_vertices"]), canonical_vertices(actual["geometry_vertices"]))
+                        self.assertEqual(
+                            canonical_faces(expected["geometry_vertices"], expected["geometry_faces"]),
+                            canonical_faces(actual["geometry_vertices"], actual["geometry_faces"]),
+                        )
+                        self.assertEqual(
+                            canonical_uv_faces(expected["geometry_vertices"], expected["geometry_faces"], expected["geometry_uv"]),
+                            canonical_uv_faces(actual["geometry_vertices"], actual["geometry_faces"], actual["geometry_uv"]),
+                        )
                     else:
                         self.assertEqual(1, len(bad_edges))
 
