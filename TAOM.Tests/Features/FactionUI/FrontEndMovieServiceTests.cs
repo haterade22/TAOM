@@ -452,4 +452,43 @@ public class FrontEndMovieServiceTests
         Assert.IsNull(_sut.BeginLoad(CampOverlayMovie, CampOverlayViewModel));
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(ThemedCampOverlayMovie)));
     }
+
+    // ── Battle HUD (#1095): the native movie stays, only the image hold is taken ──────────────
+
+    private void AddBattleHudImage()
+    {
+        var pathService = Substitute.For<IPathService>();
+        pathService.ModuleRootPath.Returns(Root);
+        pathService.ModuleDataPath.Returns(Path.Combine(Root, "ModuleData"));
+        _adapter.AddFile(Path.Combine(new FactionUIPaths(pathService).RuntimeSprites, "bh_band_mask.png"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_MainAgentHud_KeepsTheNativeMovieAndHoldsOnlyTheBattleHud()
+    {
+        AddBattleHudImage();
+
+        var swap = _sut.BeginLoad("MainAgentHUD", "MissionAgentStatusVM");
+
+        Assert.AreEqual("MainAgentHUD", swap!.TargetName);
+        Assert.AreEqual(FrontEndImageGroups.BattleHud, swap.Holds);
+        Assert.IsTrue(_adapter.IsSpriteRegistered("bh_band_mask"), "registered before the movie binds its sprites");
+        Assert.IsFalse(_adapter.IsSpriteRegistered("cc_panel_bg"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_MainAgentHudWithAnotherViewModel_IsLeftToVanilla()
+    {
+        Assert.IsNull(_sut.BeginLoad("MainAgentHUD", "SomeOtherVM"));
+    }
+
+    [TestMethod]
+    public void Tick_LiveMainAgentHud_HoldsTheBattleHud()
+    {
+        AddBattleHudImage();
+        var handle = LoadThemed("MainAgentHUD", "MissionAgentStatusVM");
+        _state.IsMovieReleased(handle).Returns(false);
+
+        Assert.AreEqual(FrontEndImageGroups.BattleHud, _sut.Tick());
+    }
 }

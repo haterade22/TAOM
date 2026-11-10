@@ -20,4 +20,8 @@ public enum FrontEndSpriteKind
     /// <summary>Kysaro's replacements for vanilla's skill icons, registered under the vanilla names for
     /// the session.</summary>
     SkillIcon,
+
+    /// <summary>The battle HUD's small icons and rim (<c>bh_*</c>, #1095): loaded with the mission HUD,
+    /// released after it closes.</summary>
+    BattleHud,
 }

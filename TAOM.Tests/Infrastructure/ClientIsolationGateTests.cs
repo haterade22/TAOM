@@ -102,9 +102,18 @@ public class ClientIsolationGateTests
 
         var inClient = CoopUiRegistrationPolicy.CollectUiExtensionTypes(typeof(TAOM.Client.ClientSubModule).Assembly);
 
-        Assert.AreEqual(50, inClient.Count,
-            "26 view model mixins and 24 prefab extension classes: " + string.Join(", ", inClient.Select(t => t.Name)));
+        Assert.AreEqual(59, inClient.Count,
+            "27 view model mixins and 32 prefab extension classes: " + string.Join(", ", inClient.Select(t => t.Name)));
         var names = inClient.Select(t => t.Name).ToArray();
+        // #1095 circular battle HUD: its ring values, and the native AgentStatus bars and previews it replaces.
+        foreach (var battleHud in new[]
+        {
+            "MissionAgentStatusBattleHudMixin",
+            "BattleHudHideNativeHealthBar", "BattleHudHideNativeHorseBar", "BattleHudHideNativeShieldBar",
+            "BattleHudHidePrimaryWeaponPreview", "BattleHudHideOffhandWeaponPreview",
+            "BattleHudMoveWeaponColumn", "BattleHudHideNativeAmmoCounter", "BattleHudMoveLanceRow",
+        })
+            CollectionAssert.Contains(names, battleHud, "the battle HUD extension " + battleHud);
         CollectionAssert.Contains(names, "EncyclopediaClanGalleryMixin", "the clan page roster, fief galleries and leader model");
         CollectionAssert.Contains(names, "EncyclopediaRelationshipGalleryMixin", "the hero page relationship galleries");
         CollectionAssert.Contains(names, "EncyclopediaKingdomGalleryMixin", "the kingdom page clan and fief galleries");

@@ -21,4 +21,8 @@ public enum FrontEndImageGroups
     /// <summary>The faction art (<see cref="FrontEndSpriteKind.Art"/>), held only by the faction screen,
     /// so it goes once the player has moved on from it.</summary>
     FactionArt = 4,
+
+    /// <summary>The circular battle HUD's icons (<see cref="FrontEndSpriteKind.BattleHud"/>, #1095), held
+    /// by the native MainAgentHUD movie while a mission shows it.</summary>
+    BattleHud = 8,
 }
