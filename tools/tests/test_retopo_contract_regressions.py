@@ -600,6 +600,63 @@ class ContractRegressionTests(unittest.TestCase):
             self.assertGreater(engine.signed_area(face, initialized_irregular.vertices), 0)
             self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
             self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+        unequal_faces = []
+        outer_index = inner_index = 0
+        while outer_index < 8 or inner_index < 4:
+            if inner_index >= 4 or (outer_index < 8 and outer_index / 8 <= inner_index / 4):
+                unequal_faces.append((outer_index % 8, (outer_index + 1) % 8, 8 + inner_index % 4))
+                outer_index += 1
+            else:
+                unequal_faces.append((outer_index % 8, 8 + (inner_index + 1) % 4, 8 + inner_index % 4))
+                inner_index += 1
+        unequal = Mesh(
+            vertices=[(2 * math.cos(math.tau * index / 8), 2 * math.sin(math.tau * index / 8), 0) for index in range(8)]
+            + [(math.cos(math.tau * index / 4), math.sin(math.tau * index / 4), 0) for index in range(4)],
+            faces=unequal_faces,
+        )
+        initialized_unequal = engine.initialize_planes(unequal, RetopoSettings())
+        self.assertEqual((16, 8, 16), (len(initialized_unequal.vertices), len(initialized_unequal.faces), len(initialized_unequal.boundary_edges())))
+        for face in initialized_unequal.faces:
+            points = [initialized_unequal.vertices[index] for index in face]
+            self.assertGreater(engine.signed_area(face, initialized_unequal.vertices), 0)
+            self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+            self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+
+        def star_case(count, high, low, radius, phase, offset):
+            outer = [((high if index % 2 == 0 else low) * math.cos(math.tau * index / count), (high if index % 2 == 0 else low) * math.sin(math.tau * index / count), 0) for index in range(count)]
+            inner = [(radius * math.cos(phase + math.tau * index / count) + offset, radius * math.sin(phase + math.tau * index / count), 0) for index in range(count)]
+            return Mesh(
+                vertices=outer + inner,
+                faces=[triangle for index in range(count) for triangle in (
+                    (index, (index + 1) % count, count + (index + 1) % count),
+                    (index, count + (index + 1) % count, count + index),
+                )],
+            )
+
+        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+            engine.initialize_planes(star_case(12, 3.57, 0.91, 0.83, 3.07, 0.14), RetopoSettings())
+        longer_inner = Mesh(
+            vertices=[(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0), (1, 1, 0), (2, 1, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)],
+            faces=[(0, 1, 5), (0, 5, 4), (1, 6, 5), (1, 2, 7), (1, 7, 6), (2, 3, 8), (2, 8, 7), (3, 0, 4), (3, 4, 8)],
+        )
+        initialized_longer_inner = engine.initialize_planes(longer_inner, RetopoSettings())
+        self.assertEqual((8, 4, 8), (len(initialized_longer_inner.vertices), len(initialized_longer_inner.faces), len(initialized_longer_inner.boundary_edges())))
+        self.assertTrue(all(engine.signed_area(face, initialized_longer_inner.vertices) > 0 for face in initialized_longer_inner.faces))
+        square = [(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)]
+        for name, inner in (
+            ("touching", [(0, 0, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)]),
+            ("crossing", [(1, 1, 0), (3, 3, 0), (1, 3, 0), (3, 1, 0)]),
+        ):
+            with self.subTest(invalid_hole=name):
+                malformed = Mesh(
+                    vertices=square + inner,
+                    faces=[triangle for index in range(4) for triangle in (
+                        (index, (index + 1) % 4, 4 + (index + 1) % 4),
+                        (index, 4 + (index + 1) % 4, 4 + index),
+                    )],
+                )
+                with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+                    engine.initialize_planes(malformed, RetopoSettings())
         guide = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2, 3)],

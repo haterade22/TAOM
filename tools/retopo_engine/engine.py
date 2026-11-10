@@ -622,36 +622,99 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
             inner_loop = loops[1] if outer is loops[0] else loops[0]
             if signed_area(outer, flat.vertices) < 0:
                 outer = list(reversed(outer))
-            if len(inner_loop) == len(outer):
-                def orientation(first, second, third):
-                    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+            outer_points = [flat.vertices[index] for index in outer]
+            inner_points = [flat.vertices[index] for index in inner_loop]
 
-                def intersects(first, second, third, fourth):
-                    return orientation(first, second, third) * orientation(first, second, fourth) < 0 and orientation(third, fourth, first) * orientation(third, fourth, second) < 0
+            def orientation(first, second, third):
+                return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
 
-                def invalid_face(face, vertices):
-                    points = [vertices[index] for index in face]
-                    return signed_area(face, vertices) <= 0 or intersects(points[0], points[1], points[2], points[3]) or intersects(points[1], points[2], points[3], points[0])
+            def on_segment(first, second, point):
+                return abs(orientation(first, second, point)) <= 1e-12 and min(first[0], second[0]) <= point[0] <= max(first[0], second[0]) and min(first[1], second[1]) <= point[1] <= max(first[1], second[1])
 
-                candidates = []
-                for oriented in (inner_loop, list(reversed(inner_loop))):
-                    for shift in range(len(oriented)):
-                        aligned = oriented[shift:] + oriented[:shift]
-                        vertices = [flat.vertices[index] for index in outer + aligned]
-                        faces = []
-                        for index in range(len(outer)):
-                            following = (index + 1) % len(outer)
-                            faces.append((index, following, len(outer) + following, len(outer) + index))
-                        invalid = sum(invalid_face(face, vertices) for face in faces)
-                        cost = sum(math.dist(flat.vertices[first], flat.vertices[second]) for first, second in zip(outer, aligned))
-                        candidates.append((invalid, cost, vertices, faces))
-                best = min(candidates, key=lambda candidate: candidate[:2])
-                if best[0]:
-                    raise ValueError("plane initialization could not align hole boundaries into valid quads")
-                _, _, vertices, faces = best
+            def intersects(first, second, third, fourth):
+                values = (orientation(first, second, third), orientation(first, second, fourth), orientation(third, fourth, first), orientation(third, fourth, second))
+                if values[0] * values[1] < 0 and values[2] * values[3] < 0:
+                    return True
+                return (abs(values[0]) <= 1e-12 and on_segment(first, second, third)) or (abs(values[1]) <= 1e-12 and on_segment(first, second, fourth)) or (abs(values[2]) <= 1e-12 and on_segment(third, fourth, first)) or (abs(values[3]) <= 1e-12 and on_segment(third, fourth, second))
+
+            def edges(points):
+                return [(points[index], points[(index + 1) % len(points)]) for index in range(len(points))]
+
+            def simple_boundary(points):
+                if any(math.dist(first, second) <= 1e-12 for first, second in edges(points)):
+                    return False
+                boundary = edges(points)
+                for first_index, (first, second) in enumerate(boundary):
+                    for second_index in range(first_index + 1, len(boundary)):
+                        if second_index == first_index + 1 or (first_index == 0 and second_index == len(boundary) - 1):
+                            continue
+                        third, fourth = boundary[second_index]
+                        if intersects(first, second, third, fourth):
+                            return False
+                return True
+
+            def contained(point, polygon):
+                inside = False
+                for first, second in edges(polygon):
+                    if (first[1] > point[1]) != (second[1] > point[1]):
+                        crossing_x = first[0] + (point[1] - first[1]) * (second[0] - first[0]) / (second[1] - first[1])
+                        if crossing_x > point[0]:
+                            inside = not inside
+                return inside
+
+            if not simple_boundary(outer_points) or not simple_boundary(inner_points):
+                raise ValueError("plane initialization could not align hole boundaries into valid quads")
+            if any(intersects(first, second, third, fourth) for first, second in edges(outer_points) for third, fourth in edges(inner_points)) or not contained(inner_points[0], outer_points):
+                raise ValueError("plane initialization could not align hole boundaries into valid quads")
+            if len(inner_points) != len(outer_points):
+                lengths = [math.dist(first, second) for first, second in edges(inner_points)]
+                total = sum(lengths)
+                if total <= 0:
+                    raise ValueError("plane initialization requires a non-degenerate hole boundary")
+                resampled = []
+                for sample in range(len(outer_points)):
+                    target = total * sample / len(outer_points)
+                    cursor = 0.0
+                    for segment, length in enumerate(lengths):
+                        if target <= cursor + length:
+                            ratio = (target - cursor) / length if length else 0.0
+                            resampled.append(lerp(inner_points[segment], inner_points[(segment + 1) % len(inner_points)], ratio))
+                            break
+                        cursor += length
+                inner_points = resampled
+
+            def invalid_face(face, vertices):
+                points = [vertices[index] for index in face]
+                return any(math.dist(points[index], points[(index + 1) % 4]) <= 1e-12 for index in range(4)) or signed_area(face, vertices) <= 0 or intersects(points[0], points[1], points[2], points[3]) or intersects(points[1], points[2], points[3], points[0])
+
+            def crossed_mesh(vertices, faces):
+                mesh_edges = sorted({Mesh.edge_key(face[index], face[(index + 1) % 4]) for face in faces for index in range(4)})
+                for first, second in combinations(mesh_edges, 2):
+                    if set(first) & set(second):
+                        continue
+                    if intersects(vertices[first[0]], vertices[first[1]], vertices[second[0]], vertices[second[1]]):
+                        return True
+                return False
+
+            candidates = []
+            for oriented in (inner_points, list(reversed(inner_points))):
+                for shift in range(len(oriented)):
+                    aligned = oriented[shift:] + oriented[:shift]
+                    vertices = outer_points + aligned
+                    faces = []
+                    for index in range(len(outer_points)):
+                        following = (index + 1) % len(outer_points)
+                        faces.append((index, following, len(outer_points) + following, len(outer_points) + index))
+                    invalid = sum(invalid_face(face, vertices) for face in faces)
+                    cost = sum(math.dist(first, second) for first, second in zip(outer_points, aligned))
+                    candidates.append((invalid, cost, vertices, faces))
+            for invalid, _, vertices, faces in sorted(candidates, key=lambda candidate: candidate[:2]):
+                if invalid or crossed_mesh(vertices, faces):
+                    continue
                 result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
                 result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
                 return result
+            raise ValueError("plane initialization could not align hole boundaries into valid quads")
         remaining = sorted(
             {index for face in flat.faces for index in face} - set(outer),
             key=lambda index: math.atan2(
