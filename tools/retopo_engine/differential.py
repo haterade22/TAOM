@@ -215,6 +215,7 @@ def summary(mesh):
         "uv_bounds": uv_bounds,
         "uv_name": mesh.uv_name,
         "attributes": sorted(mesh.attributes),
+        "attribute_values": mesh.attributes,
         "sample_vertices": mesh.vertices[:12],
         "sample_faces": mesh.faces[:12],
         "sample_uv": mesh.uv[:12],

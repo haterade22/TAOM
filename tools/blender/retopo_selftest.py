@@ -5,6 +5,7 @@ import traceback
 from pathlib import Path
 
 import bpy
+from mathutils import Matrix
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -198,6 +199,23 @@ def main():
         assert transformed_output.matrix_world == source.matrix_world
         assert min(loop.uv.x for loop in transformed_output.data.uv_layers.active.data) >= 0.25
         assert min(loop.uv.y for loop in transformed_output.data.uv_layers.active.data) >= 0.25
+        settings.only_patterns = True
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert bpy.context.active_object.matrix_world == Matrix.Identity(4)
+        settings.only_patterns = False
+        settings.output_generated_planes = True
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert bpy.context.active_object.matrix_world == Matrix.Identity(4)
+        settings.output_generated_planes = False
+        point_guides = transformed_guide.data.attributes.new(name="point_guide", type="BOOLEAN", domain="POINT")
+        for index, item in enumerate(point_guides.data):
+            item.value = index % 2 == 0
+        activate(transformed_guide)
+        assert bpy.ops.taom.mirror_guides(axis="x") == {"FINISHED"}
+        mirrored = bpy.context.active_object
+        assert "point_guide" in mirrored.data.attributes
+        assert len(mirrored.data.attributes["point_guide"].data) == len(mirrored.data.vertices)
+        assert sum(item.value for item in mirrored.data.attributes["point_guide"].data) > 0
         return {
             "status": "ok",
             "flatten_vertices": len(flat.data.vertices),

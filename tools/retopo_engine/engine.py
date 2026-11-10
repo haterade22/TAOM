@@ -256,10 +256,39 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                         result.vertices.append(mesh.vertices[old])
                         for name, values in result.attributes.items():
                             values.append(values[old])
-                    target_faces = fan if len(group) == 2 and fan_root != preserved_root else group
+                    target_faces = fan if len(incident) <= 2 and fan_root != preserved_root else group
                     for face_index in target_faces:
                         result.faces[face_index] = tuple(replacements.get(index, index) for index in result.faces[face_index])
+    edge_attributes = {name: {} for name in mesh.edge_attributes}
+    for face_index, new_face in enumerate(result.faces):
+        original_face = mesh.faces[face_index]
+        for corner, first in enumerate(original_face):
+            second = original_face[(corner + 1) % len(original_face)]
+            original_edge = Mesh.edge_key(first, second)
+            new_edge = Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
+            for name, values in mesh.edge_attributes.items():
+                if original_edge in values:
+                    edge_attributes[name][new_edge] = values[original_edge]
+    result.edge_attributes = edge_attributes
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
+    used = {index for face in result.faces for index in face} | {index for edge in result.lines for index in edge}
+    original_vertex_count = len(result.vertices)
+    ordered = sorted(used)
+    remap = {old: new for new, old in enumerate(ordered)}
+    result.vertices = [result.vertices[index] for index in ordered]
+    result.faces = [tuple(remap[index] for index in face) for face in result.faces]
+    result.lines = [tuple(remap[index] for index in edge) for edge in result.lines]
+    for name, values in result.attributes.items():
+        if len(values) == original_vertex_count:
+            result.attributes[name] = [values[index] for index in ordered]
+    result.edge_attributes = {
+        name: {
+            Mesh.edge_key(remap[first], remap[second]): value
+            for (first, second), value in values.items()
+            if first in remap and second in remap
+        }
+        for name, values in result.edge_attributes.items()
+    }
     return result, bad_edges
 
 
@@ -890,17 +919,22 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
     faces = []
     uv = []
     lookup = {}
+    group_edges = {}
     cursor = 0
     for face_index, face in enumerate(mesh.faces):
+        group = face_values[face_index]
         new_face = []
         for corner, old in enumerate(face):
-            key = (old, face_values[face_index])
+            key = (old, group)
             if key not in lookup:
                 lookup[key] = len(vertices)
                 vertices.append(mesh.vertices[old])
             new_face.append(lookup[key])
             uv.append(mesh.uv[cursor + corner])
         faces.append(tuple(new_face))
+        for index, first in enumerate(new_face):
+            edge = Mesh.edge_key(first, new_face[(index + 1) % len(new_face)])
+            group_edges.setdefault(group, set()).add(edge)
         cursor += len(face)
     result = Mesh(vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name)
     result.attributes = {name: list(values) for name, values in mesh.attributes.items()}
@@ -912,7 +946,8 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
         for (first, second), value in values.items():
             for group in set(endpoint_groups.get(first, {})) & set(endpoint_groups.get(second, {})):
                 edge = Mesh.edge_key(endpoint_groups[first][group], endpoint_groups[second][group])
-                result.edge_attributes[name][edge] = value
+                if edge in group_edges.get(group, set()):
+                    result.edge_attributes[name][edge] = value
     return result
 
 

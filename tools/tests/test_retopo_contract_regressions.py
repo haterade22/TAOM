@@ -201,11 +201,30 @@ class ContractRegressionTests(unittest.TestCase):
             vertices=[(index, 0, 0) for index in range(12)],
             faces=[(0, 1, 3, 2), (1, 0, 4, 5), (0, 2, 10, 4), (0, 1, 7, 6), (1, 0, 8, 9), (0, 6, 11, 8), (6, 7, 8, 9)],
         )
+        mesh.edge_attributes["crease_edge"] = {edge: 0.5 for edge in mesh.edges()}
         result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], engine.non_manifold_edges(result))
         self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
+        self.assertTrue(set(result.edge_attributes["crease_edge"]) <= set(result.edges()))
         for first, second in ((3, 4), (3, 5), (4, 5)):
-            self.assertTrue(set(result.faces[first]) & set(result.faces[second]), (first, second))
+            first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[first],) for index in range(4)}
+            second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
+            self.assertTrue(first_edges & second_edges, (first, second))
+
+    def test_split_edge_repair_keeps_single_incident_sheets_connected(self):
+        mesh = Mesh(
+            vertices=[(index, 0, 0) for index in range(14)],
+            faces=[(0, 1, 2, 3), (0, 3, 4, 5), (1, 0, 6, 7), (0, 6, 8, 9), (0, 1, 10, 11), (0, 11, 12, 13)],
+        )
+        mesh.edge_attributes["crease_edge"] = {edge: 0.5 for edge in mesh.edges()}
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        self.assertEqual([0, 1], [index for index, face in enumerate(result.faces) if 0 in face])
+        self.assertTrue(set(result.edge_attributes["crease_edge"]) <= set(result.edges()))
+        for first, second in ((0, 1), (2, 3), (4, 5)):
+            first_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[first],) for index in range(4)}
+            second_edges = {Mesh.edge_key(face[index], face[(index + 1) % len(face)]) for face in (result.faces[second],) for index in range(4)}
+            self.assertTrue(first_edges & second_edges, (first, second))
 
     def test_split_edge_repair_splits_even_when_all_fans_are_connected(self):
         mesh = Mesh(
@@ -220,6 +239,15 @@ class ContractRegressionTests(unittest.TestCase):
         mesh = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0)] + [(index, 2, 0) for index in range(2, 8)],
             faces=[(0, 1, 3, 2), (1, 0, 2, 4), (0, 1, 4, 5), (1, 0, 5, 6), (4, 5, 7, 6)],
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
+
+    def test_adjacent_bad_edges_leave_no_unused_vertices(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 1, 1), (0, 1, -1)],
+            faces=[(0, 1, 2, 3), (2, 1, 0, 4), (0, 1, 2, 5)],
         )
         result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], engine.non_manifold_edges(result))
@@ -249,12 +277,26 @@ class ContractRegressionTests(unittest.TestCase):
         guide.attributes["point_guide"] = [True, False, False, True]
         mirrored = engine.mirror_guides(guide, axes=("x",))
         self.assertEqual(len(mirrored.vertices), len(mirrored.attributes["point_guide"]))
+        self.assertEqual(2, sum(mirrored.attributes["point_guide"]))
+        self.assertTrue(all(value > 0 for value in mirrored.edge_attributes["bevel_weight_edge"].values()))
+        self.assertTrue(all(value > 0 for value in mirrored.edge_attributes["crease_edge"].values()))
         self.assertEqual(7, len(mirrored.edge_attributes["bevel_weight_edge"]))
         self.assertEqual(7, len(mirrored.edge_attributes["crease_edge"]))
         separated = engine.retopologize(
             differential.curved_grid(), guide, RetopoSettings(fit_uv=False, separate_parts=True)
         )
         self.assertEqual(16, len(separated.edge_attributes["bevel_weight_edge"]))
+        self.assertTrue(all(value > 0 for value in separated.edge_attributes["bevel_weight_edge"].values()))
+
+    def test_separation_edge_attributes_reference_only_real_group_edges(self):
+        mesh = Mesh(
+            vertices=[(index, 0, 0) for index in range(13)],
+            faces=[(0, 1, 2, 3), (0, 7, 8, 9), (1, 10, 11, 12)],
+            uv=[(0, 0)] * 12,
+            edge_attributes={"bevel_weight_edge": {(0, 1): 1.0}},
+        )
+        result = engine._separate(mesh, [0, 1, 1])
+        self.assertTrue(set(result.edge_attributes["bevel_weight_edge"]) <= set(result.edges()))
 
     def test_empty_guides_are_rejected_without_initialization(self):
         with self.assertRaisesRegex(ValueError, "at least one quad"):

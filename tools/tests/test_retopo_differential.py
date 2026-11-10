@@ -109,7 +109,8 @@ class RetopoDifferentialTests(unittest.TestCase):
                     self.assertEqual({"4": actual["faces"]}, actual["face_sizes"])
                     self.assertGreaterEqual(actual["vertices"], 15)
                     if case["name"] == "density_sharp_high":
-                        self.assertIn(actual["faces"], {60, 62})
+                        self.assertEqual(62, expected["faces"])
+                        self.assertEqual(60, actual["faces"])
                     else:
                         self.assertEqual(expected["faces"], actual["faces"])
                     self.assertEqual(expected["components"], actual["components"])
@@ -119,11 +120,16 @@ class RetopoDifferentialTests(unittest.TestCase):
                     self.assertTrue(all(math.isfinite(value) for coordinate in actual["geometry_uv"] for value in coordinate))
                     self.assertEqual(expected["uv_name"], actual["uv_name"])
                     self.assertTrue({"pattern_id", "part_id", "retopo_plane_id"} <= set(actual["attributes"]))
-                    surface = engine.SourceSurface(case["source"])
+                    for name in ("pattern_id", "part_id", "retopo_plane_id"):
+                        self.assertEqual(len(actual["geometry_faces"]), len(actual["attribute_values"][name]))
+                    self.assertEqual(actual["components"], len(set(actual["attribute_values"]["retopo_plane_id"])))
+                    self.assertEqual({0}, set(actual["attribute_values"]["pattern_id"]))
+                    self.assertEqual({0}, set(actual["attribute_values"]["part_id"]))
                     cursor = 0
                     for face in actual["geometry_faces"]:
                         for vertex in face:
-                            position, _, _ = surface.project(actual["geometry_uv"][cursor])
+                            u, v = actual["geometry_uv"][cursor]
+                            position = (u - 0.5, v - 0.5, 0.2 - 0.2 * (abs(u - 0.5) + abs(v - 0.5)))
                             for axis in range(3):
                                 self.assertAlmostEqual(position[axis], actual["geometry_vertices"][vertex][axis], delta=0.00001)
                             cursor += 1

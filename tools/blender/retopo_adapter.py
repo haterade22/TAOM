@@ -116,18 +116,32 @@ def combine_objects(objects, name="Combined guides"):
     vertices = []
     faces = []
     lines = []
+    attributes = {}
     edge_attributes = {}
+    attribute_defaults = {
+        "source_position": (0.0, 0.0, 0.0),
+        "pattern_center": (0.0, 0.0, 0.0),
+        "source_vertex": 0,
+        "source_part": 0,
+        "pattern_id": 0,
+        "point_guide": False,
+        "open_seam": False,
+        "simplify_on": False,
+    }
     for obj in objects:
         mesh = mesh_from_blender(obj)
         offset = len(vertices)
         vertices.extend(tuple(obj.matrix_world @ vertex.co) for vertex in obj.data.vertices)
         faces.extend(tuple(index + offset for index in face) for face in mesh.faces)
         lines.extend(tuple(index + offset for index in edge) for edge in mesh.lines)
+        for attribute_name, default in attribute_defaults.items():
+            target = attributes.setdefault(attribute_name, [])
+            target.extend(mesh.attributes.get(attribute_name, [default] * len(mesh.vertices)))
         for attribute_name, values in mesh.edge_attributes.items():
             target = edge_attributes.setdefault(attribute_name, {})
             for (first, second), value in values.items():
                 target[Mesh.edge_key(first + offset, second + offset)] = value
-    return Mesh(vertices=vertices, faces=faces, lines=lines, edge_attributes=edge_attributes)
+    return Mesh(vertices=vertices, faces=faces, lines=lines, attributes=attributes, edge_attributes=edge_attributes)
 
 
 def replace_mesh(obj, mesh):
