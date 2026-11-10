@@ -38,6 +38,7 @@
       <Icon id="10028" material_name="taom_banners_packed_alpha_02" texture_index="12" />
       <Icon id="10029" material_name="taom_banners_packed_alpha_02" texture_index="13" />
       <Icon id="10030" material_name="taom_banners_packed_alpha_02" texture_index="14" />
+      <Icon id="31006" material_name="taom_banners_packed_alpha_02" texture_index="15" />
     </BannerIconGroup>
 
     <BannerIconGroup id="105" name="{=!}TAOM Gondor Ornaments 01" is_pattern="false">
