@@ -282,6 +282,20 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([], engine.non_manifold_edges(result))
         self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
 
+    def test_triangle_split_preserves_unrelated_valid_sheet(self):
+        mesh = Mesh(
+            vertices=[
+                (0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1),
+                (10, 0, 0), (11, 0, 0), (10, 1, 0), (11, 1, 0),
+            ],
+            faces=[(0, 1, 2), (1, 0, 3), (0, 1, 4), (5, 6, 8), (6, 7, 8)],
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        self.assertEqual(13, len(result.vertices))
+        self.assertEqual(14, len(result.edges()))
+        self.assertTrue(set(result.faces[3]) & set(result.faces[4]))
+
     def test_inspection_without_repair_preserves_loose_data_and_debug_indices(self):
         mesh = Mesh(
             vertices=[(9, 9, 9), (0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 1, 1), (0, -1, 0)],

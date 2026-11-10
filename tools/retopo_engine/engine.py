@@ -197,7 +197,22 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         return result, bad_edges
 
     if all(len(face) == 3 for face in mesh.faces):
-        for face_index, face in enumerate(mesh.faces):
+        incident_faces = {
+            face_index
+            for face_index, face in enumerate(mesh.faces)
+            if any(Mesh.edge_key(vertex, face[(index + 1) % 3]) in bad_edges for index, vertex in enumerate(face))
+        }
+        components = {}
+        for face_index, component in _part_faces(mesh).items():
+            components.setdefault(component, []).append(face_index)
+        split_faces = {
+            face_index
+            for component_faces in components.values()
+            if all(face_index in incident_faces for face_index in component_faces)
+            for face_index in component_faces
+        }
+        for face_index in sorted(split_faces):
+            face = mesh.faces[face_index]
             replacements = {}
             for old in face:
                 replacements[old] = len(result.vertices)
