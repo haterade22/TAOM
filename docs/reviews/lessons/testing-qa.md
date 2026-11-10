@@ -2642,3 +2642,11 @@ The regroup release fired anywhere once no enemy was near, because the producer 
 - **Why missed:** the skip was read as a failed setup; the NOT REACHED meaning in `ingame-verdicts.md` was not reread, and the manifest was not run through `judge_segment`.
 - **Prevent:** match only the pass line in `reached`, keep skip lines out of `fail` (the `1011.toml` shape), and run `judge_segment` on a synthetic skip, pass and fault line before the manifest ships.
 - **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 4.
+
+### Stage a field-backed engine getter on a bare object before falling back to a source pin (#1114, 2026-11-10)
+
+The first `OfOwnClan` test only checked the source text for `return Of(clan);`. It caught a revert, but not a wrong input (`Clan.PlayerClan`), and it broke on a harmless rename. The class summary said a `Hero` cannot be built in the test process, yet `Hero.Clan`, `Clan.Kingdom`, `Clan.Culture` and `Hero.Culture` all read fields, so an uninitialized object with those fields set runs the real code. A second defect: an older test sliced the source from `OfHero(` to `OfCharacter(`, and when `OfOwnClan` was inserted between them, two assertions matched the new method's copy of the same text.
+
+- **Why missed:** the test copied its siblings and the summary's claim instead of reading which getters are field-backed; nobody reread the slice windows when a method was inserted.
+- **Prevent:** read the getter chain with `taom-src`; where it ends in fields, stage the object with `FormatterServices.GetUninitializedObject` and set the fields (`FactionSidesTests.LordServing`), and add a contrast case so the staging itself is proven. A source slice ends at the next method's header, never two methods down. Prove either kind with a mutation run.
+- **Source:** [rca-sworn-anew-own-clan-2026-11-10.md](../rca-sworn-anew-own-clan-2026-11-10.md), rows 1 and 2.

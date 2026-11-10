@@ -44,7 +44,7 @@ Three thin entry points over one service, `SwornAnewService`, which is pure over
 | Free lord and Evil player realm, or Evil lord and Free player realm | false |
 | Anything else, a Neutral side on either end included | true |
 
-- **Sides** come only from `FactionSides` (`OfHero(hero)` for the lord, `OfPlayer()` for the player), each the id and culture of one entity, resolved with `IAlignmentService.ResolveSide(SideIds)`. The Free-against-Evil test is `FactionSideRules.AreOpposed` (Main/Features/Execution, beside `FactionSide`), shared with gifts, hires, tournaments and battle thanks; `AreEnemyAlignments` is never used, because it calls Neutral the enemy of everyone.
+- **Sides** come only from `FactionSides` (`OfOwnClan(hero)` for the lord, `OfPlayer()` for the player), each the id and culture of one entity. The lord is sided by their own clan, never by the realm they serve, as Kingdom Allegiance sides lords (#1114): an orc lord whose clan serves Gondor reads Evil, a Free lord serving a Neutral realm reads Free, and a Neutral lord (a Khand clan, say) serving Mordor reads Neutral, so any player may now ask them. The player is sided by the player's realm. Each pair is resolved with `IAlignmentService.ResolveSide(SideIds)`. The Free-against-Evil test is `FactionSideRules.AreOpposed` (Main/Features/Execution, beside `FactionSide`), shared with gifts, hires, tournaments and battle thanks; `AreEnemyAlignments` is never used, because it calls Neutral the enemy of everyone.
 - **Lore** reuses the uncapturable registry; there is no new list and no new JSON. A hero the registry's exclude list hands back to vanilla capture is therefore not lore-locked here either.
 - **A player in mercenary service** gets the same answer as vanilla: no extra check.
 - **After the lord joins:** the engine releases them for the new kingdom. Good Deeds rewards only `ReleasedByChoice`, so there is no second reward, and Hard Questions clears its state on a release as for any other.
@@ -95,7 +95,7 @@ With the switch off, the model answers vanilla for every hero (a prisoner never 
 ## Dependencies
 
 - `IUncapturableRegistry` (UncapturableHeroes, registered in `UncapturableHeroesIoC`): who can never be taken, hence never asked.
-- `IAlignmentService` (Execution): the side of a realm.
+- `IAlignmentService` (Execution): the side of the lord's own clan and of the player's realm.
 - `ICoopSessionProvider`, `IDedicatedServerProvider` (CoopInterop and the kernel): the stand-down gate.
 - `FactionSides` (Adapters): the only place a `SideIds` pair is built.
 
@@ -108,7 +108,7 @@ With the switch off, the model answers vanilla for every hero (a prisoner never 
 - `SwornAnewBehaviorTests` (needs the game): a defection of the partner's clan queues the commit once, every other kingdom change asks the adapter nothing, the switch, the clan check and faults.
 - `PartyScreenCommitTests`: only the shared helper forces a party screen done, each adapter commits through it, and the helper checks the screen's right owner is the main party and skips the ransom case before it forces Done.
 - `SwornAnewSettingsProviderTests`: the default, the fallback before MCM, live reads, the group name and order.
-- `SwornAnewWiringTests`: the module listed once, the single-owner files untouched, one model, one patch, one behavior built per campaign, and the postfix vetoing a refused prisoner through the container's registrations. The one-filler-per-slot scan is the generic `FeatureModulesTests.EveryDeclaredGameModel_IsTheOnlyTaomFileFillingItsSlot`.
+- `SwornAnewWiringTests`: the module listed once, the single-owner files untouched, one model, one patch, one behavior built per campaign, and the postfix vetoing a refused prisoner through the container's registrations, and the adapter siding the lord by `OfOwnClan` (`FactionSidesTests` pins that `OfOwnClan` never reads the realm). The one-filler-per-slot scan is the generic `FeatureModulesTests.EveryDeclaredGameModel_IsTheOnlyTaomFileFillingItsSlot`.
 - `FactionSideRulesTests`: all nine pairs. `CampaignHotPathSettingsProvidersTests` lists the settings provider.
 - `SettingsFingerprintTests` and `ServerSettingsSchemaTests` carry the new setting in their counts.
 - The behavior has its co-op row in [coop-interop.md](coop-interop.md).
@@ -128,6 +128,7 @@ With the switch off, the model answers vanilla for every hero (a prisoner never 
 - **On the ransom screen the offer is not made.** Hard Questions offers no lines on the ransom screen since #1001.
 - **Lore is the uncapturable registry's, by design.** Sauron and the Nine are covered; a lord a future list adds there is covered too; a lord who is not on it but belongs to a lore group is not.
 - **Co-op:** a peer that defers to the host, and a dedicated server, get vanilla's behavior from the model and the commit; the postfix's veto of the prisoner line still runs on every peer, because it hides a line only on that machine. BannerlordCoop does not disable `LordDefectionCampaignBehavior` (its `LordBarterPatch` routes the defection barter to the server), so the host's flow is the single-player flow; that has not been exercised in a session.
+- **A clan the game creates during play takes its settlement's culture.** A companion granted a fief (`Clan.CreateCompanionToLordClan`) and a town's rebels (`Clan.CreateSettlementRebelClan`) get a new clan with that settlement's culture, so its lord is sided by the settlement's people. It matters only once such a clan has left the player's realm for another and its lord is in the player's custody. Kingdom Allegiance reads these clans the same way.
 - **Persuasion can fail.** The option opens vanilla's persuasion, so a lord can refuse, and vanilla's cooldown on a refused attempt applies.
 
 ## In-game Checklist
@@ -139,7 +140,7 @@ Setup: a campaign with cheat mode on; `campaign.declare_war` to put the player a
 3. **Party screen, then Escape.** Open the party screen, talk to the prisoner from it, persuade them, end the conversation, then close the party screen with Escape. With the commit, Escape closes the screen with no "cancel changes" prompt, and the lord stays released and in the kingdom; if they return to the prison roster, or the prompt appears, the deferred commit failed.
 4. **Dunlending and Easterling.** Capture a Dunlending lord and an Easterling lord and ask both. As a Free player, both should be refused (the option absent) in the diplomacy menu and on the ruler's prisoner line. As a Mordor or Isengard player, both should be offered.
 5. **Gondor lord, Mordor player.** Play a Mordor ruler, capture a Gondor lord: no diplomacy option and no ruler's prisoner line. Then play a Gondor ruler and capture a Mordor lord: the same.
-6. **Neutral.** Capture a lord of Shaghana or Abanissa (Neutral; Harad, the `aserai` culture, is Evil) as a Free player and as an Evil player: offered in both.
+6. **Neutral.** Capture a lord of a Shaghana or Abanissa clan, whatever realm they serve (Neutral; Harad, the `aserai` culture, is Evil) as a Free player and as an Evil player: offered in both.
 7. **Lore heroes.** As an Evil player, capture a Nazgul who leads a clan and is not a ruler (the Uncapturable Heroes switch off, so the Nine can be captured): no option, no line. Sauron is refused earlier, as the ruler of his kingdom.
 8. **Custody.** Hold a lord in a dungeon of a settlement your clan owns, and talk to them there: offered. A lord held by another clan's party or settlement: not offered.
 9. **Vassal and ruler.** Ask as a vassal of a kingdom (the diplomacy option) and as the ruler (both options, plus the ruler's prisoner line, which vanilla requires a ruler for).
@@ -150,10 +151,12 @@ Setup: a campaign with cheat mode on; `campaign.declare_war` to put the player a
 14. **Co-op host.** If a session is available: the host offers the option; a client does not.
 15. **Ransom broker screen.** Hold two prisoners besides the lord and open the ransom broker's sell-prisoners screen. If the screen allows a conversation, talk to the lord from it: neither the diplomacy option nor the ruler's prisoner line is offered. Leave the screen with Escape: the other prisoners are sold once, not twice (check the gold), and the screen is not committed.
 16. **Ransom screen with nothing for sale, and the alley screen.** Open each, talk to the lord from it: the offer is still absent. Then use a gift from the same screen (give an item), move one troop and press Escape: the item stays gone.
+17. **A lord whose own people differ from their realm.** In a fresh campaign, give a Gondor clan an Evil culture with `campaign.set_clan_culture [ClanName] | mordor` (the cheat takes a clan or culture id, or its name), which stands for an orc clan serving Gondor. Capture its lord as a Rohan or other Free player: not offered. Capture them as a Mordor or Isengard player: offered. Then give a Mordor clan a Neutral culture (Khand's, `battania`) and capture its lord as a Free player: offered.
 
 ## Changelog
 
 - 2026-10-23: first version (#869). The defection model, the prisoner line postfix (Patch116) and the deferred party-screen commit, behind one MCM switch at `GroupOrder = 71`.
+- 2026-11-10 (#1114): the lord is sided by their own clan (`FactionSides.OfOwnClan`), not their realm, the same as Kingdom Allegiance (#1111).
 
 ## GitHub Issue
 
