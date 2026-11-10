@@ -4,6 +4,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.Execution;
+using TAOM.Features.WarPledge;
 
 namespace TAOM.Features.Diplomacy;
 
@@ -14,16 +15,20 @@ public class DiplomacyService : IDiplomacyService
     private readonly IModLogger _logger;
     private readonly Dictionary<(string, string), AllianceTier> _relationships;
     private readonly List<KingdomRelationship> _permanentRelationships;
+    private readonly WarPledgeStore? _pledges;
 
+    // pledges: optional for the same reason as in AlignmentService; the container always passes the store.
     public DiplomacyService(
         IDiplomacyConfigProvider configProvider,
         IAllianceAdapter allianceAdapter,
         IAlignmentService alignmentService,
-        IModLogger logger)
+        IModLogger logger,
+        WarPledgeStore? pledges = null)
     {
         _allianceAdapter = allianceAdapter;
         _alignmentService = alignmentService;
         _logger = logger;
+        _pledges = pledges;
         _relationships = new Dictionary<(string, string), AllianceTier>();
         _permanentRelationships = new List<KingdomRelationship>();
 
@@ -40,10 +45,25 @@ public class DiplomacyService : IDiplomacyService
         }
     }
 
+    // #1113: a realm that pledged to a side is Hostile to every realm of the other side, so the Full War
+    // declarations and the three peace-block layers treat it as a member. A static Permanent row wins,
+    // and a pair with no pledged realm reads the table alone. The engine asks this on every war check
+    // (TaomDiplomacyModel.IsAtConstantWar), so a campaign without a pledge leaves after one count. Vanilla's
+    // party AI asks it on a worker (MobilePartyAi through FactionManager.IsAtWarAgainstFaction), so this
+    // method only reads: the table is built in the constructor and the store swaps whole maps.
     public AllianceTier GetRelationshipTier(string kingdomAId, string kingdomBId)
     {
         var key = MakeKey(kingdomAId, kingdomBId);
-        return _relationships.TryGetValue(key, out var tier) ? tier : AllianceTier.Neutral;
+        var tier = _relationships.TryGetValue(key, out var listed) ? listed : AllianceTier.Neutral;
+        if (tier == AllianceTier.Permanent || _pledges == null || _pledges.Count == 0)
+            return tier;
+        if (!_pledges.IsPledged(kingdomAId) && !_pledges.IsPledged(kingdomBId))
+            return tier;
+
+        return FactionSideRules.AreOpposed(
+            _alignmentService.GetKingdomSide(kingdomAId), _alignmentService.GetKingdomSide(kingdomBId))
+            ? AllianceTier.Hostile
+            : tier;
     }
 
     // Large enough that base.GetScoreOfStartingAlliance (≈0 for a new player kingdom)

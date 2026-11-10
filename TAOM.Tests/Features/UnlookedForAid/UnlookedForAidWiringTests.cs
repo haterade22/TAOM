@@ -131,21 +131,41 @@ public class UnlookedForAidWiringTests
 
     // IsOwnSide resolves the kingdom's side on the AI worker. AlignmentService's map is written only in its constructor, so
     // its read path may call nothing but the map's TryGetValue, IsNullOrEmpty and itself: a lazy cache write here would be a
-    // concurrent Dictionary write.
+    // concurrent Dictionary write. The one other call is the War Pledge store's TryGetSide (#1113), whose map the main
+    // thread does write; TheWarPledgeReadPath_OnlyReadsItsMap holds that method to the same rule.
     [TestMethod]
     public void TheAlignmentReadPath_OnlyReadsItsMap()
     {
         var type = typeof(TAOM.Features.Execution.AlignmentService);
+        var pledgeRead = typeof(TAOM.Features.WarPledge.WarPledgeStore).GetMethod(nameof(TAOM.Features.WarPledge.WarPledgeStore.TryGetSide))!;
         foreach (var name in new[] { "ResolveSide", "GetKingdomSide", "GetCultureSide", "GetSide" })
         {
             var method = type.GetMethod(name, All)!;
             var calls = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody()!.GetILAsByteArray()).ToArray();
             var other = calls.Where(m => !(m.DeclaringType == type
+                    || m == pledgeRead
                     || (m.Name == "TryGetValue" && m.DeclaringType?.Name == "Dictionary`2")
                     || (m.Name == nameof(string.IsNullOrEmpty) && m.DeclaringType == typeof(string))))
                 .Select(m => m.DeclaringType?.Name + "." + m.Name).ToList();
             Assert.AreEqual(0, other.Count, name + " calls " + string.Join(", ", other));
         }
+    }
+
+    // The store's read path, called from the alignment read path above on the AI worker. The main thread writes a pledge
+    // from the daily tick (which waits for the AI task first, Campaign.RealTick) and from a console command (whose
+    // timing against that task is not known). It may only take the map (a volatile field read, which is no call),
+    // count it and look one id up. That the writers never change a map they have published is pinned in
+    // WarPledgeStoreTests.
+    [TestMethod]
+    public void TheWarPledgeReadPath_OnlyReadsItsMap()
+    {
+        var method = typeof(TAOM.Features.WarPledge.WarPledgeStore).GetMethod(nameof(TAOM.Features.WarPledge.WarPledgeStore.TryGetSide))!;
+        var other = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody()!.GetILAsByteArray())
+            .Where(m => !((m.Name == "TryGetValue" || m.Name == "get_Count") && m.DeclaringType?.Name == "Dictionary`2")
+                        && !(m.Name == nameof(string.IsNullOrEmpty) && m.DeclaringType == typeof(string)))
+            .Select(m => m.DeclaringType?.Name + "." + m.Name).ToList();
+
+        Assert.AreEqual(0, other.Count, "TryGetSide calls " + string.Join(", ", other));
     }
 
     // Both directions: IsSpared(targetParty, party) spares the host from the deciding party, IsSpared(party, targetParty)

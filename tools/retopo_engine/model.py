@@ -69,6 +69,19 @@ class Mesh:
             return "POINT"
         return None
 
+    def resolved_attribute_domains(self) -> dict[str, str]:
+        return {
+            name: domain
+            for name in self.attributes
+            if (domain := self.attribute_domain(name)) is not None
+        }
+
+    def discard_unresolved_attributes(self, names):
+        for name in names:
+            if name in self.attributes:
+                del self.attributes[name]
+                self.attribute_domains.pop(name, None)
+
     def edges(self) -> list[Edge]:
         face_edges = {
             self.edge_key(face[index], face[(index + 1) % len(face)])

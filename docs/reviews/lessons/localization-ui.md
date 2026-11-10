@@ -1532,3 +1532,9 @@ The Arachnophobia Mode hint said "no one can recruit, upgrade into or buy a spid
 - **Why missed:** the hint was written from the plan's goal. Each exception was added later, in code or in the doc's "What Stays" section, and nothing compared the two.
 - **Prevent:** before seeding a hint, read every "stays", "keeps" and "still" in the feature doc and the code comments, and check that the hint excludes each or scopes its claim ("new volunteers", "already exist"). An absolute word ("no one", "never") needs a route table behind it.
 - **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), findings 1 and 3.
+
+### Read a convention from its newest uses, not from the first two that a grep finds (War Pledge, 2026-11-10)
+The MCM name and hint of `WarPledgeEnabled` reached review with no `{=KEY}`. The check behind that was a grep for two old setting names in the language files, which found nothing, and the conclusion that MCM text has no language rows. 35 settings in `TaomSettings.cs` key their name and hint, and the two features before this one (#1110, #1111) did.
+- **Why missed:** the sample was the oldest settings in the file. The `/localize` skill names no case for MCM attributes, so nothing contradicted the sample.
+- **Prevent:** before stating that a convention does not exist, read the three newest instances of the thing: the last settings added to `TaomSettings.cs`, the last rows of the strings file. A new MCM setting keys its name and hint (`{=taom_<feature>_mcm_<name>}` and `..._hint`), then `python tools/harvest_literal_loc_keys.py --apply` and the seed pass register them.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 7.

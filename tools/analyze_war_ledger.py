@@ -12,14 +12,16 @@ parses the space-separated key=value tokens after it:
     t=kingdom cid day phase k side ai war towns castles pts base loss cap str pris tier vr pe
     t=side    cid day side pts base alive
     t=share   cid day share                (free / (free + evil), "na" when both are 0)
-    t=event   cid day ev=tier|destroyed|chronicle plus that event's own keys
+    t=event   cid day ev=tier|destroyed|chronicle|pledge plus that event's own keys
     t=load    cid day                      (a save was loaded; day is the save's own day)
 
 Rules: an unknown v exits 2; a malformed line is skipped and counted (the first one is printed as a
 WARNING); a save-reload re-emits days, so per campaign (cid) the LAST kingdom line per (day, k), side
 line per (day, side) and share line per day win, and exact repeated events collapse to one. Chronicle
 resolutions (ev=chronicle, one per event outcome: Occurred, Held, Fell, Lapsed or Skipped) are listed by
-day and counted per outcome, one per event id: the last line read, even an exact repeat of an earlier one. Logs are
+day and counted per outcome, one per event id: the last line read, even an exact repeat of an earlier one. A
+realm that pledged to a side (ev=pledge, War Pledge) is listed once, by the last line read for its kingdom; from
+that day its kingdom lines carry the new side, so the share, the side totals and the net change include it. Logs are
 read oldest first (by the taom_debug_ name stamp, else file time), so the newer process wins whatever
 the argument order. A load is a rewind: a t=load line at day S drops every stored record of that cid
 (kingdom, side and share lines, events, chronicle resolutions) with a day after S, which belongs to the
@@ -76,8 +78,13 @@ EVENT_KEYS = {
     'tier': ('k', 'from', 'to', 'loss'),
     'destroyed': ('k',),
     'chronicle': ('id', 'outcome'),
+    'pledge': ('k', 'side', 'by'),
 }
 SIDES = ('free', 'evil', 'neutral')
+# War Pledge (#1113): a Neutral realm joins the Free or the Evil side; from that day its kingdom
+# lines carry the new side, so the side totals and the share move with it.
+PLEDGE_SIDES = ('free', 'evil')
+PLEDGE_NOTE = 'note: a realm that pledged counts for its new side from the day it joined'
 
 BAND_LOW, BAND_HIGH = 0.4, 0.6
 LEAD_HI, LEAD_LO = 0.52, 0.48
@@ -107,11 +114,17 @@ class Campaign:
         self.events = []     # de-duplicated, in first-read order
         self._event_seen = set()  # event keys already in self.events
         self._chronicle_reads = []  # (day, id, outcome), repeats included, in read order
+        self._pledge_reads = []     # (day, k, side, by), repeats included, in read order
 
     @property
     def chronicle_last(self):
         """Event id -> (day, outcome) of the last chronicle line read, repeats included."""
         return {eid: (day, outcome) for day, eid, outcome in self._chronicle_reads}
+
+    @property
+    def pledge_last(self):
+        """Kingdom -> (day, side, by) of the last pledge line read, repeats included."""
+        return {k: (day, side, by) for day, k, side, by in self._pledge_reads}
 
     def days(self):
         found = {d for d, _ in self.kingdoms} | {d for d, _ in self.sides} | set(self.shares)
@@ -120,6 +133,8 @@ class Campaign:
     def add_event(self, day, fields):
         if fields['ev'] == 'chronicle':
             self._chronicle_reads.append((day, fields['id'], fields['outcome']))
+        if fields['ev'] == 'pledge':
+            self._pledge_reads.append((day, fields['k'], fields['side'], fields['by']))
         key = _event_key(fields)
         if key not in self._event_seen:
             self._event_seen.add(key)
@@ -133,6 +148,7 @@ class Campaign:
         self.events = [(d, f) for d, f in self.events if d <= day]
         self._event_seen = {_event_key(f) for _, f in self.events}
         self._chronicle_reads = [r for r in self._chronicle_reads if r[0] <= day]
+        self._pledge_reads = [r for r in self._pledge_reads if r[0] <= day]
 
 
 class Parsed:
@@ -208,6 +224,8 @@ def _ingest(parsed, fields):
         keys = EVENT_KEYS.get(fields.get('ev'))
         if keys is None or any(k not in fields for k in keys):
             raise ValueError('bad event')
+        if fields['ev'] == 'pledge' and fields['side'] not in PLEDGE_SIDES:
+            raise ValueError('bad pledge side')
         parsed.campaign(fields['cid']).add_event(day, fields)
     else:
         raise ValueError('unknown t')
@@ -330,8 +348,11 @@ def compute_metrics(camp):
         for day, rec in series:
             cap = rec['cap']
             if cap in ('0', '1'):
-                if prev_cap == '1' and cap == '0' and k not in loss:
-                    loss[k] = day
+                if prev_cap == '1' and cap == '0':
+                    if k not in loss:
+                        loss[k] = day
+                    # Every loss counts for the side the kingdom is on that day: a realm that pledged
+                    # can lose its capital again on its new side.
                     side = rec['side']
                     if side not in loss_side or day < loss_side[side]:
                         loss_side[side] = day
@@ -354,6 +375,9 @@ def compute_metrics(camp):
     m['tiers'] = tiers
 
     m['destroyed'] = sorted((d, f['k']) for d, f in camp.events if f['ev'] == 'destroyed')
+    # One pledge per realm: a reload of the pledge day can replay it for the other side, and the line read
+    # last is the pledge that stood (the rule the chronicle resolutions below use).
+    m['pledges'] = sorted((d, k, side, by) for k, (d, side, by) in camp.pledge_last.items())
     # One resolution per event: a reload from before a resolution replays it, and the line read last is
     # the outcome that stood, even when it repeats an earlier line byte for byte.
     m['chronicle'] = sorted((d, eid, o) for eid, (d, o) in camp.chronicle_last.items())
@@ -412,6 +436,12 @@ def format_report(cid, m):
     else:
         out.append('  none')
     out.append('')
+    out.append('Realms pledged')
+    if m['pledges']:
+        out.extend(f'  day {d}: {k} to {side} ({by})' for d, k, side, by in m['pledges'])
+    else:
+        out.append('  none')
+    out.append('')
     out.append('Fief churn per 10-day bucket (sum of |pts change|; a capture counts for both kingdoms)')
     if m['churn']:
         out.extend(f'  days {b * 10}-{b * 10 + 9}: {v}' for b, v in m['churn'].items())
@@ -430,6 +460,8 @@ def format_report(cid, m):
         out.extend(f'  {s}: {v:+d}' for s, v in m['net_change'].items())
     else:
         out.append('  none')
+    if m['pledges']:
+        out.append(f'  {PLEDGE_NOTE}')
     out.append('')
     out.append('Chronicle outcomes')
     if m['chronicle']:
@@ -461,6 +493,7 @@ def flat_metrics(m):
         ('lead_changes', m['lead_changes']),
         ('earliest_capital_loss', m['earliest_capital_loss']),
         ('kingdoms_destroyed', len(m['destroyed'])),
+        ('realms_pledged', len(m['pledges'])),
         ('churn_total', m['churn_total']),
         ('tier1_days', sum(t['tier1_days'] for t in m['tiers'].values())),
         ('tier2_days', sum(t['tier2_days'] for t in m['tiers'].values())),
@@ -483,6 +516,8 @@ def format_compare(label_a, label_b, ma, mb):
         fa = f'{a:.4f}' if isinstance(a, float) else _fmt(a)
         fb = f'{b:.4f}' if isinstance(b, float) else _fmt(b)
         out.append(f'{name:<24}{fa:>12}{fb:>12}{diff:>12}')
+    if ma['pledges'] or mb['pledges']:
+        out.append(f'{PLEDGE_NOTE} (net_* rows and the share include it)')
     out.append('')
     for label, m in (('A', ma), ('B', mb)):
         out.append(f"target {label}: share {'PASS' if m['target_share_pass'] else 'FAIL'}, "

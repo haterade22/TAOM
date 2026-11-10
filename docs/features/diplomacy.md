@@ -362,6 +362,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-11-10: `GetRelationshipTier` returns `Hostile` for a realm that pledged to a side against a realm of the other side; a static `Permanent` row wins, and a pair with no pledged realm reads `diplomacy.json` alone (War Pledge, #1113, [war-pledge.md](war-pledge.md)).
 - 2026-10-29: Recorded yotthani's Free/Shadow side-boundary report (three gaps, each confirmed in the code, the peace hazard by pair class, the v1.5.6 mercenary seam) and the decision to change no code until 2.0.36 evidence exists.
 - 2026-10-19: Three personal-relations overrides on `TaomDiplomacyModel` (the player's relation stays on the lord named, a larger disband cost for an army's leader, and an heir keeps his own relation), single player only, behind their own MCM group (#862).
 - 2026-10-18: Doc pass for the war rule: the side is checked before the phase, `CausedByKingdomCreation` counts as player-caused, a seventh prefix (`OnCallToWarAgreementProposedByPlayerKingdom`) keeps vetoed call-to-war notices off a player kingdom's map, and the enlistment edge and the lord-dialogue sponsor gap are recorded (#818).
