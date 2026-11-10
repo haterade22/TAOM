@@ -26,7 +26,8 @@ differ.
 ## 3. The metric
 
 The median of at least 5 runs per side, A and B alternated (A, B, A, B), never one run. The tool
-also flags rows from mixed scenes and a metric with fewer than 5 values in a group as inconclusive.
+also flags rows from mixed scenes, a metric with fewer than 5 values in a group, and a group that
+holds two values of a shown setting (`settings` line: shadow type, filtering, quality) as inconclusive.
 Capture with:
 
 ```

@@ -173,6 +173,8 @@ public class MissionTickProfilerBehaviorTests
         _options.VSyncOption.Returns(2);
         _options.TextureQualityOption.Returns(3);
         _options.ShadowmapResolutionOption.Returns(4);
+        _options.ShadowmapTypeOption.Returns(6);
+        _options.ShadowmapFilteringOption.Returns(7);
         _options.ParticleDetailOption.Returns(5);
         _options.RagdollOption.Returns(1);
         var behavior = Create();
@@ -181,7 +183,7 @@ public class MissionTickProfilerBehaviorTests
         behavior.OnMissionTick(0.016f);
 
         var context = Lines(nameof(IModLogger.LogInfo)).Single(l => l.StartsWith("[PerfContext] "));
-        StringAssert.Contains(context, " frameLimiter=144 vsync=2 textureQuality=3 shadowQuality=4 particleDetail=5 ragdolls=1 ");
+        StringAssert.Contains(context, " frameLimiter=144 vsync=2 textureQuality=3 shadowQuality=4 shadowType=6 shadowFiltering=7 particleDetail=5 ragdolls=1 ");
     }
 
     [TestMethod]

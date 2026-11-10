@@ -59,6 +59,8 @@ internal static class PerfContextReader
             Safe("vsync", () => options.VSyncOption, -1),
             Safe("textureQuality", () => options.TextureQualityOption, -1),
             Safe("shadowQuality", () => options.ShadowmapResolutionOption, -1),
+            Safe("shadowType", () => options.ShadowmapTypeOption, -1),
+            Safe("shadowFiltering", () => options.ShadowmapFilteringOption, -1),
             Safe("particleDetail", () => options.ParticleDetailOption, -1),
             Safe("ragdolls", () => options.RagdollOption, -1),
             memLoad,
