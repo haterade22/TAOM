@@ -1898,3 +1898,16 @@ The first War Pledge text said the daily tick writes a pledge while the party AI
 - **Why missed:** the claim was written from a gate's comment after the gate failed, without reading where the worker starts and where the main thread waits for it.
 - **Prevent:** a sentence that says two things run at the same time names the line that starts the worker and the line where the writer waits for it, or says that no such line was found. For the campaign map: the late AI task starts in `MapScreen.OnPostFrameTick` and is awaited at the top of `Campaign.RealTick`. Any model the party AI queries (`IsAtConstantWar` included) is a worker-side reader.
 - **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 4.
+
+### A mission start that survives an exception is not a mission that started (Helm's Deep, 2026-11-10)
+The first battle on the reworked Helm's Deep scene ended in a stand-off in wave 1 of The Long Defeat. The base game's siege set-up had thrown at the mission start: the right wall's `broken_child` had no `WallSegment` script, and `WallSegment.OnChooseUsedWallSegment` calls `GetFirstScriptOfType<WallSegment>()` on both tagged children with no null check. Mission Start Guard caught the exception, so the only traces were its `[ERROR]` line, its `[WARNING]` summary and an on-screen notice that nobody watched, and the fight ran with the walls not arranged. The engine code is the same in v1.5.6 and v1.5.7. The art pass of 2026-11-06 had replaced the breach mesh and kept its tag.
+- **Why missed:** the scene was saved after the last game run on it. The v2.0.37 release note said that no battle had run on it, and nobody ran one. A guard that keeps a mission alive also turns a failed set-up into a quiet log line.
+- **Reach (2026-11-10):** 1 of 59 live `TAOM_Map` scene files, and none of 479 base game scene files. A campaign siege of Helm's Deep runs the same set-up.
+- **Prevent:** `python tools/check_siege_wall_scripts.py` reads every map scene for a sided wall whose `solid_child` or `broken_child` lacks the script, and it runs in the tool suite. After a scene is saved in the Kit, run one mission on it before it ships. When you judge an unattended run, read its log for `[MissionStartGuard]` lines, not only its verdict rows.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md).
+
+### A rule about what a callee needs comes from its caller's loop (siege walls, 2026-11-10)
+The first text on siege walls said that `FindRightMostWall` is safe with one or two walls, read from the method alone. Its caller, `ArrangeDestructedMeshes`, calls it once per wall hit-point entry and removes the wall each time, and the campaign and The Long Defeat pass two entries. So one wall also throws, on the second call. Repeat of "Read the caller of a patched handler before describing its trigger".
+- **Why missed:** the method was read to explain a `null`, not to state a rule, and the sentence became a rule in the doc.
+- **Prevent:** before a doc or a gate states what an engine method needs, read the loop that calls it and the arguments each caller passes, and write the rule for the whole loop.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 2.
