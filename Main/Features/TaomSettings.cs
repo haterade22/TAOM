@@ -178,10 +178,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Tournaments ---
 
+    // Renamed from TournamentMaxBetPerRound (Mike, 2026-11-10): default goes from 0 (unlimited) to 15,000, and
+    // MCM loads a saved value by name, so a player who ever saved any value under the old name would have kept it.
     [SettingPropertyGroup("Tournaments")]
     [SettingPropertyInteger("Max Bet Per Round", 0, TAOM.Features.TournamentRewards.TournamentRewardRules.MaxBetSetting, Order = 0, RequireRestart = false,
-        HintText = "The most you may bet in each tournament round. 0 = unlimited (up to your purse). Roguery's Deep Pockets doubles any other value. Vanilla is 150. Default: 0.")]
-    public int TournamentMaxBetPerRound { get; set; } = 0;
+        HintText = "The most you may bet in each tournament round. 0 = unlimited (up to your purse); raise this slider for a bigger cap, or back to 0 to remove it. Roguery's Deep Pockets doubles any other value. Vanilla is 150. Default: 15,000. Saved values from before 2026-11-10 were reset to this default; if you had chosen your own, set it again.")]
+    public int TournamentBetCapPerRound { get; set; } = 15_000;
 
     [SettingPropertyGroup("Tournaments")]
     [SettingPropertyFloatingInteger("Renown Multiplier", 0.0f, TAOM.Features.TournamentRewards.TournamentRewardRules.MaxMultiplier, "#0.00", Order = 1, RequireRestart = false,

@@ -611,6 +611,25 @@ into the setting's own tooltip, and the second time the CHANGELOG even said the 
   A claim of the form "X and Y both say Z" is verified by opening X and Y, not by confirming Z.
 - **Source:** #559 bandit scaling MCM, deep-review 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`.
 
+### A changed MCM default also stales prose that is not the HintText or the Configuration table (tournament bet cap, 2026-11-10)
+The HintText was correct on the first pass this time (it named the new default and the reset
+notice). The drift moved to two surfaces the "HintText" lesson above does not name: an explanatory
+paragraph elsewhere in the same feature doc ("at the default of 0, the wager text shows
+50,000,000", false once the default became 15,000), and a different doc's cross-reference row
+(`docs/reference/feature-map.md`, "default unlimited"). Third occurrence of the general pattern,
+first two on the HintText itself.
+- **Why missed:** the session's doc pass updated every surface it was editing (the Configuration
+  table, the Overview sentence, the Changelog), which created a false sense that "the doc" was
+  reconciled; a second, same-doc paragraph describing the default in free prose and an entirely
+  separate reference doc were never grepped for the old value.
+- **Prevent:** when a compiled MCM default changes, grep every doc that states the default in
+  prose, not only the Configuration table row and the HintText: the feature doc itself (for any
+  OTHER paragraph using the word "default" or describing "at the default" behavior) and
+  `docs/reference/feature-map.md`'s row for that feature. There is more than one reader of a stated
+  default (the player reads the HintText; the next developer reads the feature doc and the feature
+  map), and each reader's surface needs its own grep.
+- **Source:** `docs/reviews/rca-tournament-bet-cap-default-2026-11-10.md`, deep-review 2026-11-10 (Agent 5 data flow + Codex `xhigh` pre-review).
+
 ### `{newline}` is a GameTexts variable that exists only once a Game has initialized
 `{newline}` is not a localization token; it is a text variable that `GameTexts.InitializeGlobalTags()` registers from `Game.Initialize`. A `TextObject` rendered at the cold main menu (before any campaign or custom game exists) evaluates it to an empty string, so a multi-paragraph inquiry body runs together with no error. Vanilla menu code binds the variable locally for that reason.
 - **Why missed:** the review traced `{newline}` to `InitializeGlobalTags` and reported it "bound at early bootstrap" without checking the caller, and the text was only ever exercised in a running game.

@@ -2,8 +2,8 @@
 
 ## Overview
 
-Tournaments pay more, and the player chooses how. A **bet cap** set in MCM (unlimited by default) replaces
-vanilla's 150 per round. A winner's **renown and influence** grow with the lords and heroes in the field and with
+Tournaments pay more, and the player chooses how. A **bet cap** set in MCM (15,000 by default, or unlimited)
+replaces vanilla's 150 per round. A winner's **renown and influence** grow with the lords and heroes in the field and with
 the winner's culture. At **Join**, the player picks one of up to **three prizes** and the **combat skill** the
 tournament trains, earning experience in it for every round won. Designed with Mike on 2026-10-02.
 
@@ -63,10 +63,10 @@ which reaches the reward service through `ITournamentService`.
 | Skill XP | 125 per round won + 250 for the win (750 for a win), x the player's culture factor |
 
 **The 50,000,000 ceiling:** a won bet pays odds of up to 4 and the four rounds' payouts add up in an `int`
-(`TournamentBehavior.OverallExpectedDenars`), so a cap above about 134 million per round overflows it. At the
-default of 0 the tournament screen's own wager text ("you can wager {MAX_AMOUNT} each time", filled from the cap
-at `TournamentVM.cs:922`) therefore shows 50,000,000 as the per-round limit. Rewording vanilla's text would need
-another patch, so it stays.
+(`TournamentBehavior.OverallExpectedDenars`), so a cap above about 134 million per round overflows it. With the
+cap set to 0 (unlimited), the tournament screen's own wager text ("you can wager {MAX_AMOUNT} each time", filled
+from the cap at `TournamentVM.cs:914`) therefore shows 50,000,000 as the per-round limit. Rewording vanilla's
+text would need another patch, so it stays.
 
 **The three prizes** (`TournamentPrizeRules.PickChoices`): the advertised prize first, then up to two
 alternatives from its own band, drawn with a seed of the town and the tournament's creation time. A heavy prize
@@ -105,14 +105,15 @@ Patch96 join choices ─> TournamentJoinService ─> ITournamentJoinAdapter (pri
 
 | Setting | Default | Meaning |
 |---|---|---|
-| Max Bet Per Round | 0 | 0 = unlimited (up to the purse); vanilla is 150 |
+| Max Bet Per Round | 15,000 | 0 = unlimited (up to the purse); vanilla is 150 |
 | Renown Multiplier | 1.00 | scales every winner's renown |
 | Influence Multiplier | 1.00 | scales every winner's influence in their own kingdom's towns |
 | Keep Enemy Sides Out | on | owned by the Arena feature: see [tournament-alignment-filter.md](tournament-alignment-filter.md) |
 | Tidings of the Lists | on | owned by Settlement Services: see [settlement-services.md](settlement-services.md) |
 
 MCM keeps a value once saved, so a changed default never reaches an existing install: rename the property to
-change one ([orientation trap](../ai-includes/orientation.md), "Persisted MCM defaults").
+change one ([orientation trap](../ai-includes/orientation.md), "Persisted MCM defaults"). The bet cap did this on
+2026-11-10: `TournamentMaxBetPerRound` (default 0) became `TournamentBetCapPerRound` (default 15,000).
 
 The multipliers run from 0 to 5 (`TournamentRewardRules.MaxMultiplier`) and the bet cap from 0 to 1,000,000. MCM's
 slider enforces that range but its settings file loader does not, so `TournamentRewardsSettingsProvider` clamps a
@@ -202,6 +203,9 @@ row. A bad value reverts with a warning; read once per process.
 
 ## Changelog
 
+- 2026-11-10: default bet cap per round changed from 0 (unlimited) to 15,000 (Mike); the player may still raise
+  the MCM slider to 1,000,000 or set it back to 0 for unlimited. The MCM property was renamed
+  `TournamentMaxBetPerRound` to `TournamentBetCapPerRound` so the new default reaches existing installs too.
 - 2026-10-05: checked against Bannerlord v1.5.4: every engine member it overrides, patches, reflects on or subscribes
   to is unchanged from v1.5.3 (decompile diff of both builds, and the strict binding gate passes on v1.5.4), and so is
   the engine code behind every behaviour this doc cites. No code change.
