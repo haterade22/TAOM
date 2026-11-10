@@ -80,7 +80,7 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_r
 <!-- excerpt: the shipped row also lists gundabad, dolguldur, goblin, mistymountainorcs and bluecraig as kingdom and culture -->
 <Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
   cap="10000" starting_amount="0" daily_per_town="0.2"
-  per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
+  per_battle_victory_base="50" per_raid="100" per_siege_victory="250"
   per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
   <Kingdom id="empire_s" />
   <Kingdom id="isengard" />
@@ -89,11 +89,11 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_r
 </Resource>
 ```
 
-Earning rates are now differentiated per faction identity:
-- **Aggressive factions** (Mordor, Harad): high battle/raid, low daily
-- **Mining/trade factions** (Erebor, Dale): high daily, low battle
-- **Honor factions** (Rohan): high tournament, zero raid (unless a lord's party is beaten in the raid)
-- **Peaceful factions** (Elves): high daily, zero raid (unless a lord's party is beaten in the raid)
+Battle, raid and siege pay the same flat rate for every resource (see the table below; changed
+2026-11-10). Daily income, prisoner, tournament and hideout rates still differ per faction identity:
+- **Mining/trade factions** (Erebor, Dale): high daily
+- **Honor factions** (Rohan): high tournament
+- **Peaceful factions** (Elves): high daily, low prisoner
 
 ### Resource Tiers (Optional): `<Tiers>` element inside `<Resource>`
 
@@ -184,19 +184,23 @@ here (33 px on the map bar); if they alias, widen the widget first and bake a sm
 Every resource has cap 10000 and starting amount 0. Daily income is per owned town before the career
 gain passive (the gain scales every source below); the battle payout is the base times the enemy-to-player size ratio clamped to 0.5 to 2.
 
+Battle base, Raid and Siege are flat 50 / 100 / 250 for every resource since 2026-11-10 (previously
+differentiated per faction, roughly 5 to 14 / 0 to 16 / 10 to 20). Town/day, Prisoner, Tournament and
+Hideout still differ per resource.
+
 | Resource | Town/day | Battle base | Raid | Siege | Prisoner | Tournament | Hideout |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| War Spoils | 0.2 | 14 | 12 | 20 | 2 | 3 | 8 |
-| Gems | 1.0 | 5 | 3 | 10 | 0 | 8 | 4 |
-| Castar | 0.6 | 8 | 4 | 18 | 1 | 6 | 5 |
-| Marks | 0.4 | 12 | 0 | 12 | 1 | 10 | 6 |
-| Elven Wine | 0.8 | 6 | 0 | 10 | 0 | 8 | 4 |
-| Lake Fish | 0.7 | 7 | 5 | 10 | 1 | 8 | 5 |
-| War Drums | 0.3 | 14 | 14 | 16 | 2 | 4 | 8 |
-| Tribal Relics | 0.4 | 10 | 10 | 12 | 1 | 6 | 8 |
-| Dunlending Ale | 0.3 | 10 | 12 | 10 | 1 | 5 | 10 |
-| Plunder | 0.3 | 10 | 16 | 14 | 3 | 4 | 10 |
-| War Banners | 0.5 | 12 | 6 | 16 | 1 | 6 | 5 |
+| War Spoils | 0.2 | 50 | 100 | 250 | 2 | 3 | 8 |
+| Gems | 1.0 | 50 | 100 | 250 | 0 | 8 | 4 |
+| Castar | 0.6 | 50 | 100 | 250 | 1 | 6 | 5 |
+| Marks | 0.4 | 50 | 100 | 250 | 1 | 10 | 6 |
+| Elven Wine | 0.8 | 50 | 100 | 250 | 0 | 8 | 4 |
+| Lake Fish | 0.7 | 50 | 100 | 250 | 1 | 8 | 5 |
+| War Drums | 0.3 | 50 | 100 | 250 | 2 | 4 | 8 |
+| Tribal Relics | 0.4 | 50 | 100 | 250 | 1 | 6 | 8 |
+| Dunlending Ale | 0.3 | 50 | 100 | 250 | 1 | 5 | 10 |
+| Plunder | 0.3 | 50 | 100 | 250 | 3 | 4 | 10 |
+| War Banners | 0.5 | 50 | 100 | 250 | 1 | 6 | 5 |
 
 `troop_resource_costs.xml` holds 92 rows (`grep -c "<Troop "`, 2026-11-04): 50 carry a `daily_upkeep` (among them the 3 dire wolf riders at 0.05, the 8 Mordor uruk elites at 0.05
 to 0.3, the 13 Black Numenoreans at 0.03 to 0.15 since the second halving of 2026-09-15 (#600; the
@@ -516,6 +520,7 @@ resource's `starting_amount` is 0 (a seed then only records the pair).
 
 ## Changelog
 
+- 2026-11-10 (Mike): every one of the 11 resources now pays the same flat rate per win: `per_siege_victory="250"`, `per_raid="100"`, `per_battle_victory_base="50"` (still scaled by the enemy size ratio at earn time), replacing the previous per-resource tiers of roughly 10 to 20, 0 to 16 and 5 to 14. `per_prisoner` and the other rates are unchanged. No lord-specific capture reward exists; `per_prisoner` still pays per captured unit of any kind, not per lord. Config only; no new test needed, `SpecialResourceServiceTests` and sibling suites (440 total) still pass against the new values.
 - 2026-11-09 (#1108): the MCM option Elite Troops Cost Gold Only removes the special-resource troop costs and makes the Elite Emissary sell for gold. See "Gold-only option". Owed in game.
 - 2026-10-21 (#967 C1): earning moved out of `SpecialResourcesBehavior` into `SpecialResourceEarningService` (behavior 615 to 276 lines, pinned by `SpecialResourcesBehaviorLineCountTests`). The co-op authority now credits each registered remote player for battle, siege, raid, hideout and tournament wins and ticks their daily income and upkeep; its own `MainHero` earns nothing during a session, and prisoner income pays nobody until C2. `SpecialResourceEarnPolicy.MayCreditMainHero` is replaced by `SpecialResourceEarnPolicy.MayEarn`, and in a session the player registry alone decides who is a player. Single-player behaviour is unchanged. See "Per-player earning under co-op (#967 C1)".
 - 2026-10-08 (#771): one party-screen subscriber per process. `ScreenManager.OnPushScreen` is a static event, so a behavior left subscribed by a save load without a Game Over never became garbage, and after N loads each party-screen open wrote N `[SpecRes] PartyScreen session BEGUN` lines. `SpecialResourcesBehavior` now keeps its handler in a private static field of the engine's `ScreenManager.OnPushScreenEvent` type, removing the previous one before adding its own; the next campaign's `RegisterEvents` or a Game Over (a no-heir death) removes it and clears the field. `TroopCountDiagnosticsBehavior` (a singleton) removes its handler before adding it, so its dump is written once. No unit test covers it (campaign entry point). The in-game check is still owed: load a save three times in one session, open the party screen once, and expect one `[SpecRes] PartyScreen session BEGUN` line and one `[TroopCountDiag]` dump.
