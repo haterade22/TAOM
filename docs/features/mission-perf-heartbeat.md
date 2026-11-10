@@ -192,14 +192,14 @@ vanilla clears the unreadable force-vsync flag whenever a mission state is pushe
 among other sites), UNVERIFIED which of them can run during a mission. The reads are
 `IConfig.GetRGLConfig` (v1.5.5 client `0x4A6840`, cases `0x19` and `0x1a` for `FrameLimiter` and
 `VSync`; see the [engine page](../reference/engine/mission-frame-threads-and-native-costs.md#1-the-battle-frame)). The quality
-fields are the raw engine option values (`na` when unreadable); `memLoad` and `availPhysMB` come
+fields are the engine option values, rounded to a whole number (`na` when the read fails or the value is not a finite number in range): `shadowQuality` is the Shadow Quality option (`ShadowmapResolution`), `shadowType` is Shadow Type (0 None, 1 Static Only, 2 Static and Dynamic) and `shadowFiltering` is Shadow Filtering (0 None, 1 PCF); `memLoad` and `availPhysMB` come
 from `GlobalMemoryStatusEx`; `diag` lists, in this order, `battleLoad`, `stallWatchdog`,
 `stallBundle`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf` for each diagnostic that
 will run, or `none`. `stallWatchdog` and `exitSampler` also need the master Battle Load Diagnostics
 toggle, and `stallBundle` needs the watchdog, as their consumers do; the other three stand alone:
 
 ```
-[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,stallWatchdog,stallBundle,exitSampler,freezeSampler,memSampler,missionPerf
+[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,stallWatchdog,stallBundle,exitSampler,freezeSampler,memSampler,missionPerf
 ```
 
 **`[TickSummary]`**, INFO, once at the end of a measured mission that closed any frame, in `probe` or
@@ -288,7 +288,7 @@ not something to do on the clock of the measurement being taken.
 ### Cost
 
 **Off:** no Patch97 patch exists. Every player pays the one `[TickProfiler] off:` line per process,
-the `[PerfContext]` line per mission (one `GlobalMemoryStatusEx` read, about 84 us, six engine
+the `[PerfContext]` line per mission (one `GlobalMemoryStatusEx` read, about 84 us, eight engine
 option reads and a few `GCSettings` reads, once), and two static null checks (enter and exit) per
 agent tick in Patch91's bracket, about one agent tick per mission frame. **Installed, then switched
 off in MCM:** the patches stay until a restart, so every behaviour call pays one static read and one
@@ -1028,9 +1028,11 @@ the two busy times), the worst `maxMs`, and `gc0`, `gc1`, `gc2` per minute. The 
 it past `t=+30s`. `compare` prints the median of each metric per group, the delta and the
 percentage, with N per group, and refuses groups whose `[PerfContext]` build (Debug or Release) or
 texture quality differ unless given `--allow-mixed`. It counts the rows it could not check (no
-`[PerfContext]`, or `na` for either setting) under the table. It adds an `INCONCLUSIVE:` line (and an
+`[PerfContext]`, or `na` for either setting) under the table. It prints each group's `shadowType`, `shadowFiltering` and `shadowQuality` on a `settings` line (`na` for a log older than the field, an unreadable option or a row with no `[PerfContext]`; `1/2` for a group that holds both). It does not refuse groups that differ there, because that is the A/B. It adds an `INCONCLUSIVE:` line (and an
 `inconclusive` list in `--json`, with the exit code unchanged) when a group holds fewer than 5 runs, when the rows
-span more than one scene, or when a metric has fewer than 5 values in a group while both groups have some. Press F6 on the first frame so both
+span more than one scene, when a metric has fewer than 5 values in a group while both groups have some, or when one
+group holds two known values of a `settings` key (a run on the wrong setting). Change Shadow Type, then restart the
+game before the next run: whether the engine applies the change to a running session is UNVERIFIED. Press F6 on the first frame so both
 sides are AI-controlled, and end each run at the same point: steady windows run to the end of the
 mission, routs included. Five runs per group is the floor (`MIN_RUNS_PER_GROUP` in `tools/perf_runs.py`); AI battles vary. `gc2` should not climb
 faster with the change on.

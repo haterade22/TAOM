@@ -4942,3 +4942,11 @@ The first `--summary` footer said to read one function with `--rva 0x<entry>`. A
 - **Why missed:** the hint was written for the default binary, and the test asserted only the flag name.
 - **Prevent:** a printed follow-up command carries each option that chose the input, and a test asserts the option with its value.
 - **Source:** [adopt-rea-ghidra-2026-11-08.md](../adopt-rea-ghidra-2026-11-08.md), review table.
+
+### A tool that prints a setting to expose a bad run also judges it (#1103, 2026-11-09)
+
+`perf_runs.py compare` gained a `settings` line so that an A/B run on the wrong Shadow Type would show. A group of four runs at Static Only and one at Static and Dynamic printed `shadowType=1/2` and an empty `inconclusive` list, although the tool already marks a compare across two scenes INCONCLUSIVE. No script reads the line, so the check depended on a person noticing one `/`.
+
+- **Why missed:** the plan said "prints the new keys per group", and the printed line was taken as the safeguard. The new output was not put through the checks the tool already runs on its neighbours.
+- **Prevent:** when a tool shows a value so that a bad input shows, give the bad case the tool's own verdict (a refusal, an INCONCLUSIVE reason, an exit code), and test that case. Ask the same question of every new line added beside existing checks.
+- **Source:** [rca-shadow-instrumentation-2026-11-09.md](../rca-shadow-instrumentation-2026-11-09.md) row 1.

@@ -35,6 +35,10 @@ public sealed class GraphicsOptionsAdapter : IGraphicsOptionsAdapter
 
     public int ShadowmapResolutionOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ShadowmapResolution), MaxRawOptionIndex);
 
+    public int ShadowmapTypeOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ShadowmapType), MaxRawOptionIndex);
+
+    public int ShadowmapFilteringOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ShadowmapFiltering), MaxRawOptionIndex);
+
     public int ParticleDetailOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ParticleDetail), MaxRawOptionIndex);
 
     public bool SaveOptions(int ragdollOption, int corpseOption)

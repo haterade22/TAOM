@@ -16,7 +16,8 @@ that prefix or at the start of a line that has none, so a message that names one
                  the mission tick profiler's lines (plan 028); optional, a log without them parses,
                  and a line from before the cameraMs column parses without it
   Older lines still parse: a [MissionPerf] line without mainMs/renderMs, and a [PerfContext]
-  line without frameLimiter/vsync, give None for the missing values. The busy-time medians
+  line without frameLimiter/vsync or shadowType/shadowFiltering, give None for the missing
+  values (compare's settings line prints them as na). The busy-time medians
   print `-`; the FRAME_CAP note leaves out the limiter settings it does not have.
   [BattleLoad], [MemSample]
                  read through triage_battle_load.py's own parser, never re-implemented here
@@ -110,10 +111,12 @@ Usage:
   python tools/perf_runs.py <log> [<log> ...] [--json]
   python tools/perf_runs.py compare --a <log> [...] --b <log> [...] [--scene <id>] [--allow-mixed] [--json]
 
-A compare adds an `INCONCLUSIVE:` line and an `inconclusive` list to --json for any of three reasons:
-a group holds fewer than MIN_RUNS_PER_GROUP (5) runs, the rows span more than one scene, or a metric
-has fewer than 5 values in a group while both groups have some. The exit code does not change
-(docs/ai-includes/perf-method.md).
+A compare prints one `settings` line per group (and a `settings` object in --json): the values of
+shadowType, shadowFiltering and shadowQuality in that group, joined with `/`, `na` where a row has
+no readable value. It adds an `INCONCLUSIVE:` line and an `inconclusive` list to --json for any of
+four reasons: a group holds fewer than MIN_RUNS_PER_GROUP (5) runs, the rows span more than one
+scene, a metric has fewer than 5 values in a group while both groups have some, or one group holds
+two known values of a settings key. The exit code does not change (docs/ai-includes/perf-method.md).
 
 Exit code: 0 rows found (compare: both groups have rows), 1 no mission found, 2 usage error,
 unreadable file, or a compare refused over mixed build or texture settings.
@@ -226,6 +229,10 @@ _CONTEXT_KEYS = ("build", "jitOptimized", "clr", "serverGC", "latency", "mission
                  "ragdolls", "memLoad", "availPhysMB", "tickProfiler", "diag")
 # The [PerfContext] settings compare refuses to mix; a row without them is counted unchecked.
 _COMPARED_KEYS = ("build", "textureQuality")
+# The [PerfContext] settings compare prints per group, so a run on the wrong setting shows. shadowType and
+# shadowFiltering stay out of _CONTEXT_KEYS: parse_context drops a line that lacks any of those keys, and
+# logs from before the two fields lack both.
+_SHOWN_KEYS = ("shadowType", "shadowFiltering", "shadowQuality")
 
 METRICS = ("fps_median", "avg_ms_median", "p95_ms_median", "main_ms_median", "render_ms_median",
            "max_ms_max", "gc0_per_min",
@@ -837,9 +844,19 @@ def compare_rows(rows_a: list, rows_b: list, allow_mixed: bool = False) -> dict:
         return sum(1 for r in rows if r["context"] is None
                    or any(r["context"].get(k) in (None, "na") for k in _COMPARED_KEYS))
 
+    def shown_settings(rows: list) -> dict:
+        return {k: sorted({(r["context"] or {}).get(k, "na") for r in rows}) for k in _SHOWN_KEYS}
+
+    settings = {"a": shown_settings(rows_a), "b": shown_settings(rows_b)}
     inconclusive = [f"group {side} has {len(rows)} run(s); the perf method needs at least "
                     f"{MIN_RUNS_PER_GROUP} per group"
                     for side, rows in (("A", rows_a), ("B", rows_b)) if len(rows) < MIN_RUNS_PER_GROUP]
+    # A difference between the groups is the A/B; two known values inside one group are not evidence.
+    for side in ("a", "b"):
+        for key, values in settings[side].items():
+            known = [v for v in values if v != "na"]
+            if len(known) > 1:
+                inconclusive.append(f"group {side.upper()} mixes {key} {'/'.join(known)}")
     scenes = {r["scene"] for r in rows_a + rows_b}
     if len(scenes) > 1:
         inconclusive.append(f"rows span {len(scenes)} scenes; compare one scene with --scene")
@@ -852,6 +869,7 @@ def compare_rows(rows_a: list, rows_b: list, allow_mixed: bool = False) -> dict:
     return {"a": {"rows": len(rows_a)}, "b": {"rows": len(rows_b)}, "metrics": metrics,
             "flags": {"a": flag_counts(rows_a), "b": flag_counts(rows_b)},
             "context_unchecked": {"a": unchecked(rows_a), "b": unchecked(rows_b)},
+            "settings": settings,
             "inconclusive": inconclusive}
 
 
@@ -941,6 +959,8 @@ def format_compare(result: dict) -> str:
         if result["context_unchecked"][side]:
             out.append(f"  {result['context_unchecked'][side]} {side.upper()} row(s) without a "
                        "[PerfContext] build and texture quality: those settings unchecked")
+        shown = " ".join(f"{k}={'/'.join(v)}" for k, v in result["settings"][side].items())
+        out.append(f"settings {side.upper()}: {shown}")
     if result["inconclusive"]:
         out.append("INCONCLUSIVE: " + "; ".join(result["inconclusive"])
                    + " (docs/ai-includes/perf-method.md)")
