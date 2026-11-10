@@ -199,10 +199,11 @@ class ContractRegressionTests(unittest.TestCase):
     def test_split_edge_repair_keeps_each_split_fan_connected(self):
         mesh = Mesh(
             vertices=[(index, 0, 0) for index in range(12)],
-            faces=[(0, 1, 3, 2), (1, 0, 4, 5), (0, 2, 10, 4), (0, 1, 7, 6), (1, 0, 8, 9), (0, 6, 11, 8)],
+            faces=[(0, 1, 3, 2), (1, 0, 4, 5), (0, 2, 10, 4), (0, 1, 7, 6), (1, 0, 8, 9), (0, 6, 11, 8), (6, 7, 8, 9)],
         )
         result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], engine.non_manifold_edges(result))
+        self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
         for first, second in ((3, 4), (3, 5), (4, 5)):
             self.assertTrue(set(result.faces[first]) & set(result.faces[second]), (first, second))
 
@@ -215,6 +216,15 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([], engine.non_manifold_edges(result))
         self.assertNotEqual(mesh.faces, result.faces)
 
+    def test_split_edge_repair_handles_four_connected_faces_without_unused_vertices(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0)] + [(index, 2, 0) for index in range(2, 8)],
+            faces=[(0, 1, 3, 2), (1, 0, 2, 4), (0, 1, 4, 5), (1, 0, 5, 6), (4, 5, 7, 6)],
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        self.assertEqual(set(range(len(result.vertices))), {index for face in result.faces for index in face})
+
     def test_simplification_preserves_remapped_point_guides(self):
         source = differential.curved_grid()
         source.attributes["point_guide"] = [index == 8 for index in range(9)]
@@ -222,6 +232,29 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(5, len(result.vertices))
         self.assertEqual(4, result.attributes["source_vertex"].index(8))
         self.assertEqual(4, result.attributes["point_guide"].index(True))
+
+    def test_seam_merge_never_welds_two_corners_of_one_face_to_one_cluster(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (5, 0, 0), (5, -5, 0), (0, -5, 0), (0.1, 0, 0), (0, 0.1, 0), (-5, 5, 0), (5, 5, 0)],
+            faces=[(0, 3, 2, 1), (4, 5, 6, 7)],
+            uv=[(0, 0)] * 8,
+        )
+        result = engine.merge_output_seams(mesh, 0.5)
+        self.assertTrue(all(len(face) == 4 for face in result.faces))
+
+    def test_mirror_and_separation_preserve_edge_attributes(self):
+        guide = differential.unit_guide()
+        guide.edge_attributes["bevel_weight_edge"] = {edge: 1.0 for edge in guide.edges()}
+        guide.edge_attributes["crease_edge"] = {edge: 0.8 for edge in guide.edges()}
+        guide.attributes["point_guide"] = [True, False, False, True]
+        mirrored = engine.mirror_guides(guide, axes=("x",))
+        self.assertEqual(len(mirrored.vertices), len(mirrored.attributes["point_guide"]))
+        self.assertEqual(7, len(mirrored.edge_attributes["bevel_weight_edge"]))
+        self.assertEqual(7, len(mirrored.edge_attributes["crease_edge"]))
+        separated = engine.retopologize(
+            differential.curved_grid(), guide, RetopoSettings(fit_uv=False, separate_parts=True)
+        )
+        self.assertEqual(16, len(separated.edge_attributes["bevel_weight_edge"]))
 
     def test_empty_guides_are_rejected_without_initialization(self):
         with self.assertRaisesRegex(ValueError, "at least one quad"):

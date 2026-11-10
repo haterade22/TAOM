@@ -67,8 +67,9 @@ set BLENDER_USER_CONFIG=D:\staging\blender-test-config
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_installable_selftest.py
 ```
 
-The installable test refuses to run without a disposable `BLENDER_USER_SCRIPTS` directory. Its
-`overwrite=True` installation is confined to that directory; the add-ons are disabled after the test.
+Set `BLENDER_USER_SCRIPTS` to a disposable directory before running the installable test. The script
+refuses to run when it is unset, and its `overwrite=True` installation targets that directory. The
+add-ons are disabled after the test.
 The Blender runs write `TestResults/Blender/retopo_selftest_report.json`,
 `TestResults/Blender/petik_selftest_report.json`, and
 `TestResults/Blender/installable_report.json`; require `"status": "ok"` in all three.

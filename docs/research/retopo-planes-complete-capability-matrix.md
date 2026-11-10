@@ -12,8 +12,10 @@ subdivision, UV, ring, X mirror, separation, positive thickness, and inspector f
 compares complete synthetic meshes, not truncated samples. TAOM deliberately corrects three invalid
 captured behaviors: bow-tie initialization, inverted Y-mirror normals, and inside-out negative
 thickness. Those exceptions retain position and UV comparisons and independently require nonzero
-area, outward normals, or positive volume. Density compares exact reference face counts and checks
-quad output, connected components, and bounds; the neutral plateau and low-crease reduction are preserved.
+area, outward normals, or positive volume. Density compares reference face counts except for the
+explicit high-sharp layout difference (60 TAOM faces against 62 in the reference). Vertex and edge
+layouts are not identical. The neutral plateau and low-crease reduction are preserved, and every
+case checks quads, components, UV names, metadata, and geometry-to-source-UV associations.
 The hex auto-fill solver uses a different
 central two-quad layout and is checked for its exact 6-vertex, 2-quad result.
 

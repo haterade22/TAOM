@@ -5,6 +5,7 @@ import random
 
 import bmesh
 import bpy
+from mathutils import Matrix
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -320,7 +321,9 @@ class TAOM_OT_retopologize(bpy.types.Operator):
             else:
                 output = mesh_to_blender(result, source.name + "_Retopo")
             output["taom_retopology_output"] = True
-            if not settings.only_patterns:
+            if settings.only_patterns or settings.output_generated_planes:
+                output.matrix_world = Matrix.Identity(4)
+            else:
                 output.matrix_world = source.matrix_world
             output["guide_vertices"] = len(guide.vertices)
             output["guide_faces"] = len(guide.faces)

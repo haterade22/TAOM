@@ -240,22 +240,25 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                 key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
             )
             preserved_root = root(preserved[0])
-            preserved_incident = [index for index in fans[preserved_root] if index in face_indices]
-            if len(preserved_incident) > 2:
-                split_face = preserved_incident[-1]
-                fans[preserved_root].remove(split_face)
-                fans[f"split-{split_face}"] = [split_face]
+            preserved_incident = sorted(index for index in fans[preserved_root] if index in face_indices)
+            retained = set(preserved_incident[:2])
             for fan_root, fan in fans.items():
-                if fan_root == preserved_root:
+                incident = sorted(index for index in fan if index in face_indices)
+                if not incident:
                     continue
-                replacements = {}
-                for old in edge:
-                    replacements[old] = len(result.vertices)
-                    result.vertices.append(mesh.vertices[old])
-                    for name, values in result.attributes.items():
-                        values.append(values[old])
-                for face_index in fan:
-                    result.faces[face_index] = tuple(replacements.get(index, index) for index in result.faces[face_index])
+                groups = [incident] if len(incident) <= 2 else [[index] for index in incident]
+                for group in groups:
+                    if fan_root == preserved_root and all(index in retained for index in group):
+                        continue
+                    replacements = {}
+                    for old in edge:
+                        replacements[old] = len(result.vertices)
+                        result.vertices.append(mesh.vertices[old])
+                        for name, values in result.attributes.items():
+                            values.append(values[old])
+                    target_faces = fan if len(group) == 2 and fan_root != preserved_root else group
+                    for face_index in target_faces:
+                        result.faces[face_index] = tuple(replacements.get(index, index) for index in result.faces[face_index])
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
 
@@ -533,6 +536,9 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             if key not in position_indices:
                 position_indices[key] = len(result.vertices)
                 result.vertices.append(component.vertices[old])
+                for name, values in result.attributes.items():
+                    if len(component.attributes.get(name, [])) == len(component.vertices):
+                        values.append(component.attributes[name][old])
             return position_indices[key]
 
         for face in unique_faces:
@@ -540,6 +546,10 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             signatures.add(face_signature(component, face))
         for edge in component.lines:
             result.lines.append(tuple(mirrored_index(index) for index in edge))
+        for name, values in component.edge_attributes.items():
+            target = result.edge_attributes.setdefault(name, {})
+            for (first, second), value in values.items():
+                target[Mesh.edge_key(mirrored_index(first), mirrored_index(second))] = value
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -894,6 +904,15 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
         cursor += len(face)
     result = Mesh(vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name)
     result.attributes = {name: list(values) for name, values in mesh.attributes.items()}
+    endpoint_groups = {}
+    for (old, group), new in lookup.items():
+        endpoint_groups.setdefault(old, {})[group] = new
+    for name, values in mesh.edge_attributes.items():
+        result.edge_attributes[name] = {}
+        for (first, second), value in values.items():
+            for group in set(endpoint_groups.get(first, {})) & set(endpoint_groups.get(second, {})):
+                edge = Mesh.edge_key(endpoint_groups[first][group], endpoint_groups[second][group])
+                result.edge_attributes[name][edge] = value
     return result
 
 
@@ -913,6 +932,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         for vertex in face:
             vertex_faces[vertex].add(face_index)
     remap = list(range(len(result.vertices)))
+    cluster_faces = {index: set(faces) for index, faces in vertex_faces.items()}
     cells = {}
     for vertex in sorted(eligible):
         position = result.vertices[vertex]
@@ -922,8 +942,9 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
             for y in range(cell[1] - 1, cell[1] + 2):
                 for z in range(cell[2] - 1, cell[2] + 2):
                     for other in cells.get((x, y, z), []):
-                        if not vertex_faces[vertex] & vertex_faces[other] and math.dist(position, result.vertices[other]) <= distance:
+                        if not cluster_faces[vertex] & cluster_faces[other] and math.dist(position, result.vertices[other]) <= distance:
                             found = other
+                            cluster_faces[found].update(cluster_faces[vertex])
                             break
                     if found is not None:
                         break

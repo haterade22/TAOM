@@ -117,6 +117,16 @@ class RetopoDifferentialTests(unittest.TestCase):
                     self.assert_bounds_close(expected["uv_bounds"], actual["uv_bounds"], "uv_bounds", delta=0.01)
                     self.assertEqual(len(actual["geometry_uv"]), sum(len(face) for face in actual["geometry_faces"]))
                     self.assertTrue(all(math.isfinite(value) for coordinate in actual["geometry_uv"] for value in coordinate))
+                    self.assertEqual(expected["uv_name"], actual["uv_name"])
+                    self.assertTrue({"pattern_id", "part_id", "retopo_plane_id"} <= set(actual["attributes"]))
+                    surface = engine.SourceSurface(case["source"])
+                    cursor = 0
+                    for face in actual["geometry_faces"]:
+                        for vertex in face:
+                            position, _, _ = surface.project(actual["geometry_uv"][cursor])
+                            for axis in range(3):
+                                self.assertAlmostEqual(position[axis], actual["geometry_vertices"][vertex][axis], delta=0.00001)
+                            cursor += 1
                 else:
                     validity_exceptions = {
                         "initialize", "thickness_negative", "mirror_same_y_separate",

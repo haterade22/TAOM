@@ -109,8 +109,8 @@ and guide objects are preserved when generating a new output.
 - `python -m unittest tools.tests.test_retopo_differential`: original-product comparisons for base
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
-  connectivity, and geometry-UV associations. Validity exceptions and independent density counts are explicit.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: twenty-one regression tests for topology,
+  connectivity, and geometry-UV associations. Validity exceptions and reference density counts are explicit.
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: twenty-four regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,
