@@ -627,8 +627,8 @@
     <string id="aom_lord_I4_41_name" text="Дургаш" />
     <string id="aom_lord_I4_4_name" text="Горлаг, мастер горна урук-хай" />
     <string id="aom_lord_I4_5_name" text="Трака" />
-    <string id="aom_lord_L1_1_name" text="Галадриэль, Владычица Лотлориэна" />
-    <string id="aom_lord_L1_2_name" text="Келеборн, Владыка Лотлориэна" />
+    <string id="aom_lord_L1_1_name" text="Галадриэль" />
+    <string id="aom_lord_L1_2_name" text="Келеборн" />
     <string id="aom_lord_L1_3_name" text="Галадион" />
     <string id="aom_lord_L2_1_name" text="Каурминас" />
     <string id="aom_lord_L2_2_name" text="Тандирион" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="Заррин" />
     <string id="aom_lord_SH9_8_name" text="Анахита" />
     <string id="aom_lord_SH9_9_name" text="Бахара" />
-    <string id="aom_lord_U1_11_name" text="Лорд Гимилзор" />
+    <string id="aom_lord_U1_11_name" text="Гимилзор" />
     <string id="aom_lord_U1_12_name" text="Гимилтон" />
     <string id="aom_lord_U1_13_name" text="Фаразон" />
     <string id="aom_lord_U1_1_name" text="Ар-Гимилхад" />

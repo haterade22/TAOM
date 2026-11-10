@@ -1326,11 +1326,11 @@
 
 	<string id="aom_lord_1_6_name" text="{=aom_lord_1_6_name}Torvald Oxhorn" />
 
-	<string id="aom_lord_1_7_name" text="{=aom_lord_1_7_name}Denethor II, Steward of Gondor" />
+	<string id="aom_lord_1_7_name" text="{=aom_lord_1_7_name}Denethor II" />
 
 	<string id="aom_lord_1_8_name" text="{=aom_lord_1_8_name}Húrioneth" />
 
-	<string id="aom_lord_1_9_name" text="{=aom_lord_1_9_name}Imrahil, Prince of Dol Amroth" />
+	<string id="aom_lord_1_9_name" text="{=aom_lord_1_9_name}Imrahil" />
 
 	<string id="aom_lord_1_10_name" text="{=aom_lord_1_10_name}Aranel" />
 
@@ -1428,15 +1428,15 @@
 
 	<string id="aom_lord_1_46_name" text="{=aom_lord_1_46_name}Malrior" />
 
-	<string id="aom_lord_1_45_name" text="{=aom_lord_1_45_name}Forlong, Lord of Lossarnach" />
+	<string id="aom_lord_1_45_name" text="{=aom_lord_1_45_name}Forlong" />
 
 	<string id="aom_lord_1_57_name" text="{=aom_lord_1_57_name}Baranor" />
 
-	<string id="aom_lord_1_52_name" text="{=aom_lord_1_52_name}Hirluin, Lord of Pinnath Gelin" />
+	<string id="aom_lord_1_52_name" text="{=aom_lord_1_52_name}Hirluin" />
 
-	<string id="aom_lord_1_53_name" text="{=aom_lord_1_53_name}Angbor, Lord of Lamedon" />
+	<string id="aom_lord_1_53_name" text="{=aom_lord_1_53_name}Angbor" />
 
-	<string id="aom_lord_1_71_name" text="{=aom_lord_1_71_name}Golasgil, Lord of Anfalas" />
+	<string id="aom_lord_1_71_name" text="{=aom_lord_1_71_name}Golasgil" />
 
 	<string id="aom_lord_1_73_name" text="{=aom_lord_1_73_name}Narmir" />
 
@@ -1874,7 +1874,7 @@
 
 	<string id="aom_lord_V9_u_name" text="{=aom_lord_V9_u_name}Urundulf" />
 
-	<string id="aom_lord_5_1_name" text="{=aom_lord_5_1_name}Vargûl, the High Warlord of Khand" />
+	<string id="aom_lord_5_1_name" text="{=aom_lord_5_1_name}Vargûl" />
 
 	<string id="aom_lord_5_7_name" text="{=aom_lord_5_7_name}Kharzul" />
 
@@ -2100,7 +2100,7 @@
 
 	<string id="aom_lord_WE8_u_name" text="{=aom_lord_WE8_u_name}Barandil" />
 
-	<string id="aom_lord_WE9_l_name" text="{=aom_lord_WE9_l_name}Duinhir, Lord of Morthond" />
+	<string id="aom_lord_WE9_l_name" text="{=aom_lord_WE9_l_name}Duinhir" />
 
 	<string id="aom_lord_WE9_u_name" text="{=aom_lord_WE9_u_name}Duilin" />
 

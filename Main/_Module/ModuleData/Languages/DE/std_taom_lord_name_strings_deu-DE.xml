@@ -627,8 +627,8 @@
     <string id="aom_lord_I4_41_name" text="Durghash" />
     <string id="aom_lord_I4_4_name" text="Gorlag, Uruk-hai-Schmiedemeister" />
     <string id="aom_lord_I4_5_name" text="Thraka" />
-    <string id="aom_lord_L1_1_name" text="Galadriel, Herrin von Lothlórien" />
-    <string id="aom_lord_L1_2_name" text="Celeborn, Herr von Lothlórien" />
+    <string id="aom_lord_L1_1_name" text="Galadriel" />
+    <string id="aom_lord_L1_2_name" text="Celeborn" />
     <string id="aom_lord_L1_3_name" text="Galadion" />
     <string id="aom_lord_L2_1_name" text="Caurmínas" />
     <string id="aom_lord_L2_2_name" text="Thandirion" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="Zarrîn" />
     <string id="aom_lord_SH9_8_name" text="Anâhita" />
     <string id="aom_lord_SH9_9_name" text="Bahâra" />
-    <string id="aom_lord_U1_11_name" text="Lord Gimilzôr" />
+    <string id="aom_lord_U1_11_name" text="Gimilzôr" />
     <string id="aom_lord_U1_12_name" text="Gimilthôn" />
     <string id="aom_lord_U1_13_name" text="Pharazôn" />
     <string id="aom_lord_U1_1_name" text="Ar-Gimilkhâd" />

@@ -627,8 +627,8 @@
     <string id="aom_lord_I4_41_name" text="杜爾加什" />
     <string id="aom_lord_I4_4_name" text="戈拉格，烏魯克海鍛造大師" />
     <string id="aom_lord_I4_5_name" text="斯拉卡" />
-    <string id="aom_lord_L1_1_name" text="凱蘭崔爾，羅斯洛立安的夫人" />
-    <string id="aom_lord_L1_2_name" text="凱勒鵬，羅斯洛立安的領主" />
+    <string id="aom_lord_L1_1_name" text="凱蘭崔爾" />
+    <string id="aom_lord_L1_2_name" text="凱勒鵬" />
     <string id="aom_lord_L1_3_name" text="加拉迪昂" />
     <string id="aom_lord_L2_1_name" text="考爾米納斯" />
     <string id="aom_lord_L2_2_name" text="山迪里安" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="扎琳" />
     <string id="aom_lord_SH9_8_name" text="阿娜希塔" />
     <string id="aom_lord_SH9_9_name" text="芭哈拉" />
-    <string id="aom_lord_U1_11_name" text="吉米爾佐爾大人" />
+    <string id="aom_lord_U1_11_name" text="吉米爾佐爾" />
     <string id="aom_lord_U1_12_name" text="吉米爾松" />
     <string id="aom_lord_U1_13_name" text="法拉松" />
     <string id="aom_lord_U1_1_name" text="亞爾-吉米爾卡德" />
