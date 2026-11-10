@@ -2643,3 +2643,11 @@ The first fix pass of a review was green on 38,296 tests and still missed four s
 - **Why missed:** each fix was checked by the test written for it, which drives the path the finding described. A failing test was taken as proof without asking what made it fail.
 - **Prevent:** after a fix pass, check the fixes themselves: for each finding, list every path that reaches the fixed rule (every loop, every phase change between two calls, the extreme of every capped value) and give each a test. When a test is RED only because a member or value is new, run it once against a mutant of the rule (the old comparison, the guard removed) and keep it only if the mutant fails.
 - **Source:** [rca-hero-defence-levels-packs-2026-11-09.md](../rca-hero-defence-levels-packs-2026-11-09.md) rows Q1 to Q6. Related: "Every rule gets a test on each path that reaches it".
+
+### A spike field is checked against the raw data before its verdict is quoted (Hero Defence spikes, 2026-11-09)
+
+Three parts of spike run 6 would have misled a decision. The HOLD-DIAG `call` field rested on `Agent.GetTargetPosition`, which read (0,0) in every sample, so its "self" call meant nothing. LEASH and CAV-BLOCK-2 passed bars looser than the scenarios they were compared with (a 10.6 m peak against an 8 m bar; one return and 3 blows). PIERCE-RANGE aimed with a drop table computed from a guessed drag constant, which sent every arrow at 60 m and 100 m over the shield. The per-arrow miss distance showed the error, and run 7 repeated those cells with the measured drop.
+
+- **Why missed:** the design and measurement reviews read the code. What a native getter returns and how far a computed constant is off show only in a run.
+- **Prevent:** before a spike field feeds a rule or a verdict, show from the raw lines that it varies and tracks what its name says. Give a scenario that is compared with another the same pass bar, or print the other bar beside its own. Log a miss distance for every shot, so a setup error reads as a setup error and not as an engine result. Replace a computed engine constant with a measured one before a recipe uses it.
+- **Source:** `docs/features/hero-defence.md` "Spike results (Gate 1)", runs `20261109-224259` and `20261109-233240`. Related: "A fix gets its own check on every path, and a RED from a stub needs a mutant".
