@@ -129,6 +129,9 @@ Write the testers' checklist too: `python tools/ingame_ledger.py --since <previo
 into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, followed by an "Owed checks not PASS" section with the verdict lines from the run above. Issue titles are
 developer text, so they stay out of the Discord note.
 
+Give the release note and the testers' checklist a row each in `docs/INDEX.md`, beside the other
+release notes, or `tools/tests/test_doc_graph_ratchet.py` fails on two new orphans (v2.4.0 shipped that way).
+
 Add one line to the release note naming the TAOM_Map and LOTRLOME_Armory the release ships. Run
 `python tools/check_release_pairing.py --modules <the folder you will package from> --game-root "<game>"`
 now and copy its `modules:` line, plus any `PAIRING SIGNAL`, into the note. A non-zero exit here does
