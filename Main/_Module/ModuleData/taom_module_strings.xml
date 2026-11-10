@@ -4220,11 +4220,6 @@
 	<string id="taom_wt_halved" text="{=taom_wt_halved}Held by your clan: halved" />
 	<string id="taom_wt_term" text="{=taom_wt_term}{DESCRIPTION}: {CHANGE}% of the base chance" />
 
-	<!-- Vanilla v1.5.6 HeroHelper.GetLastSeenText ids that no installed module defines. Delete these two rows when vanilla defines
-	     the ids: the GameText merge keeps the later module's attributes, so TAOM's row would replace vanilla's text and key. -->
-	<string id="str_last_seen_encyclopedia_entry_leading_army" text="{=taom_str_last_seen_encyclopedia_entry_leading_army}Last seen leading an army {?IS_IN_SETTLEMENT}at{?}near{\?} {SETTLEMENT}." />
-	<string id="str_last_seen_encyclopedia_entry_at_sea_leading_army" text="{=taom_str_last_seen_encyclopedia_entry_at_sea_leading_army}Last seen leading an army sailing near {SETTLEMENT}." />
-
   <!-- TAOM-NEWCULTURE:eredluin:BEGIN -->
   <string id="str_culture_description.eredluin" text="{=taom_str_culture_description.eredluin}The dwarves of Ered Luin dwell in the Blue Mountains at the western edge of Middle-earth. Durin's Folk came there in exile and made Thorin's Halls, and in this age the Broadbeams and the Firebeards keep Belegost and Nogrod again, the oldest dwarf-cities of the West. They are miners and smiths, poorer than their kin in the east, and they trade iron with the Elves of Lindon and the Men of Eriador while the goblins of Blue Craig gnaw at their roads." />
   <string id="str_culture_rich_name.eredluin" text="{=taom_str_culture_rich_name.eredluin}Dwarves of the Blue Mountains" />

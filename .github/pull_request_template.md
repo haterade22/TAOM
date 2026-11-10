@@ -1,4 +1,4 @@
-<!-- Target branch: bannerlord-1.5.x (Bannerlord 1.5.6), or bannerlord-1.4.5 for 1.4.8 bug fixes. See CONTRIBUTING.md. -->
+<!-- Target branch: bannerlord-1.5.x (Bannerlord 1.5.7), or bannerlord-1.4.5 for 1.4.8 bug fixes. See CONTRIBUTING.md. -->
 
 ## What this fixes
 

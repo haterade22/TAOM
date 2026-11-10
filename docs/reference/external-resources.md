@@ -1,6 +1,6 @@
 # External Resources for TAOM
 
-Curated, verified external references for improving TAOM (a Bannerlord LOTR total conversion; v1.4.5 when this was compiled, v1.5.6 now). Compiled 2026-05-29 via web research with per-resource verification (fetched URLs; the docs hierarchy was personally re-checked to correct an official-vs-community mislabel). This is the high-value subset, not an exhaustive dump. Cite this node instead of re-searching.
+Curated, verified external references for improving TAOM (a Bannerlord LOTR total conversion; v1.4.5 when this was compiled, v1.5.7 now). Compiled 2026-05-29 via web research with per-resource verification (fetched URLs; the docs hierarchy was personally re-checked to correct an official-vs-community mislabel). This is the high-value subset, not an exhaustive dump. Cite this node instead of re-searching.
 
 > **Verification key:** ✅ = fetched/confirmed this session · 🔎 = strong search hit, not deep-fetched.
 

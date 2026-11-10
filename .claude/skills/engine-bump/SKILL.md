@@ -59,7 +59,8 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
    docs and RCAs belong to their old binary; re-derive one by engine method or string, not by
    offset ([ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)), or
    carry it. The session-start archive scores the new pair on its own (`python tools/native_archive.py
-   --status` shows `oracle=ok vs <old>`, or a banner NOTE names WRONG matches); without that result, run
+   --status` shows `oracle=ok vs <old>`, or a banner NOTE names WRONG matches; after a same-version hotfix, check that `against_file` in
+   `_native\.native-archive-state.json` is the hotfix file, and score against it by hand if it is not); without that result, run
    `python tools/native_build_match.py --old <archived old client DLL> --oracle` once
    (exit 1, a wrong match: do not use it on this pair; exit 2, no map for the old build: the pair is
    unscored), then `--rva <old offset>`. Only `MATCHED ... (hash)` gives an exact offset, and it
@@ -81,7 +82,8 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
    source compile of HEAD catches those (#1038). It also cannot see an engine enum or const whose
    value moved, which the compiler bakes into the caller (v1.5.6 `BattleEnvironment` lost `None`; only a
    type diff shows it, and a rebuild fixes it). Either kind in HEAD means every channel built before the
-   fix needs a rebuild, even with 0 checker misses.
+   fix needs a rebuild, even with 0 checker misses. A parameter inserted before one of the same type passes every gate at an old
+   positional call site with a changed meaning (v1.5.7 `GetPartyMemberSizeLimit`): after a signature change, read every TAOM caller.
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 

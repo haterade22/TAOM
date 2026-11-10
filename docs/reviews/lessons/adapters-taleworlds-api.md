@@ -1863,3 +1863,11 @@ The first text of the #1107 fix said that every spawn outside vanilla's budget c
 - **Why missed:** each sentence was generalized from one site, the two crew spawners and `TryReinforcementSpawn`. No step compared them with the other spawn sites or with the initial spawn path.
 - **Prevent:** a doc line that names a gate says what its matcher covers. A claim that vanilla "checks X first" names the method that does it, after you read every sibling path.
 - **Source:** #1107, found independently by Codex, the data flow lens and the engine compatibility lens.
+
+### A parameter inserted before one of the same type compiles at the old call sites with a changed meaning (v1.5.7 bump, 2026-11-10)
+
+v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool includeDescriptions = false)` to `(PartyBase, bool isCurrentlyAtSea, bool includeDescriptions = false)`. The override stopped compiling and the one-argument caller failed behind it, but `CareerPerkCheats` passed `(party.Party, true)` and still compiled: its `true` now meant "at sea", with descriptions off.
+
+- **Why missed:** it was found, because the two signatures were compared before the fix. The compiler, the binding gate and `check_engine_member_refs.ps1` all pass such a call, so nothing but a read of every caller finds it.
+- **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
+- **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).

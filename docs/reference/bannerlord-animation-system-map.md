@@ -1,6 +1,6 @@
 # Bannerlord animation system map: from the Modding Kit to an agent's pose
 
-> **Engine and date:** Bannerlord v1.5.3 (the pin on 2026-09-26; `.claude/pinned-game-version.txt` now reads v1.5.6), read on 2026-09-26.
+> **Engine and date:** Bannerlord v1.5.3 (the pin on 2026-09-26; `.claude/pinned-game-version.txt` now reads v1.5.7), read on 2026-09-26.
 >
 > **Binaries:** the client `bin/Win64_Shipping_Client/TaleWorlds.Native.dll` (14,209,376 bytes, dated 2026-09-15,
 > SHA-256 prefix `45be32c57c451f78`) and the Modding Kit's `bin/Win64_Shipping_wEditor/TaleWorlds.Native.dll`

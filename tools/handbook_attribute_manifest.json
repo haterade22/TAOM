@@ -1,5 +1,5 @@
 {
-  "dump_root_name": "_categories_v1.5.6",
+  "dump_root_name": "_categories_v1.5.7",
   "markers": {
     "TaleWorlds.CampaignSystem.CharacterObject|Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem/CharacterObject.cs|Deserialize": {
       "attributes": [

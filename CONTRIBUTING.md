@@ -5,7 +5,7 @@ happens to it after you do.
 
 ## Where to send it
 
-- **Branch:** open pull requests against `bannerlord-1.5.x`, which targets Bannerlord **v1.5.6**
+- **Branch:** open pull requests against `bannerlord-1.5.x`, which targets Bannerlord **v1.5.7**
   (the Steam beta branch). Bug fixes for the legacy Bannerlord 1.4.8 line can go to
   `bannerlord-1.4.5`; build and test those against 1.4.8 and say so in the PR.
 - **One fix per pull request.** Small PRs get reviewed quickly; a bundle waits for its slowest part.
@@ -14,7 +14,7 @@ happens to it after you do.
 
 ## Setting up
 
-The [README](README.md#quick-start-developers) has the full setup. In short: Bannerlord v1.5.6,
+The [README](README.md#quick-start-developers) has the full setup. In short: Bannerlord v1.5.7,
 the .NET SDK (or Visual Studio 2022), and `.\setup-dev-env.ps1` to point the build at your install.
 
 Build and run the tests without deploying into the game:
