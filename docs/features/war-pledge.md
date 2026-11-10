@@ -136,6 +136,7 @@ A number outside its range reverts to the default with a warning. A lean row wit
 - `WarPledgeBehaviorSessionResetTests.cs`: the constructor's reset, the save round trip into a fresh behavior, the daily tick's gates.
 - `WarPledgeWiringTests.cs`: the module shape, and that the container hands the one store to `AlignmentService` and `DiplomacyService`.
 - `WarPledgeCheatReportTests.cs`, `WarPledgeSettingsProviderTests.cs`; `tools/tests/test_analyze_war_ledger.py` for `ev=pledge`; `tools/tests/fixtures/war_ledger_v1.txt`, the one pledge line that the C# formatter test writes and the analyzer test reads.
+- `TAOM.Tests/Features/WarOfTheRingMomentum/MomentumEnrollmentServiceTests.cs` and `WarOfTheRingMomentumKingdomDestroyedTests.cs`: a kingdom's destruction enrolls a realm that took a side since the last sweep before the side's kingdoms are counted, so that realm keeps the war open and is in a victory's peace.
 - Co-op row: [coop-interop.md](coop-interop.md), `WarPledgeBehavior`.
 
 ## How to verify in game
@@ -173,11 +174,12 @@ An unreachable step is reported with the command tried and the unmet preconditio
 - **The Alignment map mode repaints on a war, peace, alliance or fief event** (`RealmBordersCampaignBehavior`). A join that declares no war repaints at the next such event.
 - **Co-op:** only the authority courts and only the authority's console adds a pledge. TAOM's save data is not replicated, so a client that joined before a pledge sees the wars and not the new side. Not exercised in a co-op session.
 - **Balance is not measured.** A joining realm goes to war with every realm of the other side. The observer runs in "How to verify in game" are owed.
-- **Stored sides:** a search of `Main/**/*.cs` for fields that hold a `FactionSide` found only Fire and Tribute's host sides, which come from its own config. The review's data-flow trace found that momentum enrollment, the war ledger, the rally, Fire and Tribute, the Eye of Sauron, recruitment and desertion read the side again on each use; the border paint is the one cache, and it refreshes on its events (above).
+- **Stored sides:** a search of `Main/**/*.cs` for fields that hold a `FactionSide` found only Fire and Tribute's host sides, which come from its own config. Two readers keep a side in another form. The border paint is a cache, and it refreshes on its events (above). Momentum keeps each side's kingdoms as a list (`MomentumWarState`), which the enrollment sweep rebuilds at session launch, on each daily tick and when an enrolled kingdom is destroyed, before the victory check that follows. The AI's join runs before that day's sweep. A realm pledged by the console is on the war meter and in the popup after the next sweep, which is less than a day away while Momentum Tracking is on. What happens before that sweep is not made good later. A battle the realm fights, a siege it wins, a raid it makes and an army it gathers are not recorded: no momentum and no statistic, because each `MomentumEventService` handler returns when a kingdom is not enrolled. A battle that another kingdom of its new side loses is scored against the side's strength without the realm, so that award is larger (`CalculateBattleMomentum`). The war ledger, the rally, Fire and Tribute, the Eye of Sauron, recruitment and desertion read the side again on each use.
 
 ## Changelog
 
 - 2026-11-10: Slice 1 (#1113): the pledge store, the side and tier overrides, the join, the lean table, the AI's daily courting, the ledger line, the notice, two console commands and the MCM switch.
+- 2026-11-10: after the Codex adversarial pass on the landed commit: momentum sweeps its enrollment when an enrolled kingdom is destroyed, before the victory check, so a realm that pledged that day counts for its side; the ledger analyzer no longer lists a pledge once a later kingdom line of that realm shows that a load took it back.
 
 ## GitHub Issue
 

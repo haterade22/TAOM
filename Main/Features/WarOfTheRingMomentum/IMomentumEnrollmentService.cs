@@ -13,6 +13,9 @@ public interface IMomentumEnrollmentService
     /// <summary>Returns true when anything changed (new enrollment / war started).</summary>
     bool SweepEnrollment(MomentumWarState state);
 
-    /// <summary>Handles KingdomDestroyed: drops the kingdom from whichever side holds it.</summary>
+    /// <summary>
+    /// Handles KingdomDestroyed: drops the kingdom from whichever side holds it, then sweeps, so that the
+    /// victory check the caller runs next counts a realm that took a side since the last sweep.
+    /// </summary>
     bool RemoveKingdom(MomentumWarState state, string kingdomId);
 }
