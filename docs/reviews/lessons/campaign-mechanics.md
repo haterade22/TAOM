@@ -1146,3 +1146,9 @@ A failed-join guard skipped the army undo for any party in an event. `MobilePart
 - **Why missed:** each reader stopped at the first formula that explained the number in hand. The same formula had already been corrected once in this review, and that correction did not prompt a read of the whole method.
 - **Prevent:** before a doc says "only when X" from an engine formula, read the whole method, then cover each branch or scope the claim to the branch you read.
 - **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`, Codex pass.
+
+### A guard that waits for a later day names the engine path that ends the wait (#1110, 2026-11-09)
+Arachnophobia Mode skipped a spider brood that held prisoners and said it would disband on a later day. Nothing removes regular prisoners from a bandit party under its prisoner limit: `PrisonerReleaseCampaignBehavior.HourlyPartyTick` releases only above the limit, selling needs a friendly fortification, and prisoner recruitment serves lord parties. A brood that won one fight stayed on the map.
+- **Why missed:** the guard copied a cautious default, and the plan stated the retry as a fact. Nobody traced what clears the condition.
+- **Prevent:** a skip-and-retry guard cites the decompiled line that clears its condition. With no such line, narrow the guard to the state that needs it (here a hero prisoner: an NPC hero has a daily escape chance in `DailyHeroTick`, and the player leaves through player captivity) and let the engine's own destroy handle the rest (`MobileParty.RemoveParty` frees every hero but the player and clears the roster). A chance is not a deadline: write "until the hero leaves", not "on a later day".
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), finding 2.

@@ -1505,3 +1505,11 @@ The faction UI built `{=taom_ency_filters}` and two more keys by concatenation i
 - **Why missed:** both gates start from literals. Nothing walks from a registered key to a reader.
 - **Prevent:** write every TAOM key as a literal `{=taom_...}default` at its use; never pass a key id through a helper. Before a seed run, grep each new key for a reader outside the string tables.
 - **Source:** [rca-factionui-adr013-2026-11-06.md](../rca-factionui-adr013-2026-11-06.md), F2 and F3.
+
+### A setting's hint promises only what the code enforces, exceptions included (#1110, 2026-11-09)
+
+The Arachnophobia Mode hint said "no one can recruit, upgrade into or buy a spider troop". The code kept a hidden troop's own upgrade edges (a comment said so), prisoners and existing volunteer slots stayed recruitable, and Fords of War kept its offer by the maintainer's decision. Codex and the XML lens found the gap from opposite ends.
+
+- **Why missed:** the hint was written from the plan's goal. Each exception was added later, in code or in the doc's "What Stays" section, and nothing compared the two.
+- **Prevent:** before seeding a hint, read every "stays", "keeps" and "still" in the feature doc and the code comments, and check that the hint excludes each or scopes its claim ("new volunteers", "already exist"). An absolute word ("no one", "never") needs a route table behind it.
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), findings 1 and 3.

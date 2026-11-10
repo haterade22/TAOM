@@ -1545,6 +1545,11 @@ public class SubModule : MBSubModuleBase
         IoC.Resolve<Features.MonsterSize.IMonsterSizeService>().ApplyMonsterSizes();
         hookStamp?.Mark("monster_size");
 
+        // Arachnophobia Mode (docs/features/arachnophobia-mode.md): every game init too, because each game reloads its
+        // troops from XML. It runs for Custom Battle as well, and uses the mount items the size pass finished.
+        IoC.Resolve<Features.Arachnophobia.IArachnophobiaService>().ApplyForGame(Features.TaomSettings.Instance?.ArachnophobiaMode ?? false, game?.GameType is Campaign);
+        hookStamp?.Mark("arachnophobia");
+
         // Armour acquisition (docs/features/armour-acquisition.md): every game init too, for the same reason, and
         // before a new game's workshops cache their items (OnNewGameCreatedPartialFollowUp runs after this hook).
         // Only a campaign has the markets, workshops and loot the gate reaches.

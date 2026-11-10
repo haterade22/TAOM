@@ -96,6 +96,22 @@ public class CreatureBanditRulesTests
     public void ShouldSpawnAsCreature_OrdinaryTroop_ReturnsFalse()
         => Assert.IsFalse(CreatureBanditRules.ShouldSpawnAsCreature("taom_spider_creature", isPlayerSide: false, isFieldBattle: true, hasCreatureItem: true));
 
+    [DataTestMethod]
+    [DataRow("spider", true, DisplayName = "the spider Monster")]
+    [DataRow("warg", false, DisplayName = "a warg: the brood tree plays spider clips only")]
+    [DataRow("fell_warg", false, DisplayName = "a fell warg")]
+    [DataRow(null, false, DisplayName = "no Monster")]
+    public void IsBroodMountMonster_ReturnsTrueForTheSpiderOnly(string? monsterId, bool expected)
+        => Assert.AreEqual(expected, CreatureBanditRules.IsBroodMountMonster(monsterId));
+
+    [DataTestMethod]
+    [DataRow(true, false, 0, true, DisplayName = "an idle brood")]
+    [DataRow(false, false, 0, false, DisplayName = "an inactive party")]
+    [DataRow(true, true, 0, false, DisplayName = "a brood in a battle")]
+    [DataRow(true, false, 1, false, DisplayName = "a brood with a hero prisoner")]
+    public void CanDisbandBrood_EachPartyState_ReturnsExpected(bool isActive, bool inBattle, int heroPrisoners, bool expected)
+        => Assert.AreEqual(expected, CreatureBanditRules.CanDisbandBrood(isActive, inBattle, heroPrisoners));
+
     [TestMethod]
     public void IsCreatureBandit_RiderlessNonHumanWithCreatureCharacter_ReturnsTrue()
         => Assert.IsTrue(CreatureBanditRules.IsCreatureBandit(Brood, isHuman: false, hasRider: false));

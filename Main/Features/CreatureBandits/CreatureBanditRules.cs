@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
+using TAOM.Features.Spider;
 
 namespace TAOM.Features.CreatureBandits;
 
@@ -151,6 +152,22 @@ public static class CreatureBanditRules
 
     /// <summary>A brood or troll band that chased or fought its way off its patrol gets the order back, unless it is still in a battle.</summary>
     public static bool NeedsPatrolOrder(bool hasHome, bool inBattle, bool isPatrolling) => hasHome && !inBattle && !isPatrolling;
+
+    /// <summary>
+    /// The brood's riderless body plays spider clips only (creature_bandits.xml). A brood troop on any other Monster,
+    /// which the warg swap of Arachnophobia Mode (#1110) produces, takes the vanilla spawn.
+    /// </summary>
+    public static bool IsBroodMountMonster(string? monsterId) => monsterId == SpiderConfig.SpiderMonsterId;
+
+    /// <summary>
+    /// Whether Arachnophobia Mode (#1110) can remove a brood today. Destroying a party in a battle pulls it off its side
+    /// mid-battle (DestroyPartyAction.cs:25-28), so a brood in a battle waits for a later day. So does a brood holding a
+    /// hero, until the hero leaves: the destroy would drop a captive player from the roster with captivity still running
+    /// (MobileParty.cs:3641-3644 frees every other hero). An NPC hero has a daily escape chance
+    /// (PrisonerReleaseCampaignBehavior.DailyHeroTick), and the player leaves through player captivity. Regular prisoners
+    /// have no exit, so they go with the party, as when vanilla destroys one.
+    /// </summary>
+    public static bool CanDisbandBrood(bool isActive, bool inBattle, int heroPrisoners) => isActive && !inBattle && heroPrisoners == 0;
 
     /// <summary>
     /// The spider Monster carries the horse's flight flags; a creature bandit stands and fights. CanRear too: a blow

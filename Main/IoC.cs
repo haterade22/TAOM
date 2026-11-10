@@ -135,6 +135,7 @@ public static class IoC
         Features.TrollBruteForce.TrollBruteForceIoC.RegisterTrollBruteForceFeature(container);
         Features.DwarfAttacks.DwarfAttacksIoC.RegisterDwarfAttacksFeature(container);
         Features.MonsterSize.MonsterSizeIoC.RegisterMonsterSizeFeature(container);
+        Features.Arachnophobia.ArachnophobiaIoC.RegisterArachnophobiaFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         Features.CombatMechanics.CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);

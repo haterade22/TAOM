@@ -382,6 +382,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 
 ## Changelog
 
+- 2026-11-09: Arachnophobia Mode (#1110) swaps every non-hero spider rider to a warg when it is on; see [arachnophobia-mode.md](arachnophobia-mode.md).
 - 2026-09-29: KEYforce's whole spider meshes (`sk_spiders_a_geo.tpac`) replace the split halves: the Giant, Great (was Brown, now forest_a1 at 1.10x) and Pale Spiders on forest_a1/_a2, and two new mountain mounts on mountain_a1/_a2 for a goblin-tree rider line (`goblin_spider_rider` L21, `goblin_spider_lord` L31, off `goblin_lurker`). Confirmed in game; the split was never needed for these meshes.
 - 2026-09-28: strike rules added for the creature bandits (#692), via `SpiderStrikeProfile` and `SpiderStrikeSet`; the ridden spider keeps `SpiderStrikeSet.Ridden` and is unchanged.
 - 2026-09-17: Brown and Pale Spider mounts (#616): the a1/a2 skins ship as clones of the split c halves in `spider_variants_geo.tpac`, cooked by one Kit save; the Spider Rider becomes a three-rung line (L21 / L26 / L31) with the mount growing 1.0 / 1.10 / 1.25 per rung. The engine's `<Materials>` recolour needs a `horse_body` sub-mesh tag the spider lacks.

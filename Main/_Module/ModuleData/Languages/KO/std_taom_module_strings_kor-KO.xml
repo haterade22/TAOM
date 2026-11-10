@@ -7759,6 +7759,8 @@
     <string id="taom_specres_mcm_gold_only_hint" text="When on, your troops cost no special resource to upgrade, recruit or keep, and none of them desert for lack of it. Gold and wages still apply. The Elite Emissary sells for gold, to a buyer of its own resource group only. You still earn the resource, and the armoury still takes it. When you turn this off, the charges return, and elite troops desert again at a zero balance. Default: off." />
     <string id="taom_specres_mcm_gold_rate" text="Emissary Gold Per Resource" />
     <string id="taom_specres_mcm_gold_rate_hint" text="With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200." />
+    <string id="taom_arachnophobia_mcm_mode" text="Arachnophobia Mode" />
+    <string id="taom_arachnophobia_mcm_mode_hint" text="Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off." />
   </strings>
 
 </base>

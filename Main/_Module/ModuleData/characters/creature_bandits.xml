@@ -9,7 +9,8 @@
        (CreatureBanditsConfig.CreatureTroopIds); add a new creature there too.
 
        The rider parts only matter when the swap declines (a hideout, a siege, the player's side) and the
-       vanilla spawn seats this goblin on its spider: that is why each keeps a race and a face
+       vanilla spawn seats this goblin on its spider, or when Arachnophobia Mode (#1110) has put a warg in the
+       Horse slot, which sends every battle to the vanilla spawn: that is why each keeps a race and a face
        (CharacterFaceCoverageTests) and carries no weapon. No HorseHarness, by design and for good: the
        spawner hands this troop's HorseHarness slot to Mission.SpawnMonster, which puts it on the wild spider,
        so a harness here would saddle every brood spider (_HARNESSLESS_BY_DESIGN). Levels and mounts follow the Spider Rider rungs (21 / 26 / 31: the

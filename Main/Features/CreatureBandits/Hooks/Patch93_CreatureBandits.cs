@@ -31,7 +31,7 @@ public static class Patch93_CreatureBanditSpawn
         BasicCharacterObject? troop = troopOrigin?.Troop;
         Equipment? equipment = troop?.Equipment;
         EquipmentElement creature = equipment?[EquipmentIndex.Horse] ?? default;
-        bool hasCreatureItem = creature.Item?.HasHorseComponent == true;
+        bool hasCreatureItem = CreatureBanditRules.IsBroodMountMonster(creature.Item?.HorseComponent?.Monster?.StringId);
         if (!CreatureBanditRules.ShouldSpawnAsCreature(troop?.StringId, isPlayerSide, __instance.IsFieldBattle, hasCreatureItem))
         {
             if (CreatureBanditRules.IsCreatureTroop(troop?.StringId))
