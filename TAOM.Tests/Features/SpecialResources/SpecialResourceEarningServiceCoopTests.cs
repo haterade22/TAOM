@@ -421,4 +421,60 @@ public class SpecialResourceEarningServiceCoopTests
 
         kit.Service.DidNotReceiveWithAnyArgs().ChargeRecruitCost(default, default, default, default, default);
     }
+
+    // --- Upgrades (#967 C2) ---
+
+    private static CoopUpgradeLine[] Upgrades(params CoopUpgradeLine[] lines) => lines;
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_Server_ChargesThePlayerForEachLineAndReturnsWhatLeft()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+        kit.Service.GetCurrentAmount("g1", "k", "c").Returns(20f, 13f);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(
+            EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2), new CoopUpgradeLine("elite_b", 1)));
+
+        Assert.AreEqual(7f, charged, 0.001f);
+        kit.Service.Received(1).SpendForUpgrade("g1", "k", "c", "elite_a", 2);
+        kit.Service.Received(1).SpendForUpgrade("g1", "k", "c", "elite_b", 1);
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_UntrackedPlayer_IsSeededBeforeTheCharge()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+        kit.Storage.Contains("g1", "war_spoils").Returns(false);
+
+        kit.Sut.ChargeCoopUpgrades(EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Received.InOrder(() =>
+        {
+            kit.Storage.Set("g1", "war_spoils", 10f);
+            kit.Service.SpendForUpgrade("g1", "k", "c", "elite_a", 2);
+        });
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_Client_ChargesAndSeedsNobody()
+    {
+        var kit = new EarningTestKit(session: true, authority: false);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Assert.AreEqual(0f, charged);
+        kit.Service.DidNotReceiveWithAnyArgs().SpendForUpgrade(default, default, default, default, default);
+        kit.Storage.DidNotReceiveWithAnyArgs().Set(default, default, default);
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_UpgraderGone_ChargesNobody()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(null, Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Assert.AreEqual(0f, charged);
+        kit.Service.DidNotReceiveWithAnyArgs().SpendForUpgrade(default, default, default, default, default);
+    }
 }

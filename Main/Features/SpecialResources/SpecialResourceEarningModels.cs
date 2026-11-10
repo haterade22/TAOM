@@ -142,6 +142,19 @@ public sealed class RecruitContext
     public EarnerRef Local { get; }
 }
 
+/// <summary>One upgrade Coop's server applied: the troop the men became, and how many.</summary>
+public sealed class CoopUpgradeLine
+{
+    public CoopUpgradeLine(string targetTroopId, int count)
+    {
+        TargetTroopId = targetTroopId;
+        Count = count;
+    }
+
+    public string TargetTroopId { get; }
+    public int Count { get; }
+}
+
 /// <summary>A recruit charge the local player is told about.</summary>
 public sealed class RecruitChargeNotice
 {

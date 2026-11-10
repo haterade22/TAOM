@@ -31,6 +31,7 @@ public class HarmonyPatchBindingTests
     private static readonly HashSet<Type> ThirdPartyTargetPatches = new HashSet<Type>
     {
         typeof(TAOM.Features.CoopInterop.Hooks.CoopRecruitAttributionPatch),
+        typeof(TAOM.Features.CoopInterop.Hooks.CoopUpgradeChargePatch),
     };
 
     private static bool _gameLoaded;

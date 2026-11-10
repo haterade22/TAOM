@@ -1399,3 +1399,11 @@ The emissary's gold offer held the purse in a `float` and multiplied price by qu
 - **Why missed:** the first pass saw the float and called it a display problem, because the purchase compares ints. Nobody multiplied the offered maximum by the price.
 - **Prevent:** hold money in an integer type or a `double`, never a `float`. Compute an `int` price times an `int` quantity in `long` before comparing it. Test the round trip: build the offer at the largest balance and pass its maximum to the purchase.
 - **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md), row 8.
+
+### Room in a party is its free slots divided by what one troop fills (#1108, 2026-11-09)
+
+The gold-only emissary's first party cap was `PartySizeLimit - NumberOfAllMembers`, one troop per slot. TAOM's Troop Weight already deflates the main party's limit by its weight surplus (`TroopWeightService.ApplyPartySizeWeightPenalty`), so a free slot is a weighted slot, and 10 free slots took 10 weight-3 elites: 20 over the limit.
+
+- **Why missed:** I read the engine's two numbers and not the TAOM model that writes the limit. The weights live in another feature's XML.
+- **Prevent:** before a capacity check, list every writer of the limit, TAOM's models included (`csharp-architecture.md` "Writers before gates"), and ask what one unit fills. Test with a unit heavier than one slot.
+- **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), row 1.

@@ -1868,6 +1868,26 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Evidence.** Not seen in a game; no known way to force it. The `[Check] id=taom.map-event-guard.empty-meeting` line names the party if it happens (`tools/ingame_checks/1099.toml`). `EmptyMeetingGuardServiceTests` pins the rule, `Patch143EmptyMeetingGuardTests` pins the prefix, the Harmony patch of the real target and its priority. `EmptyMeetingAdapter` has no unit test: its reads need a live `PlayerEncounter`. Co-op disposition: ReviewedSafe.
 
+## Patch144_CoopUpgradeCharge
+
+**Target:** `GameInterface.Services.Party.Handlers.PartyDoneLogicHandler.ApplyUpgradedTroopHistory(Hero mainHero, List<Tuple<CharacterObject, CharacterObject, int>> upgradedTroopHistory)` in BannerlordCoop (internal class, private static method; source `PartyDoneLogicHandler.cs:722-729`, confirmed in the installed `GameInterface.dll` on 2026-11-09), resolved by reflection through `ReflectionUtils.FindTypeAcrossLoadedAssemblies`. Postfix. One class `CoopUpgradeChargePatch` in `Main/Features/CoopInterop/Hooks/`, category `Patch144_CoopUpgradeCharge` (GameInit). #967 C2, 2026-11-09. **ACTIVE**
+
+`HarmonyPrepare` returns true only when the Coop type and method resolve, and logs one warning when Coop is active and the method is missing. `HarmonyPatchBindingTests` lists the class in `ThirdPartyTargetPatches`.
+
+**Why.** Coop's client `DoneLogicPrefix` publishes the party screen and then calls `Reset(true)`, so TAOM's `OnPartyScreenReset` cancels the queued upgrade spend and `CommitSession` has nothing to commit. On the server, `TryApplyTroopRosterDeltas` changes the roster (`PartyDoneLogicHandler.cs:305`), and this method stands in for `CampaignEventDispatcher.OnPlayerUpgradedTroops`: it grants the leader's upgrade XP through `SkillLevelingManager.OnUpgradeTroops` (`:727`). Without the postfix a co-op upgrade charges no resource.
+
+**Why this target and not `SkillLevelingManager.OnUpgradeTroops`.** That engine method also has AI and training callers (v1.5.6 `PartyUpgraderCampaignBehavior.cs:133`, `MobilePartyTrainingBehavior.cs:24`), so a patch there would have to work out who upgraded. This target fires only for a player's party screen.
+
+**Callers and actor.** The only caller is `Handle_CompletePartyDoneLogic` (`PartyDoneLogicHandler.cs:328`), inside `GameThread.RunSafe`, so the postfix runs on the game thread. It calls this method only after `TryApplyTroopRosterDeltas` accepted the roster, so a rejected screen charges nothing. Coop source from f3a075369 (in `bannerlord-1.5.x` since e0f969d61) requires `playerManager.IsSenderControllingHero(obj.Who, message.MainHeroId)` (`:179`), so with that build `mainHero` is the requesting player. The installed `GameInterface.dll` (file date 2026-10-29, before that merge on 2026-10-30) has no such guard and applies the screen to whichever hero the message names; Patch144 then charges that hero, whose party received the upgrades.
+
+**The tuple.** `(from, to, count)`: `PartyScreenLogic.UpgradeTroop` calls `AddUpgradeToHistory(character, characterObject, command.TotalNumber)`, where `characterObject` is the upgrade target. The postfix charges the target's row, the same row Patch26 queues. `ToUpgradeLines` keeps each line with a target and a positive count, as a target id and a count, so the service sees no engine type.
+
+**Wiring.** `SpecialResourceEarningService` is Transient and holds per-campaign state, so the patch never resolves it. `SubModule.RegisterSpecialResourcesAndCareers` resolves it once per campaign start, gives it to `SpecialResourcesBehavior`, then calls `CoopUpgradeChargePatch.Initialize` with that instance and `ISpecialResourceEventAdapter` (`SpecialResourceEarningServiceWiringTests`). The adapter's `DescribeHero(heroId)` turns `mainHero.StringId` into the payer. Before the first campaign start the postfix does nothing.
+
+**Nothing escapes.** Coop's handler applies prisoner recruitment effects and the roster order after this call (`:329-331`), so the postfix catches every exception, writes a `fail` check line and calls `Outcomes.Swallowed`. The parameters bind by position (`__0`, `__1`).
+
+**Co-op.** A postfix with no skip, so `CoopVetoClassificationTests` needs no entry. `SpecialResourceEarningService.ChargeCoopUpgrades` uses `RecruitChargePolicy`, so only the authority charges. Limits are in [special-resources.md](../features/special-resources.md) "Co-op upgrade charge". **Tests:** `CoopUpgradeChargePatchTests` (real Harmony on a local fake), `SpecialResourceEarningServiceCoopTests`, and `CoopMissionBindingTests` (LiveInstall), which pins the installed method's parameter types and order against the postfix's. **Check:** `tools/ingame_checks/967.toml`, not yet seen in a game.
+
 ## TAOM.EncyclopediaTroopNames
 
 **Lives in TAOM.Client** (`Client/Features/FactionUI/Campaign/EncyclopediaTroopNames.cs`, eight nested classes): every target but one is in `TaleWorlds.CampaignSystem.ViewModelCollection`, which a dedicated server cannot load (ADR-013).

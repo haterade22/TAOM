@@ -9,7 +9,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 /// <summary>
 /// SpecialResourceEarningService is registered Transient, so every Resolve builds a new instance. One instance
 /// per campaign is the intended wiring: SubModule resolves it once, inside the method that builds the
-/// behavior, and nothing else resolves a second copy.
+/// behavior, gives that instance to the behavior and to Patch144, and nothing else resolves a second copy.
 /// </summary>
 [TestClass]
 public class SpecialResourceEarningServiceWiringTests
@@ -33,7 +33,10 @@ public class SpecialResourceEarningServiceWiringTests
         var method = subModule.IndexOf("private static void RegisterSpecialResourcesAndCareers(", StringComparison.Ordinal);
         var resolve = subModule.IndexOf(Resolve, StringComparison.Ordinal);
         var behavior = subModule.IndexOf("new SpecialResourcesBehavior(", StringComparison.Ordinal);
-        Assert.IsTrue(method >= 0 && method < behavior && behavior < resolve,
-            "the one resolve is an argument of the behavior built in RegisterSpecialResourcesAndCareers");
+        var patchInit = subModule.IndexOf("CoopUpgradeChargePatch.Initialize(", StringComparison.Ordinal);
+        var nextMethod = subModule.IndexOf("private static void ", method + 1, StringComparison.Ordinal);
+        Assert.IsTrue(method >= 0 && method < resolve && resolve < behavior && behavior < patchInit
+                      && (nextMethod < 0 || patchInit < nextMethod),
+            "RegisterSpecialResourcesAndCareers resolves it once, then gives that instance to the behavior and to Patch144");
     }
 }

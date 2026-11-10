@@ -1422,3 +1422,11 @@ The new `HandleWargTargetHit` log read the victim's mount in its `catch`. Patch4
 - **Why missed:** the patch copied the teardown from vanilla's own menu init and checked that the calls matched. Vanilla runs that teardown only on its leave branch, and nobody read the caller above the menu.
 - **Prevent:** before a prefix ends or replaces shared state, read the callers up the stack to the frame that owns that state, and read what each does after the call returns. In a meeting prefix, open a menu and end the encounter from its Leave option, as Patch73, Patch75 and Patch143 do.
 - **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`.
+
+### A patch on another mod's method needs a live-install shape test, and its docs cite the installed build (Patch144, #967, 2026-11-09)
+
+`HarmonyPatchBindingTests` passes a `ThirdPartyTargetPatches` class whenever `Prepare` returns false, which is always in a test host without that mod. Patch144's postfix reads Coop's `__0` and `__1` by position, so a Coop change to the parameters that kept the method name would have passed every test. The registry also said the handler checks the sender, which only the Coop source checkout does; the installed `GameInterface.dll` predates that commit.
+
+- **Why missed:** I took the `ThirdPartyTargetPatches` row for a shape gate. It only proves that `Prepare` fails closed. I read the mod's source checkout, not the DLL the game loads.
+- **Prevent:** add a `BindingVerification` row that loads the installed mod DLL (`CoopMissionBindingTests` does this for Coop) and compares the target's parameter types with the patch method's. Write behaviour claims from the installed build, and name the source commit when the two differ.
+- **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), rows 2 and 3.

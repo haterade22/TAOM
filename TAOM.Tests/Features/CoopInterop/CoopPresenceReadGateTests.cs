@@ -33,6 +33,7 @@ public class CoopPresenceReadGateTests
         ["Main/Features/CoopInterop/CoopPresenceProvider.cs"] = "the provider itself",
         ["Main/Features/CoopInterop/CoopSessionProvider.cs"] = "the session probe that derives the session-aware predicates",
         ["Main/Features/CoopInterop/Hooks/CoopRecruitAttributionPatch.cs"] = "recruit attribution is only wanted while the Coop module is loaded",
+        ["Main/Features/CoopInterop/Hooks/CoopUpgradeChargePatch.cs"] = "Prepare warns about a moved target only while the Coop module is loaded",
         ["Main/Features/MarshalsWord/Hooks/MarshalSpacingPatch.cs"] = "a patch-time decision: the spacing repair stays off wherever a second machine could compute another width",
     };
 

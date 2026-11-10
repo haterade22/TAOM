@@ -42,6 +42,9 @@ public interface ISpecialResourceEventAdapter
     /// <summary>Whose recruit this may be: the scope Patch113 named and the local MainHero. Never throws.</summary>
     RecruitContext SnapshotRecruit();
 
+    /// <summary>The hero with this StringId as an earner, or null when there is none. Never throws.</summary>
+    EarnerRef DescribeHero(string heroId);
+
     /// <summary>Removes the deserting troops from the hero's party and returns how many left.</summary>
     int ApplyDesertion(Hero hero, IReadOnlyList<TroopDesertionEntry> desertions);
 }
