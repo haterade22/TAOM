@@ -230,6 +230,7 @@ public class WarLedgerFormatterTests
             WarLedgerFormatter.DestroyedEvent("c1", 70, "vlandia"),
             WarLedgerFormatter.ChronicleEvent("c1", 71, "hornburg", "Held"),
             WarLedgerFormatter.TierEvent("c1", 41, "k", -2, 7, float.NaN),
+            WarLedgerFormatter.PledgeEvent("c1", 72, "cardolan", FactionSide.Free, byAi: true),
             WarLedgerFormatter.Load("c1", 72),
         };
 

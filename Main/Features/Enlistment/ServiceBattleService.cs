@@ -105,7 +105,8 @@ public class ServiceBattleService : IServiceBattleService
         }
 
         // TOP UP A MISSING WAR before joining (#832), under the oath rules (own-clan identity only).
-        // The encounter menu would otherwise declare it as an untracked war discharge never unwinds.
+        // The encounter menu would otherwise declare it as an untracked war discharge never unwinds
+        // (since v1.5.7 the menu declares none against a caravan or villager leader party).
         // A refusal is logged and the join goes ahead anyway: a war check never refuses a join, and
         // CanPartyJoinBattle stays unused (see IEncounterAdapter).
         if (!string.IsNullOrEmpty(foe) && !_diplomacy.MirrorWarAtJoin(foe))

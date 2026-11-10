@@ -399,6 +399,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "During a siege window, how much more the attackers' armies want to besiege the target and the defender's armies want to defend it once it is attacked. 1 turns the focus off. Needs AI Strategic Intelligence on. Default 1.4.")]
     public float WarChronicleArmyFocus { get; set; } = 1.4f;
 
+    // --- War of the Ring / War Pledge (#1113) ---
+
+    [SettingPropertyGroup("War of the Ring/War Pledge")]
+    [SettingPropertyBool("{=taom_war_pledge_mcm_enabled}Enable War Pledge", Order = 0, RequireRestart = false,
+        HintText = "{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on.")]
+    public bool WarPledgeEnabled { get; set; } = true;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("Battle Balance/Troop Power")]

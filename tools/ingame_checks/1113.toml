@@ -1,0 +1,46 @@
+# In-game checks for #1113, read by tools/ingame_verdict.py.
+# Written by Main/Features/WarPledge/WarPledgeService.cs when a realm pledges: the AI's daily step, or the console
+# command taom.add_war_pledge. OutcomeLog writes a line once per result and key in a process, and the key is the kingdom
+# id, so a second join of the same realm in one process (a reload, a second campaign) writes no line: test each realm
+# once per process. The detail counts the wars the join owes (expected) and the wars the stance holds after it (wars),
+# the realms of its new side it made peace with (peace) and the wars with its new side that did not end (stuck).
+issue = 1113
+title = "War Pledge: Neutral realms join the War of the Ring for good"
+fixed_in = "8841aac99"   # trunk on origin before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.war-pledge.joined"
+needs = "cheat mode on, and Enable War of the Ring on in MCM. Then a join in Full War: turn on War of the Ring Test Mode in MCM, start a campaign, pass day 4, then run taom.add_war_pledge cardolan free confirm in the console (or, with Test Mode off, wait for the AI's first join: 30 days into Full War, with the war meter 25 or more against a side)"
+reached = ['\[Check\] id=taom\.war-pledge\.joined result=(pass|fail) ']
+# wars must equal expected (the back-reference): the service writes result=pass only then, and the pattern says so too.
+pass = ['\[Check\] id=taom\.war-pledge\.joined result=pass side=(?:free|evil) by=(?:ai|console) wars=([1-9]\d*) expected=\1 peace=\d+ stuck=0$']
+# A pass line with wars=0 is a FAIL here. In this check's scenario every realm of the other side is alive, so a join
+# that owed no war means the War of the Ring did not hold the pledged realm at war with them: the tier override or
+# blockPeaceBetweenHostileTiers did not take effect. The service calls that a pass because nothing it owed is missing.
+fail = ['\[Check\] id=taom\.war-pledge\.joined result=fail ', '\[Check\] id=taom\.war-pledge\.joined result=pass side=\w+ by=\w+ wars=0 ']
+absence = "not-reached"
+
+[[human]]
+claim = "after taom.add_war_pledge cardolan free confirm, a banner on the map and a line in the message log say that Cardolan joins the Free Peoples in the War of the Ring"
+
+[[human]]
+claim = "the encyclopedia then shows Cardolan at war with every realm of the Shadow that is still alive, and at peace with every Free realm"
+
+[[human]]
+claim = "a peace proposal between Cardolan and a realm of the Shadow is refused, as it is for Gondor"
+
+[[human]]
+claim = "after the next daily tick, the momentum popup lists Cardolan on the Free side"
+
+[[human]]
+claim = "the Alignment map mode paints Cardolan's lands in the Free colour after the join (the map repaints on the join's war declarations)"
+
+[[human]]
+claim = "after a save and a reload, taom.print_war_pledges still shows Cardolan pledged Free"
+
+[[human]]
+claim = "a second campaign started in the same process shows no pledge in taom.print_war_pledges"
+
+[[human]]
+claim = "in an observer campaign with Test Mode off, the AI adds no realm in the first 30 days of Full War, and then adds one realm that leans to the side the war meter stands 25 or more against"

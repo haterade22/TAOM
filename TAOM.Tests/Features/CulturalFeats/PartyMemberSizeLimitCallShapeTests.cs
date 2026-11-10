@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static TAOM.Tests.Infrastructure.RepoPaths;
 
@@ -15,12 +16,15 @@ namespace TAOM.Tests.Features.CulturalFeats;
 /// The rule here: no <c>true</c> or <c>false</c> literal goes to that method by position. A bool
 /// variable and <c>default</c> are outside the rule. The scanner blanks comments and string and
 /// character literals, then reads balanced brackets, so a nested call in an argument is still seen
-/// (Codex pre-review F1, 2026-11-10). It does not read raw string literals or interpolation holes.
+/// (Codex pre-review F1, 2026-11-10). It cannot read a call inside an interpolation hole or a raw string,
+/// so <see cref="TaomCallers_AreAllReadByTheScanner"/> fails when one exists (deep review F2, 2026-11-10).
 /// </summary>
 [TestClass]
 public class PartyMemberSizeLimitCallShapeTests
 {
     private const string Method = "GetPartyMemberSizeLimit";
+
+    private static readonly Regex RawCall = new Regex(@"(?<![A-Za-z0-9_])" + Method + @"\s*\(", RegexOptions.Compiled);
 
     [TestMethod]
     public void TaomCallers_PassNoPositionalBoolLiteral()
@@ -36,6 +40,28 @@ public class PartyMemberSizeLimitCallShapeTests
             .Select(c => $"{Path.GetFileName(c.File)}: {Method}({string.Join(", ", c.Call.Arguments)})")
             .ToList();
         Assert.AreEqual(0, offenders.Count, "name the bool argument: " + string.Join("; ", offenders));
+    }
+
+    [TestMethod]
+    public void TaomCallers_AreAllReadByTheScanner()
+    {
+        // A call the scanner did not read is a call the rule above never judged.
+        var unread = CSharpFiles("Main", "Client", "Dependencies")
+            .Where(file => CountUnreadCalls(File.ReadAllText(file)) != 0)
+            .Select(Path.GetFileName)
+            .ToList();
+        Assert.AreEqual(0, unread.Count,
+            $"{Method} stands inside a string (an interpolation hole, most likely) in: {string.Join(", ", unread)}. Move the call into a local variable.");
+    }
+
+    [DataTestMethod]
+    [DataRow("m.GetPartyMemberSizeLimit(party, true);", 0, DisplayName = "a call in code is read")]
+    [DataRow("var s = $\"limit {m.GetPartyMemberSizeLimit(party, true)}\";", 1, DisplayName = "a call in an interpolation hole is not read")]
+    [DataRow("// m.GetPartyMemberSizeLimit(party, true)", 0, DisplayName = "a comment holds no call")]
+    [DataRow("public override ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, bool isCurrentlyAtSea)", 0, DisplayName = "a declaration is read")]
+    public void CountUnreadCalls_FindsWhatTheScannerMissed(string source, int unread)
+    {
+        Assert.AreEqual(unread, CountUnreadCalls(source));
     }
 
     [DataTestMethod]
@@ -77,6 +103,13 @@ public class PartyMemberSizeLimitCallShapeTests
 
     private static bool HasPositionalBoolLiteral(IReadOnlyList<string> arguments) =>
         arguments.Any(a => a == "true" || a == "false");
+
+    /// <summary>
+    /// The calls that stand in the source outside every comment and that <see cref="FindCalls"/> did not read,
+    /// because the scanner blanked them with a string. The method's name with a bracket in a plain string counts too.
+    /// </summary>
+    private static int CountUnreadCalls(string source) =>
+        RawCall.Matches(BlankCommentsAndLiterals(source, keepLiterals: true)).Count - FindCalls(source).Count();
 
     /// <summary>Every <c>GetPartyMemberSizeLimit(...)</c> in code, with its top-level arguments.</summary>
     private static IEnumerable<Call> FindCalls(string source)
@@ -139,8 +172,11 @@ public class PartyMemberSizeLimitCallShapeTests
         return arguments;
     }
 
-    /// <summary>Comments and string and character literals become spaces; line breaks and lengths stay.</summary>
-    private static string BlankCommentsAndLiterals(string source)
+    /// <summary>
+    /// Comments and string and character literals become spaces; line breaks and lengths stay. With
+    /// <paramref name="keepLiterals"/> only comments are blanked, and a comment mark inside a string is still text.
+    /// </summary>
+    private static string BlankCommentsAndLiterals(string source, bool keepLiterals = false)
     {
         var text = new StringBuilder(source);
         var i = 0;
@@ -149,6 +185,7 @@ public class PartyMemberSizeLimitCallShapeTests
             var c = source[i];
             var next = i + 1 < source.Length ? source[i + 1] : '\0';
             var third = i + 2 < source.Length ? source[i + 2] : '\0';
+            var isComment = c == '/' && (next == '/' || next == '*');
             int end;
             if (c == '/' && next == '/')
                 end = EndOfLine(source, i);
@@ -166,7 +203,7 @@ public class PartyMemberSizeLimitCallShapeTests
                 continue;
             }
 
-            for (var k = i; k < end; k++)
+            for (var k = i; (isComment || !keepLiterals) && k < end; k++)
             {
                 if (source[k] != '\n' && source[k] != '\r')
                     text[k] = ' ';

@@ -10,6 +10,335 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.38 (2026-11-10)
+
+Commits since v2.0.37: 19 (19 with the version label, 0 without); 1 landed twice and is listed once.
+
+### Features
+
+#### feat(battle-hud): v2.0.37 - Add circular HUD and ammo counter
+
+`30be2d60`
+
+Replace the native health bars with a compact, textured circular HUD.
+Horse and shield rings appear only while equipped. The centre shows
+career charge, its ability icon and the configured activation key.
+
+Close the gaps between rings and increase the health red's saturation.
+Hide the weapon previews and show native ammo counts in a small capsule
+with the approved elven quiver or single-javelin icon. Load its sprites
+with the mission HUD and release them when it closes.
+
+Refs #1095.
+Validation: solution build and 241 focused HUD/UI tests passed against
+Bannerlord v1.5.7. Equipment states and texture were reviewed earlier.
+Not-tested: live ammo weapon switching and low-ammo alert animation.
+
+### Fixes
+
+#### fix(tools): v2.0.37 - Fixing Fix
+
+`fa2a3b26`
+
+#### fix(engine): v2.0.37 - Close the findings of the v1.5.7 reviews
+
+`9625000c`
+
+Four reviews ran on the released v1.5.7 bump: a Codex pre-review, a
+sweep of the engine diff, the deep-review lenses and the full gate
+run. None found a fault in the three code edits of the fix. This
+commit closes what they did find.
+
+- The call-shape gate for GetPartyMemberSizeLimit could not read a
+  call inside an interpolation hole, and the taom.career_perks cheat
+  had one. The call is now a local, and a second test fails when a
+  call stands in a string.
+- A new LiveInstall test fails when the live TAOM_Map or
+  LOTRLOME_Armory manifest names another engine version than the pin.
+- check_handbook_attributes.py exits 2 when its --docs folder does
+  not exist. It printed "0 finding(s)" and exited 0.
+- Three Enlistment comments said that Attack always starts a war.
+  v1.5.7 skips the hostile action against a caravan or villager
+  leader party. The sit-out rule itself is unchanged: whether it
+  should let those fights through waits for the maintainer.
+- The record (v1.5.7-impact.md, v1.5.7-diff-ranked.md) is corrected
+  where it said more than its evidence. Four call sites changed, not
+  three. It now lists the engine changes it left out. The Modding Kit
+  and the Dedicated Server both moved to v1.5.7 within the hour. A
+  third engine caller of the party size model writes the troop weight
+  snapshot when the map bar tooltip opens (display only).
+- The Modding Kit decompile is regenerated. Its build asserts that
+  the player is already at war with the faction of a caravan or
+  villager party when Attack runs.
+- /engine-bump gains two steps: grep comments and docs for each
+  changed engine member, and read the Kit and server versions again
+  before the commit that states them.
+
+Known limitation: nothing has run in game on v1.5.7.
+
+Gates on this tree: build 0 errors; C# suite 38,050 passed, 0 failed,
+9 skipped; strict binding gate 966 of 966; Python tool suite 8,487
+tests OK (12 skipped); both native pin files OK; the API snapshot
+reproduces; lint_docs exits 0.
+
+RCA: docs/reviews/rca-engine-bump-v1-5-7-2026-11-10.md
+Refs #1112
+
+#### fix(tools): v2.0.37 - Define retopology metadata value semantics
+
+`07809f9b`
+
+Infer undeclared point attributes through subdivision and seam merging, preserve exact source mappings across disconnected components, and default generated guide and seam flags to false. Drop unsupported attribute domains consistently and document the propagation rules. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Complete auto fill metadata propagation
+
+`5481c31e`
+
+Slice and combine point and face attributes for per-pattern auto fill, propagate point values through split and subdivision vertices, and preserve undeclared point mappings during seam merging. Use distinct face IDs in the Blender mixed-domain verification. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Propagate domains through retopology workflows
+
+`b6403c26`
+
+Preserve face metadata through auto fill and mirroring, map point and face attributes through separation, seam merging, and thickness, and handle mixed-domain guides with defined defaults. Reject stale attribute arrays on Blender export and test the full round trip. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(sworn-anew): v2.0.37 - Side a captured lord by their own clan
+
+`2d6e5b9e`
+
+Sworn Anew lets the player recruit a captured lord and refuses when
+the lord and the player's realm are Free against Evil. It read the
+lord's side from the realm the lord serves, while Kingdom Allegiance
+(#1111) reads it from the lord's own clan. An orc lord whose clan
+served Gondor therefore read Free: a Rohan player could turn them and
+a Mordor player could not.
+
+For players: a captured lord is now judged by their own people,
+whatever realm they serve. An orc lord serving Gondor can swear to an
+Evil realm, not a Free one. A Free lord serving a Neutral realm can
+no longer swear to Mordor. A Neutral lord, such as a Khand clan
+serving Mordor, can now be asked by any player. Lords whose clan and
+realm are on the same side, every lord at a new game, keep their old
+answer.
+
+How: SwornAnewAdapter builds the lord's side with
+FactionSides.OfOwnClan, the clan's own id and culture, as Kingdom
+Allegiance does. The player's side stays the player's realm.
+
+Review: /deep-review tier 1 (data flow, engine compatibility) and a
+Codex pre-review on the installed v1.5.7 DLLs found no behaviour
+defect. One medium and seven low test and doc findings were fixed
+here: OfOwnClan now has behavioural tests on staged engine objects,
+an older FactionSides test no longer reads OfOwnClan's text, and the
+checklist sets up every case with campaign.set_clan_culture. See
+docs/reviews/rca-sworn-anew-own-clan-2026-11-10.md.
+
+Verification on this tree with Bannerlord v1.5.7: full suite 38,096
+passed, 0 failed, 9 skipped; canary tripped; API snapshot reproduces;
+lint_docs exits 0. Tool tests ran 8,490 with one failure, the doc
+graph ratchet, whose two new orphans are the v2.0.37 release notes
+in docs/releases/, which this change does not touch.
+
+Not-tested: no in-game run yet; sworn-anew.md checklist step 17.
+
+Refs #1114
+
+#### fix(tools): v2.0.37 - Carry retopology attribute domains explicitly
+
+`47151627`
+
+Store attribute domains on Mesh and preserve them through copying, Blender reads and writes, combined guides, vertex splitting, and compaction. This keeps point pattern IDs and face pattern, part, and plane IDs correct even when counts become ambiguous. Add explicit-domain and general-loop UV regressions. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Adding
+
+`335d6a65`
+
+#### fix(tools): v2.0.37 - Preserve metadata domains in topology repair
+
+`c20bd0ab`
+
+Determine point and face attribute domains before splitting so face identifiers cannot grow or remap as vertex data. Skip repair work for healthy meshes and use linear-time component labels. Document the independent inspector UV evidence. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Preserve face identity in topology repair
+
+`0a7393a7`
+
+Use canonical face slots during triangle splitting, copy only point-domain attributes, resolve debug edges through face provenance, and normalize mirrored loose-line keys. Remove unused quadratic UV work and strengthen differential, metadata, and helper-transform checks. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(kingdom-allegiance): v2.0.37 - Keep AI lords to their own side
+
+`85e8788d`
+
+A player found orc lords serving Gondor, and Free lords started new
+campaigns as friends of Mordor and Isengard lords. The start data was
+right: vanilla's AI weighs culture when a clan joins, defects to or
+hires on with a realm, but never blocks a realm of the other side, and
+the new-game relation roll never reads the Free/Evil side.
+
+For players: an AI clan of the Free Peoples no longer joins, defects
+to or hires on as mercenaries with an Evil realm, and an Evil clan no
+longer does so with a Free realm. Neutral clans and realms still deal
+with either side. A new campaign starts with no Free-vs-Evil
+friendships: each one becomes enmity of the same strength. The switch
+is MCM "World/Kingdom Allegiance", on by default, no restart.
+
+Limits: clans that already serve an opposed realm stay; only new
+joins are vetoed. The player keeps vanilla's freedom: the player's
+clan and a realm the player rules are never vetoed. The friendship
+flip applies to new campaigns only. The vanilla Last Stand and
+invasion start scenarios (offered only while War of the Ring is off),
+cheats and two StoryMode quests move clans without a score, so the
+veto does not reach them.
+
+How: TaomDiplomacyModel returns vanilla's own veto score for the clan
+and mercenary join scores when an AI clan meets an AI-led realm of
+the opposed side, except for the realm the clan already serves:
+vanilla's mercenary leave score subtracts that join score, so vetoing
+it pushed serving mercenaries out. Patch145, a postfix on
+CharacterRelationCampaignBehavior.UpdateFriendshipAndEnemies, flips
+the opposed friendships of living and dead lords after vanilla's
+roll. Sides come from execution/alignment.json through each clan's
+own id and culture, never its realm.
+
+Review: /deep-review tier 1 (data flow, engine compatibility, XML)
+and a Codex pre-review, against the installed v1.5.7 DLLs. Three
+medium and eight low findings were fixed in this change; see
+docs/reviews/rca-kingdom-allegiance-2026-11-10.md.
+
+Verification with Bannerlord v1.5.7, on this change over trunk
+8841aac99 (the later commits change no production code and none of
+this change's files): full suite 38,077 passed, 0 failed, 9 skipped;
+canary tripped; API snapshot reproduces; data gates 5 PASS; lint_docs
+exits 0. Tool tests ran 8,486 with one failure in another session's
+then uncommitted retopology test, which this change does not touch.
+
+Not-tested: no in-game run yet; the checks are in
+tools/ingame_checks/1111.toml. The two new MCM strings carry English
+in the 12 language files until the translator runs (#763).
+
+Refs #1111
+
+#### fix(tools): v2.0.37 - Make retopology repair deterministic
+
+`61b03036`
+
+Canonicalize non-manifold repair across input face order, preserve asymmetric mirror attributes and duplicate-triangle connectors, and carry object transforms through inspector outputs. Clarify the measured high-sharp layout difference and add regression coverage. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+### Tests
+
+#### test(engine): v2.0.37 - Make the party size call gate read nested calls
+
+`6ba5dff0`
+
+Follow-ups from the Codex pre-review of the v1.5.7 engine bump. No
+shipped code changes.
+
+PartyMemberSizeLimitCallShapeTests looked for the call with a pattern
+that could not see an argument with brackets in it, so
+GetPartyMemberSizeLimit(ResolveParty(), true) passed, and a string
+that held the call text failed. The test now blanks comments and
+string and character literals, reads balanced brackets and splits the
+top-level arguments. Fourteen shape cases pin it: a nested call, a
+space before the bracket, arguments over several lines, a named
+literal, a variable, a string, a verbatim string, both comment kinds,
+a declaration and a nameof. The rule is a true or false literal
+passed by position; a bool variable is outside it.
+
+docs/features/keep-wardens.md showed the patrol hook's call with one
+argument, which no longer compiles on v1.5.7. It now shows the call
+the code makes.
+
+docs/migration/v1.5.7-impact.md names the commits and the v2.0.37
+tag, records that a tester's log confirmed the new campaign hang, and
+lists two items that wait for a decision: the testing package and the
+enlistment sit-out rule, which is now stricter than v1.5.7 needs for
+caravans and villager parties. v1.5.7-diff-ranked.md qualifies the
+party health tooltip row for a party at sea with a naval DLC crew
+bonus.
+
+Refs #1112
+
+### Documentation
+
+#### docs(index): v2.0.37 - Link the since-October Discord note
+
+`93b07114`
+
+docs/releases/2026-11-10-since-oct-28-discord.md reached trunk with no
+link to it and none out of it, so the doc graph ratchet failed on the
+merged tree: "components: 15 exceeds the baseline 14". One line in
+docs/INDEX.md, beside the other release notes, joins it to the graph.
+The ratchet then reads orphans 9 and components 14.
+
+#### docs(reviews): v2.0.37 - Record the harness retro of 2026-11-10
+
+`0e884df2`
+
+The retro Mike asked for after the Bannerlord v1.5.7 bump (#1112). It
+reads the session transcripts of 2026-11-03 to 2026-11-10: 55 main
+sessions and 1,183 subagent transcripts, with no parse failure.
+
+The record gives a verdict on each harness change older than seven
+days and proposes two edits. Both wait for Mike's decision, and this
+commit changes no harness file.
+
+- check-verification-evidence stopped a session 32 times in 16
+  sessions. In 16 of those the changed C# file belonged to another
+  session or tree: the hook reads the whole shared checkout against
+  one build marker. The proposal is to judge only the session's own
+  edits and runs.
+- The UPSTREAM AHEAD banner printed in 49 sessions and no session
+  acted on it. The proposal is to print it once in seven days.
+
+The Gates section of the v1.5.7 impact doc gains the run on the review
+follow-ups (a7a628c73): 38,221 C# tests and 8,489 tool tests, with no
+failure.
+
+#### docs(release): v2.0.37 - Full release note, linked from the index
+
+`a7a628c7`
+
+The v2.0.37 note listed only the engine change. It now covers the 442
+commits since v2.0.36 by feature, in 166 bullets that were checked
+against their commit bodies. The save, settings and package warnings
+are on top, and the known limits and a test list are at the end. A
+line that says "not tested in game" means no person has seen it work.
+
+The tool suite was red at the tag: the release added the two v2.0.37
+notes and nothing linked them, so the doc graph ratchet counted two
+new orphans. docs/INDEX.md now links both, and /release Phase 5 adds
+that line and runs the ratchet.
+
+Refs #1112
+
+#### docs(rules): v2.0.37 - Codify the Kingdom Allegiance review lessons
+
+`99d914b8`
+
+Two rule lines from the Kingdom Allegiance review (#1111):
+
+- gamemodels.md rule 1: before overriding a model method, grep the
+  base model and the engine for every call of it, the base class's own
+  virtual self-calls included. The mercenary leave score reads the
+  mercenary join score, which the first version of the veto missed.
+- adapters.md: a singleton adapter keeps no engine object after its
+  operation; one that must hold them across calls exposes a release
+  the service calls in a finally. This repeats #952.
+
+The RCA now records both as applied.
+
+### Chores
+
+#### chore(release): v2.0.37 - Reseed the shipped troop id baseline
+
+`af753fcd`
+
+tools/shipped_troop_ids.txt now lists the 1,120 troop ids that the
+v2.0.37 tag ships, read from the tag's 27 troop files. The
+TROOP_ID_REMOVED check compares later work with this list, so a troop
+id that a tester's save can hold does not leave the data unnoticed.
+Nothing changes for players.
+
 ## v2.0.37 (2026-11-10)
 
 Commits since v2.0.36: 439 (439 with the version label, 0 without); 3 landed twice and are listed once.

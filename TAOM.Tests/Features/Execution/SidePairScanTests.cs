@@ -42,6 +42,7 @@ public class SidePairScanTests
         ["TAOM.Features.WarChronicle.Events.ChronicleOutcomeService"] = "a kingdom id with GetKingdomCultureId of that kingdom",
         ["TAOM.Features.WarChronicle.Ledger.WarLedgerService"] = "a kingdom row's id with the culture of that same kingdom",
         ["TAOM.Features.WarChronicle.Rally.RallyService"] = "a kingdom row's id with the culture of that same kingdom",
+        ["TAOM.Features.WarPledge.WarPledgeService"] = "a kingdom's id with GetKingdomCultureId of that same kingdom (CanJoin: a realm sided through its culture cannot pledge)",
     };
 
     /// <summary>The types that may construct or copy a <c>SideIds</c>: the one engine-to-pair adapter and the record itself.</summary>

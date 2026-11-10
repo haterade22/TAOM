@@ -797,6 +797,14 @@ class CliTests(_Tree):
         self.assertEqual(code, 2)
         self.assertIn("--update", err)
 
+    def test_missing_docs_folder_exits_2(self):
+        # A wrong --docs path read no file, printed "0 finding(s)" and exited 0.
+        args = self._base_args()
+        args[args.index("--docs") + 1] = str(self.root / "no_docs")
+        code, _, err = self._main(*args)
+        self.assertEqual(code, 2)
+        self.assertIn(str(self.root / "no_docs"), err)
+
     def test_json_writes_the_report(self):
         _write(self.docs / "widgets.md", _chapter(attr_names=ALL_ATTRS + ["invented"]))
         out_path = self.root / "report.json"
