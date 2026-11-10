@@ -719,18 +719,23 @@ class ContractRegressionTests(unittest.TestCase):
             engine.inspect_topology(mesh, fix_split_edges=True)[0],
             engine.inspect_topology(mesh, fix_split_edges=False)[0],
             engine.merge_output_seams(mesh, 0),
+            engine.retopologize(differential.curved_grid(), mesh, RetopoSettings(output_generated_planes=True)),
         ]
         for result in results:
             self.assertNotIn("weight", result.attributes)
             self.assertNotIn("corner_tag", result.attributes)
             self.assertNotIn("short_point", result.attributes)
             self.assertNotIn("stale", result.attributes)
+            self.assertNotIn("weight", result.attribute_domains)
+            self.assertNotIn("corner_tag", result.attribute_domains)
+            self.assertNotIn("short_point", result.attribute_domains)
+            self.assertNotIn("stale", result.attribute_domains)
             self.assertIn("source_vertex", result.attributes)
         line_mesh = weld_mesh.copy()
         line_mesh.vertices.append((9, 9, 0))
-        line_mesh.lines = [(7, 8)]
+        line_mesh.lines = [(4, 8)]
         line_result = engine.merge_output_seams(line_mesh, 0.01)
-        self.assertEqual([(5, 6)], line_result.lines)
+        self.assertEqual([(0, 6)], line_result.lines)
         engine.subdivide_quads(line_result)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):

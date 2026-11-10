@@ -36,19 +36,19 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
         )
         for name in ("source_position", "pattern_center"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain in {"POINT", "FACE"}:
+            if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [tuple(item.vector) for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = attribute.domain
+                mesh.attribute_domains[name] = "POINT"
         for name in ("source_vertex", "source_part", "pattern_id"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain in {"POINT", "FACE"}:
+            if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = attribute.domain
+                mesh.attribute_domains[name] = "POINT"
         for name in ("point_guide", "open_seam", "simplify_on"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain in {"POINT", "FACE"}:
+            if attribute and attribute.domain == "POINT":
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = attribute.domain
+                mesh.attribute_domains[name] = "POINT"
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain in {"POINT", "FACE"}:
@@ -134,6 +134,8 @@ def combine_objects(objects, name="Combined guides"):
         "source_vertex": 0,
         "source_part": 0,
         "pattern_id": 0,
+        "part_id": 0,
+        "retopo_plane_id": 0,
         "point_guide": False,
         "open_seam": False,
         "simplify_on": False,

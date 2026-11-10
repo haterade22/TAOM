@@ -92,7 +92,7 @@ class Mesh:
         for name in names:
             if name in self.attributes:
                 del self.attributes[name]
-                self.attribute_domains.pop(name, None)
+            self.attribute_domains.pop(name, None)
 
     def edges(self) -> list[Edge]:
         face_edges = {

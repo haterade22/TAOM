@@ -1470,8 +1470,9 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
             across_patterns=settings.auto_fill,
         )
     if settings.output_generated_planes:
-        working.uv = []
-        return working
+        result = _normalized_copy(working)
+        result.uv = []
+        return result
     working = snap_guides_to_pattern(working, flat, settings.snapping_distance * 0.001)
     working = apply_density(working, settings)
     if settings.smooth_low_poly and settings.smooth_uvs:

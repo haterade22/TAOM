@@ -136,10 +136,9 @@ def main():
         assert face_source_output.data.attributes["source_position"].domain == "FACE"
         assert face_source_output.data.attributes["point_guide"].domain == "FACE"
         face_roundtrip = mesh_from_blender(face_source_output)
-        assert face_roundtrip.attributes["source_vertex"] == [42] * 4
-        assert face_roundtrip.attributes["source_position"] == [(1, 2, 3)] * 4
-        assert face_roundtrip.attributes["point_guide"] == [True] * 4
-        assert face_roundtrip.attribute_domains["source_vertex"] == "FACE"
+        assert "source_vertex" not in face_roundtrip.attributes
+        assert "source_position" not in face_roundtrip.attributes
+        assert "point_guide" not in face_roundtrip.attributes
         unsupported = roundtrip.copy()
         unsupported.attributes["point_guide"] = [True] * len(unsupported.vertices)
         unsupported.attribute_domains["point_guide"] = "CORNER"
@@ -149,11 +148,17 @@ def main():
         point_variant = roundtrip.copy()
         point_variant.attributes["pattern_id"] = [7] * len(point_variant.vertices)
         point_variant.attributes["part_id"] = [1] * len(point_variant.vertices)
-        point_variant.attribute_domains.update({"pattern_id": "POINT", "part_id": "POINT"})
+        point_variant.attributes["retopo_plane_id"] = [2] * len(point_variant.vertices)
+        point_variant.attribute_domains.update({"pattern_id": "POINT", "part_id": "POINT", "retopo_plane_id": "POINT"})
         point_output = mesh_to_blender(point_variant, "TAOM_PointPattern")
         point_roundtrip = mesh_from_blender(point_output)
         assert point_roundtrip.attributes["pattern_id"] == [7] * len(point_output.data.vertices)
         assert point_roundtrip.attributes["part_id"] == [1] * len(point_output.data.vertices)
+        combined_point = combine_objects([point_output])
+        assert combined_point.attributes["part_id"] == [1] * len(point_output.data.vertices)
+        assert combined_point.attributes["retopo_plane_id"] == [2] * len(point_output.data.vertices)
+        assert combined_point.attribute_domains["part_id"] == "POINT"
+        assert combined_point.attribute_domains["retopo_plane_id"] == "POINT"
         distinct = roundtrip.copy()
         distinct.attributes["pattern_id"] = [10, 11, 12, 13]
         distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")
