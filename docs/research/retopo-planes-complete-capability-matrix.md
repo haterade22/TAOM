@@ -10,8 +10,9 @@ Coverage and differential parity are separate claims: the high-sharp density lay
 a measured difference, not an exact geometry match.
 
 Complete vertex positions, oriented connectivity, and geometry-UV associations match for the base,
-subdivision, UV, ring, X mirror, separation, positive thickness, and inspector fixtures. The oracle
-compares complete synthetic meshes, not truncated samples. TAOM deliberately corrects three invalid
+subdivision, UV, ring, X mirror, separation, and positive-thickness fixtures. Inspector geometry
+matches its reference, with UV and face-metadata associations covered by dedicated UV-bearing
+contract regressions. The oracle compares complete synthetic meshes, not truncated samples. TAOM deliberately corrects three invalid
 captured behaviors: bow-tie initialization, inverted Y-mirror normals, and inside-out negative
 thickness. Those exceptions retain position and UV comparisons and independently require nonzero
 area, outward normals, or positive volume. Density compares reference face counts except for the

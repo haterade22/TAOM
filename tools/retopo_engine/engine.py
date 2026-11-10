@@ -68,12 +68,12 @@ def _pattern_faces(mesh: Mesh):
     for adjacent in edge_faces.values():
         for face_index in adjacent[1:]:
             union(adjacent[0], face_index)
-    roots = []
+    roots = {}
     for face_index in range(len(mesh.faces)):
         face_root = root(face_index)
         if face_root not in roots:
-            roots.append(face_root)
-    return {index: roots.index(root(index)) for index in range(len(mesh.faces))}
+            roots[face_root] = len(roots)
+    return {index: roots[root(index)] for index in range(len(mesh.faces))}
 
 
 def _part_faces(mesh: Mesh):
@@ -86,12 +86,12 @@ def _part_faces(mesh: Mesh):
     for adjacent in edge_faces.values():
         for face_index in adjacent[1:]:
             union(adjacent[0], face_index)
-    roots = []
+    roots = {}
     for face_index in range(len(mesh.faces)):
         face_root = root(face_index)
         if face_root not in roots:
-            roots.append(face_root)
-    return {index: roots.index(root(index)) for index in range(len(mesh.faces))}
+            roots[face_root] = len(roots)
+    return {index: roots[root(index)] for index in range(len(mesh.faces))}
 
 
 def flatten_to_patterns(
@@ -197,6 +197,17 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
         return result, bad_edges
 
+    if not bad_edges:
+        result.edge_attributes["bad_mesh"] = {}
+        return result, []
+
+    point_attribute_names = {
+        name
+        for name, values in mesh.attributes.items()
+        if len(values) == len(mesh.vertices)
+        and name not in {"part_id", "retopo_plane_id"}
+        and (name != "pattern_id" or "source_position" in mesh.attributes)
+    }
     face_order = sorted(
         range(len(mesh.faces)),
         key=lambda index: (tuple(mesh.vertices[vertex] for vertex in mesh.faces[index]), mesh.faces[index]),
@@ -228,7 +239,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                 replacements[old] = len(result.vertices)
                 result.vertices.append(result.vertices[old])
                 for name, values in result.attributes.items():
-                    if len(values) == len(result.vertices) - 1:
+                    if name in point_attribute_names:
                         values.append(values[old])
             result.faces[canonical_index] = tuple(replacements[index] for index in face)
 
@@ -393,7 +404,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         for old in best[1]:
             result.vertices.append(result.vertices[old])
             for name, values in result.attributes.items():
-                if len(values) == len(result.vertices) - 1:
+                if name in point_attribute_names:
                     values.append(values[old])
         for face_index, original_face in original_faces.items():
             corner = next(
@@ -434,7 +445,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     result.faces = [tuple(remap[index] for index in face) for face in result.faces]
     result.lines = [tuple(remap[index] for index in edge) for edge in result.lines]
     for name, values in result.attributes.items():
-        if len(values) == original_vertex_count:
+        if name in point_attribute_names:
             result.attributes[name] = [values[index] for index in ordered]
     result.edge_attributes = {
         name: {

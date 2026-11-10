@@ -1,5 +1,6 @@
 import math
 import unittest
+from unittest import mock
 
 from tools.retopo_engine import Mesh, RetopoSettings, differential, engine
 
@@ -364,7 +365,8 @@ class ContractRegressionTests(unittest.TestCase):
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2), (0, 2, 3)],
         )
-        result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
+        with mock.patch.object(engine, "_part_faces", side_effect=AssertionError("healthy mesh must not scan components")):
+            result, bad_edges = engine.inspect_topology(mesh, fix_split_edges=True)
         self.assertEqual([], bad_edges)
         self.assertEqual(mesh.vertices, result.vertices)
         self.assertEqual(mesh.faces, result.faces)
@@ -569,6 +571,23 @@ class ContractRegressionTests(unittest.TestCase):
         result = engine.mirror_guides(guide, axes=("x",))
         self.assertTrue(all(edge == Mesh.edge_key(*edge) for edge in result.edge_attributes["crease_edge"]))
         self.assertEqual(2, len(result.edge_attributes["crease_edge"]))
+
+    def test_repair_preserves_face_domains_when_vertex_count_crosses_face_count(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, -1, -1)],
+            faces=[(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2), (0, 1, 4)],
+            attributes={
+                "pattern_id": [10, 11, 12, 13, 14],
+                "part_id": [20, 21, 22, 23, 24],
+                "retopo_plane_id": [30, 31, 32, 33, 34],
+                "source_vertex": [0, 1, 2, 3, 4],
+            },
+        )
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual([], engine.non_manifold_edges(result))
+        for name in ("pattern_id", "part_id", "retopo_plane_id"):
+            self.assertEqual(mesh.attributes[name], result.attributes[name])
+        self.assertEqual(len(result.vertices), len(result.attributes["source_vertex"]))
 
     def test_repair_is_canonical_across_face_order(self):
         faces = [(1, 3, 5, 4), (2, 5, 4, 3), (0, 6, 2, 5), (5, 2, 4, 6), (5, 4, 0, 1), (3, 1, 0, 2)]
