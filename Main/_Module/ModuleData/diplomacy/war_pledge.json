@@ -1,0 +1,16 @@
+{
+  "losingBalance": 25,
+  "daysBetweenAiJoins": 30,
+  "leans": [
+    { "kingdom": "battania", "lean": "Evil" },
+    { "kingdom": "rhudaur", "lean": "Evil" },
+    { "kingdom": "umbar", "lean": "Evil" },
+    { "kingdom": "shaghana", "lean": "Evil" },
+    { "kingdom": "abanissa", "lean": "Evil" },
+    { "kingdom": "cardolan", "lean": "Free" },
+    { "kingdom": "dorwinion", "lean": "Free" },
+    { "kingdom": "anduinvale", "lean": "Neutral" },
+    { "kingdom": "angaladh", "lean": "Neutral" },
+    { "kingdom": "southrhovanion", "lean": "Neutral" }
+  ]
+}

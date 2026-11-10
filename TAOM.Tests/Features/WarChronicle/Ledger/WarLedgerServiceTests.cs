@@ -260,4 +260,25 @@ public class WarLedgerServiceTests
 
         _logger.Received(1).LogInfo("[WarLedger] v=1 t=event cid=c1 day=12 ev=chronicle id=hornburg outcome=Held");
     }
+
+    // #1113: a Neutral realm joined a side. The analyzer reads the side a kingdom's lines carry from this day on.
+    [DataTestMethod]
+    [DataRow(FactionSide.Free, true, "[WarLedger] v=1 t=event cid=c1 day=12 ev=pledge k=cardolan side=free by=ai")]
+    [DataRow(FactionSide.Evil, false, "[WarLedger] v=1 t=event cid=c1 day=12 ev=pledge k=cardolan side=evil by=console")]
+    public void LogPledge_WritesTheEventLine(FactionSide side, bool byAi, string expected)
+    {
+        _sut.LogPledge("cardolan", side, byAi);
+
+        _logger.Received(1).LogInfo(expected);
+    }
+
+    [DataTestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    public void LogPledge_WithoutAnId_WritesNothing(string? id)
+    {
+        _sut.LogPledge(id, FactionSide.Free, byAi: true);
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
 }

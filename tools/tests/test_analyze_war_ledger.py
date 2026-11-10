@@ -48,6 +48,10 @@ def ev_destroyed(day, k, cid="c1"):
     return f"{PFX}[WarLedger] v=1 t=event cid={cid} day={day} ev=destroyed k={k}"
 
 
+def ev_pledge(day, k, side, by="ai", cid="c1"):
+    return f"{PFX}[WarLedger] v=1 t=event cid={cid} day={day} ev=pledge k={k} side={side} by={by}"
+
+
 def ev_chron(day, eid, outcome, cid="c1"):
     return f"{PFX}[WarLedger] v=1 t=event cid={cid} day={day} ev=chronicle id={eid} outcome={outcome}"
 
@@ -114,6 +118,15 @@ class ParserTests(unittest.TestCase):
 
     def test_unknown_event_kind_is_malformed(self):
         self.assert_malformed(f"{PFX}[WarLedger] v=1 t=event cid=c1 day=3 ev=bogus")
+
+    def test_pledge_event_without_its_keys_is_malformed(self):
+        self.assert_malformed(ev_pledge(3, "cardolan", "free").replace(" by=ai", ""))
+        self.assert_malformed(ev_pledge(3, "cardolan", "free").replace(" side=free", ""))
+        self.assert_malformed(ev_pledge(3, "cardolan", "free").replace(" k=cardolan", ""))
+
+    def test_pledge_event_to_a_side_nobody_joins_is_malformed(self):
+        self.assert_malformed(ev_pledge(3, "cardolan", "neutral"))
+        self.assert_malformed(ev_pledge(3, "cardolan", "good"))
 
     def test_side_line_with_a_bad_base_is_malformed(self):
         self.assert_malformed(sl(1, "free", 5, base="4x"))
@@ -183,6 +196,7 @@ class FixtureTests(unittest.TestCase):
         self.assertEqual(len(by_kind["tier"]), 2)
         self.assertEqual([f["k"] for f in by_kind["destroyed"]], ["vlandia"])
         self.assertEqual((by_kind["chronicle"][0]["id"], by_kind["chronicle"][0]["outcome"]), ("hornburg", "Held"))
+        self.assertEqual([(f["k"], f["side"], f["by"]) for f in by_kind["pledge"]], [("cardolan", "free", "ai")])
         clamped = [f for f in by_kind["tier"] if f["k"] == "k"][0]
         self.assertEqual((clamped["from"], clamped["to"], clamped["loss"]), ("0", "2", "0.000"))
 
@@ -245,6 +259,78 @@ class MetricTests(unittest.TestCase):
     def test_destroyed_events(self):
         m = metrics([ev_destroyed(40, "rohan"), ev_destroyed(70, "mordor")])
         self.assertEqual(m["destroyed"], [(40, "rohan"), (70, "mordor")])
+
+    # War Pledge (#1113): a Neutral realm joined a side. One line per join, listed by day.
+    def test_pledge_events(self):
+        m = metrics([ev_pledge(90, "rhudaur", "evil"), ev_pledge(60, "cardolan", "free", by="console")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "console"), (90, "rhudaur", "evil", "ai")])
+
+    def test_a_repeated_pledge_line_counts_once(self):
+        m = metrics([ev_pledge(60, "cardolan", "free"), ev_pledge(60, "cardolan", "free")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "ai")])
+
+    def test_a_load_before_a_pledge_drops_it(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=50"
+        m = metrics([ev_pledge(40, "cardolan", "free"), ev_pledge(60, "rhudaur", "evil"), load])
+        self.assertEqual(m["pledges"], [(40, "cardolan", "free", "ai")])
+
+    def test_report_lists_the_pledges(self):
+        out = awl.format_report("c1", metrics([ev_pledge(60, "cardolan", "free"), ev_pledge(90, "rhudaur", "evil", by="console")]))
+        self.assertIn("Realms pledged\n  day 60: cardolan to free (ai)\n  day 90: rhudaur to evil (console)\n", out)
+
+    def test_report_says_none_without_a_pledge(self):
+        self.assertIn("Realms pledged\n  none\n", awl.format_report("c1", metrics([kl(1, "a")])))
+
+    # A reload of the pledge day keeps that day's lines from both runs. One realm pledges once, so the
+    # last line read for a kingdom is the pledge that stood, as for a chronicle resolution.
+    def test_a_realm_pledged_again_after_a_same_day_reload_counts_once_and_the_last_line_stands(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        m = metrics([ev_pledge(60, "cardolan", "free", by="console"), load,
+                     ev_pledge(60, "cardolan", "evil", by="console")])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "evil", "console")])
+        self.assertEqual(dict(awl.flat_metrics(m))["realms_pledged"], 1)
+
+    def test_a_replayed_pledge_line_is_the_one_that_stands(self):
+        load = f"{PFX}[WarLedger] v=1 t=load cid=c1 day=60"
+        free = ev_pledge(60, "cardolan", "free", by="console")
+        evil = ev_pledge(60, "cardolan", "evil", by="console")
+        m = metrics([free, load, evil, load, free])
+        self.assertEqual(m["pledges"], [(60, "cardolan", "free", "console")])
+
+    # A kingdom's side changes on the day it pledges, so the first capital loss of a side is read on every
+    # loss, not only on a kingdom's first one.
+    def test_capital_loss_per_side_counts_a_loss_after_the_kingdom_changed_side(self):
+        lines = [kl(10, "cardolan", side="neutral", cap="1"), kl(20, "cardolan", side="neutral", cap="0"),
+                 kl(30, "cardolan", side="neutral", cap="1"), ev_pledge(60, "cardolan", "free"),
+                 kl(61, "cardolan", side="free", cap="1"), kl(80, "cardolan", side="free", cap="0")]
+        m = metrics(lines)
+        self.assertEqual(m["capital_loss"], {"cardolan": 20})
+        self.assertEqual(m["capital_loss_side"], {"neutral": 20, "free": 80})
+
+    # Net change per side is the side's total, so a realm that joins reads as a gain for its new side and a
+    # loss for neutral with no fief changing hands. The report and the comparison say so.
+    PLEDGE_NOTE = "note: a realm that pledged counts for its new side from the day it joined"
+
+    def test_report_notes_that_net_change_includes_pledged_realms(self):
+        lines = [sl(1, "free", 20, base=20), sl(1, "neutral", 10, base=10),
+                 ev_pledge(60, "cardolan", "free"), sl(61, "free", 30, base=30), sl(61, "neutral", 0)]
+        out = awl.format_report("c1", metrics(lines))
+        self.assertIn("  free: +10\n", out)
+        self.assertIn(self.PLEDGE_NOTE, out)
+
+    def test_report_has_no_pledge_note_without_a_pledge(self):
+        out = awl.format_report("c1", metrics([sl(1, "free", 20, base=20), sl(61, "free", 30, base=30)]))
+        self.assertNotIn(self.PLEDGE_NOTE, out)
+
+    def test_compare_notes_pledges_only_when_a_side_has_one(self):
+        quiet = metrics([sl(1, "free", 20, base=20)])
+        joined = metrics([sl(1, "free", 20, base=20), ev_pledge(60, "cardolan", "free")])
+        self.assertIn(self.PLEDGE_NOTE, awl.format_compare("off", "on", quiet, joined))
+        self.assertNotIn(self.PLEDGE_NOTE, awl.format_compare("off", "off", quiet, quiet))
+
+    def test_flat_metrics_count_the_pledges(self):
+        rows = dict(awl.flat_metrics(metrics([ev_pledge(60, "cardolan", "free"), ev_pledge(90, "rhudaur", "evil")])))
+        self.assertEqual(rows["realms_pledged"], 2)
 
     def test_churn_buckets(self):
         lines = [kl(0, "a", pts=10), kl(5, "a", pts=14), kl(10, "a", pts=11), kl(19, "a", pts=11),
