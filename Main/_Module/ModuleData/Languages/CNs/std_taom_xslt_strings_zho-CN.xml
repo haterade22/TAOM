@@ -648,9 +648,9 @@
     <string id="aom_lord_1_4_name" text="布伦希尔德·铁爪" />
     <string id="aom_lord_1_5_name" text="野人奥斯里克" />
     <string id="aom_lord_1_6_name" text="牛角托瓦尔德" />
-    <string id="aom_lord_1_7_name" text="迪耐瑟二世,刚铎摄政王" />
+    <string id="aom_lord_1_7_name" text="迪耐瑟二世" />
     <string id="aom_lord_1_8_name" text="胡里昂奈丝" />
-    <string id="aom_lord_1_9_name" text="伊姆拉希尔,多尔安罗斯亲王" />
+    <string id="aom_lord_1_9_name" text="伊姆拉希尔" />
     <string id="aom_lord_1_10_name" text="阿拉奈尔" />
     <string id="aom_lord_1_25_name" text="埃尔菲尔" />
     <string id="aom_lord_1_35_name" text="埃希里昂" />
@@ -699,11 +699,11 @@
     <string id="aom_lord_1_67_name" text="埃奥温·羽箭" />
     <string id="aom_lord_1_40_name" text="博哈多" />
     <string id="aom_lord_1_46_name" text="马尔里奥" />
-    <string id="aom_lord_1_45_name" text="佛隆，洛桑纳赫领主" />
+    <string id="aom_lord_1_45_name" text="佛隆" />
     <string id="aom_lord_1_57_name" text="巴拉诺" />
-    <string id="aom_lord_1_52_name" text="希尔鲁因，皮那斯基林领主" />
-    <string id="aom_lord_1_53_name" text="安格博，拉麦顿领主" />
-    <string id="aom_lord_1_71_name" text="戈拉斯吉尔，安法拉斯领主" />
+    <string id="aom_lord_1_52_name" text="希尔鲁因" />
+    <string id="aom_lord_1_53_name" text="安格博" />
+    <string id="aom_lord_1_71_name" text="戈拉斯吉尔" />
     <string id="aom_lord_1_73_name" text="纳米尔" />
     <string id="aom_lord_1_62_name" text="奥罗马" />
     <string id="aom_lord_1_30_name" text="葛斯魔格，魔窟副官" />
@@ -922,7 +922,7 @@
     <string id="aom_lord_V11_c2_name" text="达古尼克" />
     <string id="aom_lord_V11_u_name" text="沃勒里克" />
     <string id="aom_lord_V9_u_name" text="乌伦杜尔夫" />
-    <string id="aom_lord_5_1_name" text="瓦古尔,侃德的大军阀" />
+    <string id="aom_lord_5_1_name" text="瓦古尔" />
     <string id="aom_lord_5_7_name" text="哈尔祖尔" />
     <string id="aom_lord_5_3_name" text="埃尔戈恩" />
     <string id="aom_lord_5_4_name" text="尼温" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="约娜" />
     <string id="aom_lord_WE8_c_name" text="佩伦杜尔" />
     <string id="aom_lord_WE8_u_name" text="巴兰迪尔" />
-    <string id="aom_lord_WE9_l_name" text="杜因希尔，摩尔松德领主" />
+    <string id="aom_lord_WE9_l_name" text="杜因希尔" />
     <string id="aom_lord_WE9_u_name" text="杜林" />
     <string id="aom_lord_WE9_u2_name" text="罗斯芬" />
     <string id="TAOM_hero_dead_2_1" text="老者奥莱克在保卫河谷邦、抵御东夷袭掠者时阵亡。他的牺牲守住了山间隘口,王国各地的歌谣中都还铭记着他。" />

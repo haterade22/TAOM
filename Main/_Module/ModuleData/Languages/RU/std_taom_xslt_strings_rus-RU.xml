@@ -648,9 +648,9 @@
     <string id="aom_lord_1_4_name" text="Брунхильда Железный Коготь" />
     <string id="aom_lord_1_5_name" text="Отрик Дикий" />
     <string id="aom_lord_1_6_name" text="Торвальд Воловий Рог" />
-    <string id="aom_lord_1_7_name" text="Денэтор II, Наместник Гондора" />
+    <string id="aom_lord_1_7_name" text="Денэтор II" />
     <string id="aom_lord_1_8_name" text="Хурионет" />
-    <string id="aom_lord_1_9_name" text="Имрахиль, Князь Дол Амрота" />
+    <string id="aom_lord_1_9_name" text="Имрахиль" />
     <string id="aom_lord_1_10_name" text="Аранель" />
     <string id="aom_lord_1_25_name" text="Элфир" />
     <string id="aom_lord_1_35_name" text="Эрхирион" />
@@ -699,11 +699,11 @@
     <string id="aom_lord_1_67_name" text="Эорвин Пероболт" />
     <string id="aom_lord_1_40_name" text="Борхадор" />
     <string id="aom_lord_1_46_name" text="Малриор" />
-    <string id="aom_lord_1_45_name" text="Форлонг, владыка Лоссарнаха" />
+    <string id="aom_lord_1_45_name" text="Форлонг" />
     <string id="aom_lord_1_57_name" text="Баранор" />
-    <string id="aom_lord_1_52_name" text="Хирлуин, владыка Пиннат Гелина" />
-    <string id="aom_lord_1_53_name" text="Ангбор, владыка Ламедона" />
-    <string id="aom_lord_1_71_name" text="Голасгил, владыка Анфаласа" />
+    <string id="aom_lord_1_52_name" text="Хирлуин" />
+    <string id="aom_lord_1_53_name" text="Ангбор" />
+    <string id="aom_lord_1_71_name" text="Голасгил" />
     <string id="aom_lord_1_73_name" text="Нармир" />
     <string id="aom_lord_1_62_name" text="Оромар" />
     <string id="aom_lord_1_30_name" text="Готмог, Наместник Моргула" />
@@ -922,7 +922,7 @@
     <string id="aom_lord_V11_c2_name" text="Дагуник" />
     <string id="aom_lord_V11_u_name" text="Волерик" />
     <string id="aom_lord_V9_u_name" text="Урундульф" />
-    <string id="aom_lord_5_1_name" text="Варгул, Верховный Полководец Кханда" />
+    <string id="aom_lord_5_1_name" text="Варгул" />
     <string id="aom_lord_5_7_name" text="Харзул" />
     <string id="aom_lord_5_3_name" text="Эргеон" />
     <string id="aom_lord_5_4_name" text="Нивин" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="Йонна" />
     <string id="aom_lord_WE8_c_name" text="Пелендур" />
     <string id="aom_lord_WE8_u_name" text="Барандил" />
-    <string id="aom_lord_WE9_l_name" text="Дуинхир, владыка Мортонда" />
+    <string id="aom_lord_WE9_l_name" text="Дуинхир" />
     <string id="aom_lord_WE9_u_name" text="Дуилин" />
     <string id="aom_lord_WE9_u2_name" text="Росфин" />
     <string id="TAOM_hero_dead_2_1" text="Олек Старый пал, защищая Дейл от налётчиков-истерлингов. Его жертва спасла горные перевалы, и о ней поют песни по всему королевству." />
