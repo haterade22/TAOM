@@ -123,6 +123,22 @@ def main():
         combined_output = mesh_to_blender(combined, "TAOM_CombinedRoundtrip")
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             assert combined_output.data.attributes[name].domain == "FACE"
+        face_source = roundtrip.copy()
+        face_source.attributes["source_vertex"] = [42] * len(face_source.faces)
+        face_source.attribute_domains["source_vertex"] = "FACE"
+        face_source_output = mesh_to_blender(face_source, "TAOM_FaceSourceAttribute")
+        assert face_source_output.data.attributes["source_vertex"].domain == "FACE"
+        assert [item.value for item in face_source_output.data.attributes["source_vertex"].data] == [42] * 4
+        face_source.attributes["source_position"] = [(1, 2, 3)] * 4
+        face_source.attributes["point_guide"] = [True] * 4
+        face_source.attribute_domains.update({"source_position": "FACE", "point_guide": "FACE"})
+        face_source_output = mesh_to_blender(face_source, "TAOM_FaceSourceVectors")
+        assert face_source_output.data.attributes["source_position"].domain == "FACE"
+        assert face_source_output.data.attributes["point_guide"].domain == "FACE"
+        unsupported = roundtrip.copy()
+        unsupported.attribute_domains["point_guide"] = "CORNER"
+        unsupported_output = mesh_to_blender(unsupported, "TAOM_UnsupportedDomain")
+        assert "point_guide" not in unsupported_output.data.attributes
         point_variant = roundtrip.copy()
         point_variant.attributes["pattern_id"] = [7] * len(point_variant.vertices)
         point_variant.attribute_domains["pattern_id"] = "POINT"

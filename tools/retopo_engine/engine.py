@@ -201,6 +201,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {}
         return result, []
 
+    result.attribute_domains = mesh.resolved_attribute_domains()
     point_attribute_names = {
         name for name in mesh.attributes if mesh.attribute_domain(name) == "POINT"
     }
@@ -463,6 +464,7 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                 return Mesh.edge_key(new_face[corner], new_face[(corner + 1) % len(new_face)])
         raise ValueError("non-manifold edge has no incident face")
 
+    result.discard_unresolved_attributes()
     bad_edges = [debug_edge(edge) for edge in bad_edges]
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
@@ -702,6 +704,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
         if len(_mirror_axes(guide)) > 1:
             return guide.copy()
     result = guide.copy()
+    result.attribute_domains = guide.resolved_attribute_domains()
     point_attribute_names = {
         name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
     }
@@ -777,6 +780,7 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
                 target = result.edge_attributes.setdefault(name, {})
                 if edge in values and mirrored_edge not in target:
                     target[mirrored_edge] = values[edge]
+    result.discard_unresolved_attributes()
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -786,12 +790,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
     points = [tuple(point) for point in point_guides]
-    face_attribute_names = {
-        name for name in guide.attributes if guide.attribute_domain(name) == "FACE"
-    }
-    point_attribute_names = {
-        name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
-    }
+    resolved_domains = guide.resolved_attribute_domains()
+    face_attribute_names = {name for name, domain in resolved_domains.items() if domain == "FACE"}
+    point_attribute_names = {name for name, domain in resolved_domains.items() if domain == "POINT"}
 
     def subdivide(current):
         result = subdivide_quads(current)
@@ -911,12 +912,14 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         return current
 
     if across_patterns:
-        result = fill(guide.copy(), points)
+        working = guide.copy()
+        working.attribute_domains = dict(resolved_domains)
+        result = fill(working, points)
     else:
         result = Mesh(
             vertices=[], faces=[], uv_name=guide.uv_name,
             attributes={name: [] for name in guide.attributes},
-            attribute_domains=dict(guide.attribute_domains),
+            attribute_domains=dict(resolved_domains),
         )
         for component in guide.connected_components():
             used = sorted({index for face_index in component for index in guide.faces[face_index]})
@@ -933,7 +936,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 vertices=[guide.vertices[index] for index in used],
                 faces=[tuple(remap[index] for index in guide.faces[face_index]) for face_index in component],
                 attributes=attributes,
-                attribute_domains=dict(guide.attribute_domains),
+                attribute_domains=dict(resolved_domains),
             )
             filled = fill(part, points)
             offset = len(result.vertices)
@@ -1188,10 +1191,10 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
         cursor += len(face)
     result = Mesh(
         vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name,
-        attribute_domains=dict(mesh.attribute_domains),
+        attribute_domains=mesh.resolved_attribute_domains(),
     )
     for name, values in mesh.attributes.items():
-        domain = mesh.attribute_domains.get(name)
+        domain = mesh.attribute_domain(name)
         if domain == "POINT":
             result.attributes[name] = [values[old] for old, _ in lookup]
         else:
@@ -1206,6 +1209,7 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
                 edge = Mesh.edge_key(endpoint_groups[first][group], endpoint_groups[second][group])
                 if edge in group_edges.get(group, set()):
                     result.edge_attributes[name][edge] = value
+    result.discard_unresolved_attributes()
     return result
 
 
@@ -1213,6 +1217,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     if distance <= 0:
         return mesh
     result = mesh.copy()
+    result.attribute_domains = mesh.resolved_attribute_domains()
     protected = {
         index
         for edge, value in result.edge_attributes.get("bevel_weight_edge", {}).items()
@@ -1288,6 +1293,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         }
         for name, values in result.edge_attributes.items()
     }
+    result.discard_unresolved_attributes()
     return result
 
 
@@ -1317,7 +1323,10 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 directed.append((first, second, face_index))
     for first, second, _ in directed:
         faces.append((first, second, second + count, first + count))
-    result = Mesh(vertices=vertices, faces=faces, uv_name=guide.uv_name, attribute_domains=dict(guide.attribute_domains))
+    result = Mesh(
+        vertices=vertices, faces=faces, uv_name=guide.uv_name,
+        attribute_domains=guide.resolved_attribute_domains(),
+    )
     for name, values in guide.attributes.items():
         domain = guide.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == len(guide.faces)):
@@ -1352,6 +1361,7 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 uv.extend(result.uv[cursor + index] for index in reversed(range(len(face))))
                 cursor += len(face)
             result.uv = uv
+    result.discard_unresolved_attributes()
     return result
 
 

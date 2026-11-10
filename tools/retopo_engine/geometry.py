@@ -199,11 +199,13 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
             attributes[name] = remapped
         elif domain == "FACE":
             attributes[name] = [values[face_index] for face_index in range(len(mesh.faces)) for _ in range(4)]
-    return Mesh(
+    result = Mesh(
         vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name,
         attributes=attributes, edge_attributes=edge_attributes,
-        attribute_domains=dict(mesh.attribute_domains),
+        attribute_domains=mesh.resolved_attribute_domains(),
     )
+    result.discard_unresolved_attributes()
+    return result
 
 
 def coons_point(corners, u, v):
