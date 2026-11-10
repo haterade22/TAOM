@@ -627,8 +627,8 @@
     <string id="aom_lord_I4_41_name" text="두르가시" />
     <string id="aom_lord_I4_4_name" text="고를라그, 우루크하이 대장장이 장인" />
     <string id="aom_lord_I4_5_name" text="트라카" />
-    <string id="aom_lord_L1_1_name" text="갈라드리엘, 로슬로리엔의 여주" />
-    <string id="aom_lord_L1_2_name" text="켈레보른, 로슬로리엔의 영주" />
+    <string id="aom_lord_L1_1_name" text="갈라드리엘" />
+    <string id="aom_lord_L1_2_name" text="켈레보른" />
     <string id="aom_lord_L1_3_name" text="갈라디온" />
     <string id="aom_lord_L2_1_name" text="카우르미나스" />
     <string id="aom_lord_L2_2_name" text="탄디리온" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="자린" />
     <string id="aom_lord_SH9_8_name" text="아나히타" />
     <string id="aom_lord_SH9_9_name" text="바하라" />
-    <string id="aom_lord_U1_11_name" text="기밀조르 공" />
+    <string id="aom_lord_U1_11_name" text="기밀조르" />
     <string id="aom_lord_U1_12_name" text="기밀톤" />
     <string id="aom_lord_U1_13_name" text="파라존" />
     <string id="aom_lord_U1_1_name" text="아르기밀카드" />
