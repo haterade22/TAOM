@@ -620,7 +620,19 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
         outer = max(closed_simple_loops or loops, key=lambda loop: abs(signed_area(loop, flat.vertices)))
         if len(loops) == 2:
             inner_loop = loops[1] if outer is loops[0] else loops[0]
+            if signed_area(outer, flat.vertices) < 0:
+                outer = list(reversed(outer))
             if len(inner_loop) == len(outer):
+                def orientation(first, second, third):
+                    return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+
+                def intersects(first, second, third, fourth):
+                    return orientation(first, second, third) * orientation(first, second, fourth) < 0 and orientation(third, fourth, first) * orientation(third, fourth, second) < 0
+
+                def invalid_face(face, vertices):
+                    points = [vertices[index] for index in face]
+                    return signed_area(face, vertices) <= 0 or intersects(points[0], points[1], points[2], points[3]) or intersects(points[1], points[2], points[3], points[0])
+
                 candidates = []
                 for oriented in (inner_loop, list(reversed(inner_loop))):
                     for shift in range(len(oriented)):
@@ -630,10 +642,13 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                         for index in range(len(outer)):
                             following = (index + 1) % len(outer)
                             faces.append((index, following, len(outer) + following, len(outer) + index))
-                        invalid = sum(signed_area(face, vertices) <= 0 for face in faces)
+                        invalid = sum(invalid_face(face, vertices) for face in faces)
                         cost = sum(math.dist(flat.vertices[first], flat.vertices[second]) for first, second in zip(outer, aligned))
                         candidates.append((invalid, cost, vertices, faces))
-                _, _, vertices, faces = min(candidates, key=lambda candidate: candidate[:2])
+                best = min(candidates, key=lambda candidate: candidate[:2])
+                if best[0]:
+                    raise ValueError("plane initialization could not align hole boundaries into valid quads")
+                _, _, vertices, faces = best
                 result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
                 result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
                 return result

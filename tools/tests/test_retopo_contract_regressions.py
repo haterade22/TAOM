@@ -570,8 +570,9 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual({"corner_tag", "short_point", "orphan"} & initialized_ring.attribute_domains.keys(), set())
         annulus = differential.ring_guide()
         annulus.faces = [triangle for face in annulus.faces for triangle in ((face[0], face[1], face[2]), (face[0], face[2], face[3]))]
-        initialized_annulus = engine.initialize_planes(annulus, RetopoSettings())
-        self.assertEqual((16, 8, 16), (len(initialized_annulus.vertices), len(initialized_annulus.faces), len(initialized_annulus.boundary_edges())))
+        clockwise = differential.ring_guide()
+        clockwise.vertices = [(x, 1 - y, z) for x, y, z in clockwise.vertices]
+        clockwise.faces = [triangle for face in clockwise.faces for triangle in ((face[2], face[1], face[0]), (face[3], face[2], face[0]))]
 
         def orientation(first, second, third):
             return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
@@ -579,8 +580,24 @@ class ContractRegressionTests(unittest.TestCase):
         def intersects(first, second, third, fourth):
             return orientation(first, second, third) * orientation(first, second, fourth) < 0 and orientation(third, fourth, first) * orientation(third, fourth, second) < 0
 
-        for face in initialized_annulus.faces:
-            points = [initialized_annulus.vertices[index] for index in face]
+        for annulus_input in (annulus, clockwise):
+            initialized_annulus = engine.initialize_planes(annulus_input, RetopoSettings())
+            self.assertEqual((16, 8, 16), (len(initialized_annulus.vertices), len(initialized_annulus.faces), len(initialized_annulus.boundary_edges())))
+            expected_area = sum(engine.signed_area(face, annulus_input.vertices) for face in annulus_input.faces) / len(initialized_annulus.faces)
+            for face in initialized_annulus.faces:
+                points = [initialized_annulus.vertices[index] for index in face]
+                self.assertAlmostEqual(expected_area, engine.signed_area(face, initialized_annulus.vertices))
+                self.assertGreater(engine.signed_area(face, initialized_annulus.vertices), 0)
+                self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+                self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+        irregular = Mesh(
+            vertices=[(30, 0, 0), (0, -30, 0), (-30, 0, 0), (0, 30, 0), (30, 10, 0), (18, 1, 0), (18, 6, 0), (3, 16, 0), (-12, 1, 0), (3, -14, 0)],
+            faces=[(0, 4, 6), (0, 6, 5), (4, 3, 7), (4, 7, 6), (3, 2, 8), (3, 8, 7), (2, 1, 9), (2, 9, 8), (1, 0, 5), (1, 5, 9)],
+        )
+        initialized_irregular = engine.initialize_planes(irregular, RetopoSettings())
+        for face in initialized_irregular.faces:
+            points = [initialized_irregular.vertices[index] for index in face]
+            self.assertGreater(engine.signed_area(face, initialized_irregular.vertices), 0)
             self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
             self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
         guide = Mesh(

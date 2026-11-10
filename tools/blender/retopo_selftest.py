@@ -184,7 +184,7 @@ def main():
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1, 2, 3]
         settings.output_generated_planes = False
-        from tools.retopo_engine import differential
+        from tools.retopo_engine import Mesh, differential
         pattern_mesh = differential.two_islands()
         pattern_mesh.uv = [(u + (1 if index >= 4 else 0), v) for index, (u, v) in enumerate(pattern_mesh.uv)]
         pattern_source = mesh_to_blender(pattern_mesh, "TAOM_PatternPreviewSource")
@@ -192,6 +192,16 @@ def main():
         settings.only_patterns = True
         settings.debug_material = "Patterns"
         activate(pattern_source)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1]
+        corner_mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (2, 0, 0), (3, 0, 0), (2, 1, 0), (3, 1, 0)],
+            faces=[(2, 3, 0, 1), (6, 7, 4, 5)],
+            uv=[(0.5, 0.5), (0, 0.5), (0, 0), (0.5, 0), (0.5, 0.5), (1, 0.5), (1, 1), (0.5, 1)],
+        )
+        corner_source = mesh_to_blender(corner_mesh, "TAOM_CornerPatternSource")
+        settings.source_object = corner_source
+        activate(corner_source)
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1]
         settings.only_patterns = False
