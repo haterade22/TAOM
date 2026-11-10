@@ -19,11 +19,16 @@ public sealed class EmissaryOfferList
 
     public IReadOnlyList<EmissaryTroopOffer> Offers { get; }
 
+    /// <summary>True in gold mode (#1109): <see cref="PlayerBalance"/> is the player's gold and every
+    /// offer's price is in gold. The resource name and icon are null.</summary>
+    public bool PaidInGold { get; }
+
     public bool HasOffers => Offers != null && Offers.Count > 0;
 
     private EmissaryOfferList(bool noResource, string resourceId, string resourceDisplayName,
-        string iconSpriteName, float playerBalance, IReadOnlyList<EmissaryTroopOffer> offers)
+        string iconSpriteName, float playerBalance, IReadOnlyList<EmissaryTroopOffer> offers, bool paidInGold = false)
     {
+        PaidInGold = paidInGold;
         NoResource = noResource;
         ResourceId = resourceId;
         ResourceDisplayName = resourceDisplayName;
@@ -35,6 +40,10 @@ public sealed class EmissaryOfferList
     public static EmissaryOfferList ForResource(string resourceId, string resourceDisplayName,
         string iconSpriteName, float playerBalance, IReadOnlyList<EmissaryTroopOffer> offers) =>
         new(false, resourceId, resourceDisplayName, iconSpriteName, playerBalance, offers);
+
+    /// <summary>Gold mode: priced and funded in gold, so no resource context is carried.</summary>
+    public static EmissaryOfferList ForGold(float playerGold, IReadOnlyList<EmissaryTroopOffer> offers) =>
+        new(false, null, null, null, playerGold, offers, paidInGold: true);
 
     /// <summary>Owner faction has no special resource — the menu option hides (or shows disabled).</summary>
     public static readonly EmissaryOfferList NoResourceAvailable =

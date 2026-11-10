@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.SpecialResources;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Features.CulturalFeats.Models;
@@ -13,13 +14,16 @@ public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
     private readonly ICulturalFeatsService _feats;
     private readonly ICareerPassiveService _careerPassives;
     private readonly ITroopCostService _troopCost;
+    private readonly ISpecialResourceService _specialResources;
 
     public TaomPartyTroopUpgradeModel(
-        ICulturalFeatsService feats, ICareerPassiveService careerPassives, ITroopCostService troopCost)
+        ICulturalFeatsService feats, ICareerPassiveService careerPassives, ITroopCostService troopCost,
+        ISpecialResourceService specialResources)
     {
         _feats = feats;
         _careerPassives = careerPassives;
         _troopCost = troopCost;
+        _specialResources = specialResources;
     }
 
     public override ExplainedNumber GetGoldCostForUpgrade(
@@ -33,6 +37,7 @@ public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
             characterObject.IsMounted,
             ref result);
         _careerPassives.ApplyFactor(CareerPassiveHero.ResolveId(party), ref result, PassiveEffectType.TroopUpgradeCost);
+        _specialResources.ApplyGoldUpgradeSurcharge(party == PartyBase.MainParty, upgradeTarget?.StringId, ref result);
         return result;
     }
 

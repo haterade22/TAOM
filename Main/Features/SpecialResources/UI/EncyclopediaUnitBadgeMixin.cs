@@ -42,6 +42,7 @@ internal sealed class EncyclopediaUnitBadgeMixin : BaseViewModelMixin<Encycloped
     private TroopResourceCostEntry _cost;
     private SpecialResource _resource;
 
+    private bool _goldMode;
     private bool _hasSpecialResourceCost;
     private string _specialResourceIconSprite = "";
     private BasicTooltipViewModel _specialResourceTooltip;
@@ -69,7 +70,9 @@ internal sealed class EncyclopediaUnitBadgeMixin : BaseViewModelMixin<Encycloped
             }
 
             var shown = _resource != null && SpecialResourceTroopBadge.IsShown(_cost);
-            SpecialResourceIconSprite = shown ? _resource.IconSpriteName : "";
+            // Fixed for this VM's life, so the icon and the tooltip cannot disagree if MCM flips mid-hover.
+            _goldMode = _service.IsGoldMode;
+            SpecialResourceIconSprite = !shown ? "" : _goldMode ? SpecialResourceTroopBadge.GoldSprite : _resource.IconSpriteName;
             HasSpecialResourceCost = shown;
         }
         catch (Exception ex)
@@ -88,11 +91,18 @@ internal sealed class EncyclopediaUnitBadgeMixin : BaseViewModelMixin<Encycloped
 
             // TooltipProperty takes strings only (no TextObject overload in v1.4.8), so every line is
             // rendered here; the {=key} tag is what makes it translatable.
-            result.Add(new TooltipProperty(SpecialResourceTroopBadge.Title(_resource).ToString(), "", 0,
+            var title = _goldMode ? SpecialResourceTroopBadge.TitleInGold() : SpecialResourceTroopBadge.Title(_resource);
+            result.Add(new TooltipProperty(title.ToString(), "", 0,
                 onlyShowWhenExtended: false, TooltipProperty.TooltipPropertyFlags.Title));
 
-            foreach (var row in SpecialResourceTroopBadge.Rows(_cost))
+            var rows = _goldMode
+                ? SpecialResourceTroopBadge.RowsInGold(_cost, _service.GoldPerResourcePoint)
+                : SpecialResourceTroopBadge.Rows(_cost);
+            foreach (var row in rows)
                 result.Add(new TooltipProperty(row.Key.ToString(), row.Value, 0));
+
+            // Gold is the player's own whatever the troop's faction, so there is no other-resource note.
+            if (_goldMode) return result;
 
             var hero = Hero.MainHero;
             var playerResource = hero == null

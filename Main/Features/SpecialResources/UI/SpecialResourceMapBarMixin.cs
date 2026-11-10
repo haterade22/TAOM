@@ -86,7 +86,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         }
 
         var items = ViewModel?.SecondaryInfoItems;
-        var resource = _lastResource;
+        var resource = _service.IsGoldMode ? null : _lastResource;
         if (resource == null)
         {
             // No resource for this hero (#977): take the entry off the bar, or it keeps the old amount and icon.

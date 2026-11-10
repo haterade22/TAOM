@@ -17,6 +17,11 @@ internal static class SpecialResourceTroopBadge
     public static bool IsShown(TroopResourceCostEntry cost) =>
         cost != null && (cost.UpgradeCost > 0 || cost.RecruitCost > 0 || cost.DailyUpkeep > 0f);
 
+    /// <summary>The coin the gold-mode badge shows instead of the resource icon (#1109); in TAOMSpriteData.xml.</summary>
+    public const string GoldSprite = "General\\Icons\\Coin@2x";
+
+    public static TextObject TitleInGold() => new TextObject("{=taom_res_badge_title_gold}Costs extra gold");
+
     public static TextObject Title(SpecialResource resource) =>
         new TextObject("{=taom_res_badge_title}Requires {RESOURCE}")
             .SetTextVariable("RESOURCE", resource.DisplayName);
@@ -33,6 +38,18 @@ internal static class SpecialResourceTroopBadge
         return rows;
     }
 
+    /// <summary>The same rows as <see cref="Rows"/> with each amount priced in gold at the MCM rate.</summary>
+    public static IReadOnlyList<KeyValuePair<TextObject, string>> RowsInGold(TroopResourceCostEntry cost, int goldPerPoint)
+    {
+        var rows = new List<KeyValuePair<TextObject, string>>(4);
+        if (cost == null) return rows;
+        if (cost.UpgradeCost > 0) AddGold(rows, "{=taom_res_badge_upgrade}Upgrade", cost.UpgradeCost, goldPerPoint);
+        if (cost.RecruitCost > 0) AddGold(rows, "{=taom_res_badge_recruit}Recruit", cost.RecruitCost, goldPerPoint);
+        if (cost.DailyUpkeep > 0f) AddGold(rows, "{=taom_res_badge_upkeep}Upkeep per day", cost.DailyUpkeep, goldPerPoint);
+        if (cost.MerchantCost > 0) AddGold(rows, "{=taom_res_badge_emissary}Elite Emissary price", cost.MerchantCost, goldPerPoint);
+        return rows;
+    }
+
     /// <summary>
     /// Upgrades, recruits and upkeep are charged in the PLAYER's resolved resource whatever the
     /// troop's faction (#558), so a Gondor player reading a Mordor elite pays Castar. Null when the
@@ -46,6 +63,10 @@ internal static class SpecialResourceTroopBadge
         return new TextObject("{=taom_res_badge_paid_in}Upgrades, recruits and upkeep are paid in your own {RESOURCE}")
             .SetTextVariable("RESOURCE", playerResource.DisplayName);
     }
+
+    private static void AddGold(List<KeyValuePair<TextObject, string>> rows, string label, double points, int goldPerPoint) =>
+        rows.Add(new KeyValuePair<TextObject, string>(new TextObject(label),
+            SpecialResourceMessages.FormatAmount(SpecialResourceGoldPrice.ToGold(points, goldPerPoint))));
 
     private static void Add(List<KeyValuePair<TextObject, string>> rows, string label, float amount) =>
         rows.Add(new KeyValuePair<TextObject, string>(new TextObject(label), SpecialResourceMessages.FormatAmount(amount)));

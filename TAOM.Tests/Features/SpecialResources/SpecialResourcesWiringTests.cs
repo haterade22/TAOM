@@ -57,6 +57,18 @@ public class SpecialResourcesWiringTests
     }
 
     [TestMethod]
+    public void SpecialResourcesIoC_RegistersTheGoldSettings_AndTheServiceReceivesThem()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/SpecialResources/SpecialResourcesIoC.cs", stripComments: true);
+        StringAssert.Contains(src, "container.Register<SpecialResourceGoldSettings>(Reuse.Singleton);");
+
+        var service = BuildContainer().Resolve<ISpecialResourceService>();
+        var field = typeof(SpecialResourceService).GetField("_goldSettings", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(field, "SpecialResourceService._goldSettings was renamed: update this wiring test.");
+        Assert.IsNotNull(field.GetValue(service), "The optional gold settings did not resolve, so gold mode could never switch on.");
+    }
+
+    [TestMethod]
     public void MainIoC_RegistersThePartySizeCacheInvalidator_InRegisterCoreServices()
     {
         // Both CareerSystem and AiPartySize take this dependency; the tests above fake it, so only the

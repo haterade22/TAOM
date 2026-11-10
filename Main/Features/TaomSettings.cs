@@ -178,8 +178,20 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Elite Emissary")]
     [SettingPropertyBool("Hide Emissary Without Resource", Order = 1, RequireRestart = false,
-        HintText = "When on, the emissary option is hidden at settlements whose owner faction has no special resource. When off, the option still appears but is disabled with an explanatory hint.")]
+        HintText = "When on, the emissary option is hidden at settlements whose owner faction has no special resource. With Use Special Resources off, it also hides where the owner's resource is not your own, since gold would otherwise open every faction's elites. When off, the option still appears but is disabled with an explanatory hint.")]
     public bool HideEmissaryWhenNoResource { get; set; } = true;
+
+    // --- Special Resources ---
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyBool("Use Special Resources", Order = 0, RequireRestart = false,
+        HintText = "On (default): elite troops are upgraded, recruited and kept with each faction's special resource (Castar, War Spoils, Gems...). Off: the resources stand down and the same costs are paid in gold. Balances are kept while off.")]
+    public bool UseSpecialResources { get; set; } = true;
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyInteger("Gold Per Resource Point", 1, 1000, Order = 1, RequireRestart = false,
+        HintText = "Only when Use Special Resources is off: gold charged for each point of an elite troop's resource cost (upgrade, recruit, daily upkeep, Elite Emissary price). Default: 100.")]
+    public int GoldPerResourcePoint { get; set; } = 100;
 
     // --- Culture Conversion ---
 

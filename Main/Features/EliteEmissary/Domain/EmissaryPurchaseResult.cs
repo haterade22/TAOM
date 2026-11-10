@@ -25,10 +25,14 @@ public sealed class EmissaryPurchaseResult
     public int TotalCost { get; }
     public string ResourceDisplayName { get; }
 
+    /// <summary>True when <see cref="TotalCost"/> is gold (#1109 gold mode) and not a resource amount.</summary>
+    public bool PaidInGold { get; }
+
     public bool IsSuccess => Status == EmissaryPurchaseStatus.Success;
 
-    public EmissaryPurchaseResult(EmissaryPurchaseStatus status, string troopId, int quantity, int totalCost, string resourceDisplayName)
+    public EmissaryPurchaseResult(EmissaryPurchaseStatus status, string troopId, int quantity, int totalCost, string resourceDisplayName, bool paidInGold = false)
     {
+        PaidInGold = paidInGold;
         Status = status;
         TroopId = troopId;
         Quantity = quantity;
@@ -36,6 +40,6 @@ public sealed class EmissaryPurchaseResult
         ResourceDisplayName = resourceDisplayName;
     }
 
-    public static EmissaryPurchaseResult Of(EmissaryPurchaseStatus status, string troopId = null, int quantity = 0, int totalCost = 0, string resourceDisplayName = null) =>
-        new(status, troopId, quantity, totalCost, resourceDisplayName);
+    public static EmissaryPurchaseResult Of(EmissaryPurchaseStatus status, string troopId = null, int quantity = 0, int totalCost = 0, string resourceDisplayName = null, bool paidInGold = false) =>
+        new(status, troopId, quantity, totalCost, resourceDisplayName, paidInGold);
 }

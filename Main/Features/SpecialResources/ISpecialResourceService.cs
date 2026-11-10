@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
 using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.SpecialResources;
@@ -114,6 +115,41 @@ public interface ISpecialResourceService
     /// amount is non-finite. Backs the <c>taom.add_special_resources</c> console command.
     /// </summary>
     ResourceGrantResult GrantAmount(string heroId, string kingdomId, string cultureId, float amount);
+
+    /// <summary>
+    /// True when "Use Special Resources" is off (#1109): the elite troops' resource costs are paid in
+    /// gold, no resource is earned or spent, and nobody deserts for resource arrears. False when the
+    /// gold settings are absent, which is resource mode.
+    /// </summary>
+    bool IsGoldMode { get; }
+
+    /// <summary>Gold charged per resource point in gold mode (MCM, clamped to 1 to 1000; 100 when unset).</summary>
+    int GoldPerResourcePoint { get; }
+
+    /// <summary>
+    /// Gold mode, main party only: adds <c>upgrade_cost</c> of <paramref name="upgradeTargetId"/> x the
+    /// rate to <paramref name="cost"/>. An Add, so it scales with the factors already on the number.
+    /// </summary>
+    void ApplyGoldUpgradeSurcharge(bool isMainParty, string upgradeTargetId, ref ExplainedNumber cost);
+
+    /// <summary>
+    /// Gold mode, main-hero buyer only: <c>recruit_cost</c> of <paramref name="troopId"/> x the rate,
+    /// else 0.
+    /// </summary>
+    int GetGoldRecruitSurcharge(bool isMainHeroBuyer, string troopId);
+
+    /// <summary>
+    /// Gold mode only: the gold for the main party's party-screen prisoner recruits, one entry of
+    /// <paramref name="troopIds"/> per recruited unit, at <c>recruit_cost</c> x the rate each,
+    /// priced once and saturated at <see cref="SpecialResourceGoldPrice.MaxGold"/>; else 0.
+    /// </summary>
+    int GetGoldPrisonerRecruitCharge(IEnumerable<string> troopIds);
+
+    /// <summary>
+    /// Gold mode, main party only: adds the daily <c>daily_upkeep</c> of the roster x the rate to
+    /// <paramref name="wage"/>. The roster is enumerated only in gold mode for the main party.
+    /// </summary>
+    void ApplyGoldUpkeepSurcharge(bool isMainParty, IEnumerable<TroopUpkeepInfo> roster, ref ExplainedNumber wage);
 }
 
 public sealed class TroopUpkeepInfo

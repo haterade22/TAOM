@@ -78,6 +78,13 @@ is why `RegisterEvents` runs every campaign start/load, not once.
 - **`SyncData` is the persistence half** (Phase 6) — most TAOM features `SyncData` primitives/composite strings; no
   `SaveableTypeDefiner` unless a custom class is saved.
 - **`GetCampaignBehavior<T>()`** is the cross-behavior lookup (and `Campaign.Current.GetCampaignBehavior<T>()`).
+- **`OnUnitRecruitedEvent` has three raisers in v1.4.8, and one of them is inside another behavior.** Every one goes through
+  `CampaignEventDispatcher.Instance.OnUnitRecruited(`: `RecruitmentVM.cs:895` (the volunteer screen, once per unit),
+  `RecruitmentCampaignBehavior.cs:795` (dialog mercenaries) and `RecruitPrisonersCampaignBehavior.cs:130`, which raises it
+  once per unit from its own `OnMainPartyPrisonerRecruitedEvent` listener when the party screen recruits prisoners. AI
+  recruitment raises `OnTroopRecruited` instead. Grep the dispatcher call across the whole decompile; a read of the recruit
+  VM and `RecruitmentCampaignBehavior` alone finds two of the three, and TAOM has missed the prisoner raiser twice
+  (2026-09-11 #558, 2026-11-09 #1109).
 - Subscribe in `RegisterEvents`, **not the ctor** (the ctor runs before the campaign event bus is ready; RegisterEvents
   is the engine-called hook).
 

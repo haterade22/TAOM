@@ -2431,6 +2431,8 @@
     <string id="taom_res_badge_upkeep" text="每日維持費" />
     <string id="taom_res_badge_emissary" text="精銳使者價格" />
     <string id="taom_res_badge_paid_in" text="升級、招募與維持費均以你自己的 {RESOURCE} 支付" />
+    <string id="taom_res_badge_title_gold" text="Costs extra gold" />
+    <string id="taom_res_gold_upkeep" text="Elite troop upkeep" />
     <string id="taom_patch_apply_failed" text="TAOM：在{PHASE}期間有修補群組套用失敗：{GROUPS}。這些群組中的部分修正在本次遊戲中已停用；TAOM 日誌中記載了原因。" />
     <string id="taom_patch_apply_phase_startup" text="啟動" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />

@@ -65,6 +65,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 return;
             }
 
+            var currency = Currency(offerList.ResourceDisplayName, offerList.PaidInGold);
             var elements = new List<InquiryElement>();
             foreach (var offer in offerList.Offers)
             {
@@ -78,12 +79,12 @@ public sealed class EliteEmissaryInquiryPresenter
                 var title = new TextObject("{=taom_emissary_offer_line}{NAME} — {COST} {RESOURCE}")
                     .SetTextVariable("NAME", character.Name)
                     .SetTextVariable("COST", offer.MerchantCost)
-                    .SetTextVariable("RESOURCE", offerList.ResourceDisplayName)
+                    .SetTextVariable("RESOURCE", currency)
                     .ToString();
 
                 var hint = (offer.CanAfford
                     ? new TextObject("{=taom_emissary_offer_afford}You can afford up to {MAX}.").SetTextVariable("MAX", offer.MaxAffordableQuantity)
-                    : new TextObject("{=taom_emissary_offer_cant}Not enough {RESOURCE}.").SetTextVariable("RESOURCE", offerList.ResourceDisplayName))
+                    : new TextObject("{=taom_emissary_offer_cant}Not enough {RESOURCE}.").SetTextVariable("RESOURCE", currency))
                     .ToString();
 
                 // Per-element portraits are skipped — v1.4.6's InquiryElement image type is the abstract
@@ -100,7 +101,7 @@ public sealed class EliteEmissaryInquiryPresenter
 
             var desc = new TextObject("{=taom_emissary_list_desc}Balance: {AMOUNT} {RESOURCE}")
                 .SetTextVariable("AMOUNT", (int)offerList.PlayerBalance)
-                .SetTextVariable("RESOURCE", offerList.ResourceDisplayName)
+                .SetTextVariable("RESOURCE", currency)
                 .ToString();
 
             var data = new MultiSelectionInquiryData(
@@ -116,7 +117,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 {
                     if (chosen == null || chosen.Count == 0) return;
                     if (chosen[0].Identifier is EmissaryTroopOffer offer)
-                        OpenQuantityPicker(settlement, owner, heroId, offer, offerList.ResourceDisplayName, offerList.PlayerBalance);
+                        OpenQuantityPicker(settlement, owner, heroId, offer, currency, offerList.PlayerBalance);
                 },
                 negativeAction: _ => { });
 
@@ -216,11 +217,11 @@ public sealed class EliteEmissaryInquiryPresenter
                     .SetTextVariable("QTY", result.Quantity)
                     .SetTextVariable("TROOP", troopName)
                     .SetTextVariable("COST", result.TotalCost)
-                    .SetTextVariable("RESOURCE", result.ResourceDisplayName).ToString(), Colors.Green);
+                    .SetTextVariable("RESOURCE", Currency(result.ResourceDisplayName, result.PaidInGold)).ToString(), Colors.Green);
                 break;
             case EmissaryPurchaseStatus.Unaffordable:
                 Notify(new TextObject("{=taom_emissary_cant_afford}Not enough {RESOURCE} — need {COST}.")
-                    .SetTextVariable("RESOURCE", result.ResourceDisplayName)
+                    .SetTextVariable("RESOURCE", Currency(result.ResourceDisplayName, result.PaidInGold))
                     .SetTextVariable("COST", result.TotalCost).ToString(), Colors.Red);
                 break;
             case EmissaryPurchaseStatus.NoResource:
@@ -231,6 +232,10 @@ public sealed class EliteEmissaryInquiryPresenter
                 break;
         }
     }
+
+    // Gold mode (#1109) carries no resource name; the price is in gold.
+    private static string Currency(string resourceName, bool paidInGold) =>
+        paidInGold ? new TextObject("{=taom_emissary_gold}gold").ToString() : resourceName;
 
     private static void Notify(string textKeyOrLiteral) => Notify(textKeyOrLiteral, Colors.White);
 

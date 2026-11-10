@@ -2479,6 +2479,8 @@
     <string id="taom_res_badge_upkeep" text="Unterhalt pro Tag" />
     <string id="taom_res_badge_emissary" text="Preis des Elite-Emissärs" />
     <string id="taom_res_badge_paid_in" text="Verbesserungen, Rekruten und Unterhalt werden mit deinem eigenen {RESOURCE} bezahlt" />
+    <string id="taom_res_badge_title_gold" text="Costs extra gold" />
+    <string id="taom_res_gold_upkeep" text="Elite troop upkeep" />
     <string id="taom_patch_apply_failed" text="TAOM: Patch-Gruppen konnten während {PHASE} nicht angewendet werden: {GROUPS}. Einige Korrekturen in diesen Gruppen sind in dieser Sitzung deaktiviert; das TAOM-Protokoll nennt die Ursache." />
     <string id="taom_patch_apply_phase_startup" text="des Starts" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />

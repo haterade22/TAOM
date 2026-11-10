@@ -151,7 +151,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         var hero = Hero.MainHero;
         if (hero == null) return;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
         _service.InitializeHero(hero.StringId, kingdomId, cultureId);
         _logger.LogInfo($"SpecialResources: Seeded starting resource for {hero.Name} at character-creation finalize");
     }
@@ -163,7 +163,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         var hero = Hero.MainHero;
         if (hero == null) return;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
@@ -193,8 +193,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private void OnDailyTickHero(Hero hero)
     {
         if (hero != Hero.MainHero) return;
+        if (_service.IsGoldMode) { _isFirstTickAfterLoad = true; return; }
 
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null)
         {
@@ -296,7 +297,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
         _logger.LogDebug($"[SpecRes] MapEventEnded: state={mapEvent.BattleState}, isSiege={mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside}");
 
         if (mapEvent.BattleState == BattleState.AttackerVictory || mapEvent.BattleState == BattleState.DefenderVictory)
@@ -356,7 +357,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         _service.EarnFromRaid(hero.StringId, kingdomId, cultureId);
@@ -368,7 +369,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         var count = 0;
         if (roster != null)
@@ -387,7 +388,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (winner != Hero.MainHero?.CharacterObject) return;
         if (!CanEarn()) return;
 
-        GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
         var before = _service.GetCurrentAmount(Hero.MainHero.StringId, kingdomId, cultureId);
         _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
         NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament", before);
@@ -408,7 +409,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
 
         var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
@@ -420,12 +421,12 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     // recruit_cost in troop_resource_costs.xml is charged here and gated by Patch51 — no hardcoded ids.
     private void OnUnitRecruited(CharacterObject character, int count)
     {
-        if (character == null || count <= 0) return;
+        if (character == null || count <= 0 || _service.IsGoldMode) return;
 
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
         var charged = _service.ChargeRecruitCost(hero.StringId, kingdomId, cultureId, character.StringId, count);
         if (charged > 0f)
         {
@@ -513,7 +514,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         else
         {
             var hero = Hero.MainHero;
-            GetHeroIds(hero, out var kingdomId, out var cultureId);
+            PartyUpkeepReader.GetHeroIds(hero, out var kingdomId, out var cultureId);
             var spent = _service.CommitSession(hero?.StringId, kingdomId, cultureId);
             if (spent > 0f && hero != null)
             {
@@ -548,6 +549,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     /// </summary>
     private bool CanEarn()
     {
+        if (_service.IsGoldMode) return false;
         if (SpecialResourceEarnPolicy.MayCreditMainHero(_dedicatedServer.IsDedicatedServer)) return true;
 
         if (!_suppressionLogged)
@@ -561,11 +563,5 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     }
 
     private bool _suppressionLogged;
-
-    private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
-    {
-        kingdomId = hero?.Clan?.Kingdom?.StringId;
-        cultureId = hero?.Culture?.StringId;
-    }
 
 }

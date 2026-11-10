@@ -22,6 +22,7 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
 
     public int GetUpgradeCost(string troopId)
     {
+        if (_service.IsGoldMode) return 0;
         var cost = _config.GetTroopCost(troopId);
         return cost?.UpgradeCost ?? 0;
     }
@@ -31,6 +32,7 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
 
     public string GetResourceDisplayName(string kingdomId, string cultureId)
     {
+        if (_service.IsGoldMode) return null;
         var resource = _service.ResolveResource(kingdomId, cultureId);
         return resource?.DisplayName;
     }

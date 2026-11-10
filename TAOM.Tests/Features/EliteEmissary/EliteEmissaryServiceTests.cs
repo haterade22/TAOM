@@ -270,4 +270,211 @@ public class EliteEmissaryServiceTests
         Assert.AreEqual(EmissaryPurchaseStatus.Failed, r.Status);
         _resourceService.DidNotReceive().ChargeMerchantPurchase(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
     }
+
+    // ── Gold mode (#1109): "Use Special Resources" off, elites sold for merchant_cost x rate in gold ──
+
+    private static readonly SpecialResource OtherResource = new(
+        id: "gems",
+        kingdomIds: new[] { "dwarves" },
+        cultureIds: new[] { "erebor" },
+        displayName: "Gems",
+        iconSpriteName: "SpecialResources\taom_gems_icon",
+        cap: 600f, startingAmount: 10f, dailyPerTown: 0.4f,
+        perBattleVictoryBase: 6f, perRaid: 3f, perSiegeVictory: 12f, perPrisoner: 1f);
+
+    private void GoldMode(int gold = 6500, int rate = 100)
+    {
+        _resourceService.IsGoldMode.Returns(true);
+        _resourceService.GoldPerResourcePoint.Returns(rate);
+        _party.GetMainHeroKingdomId().Returns(Kingdom);
+        _party.GetMainHeroCultureId().Returns(Culture);
+        _party.GetMainHeroGold().Returns(gold);
+    }
+
+    [TestMethod]
+    public void HasPurchasableOffers_GoldMode_BuyerResourceMatches_True()
+    {
+        GoldMode();
+
+        Assert.IsTrue(_service.HasPurchasableOffers(Kingdom, Culture));
+    }
+
+    [TestMethod]
+    public void HasPurchasableOffers_GoldMode_BuyerResourceDiffers_False()
+    {
+        GoldMode();
+        _party.GetMainHeroKingdomId().Returns("dwarves");
+        _party.GetMainHeroCultureId().Returns("erebor");
+        _resourceService.ResolveResource("dwarves", "erebor").Returns(OtherResource);
+
+        Assert.IsFalse(_service.HasPurchasableOffers(Kingdom, Culture));
+    }
+
+    [TestMethod]
+    public void HasPurchasableOffers_GoldMode_BuyerResourceNull_False()
+    {
+        GoldMode();
+        _party.GetMainHeroKingdomId().Returns("nowhere");
+        _party.GetMainHeroCultureId().Returns("nobody");
+
+        Assert.IsFalse(_service.HasPurchasableOffers(Kingdom, Culture));
+    }
+
+    [TestMethod]
+    public void HasPurchasableOffers_ResourceMode_IgnoresTheBuyer()
+    {
+        _party.GetMainHeroKingdomId().Returns("dwarves");
+        _party.GetMainHeroCultureId().Returns("erebor");
+
+        Assert.IsTrue(_service.HasPurchasableOffers(Kingdom, Culture));
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldMode_PricesMerchantCostTimesRate_AndBalanceIsGold()
+    {
+        GoldMode(gold: 6500);
+
+        var list = _service.BuildOfferList(Hero, Kingdom, Culture);
+
+        Assert.IsFalse(list.NoResource);
+        Assert.IsTrue(list.PaidInGold);
+        Assert.AreEqual(6500f, list.PlayerBalance);
+        Assert.AreEqual(3000, list.Offers[0].MerchantCost);
+        Assert.AreEqual(2, list.Offers[0].MaxAffordableQuantity);
+        Assert.AreEqual(5000, list.Offers[1].MerchantCost);
+        Assert.AreEqual(1, list.Offers[1].MaxAffordableQuantity);
+        _resourceService.DidNotReceive().GetCurrentAmount(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldMode_AffordFlipsAtGoldEqualsPrice()
+    {
+        GoldMode(gold: 3000);
+        Assert.IsTrue(_service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].CanAfford);
+
+        GoldMode(gold: 2999);
+        Assert.IsFalse(_service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].CanAfford);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldMode_BuyerResourceDiffers_NoResourceAvailable()
+    {
+        GoldMode();
+        _party.GetMainHeroKingdomId().Returns("dwarves");
+        _party.GetMainHeroCultureId().Returns("erebor");
+        _resourceService.ResolveResource("dwarves", "erebor").Returns(OtherResource);
+
+        Assert.IsTrue(_service.BuildOfferList(Hero, Kingdom, Culture).NoResource);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_Success_GrantsThenDebitsGold_NoResourceCharge()
+    {
+        GoldMode(gold: 6500);
+        _party.GrantTroop("gondor_a", 2).Returns(true);
+        _party.TryDebitMainHeroGold(6000).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 2);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        Assert.AreEqual(6000, r.TotalCost);
+        Assert.IsTrue(r.PaidInGold);
+        Received.InOrder(() =>
+        {
+            _party.GrantTroop("gondor_a", 2);
+            _party.TryDebitMainHeroGold(6000);
+        });
+        _resourceService.DidNotReceive().ChargeMerchantPurchase(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
+        _resourceService.DidNotReceive().CanAffordMerchantPurchase(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_Unaffordable_NoGrantNoDebit()
+    {
+        GoldMode(gold: 5999);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 2);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Unaffordable, r.Status);
+        Assert.AreEqual(6000, r.TotalCost);
+        Assert.IsTrue(r.PaidInGold);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+        _party.DidNotReceive().TryDebitMainHeroGold(Arg.Any<int>());
+    }
+
+    // A price can only reach SpecialResourceGoldPrice.MaxGold exactly; past it the total would
+    // saturate and undercharge, so no offer or purchase may go past it. gondor_a costs 30 points:
+    // 30,000 gold at rate 1000, so 333 units (9,990,000) is the most one purchase may hold.
+    [TestMethod]
+    public void BuildOfferList_GoldMode_MaxQuantityStopsBelowMaxGold()
+    {
+        GoldMode(gold: 20_000_000, rate: 1000);
+
+        Assert.AreEqual(333, _service.BuildOfferList(Hero, Kingdom, Culture).Offers[0].MaxAffordableQuantity);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_TotalPastMaxGold_RejectedNoGrantNoDebit()
+    {
+        GoldMode(gold: 20_000_000, rate: 1000);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 334);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Unaffordable, r.Status);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+        _party.DidNotReceive().TryDebitMainHeroGold(Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_TotalAtTheCap_ChargesTheExactTotal()
+    {
+        GoldMode(gold: 20_000_000, rate: 1000);
+        _party.GrantTroop("gondor_a", 333).Returns(true);
+        _party.TryDebitMainHeroGold(9_990_000).Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 333);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        _party.Received(1).TryDebitMainHeroGold(9_990_000);
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_GrantFails_NoDebit()
+    {
+        GoldMode(gold: 6500);
+        _party.GrantTroop("gondor_a", 2).Returns(false);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 2);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Failed, r.Status);
+        _party.DidNotReceive().TryDebitMainHeroGold(Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_BuyerResourceDiffers_NotOffered_NoGrantNoDebit()
+    {
+        GoldMode(gold: 99999);
+        _party.GetMainHeroKingdomId().Returns("dwarves");
+        _party.GetMainHeroCultureId().Returns("erebor");
+        _resourceService.ResolveResource("dwarves", "erebor").Returns(OtherResource);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 1);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.NotOffered, r.Status);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+        _party.DidNotReceive().TryDebitMainHeroGold(Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Purchase_GoldMode_DebitFailsAfterGrant_StillSuccessAndLogsAnError()
+    {
+        GoldMode(gold: 6500);
+        _party.GrantTroop("gondor_a", 1).Returns(true);
+        _party.TryDebitMainHeroGold(3000).Returns(false);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 1);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.Success, r.Status);
+        _logger.Received().LogError(Arg.Is<string>(m => m.Contains("debit")));
+    }
 }
