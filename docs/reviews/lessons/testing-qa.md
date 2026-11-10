@@ -2627,3 +2627,10 @@ The regroup release fired anywhere once no enemy was near, because the producer 
 - **Why missed:** the fake was needed to turn the toggle on, the test passed, and nobody deleted the line the test names.
 - **Prevent:** assert `IsRegistered<T>()` before the replacement, or resolve the real type. For a wiring test, delete the registration it names and watch it fail.
 - **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) row 7.
+
+### A source pin on a branch pins its condition and its exit, not only the order of two calls (#1110, 2026-11-09)
+
+`BroodTick_DisbandsAndSpawnsNothingWithTheModeOn` checked only that the `DisbandAll` text came before `ReturnStraysToPatrol`. Inverting the mode check or deleting the `return;` after the disband left it green, and so did moving the mode call in `SubModule` below the once-per-process guard. This is the third review in a week to find a pin that a breaking edit passes (Seat of Seeing S1, 2026-11-04; Supply Lines, 2026-11-09).
+- **Why missed:** the earlier lesson asks for a pin on each forwarding line. These seams are branches, and the pin recorded only the order its author cared about.
+- **Prevent:** for a branch, pin the condition text, the call with its arguments, the exit, and any guard it must precede. Before you keep a pin, name one edit that breaks the behaviour and check that the pin fails on it.
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), finding 4.

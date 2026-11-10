@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Features.Arachnophobia;
 
 namespace TAOM.Features.TroopProgression;
 
@@ -9,6 +10,7 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
 {
     private readonly IRandomProvider _random;
     private readonly IModLogger _logger;
+    private readonly IArachnophobiaService _arachnophobia;
 
     private static readonly Dictionary<string, List<VolunteerChance>> SettlementMap = new();
     private static readonly Dictionary<string, List<VolunteerChance>> ClanMap = new();
@@ -73,10 +75,11 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeSouthRhovanionCulture();
     }
 
-    public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger)
+    public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger, IArachnophobiaService arachnophobia)
     {
         _random = random;
         _logger = logger;
+        _arachnophobia = arachnophobia;
         EnsureGondorJsonLoaded();
     }
 
@@ -121,7 +124,9 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         if (pool == null || pool.Count == 0)
             return null;
 
-        return PickWeighted(pool);
+        // Arachnophobia Mode (#1110). A copy, because the pools are static and the next game can have the mode off.
+        List<VolunteerChance> visible = pool.FindAll(chance => !_arachnophobia.IsHidden(chance.CharacterId));
+        return visible.Count == 0 ? null : PickWeighted(visible);
     }
 
     // Standard (non-converted) resolution cascade: conditional → per-settlement → per-clan → culture fallback.
@@ -148,7 +153,7 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         var ids = new List<string>(pool.Count);
         foreach (var chance in pool)
         {
-            if (!string.IsNullOrEmpty(chance.CharacterId) && !ids.Contains(chance.CharacterId))
+            if (!string.IsNullOrEmpty(chance.CharacterId) && !ids.Contains(chance.CharacterId) && !_arachnophobia.IsHidden(chance.CharacterId))
                 ids.Add(chance.CharacterId);
         }
         return ids;

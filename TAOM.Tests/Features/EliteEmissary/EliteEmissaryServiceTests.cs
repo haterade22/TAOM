@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Arachnophobia;
 using TAOM.Features.EliteEmissary;
 using TAOM.Features.EliteEmissary.Domain;
 using TAOM.Features.SpecialResources;
@@ -21,6 +22,7 @@ public class EliteEmissaryServiceTests
     private IArmouryPlayerAdapter _player;
     private ISpecialResourceSettingsProvider _goldOption;
     private IOutcomeLog _outcomes;
+    private IArachnophobiaService _arachnophobia;
     private IModLogger _logger;
     private EliteEmissaryService _service;
 
@@ -48,6 +50,7 @@ public class EliteEmissaryServiceTests
         _player = Substitute.For<IArmouryPlayerAdapter>();
         _goldOption = Substitute.For<ISpecialResourceSettingsProvider>();
         _outcomes = Substitute.For<IOutcomeLog>();
+        _arachnophobia = Substitute.For<IArachnophobiaService>();
         _logger = Substitute.For<IModLogger>();
 
         _settings.IsEnabled.Returns(true);
@@ -59,7 +62,7 @@ public class EliteEmissaryServiceTests
         _resourceConfig.GetTroopCost("gondor_a").Returns(Cost("gondor_a", 30));
         _resourceConfig.GetTroopCost("gondor_b").Returns(Cost("gondor_b", 50));
 
-        _service = new EliteEmissaryService(_config, _settings, _resourceService, _resourceConfig, _party, _player, _goldOption, _outcomes, _logger);
+        _service = new EliteEmissaryService(_config, _settings, _resourceService, _resourceConfig, _party, _player, _goldOption, _outcomes, _arachnophobia, _logger);
     }
 
     private static TroopResourceCostEntry Cost(string id, int merchant) =>
@@ -158,6 +161,36 @@ public class EliteEmissaryServiceTests
 
         Assert.AreEqual(1, list.Offers.Count);
         Assert.AreEqual("gondor_b", list.Offers[0].TroopId);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_HiddenTroop_IsNotOffered()
+    {
+        _arachnophobia.IsHidden("gondor_a").Returns(true);
+        _resourceService.GetCurrentAmount(Hero, Kingdom, Culture).Returns(100f);
+
+        var list = _service.BuildOfferList(Hero, Kingdom, Culture);
+
+        Assert.AreEqual(1, list.Offers.Count);
+        Assert.AreEqual("gondor_b", list.Offers[0].TroopId);
+    }
+
+    [TestMethod]
+    public void Purchase_HiddenTroop_NotOffered()
+    {
+        _arachnophobia.IsHidden("gondor_a").Returns(true);
+
+        var r = _service.Purchase(Hero, Kingdom, Culture, "gondor_a", 1);
+
+        Assert.AreEqual(EmissaryPurchaseStatus.NotOffered, r.Status);
+        _party.DidNotReceive().GrantTroop(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void HasPurchasableOffers_EveryOfferHidden_ReturnsFalse()
+    {
+        _arachnophobia.IsHidden(Arg.Any<string>()).Returns(true);
+        Assert.IsFalse(_service.HasPurchasableOffers(Kingdom, Culture));
     }
 
     [TestMethod]

@@ -20,7 +20,7 @@ public class VolunteerRecruitmentServiceTests
         _random = Substitute.For<IRandomProvider>();
         _random.Next(Arg.Any<int>()).Returns(0);
         _logger = Substitute.For<IModLogger>();
-        _sut = new VolunteerRecruitmentService(_random, _logger);
+        _sut = new VolunteerRecruitmentService(_random, _logger, Substitute.For<TAOM.Features.Arachnophobia.IArachnophobiaService>());
     }
 
     // --- Culture fallback ---

@@ -3035,4 +3035,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("{=taom_specres_mcm_gold_rate}Emissary Gold Per Resource", SpecialResources.SpecialResourceSettingsProvider.MinGoldPerResource, SpecialResources.SpecialResourceSettingsProvider.MaxGoldPerResource, Order = 1, RequireRestart = false,
         HintText = "{=taom_specres_mcm_gold_rate_hint}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200.")]
     public int EmissaryGoldPerResource { get; set; } = SpecialResources.SpecialResourceSettingsProvider.DefaultGoldPerResource;
+
+    // --- Accessibility (#1110) ---
+
+    [SettingPropertyGroup("Accessibility", GroupOrder = 85)]
+    [SettingPropertyBool("{=taom_arachnophobia_mcm_mode}Arachnophobia Mode", Order = 0, RequireRestart = false,
+        HintText = "{=taom_arachnophobia_mcm_mode_hint}Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off.")]
+    public bool ArachnophobiaMode { get; set; } = false;
 }

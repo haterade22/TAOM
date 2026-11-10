@@ -136,6 +136,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.HorseComponent", "HorseComponent", "set_BodyLength", "Method", "MonsterSizeCatalogAdapter.cs:23")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:30")]
+    // --- Arachnophobia Mode (#1110): the upgrade edge into a spider troop and the Custom Battle list both go through private setters. Missing: that route stays open, and the game start writes a fail line on taom.arachnophobia.apply.
+    [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "set_UpgradeTargets", "Method", "TroopMountCatalogAdapter.cs:21")]
+    [DataRow("TaleWorlds.Core.BasicCharacterObject", "BasicCharacterObject", "set_IsObsolete", "Method", "TroopMountCatalogAdapter.cs:24")]
     // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
     [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:50")]
     // --- Seat of Seeing (S2): keep the order panel open reaches the panel's view model through the handler's protected _dataSource. Missing: the reopen cannot run, and the session writes a fail line on taom.seat-of-seeing.panel-reopened.

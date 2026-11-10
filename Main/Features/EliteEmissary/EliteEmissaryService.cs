@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Arachnophobia;
 using TAOM.Features.EliteEmissary.Domain;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Domain;
@@ -27,6 +29,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
     private readonly IArmouryPlayerAdapter _player;
     private readonly ISpecialResourceSettingsProvider _goldOption;
     private readonly IOutcomeLog _outcomes;
+    private readonly IArachnophobiaService _arachnophobia;
     private readonly IModLogger _logger;
 
     public EliteEmissaryService(
@@ -38,6 +41,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         IArmouryPlayerAdapter player,
         ISpecialResourceSettingsProvider goldOption,
         IOutcomeLog outcomes,
+        IArachnophobiaService arachnophobia,
         IModLogger logger)
     {
         _config = config;
@@ -48,6 +52,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         _player = player;
         _goldOption = goldOption;
         _outcomes = outcomes;
+        _arachnophobia = arachnophobia;
         _logger = logger;
     }
 
@@ -205,7 +210,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
     private IReadOnlyList<string> GetCultureOffers(string cultureId)
     {
         if (cultureId != null && _config.GetConfig().CultureOffers.TryGetValue(cultureId, out var list) && list != null)
-            return list;
+            return list.Where(id => !_arachnophobia.IsHidden(id)).ToList();
         return Array.Empty<string>();
     }
 

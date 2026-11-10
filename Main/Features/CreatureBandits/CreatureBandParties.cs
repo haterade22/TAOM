@@ -1,6 +1,8 @@
+using System.Linq;
 using Helpers;
 using TAOM.Features.CreatureBandits.Diagnostics;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -60,6 +62,24 @@ internal static class CreatureBandParties
             if (distance * distance > sightSquared) return retry;
         }
         return position;
+    }
+
+    /// <summary>Removes each brood that can leave today (Arachnophobia Mode, #1110). Returns how many left.</summary>
+    internal static int DisbandAll(Clan clan)
+    {
+        int count = 0;
+        // A copy: DestroyPartyAction removes the party from this list.
+        foreach (WarPartyComponent component in clan.WarPartyComponents.ToList())
+        {
+            MobileParty party = component.MobileParty;
+            if (party == null || !CreatureBanditRules.CanDisbandBrood(party.IsActive, party.MapEvent != null, party.PrisonRoster.TotalHeroes))
+                continue;
+            if (party.CurrentSettlement != null)
+                LeaveSettlementAction.ApplyForParty(party);
+            DestroyPartyAction.Apply(null, party);
+            count++;
+        }
+        return count;
     }
 
     internal static int ReturnStraysToPatrol(Clan clan)

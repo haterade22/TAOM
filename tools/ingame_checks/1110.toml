@@ -1,0 +1,47 @@
+# In-game checks for #1110, read by tools/ingame_verdict.py.
+# Written by Main/Features/Arachnophobia/ArachnophobiaService.cs at a game start with the mode on, and by
+# Main/Features/CreatureBandits/CreatureBroodSpawnBehavior.cs when a brood leaves the map. OutcomeLog writes a line once
+# per result and key in a process (the key is the game type, campaign or custom; the brood line's key is empty), so a
+# second game of one type with the same result writes no line: test it in a new process.
+# NOT REACHED is the normal result with Arachnophobia Mode off.
+issue = 1110
+title = "Arachnophobia Mode: a setting that hides spiders and takes spider troops out of play"
+fixed_in = "fc7cd73c4"   # trunk on origin before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.arachnophobia.apply"
+needs = "a game start with the mode on: turn on Arachnophobia Mode in MCM, then start or load a campaign, or start a Custom Battle"
+reached = ['\[Check\] id=taom\.arachnophobia\.apply result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.arachnophobia\.apply result=pass hidden=[1-9]\d* sets=\d+ edges=\d+$']
+# sets=0 with riders found means no battle set took a warg, so spiders still render.
+fail = ['\[Check\] id=taom\.arachnophobia\.apply result=fail ', '\[Check\] id=taom\.arachnophobia\.apply result=pass hidden=\d+ sets=0 ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.arachnophobia.broods-disbanded"
+needs = "a daily tick with the mode on and a spider brood on the map: load a save that has broods, turn on the mode, then pass one day"
+reached = ['\[Check\] id=taom\.arachnophobia\.broods-disbanded result=pass ']
+pass = ['\[Check\] id=taom\.arachnophobia\.broods-disbanded result=pass count=[1-9]\d*$']
+absence = "not-reached"
+
+[[human]]
+claim = "with the mode on, the Custom Battle troop list shows no Spider Rider"
+
+[[human]]
+claim = "with the mode on in a new campaign, a Dol Guldur fief offers no spider recruit and goblin_lurker offers no spider upgrade"
+
+[[human]]
+claim = "with the mode on, the encyclopedia lists no spider troop and the Elite Emissary offers none"
+
+[[human]]
+claim = "with the mode on in an old save, a leftover Spider Rider shows a warg and fights, and no crash follows the brood disband"
+
+[[human]]
+claim = "with the mode on, a goblin Spider Rider, Spider Lord and Pale Spider Rider each sit on the saddle of a brown warg, a dark warg and a fell warg; no goblin rode these wargs before"
+
+[[human]]
+claim = "with the mode on, a brood met before the first daily tick fights as unarmed goblins on wargs, the wargs bite, and the battle ends with no crash"
+
+[[human]]
+claim = "with the mode off after a reload, spider riders ride spiders again and new broods appear"
