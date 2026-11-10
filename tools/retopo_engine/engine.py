@@ -575,6 +575,7 @@ def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
 
 def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
     settings.validate()
+    flat = _normalized_copy(flat)
     components = flat.connected_components()
     if len(components) > 1:
         combined = Mesh(vertices=[], faces=[], uv_name=flat.uv_name)
@@ -588,7 +589,10 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 attributes={
                     name: [values[index] for index in used]
                     for name, values in flat.attributes.items()
-                    if len(values) == len(flat.vertices)
+                    if flat.attribute_domain(name) == "POINT"
+                },
+                attribute_domains={
+                    name: "POINT" for name in flat.attributes if flat.attribute_domain(name) == "POINT"
                 },
             )
             initialized = initialize_planes(part, settings)

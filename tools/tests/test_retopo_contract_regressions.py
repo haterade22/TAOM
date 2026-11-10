@@ -512,24 +512,57 @@ class ContractRegressionTests(unittest.TestCase):
 
     def test_direct_initialization_and_snap_ignore_invalid_markers(self):
         source = differential.curved_grid()
+        selective = [index in {1, 3, 5, 7} for index in range(len(source.vertices))]
         for domain in ("CORNER", "FACE"):
             with self.subTest(source_domain=domain):
-                source.attributes["point_guide"] = [True] * len(source.vertices)
+                source.attributes["point_guide"] = selective
                 source.attribute_domains["point_guide"] = domain
                 flat = engine.flatten_to_patterns(source)
                 result = engine.initialize_planes(flat, RetopoSettings())
                 self.assertEqual(differential.unit_guide().vertices, result.vertices)
                 self.assertNotIn("point_guide", result.attributes)
+        source.attribute_domains["point_guide"] = "POINT"
+        valid_source_result = engine.initialize_planes(engine.flatten_to_patterns(source), RetopoSettings())
+        self.assertNotEqual(differential.unit_guide().vertices, valid_source_result.vertices)
         source.attributes.pop("point_guide")
         source.attribute_domains.pop("point_guide")
         flat = engine.flatten_to_patterns(source)
-        for domain, values in (("CORNER", [True] * len(flat.vertices)), ("POINT", [True])):
+        for domain, values in (("CORNER", selective), ("POINT", [True])):
             with self.subTest(direct_domain=domain, direct_length=len(values)):
                 invalid = flat.copy()
                 invalid.attributes["point_guide"] = values
                 invalid.attribute_domains["point_guide"] = domain
                 result = engine.initialize_planes(invalid, RetopoSettings())
                 self.assertEqual(differential.unit_guide().vertices, result.vertices)
+        valid_direct = flat.copy()
+        valid_direct.attributes["point_guide"] = selective
+        valid_direct.attribute_domains["point_guide"] = "POINT"
+        valid_direct_result = engine.initialize_planes(valid_direct, RetopoSettings())
+        self.assertNotEqual(differential.unit_guide().vertices, valid_direct_result.vertices)
+        first = engine.flatten_to_patterns(differential.curved_grid())
+        second = first.copy()
+        second.vertices = [(x + 2, y, z) for x, y, z in second.vertices]
+        offset = len(first.vertices)
+        combined = Mesh(
+            vertices=first.vertices + second.vertices,
+            faces=first.faces + [tuple(index + offset for index in face) for face in second.faces],
+            attributes={name: values + second.attributes[name] for name, values in first.attributes.items()},
+            attribute_domains=first.attribute_domains,
+        )
+        expected = engine.initialize_planes(combined, RetopoSettings())
+        for domain in ("CORNER", "FACE"):
+            with self.subTest(component_domain=domain):
+                invalid = combined.copy()
+                invalid.attributes["point_guide"] = [index == 0 for index in range(len(first.vertices))] * 2
+                invalid.attribute_domains["point_guide"] = domain
+                result = engine.initialize_planes(invalid, RetopoSettings())
+                self.assertEqual((expected.vertices, expected.faces), (result.vertices, result.faces))
+        ring = engine.flatten_to_patterns(differential.ring())
+        ring.attributes.update({"corner_tag": [1] * len(ring.vertices), "short_point": [1, 2]})
+        ring.attribute_domains.update({"corner_tag": "CORNER", "short_point": "POINT", "orphan": "FACE"})
+        initialized_ring = engine.initialize_planes(ring, RetopoSettings())
+        self.assertEqual({"corner_tag", "short_point"} & initialized_ring.attributes.keys(), set())
+        self.assertEqual({"corner_tag", "short_point", "orphan"} & initialized_ring.attribute_domains.keys(), set())
         guide = Mesh(
             vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
             faces=[(0, 1, 2, 3)],
@@ -757,8 +790,11 @@ class ContractRegressionTests(unittest.TestCase):
         repair_mesh = differential.non_manifold()
         repair_mesh.attributes.update({"source_vertex": list(range(5)), "stale": list(range(52)), "corner_tag": [0] * 5})
         repair_mesh.attribute_domains["corner_tag"] = "CORNER"
+        mismatched_axis = mesh.copy()
+        mismatched_axis.lines = [(0, 1)]
         results = [
             engine.mirror_guides(mesh, axes=("x",)),
+            engine.mirror_guides(mismatched_axis, axes=("y",), source=differential.curved_grid()),
             engine._separate(mesh, [0]),
             engine.merge_output_seams(weld_mesh, 0.01),
             engine.thicken(mesh, 0.1),

@@ -168,7 +168,7 @@ def main():
         activate(point_output)
         assert bpy.ops.taom.retopologize() == {"FINISHED"}
         assert all(polygon.material_index == 0 for polygon in bpy.context.active_object.data.polygons)
-        assert len(bpy.context.active_object.data.materials) == len(bpy.context.active_object.data.polygons)
+        assert len(bpy.context.active_object.data.materials) == 1
         settings.output_generated_planes = False
         distinct = roundtrip.copy()
         distinct.attributes["pattern_id"] = [10, 11, 12, 13]
