@@ -137,7 +137,7 @@ class GuideTests(unittest.TestCase):
     def test_mirror_adds_geometry_and_restores_outward_winding(self):
         result = engine.mirror_guides(unit_guide(), axes=("x",))
         self.assertEqual(2, len(result.faces))
-        self.assertEqual(8, len(result.vertices))
+        self.assertEqual(6, len(result.vertices))
         self.assertTrue(all(len(face) == 4 for face in result.faces))
         self.assertTrue(all(math.isclose(vertex[2], 0) for vertex in result.vertices))
 
@@ -165,18 +165,18 @@ class DensityTests(unittest.TestCase):
         settings = RetopoSettings(base_density=4, full_crease_control=True)
         self.assertEqual(1, len(engine.apply_density(guide, settings).faces))
 
-    def test_base_density_and_upper_full_crease_control_change_resolution(self):
+    def test_density_controls_match_measured_reference_contract(self):
         low = engine.apply_density(unit_guide(), RetopoSettings(base_density=25))
         high = engine.apply_density(unit_guide(), RetopoSettings(base_density=100))
-        self.assertGreater(len(high.faces), len(low.faces))
+        self.assertEqual(len(low.faces), len(high.faces))
         guide = unit_guide()
         results = {}
         for value in (0.25, 0.5, 0.75, 1.0):
             guide.edge_attributes["crease_edge"] = {edge: value for edge in guide.edges()}
             results[value] = len(engine.apply_density(guide, RetopoSettings(base_density=100, full_crease_control=True)).faces)
         self.assertLess(results[0.25], results[0.5])
-        self.assertLess(results[0.5], results[0.75])
-        self.assertLess(results[0.75], results[1.0])
+        self.assertEqual(results[0.5], results[0.75])
+        self.assertEqual(results[0.75], results[1.0])
 
     def test_sharp_edge_adds_configured_cuts(self):
         guide = unit_guide()

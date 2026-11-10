@@ -79,11 +79,13 @@ claim. Matching the source's internal 83 node groups or 8,486 nodes is not a goa
 
 ### Density, snapping, and smoothing
 
-- `Base Density` sets the baseline sampling density. It must be finite and non-negative.
+- `Base Density` scales crease and sharp-edge sampling. Plain guides receive no implicit baseline
+  tessellation, matching the measured reference. It must be finite and non-negative.
 - `Auto Density` reconciles divisions across connected patterns without letting an isolated
   single-face guide or a circular loop distort unrelated regions.
 - Edge crease controls cuts. With full crease control disabled, the 0 to 1 range adds cuts.
-- With full crease control enabled, 0 to 0.5 reduces cuts, 0.5 is neutral, and 0.5 to 1 adds cuts.
+- With full crease control enabled, 0 to 0.5 reduces cuts and 0.5 is neutral. The measured
+  reference keeps a neutral plateau above 0.5; compatibility tests must not invent an increase.
   Reducing density requires the relevant sides and connected patterns to participate.
 - `Density Add` uses sharp-edge weights to add cuts, with `Density Add Threshold` offsetting their
   reach. A crease-neutralization helper sets selected edges to 0.5.

@@ -206,6 +206,10 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
             }
             for face in mesh.faces
         ]
+        vertex_faces = {index: [] for index in range(len(mesh.vertices))}
+        for face_index, face in enumerate(mesh.faces):
+            for vertex in face:
+                vertex_faces[vertex].append(face_index)
         for edge, face_indices in adjacency.items():
             parents = {index: index for index in range(len(mesh.faces))}
 
@@ -215,8 +219,11 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                     index = parents[index]
                 return index
 
-            for first in range(len(mesh.faces)):
-                for second in range(first + 1, len(mesh.faces)):
+            candidates = set(vertex_faces[edge[0]]) | set(vertex_faces[edge[1]])
+            for first in candidates:
+                for second in candidates:
+                    if second <= first:
+                        continue
                     shared = face_edges[first] & face_edges[second]
                     if any(
                         candidate != edge and any(vertex in candidate for vertex in edge)
@@ -226,19 +233,28 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
                         if first_root != second_root:
                             parents[second_root] = first_root
             fans = {}
-            for face_index in face_indices:
+            for face_index in range(len(mesh.faces)):
                 fans.setdefault(root(face_index), []).append(face_index)
-            preserved = max(fans.values(), key=lambda fan: (len(fan), -min(fan)))
-            for fan in fans.values():
-                if fan is preserved:
+            preserved = max(
+                (fan for fan in fans.values() if any(index in face_indices for index in fan)),
+                key=lambda fan: (sum(index in face_indices for index in fan), -min(fan)),
+            )
+            preserved_root = root(preserved[0])
+            preserved_incident = [index for index in fans[preserved_root] if index in face_indices]
+            if len(preserved_incident) > 2:
+                split_face = preserved_incident[-1]
+                fans[preserved_root].remove(split_face)
+                fans[f"split-{split_face}"] = [split_face]
+            for fan_root, fan in fans.items():
+                if fan_root == preserved_root:
                     continue
+                replacements = {}
+                for old in edge:
+                    replacements[old] = len(result.vertices)
+                    result.vertices.append(mesh.vertices[old])
+                    for name, values in result.attributes.items():
+                        values.append(values[old])
                 for face_index in fan:
-                    replacements = {}
-                    for old in edge:
-                        replacements[old] = len(result.vertices)
-                        result.vertices.append(mesh.vertices[old])
-                        for name, values in result.attributes.items():
-                            values.append(values[old])
                     result.faces[face_index] = tuple(replacements.get(index, index) for index in result.faces[face_index])
     result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
     return result, bad_edges
@@ -504,14 +520,26 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
             for vertex in component.vertices
         ]
         component.faces = [tuple(reversed(face)) for face in component.faces]
-        component_signatures = {face_signature(component, face) for face in component.faces}
-        if component_signatures and component_signatures <= signatures:
+        unique_faces = [face for face in component.faces if face_signature(component, face) not in signatures]
+        if not unique_faces:
             continue
-        signatures.update(component_signatures)
-        offset = len(result.vertices)
-        result.vertices.extend(component.vertices)
-        result.faces.extend(tuple(index + offset for index in face) for face in component.faces)
-        result.lines.extend(tuple(index + offset for index in edge) for edge in component.lines)
+        position_indices = {
+            tuple(round(value, 9) for value in vertex): index
+            for index, vertex in enumerate(result.vertices)
+        }
+
+        def mirrored_index(old):
+            key = tuple(round(value, 9) for value in component.vertices[old])
+            if key not in position_indices:
+                position_indices[key] = len(result.vertices)
+                result.vertices.append(component.vertices[old])
+            return position_indices[key]
+
+        for face in unique_faces:
+            result.faces.append(tuple(mirrored_index(index) for index in face))
+            signatures.add(face_signature(component, face))
+        for edge in component.lines:
+            result.lines.append(tuple(mirrored_index(index) for index in edge))
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -638,14 +666,17 @@ def requested_density_counts(guide: Mesh, settings: RetopoSettings):
     validate_guides(guide)
     creases = guide.edge_attributes.get("crease_edge", {})
     sharps = guide.edge_attributes.get("sharp_edge", {})
-    counts = {edge: max(1, round(settings.base_density * 0.02)) for edge in guide.edges()}
+    counts = {edge: 1 for edge in guide.edges()}
     for edge in guide.edges():
         if edge in creases:
             value = max(0.0, min(1.0, float(creases[edge])))
             if settings.full_crease_control:
-                counts[edge] = max(1, round(settings.base_density * value * 0.04))
+                if value >= 0.5:
+                    counts[edge] = max(1, round(settings.base_density * 0.02))
+                else:
+                    counts[edge] = max(1, round(settings.base_density * value * 0.04))
             else:
-                counts[edge] = max(counts[edge], round(settings.base_density * value * 0.22))
+                counts[edge] = max(1, round(settings.base_density * value * 0.22))
         if (
             edge in sharps
             and sharps[edge]
@@ -877,6 +908,10 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         for index in edge
     }
     eligible = {index for edge in result.boundary_edges() for index in edge} - protected
+    vertex_faces = {index: set() for index in range(len(result.vertices))}
+    for face_index, face in enumerate(result.faces):
+        for vertex in face:
+            vertex_faces[vertex].add(face_index)
     remap = list(range(len(result.vertices)))
     cells = {}
     for vertex in sorted(eligible):
@@ -887,7 +922,7 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
             for y in range(cell[1] - 1, cell[1] + 2):
                 for z in range(cell[2] - 1, cell[2] + 2):
                     for other in cells.get((x, y, z), []):
-                        if math.dist(position, result.vertices[other]) <= distance:
+                        if not vertex_faces[vertex] & vertex_faces[other] and math.dist(position, result.vertices[other]) <= distance:
                             found = other
                             break
                     if found is not None:
@@ -1109,9 +1144,9 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
         result.uv = _fit_uv(result.uv)
     result = _merge_seams(result, settings.seams_merge_distance)
     if settings.separate_patterns:
-        result = _separate(result, face_patterns)
+        result = _separate(result, result.attributes["pattern_id"])
     if settings.separate_parts:
-        result = _separate(result, face_parts)
+        result = _separate(result, result.attributes["part_id"])
     if settings.thickness_enabled:
         result = thicken(result, settings.thickness, settings.thickness_offset)
     return result

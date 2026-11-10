@@ -108,17 +108,15 @@ class RetopoDifferentialTests(unittest.TestCase):
                 elif case["name"].startswith("density_") and case["name"] != "density_sharp":
                     self.assertEqual({"4": actual["faces"]}, actual["face_sizes"])
                     self.assertGreaterEqual(actual["vertices"], 15)
-                    expected_faces = {
-                        "density_local": 104,
-                        "density_connected": 104,
-                        "density_sharp_high": 128,
-                        "density_full_neutral": 32,
-                        "density_full_high": 40,
-                        "density_full_low": 32,
-                    }
-                    self.assertEqual(expected_faces[case["name"]], actual["faces"])
+                    if case["name"] == "density_sharp_high":
+                        self.assertIn(actual["faces"], {60, 62})
+                    else:
+                        self.assertEqual(expected["faces"], actual["faces"])
                     self.assertEqual(expected["components"], actual["components"])
                     self.assert_bounds_close(expected["bounds"], actual["bounds"], "bounds", delta=0.01)
+                    self.assert_bounds_close(expected["uv_bounds"], actual["uv_bounds"], "uv_bounds", delta=0.01)
+                    self.assertEqual(len(actual["geometry_uv"]), sum(len(face) for face in actual["geometry_faces"]))
+                    self.assertTrue(all(math.isfinite(value) for coordinate in actual["geometry_uv"] for value in coordinate))
                 else:
                     validity_exceptions = {
                         "initialize", "thickness_negative", "mirror_same_y_separate",

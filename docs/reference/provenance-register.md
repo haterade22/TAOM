@@ -98,7 +98,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Exoside Quad Remesher engine | `Quad Remesher` `QuadRemesher` `xremeshlib` | proprietary, local licensed dependency | comparison-only | `docs/research/quad-remesher-engine.md`; no native code, binary, license data, or mesh assets redistributed | uncleared |
 | Exoside Blender bridge | `qr_exe.py` `qr_operators.py` | GPL-2.0-or-later | behavioural-port | `tools/blender/quad_remesh_job.py` `tools/tests/test_quad_remesh_job.py`; the standalone package carries the GPL notice and license text | cleared |
 | Hair Tool (Bartosz Styperek, JOSECONSCO) | `Hair Tool` `hair_tool` | GPL-3.0-or-later | behavioural-port | `tools/hair_engine/**` `tools/blender/hair_engine_*.py` are behavioral implementations with GPL notices; the older `tools/blender/hair_tool_pipeline.py` bridge remains interop-only; no add-on source, node assets, textures, or presets redistributed | cleared |
-| Petik 2.0.7 (Mihai Dobrin) | `Petik` `MdUtilMultiPetik` | GPL-3.0-or-later | verbatim-port | `tools/petik/Petik/**` with three recorded compatibility edits in `__init__.py` and `op_md_petik.py`; the separate KEYforce Petik installable archive carries source and license | cleared |
+| Petik 2.0.7 (Mihai Dobrin) | `Petik` `MdUtilMultiPetik` | GPL-3.0-or-later | verbatim-port | `tools/petik/Petik/**` with six recorded compatibility edits in `__init__.py` and `op_md_petik.py`; the separate KEYforce Petik installable archive carries source and license | cleared |
 | Retopo Planes 1.6.3 (Nodes Interactive) | `RetopoPlanes` `Nodes Interactive` | proprietary, behavioral reference only; no product code or assets shipped | behavioural-port | `docs/research/retopo-planes-1-6-3-clean-room.md`; independently structured implementation in `tools/retopo_engine/**` `tools/blender/retopo_{adapter,operators}.py`; measured synthetic outputs in `tools/tests/fixtures/retopo_reference.json`; no source `.blend`, nodes, demo assets, or textures redistributed | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
@@ -1053,6 +1053,20 @@ and Mixamo renders from that license, so nothing may be copied from
 nothing was cloned, built or run. No code was ported. Its fal binding led TAOM to the Tripo option
 names, which were confirmed on fal's own page and written in TAOM's words. Record:
 [`docs/reviews/adopt-artcraft-2026-11-08.md`](../reviews/adopt-artcraft-2026-11-08.md).
+
+## Retopo Planes 1.6.3 detail
+
+The maintainer supplied the proprietary reference file, SHA-256
+`6e00e628d0638fbab315076baf1db466c6b93e583f2a5123dcf50ff510441b64`. TAOM inspected its public
+settings and measured independently authored synthetic outputs. The implementation uses new Python
+structure and algorithms, not the product's Geometry Nodes or other expression. Repeated behavioral
+comparisons make this a `behavioural-port`, not the single-pass clean-room procedure.
+
+No product license grant is implied or asserted. The reference file, nodes, demo meshes, textures,
+materials, presets, and activation data are not redistributed. The shipped notice records this
+boundary. Validity corrections for crossed initialization, inverted Y mirrors, and negative
+thickness are explicit in the capability matrix. `cleared` applies to that independently authored
+implementation boundary. Petik is separate GPL-3.0-or-later source with its own notices.
 
 ---
 

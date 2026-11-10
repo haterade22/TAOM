@@ -30,7 +30,7 @@ line tool. The TAOM panel is in **3D View > Sidebar > TAOM > TAOM Retopology**.
 4. Edit or generate quad guides. Use ordinary mesh editing, **Initialize Planes**, mirroring, auto
    fill, or Petik. Triangles and ngons are rejected with their face indices.
 5. Configure density, snapping, smoothing, subdivision/reprojection, separation, thickness, and
-   preview options. Every option in the clean-room contract is exposed in the panel.
+   preview options. Every option in the behavioral contract is exposed in the panel.
 6. Run **Generate / Update Retopology**. The result is an ordinary editable mesh with an active UV
    layer, not a proprietary Geometry Nodes dependency.
 7. Review helpers and UVs, then export to a staging directory outside the live Armory. Complete
@@ -62,9 +62,13 @@ python -m unittest tools.tests.test_retopo_engine tools.tests.test_retopo_differ
 python -m ruff check tools/retopo_engine tools/blender/retopo_adapter.py tools/blender/retopo_operators.py tools/tests/test_retopo_engine.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_selftest.py
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/petik_selftest.py
+set BLENDER_USER_SCRIPTS=D:\staging\blender-test-addons
+set BLENDER_USER_CONFIG=D:\staging\blender-test-config
 blender-launcher -b --factory-startup --disable-autoexec --python-exit-code 1 -P tools/blender/retopo_installable_selftest.py
 ```
 
+The installable test refuses to run without a disposable `BLENDER_USER_SCRIPTS` directory. Its
+`overwrite=True` installation is confined to that directory; the add-ons are disabled after the test.
 The Blender runs write `TestResults/Blender/retopo_selftest_report.json`,
 `TestResults/Blender/petik_selftest_report.json`, and
 `TestResults/Blender/installable_report.json`; require `"status": "ok"` in all three.
@@ -84,7 +88,7 @@ outputs, proprietary reference files, demo content, or generated meshes.
 ## License and provenance
 
 The independent TAOM engine, adapter, operators, examples, tests, and packaging code are MIT
-licensed. Petik is a separate GPL-3.0-or-later add-on with five recorded compatibility fixes and
+licensed. Petik is a separate GPL-3.0-or-later add-on with six recorded compatibility fixes and
 its own source, license, and notice. See `LICENSE.txt`, `NOTICE.txt`, and each installable archive.
 
 Retopo Planes 1.6.3 was used as a behavioral reference and for measured synthetic output comparisons.

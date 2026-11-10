@@ -241,8 +241,20 @@ class PatchLine:
                         self.start.co.lerp(self.end.co, 1.0 / (self.total_control_points + 1) * (control_point_id + 1)),
                         self, self.normal))
                     if self.preexistant:
-                        self.control_points[-1].update_location(self.verts[control_point_id + 1].co.copy())
-                        self.control_points[-1].normal = self.verts[control_point_id + 1].normal
+                        if control_point_id + 1 < len(self.verts):
+                            self.control_points[-1].update_location(self.verts[control_point_id + 1].co.copy())
+                            self.control_points[-1].normal = self.verts[control_point_id + 1].normal
+                        else:
+                            position = (control_point_id + 1) / (self.total_control_points + 1) * (len(self.verts) - 1)
+                            index = min(int(position), len(self.verts) - 2)
+                            factor = position - index
+                            self.control_points[-1].update_location(self.verts[index].co.lerp(self.verts[index + 1].co, factor))
+                            first_normal = self.verts[index].normal
+                            second_normal = self.verts[index + 1].normal
+                            if first_normal.length < 1e-8 or second_normal.length < 1e-8:
+                                self.control_points[-1].normal = self.normal
+                            else:
+                                self.control_points[-1].normal = first_normal.slerp(second_normal, factor)
                     else:
                         self.control_points[-1].update_location(
                             get_snap_point(self.context, self.active_objects, self.control_points[-1].co, self.normal,

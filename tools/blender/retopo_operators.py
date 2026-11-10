@@ -320,7 +320,8 @@ class TAOM_OT_retopologize(bpy.types.Operator):
             else:
                 output = mesh_to_blender(result, source.name + "_Retopo")
             output["taom_retopology_output"] = True
-            output.matrix_world = source.matrix_world
+            if not settings.only_patterns:
+                output.matrix_world = source.matrix_world
             output["guide_vertices"] = len(guide.vertices)
             output["guide_faces"] = len(guide.faces)
             output["engine"] = "TAOM independent UV retopology"
@@ -341,7 +342,7 @@ class TAOM_OT_mirror_guides(bpy.types.Operator):
         active = _active_mesh(context)
         axes = ("x", "y") if self.axis == "xy" else (self.axis,)
         source_mesh = mesh_from_blender(_source(context), evaluated=True, uv_name=_settings(context).source_uv_name or None)
-        result = engine.mirror_guides(mesh_from_blender(active), axes=axes, source=source_mesh)
+        result = engine.mirror_guides(combine_objects([active]), axes=axes, source=source_mesh)
         obj = mesh_to_blender(result, active.name + "_Mirrored")
         _activate(obj)
         return {"FINISHED"}
@@ -357,7 +358,7 @@ class TAOM_OT_auto_fill(bpy.types.Operator):
         flat = engine.flatten_to_patterns(mesh_from_blender(_source(context), evaluated=True, uv_name=_settings(context).source_uv_name or None))
         points = [flat.vertices[index] for index, value in enumerate(flat.attributes["point_guide"]) if value]
         result = engine.auto_fill(
-            mesh_from_blender(active), points, _settings(context).auto_fill_max_iterations
+            combine_objects([active]), points, _settings(context).auto_fill_max_iterations
         )
         obj = mesh_to_blender(result, active.name + "_Filled")
         _activate(obj)

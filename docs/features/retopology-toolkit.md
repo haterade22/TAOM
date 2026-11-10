@@ -96,7 +96,7 @@ and guide objects are preserved when generating a new output.
 | `tools/blender/retopo_installable_selftest.py` | Reproducible nested-archive installation and clean-disable verification |
 | `tools/blender/retopo_reference_differential.py` | Original-product differential case capture |
 | `tools/blender/petik_selftest.py` | Petik topology, projection, and modal verification |
-| `tools/petik/Petik/` | Petik 2.0.7 with five recorded compatibility fixes, GPL license, and notice |
+| `tools/petik/Petik/` | Petik 2.0.7 with six recorded compatibility fixes, GPL license, and notice |
 | `tools/package_retopology_toolkit.py` | Deterministic KEYforce source and installable-archive builder |
 | `docs/research/retopo-planes-1-6-3-clean-room.md` | Behavior specification and acceptance matrix |
 
@@ -110,7 +110,7 @@ and guide objects are preserved when generating a new output.
   geometry, subdivision, UVs, initialization, X/Y mirroring, auto-fill, density modes, separation,
   thickness, and inspector behavior. Exact cases compare complete vertex positions, oriented
   connectivity, and geometry-UV associations. Validity exceptions and independent density counts are explicit.
-- `python -m unittest tools.tests.test_retopo_contract_regressions`: eighteen regression tests for topology,
+- `python -m unittest tools.tests.test_retopo_contract_regressions`: twenty-one regression tests for topology,
   source attributes, validity, density order, seam merging, bevel propagation, inspector face fans,
   self-mirroring, empty inputs, report naming, and preview density/contact guides.
 - `python -m unittest tools.tests.test_petik_compat`: three tests for explicit reload imports,

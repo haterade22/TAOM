@@ -6,12 +6,13 @@ The add-on is redistributed under GNU GPL-3.0-or-later, as declared by the upstr
 blender_manifest.toml. The upstream distribution did not include a separate LICENSE
 file; the corresponding license text is supplied in LICENSE.txt.
 
-TAOM made five compatibility changes on 2026-11-09 and 2026-11-10:
+TAOM made six compatibility changes on 2026-11-09 and 2026-11-10:
 - __init__.py imports both modules explicitly before reloading them.
 - Patch.refresh passes self.context instead of an undefined name.
 - The optional menu method references MdUtilMultiPetik instead of an undefined operator.
 - Petik Line snapping uses the line supplied by its caller instead of the selected line.
 - Selected closed edge cycles are discovered and retain their closing vertex.
+- Control-point growth on a closed line samples the original polyline instead of indexing past it.
 
 petik_preferences.py and blender_manifest.toml remain byte-identical to upstream.
 No other executable Petik logic was changed.

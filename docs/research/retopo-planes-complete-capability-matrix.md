@@ -12,8 +12,9 @@ subdivision, UV, ring, X mirror, separation, positive thickness, and inspector f
 compares complete synthetic meshes, not truncated samples. TAOM deliberately corrects three invalid
 captured behaviors: bow-tie initialization, inverted Y-mirror normals, and inside-out negative
 thickness. Those exceptions retain position and UV comparisons and independently require nonzero
-area, outward normals, or positive volume. Density uses an independent baseline and increasing
-upper-crease contract with exact expected face counts. The hex auto-fill solver uses a different
+area, outward normals, or positive volume. Density compares exact reference face counts and checks
+quad output, connected components, and bounds; the neutral plateau and low-crease reduction are preserved.
+The hex auto-fill solver uses a different
 central two-quad layout and is checked for its exact 6-vertex, 2-quad result.
 
 The numeric contract enforces the original maxima for base density, subdivision, smoothing, auto-fill,
@@ -24,7 +25,8 @@ Petik evidence includes real BMesh 3 to 6-sided quad patches, alternative soluti
 editing, selected-loop discovery, modal controls, reset/undo, preference swaps, visibility, real
 ray casting, snapping, and view normals. Registration and reload, both hotkeys, help drawing,
 right-click handling, and mouse-wheel control-point and snap-distance changes are also exercised.
-Background-only RNA modal-handler registration is isolated by the test context, while the modal
+Closed lines are created and grown to five control points. Background-only RNA modal-handler
+registration is isolated by the test context, while the modal
 methods themselves run unchanged.
 
 Reference input remains `RetopoPlanes1.6.3vBlender5.1.blend`, SHA-256

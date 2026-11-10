@@ -42,6 +42,8 @@ def reset_preview(settings):
 
 
 def main():
+    if not os.environ.get("BLENDER_USER_SCRIPTS"):
+        raise RuntimeError("set BLENDER_USER_SCRIPTS to a disposable directory before installing test add-ons")
     report = {"installed": []}
     for name in ("taom_retopology", "Petik"):
         archive = ARCHIVE_ROOT / f"{name}.zip"

@@ -185,11 +185,19 @@ def multi_line_cases():
     bm.edges.index_update()
     operator.bm = bm
     loops = operator.get_selected_vertex_loops()
-    bm.free()
     assert len(loops) == 1 and len(loops[0]) == 5, loops
     assert loops[0][0] == loops[0][-1], loops
+    operator.lines = []
+    operator.snap_type = 0
+    operator.eagle_eye_ratio = 0.1
+    created = operator.create_lines(loops)
+    assert len(created) == 1
+    line = created[0]
+    line.change_control_points(5 - line.total_control_points)
+    assert len(line.control_points) == 5
+    bm.free()
     bpy.ops.object.mode_set(mode="OBJECT")
-    return {"snapped_lines": snapped, "closed_loop_vertices": len(loops[0])}
+    return {"snapped_lines": snapped, "closed_loop_vertices": len(loops[0]), "closed_control_points": len(line.control_points)}
 
 
 def modal_event(event_type, value="PRESS"):
