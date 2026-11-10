@@ -697,20 +697,41 @@ class ContractRegressionTests(unittest.TestCase):
                 "source_vertex": [0, 1, 2, 3],
                 "weight": [9, 8, 7, 6, 5, 4],
                 "corner_tag": [1, 1, 1, 1],
+                "short_point": [1, 2, 3],
             },
-            attribute_domains={"corner_tag": "CORNER"},
+            attribute_domains={"corner_tag": "CORNER", "short_point": "POINT"},
         )
+        weld_mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, -1, 0), (0, -1, 0)],
+            faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+            attributes={"weight": list(range(6)), "source_vertex": list(range(8))},
+        )
+        repair_mesh = differential.non_manifold()
+        repair_mesh.attributes.update({"source_vertex": list(range(5)), "stale": list(range(52)), "corner_tag": [0] * 5})
+        repair_mesh.attribute_domains["corner_tag"] = "CORNER"
         results = [
             engine.mirror_guides(mesh, axes=("x",)),
             engine._separate(mesh, [0]),
-            engine.merge_output_seams(mesh, 0.01),
+            engine.merge_output_seams(weld_mesh, 0.01),
             engine.thicken(mesh, 0.1),
             engine.subdivide_quads(mesh),
+            engine.inspect_topology(repair_mesh, fix_split_edges=True)[0],
+            engine.inspect_topology(mesh, fix_split_edges=True)[0],
+            engine.inspect_topology(mesh, fix_split_edges=False)[0],
+            engine.merge_output_seams(mesh, 0),
         ]
         for result in results:
             self.assertNotIn("weight", result.attributes)
             self.assertNotIn("corner_tag", result.attributes)
+            self.assertNotIn("short_point", result.attributes)
+            self.assertNotIn("stale", result.attributes)
             self.assertIn("source_vertex", result.attributes)
+        line_mesh = weld_mesh.copy()
+        line_mesh.vertices.append((9, 9, 0))
+        line_mesh.lines = [(7, 8)]
+        line_result = engine.merge_output_seams(line_mesh, 0.01)
+        self.assertEqual([(5, 6)], line_result.lines)
+        engine.subdivide_quads(line_result)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(

@@ -76,6 +76,18 @@ class Mesh:
             if (domain := self.attribute_domain(name)) is not None
         }
 
+    def unresolved_attribute_names(self):
+        unresolved = set()
+        for name, values in self.attributes.items():
+            domain = self.attribute_domain(name)
+            if (
+                domain not in {"POINT", "FACE"}
+                or (domain == "POINT" and len(values) != len(self.vertices))
+                or (domain == "FACE" and len(values) != len(self.faces))
+            ):
+                unresolved.add(name)
+        return unresolved
+
     def discard_unresolved_attributes(self, names):
         for name in names:
             if name in self.attributes:

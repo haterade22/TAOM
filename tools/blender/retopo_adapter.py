@@ -36,24 +36,24 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
         )
         for name in ("source_position", "pattern_center"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "POINT":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [tuple(item.vector) for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "POINT"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("source_vertex", "source_part", "pattern_id"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "POINT":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "POINT"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("point_guide", "open_seam", "simplify_on"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "POINT":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "POINT"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "FACE":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "FACE"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("crease_edge", "sharp_edge", "bevel_weight_edge"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "EDGE":
