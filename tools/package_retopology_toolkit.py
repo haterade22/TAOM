@@ -65,11 +65,15 @@ def _write(archive, name, data):
     archive.writestr(info, data)
 
 
+def _source_bytes(repo, relative):
+    return (repo / relative).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
 def _taom_installable(repo):
     buffer = BytesIO()
     with zipfile.ZipFile(buffer, "w") as archive:
         for source, destination in sorted(TAOM_ADDON_FILES.items()):
-            _write(archive, destination, (repo / source).read_bytes())
+            _write(archive, destination, _source_bytes(repo, source))
     return buffer.getvalue()
 
 
@@ -80,7 +84,7 @@ def _petik_installable(repo):
             if not source.startswith("tools/petik/Petik/"):
                 continue
             destination = "Petik/" + source.removeprefix("tools/petik/Petik/")
-            _write(archive, destination, (repo / source).read_bytes())
+            _write(archive, destination, _source_bytes(repo, source))
     return buffer.getvalue()
 
 
@@ -93,7 +97,7 @@ def build_package(repo, output):
     taom = _taom_installable(repo)
     petik = _petik_installable(repo)
     file_hashes = {
-        relative: hashlib.sha256((repo / relative).read_bytes()).hexdigest()
+        relative: hashlib.sha256(_source_bytes(repo, relative)).hexdigest()
         for relative in sorted(PACKAGE_FILES)
     }
     manifest = {
@@ -107,10 +111,10 @@ def build_package(repo, output):
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w") as archive:
         for name in ("README.md", "LICENSE.txt", "NOTICE.txt"):
-            _write(archive, "retopo-toolkit/" + name, (repo / "tools/retopo_toolkit" / name).read_bytes())
+            _write(archive, "retopo-toolkit/" + name, _source_bytes(repo, "tools/retopo_toolkit/" + name))
         for relative in sorted(PACKAGE_FILES):
             name = (Path("retopo-toolkit") / relative).as_posix()
-            _write(archive, name, (repo / relative).read_bytes())
+            _write(archive, name, _source_bytes(repo, relative))
         _write(archive, "retopo-toolkit/installable/taom_retopology.zip", taom)
         _write(archive, "retopo-toolkit/installable/Petik.zip", petik)
         _write(

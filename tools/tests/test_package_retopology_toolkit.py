@@ -92,7 +92,7 @@ class RetopologyToolkitPackageTests(unittest.TestCase):
                 self.assertEqual(len(pkg.PACKAGE_FILES), len(manifest["files"]))
                 for relative, recorded in manifest["files"].items():
                     self.assertEqual(
-                        hashlib.sha256((ROOT / relative).read_bytes()).hexdigest(), recorded
+                        hashlib.sha256((ROOT / relative).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")).hexdigest(), recorded
                     )
                 for installer, prefix in (
                     ("taom_retopology.zip", "taom_retopology/"),
@@ -109,6 +109,24 @@ class RetopologyToolkitPackageTests(unittest.TestCase):
                         if prefix.startswith("taom"):
                             self.assertIn(prefix + "retopo_engine/engine.py", addon.namelist())
                             self.assertIn(prefix + "retopo_operators.py", addon.namelist())
+
+    def test_builder_is_identical_for_lf_and_crlf_checkouts(self):
+        with tempfile.TemporaryDirectory() as folder:
+            roots = [Path(folder) / "lf", Path(folder) / "crlf"]
+            for root in roots:
+                for relative in pkg.PACKAGE_FILES:
+                    source = ROOT / relative
+                    target = root / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    data = source.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                    if root.name == "crlf":
+                        data = data.replace(b"\n", b"\r\n")
+                    target.write_bytes(data)
+            first = Path(folder) / "lf.zip"
+            second = Path(folder) / "crlf.zip"
+            pkg.build_package(roots[0], first)
+            pkg.build_package(roots[1], second)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
 
     def test_missing_source_fails_before_writing(self):
         with tempfile.TemporaryDirectory() as folder:
