@@ -569,20 +569,43 @@ class ContractRegressionTests(unittest.TestCase):
                 "retopo_plane_id": [7, 8],
                 "pattern_id": [10, 11],
                 "part_id": [20, 21],
-                "source_vertex": [0] * 6,
+                "source_vertex": list(range(6)),
+                "point_guide": [True, False, False, False, False, True],
             },
             attribute_domains={
-                "retopo_plane_id": "FACE", "pattern_id": "FACE", "part_id": "FACE", "source_vertex": "POINT",
+                "retopo_plane_id": "FACE", "pattern_id": "FACE", "part_id": "FACE",
+                "source_vertex": "POINT", "point_guide": "POINT",
             },
         )
         filled = engine.auto_fill(guide, [(0.3, 0, 0)], 5)
         self.assertEqual(3, len(filled.faces))
         for name, expected in (("retopo_plane_id", [8, 7, 7]), ("pattern_id", [11, 10, 10]), ("part_id", [21, 20, 20])):
             self.assertEqual(expected, filled.attributes[name])
+        self.assertEqual(len(filled.vertices), len(filled.attributes["source_vertex"]))
+        self.assertEqual(len(filled.vertices), len(filled.attributes["point_guide"]))
+        across_components = engine.auto_fill(guide, [(0.3, 0, 0)], 5, across_patterns=False)
+        for name, expected in (("retopo_plane_id", [8, 7, 7]), ("pattern_id", [11, 10, 10]), ("part_id", [21, 20, 20])):
+            self.assertEqual(expected, across_components.attributes[name])
+        self.assertEqual(len(across_components.vertices), len(across_components.attributes["source_vertex"]))
         mirrored = engine.mirror_guides(guide, axes=("x",))
         self.assertEqual(4, len(mirrored.faces))
         for name, expected in (("retopo_plane_id", [7, 8, 7, 8]), ("pattern_id", [10, 11, 10, 11]), ("part_id", [20, 21, 20, 21])):
             self.assertEqual(expected, mirrored.attributes[name])
+
+    def test_auto_fill_subdivision_preserves_point_and_face_metadata(self):
+        guide = differential.unit_guide()
+        guide.attributes.update({
+            "source_vertex": [0, 1, 2, 3],
+            "point_guide": [True, False, False, True],
+            "pattern_id": [9],
+        })
+        guide.attribute_domains.update({"source_vertex": "POINT", "point_guide": "POINT", "pattern_id": "FACE"})
+        result = engine.auto_fill(guide, [(0.5, 0.5, 0)], 1)
+        self.assertEqual(9, len(result.vertices))
+        self.assertEqual(4, len(result.faces))
+        self.assertEqual(len(result.vertices), len(result.attributes["source_vertex"]))
+        self.assertEqual(len(result.vertices), len(result.attributes["point_guide"]))
+        self.assertEqual([9] * 4, result.attributes["pattern_id"])
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
@@ -602,7 +625,7 @@ class ContractRegressionTests(unittest.TestCase):
                 vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (-1, 0, 0), (-1, -1, 0), (0, -1, 0)],
                 faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
                 attributes={"source_vertex": list(range(8)), "pattern_id": [10, 20]},
-                attribute_domains={"source_vertex": "POINT", "pattern_id": "FACE"},
+                attribute_domains={"pattern_id": "FACE"},
             ),
             0.01,
         )

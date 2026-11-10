@@ -127,9 +127,11 @@ def main():
         point_variant.attributes["pattern_id"] = [7] * len(point_variant.vertices)
         point_variant.attribute_domains["pattern_id"] = "POINT"
         point_output = mesh_to_blender(point_variant, "TAOM_PointPattern")
-        mixed = combine_objects([output, point_output])
-        assert len(mixed.attributes["pattern_id"]) == len(mixed.faces)
-        assert set(mixed.attributes["pattern_id"]) == {0}
+        distinct = roundtrip.copy()
+        distinct.attributes["pattern_id"] = [10, 11, 12, 13]
+        distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")
+        mixed = combine_objects([distinct_output, point_output])
+        assert mixed.attributes["pattern_id"] == [10, 11, 12, 13, 0, 0, 0, 0]
         invalid = combined.copy()
         invalid.attributes["part_id"] = [99]
         rejected = mesh_to_blender(invalid, "TAOM_InvalidFaceMetadata")
