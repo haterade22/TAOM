@@ -943,6 +943,18 @@ class ContractRegressionTests(unittest.TestCase):
                 self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
                 subdivided = engine.subdivide_quads(filled)
                 self.assertEqual({0.5}, set(subdivided.edge_attributes["crease_edge"].values()))
+        loose = differential.unit_guide()
+        loose.lines = [(0, 2)]
+        loose.edge_attributes["crease_edge"] = {(0, 2): 0.5}
+        filled_loose = engine.auto_fill(loose, [(0.5, 0.5, 0)], 1, across_patterns=False)
+        self.assertTrue(filled_loose.lines)
+        subdivided_loose = engine.subdivide_quads(filled_loose)
+        self.assertTrue(subdivided_loose.lines)
+        self.assertEqual(set(subdivided_loose.edge_attributes["crease_edge"]) - set(subdivided_loose.edges()), set())
+        source = differential.curved_grid()
+        source.attributes["point_guide"] = [index == 4 for index in range(9)]
+        pipeline = engine.retopologize(source, loose, RetopoSettings(auto_fill_prepass=True, subdiv_reproject=1))
+        self.assertTrue(pipeline.faces)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
