@@ -1045,9 +1045,12 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             attribute_domains=dict(resolved_domains),
         )
         combined_indices = {}
+        component_lines = set()
         for component in guide.connected_components():
             used = sorted({index for face_index in component for index in guide.faces[face_index]})
             remap = {old: new for new, old in enumerate(used)}
+            internal_lines = [edge for edge in guide.lines if edge[0] in remap and edge[1] in remap]
+            component_lines.update(Mesh.edge_key(*edge) for edge in internal_lines)
             attributes = {}
             for name, values in guide.attributes.items():
                 if name in point_attribute_names:
@@ -1059,7 +1062,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             part = Mesh(
                 vertices=[guide.vertices[index] for index in used],
                 faces=[tuple(remap[index] for index in guide.faces[face_index]) for face_index in component],
-                lines=[(remap[first], remap[second]) for first, second in guide.lines if first in remap and second in remap],
+                lines=[(remap[first], remap[second]) for first, second in internal_lines],
                 attributes=attributes,
                 edge_attributes={
                     name: {
@@ -1085,6 +1088,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 target = result.edge_attributes.setdefault(name, {})
                 target.update({(first + offset, second + offset): value for (first, second), value in values.items()})
         for first, second in guide.lines:
+            if Mesh.edge_key(first, second) in component_lines:
+                continue
             for old in (first, second):
                 if old not in combined_indices:
                     combined_indices[old] = len(result.vertices)

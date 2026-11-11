@@ -969,7 +969,9 @@ class ContractRegressionTests(unittest.TestCase):
         loose.lines = [(0, 2)]
         loose.edge_attributes["crease_edge"] = {(0, 2): 0.5}
         filled_loose = engine.auto_fill(loose, [(0.5, 0.5, 0)], 1, across_patterns=False)
-        self.assertTrue(filled_loose.lines)
+        self.assertEqual(2, len(filled_loose.lines))
+        self.assertNotIn((0, 2), filled_loose.lines)
+        self.assertNotIn((0, 2), filled_loose.edge_attributes["crease_edge"])
         subdivided_loose = engine.subdivide_quads(filled_loose)
         self.assertTrue(subdivided_loose.lines)
         self.assertEqual(set(subdivided_loose.edge_attributes["crease_edge"]) - set(subdivided_loose.edges()), set())
