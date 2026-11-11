@@ -154,7 +154,7 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
                 for neighbor in vertex_neighbors[index]
             )
             count = len(vertex_faces[index])
-            updated = average(()) if count == 0 else add(
+            updated = point if count == 0 else add(
                 multiply(face_average, 1.0 / count),
                 add(
                     multiply(edge_average, 2.0 / count),

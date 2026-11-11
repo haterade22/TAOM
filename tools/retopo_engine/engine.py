@@ -666,22 +666,18 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 raise ValueError("plane initialization could not align hole boundaries into valid quads")
             if any(intersects(first, second, third, fourth) for first, second in edges(outer_points) for third, fourth in edges(inner_points)) or not contained(inner_points[0], outer_points):
                 raise ValueError("plane initialization could not align hole boundaries into valid quads")
-            if len(inner_points) != len(outer_points):
-                lengths = [math.dist(first, second) for first, second in edges(inner_points)]
-                total = sum(lengths)
-                if total <= 0:
-                    raise ValueError("plane initialization requires a non-degenerate hole boundary")
-                resampled = []
-                for sample in range(len(outer_points)):
-                    target = total * sample / len(outer_points)
-                    cursor = 0.0
-                    for segment, length in enumerate(lengths):
-                        if target <= cursor + length:
-                            ratio = (target - cursor) / length if length else 0.0
-                            resampled.append(lerp(inner_points[segment], inner_points[(segment + 1) % len(inner_points)], ratio))
-                            break
-                        cursor += length
-                inner_points = resampled
+            def split_longest_edges(points, count):
+                result = list(points)
+                while len(result) < count:
+                    lengths = [math.dist(first, second) for first, second in edges(result)]
+                    index = max(range(len(lengths)), key=lengths.__getitem__)
+                    result.insert(index + 1, lerp(result[index], result[(index + 1) % len(result)], 0.5))
+                return result
+
+            if len(inner_points) < len(outer_points):
+                inner_points = split_longest_edges(inner_points, len(outer_points))
+            elif len(outer_points) < len(inner_points):
+                outer_points = split_longest_edges(outer_points, len(inner_points))
 
             def invalid_face(face, vertices):
                 points = [vertices[index] for index in face]
@@ -1048,6 +1044,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             edge_attributes={name: {} for name in guide.edge_attributes},
             attribute_domains=dict(resolved_domains),
         )
+        combined_indices = {}
         for component in guide.connected_components():
             used = sorted({index for face_index in component for index in guide.faces[face_index]})
             remap = {old: new for new, old in enumerate(used)}
@@ -1076,6 +1073,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             )
             filled = fill(part, points)
             offset = len(result.vertices)
+            combined_indices.update({old: offset + remap[old] for old in used})
             result.vertices.extend(filled.vertices)
             result.faces.extend(tuple(index + offset for index in face) for face in filled.faces)
             result.lines.extend((first + offset, second + offset) for first, second in filled.lines)
@@ -1086,6 +1084,20 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             for name, values in filled.edge_attributes.items():
                 target = result.edge_attributes.setdefault(name, {})
                 target.update({(first + offset, second + offset): value for (first, second), value in values.items()})
+        for first, second in guide.lines:
+            for old in (first, second):
+                if old not in combined_indices:
+                    combined_indices[old] = len(result.vertices)
+                    result.vertices.append(guide.vertices[old])
+                    for name in point_attribute_names:
+                        result.attributes[name].append(guide.attributes[name][old])
+            edge = Mesh.edge_key(combined_indices[first], combined_indices[second])
+            if edge not in result.lines:
+                result.lines.append(edge)
+            for name, values in guide.edge_attributes.items():
+                original = Mesh.edge_key(first, second)
+                if original in values:
+                    result.edge_attributes.setdefault(name, {}).setdefault(edge, values[original])
     for name in list(result.attributes):
         if name not in point_attribute_names and name not in face_attribute_names:
             del result.attributes[name]
@@ -1649,4 +1661,10 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
         result = _separate(result, result.attributes["part_id"])
     if settings.thickness_enabled:
         result = thicken(result, settings.thickness, settings.thickness_offset)
+    valid_edges = set(result.edges())
+    result.edge_attributes = {
+        name: {edge: value for edge, value in values.items() if edge in valid_edges}
+        for name, values in result.edge_attributes.items()
+    }
+    result.edge_attributes = {name: values for name, values in result.edge_attributes.items() if values}
     return result

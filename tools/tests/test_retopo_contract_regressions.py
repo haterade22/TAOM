@@ -622,6 +622,28 @@ class ContractRegressionTests(unittest.TestCase):
             self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
             self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
 
+        def loop_case(outer, inner):
+            faces = []
+            outer_index = inner_index = 0
+            while outer_index < len(outer) or inner_index < len(inner):
+                if inner_index >= len(inner) or (outer_index < len(outer) and outer_index / len(outer) <= inner_index / len(inner)):
+                    faces.append((outer_index % len(outer), (outer_index + 1) % len(outer), len(outer) + inner_index % len(inner)))
+                    outer_index += 1
+                else:
+                    faces.append((outer_index % len(outer), len(outer) + (inner_index + 1) % len(inner), len(outer) + inner_index % len(inner)))
+                    inner_index += 1
+            return Mesh(vertices=outer + inner, faces=faces)
+
+        corner_cases = (
+            loop_case([(-3, -3, 0), (0, -3, 0), (3, -3, 0), (3, 3, 0), (0, 3, 0), (-3, 3, 0)], [(-1, -1, 0), (1, -1, 0), (1, 1, 0), (-1, 1, 0)]),
+            loop_case([(-3, -3, 0), (3, -3, 0), (3, 3, 0), (-3, 3, 0)], [(0, -1, 0), (1, -1, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (-1, 1, 0), (-1, 0, 0), (-1, -1, 0)]),
+        )
+        for corner_case in corner_cases:
+            initialized_corners = engine.initialize_planes(corner_case, RetopoSettings())
+            input_area = sum(engine.signed_area(face, corner_case.vertices) for face in corner_case.faces)
+            output_area = sum(engine.signed_area(face, initialized_corners.vertices) for face in initialized_corners.faces)
+            self.assertAlmostEqual(input_area, output_area)
+            self.assertTrue(all(vertex in initialized_corners.vertices for vertex in corner_case.vertices))
         def star_case(count, high, low, radius, phase, offset):
             outer = [((high if index % 2 == 0 else low) * math.cos(math.tau * index / count), (high if index % 2 == 0 else low) * math.sin(math.tau * index / count), 0) for index in range(count)]
             inner = [(radius * math.cos(phase + math.tau * index / count) + offset, radius * math.sin(phase + math.tau * index / count), 0) for index in range(count)]
@@ -640,7 +662,7 @@ class ContractRegressionTests(unittest.TestCase):
             faces=[(0, 1, 5), (0, 5, 4), (1, 6, 5), (1, 2, 7), (1, 7, 6), (2, 3, 8), (2, 8, 7), (3, 0, 4), (3, 4, 8)],
         )
         initialized_longer_inner = engine.initialize_planes(longer_inner, RetopoSettings())
-        self.assertEqual((8, 4, 8), (len(initialized_longer_inner.vertices), len(initialized_longer_inner.faces), len(initialized_longer_inner.boundary_edges())))
+        self.assertEqual((10, 5, 10), (len(initialized_longer_inner.vertices), len(initialized_longer_inner.faces), len(initialized_longer_inner.boundary_edges())))
         self.assertTrue(all(engine.signed_area(face, initialized_longer_inner.vertices) > 0 for face in initialized_longer_inner.faces))
         square = [(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)]
         for name, inner in (
@@ -955,6 +977,44 @@ class ContractRegressionTests(unittest.TestCase):
         source.attributes["point_guide"] = [index == 4 for index in range(9)]
         pipeline = engine.retopologize(source, loose, RetopoSettings(auto_fill_prepass=True, subdiv_reproject=1))
         self.assertTrue(pipeline.faces)
+        free = differential.unit_guide()
+        free.vertices.append((5, 5, 0))
+        free.lines = [(2, 4)]
+        subdivided_free = engine.subdivide_quads(free)
+        self.assertIn((5, 5, 0), subdivided_free.vertices)
+        filled_free = engine.auto_fill(free, [(0.5, 0.5, 0)], 1)
+        self.assertIn((5, 5, 0), filled_free.vertices)
+        cross_component = differential.two_islands()
+        cross_component.vertices.append((5, 5, 0))
+        cross_component.lines = [(1, 4), (2, 8)]
+        cross_component.edge_attributes["crease_edge"] = {(1, 4): 0.5, (2, 8): 0.7}
+        filled_cross = engine.auto_fill(cross_component, [(0.3, 0, 0)], 1, across_patterns=False)
+        original_lines = sorted(tuple(sorted((cross_component.vertices[first], cross_component.vertices[second]))) for first, second in cross_component.lines)
+        filled_lines = sorted(tuple(sorted((filled_cross.vertices[first], filled_cross.vertices[second]))) for first, second in filled_cross.lines)
+        self.assertEqual(original_lines, filled_lines)
+        self.assertEqual([0.5, 0.7], sorted(filled_cross.edge_attributes["crease_edge"].values()))
+        self.assertEqual(set(filled_cross.edge_attributes["crease_edge"]) - set(filled_cross.edges()), set())
+        self.assertIn((5, 5, 0), filled_cross.vertices)
+        twice_subdivided = engine.subdivide_quads(subdivided_loose)
+        self.assertIn((0.5, 0.5, 0), twice_subdivided.vertices)
+        self.assertEqual(set(twice_subdivided.edge_attributes["crease_edge"]) - set(twice_subdivided.edges()), set())
+        beveled = differential.unit_guide()
+        beveled.lines = [(0, 2)]
+        beveled.edge_attributes["bevel_weight_edge"] = {(0, 2): 0.5}
+        final_output = engine.retopologize(
+            differential.curved_grid(), beveled,
+            RetopoSettings(subdiv_reproject=1, separate_parts=False, fit_uv=False, seams_merge_distance=0),
+        )
+        self.assertEqual(set(final_output.edge_attributes.get("bevel_weight_edge", {})) - set(final_output.edges()), set())
+        engine.subdivide_quads(final_output)
+        six_point = differential.unit_guide()
+        six_point.edge_attributes["crease_edge"] = {(0, 1): 0.5, (2, 3): 0.7}
+        for across_patterns in (True, False):
+            with self.subTest(six_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(six_point, [(index / 5, 0, 0) for index in range(6)], 1, across_patterns=across_patterns)
+                self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
+                self.assertEqual([0.5, 0.7], sorted(set(filled.edge_attributes["crease_edge"].values())))
+                engine.subdivide_quads(filled)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
