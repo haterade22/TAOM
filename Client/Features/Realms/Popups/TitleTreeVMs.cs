@@ -38,6 +38,13 @@ internal sealed class TitleCardVM : ViewModel
     }
 
     [DataSourceProperty] public BannerImageIdentifierVM ImageIdentifier { get; }
+
+    // The pennant binds these on the card itself, not through DataSource="{ImageIdentifier}": scoped to the identifier,
+    // its Brush.GlobalAlphaFactor="@ContentAlpha" found no such property there and drew every banner empty.
+    [DataSourceProperty] public string BannerId => ImageIdentifier.Id;
+    [DataSourceProperty] public string BannerArgs => ImageIdentifier.AdditionalArgs;
+    [DataSourceProperty] public string BannerProvider => ImageIdentifier.TextureProviderName;
+
     [DataSourceProperty] public string TitleText { get; }
     [DataSourceProperty] public string HolderText { get; }
     [DataSourceProperty] public bool HasFolded { get; }

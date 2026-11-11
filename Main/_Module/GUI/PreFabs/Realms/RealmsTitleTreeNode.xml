@@ -34,7 +34,7 @@
 											<Children>
 												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
 													<Children>
-														<EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Brush.GlobalAlphaFactor="@ContentAlpha" Zoom="1.35"/>
+														<EncyclopediaMaskedImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@BannerId" AdditionalArgs="@BannerArgs" TextureProviderName="@BannerProvider" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Brush.GlobalAlphaFactor="@ContentAlpha" Zoom="1.35"/>
 													</Children>
 												</Widget>
 												<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" Brush.GlobalAlphaFactor="@ContentAlpha" DoNotAcceptEvents="true"/>
@@ -59,7 +59,7 @@
 											<Children>
 												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
 													<Children>
-														<EncyclopediaMaskedImageWidget DataSource="{ImageIdentifier}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Brush.GlobalAlphaFactor="@ContentAlpha" Zoom="1.35"/>
+														<EncyclopediaMaskedImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@BannerId" AdditionalArgs="@BannerArgs" TextureProviderName="@BannerProvider" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Brush.GlobalAlphaFactor="@ContentAlpha" Zoom="1.35"/>
 													</Children>
 												</Widget>
 												<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" Brush.GlobalAlphaFactor="@ContentAlpha" DoNotAcceptEvents="true"/>
