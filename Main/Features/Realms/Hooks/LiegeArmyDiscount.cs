@@ -40,7 +40,7 @@ internal static class LiegeArmyDiscount
     private static void Postfix(MobileParty __0, MobileParty __1, ref int __result)
     {
         var behavior = Behavior;
-        if (behavior == null || __result <= 0)
+        if (behavior == null || __result <= 0 || !behavior.Settings.LiegeArmyDiscount)
             return;
         var liege = __0?.LeaderHero?.StringId;
         var vassal = __1?.LeaderHero?.StringId;

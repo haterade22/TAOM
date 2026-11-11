@@ -219,7 +219,8 @@ public class ConfigXmlTests
         CollectionAssert.AreEqual(new[] { "town_EW1" }, coronation.FiefIds.ToArray());
         CollectionAssert.AreEqual(new[] { "d_anorien" }, coronation.TitleIds.ToArray());
         Assert.AreEqual("steward_gondor", coronation.OfficeId);
-        Assert.AreEqual(1000, coronation.Influence);
+        Assert.AreEqual(2500, coronation.Influence);
+        Assert.AreEqual("11.149.149.1528.1528.764.764.1.0.0.31006.172.2000.580.580.764.798.0.0.0", coronation.Banner);
         StringAssert.StartsWith(coronation.FormerBanner, "11.172.149.");
         StringAssert.EndsWith(coronation.Event.Heading, "The Return of the King");
         StringAssert.EndsWith(coronation.Event.Button, "Long live the King!");
@@ -248,6 +249,7 @@ public class ConfigXmlTests
         Assert.AreEqual(50, coronation.Relation);
         Assert.IsNull(coronation.Influence);
         Assert.IsNull(coronation.FormerBanner);
+        Assert.IsNull(coronation.Banner);
         Assert.IsNull(coronation.Event.Heading);
         Assert.IsNull(coronation.Event.Image);
         Assert.AreEqual(2, result.Warnings.Count, "the duplicate and the one without a clan");

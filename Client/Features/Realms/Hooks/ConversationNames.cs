@@ -45,7 +45,7 @@ internal static class ConversationNames
         {
             var hero = (TaleWorlds.CampaignSystem.Campaign.Current?.ConversationManager?.SpeakerAgent?.Character as CharacterObject)?.HeroObject;
             var behavior = RealmsCampaign.Current;
-            if (hero == null || behavior == null || !behavior.Service.IsInitialized || behavior.IsDisabled)
+            if (hero == null || behavior == null || !behavior.Service.IsInitialized || behavior.IsDisabled || !behavior.Settings.TitleStyles)
                 return;
             var styled = TitleNames.KnownAs(hero, behavior);
             if (styled != null)

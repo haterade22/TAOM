@@ -168,7 +168,8 @@ public sealed partial class RealmsService
     {
         var title = Catalog.Get(titleId);
         // A coronation has its own price (Aragorn taking up Gondor's crown); any other restore costs as usurping.
-        var cost = title != null ? CoronationFor(titleId, heroId)?.Influence ?? config.UsurpCost(title.Rank) : null;
+        var own = title != null ? CoronationFor(titleId, heroId)?.Influence : null;
+        var cost = title == null ? null : own != null ? config.ScaleInfluence(own.Value) : config.UsurpCost(title.Rank);
         if (title == null || cost == null)
             return ClaimQuote.Refused(ClaimRefusal.NotForSale);
         if (Ledger.HolderOf(titleId) != null || Ledger.IsPending(titleId))

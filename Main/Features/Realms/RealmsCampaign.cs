@@ -25,6 +25,10 @@ public sealed partial class RealmsCampaign
     private const string ChunkKeyPrefix = "taom_realms_chunk_";
 
     private readonly IRealmsPopupAdapter _popups;
+    private readonly IRealmsSettingsProvider _settings;
+
+    /// <summary>The title styles option the lord party names were last built with; a change clears them.</summary>
+    private bool _stylesOn = true;
 
     /// <summary>This peer may change the campaign: singleplayer or a co-op host (docs/features/coop-interop.md).</summary>
     private readonly Func<bool> _isAuthority;
@@ -39,9 +43,10 @@ public sealed partial class RealmsCampaign
     private int _savedVersion = RealmsSaveFormat.Version;
     private bool _needsUpgrade;
 
-    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority)
+    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority, IRealmsSettingsProvider? settings = null)
     {
         _popups = popups;
+        _settings = settings ?? new RealmsSettingsProvider();
         _isAuthority = isAuthority;
         _service.Clock = () => CampaignTime.Now.ToDays;
         LiegeArmyDiscount.Behavior = this;
@@ -51,6 +56,9 @@ public sealed partial class RealmsCampaign
     public static RealmsCampaign? Current => RealmsCampaignBehavior.Current?.Realms;
 
     public RealmsService Service => _service;
+
+    /// <summary>The "World/Realms" mod options.</summary>
+    public IRealmsSettingsProvider Settings => _settings;
 
     public RealmsConfig Config
     {
@@ -62,6 +70,11 @@ public sealed partial class RealmsCampaign
                 _service.Config = _config;
             }
 
+            // The mod options scale the file's prices and payments. A few assignments, so every read is current.
+            _config.Claims.BuyPricePercent = _settings.ClaimPricePercent;
+            _config.Claims.InfluencePercent = _settings.InfluenceCostPercent;
+            _config.Feudal.InfluencePercent = _settings.InfluenceCostPercent;
+            _config.Feudal.TributePercent = _settings.TributePercent;
             return _config;
         }
     }
@@ -71,7 +84,7 @@ public sealed partial class RealmsCampaign
     /// <summary>Registers the campaign listeners with <paramref name="owner"/>, the campaign behavior, as their owner.</summary>
     internal void RegisterEvents(object owner)
     {
-        CampaignEvents.HourlyTickEvent.AddNonSerializedListener(owner, () => MayWrite());
+        CampaignEvents.HourlyTickEvent.AddNonSerializedListener(owner, OnHourlyTick);
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(owner, OnDailyTick);
         CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(owner, OnWeeklyTick);
         CampaignEvents.HeroKilledEvent.AddNonSerializedListener(owner, OnHeroKilled);
@@ -86,9 +99,26 @@ public sealed partial class RealmsCampaign
         LiegeArmyDiscount.Patch();
         Upgrade();
         if (_service.IsInitialized && _isAuthority())
+        {
             ApplyFormerBannersOnLoad();
+            ApplyCrownedBannersOnLoad();
+        }
+
         // Party names may have been built before the saved titles were read.
+        _stylesOn = _settings.TitleStyles;
         PartyNames.Refresh();
+    }
+
+    private void OnHourlyTick()
+    {
+        // Every peer builds its own party names, so this runs on a co-op client too.
+        if (_stylesOn != _settings.TitleStyles)
+        {
+            _stylesOn = !_stylesOn;
+            PartyNames.Refresh();
+        }
+
+        MayWrite();
     }
 
     /// <summary>
@@ -151,7 +181,8 @@ public sealed partial class RealmsCampaign
         if (!_service.IsInitialized || IsDisabled || !_isAuthority())
             return;
         ResolvePending();
-        Report(GrantToChildren()); // children who came of age, and saves made before grants existed
+        if (_settings.FamilyGrants)
+            Report(GrantToChildren()); // children who came of age, and saves made before grants existed
     }
 
     /// <summary>The weekly work: what titles do to their holders, the offices, then the AI's claims and new titles.</summary>

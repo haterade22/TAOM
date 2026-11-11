@@ -8,7 +8,7 @@ In Bannerlord a castle belongs to whoever took it last, and nobody remembers who
 
 **2. Conquest wins the stones, not the right.** Storm a castle and you gain a **claim**, while its holder keeps the title. A grant, gift or sale moves the title with the fief. When a lord dies, his realm's succession law picks the heir, and his children inherit his claims.
 
-**3. The Return of the King.** Gondor's throne stands empty, and Denethor rules as **Steward Denethor of Gondor**. Serve Gondor with Aragorn in your clan, and his claim of blood lets you **restore the crown** for 1000 influence. He founds the **House of Telcontar** in Minas Tirith, Denethor stays Steward under the King, and an event window closes on *"Long live the King!"*
+**3. The Return of the King.** Gondor's throne stands empty, and Denethor rules as **Steward Denethor of Gondor**. Serve Gondor with Aragorn in your clan, and his claim of blood lets you **restore the crown** for 2500 influence. He founds the **House of Telcontar** in Minas Tirith, Denethor stays Steward under the King, and an event window closes on *"Long live the King!"*
 
 **4. Lords are called by what they hold.** **King Aragorn**, **Prince Imrahil of Dol Amroth**, **Marshal Éomer**. Elves are **Aran** and **Hîr**, dwarf lords are **Uzbad**, and orcs keep their plain names. On party names, in conversations and across the encyclopedia.
 

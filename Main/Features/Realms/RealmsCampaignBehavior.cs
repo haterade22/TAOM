@@ -10,8 +10,8 @@ namespace TAOM.Features.Realms;
 /// </summary>
 public sealed class RealmsCampaignBehavior : CampaignBehaviorBase
 {
-    public RealmsCampaignBehavior(IRealmsPopupAdapter popups, ICoopSessionProvider coop) =>
-        Realms = new RealmsCampaign(popups, () => coop.IsAuthority);
+    public RealmsCampaignBehavior(IRealmsPopupAdapter popups, ICoopSessionProvider coop, IRealmsSettingsProvider settings) =>
+        Realms = new RealmsCampaign(popups, () => coop.IsAuthority, settings);
 
     public static RealmsCampaignBehavior? Current =>
         TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<RealmsCampaignBehavior>();
