@@ -65,7 +65,7 @@ public class LongDefeatFortWiringTests
             new ShopPlan(0, Array.Empty<ShopOffer>()), RunRules.Default, RunOptions.Default);
         var field = new FakeLongDefeatField();
         var outcomes = new RecordingOutcomeLog();
-        var host = new LongDefeatRunHost(plan, new LongDefeatSession(), Substitute.For<IModLogger>(), outcomes, new FakeLongDefeatMenu(), "m1", () => field);
+        var host = new LongDefeatRunHost(plan, new LongDefeatSession(), Substitute.For<IModLogger>(), outcomes, new FakeLongDefeatMenu().EndGame, "m1", () => field);
         MissionThreadGuard.ResetForTests();
 
         host.MarkStartDue();

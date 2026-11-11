@@ -24,6 +24,7 @@ public class MissionViewRegistrationGateTests
         ["TAOM.Client.Features.FordsOfWar.FordsCommandView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
         ["TAOM.Client.Features.FordsOfWar.FordsControlView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
         ["TAOM.Client.Features.LongDefeat.LongDefeatHudView"] = "built by the [ViewMethod] list of the TaomLongDefeat mission (LongDefeatMissionViews)",
+        ["TAOM.Client.Features.StoryMissions.StoryMusicMissionView"] = "built by the [ViewMethod] list of the TaomStoryMission mission (StoryMissionViews), only for a row that names a track",
     };
 
     [ClassInitialize]

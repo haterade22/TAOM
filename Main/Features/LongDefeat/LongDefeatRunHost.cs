@@ -20,7 +20,7 @@ internal sealed class LongDefeatRunHost
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
-    private readonly ILongDefeatMenuAdapter _menu;
+    private readonly Action _leave;
     private readonly string _missionKey;
     private readonly Func<ILongDefeatBattlefieldAdapter> _fieldFactory;
     private readonly Func<ILongDefeatEffectsAdapter>? _effectsFactory;
@@ -30,8 +30,9 @@ internal sealed class LongDefeatRunHost
     private bool _leaving;
     private int _faults;
 
+    /// <param name="leave">How the mission ends when the run cannot go on: the Long Defeat's game manager ends the game, a story mission ends only its own mission and returns to the campaign map.</param>
     /// <param name="missionKey">One value per mission (the launcher counts them): the outcome log latches each check line once per id, result and key for the whole process.</param>
-    public LongDefeatRunHost(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, ILongDefeatMenuAdapter menu,
+    public LongDefeatRunHost(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, Action leave,
         string missionKey, Func<ILongDefeatBattlefieldAdapter> fieldFactory, LongDefeatRunRecords? records = null,
         Func<ILongDefeatEffectsAdapter>? effectsFactory = null)
     {
@@ -39,7 +40,7 @@ internal sealed class LongDefeatRunHost
         _session = session;
         _logger = logger;
         _outcomes = outcomes;
-        _menu = menu;
+        _leave = leave;
         _missionKey = missionKey;
         _fieldFactory = fieldFactory;
         _effectsFactory = effectsFactory;
@@ -118,7 +119,7 @@ internal sealed class LongDefeatRunHost
             return;
 
         _leaving = true;
-        Guarded("Leave", _menu.EndGame);
+        Guarded("Leave", _leave);
     }
 
     private void StartRun()

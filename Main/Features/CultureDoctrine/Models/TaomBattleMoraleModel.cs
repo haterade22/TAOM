@@ -1,6 +1,7 @@
 using SandBox.GameComponents;
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
+using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.SeatOfSeeing;
 using TaleWorlds.MountAndBlade;
@@ -28,10 +29,12 @@ public class TaomBattleMoraleModel : SandboxBattleMoraleModel
 
     // Creature Bandits (#692): a creature bandit never panics, whatever its morale. Race Abilities: nor does a
     // soldier while his ability holds a morale floor (Berserk, Iron Discipline, Stand Fast and others). Seat of Seeing: nor does the hero
-    // while he fights on in the Seat; a refused panic sets morale to 0.01 and carries on (CommonAIComponent.cs:84-93).
+    // while he fights on in the Seat; a refused panic sets morale to 0.01 and carries on (CommonAIComponent.cs:84-93). A story mission
+    // hosted in a campaign runs the Long Defeat's waves, which end only when no attacker stands, so its attackers never panic either;
+    // the hold is inert outside the mission that armed it.
     public override bool CanPanicDueToMorale(Agent agent)
-        => !SeatPresence.RefusesPanic(agent.IsMainAgent) && !CreatureBanditAgents.RefusesMoralePanic(agent) && !RaceAbilityHooks.HoldsNerve(agent)
-           && base.CanPanicDueToMorale(agent) && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
+        => !SeatPresence.RefusesPanic(agent.IsMainAgent) && !LongDefeatMorale.HoldsAttacker(agent) && !CreatureBanditAgents.RefusesMoralePanic(agent)
+           && !RaceAbilityHooks.HoldsNerve(agent) && base.CanPanicDueToMorale(agent) && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
 
     public override float GetEffectiveInitialMorale(Agent agent, float baseMorale)
         => _morale.InitialMorale(AgentAggressionApplier.CultureOf(agent), base.GetEffectiveInitialMorale(agent, baseMorale));

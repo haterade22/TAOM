@@ -15,7 +15,7 @@ namespace TAOM.Features.LostFooting;
 /// <see cref="LostFootingTunables.SweepSeconds"/>; at least one agent a tick, never more than <see cref="LostFootingTunables.AgentsPerTick"/> agents in one
 /// tick) and folds it into the per-mission state; every census interval, only while someone is stranded, it writes the
 /// census lines. When the census pauses (switched off, or the gate closed) it forgets what it saw, so paused time is
-/// never bridged. Nothing here changes the battle. A fresh instance is built per mission. Main thread only: the owning
+/// never bridged. The census changes nothing; the rescue (#894 phase 2, its own toggle) moves a stuck agent through the rescue adapter. A fresh instance is built per mission. Main thread only: the owning
 /// mission behavior calls <see cref="Tick"/> from <c>OnMissionTick</c> and <see cref="Finish"/> at the end.
 /// </summary>
 public sealed class LostFootingService
@@ -23,6 +23,7 @@ public sealed class LostFootingService
     private const float GateSeconds = 1f;
 
     private readonly ILostFootingAdapter _adapter;
+    private readonly ILostFootingRescueAdapter _rescue;
     private readonly ILostFootingSettingsProvider _settings;
     private readonly IModLogger _logger;
     private readonly LostFootingTunables _tunables;
@@ -36,10 +37,11 @@ public sealed class LostFootingService
     private bool _paused;
 
     public LostFootingService(
-        ILostFootingAdapter adapter, ILostFootingSettingsProvider settings, IModLogger logger, LostFootingTunables tunables,
+        ILostFootingAdapter adapter, ILostFootingRescueAdapter rescue, ILostFootingSettingsProvider settings, IModLogger logger, LostFootingTunables tunables,
         IStampClock clock, Func<bool> isOpen)
     {
         _adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+        _rescue = rescue ?? throw new ArgumentNullException(nameof(rescue));
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _tunables = tunables ?? throw new ArgumentNullException(nameof(tunables));
@@ -60,7 +62,7 @@ public sealed class LostFootingService
             _open = _isOpen();
         }
 
-        if (!_open || !_settings.CensusEnabled)
+        if (!_open || !(_settings.CensusEnabled || _settings.RescueEnabled))
         {
             Pause();
             return;
@@ -107,7 +109,8 @@ public sealed class LostFootingService
 
         if (_state.Clock < _state.NextCensus) return;
         _state.NextCensus = _state.Clock + _tunables.CensusIntervalSeconds;
-        WriteCensus(LostFootingRules.Tally(_state));
+        var tally = LostFootingRules.Tally(_state);
+        if (_settings.CensusEnabled) WriteCensus(tally);
     }
 
     private void ReadAndFold(SlicePlan plan)
@@ -138,10 +141,65 @@ public sealed class LostFootingService
     {
         var entry = LostFootingRules.Observe(_state, probe, _state.Clock, _tunables);
 
+        if (entry == null) return;
+
         // The second look runs once per episode, and only for an agent that has held its miss long enough to count.
-        if (entry == null || !entry.OffMesh || entry.ConfirmTried) return;
-        entry.ConfirmTried = true;
-        entry.Detail = _adapter.Confirm(probe.Handle);
+        if (entry.OffMesh && !entry.ConfirmTried)
+        {
+            entry.ConfirmTried = true;
+            entry.Detail = _adapter.Confirm(probe.Handle);
+        }
+
+        if (_settings.RescueEnabled) Rescue(probe.Handle, entry);
+    }
+
+    private void Rescue(object handle, StrandEntry entry)
+    {
+        var plan = LostFootingRules.PlanRescue(entry, _state.Clock, _tunables);
+        if (plan.Move == RescueMove.None) return;
+
+        RescueResult result;
+        if (plan.Move == RescueMove.Near)
+        {
+            entry.NearTried = true;
+            var step = plan.NeedLand ? _tunables.RescueWaterStepMeters : _tunables.RescueMaxStepMeters;
+            result = _rescue.MoveNear(handle, _tunables.RescueNearMeters, step, plan.NeedLand);
+        }
+        else
+        {
+            entry.FarTried = true;
+            result = _rescue.MoveToFormation(handle, _tunables.RescuePlayerMeters, plan.NeedLand);
+            if (!result.Moved && result.Reason == RescueResult.PlayerNear && !WaitForThePlayerToLeave(entry)) return;
+        }
+
+        if (result.Moved)
+        {
+            _state.Rescued++;
+            entry.AwaitFree = true;
+            ForgetTheSecondLook(entry);
+        }
+        else
+        {
+            _state.RescueRefused++;
+        }
+        _logger.LogInfo(CensusLine.Rescue(plan, entry, result, _state.Clock));
+    }
+
+    /// <summary>The player can walk away, so a player-near refusal is tried again later. True for the first one while
+    /// stranded, which is logged and counted; later ones stay silent.</summary>
+    private bool WaitForThePlayerToLeave(StrandEntry entry)
+    {
+        var first = float.IsNaN(entry.FarRetryAt);
+        entry.FarTried = false;
+        entry.FarRetryAt = _state.Clock + _tunables.RescueRetrySeconds;
+        return first;
+    }
+
+    /// <summary>The second look was taken at the old spot; the next sighting confirms again where the agent now stands.</summary>
+    private static void ForgetTheSecondLook(StrandEntry entry)
+    {
+        entry.Detail = null;
+        entry.ConfirmTried = false;
     }
 
     private void WriteCensus(LostFootingTally tally)

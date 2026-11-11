@@ -5,9 +5,9 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.LostFooting.Hooks;
 
 /// <summary>
-/// Entry point of the Lost Footing census (#894, docs/features/lost-footing.md): ticks the per-mission service from
+/// Entry point of the Lost Footing census and rescue (#894, docs/features/lost-footing.md): ticks the per-mission service from
 /// <c>OnMissionTick</c>, the one place every read runs (main thread, never overlapping the agent tick). No event
-/// subscription, no Harmony patch, and nothing it does changes the battle. A fresh instance, and so fresh state, is
+/// subscription and no Harmony patch; only the rescue (its own toggle) moves agents, through the service. A fresh instance, and so fresh state, is
 /// built for every mission. The service owns the clock, the gate and the log lines; this class only ticks, catches
 /// and asks for the end-of-battle summary.
 ///
@@ -39,7 +39,7 @@ public sealed class LostFootingMissionLogic : MissionLogic
         }
         catch (Exception ex)
         {
-            // Never take a battle down over a measurement: this mission runs unobserved from here.
+            // Never take a battle down over the census or the rescue: this mission runs without both from here.
             _disabled = true;
             _logger.LogError($"[LostFooting] disabled for this mission after {ex.GetType().Name}: {ex.Message}");
         }
