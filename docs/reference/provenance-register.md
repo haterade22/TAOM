@@ -79,7 +79,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` `TheOldRealms/TOR_Core` | GPL-3.0 | behavioural-port | `Main/Features/CreatureSiegeRole/**` | pending-license |
 | module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` except `StoryMusic/` (next row) | uncleared |
-| Story mission music | `StoryMusic` `isengard_vs_rohan` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/StoryMusic/**` (see the detail) | uncleared |
+| Story mission music | `StoryMusic` `isengard_vs_rohan` | purchased from its composer, name not recorded | redistributed | `Main/_Module/ModuleSounds/StoryMusic/**` (see the detail) | cleared |
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` `FS_Ringbearer` | Pete Klassen freeware: free distribution only with the original archive, private use only, no modification (see detail) | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_Ringbearer/**` | uncleared |
@@ -664,16 +664,12 @@ the story mission track ([music and sound events](engine/music-and-sound-events.
 
 **Story mission music.** `ModuleSounds/StoryMusic/isengard_vs_rohan.ogg` (#1105, 2026-11-10) is an
 OGG encode of `Isengard vs. Rohan Third Draft.wav` from the maintainer's asset folder. The WAV is a
-Cubase 14 render with no composer, copyright or description field. It has its own folder and row so
-that its status can change without the rest of the audio. Until the maintainer says who made it,
-whether it uses third-party samples or loops, and whether it quotes or arranges any film, game or
-other third-party melody, it is `UNKNOWN` and `uncleared`, and the audio exclusion in
-`LICENSE-CONTENT.md` and `THIRD-PARTY-LICENSES.txt` covers it.
-
-**What would clear this row:** identify the upstream and its terms, or replace the audio. Until
-then it is redistributed with unknown terms, which is the same class of exposure as the
-NativeSkinFixes row below (while that DLL shipped), at lower stakes only because audio is easier to swap than a native hook
-library.
+Cubase 14 render with no composer, copyright or description field. The maintainer bought the track
+from a music composer and does not remember the composer's name (maintainer, 2026-11-11), so the row
+is `cleared` on his purchase. What stays unknown: the composer's name and the purchase terms in
+writing, and whether the track uses third-party samples or quotes a film, game or other melody. If
+the receipt or the composer turns up, record the name and terms here. It keeps its own folder and
+row so that its status can change without the rest of the audio.
 
 ### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
 

@@ -68,7 +68,7 @@
     {
       "id": "pelargir_defend",
       "name": "{=!}Pelargir: hold the harbour",
-      "scene": "taom_gondor_town_pelargir_forceatmo",
+      "scene": "taom_gondor_town_dolamroth_forceatmo",
       "side": "Defend",
       "defenderCulture": "gondor",
       "attackerCulture": "umbar",
@@ -89,7 +89,7 @@
     {
       "id": "dale_defend",
       "name": "{=!}Dale: hold against the Easterlings",
-      "scene": "taom_dale_castle_001_forceatmo",
+      "scene": "sturgia_town_g",
       "side": "Defend",
       "defenderCulture": "sturgia",
       "attackerCulture": "khuzait",
@@ -110,7 +110,7 @@
     {
       "id": "lorien_defend",
       "name": "{=!}Lothlorien: hold the borders",
-      "scene": "taom_gondor_castle_001_forceatmo",
+      "scene": "battania_town_a",
       "side": "Defend",
       "defenderCulture": "lothlorien",
       "attackerCulture": "dolguldur",
@@ -131,7 +131,7 @@
     {
       "id": "north_defend",
       "name": "{=!}Arthedain: hold against Gundabad",
-      "scene": "taom_gondor_castle_002_forceatmo",
+      "scene": "empire_town_c",
       "side": "Defend",
       "defenderCulture": "arthedain",
       "attackerCulture": "gundabad",
