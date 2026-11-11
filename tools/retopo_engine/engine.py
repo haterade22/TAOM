@@ -932,6 +932,12 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     if max_iterations < 0:
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
+    guide = guide.copy()
+    valid_edges = set(guide.edges())
+    guide.edge_attributes = {
+        name: {edge: value for edge, value in values.items() if edge in valid_edges}
+        for name, values in guide.edge_attributes.items()
+    }
     points = [tuple(point) for point in point_guides]
     resolved_domains = guide.resolved_attribute_domains()
     unresolved_names = guide.unresolved_attribute_names()

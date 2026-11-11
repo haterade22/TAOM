@@ -660,6 +660,13 @@ class ContractRegressionTests(unittest.TestCase):
         initialized_later = engine.initialize_planes(later_rotation, RetopoSettings())
         self.assertEqual(7, len(initialized_later.faces))
         self.assertTrue(all(engine.signed_area(face, initialized_later.vertices) > 0 for face in initialized_later.faces))
+        fifth_rotation = loop_case(
+            [(2.63, 0.157, 0), (2.775, 0.932, 0), (1.642, 1.832, 0), (0.632, 2.428, 0), (-0.509, 2.256, 0), (-1.995, 2.947, 0), (-2.792, -2.499, 0), (-1.456, -1.685, 0), (-1.535, -1.965, 0), (0.911, -3.841, 0), (2.071, -1.277, 0), (3.214, -1.913, 0), (2.116, -0.985, 0), (2.518, -0.753, 0)],
+            [(-0.282 + 0.5 * math.cos(math.tau * index / 14), -0.194 + 0.5 * math.sin(math.tau * index / 14), 0) for index in range(14)],
+        )
+        initialized_fifth = engine.initialize_planes(fifth_rotation, RetopoSettings())
+        self.assertEqual(14, len(initialized_fifth.faces))
+        self.assertTrue(all(engine.signed_area(face, initialized_fifth.vertices) > 0 for face in initialized_fifth.faces))
         crossing_outer = [(2.07, 0.774, 0), (1.944, 1.884, 0), (1.449, 1.551, 0), (1.69, 2.588, 0), (0.799, 1.641, 0), (-0.975, 2.182, 0), (-2.456, -1.221, 0), (-1.573, -1.198, 0), (-2.086, -1.825, 0), (0.887, -1.398, 0)]
         crossing_inner = [(-1.034, -0.31, 0), (0.39, -0.604, 0), (0.683, 0.82, 0), (-0.74, 1.113, 0)]
         while len(crossing_inner) < len(crossing_outer):
@@ -1063,6 +1070,16 @@ class ContractRegressionTests(unittest.TestCase):
                 self.assertEqual({(0, 6): 0.5, (1, 6): 0.5}, filled.edge_attributes["crease_edge"])
                 self.assertEqual([(0, 6), (1, 6)], sorted(filled.lines))
                 engine.subdivide_quads(filled)
+        stale = differential.unit_guide()
+        stale.edge_attributes["crease_edge"] = {(0, 2): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(stale_attribute_across_patterns=across_patterns):
+                filled = engine.auto_fill(stale, [(0.5, 0.5, 0)], 1, across_patterns=across_patterns)
+                self.assertNotIn((0, 2), filled.edge_attributes.get("crease_edge", {}))
+                engine.subdivide_quads(filled)
+        stale.edge_attributes = {"bevel_weight_edge": {(0, 2): 0.5}}
+        pipeline = engine.retopologize(differential.curved_grid(), stale, RetopoSettings(auto_fill_prepass=True))
+        self.assertTrue(pipeline.faces)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
