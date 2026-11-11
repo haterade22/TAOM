@@ -23,12 +23,20 @@ public sealed class StoryMissionLogic : MissionLogic
     private bool _cueShown;
     private bool _faultLogged;
 
-    internal StoryMissionLogic(LongDefeatSession session, StorySide side, IModLogger logger, IOutcomeLog outcomes, string missionKey)
+    internal StoryMissionLogic(LongDefeatSession session, StorySide side, IModLogger logger, IOutcomeLog outcomes, string missionKey, string? music)
     {
         _session = session;
         _logger = logger;
         _watch = new StoryEndWatch(side, logger, outcomes, missionKey);
+        MissionKey = missionKey;
+        Music = music;
     }
+
+    /// <summary>The launcher's serial for this mission, the key of its check lines.</summary>
+    internal string MissionKey { get; }
+
+    /// <summary>The mission's own track under ModuleSounds, or null. The client view list reads it: behaviors join the mission before views.</summary>
+    internal string? Music { get; }
 
     public override void OnMissionTick(float dt)
     {

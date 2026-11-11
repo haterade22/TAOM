@@ -64,7 +64,7 @@ internal sealed class StoryMissionLauncher
             var attacker = Combatant("{=!}Story mission, attackers", attackerCulture, BattleSideEnum.Attacker);
             var key = "story" + Interlocked.Increment(ref _missions);
             _logger.LogInfo($"[StoryMissions] launching {definition.Scene} for '{definition.Id}' ({key}, autoplay {autoplay})");
-            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene), opening => CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key));
+            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene), opening => CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music));
 
             // Both are needed: a dead player may take a soldier, and IsFriendlyMission true makes Tab end the mission and leaves the order bar empty.
             opened.SetPlayerCanTakeControlOfAnotherAgentWhenDead();
@@ -85,7 +85,7 @@ internal sealed class StoryMissionLauncher
     }
 
     private IReadOnlyList<MissionBehavior> CreateBehaviors(Mission mission, RunPlan plan, LongDefeatSession session, StorySide side, CustomBattleCombatant defender,
-        CustomBattleCombatant attacker, string key) =>
+        CustomBattleCombatant attacker, string key, string? music) =>
         new MissionBehavior[]
         {
             new BattleSpawnLogic("battle_set"),
@@ -103,7 +103,7 @@ internal sealed class StoryMissionLauncher
             new MissionSiegeEnginesLogic(Weapons(DefaultSiegeEngineTypes.Catapult, 4, DefaultSiegeEngineTypes.Trebuchet, 2),
                 Weapons(DefaultSiegeEngineTypes.Ram, 1, DefaultSiegeEngineTypes.SiegeTower, 2)),
             new LongDefeatMissionLogic(plan, session, _logger, new HostedRunOutcomeLog(_outcomes), mission.EndMission, key),
-            new StoryMissionLogic(session, side, _logger, _outcomes, key),
+            new StoryMissionLogic(session, side, _logger, _outcomes, key, music),
         };
 
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>

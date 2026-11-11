@@ -1880,3 +1880,9 @@ v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool incl
 - **Why missed:** it was found, because the two signatures were compared before the fix. The compiler, the binding gate and `check_engine_member_refs.ps1` all pass such a call, so nothing but a read of every caller finds it.
 - **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
 - **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).
+
+### A sound event that ends by itself is gone: replay on a new event (#1105, 2026-11-10)
+`SoundEvent.Play()` on an event that has just ended looks like a replay, and the managed wrapper is one line that hides why it cannot work. In v1.5.7 native, the STOPPED callback queues the event id, and the next native sound update releases the FMOD instance and removes the id (`FUN_180237200`). After that `IsValid` is false and `Play()` on the same object fails. psai makes a new event for each channel it plays, and a TAOM loop must do the same: create a new event for every play.
+- **Why missed:** the design asked whether `event:/music` loops by itself, a question about the sound bank, and not whether a stopped event still exists, a question about the native lifetime. The unit tests faked the adapter, so they proved the cue's logic and not the engine's.
+- **Prevent:** for any engine handle that a callback can end (a sound, an effect, a timer), read the native callback for what it frees before the design relies on reuse. When the decompile is not readable, mark the reuse UNVERIFIED and use a new handle.
+- **Source:** docs/reviews/rca-story-mission-music-2026-11-10.md finding 1; docs/reference/engine/music-and-sound-events.md section 5 (#1105)

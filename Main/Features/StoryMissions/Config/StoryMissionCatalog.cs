@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -20,6 +21,10 @@ internal sealed class StoryMissionCatalog
 {
     private const string FolderName = "story_missions";
     private const string FileName = "story_missions.json";
+
+    internal const int MaxMusicLength = 120;
+
+    private static readonly Regex MusicPath = new(@"^[A-Za-z0-9_]([A-Za-z0-9_/.-]*[A-Za-z0-9_-])?\.ogg$", RegexOptions.CultureInvariant);
 
     private readonly Lazy<IReadOnlyList<StoryMissionDefinition>> _missions;
 
@@ -132,7 +137,20 @@ internal sealed class StoryMissionCatalog
         var rules = WavesReader.KeepAboveStragglers(WavesReader.ReadRules(s.Group(o, "rules", ""), s), new[] { roster }, s);
         seen.Add(id);
         return new StoryMissionDefinition(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, side, defenderCulture, attackerCulture, garrison, roster, rules,
-            FortressesReader.ReadKeep(o["keep"], id, rules.KeepRadius, s), FortressesReader.ReadMuster(o["muster"], id, s));
+            FortressesReader.ReadKeep(o["keep"], id, rules.KeepRadius, s), FortressesReader.ReadMuster(o["muster"], id, s), ReadMusic(o["music"], id, s));
+    }
+
+    private static string? ReadMusic(JToken? token, string id, LongDefeatConfigScope s)
+    {
+        if (token == null)
+            return null;
+
+        var text = LongDefeatConfigScope.Text(token);
+        if (text != null && text.Length <= MaxMusicLength && !text.Contains("..") && MusicPath.IsMatch(text))
+            return text;
+
+        s.Warn($"mission '{id}': 'music' '{token}' is not a relative .ogg path under ModuleSounds of at most {MaxMusicLength} characters; dropped, the campaign's music plays");
+        return null;
     }
 
     private static StoryMissionDefinition? Skip(LongDefeatConfigScope s, string row, string why)

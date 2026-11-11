@@ -63,7 +63,43 @@ public class StoryMissionWiringPinTests
         var launcher = Source("Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs");
 
         StringAssert.Contains(launcher, "new LongDefeatMissionLogic(plan, session, _logger, new HostedRunOutcomeLog(_outcomes), mission.EndMission, key)");
-        StringAssert.Contains(launcher, "new StoryMissionLogic(session, side, _logger, _outcomes, key)");
+        StringAssert.Contains(launcher, "new StoryMissionLogic(session, side, _logger, _outcomes, key, music)");
+    }
+
+    [TestMethod]
+    public void TheMusicView_JoinsOnlyAMissionThatNamesATrack_AndIsBuiltPerMission()
+    {
+        // A silenced slot left set outranks the campaign handler (MBMusicManager.CheckActiveHandler), so the adapter that holds it is never a container singleton.
+        var views = Source("Client/Features/StoryMissions/StoryMissionViews.cs");
+        var view = Source("Client/Features/StoryMissions/StoryMusicMissionView.cs");
+        var module = Source("Main/Features/StoryMissions/StoryMissionsModule.cs");
+
+        StringAssert.Contains(views, "var music = StoryMusicMissionView.ForMission(mission); if (music != null) views.Add(music);");
+        StringAssert.Contains(view, "if (logic?.Music == null) return null;");
+        StringAssert.Contains(view, "new StoryMusicCue(new MissionMusicAdapter(),");
+        Assert.IsFalse(module.Contains("MissionMusicAdapter"), "registered in the container, one adapter would hold every mission's slot and event");
+    }
+
+    [TestMethod]
+    public void TheMusicView_ReleasesFromBothTeardownHooks()
+    {
+        // OnMissionScreenFinalize comes from IMissionListener.OnEndMission (Mission.EndMission). A teardown without it (shutdown, or a mod's mid-mission load)
+        // reaches only OnRemoveBehavior, the path vanilla's silenced view misses.
+        var view = Source("Client/Features/StoryMissions/StoryMusicMissionView.cs");
+
+        StringAssert.Contains(view, "public override void OnMissionScreenFinalize() { _cue.Release(\"screen-finalize\");");
+        StringAssert.Contains(view, "public override void OnRemoveBehavior() { _cue.Release(\"remove-behavior\");");
+    }
+
+    [TestMethod]
+    public void TheMusicAdapter_PlaysOnTheEnginesMusicEvent_AndItsSilencedHandlerDoesNothing()
+    {
+        // event:/music is the event psai's own channels use (native), so it most likely follows the Music fader (UNVERIFIED); the module_sounds categories have no music.
+        var adapter = Source("Main/Adapters/MissionMusicAdapter.cs");
+
+        StringAssert.Contains(adapter, "SoundEvent.CreateEventFromExternalFile(MusicEvent, fullPath, null, is3d: false, isBlocking: false)");
+        StringAssert.Contains(adapter, "private const string MusicEvent = \"event:/music\";");
+        StringAssert.Contains(adapter, "void IMusicHandler.OnUpdated(float dt) { }");
     }
 
     [TestMethod]

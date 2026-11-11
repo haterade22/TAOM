@@ -28,6 +28,58 @@ pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost)
 fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
 absence = "not-reached"
 
+# The story mission's own track (Main/Features/StoryMissions/StoryMusicCue.cs). A pass means the engine accepted the start, not that anyone heard it: the
+# file is opened later, in the engine's sound callback, which reports nothing back. The human rows below are the proof of sound. A [Swallowed] line from any
+# music site (the view, the silence, the loop, the stop, the unsilence) fails both music rows: after a silence fault the requested line still reads
+# silenced=True.
+[[check]]
+id = "taom.story-missions.music.requested"
+needs = "the same run: the mission's row names a track, the scene rendered and the engine accepted the start"
+reached = ['\[Check\] id=taom\.story-missions\.music\.requested result=']
+pass = ['\[Check\] id=taom\.story-missions\.music\.requested result=pass sound=\S+StoryMusic/isengard_vs_rohan\.ogg silenced=True$']
+fail = [
+  '\[Check\] id=taom\.story-missions\.music\.requested result=fail',
+  '\[Swallowed\] feature=StoryMissions site=music-',
+]
+absence = "not-reached"
+
+# Written once per mission by the first teardown hook. loop=ok means the track played (and replayed) until the mission ended. loop=early means it ended
+# within ten seconds, most likely a file that does not decode (UNVERIFIED: native opens the file non-blocking and reports a failed open nowhere, so a silent
+# event that never stops would read loop=ok; the human rows are the proof of sound). loop=early with "music ended after 0.0 s" in the log would instead mean
+# that the engine reads a just-started event as stopped. loop=refused or loop=fault means the engine would not play it again. In those three cases vanilla
+# music came back at that moment, and the line is a fail.
+[[check]]
+id = "taom.story-missions.music.stopped"
+needs = "the same run: the mission ended by any exit after the track started"
+reached = ['\[Check\] id=taom\.story-missions\.music\.stopped result=']
+pass = ['\[Check\] id=taom\.story-missions\.music\.stopped result=pass via=\S+ played=True restarts=\d+ loop=ok$']
+fail = [
+  '\[Check\] id=taom\.story-missions\.music\.stopped result=fail',
+  '\[Swallowed\] feature=StoryMissions site=music-',
+]
+absence = "not-reached"
+
+[[human]]
+claim = "the track starts when the battle scene appears, and about 3 s later no campaign theme plays over it"
+
+[[human]]
+claim = "with the Music volume slider at 0 the track is silent, and the Sound Effects slider does not change it. If this fails, the track is on the wrong mixer channel: report it"
+
+[[human]]
+claim = "the track plays again from the start when it ends (3 min 12 s), and it stops (at once, or with a short fade if the sound bank sets one) at the end of the mission, at a retreat and at Exit to Main Menu"
+
+[[human]]
+claim = "at each replay (3 min 12 s, 6 min 24 s) the game does not stutter. Each replay may decode the 3.8 MB file again; if the frame stalls, report it"
+
+[[human]]
+claim = "back on the campaign map, campaign music returns within about 3 minutes; the main menu theme plays normally after Exit to Main Menu"
+
+[[human]]
+claim = "after the story mission, an ordinary field battle and a siege have vanilla battle music, and the campaign map has music after each"
+
+[[human]]
+claim = "a second story mission in the same session plays the track from the start"
+
 [[human]]
 claim = "after the mission the player stands on the campaign map again with no encounter, no menu stuck open and no prisoner or party change: win and loss both"
 
@@ -48,3 +100,8 @@ claim = "taom.story_open typed in a town or camp menu, during an encounter, or w
 
 [[human]]
 claim = "the garrison and the Uruk wave look as they do in the Long Defeat on this scene (Rohan defenders on the walls, Uruks with ram and towers), and the order bar works. They are the campaign troops, not the Long Defeat's fow_ copies, so their skills differ"
+
+# The six rows after helms_deep_defend are stand-ins: no recorded muster point (new defenders use the scene's own frames), no keep point (the defender
+# reinforcement frame), and no track (campaign music plays). Three use a stand-in scene: dale_defend a Dale castle, lorien_defend and north_defend two Gondor castles.
+[[human]]
+claim = "taom.story_open opens each of minas_tirith_defend, osgiliath_defend, pelargir_defend, dale_defend, lorien_defend and north_defend: the scene loads, both sides spawn, the attackers move on the wall, and the ended line follows. A scene that lacks a frame fails the boot with 'no spawn frame for' and the frames it lacks: report the row"

@@ -23,6 +23,12 @@ public class ShippedStoryMissionsTests
 {
     private const string MissionId = "helms_deep_defend";
 
+    // Every row the file ships, in file order. Each row other than Helm's Deep is a stand-in until its scene gets a recorded muster and its own track.
+    private static readonly string[] ShippedIds =
+    {
+        MissionId, "minas_tirith_defend", "osgiliath_defend", "pelargir_defend", "dale_defend", "lorien_defend", "north_defend",
+    };
+
     private static string ModuleData => RepoPaths.RepoPath("Main", "_Module", "ModuleData");
 
     private static (StoryMissionCatalog Catalog, IModLogger Logger) Load()
@@ -72,13 +78,33 @@ public class ShippedStoryMissionsTests
                 yield return (t.TroopId, t.Slot, m.AttackerCulture, "wave " + (w + 1));
     }
 
+    private static IReadOnlyList<StoryMissionDefinition> All() => Load().Catalog.Missions;
+
+    [TestMethod]
+    public void TheShippedFile_LoadsEveryRowWithNoWarning_AsSiegeDefences()
+    {
+        var (catalog, logger) = Load();
+
+        CollectionAssert.AreEqual(ShippedIds, catalog.Missions.Select(m => m.Id).ToArray());
+        foreach (var m in catalog.Missions)
+            Assert.AreEqual(StorySide.Defending, m.Side, m.Id + ": the host plays a siege defence only");
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void TheShippedFile_GivesEveryRowItsOwnScene()
+    {
+        var scenes = All().Select(m => m.Scene).ToList();
+
+        Assert.AreEqual(scenes.Count, scenes.Distinct(StringComparer.OrdinalIgnoreCase).Count());
+    }
+
     [TestMethod]
     public void TheShippedFile_LoadsTheHelmsDeepDefenceWithNoWarning()
     {
         var (catalog, logger) = Load();
 
         Assert.IsTrue(catalog.TryGet(MissionId, out var m));
-        Assert.AreEqual(1, catalog.Missions.Count);
         Assert.AreEqual("taom_rohan_castle_helms_deep_forceatmo", m.Scene);
         Assert.AreEqual(StorySide.Defending, m.Side);
         Assert.AreEqual(1, m.Waves.Authored.Count, "slice 1 proves the host with one wave");
@@ -97,13 +123,16 @@ public class ShippedStoryMissionsTests
     }
 
     [TestMethod]
-    public void EveryTroopTheShippedMissionFields_IsALoadedCampaignTroop()
+    public void EveryTroopTheShippedMissionsField_IsALoadedCampaignTroop()
     {
         var troops = CampaignTroops();
-        var ids = RunPlanTroops.AllTroopIds(StoryPlanBuilder.Build(Helms(), RunOptions.Default));
 
-        Assert.IsTrue(ids.Count > 0);
-        CollectionAssert.AreEqual(Array.Empty<string>(), ids.Where(id => !troops.ContainsKey(id)).ToArray(), "named but not loaded in a campaign");
+        foreach (var m in All())
+        {
+            var ids = RunPlanTroops.AllTroopIds(StoryPlanBuilder.Build(m, RunOptions.Default));
+            Assert.IsTrue(ids.Count > 0, m.Id);
+            CollectionAssert.AreEqual(Array.Empty<string>(), ids.Where(id => !troops.ContainsKey(id)).ToArray(), m.Id + ": named but not loaded in a campaign");
+        }
     }
 
     [TestMethod]
@@ -111,28 +140,41 @@ public class ShippedStoryMissionsTests
     {
         var troops = CampaignTroops();
 
-        foreach (var (troop, slot, culture, where) in Rows(Helms()))
+        foreach (var m in All())
         {
-            var npc = troops[troop];
-            Assert.AreEqual(slot == FormationSlot.Ranged ? "Ranged" : "Infantry", (string?)npc.Attribute("default_group"), $"{troop} in the {where}");
-            Assert.AreEqual("Culture." + culture, (string?)npc.Attribute("culture"), $"{troop} in the {where}");
+            foreach (var (troop, slot, culture, where) in Rows(m))
+            {
+                var npc = troops[troop];
+                Assert.AreEqual(slot == FormationSlot.Ranged ? "Ranged" : "Infantry", (string?)npc.Attribute("default_group"), $"{m.Id}: {troop} in the {where}");
+                Assert.AreEqual("Culture." + culture, (string?)npc.Attribute("culture"), $"{m.Id}: {troop} in the {where}");
+            }
         }
     }
 
     [TestMethod]
-    public void TheAttackersCulture_IsATaomCultureLoadedInACampaign()
+    public void EveryTaomCultureARowNames_IsLoadedInACampaign()
     {
+        // The launcher looks both cultures up in the running campaign, so a TAOM culture must load there; vanilla ids are read in the LiveInstall test.
         var sub = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml"));
         var node = sub.Descendants("XmlNode").Single(n => (string?)n.Element("XmlName")?.Attribute("path") == "taom_spcultures");
-        var cultures = XDocument.Load(Path.Combine(ModuleData, "taom_spcultures.xml")).Descendants("Culture").Select(c => (string?)c.Attribute("id")).ToList();
+        var taom = XDocument.Load(Path.Combine(ModuleData, "taom_spcultures.xml")).Descendants("Culture").Select(c => (string?)c.Attribute("id")).ToList();
 
         CollectionAssert.Contains(node.Descendants("GameType").Select(g => (string?)g.Attribute("value")).ToList(), "Campaign");
-        CollectionAssert.Contains(cultures, Helms().AttackerCulture);
+        CollectionAssert.Contains(taom, Helms().AttackerCulture);
+        foreach (var m in All())
+            foreach (var culture in new[] { m.DefenderCulture, m.AttackerCulture })
+                Assert.IsTrue(taom.Contains(culture) || VanillaCultureIds.Contains(culture), $"{m.Id}: culture '{culture}' is neither a TAOM nor a vanilla culture");
     }
+
+    // The main SandBox culture ids, which TAOM reuses for its own peoples (vlandia is Rohan, sturgia Dale, khuzait Rhun).
+    private static readonly HashSet<string> VanillaCultureIds = new(StringComparer.Ordinal)
+    {
+        "empire", "aserai", "sturgia", "vlandia", "battania", "khuzait", "nord",
+    };
 
     [TestMethod]
     [TestCategory("LiveInstall")]
-    public void TheDefendersCulture_IsAVanillaCultureInTheInstalledSandBox()
+    public void EveryVanillaCultureARowNames_IsInTheInstalledSandBox()
     {
         var env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
         var game = string.IsNullOrWhiteSpace(env) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env;
@@ -143,24 +185,60 @@ public class ShippedStoryMissionsTests
         var cultures = XDocument.Load(file).Descendants("Culture").Select(c => (string?)c.Attribute("id")).ToList();
 
         CollectionAssert.Contains(cultures, Helms().DefenderCulture);
+        foreach (var m in All())
+            foreach (var culture in new[] { m.DefenderCulture, m.AttackerCulture }.Where(VanillaCultureIds.Contains))
+                CollectionAssert.Contains(cultures, culture, m.Id);
     }
 
     [TestMethod]
-    public void TheShippedGarrison_IsAsLargeAsTheLongDefeatsAndTheWaveAboveTheLiveFloor()
+    public void EveryShippedGarrison_IsAsLargeAsTheLongDefeatsAndEveryWaveAboveTheLiveFloor()
     {
-        var m = Helms();
-
-        Assert.AreEqual(150, m.Garrison.Sum(g => g.Count));
-        Assert.IsTrue(m.Waves.Authored[0].Count > 100, "at 100 or fewer live attackers the siege AI stops its machines");
+        foreach (var m in All())
+        {
+            Assert.AreEqual(150, m.Garrison.Sum(g => g.Count), m.Id);
+            Assert.IsTrue(m.Garrison.Any(g => g.Slot == FormationSlot.Ranged), m.Id + ": the archer muster point needs archers");
+            foreach (var wave in m.Waves.Authored)
+                Assert.IsTrue(wave.Count > 100, m.Id + ": at 100 or fewer live attackers the siege AI stops its machines");
+        }
     }
 
     [TestMethod]
-    public void TheShippedRules_KeepAStragglerGroupFromTakingTheKeep()
+    public void EveryShippedRow_KeepsAStragglerGroupFromTakingTheKeep()
     {
-        var m = Helms();
-        var floor = (int)(m.Rules.StragglerShare * m.Waves.Authored.Min(w => w.Count)) + 1;
+        foreach (var m in All())
+        {
+            var floor = (int)(m.Rules.StragglerShare * m.Waves.Authored.Min(w => w.Count)) + 1;
+            Assert.IsTrue(m.Rules.KeepMinAttackers >= floor, m.Id);
+        }
+    }
 
-        Assert.IsTrue(m.Rules.KeepMinAttackers >= floor);
+    [TestMethod]
+    public void OnlyHelmsDeep_NamesATrack()
+    {
+        // Each other row is a stand-in: with no track, the campaign's music plays and nothing is silenced.
+        CollectionAssert.AreEqual(new[] { MissionId }, All().Where(m => m.Music != null).Select(m => m.Id).ToArray());
+    }
+
+    [TestMethod]
+    public void TheShippedMusic_IsAStereoOggVorbisFile_InItsOwnModuleSoundsFolder()
+    {
+        // The engine opens the file only inside its FMOD callback, after Play has answered, so a file that does not decode would silence the mission
+        // with a passing log line. A bad encode fails here instead. StoryMusic/ keeps the track out of the LOTR/OST folder's provenance row.
+        var music = Helms().Music;
+        Assert.IsNotNull(music, MissionId + " names no music");
+        StringAssert.StartsWith(music, "StoryMusic/");
+        var path = RepoPaths.RepoPath("Main", "_Module", "ModuleSounds", music!.Replace('/', Path.DirectorySeparatorChar));
+        Assert.IsTrue(File.Exists(path), path + " is missing");
+
+        var head = new byte[64];
+        using (var file = File.OpenRead(path))
+            Assert.AreEqual(head.Length, file.Read(head, 0, head.Length));
+        Assert.AreEqual("OggS", System.Text.Encoding.ASCII.GetString(head, 0, 4), "not an Ogg container");
+        var packet = 27 + head[26];
+        Assert.AreEqual(1, head[packet], "the first packet is not a Vorbis identification header");
+        Assert.AreEqual("vorbis", System.Text.Encoding.ASCII.GetString(head, packet + 1, 6));
+        Assert.AreEqual(2, head[packet + 11], "channels");
+        Assert.AreEqual(48000, BitConverter.ToInt32(head, packet + 12), "sample rate");
     }
 
     [TestMethod]

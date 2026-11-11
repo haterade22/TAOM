@@ -83,6 +83,7 @@ public class StoryMissionCatalogTests
         Assert.AreEqual(RunRules.Default.PreparationSeconds, m.Rules.PreparationSeconds);
         Assert.IsNull(m.Keep);
         Assert.IsNull(m.Muster);
+        Assert.IsNull(m.Music, "a mission with no music keeps the campaign's music");
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
@@ -371,6 +372,55 @@ public class StoryMissionCatalogTests
 
         Assert.AreEqual(1, catalog.Missions.Count);
         AssertWarned(logger, "reverted or were skipped");
+    }
+
+    [TestMethod]
+    public void Load_AMusicPath_IsRead()
+    {
+        var (catalog, logger) = Load(File(Row(("music", "\"StoryMusic/isengard_vs_rohan.ogg\""))));
+
+        Assert.AreEqual("StoryMusic/isengard_vs_rohan.ogg", catalog.Missions.Single().Music);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    // The path goes to the engine as a file under ModuleSounds, so only a plain relative .ogg path passes: a float WAV, the source format, may not decode.
+    [DataTestMethod]
+    [DataRow("\"\"", DisplayName = "blank")]
+    [DataRow("7", DisplayName = "not text")]
+    [DataRow("\"StoryMusic/../x.ogg\"", DisplayName = "parent folder")]
+    [DataRow("\"StoryMusic\\\\x.ogg\"", DisplayName = "backslash")]
+    [DataRow("\"/StoryMusic/x.ogg\"", DisplayName = "leading slash")]
+    [DataRow("\"C:/x.ogg\"", DisplayName = "drive")]
+    [DataRow("\"Story Music/x.ogg\"", DisplayName = "space")]
+    [DataRow("\"StoryMusic/x.wav\"", DisplayName = "wav")]
+    [DataRow("\"StoryMusic/x.OGG\"", DisplayName = "upper-case extension")]
+    [DataRow("\"StoryMusic/.ogg\"", DisplayName = "no file name")]
+    public void Load_ABadMusicPath_IsDropped_WithAWarning_AndTheMissionStays(string json)
+    {
+        var (catalog, logger) = Load(File(Row(("music", json))));
+
+        Assert.IsNull(catalog.Missions.Single().Music);
+        AssertWarned(logger, "'music'");
+    }
+
+    [TestMethod]
+    public void Load_AMusicPathOneCharacterTooLong_IsDropped()
+    {
+        var (catalog, logger) = Load(File(Row(("music", "\"" + new string('a', StoryMissionCatalog.MaxMusicLength - 3) + ".ogg\""))));
+
+        Assert.IsNull(catalog.Missions.Single().Music);
+        AssertWarned(logger, "'music'");
+    }
+
+    [TestMethod]
+    public void Load_AMusicPathOfExactlyTheLimit_IsRead()
+    {
+        var path = new string('a', StoryMissionCatalog.MaxMusicLength - 4) + ".ogg";
+
+        var (catalog, logger) = Load(File(Row(("music", "\"" + path + "\""))));
+
+        Assert.AreEqual(path, catalog.Missions.Single().Music);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
     [TestMethod]

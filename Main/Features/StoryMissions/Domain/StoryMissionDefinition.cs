@@ -14,6 +14,7 @@ internal enum StorySide
 /// <summary>
 /// One valid row of <c>story_missions.json</c>: the scene, the two cultures, the player's garrison and the waves that attack it, with the
 /// rule numbers and the recorded keep and muster points of that scene. <paramref name="Name"/> is raw <c>{=KEY}English</c> text.
+/// <paramref name="Music"/> is the mission's own track, a path under the module's <c>ModuleSounds</c> folder; null keeps the campaign's music.
 /// </summary>
 internal sealed record StoryMissionDefinition(
     string Id,
@@ -26,4 +27,5 @@ internal sealed record StoryMissionDefinition(
     WavePlan Waves,
     RunRules Rules,
     KeepPoint? Keep,
-    MusterPoints? Muster);
+    MusterPoints? Muster,
+    string? Music = null);
