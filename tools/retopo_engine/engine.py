@@ -674,10 +674,34 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                     result.insert(index + 1, lerp(result[index], result[(index + 1) % len(result)], 0.5))
                 return result
 
-            if len(inner_points) < len(outer_points):
-                inner_points = split_longest_edges(inner_points, len(outer_points))
-            elif len(outer_points) < len(inner_points):
-                outer_points = split_longest_edges(outer_points, len(inner_points))
+            loop_variants = [(outer_points, inner_points)]
+            if len(inner_points) != len(outer_points):
+                inner_is_shorter = len(inner_points) < len(outer_points)
+                shorter = inner_points if inner_is_shorter else outer_points
+                target_count = max(len(inner_points), len(outer_points))
+                if inner_is_shorter:
+                    loop_variants = [(outer_points, split_longest_edges(inner_points, target_count))]
+                else:
+                    loop_variants = [(split_longest_edges(outer_points, target_count), inner_points)]
+
+                def compositions(total, parts):
+                    if parts == 1:
+                        yield (total,)
+                    else:
+                        for first in range(total + 1):
+                            for remaining in compositions(total - first, parts - 1):
+                                yield (first, *remaining)
+
+                extra = target_count - len(shorter)
+                if math.comb(extra + len(shorter) - 1, len(shorter) - 1) <= 256:
+                    for counts in compositions(extra, len(shorter)):
+                        split = []
+                        for (first, second), cuts in zip(edges(shorter), counts):
+                            split.extend(lerp(first, second, step / (cuts + 1)) for step in range(cuts + 1))
+                        if inner_is_shorter:
+                            loop_variants.append((outer_points, split))
+                        else:
+                            loop_variants.append((split, inner_points))
 
             def invalid_face(face, vertices):
                 points = [vertices[index] for index in face]
@@ -693,17 +717,18 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 return False
 
             candidates = []
-            for oriented in (inner_points, list(reversed(inner_points))):
-                for shift in range(len(oriented)):
-                    aligned = oriented[shift:] + oriented[:shift]
-                    vertices = outer_points + aligned
-                    faces = []
-                    for index in range(len(outer_points)):
-                        following = (index + 1) % len(outer_points)
-                        faces.append((index, following, len(outer_points) + following, len(outer_points) + index))
-                    invalid = sum(invalid_face(face, vertices) for face in faces)
-                    cost = sum(math.dist(first, second) for first, second in zip(outer_points, aligned))
-                    candidates.append((invalid, cost, vertices, faces))
+            for outer_candidate, inner_candidate in loop_variants:
+                for oriented in (inner_candidate, list(reversed(inner_candidate))):
+                    for shift in range(len(oriented)):
+                        aligned = oriented[shift:] + oriented[:shift]
+                        vertices = outer_candidate + aligned
+                        faces = []
+                        for index in range(len(outer_candidate)):
+                            following = (index + 1) % len(outer_candidate)
+                            faces.append((index, following, len(outer_candidate) + following, len(outer_candidate) + index))
+                        invalid = sum(invalid_face(face, vertices) for face in faces)
+                        cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
+                        candidates.append((invalid, cost, vertices, faces))
             for invalid, _, vertices, faces in sorted(candidates, key=lambda candidate: candidate[:2]):
                 if invalid or crossed_mesh(vertices, faces):
                     continue

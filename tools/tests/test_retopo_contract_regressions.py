@@ -644,6 +644,22 @@ class ContractRegressionTests(unittest.TestCase):
             output_area = sum(engine.signed_area(face, initialized_corners.vertices) for face in initialized_corners.faces)
             self.assertAlmostEqual(input_area, output_area)
             self.assertTrue(all(vertex in initialized_corners.vertices for vertex in corner_case.vertices))
+        alternative_split = loop_case(
+            [(1.257, 1.809, 0), (-2.368, 2.23, 0), (-3.207, 1.863, 0), (-1.976, -1.841, 0), (-1.216, -3.272, 0), (-0.382, -2.454, 0), (0.889, -2.864, 0), (2.673, -2.136, 0)],
+            [(0.5 * math.cos(1.7202529039022743 + math.tau * index / 3), 0.5 * math.sin(1.7202529039022743 + math.tau * index / 3), 0) for index in range(3)],
+        )
+        initialized_alternative = engine.initialize_planes(alternative_split, RetopoSettings())
+        self.assertEqual(8, len(initialized_alternative.faces))
+        self.assertTrue(all(vertex in initialized_alternative.vertices for vertex in alternative_split.vertices))
+        crossing_outer = [(2.07, 0.774, 0), (1.944, 1.884, 0), (1.449, 1.551, 0), (1.69, 2.588, 0), (0.799, 1.641, 0), (-0.975, 2.182, 0), (-2.456, -1.221, 0), (-1.573, -1.198, 0), (-2.086, -1.825, 0), (0.887, -1.398, 0)]
+        crossing_inner = [(-1.034, -0.31, 0), (0.39, -0.604, 0), (0.683, 0.82, 0), (-0.74, 1.113, 0)]
+        while len(crossing_inner) < len(crossing_outer):
+            lengths = [math.dist(crossing_inner[index], crossing_inner[(index + 1) % len(crossing_inner)]) for index in range(len(crossing_inner))]
+            split_index = max(range(len(lengths)), key=lengths.__getitem__)
+            crossing_inner.insert(split_index + 1, engine.lerp(crossing_inner[split_index], crossing_inner[(split_index + 1) % len(crossing_inner)], 0.5))
+        assembled_crossing = loop_case(crossing_outer, crossing_inner)
+        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+            engine.initialize_planes(assembled_crossing, RetopoSettings())
         def star_case(count, high, low, radius, phase, offset):
             outer = [((high if index % 2 == 0 else low) * math.cos(math.tau * index / count), (high if index % 2 == 0 else low) * math.sin(math.tau * index / count), 0) for index in range(count)]
             inner = [(radius * math.cos(phase + math.tau * index / count) + offset, radius * math.sin(phase + math.tau * index / count), 0) for index in range(count)]
