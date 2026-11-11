@@ -160,7 +160,8 @@ helmet or animation variants.
 The pure Python reference implementation uses direct UV-triangle lookup, which is straightforward and
 deterministic but grows linearly with source triangle count per output vertex. Dense production meshes
 need profiling and an accelerated Blender BVH path before throughput claims. Auto fill is intentionally
-bounded. Generated helpers are rebuilt only when the operator runs.
+bounded. Unequal-hole alignment samples at most 32 split layouts and four lowest-cost rotations per
+direction before validating assembled geometry. Generated helpers are rebuilt only when the operator runs.
 
 ## Limitations
 

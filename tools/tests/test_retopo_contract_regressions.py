@@ -671,7 +671,7 @@ class ContractRegressionTests(unittest.TestCase):
                 )],
             )
 
-        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+        with self.assertRaisesRegex(ValueError, "simple hole inside the outer boundary"):
             engine.initialize_planes(star_case(12, 3.57, 0.91, 0.83, 3.07, 0.14), RetopoSettings())
         longer_inner = Mesh(
             vertices=[(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0), (1, 1, 0), (2, 1, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)],
@@ -681,9 +681,9 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual((10, 5, 10), (len(initialized_longer_inner.vertices), len(initialized_longer_inner.faces), len(initialized_longer_inner.boundary_edges())))
         self.assertTrue(all(engine.signed_area(face, initialized_longer_inner.vertices) > 0 for face in initialized_longer_inner.faces))
         square = [(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)]
-        for name, inner in (
-            ("touching", [(0, 0, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)]),
-            ("crossing", [(1, 1, 0), (3, 3, 0), (1, 3, 0), (3, 1, 0)]),
+        for name, inner, error in (
+            ("touching", [(0, 0, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)], "inside the outer boundary"),
+            ("crossing", [(1, 1, 0), (3, 3, 0), (1, 3, 0), (3, 1, 0)], "simple hole boundaries"),
         ):
             with self.subTest(invalid_hole=name):
                 malformed = Mesh(
@@ -693,7 +693,7 @@ class ContractRegressionTests(unittest.TestCase):
                         (index, 4 + (index + 1) % 4, 4 + index),
                     )],
                 )
-                with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+                with self.assertRaisesRegex(ValueError, error):
                     engine.initialize_planes(malformed, RetopoSettings())
         invalid_alignment = Mesh(
             vertices=[(3, 0, 0), (0.5, 1, 0), (0, 3, 0), (-1, 1, 0), (-3, 0, 0), (-1, -1, 0), (0, -3, 0), (1, -1, 0)]
@@ -1032,6 +1032,17 @@ class ContractRegressionTests(unittest.TestCase):
                 filled = engine.auto_fill(six_point, [(index / 5, 0, 0) for index in range(6)], 1, across_patterns=across_patterns)
                 self.assertEqual({(0, 4): 0.5, (1, 4): 0.5, (2, 5): 0.7, (3, 5): 0.7}, filled.edge_attributes["crease_edge"])
                 self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
+                engine.subdivide_quads(filled)
+        face_line = differential.two_guide()
+        face_line.lines = [(0, 1)]
+        face_line.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(face_line_across_patterns=across_patterns):
+                filled = engine.auto_fill(face_line, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                self.assertNotIn((0, 1), filled.lines)
+                self.assertNotIn((0, 1), filled.edge_attributes["crease_edge"])
+                self.assertEqual({(0, 6): 0.5, (1, 6): 0.5}, filled.edge_attributes["crease_edge"])
+                self.assertEqual([(0, 6), (1, 6)], sorted(filled.lines))
                 engine.subdivide_quads(filled)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):

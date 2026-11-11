@@ -663,9 +663,9 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 return inside
 
             if not simple_boundary(outer_points) or not simple_boundary(inner_points):
-                raise ValueError("plane initialization could not align hole boundaries into valid quads")
+                raise ValueError("plane initialization requires simple hole boundaries")
             if any(intersects(first, second, third, fourth) for first, second in edges(outer_points) for third, fourth in edges(inner_points)) or not contained(inner_points[0], outer_points):
-                raise ValueError("plane initialization could not align hole boundaries into valid quads")
+                raise ValueError("plane initialization requires a simple hole inside the outer boundary")
             def split_longest_edges(points, count):
                 result = list(points)
                 while len(result) < count:
@@ -716,18 +716,25 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                         return True
                 return False
 
+            if len(loop_variants) > 32:
+                indices = sorted({round(index * (len(loop_variants) - 1) / 31) for index in range(32)})
+                loop_variants = [loop_variants[index] for index in indices]
             candidates = []
             for outer_candidate, inner_candidate in loop_variants:
                 for oriented in (inner_candidate, list(reversed(inner_candidate))):
+                    scored_alignments = []
                     for shift in range(len(oriented)):
                         aligned = oriented[shift:] + oriented[:shift]
+                        cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
+                        scored_alignments.append((cost, aligned))
+                    alignment_limit = len(scored_alignments) if len(loop_variants) == 1 else 4
+                    for cost, aligned in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]:
                         vertices = outer_candidate + aligned
                         faces = []
                         for index in range(len(outer_candidate)):
                             following = (index + 1) % len(outer_candidate)
                             faces.append((index, following, len(outer_candidate) + following, len(outer_candidate) + index))
                         invalid = sum(invalid_face(face, vertices) for face in faces)
-                        cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
                         candidates.append((invalid, cost, vertices, faces))
             for invalid, _, vertices, faces in sorted(candidates, key=lambda candidate: candidate[:2]):
                 if invalid or crossed_mesh(vertices, faces):
@@ -935,6 +942,11 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
 
     def split_edge(current, parent, new_vertex):
         parent = Mesh.edge_key(*parent)
+        if parent in current.lines:
+            current.lines.remove(parent)
+            for child in (Mesh.edge_key(parent[0], new_vertex), Mesh.edge_key(parent[1], new_vertex)):
+                if child not in current.lines:
+                    current.lines.append(child)
         for values in current.edge_attributes.values():
             if parent not in values:
                 continue
