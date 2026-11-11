@@ -288,7 +288,7 @@ public sealed partial class RealmsCampaign
     {
         if (victim == null || !MayWrite())
             return;
-        Report(_service.OnHeroDied(victim.StringId, FamilySnapshotReader.Read(victim)));
+        Report(_service.OnHeroDied(victim.StringId, FamilySnapshotReader.Read(victim), _claimWorld));
         ResolvePending();
     }
 
@@ -319,7 +319,7 @@ public sealed partial class RealmsCampaign
     private void ResolvePending()
     {
         if (_service.IsInitialized && !IsDisabled && _isAuthority())
-            Report(_service.ResolvePending(_leaders));
+            Report(_service.ResolvePending(_leaders, _claimWorld));
     }
 
     internal static TransferKind KindOf(ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)

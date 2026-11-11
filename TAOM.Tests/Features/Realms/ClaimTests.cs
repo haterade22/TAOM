@@ -69,20 +69,56 @@ public class ClaimTests
     }
 
     [TestMethod]
-    public void A_claim_can_be_bought_on_a_bordering_title_and_the_titles_above_it()
+    public void A_claim_can_be_bought_on_a_bordering_title_and_the_titles_above_it_one_step_at_a_time()
     {
         var service = Service();
         var world = new FakeWorld();
         var neighbors = Neighbors(1);
         var duchy = service.Catalog.Get("c_town_c")!.ParentId!;
+        Assert.AreEqual(TitleRank.Duchy, service.Catalog.Get(duchy)!.Rank);
+        Assert.AreEqual("k_north", service.Catalog.Get(duchy)!.ParentId);
 
         var county = service.QuoteClaim(SouthKing(), "c_town_c", world, neighbors, Prices);
         Assert.IsTrue(county.Allowed, county.Refusal.ToString());
         Assert.AreEqual(80, county.Cost);
-        Assert.AreEqual(Prices.BuyPrice(service.Catalog.Get(duchy)!.Rank), service.QuoteClaim(SouthKing(), duchy, world, neighbors, Prices).Cost);
-        Assert.AreEqual(500, service.QuoteClaim(SouthKing(), "k_north", world, neighbors, Prices).Cost);
         Assert.AreEqual(ClaimRefusal.TooFar, service.QuoteClaim(SouthKing(), "c_town_a", world, neighbors, Prices).Refusal);
         Assert.AreEqual(ClaimRefusal.TooFar, service.QuoteClaim(SouthKing(), "b_castle_a", world, neighbors, Prices).Refusal);
+
+        // Bordering a realm's town is not enough to claim the duchy or the realm above it.
+        Assert.AreEqual(ClaimRefusal.NoFoothold, service.QuoteClaim(SouthKing(), duchy, world, neighbors, Prices).Refusal);
+        Assert.AreEqual(ClaimRefusal.NoFoothold, service.QuoteClaim(SouthKing(), "k_north", world, neighbors, Prices).Refusal);
+
+        world.Owners["town_c"] = "king_s"; // the town first: its county is a foothold in the duchy
+        var onDuchy = service.QuoteClaim(SouthKing(), duchy, world, neighbors, Prices);
+        Assert.IsTrue(onDuchy.Allowed, onDuchy.Refusal.ToString());
+        Assert.AreEqual(Prices.BuyPrice(TitleRank.Duchy), onDuchy.Cost);
+        Assert.AreEqual(ClaimRefusal.NoFoothold, service.QuoteClaim(SouthKing(), "k_north", world, neighbors, Prices).Refusal,
+            "a county is no foothold in the realm: the duchy between them is");
+
+        service.Ledger.SetHolder(duchy, "king_s"); // then the duchy: a foothold in the realm
+        var onRealm = service.QuoteClaim(SouthKing(), "k_north", world, neighbors, Prices);
+        Assert.IsTrue(onRealm.Allowed, onRealm.Refusal.ToString());
+        Assert.AreEqual(500, onRealm.Cost);
+    }
+
+    [TestMethod]
+    public void A_vassals_title_is_a_foothold_too()
+    {
+        var service = Service();
+        var world = new FakeWorld();
+        var duchy = service.Catalog.Get("c_town_c")!.ParentId!;
+        service.Ledger.SetHolder("c_town_s", "knight"); // the south king's vassal: c_town_s lies under k_south
+        service.Ledger.SetHolder("c_town_c", "knight"); // and holds the duchy's county by right
+        world.Clans["knight"] = "clan_k";
+        world.Kingdoms["knight"] = "south";
+        world.Rulers["south"] = "nobody"; // so king_s counts only his own vassals, not every lord of the realm
+        service.Ledger.SetHolder("k_south", null);
+        Assert.AreEqual(ClaimRefusal.NoFoothold, service.QuoteClaim(SouthKing(), duchy, world, Neighbors(1), Prices).Refusal,
+            "the knight is nobody's vassal while k_south is vacant");
+
+        service.Ledger.SetHolder("k_south", "king_s");
+        var quote = service.QuoteClaim(SouthKing(), duchy, world, Neighbors(1), Prices);
+        Assert.IsTrue(quote.Allowed, "the knight is king_s's vassal: " + quote.Refusal);
     }
 
     [TestMethod]
@@ -143,11 +179,17 @@ public class ClaimTests
     {
         var service = Service();
 
-        var offers = service.ClaimOffers(SouthKing(), new FakeWorld(), Neighbors(1), Prices);
+        var world = new FakeWorld();
 
+        var offers = service.ClaimOffers(SouthKing(), world, Neighbors(1), Prices);
+        Assert.AreEqual("c_town_c", offers[0].Title.Id);
+        Assert.IsFalse(offers.Any(o => o.Title.SettlementId == null), "no duchy or realm without a foothold below it");
+        Assert.IsFalse(offers.Any(o => o.Title.KingdomId == "south"), "the buyer's own realm is never offered");
+
+        service.Ledger.SetHolder(service.Catalog.Get("c_town_c")!.ParentId!, "king_s");
+        offers = service.ClaimOffers(SouthKing(), world, Neighbors(1), Prices);
         Assert.AreEqual("c_town_c", offers[0].Title.Id);
         Assert.AreEqual("k_north", offers[offers.Count - 1].Title.Id);
-        Assert.IsFalse(offers.Any(o => o.Title.KingdomId == "south"), "the buyer's own realm is never offered");
     }
 
     [TestMethod]
@@ -297,6 +339,39 @@ public class ClaimTests
         Assert.AreEqual(TitleEventReason.Claim, e.Reason);
         Assert.AreEqual("conqueror", service.Ledger.HolderOf("c_town_c"));
         Assert.AreEqual(2, service.Ledger.ClaimsOn("c_town_c").Count, "only the winner's claim is spent");
+    }
+
+    [TestMethod]
+    public void A_bought_claim_takes_up_a_vacated_duchy_only_when_its_claimant_could_press_it()
+    {
+        var (service, world, duchy, vassals) = DuchyClaimedBy("pretender");
+        var family = new FamilySnapshot(new[] { new HeroInfo("old_duke", false, false, 60, null) });
+        service.Ledger.SetHolder(duchy, "old_duke");
+
+        service.OnHeroDied("old_duke", family, world);
+        Assert.IsNull(service.Ledger.HolderOf(duchy), "a claim bought from far below does not inherit the duchy");
+        Assert.AreEqual(1, service.Ledger.ClaimsOn(duchy).Count, "the claim stays, to be pressed later");
+
+        foreach (var vassal in vassals.Take(vassals.Count / 2 + 1))
+            service.Ledger.SetHolder(vassal.Id, "pretender");
+        service.Ledger.SetHolder(duchy, "old_duke");
+        Assert.IsNull(service.StrongestClaimant(duchy), "without the campaign a bought claim on a duchy never counts");
+
+        var events = service.OnHeroDied("old_duke", family, world);
+        Assert.AreEqual("pretender", service.Ledger.HolderOf(duchy));
+        Assert.AreEqual(TitleEventReason.Claim, events.Single(e => e.TitleId == duchy).Reason);
+    }
+
+    [TestMethod]
+    public void A_blood_claim_takes_up_a_vacated_duchy_without_its_lands()
+    {
+        var (service, world, duchy, _) = DuchyClaimedBy("pretender");
+        service.Ledger.AddClaim(new TitleClaim(duchy, "grandson", ClaimKind.Ancestral, 2));
+        service.Ledger.SetHolder(duchy, "old_duke");
+
+        service.OnHeroDied("old_duke", new FamilySnapshot(new[] { new HeroInfo("old_duke", false, false, 60, null) }), world);
+
+        Assert.AreEqual("grandson", service.Ledger.HolderOf(duchy));
     }
 
     [TestMethod]

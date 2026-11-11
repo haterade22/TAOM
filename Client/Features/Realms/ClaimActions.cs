@@ -134,6 +134,7 @@ internal static class ClaimActions
         ClaimRefusal.TooFar => Text("{=realms_ui_refuse_far}It does not border your fiefs."),
         ClaimRefusal.NotOwned => Text("{=realms_ui_refuse_owned}Your clan must hold its fief first."),
         ClaimRefusal.TooFewVassals => Text("{=realms_ui_refuse_vassals}You, your clan and your vassals must hold more than half of its lands."),
+        ClaimRefusal.NoFoothold => Text("{=realms_ui_refuse_foothold}You, your clan or your vassals must first hold one of its lands."),
         ClaimRefusal.OutsideRealm => Text("{=realms_ui_refuse_outside}Its holder does not serve your realm."),
         ClaimRefusal.NotServing => Text("{=realms_ui_refuse_serving}The claimant must serve its realm."),
         ClaimRefusal.RestoreOnly => Text("{=realms_ui_refuse_restore_only}Only the heir of its old kings can take up this throne."),

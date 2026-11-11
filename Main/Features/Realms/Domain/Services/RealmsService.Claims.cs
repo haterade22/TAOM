@@ -8,20 +8,27 @@ using TAOM.Features.Realms.Domain.Titles;
 namespace TAOM.Features.Realms.Domain.Services;
 
 /// <summary>
-/// Claims beyond conquest: buying one on a title that borders the buyer's lands, pressing one to take the title
-/// (usurping), and a claimant taking up a title that has no heir.
+/// Claims beyond conquest: buying one on a title that borders the buyer's lands (a duchy or higher only from a foothold
+/// below it), pressing one to take the title (usurping), and a claimant taking up a title that has no heir.
 /// </summary>
 public sealed partial class RealmsService
 {
     /// <summary>
     /// Who takes up a title that has no heir: conquest claims before ancestral before fabricated ones, then the oldest
-    /// claim, then hero id. Null when nobody claims it.
+    /// claim, then hero id. Null when nobody claims it. A bought (fabricated) claim on a duchy or higher counts only when
+    /// its claimant could press it (<see cref="HighTitleLands"/>): a lord who bought a claim on a realm far above his lands
+    /// does not take it up for nothing when its holder dies. Without a <paramref name="world"/> such claims never count.
     /// </summary>
-    public string? StrongestClaimant(string titleId) =>
-        Ledger.ClaimsOn(titleId)
+    public string? StrongestClaimant(string titleId, IClaimWorld? world = null)
+    {
+        var title = Catalog.Get(titleId);
+        return Ledger.ClaimsOn(titleId)
             .OrderBy(c => c.Kind == ClaimKind.Conquest ? 0 : c.Kind == ClaimKind.Ancestral ? 1 : 2)
             .ThenBy(c => c.CampaignDay).ThenBy(c => c.HeroId, StringComparer.Ordinal)
-            .FirstOrDefault()?.HeroId;
+            .FirstOrDefault(c => c.Kind != ClaimKind.Fabricated || title?.SettlementId != null
+                || (world != null && title != null && HighTitleLands(title, AllegianceOf(c.HeroId, world)) == ClaimRefusal.None))
+            ?.HeroId;
+    }
 
     /// <summary>
     /// The titles that border the buyer: those of the buyer's clan's towns and castles and of their nearest others
@@ -48,20 +55,25 @@ public sealed partial class RealmsService
     /// <summary>
     /// Whether the buyer may buy a claim on the title, and its price in their special resource: the rank has a price,
     /// the buyer neither holds nor claims it, no member of their clan holds it, it is not in or held from their realm,
-    /// and it borders their clan's lands (<see cref="BorderingTitles"/>).
+    /// it borders their clan's lands (<see cref="BorderingTitles"/>) and, for a duchy or higher, their side holds one of
+    /// its vassal titles (<see cref="ClaimRefusal.NoFoothold"/>): titles are climbed, a county first, then the duchy, then the realm.
     /// </summary>
     public ClaimQuote QuoteClaim(ClaimBuyer buyer, string titleId, IClaimWorld world, FiefNeighbors neighbors, ClaimsConfig config) =>
-        QuoteClaim(buyer, Catalog.Get(titleId), world, config, () => BorderingTitles(buyer, neighbors).Any(t => t.Id == titleId));
+        QuoteClaim(buyer, Catalog.Get(titleId), world, config, () => BorderingTitles(buyer, neighbors).Any(t => t.Id == titleId), null);
 
-    /// <summary>Every claim the buyer may buy now, with its price, cheapest first.</summary>
-    public IReadOnlyList<(TitleDefinition Title, int Price)> ClaimOffers(ClaimBuyer buyer, IClaimWorld world, FiefNeighbors neighbors, ClaimsConfig config) =>
-        BorderingTitles(buyer, neighbors)
-            .Select(t => (Title: t, Quote: QuoteClaim(buyer, t, world, config, () => true)))
+    /// <summary>Every claim the buyer may buy now, with its price, cheapest first. One side serves every quote of the list.</summary>
+    public IReadOnlyList<(TitleDefinition Title, int Price)> ClaimOffers(ClaimBuyer buyer, IClaimWorld world, FiefNeighbors neighbors, ClaimsConfig config)
+    {
+        var side = AllegianceOf(buyer.HeroId, world);
+        return BorderingTitles(buyer, neighbors)
+            .Select(t => (Title: t, Quote: QuoteClaim(buyer, t, world, config, () => true, side)))
             .Where(o => o.Quote.Allowed)
             .OrderBy(o => o.Quote.Cost).ThenBy(o => o.Title.Id, StringComparer.Ordinal)
             .Select(o => (o.Title, o.Quote.Cost)).ToList();
+    }
 
-    private ClaimQuote QuoteClaim(ClaimBuyer buyer, TitleDefinition? title, IClaimWorld world, ClaimsConfig config, Func<bool> borders)
+    /// <param name="side">The buyer's side when an offer list has it already; built here when a duchy or higher needs it.</param>
+    private ClaimQuote QuoteClaim(ClaimBuyer buyer, TitleDefinition? title, IClaimWorld world, ClaimsConfig config, Func<bool> borders, Allegiance? side)
     {
         var price = title != null ? config.BuyPrice(title.Rank) : null;
         if (title == null || price == null)
@@ -77,7 +89,25 @@ public sealed partial class RealmsService
             return ClaimQuote.Refused(ClaimRefusal.OwnRealm);
         if (!borders())
             return ClaimQuote.Refused(ClaimRefusal.TooFar);
+        // A foothold: one title directly below it held by the buyer's side. (A vacant titular realm has no vassals, but
+        // no fief lies under it either, so it never borders anyone.)
+        if (title.SettlementId == null && !Catalog.ChildrenOf(title.Id).Any((side ??= AllegianceOf(buyer.HeroId, world)).Counts))
+            return ClaimQuote.Refused(ClaimRefusal.NoFoothold);
         return new ClaimQuote(ClaimRefusal.None, price.Value);
+    }
+
+    /// <summary>
+    /// Whether the hero's side may take a duchy or higher by right: a titular realm only by its own peoples, and more than
+    /// half of its lands held by the side (a titular realm counts the counties it lies over).
+    /// </summary>
+    private ClaimRefusal HighTitleLands(TitleDefinition title, Allegiance side)
+    {
+        // A titular realm (Khazad-dûm) has no vassals of its own: its claimant needs the lands it lies over.
+        var titular = TitularRealmOf(title);
+        if (titular != null && !titular.Allows(side.CultureId))
+            return ClaimRefusal.WrongCulture;
+        var vassals = titular != null ? TitularCounties(titular) : Catalog.ChildrenOf(title.Id);
+        return vassals.Count == 0 || vassals.Count(side.Counts) * 2 <= vassals.Count ? ClaimRefusal.TooFewVassals : ClaimRefusal.None;
     }
 
     /// <summary>
@@ -136,14 +166,9 @@ public sealed partial class RealmsService
         }
         else
         {
-            side ??= AllegianceOf(heroId, world);
-            // A titular realm (Khazad-dûm) has no vassals of its own: its claimant needs the lands it lies over.
-            var titular = TitularRealmOf(title);
-            if (titular != null && !titular.Allows(side.CultureId))
-                return ClaimQuote.Refused(ClaimRefusal.WrongCulture);
-            var vassals = titular != null ? TitularCounties(titular) : Catalog.ChildrenOf(titleId);
-            if (vassals.Count == 0 || vassals.Count(side.Counts) * 2 <= vassals.Count)
-                return ClaimQuote.Refused(ClaimRefusal.TooFewVassals);
+            var lands = HighTitleLands(title, side ?? AllegianceOf(heroId, world));
+            if (lands != ClaimRefusal.None)
+                return ClaimQuote.Refused(lands);
         }
 
         return new ClaimQuote(ClaimRefusal.None, cost.Value);

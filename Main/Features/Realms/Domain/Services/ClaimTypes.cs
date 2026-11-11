@@ -101,6 +101,9 @@ public enum ClaimRefusal
 
     /// <summary>Only a hero of one of its peoples may form or press this titular realm (dwarves for Khazad-dûm).</summary>
     WrongCulture,
+
+    /// <summary>Buying a claim on a duchy or higher needs one of its vassal titles held by the hero, their clan or their vassals.</summary>
+    NoFoothold,
 }
 
 /// <summary>How a granted title passes.</summary>
