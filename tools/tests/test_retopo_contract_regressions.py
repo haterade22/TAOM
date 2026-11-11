@@ -651,6 +651,13 @@ class ContractRegressionTests(unittest.TestCase):
         initialized_alternative = engine.initialize_planes(alternative_split, RetopoSettings())
         self.assertEqual(8, len(initialized_alternative.faces))
         self.assertTrue(all(vertex in initialized_alternative.vertices for vertex in alternative_split.vertices))
+        later_rotation = loop_case(
+            [(-2.012, 1.099, 0), (-3.069, 1.647, 0), (-3.937, -0.595, 0), (-1.75, -2.123, 0), (-0.58, -2.262, 0), (0.777, -2.28, 0), (2.75, -0.747, 0)],
+            [(0.596, -0.164, 0), (0.232, -0.49, 0), (0.259, -0.977, 0), (0.657, -1.26, 0), (1.126, -1.125, 0), (1.314, -0.674, 0), (1.078, -0.246, 0)],
+        )
+        initialized_later = engine.initialize_planes(later_rotation, RetopoSettings())
+        self.assertEqual(7, len(initialized_later.faces))
+        self.assertTrue(all(engine.signed_area(face, initialized_later.vertices) > 0 for face in initialized_later.faces))
         crossing_outer = [(2.07, 0.774, 0), (1.944, 1.884, 0), (1.449, 1.551, 0), (1.69, 2.588, 0), (0.799, 1.641, 0), (-0.975, 2.182, 0), (-2.456, -1.221, 0), (-1.573, -1.198, 0), (-2.086, -1.825, 0), (0.887, -1.398, 0)]
         crossing_inner = [(-1.034, -0.31, 0), (0.39, -0.604, 0), (0.683, 0.82, 0), (-0.74, 1.113, 0)]
         while len(crossing_inner) < len(crossing_outer):
@@ -1000,6 +1007,11 @@ class ContractRegressionTests(unittest.TestCase):
                 filled = engine.auto_fill(loose, [(0.52, 0.5, 0)], 1, across_patterns=across_patterns)
                 face_vertices = {index for face in filled.faces for index in face}
                 self.assertTrue(any(math.dist(filled.vertices[index], (0.52, 0.5, 0)) < 1e-7 for index in face_vertices))
+        for across_patterns in (True, False):
+            with self.subTest(iterative_off_center_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
         free = differential.unit_guide()
         free.vertices.append((5, 5, 0))
         free.lines = [(2, 4)]
