@@ -98,7 +98,7 @@ public class RealmBordersMapView : MapView
         if (_names == null || _borders == null || _nameOf == null || _project == null)
             return;
         var labels = _borders.Labels;
-        _names.SetLabels(labels, _nameOf);
+        _names.SetLabels(labels, _nameOf, _borders.NameVersion);
         if (camera == null)
         {
             _names.Place(0f, 1f, 1f, _project);

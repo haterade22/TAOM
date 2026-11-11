@@ -112,7 +112,11 @@ public sealed partial class RealmsService
     /// claims it, and their clan owns its fief (a town, castle or village title) or their side (<see cref="Allegiance"/>:
     /// themselves, their clan and their vassals) holds more than half of its vassal titles (a duchy or higher).
     /// </summary>
-    public ClaimQuote QuoteUsurp(string heroId, string? clanId, string titleId, IClaimWorld world, ClaimsConfig config)
+    public ClaimQuote QuoteUsurp(string heroId, string? clanId, string titleId, IClaimWorld world, ClaimsConfig config) =>
+        QuoteUsurp(heroId, clanId, titleId, world, config, null);
+
+    /// <param name="side">The hero's side when an offer list has it already; built here when a duchy or higher needs it.</param>
+    private ClaimQuote QuoteUsurp(string heroId, string? clanId, string titleId, IClaimWorld world, ClaimsConfig config, Allegiance? side)
     {
         var title = Catalog.Get(titleId);
         var cost = title != null ? config.UsurpCost(title.Rank) : null;
@@ -132,8 +136,12 @@ public sealed partial class RealmsService
         }
         else
         {
-            var vassals = Catalog.ChildrenOf(titleId);
-            var side = AllegianceOf(heroId, world);
+            side ??= AllegianceOf(heroId, world);
+            // A titular realm (Khazad-dûm) has no vassals of its own: its claimant needs the lands it lies over.
+            var titular = TitularRealmOf(title);
+            if (titular != null && !titular.Allows(side.CultureId))
+                return ClaimQuote.Refused(ClaimRefusal.WrongCulture);
+            var vassals = titular != null ? TitularCounties(titular) : Catalog.ChildrenOf(titleId);
             if (vassals.Count == 0 || vassals.Count(side.Counts) * 2 <= vassals.Count)
                 return ClaimQuote.Refused(ClaimRefusal.TooFewVassals);
         }
@@ -168,12 +176,25 @@ public sealed partial class RealmsService
         return events;
     }
 
-    /// <summary>The hero's claims they may press now, with their influence cost.</summary>
-    public IReadOnlyList<(string TitleId, int Cost)> UsurpOffers(string heroId, string? clanId, IClaimWorld world, ClaimsConfig config) =>
-        Ledger.ClaimsOf(heroId)
-            .Select(c => (c.TitleId, Quote: QuoteUsurp(heroId, clanId, c.TitleId, world, config)))
+    /// <summary>The hero's claims they may press now, with their influence cost. One side serves every quote of the list.</summary>
+    public IReadOnlyList<(string TitleId, int Cost)> UsurpOffers(string heroId, string? clanId, IClaimWorld world, ClaimsConfig config)
+    {
+        var claims = Ledger.ClaimsOf(heroId);
+        if (claims.Count == 0)
+            return Array.Empty<(string, int)>();
+        var side = AllegianceOf(heroId, world);
+        return claims
+            .Select(c => (c.TitleId, Quote: QuoteUsurp(heroId, clanId, c.TitleId, world, config, side)))
             .Where(o => o.Quote.Allowed)
             .Select(o => (o.TitleId, o.Quote.Cost)).ToList();
+    }
+
+    /// <summary>
+    /// The least influence any usurpation can cost; null when no rank can be usurped. Every offer of
+    /// <see cref="UsurpOffers"/> costs at least this, so a clan with less need not be quoted at all.
+    /// </summary>
+    public static int? CheapestUsurpCost(ClaimsConfig config) =>
+        Enum.GetValues(typeof(TitleRank)).Cast<TitleRank>().Select(config.UsurpCost).Min();
 
     private static bool OwnedByClan(string settlementId, string heroId, string? clanId, IClaimWorld world)
     {

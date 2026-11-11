@@ -142,9 +142,9 @@ public static class RealmsSaveFormat
 
     private static SaveReadResult Failed(string error, List<string> warnings) => new(null, null, error, warnings);
 
-    private static string Join(params string?[] fields) => string.Join("\t", fields.Select(Escape));
+    internal static string Join(params string?[] fields) => string.Join("\t", fields.Select(Escape));
 
-    private static string?[] Fields(string line) => line.Split('\t').Select(Unescape).ToArray();
+    internal static string?[] Fields(string line) => line.Split('\t').Select(Unescape).ToArray();
 
     private static string Escape(string? value)
     {

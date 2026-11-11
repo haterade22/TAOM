@@ -7,13 +7,21 @@ namespace TAOM.Features.Realms.Domain.Titles;
 /// <summary>One title in a <see cref="TitleTree"/> and the vassal titles drawn under it.</summary>
 public sealed class TitleTreeNode
 {
-    public TitleTreeNode(TitleDefinition title, bool isFocus, int foldedLordships, IReadOnlyList<TitleTreeNode> children)
+    public TitleTreeNode(TitleDefinition title, bool isFocus, int foldedLordships, IReadOnlyList<TitleTreeNode> children,
+        bool isLands = false)
     {
         Title = title;
         IsFocus = isFocus;
         FoldedLordships = foldedLordships;
         Children = children;
+        IsLands = isLands;
     }
+
+    /// <summary>
+    /// True for a title drawn under a vacant titular realm only because the realm lies over it (Moria's duchies under
+    /// Khazad-dûm): not its vassal yet. The popup dims it.
+    /// </summary>
+    public bool IsLands { get; }
 
     public TitleDefinition Title { get; }
 
@@ -79,19 +87,32 @@ public sealed class TitleTree
     public TitleTreeNode Root { get; }
     public string FocusId { get; }
 
-    /// <summary>Null when the catalog has no title with that id.</summary>
-    public static TitleTree? Build(TitleCatalog catalog, string? focusId)
+    /// <summary>
+    /// Null when the catalog has no title with that id. <paramref name="landsOf"/> gives the titles drawn (as
+    /// <see cref="TitleTreeNode.IsLands"/>) under a title with no vassals of its own: a vacant titular realm's lands.
+    /// </summary>
+    public static TitleTree? Build(TitleCatalog catalog, string? focusId,
+        Func<string, IReadOnlyList<TitleDefinition>>? landsOf = null)
     {
         var focus = catalog.Get(focusId);
         if (focus == null)
             return null;
         var root = catalog.AncestorsOf(focus.Id).LastOrDefault() ?? focus;
-        return new TitleTree(BuildNode(catalog, root, focus), focus.Id);
+        return new TitleTree(BuildNode(catalog, root, focus, landsOf, false), focus.Id);
     }
 
-    private static TitleTreeNode BuildNode(TitleCatalog catalog, TitleDefinition title, TitleDefinition focus)
+    private static TitleTreeNode BuildNode(TitleCatalog catalog, TitleDefinition title, TitleDefinition focus,
+        Func<string, IReadOnlyList<TitleDefinition>>? landsOf, bool isLands)
     {
-        var vassals = catalog.ChildrenOf(title.Id)
+        IEnumerable<TitleDefinition> below = catalog.ChildrenOf(title.Id);
+        var childLands = isLands;
+        if (!below.Any() && landsOf != null && !isLands)
+        {
+            below = landsOf(title.Id);
+            childLands = true;
+        }
+
+        var vassals = below
             .OrderByDescending(t => t.Rank)
             .ThenBy(t => t.Name, StringComparer.Ordinal)
             .ToList();
@@ -102,6 +123,7 @@ public sealed class TitleTree
             title,
             title.Id == focus.Id,
             unfold ? 0 : lordships.Count,
-            drawn.Select(t => BuildNode(catalog, t, focus)).ToList());
+            drawn.Select(t => BuildNode(catalog, t, focus, landsOf, childLands)).ToList(),
+            isLands);
     }
 }

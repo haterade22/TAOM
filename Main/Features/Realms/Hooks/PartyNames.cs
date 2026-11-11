@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using Helpers;
 using TaleWorlds.CampaignSystem;
@@ -6,6 +7,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TAOM.Features.Realms.Domain.Services;
 
 namespace TAOM.Features.Realms.Hooks;
 
@@ -71,5 +73,37 @@ internal static class PartyNames
             return;
         foreach (var party in parties)
             party?.PartyComponent?.ClearCachedName();
+    }
+
+    /// <summary>
+    /// Clears the cached names of the lord parties whose owner gained or lost a title or office in
+    /// <paramref name="events"/>: a party's style follows its owner's own titles and offices alone.
+    /// </summary>
+    public static void Refresh(IEnumerable<TitleEvent> events)
+    {
+        var owners = OwnersAffectedBy(events);
+        var parties = owners.Count > 0 && TaleWorlds.CampaignSystem.Campaign.Current != null ? MobileParty.AllLordParties : null;
+        if (parties == null)
+            return;
+        foreach (var party in parties)
+            if (party?.PartyComponent is LordPartyComponent lord && lord.Owner?.StringId is { } owner && owners.Contains(owner))
+                lord.ClearCachedName();
+    }
+
+    /// <summary>The heroes whose style the events may change: new and previous holders of titles and offices. A claim changes no style.</summary>
+    internal static HashSet<string> OwnersAffectedBy(IEnumerable<TitleEvent> events)
+    {
+        var owners = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var e in events)
+        {
+            if (e.Kind == TitleEventKind.ClaimGained)
+                continue;
+            if (e.HeroId != null)
+                owners.Add(e.HeroId);
+            if (e.PreviousHolderId != null)
+                owners.Add(e.PreviousHolderId);
+        }
+
+        return owners;
     }
 }

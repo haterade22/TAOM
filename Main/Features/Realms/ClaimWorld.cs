@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -5,13 +7,61 @@ using TAOM.Features.Realms.Domain.Services;
 
 namespace TAOM.Features.Realms;
 
-/// <summary>The live campaign as the claim rules see it. Lookups only, nothing is cached but the neighbor table.</summary>
+/// <summary>
+/// The live campaign as the claim rules see it. Lookups only: nothing is cached but the neighbor table and, during a
+/// sweep (<see cref="BeginSweep"/>), which hero object an id names. A hero's clan, realm and life are always read live.
+/// </summary>
 internal sealed class ClaimWorld : IOfficeWorld
 {
     private FiefNeighbors? _neighbors;
     private int _neighborCount;
 
-    public bool IsAlive(string heroId) => Hero.Find(heroId)?.IsAlive == true;
+    /// <summary>The heroes by id while a sweep runs; null otherwise.</summary>
+    private Dictionary<string, Hero?>? _heroes;
+
+    /// <summary>
+    /// Starts a sweep: until <see cref="EndSweep"/> heroes are found in a table built once, not by
+    /// <see cref="Hero.Find"/>, which walks every hero the campaign ever had. The weekly rules ask for thousands of
+    /// heroes per clan, so this is what keeps the weekly tick from freezing the map. Ids it does not know (a hero made
+    /// during the sweep) still fall back to <see cref="Hero.Find"/>.
+    /// </summary>
+    public void BeginSweep()
+    {
+        var campaign = TaleWorlds.CampaignSystem.Campaign.Current;
+        _heroes = campaign == null
+            ? null
+            : IndexFirst<Hero?>(campaign.DeadOrDisabledHeroes.Concat(campaign.AliveHeroes), h => h?.StringId);
+    }
+
+    public void EndSweep() => _heroes = null;
+
+    /// <summary>
+    /// Each id's first item, in order: the same one a front-to-back search finds (the campaign registers dead and
+    /// disabled heroes before the living, and <see cref="Hero.Find"/> walks them in that order). Items without an id are left out.
+    /// </summary>
+    internal static Dictionary<string, T> IndexFirst<T>(IEnumerable<T> items, Func<T, string?> idOf)
+    {
+        var index = new Dictionary<string, T>(StringComparer.Ordinal);
+        foreach (var item in items)
+        {
+            var id = idOf(item);
+            if (id != null && !index.ContainsKey(id))
+                index[id] = item;
+        }
+
+        return index;
+    }
+
+    private Hero? FindHero(string heroId)
+    {
+        if (_heroes == null || heroId == null)
+            return Hero.Find(heroId);
+        if (_heroes.TryGetValue(heroId, out var hero))
+            return hero;
+        return _heroes[heroId] = Hero.Find(heroId);
+    }
+
+    public bool IsAlive(string heroId) => FindHero(heroId)?.IsAlive == true;
 
     public string? RulerOf(string kingdomId)
     {
@@ -23,9 +73,11 @@ internal sealed class ClaimWorld : IOfficeWorld
 
     public string? KingdomOfSettlement(string settlementId) => Landlord(settlementId)?.OwnerClan?.Kingdom?.StringId;
 
-    public string? KingdomOfHero(string heroId) => Hero.Find(heroId)?.Clan?.Kingdom?.StringId;
+    public string? KingdomOfHero(string heroId) => FindHero(heroId)?.Clan?.Kingdom?.StringId;
 
-    public string? ClanOf(string heroId) => Hero.Find(heroId)?.Clan?.StringId;
+    public string? ClanOf(string heroId) => FindHero(heroId)?.Clan?.StringId;
+
+    public string? CultureOf(string heroId) => FindHero(heroId)?.Culture?.StringId;
 
     /// <summary>Towns and castles never move, so the table is built once per session (again if the count changes).</summary>
     public FiefNeighbors Neighbors(int count)

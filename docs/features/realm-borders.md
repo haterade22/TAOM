@@ -236,7 +236,11 @@ when aniron has every glyph (Latin and Cyrillic; `RealmNameLetteringTests` holds
 name never shows empty boxes. The names appear once the borders are 35% opaque and fade in with them
 (through `Brush.GlobalAlphaFactor`, which is how Gauntlet fades text), are centred on the screen's
 usable area, and never take a click: every widget ignores events and the layer sets no input
-restrictions.
+restrictions. The name is the kingdom's own `Name`. A realm renamed in play (Erebor as Durin's Folk
+when its holder forms the title, see [Realms](realms.md)) is lettered anew in place without waiting
+for the borders to repaint: the game raises no event for `Kingdom.ChangeKingdomName`, so Realms tells
+every `IKingdomRenameListener` (Core/Domain), `RealmBorderService` raises its `NameVersion`, and the
+names layer reads the names again only when that number moves.
 
 ### Crossing notices
 

@@ -45,6 +45,8 @@ public class FeudalTests
         public string? ClanOf(string heroId) => Clans.TryGetValue(heroId, out var c) ? c : null;
         public bool IsAlive(string heroId) => !Dead.Contains(heroId);
         public string? RulerOf(string kingdomId) => Rulers.TryGetValue(kingdomId, out var h) ? h : null;
+        public Dictionary<string, string> Cultures { get; } = new();
+        public string? CultureOf(string heroId) => Cultures.TryGetValue(heroId, out var c) ? c : null;
         public string? ClanLeaderOf(string clanId) => null;
         public bool ClanExists(string clanId) => true;
         public bool KingdomExists(string kingdomId) => Rulers.ContainsKey(kingdomId);
@@ -338,10 +340,10 @@ public class FeudalTests
         service.Config.Unions.Add(new UnionConfig("both", "Both", new[] { "k_north", "k_south", "k_nowhere" }));
         var warnings = new List<string>();
 
-        Assert.AreEqual(1, service.AddMissingUnions(warnings));
+        Assert.AreEqual(1, service.AddMissingTitles(warnings));
         Assert.AreEqual("u_both", service.Catalog.Get("k_south")!.ParentId);
         Assert.AreEqual(TitleEventReason.Start, service.Ledger.ChronicleOf("u_both").Single().Reason);
-        Assert.AreEqual(0, service.AddMissingUnions(warnings));
+        Assert.AreEqual(0, service.AddMissingTitles(warnings));
         Assert.IsTrue(warnings.Any(w => w.Contains("both")), "the missing member is reported");
     }
 

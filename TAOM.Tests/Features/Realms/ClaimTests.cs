@@ -40,6 +40,7 @@ public class ClaimTests
 
         public Dictionary<string, string> Rulers { get; } = new() { ["north"] = "king_n", ["south"] = "king_s" };
         public string? RulerOf(string kingdomId) => Rulers.TryGetValue(kingdomId, out var h) ? h : null;
+        public string? CultureOf(string heroId) => null;
     }
 
     private static readonly ClaimsConfig Prices = new();

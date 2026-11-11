@@ -64,7 +64,15 @@ The file's header comment documents every element and attribute. Main sections:
 | `<Coronations>` | Aragorn's coronation: house, `banner` (the new house's own code; Gondor flies it while the house rules), `banner_of`, fiefs, gold, relation, `influence` (the restore price, 2500), `former_banner` |
 | `<StartingClaims>`, `<Chronicle>` | Claims at campaign start; how many past holders each title remembers |
 
-The hierarchy is made once, when a campaign first gets titles. Names, styles, prices and the settings sections are read on each campaign load. Unions, offices and starting claims missing from a save are added on its next load.
+The hierarchy is made once, when a campaign first gets titles. Names, styles, prices and the settings sections are read on each campaign load. Unions, titular realms, offices and starting claims missing from a save are added on its next load.
+
+### Titular realms
+
+`<TitularRealms><Realm>` makes a kingdom title of no realm, vacant at the start, over another realm's lands: Khazad-dûm (`k_khazad_dum`) lies over the orcs' Moria (`lands="k_mistymountainorcs"`) under Durin's Folk (`liege`). While vacant it takes no titles from that realm; the tree draws that realm's vassal titles under it, dimmed, and its page lists them as the lands it lies over. Once formed, those titles move under it (`RealmsService.SyncTitularLands`, run on forming, after every title change, daily and on load): its holder is their liege, and the orcs' kingdom title is left with no lands until Khazad-dûm falls vacant again, when they move back. The moved tree is saved. Forming or pressing it needs more than half of the counties below it (below `lands` while vacant), and only heroes of a `cultures` culture may (refused with "Only its own people can take up this title."), so the orcs who hold Moria never form it. A missing `lands` title skips the realm with a warning; a missing `liege` leaves it without one.
+
+### Realm names
+
+A kingdom is named after the highest Kingdom, High or Union title its ruler holds above its own kingdom title: Erebor reads Durin's Folk while its king holds that title, Gondor reads Reunited Kingdom under the union. A title beside its own (Mordor holding Arnor, a Steward forming Arnor) does not rename the realm. A kingdom made in the campaign, with no title of its own, takes its ruler's highest title that is no other realm's own. The name and informal name come from the title's `realm_name` attribute (on `<HighTitle>`, `<Union>` and `<Realm>`), or its own name; the formal name is the title's full name ("Mansion of Khazad-dûm"). The kingdom's own names are kept in the save and come back when the title is lost. Names are set again on each load, daily, when a ruling clan changes and after a title changes hands; only the co-op host renames.
 
 ### Mod options: World/Realms
 
@@ -124,7 +132,9 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 7. Load a save made with the separate TAOM.Realms module. Pass: `taom.realms_hero` lists the same titles as before.
 8. As ruler of your own kingdom, give Minas Tirith and West Osgiliath to two vassal clans, buy a claim on the Duchy of Anórien and open its page. Pass: Usurp is offered for 200 influence; before the fiefs were given away it was refused with "You, your clan and your vassals must hold more than half of its lands."
 9. Serve Gondor with Aragorn in your clan and open the Kingdom of Gondor's title page. Pass: Restore costs 2500 influence; at Title Influence Cost 50% it costs 1250. Restore it. Pass (visual): the House of Telcontar and the Kingdom of Gondor show the Telcontar banner, on the clan page, the kingdom page and the map parties. Save, load. Pass: Gondor keeps that banner.
-10. Mod options, World/Realms: turn off Lords Styled by Their Titles. Pass: within an in-game hour Denethor's party reads "Denethor's Party", and a conversation with him shows the plain name; the encyclopedia still lists his titles. Turn off Tribute (0%) and wait a week. Pass: no tribute notice.
+10. As Dáin, form or take Durin's Folk. Pass: the kingdom reads Durin's Folk on the map, the kingdom page and the encyclopedia list; lose the title and it reads Erebor again. Save and load in between. Pass: the names hold.
+11. As a dwarf ruler, take two of the three Moria towns and open the Kingdom of Khazad-dûm title page. Pass: Form is offered, and the title tree shows Zirakzigil, Caradhras and Fanuidhol dimmed under it. Form it. Pass: the three duchies are drawn under Khazad-dûm undimmed, the orcs' kingdom title page (`k_mistymountainorcs`) lists no vassal titles, and save and load keep it so. An orc lord holding the same towns is refused with "Only its own people can take up this title."
+12. Mod options, World/Realms: turn off Lords Styled by Their Titles. Pass: within an in-game hour Denethor's party reads "Denethor's Party", and a conversation with him shows the plain name; the encyclopedia still lists his titles. Turn off Tribute (0%) and wait a week. Pass: no tribute notice.
 
 None of these has been run yet.
 
@@ -138,7 +148,11 @@ None of these has been run yet.
 
 Titles are created once, on the first hourly tick. The hourly listener is a flag check after that. Claims, offices, consequences and tribute run weekly, grants to children daily. The client tick drains a small UI queue. A title page builds its rows once when it opens and again after an action.
 
+The weekly tick is one sweep over the AI clans that own a town or castle. Forming a title weighs every vacant duchy and realm against the clan's side (its vassals found through the whole title tree), which asks after heroes many thousands of times, and the game's `Hero.Find` walks every hero the campaign ever had. So during the sweep `ClaimWorld` finds heroes in a table built once (clan, realm and life are still read live), a clan that cannot pay the cheapest formation or usurpation is not quoted at all (it would stop at the first offer), one side serves a clan's whole usurp offer list, the ledger keeps each holder's titles in an index, and only the parties of heroes who gained or lost a title or office have their names rebuilt. Each weekly tick logs its time per part (`[TAOM.Realms] weekly tick ... ms`).
+
 ## Changelog
+
+- 2026-11-11: less work in the weekly AI claims, which froze the map (about 3 s on one logged week). Heroes are found from a table during the weekly sweep instead of `Hero.Find`, unaffordable clans are not quoted, usurp offers share one side, titles held are indexed and only affected party names are rebuilt. The weekly tick logs its timings.
 
 - 2026-11-10: merged into TAOM from the separate TAOM.Realms module. Console commands renamed from `realms.*` to `taom.realms_*`; host-only co-op gate added; the coronation window moved behind `IRealmsPopupAdapter`.
 - 2026-11-10: the encyclopedia's Titles category also shows on a new campaign. The home list keeps only the pages relevant when the map screen builds it, before the first hourly tick creates the titles; the page is now relevant while Realms runs and its list reads the titles each time it opens.

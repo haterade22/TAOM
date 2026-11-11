@@ -28,10 +28,13 @@ internal sealed class TitleCardVM : ViewModel
         TitleText = TitleNames.Of(title, b);
         HolderText = RealmsText.HolderName(b, title);
         IsSelected = node.IsFocus;
+        IsLands = node.IsLands;
         HasFolded = node.FoldedLordships > 0;
         FoldedText = HasFolded ? FoldedLordships(node.FoldedLordships) : string.Empty;
         _link = TitleVisuals.Link(title);
         _hint = $"{RealmsText.Rank(title.Rank)}\n{new TextObject("{=realms_ui_holder}Held by right")}: {HolderText}";
+        if (IsLands)
+            _hint += "\n" + new TextObject("{=realms_tree_lands}Lies under the realm above once it is formed.");
     }
 
     [DataSourceProperty] public BannerImageIdentifierVM ImageIdentifier { get; }
@@ -40,6 +43,18 @@ internal sealed class TitleCardVM : ViewModel
     [DataSourceProperty] public bool HasFolded { get; }
     [DataSourceProperty] public string FoldedText { get; }
     [DataSourceProperty] public bool IsSelected { get; }
+
+    /// <summary>Drawn under a vacant titular realm without being its vassal yet (<see cref="TitleTreeNode.IsLands"/>): faded.</summary>
+    [DataSourceProperty] public bool IsLands { get; }
+
+    /// <summary>How opaque a lands card's pennant and text are; the card itself and its hover stay as they are.</summary>
+    public const float LandsAlpha = 0.45f;
+
+    /// <summary>
+    /// The pennant's and text's <c>Brush.GlobalAlphaFactor</c>: <see cref="LandsAlpha"/> for a lands card, else 1. Brush
+    /// widgets fade through their brush; <c>AlphaFactor</c> reaches only a widget's own sprite.
+    /// </summary>
+    [DataSourceProperty] public float ContentAlpha => IsLands ? LandsAlpha : 1f;
 
     /// <summary>Closes the tree, then opens the title's page on the next tick, once the popup layer is gone.</summary>
     public void ExecuteLink()

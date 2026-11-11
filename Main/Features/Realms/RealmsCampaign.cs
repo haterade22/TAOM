@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
+using TAOM.Core.Domain;
 using TAOM.Features.Realms.Domain.Config;
 using TAOM.Features.Realms.Domain.Persistence;
 using TAOM.Features.Realms.Domain.Services;
@@ -23,9 +24,16 @@ public sealed partial class RealmsCampaign
 {
     private const string ChunkCountKey = "taom_realms_chunks";
     private const string ChunkKeyPrefix = "taom_realms_chunk_";
+    private const string KingdomNamesKey = "taom_realms_kingdom_names";
+
+    private readonly KingdomNames _kingdomNames = new();
 
     private readonly IRealmsPopupAdapter _popups;
     private readonly IRealmsSettingsProvider _settings;
+
+    /// <summary>Told of each kingdom <see cref="KingdomNames"/> renames (the realm names on the map letter it anew).</summary>
+    private readonly IKingdomRenameListener[] _renameListeners;
+    private readonly Action<string> _renamed;
 
     /// <summary>The title styles option the lord party names were last built with; a change clears them.</summary>
     private bool _stylesOn = true;
@@ -43,11 +51,14 @@ public sealed partial class RealmsCampaign
     private int _savedVersion = RealmsSaveFormat.Version;
     private bool _needsUpgrade;
 
-    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority, IRealmsSettingsProvider? settings = null)
+    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority, IRealmsSettingsProvider? settings = null,
+        IEnumerable<IKingdomRenameListener>? renameListeners = null)
     {
         _popups = popups;
         _settings = settings ?? new RealmsSettingsProvider();
         _isAuthority = isAuthority;
+        _renameListeners = renameListeners?.ToArray() ?? Array.Empty<IKingdomRenameListener>();
+        _renamed = TellRenamed;
         _service.Clock = () => CampaignTime.Now.ToDays;
         LiegeArmyDiscount.Behavior = this;
     }
@@ -104,6 +115,8 @@ public sealed partial class RealmsCampaign
             ApplyCrownedBannersOnLoad();
         }
 
+        UpdateKingdomNames();
+
         // Party names may have been built before the saved titles were read.
         _stylesOn = _settings.TitleStyles;
         PartyNames.Refresh();
@@ -132,15 +145,15 @@ public sealed partial class RealmsCampaign
         _needsUpgrade = false;
         var warnings = new List<string>();
         var quiet = new List<TitleEvent>(_service.Migrate(_savedVersion, _leaders));
-        var unions = _service.AddMissingUnions(warnings);
+        var added = _service.AddMissingTitles(warnings);
         var claims = _service.ApplyStartingClaims(id => Hero.Find(id)?.IsAlive == true);
         quiet.AddRange(_service.EnsureOffices(_claimWorld));
         foreach (var warning in warnings)
             Debug.Print($"[TAOM.Realms] {warning}");
         foreach (var e in quiet)
             Debug.Print($"[TAOM.Realms] update {e.Kind}/{e.Reason} {e.TitleId}: {e.PreviousHolderId ?? "-"} -> {e.HeroId ?? "-"}");
-        if (unions > 0 || claims > 0)
-            Debug.Print($"[TAOM.Realms] added {unions} unions and {claims} starting claims.");
+        if (added > 0 || claims > 0)
+            Debug.Print($"[TAOM.Realms] added {added} titles (titular realms and unions) and {claims} starting claims.");
         _savedVersion = RealmsSaveFormat.Version;
         ForgetBonds();
         PartyNames.Refresh();
@@ -170,6 +183,7 @@ public sealed partial class RealmsCampaign
                 Debug.Print($"[TAOM.Realms] start grant {e.TitleId}: {e.PreviousHolderId} -> {e.HeroId}");
             _needsUpgrade = true;
             Upgrade(); // starting claims and offices
+            UpdateKingdomNames();
         }
 
         PartyNames.Refresh();
@@ -183,17 +197,73 @@ public sealed partial class RealmsCampaign
         ResolvePending();
         if (_settings.FamilyGrants)
             Report(GrantToChildren()); // children who came of age, and saves made before grants existed
+        UpdateKingdomNames(); // a ruler changed in a way no title event shows (a new kingdom, a clan leaving)
     }
 
-    /// <summary>The weekly work: what titles do to their holders, the offices, then the AI's claims and new titles.</summary>
+    /// <summary>
+    /// Moves a titular realm's lands to it or back (<see cref="RealmsService.SyncTitularLands"/>: Khazad-dûm formed, or
+    /// fallen vacant), then names each kingdom after the higher title its ruler holds, or gives it its own name back
+    /// (<see cref="KingdomNames"/>).
+    /// </summary>
+    private void UpdateKingdomNames()
+    {
+        if (!_service.IsInitialized || IsDisabled || !_isAuthority())
+            return;
+        var moved = _service.SyncTitularLands();
+        if (moved > 0)
+        {
+            ForgetBonds();
+            Debug.Print($"[TAOM.Realms] {moved} titles moved to or from a titular realm.");
+        }
+        _kingdomNames.Update(_service, Config, _renamed);
+    }
+
+    private void TellRenamed(string kingdomId)
+    {
+        foreach (var listener in _renameListeners)
+        {
+            try
+            {
+                listener.OnKingdomRenamed(kingdomId);
+            }
+            catch (Exception ex)
+            {
+                // A listener that throws must not stop the other kingdoms being renamed.
+                Debug.Print($"[TAOM.Realms] {listener.GetType().Name} failed on the rename of {kingdomId}: {ex.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// The weekly work: what titles do to their holders, the offices, then the AI's claims and new titles. One sweep
+    /// (<see cref="ClaimWorld.BeginSweep"/>), and the time each part took goes to the log, so a slow week shows where.
+    /// </summary>
     private void OnWeeklyTick()
     {
         if (!_service.IsInitialized || IsDisabled || !_isAuthority())
             return;
-        ForgetBonds();
-        WeeklyConsequences();
-        WeeklyOffices();
-        WeeklyAiClaims();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        long consequences, offices, claims;
+        IReadOnlyList<TitleEvent> events;
+        _claimWorld.BeginSweep();
+        try
+        {
+            ForgetBonds();
+            WeeklyConsequences();
+            consequences = clock.ElapsedMilliseconds;
+            WeeklyOffices();
+            offices = clock.ElapsedMilliseconds;
+            events = WeeklyAiClaims();
+            claims = clock.ElapsedMilliseconds;
+        }
+        finally
+        {
+            _claimWorld.EndSweep();
+        }
+
+        Report(events, everyParty: false);
+        Debug.Print($"[TAOM.Realms] weekly tick {clock.ElapsedMilliseconds} ms: consequences {consequences}, offices {offices - consequences}, "
+                    + $"AI titles and claims {claims - offices}, report {clock.ElapsedMilliseconds - claims} ({events.Count} events).");
     }
 
     /// <summary>AI clan leaders hand lesser titles to their grown children. The player's clan grants nothing by itself.</summary>
@@ -243,6 +313,7 @@ public sealed partial class RealmsCampaign
         ResolvePending();
         Report(_service.UpdateOffices(_claimWorld, null)); // a Steward's office follows the new ruler at once
         ApplyFormerBanners(kingdom, formerRulingClan);
+        UpdateKingdomNames();
     }
 
     private void ResolvePending()
@@ -267,13 +338,24 @@ public sealed partial class RealmsCampaign
         }
     }
 
-    private void Report(IReadOnlyList<TitleEvent> events)
+    private void Report(IReadOnlyList<TitleEvent> events) => Report(events, everyParty: true);
+
+    /// <param name="everyParty">
+    /// Clear every lord party's name; false clears only those of the events' holders, for events that record every
+    /// change of holder they made (the AI's claims and new titles).
+    /// </param>
+    private void Report(IReadOnlyList<TitleEvent> events, bool everyParty)
     {
         if (events.Count == 0)
             return;
         TitleEventReporter.Report(events, _service.Catalog, Config);
         ForgetBonds();
-        PartyNames.Refresh(); // a holder changed, so a party's style may have
+        // A holder changed, so a party's style may have.
+        if (everyParty)
+            PartyNames.Refresh();
+        else
+            PartyNames.Refresh(events);
+        UpdateKingdomNames();
     }
 
     internal void SyncData(IDataStore dataStore)
@@ -297,10 +379,17 @@ public sealed partial class RealmsCampaign
             var chunk = chunks[i];
             dataStore.SyncData(ChunkKeyPrefix + i, ref chunk);
         }
+
+        var names = _kingdomNames.Save();
+        dataStore.SyncData(KingdomNamesKey, ref names);
     }
 
     private void Load(IDataStore dataStore)
     {
+        var names = string.Empty;
+        dataStore.SyncData(KingdomNamesKey, ref names);
+        _kingdomNames.Load(names);
+
         var count = 0;
         dataStore.SyncData(ChunkCountKey, ref count);
         if (count <= 0)

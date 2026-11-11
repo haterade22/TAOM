@@ -19,6 +19,9 @@ public interface IClaimWorld
 
     /// <summary>The realm's ruler; null when the realm is gone.</summary>
     string? RulerOf(string kingdomId);
+
+    /// <summary>The hero's culture id; null when unknown.</summary>
+    string? CultureOf(string heroId);
 }
 
 /// <summary>Who wants a claim: a hero, their clan and realm, and the towns and castles their clan owns.</summary>
@@ -95,6 +98,9 @@ public enum ClaimRefusal
 
     /// <summary>This throne is only restored by an heir with an ancestral claim, never formed.</summary>
     RestoreOnly,
+
+    /// <summary>Only a hero of one of its peoples may form or press this titular realm (dwarves for Khazad-dûm).</summary>
+    WrongCulture,
 }
 
 /// <summary>How a granted title passes.</summary>

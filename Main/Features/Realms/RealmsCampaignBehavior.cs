@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TAOM.Core.Domain;
 using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.Realms;
@@ -10,8 +12,9 @@ namespace TAOM.Features.Realms;
 /// </summary>
 public sealed class RealmsCampaignBehavior : CampaignBehaviorBase
 {
-    public RealmsCampaignBehavior(IRealmsPopupAdapter popups, ICoopSessionProvider coop, IRealmsSettingsProvider settings) =>
-        Realms = new RealmsCampaign(popups, () => coop.IsAuthority, settings);
+    public RealmsCampaignBehavior(IRealmsPopupAdapter popups, ICoopSessionProvider coop, IRealmsSettingsProvider settings,
+        IEnumerable<IKingdomRenameListener>? renameListeners = null) =>
+        Realms = new RealmsCampaign(popups, () => coop.IsAuthority, settings, renameListeners);
 
     public static RealmsCampaignBehavior? Current =>
         TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<RealmsCampaignBehavior>();

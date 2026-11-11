@@ -72,7 +72,28 @@ public static class RealmsConfigXml
             var id = Required(union, "id", warnings);
             var members = union.Elements("Member").Select(m => Required(m, "title", warnings)).Where(t => t != null).Select(t => t!).ToList();
             if (id != null)
+            {
                 config.Unions.Add(new UnionConfig(id, (string?)union.Attribute("name") ?? id, members));
+                ReadRealmName(union, "u_" + id, config);
+            }
+        }
+
+        foreach (var realm in Children(root, "TitularRealms", "Realm"))
+        {
+            var id = Required(realm, "id", warnings);
+            var lands = Required(realm, "lands", warnings);
+            if (id == null || lands == null)
+                continue;
+            if (config.TitularRealms.Any(r => r.Id == id))
+            {
+                warnings.Add($"<Realm id=\"{id}\"> is defined twice; the second is ignored.");
+                continue;
+            }
+
+            var titular = new TitularRealmConfig(id, (string?)realm.Attribute("name") ?? id, (string?)realm.Attribute("culture"),
+                (string?)realm.Attribute("liege"), lands, Words(realm, "cultures"), ReadLaws(realm, config.DefaultLaws, warnings));
+            config.TitularRealms.Add(titular);
+            ReadRealmName(realm, titular.TitleId, config);
         }
 
         foreach (var claim in Children(root, "StartingClaims", "Claim"))
@@ -146,7 +167,10 @@ public static class RealmsConfigXml
             var id = Required(high, "id", warnings);
             var members = high.Elements("Member").Select(m => (string?)m.Attribute("kingdom")).Where(k => !string.IsNullOrEmpty(k)).Select(k => k!).ToList();
             if (id != null)
+            {
                 config.HighTitles.Add(new HighTitleConfig(id, (string?)high.Attribute("name") ?? id, members, ReadLaws(high, config.DefaultLaws, warnings)));
+                ReadRealmName(high, "e_" + id, config);
+            }
         }
 
         foreach (var duchy in Children(root, "Duchies", "Duchy"))
@@ -419,6 +443,14 @@ public static class RealmsConfigXml
             return rule;
         warnings.Add($"<Prefix name=\"{name}\"> sets no condition and would rename every title; ignored. Use <RankNames> for that.");
         return null;
+    }
+
+    /// <summary>A realm_name attribute: the name a kingdom takes while its ruler's highest title is this one.</summary>
+    private static void ReadRealmName(XElement element, string titleId, RealmsConfig config)
+    {
+        var name = (string?)element.Attribute("realm_name");
+        if (!string.IsNullOrWhiteSpace(name))
+            config.RealmNames[titleId] = name!;
     }
 
     /// <summary>The settlement ids of a duchy's &lt;County settlement="..."/&gt; or &lt;Barony settlement="..."/&gt; children.</summary>

@@ -274,7 +274,8 @@
       <Member kingdom="southrhovanion" />
     </HighTitle>
     <!-- The orc holds under the mountains: whoever masters them all rules them all. -->
-    <HighTitle id="misty_mountains" name="{=realms_title_misty_mountains}the Misty Mountains" succession="Elective" gender="Absolute">
+    <HighTitle id="misty_mountains" name="{=realms_title_misty_mountains}the Misty Mountains" succession="Elective" gender="Absolute"
+               realm_name="{=realms_realm_misty_mountains}Misty Mountains">
       <Member kingdom="gundabad" />
       <Member kingdom="goblin" />
       <Member kingdom="mistymountainorcs" />
@@ -288,11 +289,27 @@
   -->
   <Unions>
     <!-- Elessar's realm of Gondor and Arnor, named "Reunited Kingdom" by its prefix. -->
-    <Union id="reunited" name="{=realms_title_reunited}Gondor and Arnor">
+    <Union id="reunited" name="{=realms_title_reunited}Gondor and Arnor" realm_name="{=realms_realm_reunited}Reunited Kingdom">
       <Member title="k_empire_w" />
       <Member title="e_arnor" />
     </Union>
   </Unions>
+
+  <!--
+    Titular realms: a realm title (rank Kingdom, id k_ + id) of no kingdom of the game, under its liege title. It has no
+    lands of its own and starts vacant; it is formed, or pressed by a claim, by holding more than half of the counties of
+    its lands title, and only by a hero of one of its cultures (none listed: anyone). A save made before it existed gets
+    it on its next load.
+
+    Realm names: a kingdom whose ruler holds a higher title above its own (Durin's Folk over Erebor) takes that title's
+    name, or its realm_name when it sets one (HighTitle, Union and Realm), and gets its own name back when the title is
+    lost. A kingdom made in the campaign takes the name of the highest such title its ruler holds.
+  -->
+  <TitularRealms>
+    <!-- The dwarves' lost mansion: taken back from the orcs of Moria by the sword, never restored by a claim of blood. -->
+    <Realm id="khazad_dum" name="{=realms_title_khazad_dum}Khazad-dûm" culture="erebor" liege="e_durins_folk"
+           lands="k_mistymountainorcs" cultures="erebor eredluin" succession="Primogeniture" gender="Agnatic" />
+  </TitularRealms>
 
   <!--
     Starting claims: claims heroes hold from the start, given on every load to a living hero who neither holds nor

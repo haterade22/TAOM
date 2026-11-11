@@ -138,6 +138,7 @@ internal static class ClaimActions
         ClaimRefusal.NotServing => Text("{=realms_ui_refuse_serving}The claimant must serve its realm."),
         ClaimRefusal.RestoreOnly => Text("{=realms_ui_refuse_restore_only}Only the heir of its old kings can take up this throne."),
         ClaimRefusal.NotVacant => Text("{=realms_ui_refuse_not_vacant}It is not vacant."),
+        ClaimRefusal.WrongCulture => Text("{=realms_ui_refuse_culture}Only its own people can take up this title."),
         _ => Text("{=realms_ui_refuse}Not possible."),
     };
 
