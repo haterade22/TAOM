@@ -146,7 +146,7 @@ markedly bigger animal relative to its rider than a horse does, which is the int
 | Constant | Value | Rationale |
 |---|---|---|
 | `AttackMinDamage` / `AttackMaxDamage` | 40 / 50 | Since 2026-09-18 (Mike; was 18 / 28, set while the attack still swept every enemy in the radius). One enemy per butt, every 35 s. The butt IGNORES armor (`CustomAttacksUtils.TakeDamage` writes the inflicted damage directly), so 40-50 lands in full on an Armored Troll; for scale a mid-tier sword swings 25-35 before armor, the warg bite tops out near 60, the elephant trample is 50-100 |
-| `AttackCooldownSeconds` | 35.0 | Raised to 35.0 on 2026-11-11 (Mike). Was 10.0 (level with the elephant's trample), and 6.0 before that, which played as overpowered, see below |
+| `AttackCooldownSeconds` | 35.0 | Raised to 35.0 on 2026-11-11 (Mike). Was 10.0 (level with the elephant's trample), and 6.0 before that, which played as overpowered, see below. The elk and Animalia follow this value, and their tests fail if it differs |
 | `AttackBlowMagnitude` | 35f | Below the elephant's 50f: a horse-scale creature should stagger, not launch |
 | `AttackTriggerRange` / `AttackRadius` | 1.5f / 2f | Was 2.5f / 3.5f, near the unscaled elephant's 3f / 4f. See below |
 | `AttackSingleTarget` | true | The head-butt hits ONE enemy inside `AttackRadius`, the one the ram faces most squarely (nearer on a tie, `SingleVictimPick`). Radial until 2026-09-18; the elephant and mumakil tramples stay radial. A shield-blocker straight ahead takes the butt (12 damage at most, no knockdown) and nobody else is hit. A mounted enemy is picked as the rider, never the horse: in the area version the blow log shows the butt hitting mounted lords and never their horses |

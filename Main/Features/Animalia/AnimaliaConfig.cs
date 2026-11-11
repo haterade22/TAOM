@@ -41,9 +41,10 @@ public static class AnimaliaConfig
     /// <summary>The animal must face its target: dot(toEnemy, lookDir) above this (elephant-like parity).</summary>
     public const float AttackFacingDot = 0.25f;
 
-    /// <summary>Seconds between attacks: the great elk's and the ram's 10 s, well past both clips (the elk's
-    /// attack_front_low plays 2.5 s, the moose's attack_head_01 1.57 s: tools/gen_animalia_anim_clips.ps1).</summary>
-    public const double AttackCooldownSeconds = 10.0;
+    /// <summary>Seconds between attacks: the great elk's and the ram's 35 s (Mike, 2026-11-11; all three were 10 s),
+    /// well past both clips (the elk's attack_front_low plays 2.5 s, the moose's attack_head_01 1.57 s:
+    /// tools/gen_animalia_anim_clips.ps1). <c>Cooldown_FollowsTheWarRam</c> pins the match.</summary>
+    public const double AttackCooldownSeconds = 35.0;
 
     /// <summary>One blow each. The elk hits as the great elk does (60); the moose, the heavier animal, harder (70).
     /// Armour does not reduce it (CustomAttacksUtils.TakeDamage writes it directly); a shield block quarters it.</summary>
