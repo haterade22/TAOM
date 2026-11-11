@@ -68,3 +68,25 @@ internal sealed class SteppingStampClock : IStampClock
     /// <summary>1000 ticks a second, so a tick is a millisecond.</summary>
     public long Frequency => 1000;
 }
+
+/// <summary>Records each rescue try and answers with a set result (#894 phase 2).</summary>
+internal sealed class FakeLostFootingRescueAdapter : ILostFootingRescueAdapter
+{
+    public List<(object Handle, string Move, float Meters, float Step, bool NeedLand)> Calls { get; } = new List<(object, string, float, float, bool)>();
+
+    public RescueResult Near { get; set; } = new RescueResult { Moved = true, Meters = 1f, ToX = 0f, ToY = 0f, ToZ = 0f };
+
+    public RescueResult Formation { get; set; } = new RescueResult { Moved = true, Meters = 20f, ToX = 0f, ToY = 0f, ToZ = 0f };
+
+    public RescueResult MoveNear(object handle, float maxMeters, float maxStep, bool needLand)
+    {
+        Calls.Add((handle, "near", maxMeters, maxStep, needLand));
+        return Near;
+    }
+
+    public RescueResult MoveToFormation(object handle, float minPlayerMeters, bool needLand)
+    {
+        Calls.Add((handle, "formation", minPlayerMeters, float.NaN, needLand));
+        return Formation;
+    }
+}

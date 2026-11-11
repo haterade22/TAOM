@@ -95,7 +95,7 @@ public sealed class FrontEndMovieService
                 return Settings.CustomReviewStage ? Themed(movieName, ReviewMovie, CreationFrame) : null;
 
             case "BannerEditor" when dataSourceTypeName == "BannerEditorVM":
-                return Settings.CustomBannerEditor && _state.IsInCharacterCreation() ? Themed(movieName, BannerEditorMovie, CreationFrame) : null;
+                return Settings.CustomBannerEditor ? Themed(movieName, BannerEditorMovie, CreationFrame) : null;
 
             case "CharacterCreationClanNamingStage" when dataSourceTypeName == "CharacterCreationClanNamingStageVM":
                 return Settings.CustomClanNaming ? Themed(movieName, ClanNamingMovie, CreationFrame) : null;

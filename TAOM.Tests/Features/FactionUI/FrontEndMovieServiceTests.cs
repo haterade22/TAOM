@@ -135,15 +135,27 @@ public class FrontEndMovieServiceTests
         Assert.IsTrue(swap!.HasVanillaFallback);
     }
 
-    [DataTestMethod]
-    [DataRow("FaceGen", "FaceGenVM")]
-    [DataRow("BannerEditor", "BannerEditorVM")]
-    public void BeginLoad_TheBarberOrTheCampaignBannerEditor_StaysVanilla(string movie, string viewModel)
+    [TestMethod]
+    public void BeginLoad_TheBarber_StaysVanilla()
     {
         _state.IsInCharacterCreation().Returns(false);
 
-        Assert.IsNull(_sut.BeginLoad(movie, viewModel));
+        Assert.IsNull(_sut.BeginLoad("FaceGen", "FaceGenVM"));
         Assert.IsFalse(_adapter.IsSpriteRegistered("cc_panel_bg"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_TheCampaignBannerEditor_SwapsToTheLayeredEditor()
+    {
+        // The clan banner editor in a running campaign (BannerEditorState) uses the same vanilla BannerEditorVM and
+        // movie as character creation, so it gets the same layered editor and frame.
+        _state.IsInCharacterCreation().Returns(false);
+
+        var swap = _sut.BeginLoad("BannerEditor", "BannerEditorVM");
+
+        Assert.AreEqual(FrontEndMovieService.BannerEditorMovie, swap!.TargetName);
+        Assert.AreEqual(CharacterCreation, swap.Holds);
+        Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
     }
 
     [TestMethod]

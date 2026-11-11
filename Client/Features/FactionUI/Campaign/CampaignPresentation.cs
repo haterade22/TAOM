@@ -1,6 +1,7 @@
 using System;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Engine.GauntletUI;
@@ -38,6 +39,8 @@ internal static class CampaignPresentation
                 if (movie == "TAOMEncyclopediaItemList" && source != null)
                     return new EncyclopediaListScreenVM(source);
                 break;
+            case "TAOMBannerEditor" when source is BannerEditorVM editor:
+                return new TaomBannerEditorVM(editor);
             case "TAOMCharacterDeveloper" when source != null:
                 return new CharacterScreenVM(source);
             case "TAOMMapBar" when source is MapBarVM map:

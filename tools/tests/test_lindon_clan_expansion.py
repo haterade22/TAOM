@@ -97,7 +97,7 @@ def sigil_layers(case, owner, key, icons):
     layers = [parts[i:i + 10] for i in range(0, len(parts), 10)]
     case.assertGreater(len(layers), 1, f"{owner} flies no sigil")
     for layer in layers[1:]:
-        case.assertRegex(icons.get(layer[0], "undefined"), r"^\{=!\}TAOM (Noldor|Sindar|Silvan|Lindon) ", (owner, layer[0]))
+        case.assertRegex(icons.get(layer[0], "undefined"), r"^\{=taom_banner_category_elven\}", (owner, layer[0]))
     return tuple(layer[0] for layer in layers[1:])
 
 

@@ -74,7 +74,8 @@ public class LongDefeatDirectorTests
     }
 
     private static Rig NewRig(RunOptions? options = null, RunRules? rules = null, int gold = 600, KeepPoint? keep = null,
-        LongDefeatRunRecords? records = null, RunProvenance? provenance = null, MusterPoints? muster = null)
+        LongDefeatRunRecords? records = null, RunProvenance? provenance = null, MusterPoints? muster = null,
+        IReadOnlyDictionary<string, int>? bounties = null)
     {
         var rig = new Rig();
         var waves = new WavePlan(
@@ -97,7 +98,7 @@ public class LongDefeatDirectorTests
             rules ?? RunRules.Default with { PreparationSeconds = 1f, IntermissionSeconds = 1f },
             options ?? RunOptions.Default)
         {
-            Bounties = new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
+            Bounties = bounties ?? new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
             Keep = keep,
             Muster = muster,
             Provenance = provenance ?? RunProvenance.Unknown,
@@ -626,6 +627,23 @@ public class LongDefeatDirectorTests
     }
 
     // ---- Run end ----
+
+    // A story mission (#1105) runs this machine with no bounty table and no shop, so its books have nothing to balance. A fail here
+    // would raise checks_fail on every story win (#1105 review, F2).
+    [TestMethod]
+    public void ARunWithNoBountyTable_SkipsTheGoldCheck_NeverFailsIt()
+    {
+        var rig = NewRig(new RunOptions { StopAfterWaves = 1 }, bounties: new Dictionary<string, int>());
+        rig.StartAndSpawnWave();
+        rig.KillAttackers(110);
+
+        rig.Tick();
+
+        Assert.AreEqual(RunEndReason.TargetReached, rig.Director.Result!.Reason);
+        Assert.IsTrue(rig.Outcomes.Lines.Any(l => l.StartsWith("skip " + LongDefeatChecks.GoldId + " ") && l.Contains("reason=no-bounties")),
+            string.Join("\n", rig.Outcomes.Lines));
+        Assert.IsFalse(rig.Outcomes.Lines.Any(l => l.StartsWith("fail " + LongDefeatChecks.GoldId)));
+    }
 
     [TestMethod]
     public void ARunThatClearsItsTarget_WritesTheRunEndChecksAndTheReport()

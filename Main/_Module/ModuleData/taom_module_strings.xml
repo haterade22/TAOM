@@ -4968,5 +4968,39 @@
 	<string id="taom_realms_mcm_family_grants_hint" text="{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on." />
 	<string id="taom_realms_mcm_title_styles" text="{=taom_realms_mcm_title_styles}Lords Styled by Their Titles" />
 	<string id="taom_realms_mcm_title_styles_hint" text="{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on." />
+	<string id="taom_fui_banner_layers" text="{=taom_fui_banner_layers}LAYERS" />
+	<string id="taom_fui_banner_layer_background" text="{=taom_fui_banner_layer_background}Background" />
+	<string id="taom_fui_banner_layer_sigil" text="{=taom_fui_banner_layer_sigil}Sigil {INDEX}" />
+	<string id="taom_fui_banner_add" text="{=taom_fui_banner_add}ADD" />
+	<string id="taom_fui_banner_copy" text="{=taom_fui_banner_copy}COPY" />
+	<string id="taom_fui_banner_raise" text="{=taom_fui_banner_raise}RAISE" />
+	<string id="taom_fui_banner_lower" text="{=taom_fui_banner_lower}LOWER" />
+	<string id="taom_fui_banner_delete" text="{=taom_fui_banner_delete}DELETE" />
+	<string id="taom_fui_banner_position_x" text="{=taom_fui_banner_position_x}POSITION X" />
+	<string id="taom_fui_banner_position_y" text="{=taom_fui_banner_position_y}POSITION Y" />
+	<string id="taom_fui_banner_width" text="{=taom_fui_banner_width}WIDTH" />
+	<string id="taom_fui_banner_height" text="{=taom_fui_banner_height}HEIGHT" />
+	<string id="taom_fui_banner_rotation" text="{=taom_fui_banner_rotation}ROTATION" />
+	<string id="taom_fui_banner_mirror" text="{=taom_fui_banner_mirror}MIRROR" />
+	<string id="taom_fui_banner_outline" text="{=taom_fui_banner_outline}OUTLINE" />
+	<string id="taom_fui_banner_centre" text="{=taom_fui_banner_centre}CENTRE" />
+	<string id="taom_fui_banner_fit" text="{=taom_fui_banner_fit}RESET" />
+	<string id="taom_fui_banner_lock" text="{=taom_fui_banner_lock}LOCK RATIO" />
+	<string id="taom_fui_banner_color_primary" text="{=taom_fui_banner_color_primary}PRIMARY" />
+	<string id="taom_fui_banner_color_secondary" text="{=taom_fui_banner_color_secondary}SECONDARY" />
+	<string id="taom_fui_banner_swap" text="{=taom_fui_banner_swap}SWAP" />
+	<string id="taom_fui_banner_preview_shield" text="{=taom_fui_banner_preview_shield}SHIELD" />
+	<string id="taom_fui_banner_preview_pennant" text="{=taom_fui_banner_preview_pennant}PENNANT" />
+	<string id="taom_banner_category_dunedain" text="{=taom_banner_category_dunedain}Dúnedain" />
+	<string id="taom_banner_category_adunaic" text="{=taom_banner_category_adunaic}Adûnaic" />
+	<string id="taom_banner_category_haradrim" text="{=taom_banner_category_haradrim}Haradrim" />
+	<string id="taom_banner_category_easterling" text="{=taom_banner_category_easterling}Easterling" />
+	<string id="taom_banner_category_elven" text="{=taom_banner_category_elven}Elven" />
+	<string id="taom_banner_category_evil" text="{=taom_banner_category_evil}Forces of Evil" />
+	<string id="taom_banner_category_northmen" text="{=taom_banner_category_northmen}Northmen" />
+	<string id="taom_banner_category_orcish" text="{=taom_banner_category_orcish}Orcish" />
+	<string id="taom_banner_category_dwarven" text="{=taom_banner_category_dwarven}Dwarven" />
+	<string id="taom_banner_category_dunlending" text="{=taom_banner_category_dunlending}Dunlending" />
+	<string id="taom_banner_category_misc" text="{=taom_banner_category_misc}Miscellaneous" />
 
 </strings>

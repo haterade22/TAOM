@@ -1,6 +1,6 @@
 ---
 name: localize
-description: Use after adding player-facing text in C#, data XML or XSLT. Wraps with {=KEY}, registers the English, validates. The translation XMLs (Languages/<LANG>/) are the project lead's: never seed, translate or edit them.
+description: "Use for player-facing text in C#, XML or XSLT. Wraps with {=KEY}, registers English, validates. Translation XMLs (Languages/<LANG>/) are the project lead's: never seed, translate or edit them."
 argument-hint: [c#|xml-file|xslt]
 ---
 

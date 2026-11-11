@@ -86,6 +86,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.TeamAIComponent", "TeamAIComponent", "_currentTactic", "Field", "TeamTacticProbe.cs:30")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:23")]
+    // --- Layered banner editor: the view's refresh callback it calls after each edit (TaomBannerEditorVM.cs) ---
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.BannerEditorVM", "BannerEditorVM", "_refresh", "Field", "TaomBannerEditorVM.cs:39")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:72")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---

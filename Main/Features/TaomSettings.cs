@@ -1976,7 +1976,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
     [SettingPropertyBool("Themed Banner Editor", Order = 4, RequireRestart = false,
-        HintText = "Kysaro's reskin of the banner editor during character creation. The banner editor in a running campaign stays vanilla. Takes effect the next time it opens.")]
+        HintText = "The themed, layered banner editor, both during character creation and in a running campaign. Takes effect the next time it opens.")]
     public bool FrontEndCustomBannerEditor { get; set; } = true;
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
@@ -2610,8 +2610,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Lost Footing", GroupOrder = 64)]
     [SettingPropertyBool("Lost Footing Census", Order = 0, RequireRestart = false,
-        HintText = "Counts soldiers, mounts and creatures that are stuck in a battle, standing off the walkable ground or wading in water without moving, and writes what it finds to the log with a [LostFooting] tag, with a summary when the battle ends. It only watches: it never moves or changes anything in the battle. Field battles, sieges and sally-outs. Default: on.")]
+        HintText = "Counts soldiers, mounts and creatures that are stuck in a battle, standing off the walkable ground or wading in water without moving, and writes what it finds to the log with a [LostFooting] tag, with a summary when the battle ends. It only watches: it never moves or changes anything in the battle. With the rescue on, the start line and the summary are still written. Field battles, sieges and sally-outs. Default: on.")]
     public bool LostFootingCensus { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Lost Footing")]
+    [SettingPropertyBool("Lost Footing Rescue", Order = 1, RequireRestart = false,
+        HintText = "Moves a soldier who stays stuck back to where he can walk: off the walkable ground or still in water for 10 seconds, he steps to the nearest good spot within 6 m at his own height; still stuck after 30 seconds, he moves to his place in his formation while you are at least 25 m away. A riderless horse gets the short step only. Never the player, fleeing men, creatures, men working a ladder or machine, or men holding a set post or waiting at a ladder. Field battles, sieges and sally-outs, not co-op. Default: on.")]
+    public bool LostFootingRescue { get; set; } = true;
     // --- Good Deeds (docs/features/good-deeds.md, #864) ---
     //
     // Relation earned by releasing a captured lord, donating a hero prisoner to a settlement and winning a town's tournament.

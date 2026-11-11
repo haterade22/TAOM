@@ -130,6 +130,7 @@ public class LostFootingCensusLineTests
         {
             Clock = 1234.4f, SceneId = "some_scene", Recovered = 2, Removed = 1, AtEnd = 0, LongestEpisode = 45.25f,
             PeakOffMesh = 7, PeakConfirmed = 5, PeakWaterStill = 2, PeakLandBelow = 1, Probes = 9000, TotalMs = 12.345, MaxTickMs = 0.5,
+            Rescued = 4, Freed = 2, RescueRefused = 3,
         };
         s.EpisodeKinds[(int)AgentKind.Soldier] = 2;
         s.EpisodeKinds[(int)AgentKind.Creature] = 1;
@@ -137,8 +138,29 @@ public class LostFootingCensusLineTests
         Assert.AreEqual(
             "[LostFooting] summary scene=some_scene time=1234s episodes=3 recovered=2 removed=1 atEnd=0 longest=45.3s " +
             "peak offmesh=7 confirmed=5 waterstill=2 landbelowwater=1 soldier=2 router=0 mount=0 creature=1 object=0 other=0 " +
-            "cost probes=9000 totalMs=12.35 maxTickMs=0.50",
+            "cost probes=9000 totalMs=12.35 maxTickMs=0.50 rescued=4 freed=2 refused=3",
             CensusLine.Summary(s));
+    }
+
+    [TestMethod]
+    public void Rescue_AMove_NamesTheTierTheCauseTheKindAndBothEnds()
+    {
+        var e = new StrandEntry { Kind = AgentKind.Soldier, X = 1f, Y = 2f, Z = 3f };
+        var r = new RescueResult { Moved = true, Meters = 0.84f, ToX = 1.5f, ToY = 2.5f, ToZ = 3.25f };
+
+        Assert.AreEqual(
+            "[LostFooting] rescue t=12s move=near cause=offmesh kind=soldier result=moved meters=0.8 from=(1.0,2.0,3.0) to=(1.5,2.5,3.3)",
+            CensusLine.Rescue(new RescuePlan(RescueMove.Near, RescueCause.OffMesh, false), e, r, 12.4f));
+    }
+
+    [TestMethod]
+    public void Rescue_ARefusal_NamesItsReason()
+    {
+        var e = new StrandEntry { Kind = AgentKind.RiderlessMount, X = 1f, Y = 2f, Z = 3f };
+
+        Assert.AreEqual(
+            "[LostFooting] rescue t=40s move=formation cause=water kind=mount result=refused reason=player-near from=(1.0,2.0,3.0)",
+            CensusLine.Rescue(new RescuePlan(RescueMove.Formation, RescueCause.Water, true), e, RescueResult.Refused("player-near"), 40f));
     }
 
     [DataTestMethod]
