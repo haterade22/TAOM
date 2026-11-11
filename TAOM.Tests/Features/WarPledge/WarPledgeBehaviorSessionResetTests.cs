@@ -93,6 +93,17 @@ public class WarPledgeBehaviorSessionResetTests
         Assert.AreEqual(110, store.Get<int>(WarPledgeBehavior.NextCourtingDayKey));
     }
 
+    // The two keys and the "no courting day" value are written into every save. The tests here read them
+    // through the same constants, so a rename would pass them all and load an existing save with no pledge,
+    // and another sentinel would read a saved -1 as a courting day.
+    [TestMethod]
+    public void SaveFormat_TheKeysAndTheNoCourtingDayValue_AreTheOnesASaveHolds()
+    {
+        Assert.AreEqual("_taom_war_pledge_rows", WarPledgeBehavior.RowsKey);
+        Assert.AreEqual("_taom_war_pledge_nextCourtingDay", WarPledgeBehavior.NextCourtingDayKey);
+        Assert.AreEqual(-1, WarPledgeStore.NoCourtingDay);
+    }
+
     [TestMethod]
     public void SaveWithoutAPledge_LoadsWithoutOne()
     {

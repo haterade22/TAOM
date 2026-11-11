@@ -244,6 +244,12 @@ first target only, so diff its other targets by hand (#1038): `grep -rlE 'IEnume
 10. Write the Gates section of `docs/migration/v<ver>-impact.md` from the final `/verify` output,
     after the commit, in the past tense, and name the commit each number comes from. A later commit
     that changes one of those numbers rewrites the whole section, not only its own clause.
+11. Before the first start on the new build, move each live
+    `Modules/<module>/Shaders/D3D11/compressed_shader_cache.sack` (TAOM, `LOTRLOME_Armory`) to a
+    backup on E:. The engine reads a sack compiled for the old build and recompiles nothing. On the
+    v1.5.7 bump, TAOM's stale sack left every small character portrait (encyclopedia leader cards)
+    blank, while banners and 3D tableaus rendered (#448). Done when the first start rewrites the
+    folder and a kingdom page shows its leader portrait.
 
 ## Phase 5 — Control battles before believing anything
 

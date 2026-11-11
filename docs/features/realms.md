@@ -61,10 +61,27 @@ The file's header comment documents every element and attribute. Main sections:
 | `<Claims>`, `<Grants>` | Claim, usurp, form, restore, grant and revoke prices and relation changes |
 | `<Offices>` | Steward, Marshals, Lieutenant: styles and weekly influence |
 | `<Consequences>` | The weekly resentment, liege pull and tribute |
-| `<Coronations>` | Aragorn's coronation: house, banner, fiefs, gold, relation, `former_banner` |
+| `<Coronations>` | Aragorn's coronation: house, `banner` (the new house's own code; Gondor flies it while the house rules), `banner_of`, fiefs, gold, relation, `influence` (the restore price, 2500), `former_banner` |
 | `<StartingClaims>`, `<Chronicle>` | Claims at campaign start; how many past holders each title remembers |
 
 The hierarchy is made once, when a campaign first gets titles. Names, styles, prices and the settings sections are read on each campaign load. Unions, offices and starting claims missing from a save are added on its next load.
+
+### Mod options: World/Realms
+
+The file sets the prices and amounts; the MCM group scales or switches them in play, with no restart (`RealmsSettingsProvider`, which clamps a hand-edited json to the slider range). Percentages apply to the player and the AI alike, and round so a positive price never drops to 0.
+
+| Option | Range, default | Effect |
+|---|---|---|
+| Claim Price (%) | 10 to 500, 100 | `<Claims>` buy prices |
+| Title Influence Cost (%) | 10 to 500, 100 | Usurp, form, restore and revoke influence, the coronation's own `influence` included |
+| AI Lords Press Claims | on | Off stops the weekly AI claims; `<Claims ai="false">` still turns them off as well |
+| Tribute (%) | 0 to 300, 100 | Weekly tribute to the liege |
+| Office Influence (%) | 0 to 300, 100 | Weekly influence of the offices |
+| Resentment Over Fiefs | on | The weekly relation and loyalty loss when another clan owns your title's fief |
+| Liege's Pull | on | The weekly relation gain toward the liege |
+| Liege Army Discount | on | Half-price army calls for vassals |
+| Lands for Sons and Daughters | on | Daily grants of lesser titles to grown children; the campaign-start grants stay |
+| Lords Styled by Their Titles | on | Styled party and conversation names (party names refresh within an hour); the encyclopedia always shows titles. Presentation only, so left out of the co-op settings fingerprint |
 
 ## Key Files
 
@@ -75,6 +92,7 @@ The hierarchy is made once, when a campaign first gets titles. Names, styles, pr
 | `Main/Features/Realms/RealmsCampaign*.cs` | Coordinator: events, claims, feudal actions, coronation |
 | `Main/Features/Realms/Domain/Services/RealmsService.cs` | Rules facade |
 | `Main/Features/Realms/IRealmsPopupAdapter.cs` | The coronation window seam |
+| `Main/Features/Realms/RealmsSettingsProvider.cs` | The World/Realms mod options, clamped (`IRealmsSettingsProvider`) |
 | `Main/Features/Realms/Cheats/RealmsConsole.cs` | Console commands |
 | `Client/Features/Realms/RealmsClient.cs` | Client start and tick: conversation names, the Titles page patch, the UI queue |
 | `Client/Features/Realms/Encyclopedia/*` | Title rows on the themed encyclopedia pages, the Titles category (`TitleEncyclopediaPage`) and the title page (`TitleEncyclopediaPageVM`) |
@@ -89,7 +107,7 @@ The hierarchy is made once, when a campaign first gets titles. Names, styles, pr
 
 ## Tests
 
-- `TAOM.Tests/Features/Realms/`: the domain suite carried over from TAOM.Realms (catalog, generation, succession, claims, feudal rules, family grants, persistence, prefixes, the tree layout, the shipped XML) and `RealmsCoopGateTests` (a co-op client creates no titles).
+- `TAOM.Tests/Features/Realms/`: the domain suite carried over from TAOM.Realms (catalog, generation, succession, claims, feudal rules, family grants, persistence, prefixes, the tree layout, the shipped XML) and `RealmsCoopGateTests` (a co-op client creates no titles). `RealmsSettingsProviderTests` pins the mod options: defaults, clamps, slider ranges, hints, the percentage scaling and the co-op split.
 - `ClientIsolationGateTests.TaomClient_DeclaresEveryUiExtension` names the six Realms encyclopedia extensions.
 - Co-op row: the "Gated (host-only)" table in `docs/features/coop-interop.md`.
 
@@ -105,6 +123,8 @@ The hierarchy is made once, when a campaign first gets titles. Names, styles, pr
 6. With a clan in another realm and enough resource, Buy a claim on a duchy from its page. Pass: a confirmation, then the page rebuilds with your claim counted. In your own realm the action is refused with its reason.
 7. Load a save made with the separate TAOM.Realms module. Pass: `taom.realms_hero` lists the same titles as before.
 8. As ruler of your own kingdom, give Minas Tirith and West Osgiliath to two vassal clans, buy a claim on the Duchy of Anórien and open its page. Pass: Usurp is offered for 200 influence; before the fiefs were given away it was refused with "You, your clan and your vassals must hold more than half of its lands."
+9. Serve Gondor with Aragorn in your clan and open the Kingdom of Gondor's title page. Pass: Restore costs 2500 influence; at Title Influence Cost 50% it costs 1250. Restore it. Pass (visual): the House of Telcontar and the Kingdom of Gondor show the Telcontar banner, on the clan page, the kingdom page and the map parties. Save, load. Pass: Gondor keeps that banner.
+10. Mod options, World/Realms: turn off Lords Styled by Their Titles. Pass: within an in-game hour Denethor's party reads "Denethor's Party", and a conversation with him shows the plain name; the encyclopedia still lists his titles. Turn off Tribute (0%) and wait a week. Pass: no tribute notice.
 
 None of these has been run yet.
 
@@ -126,6 +146,7 @@ Titles are created once, on the first hourly tick. The hourly listener is a flag
 
 - 2026-11-10: your side counts. Usurping or forming a duchy or higher counts the lands held by the hero, their clan and their vassals at any depth (lords of the same realm below them in the title tree); a ruler counts every lord serving the realm. A town or castle title also counts while one of them owns its fief, so fiefs handed to vassal clans count before their titles are pressed. A ruler buys claims bordering any town or castle of the realm, not only the clan's (`RealmsService.Allegiance.cs`, `ClaimWorld.BuyerOf`). AI rulers now form vacant duchies their lords hold.
 - 2026-11-10: lord names lose the titles written into them (Denethor II, Imrahil, Galadriel, Celeborn, Forlong, Hirluin, Angbor, Golasgil, Duinhir, Gimilzôr, Vargûl), in `lords.xml`, `lords.xslt`, their string files and every translation. Realms styles them from what they hold, so "Steward Denethor of Gondor" no longer reads "Denethor II, Steward of Gondor" twice over.
+- 2026-11-11: World/Realms mod options: claim price, title influence cost, tribute and office influence as percentages, and switches for AI claims, resentment, the liege's pull, the army discount, grants to children and title styles. The coronation's `banner` gives the House of Telcontar its own banner; because a ruling clan shows its kingdom's banner, Gondor takes it too, and it is set again on each load (TAOM's banner injection resets kingdom banners on load). Restoring Gondor's throne for Aragorn costs 2500 influence (was 1000).
 
 ## GitHub Issue
 

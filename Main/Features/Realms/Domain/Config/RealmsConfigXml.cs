@@ -111,7 +111,8 @@ public static class RealmsConfigXml
                 coronation.Attribute("influence") != null ? Int(coronation, "influence", 0, 0, warnings) : (int?)null,
                 (string?)coronation.Attribute("former_banner"),
                 new CoronationEvent((string?)coronation.Attribute("heading"), (string?)coronation.Attribute("text"),
-                    (string?)coronation.Attribute("image"), (string?)coronation.Attribute("button"))));
+                    (string?)coronation.Attribute("image"), (string?)coronation.Attribute("button")),
+                (string?)coronation.Attribute("banner")));
         }
 
         foreach (var office in Children(root, "Offices", "Office"))

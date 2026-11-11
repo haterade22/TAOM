@@ -48,7 +48,7 @@ internal static class PartyNames
         {
             var owner = __instance.Owner;
             var behavior = RealmsCampaign.Current;
-            if (__result == null || owner?.CharacterObject == null || behavior == null)
+            if (__result == null || owner?.CharacterObject == null || behavior == null || !behavior.Settings.TitleStyles)
                 return;
             var styled = TitleNames.KnownAs(owner, behavior);
             if (styled != null)

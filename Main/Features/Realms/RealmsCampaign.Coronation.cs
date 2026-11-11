@@ -45,13 +45,15 @@ public sealed partial class RealmsCampaign
         RemoveCompanionAction.ApplyByByTurningToLord(playerClan, hero);
         hero.SetNewOccupation(Occupation.Lord);
 
-        var clan = Clan.CreateClan("realms_clan_" + hero.StringId);
+        var clan = Clan.CreateClan(CrownedClanId(coronation));
         var name = new TextObject(coronation.ClanName);
         clan.ChangeClanName(name, coronation.InformalName != null ? new TextObject(coronation.InformalName) : name);
         clan.Culture = bannerOf?.Culture ?? hero.Culture;
-        // A ruling clan shows its realm's banner, so this is the banner the former house is seen with.
-        var banner = bannerOf?.Banner ?? kingdom.Banner;
-        if (banner != null)
+        // The house's own banner (<Coronation banner>), else the one the former house is seen with: a ruling clan shows
+        // its realm's banner.
+        if (coronation.Banner != null)
+            clan.Banner = new Banner(coronation.Banner);
+        else if ((bannerOf?.Banner ?? kingdom.Banner) is { } banner)
             clan.Banner = new Banner(banner);
         clan.Kingdom = kingdom;
         RaiseTier(clan, coronation.Tier);
@@ -71,6 +73,7 @@ public sealed partial class RealmsCampaign
             GiveGoldAction.ApplyBetweenCharacters(null, hero, coronation.Gold, disableNotification: true);
 
         ChangeRulingClanAction.Apply(kingdom, clan);
+        ApplyCrownedBanner(kingdom, clan, coronation);
 
         // Titles the gift did not move (held by right by someone of the former house who did not own the fief).
         var formerHouse = new System.Collections.Generic.HashSet<string>(
@@ -201,6 +204,41 @@ public sealed partial class RealmsCampaign
             var kingdom = kingdomId != null ? FindKingdom(kingdomId) : null;
             if (kingdom?.RulingClan?.Leader?.StringId == coronation.HeroId)
                 ApplyFormerBanners(kingdom, FindClan(coronation.BannerOfClanId!));
+        }
+    }
+
+    /// <summary>The id of the house a coronation founds ("realms_clan_named_companion_aragorn").</summary>
+    private static string CrownedClanId(CoronationConfig coronation) => "realms_clan_" + coronation.HeroId;
+
+    /// <summary>
+    /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well: a ruling clan is seen with its realm's
+    /// banner (Clan.Banner returns Kingdom.Banner for it), so its own alone would never show. Nothing to do without one,
+    /// or when the realm already has it.
+    /// </summary>
+    private static void ApplyCrownedBanner(Kingdom kingdom, Clan clan, CoronationConfig coronation)
+    {
+        if (coronation.Banner == null || kingdom.RulingClan != clan || kingdom.Banner?.Serialize() == coronation.Banner)
+            return;
+        kingdom.Banner = new Banner(coronation.Banner);
+        foreach (var party in clan.WarPartyComponents.Select(w => w.MobileParty).Where(p => p?.Party != null))
+            party.Party.SetVisualAsDirty();
+        foreach (var settlement in clan.Settlements.Where(s => s.Party != null))
+            settlement.Party.SetVisualAsDirty();
+    }
+
+    /// <summary>
+    /// On load: the banner of each crowned house that still rules its realm. BannerInjection sets every realm back to its
+    /// banner_key when a game loads, and this runs after it (session launch follows the game load).
+    /// </summary>
+    private void ApplyCrownedBannersOnLoad()
+    {
+        foreach (var coronation in Config.Coronations.Where(c => c.Banner != null))
+        {
+            var kingdomId = _service.Catalog.Get(coronation.TitleId)?.KingdomId;
+            var kingdom = kingdomId != null ? FindKingdom(kingdomId) : null;
+            var clan = kingdom?.RulingClan;
+            if (kingdom != null && clan != null && clan.StringId == CrownedClanId(coronation))
+                ApplyCrownedBanner(kingdom, clan, coronation);
         }
     }
 

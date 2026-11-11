@@ -35,7 +35,7 @@ public sealed partial class RealmsCampaign
     private void WeeklyConsequences()
     {
         var config = Config.Feudal;
-        if (config.ResentmentRelation != 0 || config.ResentmentLoyalty != 0)
+        if (_settings.Resentment && (config.ResentmentRelation != 0 || config.ResentmentLoyalty != 0))
             foreach (var gap in _service.TitleGaps(_claimWorld))
             {
                 var holder = Hero.Find(gap.HolderId);
@@ -47,7 +47,7 @@ public sealed partial class RealmsCampaign
                     settlement.Town.Loyalty += config.ResentmentLoyalty;
             }
 
-        if (config.LiegeRelation != 0)
+        if (_settings.LiegePull && config.LiegeRelation != 0)
             foreach (var (liegeId, vassalId) in _service.LiegeBonds(_claimWorld, config))
             {
                 var liege = Hero.Find(liegeId);
@@ -104,12 +104,13 @@ public sealed partial class RealmsCampaign
         }
 
         var events = _service.UpdateOffices(_claimWorld, candidates);
-        foreach (var office in Config.Offices.Where(o => o.Influence != 0))
+        var share = _settings.OfficeInfluencePercent / 100f;
+        foreach (var office in Config.Offices.Where(o => o.Influence != 0 && share > 0))
         {
             var holder = _service.Ledger.OfficeHolderOf(office.Id);
             var clan = holder != null ? Hero.Find(holder)?.Clan : null;
             if (clan != null && !clan.IsEliminated)
-                ChangeClanInfluenceAction.Apply(clan, office.Influence);
+                ChangeClanInfluenceAction.Apply(clan, office.Influence * share);
         }
 
         Report(events);

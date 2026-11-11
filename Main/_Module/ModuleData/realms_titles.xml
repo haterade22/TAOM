@@ -311,7 +311,9 @@
       clan          the name of the house he founds; informal: its short name
       banner_of     the clan whose banner (as it is seen, a ruling clan shows its realm's) and culture the house takes;
                     default the realm's ruling clan
-      fiefs         towns and castles of the ruling clan given to him, his seat first, with their titles and the
+      banner        the new house's own banner code. As the realm's ruling clan it shows the realm's banner, so the
+                    realm takes this banner too, from the coronation on. Left out, the house keeps banner_of's banner
+      fiefs        towns and castles of the ruling clan given to him, his seat first, with their titles and the
                     lordships of their villages
       titles        further titles of the ruling house that pass to him (a duchy: d_anorien)
       office        an office the former ruler keeps, or is appointed to when it is vacant
@@ -331,7 +333,8 @@
          Tirith and holds Anórien. The Húrinionath keep the Osgiliaths and Min-Rimmon, and Denethor stays Steward. -->
     <Coronation title="k_empire_w" hero="named_companion_aragorn" clan="{=realms_clan_telcontar}House of Telcontar"
                 informal="{=realms_clan_telcontar_short}Telcontar" banner_of="clan_empire_west_1" fiefs="town_EW1"
-                titles="d_anorien" office="steward_gondor" influence="1000" tier="5" troops="60"
+                titles="d_anorien" office="steward_gondor" influence="2500" tier="5" troops="60"
+                banner="11.149.149.1528.1528.764.764.1.0.0.31006.172.2000.580.580.764.798.0.0.0"
                 former_banner="11.172.149.1528.1528.764.764.1.0.0.10000.2000.2000.580.580.765.825.0.0.0"
                 heading="{=realms_coronation_heading}The Return of the King"
                 text="{=realms_coronation_text}Before the gate of Minas Tirith the Steward of Gondor offers up the white rod of his office, and the King gives it back to him. Then the ancient crown of the kings is set upon the head of {HERO}.{newline}After long years an heir of Isildur sits upon the throne of Gondor, and the {CLAN} rules the realm from {SEAT}."

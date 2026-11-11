@@ -109,6 +109,21 @@ class SelectionTests(unittest.TestCase):
     def test_windows_separators_and_case_match(self):
         self.assertIn("moduledata", _ids(dg.select(dg.GATES, [TROOPS.replace("/", "\\").upper()])))
 
+    def test_a_live_map_scene_selects_the_siege_wall_gate(self):
+        scene = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/SceneObj/helms/scene.xscene"
+        self.assertIn("siege-walls", _ids(dg.select(dg.GATES, [scene])))
+        self.assertNotIn("siege-walls", _ids(dg.select(dg.GATES, [scene.replace("scene.xscene", "terrain.bin"), TROOPS])))
+
+    def test_the_siege_wall_gate_judges_the_scene_that_was_named(self):
+        """Run bare, the tool reads the live install, so a staged or channel scene would get the install's PASS."""
+        gate = next(g for g in dg.GATES if g.id == "siege-walls")
+        with tempfile.TemporaryDirectory() as tmp:
+            scene = Path(tmp) / "SceneObj" / "helms" / "scene.xscene"
+            scene.parent.mkdir(parents=True)
+            scene.write_text("<scene/>", encoding="utf-8")
+            self.assertEqual(dg.command_for(gate, [str(scene), TROOPS], all_mode=False)[2:], [str(scene)])
+            self.assertEqual(dg.command_for(gate, [str(scene)], all_mode=True), list(gate.cmd))
+
     def test_a_file_gate_receives_only_the_files_that_match_it(self):
         g = next(g for g in dg.GATES if g.id == "xml-schemas")
         argv = dg.command_for(g, [TROOPS, "README.md"], all_mode=False)

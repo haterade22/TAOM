@@ -103,6 +103,16 @@ public class WarPledgeWiringTests
         Assert.IsTrue(IsBuiltInlinePerCampaign("CampaignBehaviorDecl.Of(r =>\n    new WarPledgeBehavior(\n a, b)),"));
     }
 
+    // The behavior tests call OnDailyTick themselves, so nothing else fails when the subscription is gone,
+    // and then the AI never courts a realm in play.
+    [TestMethod]
+    public void Behavior_SubscribesItsDailyStepToTheDailyTick()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/WarPledge/WarPledgeBehavior.cs", stripComments: true);
+
+        StringAssert.Contains(src, "CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick)");
+    }
+
     // The production lines the container test below copies: a factory lambda there would not pass the store.
     [TestMethod]
     public void HandWiredFeatures_RegisterBothReadersByType_SoTheContainerPassesTheStore()
@@ -167,6 +177,10 @@ public class WarPledgeWiringTests
         Assert.AreEqual(typeof(WarPledgeBehavior), decl.BehaviorType);
         Assert.IsInstanceOfType(decl.Create(container), typeof(WarPledgeBehavior));
         Assert.AreNotSame(decl.Create(container), decl.Create(container), "a fresh behavior per campaign start");
+        var store = container.Resolve<WarPledgeStore>();
+        store.Pledge("cardolan", FactionSide.Free);
+        decl.Create(container);
+        Assert.AreEqual(0, store.Count, "the behavior resets, saves and loads the container's store, not one of its own");
         Assert.AreSame(container.Resolve<WarPledgeService>(), container.Resolve<WarPledgeService>());
         Assert.IsInstanceOfType(container.Resolve<IWarPledgeWorldAdapter>(), typeof(WarPledgeWorldAdapter));
         Assert.IsInstanceOfType(container.Resolve<IWarPledgeSettings>(), typeof(WarPledgeSettingsProvider));

@@ -4974,3 +4974,9 @@ To stop this session's gate run, a process filter matched the command text `unit
 - **Why missed:** the filter named what the run does, and several sessions do the same thing at once. The earlier lesson on stopping a queue lists script names that only one session used.
 - **Prevent:** match on the full path of the session's own script, or on its worktree path in the command line. Print the matching processes with their parents before stopping any, and stop by process id.
 - **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 18.
+
+### A gate that a named file selects judges that file (siege wall gate, 2026-11-10)
+The new `siege-walls` row of `tools/data_gates.py` was selected by a scene file named on the command line, but it ran its tool bare, and the tool then read the live install. A faulty scene in a staged drop or a channel folder got the install's PASS. Repeat of "A gate reads what its consumer reads, and proves it read all of it".
+- **Why missed:** the row was tested for selection only, and the one manual run named the live file, where the default folder gives the same answer.
+- **Prevent:** a `data_gates.py` row whose glob matches single files sets `files=True`, and its test asserts the command line that the runner builds, with a file outside the default folder.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 1.

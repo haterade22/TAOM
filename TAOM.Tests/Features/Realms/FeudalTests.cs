@@ -237,6 +237,10 @@ public class FeudalTests
 
         Assert.AreEqual(1000, service.QuoteRestore("heir", "k_north", world, claims).Cost);
         Assert.AreEqual(usual, service.QuoteRestore("prince", "k_north", world, claims).Cost);
+
+        // The MCM's Title Influence Cost scales the coronation's own price as well.
+        claims.InfluencePercent = 250;
+        Assert.AreEqual(2500, service.QuoteRestore("heir", "k_north", world, claims).Cost);
     }
 
     [TestMethod]

@@ -206,6 +206,8 @@ must exit 0.
 
 **TAOM_Map must carry the #1042 name and description repair.** The 4,677 language rows reset from pre-rename names (4,633 for renamed villages and castles, DE "Dorf E2_1" for Linenhold, and 44 for four Dunland towns and castles, DE "Epicrotea" for Galtrev) and the 109 new village descriptions exist only in the live `TAOM_Map` until a package carries them; on 2026-10-27 all three channels still showed "Usanc" for Mearhtun and none of the descriptions. Check each channel before publishing: `BANNERLORD_GAME_DIR=E:/LOTRAOM_Releases/<channel> python tools/oneoff/write_village_descriptions.py --check` exits 0, and `grep -cE 'text="(Usanc|Epicrotea)"' E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/ModuleData/Languages/DE/loc_settlements.xml` prints 0 (the `--check` does not read the name rows).
 
+**Every siege wall in the packaged scenes needs its two child scripts.** A sided wall whose `solid_child` or `broken_child` has no `WallSegment` script makes the base game's siege set-up throw at every siege start on that scene; on 2026-11-10 Helm's Deep shipped that way to the testing channel after an art pass ([RCA](../reviews/rca-helms-deep-siege-wall-2026-11-10.md)). Check each channel before publishing: `python tools/check_siege_wall_scripts.py --scenes E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/SceneObj` exits 0 and prints `PASS:`. Exit 2 means a scene file could not be read: not a pass.
+
 **Step 8 is the one that gets skipped**, which is why
 [`session-start.sh`](../../.claude/hooks/session-start.sh) prints a banner at the next startup
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition

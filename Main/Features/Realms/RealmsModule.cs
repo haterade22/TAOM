@@ -15,7 +15,8 @@ internal sealed class RealmsModule : TaomFeatureModule
 {
     private static readonly CampaignBehaviorDecl[] Behaviors =
     {
-        CampaignBehaviorDecl.Of(r => new RealmsCampaignBehavior(r.Resolve<IRealmsPopupAdapter>(), r.Resolve<ICoopSessionProvider>())),
+        CampaignBehaviorDecl.Of(r => new RealmsCampaignBehavior(r.Resolve<IRealmsPopupAdapter>(), r.Resolve<ICoopSessionProvider>(),
+            r.Resolve<IRealmsSettingsProvider>())),
     };
 
     public override string Id => "Realms";
@@ -23,9 +24,13 @@ internal sealed class RealmsModule : TaomFeatureModule
     /// <summary>RealmsCampaignBehavior saves the titles and their ledger (taom_realms_chunks).</summary>
     public override bool OwnsSaveData => true;
 
-    public override void RegisterServices(IRegistrator registrator) =>
+    public override void RegisterServices(IRegistrator registrator)
+    {
         // The windows are client-only (ADR-013): core's null adapter, replaced by TAOM.Client's.
         registrator.Register<IRealmsPopupAdapter, NullRealmsPopupAdapter>(Reuse.Singleton);
+        // The "World/Realms" mod options.
+        registrator.Register<IRealmsSettingsProvider, RealmsSettingsProvider>(Reuse.Singleton);
+    }
 
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;
 

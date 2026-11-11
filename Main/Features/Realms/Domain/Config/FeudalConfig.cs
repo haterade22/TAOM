@@ -59,9 +59,17 @@ public sealed class FeudalConfig
         [TitleRank.Kingdom] = 300,
     };
 
-    public int? RevokeCost(TitleRank rank) => RevokeInfluence.TryGetValue(rank, out var cost) && cost >= 0 ? cost : null;
+    /// <summary>Revoke costs as a percentage of <see cref="RevokeInfluence"/> (the MCM's Title Influence Cost).</summary>
+    public int InfluencePercent { get; set; } = 100;
 
-    public int TributeOf(TitleRank rank) => Tribute.TryGetValue(rank, out var gold) && gold > 0 ? gold : 0;
+    /// <summary>Tribute as a percentage of <see cref="Tribute"/> (the MCM's Tribute). 0 stops it.</summary>
+    public int TributePercent { get; set; } = 100;
+
+    public int? RevokeCost(TitleRank rank) =>
+        RevokeInfluence.TryGetValue(rank, out var cost) && cost >= 0 ? RealmsPercent.Of(cost, InfluencePercent) : null;
+
+    public int TributeOf(TitleRank rank) =>
+        Tribute.TryGetValue(rank, out var gold) && gold > 0 ? RealmsPercent.Of(gold, TributePercent) : 0;
 }
 
 /// <summary>A union title (rank <see cref="TitleRank.Union"/>) over existing realm and high titles, formed by holding all of them.</summary>
@@ -106,10 +114,11 @@ public sealed class CoronationConfig
 {
     public CoronationConfig(string titleId, string heroId, string clanName, string? informalName, string? bannerOfClanId,
         IReadOnlyList<string> fiefIds, IReadOnlyList<string> titleIds, string? officeId, int tier, int troops, int gold, int relation,
-        int? influence = null, string? formerBanner = null, CoronationEvent? coronationEvent = null)
+        int? influence = null, string? formerBanner = null, CoronationEvent? coronationEvent = null, string? banner = null)
     {
         Influence = influence;
         FormerBanner = string.IsNullOrWhiteSpace(formerBanner) ? null : formerBanner;
+        Banner = string.IsNullOrWhiteSpace(banner) ? null : banner;
         Event = coronationEvent ?? CoronationEvent.Default;
         TitleId = titleId;
         HeroId = heroId;
@@ -162,6 +171,12 @@ public sealed class CoronationConfig
     /// realm's banner, which the new house keeps); null leaves its banner alone.
     /// </summary>
     public string? FormerBanner { get; }
+
+    /// <summary>
+    /// The new house's own banner code. As the realm's ruling clan it shows the realm's banner, so the realm takes it
+    /// too. Null keeps the banner it takes from <see cref="BannerOfClanId"/>.
+    /// </summary>
+    public string? Banner { get; }
 
     /// <summary>The coronation event window: heading, story text (text ids), the illustration's sprite and the button.</summary>
     public CoronationEvent Event { get; }

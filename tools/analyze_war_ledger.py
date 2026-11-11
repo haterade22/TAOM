@@ -21,7 +21,11 @@ line per (day, side) and share line per day win, and exact repeated events colla
 resolutions (ev=chronicle, one per event outcome: Occurred, Held, Fell, Lapsed or Skipped) are listed by
 day and counted per outcome, one per event id: the last line read, even an exact repeat of an earlier one. A
 realm that pledged to a side (ev=pledge, War Pledge) is listed once, by the last line read for its kingdom; from
-that day its kingdom lines carry the new side, so the share, the side totals and the net change include it. Logs are
+that day its kingdom lines carry the new side, so the share, the side totals and the net change include it. A
+pledge is not listed while the last kingdom line of that realm, read after its pledge line and not of an earlier
+day, carries another side: a load took the pledge back. A load rewinds that judgement with the other records,
+so a later load of a save that holds the pledge lists it again. Until such a kingdom line is read (a log that
+ends on the day of the load, a realm destroyed that day), a pledge that a load took back stays listed. Logs are
 read oldest first (by the taom_debug_ name stamp, else file time), so the newer process wins whatever
 the argument order. A load is a rewind: a t=load line at day S drops every stored record of that cid
 (kingdom, side and share lines, events, chronicle resolutions) with a day after S, which belongs to the
@@ -115,6 +119,7 @@ class Campaign:
         self._event_seen = set()  # event keys already in self.events
         self._chronicle_reads = []  # (day, id, outcome), repeats included, in read order
         self._pledge_reads = []     # (day, k, side, by), repeats included, in read order
+        self._side_since_pledge = {}  # k -> (day, side) of the last kingdom line read after k's last pledge line
 
     @property
     def chronicle_last(self):
@@ -126,15 +131,34 @@ class Campaign:
         """Kingdom -> (day, side, by) of the last pledge line read, repeats included."""
         return {k: (day, side, by) for day, k, side, by in self._pledge_reads}
 
+    @property
+    def pledges(self):
+        """pledge_last without each realm whose last kingdom line read since its pledge carries another side.
+
+        A pledge has no end, so a kingdom line written after it carries the pledged side. Another side means
+        that a load took the pledge back: a load keeps its own day from both runs, so the pledge line is
+        still stored. The pledge line is kept, and a later load of a save that holds the pledge lists it again.
+        """
+        return {k: rec for k, rec in self.pledge_last.items()
+                if self._side_since_pledge.get(k, rec)[1] == rec[1]}
+
     def days(self):
         found = {d for d, _ in self.kingdoms} | {d for d, _ in self.sides} | set(self.shares)
         return sorted(found)
+
+    def add_kingdom(self, day, fields):
+        self.kingdoms[(day, fields['k'])] = fields
+        # What `pledges` judges a pledge by. A line of a day before the pledge says nothing about it.
+        last = self.pledge_last.get(fields['k'])
+        if last is not None and day >= last[0]:
+            self._side_since_pledge[fields['k']] = (day, fields['side'])
 
     def add_event(self, day, fields):
         if fields['ev'] == 'chronicle':
             self._chronicle_reads.append((day, fields['id'], fields['outcome']))
         if fields['ev'] == 'pledge':
             self._pledge_reads.append((day, fields['k'], fields['side'], fields['by']))
+            self._side_since_pledge.pop(fields['k'], None)
         key = _event_key(fields)
         if key not in self._event_seen:
             self._event_seen.add(key)
@@ -149,6 +173,7 @@ class Campaign:
         self._event_seen = {_event_key(f) for _, f in self.events}
         self._chronicle_reads = [r for r in self._chronicle_reads if r[0] <= day]
         self._pledge_reads = [r for r in self._pledge_reads if r[0] <= day]
+        self._side_since_pledge = {k: rec for k, rec in self._side_since_pledge.items() if rec[0] <= day}
 
 
 class Parsed:
@@ -205,7 +230,7 @@ def _ingest(parsed, fields):
             raise ValueError('missing ' + missing[0])
         _num(fields['pts'], int)
         _num(fields['tier'], int)
-        parsed.campaign(fields['cid']).kingdoms[(day, fields['k'])] = fields
+        parsed.campaign(fields['cid']).add_kingdom(day, fields)
     elif kind == 'side':
         missing = [k for k in SIDE_KEYS if k not in fields]
         if missing:
@@ -377,7 +402,7 @@ def compute_metrics(camp):
     m['destroyed'] = sorted((d, f['k']) for d, f in camp.events if f['ev'] == 'destroyed')
     # One pledge per realm: a reload of the pledge day can replay it for the other side, and the line read
     # last is the pledge that stood (the rule the chronicle resolutions below use).
-    m['pledges'] = sorted((d, k, side, by) for k, (d, side, by) in camp.pledge_last.items())
+    m['pledges'] = sorted((d, k, side, by) for k, (d, side, by) in camp.pledges.items())
     # One resolution per event: a reload from before a resolution replays it, and the line read last is
     # the outcome that stood, even when it repeats an earlier line byte for byte.
     m['chronicle'] = sorted((d, eid, o) for eid, (d, o) in camp.chronicle_last.items())

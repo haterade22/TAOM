@@ -64,7 +64,7 @@ public sealed partial class RealmsCampaign
     private void WeeklyAiClaims()
     {
         var config = Config.Claims;
-        if (!config.AiEnabled)
+        if (!config.AiEnabled || !_settings.AiClaims)
             return;
 
         var events = new List<TitleEvent>();

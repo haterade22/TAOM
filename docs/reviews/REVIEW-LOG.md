@@ -6,6 +6,7 @@ Running scorecard. Numbers are not unique keys; rows since 2026-09-24 carry "(at
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| (at merge) | 2026-11-10 | War Pledge Slice 1 (#1113): adversarial pass on the landed commit `65189fc49`, then a pass on its fixes | issues-found (`ultra`: 0 P1, 1 P2, 1 P3, 11 coverage gaps, 6 of 8 suspects disputed with evidence; `high` on the fixes: 0 P1, 0 P2, 2 P3) | agree (all confirmed and fixed; the P2 rated LOW: console only, victory off by default; one design item is a follow-up for Slice 2) | 4 LOW (one is a regression of the first fix), plus 2 coverage rows | 0 | 0 | gpt-6-astra, ultra then high; RCA `rca-war-pledge-2026-11-10.md`, rows 14 to 19 |
 | (at merge) | 2026-11-09 | Supply Lines caravan meeting menu and failed-join stay branch (#1104, #1099), commit `218f4ee31` | issues-found (0 CRITICAL, 0 HIGH, 0 MEDIUM, 2 LOW, 5 LOW observations; the defect suspects disputed on the ordinary paths) | agree (5 confirmed and fixed, 2 left open with no known producer) | 5 | 0 | 0 | gpt-6-astra, ultra, read-only sandbox; RCA `rca-supply-caravan-meeting-2026-11-09.md` |
 | (at merge) | 2026-11-01 | Fords of War: the night batch `d4fb51a50..c2c3a6f28` (review A) and the whole feature at `c2c3a6f28` (review B), on `E:/repos/taom-fords-of-war` | issues-found (A: 0 CRITICAL, 0 HIGH, 2 MEDIUM; B: 0 CRITICAL, 0 HIGH, 3 MEDIUM; 23 and 34 suspects disputed with evidence) | agree (all five confirmed and fixed; review A's remedy for F1 corrected, because Bannerlord exits -1 after a normal quit) | 5 | 0 | 0 (the F1 remedy error was Claude's, caught against in-game runs Codex could not see) | gpt-6-astra, ultra; RCA `rca-fords-of-war-2026-10-31.md` |
 | (at merge) | 2026-10-27 | Bannerlord v1.5.6 engine bump (#1036), Hidden Hosts field-parley veto (#1037), turbo click fix Patch124 (#1040), uncommitted on base `59251a28d` | issues-found (ultra: 1 MEDIUM, 1 LOW; xhigh: 1 real, rated MEDIUM) | agree (MasksParley and GameText fixed; the one-frame latch lag kept as a known limitation) | 3 | 0 | 1 MEDIUM (the Ctrl click scope; engine-compatibility lens) | codex ultra pre-review, codex xhigh adversarial; RCA `rca-engine-bump-v1-5-6-2026-10-27.md` |
@@ -5636,3 +5637,20 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 8 | The offered maximum overflowed the gold total, so the emissary granted unpaid troops and returned `Success` | Logic error | The float was recorded as a display problem; nobody multiplied the maximum by the price | `double` balance, `long` total, four RED-first tests, lesson in `lessons/gamemodels-services.md` |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1108.toml`.
+
+## Review (number assigned at merge): Codex adversarial pass on War Pledge Slice 1 (#1113) after it landed, and the re-review of its fixes (2026-11-10)
+
+- **Scope:** the landed commit `65189fc49` (70 files), then the uncommitted fixes on `696c1e224`.
+- **Codex:** `ultra` on the landed commit, on Mike's word: 0 P1, 1 P2, 1 P3 and 11 coverage gaps; 6 of 8 suspects disputed with evidence. Then `high` on the fixes, with Lens 5, Lens 2 and the Tooling lens at `high`: 0 P1, 0 P2, 2 P3. 0 false positives in both passes.
+- **Confirmed:** rows 14 to 19 of `docs/reviews/rca-war-pledge-2026-11-10.md`, all fixed. One design item is a recorded follow-up (#1113, Slice 2).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 14 | Momentum's victory check at a kingdom's destruction counted lists that did not hold a realm pledged that day | Stale state / lifecycle | The search for stored sides looked for fields of the side's type; momentum holds a side as membership of a list | The removal sweeps before the count; lesson in `lessons/state-lifecycle-save.md` |
+| 15 | The ledger analyzer listed a pledge that a load of the same day took back | Stale state / lifecycle | The earlier fix did not ask what a load leaves when no second pledge line follows | A pledge is judged by the last kingdom line read after it |
+| 16 | Eleven decisions with no test that would fail | Other: coverage | Tests read the save keys through the production constants and called the handler directly | One test each, proven by twelve mutants |
+| 17 | The first form of fix 15 deleted the pledge lines, so a later load of a save that holds the pledge never listed it again | Logic error | The fix's tests ended at the first contradiction | The lines stay and the judgement rewinds on a load; nine mutants |
+| 18 | The corrected limit named battles only and an unconditional sweep | Other: doc against code | Written from the one reader the finding named | Text corrected from the four event gates |
+| 19 | Decisions of the two fixes with no test | Other: coverage | The fix tests stopped at the service that changed | A handler test with the real services, the threshold peace, the analyzer cases |
+
+- **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1113.toml`.
