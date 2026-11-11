@@ -2662,3 +2662,9 @@ The `ev=pledge` ledger line had a C# golden-line test and a Python helper that w
 - **Why missed:** the fixture is named in two docstrings and in no rule, and the new line was tested where its code was written, once per language.
 - **Prevent:** a new `[WarLedger]` line or event kind adds one line to the fixture, one entry to the C# `written` array and one assertion on the parsed fields, in the change that adds the formatter method. The same holds for any file one language writes and another reads: find the shared fixture before writing a second copy of the line.
 - **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 2.
+
+### A test helper that swaps a process-wide static saves the original once per test (Patch103 list check, #1028, 2026-11-11)
+
+- **Why missed:** `InstallMission` saved the current `Mission._current` on every call. A test that installs twice made the first fake the "previous" value, so cleanup restored a fake, and a later test that assumes "no mission" ran against it and passed.
+- **Prevent:** save the original on the first install of a test only (a flag), restore only when the flag is set, and have a test that needs the empty state set it itself. Two-edit test: move the save back into every install and the no-mission test must fail.
+- **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), row 2.

@@ -48,6 +48,69 @@ public class MissionStartGuardServiceTests
         _logger.ReceivedCalls().Where(c => c.GetMethodInfo().Name == nameof(IModLogger.LogWarning))
             .Select(c => (string)c.GetArguments()[0]!).ToList();
 
+    // ---- ReportListChange (#1028: a start call changed the list the engine was walking) ----
+
+    private void ListChange(int before = 3, int after = 4) =>
+        _sut.ReportListChange(StartCall.AfterStart, "Mod.Foo", "ModAsm", "MissionBehaviors", before, after, "Mod.Newest");
+
+    [TestMethod]
+    public void ReportListChange_LogsOneErrorNamingTheCallOwnerListSizesAndNewestItem()
+    {
+        _sut.ReportListChange(StartCall.AfterStart, "Mod.Foo", "ModAsm", "MissionBehaviors", 3, 4, "Mod.Newest");
+
+        var line = Errors().Single();
+        StringAssert.StartsWith(line, "[MissionStartGuard]");
+        StringAssert.Contains(line, "MissionBehaviors changed during AfterStart of Mod.Foo");
+        StringAssert.Contains(line, "ModAsm");
+        StringAssert.Contains(line, "size 3 to 4");
+        StringAssert.Contains(line, "Mod.Newest");
+        StringAssert.Contains(line, "#1028");
+    }
+
+    [TestMethod]
+    public void ReportListChange_MoreThanTheCapInOneMission_LogsOnlyTheCap()
+    {
+        for (var i = 0; i < MissionStartGuardService.MaxListChangeLogsPerMission + 4; i++)
+            ListChange();
+
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission, Errors().Count);
+    }
+
+    [TestMethod]
+    public void ReportListChange_ANewMission_ResetsTheCap()
+    {
+        _sut.BeginMission(new object());
+        for (var i = 0; i < MissionStartGuardService.MaxListChangeLogsPerMission; i++)
+            ListChange();
+
+        _sut.BeginMission(new object());
+        ListChange();
+
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission + 1, Errors().Count);
+    }
+
+    [TestMethod]
+    public void ReportListChange_TheSameMissionLoadedAgain_KeepsItsCap()
+    {
+        var mission = new object();
+        _sut.BeginMission(mission);
+        for (var i = 0; i < MissionStartGuardService.MaxListChangeLogsPerMission; i++)
+            ListChange();
+
+        _sut.BeginMission(mission);
+        ListChange();
+
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission, Errors().Count);
+    }
+
+    [TestMethod]
+    public void ReportListChange_TheLoggerThrows_DoesNotThrow()
+    {
+        _logger.When(l => l.LogError(Arg.Any<string>())).Do(_ => throw new InvalidOperationException("log closed"));
+
+        ListChange();
+    }
+
     // ---- ShouldSurvive ----
 
     [TestMethod]

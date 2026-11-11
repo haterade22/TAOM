@@ -127,13 +127,29 @@ Mission_AfterStart_MissionStartGuard_Patch
   Prefix     -> IMissionStartGuardService.BeginMission (also the canary)
   Finalizer  -> ReportEscaped, EndMissionStart(live swap count)
         |
-Hooks/MissionStartGuardCalls (6 helpers: try / catch when)
+Hooks/MissionStartGuardCalls (6 helpers: try / catch when; 3 also check the list size)
         |
 IMissionStartGuardService  (MissionStartGuardService)
    |            |               |
 IModLogger  IMissionStartGuardAdapter   IMissionStartGuardSettingsProvider
             (DisplayMessage)              (CrashReportSettings.Instance)
 ```
+
+### The list-size check (#1028)
+
+`Mission.AfterStart` walks `MissionBehaviors` with `foreach` around `EarlyStart` and `AfterStart`, and `MissionObjects` around
+`AfterMissionStart`. A start call that changes the list it is being walked from (an add, a remove, an indexer write, a sort,
+an add paired with a remove) makes the engine's next step through that list throw "Collection was modified" from the
+enumerator itself, outside every try the six helpers hold. The guard cannot survive that throw, and the engine loads the
+mission again. Before its call each of the three helpers takes a `Watch`: the list, its size and a `List<T>` enumerator.
+After the call it steps a copy of that enumerator, which throws exactly when the engine's own next step will. When it does,
+`IMissionStartGuardService.ReportListChange` writes one ERROR line: the list, the call, the owner's type and assembly, both
+sizes and, when the list grew, the newest item (at most five per mission). A healthy start never writes it, and it adds no
+patch. The owner is the call during which the change happened: it may only have called code (a mod's listener, for
+example) that made the change. It exists to name the culprit of #1028 (a stealth hideout raid that loops the loading
+screen, crash bundle `taom_crash_20261111_145332_395a9270`); remove it when the issue closes. It does not see a change made
+outside the three loops' calls, such as in `_battleSpawnPathSelector.Initialize()` or `_deploymentPlan.Initialize()`,
+which run between the loops: if the line never appears and the exception recurs, look there next.
 
 ## Configuration
 
@@ -184,11 +200,12 @@ which would otherwise loop the mission.
 
 ## Tests
 
-- `TAOM.Tests/Features/MissionStartGuard/MissionStartGuardServiceTests.cs`: 34 tests. Toggle off, out of memory,
+- `TAOM.Tests/Features/MissionStartGuard/MissionStartGuardServiceTests.cs`: 39 tests. Toggle off, out of memory,
   settings throwing; the log line content; the 10-line cap; the 3-message budget and its reset by a new mission, not
   by the same one; dedicated server; a failing logger or adapter; the summary; the escaped-throw cap; the install
   lines; the canary (a call whose prefix did not run warns once, a live count of 5 warns once, a normal start is
-  silent, a second loss in the same process writes nothing more).
+  silent, a second loss in the same process writes nothing more); the list-change line and its five-line cap, reset by a new
+  mission and kept by the same one.
 - `MissionStartGuardHookTests.cs`: 14 tests. The prefix hands its instance to the service and sets `__state` even with
   no service or a throwing one; the finalizer reports an escaped throw before the end and passes `__state` and the live
   swap count; `Cleanup` zeroes the count only after a failed apply; a throwing service escapes neither.
@@ -196,12 +213,15 @@ which would otherwise loop the mission.
   Harmony rerun Patch103's finalizer, and nothing is warned; a prefix stripped after such a rerun is still reported once;
   a void cleanup taking the exception is called on a failed apply and Harmony still throws; Patch103's cleanup zeroes
   the swap count only on failure; a healthy call writes nothing.
-- `MissionStartGuardCallsTests.cs`: 11 tests (needs the game assemblies). A normal call runs once; a throwing call is
+- `MissionStartGuardCallsTests.cs`: 21 tests (needs the game assemblies). A normal call runs once; a throwing call is
   reported with the right call, type and assembly; a null owner is reported once as `<null>`; the guard saying no
   rethrows the same exception object with its
   stack; no service, a throwing filter, a throwing report; out of memory through the real service; and the IL of all
   six helpers (one exception filter, the engine call inside it). `MissionObject` cannot be allocated in a test host, so
-  the sixth helper has no behavioural subject.
+  the sixth helper has no behavioural subject. Ten more tests give a behavior that adds, removes or overwrites a list item,
+  or adds and removes one (both sizes and, when the list grew, the newest item are reported), a call that changes nothing (on a filled and an empty list), no
+  current mission, a throwing report, the watches reading the mission's own lists, and the objects list's mapping; they
+  allocate a `Mission` without its constructor.
 - `MissionStartGuardBindingTests.cs`: 15 tests. The target and the six call signatures; each call exactly once in the
   installed `Mission.AfterStart`; the rewrite swaps six sites with no warning and is idempotent; the real patch class
   applied to the real method builds a replacement the JIT accepts; parameter names (`__state` included), void finalizer
@@ -227,13 +247,18 @@ behaviour's `AfterStart`, the #699 shape. Turn it on and start a battle.
    rather than assume, what the second load does: whether the battle starts, whether it loads again, and how many
    `not survived` lines appear (a battle with TAOM's behaviours added twice is not tested).
 
+A `[MissionStartGuard] ... changed MissionBehaviors from N to M` ERROR line names the owner of a list change (#1028); a
+healthy start never writes it.
+
 Also check one Custom Battle after any change to the wrapped calls.
 
 ## Performance
 
-Each helper adds one static call and a `try` with an exception filter per start call, once per mission, and allocates
-nothing unless a call throws. `AfterMissionStart` runs per mission object (thousands in a siege scene), so that helper
-is the only one whose count is large; its cost is not measured. Nothing runs per frame.
+Each helper adds one static call and a `try` with an exception filter per start call, once per mission. The three list
+helpers also build a `Watch` (two reads of `Mission.Current`, a `Count` read and a struct copy, no allocation) and step an
+enumerator copy afterwards. A call that changed nothing allocates nothing; a reported change allocates its log line.
+`AfterMissionStart` runs per mission object (thousands in a siege scene), so that helper is the only one whose count is
+large; its cost is not measured. Nothing runs per frame.
 
 ## Changelog
 
