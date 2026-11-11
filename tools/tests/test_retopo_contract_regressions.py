@@ -995,6 +995,11 @@ class ContractRegressionTests(unittest.TestCase):
         source.attributes["point_guide"] = [index == 4 for index in range(9)]
         pipeline = engine.retopologize(source, loose, RetopoSettings(auto_fill_prepass=True, subdiv_reproject=1))
         self.assertTrue(pipeline.faces)
+        for across_patterns in (True, False):
+            with self.subTest(off_center_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose, [(0.52, 0.5, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.52, 0.5, 0)) < 1e-7 for index in face_vertices))
         free = differential.unit_guide()
         free.vertices.append((5, 5, 0))
         free.lines = [(2, 4)]

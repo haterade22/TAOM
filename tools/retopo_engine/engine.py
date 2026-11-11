@@ -970,8 +970,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         ]
         if len(current.faces) == 1 and len(nearby_points) in {1, 4}:
             current = subdivide(current)
+            face_vertices = {index for face in current.faces for index in face}
             for point in nearby_points:
-                nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
+                nearest = min(face_vertices, key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
             return current
         if len(current.faces) == 1 and len(nearby_points) >= 6:
@@ -1034,7 +1035,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             distance, point, face_index, edge_index, projected, length = best
             if distance >= length * 0.49:
                 current = subdivide(current)
-                nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
+                face_vertices = {index for face in current.faces for index in face}
+                nearest = min(face_vertices, key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
                 continue
             face = current.faces[face_index]
