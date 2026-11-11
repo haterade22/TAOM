@@ -764,16 +764,17 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                         cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
                         scored_alignments.append((cost, aligned))
                     alignment_limit = len(scored_alignments) if len(loop_variants) <= 2 else 4
-                    for cost, aligned in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]:
-                        vertices = outer_candidate + aligned
-                        faces = []
-                        for index in range(len(outer_candidate)):
-                            following = (index + 1) % len(outer_candidate)
-                            faces.append((index, following, len(outer_candidate) + following, len(outer_candidate) + index))
-                        invalid = sum(invalid_face(face, vertices) for face in faces)
-                        candidates.append((invalid, cost, vertices, faces))
-            for invalid, _, vertices, faces in sorted(candidates, key=lambda candidate: candidate[:2]):
-                if invalid or crossed_mesh(vertices, faces):
+                    candidates.extend(
+                        (cost, outer_candidate, aligned)
+                        for cost, aligned in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]
+                    )
+            for _, outer_candidate, aligned in sorted(candidates, key=lambda candidate: candidate[0]):
+                vertices = outer_candidate + aligned
+                faces = []
+                for index in range(len(outer_candidate)):
+                    following = (index + 1) % len(outer_candidate)
+                    faces.append((index, following, len(outer_candidate) + following, len(outer_candidate) + index))
+                if any(invalid_face(face, vertices) for face in faces) or crossed_mesh(vertices, faces):
                     continue
                 result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
                 result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
