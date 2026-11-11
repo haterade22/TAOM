@@ -961,7 +961,7 @@ class ContractRegressionTests(unittest.TestCase):
         for across_patterns in (True, False):
             with self.subTest(auto_fill_across_patterns=across_patterns):
                 filled = engine.auto_fill(attributed, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
-                self.assertTrue(filled.edge_attributes["crease_edge"])
+                self.assertEqual({(0, 6): 0.5, (1, 6): 0.5}, filled.edge_attributes["crease_edge"])
                 self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
                 subdivided = engine.subdivide_quads(filled)
                 self.assertEqual({0.5}, set(subdivided.edge_attributes["crease_edge"].values()))
@@ -1014,8 +1014,8 @@ class ContractRegressionTests(unittest.TestCase):
         for across_patterns in (True, False):
             with self.subTest(six_point_across_patterns=across_patterns):
                 filled = engine.auto_fill(six_point, [(index / 5, 0, 0) for index in range(6)], 1, across_patterns=across_patterns)
+                self.assertEqual({(0, 4): 0.5, (1, 4): 0.5, (2, 5): 0.7, (3, 5): 0.7}, filled.edge_attributes["crease_edge"])
                 self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
-                self.assertEqual([0.5, 0.7], sorted(set(filled.edge_attributes["crease_edge"].values())))
                 engine.subdivide_quads(filled)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
