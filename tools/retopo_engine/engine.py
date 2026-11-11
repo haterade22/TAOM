@@ -198,6 +198,13 @@ def _normalized_copy(mesh: Mesh) -> Mesh:
     return result
 
 
+def _sample_loop_variants(variants, limit=32):
+    if len(variants) <= limit:
+        return variants
+    indices = sorted({round(index * (len(variants) - 1) / (limit - 1)) for index in range(limit)})
+    return [variants[index] for index in indices]
+
+
 def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     bad_edges = non_manifold_edges(mesh)
     result = _normalized_copy(mesh)
@@ -618,6 +625,161 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
             if all(len(adjacency[index]) == 2 for index in loop)
         ]
         outer = max(closed_simple_loops or loops, key=lambda loop: abs(signed_area(loop, flat.vertices)))
+        if len(loops) == 2:
+            inner_loop = loops[1] if outer is loops[0] else loops[0]
+            if signed_area(outer, flat.vertices) < 0:
+                outer = list(reversed(outer))
+            outer_points = [flat.vertices[index] for index in outer]
+            inner_points = [flat.vertices[index] for index in inner_loop]
+
+            def orientation(first, second, third):
+                return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+
+            def on_segment(first, second, point):
+                return abs(orientation(first, second, point)) <= 1e-12 and min(first[0], second[0]) <= point[0] <= max(first[0], second[0]) and min(first[1], second[1]) <= point[1] <= max(first[1], second[1])
+
+            def intersects(first, second, third, fourth):
+                values = (orientation(first, second, third), orientation(first, second, fourth), orientation(third, fourth, first), orientation(third, fourth, second))
+                if values[0] * values[1] < 0 and values[2] * values[3] < 0:
+                    return True
+                return (abs(values[0]) <= 1e-12 and on_segment(first, second, third)) or (abs(values[1]) <= 1e-12 and on_segment(first, second, fourth)) or (abs(values[2]) <= 1e-12 and on_segment(third, fourth, first)) or (abs(values[3]) <= 1e-12 and on_segment(third, fourth, second))
+
+            def edges(points):
+                return [(points[index], points[(index + 1) % len(points)]) for index in range(len(points))]
+
+            def candidate_pairs(segments):
+                bounds = [
+                    (min(first[0], second[0]), min(first[1], second[1]), max(first[0], second[0]), max(first[1], second[1]))
+                    for first, second in segments
+                ]
+                cell_size = max((max(box[2] - box[0], box[3] - box[1]) for box in bounds), default=1.0) or 1e-12
+                grid = {}
+                pairs = set()
+                for index, box in enumerate(bounds):
+                    for x in range(math.floor(box[0] / cell_size), math.floor(box[2] / cell_size) + 1):
+                        for y in range(math.floor(box[1] / cell_size), math.floor(box[3] / cell_size) + 1):
+                            cell = (x, y)
+                            for other in grid.get(cell, ()):
+                                other_box = bounds[other]
+                                if box[0] <= other_box[2] and other_box[0] <= box[2] and box[1] <= other_box[3] and other_box[1] <= box[3]:
+                                    pairs.add((other, index))
+                            grid.setdefault(cell, []).append(index)
+                return pairs
+
+            def simple_boundary(points):
+                if any(math.dist(first, second) <= 1e-12 for first, second in edges(points)):
+                    return False
+                boundary = edges(points)
+                for first_index, second_index in candidate_pairs(boundary):
+                    if second_index == first_index + 1 or (first_index == 0 and second_index == len(boundary) - 1):
+                        continue
+                    first, second = boundary[first_index]
+                    third, fourth = boundary[second_index]
+                    if intersects(first, second, third, fourth):
+                        return False
+                return True
+
+            def contained(point, polygon):
+                inside = False
+                for first, second in edges(polygon):
+                    if (first[1] > point[1]) != (second[1] > point[1]):
+                        crossing_x = first[0] + (point[1] - first[1]) * (second[0] - first[0]) / (second[1] - first[1])
+                        if crossing_x > point[0]:
+                            inside = not inside
+                return inside
+
+            if not simple_boundary(outer_points) or not simple_boundary(inner_points):
+                raise ValueError("plane initialization requires simple hole boundaries")
+            combined_edges = edges(outer_points) + edges(inner_points)
+            outer_count = len(outer_points)
+            if any(
+                (first < outer_count) != (second < outer_count)
+                and intersects(*combined_edges[first], *combined_edges[second])
+                for first, second in candidate_pairs(combined_edges)
+            ) or not contained(inner_points[0], outer_points):
+                raise ValueError("plane initialization requires a simple hole inside the outer boundary")
+            def split_longest_edges(points, count):
+                result = list(points)
+                while len(result) < count:
+                    lengths = [math.dist(first, second) for first, second in edges(result)]
+                    index = max(range(len(lengths)), key=lengths.__getitem__)
+                    result.insert(index + 1, lerp(result[index], result[(index + 1) % len(result)], 0.5))
+                return result
+
+            loop_variants = [(outer_points, inner_points)]
+            if len(inner_points) == len(outer_points):
+                loop_variants.append((
+                    split_longest_edges(outer_points, len(outer_points) + 1),
+                    split_longest_edges(inner_points, len(inner_points) + 1),
+                ))
+            if len(inner_points) != len(outer_points):
+                inner_is_shorter = len(inner_points) < len(outer_points)
+                shorter = inner_points if inner_is_shorter else outer_points
+                target_count = max(len(inner_points), len(outer_points))
+                if inner_is_shorter:
+                    loop_variants = [(outer_points, split_longest_edges(inner_points, target_count))]
+                else:
+                    loop_variants = [(split_longest_edges(outer_points, target_count), inner_points)]
+
+                def compositions(total, parts):
+                    if parts == 1:
+                        yield (total,)
+                    else:
+                        for first in range(total + 1):
+                            for remaining in compositions(total - first, parts - 1):
+                                yield (first, *remaining)
+
+                extra = target_count - len(shorter)
+                if math.comb(extra + len(shorter) - 1, len(shorter) - 1) <= 256:
+                    for counts in compositions(extra, len(shorter)):
+                        split = []
+                        for (first, second), cuts in zip(edges(shorter), counts):
+                            split.extend(lerp(first, second, step / (cuts + 1)) for step in range(cuts + 1))
+                        if inner_is_shorter:
+                            loop_variants.append((outer_points, split))
+                        else:
+                            loop_variants.append((split, inner_points))
+
+            def invalid_face(face, vertices):
+                points = [vertices[index] for index in face]
+                return any(math.dist(points[index], points[(index + 1) % 4]) <= 1e-12 for index in range(4)) or signed_area(face, vertices) <= 0 or intersects(points[0], points[1], points[2], points[3]) or intersects(points[1], points[2], points[3], points[0])
+
+            def crossed_mesh(vertices, faces):
+                mesh_edges = sorted({Mesh.edge_key(face[index], face[(index + 1) % 4]) for face in faces for index in range(4)})
+                segments = [(vertices[first], vertices[second]) for first, second in mesh_edges]
+                for first_index, second_index in candidate_pairs(segments):
+                    if set(mesh_edges[first_index]) & set(mesh_edges[second_index]):
+                        continue
+                    if intersects(*segments[first_index], *segments[second_index]):
+                        return True
+                return False
+
+            loop_variants = _sample_loop_variants(loop_variants)
+            candidates = []
+            for outer_candidate, inner_candidate in loop_variants:
+                for oriented in (inner_candidate, list(reversed(inner_candidate))):
+                    scored_alignments = []
+                    for shift in range(len(oriented)):
+                        cost = sum(math.dist(outer_candidate[index], oriented[(shift + index) % len(oriented)]) for index in range(len(oriented)))
+                        scored_alignments.append((cost, shift))
+                    alignment_limit = len(scored_alignments) if len(loop_variants) <= 2 else 4
+                    candidates.extend(
+                        (cost, outer_candidate, oriented, shift)
+                        for cost, shift in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]
+                    )
+            for _, outer_candidate, oriented, shift in sorted(candidates, key=lambda candidate: candidate[0]):
+                aligned = [oriented[(shift + index) % len(oriented)] for index in range(len(oriented))]
+                vertices = outer_candidate + aligned
+                faces = []
+                for index in range(len(outer_candidate)):
+                    following = (index + 1) % len(outer_candidate)
+                    faces.append((index, following, len(outer_candidate) + following, len(outer_candidate) + index))
+                if any(invalid_face(face, vertices) for face in faces) or crossed_mesh(vertices, faces):
+                    continue
+                result = Mesh(vertices=vertices, faces=faces, uv_name=flat.uv_name)
+                result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
+                return result
+            raise ValueError("plane initialization could not align hole boundaries into valid quads")
         remaining = sorted(
             {index for face in flat.faces for index in face} - set(outer),
             key=lambda index: math.atan2(
@@ -802,6 +964,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     if max_iterations < 0:
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
+    guide = guide.copy()
     points = [tuple(point) for point in point_guides]
     resolved_domains = guide.resolved_attribute_domains()
     unresolved_names = guide.unresolved_attribute_names()
@@ -815,22 +978,40 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         result.attribute_domains = dict(current.attribute_domains)
         return result
 
+    def split_edge(current, parent, new_vertex):
+        parent = Mesh.edge_key(*parent)
+        if parent in current.lines:
+            current.lines.remove(parent)
+            for child in (Mesh.edge_key(parent[0], new_vertex), Mesh.edge_key(parent[1], new_vertex)):
+                if child not in current.lines:
+                    current.lines.append(child)
+        for values in current.edge_attributes.values():
+            if parent not in values:
+                continue
+            value = values[parent]
+            values[Mesh.edge_key(parent[0], new_vertex)] = value
+            values[Mesh.edge_key(parent[1], new_vertex)] = value
+            if parent not in current.edges():
+                del values[parent]
+
     def fill(current, candidate_points):
         if max_iterations == 0:
             return current
+        face_vertices = {index for face in current.faces for index in face}
         nearby_points = [
             point for point in candidate_points
             if all(
-                min(vertex[axis] for vertex in current.vertices) - 0.5
+                min(current.vertices[index][axis] for index in face_vertices) - 0.5
                 <= point[axis]
-                <= max(vertex[axis] for vertex in current.vertices) + 0.5
+                <= max(current.vertices[index][axis] for index in face_vertices) + 0.5
                 for axis in range(3)
             )
         ]
         if len(current.faces) == 1 and len(nearby_points) in {1, 4}:
             current = subdivide(current)
+            face_vertices = {index for face in current.faces for index in face}
             for point in nearby_points:
-                nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
+                nearest = min(face_vertices, key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
             return current
         if len(current.faces) == 1 and len(nearby_points) >= 6:
@@ -856,11 +1037,14 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 ]
                 for name in face_attribute_names:
                     current.attributes[name] = [parent_attributes[name]] * 2
+                split_edge(current, (face[0], face[1]), len(current.vertices) - 2)
+                split_edge(current, (face[2], face[3]), len(current.vertices) - 1)
                 return current
         for _ in range(max_iterations):
+            face_vertices = {index for face in current.faces for index in face}
             missing = [
                 point for point in candidate_points
-                if not any(math.dist(point, vertex) < 1e-7 for vertex in current.vertices)
+                if not any(math.dist(point, current.vertices[index]) < 1e-7 for index in face_vertices)
             ]
             if not missing:
                 break
@@ -891,7 +1075,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             distance, point, face_index, edge_index, projected, length = best
             if distance >= length * 0.49:
                 current = subdivide(current)
-                nearest = min(range(len(current.vertices)), key=lambda index: math.dist(point, current.vertices[index]))
+                face_vertices = {index for face in current.faces for index in face}
+                nearest = min(face_vertices, key=lambda index: math.dist(point, current.vertices[index]))
                 current.vertices[nearest] = point
                 continue
             face = current.faces[face_index]
@@ -902,8 +1087,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             opposite = lerp(current.vertices[third], current.vertices[fourth], 0.5)
 
             def vertex_at(coordinate, parent_indices):
-                for index, vertex in enumerate(current.vertices):
-                    if math.dist(vertex, coordinate) < 1e-7:
+                for index in face_vertices:
+                    if math.dist(current.vertices[index], coordinate) < 1e-7:
                         return index
                 parent = min(parent_indices, key=lambda index: math.dist(coordinate, current.vertices[index]))
                 current.vertices.append(coordinate)
@@ -922,6 +1107,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 current.attributes[name].extend([parent_attributes[name]] * 2)
             current.faces.append((first, first_new, opposite_new, fourth))
             current.faces.append((first_new, second, third, opposite_new))
+            split_edge(current, (first, second), first_new)
+            split_edge(current, (third, fourth), opposite_new)
             break
         return current
 
@@ -933,11 +1120,16 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         result = Mesh(
             vertices=[], faces=[], uv_name=guide.uv_name,
             attributes={name: [] for name in guide.attributes},
+            edge_attributes={name: {} for name in guide.edge_attributes},
             attribute_domains=dict(resolved_domains),
         )
+        combined_indices = {}
+        component_lines = set()
         for component in guide.connected_components():
             used = sorted({index for face_index in component for index in guide.faces[face_index]})
             remap = {old: new for new, old in enumerate(used)}
+            internal_lines = [edge for edge in guide.lines if edge[0] in remap and edge[1] in remap]
+            component_lines.update(Mesh.edge_key(*edge) for edge in internal_lines)
             attributes = {}
             for name, values in guide.attributes.items():
                 if name in point_attribute_names:
@@ -949,17 +1141,47 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             part = Mesh(
                 vertices=[guide.vertices[index] for index in used],
                 faces=[tuple(remap[index] for index in guide.faces[face_index]) for face_index in component],
+                lines=[(remap[first], remap[second]) for first, second in internal_lines],
                 attributes=attributes,
+                edge_attributes={
+                    name: {
+                        Mesh.edge_key(remap[first], remap[second]): value
+                        for (first, second), value in values.items()
+                        if first in remap and second in remap
+                    }
+                    for name, values in guide.edge_attributes.items()
+                },
                 attribute_domains=dict(resolved_domains),
             )
             filled = fill(part, points)
             offset = len(result.vertices)
+            combined_indices.update({old: offset + remap[old] for old in used})
             result.vertices.extend(filled.vertices)
             result.faces.extend(tuple(index + offset for index in face) for face in filled.faces)
+            result.lines.extend((first + offset, second + offset) for first, second in filled.lines)
             for name in point_attribute_names:
                 result.attributes[name].extend(filled.attributes[name])
             for name in face_attribute_names:
                 result.attributes[name].extend(filled.attributes[name])
+            for name, values in filled.edge_attributes.items():
+                target = result.edge_attributes.setdefault(name, {})
+                target.update({(first + offset, second + offset): value for (first, second), value in values.items()})
+        for first, second in guide.lines:
+            if Mesh.edge_key(first, second) in component_lines:
+                continue
+            for old in (first, second):
+                if old not in combined_indices:
+                    combined_indices[old] = len(result.vertices)
+                    result.vertices.append(guide.vertices[old])
+                    for name in point_attribute_names:
+                        result.attributes[name].append(guide.attributes[name][old])
+            edge = Mesh.edge_key(combined_indices[first], combined_indices[second])
+            if edge not in result.lines:
+                result.lines.append(edge)
+            for name, values in guide.edge_attributes.items():
+                original = Mesh.edge_key(first, second)
+                if original in values:
+                    result.edge_attributes.setdefault(name, {}).setdefault(edge, values[original])
     for name in list(result.attributes):
         if name not in point_attribute_names and name not in face_attribute_names:
             del result.attributes[name]
@@ -1523,4 +1745,10 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
         result = _separate(result, result.attributes["part_id"])
     if settings.thickness_enabled:
         result = thicken(result, settings.thickness, settings.thickness_offset)
+    valid_edges = set(result.edges())
+    result.edge_attributes = {
+        name: {edge: value for edge, value in values.items() if edge in valid_edges}
+        for name, values in result.edge_attributes.items()
+    }
+    result.edge_attributes = {name: values for name, values in result.edge_attributes.items() if values}
     return result

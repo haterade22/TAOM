@@ -39,13 +39,13 @@ before vertex-length matching, except known point attributes and `pattern_id` pa
 `source_position`. Subdivision keeps original vertex values, uses the lower-index edge endpoint and
 first face corner for generated source values, and uses the nearest parent for edge splits. New
 `point_guide`, `open_seam`, and `simplify_on` values are false, so generated vertices do not become
-manual guides. Domains resolve once at operation entry and inferred values stay explicit through
-reconstruction. Unsupported attributes are discarded, and export accepts only point or face arrays
-whose lengths match their elements. Mixed-domain face combinations default to zero. Import reads
-source and guide attributes only on the point domain; pattern, part, and plane identifiers may use
-point or face domains. Wrong-length and unsupported attributes and their domain declarations are
-removed at operation entry, and loose-line endpoints follow the same vertex remap as faces.
-Debug materials use face-domain identifiers only.
+manual guides. Operations that normalize inputs resolve domains once at entry and keep inferred
+values explicit through reconstruction. They discard wrong-length and unsupported attributes and
+their domain declarations. Export accepts only point or face arrays whose lengths match their
+elements. Mixed-domain face combinations default to zero. Import reads source and guide attributes
+only on the point domain; pattern, part, and plane identifiers may use point or face domains.
+Loose-line endpoints follow the same vertex remap as faces. Debug materials use face-domain
+identifiers only.
 
 The behavioral input and acceptance matrix are in
 [retopo-planes-1-6-3-clean-room.md](../research/retopo-planes-1-6-3-clean-room.md). The independent
@@ -160,7 +160,10 @@ helmet or animation variants.
 The pure Python reference implementation uses direct UV-triangle lookup, which is straightforward and
 deterministic but grows linearly with source triangle count per output vertex. Dense production meshes
 need profiling and an accelerated Blender BVH path before throughput claims. Auto fill is intentionally
-bounded. Generated helpers are rebuilt only when the operator runs.
+bounded. Larger alternative-hole searches use at most 32 layouts and four lowest-cost rotations per
+direction; one or two layouts score every rotation. Boundary and assembled-mesh
+intersections use a uniform-grid broad phase before exact segment tests. Generated helpers are rebuilt
+only when the operator runs.
 
 ## Limitations
 
