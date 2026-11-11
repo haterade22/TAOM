@@ -997,12 +997,13 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     def fill(current, candidate_points):
         if max_iterations == 0:
             return current
+        face_vertices = {index for face in current.faces for index in face}
         nearby_points = [
             point for point in candidate_points
             if all(
-                min(vertex[axis] for vertex in current.vertices) - 0.5
+                min(current.vertices[index][axis] for index in face_vertices) - 0.5
                 <= point[axis]
-                <= max(vertex[axis] for vertex in current.vertices) + 0.5
+                <= max(current.vertices[index][axis] for index in face_vertices) + 0.5
                 for axis in range(3)
             )
         ]

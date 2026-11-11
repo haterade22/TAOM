@@ -1050,6 +1050,14 @@ class ContractRegressionTests(unittest.TestCase):
                 filled = engine.auto_fill(loose, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
                 face_vertices = {index for face in filled.faces for index in face}
                 self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
+        far_point = differential.unit_guide()
+        far_point.vertices.append((5, 5, 0))
+        far_point.lines = [(2, 4)]
+        for across_patterns in (True, False):
+            with self.subTest(far_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(far_point, [(3, 3, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(all(math.dist(filled.vertices[index], (3, 3, 0)) > 1e-7 for index in face_vertices))
         loose_point = differential.unit_guide()
         loose_point.vertices.append((0.49, 0.5, 0))
         loose_point.lines = [(0, 2), (0, 4)]
