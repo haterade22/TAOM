@@ -65,6 +65,10 @@ Every outside PR goes through the same three checks, in this order:
 2. **Build and tests.** The full solution build and the whole test suite.
 3. **Code review.** A review of correctness, engine compatibility and the project rules.
 
+The default branches need a pull request and a review from the maintainer (`.github/CODEOWNERS`), and
+the paths listed under "What we will not merge" always go to the maintainer by name. Nothing from your
+branch is built before the security review passes.
+
 We may push small fixes to your branch or ask for changes. A maintainer merges; passing checks are
 not approval on their own.
 

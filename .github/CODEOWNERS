@@ -1,0 +1,25 @@
+# Every path has the maintainer as owner. The ruleset on the default branches requires a code owner
+# review, so no PR merges without it. The lines below repeat the owner for the paths that
+# .claude/skills/review-outside-pr/SKILL.md treats as high risk (Phase 1, step 3), so they show
+# in the PR review list by name.
+
+*                   @haterade22
+
+*.csproj            @haterade22
+*.props             @haterade22
+*.targets           @haterade22
+*.sln               @haterade22
+/NuGet.config       @haterade22
+/build.ps1          @haterade22
+/setup-dev-env.ps1  @haterade22
+/.claude/           @haterade22
+/.ai/               @haterade22
+/.agents/           @haterade22
+/.mcp.json          @haterade22
+/AGENTS.md          @haterade22
+/CLAUDE.md          @haterade22
+/.github/           @haterade22
+/.gitattributes     @haterade22
+/.githooks/         @haterade22
+/.vscode/           @haterade22
+/tools/             @haterade22
