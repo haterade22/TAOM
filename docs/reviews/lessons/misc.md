@@ -727,3 +727,11 @@ The gold-only option's rate check carried the comment "a dedicated server fills 
 - **Why missed:** the comment and docs were written from the plan's summary. No step read the code that feeds the value or writes the effect, and the maintainer's approval of the plan looked like evidence for each sentence in it.
 - **Prevent:** a reason or an effect stated in a comment or doc is a claim about the producer. Read the line that proves it, or state only what the code does. A plan's reason is a hypothesis until a read confirms it.
 - **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) rows 3 to 5.
+
+### A retuned value is searched in every prose form before the retune is called done (war ram cooldown, 2026-11-11)
+
+The war ram's cooldown went from 10 s to 35 s. The constant, one test and the feature table were easy to find. Four passages in the same two files, and two comments in the elk and Animalia configs, still gave 10 s as the current value. My own first grep had listed some of them, and I sorted them as retune history without reading their tense.
+
+- **Why missed:** the hits were judged by file, not by sentence, and the search covered only files named for the ram, so comments in other features that quote the ram were out of reach.
+- **Prevent:** before a retune is called done, grep the old value in each prose form (`10 s`, `10s`, `10-second`, `ten second`) across `Main/` and `docs/`, and read every hit. A hit is history only when its sentence is dated. Fix the ones in the files you edited; report the ones in other features.
+- **Source:** [rca-war-ram-cooldown-2026-11-11.md](../rca-war-ram-cooldown-2026-11-11.md) findings F1 and F2.

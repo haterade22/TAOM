@@ -78,7 +78,7 @@ public class WarRamAttackServiceTests
     [TestMethod]
     public void IsOffCooldown_ExactlyAtCooldown_ReturnsTrue()
         // Inclusive ">= cooldown" -- the attack becomes available the moment the window closes.
-        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-10), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-WarRamConfig.AttackCooldownSeconds), now: Now, cooldownSeconds: WarRamConfig.AttackCooldownSeconds));
 
     [TestMethod]
     public void IsOffCooldown_FullyElapsed_ReturnsTrue()
