@@ -707,6 +707,11 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 return result
 
             loop_variants = [(outer_points, inner_points)]
+            if len(inner_points) == len(outer_points):
+                loop_variants.append((
+                    split_longest_edges(outer_points, len(outer_points) + 1),
+                    split_longest_edges(inner_points, len(inner_points) + 1),
+                ))
             if len(inner_points) != len(outer_points):
                 inner_is_shorter = len(inner_points) < len(outer_points)
                 shorter = inner_points if inner_is_shorter else outer_points
@@ -758,7 +763,7 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                         aligned = oriented[shift:] + oriented[:shift]
                         cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
                         scored_alignments.append((cost, aligned))
-                    alignment_limit = len(scored_alignments) if len(loop_variants) == 1 else 4
+                    alignment_limit = len(scored_alignments) if len(loop_variants) <= 2 else 4
                     for cost, aligned in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]:
                         vertices = outer_candidate + aligned
                         faces = []

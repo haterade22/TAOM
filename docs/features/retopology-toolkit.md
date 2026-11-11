@@ -160,8 +160,8 @@ helmet or animation variants.
 The pure Python reference implementation uses direct UV-triangle lookup, which is straightforward and
 deterministic but grows linearly with source triangle count per output vertex. Dense production meshes
 need profiling and an accelerated Blender BVH path before throughput claims. Auto fill is intentionally
-bounded. When multiple unequal-hole layouts are sampled, alignment uses at most 32 layouts and four
-lowest-cost rotations per direction; a single layout scores every rotation. Boundary and assembled-mesh
+bounded. Larger alternative-hole searches use at most 32 layouts and four lowest-cost rotations per
+direction; one or two layouts score every rotation. Boundary and assembled-mesh
 intersections use a uniform-grid broad phase before exact segment tests. Generated helpers are rebuilt
 only when the operator runs.
 

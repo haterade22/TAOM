@@ -667,6 +667,14 @@ class ContractRegressionTests(unittest.TestCase):
         initialized_fifth = engine.initialize_planes(fifth_rotation, RetopoSettings())
         self.assertEqual(14, len(initialized_fifth.faces))
         self.assertTrue(all(engine.signed_area(face, initialized_fifth.vertices) > 0 for face in initialized_fifth.faces))
+        equal_split = loop_case(
+            [(0, 0, 0), (0.5, 0, 0), (1, 0, 0), (1.5, 0, 0), (2, 0, 0), (3, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)],
+            [(1, 1, 0), (2, 1, 0), (3, 1, 0), (3, 2, 0), (3, 3, 0), (2, 3, 0), (1, 3, 0), (1, 2, 0), (1, 1.5, 0)],
+        )
+        initialized_equal_split = engine.initialize_planes(equal_split, RetopoSettings())
+        self.assertEqual(10, len(initialized_equal_split.faces))
+        self.assertTrue(all(vertex in initialized_equal_split.vertices for vertex in equal_split.vertices))
+        self.assertTrue(all(engine.signed_area(face, initialized_equal_split.vertices) > 0 for face in initialized_equal_split.faces))
         crossing_outer = [(2.07, 0.774, 0), (1.944, 1.884, 0), (1.449, 1.551, 0), (1.69, 2.588, 0), (0.799, 1.641, 0), (-0.975, 2.182, 0), (-2.456, -1.221, 0), (-1.573, -1.198, 0), (-2.086, -1.825, 0), (0.887, -1.398, 0)]
         crossing_inner = [(-1.034, -0.31, 0), (0.39, -0.604, 0), (0.683, 0.82, 0), (-0.74, 1.113, 0)]
         while len(crossing_inner) < len(crossing_outer):
@@ -674,8 +682,18 @@ class ContractRegressionTests(unittest.TestCase):
             split_index = max(range(len(lengths)), key=lengths.__getitem__)
             crossing_inner.insert(split_index + 1, engine.lerp(crossing_inner[split_index], crossing_inner[(split_index + 1) % len(crossing_inner)], 0.5))
         assembled_crossing = loop_case(crossing_outer, crossing_inner)
-        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
-            engine.initialize_planes(assembled_crossing, RetopoSettings())
+        initialized_assembled = engine.initialize_planes(assembled_crossing, RetopoSettings())
+        self.assertTrue(all(vertex in initialized_assembled.vertices for vertex in assembled_crossing.vertices))
+        self.assertTrue(all(engine.signed_area(face, initialized_assembled.vertices) > 0 for face in initialized_assembled.faces))
+        assembled_edges = sorted({Mesh.edge_key(face[index], face[(index + 1) % 4]) for face in initialized_assembled.faces for index in range(4)})
+        for first_index, (first, second) in enumerate(assembled_edges):
+            for third, fourth in assembled_edges[first_index + 1:]:
+                if set((first, second)) & set((third, fourth)):
+                    continue
+                self.assertFalse(intersects(
+                    initialized_assembled.vertices[first], initialized_assembled.vertices[second],
+                    initialized_assembled.vertices[third], initialized_assembled.vertices[fourth],
+                ))
         def star_case(count, high, low, radius, phase, offset):
             outer = [((high if index % 2 == 0 else low) * math.cos(math.tau * index / count), (high if index % 2 == 0 else low) * math.sin(math.tau * index / count), 0) for index in range(count)]
             inner = [(radius * math.cos(phase + math.tau * index / count) + offset, radius * math.sin(phase + math.tau * index / count), 0) for index in range(count)]
