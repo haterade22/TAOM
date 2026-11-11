@@ -129,6 +129,9 @@ internal static class LongDefeatChecks
         return Verdict(s.Fled == 0 && s.FleeingPeak == 0, $"fled={Num(s.Fled)} fleeing_peak={Num(s.FleeingPeak)} kills={Num(s.TotalKills)}");
     }
 
+    /// <summary>A plan with no bounty table has no economy to judge: a story mission (#1105) has no bounty table and no shop, and its purse takes only the wave bonus, which nothing spends.</summary>
+    internal static CheckVerdict GoldWithoutBounties() => new(CheckResult.Skip, "reason=no-bounties");
+
     internal static CheckVerdict Gold(Purse p, RunStats s, int wavesCleared) =>
         Gold(p.Start, p.TotalEarned, p.Spent, p.Balance, p.EarnedFrom(PurseSource.Bounty), p.EarnedFrom(PurseSource.WaveBonus),
             p.EarnedFrom(PurseSource.EarlyStart), s.TotalKills, wavesCleared);

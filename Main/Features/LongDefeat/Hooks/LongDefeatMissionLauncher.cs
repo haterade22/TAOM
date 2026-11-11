@@ -118,7 +118,7 @@ internal sealed class LongDefeatMissionLauncher
             new EquipmentControllerLeaveLogic(),
             new MissionSiegeEnginesLogic(Weapons(DefaultSiegeEngineTypes.Catapult, 4, DefaultSiegeEngineTypes.Trebuchet, 2),
                 Weapons(DefaultSiegeEngineTypes.Ram, 1, DefaultSiegeEngineTypes.SiegeTower, 2)),
-            new LongDefeatMissionLogic(plan, _session, _logger, _outcomes, _menu, "ld" + Interlocked.Increment(ref _missions), records),
+            new LongDefeatMissionLogic(plan, _session, _logger, _outcomes, _menu.EndGame, "ld" + Interlocked.Increment(ref _missions), records),
         };
 
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>

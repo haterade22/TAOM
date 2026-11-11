@@ -1791,6 +1791,7 @@ The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed(
 - **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
 - **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.
+- **Repeat (Story Missions, #1105, 2026-11-10):** the story list was built from the Long Defeat's list and Host Review's, and kept neither the HUD's veto nor Host Review's Photo Mode view. Its dev menu also copied Host Review's mission host but not `HostReviewService.GetBlock`, so it opened over encounters and other menus. The lesson was in this file, but path rules do not load in a sibling worktree, and nothing machine-checked it. **Gate:** `PhotoModeEscapeMenuGateTests` fails any `[ViewMethod]` list with the singleplayer escape menu and neither the Photo Mode view nor a view that refuses it. A copied launcher or menu entry also copies its precedent's refusals, each with a test. Source: [rca-story-missions-slice1-2026-11-10.md](../rca-story-missions-slice1-2026-11-10.md), rows 1 and 2.
 
 ### A co-op battle is not a network session to the engine: read `ICoopSessionProvider` (Seat of Seeing, 2026-11-04)
 
@@ -1880,6 +1881,11 @@ v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool incl
 - **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
 - **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).
 
+### A sound event that ends by itself is gone: replay on a new event (#1105, 2026-11-10)
+`SoundEvent.Play()` on an event that has just ended looks like a replay, and the managed wrapper is one line that hides why it cannot work. In v1.5.7 native, the STOPPED callback queues the event id, and the next native sound update releases the FMOD instance and removes the id (`FUN_180237200`). After that `IsValid` is false and `Play()` on the same object fails. psai makes a new event for each channel it plays, and a TAOM loop must do the same: create a new event for every play.
+- **Why missed:** the design asked whether `event:/music` loops by itself, a question about the sound bank, and not whether a stopped event still exists, a question about the native lifetime. The unit tests faked the adapter, so they proved the cue's logic and not the engine's.
+- **Prevent:** for any engine handle that a callback can end (a sound, an effect, a timer), read the native callback for what it frees before the design relies on reuse. When the decompile is not readable, mark the reuse UNVERIFIED and use a new handle.
+- **Source:** docs/reviews/rca-story-mission-music-2026-11-10.md finding 1; docs/reference/engine/music-and-sound-events.md section 5 (#1105)
 ### A comment that states an engine rule is bound to the engine: grep it at every bump (v1.5.7 bump, 2026-11-10)
 
 v1.5.7 made `MenuHelper.EncounterAttackConsequence` skip the hostile action against a caravan or villager leader party. TAOM patches neither that method nor its caller, so the member diff, the binding gate and the patch-note table all read "Inherited". Three Enlistment comments still said that Attack always declares the war, and `OathSitOutRule` rests on that rule. An independent sweep of the engine diff found it, not the bump's own steps.

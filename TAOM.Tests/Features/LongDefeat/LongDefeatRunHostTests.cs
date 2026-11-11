@@ -24,7 +24,7 @@ public class LongDefeatRunHostTests
         var menu = new FakeLongDefeatMenu();
         var session = new LongDefeatSession();
         var outcomes = new RecordingOutcomeLog();
-        var host = new LongDefeatRunHost(Plan, session, Substitute.For<IModLogger>(), outcomes, menu, "m1", field);
+        var host = new LongDefeatRunHost(Plan, session, Substitute.For<IModLogger>(), outcomes, menu.EndGame, "m1", field);
         return (host, menu, session, outcomes);
     }
 
@@ -86,7 +86,7 @@ public class LongDefeatRunHostTests
     {
         var (foot, _, _, _) = NewHost(() => new FakeLongDefeatField());
         var mounted = new LongDefeatRunHost(Plan with { Loadout = new LdLoadout("cavalry", true, Array.Empty<LdKitSlot>()) }, new LongDefeatSession(),
-            Substitute.For<IModLogger>(), new RecordingOutcomeLog(), new FakeLongDefeatMenu(), "m1", () => new FakeLongDefeatField());
+            Substitute.For<IModLogger>(), new RecordingOutcomeLog(), new FakeLongDefeatMenu().EndGame, "m1", () => new FakeLongDefeatField());
 
         Assert.IsFalse(foot.WatchesBodies);
         Assert.IsTrue(mounted.WatchesBodies);
@@ -208,5 +208,82 @@ public class LongDefeatRunHostTests
         host.Leave();
 
         Assert.AreEqual(1, menu.EndGames);
+    }
+
+    // The Story Missions host leaves by ending its mission, not the game: the host takes the exit as an action, whatever the caller binds to it.
+    private static (LongDefeatRunHost Host, LongDefeatSession Session, Func<int> Leaves) HostWithCountedLeave(Func<TAOM.Adapters.ILongDefeatBattlefieldAdapter> field, Action? extra = null)
+    {
+        var leaves = 0;
+        var session = new LongDefeatSession();
+        var host = new LongDefeatRunHost(Plan, session, Substitute.For<IModLogger>(), new RecordingOutcomeLog(), () =>
+        {
+            leaves++;
+            extra?.Invoke();
+        }, "m1", field);
+        return (host, session, () => leaves);
+    }
+
+    [TestMethod]
+    public void Leave_AFieldThatCannotBoot_CallsTheLeaveActionOnce_AndRecordsTheBootFault()
+    {
+        var (host, session, leaves) = HostWithCountedLeave(() => new FakeLongDefeatField { BootOk = false });
+        host.MarkStartDue();
+
+        host.Step(0.1f, () => 1f);
+        host.Step(0.1f, () => 2f);
+
+        Assert.AreEqual(1, leaves());
+        Assert.AreEqual("Boot", session.Fault);
+    }
+
+    [TestMethod]
+    public void Leave_ATickThatFaults_CallsTheLeaveActionOnce_EvenWhenTheNextTickFaultsToo()
+    {
+        var field = new FakeLongDefeatField();
+        var (host, session, leaves) = HostWithCountedLeave(() => field);
+        host.MarkStartDue();
+        host.Step(0.1f, () => 1f);
+        field.ThrowOnRead = true;
+
+        host.Step(0.1f, () => 2f);
+        host.Step(0.1f, () => 3f);
+
+        Assert.AreEqual(1, leaves());
+        Assert.AreEqual("OnMissionTick", session.Fault);
+    }
+
+    [TestMethod]
+    public void Leave_AStartThatThrows_CallsTheLeaveActionOnce()
+    {
+        var (host, _, leaves) = HostWithCountedLeave(() => throw new InvalidOperationException("the engine call threw"));
+        host.MarkStartDue();
+
+        host.Step(0.1f, () => 1f);
+
+        Assert.AreEqual(1, leaves());
+    }
+
+    [TestMethod]
+    public void Leave_AnActionThatThrows_NeverEscapesTheHost_AndIsNotCalledAgain()
+    {
+        var (host, _, leaves) = HostWithCountedLeave(() => new FakeLongDefeatField { BootOk = false }, () => throw new InvalidOperationException("the mission is gone"));
+        host.MarkStartDue();
+
+        host.Step(0.1f, () => 1f);
+        host.Leave();
+
+        Assert.AreEqual(1, leaves());
+    }
+
+    [TestMethod]
+    public void Leave_AnOrdinaryShutDown_DoesNotCallTheLeaveAction()
+    {
+        var (host, _, leaves) = HostWithCountedLeave(() => new FakeLongDefeatField());
+        host.MarkStartDue();
+        host.Step(0.1f, () => 1f);
+
+        host.ShutDown();
+
+        Assert.AreEqual(0, leaves(), "an ordinary exit is the engine ending the mission; the host never asks to leave");
     }
 }

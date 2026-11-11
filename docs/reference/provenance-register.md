@@ -78,7 +78,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | AssertAutoIgnore (poheniks) | `AssertAutoIgnore` | UNKNOWN | behavioural-port | `tools/assert_auto_ignore.py` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` `TheOldRealms/TOR_Core` | GPL-3.0 | behavioural-port | `Main/Features/CreatureSiegeRole/**` | pending-license |
-| module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
+| module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` except `StoryMusic/` (next row) | uncleared |
+| Story mission music | `StoryMusic` `isengard_vs_rohan` | purchased from its composer, name not recorded | redistributed | `Main/_Module/ModuleSounds/StoryMusic/**` (see the detail) | cleared |
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` `FS_Ringbearer` | Pete Klassen freeware: free distribution only with the original archive, private use only, no modification (see detail) | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_Ringbearer/**` | uncleared |
@@ -643,23 +644,32 @@ v0.7.5.1's. A list of module ids is a compatibility fact about other people's mo
 
 ### Module audio (UNCLEARED)
 
-`Main/_Module/ModuleSounds/` ships 436 tracked files (342 WAV, 93 MP3) plus the culture music set
-introduced in `cf2b9c44` ("17 cultures, 476 tracks"). No upstream, author, or terms are recorded
-anywhere in the repo, and `Main/_Module/THIRD-PARTY-LICENSES.txt` historically disclaimed audio
-provenance in the same breath as art and game data.
+`Main/_Module/ModuleSounds/` ships 436 tracked files (342 WAV, 93 MP3) by an earlier count;
+`git ls-files Main/_Module/ModuleSounds | wc -l` prints today's. No
+upstream, author, or terms are recorded anywhere in the repo, and `Main/_Module/THIRD-PARTY-LICENSES.txt`
+historically disclaimed audio provenance in the same breath as art and game data. The culture music
+set of `cf2b9c44` ("17 cultures, 476 tracks") never reached trunk: that commit is only on the
+contributor branch `origin/Theboyys-Music-Integration-1.4.5` (issue #275, open), and no file under
+`ModuleSounds/taom/` is tracked on trunk (checked 2026-11-10).
 
 The maintainer's position (2026-08-25) is that the audio is third-party in origin and is not
 claimed. That is now stated explicitly rather than left to a blanket disclaimer: the audio is
 excluded from TAOM's CC BY-NC-SA grant in `LICENSE-CONTENT.md`, and `THIRD-PARTY-LICENSES.txt`
 carries its own section saying TAOM does not hold rights in it.
 
-The playback engine is unaffected and is TAOM original work under MIT: `MusicPlaybackService`,
-`MusicTrackIndex`, `MusicTransitionResolver`, `Patch46_Music` and the surrounding code.
+The playback engine that branch wrote (`MusicPlaybackService`, `MusicTrackIndex`,
+`MusicTransitionResolver`, `Patch46_Music`) is not on trunk either; trunk's `Patch46` is a
+tournament patch. TAOM's own music code is the Faction UI menu-music patch and, for #1105,
+the story mission track ([music and sound events](engine/music-and-sound-events.md)).
 
-**What would clear this row:** identify the upstream and its terms, or replace the audio. Until
-then it is redistributed with unknown terms, which is the same class of exposure as the
-NativeSkinFixes row below (while that DLL shipped), at lower stakes only because audio is easier to swap than a native hook
-library.
+**Story mission music.** `ModuleSounds/StoryMusic/isengard_vs_rohan.ogg` (#1105, 2026-11-10) is an
+OGG encode of `Isengard vs. Rohan Third Draft.wav` from the maintainer's asset folder. The WAV is a
+Cubase 14 render with no composer, copyright or description field. The maintainer bought the track
+from a music composer and does not remember the composer's name (maintainer, 2026-11-11), so the row
+is `cleared` on his purchase. What stays unknown: the composer's name and the purchase terms in
+writing, and whether the track uses third-party samples or quotes a film, game or other melody. If
+the receipt or the composer turns up, record the name and terms here. It keeps its own folder and
+row so that its status can change without the rest of the audio.
 
 ### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
 

@@ -382,6 +382,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
 | `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, refuses a guest. |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
+| `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `TaomBuildingSeedingBehavior` | `OnGameLoaded` (`IsAuthority`, checked in `TaomBuildingSeedingService`) | Adds town buildings, a shared write. |
 | `LordCourtesiesDialogBehavior` | the dialog lines, in `LordCourtesiesService` (`!ShouldDeferToHost && !IsDedicatedServer`) | Player action: the relation charge, the clan reveal and the troop gift. |
 | `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`) | Enforces the permanent alliances. The initial alliances run only while a new campaign is built. |

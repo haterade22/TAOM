@@ -1,0 +1,153 @@
+{
+  "missions": [
+    {
+      "id": "helms_deep_defend",
+      "name": "{=!}Helm's Deep: hold the walls",
+      "scene": "taom_rohan_castle_helms_deep_forceatmo",
+      "side": "Defend",
+      "defenderCulture": "vlandia",
+      "attackerCulture": "isengard",
+      "music": "StoryMusic/isengard_vs_rohan.ogg",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
+        { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
+      ],
+      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "roster": {
+        "waves": [
+          { "count": 110, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 50 },
+            { "troop": "isengard_militia_spearman", "class": "Infantry", "weight": 25 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "minas_tirith_defend",
+      "name": "{=!}Minas Tirith: hold the White City",
+      "scene": "taom_gondor_town_minas_tirith_forceatmo",
+      "side": "Defend",
+      "defenderCulture": "gondor",
+      "attackerCulture": "mordor",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "gondor_anf_militia", "class": "Infantry", "count": 100 },
+        { "troop": "gondor_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "mordor_orc_fighter", "class": "Infantry", "weight": 40 },
+            { "troop": "mordor_uruk_grunt", "class": "Infantry", "weight": 35 },
+            { "troop": "mordor_orc_hunter", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "osgiliath_defend",
+      "name": "{=!}Osgiliath: hold the river crossing",
+      "scene": "taom_gondor_town_osgiliath_e_forceatmo",
+      "side": "Defend",
+      "defenderCulture": "gondor",
+      "attackerCulture": "mordor",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "gondor_ano_militia", "class": "Infantry", "count": 100 },
+        { "troop": "gondor_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "mordor_orc_fighter", "class": "Infantry", "weight": 45 },
+            { "troop": "mordor_militia_spearman", "class": "Infantry", "weight": 30 },
+            { "troop": "mordor_militia_archer", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "pelargir_defend",
+      "name": "{=!}Pelargir: hold the harbour",
+      "scene": "taom_gondor_town_dolamroth_forceatmo",
+      "side": "Defend",
+      "defenderCulture": "gondor",
+      "attackerCulture": "umbar",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "gondor_anf_militia", "class": "Infantry", "count": 100 },
+        { "troop": "gondor_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "umbar_elite", "class": "Infantry", "weight": 45 },
+            { "troop": "aux_basic", "class": "Infantry", "weight": 30 },
+            { "troop": "umbar_elite_root1", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "dale_defend",
+      "name": "{=!}Dale: hold against the Easterlings",
+      "scene": "sturgia_town_g",
+      "side": "Defend",
+      "defenderCulture": "sturgia",
+      "attackerCulture": "khuzait",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "dale_militia", "class": "Infantry", "count": 100 },
+        { "troop": "dale_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "easterling_militia", "class": "Infantry", "weight": 40 },
+            { "troop": "rhun_militia_spearman", "class": "Infantry", "weight": 35 },
+            { "troop": "easterling_bowman", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "lorien_defend",
+      "name": "{=!}Lothlorien: hold the borders",
+      "scene": "battania_town_a",
+      "side": "Defend",
+      "defenderCulture": "lothlorien",
+      "attackerCulture": "dolguldur",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "lorien_militia_spearman", "class": "Infantry", "count": 100 },
+        { "troop": "lorien_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "dg_orc_gnasher", "class": "Infantry", "weight": 45 },
+            { "troop": "dolguldur_militia_spearman", "class": "Infantry", "weight": 30 },
+            { "troop": "dg_goblin_hunter", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "north_defend",
+      "name": "{=!}Arthedain: hold against Gundabad",
+      "scene": "empire_town_c",
+      "side": "Defend",
+      "defenderCulture": "arthedain",
+      "attackerCulture": "gundabad",
+      "rules": { "preparationSeconds": 20 },
+      "garrison": [
+        { "troop": "arthedain_militia_spearman", "class": "Infantry", "count": 100 },
+        { "troop": "arthedain_militia_archer", "class": "Ranged", "count": 50 }
+      ],
+      "roster": {
+        "waves": [
+          { "count": 115, "mix": [
+            { "troop": "gundabad_snaga", "class": "Infantry", "weight": 45 },
+            { "troop": "gundabad_militia_spearman", "class": "Infantry", "weight": 30 },
+            { "troop": "gundabad_hunter", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    }
+  ]
+}
