@@ -216,6 +216,11 @@ GATES = (
     Gate("prefab-budget", "scenes, prefabs", ("*/scenes/*", "*.scene.xml", "*/sceneobj/*"),
          ("python", "tools/check_prefab_budget.py"), ("docs/modding/module-map.md",),
          note="counts TAOM_Map only; sum all modules"),
+    Gate("siege-walls", "TAOM_Map scene files", ("*/sceneobj/*/scene.xscene",),
+         ("python", "tools/check_siege_wall_scripts.py"),
+         ("docs/reference/engine/scene-gameentity-scriptcomponent.md",), files=True,
+         note="judges the scene files you named, or every live TAOM_Map scene under --all; "
+              "a wall placed as a bare prefab instance is not judged"),
 )
 
 

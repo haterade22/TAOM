@@ -163,7 +163,7 @@ def flatten_to_patterns(
     boundary_vertices = {index for edge in flat.boundary_edges() for index in edge}
     valence = Counter(vertex for face in flat.faces for vertex in face)
     flat.attributes["open_seam"] = [index in boundary_vertices for index in range(len(flat.vertices))]
-    if "point_guide" in source.attributes:
+    if source.attribute_domain("point_guide") == "POINT" and len(source.attributes["point_guide"]) == len(source.vertices):
         flat.attributes["point_guide"] = [
             bool(source.attributes["point_guide"][vertex]) for vertex in flat.attributes["source_vertex"]
         ]
@@ -190,9 +190,17 @@ def non_manifold_edges(mesh: Mesh):
     return sorted(edge for edge, count in counts.items() if count > 2)
 
 
+def _normalized_copy(mesh: Mesh) -> Mesh:
+    result = mesh.copy()
+    unresolved_names = mesh.unresolved_attribute_names()
+    result.attribute_domains = mesh.resolved_attribute_domains()
+    result.discard_unresolved_attributes(unresolved_names)
+    return result
+
+
 def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     bad_edges = non_manifold_edges(mesh)
-    result = mesh.copy()
+    result = _normalized_copy(mesh)
     if not fix_split_edges:
         result.edge_attributes["bad_mesh"] = {edge: True for edge in bad_edges}
         return result, bad_edges
@@ -201,11 +209,11 @@ def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
         result.edge_attributes["bad_mesh"] = {}
         return result, []
 
-    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
+    unresolved_names = mesh.unresolved_attribute_names()
     result.attribute_domains = mesh.resolved_attribute_domains()
     point_attribute_names = {
         name for name in mesh.attributes if mesh.attribute_domain(name) == "POINT"
-    }
+    } - unresolved_names
     face_order = sorted(
         range(len(mesh.faces)),
         key=lambda index: (tuple(mesh.vertices[vertex] for vertex in mesh.faces[index]), mesh.faces[index]),
@@ -521,7 +529,7 @@ def _ordered_loop(mesh: Mesh, loop, indices):
 
 
 def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
-    explicit = mesh.attributes.get("point_guide", [])
+    explicit = mesh.attributes.get("point_guide", []) if mesh.attribute_domain("point_guide") == "POINT" and len(mesh.attributes["point_guide"]) == len(mesh.vertices) else []
     marked = [index for index in loop if index < len(explicit) and explicit[index]]
     if marked and len(marked) <= 4:
         return _ordered_loop(mesh, loop, marked)
@@ -567,6 +575,7 @@ def _corner_candidates(mesh: Mesh, loop, settings: RetopoSettings):
 
 def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
     settings.validate()
+    flat = _normalized_copy(flat)
     components = flat.connected_components()
     if len(components) > 1:
         combined = Mesh(vertices=[], faces=[], uv_name=flat.uv_name)
@@ -580,7 +589,10 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 attributes={
                     name: [values[index] for index in used]
                     for name, values in flat.attributes.items()
-                    if len(values) == len(flat.vertices)
+                    if flat.attribute_domain(name) == "POINT"
+                },
+                attribute_domains={
+                    name: "POINT" for name in flat.attributes if flat.attribute_domain(name) == "POINT"
                 },
             )
             initialized = initialize_planes(part, settings)
@@ -701,18 +713,17 @@ def mirror_guides(guide: Mesh, axes=("x",), source: Mesh | None = None) -> Mesh:
                 target = guide_center
             targets[axis] = min(pattern_centers, key=lambda center: math.dist(target, center))
         if guide.lines and _mirror_axes(guide) != set(axes):
-            return guide.copy()
+            return _normalized_copy(guide)
         if len(_mirror_axes(guide)) > 1:
-            return guide.copy()
-    result = guide.copy()
-    unresolved_names = {name for name in guide.attributes if guide.attribute_domain(name) not in {"POINT", "FACE"}}
-    result.attribute_domains = guide.resolved_attribute_domains()
+            return _normalized_copy(guide)
+    result = _normalized_copy(guide)
+    unresolved_names = guide.unresolved_attribute_names()
     point_attribute_names = {
         name for name in guide.attributes if guide.attribute_domain(name) == "POINT"
-    }
+    } - unresolved_names
     face_attribute_names = {
         name for name in guide.attributes if guide.attribute_domain(name) == "FACE"
-    }
+    } - unresolved_names
 
     def face_signature(mesh, face):
         return tuple(sorted(
@@ -793,8 +804,9 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     validate_guides(guide)
     points = [tuple(point) for point in point_guides]
     resolved_domains = guide.resolved_attribute_domains()
-    face_attribute_names = {name for name, domain in resolved_domains.items() if domain == "FACE"}
-    point_attribute_names = {name for name, domain in resolved_domains.items() if domain == "POINT"}
+    unresolved_names = guide.unresolved_attribute_names()
+    face_attribute_names = {name for name, domain in resolved_domains.items() if domain == "FACE"} - unresolved_names
+    point_attribute_names = {name for name, domain in resolved_domains.items() if domain == "POINT"} - unresolved_names
 
     def subdivide(current):
         result = subdivide_quads(current)
@@ -951,6 +963,7 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
     for name in list(result.attributes):
         if name not in point_attribute_names and name not in face_attribute_names:
             del result.attributes[name]
+    result.discard_unresolved_attributes(unresolved_names)
     result.uv = [result.vertices[index][:2] for face in result.faces for index in face]
     return result
 
@@ -1070,8 +1083,8 @@ def neutralize_crease(guide: Mesh, edges) -> Mesh:
 
 def snap_guides_to_pattern(guide: Mesh, flat: Mesh, distance: float) -> Mesh:
     if distance <= 0:
-        return guide.copy()
-    result = guide.copy()
+        return _normalized_copy(guide)
+    result = _normalized_copy(guide)
     borders = flat.boundary_edges()
     for index, vertex in enumerate(result.vertices):
         candidates = [
@@ -1191,12 +1204,14 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
             edge = Mesh.edge_key(first, new_face[(index + 1) % len(new_face)])
             group_edges.setdefault(group, set()).add(edge)
         cursor += len(face)
-    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
+    unresolved_names = mesh.unresolved_attribute_names()
     result = Mesh(
         vertices=vertices, faces=faces, uv=uv, uv_name=mesh.uv_name,
         attribute_domains=mesh.resolved_attribute_domains(),
     )
     for name, values in mesh.attributes.items():
+        if name in unresolved_names:
+            continue
         domain = mesh.attribute_domain(name)
         if domain == "POINT":
             result.attributes[name] = [values[old] for old, _ in lookup]
@@ -1218,10 +1233,9 @@ def _separate(mesh: Mesh, face_values) -> Mesh:
 
 def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
     if distance <= 0:
-        return mesh
-    result = mesh.copy()
-    unresolved_names = {name for name in mesh.attributes if mesh.attribute_domain(name) not in {"POINT", "FACE"}}
-    result.attribute_domains = mesh.resolved_attribute_domains()
+        return _normalized_copy(mesh)
+    result = _normalized_copy(mesh)
+    unresolved_names = mesh.unresolved_attribute_names()
     protected = {
         index
         for edge, value in result.edge_attributes.get("bevel_weight_edge", {}).items()
@@ -1299,6 +1313,11 @@ def _merge_seams(mesh: Mesh, distance: float) -> Mesh:
         }
         for name, values in result.edge_attributes.items()
     }
+    result.lines = [
+        Mesh.edge_key(indices[remap[first]], indices[remap[second]])
+        for first, second in result.lines
+        if remap[first] != remap[second]
+    ]
     result.discard_unresolved_attributes(unresolved_names)
     return result
 
@@ -1329,12 +1348,14 @@ def thicken(guide: Mesh, thickness: float, offset: float = 0.0) -> Mesh:
                 directed.append((first, second, face_index))
     for first, second, _ in directed:
         faces.append((first, second, second + count, first + count))
-    unresolved_names = {name for name in guide.attributes if guide.attribute_domain(name) not in {"POINT", "FACE"}}
+    unresolved_names = guide.unresolved_attribute_names()
     result = Mesh(
         vertices=vertices, faces=faces, uv_name=guide.uv_name,
         attribute_domains=guide.resolved_attribute_domains(),
     )
     for name, values in guide.attributes.items():
+        if name in unresolved_names:
+            continue
         domain = guide.attribute_domain(name)
         if domain == "FACE" or (domain is None and len(values) == len(guide.faces)):
             result.attributes[name] = values + values + [values[face_index] for _, _, face_index in directed]
@@ -1425,11 +1446,13 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
     validate_guides(guide, allow_empty=settings.initialize_planes)
     surface = SourceSurface(source)
     flat = flatten_to_patterns(source)
-    working = guide.copy()
+    working = _normalized_copy(guide)
     if settings.initialize_planes:
+        marked = working.attributes.get("point_guide", [])
+        if working.attribute_domain("point_guide") != "POINT" or len(marked) != len(working.vertices):
+            marked = []
+        manual_points = [point for index, point in enumerate(working.vertices) if index < len(marked) and marked[index]]
         working = initialize_planes(flat, settings)
-        marked = guide.attributes.get("point_guide", [])
-        manual_points = [point for index, point in enumerate(guide.vertices) if index < len(marked) and marked[index]]
         if len(manual_points) >= 4:
             for face in working.faces:
                 if len(face) != 4:
@@ -1454,8 +1477,9 @@ def retopologize(source: Mesh, guide: Mesh, settings: RetopoSettings | None = No
             across_patterns=settings.auto_fill,
         )
     if settings.output_generated_planes:
-        working.uv = []
-        return working
+        result = _normalized_copy(working)
+        result.uv = []
+        return result
     working = snap_guides_to_pattern(working, flat, settings.snapping_distance * 0.001)
     working = apply_density(working, settings)
     if settings.smooth_low_poly and settings.smooth_uvs:

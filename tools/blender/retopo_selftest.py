@@ -135,6 +135,10 @@ def main():
         face_source_output = mesh_to_blender(face_source, "TAOM_FaceSourceVectors")
         assert face_source_output.data.attributes["source_position"].domain == "FACE"
         assert face_source_output.data.attributes["point_guide"].domain == "FACE"
+        face_roundtrip = mesh_from_blender(face_source_output)
+        assert "source_vertex" not in face_roundtrip.attributes
+        assert "source_position" not in face_roundtrip.attributes
+        assert "point_guide" not in face_roundtrip.attributes
         unsupported = roundtrip.copy()
         unsupported.attributes["point_guide"] = [True] * len(unsupported.vertices)
         unsupported.attribute_domains["point_guide"] = "CORNER"
@@ -143,11 +147,45 @@ def main():
         assert "point_guide" not in unsupported_output.data.attributes
         point_variant = roundtrip.copy()
         point_variant.attributes["pattern_id"] = [7] * len(point_variant.vertices)
-        point_variant.attribute_domains["pattern_id"] = "POINT"
+        point_variant.attributes["part_id"] = [1] * len(point_variant.vertices)
+        point_variant.attributes["retopo_plane_id"] = [2] * len(point_variant.vertices)
+        point_variant.attribute_domains.update({"pattern_id": "POINT", "part_id": "POINT", "retopo_plane_id": "POINT"})
         point_output = mesh_to_blender(point_variant, "TAOM_PointPattern")
+        point_roundtrip = mesh_from_blender(point_output)
+        assert point_roundtrip.attributes["pattern_id"] == [7] * len(point_output.data.vertices)
+        assert point_roundtrip.attributes["part_id"] == [1] * len(point_output.data.vertices)
+        combined_point = combine_objects([point_output])
+        assert combined_point.attributes["part_id"] == [1] * len(point_output.data.vertices)
+        assert combined_point.attributes["retopo_plane_id"] == [2] * len(point_output.data.vertices)
+        assert combined_point.attribute_domains["part_id"] == "POINT"
+        assert combined_point.attribute_domains["retopo_plane_id"] == "POINT"
+        point_guides = bpy.data.collections.new("TAOM_PointGuides")
+        bpy.context.scene.collection.children.link(point_guides)
+        point_guides.objects.link(point_output)
+        settings.guide_collection = point_guides
+        settings.output_generated_planes = True
+        settings.debug_material = "Retopo Planes"
+        activate(point_output)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert all(polygon.material_index == 0 for polygon in bpy.context.active_object.data.polygons)
+        assert len(bpy.context.active_object.data.materials) == 1
+        settings.output_generated_planes = False
         distinct = roundtrip.copy()
         distinct.attributes["pattern_id"] = [10, 11, 12, 13]
         distinct_output = mesh_to_blender(distinct, "TAOM_DistinctFacePatterns")
+        distinct.attributes["retopo_plane_id"] = [0, 1, 2, 3]
+        distinct_plane_output = mesh_to_blender(distinct, "TAOM_DistinctPlaneIds")
+        distinct_guides = bpy.data.collections.new("TAOM_DistinctGuides")
+        bpy.context.scene.collection.children.link(distinct_guides)
+        distinct_guides.objects.link(distinct_plane_output)
+        settings.guide_collection = distinct_guides
+        settings.output_generated_planes = True
+        activate(distinct_plane_output)
+        assert bpy.ops.taom.retopologize() == {"FINISHED"}
+        assert sorted(polygon.material_index for polygon in bpy.context.active_object.data.polygons) == [0, 1, 2, 3]
+        settings.output_generated_planes = False
+        settings.debug_material = "Retopo Planes"
+        settings.guide_collection = guides
         mixed = combine_objects([distinct_output, point_output])
         assert mixed.attributes["pattern_id"] == [10, 11, 12, 13, 0, 0, 0, 0]
         invalid = combined.copy()
