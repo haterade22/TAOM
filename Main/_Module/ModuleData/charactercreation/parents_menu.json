@@ -2019,7 +2019,7 @@
         "string_id": "taom_parent_eredluin_1",
         "culture_id": "eredluin",
         "text": "Noble of Thorin's Halls",
-        "description": "Your family belonged to the House of Borin, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains.",
+        "description": "Your family belonged to the House of Delingur, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains.",
         "skills": ["TwoHanded", "Leadership"],
         "attribute": "Cunning",
         "focus_to_add": 1,

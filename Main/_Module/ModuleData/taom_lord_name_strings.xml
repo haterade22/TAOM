@@ -736,21 +736,21 @@
 	<string id="aom_lord_LN1_4_name" text="{=aom_lord_LN1_4_name}Lhúnedhel" />
 	<string id="aom_lord_LN1_5_name" text="{=aom_lord_LN1_5_name}Nimwen" />
 	<string id="aom_lord_LN1_6_name" text="{=aom_lord_LN1_6_name}Lindis" />
-	<string id="aom_lord_LN2_1_name" text="{=aom_lord_LN2_1_name}Aeglir" />
-	<string id="aom_lord_LN2_2_name" text="{=aom_lord_LN2_2_name}Celebrin" />
-	<string id="aom_lord_LN2_3_name" text="{=aom_lord_LN2_3_name}Edronil" />
+	<string id="aom_lord_LN2_1_name" text="{=aom_lord_LN2_1_name}Auredhir" />
+	<string id="aom_lord_LN2_2_name" text="{=aom_lord_LN2_2_name}Feren" />
+	<string id="aom_lord_LN2_3_name" text="{=aom_lord_LN2_3_name}Arador" />
 	<string id="aom_lord_LN2_4_name" text="{=aom_lord_LN2_4_name}Nárwen" />
-	<string id="aom_lord_LN3_1_name" text="{=aom_lord_LN3_1_name}Galdor" />
-	<string id="aom_lord_LN3_2_name" text="{=aom_lord_LN3_2_name}Faelwen" />
-	<string id="aom_lord_LN3_3_name" text="{=aom_lord_LN3_3_name}Thalanor" />
-	<string id="aom_lord_LN3_4_name" text="{=aom_lord_LN3_4_name}Glîrwen" />
-	<string id="aom_lord_LN4_1_name" text="{=aom_lord_LN4_1_name}Ostaron" />
-	<string id="aom_lord_LN4_2_name" text="{=aom_lord_LN4_2_name}Brethilwen" />
-	<string id="aom_lord_LN4_3_name" text="{=aom_lord_LN4_3_name}Hîrion" />
+	<string id="aom_lord_LN3_1_name" text="{=aom_lord_LN3_1_name}Maicasáma" />
+	<string id="aom_lord_LN3_2_name" text="{=aom_lord_LN3_2_name}Edhetariel" />
+	<string id="aom_lord_LN3_3_name" text="{=aom_lord_LN3_3_name}Talanthir" />
+	<string id="aom_lord_LN3_4_name" text="{=aom_lord_LN3_4_name}Nimlothel" />
+	<string id="aom_lord_LN4_1_name" text="{=aom_lord_LN4_1_name}Anrod" />
+	<string id="aom_lord_LN4_2_name" text="{=aom_lord_LN4_2_name}Adanel" />
+	<string id="aom_lord_LN4_3_name" text="{=aom_lord_LN4_3_name}Megilhir" />
 	<string id="aom_lord_LN5_1_name" text="{=aom_lord_LN5_1_name}Luinor" />
 	<string id="aom_lord_LN5_2_name" text="{=aom_lord_LN5_2_name}Celebwen" />
 	<string id="aom_lord_LN5_3_name" text="{=aom_lord_LN5_3_name}Lothron" />
-	<string id="aom_lord_LN6_1_name" text="{=aom_lord_LN6_1_name}Aearion" />
+	<string id="aom_lord_LN6_1_name" text="{=aom_lord_LN6_1_name}Esgaldil" />
 	<string id="aom_lord_LN6_2_name" text="{=aom_lord_LN6_2_name}Gwaeriel" />
 	<string id="aom_lord_LN6_3_name" text="{=aom_lord_LN6_3_name}Rínthal" />
 	<string id="aom_lord_M10_11_name" text="{=aom_lord_M10_11_name}Gulzag" />

@@ -1135,7 +1135,7 @@
 	<string id="taom_cc_taom_education_rhudaur_6_text" text="{=taom_cc_taom_education_rhudaur_6_text}Scrounged along the Great East Road." />
 	<string id="taom_cc_taom_education_rhudaur_6_desc" text="{=taom_cc_taom_education_rhudaur_6_desc}You grew up on the road between the Last Bridge and Weathertop, running messages for coin and selling what travellers left behind. The road taught you quick hands, a quicker tongue and when to vanish." />
 	<string id="taom_cc_taom_parent_eredluin_1_text" text="{=taom_cc_taom_parent_eredluin_1_text}Noble of Thorin's Halls" />
-	<string id="taom_cc_taom_parent_eredluin_1_desc" text="{=taom_cc_taom_parent_eredluin_1_desc}Your family belonged to the House of Borin, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains." />
+	<string id="taom_cc_taom_parent_eredluin_1_desc" text="{=taom_cc_taom_parent_eredluin_1_desc}Your family belonged to the House of Delingur, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains." />
 	<string id="taom_cc_taom_parent_eredluin_2_text" text="{=taom_cc_taom_parent_eredluin_2_text}Master Smith of Nogrod" />
 	<string id="taom_cc_taom_parent_eredluin_2_desc" text="{=taom_cc_taom_parent_eredluin_2_desc}Your family kept a forge in Nogrod, where the Firebeards have worked iron since the Elder Days. Their blades and mail went west to the Elves of Lindon and east along the Dwarf-road, and every piece fetched its price." />
 	<string id="taom_cc_taom_parent_eredluin_3_text" text="{=taom_cc_taom_parent_eredluin_3_text}Miner of Mount Dolmed" />

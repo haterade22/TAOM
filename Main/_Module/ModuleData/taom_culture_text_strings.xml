@@ -811,13 +811,13 @@
 	<string id="aom_erebor_male_name_8" text="{=aom_erebor_male_name_8}Hanar" />
 	<string id="aom_erebor_male_name_9" text="{=aom_erebor_male_name_9}Galar" />
 	<string id="aom_erebor_name" text="{=aom_erebor_name}Dwarves" />
-	<string id="aom_eredluin_clan_1" text="{=aom_eredluin_clan_1}House of Borin" />
+	<string id="aom_eredluin_clan_1" text="{=aom_eredluin_clan_1}House of Delingur" />
 	<string id="aom_eredluin_clan_10" text="{=aom_eredluin_clan_10}House of Azaghâl" />
 	<string id="aom_eredluin_clan_11" text="{=aom_eredluin_clan_11}Keepers of the Dwarf-road" />
 	<string id="aom_eredluin_clan_12" text="{=aom_eredluin_clan_12}House of Gamil" />
-	<string id="aom_eredluin_clan_2" text="{=aom_eredluin_clan_2}Broadbeams" />
-	<string id="aom_eredluin_clan_3" text="{=aom_eredluin_clan_3}Firebeards" />
-	<string id="aom_eredluin_clan_4" text="{=aom_eredluin_clan_4}Wardens of Dolmed" />
+	<string id="aom_eredluin_clan_2" text="{=aom_eredluin_clan_2}House of Dwálin" />
+	<string id="aom_eredluin_clan_3" text="{=aom_eredluin_clan_3}House of Úri" />
+	<string id="aom_eredluin_clan_4" text="{=aom_eredluin_clan_4}House of Eldran" />
 	<string id="aom_eredluin_clan_5" text="{=aom_eredluin_clan_5}House of Frerin" />
 	<string id="aom_eredluin_clan_6" text="{=aom_eredluin_clan_6}House of Narvi" />
 	<string id="aom_eredluin_clan_7" text="{=aom_eredluin_clan_7}Stonehands of Belegost" />
