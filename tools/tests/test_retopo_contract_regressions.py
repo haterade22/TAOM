@@ -616,7 +616,15 @@ class ContractRegressionTests(unittest.TestCase):
             + [(math.cos(math.tau * index / 4), math.sin(math.tau * index / 4), 0) for index in range(4)],
             faces=unequal_faces,
         )
-        initialized_unequal = engine.initialize_planes(unequal, RetopoSettings())
+        layout_counts = []
+        sample_loop_variants = engine._sample_loop_variants
+        def record_layouts(variants):
+            sampled = sample_loop_variants(variants)
+            layout_counts.append((len(variants), len(sampled)))
+            return sampled
+        with mock.patch.object(engine, "_sample_loop_variants", side_effect=record_layouts):
+            initialized_unequal = engine.initialize_planes(unequal, RetopoSettings())
+        self.assertEqual([(36, 32)], layout_counts)
         self.assertEqual((16, 8, 16), (len(initialized_unequal.vertices), len(initialized_unequal.faces), len(initialized_unequal.boundary_edges())))
         for face in initialized_unequal.faces:
             points = [initialized_unequal.vertices[index] for index in face]
@@ -1050,6 +1058,15 @@ class ContractRegressionTests(unittest.TestCase):
                 filled = engine.auto_fill(loose_point, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
                 face_vertices = {index for face in filled.faces for index in face}
                 self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
+        split_loose = differential.two_guide()
+        split_loose.vertices.extend([(0.3, 0, 0), (0.3, -2, 0)])
+        split_loose.lines = [(6, 7)]
+        split_loose.edge_attributes["crease_edge"] = {(6, 7): 0.9}
+        for across_patterns in (True, False):
+            with self.subTest(split_loose_across_patterns=across_patterns):
+                filled = engine.auto_fill(split_loose, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(all(index not in face_vertices for line in filled.lines for index in line))
         free = differential.unit_guide()
         free.vertices.append((5, 5, 0))
         free.lines = [(2, 4)]

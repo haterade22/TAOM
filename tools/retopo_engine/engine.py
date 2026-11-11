@@ -760,15 +760,15 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                 for oriented in (inner_candidate, list(reversed(inner_candidate))):
                     scored_alignments = []
                     for shift in range(len(oriented)):
-                        aligned = oriented[shift:] + oriented[:shift]
-                        cost = sum(math.dist(first, second) for first, second in zip(outer_candidate, aligned))
-                        scored_alignments.append((cost, aligned))
+                        cost = sum(math.dist(outer_candidate[index], oriented[(shift + index) % len(oriented)]) for index in range(len(oriented)))
+                        scored_alignments.append((cost, shift))
                     alignment_limit = len(scored_alignments) if len(loop_variants) <= 2 else 4
                     candidates.extend(
-                        (cost, outer_candidate, aligned)
-                        for cost, aligned in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]
+                        (cost, outer_candidate, oriented, shift)
+                        for cost, shift in sorted(scored_alignments, key=lambda candidate: candidate[0])[:alignment_limit]
                     )
-            for _, outer_candidate, aligned in sorted(candidates, key=lambda candidate: candidate[0]):
+            for _, outer_candidate, oriented, shift in sorted(candidates, key=lambda candidate: candidate[0]):
+                aligned = [oriented[(shift + index) % len(oriented)] for index in range(len(oriented))]
                 vertices = outer_candidate + aligned
                 faces = []
                 for index in range(len(outer_candidate)):
@@ -1086,8 +1086,8 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
             opposite = lerp(current.vertices[third], current.vertices[fourth], 0.5)
 
             def vertex_at(coordinate, parent_indices):
-                for index, vertex in enumerate(current.vertices):
-                    if math.dist(vertex, coordinate) < 1e-7:
+                for index in face_vertices:
+                    if math.dist(current.vertices[index], coordinate) < 1e-7:
                         return index
                 parent = min(parent_indices, key=lambda index: math.dist(coordinate, current.vertices[index]))
                 current.vertices.append(coordinate)
