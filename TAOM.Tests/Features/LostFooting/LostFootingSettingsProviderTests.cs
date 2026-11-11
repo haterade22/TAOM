@@ -32,6 +32,18 @@ public class LostFootingSettingsProviderTests
         Assert.IsTrue(provider.CensusEnabled);
     }
 
+    [TestMethod]
+    public void TheRescue_IsOnByDefault_AndPassesThroughLive()
+    {
+        Assert.IsTrue(new LostFootingSettingsProvider().RescueEnabled, "Mike, 2026-11-10: the rescue runs in every battle");
+        var s = new TaomSettings { LostFootingRescue = false };
+        var provider = new LostFootingSettingsProvider(s);
+
+        Assert.IsFalse(provider.RescueEnabled);
+        s.LostFootingRescue = true;
+        Assert.IsTrue(provider.RescueEnabled);
+    }
+
     private static object? Attribute(PropertyInfo property, string typeName) =>
         property.GetCustomAttributes(inherit: false).FirstOrDefault(a => a.GetType().Name == typeName);
 

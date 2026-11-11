@@ -1911,3 +1911,9 @@ The first text on siege walls said that `FindRightMostWall` is safe with one or 
 - **Why missed:** the method was read to explain a `null`, not to state a rule, and the sentence became a rule in the doc.
 - **Prevent:** before a doc or a gate states what an engine method needs, read the loop that calls it and the arguments each caller passes, and write the rule for the whole loop.
 - **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 2.
+
+### A formation's order spot is not the unit's own place, and a flagged unit gets none (#894, 2026-11-10)
+`Formation.GetOrderPositionOfUnit` reads as "this soldier's place". In v1.5.7 a unit without its own slot gets the formation's single order point (Formation.cs:1344, :1360-1362), and a unit flagged `UnreachableViaNavMesh` gets `WorldPosition.Invalid` (:1382-1385). The Lost Footing rescue moved 29 of 31 soldiers onto one point, and its unreachable cause could never move anyone. `Agent.IsUsingGameObject` likewise covers standing points only, not ladder climbers or queued agents on a scripted hold.
+- **Why missed:** both members were used for what their names say; the code that produces the spot and the flag's one reader were not read. The run log showed the stacking before any reviewer did.
+- **Prevent:** before a move or a guard relies on an engine member, read the body that produces its value and every branch that can return Invalid or a shared value. Log both ends of every engine write, so a run shows what a name hid.
+- **Source:** docs/reviews/rca-lost-footing-rescue-2026-11-10.md rows 2 to 4 (#894)

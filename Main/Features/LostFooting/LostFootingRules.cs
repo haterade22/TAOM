@@ -81,6 +81,9 @@ public static class LostFootingRules
         e.LandSince = Hold(e.LandSince, belowTheWater, now);
         e.LandBelow = Elapsed(e.LandSince, now, t.WaterStillSeconds);
 
+        e.Speed = p.Speed;
+        ResetRescueTriesWhenFree(e);
+
         if (e.IsStranded)
         {
             if (float.IsNaN(e.StrandedSince)) e.StrandedSince = EarliestEvidence(e);
@@ -92,6 +95,54 @@ public static class LostFootingRules
         }
 
         return e;
+    }
+
+    /// <summary>
+    /// The rescue for one entry at clock <paramref name="now"/> (#894 phase 2): a soldier or a riderless mount, still,
+    /// stranded for the near wait gets the near move once; a soldier still stranded after the far wait gets the move to
+    /// his formation spot once. An off-mesh agent counts only after the second look confirmed it, and never on a dynamic
+    /// navigation mesh (a siege tower deck, a ship). A formation move refused for the player near is tried again later.
+    /// </summary>
+    public static RescuePlan PlanRescue(StrandEntry e, float now, LostFootingTunables t)
+    {
+        var soldier = e.Kind == AgentKind.Soldier;
+        if (!soldier && e.Kind != AgentKind.RiderlessMount) return RescuePlan.Nothing;
+        if (!FiniteFloatValidator.IsFinite(e.Speed) || e.Speed > t.RescueMaxSpeed) return RescuePlan.Nothing;
+
+        float since;
+        RescueCause cause;
+        if (e.OffMesh && e.Detail is { Confirmed: true, OnDynamicNavMesh: false })
+        {
+            since = e.MissSince;
+            cause = RescueCause.OffMesh;
+        }
+        else if (e.WaterStill || e.LandBelow)
+        {
+            since = e.WaterStill ? e.WaterSince : e.LandSince;
+            cause = RescueCause.Water;
+        }
+        else
+        {
+            return RescuePlan.Nothing;
+        }
+
+        var held = now - since;
+        if (!FiniteFloatValidator.IsFinite(held)) return RescuePlan.Nothing;
+        var needLand = e.WaterStill || e.LandBelow;
+        if (!e.NearTried && held >= t.RescueNearAfterSeconds)
+            return new RescuePlan(RescueMove.Near, cause, needLand);
+        if (soldier && !e.FarTried && !(now < e.FarRetryAt) && held >= t.RescueFarAfterSeconds)
+            return new RescuePlan(RescueMove.Formation, cause, needLand);
+        return RescuePlan.Nothing;
+    }
+
+    /// <summary>A rescue is tried once per tier while an agent stays stranded; one free of every condition starts over.</summary>
+    private static void ResetRescueTriesWhenFree(StrandEntry e)
+    {
+        if (!float.IsNaN(e.MissSince) || !float.IsNaN(e.WaterSince) || !float.IsNaN(e.LandSince)) return;
+        e.NearTried = false;
+        e.FarTried = false;
+        e.FarRetryAt = float.NaN;
     }
 
     private static float Hold(float since, bool holds, float now) => !holds ? float.NaN : float.IsNaN(since) ? now : since;
@@ -132,6 +183,8 @@ public static class LostFootingRules
         var length = end - e.StrandedSince;
         e.StrandedSince = float.NaN;
         if (!FiniteFloatValidator.IsFinite(length) || length < 0f) return;
+        if (e.AwaitFree && reason == EpisodeEnd.Recovered) state.Freed++;
+        e.AwaitFree = false;
         if (reason == EpisodeEnd.Recovered) state.Recovered++;
         else if (reason == EpisodeEnd.Removed) state.Removed++;
         else state.AtEnd++;

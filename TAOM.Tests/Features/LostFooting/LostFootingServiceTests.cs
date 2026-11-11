@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.LostFooting;
 public class LostFootingServiceTests
 {
     private FakeLostFootingAdapter _adapter = null!;
+    private FakeLostFootingRescueAdapter _rescue = new FakeLostFootingRescueAdapter();
     private ILostFootingSettingsProvider _settings = null!;
     private List<string> _lines = null!;
     private bool _open;
@@ -42,7 +43,7 @@ public class LostFootingServiceTests
     private SteppingStampClock _clock = new SteppingStampClock(4);
 
     private LostFootingService New(LostFootingTunables t) =>
-        new LostFootingService(_adapter, _settings, _logger, t, _clock, () => { _gateCalls++; return _open; });
+        new LostFootingService(_adapter, _rescue, _settings, _logger, t, _clock, () => { _gateCalls++; return _open; });
 
     private void Seconds(int n)
     {
@@ -487,5 +488,227 @@ public class LostFootingServiceTests
         _sut.Finish();
 
         StringAssert.Contains(_lines.Single(l => l.Contains("summary")), "episodes=2");
+    }
+
+    // ----- the rescue (#894 phase 2)
+
+    private static AgentProbe StuckOffMesh() => new AgentProbe { FaceMiss = true, X = 1f, Y = 2f, Z = 10f, Speed = 0f, DistToFormation = 20f };
+
+    private void RescueOn(bool census = true)
+    {
+        _settings.RescueEnabled.Returns(true);
+        _settings.CensusEnabled.Returns(census);
+    }
+
+    [TestMethod]
+    public void Rescue_SwitchedOff_MovesNobody()
+    {
+        _adapter.Agents.Add(StuckOffMesh());
+
+        Seconds(60);
+
+        Assert.AreEqual(0, _rescue.Calls.Count);
+        Assert.AreEqual(0, Count("rescue t="));
+    }
+
+    [TestMethod]
+    public void Rescue_AStillOffMeshSoldier_GetsTheNearMove_ThenTheFormationMove_EachOnce()
+    {
+        RescueOn();
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+
+        Seconds(60);
+
+        Assert.AreEqual(2, _rescue.Calls.Count);
+        Assert.AreEqual((stuck.Handle, "near", _tunables.RescueNearMeters, _tunables.RescueMaxStepMeters, false), _rescue.Calls[0]);
+        Assert.AreEqual("formation", _rescue.Calls[1].Move);
+        Assert.AreEqual(_tunables.RescuePlayerMeters, _rescue.Calls[1].Meters);
+        Assert.AreEqual(2, Count("[LostFooting] rescue t="));
+        _sut.Finish();
+        Assert.AreEqual(1, Count(" rescued=2 freed=0 refused=0"), "still off the mesh at the end, so neither move freed him");
+    }
+
+    [TestMethod]
+    public void Rescue_ARefusal_IsCountedAndLoggedWithItsReason()
+    {
+        RescueOn();
+        _rescue.Near = RescueResult.Refused("no-standing-spot");
+        _adapter.Agents.Add(StuckOffMesh());
+
+        Seconds(15);
+        _sut.Finish();
+
+        Assert.AreEqual(1, Count("result=refused reason=no-standing-spot"));
+        Assert.AreEqual(1, Count(" rescued=0 freed=0 refused=1"));
+    }
+
+    [TestMethod]
+    public void Rescue_ASoldierStillInWater_IsMovedToLandWithTheWaterStep()
+    {
+        RescueOn();
+        var wading = Wading();
+        _adapter.Agents.Add(wading);
+
+        Seconds(15);
+
+        Assert.AreEqual((wading.Handle, "near", _tunables.RescueNearMeters, _tunables.RescueWaterStepMeters, true), _rescue.Calls[0]);
+    }
+
+    [TestMethod]
+    public void Rescue_OnWithTheCensusOff_StillScansAndMoves_ButWritesNoCensusLine()
+    {
+        RescueOn(census: false);
+        _adapter.Agents.Add(StuckOffMesh());
+
+        Seconds(15);
+
+        Assert.AreEqual(1, _rescue.Calls.Count);
+        Assert.AreEqual(0, Count("census t="));
+        Assert.AreEqual(0, Count("sample class="));
+    }
+
+    [TestMethod]
+    public void Rescue_AMovingAgent_IsLeftToWalk()
+    {
+        RescueOn();
+        _adapter.Agents.Add(Lost());
+
+        Seconds(60);
+
+        Assert.AreEqual(0, _rescue.Calls.Count);
+    }
+
+    [TestMethod]
+    public void Rescue_AMoveThatPutsTheSoldierBackOnTheMesh_CountsAsFreed()
+    {
+        RescueOn();
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+        Seconds(12);
+
+        stuck.FaceMiss = false;
+        Seconds(3);
+        _sut.Finish();
+
+        Assert.AreEqual(1, Count(" rescued=1 freed=1 refused=0"));
+    }
+
+    [TestMethod]
+    public void Rescue_AFormationMoveRefusedForThePlayerNear_IsTriedAgainEveryRetryInterval_AndLoggedOnce()
+    {
+        RescueOn();
+        _rescue.Near = RescueResult.Refused("no-standing-spot");
+        _rescue.Formation = RescueResult.Refused("player-near");
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+
+        Seconds(61);
+
+        var formation = _rescue.Calls.Count(c => c.Move == "formation");
+        Assert.AreEqual(1 + (int)((61 - 1 - _tunables.RescueFarAfterSeconds) / _tunables.RescueRetrySeconds), formation);
+        Assert.AreEqual(1, Count("reason=player-near"));
+        _sut.Finish();
+        Assert.AreEqual(1, Count(" rescued=0 freed=0 refused=2"));
+    }
+
+    [TestMethod]
+    public void Rescue_ARetryThatMovesTheSoldier_EndsTheRetries()
+    {
+        RescueOn();
+        _rescue.Near = RescueResult.Refused("no-standing-spot");
+        _rescue.Formation = RescueResult.Refused("player-near");
+        _adapter.Agents.Add(StuckOffMesh());
+        Seconds(35);
+
+        _rescue.Formation = new RescueResult { Moved = true, Meters = 4f, ToX = 0f, ToY = 0f, ToZ = 0f };
+        Seconds(60);
+
+        Assert.AreEqual(1, Count("move=formation cause=offmesh kind=soldier result=moved"));
+        Assert.AreEqual(2, _rescue.Calls.Count(c => c.Move == "formation"));
+    }
+
+    [TestMethod]
+    public void Rescue_AFormationMoveRefusedForAnotherReason_IsNotTriedAgain()
+    {
+        RescueOn();
+        _rescue.Near = RescueResult.Refused("no-standing-spot");
+        _rescue.Formation = RescueResult.Refused("no-formation-spot");
+        _adapter.Agents.Add(StuckOffMesh());
+
+        Seconds(90);
+
+        Assert.AreEqual(1, _rescue.Calls.Count(c => c.Move == "formation"));
+    }
+
+    [TestMethod]
+    public void Rescue_AnUnreachableSoldierOnTheMesh_IsNeverMoved()
+    {
+        RescueOn();
+        _adapter.Agents.Add(new AgentProbe { Unreachable = true, X = 1f, Y = 2f, Z = 10f, Speed = 0f, DistToFormation = 20f });
+
+        Seconds(90);
+
+        Assert.AreEqual(0, _rescue.Calls.Count);
+    }
+
+    [TestMethod]
+    public void Rescue_AMove_ConfirmsAgainAtTheNewSpot_BeforeTheFormationMove()
+    {
+        RescueOn();
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+        Seconds(20);
+
+        Assert.AreEqual(1, _rescue.Calls.Count, "only the near move so far");
+        Assert.AreEqual(2, _adapter.Confirmed.Count, "one second look before the move, one at the new spot");
+    }
+
+    [TestMethod]
+    public void Rescue_APlayerNearRefusalInALaterStranding_IsLoggedAndCountedAgain()
+    {
+        RescueOn();
+        _rescue.Near = RescueResult.Refused("no-standing-spot");
+        _rescue.Formation = RescueResult.Refused("player-near");
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+        Seconds(35);
+
+        stuck.FaceMiss = false;
+        Seconds(5);
+        stuck.FaceMiss = true;
+        Seconds(35);
+        _sut.Finish();
+
+        Assert.AreEqual(2, Count("reason=player-near"));
+        Assert.AreEqual(1, Count(" rescued=0 freed=0 refused=4"));
+    }
+
+    [TestMethod]
+    public void Rescue_OnWithTheCensusOff_StillWritesTheStartAndTheSummary()
+    {
+        RescueOn(census: false);
+        _adapter.Agents.Add(StuckOffMesh());
+
+        Seconds(15);
+        _sut.Finish();
+
+        Assert.AreEqual(1, Count("[LostFooting] start "));
+        Assert.AreEqual(1, Count("[LostFooting] summary "));
+    }
+
+    [TestMethod]
+    public void Rescue_AMovedSoldierWhoLeavesTheBattle_IsNotFreed()
+    {
+        RescueOn();
+        var stuck = StuckOffMesh();
+        _adapter.Agents.Add(stuck);
+        Seconds(12);
+
+        _adapter.Agents.Remove(stuck);
+        Seconds(5);
+        _sut.Finish();
+
+        Assert.AreEqual(1, Count(" rescued=1 freed=0 refused=0"));
     }
 }

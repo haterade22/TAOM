@@ -137,12 +137,13 @@ public class LostFootingWiringTests
     [TestMethod]
     public void CoopClassification_TheCensusToggleIsInstrumentation_AndExcluded()
     {
-        var mine = typeof(TaomSettings).GetProperties().Where(p => p.Name.StartsWith("LostFooting", System.StringComparison.Ordinal)).ToList();
+        var mine = typeof(TaomSettings).GetProperties().Where(p => p.Name.StartsWith("LostFooting", System.StringComparison.Ordinal)).OrderBy(p => p.Name).ToList();
 
-        Assert.AreEqual(1, mine.Count);
-        Assert.AreEqual("LostFootingCensus", mine[0].Name);
+        CollectionAssert.AreEqual(new[] { "LostFootingCensus", "LostFootingRescue" }, mine.Select(p => p.Name).ToArray());
         Assert.IsFalse(CoopSettingsRelevance.IsSimulationRelevant(mine[0]));
         Assert.IsTrue(CoopSettingsRelevance.IsExcluded(mine[0].Name));
+        // The rescue moves agents, so it stays included by default, as Fell Foes' own toggles do (it stands down in co-op).
+        Assert.IsTrue(CoopSettingsRelevance.IsSimulationRelevant(mine[1]));
     }
 
     [TestMethod]
@@ -164,6 +165,24 @@ public class LostFootingWiringTests
         StringAssert.Contains(src, "FindClosestExitPositionForPositionOnABoundaryFace(");
         Assert.IsFalse(src.Contains(".Index"), "handles are agent objects, never indices");
         Assert.IsFalse(src.Contains("GetCurrentNavigationFaceId"), "face id 0 collides with face group 0");
+    }
+
+    private const string RescuePath = "Main/Adapters/LostFootingRescueAdapter.cs";
+
+    [TestMethod]
+    public void RescueAdapter_MovesOnlyByTeleport_AndRefusesTheAgentsTheIssueRulesOut()
+    {
+        var src = RepoPaths.ReadSource(RescuePath, stripComments: true);
+
+        StringAssert.Contains(src, "agent.TeleportToPosition(spot)");
+        foreach (var write in new[] { "SetIsAIPaused", "SetScriptedPosition", "SetAgentFlags", "SetMorale", "MakeDead", "Retreat", "AddHitPoints" })
+            Assert.IsFalse(src.Contains(write), "the rescue only moves an agent, so it must not call " + write);
+        foreach (var guard in new[] { "AgentSlotIdentity.IsCurrentOccupant(agent)", "IsPlayerControlled", "IsMainAgent", "IsRunningAway", "IsUsingGameObject", "IsPositionOnADynamicNavMesh(",
+                     "GetScriptedFlags() != Agent.AIScriptedFrameFlags.None", "IsPositionInsideBoundaries(", "RiderAgent != null",
+                     "GetWaterLevelAtPosition(", "MissionThreadGuard.NoteCall(" })
+            StringAssert.Contains(src, guard);
+        StringAssert.Contains(src, "GetNavMeshZ()", "a spot's height comes from the mesh, so a soldier is not dropped off a wall");
+        Assert.IsFalse(src.Contains(".Index"), "handles are agent objects, never indices");
     }
 
     [TestMethod]
