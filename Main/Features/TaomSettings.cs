@@ -1976,7 +1976,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
     [SettingPropertyBool("Themed Banner Editor", Order = 4, RequireRestart = false,
-        HintText = "Kysaro's reskin of the banner editor during character creation. The banner editor in a running campaign stays vanilla. Takes effect the next time it opens.")]
+        HintText = "The themed, layered banner editor, both during character creation and in a running campaign. Takes effect the next time it opens.")]
     public bool FrontEndCustomBannerEditor { get; set; } = true;
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
