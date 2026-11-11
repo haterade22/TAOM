@@ -2400,7 +2400,7 @@
 		color="FF6F8FA8"
 		color2="FF1E2F4F"
 		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_2_template"
-		banner_key="11.2017.2017.1528.1528.764.764.1.0.0.31001.2022.2022.483.483.764.764.0.0.0" />
+		banner_key="11.2023.2023.1528.1528.764.764.1.0.0.31003.293.293.477.477.764.777.0.0.0.515.2016.2016.39.39.594.614.0.0.0.515.2016.2016.39.39.934.614.0.0.0" />
   <Faction
 		id="clan_lindon_4"
 		initial_home_settlement="Settlement.castle_LN1"
