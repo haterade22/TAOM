@@ -154,7 +154,7 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
                 for neighbor in vertex_neighbors[index]
             )
             count = len(vertex_faces[index])
-            updated = average(()) if count == 0 else add(
+            updated = point if count == 0 else add(
                 multiply(face_average, 1.0 / count),
                 add(
                     multiply(edge_average, 2.0 / count),
@@ -181,6 +181,8 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
     for name, values in mesh.edge_attributes.items():
         children = {}
         for edge, value in values.items():
+            if edge not in edge_map:
+                continue
             for endpoint in edge:
                 children[Mesh.edge_key(vertex_map[endpoint], edge_map[edge])] = value
         edge_attributes[name] = children
@@ -203,7 +205,16 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
         elif domain == "FACE":
             attributes[name] = [values[face_index] for face_index in range(len(mesh.faces)) for _ in range(4)]
     result = Mesh(
-        vertices=new_vertices, faces=new_faces, uv_name=mesh.uv_name,
+        vertices=new_vertices, faces=new_faces,
+        lines=[
+            child
+            for first, second in mesh.lines
+            for child in (
+                (vertex_map[first], edge_map[Mesh.edge_key(first, second)]),
+                (edge_map[Mesh.edge_key(first, second)], vertex_map[second]),
+            )
+        ],
+        uv_name=mesh.uv_name,
         attributes=attributes, edge_attributes=edge_attributes,
         attribute_domains=mesh.resolved_attribute_domains(),
     )

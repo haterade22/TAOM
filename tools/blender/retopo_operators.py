@@ -306,7 +306,11 @@ class TAOM_OT_retopologize(bpy.types.Operator):
             flat = engine.flatten_to_patterns(source_mesh)
             guide = _guide_mesh(context)
             if settings.only_patterns:
-                result = flat
+                result = flat.copy()
+                if settings.debug_material == "Patterns":
+                    pattern_faces = engine._pattern_faces(flat)
+                    result.attributes["pattern_id"] = [pattern_faces[index] for index in range(len(flat.faces))]
+                    result.attribute_domains["pattern_id"] = "FACE"
             elif settings.only_seams:
                 seam_mesh = Mesh(vertices=flat.vertices, faces=[], uv_name=flat.uv_name)
                 output = mesh_to_blender(seam_mesh, source.name + "_Seams", edges=flat.boundary_edges())
