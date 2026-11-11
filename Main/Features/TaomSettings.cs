@@ -399,6 +399,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "During a siege window, how much more the attackers' armies want to besiege the target and the defender's armies want to defend it once it is attacked. 1 turns the focus off. Needs AI Strategic Intelligence on. Default 1.4.")]
     public float WarChronicleArmyFocus { get; set; } = 1.4f;
 
+    // --- War of the Ring / War Pledge (#1113) ---
+
+    [SettingPropertyGroup("War of the Ring/War Pledge")]
+    [SettingPropertyBool("{=taom_war_pledge_mcm_enabled}Enable War Pledge", Order = 0, RequireRestart = false,
+        HintText = "{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on.")]
+    public bool WarPledgeEnabled { get; set; } = true;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("Battle Balance/Troop Power")]
@@ -2808,6 +2815,64 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_kingdom_allegiance_mcm_enabled}Enable Kingdom Allegiance", Order = 0, RequireRestart = false,
         HintText = "{=taom_kingdom_allegiance_mcm_enabled_hint}When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only.")]
     public bool KingdomAllegianceEnabled { get; set; } = TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider.DefaultEnabled;
+
+    // --- Realms (docs/features/realms.md) ---
+    //
+    // Feudal titles, claims, vassal duties and offices. Prices and payments are percentages of realms_titles.xml, which stays
+    // the baseline. Read when a price is quoted, on the daily and weekly ticks and when a name is built, through
+    // RealmsSettingsProvider's one cached settings reference, so none needs a restart. GroupOrder 87 is used by no other
+    // group. New settings, so the defaults reach every install.
+
+    [SettingPropertyGroup("World/Realms", GroupOrder = 87)]
+    [SettingPropertyInteger("{=taom_realms_mcm_claim_price}Claim Price (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinCostPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxCostPercent, Order = 0, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_claim_price_hint}The price of buying a claim on a title, as a percentage of its price in realms_titles.xml (40 for a Barony up to 500 for a Kingdom, in your people's own resource). AI lords pay for theirs in gold, at the same percentage. Between 10 and 500. Default: 100.")]
+    public int RealmsClaimPricePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_influence_cost}Title Influence Cost (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinCostPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxCostPercent, Order = 1, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_influence_cost_hint}The influence it costs to usurp, form, restore or revoke a title, as a percentage of its cost in realms_titles.xml. Restoring Gondor's throne for Aragorn costs 2500 at 100. Applies to AI lords too. Between 10 and 500. Default: 100.")]
+    public int RealmsInfluenceCostPercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_ai_claims}AI Lords Press Claims", Order = 2, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_ai_claims_hint}When on, AI lords buy claims, usurp the titles they claim, form vacant titles their side holds and restore thrones, each week. When off, only you do; claims they already hold stay. Default: on.")]
+    public bool RealmsAiClaims { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_tribute}Tribute (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 3, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_hint}The gold a vassal pays their liege each week, as a percentage of the tribute in realms_titles.xml (50 for a Barony up to 300 for a Kingdom). 0 stops tribute. Between 0 and 300. Default: 100.")]
+    public int RealmsTributePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_office_influence}Office Influence (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 4, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_office_influence_hint}The influence an office such as the Steward of Gondor or a Marshal of the Mark pays its holder's clan each week, as a percentage of its amount in realms_titles.xml. 0 stops it. Between 0 and 300. Default: 100.")]
+    public int RealmsOfficeInfluencePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_resentment}Resentment Over Fiefs", Order = 5, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_resentment_hint}When on, a lord who holds the title of a town or castle that another clan owns likes its owner a little less each week, and the town loses a little loyalty. Default: on.")]
+    public bool RealmsResentment { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_liege_pull}Liege's Pull", Order = 6, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on.")]
+    public bool RealmsLiegePull { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 7, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on.")]
+    public bool RealmsLiegeArmyDiscount { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_family_grants}Lands for Sons and Daughters", Order = 8, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on.")]
+    public bool RealmsFamilyGrants { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_title_styles}Lords Styled by Their Titles", Order = 9, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on.")]
+    public bool RealmsTitleStyles { get; set; } = true;
+
     // --- Provender-master (docs/features/provender.md, #908) ---
     //
     // Standing orders and morale options for the hero in the party's Quartermaster role. Every value is read when an order is

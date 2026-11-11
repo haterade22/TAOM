@@ -400,7 +400,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_7']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_7</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_7_name}Denethor II, Steward of Gondor</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_7_name}Denethor II</xsl:attribute>
             <xsl:attribute name="age">72</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -509,7 +509,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_9']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_9</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_9_name}Imrahil, Prince of Dol Amroth</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_9_name}Imrahil</xsl:attribute>
             <xsl:attribute name="age">72</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -3178,7 +3178,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_45']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_45_name}Forlong, Lord of Lossarnach</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_45_name}Forlong</xsl:attribute>
             <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -3286,7 +3286,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_52']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_52_name}Hirluin, Lord of Pinnath Gelin</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_52_name}Hirluin</xsl:attribute>
             <xsl:attribute name="age">66</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -3340,7 +3340,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_53']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_53</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_53_name}Angbor, Lord of Lamedon</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_53_name}Angbor</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -3394,7 +3394,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_71']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_71</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_71_name}Golasgil, Lord of Anfalas</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_71_name}Golasgil</xsl:attribute>
             <xsl:attribute name="age">53</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -15248,7 +15248,7 @@
     <xsl:template match="NPCCharacter[@id='lord_5_1']">
         <xsl:copy>
             <xsl:attribute name="id">lord_5_1</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_5_1_name}Vargûl, the High Warlord of Khand</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_5_1_name}Vargûl</xsl:attribute>
             <xsl:attribute name="age">39</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -21365,7 +21365,7 @@
     <xsl:template match="NPCCharacter[@id='lord_WE9_l']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_l</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir, Lord of Morthond</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir</xsl:attribute>
             <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>

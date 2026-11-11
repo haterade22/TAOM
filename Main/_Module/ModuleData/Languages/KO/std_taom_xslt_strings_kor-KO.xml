@@ -648,9 +648,9 @@
     <string id="aom_lord_1_4_name" text="브룬힐드 아이언클로" />
     <string id="aom_lord_1_5_name" text="오스릭 더 와일드" />
     <string id="aom_lord_1_6_name" text="토르발드 옥스혼" />
-    <string id="aom_lord_1_7_name" text="데네소르 2세, 곤도르의 집정관" />
+    <string id="aom_lord_1_7_name" text="데네소르 2세" />
     <string id="aom_lord_1_8_name" text="후리오네스" />
-    <string id="aom_lord_1_9_name" text="임라힐, 돌 아므로스의 공" />
+    <string id="aom_lord_1_9_name" text="임라힐" />
     <string id="aom_lord_1_10_name" text="아라넬" />
     <string id="aom_lord_1_25_name" text="엘피르" />
     <string id="aom_lord_1_35_name" text="에르키리온" />
@@ -699,11 +699,11 @@
     <string id="aom_lord_1_67_name" text="에오르윈 깃살" />
     <string id="aom_lord_1_40_name" text="보르하도르" />
     <string id="aom_lord_1_46_name" text="말리오르" />
-    <string id="aom_lord_1_45_name" text="포를롱, 로사르나흐의 영주" />
+    <string id="aom_lord_1_45_name" text="포를롱" />
     <string id="aom_lord_1_57_name" text="바라노르" />
-    <string id="aom_lord_1_52_name" text="히를루인, 피나스 겔린의 영주" />
-    <string id="aom_lord_1_53_name" text="앙보르, 라메돈의 영주" />
-    <string id="aom_lord_1_71_name" text="골라스길, 안팔라스의 영주" />
+    <string id="aom_lord_1_52_name" text="히를루인" />
+    <string id="aom_lord_1_53_name" text="앙보르" />
+    <string id="aom_lord_1_71_name" text="골라스길" />
     <string id="aom_lord_1_73_name" text="나르미르" />
     <string id="aom_lord_1_62_name" text="오로마르" />
     <string id="aom_lord_1_30_name" text="고스모그, 모르굴의 부관" />
@@ -922,7 +922,7 @@
     <string id="aom_lord_V11_c2_name" text="다구닉" />
     <string id="aom_lord_V11_u_name" text="볼레릭" />
     <string id="aom_lord_V9_u_name" text="우룬둘프" />
-    <string id="aom_lord_5_1_name" text="바르굴, 칸드의 대장군" />
+    <string id="aom_lord_5_1_name" text="바르굴" />
     <string id="aom_lord_5_7_name" text="카르줄" />
     <string id="aom_lord_5_3_name" text="에르게온" />
     <string id="aom_lord_5_4_name" text="니윈" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="존나" />
     <string id="aom_lord_WE8_c_name" text="펠렌두르" />
     <string id="aom_lord_WE8_u_name" text="바란딜" />
-    <string id="aom_lord_WE9_l_name" text="모르손드의 영주, 두인히르" />
+    <string id="aom_lord_WE9_l_name" text="두인히르" />
     <string id="aom_lord_WE9_u_name" text="두일린" />
     <string id="aom_lord_WE9_u2_name" text="로스핀" />
     <string id="TAOM_hero_dead_2_1" text="노인 올렉은 동부인 약탈자들로부터 데일을 지키다 전사했다. 그의 희생으로 산길이 지켜졌고, 그 이야기는 왕국 전역의 노래로 전해진다." />

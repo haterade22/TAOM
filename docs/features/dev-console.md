@@ -208,7 +208,8 @@ enabled it to add gold has not consented to an irreversible mutation of persiste
 Known Tier C territory: settlement culture conversion (`ICultureConversionStore` persists and
 re-applies on load), hero race change (`RacePersistenceService`; `CharacterObject.Race` accepts
 arbitrary integers and `GetRaceNameFromId` coerces unknown ids to `"human"`), career set/switch,
-opening a chronicle event (`taom.chronicle_open`), and anything removing roster entries.
+opening a chronicle event (`taom.chronicle_open`), adding a war pledge (`taom.add_war_pledge`), and anything
+removing roster entries.
 `taom.add_special_resources` is explicitly **not** Tier C: it is clamped to the XML cap, floored at 0,
 and reversible with a negative amount.
 
@@ -307,6 +308,8 @@ A feature doc pairs these commands with the observable result that proves each s
 | `taom.print_war_ledger` | A | campaign | Waiting a day for the log. Prints the `[WarLedger]` lines the daily tick would write now; logs and changes nothing |
 | `taom.chronicle_status` | A | campaign | Nothing else shows the War Chronicle's event chain: every event with its state (Pending, Active, Occurred, Held, Fell, Lapsed, Skipped), its open, close or resolution day, whether an Active siege was assaulted, and the army focus the open windows set. See [war-chronicle.md](war-chronicle.md) |
 | `taom.chronicle_open <id> [confirm]` | C | campaign | Waiting for an event's day. Without `confirm` it is a dry run: it runs the same checks, says what would happen (occurs, opens its window, resolves Fell, or why it stays Pending) and changes nothing. With the literal `confirm` it opens a Pending chronicle event now, still checking its preconditions; a resolved event's row, effects and momentum award are saved and nothing undoes them. A narrative occurs at once and applies its effects. A siege needs the Full War; it then opens its window when the defender holds the target and is at war with a live attacker, or resolves Fell at once, paying its Fell outcome, when an attacker already holds the target. A failed check leaves the event Pending and says why. Refused on a co-op client, while the chronicle is off in MCM, and after the War of the Ring has ended |
+| `taom.print_war_pledges` | A | campaign | Nothing else shows the [War Pledge](war-pledge.md) state: the switches, the momentum balance and the side that courts now, the day the AI may court again, and every realm of the lean table with its lean and its pledge |
+| `taom.add_war_pledge <kingdom id> <free\|evil> [confirm]` | C | campaign | Waiting for the AI's courting (30 days into Full War, with the meter 25 or more against a side). Without `confirm` it is a dry run through the same checks. With the literal `confirm` it pledges a Neutral realm to that side now, ignoring the MCM switch, the lean table, the balance and the wait: the realm makes peace with that side and goes to war with every realm of the other side. The pledge, the peace and the wars are saved and nothing undoes them. Needs the Full War, a live kingdom with no side and no pledge, and no Hostile row with a realm of that side. Refused on a co-op client |
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit, and since #545 prints the ENFORCED frame (`raw/deflated`) beside the DISPLAYED one (`weighted/true-base`) so the two can be compared in one line |
 | `taom.print_ai_food_relief [count]` | A | campaign | Nothing else shows it: each AI party's daily food consumption as a fraction of the vanilla members/20 rate, split by whether the party is eligible for the AI food relief; the count caps the per-party table (default 25), and the summary covers every party. See [ai-party-size.md](ai-party-size.md) |
 | `taom.tactic_status` | A | mission | Turning Culture Doctrine Debug on and reading the log: every team AI's current tactic and each formation's active behaviour and arrangement; works in Custom Battle. See [culture-doctrine.md](culture-doctrine.md) |
@@ -457,6 +460,7 @@ only coverage.
 
 ## Changelog
 
+- **2026-11-10**: Added `taom.print_war_pledges` (Tier A) and `taom.add_war_pledge` (Tier C) for War Pledge (#1113).
 - **2026-08-07** — Added `taom.print_memory [label] [gpu]` (Tier A, cheat gate) for the commit-attribution
   matrix in `docs/investigations/native-commit-audit-2026-08.md`. Recorded above that **`RunAnywhere`
   structurally cannot serve the main-menu station** — a fact that shapes instrument design, not just

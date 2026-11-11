@@ -23,7 +23,8 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
    The Modding Kit build (`bin/Win64_Shipping_wEditor`) updates on its OWN Steam schedule, so read
    its `Version.xml` and its `TaleWorlds.Native.dll` `LastWriteTime` separately from the client's.
    It can land well after the client (44 minutes on v1.5.6; whole versions before 2026-08-10), so re-read its `Version.xml` and the DLL hash right before the
-   Phase 2 decompile and again before trusting `_editor_build`.
+   Phase 2 decompile and again before trusting `_editor_build`. Read it, and the Dedicated Server's
+   buildid, once more before the commit that states them: on v1.5.7 both moved within the hour.
    It can jump several versions in one update ([engine-bump-history.md](../../../docs/migration/engine-bump-history.md), "wEditor jump of 2026-08-10").
    What skipping it breaks: triage of an editor crash, which passes `--dll` on the wEditor binary. An offset
    read from that binary holds only for the version in its own Version.xml.
@@ -151,7 +152,7 @@ then TAOM on top) inherits a body change for free, a replacement inherits nothin
 indistinguishable to a signature gate. Calibration: [engine-bump-history.md](../../../docs/migration/engine-bump-history.md), "v1.5.2 member diff". A row it cannot resolve is a failure, not a pass. Until #1038 item 4 lands, two rows fail every
 run: `CoopRecruitAttributionPatch` (UNPARSED) and `MissionScreen.IMissionSystemHandler.UpdateCamera`
 (UNRESOLVED). Diff both by hand; any other UNPARSED or UNRESOLVED row is a failure. A `TargetMethods()` patch appears in the snapshot by its
-first target only, so diff its other targets by hand (#1038): `grep -rlE 'IEnumerable<MethodBase>\s+TargetMethods' Main Client Dependencies` lists them. Record the verdicts in `docs/migration/v<ver>-diff-ranked.md`.
+first target only, so diff its other targets by hand (#1038): `grep -rlE 'IEnumerable<MethodBase>\s+TargetMethods' Main Client Dependencies` lists them. Then grep each changed member's name across `Main`, `Client`, `Dependencies` and `docs/features/`, comments included: a comment or doc that states the old behaviour as fact has no row in the snapshot (v1.5.7 `OathSitOutRule`). Record the verdicts in `docs/migration/v<ver>-diff-ranked.md`.
 
 ## Phase 4 — Re-verify TAOM against the new engine
 
@@ -243,6 +244,12 @@ first target only, so diff its other targets by hand (#1038): `grep -rlE 'IEnume
 10. Write the Gates section of `docs/migration/v<ver>-impact.md` from the final `/verify` output,
     after the commit, in the past tense, and name the commit each number comes from. A later commit
     that changes one of those numbers rewrites the whole section, not only its own clause.
+11. Before the first start on the new build, move each live
+    `Modules/<module>/Shaders/D3D11/compressed_shader_cache.sack` (TAOM, `LOTRLOME_Armory`) to a
+    backup on E:. The engine reads a sack compiled for the old build and recompiles nothing. On the
+    v1.5.7 bump, TAOM's stale sack left every small character portrait (encyclopedia leader cards)
+    blank, while banners and 3D tableaus rendered (#448). Done when the first start rewrites the
+    folder and a kingdom page shows its leader portrait.
 
 ## Phase 5 — Control battles before believing anything
 

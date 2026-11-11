@@ -492,6 +492,274 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual(guide.vertices, result.vertices)
         self.assertEqual(1, len(result.faces))
 
+    def test_invalid_guide_markers_do_not_change_generated_geometry(self):
+        source = differential.curved_grid()
+        source.attributes["point_guide"] = [True]
+        source.attribute_domains["point_guide"] = "POINT"
+        guide = Mesh(
+            vertices=[(0.1, 0.1, 0), (0.9, 0.1, 0), (0.9, 0.9, 0), (0.1, 0.9, 0)],
+            faces=[(0, 1, 2, 3)] * 4,
+            attributes={"point_guide": [True] * 4},
+            attribute_domains={"point_guide": "FACE"},
+        )
+        result = engine.retopologize(
+            source, guide,
+            RetopoSettings(initialize_planes=True, output_generated_planes=True),
+        )
+        self.assertEqual(differential.unit_guide().vertices, result.vertices)
+        self.assertNotIn("point_guide", result.attributes)
+        self.assertNotIn("point_guide", result.attribute_domains)
+
+    def test_direct_initialization_and_snap_ignore_invalid_markers(self):
+        source = differential.curved_grid()
+        selective = [index in {1, 3, 5, 7} for index in range(len(source.vertices))]
+        self.assertEqual(32, len(engine._sample_loop_variants(list(range(36)))))
+        self.assertEqual([0, 35], engine._sample_loop_variants(list(range(36)))[::31])
+        for domain in ("CORNER", "FACE"):
+            with self.subTest(source_domain=domain):
+                source.attributes["point_guide"] = selective
+                source.attribute_domains["point_guide"] = domain
+                flat = engine.flatten_to_patterns(source)
+                result = engine.initialize_planes(flat, RetopoSettings())
+                self.assertEqual(differential.unit_guide().vertices, result.vertices)
+                self.assertNotIn("point_guide", result.attributes)
+        source.attribute_domains["point_guide"] = "POINT"
+        valid_source_result = engine.initialize_planes(engine.flatten_to_patterns(source), RetopoSettings())
+        self.assertNotEqual(differential.unit_guide().vertices, valid_source_result.vertices)
+        source.attributes.pop("point_guide")
+        source.attribute_domains.pop("point_guide")
+        flat = engine.flatten_to_patterns(source)
+        for domain, values in (("CORNER", selective), ("POINT", [True])):
+            with self.subTest(direct_domain=domain, direct_length=len(values)):
+                invalid = flat.copy()
+                invalid.attributes["point_guide"] = values
+                invalid.attribute_domains["point_guide"] = domain
+                result = engine.initialize_planes(invalid, RetopoSettings())
+                self.assertEqual(differential.unit_guide().vertices, result.vertices)
+        valid_direct = flat.copy()
+        valid_direct.attributes["point_guide"] = selective
+        valid_direct.attribute_domains["point_guide"] = "POINT"
+        valid_direct_result = engine.initialize_planes(valid_direct, RetopoSettings())
+        self.assertNotEqual(differential.unit_guide().vertices, valid_direct_result.vertices)
+        face_marked = flat.copy()
+        face_marked.attributes["point_guide"] = [False, True, False, True]
+        face_marked.attribute_domains["point_guide"] = "FACE"
+        face_marked_result = engine.initialize_planes(face_marked, RetopoSettings())
+        self.assertEqual(differential.unit_guide().vertices, face_marked_result.vertices)
+        first = engine.flatten_to_patterns(differential.curved_grid())
+        second = first.copy()
+        second.vertices = [(x + 2, y, z) for x, y, z in second.vertices]
+        offset = len(first.vertices)
+        combined = Mesh(
+            vertices=first.vertices + second.vertices,
+            faces=first.faces + [tuple(index + offset for index in face) for face in second.faces],
+            attributes={name: values + second.attributes[name] for name, values in first.attributes.items()},
+            attribute_domains=first.attribute_domains,
+        )
+        expected = engine.initialize_planes(combined, RetopoSettings())
+        for domain in ("CORNER", "FACE"):
+            with self.subTest(component_domain=domain):
+                invalid = combined.copy()
+                invalid.attributes["point_guide"] = [index == 0 for index in range(len(first.vertices))] * 2
+                invalid.attribute_domains["point_guide"] = domain
+                result = engine.initialize_planes(invalid, RetopoSettings())
+                self.assertEqual((expected.vertices, expected.faces), (result.vertices, result.faces))
+        ring = engine.flatten_to_patterns(differential.ring())
+        ring.attributes.update({"corner_tag": [1] * len(ring.vertices), "short_point": [1, 2]})
+        ring.attribute_domains.update({"corner_tag": "CORNER", "short_point": "POINT", "orphan": "FACE"})
+        initialized_ring = engine.initialize_planes(ring, RetopoSettings())
+        self.assertEqual({"corner_tag", "short_point"} & initialized_ring.attributes.keys(), set())
+        self.assertEqual({"corner_tag", "short_point", "orphan"} & initialized_ring.attribute_domains.keys(), set())
+        annulus = differential.ring_guide()
+        annulus.faces = [triangle for face in annulus.faces for triangle in ((face[0], face[1], face[2]), (face[0], face[2], face[3]))]
+        clockwise = differential.ring_guide()
+        clockwise.vertices = [(x, 1 - y, z) for x, y, z in clockwise.vertices]
+        clockwise.faces = [triangle for face in clockwise.faces for triangle in ((face[2], face[1], face[0]), (face[3], face[2], face[0]))]
+
+        def orientation(first, second, third):
+            return (second[0] - first[0]) * (third[1] - first[1]) - (second[1] - first[1]) * (third[0] - first[0])
+
+        def intersects(first, second, third, fourth):
+            return orientation(first, second, third) * orientation(first, second, fourth) < 0 and orientation(third, fourth, first) * orientation(third, fourth, second) < 0
+
+        for annulus_input in (annulus, clockwise):
+            initialized_annulus = engine.initialize_planes(annulus_input, RetopoSettings())
+            self.assertEqual((16, 8, 16), (len(initialized_annulus.vertices), len(initialized_annulus.faces), len(initialized_annulus.boundary_edges())))
+            expected_area = sum(engine.signed_area(face, annulus_input.vertices) for face in annulus_input.faces) / len(initialized_annulus.faces)
+            for face in initialized_annulus.faces:
+                points = [initialized_annulus.vertices[index] for index in face]
+                self.assertAlmostEqual(expected_area, engine.signed_area(face, initialized_annulus.vertices))
+                self.assertGreater(engine.signed_area(face, initialized_annulus.vertices), 0)
+                self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+                self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+        irregular = Mesh(
+            vertices=[(30, 0, 0), (0, -30, 0), (-30, 0, 0), (0, 30, 0), (30, 10, 0), (18, 1, 0), (18, 6, 0), (3, 16, 0), (-12, 1, 0), (3, -14, 0)],
+            faces=[(0, 4, 6), (0, 6, 5), (4, 3, 7), (4, 7, 6), (3, 2, 8), (3, 8, 7), (2, 1, 9), (2, 9, 8), (1, 0, 5), (1, 5, 9)],
+        )
+        initialized_irregular = engine.initialize_planes(irregular, RetopoSettings())
+        for face in initialized_irregular.faces:
+            points = [initialized_irregular.vertices[index] for index in face]
+            self.assertGreater(engine.signed_area(face, initialized_irregular.vertices), 0)
+            self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+            self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+        unequal_faces = []
+        outer_index = inner_index = 0
+        while outer_index < 8 or inner_index < 4:
+            if inner_index >= 4 or (outer_index < 8 and outer_index / 8 <= inner_index / 4):
+                unequal_faces.append((outer_index % 8, (outer_index + 1) % 8, 8 + inner_index % 4))
+                outer_index += 1
+            else:
+                unequal_faces.append((outer_index % 8, 8 + (inner_index + 1) % 4, 8 + inner_index % 4))
+                inner_index += 1
+        unequal = Mesh(
+            vertices=[(2 * math.cos(math.tau * index / 8), 2 * math.sin(math.tau * index / 8), 0) for index in range(8)]
+            + [(math.cos(math.tau * index / 4), math.sin(math.tau * index / 4), 0) for index in range(4)],
+            faces=unequal_faces,
+        )
+        layout_counts = []
+        sample_loop_variants = engine._sample_loop_variants
+        def record_layouts(variants):
+            sampled = sample_loop_variants(variants)
+            layout_counts.append((len(variants), len(sampled)))
+            return sampled
+        with mock.patch.object(engine, "_sample_loop_variants", side_effect=record_layouts):
+            initialized_unequal = engine.initialize_planes(unequal, RetopoSettings())
+        self.assertEqual([(36, 32)], layout_counts)
+        self.assertEqual((16, 8, 16), (len(initialized_unequal.vertices), len(initialized_unequal.faces), len(initialized_unequal.boundary_edges())))
+        for face in initialized_unequal.faces:
+            points = [initialized_unequal.vertices[index] for index in face]
+            self.assertGreater(engine.signed_area(face, initialized_unequal.vertices), 0)
+            self.assertFalse(intersects(points[0], points[1], points[2], points[3]))
+            self.assertFalse(intersects(points[1], points[2], points[3], points[0]))
+
+        def loop_case(outer, inner):
+            faces = []
+            outer_index = inner_index = 0
+            while outer_index < len(outer) or inner_index < len(inner):
+                if inner_index >= len(inner) or (outer_index < len(outer) and outer_index / len(outer) <= inner_index / len(inner)):
+                    faces.append((outer_index % len(outer), (outer_index + 1) % len(outer), len(outer) + inner_index % len(inner)))
+                    outer_index += 1
+                else:
+                    faces.append((outer_index % len(outer), len(outer) + (inner_index + 1) % len(inner), len(outer) + inner_index % len(inner)))
+                    inner_index += 1
+            return Mesh(vertices=outer + inner, faces=faces)
+
+        corner_cases = (
+            loop_case([(-3, -3, 0), (0, -3, 0), (3, -3, 0), (3, 3, 0), (0, 3, 0), (-3, 3, 0)], [(-1, -1, 0), (1, -1, 0), (1, 1, 0), (-1, 1, 0)]),
+            loop_case([(-3, -3, 0), (3, -3, 0), (3, 3, 0), (-3, 3, 0)], [(0, -1, 0), (1, -1, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (-1, 1, 0), (-1, 0, 0), (-1, -1, 0)]),
+        )
+        for corner_case in corner_cases:
+            initialized_corners = engine.initialize_planes(corner_case, RetopoSettings())
+            input_area = sum(engine.signed_area(face, corner_case.vertices) for face in corner_case.faces)
+            output_area = sum(engine.signed_area(face, initialized_corners.vertices) for face in initialized_corners.faces)
+            self.assertAlmostEqual(input_area, output_area)
+            self.assertTrue(all(vertex in initialized_corners.vertices for vertex in corner_case.vertices))
+        alternative_split = loop_case(
+            [(1.257, 1.809, 0), (-2.368, 2.23, 0), (-3.207, 1.863, 0), (-1.976, -1.841, 0), (-1.216, -3.272, 0), (-0.382, -2.454, 0), (0.889, -2.864, 0), (2.673, -2.136, 0)],
+            [(0.5 * math.cos(1.7202529039022743 + math.tau * index / 3), 0.5 * math.sin(1.7202529039022743 + math.tau * index / 3), 0) for index in range(3)],
+        )
+        initialized_alternative = engine.initialize_planes(alternative_split, RetopoSettings())
+        self.assertEqual(8, len(initialized_alternative.faces))
+        self.assertTrue(all(vertex in initialized_alternative.vertices for vertex in alternative_split.vertices))
+        later_rotation = loop_case(
+            [(-2.012, 1.099, 0), (-3.069, 1.647, 0), (-3.937, -0.595, 0), (-1.75, -2.123, 0), (-0.58, -2.262, 0), (0.777, -2.28, 0), (2.75, -0.747, 0)],
+            [(0.596, -0.164, 0), (0.232, -0.49, 0), (0.259, -0.977, 0), (0.657, -1.26, 0), (1.126, -1.125, 0), (1.314, -0.674, 0), (1.078, -0.246, 0)],
+        )
+        initialized_later = engine.initialize_planes(later_rotation, RetopoSettings())
+        self.assertEqual(7, len(initialized_later.faces))
+        self.assertTrue(all(engine.signed_area(face, initialized_later.vertices) > 0 for face in initialized_later.faces))
+        fifth_rotation = loop_case(
+            [(2.63, 0.157, 0), (2.775, 0.932, 0), (1.642, 1.832, 0), (0.632, 2.428, 0), (-0.509, 2.256, 0), (-1.995, 2.947, 0), (-2.792, -2.499, 0), (-1.456, -1.685, 0), (-1.535, -1.965, 0), (0.911, -3.841, 0), (2.071, -1.277, 0), (3.214, -1.913, 0), (2.116, -0.985, 0), (2.518, -0.753, 0)],
+            [(-0.282 + 0.5 * math.cos(math.tau * index / 14), -0.194 + 0.5 * math.sin(math.tau * index / 14), 0) for index in range(14)],
+        )
+        initialized_fifth = engine.initialize_planes(fifth_rotation, RetopoSettings())
+        self.assertEqual(14, len(initialized_fifth.faces))
+        self.assertTrue(all(engine.signed_area(face, initialized_fifth.vertices) > 0 for face in initialized_fifth.faces))
+        equal_split = loop_case(
+            [(0, 0, 0), (0.5, 0, 0), (1, 0, 0), (1.5, 0, 0), (2, 0, 0), (3, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)],
+            [(1, 1, 0), (2, 1, 0), (3, 1, 0), (3, 2, 0), (3, 3, 0), (2, 3, 0), (1, 3, 0), (1, 2, 0), (1, 1.5, 0)],
+        )
+        initialized_equal_split = engine.initialize_planes(equal_split, RetopoSettings())
+        self.assertEqual(10, len(initialized_equal_split.faces))
+        self.assertTrue(all(vertex in initialized_equal_split.vertices for vertex in equal_split.vertices))
+        self.assertTrue(all(engine.signed_area(face, initialized_equal_split.vertices) > 0 for face in initialized_equal_split.faces))
+        crossing_outer = [(2.07, 0.774, 0), (1.944, 1.884, 0), (1.449, 1.551, 0), (1.69, 2.588, 0), (0.799, 1.641, 0), (-0.975, 2.182, 0), (-2.456, -1.221, 0), (-1.573, -1.198, 0), (-2.086, -1.825, 0), (0.887, -1.398, 0)]
+        crossing_inner = [(-1.034, -0.31, 0), (0.39, -0.604, 0), (0.683, 0.82, 0), (-0.74, 1.113, 0)]
+        while len(crossing_inner) < len(crossing_outer):
+            lengths = [math.dist(crossing_inner[index], crossing_inner[(index + 1) % len(crossing_inner)]) for index in range(len(crossing_inner))]
+            split_index = max(range(len(lengths)), key=lengths.__getitem__)
+            crossing_inner.insert(split_index + 1, engine.lerp(crossing_inner[split_index], crossing_inner[(split_index + 1) % len(crossing_inner)], 0.5))
+        assembled_crossing = loop_case(crossing_outer, crossing_inner)
+        initialized_assembled = engine.initialize_planes(assembled_crossing, RetopoSettings())
+        self.assertTrue(all(vertex in initialized_assembled.vertices for vertex in assembled_crossing.vertices))
+        self.assertTrue(all(engine.signed_area(face, initialized_assembled.vertices) > 0 for face in initialized_assembled.faces))
+        assembled_edges = sorted({Mesh.edge_key(face[index], face[(index + 1) % 4]) for face in initialized_assembled.faces for index in range(4)})
+        for first_index, (first, second) in enumerate(assembled_edges):
+            for third, fourth in assembled_edges[first_index + 1:]:
+                if set((first, second)) & set((third, fourth)):
+                    continue
+                self.assertFalse(intersects(
+                    initialized_assembled.vertices[first], initialized_assembled.vertices[second],
+                    initialized_assembled.vertices[third], initialized_assembled.vertices[fourth],
+                ))
+        def star_case(count, high, low, radius, phase, offset):
+            outer = [((high if index % 2 == 0 else low) * math.cos(math.tau * index / count), (high if index % 2 == 0 else low) * math.sin(math.tau * index / count), 0) for index in range(count)]
+            inner = [(radius * math.cos(phase + math.tau * index / count) + offset, radius * math.sin(phase + math.tau * index / count), 0) for index in range(count)]
+            return Mesh(
+                vertices=outer + inner,
+                faces=[triangle for index in range(count) for triangle in (
+                    (index, (index + 1) % count, count + (index + 1) % count),
+                    (index, count + (index + 1) % count, count + index),
+                )],
+            )
+
+        with self.assertRaisesRegex(ValueError, "simple hole inside the outer boundary"):
+            engine.initialize_planes(star_case(12, 3.57, 0.91, 0.83, 3.07, 0.14), RetopoSettings())
+        longer_inner = Mesh(
+            vertices=[(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0), (1, 1, 0), (2, 1, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)],
+            faces=[(0, 1, 5), (0, 5, 4), (1, 6, 5), (1, 2, 7), (1, 7, 6), (2, 3, 8), (2, 8, 7), (3, 0, 4), (3, 4, 8)],
+        )
+        initialized_longer_inner = engine.initialize_planes(longer_inner, RetopoSettings())
+        self.assertEqual((10, 5, 10), (len(initialized_longer_inner.vertices), len(initialized_longer_inner.faces), len(initialized_longer_inner.boundary_edges())))
+        self.assertTrue(all(engine.signed_area(face, initialized_longer_inner.vertices) > 0 for face in initialized_longer_inner.faces))
+        square = [(0, 0, 0), (4, 0, 0), (4, 4, 0), (0, 4, 0)]
+        for name, inner, error in (
+            ("touching", [(0, 0, 0), (3, 1, 0), (3, 3, 0), (1, 3, 0)], "inside the outer boundary"),
+            ("crossing", [(1, 1, 0), (3, 3, 0), (1, 3, 0), (3, 1, 0)], "simple hole boundaries"),
+        ):
+            with self.subTest(invalid_hole=name):
+                malformed = Mesh(
+                    vertices=square + inner,
+                    faces=[triangle for index in range(4) for triangle in (
+                        (index, (index + 1) % 4, 4 + (index + 1) % 4),
+                        (index, 4 + (index + 1) % 4, 4 + index),
+                    )],
+                )
+                with self.assertRaisesRegex(ValueError, error):
+                    engine.initialize_planes(malformed, RetopoSettings())
+        outside = loop_case(square, [(10, 10, 0), (11, 10, 0), (11, 11, 0), (10, 11, 0)])
+        with self.assertRaisesRegex(ValueError, "simple hole inside the outer boundary"):
+            engine.initialize_planes(outside, RetopoSettings())
+        invalid_alignment = Mesh(
+            vertices=[(3, 0, 0), (0.5, 1, 0), (0, 3, 0), (-1, 1, 0), (-3, 0, 0), (-1, -1, 0), (0, -3, 0), (1, -1, 0)]
+            + [(1 + 0.1 * math.cos(math.tau * index / 8), 0.1 * math.sin(math.tau * index / 8), 0) for index in range(8)],
+            faces=[triangle for index in range(8) for triangle in (
+                (index, (index + 1) % 8, 8 + (index + 1) % 8),
+                (index, 8 + (index + 1) % 8, 8 + index),
+            )],
+        )
+        with self.assertRaisesRegex(ValueError, "could not align hole boundaries"):
+            engine.initialize_planes(invalid_alignment, RetopoSettings())
+        guide = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2, 3)],
+            attributes={"point_guide": [True, True, True, True]},
+            attribute_domains={"point_guide": "CORNER"},
+        )
+        snapped = engine.snap_guides_to_pattern(guide, differential.unit_guide(), 0.001)
+        self.assertNotIn("point_guide", snapped.attributes)
+        self.assertNotIn("point_guide", snapped.attribute_domains)
+
     def test_density_plane_ids_distinguish_unequal_components(self):
         guide = Mesh(
             vertices=[(0, 0, 0), (0.4, 0, 0), (0.4, 1, 0), (0, 1, 0), (0.6, 0, 0), (1, 0, 0), (1, 1, 0), (0.6, 1, 0)],
@@ -626,7 +894,7 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([False] * 13, result.attributes["point_guide"])
 
     def test_undeclared_known_point_domains_are_consistent(self):
-        size = 4
+        size = 6
         vertices = [
             ((3 + math.cos(math.tau * i / size) * math.cos(math.tau * j / size), 3 + math.sin(math.tau * i / size) * math.cos(math.tau * j / size), math.sin(math.tau * j / size)))
             for i in range(size) for j in range(size)
@@ -638,20 +906,237 @@ class ContractRegressionTests(unittest.TestCase):
         guide = Mesh(
             vertices=vertices,
             faces=faces,
-            attributes={"source_vertex": list(range(16)), "point_guide": [True] + [False] * 15},
+            attributes={"source_vertex": list(range(36)), "point_guide": [True] + [False] * 35},
         )
-        center = guide.vertices[5]
-        filled = engine.auto_fill(guide, [center], 1)
+        first, second, third, fourth = (guide.vertices[index] for index in guide.faces[0])
+        normal = engine.normalize(engine.cross(engine.subtract(second, first), engine.subtract(fourth, first)))
+        center = engine.add(engine.average((first, second, third, fourth)), engine.multiply(normal, 0.34))
+        composite = guide.copy()
+        composite.vertices.extend([(100, 0, 0), (101, 0, 0), (101, 1, 0), (100, 1, 0)])
+        composite.faces.append((36, 37, 38, 39))
+        composite.attributes["source_vertex"].extend(range(36, 40))
+        composite.attributes["point_guide"].extend([False] * 4)
+        composite.attributes["pattern_id"] = list(range(40))
+        filled = engine.auto_fill(composite, [center], 1, across_patterns=False)
+        self.assertGreater(len(filled.faces), len(composite.faces))
+        self.assertEqual(list(range(36)), filled.attributes["pattern_id"][:36])
         self.assertEqual(len(filled.vertices), len(filled.attributes["source_vertex"]))
         self.assertEqual(1, sum(filled.attributes["point_guide"]))
         mirrored = engine.mirror_guides(guide, axes=("x",))
         self.assertEqual(len(mirrored.vertices), len(mirrored.attributes["source_vertex"]))
         self.assertEqual(2, sum(mirrored.attributes["point_guide"]))
         subdivided = engine.subdivide_quads(guide)
-        self.assertEqual(list(range(16)), subdivided.attributes["source_vertex"][:16])
+        self.assertEqual(list(range(36)), subdivided.attributes["source_vertex"][:36])
         self.assertEqual(1, sum(subdivided.attributes["point_guide"]))
-        merged = engine.merge_output_seams(filled, 0.01)
-        self.assertEqual(len(merged.vertices), len(merged.attributes["source_vertex"]))
+        merged = engine.merge_output_seams(
+            Mesh(
+                vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, -1, 0), (0, -1, 0)],
+                faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+                attributes={"source_vertex": list(range(8))},
+            ),
+            0.01,
+        )
+        self.assertEqual(6, len(merged.vertices))
+        self.assertEqual([0, 1, 2, 3, 6, 7], merged.attributes["source_vertex"])
+
+    def test_repair_freezes_undeclared_point_domain_after_count_change(self):
+        vertices = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+        faces = [(0, 1, 2), (1, 0, 3), (0, 1, 4), (1, 0, 5)]
+        for _ in range(4):
+            offset = len(vertices)
+            vertices.extend([(6, 0, 0), (7, 0, 0), (6, 1, 0), (5, 0, 0), (6, -1, 0), (6, 0, 1)])
+            faces.extend(tuple(offset + index for index in face) for face in (
+                (0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2),
+                (4, 1, 2), (4, 2, 5), (4, 5, 1), (4, 3, 5),
+            ))
+        mesh = Mesh(vertices=vertices, faces=faces, attributes={"weight": list(range(30))})
+        result, _ = engine.inspect_topology(mesh, fix_split_edges=True)
+        self.assertEqual(52, len(result.vertices))
+        self.assertEqual(36, len(result.faces))
+        self.assertEqual("POINT", result.attribute_domains["weight"])
+        self.assertEqual(len(result.vertices), len(result.attributes["weight"]))
+
+    def test_reconstruction_drops_unresolved_and_unsupported_attributes(self):
+        mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+            faces=[(0, 1, 2, 3)],
+            uv=[(0, 0), (1, 0), (1, 1), (0, 1)],
+            attributes={
+                "source_vertex": [0, 1, 2, 3],
+                "weight": [9, 8, 7, 6, 5, 4],
+                "corner_tag": [1, 1, 1, 1],
+                "short_point": [1, 2, 3],
+            },
+            attribute_domains={"corner_tag": "CORNER", "short_point": "POINT"},
+        )
+        weld_mesh = Mesh(
+            vertices=[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, -1, 0), (0, -1, 0)],
+            faces=[(0, 1, 2, 3), (4, 5, 6, 7)],
+            attributes={"weight": list(range(6)), "source_vertex": list(range(8))},
+        )
+        repair_mesh = differential.non_manifold()
+        repair_mesh.attributes.update({"source_vertex": list(range(5)), "stale": list(range(52)), "corner_tag": [0] * 5})
+        repair_mesh.attribute_domains["corner_tag"] = "CORNER"
+        mismatched_axis = mesh.copy()
+        mismatched_axis.lines = [(0, 1)]
+        two_axes = mesh.copy()
+        two_axes.vertices.extend([(0.25, 0.5, 0), (0.5, 0.25, 0)])
+        two_axes.attributes["source_vertex"] = list(range(6))
+        two_axes.attribute_domains["weight"] = "FACE"
+        two_axes.lines = [(1, 4), (2, 5)]
+        results = [
+            engine.mirror_guides(mesh, axes=("x",)),
+            engine.mirror_guides(mismatched_axis, axes=("y",), source=differential.curved_grid()),
+            engine.mirror_guides(two_axes, axes=("x", "y"), source=differential.curved_grid()),
+            engine.snap_guides_to_pattern(mesh, differential.unit_guide(), 0),
+            engine._separate(mesh, [0]),
+            engine.merge_output_seams(weld_mesh, 0.01),
+            engine.thicken(mesh, 0.1),
+            engine.subdivide_quads(mesh),
+            engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1),
+            engine.auto_fill(mesh, [(0.5, 0.5, 0)], 1, across_patterns=False),
+            engine.inspect_topology(repair_mesh, fix_split_edges=True)[0],
+            engine.inspect_topology(mesh, fix_split_edges=True)[0],
+            engine.inspect_topology(mesh, fix_split_edges=False)[0],
+            engine.merge_output_seams(mesh, 0),
+            engine.retopologize(differential.curved_grid(), mesh, RetopoSettings(output_generated_planes=True)),
+        ]
+        for result in results:
+            self.assertNotIn("weight", result.attributes)
+            self.assertNotIn("corner_tag", result.attributes)
+            self.assertNotIn("short_point", result.attributes)
+            self.assertNotIn("stale", result.attributes)
+            self.assertNotIn("weight", result.attribute_domains)
+            self.assertNotIn("corner_tag", result.attribute_domains)
+            self.assertNotIn("short_point", result.attribute_domains)
+            self.assertNotIn("stale", result.attribute_domains)
+            self.assertIn("source_vertex", result.attributes)
+        line_mesh = weld_mesh.copy()
+        line_mesh.vertices.append((9, 9, 0))
+        line_mesh.lines = [(4, 8)]
+        line_result = engine.merge_output_seams(line_mesh, 0.01)
+        self.assertEqual([(0, 6)], line_result.lines)
+        engine.subdivide_quads(line_result)
+        attributed = differential.two_guide()
+        attributed.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(auto_fill_across_patterns=across_patterns):
+                filled = engine.auto_fill(attributed, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                self.assertEqual({(0, 6): 0.5, (1, 6): 0.5}, filled.edge_attributes["crease_edge"])
+                self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
+                subdivided = engine.subdivide_quads(filled)
+                self.assertEqual({0.5}, set(subdivided.edge_attributes["crease_edge"].values()))
+        loose = differential.unit_guide()
+        loose.lines = [(0, 2)]
+        loose.edge_attributes["crease_edge"] = {(0, 2): 0.5}
+        filled_loose = engine.auto_fill(loose, [(0.5, 0.5, 0)], 1, across_patterns=False)
+        self.assertEqual(2, len(filled_loose.lines))
+        self.assertNotIn((0, 2), filled_loose.lines)
+        self.assertNotIn((0, 2), filled_loose.edge_attributes["crease_edge"])
+        subdivided_loose = engine.subdivide_quads(filled_loose)
+        self.assertTrue(subdivided_loose.lines)
+        self.assertEqual(set(subdivided_loose.edge_attributes["crease_edge"]) - set(subdivided_loose.edges()), set())
+        source = differential.curved_grid()
+        source.attributes["point_guide"] = [index == 4 for index in range(9)]
+        pipeline = engine.retopologize(source, loose, RetopoSettings(auto_fill_prepass=True, subdiv_reproject=1))
+        self.assertTrue(pipeline.faces)
+        for across_patterns in (True, False):
+            with self.subTest(off_center_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose, [(0.52, 0.5, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.52, 0.5, 0)) < 1e-7 for index in face_vertices))
+        for across_patterns in (True, False):
+            with self.subTest(iterative_off_center_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
+        far_point = differential.unit_guide()
+        far_point.vertices.append((5, 5, 0))
+        far_point.lines = [(2, 4)]
+        for across_patterns in (True, False):
+            with self.subTest(far_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(far_point, [(3, 3, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(all(math.dist(filled.vertices[index], (3, 3, 0)) > 1e-7 for index in face_vertices))
+        loose_point = differential.unit_guide()
+        loose_point.vertices.append((0.49, 0.5, 0))
+        loose_point.lines = [(0, 2), (0, 4)]
+        for across_patterns in (True, False):
+            with self.subTest(loose_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose_point, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
+        split_loose = differential.two_guide()
+        split_loose.vertices.extend([(0.3, 0, 0), (0.3, -2, 0)])
+        split_loose.lines = [(6, 7)]
+        split_loose.edge_attributes["crease_edge"] = {(6, 7): 0.9}
+        for across_patterns in (True, False):
+            with self.subTest(split_loose_across_patterns=across_patterns):
+                filled = engine.auto_fill(split_loose, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(all(index not in face_vertices for line in filled.lines for index in line))
+        free = differential.unit_guide()
+        free.vertices.append((5, 5, 0))
+        free.lines = [(2, 4)]
+        subdivided_free = engine.subdivide_quads(free)
+        self.assertIn((5, 5, 0), subdivided_free.vertices)
+        filled_free = engine.auto_fill(free, [(0.5, 0.5, 0)], 1)
+        self.assertIn((5, 5, 0), filled_free.vertices)
+        cross_component = differential.two_islands()
+        cross_component.vertices.append((5, 5, 0))
+        cross_component.lines = [(1, 4), (2, 8)]
+        cross_component.edge_attributes["crease_edge"] = {(1, 4): 0.5, (2, 8): 0.7}
+        filled_cross = engine.auto_fill(cross_component, [(0.3, 0, 0)], 1, across_patterns=False)
+        original_lines = sorted(tuple(sorted((cross_component.vertices[first], cross_component.vertices[second]))) for first, second in cross_component.lines)
+        filled_lines = sorted(tuple(sorted((filled_cross.vertices[first], filled_cross.vertices[second]))) for first, second in filled_cross.lines)
+        self.assertEqual(original_lines, filled_lines)
+        self.assertEqual([0.5, 0.7], sorted(filled_cross.edge_attributes["crease_edge"].values()))
+        self.assertEqual(set(filled_cross.edge_attributes["crease_edge"]) - set(filled_cross.edges()), set())
+        self.assertIn((5, 5, 0), filled_cross.vertices)
+        twice_subdivided = engine.subdivide_quads(subdivided_loose)
+        self.assertIn((0.5, 0.5, 0), twice_subdivided.vertices)
+        self.assertEqual(set(twice_subdivided.edge_attributes["crease_edge"]) - set(twice_subdivided.edges()), set())
+        beveled = differential.unit_guide()
+        beveled.lines = [(0, 2)]
+        beveled.edge_attributes["bevel_weight_edge"] = {(0, 2): 0.5}
+        final_output = engine.retopologize(
+            differential.curved_grid(), beveled,
+            RetopoSettings(subdiv_reproject=1, separate_parts=False, fit_uv=False, seams_merge_distance=0),
+        )
+        self.assertEqual(set(final_output.edge_attributes.get("bevel_weight_edge", {})) - set(final_output.edges()), set())
+        engine.subdivide_quads(final_output)
+        six_point = differential.unit_guide()
+        six_point.edge_attributes["crease_edge"] = {(0, 1): 0.5, (2, 3): 0.7}
+        for across_patterns in (True, False):
+            with self.subTest(six_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(six_point, [(index / 5, 0, 0) for index in range(6)], 1, across_patterns=across_patterns)
+                self.assertEqual({(0, 4): 0.5, (1, 4): 0.5, (2, 5): 0.7, (3, 5): 0.7}, filled.edge_attributes["crease_edge"])
+                self.assertEqual(set(filled.edge_attributes["crease_edge"]) - set(filled.edges()), set())
+                engine.subdivide_quads(filled)
+        face_line = differential.two_guide()
+        face_line.lines = [(0, 1)]
+        face_line.edge_attributes["crease_edge"] = {(0, 1): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(face_line_across_patterns=across_patterns):
+                filled = engine.auto_fill(face_line, [(0.3, 0, 0)], 1, across_patterns=across_patterns)
+                self.assertNotIn((0, 1), filled.lines)
+                self.assertNotIn((0, 1), filled.edge_attributes["crease_edge"])
+                self.assertEqual({(0, 6): 0.5, (1, 6): 0.5}, filled.edge_attributes["crease_edge"])
+                self.assertEqual([(0, 6), (1, 6)], sorted(filled.lines))
+                engine.subdivide_quads(filled)
+        stale = differential.unit_guide()
+        stale.edge_attributes["crease_edge"] = {(0, 2): 0.5}
+        for across_patterns in (True, False):
+            with self.subTest(stale_attribute_across_patterns=across_patterns):
+                filled = engine.auto_fill(stale, [(0.5, 0.5, 0)], 1, across_patterns=across_patterns)
+                subdivided = engine.subdivide_quads(filled)
+                self.assertNotIn((0, 2), subdivided.edge_attributes.get("crease_edge", {}))
+        stale.edge_attributes = {"bevel_weight_edge": {(0, 2): 0.5}}
+        pipeline = engine.retopologize(differential.curved_grid(), stale, RetopoSettings(auto_fill_prepass=True))
+        self.assertTrue(pipeline.faces)
+        stale.edge_attributes = {"crease_edge": {(0, 2): 0.5}}
+        subdivided_stale = engine.retopologize(differential.curved_grid(), stale, RetopoSettings(subdiv_reproject=1))
+        engine.subdivide_quads(subdivided_stale)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(
@@ -660,7 +1145,7 @@ class ContractRegressionTests(unittest.TestCase):
                 faces=[(0, 1, 4, 3), (1, 2, 5, 4)],
                 uv=[(0, 0), (0.5, 0), (0.5, 1), (0, 1), (0.5, 0), (1, 0), (1, 1), (0.5, 1)],
                 attributes={"pattern_id": [0, 1, 2, 3, 4, 5]},
-                attribute_domains={"pattern_id": "POINT"},
+                attribute_domains={},
             ),
             [0, 1],
         )
@@ -688,7 +1173,6 @@ class ContractRegressionTests(unittest.TestCase):
         self.assertEqual([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], merged_equal.attributes["source_vertex"])
         guide = differential.ring_guide()
         guide.attributes["pattern_id"] = list(range(16))
-        guide.attribute_domains["pattern_id"] = "POINT"
         thickened = engine.thicken(guide, 0.1)
         self.assertEqual(list(range(16)) * 2, thickened.attributes["pattern_id"])
         self.assertEqual("POINT", thickened.attribute_domains["pattern_id"])

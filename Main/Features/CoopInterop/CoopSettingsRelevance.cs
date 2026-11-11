@@ -173,6 +173,9 @@ public static class CoopSettingsRelevance
         // never grants (CoopSessionPolicy.MayWriteSaveBackedState), so peers disagreeing about the toggle cannot
         // make the simulation differ.
         "HiddenHostsEnabled",
+        // Realms: whether YOUR lord party names and conversation speaker carry the lord's style and title. A name built on
+        // each peer from the titles it holds; no campaign state is read for it or written.
+        "RealmsTitleStyles",
         // Many Hammers (#911): whether YOUR smelting list leaves out the weapons you locked. A view filter on one client's
         // list; no campaign state is read or written.
         "ManyHammersHideLockedEnabled",

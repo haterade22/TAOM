@@ -13,8 +13,9 @@ namespace TAOM.Features.FireAndTribute;
 /// </summary>
 /// <remarks>
 /// The snapshot holds each live host's side, keyed by party id, and is replaced whole on the main thread whenever the
-/// host list changes. A kingdom's side is resolved when the model asks, through <see cref="IAlignmentService"/>, whose map
-/// is written only in its constructor, so the AI worker reads nothing that changes under it. The side function is the
+/// host list changes. A kingdom's side is resolved when the model asks, through <see cref="IAlignmentService"/>. Its own
+/// map is written only in its constructor, and the War Pledge store it also reads (#1113) swaps whole maps behind a
+/// volatile reference, so the AI worker reads nothing that changes under it. The side function is the
 /// one the target picker uses (<c>TargetCandidates</c>), so a Neutral host's own side is every Neutral-resolving kingdom.
 /// </remarks>
 public sealed partial class FireAndTributeService : IRaidHostOwnSideQuery

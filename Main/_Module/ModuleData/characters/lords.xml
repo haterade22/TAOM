@@ -12997,7 +12997,7 @@
             <EquipmentSet id="gondor_lord_anfalas_1_civ" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_l" name="{=aom_lord_WE9_l_name}Duinhir, Lord of Morthond" age="50" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_WE9_l_skills">
+    <NPCCharacter id="lord_WE9_l" name="{=aom_lord_WE9_l_name}Duinhir" age="50" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_WE9_l_skills">
         <face>
             <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
@@ -22612,7 +22612,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.lothlorien -->
-    <NPCCharacter id="lord_L1_1" race="elf" name="{=aom_lord_L1_1_name}Galadriel, Lady of Lothlórien" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_1_skills">
+    <NPCCharacter id="lord_L1_1" race="elf" name="{=aom_lord_L1_1_name}Galadriel" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_1_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.0139" build="0.9583" key="0000700000003005E77CE80EEFF01FF018FE88105FBF11800FF60FEE8EBF68F100DE06030D71E0E0000000000000000000000000000000000000000043AC2103" />
             <hair_tags>
@@ -22657,7 +22657,7 @@
             <EquipmentSet id="galadriel_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_2" race="elf" name="{=aom_lord_L1_2_name}Celeborn, Lord of Lothlórien" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_2_skills">
+    <NPCCharacter id="lord_L1_2" race="elf" name="{=aom_lord_L1_2_name}Celeborn" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_2_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.1968" build="0.9583" key="0000CC0000003003E77FF80E81B7100118EE88105FBF11800FF60FEE8F86686000EE36030E71E0E0000000000000000000000000000000000000000043CC4142" />
             <hair_tags>
@@ -29570,7 +29570,7 @@
             <EquipmentSet id="umbar_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_U1_11" name="{=aom_lord_U1_11_name}Lord Gimilzôr" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">
+    <NPCCharacter id="lord_U1_11" name="{=aom_lord_U1_11_name}Gimilzôr" age="20" voice="earnest" is_hero="true" culture="Culture.umbar" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">
         <face>
             <!--face_key
 			value="0016f12640fc334d7b57826ca4c57ca67949e6aca88b3acd7a45da9768858686000259a40573767b00001105000030a30000001f000000000000000000006000"

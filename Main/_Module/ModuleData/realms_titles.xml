@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TAOM Realms: title system setup.
+  Read once when a campaign first gets titles (new game, or the first load of an older save).
+  Changing this file does not alter titles in a campaign that already has them.
+
+  Ids are game StringIds: kingdom ids as in taom_spkingdoms.xml ("erebor"), culture ids without the
+  "Culture." prefix ("erebor"), settlement ids as in settlements.xml ("town_E1").
+
+  Laws:  succession = Primogeniture | Ultimogeniture | Seniority | ClanLeader | Elective
+         gender     = Agnatic | AgnaticCognatic | Absolute
+  A kingdom's laws apply to every title under it unless a title sets its own.
+
+  The kingdom laws and culture names below are first proposals for lore review.
+-->
+<Realms version="1">
+  <!-- counties_per_duchy: towns per automatic duchy; 0 or 1 turns automatic duchies off. -->
+  <Generation include_villages="true" counties_per_duchy="3" />
+
+  <DefaultLaws succession="Primogeniture" gender="AgnaticCognatic" />
+
+  <!--
+    Claims, read on every campaign load (unlike the titles themselves).
+    buy:    price of a bought claim in the buyer's own special resource (Castar, Marks, Gems...); a rank without buy
+            cannot be bought. Only titles bordering the buyer's clan's towns and castles, outside their realm.
+    usurp:  influence to take a claimed title by right (the clan must own its fief; for a duchy or higher, hold more
+            than half of its vassal titles by right); a rank without usurp cannot be usurped.
+    neighbors: how many nearest towns and castles border each of the clan's own.
+    relation / usurp_relation: relation change with the holder.
+    ai: AI clan leaders buy claims in gold (ai_gold_per_point per point of buy) with ai_chance per week, and usurp,
+        only with ai_reserve times the cost in hand. Checked once a week, never per tick.
+    ancestral_min_rank: when a lord dies, each living child gains an ancestral (blood) claim on every title of this
+        rank or higher the lord held, and on the lord's own ancestral claims. A daughter married into another house
+        carries them to her children. The heir's claim is spent at once.
+    usurp also prices forming a vacant title from the lands below it, and restoring one by ancestral claim.
+  -->
+  <Claims neighbors="5" relation="-10" usurp_relation="-20" ai="true" ai_chance="0.05" ai_gold_per_point="100" ai_reserve="2"
+          ancestral_min_rank="County">
+    <Rank rank="Lordship" usurp="10" />
+    <Rank rank="Barony" buy="40" usurp="50" />
+    <Rank rank="County" buy="80" usurp="100" />
+    <Rank rank="Duchy" buy="200" usurp="200" />
+    <Rank rank="Kingdom" buy="500" usurp="400" />
+    <Rank rank="Empire" usurp="800" />
+    <Rank rank="Union" usurp="1200" />
+  </Claims>
+
+  <RankNames>
+    <Rank rank="Lordship" name="{=realms_rank_lordship}Lordship of {NAME}" />
+    <Rank rank="Barony" name="{=realms_rank_barony}Barony of {NAME}" />
+    <Rank rank="County" name="{=realms_rank_county}County of {NAME}" />
+    <Rank rank="Duchy" name="{=realms_rank_duchy}Duchy of {NAME}" />
+    <Rank rank="Kingdom" name="{=realms_rank_kingdom}Kingdom of {NAME}" />
+    <Rank rank="Empire" name="{=realms_rank_empire}High Kingship of {NAME}" />
+    <Rank rank="Union" name="{=realms_rank_union}Reunited Kingdom of {NAME}" />
+
+    <!--
+      Holder styles: <Holder rank="..." male="..." female="..." />, {NAME} being the holder's name, so
+      "Aran {NAME}" shows "Aran Gil-galad". The title gives the rank and the holder's own culture gives the
+      word: an elf holding a fief of Men is still Hîr, an orc holding a Gondorian castle has no style. Set at the
+      top level for every culture or inside a <Culture>; a culture's Holder for a rank replaces the top-level
+      one. Without a female form a female holder shows her plain name; male="" gives no style at all.
+      <Culture holders="plain"> gives its heroes no style except the Holders it sets itself. A <Prefix> can style
+      the holders of the titles it names (holder, holder_female), when they are of the title's own culture.
+      A hero is known by the highest title held, with its name after "of" (on the map: "Lord Forlong of
+      Lossarnach's Party"). An epithet after a comma in the hero's name follows the title ("Lord Cerdic of
+      ..., the Anvil").
+
+      The elven and dwarven words are Tolkien's own, proposed for lore review:
+        Sindarin  aran "king", bereth "queen" (Elbereth), hîr "lord", híril "lady";
+        Khuzdul   uzbad "lord" (Balin's tomb: Uzbad Khazad-dûmu, "Lord of Moria"); no female form is attested.
+      Men: King and Lord as Tolkien writes them for the realms of Men. Gondor's throne stands empty while its
+      Stewards rule; the Steward's style comes from the office (see <Offices>), not from the crown.
+    -->
+    <Holder rank="Union" male="{=realms_holder_high_king}High King {NAME}" female="{=realms_holder_high_queen}High Queen {NAME}" />
+    <Holder rank="Empire" male="{=realms_holder_high_king}High King {NAME}" female="{=realms_holder_high_queen}High Queen {NAME}" />
+    <Holder rank="Kingdom" male="{=realms_holder_king}King {NAME}" female="{=realms_holder_queen}Queen {NAME}" />
+    <Holder rank="Duchy" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
+    <Holder rank="County" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
+    <Holder rank="Barony" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
+    <Holder rank="Lordship" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
+
+    <!-- Dwarves: Delving (castle), Hold (duchy), Mansion (realm); the high title stays a Kingship. -->
+    <Culture id="erebor">
+      <Rank rank="Barony" name="{=realms_rank_barony_dwarf}Delving of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_dwarf}Hold of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_dwarf}Mansion of {NAME}" />
+      <Rank rank="Empire" name="{=realms_rank_empire_dwarf}Kingship of {NAME}" />
+      <Holder rank="Empire" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+    </Culture>
+    <Culture id="eredluin">
+      <Rank rank="Barony" name="{=realms_rank_barony_dwarf}Delving of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_dwarf}Hold of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_dwarf}Mansion of {NAME}" />
+      <Rank rank="Empire" name="{=realms_rank_empire_dwarf}Kingship of {NAME}" />
+      <Holder rank="Empire" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
+    </Culture>
+
+    <!-- Elves: Refuge (town and duchy), Realm (realm); Aran or Bereth rules, Hîr or Híril holds the lands under. -->
+    <Culture id="rivendell">
+      <Rank rank="County" name="{=realms_rank_county_elf}Refuge of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_elf}Refuge of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_elf}Realm of {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_elf}Aran {NAME}" female="{=realms_holder_queen_elf}Bereth {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="County" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Barony" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Lordship" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+    </Culture>
+    <Culture id="lothlorien">
+      <Rank rank="County" name="{=realms_rank_county_elf}Refuge of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_elf}Refuge of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_elf}Realm of {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_elf}Aran {NAME}" female="{=realms_holder_queen_elf}Bereth {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="County" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Barony" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Lordship" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+    </Culture>
+    <Culture id="mirkwood">
+      <Rank rank="County" name="{=realms_rank_county_elf}Refuge of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_elf}Refuge of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_elf}Realm of {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_elf}Aran {NAME}" female="{=realms_holder_queen_elf}Bereth {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="County" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Barony" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Lordship" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+    </Culture>
+    <Culture id="lindon">
+      <Rank rank="County" name="{=realms_rank_county_elf}Refuge of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_elf}Refuge of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_elf}Realm of {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_elf}Aran {NAME}" female="{=realms_holder_queen_elf}Bereth {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="County" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Barony" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+      <Holder rank="Lordship" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+    </Culture>
+
+    <!-- Orcs and goblins. Their chiefs and the Dark Lords keep their own names, with no style. -->
+    <Culture id="gundabad" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+      <Rank rank="County" name="{=realms_rank_county_orc}Stronghold of {NAME}" />
+    </Culture>
+    <Culture id="mistymountainorcs" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+      <Rank rank="County" name="{=realms_rank_county_orc}Stronghold of {NAME}" />
+    </Culture>
+    <Culture id="goblin" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+      <Rank rank="County" name="{=realms_rank_county_orc}Stronghold of {NAME}" />
+    </Culture>
+    <Culture id="bluecraig" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+      <Rank rank="County" name="{=realms_rank_county_orc}Stronghold of {NAME}" />
+    </Culture>
+    <Culture id="isengard" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+    </Culture>
+    <Culture id="dolguldur" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+    </Culture>
+    <Culture id="mordor" holders="plain">
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_orc}Dominion of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_orc}Warlordship of {NAME}" />
+    </Culture>
+  </RankNames>
+
+  <!--
+    Prefixes: names for the titles of one realm, region or place, used instead of the rank names above.
+    Unlike the rest of this file, names are read each time a campaign loads, so a change here shows on the
+    next load of any save.
+
+      name        the template; {NAME} is the title's base name. Give it its own {=key} for translation.
+      priority    whole number, default 0. Of the prefixes that match a title, the highest priority wins;
+                  on equal priority the one further down this file wins.
+      rank        Lordship (village) | Barony (castle) | County (town) | Duchy | Kingdom | Empire | Union
+      title       title ids: l_, b_ or c_ plus the settlement id ("c_town_EW5"), k_ plus the kingdom id,
+                  e_ plus the high title id, u_ plus the union id, d_ plus the duchy id (automatic duchies: d_ plus
+                  their first town id)
+      settlement  settlement ids ("town_EW5") of lordships, baronies and counties
+      kingdom     the kingdom id the title belongs to de jure ("empire_w"): its realm's vassals, and the
+                  realm title itself unless rank leaves it out
+      under       title ids anywhere above it ("d_anorien", "e_arnor"): the vassals of that title
+      culture     culture ids the title was made with ("gondor")
+      holder      optional: how the holder of a matching title is styled ("Prince {NAME}"), instead of the
+                  <Holder> styles above; holder_female for a female holder (left out: her plain name)
+      known_over  optional, with holder: a rank. The holder is known by this title (its style and name, in the
+                  title tree, the hero page, party names and conversations) while their highest title is at most
+                  that rank ("Prince Imrahil of Dol Amroth" though he also holds the Duchy of Belfalas). Without it a
+                  hero is known by their highest title.
+
+    Every condition a prefix sets must match; each takes one id or several separated by spaces. A prefix
+    with no condition at all is ignored (that is what <RankNames> is for). The conditions read the de jure
+    tree, fixed when the titles were made, so a fief keeps its name when it changes hands.
+
+    The prefixes below are first proposals for lore review.
+  -->
+  <Prefixes>
+    <!-- Gondor's great holdings are its fiefs (Lossarnach, Lebennin, the Ringló Vale...). -->
+    <Prefix name="{=realms_prefix_gondor_fief}Fief of {NAME}" kingdom="empire_w" rank="County" />
+    <!-- Dol Amroth is held by its Prince, and he is known as Prince over his Duchy of Belfalas too. -->
+    <Prefix name="{=realms_prefix_dol_amroth}Princedom of {NAME}" settlement="town_EW5" rank="County" priority="10"
+            holder="{=realms_holder_prince}Prince {NAME}" holder_female="{=realms_holder_princess}Princess {NAME}"
+            known_over="Duchy" />
+    <!-- Elessar's realm is simply the Reunited Kingdom. A prefix, so saves made with the older name show it too. -->
+    <Prefix name="{=realms_prefix_reunited}Reunited Kingdom" title="u_reunited" priority="10" />
+  </Prefixes>
+
+  <Kingdoms>
+    <!--
+      succession and gender: the realm's laws, followed by every title under it.
+      capital: the realm's capital settlement. Its ruler keeps it as their seat when granting titles to their children,
+      ahead of the game's clan home settlement (TAOM's Gondor has West Osgiliath as its home, not Minas Tirith).
+      throne="vacant": the realm title starts without a holder and is never taken up by whoever rules the realm,
+      nor formed from its lands; only an heir with an ancestral claim who serves the realm can restore it.
+      A save made before this setting existed has the throne vacated on its next load.
+    -->
+    <!-- The line of Durin: father to son. -->
+    <Kingdom id="erebor" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="eredluin" succession="Primogeniture" gender="Agnatic" />
+    <!-- The heirs of Isildur. -->
+    <Kingdom id="arthedain" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="cardolan" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="rhudaur" succession="Primogeniture" gender="Agnatic" />
+    <!-- Elven realms: the eldest of the house leads, man or woman. -->
+    <Kingdom id="rivendell" succession="Seniority" gender="Absolute" />
+    <Kingdom id="lothlorien" succession="Seniority" gender="Absolute" />
+    <Kingdom id="lindon" succession="Seniority" gender="Absolute" />
+    <Kingdom id="mirkwood" succession="Primogeniture" gender="AgnaticCognatic" />
+    <!-- Might makes right: the realm's titles follow whoever rules it. -->
+    <Kingdom id="isengard" succession="Elective" gender="Absolute" />
+    <Kingdom id="gundabad" succession="Elective" gender="Absolute" />
+    <Kingdom id="dolguldur" succession="Elective" gender="Absolute" />
+    <Kingdom id="goblin" succession="Elective" gender="Absolute" />
+    <Kingdom id="mistymountainorcs" succession="Elective" gender="Absolute" />
+    <Kingdom id="bluecraig" succession="Elective" gender="Absolute" />
+    <Kingdom id="umbar" succession="Elective" gender="Absolute" />
+    <!-- Chieftains of the vale folk. -->
+    <Kingdom id="anduinvale" succession="Seniority" gender="AgnaticCognatic" />
+    <!-- TAOM keeps the vanilla ids for these realms: empire_w = Gondor, vlandia = Rohan, empire_s = Mordor. -->
+    <!-- Gondor: no king has sat on the throne since Eärnur; the Ruling Stewards govern until the King returns. -->
+    <Kingdom id="empire_w" succession="Primogeniture" gender="Agnatic" capital="town_EW1" throne="vacant" />
+    <Kingdom id="vlandia" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="empire_s" succession="Elective" gender="Absolute" />
+  </Kingdoms>
+
+  <HighTitles>
+    <!-- Vacant at the start: one king must hold all three successor realms to reunite Arnor. -->
+    <HighTitle id="arnor" name="{=realms_title_arnor}Arnor" succession="Primogeniture" gender="Agnatic">
+      <Member kingdom="arthedain" />
+      <Member kingdom="cardolan" />
+      <Member kingdom="rhudaur" />
+    </HighTitle>
+    <HighTitle id="durins_folk" name="{=realms_title_durins_folk}Durin's Folk" succession="Primogeniture" gender="Agnatic">
+      <Member kingdom="erebor" />
+      <Member kingdom="eredluin" />
+    </HighTitle>
+    <!-- The free realms of Men east of Mirkwood. -->
+    <HighTitle id="rhovanion" name="{=realms_title_rhovanion}Rhovanion" succession="Primogeniture" gender="AgnaticCognatic">
+      <Member kingdom="sturgia" />
+      <Member kingdom="dorwinion" />
+      <Member kingdom="southrhovanion" />
+    </HighTitle>
+    <!-- The orc holds under the mountains: whoever masters them all rules them all. -->
+    <HighTitle id="misty_mountains" name="{=realms_title_misty_mountains}the Misty Mountains" succession="Elective" gender="Absolute">
+      <Member kingdom="gundabad" />
+      <Member kingdom="goblin" />
+      <Member kingdom="mistymountainorcs" />
+    </HighTitle>
+  </HighTitles>
+
+  <!--
+    Unions: a title above existing realm and high titles (title ids), of rank Union. It is held from the start only
+    when one hero holds every member; otherwise it is formed by holding more than half of them, or restored by an
+    ancestral claim. A save made before a union existed gets it on its next load.
+  -->
+  <Unions>
+    <!-- Elessar's realm of Gondor and Arnor, named "Reunited Kingdom" by its prefix. -->
+    <Union id="reunited" name="{=realms_title_reunited}Gondor and Arnor">
+      <Member title="k_empire_w" />
+      <Member title="e_arnor" />
+    </Union>
+  </Unions>
+
+  <!--
+    Starting claims: claims heroes hold from the start, given on every load to a living hero who neither holds nor
+    claims the title yet. kind = Ancestral | Bought | Conquest (default Ancestral).
+  -->
+  <StartingClaims>
+    <!-- Aragorn, Isildur's heir: a claim of blood on Gondor's empty throne and on Arnor. -->
+    <Claim hero="named_companion_aragorn" title="k_empire_w" kind="Ancestral" />
+    <Claim hero="named_companion_aragorn" title="e_arnor" kind="Ancestral" />
+    <Claim hero="named_companion_aragorn" title="u_reunited" kind="Ancestral" />
+  </StartingClaims>
+
+  <!--
+    Coronations: what follows when a companion of the player's clan restores a realm title.
+      title, hero   the realm title and the claimant
+      clan          the name of the house he founds; informal: its short name
+      banner_of     the clan whose banner (as it is seen, a ruling clan shows its realm's) and culture the house takes;
+                    default the realm's ruling clan
+      banner        the new house's own banner code. As the realm's ruling clan it shows the realm's banner, so the
+                    realm takes this banner too, from the coronation on. Left out, the house keeps banner_of's banner
+      fiefs        towns and castles of the ruling clan given to him, his seat first, with their titles and the
+                    lordships of their villages
+      titles        further titles of the ruling house that pass to him (a duchy: d_anorien)
+      office        an office the former ruler keeps, or is appointed to when it is vacant
+      influence     what the restore costs the player's clan (default: the usurp price of the title's rank)
+      tier, troops, gold, relation   the clan's tier (default 4), his party's size (33), his starting gold (20000,
+                    not taken from the player) and how much more he likes the player (50)
+      former_banner the banner code the former ruling house takes once it no longer rules (as ruling house it showed
+                    the realm's banner, which the new house keeps); left out, its banner is not changed
+      heading, text, image, button   the event window the player sees: its heading, story text ({HERO}, {CLAN},
+                    {REALM} and {SEAT} are filled in, {newline} breaks a line), an illustration sprite (left out: the
+                    new house's banner) and the button's text. Placeholders until the event art is made.
+    He leaves the player's clan and his house becomes the realm's ruling clan. The former ruling house keeps its other
+    fiefs and titles.
+  -->
+  <Coronations>
+    <!-- Elessar takes up the crown: the House of Telcontar, Tolkien's name for Aragorn's house, rules Gondor from Minas
+         Tirith and holds Anórien. The Húrinionath keep the Osgiliaths and Min-Rimmon, and Denethor stays Steward. -->
+    <Coronation title="k_empire_w" hero="named_companion_aragorn" clan="{=realms_clan_telcontar}House of Telcontar"
+                informal="{=realms_clan_telcontar_short}Telcontar" banner_of="clan_empire_west_1" fiefs="town_EW1"
+                titles="d_anorien" office="steward_gondor" influence="2500" tier="5" troops="60"
+                banner="11.149.149.1528.1528.764.764.1.0.0.31006.172.2000.580.580.764.798.0.0.0"
+                former_banner="11.172.149.1528.1528.764.764.1.0.0.10000.2000.2000.580.580.765.825.0.0.0"
+                heading="{=realms_coronation_heading}The Return of the King"
+                text="{=realms_coronation_text}Before the gate of Minas Tirith the Steward of Gondor offers up the white rod of his office, and the King gives it back to him. Then the ancient crown of the kings is set upon the head of {HERO}.{newline}After long years an heir of Isildur sits upon the throne of Gondor, and the {CLAN} rules the realm from {SEAT}."
+                button="{=realms_coronation_button}Long live the King!" />
+  </Coronations>
+
+  <!--
+    Grants: a lord grants a duchy, county, barony or lordship they hold by right to a vassal. To a member of their
+    own clan it passes with the titles below it; to a lord of another clan in their realm a duchy passes alone and a
+    town or castle title with its fief. relation: the recipient's relation change with the giver.
+    Revocation: a lord takes back a title held below one of theirs, or from a member of their clan (free).
+    revoke: influence it costs from a lord of another clan; a rank without revoke cannot be revoked.
+    revoke_relation: the old holder's relation change with the revoker.
+  -->
+  <Grants relation="10" revoke_relation="-30">
+    <Rank rank="Lordship" revoke="5" />
+    <Rank rank="Barony" revoke="25" />
+    <Rank rank="County" revoke="50" />
+    <Rank rank="Duchy" revoke="100" />
+    <Rank rank="Kingdom" revoke="200" />
+  </Grants>
+
+  <!-- Chronicle: how many changes of holder each title and office remembers (shown in the encyclopedia). -->
+  <Chronicle entries="20" />
+
+  <!--
+    Consequences, applied once a week, never per tick:
+      resentment     relation change of a holder by right with the lord of another clan who owns the title's
+                     town or castle; loyalty: the town's loyalty change meanwhile.
+      liege_relation relation change of a vassal of another clan with the holder of their title's direct liege
+                     title of liege_rank or higher, until it reaches liege_cap.
+      army_discount  share of the influence a liege saves when calling such a vassal to their army.
+      tribute        weekly gold the holder of a title of this rank pays the holder of its direct liege title, when
+                     both serve the same realm in different clans and the payer has the gold.
+  -->
+  <Consequences resentment="-1" loyalty="-1" liege_relation="1" liege_cap="30" liege_rank="Duchy" army_discount="0.5">
+    <Rank rank="Barony" tribute="50" />
+    <Rank rank="County" tribute="100" />
+    <Rank rank="Duchy" tribute="200" />
+    <Rank rank="Kingdom" tribute="300" />
+  </Consequences>
+
+  <!--
+    Offices: posts of a realm held by one hero at a time, appointed by its ruler, never inherited.
+      holder / holder_female  how the holder is styled ({NAME}); left out: their plain name
+      of         what follows "of" in the holder's name ("Steward Denethor of Gondor")
+      rank       the office styles its holder ahead of any title of this rank or lower
+      follows="ruler"  the realm's ruler holds it while the realm title is not theirs (Gondor's Ruling Steward);
+                 once the ruler holds the realm title, the office goes to someone else
+      influence  weekly influence for the holder's clan
+      initial    hero id appointed when the office is first made, if alive and in the realm
+    An AI ruler fills a vacant office each week with a lord of the realm; the player's realm waits for the player.
+  -->
+  <Offices>
+    <Office id="steward_gondor" kingdom="empire_w" name="{=realms_office_steward_gondor}Steward of Gondor"
+            holder="{=realms_holder_steward}Steward {NAME}" holder_female="{=realms_holder_steward}Steward {NAME}"
+            of="{=realms_of_gondor}Gondor" rank="Kingdom" follows="ruler" influence="3" />
+    <Office id="marshal_1_mark" kingdom="vlandia" name="{=realms_office_marshal_1}First Marshal of the Mark"
+            holder="{=realms_holder_marshal}Marshal {NAME}" holder_female="{=realms_holder_marshal}Marshal {NAME}"
+            of="{=realms_of_the_mark}the Mark" rank="Duchy" influence="1" />
+    <Office id="marshal_2_mark" kingdom="vlandia" name="{=realms_office_marshal_2}Second Marshal of the Mark"
+            holder="{=realms_holder_marshal}Marshal {NAME}" holder_female="{=realms_holder_marshal}Marshal {NAME}"
+            of="{=realms_of_the_mark}the Mark" rank="Duchy" influence="1" />
+    <!-- Éomer, Third Marshal of the Mark at the War of the Ring. -->
+    <Office id="marshal_3_mark" kingdom="vlandia" name="{=realms_office_marshal_3}Third Marshal of the Mark"
+            holder="{=realms_holder_marshal}Marshal {NAME}" holder_female="{=realms_holder_marshal}Marshal {NAME}"
+            of="{=realms_of_the_mark}the Mark" rank="Duchy" influence="1" initial="lord_4_3_1" />
+    <Office id="lieutenant_barad_dur" kingdom="empire_s" name="{=realms_office_lieutenant}Lieutenant of Barad-dûr"
+            of="{=realms_of_barad_dur}Barad-dûr" rank="Duchy" influence="2" />
+  </Offices>
+
+  <!--
+    Duchies: one per region of the Vista map overlay (Vista_dot-settlements.psd, 2026-11-10).
+
+      <County settlement="town_X"/>    a town of the duchy
+      <Barony settlement="castle_X"/>  a castle of the duchy: it joins the duchy's nearest county, or sits
+                                       directly under the duchy when the duchy has no town
+
+    A settlement is only taken when it belongs to the duchy's kingdom at the start of the campaign.
+    Towns no duchy lists are grouped automatically; castles no duchy lists join the nearest town of
+    their kingdom. A duchy of castles only goes to whoever owns most of its castles.
+
+    Matched by name to the game settlements, or by map position where the overlay names differ
+    (for example Lond Cirion, Harlond Quays, Min-Rimmon). Left to the automatic grouping: settlements
+    not on the overlay, Blue Crag (no regions drawn), the Dunland pairings Lhan Tarren and Daiâdûn,
+    Nogrod, and settlements held by another realm than the one whose region they are in.
+  -->
+  <Duchies>    <!-- Âbanissa -->
+    <Duchy id="amex_kannu" name="{=realms_duchy_amex_kannu}Amêx Kânnu" kingdom="abanissa">
+      <County settlement="town_A14" /> <!-- Damudûr -->
+      <Barony settlement="castle_FH9" /> <!-- Zakhûr -->
+    </Duchy>
+    <Duchy id="chajapun" name="{=realms_duchy_chajapun}Chajapun" kingdom="abanissa">
+      <Barony settlement="castle_FH7" /> <!-- Taridím -->
+    </Duchy>
+    <Duchy id="donfahan" name="{=realms_duchy_donfahan}Dônfahan" kingdom="abanissa">
+      <County settlement="town_A13" /> <!-- Naxar Dâl -->
+      <Barony settlement="castle_FH3" /> <!-- Gebarakôr -->
+    </Duchy>
+    <Duchy id="ketex_ul" name="{=realms_duchy_ketex_ul}Ketêx Ûl" kingdom="abanissa">
+      <Barony settlement="castle_FH5" /> <!-- Kôth Rau -->
+    </Duchy>
+    <Duchy id="khigan" name="{=realms_duchy_khigan}Khigan" kingdom="abanissa">
+      <County settlement="town_A12" /> <!-- Jîret -->
+      <Barony settlement="castle_FH4" /> <!-- Shâlahin -->
+    </Duchy>
+    <Duchy id="tubultarna" name="{=realms_duchy_tubultarna}Tûbultârna" kingdom="abanissa">
+      <County settlement="town_A9" /> <!-- Charganpâta -->
+      <Barony settlement="castle_FH2" /> <!-- Erakúndo -->
+      <Barony settlement="castle_FH1" /> <!-- Archadâzar -->
+    </Duchy>
+
+    <!-- Andúin Vale -->
+    <Duchy id="drownholt" name="{=realms_duchy_drownholt}Drownholt" kingdom="anduinvale">
+      <Barony settlement="castle_AV3" /> <!-- Gladden Hold -->
+    </Duchy>
+    <Duchy id="herimundi" name="{=realms_duchy_herimundi}Herimundi" kingdom="anduinvale">
+      <County settlement="town_AV2" /> <!-- Old Ford -->
+      <Barony settlement="castle_AV1" /> <!-- Carrock -->
+      <Barony settlement="castle_AV2" /> <!-- High Pass Watch -->
+    </Duchy>
+    <Duchy id="langfells" name="{=realms_duchy_langfells}Langfells" kingdom="anduinvale">
+      <County settlement="town_AV1" /> <!-- Beorn's Hall -->
+    </Duchy>
+    <Duchy id="west_bight" name="{=realms_duchy_west_bight}West Bight" kingdom="anduinvale">
+      <Barony settlement="castle_AV4" /> <!-- Eastbank -->
+    </Duchy>
+
+    <!-- Angáladh -->
+    <Duchy id="bleakmere" name="{=realms_duchy_bleakmere}Bleakmere" kingdom="angaladh">
+      <Barony settlement="castle_AND3" /> <!-- Forest Gate -->
+    </Duchy>
+    <Duchy id="gorogrod" name="{=realms_duchy_gorogrod}Gorogrod" kingdom="angaladh">
+      <County settlement="town_AND1" /> <!-- Woodmen-town -->
+      <Barony settlement="castle_AND4" /> <!-- Ironwood Hall -->
+      <Barony settlement="castle_AND1" /> <!-- Thornhold -->
+    </Duchy>
+    <Duchy id="mithelad" name="{=realms_duchy_mithelad}Mithelad" kingdom="angaladh">
+      <Barony settlement="castle_AND2" /> <!-- Emyn Duir Watch -->
+    </Duchy>
+
+    <!-- Angmar -->
+    <Duchy id="kanelemas" name="{=realms_duchy_kanelemas}Kanelemas" kingdom="gundabad">
+      <County settlement="town_G3" /> <!-- Carn Dûm -->
+    </Duchy>
+    <Duchy id="nan_angmar" name="{=realms_duchy_nan_angmar}Nan Angmar" kingdom="gundabad">
+      <Barony settlement="castle_G6" /> <!-- Lithur -->
+    </Duchy>
+
+    <!-- Arthedain -->
+    <Duchy id="breelands" name="{=realms_duchy_breelands}Breelands" kingdom="arthedain">
+      <Barony settlement="castle_AN6" /> <!-- Brandywine Bridge -->
+    </Duchy>
+    <Duchy id="evendim" name="{=realms_duchy_evendim}Evendim" kingdom="arthedain">
+      <County settlement="town_AN1" /> <!-- Annúminas -->
+      <Barony settlement="castle_AN11" /> <!-- Forochel -->
+    </Duchy>
+    <Duchy id="lone_lands" name="{=realms_duchy_lone_lands}Lone Lands" kingdom="arthedain">
+      <County settlement="town_AN3" /> <!-- Bree -->
+      <Barony settlement="castle_AN4" /> <!-- Amon Sûl -->
+    </Duchy>
+    <Duchy id="northdowns" name="{=realms_duchy_northdowns}Northdowns" kingdom="arthedain">
+      <Barony settlement="castle_AN5" /> <!-- Hoarwell Watch -->
+    </Duchy>
+    <Duchy id="shire" name="{=realms_duchy_shire}Shire" kingdom="arthedain">
+      <Barony settlement="castle_AN8" /> <!-- Emyn Beraid -->
+    </Duchy>
+    <Duchy id="west_nan_amlug" name="{=realms_duchy_west_nan_amlug}West Nan Amlug" kingdom="arthedain">
+      <Barony settlement="castle_AN9" /> <!-- Barad Forn -->
+      <Barony settlement="castle_AN10" /> <!-- Emyn Uial -->
+    </Duchy>
+
+    <!-- Blue Mountains -->
+    <Duchy id="buzra_dum" name="{=realms_duchy_buzra_dum}Buzrâ-dûm" kingdom="eredluin">
+      <County settlement="town_EL3" /> <!-- Thorin's Halls -->
+      <Barony settlement="castle_EL3" /> <!-- Hammerdeep -->
+      <Barony settlement="castle_EL5" /> <!-- Dwarrowgate -->
+    </Duchy>
+    <Duchy id="nogrod" name="{=realms_duchy_nogrod}Nogrod" kingdom="eredluin">
+      <County settlement="town_EL1" /> <!-- Belegost -->
+      <Barony settlement="castle_EL1" /> <!-- Ironcrag -->
+      <Barony settlement="castle_EL2" /> <!-- Dolmed Hold -->
+    </Duchy>
+
+    <!-- Cardolan -->
+    <Duchy id="faerdor" name="{=realms_duchy_faerdor}Faerdor" kingdom="cardolan">
+      <County settlement="town_CA1" /> <!-- Tharbad -->
+    </Duchy>
+    <Duchy id="girithlin" name="{=realms_duchy_girithlin}Girithlin" kingdom="cardolan">
+      <Barony settlement="castle_CA2" /> <!-- Sarn Ford -->
+    </Duchy>
+    <Duchy id="minhiriath" name="{=realms_duchy_minhiriath}Minhiriath" kingdom="cardolan">
+      <County settlement="town_CA2" /> <!-- Caras Gorthad -->
+      <Barony settlement="castle_CA1" /> <!-- Tyrn Gorthad -->
+    </Duchy>
+
+    <!-- Dale -->
+    <Duchy id="aldmyrr" name="{=realms_duchy_aldmyrr}Aldmyrr" kingdom="sturgia">
+      <Barony settlement="castle_S7" /> <!-- Yoldbryn -->
+    </Duchy>
+    <Duchy id="dalelands" name="{=realms_duchy_dalelands}Dalelands" kingdom="sturgia">
+      <County settlement="town_S1" /> <!-- Dale -->
+      <Barony settlement="castle_S2" /> <!-- Garthness -->
+      <Barony settlement="castle_S1" /> <!-- Westoft -->
+    </Duchy>
+    <Duchy id="gramavuld" name="{=realms_duchy_gramavuld}Gramavuld" kingdom="sturgia">
+      <County settlement="town_S3" /> <!-- Eldby -->
+      <Barony settlement="castle_S6" /> <!-- Taigbarn -->
+    </Duchy>
+    <Duchy id="sunnarinna" name="{=realms_duchy_sunnarinna}Sunnarinna" kingdom="sturgia">
+      <County settlement="town_S2" /> <!-- Stranding -->
+      <Barony settlement="castle_S5" /> <!-- Torndal -->
+      <Barony settlement="castle_S4" /> <!-- Tham Aeldir -->
+    </Duchy>
+    <Duchy id="vargfell" name="{=realms_duchy_vargfell}Vargfell" kingdom="sturgia">
+      <County settlement="town_S5" /> <!-- Vargfell -->
+      <County settlement="town_S4" /> <!-- Liutburg -->
+      <Barony settlement="castle_S3" /> <!-- Bridgethorp -->
+    </Duchy>
+
+    <!-- Dol Guldur -->
+    <Duchy id="coresching" name="{=realms_duchy_coresching}Coresching" kingdom="dolguldur">
+      <Barony settlement="castle_DG3" /> <!-- Bûrzkala -->
+      <Barony settlement="castle_DG2" /> <!-- Maufulug -->
+    </Duchy>
+    <Duchy id="dol_guldur" name="{=realms_duchy_dol_guldur}Dol Guldur" kingdom="dolguldur">
+      <County settlement="town_DG1" /> <!-- Dol Guldur -->
+      <Barony settlement="castle_DG1" /> <!-- Amon Angened -->
+    </Duchy>
+    <Duchy id="sairthiuda" name="{=realms_duchy_sairthiuda}Sairthiuda" kingdom="dolguldur">
+      <Barony settlement="castle_DG5" /> <!-- Ashúrz -->
+      <Barony settlement="castle_DG4" /> <!-- Dannenglor -->
+    </Duchy>
+
+    <!-- Dorwinion -->
+    <Duchy id="marsant" name="{=realms_duchy_marsant}Mârsant" kingdom="dorwinion">
+      <County settlement="town_DO3" /> <!-- Seagate -->
+      <Barony settlement="castle_DO4" /> <!-- Sunwall -->
+    </Duchy>
+    <Duchy id="szreliviod" name="{=realms_duchy_szreliviod}Szreliviod" kingdom="dorwinion">
+      <County settlement="town_DO1" /> <!-- Redwater -->
+      <County settlement="town_DO2" /> <!-- Vineholm -->
+      <Barony settlement="castle_DO2" /> <!-- Northgate Keep -->
+      <Barony settlement="castle_DO3" /> <!-- Eastmarch Hold -->
+      <Barony settlement="castle_DO1" /> <!-- Vinewatch -->
+    </Duchy>
+
+    <!-- Dunland -->
+    <Duchy id="dathabha" name="{=realms_duchy_dathabha}Dáthabha" kingdom="empire">
+      <Barony settlement="castle_EN3" /> <!-- Tûr Morva -->
+      <Barony settlement="castle_EN4" /> <!-- Lhanuch -->
+    </Duchy>
+    <Duchy id="dunfearan" name="{=realms_duchy_dunfearan}Dunfearan" kingdom="empire">
+      <County settlement="town_EN1" /> <!-- Galtrev -->
+      <Barony settlement="castle_EN6" /> <!-- Barnavon -->
+    </Duchy>
+    <Duchy id="dunlandfells" name="{=realms_duchy_dunlandfells}Dunlandfells" kingdom="empire">
+      <Barony settlement="castle_EN7" /> <!-- Thror's Coomb -->
+      <Barony settlement="castle_EN8" /> <!-- Dûvodaiad -->
+    </Duchy>
+
+    <!-- Erebor -->
+    <Duchy id="erebor" name="{=realms_duchy_erebor}Erebor" kingdom="erebor">
+      <County settlement="town_E1" /> <!-- Erebor -->
+    </Duchy>
+    <Duchy id="iron_gap" name="{=realms_duchy_iron_gap}Iron Gap" kingdom="erebor">
+      <County settlement="town_E2" /> <!-- Járnfast -->
+      <Barony settlement="castle_E1" /> <!-- Irongap -->
+      <Barony settlement="castle_E2" /> <!-- Flogalith -->
+      <Barony settlement="castle_E3" /> <!-- Anatrâd -->
+      <Barony settlement="castle_E8" /> <!-- Frósthel -->
+    </Duchy>
+    <Duchy id="iron_hills" name="{=realms_duchy_iron_hills}Iron Hills" kingdom="erebor">
+      <County settlement="town_E4" /> <!-- Azanûlibar-dûm -->
+      <County settlement="town_E3" /> <!-- Skárhald -->
+      <Barony settlement="castle_E4" /> <!-- Buzra-sâlan -->
+      <Barony settlement="castle_E5" /> <!-- Mesem-garak -->
+      <Barony settlement="castle_E7" /> <!-- Zul-mazal -->
+      <Barony settlement="castle_E6" /> <!-- Grymmclúd -->
+    </Duchy>
+
+    <!-- Goblin Town -->
+    <Duchy id="goblin_town" name="{=realms_duchy_goblin_town}Goblin Town" kingdom="goblin">
+      <County settlement="town_GT1" /> <!-- Goblin Town -->
+    </Duchy>
+
+    <!-- Gondor -->
+    <Duchy id="anfalas" name="{=realms_duchy_anfalas}Anfalas" kingdom="empire_w">
+      <County settlement="town_EW10" /> <!-- Serelond -->
+      <County settlement="town_EW6" /> <!-- Lond Cirion -->
+      <Barony settlement="castle_EW3" /> <!-- Edhellond -->
+      <Barony settlement="castle_EW7" /> <!-- Bar-en-Siril -->
+    </Duchy>
+    <Duchy id="anorien" name="{=realms_duchy_anorien}Anórien" kingdom="empire_w">
+      <County settlement="town_EW1" /> <!-- Minas Tirith -->
+      <County settlement="town_EW2" /> <!-- West Osgiliath -->
+      <Barony settlement="castle_EW5" /> <!-- Min-Rimmon -->
+    </Duchy>
+    <Duchy id="belfalas" name="{=realms_duchy_belfalas}Belfalas" kingdom="empire_w">
+      <County settlement="town_EW5" /> <!-- Dol Amroth -->
+      <Barony settlement="castle_EW12" /> <!-- Linhir -->
+      <Barony settlement="castle_EW9" /> <!-- Caras Tolfalas -->
+      <Barony settlement="castle_EW10" /> <!-- Methrast -->
+    </Duchy>
+    <Duchy id="harondor" name="{=realms_duchy_harondor}Harondor" kingdom="empire_w">
+      <County settlement="town_EW11" /> <!-- Methir -->
+      <Barony settlement="castle_EW16" /> <!-- Erethir -->
+      <Barony settlement="castle_EW15" /> <!-- Amonost -->
+    </Duchy>
+    <Duchy id="ithilien" name="{=realms_duchy_ithilien}Ithilien" kingdom="empire_w">
+      <County settlement="town_EW3" /> <!-- East Osgiliath -->
+      <Barony settlement="castle_EW4" /> <!-- Cair Andros -->
+      <Barony settlement="castle_EW8" /> <!-- Hyarpendë -->
+    </Duchy>
+    <Duchy id="lamedon" name="{=realms_duchy_lamedon}Lamedon" kingdom="empire_w">
+      <County settlement="town_EW9" /> <!-- Calembel -->
+      <Barony settlement="castle_EW2" /> <!-- Glanhir -->
+    </Duchy>
+    <Duchy id="lebennin" name="{=realms_duchy_lebennin}Lebennin" kingdom="empire_w">
+      <County settlement="town_EW4" /> <!-- Pelargir -->
+      <Barony settlement="castle_EW14" /> <!-- Tumladen -->
+    </Duchy>
+    <Duchy id="lossarnach" name="{=realms_duchy_lossarnach}Lossarnach" kingdom="empire_w">
+      <County settlement="town_EW7" /> <!-- Bar Melui -->
+      <Barony settlement="castle_EW1" /> <!-- Harlond Quays -->
+    </Duchy>
+    <Duchy id="pinnath_gelin" name="{=realms_duchy_pinnath_gelin}Pinnath Gelin" kingdom="empire_w">
+      <County settlement="town_EW8" /> <!-- Ost Arndir -->
+      <Barony settlement="castle_EW6" /> <!-- Morlad -->
+      <Barony settlement="castle_EW13" /> <!-- Méreharn -->
+    </Duchy>
+
+    <!-- Gundabad -->
+    <Duchy id="arshalag" name="{=realms_duchy_arshalag}Arshâlag" kingdom="gundabad">
+      <Barony settlement="castle_G2" /> <!-- Dûglarshun -->
+    </Duchy>
+    <Duchy id="falyagash" name="{=realms_duchy_falyagash}Fâlyagash" kingdom="gundabad">
+      <County settlement="town_G1" /> <!-- Mount Gundabad -->
+      <Barony settlement="castle_G5" /> <!-- Shúrdmúl -->
+    </Duchy>
+    <Duchy id="gramberg" name="{=realms_duchy_gramberg}Gramberg" kingdom="gundabad">
+      <County settlement="town_G2" /> <!-- Mount Gram -->
+      <Barony settlement="castle_G3" /> <!-- Mazôglod -->
+    </Duchy>
+    <Duchy id="gundalok" name="{=realms_duchy_gundalok}Gundalok" kingdom="gundabad">
+      <Barony settlement="castle_G4" /> <!-- Framsburg -->
+    </Duchy>
+
+    <!-- Harwan -->
+    <Duchy id="chelkar" name="{=realms_duchy_chelkar}Chelkar" kingdom="aserai">
+      <County settlement="town_A4" /> <!-- Chelkarâ -->
+      <Barony settlement="castle_A11" /> <!-- Dân Shatagân -->
+    </Duchy>
+    <Duchy id="haruzan" name="{=realms_duchy_haruzan}Haruzan" kingdom="aserai">
+      <County settlement="town_A2" /> <!-- Kes Marzûk -->
+      <County settlement="town_A1" /> <!-- Korb Taskral -->
+      <Barony settlement="castle_A4" /> <!-- Yânu -->
+      <Barony settlement="castle_A3" /> <!-- Kadar Kâraba -->
+      <Barony settlement="castle_A7" /> <!-- Hârmaka -->
+    </Duchy>
+    <Duchy id="jelut" name="{=realms_duchy_jelut}Jelût" kingdom="aserai">
+      <County settlement="town_A3" /> <!-- Hurum Kâna -->
+      <Barony settlement="castle_A6" /> <!-- Sul Madash -->
+      <Barony settlement="castle_A8" /> <!-- Sâr Marsag -->
+      <Barony settlement="castle_A9" /> <!-- Khâb Antâx -->
+    </Duchy>
+    <Duchy id="nakar" name="{=realms_duchy_nakar}Nâkar" kingdom="aserai">
+      <Barony settlement="castle_A2" /> <!-- Kes Shadoul -->
+      <Barony settlement="castle_A1" /> <!-- Nagakhêdi -->
+      <Barony settlement="castle_A5" /> <!-- Pazakhêra -->
+    </Duchy>
+    <Duchy id="pezarsan" name="{=realms_duchy_pezarsan}Pezarsan" kingdom="aserai">
+      <County settlement="town_A5" /> <!-- Parzee -->
+      <Barony settlement="castle_A12" /> <!-- Khatzâla -->
+    </Duchy>
+
+    <!-- Imladris -->
+    <Duchy id="eastern_trollshaws" name="{=realms_duchy_eastern_trollshaws}Eastern Trollshaws" kingdom="rivendell">
+      <Barony settlement="castle_R2" /> <!-- Hithaegrist -->
+      <Barony settlement="castle_R3" /> <!-- Nan Tornaeth -->
+    </Duchy>
+    <Duchy id="imladris" name="{=realms_duchy_imladris}Imladris" kingdom="rivendell">
+      <County settlement="town_R1" /> <!-- Rivendell -->
+    </Duchy>
+    <Duchy id="tal_bruinen" name="{=realms_duchy_tal_bruinen}Tal Bruinen" kingdom="rivendell">
+      <Barony settlement="castle_R4" /> <!-- Baracharn -->
+      <Barony settlement="castle_R5" /> <!-- Fennas Drúnin -->
+    </Duchy>
+
+    <!-- Isengard -->
+    <Duchy id="nan_curunir" name="{=realms_duchy_nan_curunir}Nan Curunir" kingdom="isengard">
+      <County settlement="town_isengard" /> <!-- Orthanc -->
+      <Barony settlement="castle_I2" /> <!-- Forthbrond -->
+      <Barony settlement="castle_I1" /> <!-- Nan Angranost -->
+    </Duchy>
+
+    <!-- Khand -->
+    <Duchy id="gap_of_khand" name="{=realms_duchy_gap_of_khand}Gap of Khand" kingdom="battania">
+      <Barony settlement="castle_K2" /> <!-- Varnakh -->
+    </Duchy>
+    <Duchy id="khand_amu" name="{=realms_duchy_khand_amu}Khand-Amû" kingdom="battania">
+      <Barony settlement="castle_K5" /> <!-- Dagmathar -->
+    </Duchy>
+    <Duchy id="khand_khuvesra" name="{=realms_duchy_khand_khuvesra}Khand-Khûvesra" kingdom="battania">
+      <Barony settlement="castle_K1" /> <!-- Síransíra -->
+    </Duchy>
+    <Duchy id="khur_khand" name="{=realms_duchy_khur_khand}Khûr-khand" kingdom="battania">
+      <County settlement="town_K1" /> <!-- Sturlurtsa Khand -->
+      <Barony settlement="castle_K3" /> <!-- Ôvathikor -->
+    </Duchy>
+    <Duchy id="starlurtsa" name="{=realms_duchy_starlurtsa}Starlurtsa" kingdom="battania">
+      <County settlement="town_K2" /> <!-- Lûrmsakun -->
+      <County settlement="town_K3" /> <!-- Ardûvar -->
+      <Barony settlement="castle_K7" /> <!-- Klagûl -->
+      <Barony settlement="castle_K6" /> <!-- Khondûr -->
+    </Duchy>
+    <Duchy id="uda_khand" name="{=realms_duchy_uda_khand}Uda-Khand" kingdom="battania">
+      <County settlement="town_K4" /> <!-- Yanûk Anlê -->
+    </Duchy>
+
+    <!-- Lindon -->
+    <Duchy id="forlindon" name="{=realms_duchy_forlindon}Forlindon" kingdom="lindon">
+      <County settlement="town_LN3" /> <!-- Forlond -->
+      <Barony settlement="castle_LN3" /> <!-- Tirith Aear -->
+    </Duchy>
+    <Duchy id="harlindon" name="{=realms_duchy_harlindon}Harlindon" kingdom="lindon">
+      <County settlement="town_LN2" /> <!-- Harlond -->
+      <Barony settlement="castle_LN1" /> <!-- Ost Falas -->
+      <Barony settlement="castle_LN2" /> <!-- Barad Luin -->
+    </Duchy>
+    <Duchy id="mithlond" name="{=realms_duchy_mithlond}Mithlond" kingdom="lindon">
+      <County settlement="town_LN1" /> <!-- Mithlond -->
+    </Duchy>
+
+    <!-- Lothlórien -->
+    <Duchy id="lorien" name="{=realms_duchy_lorien}Lórien" kingdom="lothlorien">
+      <County settlement="town_L1" /> <!-- Caras Galadhon -->
+      <Barony settlement="castle_L1" /> <!-- Cerin Amroth -->
+    </Duchy>
+    <Duchy id="parth_celebrant" name="{=realms_duchy_parth_celebrant}Parth Celebrant" kingdom="lothlorien">
+      <Barony settlement="castle_L3" /> <!-- Tol Calan -->
+      <Barony settlement="castle_L2" /> <!-- Talas Duiren -->
+    </Duchy>
+
+    <!-- Mirkwood -->
+    <Duchy id="aradhrynd" name="{=realms_duchy_aradhrynd}Aradhrynd" kingdom="mirkwood">
+      <County settlement="town_M1" /> <!-- Felegoth -->
+    </Duchy>
+    <Duchy id="emyn_i_firith" name="{=realms_duchy_emyn_i_firith}Emyn-i-Firith" kingdom="mirkwood">
+      <County settlement="town_M2" /> <!-- Caras Laerolin -->
+      <Barony settlement="castle_M1" /> <!-- Glad Thaw -->
+      <Barony settlement="castle_M3" /> <!-- Torech Emel -->
+      <Barony settlement="castle_M4" /> <!-- Lasgalor -->
+      <Barony settlement="castle_M5" /> <!-- Imnagath -->
+    </Duchy>
+    <Duchy id="taur_nu_fuin" name="{=realms_duchy_taur_nu_fuin}Taur-nu-Fuin" kingdom="mirkwood">
+      <Barony settlement="castle_M2" /> <!-- Gwígar -->
+    </Duchy>
+
+    <!-- Mordor -->
+    <Duchy id="gorgoroth" name="{=realms_duchy_gorgoroth}Gorgoroth" kingdom="empire_s">
+      <County settlement="town_ES1" /> <!-- Barad Dûr -->
+      <County settlement="town_ES3" /> <!-- Durthang -->
+      <Barony settlement="castle_ES4" /> <!-- Mornaur -->
+    </Duchy>
+    <Duchy id="lithlad" name="{=realms_duchy_lithlad}Lithlad" kingdom="empire_s">
+      <County settlement="town_ES6" /> <!-- Naerband -->
+      <Barony settlement="castle_ES8" /> <!-- Lûglurag -->
+    </Duchy>
+    <Duchy id="morgul_vale" name="{=realms_duchy_morgul_vale}Morgul Vale" kingdom="empire_s">
+      <County settlement="town_ES2" /> <!-- Minas Morgul -->
+      <Barony settlement="castle_ES3" /> <!-- Cirith Ungol -->
+    </Duchy>
+    <Duchy id="nurn" name="{=realms_duchy_nurn}Nûrn" kingdom="empire_s">
+      <County settlement="town_ES5" /> <!-- Thaurband -->
+      <Barony settlement="castle_ES6" /> <!-- Cirith Nargil -->
+      <Barony settlement="castle_ES7" /> <!-- Barad Wath -->
+      <Barony settlement="castle_ES5" /> <!-- Barad Nûrn -->
+    </Duchy>
+    <Duchy id="seregost" name="{=realms_duchy_seregost}Seregost" kingdom="empire_s">
+      <County settlement="town_ES4" /> <!-- Seregost -->
+    </Duchy>
+    <Duchy id="udun" name="{=realms_duchy_udun}Ûdun" kingdom="empire_s">
+      <Barony settlement="castle_ES2" /> <!-- Carach Angren -->
+    </Duchy>
+
+    <!-- Moria -->
+    <Duchy id="caradhras" name="{=realms_duchy_caradhras}Caradhras" kingdom="mistymountainorcs">
+      <County settlement="town_MM3" /> <!-- Nanduhirion -->
+    </Duchy>
+    <Duchy id="fanuidhol" name="{=realms_duchy_fanuidhol}Fanuidhol" kingdom="mistymountainorcs">
+      <Barony settlement="castle_MM5" /> <!-- Methedras -->
+    </Duchy>
+    <Duchy id="zirakzigil" name="{=realms_duchy_zirakzigil}Zirakzigil" kingdom="mistymountainorcs">
+      <County settlement="town_MM1" /> <!-- Eastern Moria -->
+      <County settlement="town_MM2" /> <!-- Western Moria -->
+    </Duchy>
+
+    <!-- Rhudaur -->
+    <Duchy id="drunin" name="{=realms_duchy_drunin}Drûnin" kingdom="rhudaur">
+      <Barony settlement="castle_RH1" /> <!-- Egladil -->
+    </Duchy>
+    <Duchy id="trollshaws" name="{=realms_duchy_trollshaws}Trollshaws" kingdom="rhudaur">
+      <Barony settlement="castle_RH2" /> <!-- Ettendale Hold -->
+    </Duchy>
+
+    <!-- Rhûn -->
+    <Duchy id="balcoth" name="{=realms_duchy_balcoth}Balcoth" kingdom="khuzait">
+      <County settlement="town_RU4" /> <!-- Ûrushban -->
+      <Barony settlement="castle_RU9" /> <!-- Carndûr -->
+      <Barony settlement="castle_RU10" /> <!-- Nîrakh -->
+    </Duchy>
+    <Duchy id="dragon_wrath" name="{=realms_duchy_dragon_wrath}Dragon-Wrath" kingdom="khuzait">
+      <County settlement="town_RU7" /> <!-- Khûndol -->
+      <Barony settlement="castle_RU3" /> <!-- Khûsar -->
+      <Barony settlement="castle_RU2" /> <!-- Tarlat Arlan -->
+      <Barony settlement="castle_RU1" /> <!-- Mârdûn -->
+    </Duchy>
+    <Duchy id="far_rhun" name="{=realms_duchy_far_rhun}Far-Rhûn" kingdom="khuzait">
+      <County settlement="town_RU3" /> <!-- Vorgavuld -->
+      <County settlement="town_RU5" /> <!-- Sârt -->
+      <Barony settlement="castle_RU11" /> <!-- Ulbarath -->
+      <Barony settlement="castle_RU12" /> <!-- Chêya -->
+    </Duchy>
+    <Duchy id="hearthlands" name="{=realms_duchy_hearthlands}Hearthlands" kingdom="khuzait">
+      <County settlement="town_RU1" /> <!-- Mistrand -->
+      <County settlement="town_RU2" /> <!-- Lest -->
+      <County settlement="town_RU6" /> <!-- Kelepar -->
+      <County settlement="town_RU8" /> <!-- Iôrig -->
+      <Barony settlement="castle_RU7" /> <!-- Tôrcâin -->
+      <Barony settlement="castle_RU8" /> <!-- Kârashûn -->
+      <Barony settlement="castle_RU6" /> <!-- Rûartar -->
+      <Barony settlement="castle_RU5" /> <!-- Ulathar -->
+      <Barony settlement="castle_RU4" /> <!-- Samârnûl -->
+    </Duchy>
+
+    <!-- Rohan -->
+    <Duchy id="eastemnet" name="{=realms_duchy_eastemnet}Eastemnet" kingdom="vlandia">
+      <County settlement="town_V3" /> <!-- Aldburg -->
+    </Duchy>
+    <Duchy id="eastfold" name="{=realms_duchy_eastfold}Eastfold" kingdom="vlandia">
+      <Barony settlement="castle_V3" /> <!-- Fenmarch -->
+      <Barony settlement="castle_V2" /> <!-- Cliving -->
+    </Duchy>
+    <Duchy id="entwash_vale" name="{=realms_duchy_entwash_vale}Entwash Vale" kingdom="vlandia">
+      <Barony settlement="castle_V4" /> <!-- Starkmoore -->
+    </Duchy>
+    <Duchy id="kingstead" name="{=realms_duchy_kingstead}Kingstead" kingdom="vlandia">
+      <County settlement="town_V1" /> <!-- Edoras -->
+      <Barony settlement="castle_V6" /> <!-- Caleus Castle -->
+    </Duchy>
+    <Duchy id="the_wold" name="{=realms_duchy_the_wold}The Wold" kingdom="vlandia">
+      <County settlement="town_V4" /> <!-- Eaworth -->
+      <County settlement="town_V6" /> <!-- Langhold -->
+      <Barony settlement="castle_V5" /> <!-- Hiltbolt -->
+    </Duchy>
+    <Duchy id="westemnet" name="{=realms_duchy_westemnet}Westemnet" kingdom="vlandia">
+      <County settlement="town_V2" /> <!-- Helm's Deep -->
+      <County settlement="town_V5" /> <!-- Aldenburg -->
+      <Barony settlement="castle_V1" /> <!-- Marton -->
+    </Duchy>
+    <Duchy id="westfold" name="{=realms_duchy_westfold}Westfold" kingdom="vlandia">
+      <County settlement="town_V7" /> <!-- Grimslade -->
+      <Barony settlement="castle_V7" /> <!-- Gramburg -->
+    </Duchy>
+
+    <!-- Shaghâna -->
+    <Duchy id="anbarul" name="{=realms_duchy_anbarul}Anbârul" kingdom="shaghana">
+      <County settlement="town_A6" /> <!-- Zajâna -->
+      <County settlement="town_A7" /> <!-- Chatâk -->
+      <Barony settlement="castle_A15" /> <!-- Lajór -->
+      <Barony settlement="castle_A14" /> <!-- Kâna -->
+    </Duchy>
+    <Duchy id="darsalan" name="{=realms_duchy_darsalan}Dârsalan" kingdom="shaghana">
+      <Barony settlement="castle_A17" /> <!-- Sâkhazai -->
+      <Barony settlement="castle_A19" /> <!-- Khâb Kitâx -->
+      <Barony settlement="castle_A18" /> <!-- Kalmâkhila -->
+    </Duchy>
+    <Duchy id="koanoz" name="{=realms_duchy_koanoz}Koanoz" kingdom="shaghana">
+      <County settlement="town_A8" /> <!-- Sormedân -->
+      <Barony settlement="castle_A13" /> <!-- Bâdrasag -->
+      <Barony settlement="castle_A16" /> <!-- Gatúr -->
+    </Duchy>
+
+    <!-- South Rhovanion -->
+    <Duchy id="brownlands" name="{=realms_duchy_brownlands}Brownlands" kingdom="southrhovanion">
+      <Barony settlement="castle_SRH1" /> <!-- Wainwatch -->
+    </Duchy>
+    <Duchy id="glaudhol" name="{=realms_duchy_glaudhol}Gláudhól" kingdom="southrhovanion">
+      <County settlement="town_SRH1" /> <!-- Southwood -->
+    </Duchy>
+    <Duchy id="vestvineland" name="{=realms_duchy_vestvineland}Vestvineland" kingdom="southrhovanion">
+      <Barony settlement="castle_SRH2" /> <!-- Horsemead -->
+      <Barony settlement="castle_SRH3" /> <!-- Northmark -->
+    </Duchy>
+    <Duchy id="vidufells" name="{=realms_duchy_vidufells}Vídufells" kingdom="southrhovanion">
+      <County settlement="town_SRH2" /> <!-- Vidugard -->
+      <Barony settlement="castle_SRH4" /> <!-- Westmark -->
+    </Duchy>
+
+    <!-- Umbar -->
+    <Duchy id="ansharan" name="{=realms_duchy_ansharan}Anshâran" kingdom="umbar">
+      <Barony settlement="castle_U5" /> <!-- Zamarzîr -->
+    </Duchy>
+    <Duchy id="nykkea" name="{=realms_duchy_nykkea}Nykkeâ" kingdom="umbar">
+      <County settlement="town_U2" /> <!-- Jax Phanal -->
+      <Barony settlement="castle_U8" /> <!-- Rakhâx -->
+      <Barony settlement="castle_U6" /> <!-- Hâtab -->
+      <Barony settlement="castle_U7" /> <!-- Khûthra -->
+    </Duchy>
+    <Duchy id="umbar_baharbel" name="{=realms_duchy_umbar_baharbel}Umbar Bahârbel" kingdom="umbar">
+      <County settlement="town_U1" /> <!-- Umbar -->
+      <Barony settlement="castle_U4" /> <!-- Zimrathôr -->
+      <Barony settlement="castle_U3" /> <!-- Bêluzir -->
+      <Barony settlement="castle_U2" /> <!-- Azruphâr -->
+      <Barony settlement="castle_U1" /> <!-- Bej Magha -->
+    </Duchy>
+  </Duchies>
+</Realms>

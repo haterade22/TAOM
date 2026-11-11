@@ -1345,3 +1345,11 @@ The time limit ended matches through the same phase as a fallen keep, but the to
 - **Why missed:** the new end reused the old end's plumbing, and nobody listed what runs after it.
 - **Prevent:** when adding an end path, list the hooks and timers that outlive the end, gate each on the end phase, and record the end's kind in the run evidence.
 - **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).
+
+### A stored copy of a value is not always a field of its type: find the lists that group by it, and every reader between two refreshes (War Pledge, 2026-11-10)
+
+Momentum keeps each side's kingdoms in a list. The list is a copy of the kingdoms' sides, and only the enrollment sweep refreshes it: at session launch and on the daily tick. War Pledge let a side change inside a day. The handler for a destroyed kingdom removed that kingdom and checked victory with no sweep, so a side whose last enrolled kingdom fell could lose the war while a realm that had pledged to it that day was alive. This repeats "When a change lets a fixed attribute vary, sweep every reader that groups by it" (`data-content-cultures.md`) one layer down: the reader was found, its second entry point was not.
+
+- **Why missed:** the search for stored sides was a grep for fields of type `FactionSide`, and it found one. The data-flow trace then judged momentum by its sweep ("reads the side again on each use") and did not list the other code that reads the enrolled lists. Two Codex passes asked how the meter moves after a join, not who counts the lists.
+- **Prevent:** when a value starts to vary, search for its copies by meaning: a list, set or dictionary that groups or keys by it, in any type. For each copy, write down every refresh point and every reader. A reader whose decision cannot be taken back (a victory, a peace) must run after a refresh in the same call. For every other reader, state what the delay costs and whether a later refresh makes it good: here the four event handlers still score nothing for a realm between its pledge and the next sweep, and the feature doc says so.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 14.

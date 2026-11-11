@@ -51,9 +51,9 @@ def mesh_from_blender(obj, evaluated=False, uv_name=None):
                 mesh.attribute_domains[name] = "POINT"
         for name in ("pattern_id", "part_id", "retopo_plane_id"):
             attribute = data.attributes.get(name)
-            if attribute and attribute.domain == "FACE":
+            if attribute and attribute.domain in {"POINT", "FACE"}:
                 mesh.attributes[name] = [item.value for item_index, item in enumerate(attribute.data)]
-                mesh.attribute_domains[name] = "FACE"
+                mesh.attribute_domains[name] = attribute.domain
         for name in ("crease_edge", "sharp_edge", "bevel_weight_edge"):
             attribute = data.attributes.get(name)
             if attribute and attribute.domain == "EDGE":
@@ -86,31 +86,25 @@ def mesh_to_blender(mesh, name, collection=None, edges=None, matrix_world=None):
         layer.active_render = True
     for attribute_name, values in mesh.attributes.items():
         domain = mesh.attribute_domain(attribute_name)
-        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces) if domain == "FACE" else None
-        if expected_count is not None and len(values) != expected_count:
+        if domain not in {"POINT", "FACE"}:
+            continue
+        expected_count = len(mesh.vertices) if domain == "POINT" else len(mesh.faces)
+        if len(values) != expected_count:
             continue
         if attribute_name in {"source_position", "pattern_center"}:
-            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain="POINT")
+            attribute = data.attributes.new(name=attribute_name, type="FLOAT_VECTOR", domain=domain)
             for item, value in zip(attribute.data, values):
                 item.vector = value
         elif attribute_name in {"point_guide", "open_seam", "simplify_on"}:
-            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain="POINT")
+            attribute = data.attributes.new(name=attribute_name, type="BOOLEAN", domain=domain)
             for item, value in zip(attribute.data, values):
                 item.value = bool(value)
-        elif (
-            attribute_name in {"source_vertex", "source_part"}
-            or domain == "POINT"
-            or (domain is None and attribute_name == "pattern_id" and "source_position" in mesh.attributes)
-        ):
+        elif domain == "POINT":
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
-        elif domain == "FACE" or len(values) == len(mesh.faces):
+        else:
             attribute = data.attributes.new(name=attribute_name, type="INT", domain="FACE")
-            for item, value in zip(attribute.data, values):
-                item.value = int(value)
-        elif len(values) == len(mesh.vertices):
-            attribute = data.attributes.new(name=attribute_name, type="INT", domain="POINT")
             for item, value in zip(attribute.data, values):
                 item.value = int(value)
     for attribute_name, values in mesh.edge_attributes.items():
@@ -140,6 +134,8 @@ def combine_objects(objects, name="Combined guides"):
         "source_vertex": 0,
         "source_part": 0,
         "pattern_id": 0,
+        "part_id": 0,
+        "retopo_plane_id": 0,
         "point_guide": False,
         "open_seam": False,
         "simplify_on": False,

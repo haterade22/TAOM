@@ -131,6 +131,15 @@ public sealed class WarLedgerService
         _logger.LogInfo(WarLedgerFormatter.ChronicleEvent(
             _snapshots.GetCampaignId(), _snapshots.GetElapsedDay(), eventId, outcome));
 
+    /// <summary>For War Pledge (#1113): one line when a Neutral realm joins a side, by the AI or by the console.</summary>
+    public void LogPledge(string? kingdomId, FactionSide side, bool byAi)
+    {
+        if (kingdomId is null || kingdomId.Length == 0)
+            return;
+        _logger.LogInfo(WarLedgerFormatter.PledgeEvent(
+            _snapshots.GetCampaignId(), _snapshots.GetElapsedDay(), kingdomId, side, byAi));
+    }
+
     private static int SlotOf(FactionSide side)
     {
         switch (side)

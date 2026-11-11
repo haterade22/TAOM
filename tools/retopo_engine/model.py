@@ -53,6 +53,8 @@ class Mesh:
         )
 
     def attribute_domain(self, name: str) -> str | None:
+        if name not in self.attributes:
+            return None
         explicit = self.attribute_domains.get(name)
         if explicit is not None:
             return explicit
@@ -68,6 +70,31 @@ class Mesh:
         if len(values) == len(self.vertices):
             return "POINT"
         return None
+
+    def resolved_attribute_domains(self) -> dict[str, str]:
+        return {
+            name: domain
+            for name in self.attributes
+            if (domain := self.attribute_domain(name)) is not None
+        }
+
+    def unresolved_attribute_names(self):
+        unresolved = set()
+        for name, values in self.attributes.items():
+            domain = self.attribute_domain(name)
+            if (
+                domain not in {"POINT", "FACE"}
+                or (domain == "POINT" and len(values) != len(self.vertices))
+                or (domain == "FACE" and len(values) != len(self.faces))
+            ):
+                unresolved.add(name)
+        return unresolved
+
+    def discard_unresolved_attributes(self, names):
+        for name in names:
+            if name in self.attributes:
+                del self.attributes[name]
+            self.attribute_domains.pop(name, None)
 
     def edges(self) -> list[Edge]:
         face_edges = {

@@ -102,8 +102,8 @@ public class ClientIsolationGateTests
 
         var inClient = CoopUiRegistrationPolicy.CollectUiExtensionTypes(typeof(TAOM.Client.ClientSubModule).Assembly);
 
-        Assert.AreEqual(59, inClient.Count,
-            "27 view model mixins and 32 prefab extension classes: " + string.Join(", ", inClient.Select(t => t.Name)));
+        Assert.AreEqual(65, inClient.Count,
+            "30 view model mixins and 35 prefab extension classes: " + string.Join(", ", inClient.Select(t => t.Name)));
         var names = inClient.Select(t => t.Name).ToArray();
         // #1095 circular battle HUD: its ring values, and the native AgentStatus bars and previews it replaces.
         foreach (var battleHud in new[]
@@ -117,6 +117,9 @@ public class ClientIsolationGateTests
         CollectionAssert.Contains(names, "EncyclopediaClanGalleryMixin", "the clan page roster, fief galleries and leader model");
         CollectionAssert.Contains(names, "EncyclopediaRelationshipGalleryMixin", "the hero page relationship galleries");
         CollectionAssert.Contains(names, "EncyclopediaKingdomGalleryMixin", "the kingdom page clan and fief galleries");
+        // Realms (docs/features/realms.md): the title rows on the settlement, hero and kingdom pages.
+        foreach (var realms in new[] { "SettlementTitleMixin", "HeroTitlesMixin", "KingdomTitleMixin", "SettlementTitlePrefab", "HeroTitlesPrefab", "KingdomTitlePrefab" })
+            CollectionAssert.Contains(names, realms, "the Realms encyclopedia extension " + realms);
         CollectionAssert.AreEquivalent(
             new[]
             {
