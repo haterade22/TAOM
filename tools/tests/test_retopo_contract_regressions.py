@@ -711,6 +711,9 @@ class ContractRegressionTests(unittest.TestCase):
                 )
                 with self.assertRaisesRegex(ValueError, error):
                     engine.initialize_planes(malformed, RetopoSettings())
+        outside = loop_case(square, [(10, 10, 0), (11, 10, 0), (11, 11, 0), (10, 11, 0)])
+        with self.assertRaisesRegex(ValueError, "simple hole inside the outer boundary"):
+            engine.initialize_planes(outside, RetopoSettings())
         invalid_alignment = Mesh(
             vertices=[(3, 0, 0), (0.5, 1, 0), (0, 3, 0), (-1, 1, 0), (-3, 0, 0), (-1, -1, 0), (0, -3, 0), (1, -1, 0)]
             + [(1 + 0.1 * math.cos(math.tau * index / 8), 0.1 * math.sin(math.tau * index / 8), 0) for index in range(8)],
@@ -1021,6 +1024,14 @@ class ContractRegressionTests(unittest.TestCase):
                 filled = engine.auto_fill(loose, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
                 face_vertices = {index for face in filled.faces for index in face}
                 self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
+        loose_point = differential.unit_guide()
+        loose_point.vertices.append((0.49, 0.5, 0))
+        loose_point.lines = [(0, 2), (0, 4)]
+        for across_patterns in (True, False):
+            with self.subTest(loose_point_across_patterns=across_patterns):
+                filled = engine.auto_fill(loose_point, [(0.49, 0.5, 0), (0.5, 0.5, 0)], 5, across_patterns=across_patterns)
+                face_vertices = {index for face in filled.faces for index in face}
+                self.assertTrue(any(math.dist(filled.vertices[index], (0.49, 0.5, 0)) < 1e-7 for index in face_vertices))
         free = differential.unit_guide()
         free.vertices.append((5, 5, 0))
         free.lines = [(2, 4)]
@@ -1075,11 +1086,14 @@ class ContractRegressionTests(unittest.TestCase):
         for across_patterns in (True, False):
             with self.subTest(stale_attribute_across_patterns=across_patterns):
                 filled = engine.auto_fill(stale, [(0.5, 0.5, 0)], 1, across_patterns=across_patterns)
-                self.assertNotIn((0, 2), filled.edge_attributes.get("crease_edge", {}))
-                engine.subdivide_quads(filled)
+                subdivided = engine.subdivide_quads(filled)
+                self.assertNotIn((0, 2), subdivided.edge_attributes.get("crease_edge", {}))
         stale.edge_attributes = {"bevel_weight_edge": {(0, 2): 0.5}}
         pipeline = engine.retopologize(differential.curved_grid(), stale, RetopoSettings(auto_fill_prepass=True))
         self.assertTrue(pipeline.faces)
+        stale.edge_attributes = {"crease_edge": {(0, 2): 0.5}}
+        subdivided_stale = engine.retopologize(differential.curved_grid(), stale, RetopoSettings(subdiv_reproject=1))
+        engine.subdivide_quads(subdivided_stale)
 
     def test_reconstruction_preserves_explicit_attribute_domains(self):
         separated = engine._separate(

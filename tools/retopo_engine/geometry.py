@@ -181,6 +181,8 @@ def subdivide_quads(mesh: Mesh) -> Mesh:
     for name, values in mesh.edge_attributes.items():
         children = {}
         for edge, value in values.items():
+            if edge not in edge_map:
+                continue
             for endpoint in edge:
                 children[Mesh.edge_key(vertex_map[endpoint], edge_map[edge])] = value
         edge_attributes[name] = children

@@ -647,17 +647,36 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
             def edges(points):
                 return [(points[index], points[(index + 1) % len(points)]) for index in range(len(points))]
 
+            def candidate_pairs(segments):
+                bounds = [
+                    (min(first[0], second[0]), min(first[1], second[1]), max(first[0], second[0]), max(first[1], second[1]))
+                    for first, second in segments
+                ]
+                cell_size = max((max(box[2] - box[0], box[3] - box[1]) for box in bounds), default=1.0) or 1e-12
+                grid = {}
+                pairs = set()
+                for index, box in enumerate(bounds):
+                    for x in range(math.floor(box[0] / cell_size), math.floor(box[2] / cell_size) + 1):
+                        for y in range(math.floor(box[1] / cell_size), math.floor(box[3] / cell_size) + 1):
+                            cell = (x, y)
+                            for other in grid.get(cell, ()):
+                                other_box = bounds[other]
+                                if box[0] <= other_box[2] and other_box[0] <= box[2] and box[1] <= other_box[3] and other_box[1] <= box[3]:
+                                    pairs.add((other, index))
+                            grid.setdefault(cell, []).append(index)
+                return pairs
+
             def simple_boundary(points):
                 if any(math.dist(first, second) <= 1e-12 for first, second in edges(points)):
                     return False
                 boundary = edges(points)
-                for first_index, (first, second) in enumerate(boundary):
-                    for second_index in range(first_index + 1, len(boundary)):
-                        if second_index == first_index + 1 or (first_index == 0 and second_index == len(boundary) - 1):
-                            continue
-                        third, fourth = boundary[second_index]
-                        if intersects(first, second, third, fourth):
-                            return False
+                for first_index, second_index in candidate_pairs(boundary):
+                    if second_index == first_index + 1 or (first_index == 0 and second_index == len(boundary) - 1):
+                        continue
+                    first, second = boundary[first_index]
+                    third, fourth = boundary[second_index]
+                    if intersects(first, second, third, fourth):
+                        return False
                 return True
 
             def contained(point, polygon):
@@ -671,7 +690,13 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
 
             if not simple_boundary(outer_points) or not simple_boundary(inner_points):
                 raise ValueError("plane initialization requires simple hole boundaries")
-            if any(intersects(first, second, third, fourth) for first, second in edges(outer_points) for third, fourth in edges(inner_points)) or not contained(inner_points[0], outer_points):
+            combined_edges = edges(outer_points) + edges(inner_points)
+            outer_count = len(outer_points)
+            if any(
+                (first < outer_count) != (second < outer_count)
+                and intersects(*combined_edges[first], *combined_edges[second])
+                for first, second in candidate_pairs(combined_edges)
+            ) or not contained(inner_points[0], outer_points):
                 raise ValueError("plane initialization requires a simple hole inside the outer boundary")
             def split_longest_edges(points, count):
                 result = list(points)
@@ -716,10 +741,11 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
 
             def crossed_mesh(vertices, faces):
                 mesh_edges = sorted({Mesh.edge_key(face[index], face[(index + 1) % 4]) for face in faces for index in range(4)})
-                for first, second in combinations(mesh_edges, 2):
-                    if set(first) & set(second):
+                segments = [(vertices[first], vertices[second]) for first, second in mesh_edges]
+                for first_index, second_index in candidate_pairs(segments):
+                    if set(mesh_edges[first_index]) & set(mesh_edges[second_index]):
                         continue
-                    if intersects(vertices[first[0]], vertices[first[1]], vertices[second[0]], vertices[second[1]]):
+                    if intersects(*segments[first_index], *segments[second_index]):
                         return True
                 return False
 
@@ -933,11 +959,6 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
         raise ValueError("max_iterations must be non-negative")
     validate_guides(guide)
     guide = guide.copy()
-    valid_edges = set(guide.edges())
-    guide.edge_attributes = {
-        name: {edge: value for edge, value in values.items() if edge in valid_edges}
-        for name, values in guide.edge_attributes.items()
-    }
     points = [tuple(point) for point in point_guides]
     resolved_domains = guide.resolved_attribute_domains()
     unresolved_names = guide.unresolved_attribute_names()
@@ -1013,9 +1034,10 @@ def auto_fill(guide: Mesh, point_guides, max_iterations: int = 5, across_pattern
                 split_edge(current, (face[2], face[3]), len(current.vertices) - 1)
                 return current
         for _ in range(max_iterations):
+            face_vertices = {index for face in current.faces for index in face}
             missing = [
                 point for point in candidate_points
-                if not any(math.dist(point, vertex) < 1e-7 for vertex in current.vertices)
+                if not any(math.dist(point, current.vertices[index]) < 1e-7 for index in face_vertices)
             ]
             if not missing:
                 break
