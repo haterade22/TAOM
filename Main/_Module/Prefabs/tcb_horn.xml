@@ -1,0 +1,18 @@
+<prefabs>
+	<!-- TAOM_CustomBattleUI: the horn blower's war horn (HornCall) on the head bone: the mouthpiece at his lips, the horn running out
+	     through the fist the cornu clip raises to his mouth, 20 degrees up, its curve hollow upwards like Boromir's horn.
+	     The mesh is the game's curved ox horn with a brass band (kitchen_horn) at 1.4x.
+	     Solved, not eyeballed (scratchpad horn_aim3.py, 2026-11-08):
+	       - kitchen_horn (TpacTool, BannerlordArmorViewer\meshprobe): origin mid-horn, mouthpiece at local
+	         (-0.124, -0.054, -0.058), tip->bell along about (0.87, 0.33, 0.37), hollow towards (-0.26, -0.33, 0.91);
+	       - head bone frame (logged in game): +X up, +Y forward, -Z his right; the raised fist (itemL) at (0.036, 0.240, -0.011);
+	       - rotation_euler composes as Rz*Ry*Rx (the only order matching every test shot);
+	       - mouthpiece 9 cm behind the fist, checked from front, both sides and above. -->
+	<game_entity name="tcb_horn_big" old_prefab_name="">
+		<transform position="0.078, 0.348, -0.001" rotation_euler="1.345, 0.435, 1.517" scale="1.400, 1.400, 1.400"/>
+		<physics mass="1.000"/>
+		<components>
+			<meta_mesh_component name="kitchen_horn"/>
+		</components>
+	</game_entity>
+</prefabs>

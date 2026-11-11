@@ -1,0 +1,19 @@
+<Prefab>
+  <!-- An army's pennant (TcbSideVM) on its army column: the encyclopedia's clan pennant stack, unchanged (the banner cut by
+       TAOM.Encyclopedia.HeroClanMask and zoomed so its colour fills the cloth, the drape's folds, the rim), at the art's
+       408:664 proportions. -->
+  <Window>
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="130" DoNotAcceptEvents="true">
+      <Children>
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+          <Children>
+            <EncyclopediaMaskedImageWidget DataSource="{BannerTall}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35"
+                                           ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true" />
+        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true" />
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

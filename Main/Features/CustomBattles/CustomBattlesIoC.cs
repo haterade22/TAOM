@@ -34,5 +34,6 @@ public static class CustomBattlesIoC
         CustomBattleSideVM_RefreshValues_Patch.Initialize(sideCommanderFilter, logger);
         BannerlordMissions_CustomBattle_Patch.Initialize(logger);
         BannerlordMissions_Siege_Patch.Initialize(logger);
+        Muster.CustomBattleMuster.Initialize(sideCommanderFilter, logger);
     }
 }

@@ -1,0 +1,140 @@
+<Prefab>
+  <!-- The Battlefield tab (TcbFieldVM) inside the screen's 1760 frame, on the encyclopedia's stone panels: the map preview
+       (its name, the picture at 16:9, a strip of neighbouring maps) at the left, 1160 wide; the battle settings at the right,
+       576 wide, above the armies' summary that the main prefab draws (176 kept free at the bottom). An open dropdown unfolds
+       inside its row (a separate overlay layer did not take clicks, user 2026-11-08) and the column scrolls when a long list
+       is open. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+        <!-- the preview -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1160">
+          <Children>
+            <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="24" MarginLeft="70" MarginRight="70" MarginTop="18"
+                        Brush="Tcb.Label" Text="@PreviewHeader" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="52" MarginLeft="70" MarginRight="70" MarginTop="42"
+                        Brush="Tcb.MapTitle" Text="@MapName" DoNotAcceptEvents="true" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1020" SuggestedHeight="574" HorizontalAlignment="Center" MarginTop="104" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#08080AFF" DoNotAcceptEvents="true" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" Sprite="@PreviewSprite" DoNotAcceptEvents="true" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="64" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#000000A8" IsVisible="@NoPreview" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.Summary" Brush.FontSize="26" Text="@NoPreviewText" />
+                  </Children>
+                </Widget>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="fs_hero_frame_9" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+
+            <!-- the strip: previous, five neighbouring maps, next -->
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="110" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="26"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="44" Brush="Tcb.Hover" Command.Click="ExecutePreviousMap" DoNotPassEventsToChildren="true">
+                  <Children><ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="28" SuggestedHeight="44" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="ec_gallery_arrow_l" /></Children>
+                </ButtonWidget>
+                <ListPanel DataSource="{Thumbs}" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <ItemTemplate>
+                    <!-- the hover and press tint is the last child: the opaque thumbnail would cover a brush on the button itself -->
+                    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="178" MarginLeft="6" MarginRight="6" Command.Click="ExecuteSelect" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#08080AFF" />
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" Sprite="@Sprite" />
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" VerticalAlignment="Bottom" MarginLeft="3" MarginRight="3" MarginBottom="3" Sprite="BlankWhiteSquare_9" Color="#000000B0" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" VerticalAlignment="Bottom" MarginLeft="8" MarginRight="8" MarginBottom="3"
+                                    Brush="Tcb.Sub" Brush.FontSize="15" Brush.FontColor="#E8DCC0FF" Brush.TextHorizontalAlignment="Center" Text="@Name" />
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="fs_hero_frame_9" AlphaFactor="0.35" IsHidden="@IsSelected" />
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="fs_hero_frame_9" IsVisible="@IsSelected" />
+                        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3" Brush="Tcb.Hover" />
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="44" Brush="Tcb.Hover" Command.Click="ExecuteNextMap" DoNotPassEventsToChildren="true">
+                  <Children><ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="28" SuggestedHeight="44" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="ec_gallery_arrow_r" /></Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+
+        <!-- the settings -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="576" HorizontalAlignment="Right" MarginBottom="176">
+          <Children>
+            <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="36" MarginLeft="24" MarginRight="24" MarginTop="16" Brush="Tcb.Heading" Text="@SettingsHeader" DoNotAcceptEvents="true" />
+            <!-- two lines and a diamond at its own 1:1 proportions (fs_divider stretched past its 420 width distorts the diamond) -->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="528" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="56" DoNotAcceptEvents="true">
+              <Children>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="248" SuggestedHeight="2" VerticalAlignment="Center" Sprite="fs_divider_thin" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="fs_diamond" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="248" SuggestedHeight="2" HorizontalAlignment="Right" VerticalAlignment="Center" Sprite="fs_divider_thin" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="24" MarginRight="14" MarginTop="80" MarginBottom="76">
+              <Children>
+                <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="16" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\Rows" VerticalScrollbar="..\Scrollbar">
+                  <Children>
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+                        <ListPanel Id="Rows" DataSource="{Settings}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsShown">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="56">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="196" MarginLeft="4" Brush="Tcb.Label" Brush.FontColor="#CDBF9EFF" Text="@Label" />
+                                    <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="40" HorizontalAlignment="Right" VerticalAlignment="Center" ClipContents="true"
+                                                  Brush="CC.Card" UpdateChildrenStates="true" IsSelected="@IsOpen" Command.Click="ExecuteToggle" DoNotPassEventsToChildren="true">
+                                      <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="16" MarginRight="40" Brush="Tcb.Name" Brush.FontSize="20" Text="@ValueText" />
+                                        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="16" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="14" Sprite="ec_list_expand" IsHidden="@IsOpen" />
+                                        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="16" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="14" Sprite="ec_list_collapse" IsVisible="@IsOpen" />
+                                      </Children>
+                                    </ButtonWidget>
+                                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.35" />
+                                  </Children>
+                                </Widget>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@IsOpen">
+                                  <Children>
+                                    <ListPanel DataSource="{Options}" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="300" HorizontalAlignment="Right" MarginTop="2" MarginBottom="8"
+                                               StackLayout.LayoutMethod="VerticalTopToBottom" Sprite="BlankWhiteSquare_9" Color="#0C0B09F2">
+                                      <ItemTemplate>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="36" Brush="Tcb.Hover" Command.Click="ExecuteSelect" DoNotPassEventsToChildren="true">
+                                          <Children>
+                                            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" MarginLeft="12" VerticalAlignment="Center" Sprite="fs_bullet" IsVisible="@IsSelected" />
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="30" MarginRight="10" Brush="Tcb.Name" Brush.FontSize="19" Text="@Name" IsHidden="@IsSelected" />
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="30" MarginRight="10" Brush="Tcb.Name" Brush.FontSize="19" Brush.FontColor="#F0D898FF" Text="@Name" IsVisible="@IsSelected" />
+                                          </Children>
+                                        </ButtonWidget>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ListPanel>
+                          </ItemTemplate>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+                <ScrollbarWidget Id="Scrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="10" HorizontalAlignment="Right" AlignmentAxis="Vertical" Handle="Handle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.3" />
+                    <ImageWidget Id="Handle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="9" SuggestedHeight="90" HorizontalAlignment="Center" Sprite="ec_list_scroll" />
+                  </Children>
+                </ScrollbarWidget>
+              </Children>
+            </Widget>
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="480" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="68" Sprite="fs_divider_thin" AlphaFactor="0.6" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="48" MarginLeft="30" MarginRight="30" VerticalAlignment="Bottom" MarginBottom="14"
+                        Brush="Tcb.Summary" Brush.FontSize="18" Brush.FontColor="#BFB292FF" Text="@Tagline" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

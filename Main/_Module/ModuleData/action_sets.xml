@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<action_sets>
+	<!-- TAOM_CustomBattleUI horn blowers (HornCall): each race's own warrior set plus the tavern musicians'
+	     cornu clip, played on the upper-body channel (1) while he calls, so his legs keep marching and his hands
+	     hold the horn (Prefabs/tcb_horn.xml) to his lips. Given once while he stands: switching sets on a
+	     walking agent crashes the engine. Races without a set here (dwarves, elves) only sound the horn. -->
+	<action_set id="as_tcb_horn_human_warrior" base_set="as_human_warrior">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_orc_warrior" base_set="as_orc_warrior">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_orc_warrior_b" base_set="as_orc_warrior_b">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_orc_warrior_c" base_set="as_orc_warrior_c">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_uruk_warrior" base_set="as_uruk_warrior">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_uruk_hai_warrior" base_set="as_uruk_hai_warrior">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+	<action_set id="as_tcb_horn_berserker_warrior" base_set="as_berserker_warrior">
+		<action type="act_play_cornu_stand" animation="musician_cornu_stand_loop" />
+	</action_set>
+</action_sets>
