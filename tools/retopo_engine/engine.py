@@ -198,6 +198,13 @@ def _normalized_copy(mesh: Mesh) -> Mesh:
     return result
 
 
+def _sample_loop_variants(variants, limit=32):
+    if len(variants) <= limit:
+        return variants
+    indices = sorted({round(index * (len(variants) - 1) / (limit - 1)) for index in range(limit)})
+    return [variants[index] for index in indices]
+
+
 def inspect_topology(mesh: Mesh, fix_split_edges: bool = False):
     bad_edges = non_manifold_edges(mesh)
     result = _normalized_copy(mesh)
@@ -716,9 +723,7 @@ def initialize_planes(flat: Mesh, settings: RetopoSettings) -> Mesh:
                         return True
                 return False
 
-            if len(loop_variants) > 32:
-                indices = sorted({round(index * (len(loop_variants) - 1) / 31) for index in range(32)})
-                loop_variants = [loop_variants[index] for index in indices]
+            loop_variants = _sample_loop_variants(loop_variants)
             candidates = []
             for outer_candidate, inner_candidate in loop_variants:
                 for oriented in (inner_candidate, list(reversed(inner_candidate))):

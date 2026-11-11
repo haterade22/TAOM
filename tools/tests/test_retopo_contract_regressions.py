@@ -513,6 +513,8 @@ class ContractRegressionTests(unittest.TestCase):
     def test_direct_initialization_and_snap_ignore_invalid_markers(self):
         source = differential.curved_grid()
         selective = [index in {1, 3, 5, 7} for index in range(len(source.vertices))]
+        self.assertEqual(32, len(engine._sample_loop_variants(list(range(36)))))
+        self.assertEqual([0, 35], engine._sample_loop_variants(list(range(36)))[::31])
         for domain in ("CORNER", "FACE"):
             with self.subTest(source_domain=domain):
                 source.attributes["point_guide"] = selective
