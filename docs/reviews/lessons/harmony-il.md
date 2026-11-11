@@ -1430,3 +1430,9 @@ The new `HandleWargTargetHit` log read the victim's mount in its `catch`. Patch4
 - **Why missed:** I took the `ThirdPartyTargetPatches` row for a shape gate. It only proves that `Prepare` fails closed. I read the mod's source checkout, not the DLL the game loads.
 - **Prevent:** add a `BindingVerification` row that loads the installed mod DLL (`CoopMissionBindingTests` does this for Coop) and compares the target's parameter types with the patch method's. Write behaviour claims from the installed build, and name the source commit when the two differ.
 - **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), rows 2 and 3.
+
+### Detect a "Collection was modified" throw with the enumerator's own check, not a size compare (Patch103 list check, #1028, 2026-11-11)
+
+- **Why missed:** I took "a behavior was added or removed" from the #1028 hypothesis and used the list's size as the signal. `List<T>.Enumerator.MoveNext` throws on any `_version` change, and an indexer write, `Sort`, `Reverse` or an add paired with a remove keep the size. I also wrote that the call whose size differs "is the culprit"; it proves only where the change happened.
+- **Prevent:** to see what the engine's enumerator will see, take `list.GetEnumerator()` before the call and step a copy of the struct after it (`Watch<T>` in `MissionStartGuardCalls`). Test the size-equal cases. A diagnostic's text says what it proves ("during AfterStart of X"), not who to blame.
+- **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), rows 1 and 4.

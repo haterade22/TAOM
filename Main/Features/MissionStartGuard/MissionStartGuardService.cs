@@ -31,6 +31,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     internal const int MaxNoticesPerMission = 3;
     internal const int MaxFullLogsPerMission = 10;
     internal const int MaxEscapedLogsPerProcess = 3;
+    internal const int MaxListChangeLogsPerMission = 5;
 
     private readonly IMissionStartGuardSettingsProvider _settings;
     private readonly IMissionStartGuardAdapter _adapter;
@@ -43,6 +44,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     private bool _summaryWritten;
     private int _escapedLogged;
     private bool _guardWarned;
+    private int _listChanges;
 
     public MissionStartGuardService(IMissionStartGuardSettingsProvider settings, IMissionStartGuardAdapter adapter,
         IDedicatedServerProvider server, IModLogger logger)
@@ -66,6 +68,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
         _caught = 0;
         _notices = 0;
         _summaryWritten = false;
+        _listChanges = 0;
     }
 
     public void Report(StartCall call, string ownerType, string ownerAssembly, Exception exception)
@@ -99,6 +102,13 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
         if (_escapedLogged >= MaxEscapedLogsPerProcess) return;
         _escapedLogged++;
         Safe(() => _logger.LogError(MissionStartGuardLines.BuildEscapedLine(exception, _escapedLogged, MaxEscapedLogsPerProcess)));
+    }
+
+    public void ReportListChange(StartCall call, string ownerType, string ownerAssembly, string list, int before, int after, string newestType)
+    {
+        _listChanges++;
+        if (_listChanges > MaxListChangeLogsPerMission) return;
+        Safe(() => _logger.LogError(MissionStartGuardLines.BuildListChangeLine(call, ownerType, ownerAssembly, list, before, after, newestType)));
     }
 
     public void LogInstall(int wrappedSites)

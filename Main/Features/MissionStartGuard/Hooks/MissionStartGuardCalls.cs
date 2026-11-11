@@ -1,5 +1,6 @@
 // Adapted from yotthani's VanillaTuning (MIT, (c) 2026 yotthani), mission-start-guard.
 using System;
+using System.Collections.Generic;
 using TAOM.Features.MissionStartGuard.Models;
 using TaleWorlds.MountAndBlade;
 
@@ -39,21 +40,93 @@ internal static class MissionStartGuardCalls
 
     internal static void EarlyStart(MissionBehavior behavior)
     {
+        var watch = WatchBehaviors();
         try { behavior.EarlyStart(); }
         catch (Exception ex) when (Survives(ex)) { Note(StartCall.EarlyStart, behavior, ex); }
+        NoteListChange(StartCall.EarlyStart, behavior, watch);
     }
 
     internal static void AfterStart(MissionBehavior behavior)
     {
+        var watch = WatchBehaviors();
         try { behavior.AfterStart(); }
         catch (Exception ex) when (Survives(ex)) { Note(StartCall.AfterStart, behavior, ex); }
+        NoteListChange(StartCall.AfterStart, behavior, watch);
     }
 
     internal static void AfterMissionStart(MissionObject missionObject)
     {
+        var watch = WatchObjects();
         try { missionObject.AfterMissionStart(); }
         catch (Exception ex) when (Survives(ex)) { Note(StartCall.AfterMissionStart, missionObject, ex); }
+        NoteListChange(StartCall.AfterMissionStart, missionObject, watch);
     }
+
+    // Mission.AfterStart walks MissionBehaviors with foreach around EarlyStart and AfterStart, and MissionObjects around
+    // AfterMissionStart. Any change to the list inside one call (an add, a remove, an indexer write, a sort, an add paired
+    // with a remove) makes the engine's next step through it throw "Collection was modified", from the engine's own
+    // enumerator and so outside every try here (#1028). Each of the three helpers takes a Watch before its call and asks it
+    // afterwards; the call whose watch says changed is where the change happened. The watch takes no lock and allocates
+    // nothing. A Mission.Current of null (a unit test) gives an empty watch that reports nothing.
+
+    /// <summary>
+    /// A list as it was before one wrapped call: the list, its size and an enumerator taken then. Stepping a copy of that
+    /// enumerator afterwards throws exactly when the engine's own next step through the list will, whatever the change was.
+    /// </summary>
+    internal readonly struct Watch<T> where T : class
+    {
+        private readonly List<T>? _list;
+        private readonly List<T>.Enumerator _probe;
+
+        internal Watch(List<T>? list)
+        {
+            _list = list;
+            _probe = list != null ? list.GetEnumerator() : default;
+            Before = list?.Count ?? -1;
+        }
+
+        internal List<T>? Items => _list;
+
+        internal int Before { get; }
+
+        internal bool Changed(out int after)
+        {
+            after = _list?.Count ?? -1;
+            if (_list == null) return false;
+            var probe = _probe;   // a copy: stepping it never moves the watch
+            try { probe.MoveNext(); return false; }
+            catch (InvalidOperationException) { return true; /* swallow-ok: the exception is the signal */ }
+        }
+
+        internal T? Newest() => _list != null && _list.Count > 0 ? _list[_list.Count - 1] : null;
+    }
+
+    internal static Watch<MissionBehavior> WatchBehaviors()
+    {
+        try { return new Watch<MissionBehavior>(Mission.Current?.MissionBehaviors); }
+        catch { return default; /* swallow-ok: a watch must never break the mission start */ }
+    }
+
+    internal static Watch<MissionObject> WatchObjects()
+    {
+        try { return new Watch<MissionObject>(Mission.Current?.MissionObjects); }
+        catch { return default; /* swallow-ok: a watch must never break the mission start */ }
+    }
+
+    internal static void NoteListChange<T>(StartCall call, object owner, Watch<T> watch) where T : class
+    {
+        try
+        {
+            if (!watch.Changed(out var after)) return;
+            var newest = after > watch.Before ? watch.Newest() : null;   // the last item is the added one only for an append
+            Service?.ReportListChange(call, TypeNameOf(owner), AssemblyNameOf(owner.GetType()),
+                typeof(T) == typeof(MissionBehavior) ? "MissionBehaviors" : "MissionObjects", watch.Before, after,
+                newest == null ? "n/a" : TypeNameOf(newest));
+        }
+        catch { /* swallow-ok: observe-only, a log line must never change the engine's outcome */ }
+    }
+
+    private static string TypeNameOf(object value) => value.GetType().FullName ?? value.GetType().Name;
 
     // A throw inside an exception filter is swallowed by the runtime as "not handled", so this is belt and braces.
     private static bool Survives(Exception ex)
