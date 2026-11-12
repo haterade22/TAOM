@@ -12,6 +12,10 @@ namespace TAOM.Features.Realms.Domain.Ledger;
 public sealed class TitleLedger
 {
     private readonly Dictionary<string, string> _holders = new();
+
+    /// <summary><see cref="_holders"/> turned around: each holder's titles. Kept in step by <see cref="SetHolder"/>.</summary>
+    private readonly Dictionary<string, HashSet<string>> _heldBy = new();
+
     private readonly Dictionary<string, List<TitleClaim>> _claims = new();
     private readonly Dictionary<string, TitleLaws> _laws = new();
     private readonly Dictionary<string, PendingSuccession> _pending = new();
@@ -26,6 +30,13 @@ public sealed class TitleLedger
     /// <summary>Sets the de jure holder. Null vacates the title. A new holder's own claim on it is spent.</summary>
     public void SetHolder(string titleId, string? heroId)
     {
+        if (_holders.TryGetValue(titleId, out var previous) && _heldBy.TryGetValue(previous, out var previousTitles))
+        {
+            previousTitles.Remove(titleId);
+            if (previousTitles.Count == 0)
+                _heldBy.Remove(previous);
+        }
+
         if (heroId == null)
         {
             _holders.Remove(titleId);
@@ -33,11 +44,15 @@ public sealed class TitleLedger
         }
 
         _holders[titleId] = heroId;
+        if (!_heldBy.TryGetValue(heroId, out var titles))
+            _heldBy[heroId] = titles = new HashSet<string>(System.StringComparer.Ordinal);
+        titles.Add(titleId);
         RemoveClaim(titleId, heroId);
     }
 
+    /// <summary>The hero's titles by right, by id. Read from an index, since every lord party's name asks for it.</summary>
     public IReadOnlyList<string> TitlesHeldBy(string heroId) =>
-        _holders.Where(p => p.Value == heroId).Select(p => p.Key).OrderBy(id => id).ToList();
+        heroId != null && _heldBy.TryGetValue(heroId, out var titles) ? titles.OrderBy(id => id).ToList() : new List<string>();
 
     public IEnumerable<KeyValuePair<string, string>> Holders => _holders;
 

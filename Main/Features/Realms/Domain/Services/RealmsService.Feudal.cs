@@ -134,16 +134,12 @@ public sealed partial class RealmsService
             return ClaimQuote.Refused(ClaimRefusal.NotVacant);
         if (IsRestoreOnly(title))
             return ClaimQuote.Refused(ClaimRefusal.RestoreOnly);
-        IReadOnlyList<TitleDefinition> lands;
-        if (title.Rank >= TitleRank.Empire)
-            lands = Catalog.ChildrenOf(titleId);
-        else
-        {
-            var below = DescendantsOf(titleId).ToList();
-            lands = below.Where(t => t.Rank == TitleRank.County).ToList();
-            if (lands.Count == 0)
-                lands = below.Where(t => t.Rank == TitleRank.Barony).ToList();
-        }
+        var titular = TitularRealmOf(title);
+        if (titular != null && !titular.Allows(side.CultureId))
+            return ClaimQuote.Refused(ClaimRefusal.WrongCulture);
+        var lands = title.Rank >= TitleRank.Empire
+            ? Catalog.ChildrenOf(titleId)
+            : titular != null ? TitularCounties(titular) : CountiesBelow(titleId);
 
         if (lands.Count == 0 || lands.Count(side.Counts) * 2 <= lands.Count)
             return ClaimQuote.Refused(ClaimRefusal.TooFewVassals);
@@ -156,6 +152,7 @@ public sealed partial class RealmsService
         if (!QuoteForm(heroId, titleId, world, config).Allowed)
             return Array.Empty<TitleEvent>();
         Ledger.SetHolder(titleId, heroId);
+        SyncTitularLands(); // a titular realm takes up the lands it was formed from
         return new[] { Changed(TitleEventReason.Formation, titleId, heroId, null) };
     }
 
@@ -213,6 +210,17 @@ public sealed partial class RealmsService
         return offers;
     }
 
+    /// <summary>
+    /// The least influence forming or restoring any title can cost the hero (their own coronation's price counts); null
+    /// when nothing can be. Every offer of <see cref="FormOffers"/> costs at least this, so a clan with less need not be
+    /// quoted at all.
+    /// </summary>
+    public int? CheapestFormCost(string heroId, ClaimsConfig config) =>
+        Enum.GetValues(typeof(TitleRank)).Cast<TitleRank>().Where(r => r >= TitleRank.Duchy).Select(config.UsurpCost)
+            .Concat(Config.Coronations.Where(c => c.HeroId == heroId && c.Influence != null)
+                .Select(c => (int?)config.ScaleInfluence(c.Influence!.Value)))
+            .Min();
+
     /// <summary>A realm title of a <c>throne="vacant"</c> kingdom: it is only ever restored by an ancestral claimant.</summary>
     public bool IsRestoreOnly(TitleDefinition title) =>
         title.Rank == TitleRank.Kingdom && title.KingdomId != null && Config.VacantThrones.Contains(title.KingdomId);
@@ -227,6 +235,92 @@ public sealed partial class RealmsService
             foreach (var below in DescendantsOf(title.Id).Where(t => t.Rank == TitleRank.Kingdom && t.KingdomId != null))
                 realms.Add(below.KingdomId!);
         return realms;
+    }
+
+    /// <summary>
+    /// The title a realm is named after while its ruler holds it: the highest of the ruler's titles of kingdom rank or
+    /// higher that stands above the realm's own title (Durin's Folk over Erebor, the Reunited Kingdom over Gondor), on a
+    /// tie the first by id. A realm without a title of its own (a kingdom made in the campaign) takes the highest such
+    /// title that is no other realm's own (a dwarf lord's kingdom that holds Khazad-dûm). Null: the realm keeps its own
+    /// name. A title elsewhere (Mordor holding Arnor) never renames a realm.
+    /// </summary>
+    public TitleDefinition? RealmNameTitle(string kingdomId, string? rulerId)
+    {
+        if (rulerId == null || !IsInitialized)
+            return null;
+        var own = Catalog.Get(Generation.TitleGenerator.KingdomPrefix + kingdomId);
+        var above = own != null ? new HashSet<string>(Catalog.AncestorsOf(own.Id).Select(t => t.Id), StringComparer.Ordinal) : null;
+        return Ledger.TitlesHeldBy(rulerId).Select(Catalog.Get)
+            .Where(t => t != null && t.Rank >= TitleRank.Kingdom
+                        && (above != null ? above.Contains(t.Id) : t.KingdomId == null || t.KingdomId == kingdomId))
+            .Select(t => t!)
+            .OrderByDescending(t => t.Rank).ThenBy(t => t.Id, StringComparer.Ordinal).FirstOrDefault();
+    }
+
+    /// <summary>The name a realm takes from <paramref name="title"/>: its <c>realm_name</c>, else the title's own name.</summary>
+    public string RealmNameFrom(TitleDefinition title) =>
+        Config.RealmNames.TryGetValue(title.Id, out var name) ? name : title.Name;
+
+    /// <summary>The titular realm (<see cref="TitularRealmConfig"/>) this title is, or null.</summary>
+    private TitularRealmConfig? TitularRealmOf(TitleDefinition title) =>
+        title.Rank == TitleRank.Kingdom && title.KingdomId == null ? Generation.TitleGenerator.TitularRealmOf(Config, title.Id) : null;
+
+    /// <summary>
+    /// The counties a titular realm is formed or pressed from: its own once its lands have moved to it, else those below
+    /// the realm it lies over.
+    /// </summary>
+    private IReadOnlyList<TitleDefinition> TitularCounties(TitularRealmConfig titular) =>
+        CountiesBelow(Catalog.ChildrenOf(titular.TitleId).Count > 0 ? titular.TitleId : titular.LandsTitleId);
+
+    /// <summary>
+    /// The titles a vacant titular realm lies over, for the tree and its page to show (dimmed) under it: the vassal titles
+    /// of its lands title. Empty for any other title, and once the lands have moved to it (they are its own vassals then).
+    /// </summary>
+    public IReadOnlyList<TitleDefinition> LandsShownUnder(string titleId)
+    {
+        var title = Catalog.Get(titleId);
+        var titular = title != null ? TitularRealmOf(title) : null;
+        if (titular == null || Catalog.ChildrenOf(titleId).Count > 0)
+            return Array.Empty<TitleDefinition>();
+        return Catalog.ChildrenOf(titular.LandsTitleId);
+    }
+
+    /// <summary>
+    /// Moves each titular realm's lands to where they belong: a held (or pending) titular realm takes the vassal titles
+    /// of the realm it lies over (Khazad-dûm, once formed, is liege of Moria's duchies), and a vacant one gives them back.
+    /// Safe to run at any time; returns the titles moved. The tree is saved, so a move lasts.
+    /// </summary>
+    public int SyncTitularLands()
+    {
+        var moves = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var titular in Config.TitularRealms)
+        {
+            if (Catalog.Get(titular.TitleId) == null || Catalog.Get(titular.LandsTitleId) == null)
+                continue;
+            var held = Ledger.HolderOf(titular.TitleId) != null || Ledger.IsPending(titular.TitleId);
+            var own = Catalog.ChildrenOf(titular.TitleId);
+            if (held && own.Count == 0)
+                foreach (var land in Catalog.ChildrenOf(titular.LandsTitleId))
+                    moves[land.Id] = titular.TitleId;
+            else if (!held)
+                foreach (var land in own)
+                    moves[land.Id] = titular.LandsTitleId;
+        }
+
+        if (moves.Count == 0)
+            return 0;
+        Catalog = new TitleCatalog(Catalog.All.Select(t => moves.TryGetValue(t.Id, out var parent)
+            ? new TitleDefinition(t.Id, t.Rank, t.Name, parent, t.SettlementId, t.KingdomId, t.CultureId)
+            : t).ToList());
+        return moves.Count;
+    }
+
+    /// <summary>The counties below a title, or its baronies when it has no county: the lands a duchy or realm is formed from.</summary>
+    private IReadOnlyList<TitleDefinition> CountiesBelow(string titleId)
+    {
+        var below = DescendantsOf(titleId).ToList();
+        var lands = below.Where(t => t.Rank == TitleRank.County).ToList();
+        return lands.Count > 0 ? lands : below.Where(t => t.Rank == TitleRank.Barony).ToList();
     }
 
     /// <summary>Every title below this one, depth first.</summary>
@@ -263,20 +357,21 @@ public sealed partial class RealmsService
     }
 
     /// <summary>
-    /// Adds the unions in the config that this campaign's titles do not have yet (a save made before they existed),
-    /// putting their member titles under them. Returns how many were added.
+    /// Adds the titular realms and unions in the config that this campaign's titles do not have yet (a save made before
+    /// they existed), putting a union's member titles under it. Returns how many titles were added.
     /// </summary>
-    public int AddMissingUnions(List<string> warnings)
+    public int AddMissingTitles(List<string> warnings)
     {
-        var definitions = Generation.TitleGenerator.WithUnions(Catalog.All, Ledger, Config, warnings);
+        var titular = Generation.TitleGenerator.WithTitularRealms(Catalog.All, Ledger, Config, warnings);
+        var definitions = Generation.TitleGenerator.WithUnions(titular, Ledger, Config, warnings);
         var added = definitions.Count - Catalog.Count;
         if (added <= 0)
             return 0;
         var known = new HashSet<string>(Catalog.All.Select(t => t.Id), StringComparer.Ordinal);
         Catalog = new TitleCatalog(definitions);
         warnings.AddRange(Catalog.Problems);
-        foreach (var union in definitions.Where(d => !known.Contains(d.Id)))
-            Ledger.Record(union.Id, new ChronicleEntry(Clock(), TitleEventReason.Start, Ledger.HolderOf(union.Id), null), Config.Feudal.ChronicleEntries);
+        foreach (var title in definitions.Where(d => !known.Contains(d.Id)))
+            Ledger.Record(title.Id, new ChronicleEntry(Clock(), TitleEventReason.Start, Ledger.HolderOf(title.Id), null), Config.Feudal.ChronicleEntries);
         return added;
     }
 

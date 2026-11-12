@@ -63,30 +63,32 @@ public sealed partial class RealmsService
     }
 
     /// <summary>
-    /// The weekly tribute each vassal owes each liege: for every title with a <see cref="FeudalConfig.TributeOf"/> its
-    /// holder pays the holder of its direct liege title, when both serve the same realm in different clans. Summed per pair.
+    /// Each clan and the liege clans it owes tribute, once per pair: a hero of the payer clan holds a title of
+    /// <see cref="FeudalConfig.TributeMinRank"/> or higher directly below one held by a hero of the payee clan, and both
+    /// serve the same realm. Kin owe each other nothing. <see cref="TributeSheet"/> turns the pairs into gold.
     /// </summary>
-    public IReadOnlyList<Tribute> Tributes(IClaimWorld world, FeudalConfig config)
+    public IReadOnlyList<(string PayerClanId, string PayeeClanId)> TributeBonds(IClaimWorld world, FeudalConfig config)
     {
-        var owed = new Dictionary<(string, string), int>();
+        var bonds = new HashSet<(string, string)>();
         foreach (var title in Catalog.All)
         {
-            var gold = config.TributeOf(title.Rank);
-            if (gold <= 0 || title.ParentId == null)
+            if (title.ParentId == null || title.Rank < config.TributeMinRank)
                 continue;
             var payer = Ledger.HolderOf(title.Id);
             var payee = Ledger.HolderOf(title.ParentId);
-            if (payer == null || payee == null || payer == payee || SameClan(payer, payee, world))
+            if (payer == null || payee == null || payer == payee)
+                continue;
+            var payerClan = world.ClanOf(payer);
+            var payeeClan = world.ClanOf(payee);
+            if (payerClan == null || payeeClan == null || payerClan == payeeClan)
                 continue;
             var realm = world.KingdomOfHero(payer);
             if (realm == null || world.KingdomOfHero(payee) != realm)
                 continue;
-            owed.TryGetValue((payer, payee), out var sum);
-            owed[(payer, payee)] = sum + gold;
+            bonds.Add((payerClan, payeeClan));
         }
 
-        return owed.OrderBy(o => o.Key.Item1, StringComparer.Ordinal).ThenBy(o => o.Key.Item2, StringComparer.Ordinal)
-            .Select(o => new Tribute(o.Key.Item1, o.Key.Item2, o.Value)).ToList();
+        return bonds.OrderBy(b => b.Item1, StringComparer.Ordinal).ThenBy(b => b.Item2, StringComparer.Ordinal).ToList();
     }
 
     private static bool SameClan(string a, string b, IClaimWorld world)

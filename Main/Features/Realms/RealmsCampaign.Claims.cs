@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -59,15 +60,18 @@ public sealed partial class RealmsCampaign
     /// <summary>
     /// AI clan leaders restore or form the vacant titles they can (influence), press the claims they can afford
     /// (influence) and, with <c>ai_chance</c>, buy one claim on a bordering title (gold). Weekly and only over clans that
-    /// own a town or castle: a few hundred cheap lookups.
+    /// own a town or castle. Forming a title weighs every vacant duchy and realm against the clan's side, so a clan that
+    /// could not pay even the cheapest formation or usurpation is not quoted at all: it would stop at the first offer.
+    /// Returns the events for the caller to report once the sweep is over.
     /// </summary>
-    private void WeeklyAiClaims()
+    private IReadOnlyList<TitleEvent> WeeklyAiClaims()
     {
+        var events = new List<TitleEvent>();
         var config = Config.Claims;
         if (!config.AiEnabled || !_settings.AiClaims)
-            return;
+            return events;
 
-        var events = new List<TitleEvent>();
+        var cheapestUsurp = RealmsService.CheapestUsurpCost(config);
         foreach (var clan in Clan.All.ToList())
         {
             var leader = clan?.Leader;
@@ -75,7 +79,11 @@ public sealed partial class RealmsCampaign
                 || leader == null || !leader.IsAlive || leader == Hero.MainHero || !clan.Settlements.Any(s => s.IsTown || s.IsCastle))
                 continue;
 
-            foreach (var (titleId, cost, restore) in _service.FormOffers(leader.StringId, _claimWorld, config))
+            var cheapestForm = _service.CheapestFormCost(leader.StringId, config);
+            var formOffers = cheapestForm != null && clan.Influence >= cheapestForm.Value * config.AiReserve
+                ? _service.FormOffers(leader.StringId, _claimWorld, config)
+                : Array.Empty<(string, int, bool)>();
+            foreach (var (titleId, cost, restore) in formOffers)
             {
                 if (clan.Influence < cost * config.AiReserve)
                     break;
@@ -88,7 +96,10 @@ public sealed partial class RealmsCampaign
                 events.AddRange(formed);
             }
 
-            foreach (var (titleId, cost) in _service.UsurpOffers(leader.StringId, clan.StringId, _claimWorld, config))
+            var usurpOffers = cheapestUsurp != null && clan.Influence >= cheapestUsurp.Value * config.AiReserve
+                ? _service.UsurpOffers(leader.StringId, clan.StringId, _claimWorld, config)
+                : Array.Empty<(string, int)>();
+            foreach (var (titleId, cost) in usurpOffers)
             {
                 if (clan.Influence < cost * config.AiReserve)
                     break;
@@ -112,7 +123,7 @@ public sealed partial class RealmsCampaign
             events.AddRange(bought);
         }
 
-        Report(events);
+        return events;
     }
 
     /// <summary>The holder (the events' previous holder) thinks less of the hero who claimed or took their title.</summary>

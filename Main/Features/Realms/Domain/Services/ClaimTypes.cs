@@ -19,6 +19,9 @@ public interface IClaimWorld
 
     /// <summary>The realm's ruler; null when the realm is gone.</summary>
     string? RulerOf(string kingdomId);
+
+    /// <summary>The hero's culture id; null when unknown.</summary>
+    string? CultureOf(string heroId);
 }
 
 /// <summary>Who wants a claim: a hero, their clan and realm, and the towns and castles their clan owns.</summary>
@@ -95,6 +98,12 @@ public enum ClaimRefusal
 
     /// <summary>This throne is only restored by an heir with an ancestral claim, never formed.</summary>
     RestoreOnly,
+
+    /// <summary>Only a hero of one of its peoples may form or press this titular realm (dwarves for Khazad-dûm).</summary>
+    WrongCulture,
+
+    /// <summary>Buying a claim on a duchy or higher needs one of its vassal titles held by the hero, their clan or their vassals.</summary>
+    NoFoothold,
 }
 
 /// <summary>How a granted title passes.</summary>
@@ -145,19 +154,104 @@ public sealed class TitleGap
     public string OwnerId { get; }
 }
 
-/// <summary>Weekly gold a vassal owes the holder of their title's liege title.</summary>
-public sealed class Tribute
+/// <summary>One clan's daily tribute to one liege clan: what it pays and what the liege receives.</summary>
+public sealed class TributeLine
 {
-    public Tribute(string payerId, string payeeId, int gold)
+    public TributeLine(string payerClanId, string payeeClanId, int paid, int received)
     {
-        PayerId = payerId;
-        PayeeId = payeeId;
-        Gold = gold;
+        PayerClanId = payerClanId;
+        PayeeClanId = payeeClanId;
+        Paid = paid;
+        Received = received;
     }
 
-    public string PayerId { get; }
-    public string PayeeId { get; }
-    public int Gold { get; }
+    public string PayerClanId { get; }
+    public string PayeeClanId { get; }
+
+    /// <summary>Gold the payer loses; 0 while paying is off.</summary>
+    public int Paid { get; }
+
+    /// <summary>Gold the payee gains; 0 while receiving is off.</summary>
+    public int Received { get; }
+}
+
+/// <summary>
+/// A day's tribute across the realms. Each payer clan owes a share of its daily income from fiefs, split evenly among its
+/// liege clans; the payer loses the pay percentage of its share and the liege gains the receive percentage, so either side
+/// can be off. A payer that cannot cover its whole tribute owes nothing that day. Tribute is not part of the base, so it
+/// never passes further up. Built at most once a day; every read after that is a lookup.
+/// </summary>
+public sealed class TributeSheet
+{
+    public static readonly TributeSheet Empty = new(new List<TributeLine>());
+
+    private static readonly IReadOnlyList<TributeLine> None = Array.Empty<TributeLine>();
+
+    private readonly Dictionary<string, List<TributeLine>> _byPayer = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<TributeLine>> _byPayee = new(StringComparer.Ordinal);
+
+    private TributeSheet(List<TributeLine> lines)
+    {
+        Lines = lines;
+        foreach (var line in lines)
+        {
+            Add(_byPayer, line.PayerClanId, line);
+            Add(_byPayee, line.PayeeClanId, line);
+        }
+    }
+
+    public IReadOnlyList<TributeLine> Lines { get; }
+
+    /// <param name="bonds">Payer and liege clan pairs (<see cref="RealmsService.TributeBonds"/>).</param>
+    /// <param name="fiefIncome">A clan's daily income from its fiefs; read once per payer.</param>
+    /// <param name="gold">A clan's gold now; read only while paying is on.</param>
+    /// <param name="receivePercent">The liege's share in percent; 0 when receiving is off.</param>
+    /// <param name="payPercent">The payer's share in percent; 0 when paying is off.</param>
+    public static TributeSheet Build(IEnumerable<(string PayerClanId, string PayeeClanId)> bonds, Func<string, int> fiefIncome,
+        Func<string, int> gold, int receivePercent, int payPercent)
+    {
+        if (receivePercent <= 0 && payPercent <= 0)
+            return Empty;
+        var lines = new List<TributeLine>();
+        foreach (var payer in bonds.Where(b => b.PayerClanId != b.PayeeClanId)
+                     .GroupBy(b => b.PayerClanId, StringComparer.Ordinal).OrderBy(g => g.Key, StringComparer.Ordinal))
+        {
+            var payees = payer.Select(b => b.PayeeClanId).Distinct(StringComparer.Ordinal).OrderBy(p => p, StringComparer.Ordinal).ToList();
+            var income = fiefIncome(payer.Key);
+            if (income <= 0)
+                continue;
+            var share = (double)income / payees.Count;
+            var paid = Percent(share, payPercent);
+            var received = Percent(share, receivePercent);
+            if (paid * payees.Count > 0 && gold(payer.Key) < paid * payees.Count)
+                continue;
+            if (paid == 0 && received == 0)
+                continue;
+            foreach (var payee in payees)
+                lines.Add(new TributeLine(payer.Key, payee, paid, received));
+        }
+
+        return lines.Count == 0 ? Empty : new TributeSheet(lines);
+    }
+
+    /// <summary>What the clan's vassal clans pay it, one line each.</summary>
+    public IReadOnlyList<TributeLine> From(string clanId) => _byPayee.TryGetValue(clanId, out var lines) ? lines : None;
+
+    /// <summary>What the clan pays its liege clans, one line each.</summary>
+    public IReadOnlyList<TributeLine> To(string clanId) => _byPayer.TryGetValue(clanId, out var lines) ? lines : None;
+
+    public int ReceivedBy(string clanId) => From(clanId).Sum(l => l.Received);
+
+    public int PaidBy(string clanId) => To(clanId).Sum(l => l.Paid);
+
+    private static int Percent(double share, int percent) => percent <= 0 ? 0 : (int)Math.Round(share * percent / 100.0);
+
+    private static void Add(Dictionary<string, List<TributeLine>> map, string key, TributeLine line)
+    {
+        if (!map.TryGetValue(key, out var list))
+            map[key] = list = new List<TributeLine>();
+        list.Add(line);
+    }
 }
 
 /// <summary>What the office rules need beyond <see cref="IClaimWorld"/>.</summary>

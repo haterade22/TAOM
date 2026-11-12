@@ -2844,37 +2844,52 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool RealmsAiClaims { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyInteger("{=taom_realms_mcm_tribute}Tribute (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 3, RequireRestart = false,
-        HintText = "{=taom_realms_mcm_tribute_hint}The gold a vassal pays their liege each week, as a percentage of the tribute in realms_titles.xml (50 for a Barony up to 300 for a Kingdom). 0 stops tribute. Between 0 and 300. Default: 100.")]
-    public int RealmsTributePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+    [SettingPropertyBool("{=taom_realms_mcm_tribute_recv}Tribute From Vassals", Order = 3, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_recv_hint}When on, each clan whose lords hold titles directly below your clan's, in your realm, pays your clan a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. Receiving and paying are separate: with only this one on, lieges gain the gold without their vassals losing it. Default: on.")]
+    public bool RealmsTributeReceive { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyInteger("{=taom_realms_mcm_office_influence}Office Influence (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 4, RequireRestart = false,
+    [SettingPropertyInteger("{=taom_realms_mcm_tribute_recv_pct}Tribute From Vassals (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinTributePercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxTributePercent, Order = 4, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_recv_pct_hint}The share of a vassal clan's daily income from fiefs that its liege clan receives. A clan with more than one liege clan splits it among them. Between 1 and 25. Default: 5.")]
+    public int RealmsTributeReceivePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultTributePercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_tribute_pay}Tribute To Liege", Order = 5, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_pay_hint}When on, your clan pays each liege clan, the clan whose lord holds a title directly above one of yours in your realm, a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. A clan that cannot pay its whole tribute pays nothing that day. With only this one on, vassals lose the gold without their lieges gaining it. Default: on.")]
+    public bool RealmsTributePay { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_tribute_pay_pct}Tribute To Liege (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinTributePercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxTributePercent, Order = 6, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_pay_pct_hint}The share of a clan's daily income from fiefs it pays its liege clans, split among them when it has more than one. Between 1 and 25. Default: 5.")]
+    public int RealmsTributePayPercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultTributePercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_office_influence}Office Influence (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 7, RequireRestart = false,
         HintText = "{=taom_realms_mcm_office_influence_hint}The influence an office such as the Steward of Gondor or a Marshal of the Mark pays its holder's clan each week, as a percentage of its amount in realms_titles.xml. 0 stops it. Between 0 and 300. Default: 100.")]
     public int RealmsOfficeInfluencePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyBool("{=taom_realms_mcm_resentment}Resentment Over Fiefs", Order = 5, RequireRestart = false,
+    [SettingPropertyBool("{=taom_realms_mcm_resentment}Resentment Over Fiefs", Order = 8, RequireRestart = false,
         HintText = "{=taom_realms_mcm_resentment_hint}When on, a lord who holds the title of a town or castle that another clan owns likes its owner a little less each week, and the town loses a little loyalty. Default: on.")]
     public bool RealmsResentment { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyBool("{=taom_realms_mcm_liege_pull}Liege's Pull", Order = 6, RequireRestart = false,
+    [SettingPropertyBool("{=taom_realms_mcm_liege_pull}Liege's Pull", Order = 9, RequireRestart = false,
         HintText = "{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on.")]
     public bool RealmsLiegePull { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 7, RequireRestart = false,
+    [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 10, RequireRestart = false,
         HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on.")]
     public bool RealmsLiegeArmyDiscount { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyBool("{=taom_realms_mcm_family_grants}Lands for Sons and Daughters", Order = 8, RequireRestart = false,
+    [SettingPropertyBool("{=taom_realms_mcm_family_grants}Lands for Sons and Daughters", Order = 11, RequireRestart = false,
         HintText = "{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on.")]
     public bool RealmsFamilyGrants { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
-    [SettingPropertyBool("{=taom_realms_mcm_title_styles}Lords Styled by Their Titles", Order = 9, RequireRestart = false,
+    [SettingPropertyBool("{=taom_realms_mcm_title_styles}Lords Styled by Their Titles", Order = 12, RequireRestart = false,
         HintText = "{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on.")]
     public bool RealmsTitleStyles { get; set; } = true;
 

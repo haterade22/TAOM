@@ -45,6 +45,8 @@ public class FeudalTests
         public string? ClanOf(string heroId) => Clans.TryGetValue(heroId, out var c) ? c : null;
         public bool IsAlive(string heroId) => !Dead.Contains(heroId);
         public string? RulerOf(string kingdomId) => Rulers.TryGetValue(kingdomId, out var h) ? h : null;
+        public Dictionary<string, string> Cultures { get; } = new();
+        public string? CultureOf(string heroId) => Cultures.TryGetValue(heroId, out var c) ? c : null;
         public string? ClanLeaderOf(string clanId) => null;
         public bool ClanExists(string clanId) => true;
         public bool KingdomExists(string kingdomId) => Rulers.ContainsKey(kingdomId);
@@ -338,10 +340,10 @@ public class FeudalTests
         service.Config.Unions.Add(new UnionConfig("both", "Both", new[] { "k_north", "k_south", "k_nowhere" }));
         var warnings = new List<string>();
 
-        Assert.AreEqual(1, service.AddMissingUnions(warnings));
+        Assert.AreEqual(1, service.AddMissingTitles(warnings));
         Assert.AreEqual("u_both", service.Catalog.Get("k_south")!.ParentId);
         Assert.AreEqual(TitleEventReason.Start, service.Ledger.ChronicleOf("u_both").Single().Reason);
-        Assert.AreEqual(0, service.AddMissingUnions(warnings));
+        Assert.AreEqual(0, service.AddMissingTitles(warnings));
         Assert.IsTrue(warnings.Any(w => w.Contains("both")), "the missing member is reported");
     }
 
@@ -525,13 +527,18 @@ public class FeudalTests
         CollectionAssert.Contains(bonds.ToList(), ("king_n", "duke"));
         Assert.IsFalse(bonds.Contains(("lord_b", "knight")), "a county is below the liege rank");
 
-        var tributes = service.Tributes(world, config);
-        Assert.AreEqual(100, tributes.Single(t => t.PayerId == "lord_c" && t.PayeeId == "duke").Gold);
-        Assert.AreEqual(200, tributes.Single(t => t.PayerId == "duke" && t.PayeeId == "king_n").Gold);
-        Assert.IsFalse(tributes.Any(t => t.PayerId == "knight"), "the knight serves no realm");
+        var tributes = service.TributeBonds(world, config);
+        CollectionAssert.Contains(tributes.ToList(), ("clan_c", "clan_d"));
+        CollectionAssert.Contains(tributes.ToList(), ("clan_d", "clan_n"));
+        Assert.IsFalse(tributes.Any(t => t.PayerClanId == t.PayeeClanId), "kin owe each other nothing");
+        Assert.AreEqual(tributes.Count, tributes.Distinct().Count(), "one bond per pair of clans");
 
         world.Kingdoms["lord_c"] = "south";
-        Assert.IsFalse(service.Tributes(world, config).Any(t => t.PayerId == "lord_c"), "no tribute across realms");
+        Assert.IsFalse(service.TributeBonds(world, config).Any(t => t.PayerClanId == "clan_c"), "no tribute across realms");
+
+        world.Kingdoms["lord_c"] = "north";
+        config.TributeMinRank = TitleRank.Duchy;
+        Assert.IsFalse(service.TributeBonds(world, config).Any(t => t.PayerClanId == "clan_c"), "a county is below the tribute rank");
     }
 
     [TestMethod]
@@ -555,8 +562,8 @@ public class FeudalTests
   <Kingdoms><Kingdom id=""empire_w"" throne=""vacant""/></Kingdoms>
   <Grants relation=""5"" revoke_relation=""-40""><Rank rank=""Duchy"" revoke=""150""/><Rank rank=""Kingdom""/></Grants>
   <Chronicle entries=""12""/>
-  <Consequences resentment=""-2"" loyalty=""-3"" liege_relation=""2"" liege_cap=""40"" liege_rank=""Kingdom"" army_discount=""0.25"">
-    <Rank rank=""County"" tribute=""60""/><Rank rank=""Barony""/>
+  <Consequences resentment=""-2"" loyalty=""-3"" liege_relation=""2"" liege_cap=""40"" liege_rank=""Kingdom"" army_discount=""0.25"" tribute_rank=""County"">
+    <Rank rank=""County"" tribute=""60""/>
   </Consequences>
   <Unions><Union id=""reunited"" name=""Gondor and Arnor""><Member title=""k_empire_w""/><Member title=""e_arnor""/></Union></Unions>
   <StartingClaims><Claim hero=""named_companion_aragorn"" title=""k_empire_w"" kind=""Ancestral""/></StartingClaims>
@@ -581,8 +588,7 @@ public class FeudalTests
         Assert.AreEqual(40, config.Feudal.LiegeRelationCap);
         Assert.AreEqual(TitleRank.Kingdom, config.Feudal.LiegeMinRank);
         Assert.AreEqual(0.25f, config.Feudal.ArmyDiscount);
-        Assert.AreEqual(60, config.Feudal.TributeOf(TitleRank.County));
-        Assert.AreEqual(0, config.Feudal.TributeOf(TitleRank.Barony));
+        Assert.AreEqual(TitleRank.County, config.Feudal.TributeMinRank);
         CollectionAssert.AreEqual(new[] { "k_empire_w", "e_arnor" }, config.Unions.Single().MemberTitleIds.ToArray());
         Assert.AreEqual("named_companion_aragorn", config.StartingClaims.Single().HeroId);
         var steward = config.Offices[0];

@@ -15,8 +15,17 @@ public interface IRealmsSettingsProvider
     /// <summary>AI lords buy and press claims, form vacant titles and restore thrones on the weekly tick.</summary>
     bool AiClaims { get; }
 
-    /// <summary>Weekly tribute, 0 to 300 percent of the file's.</summary>
-    int TributePercent { get; }
+    /// <summary>A liege clan receives a share of its vassal clans' daily income from fiefs.</summary>
+    bool TributeReceive { get; }
+
+    /// <summary>That share, 1 to 25 percent.</summary>
+    int TributeReceivePercent { get; }
+
+    /// <summary>A vassal clan pays a share of its daily income from fiefs to its liege clans.</summary>
+    bool TributePay { get; }
+
+    /// <summary>That share, 1 to 25 percent.</summary>
+    int TributePayPercent { get; }
 
     /// <summary>Weekly influence of offices, 0 to 300 percent of the file's.</summary>
     int OfficeInfluencePercent { get; }

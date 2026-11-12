@@ -19,7 +19,7 @@ internal static class RealmsPopups
     {
         if (!TryBehavior(out var b))
             return;
-        var tree = TitleTree.Build(b.Service.Catalog, titleId);
+        var tree = TitleTree.Build(b.Service.Catalog, titleId, b.Service.LandsShownUnder);
         if (tree != null)
             Open("RealmsTitleTreePopup", close => new TitleTreePopupVM(b, tree, close));
     }

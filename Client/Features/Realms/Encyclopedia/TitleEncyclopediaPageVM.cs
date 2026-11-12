@@ -39,6 +39,7 @@ internal sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
     private bool _hasSeat;
     private string _seatHeading = string.Empty;
     private bool _hasVassals;
+    private string _vassalsHeading = string.Empty;
     private bool _hasActions;
     private bool _hasChronicle;
     private bool _finalized;
@@ -55,7 +56,13 @@ internal sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
 
     [DataSourceProperty] public string HolderHeading => Text("{=realms_ui_holder}Held by right");
     [DataSourceProperty] public string VacantText => Text("{=realms_page_vacant}Vacant");
-    [DataSourceProperty] public string VassalsHeading => Text("{=realms_ui_vassals}Vassal titles");
+    /// <summary>"Vassal titles", or for a vacant titular realm the lands it lies over (Khazad-dûm's Moria).</summary>
+    [DataSourceProperty]
+    public string VassalsHeading
+    {
+        get => _vassalsHeading;
+        set { if (value != _vassalsHeading) { _vassalsHeading = value; OnPropertyChangedWithValue(value); } }
+    }
     [DataSourceProperty] public string NoVassalsText => Text("{=realms_page_no_vassals}No titles below it.");
     [DataSourceProperty] public string NoSeatText => Text("{=realms_page_no_seat}No fief of its own.");
     [DataSourceProperty] public string ActionsHeading => Text("{=realms_page_actions}Your actions");
@@ -260,7 +267,11 @@ internal sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
                 InfoRows.Add(new TitleRowVM(new TextObject(office.Name).ToString(), TitleText.HolderName(officer), HeroPage(officer)));
             }
 
-        foreach (var vassal in TitleText.Sorted(b, catalog.ChildrenOf(title.Id)))
+        var lands = b.Service.LandsShownUnder(title.Id);
+        VassalsHeading = lands.Count > 0
+            ? Text("{=realms_page_lands}Lands it lies over, its vassals once formed")
+            : Text("{=realms_ui_vassals}Vassal titles");
+        foreach (var vassal in TitleText.Sorted(b, lands.Count > 0 ? lands : catalog.ChildrenOf(title.Id)))
             Vassals.Add(new TitleLinkVM(TitleNames.Of(vassal, b), TitleText.HolderName(b, vassal), vassal.Id));
         HasVassals = Vassals.Count > 0;
 

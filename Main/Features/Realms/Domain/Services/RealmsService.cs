@@ -65,7 +65,8 @@ public sealed partial class RealmsService
         return Ledger.DefaultLaws;
     }
 
-    public IReadOnlyList<TitleEvent> OnHeroDied(string heroId, FamilySnapshot family)
+    /// <param name="world">The live campaign, so a bought claim on a vacated duchy or higher is weighed (<see cref="StrongestClaimant"/>).</param>
+    public IReadOnlyList<TitleEvent> OnHeroDied(string heroId, FamilySnapshot family, IClaimWorld? world = null)
     {
         var events = new List<TitleEvent>();
         var ancestral = Ledger.ClaimsOf(heroId).Where(c => c.Kind == ClaimKind.Ancestral).Select(c => c.TitleId).ToList();
@@ -87,7 +88,7 @@ public sealed partial class RealmsService
                 events.Add(Changed(TitleEventReason.Inheritance, title.Id, outcome.HeirId, heroId));
             }
             else
-                VacateOrClaim(title.Id, heroId, events);
+                VacateOrClaim(title.Id, heroId, world, events);
         }
 
         ancestral.AddRange(held.Where(t => t.Rank >= Config.Claims.AncestralMinRank).Select(t => t.Id));
@@ -112,15 +113,16 @@ public sealed partial class RealmsService
     }
 
     /// <summary>A title without an heir goes to its strongest claimant (<see cref="StrongestClaimant"/>), else falls vacant.</summary>
-    private void VacateOrClaim(string titleId, string? previousHolderId, List<TitleEvent> events)
+    private void VacateOrClaim(string titleId, string? previousHolderId, IClaimWorld? world, List<TitleEvent> events)
     {
-        var claimant = StrongestClaimant(titleId);
+        var claimant = StrongestClaimant(titleId, world);
         Ledger.SetHolder(titleId, claimant);
         events.Add(Changed(claimant == null ? TitleEventReason.Vacated : TitleEventReason.Claim, titleId, claimant, previousHolderId));
     }
 
     /// <summary>Hands waiting titles to the clan leader or ruler the game has since settled on.</summary>
-    public IReadOnlyList<TitleEvent> ResolvePending(IRealmLeaders leaders)
+    /// <param name="world">The live campaign, so a bought claim on a vacated duchy or higher is weighed (<see cref="StrongestClaimant"/>).</param>
+    public IReadOnlyList<TitleEvent> ResolvePending(IRealmLeaders leaders, IClaimWorld? world = null)
     {
         var events = new List<TitleEvent>();
         foreach (var pending in Ledger.Pending)
@@ -136,7 +138,7 @@ public sealed partial class RealmsService
             Ledger.RemovePending(pending.TitleId);
             if (heir == null)
             {
-                VacateOrClaim(pending.TitleId, pending.PreviousHolderId, events);
+                VacateOrClaim(pending.TitleId, pending.PreviousHolderId, world, events);
                 continue;
             }
 

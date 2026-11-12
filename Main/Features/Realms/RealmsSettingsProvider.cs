@@ -16,6 +16,11 @@ public sealed class RealmsSettingsProvider : IRealmsSettingsProvider
     public const int MinPaymentPercent = 0;
     public const int MaxPaymentPercent = 300;
 
+    /// <summary>Tribute is a share of fief income, so its range is far below the payments'.</summary>
+    public const int DefaultTributePercent = 5;
+    public const int MinTributePercent = 1;
+    public const int MaxTributePercent = 25;
+
     private TaomSettings? _settings;
 
     public RealmsSettingsProvider()
@@ -30,7 +35,10 @@ public sealed class RealmsSettingsProvider : IRealmsSettingsProvider
     public int ClaimPricePercent => Cost(Settings?.RealmsClaimPricePercent);
     public int InfluenceCostPercent => Cost(Settings?.RealmsInfluenceCostPercent);
     public bool AiClaims => Settings?.RealmsAiClaims ?? true;
-    public int TributePercent => Payment(Settings?.RealmsTributePercent);
+    public bool TributeReceive => Settings?.RealmsTributeReceive ?? true;
+    public int TributeReceivePercent => Tribute(Settings?.RealmsTributeReceivePercent);
+    public bool TributePay => Settings?.RealmsTributePay ?? true;
+    public int TributePayPercent => Tribute(Settings?.RealmsTributePayPercent);
     public int OfficeInfluencePercent => Payment(Settings?.RealmsOfficeInfluencePercent);
     public bool Resentment => Settings?.RealmsResentment ?? true;
     public bool LiegePull => Settings?.RealmsLiegePull ?? true;
@@ -41,4 +49,6 @@ public sealed class RealmsSettingsProvider : IRealmsSettingsProvider
     internal static int Cost(int? value) => SettingClamp.Clamp(value, DefaultPercent, MinCostPercent, MaxCostPercent);
 
     internal static int Payment(int? value) => SettingClamp.Clamp(value, DefaultPercent, MinPaymentPercent, MaxPaymentPercent);
+
+    internal static int Tribute(int? value) => SettingClamp.Clamp(value, DefaultTributePercent, MinTributePercent, MaxTributePercent);
 }

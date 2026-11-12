@@ -16,13 +16,15 @@ namespace TAOM.Features.Realms;
 /// A coronation (&lt;Coronations&gt;), run once when the player's companion restores a realm title: Aragorn leaves the
 /// player's clan, founds the House of Telcontar under the banner of the house that ruled, takes Minas Tirith with its
 /// titles and becomes Gondor's ruling clan, while the Steward keeps his office. It follows the game's own way of turning a
-/// companion into a lord (CompanionRolesCampaignBehavior), except that nothing is taken from the player.
+/// companion into a lord (CompanionRolesCampaignBehavior), except that nothing is taken from the player. When the player
+/// plays Aragorn and restores the title themselves, the player's own clan becomes the House of Telcontar instead: renamed,
+/// given the banner, the fiefs and the rule, with no new clan or party.
 /// </summary>
 public sealed partial class RealmsCampaign
 {
-    /// <summary>The coronation the hero's restoring of the title would start, if any.</summary>
+    /// <summary>The coronation the hero's restoring of the title would start, if any: the player's or a companion's.</summary>
     public CoronationConfig? CoronationFor(Hero hero, string titleId) =>
-        hero.Clan == Clan.PlayerClan && hero != Hero.MainHero ? _service.CoronationFor(titleId, hero.StringId) : null;
+        hero.Clan == Clan.PlayerClan ? _service.CoronationFor(titleId, hero.StringId) : null;
 
     private bool Crown(Hero hero, CoronationConfig coronation, int influencePaid)
     {
@@ -38,39 +40,50 @@ public sealed partial class RealmsCampaign
         bannerOf ??= former;
         // The former ruling house gives up the seat; so does the house whose banner he takes, when the player ruled.
         bool OfFormerHouse(Clan? c) => c != null && (c == former || c == bannerOf);
+        // The player crowned in their own clan keeps the clan; a companion founds a house and takes even the player's fiefs.
+        var isPlayer = hero == Hero.MainHero;
         var fiefs = coronation.FiefIds.Select(Settlement.Find)
-            .Where(s => s != null && s.IsFortification && OfFormerHouse(s.OwnerClan)).ToList();
+            .Where(s => s != null && s.IsFortification && OfFormerHouse(s.OwnerClan) && !(isPlayer && s.OwnerClan == playerClan))
+            .ToList();
         var seat = fiefs.FirstOrDefault() ?? hero.HomeSettlement;
 
-        RemoveCompanionAction.ApplyByByTurningToLord(playerClan, hero);
-        hero.SetNewOccupation(Occupation.Lord);
+        Clan clan;
+        if (isPlayer)
+        {
+            clan = playerClan;
+            // A mercenary may restore (it serves the realm); a ruling house is a vassal of it.
+            if (clan.IsUnderMercenaryService)
+                EndMercenaryServiceAction.EndByBecomingVassal(clan);
+            NameHouse(clan, coronation, null);
+        }
+        else
+        {
+            RemoveCompanionAction.ApplyByByTurningToLord(playerClan, hero);
+            hero.SetNewOccupation(Occupation.Lord);
+            clan = Clan.CreateClan(CrownedClanId(coronation));
+            NameHouse(clan, coronation, bannerOf?.Banner ?? kingdom.Banner);
+            clan.Culture = bannerOf?.Culture ?? hero.Culture;
+            clan.Kingdom = kingdom;
+            if (seat != null)
+                clan.SetInitialHomeSettlement(seat);
+            hero.Clan = clan;
+            clan.SetLeader(hero);
+        }
 
-        var clan = Clan.CreateClan(CrownedClanId(coronation));
-        var name = new TextObject(coronation.ClanName);
-        clan.ChangeClanName(name, coronation.InformalName != null ? new TextObject(coronation.InformalName) : name);
-        clan.Culture = bannerOf?.Culture ?? hero.Culture;
-        // The house's own banner (<Coronation banner>), else the one the former house is seen with: a ruling clan shows
-        // its realm's banner.
-        if (coronation.Banner != null)
-            clan.Banner = new Banner(coronation.Banner);
-        else if ((bannerOf?.Banner ?? kingdom.Banner) is { } banner)
-            clan.Banner = new Banner(banner);
-        clan.Kingdom = kingdom;
         RaiseTier(clan, coronation.Tier);
-        if (seat != null)
-            clan.SetInitialHomeSettlement(seat);
-        hero.Clan = clan;
-        clan.SetLeader(hero);
         clan.IsNoble = true;
 
         // A lawful gift: each fief's title and its village lordships move with it (OnFiefOwnerChanged).
         foreach (var fief in fiefs)
             ChangeOwnerOfSettlementAction.ApplyByGift(fief, hero);
-        CampaignEventDispatcher.Instance.OnClanCreated(clan, isCompanion: true);
 
-        LeadParty(hero, clan, seat, coronation.Troops);
-        if (coronation.Gold > 0)
-            GiveGoldAction.ApplyBetweenCharacters(null, hero, coronation.Gold, disableNotification: true);
+        if (!isPlayer)
+        {
+            CampaignEventDispatcher.Instance.OnClanCreated(clan, isCompanion: true);
+            LeadParty(hero, clan, seat, coronation.Troops);
+            if (coronation.Gold > 0)
+                GiveGoldAction.ApplyBetweenCharacters(null, hero, coronation.Gold, disableNotification: true);
+        }
 
         ChangeRulingClanAction.Apply(kingdom, clan);
         ApplyCrownedBanner(kingdom, clan, coronation);
@@ -85,7 +98,7 @@ public sealed partial class RealmsCampaign
             && _service.Ledger.OfficeHolderOf(coronation.OfficeId) == null)
             Report(_service.Appoint(hero.StringId, coronation.OfficeId, formerLeader.StringId, _claimWorld));
 
-        if (coronation.Relation > 0)
+        if (coronation.Relation > 0 && !isPlayer)
             ChangeRelationAction.ApplyPlayerRelation(hero, coronation.Relation);
 
         var news = new TextObject("{=realms_news_coronation}{HERO} is crowned in {SEAT}. The {CLAN} rules {KINGDOM}.");
@@ -95,15 +108,30 @@ public sealed partial class RealmsCampaign
         news.SetTextVariable("KINGDOM", kingdom.Name);
         InformationManager.DisplayMessage(new InformationMessage(news.ToString(), Colors.Yellow));
         PartyNames.Refresh();
-        ShowCoronation(hero, clan, kingdom, seat, coronation, influencePaid);
+        ShowCoronation(hero, clan, kingdom, seat, coronation, influencePaid, isPlayer);
         return true;
+    }
+
+    /// <summary>
+    /// The crowned house's name and banner: its own (&lt;Coronation banner&gt;), else the one the former house is seen with
+    /// (a ruling clan shows its realm's banner). The player's clan keeps the banner they made when there is no own one.
+    /// </summary>
+    private static void NameHouse(Clan clan, CoronationConfig coronation, Banner? fallback)
+    {
+        var name = new TextObject(coronation.ClanName);
+        clan.ChangeClanName(name, coronation.InformalName != null ? new TextObject(coronation.InformalName) : name);
+        if (coronation.Banner != null)
+            clan.Banner = new Banner(coronation.Banner);
+        else if (fallback != null)
+            clan.Banner = new Banner(fallback);
     }
 
     /// <summary>
     /// The coronation's event window, after the confirmation and the page refresh it is started from: the story from the
     /// &lt;Coronation&gt; entry (or the placeholder below) and what actually changed.
     /// </summary>
-    private void ShowCoronation(Hero hero, Clan clan, Kingdom kingdom, Settlement? seat, CoronationConfig coronation, int influencePaid)
+    private void ShowCoronation(Hero hero, Clan clan, Kingdom kingdom, Settlement? seat, CoronationConfig coronation, int influencePaid,
+        bool isPlayer)
     {
         TextObject Fill(string text)
         {
@@ -122,7 +150,9 @@ public sealed partial class RealmsCampaign
 
         var lines = new System.Collections.Generic.List<string>
         {
-            Fill("{=realms_coronation_line_house}{HERO} founds the {CLAN}, the ruling house of {REALM}.").ToString(),
+            Fill(isPlayer
+                ? "{=realms_coronation_line_house_player}Your clan becomes the {CLAN}, the ruling house of {REALM}."
+                : "{=realms_coronation_line_house}{HERO} founds the {CLAN}, the ruling house of {REALM}.").ToString(),
         };
 
         var held = _service.Ledger.TitlesHeldBy(hero.StringId).Select(_service.Catalog.Get).Where(t => t != null).Select(t => t!)
@@ -131,9 +161,13 @@ public sealed partial class RealmsCampaign
         var lordships = held.Count(t => t.Rank == Domain.Titles.TitleRank.Lordship);
         if (named.Count > 0)
         {
-            var titles = new TextObject(lordships > 0
-                ? "{=realms_coronation_line_titles_lordships}He holds by right: {TITLES} and {COUNT} lordships."
-                : "{=realms_coronation_line_titles}He holds by right: {TITLES}.");
+            var titles = new TextObject(isPlayer
+                ? lordships > 0
+                    ? "{=realms_coronation_line_titles_lordships_player}You hold by right: {TITLES} and {COUNT} lordships."
+                    : "{=realms_coronation_line_titles_player}You hold by right: {TITLES}."
+                : lordships > 0
+                    ? "{=realms_coronation_line_titles_lordships}He holds by right: {TITLES} and {COUNT} lordships."
+                    : "{=realms_coronation_line_titles}He holds by right: {TITLES}.");
             titles.SetTextVariable("TITLES", string.Join(", ", named));
             titles.SetTextVariable("COUNT", lordships);
             lines.Add(titles.ToString());
@@ -150,7 +184,7 @@ public sealed partial class RealmsCampaign
             lines.Add(stays.ToString());
         }
 
-        if (coronation.Relation > 0)
+        if (coronation.Relation > 0 && !isPlayer)
         {
             var relation = Fill("{=realms_coronation_line_relation}{HERO} likes you more (+{AMOUNT}).");
             relation.SetTextVariable("AMOUNT", coronation.Relation);
@@ -211,6 +245,15 @@ public sealed partial class RealmsCampaign
     private static string CrownedClanId(CoronationConfig coronation) => "realms_clan_" + coronation.HeroId;
 
     /// <summary>
+    /// The house a coronation founded, or the player's clan it renamed (crowned as the player, it keeps its own id): led by
+    /// the coronation's hero, who holds the title. By ids only, so renaming the clan keeps the banner. Read once per load.
+    /// </summary>
+    private bool IsCrownedHouse(Clan clan, CoronationConfig coronation) =>
+        clan.StringId == CrownedClanId(coronation)
+        || (clan == Clan.PlayerClan && clan.Leader?.StringId == coronation.HeroId
+            && _service.Ledger.HolderOf(coronation.TitleId) == coronation.HeroId);
+
+    /// <summary>
     /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well: a ruling clan is seen with its realm's
     /// banner (Clan.Banner returns Kingdom.Banner for it), so its own alone would never show. Nothing to do without one,
     /// or when the realm already has it.
@@ -237,7 +280,7 @@ public sealed partial class RealmsCampaign
             var kingdomId = _service.Catalog.Get(coronation.TitleId)?.KingdomId;
             var kingdom = kingdomId != null ? FindKingdom(kingdomId) : null;
             var clan = kingdom?.RulingClan;
-            if (kingdom != null && clan != null && clan.StringId == CrownedClanId(coronation))
+            if (kingdom != null && clan != null && IsCrownedHouse(clan, coronation))
                 ApplyCrownedBanner(kingdom, clan, coronation);
         }
     }

@@ -41,6 +41,15 @@ public sealed class RealmsConfig
 
     public List<UnionConfig> Unions { get; } = new();
 
+    /// <summary>Realm titles of no kingdom of the game, formed over another title's lands (Khazad-dûm over Moria).</summary>
+    public List<TitularRealmConfig> TitularRealms { get; } = new();
+
+    /// <summary>
+    /// The name a kingdom takes while its ruler's highest title is this one, by title id ("u_reunited": "Reunited
+    /// Kingdom"), from <c>realm_name</c>. A title without one lends its own name.
+    /// </summary>
+    public Dictionary<string, string> RealmNames { get; } = new(StringComparer.Ordinal);
+
     public List<StartingClaimConfig> StartingClaims { get; } = new();
 
     public List<CoronationConfig> Coronations { get; } = new();
@@ -65,6 +74,50 @@ public sealed class HighTitleConfig
     public string Name { get; }
     public IReadOnlyList<string> MemberKingdomIds { get; }
     public TitleLaws? Laws { get; }
+}
+
+/// <summary>
+/// A realm title (rank Kingdom, id k_ + id) that no kingdom of the game has: Khazad-dûm, which the orcs of Moria hold
+/// as their own realm. It has no de jure lands of its own; it is formed, or pressed by a claim, by holding more than half
+/// of the counties below <see cref="LandsTitleId"/>, and only by a hero of one of <see cref="FormingCultureIds"/> (none
+/// listed: anyone). It sits under <see cref="LiegeTitleId"/> and starts vacant. A save made before it existed gets it
+/// on its next load.
+/// </summary>
+public sealed class TitularRealmConfig
+{
+    public TitularRealmConfig(string id, string name, string? cultureId, string? liegeTitleId, string landsTitleId,
+        IReadOnlyList<string> formingCultureIds, TitleLaws? laws)
+    {
+        Id = id;
+        Name = name;
+        CultureId = cultureId;
+        LiegeTitleId = liegeTitleId;
+        LandsTitleId = landsTitleId;
+        FormingCultureIds = formingCultureIds;
+        Laws = laws;
+    }
+
+    public string Id { get; }
+
+    /// <summary>The title id: <c>k_</c> + <see cref="Id"/>.</summary>
+    public string TitleId => "k_" + Id;
+
+    public string Name { get; }
+
+    /// <summary>The culture its rank name and holder style follow ("erebor": "Mansion of Khazad-dûm").</summary>
+    public string? CultureId { get; }
+
+    /// <summary>The title above it ("e_durins_folk"); null or missing: none.</summary>
+    public string? LiegeTitleId { get; }
+
+    /// <summary>The title whose counties it is formed from ("k_mistymountainorcs").</summary>
+    public string LandsTitleId { get; }
+
+    public IReadOnlyList<string> FormingCultureIds { get; }
+    public TitleLaws? Laws { get; }
+
+    public bool Allows(string? cultureId) =>
+        FormingCultureIds.Count == 0 || (cultureId != null && FormingCultureIds.Contains(cultureId));
 }
 
 /// <summary>

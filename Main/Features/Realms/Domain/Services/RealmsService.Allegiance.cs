@@ -27,6 +27,8 @@ public sealed partial class RealmsService
         private readonly string? _realm;
         private readonly bool _rules;
         private HashSet<string>? _vassals;
+        private string? _cultureId;
+        private bool _cultureRead;
 
         public Allegiance(RealmsService service, string heroId, IClaimWorld world)
         {
@@ -36,6 +38,21 @@ public sealed partial class RealmsService
             _clanId = world.ClanOf(heroId);
             _realm = world.KingdomOfHero(heroId);
             _rules = _realm != null && world.RulerOf(_realm) == heroId;
+        }
+
+        /// <summary>The hero's culture, read once.</summary>
+        public string? CultureId
+        {
+            get
+            {
+                if (!_cultureRead)
+                {
+                    _cultureId = _world.CultureOf(_heroId);
+                    _cultureRead = true;
+                }
+
+                return _cultureId;
+            }
         }
 
         /// <summary>Whether the title counts for the hero: its holder is on their side, or (a fief title) its fief's owner is.</summary>

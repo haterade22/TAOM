@@ -85,7 +85,7 @@ public static class TitleGenerator
         if (config.IncludeVillages)
             AddLordships(fiefs, definitions, ledger, warnings);
 
-        var catalog = new TitleCatalog(WithUnions(definitions, ledger, config, warnings));
+        var catalog = new TitleCatalog(WithUnions(WithTitularRealms(definitions, ledger, config, warnings), ledger, config, warnings));
         warnings.AddRange(catalog.Problems);
         return new GenerationResult(catalog, ledger, warnings);
     }
@@ -127,6 +127,53 @@ public static class TitleGenerator
 
         return definitions;
     }
+
+    /// <summary>
+    /// The titles with the configured titular realms added that are not there yet (<see cref="TitularRealmConfig.TitleId"/>):
+    /// each a vacant Kingdom title of no kingdom of the game, under its liege title when that exists and outranks a
+    /// kingdom. A realm whose lands title is missing is skipped. Titles already present are kept as they are.
+    /// </summary>
+    public static List<TitleDefinition> WithTitularRealms(IEnumerable<TitleDefinition> titles, TitleLedger ledger, RealmsConfig config, List<string> warnings)
+    {
+        var definitions = titles.ToList();
+        var byId = new Dictionary<string, TitleDefinition>(StringComparer.Ordinal);
+        foreach (var title in definitions)
+            byId[title.Id] = title;
+        foreach (var realm in config.TitularRealms)
+        {
+            var id = realm.TitleId;
+            if (byId.ContainsKey(id))
+                continue;
+            if (!byId.ContainsKey(realm.LandsTitleId))
+            {
+                warnings.Add($"Titular realm '{realm.Id}': lands title '{realm.LandsTitleId}' is not in this campaign; skipped.");
+                continue;
+            }
+
+            string? parent = null;
+            if (realm.LiegeTitleId != null)
+            {
+                if (byId.TryGetValue(realm.LiegeTitleId, out var liege) && liege.Rank > TitleRank.Kingdom)
+                    parent = liege.Id;
+                else
+                    warnings.Add($"Titular realm '{realm.Id}': liege title '{realm.LiegeTitleId}' is missing or not above kingdom rank; it has no liege.");
+            }
+
+            var definition = new TitleDefinition(id, TitleRank.Kingdom, realm.Name, parent, null, null, realm.CultureId);
+            definitions.Add(definition);
+            byId[id] = definition;
+            ledger.SetHolder(id, null);
+            ledger.SetLaws(id, realm.Laws);
+        }
+
+        return definitions;
+    }
+
+    /// <summary>The titular realm whose title this is, or null.</summary>
+    public static TitularRealmConfig? TitularRealmOf(RealmsConfig config, string titleId) =>
+        titleId.StartsWith(KingdomPrefix, StringComparison.Ordinal)
+            ? config.TitularRealms.FirstOrDefault(r => r.TitleId == titleId)
+            : null;
 
     private static Dictionary<string, string> AddHighTitles(
         RealmsConfig config, IReadOnlyDictionary<string, KingdomInfo> kingdoms,

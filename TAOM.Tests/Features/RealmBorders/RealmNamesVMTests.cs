@@ -67,4 +67,31 @@ public class RealmNamesVMTests
 
         Assert.AreSame(items, names.Items);
     }
+
+    [TestMethod]
+    public void SetLabels_SameList_LettersARenamedRealmAnewWhenTheNameVersionMoves()
+    {
+        var labels = new[] { new RealmLabel("erebor", new MapPoint(10f, 20f), 900) };
+        var name = "Erebor";
+        var reads = 0;
+        string NameOf(string _) { reads++; return name; }
+        var names = new RealmNamesVM();
+        names.SetLabels(labels, NameOf, 3);
+        var item = names.Items.Single();
+
+        name = "Durin's Folk";
+        reads = 0;
+        for (var i = 0; i < 100; i++)
+            names.SetLabels(labels, NameOf, 3);
+        Assert.AreEqual(0, reads, "with no rename the names are never read");
+        Assert.AreEqual(RealmNameLettering.Letter("Erebor").Text, item.Name);
+
+        names.SetLabels(labels, NameOf, 4);
+        Assert.AreSame(item, names.Items.Single(), "renamed in place");
+        Assert.AreEqual(RealmNameLettering.Letter("Durin's Folk").Text, item.Name);
+
+        name = "";
+        names.SetLabels(labels, NameOf, 5);
+        Assert.AreEqual(RealmNameLettering.Letter("Durin's Folk").Text, item.Name, "an empty name keeps the old one");
+    }
 }

@@ -29,9 +29,9 @@ public class RealmsSettingsProviderTests
 
         Assert.AreEqual(100, provider.ClaimPricePercent);
         Assert.AreEqual(100, provider.InfluenceCostPercent);
-        Assert.AreEqual(100, provider.TributePercent);
+        Assert.AreEqual((5, 5), (provider.TributeReceivePercent, provider.TributePayPercent));
         Assert.AreEqual(100, provider.OfficeInfluencePercent);
-        Assert.IsTrue(provider.AiClaims && provider.Resentment && provider.LiegePull && provider.LiegeArmyDiscount
+        Assert.IsTrue(provider.AiClaims && provider.TributeReceive && provider.TributePay && provider.Resentment && provider.LiegePull && provider.LiegeArmyDiscount
             && provider.FamilyGrants && provider.TitleStyles);
     }
 
@@ -52,7 +52,10 @@ public class RealmsSettingsProviderTests
         {
             RealmsClaimPricePercent = 50,
             RealmsInfluenceCostPercent = 200,
-            RealmsTributePercent = 0,
+            RealmsTributeReceive = false,
+            RealmsTributeReceivePercent = 12,
+            RealmsTributePay = false,
+            RealmsTributePayPercent = 20,
             RealmsOfficeInfluencePercent = 150,
             RealmsAiClaims = false,
             RealmsResentment = false,
@@ -62,9 +65,9 @@ public class RealmsSettingsProviderTests
             RealmsTitleStyles = false,
         });
 
-        Assert.AreEqual((50, 200, 0, 150), (provider.ClaimPricePercent, provider.InfluenceCostPercent, provider.TributePercent,
-            provider.OfficeInfluencePercent));
-        Assert.IsFalse(provider.AiClaims || provider.Resentment || provider.LiegePull || provider.LiegeArmyDiscount
+        Assert.AreEqual((50, 200, 12, 20, 150), (provider.ClaimPricePercent, provider.InfluenceCostPercent, provider.TributeReceivePercent,
+            provider.TributePayPercent, provider.OfficeInfluencePercent));
+        Assert.IsFalse(provider.AiClaims || provider.TributeReceive || provider.TributePay || provider.Resentment || provider.LiegePull || provider.LiegeArmyDiscount
             || provider.FamilyGrants || provider.TitleStyles);
     }
 
@@ -92,7 +95,7 @@ public class RealmsSettingsProviderTests
     public void APayment_IsClampedToZeroToThreeHundred(int value, int expected)
     {
         Assert.AreEqual(expected, RealmsSettingsProvider.Payment(value));
-        Assert.AreEqual(expected, new RealmsSettingsProvider(new TaomSettings { RealmsTributePercent = value }).TributePercent);
+        Assert.AreEqual(expected, new RealmsSettingsProvider(new TaomSettings { RealmsOfficeInfluencePercent = value }).OfficeInfluencePercent);
     }
 
     [TestMethod]
@@ -142,18 +145,29 @@ public class RealmsSettingsProviderTests
     }
 
     [TestMethod]
-    public void TheFeudalConfig_ScalesRevokeAndTribute()
+    public void TheFeudalConfig_ScalesRevoke_AndTributeStartsAtFivePercentFromABarony()
     {
         var feudal = RealmsConfig.Defaults().Feudal;
         var revoke = feudal.RevokeCost(TitleRank.Duchy)!.Value;
-        var tribute = feudal.TributeOf(TitleRank.Kingdom);
-        Assert.IsTrue(tribute > 0);
 
         feudal.InfluencePercent = 300;
-        feudal.TributePercent = 0;
 
         Assert.AreEqual(revoke * 3, feudal.RevokeCost(TitleRank.Duchy));
-        Assert.AreEqual(0, feudal.TributeOf(TitleRank.Kingdom));
+        Assert.AreEqual((5, 5, TitleRank.Barony), (feudal.TributeReceivePercent, feudal.TributePayPercent, feudal.TributeMinRank));
+    }
+
+    [DataTestMethod]
+    [DataRow(int.MinValue, 1)]
+    [DataRow(0, 1)]
+    [DataRow(1, 1)]
+    [DataRow(25, 25)]
+    [DataRow(26, 25)]
+    [DataRow(int.MaxValue, 25)]
+    public void ATributeShare_IsClampedToOneToTwentyFive(int value, int expected)
+    {
+        Assert.AreEqual(expected, RealmsSettingsProvider.Tribute(value));
+        var provider = new RealmsSettingsProvider(new TaomSettings { RealmsTributeReceivePercent = value, RealmsTributePayPercent = value });
+        Assert.AreEqual((expected, expected), (provider.TributeReceivePercent, provider.TributePayPercent));
     }
 
     // --- the MCM group on TaomSettings -------------------------------------------------------------------------------------
@@ -173,7 +187,7 @@ public class RealmsSettingsProviderTests
     private static PropertyInfo Property(string name) => typeof(TaomSettings).GetProperty(name)!;
 
     [TestMethod]
-    public void TaomSettings_DeclaresTheGroupOnceAtAnUnusedOrder_WithItsTenSettings()
+    public void TaomSettings_DeclaresTheGroupOnceAtAnUnusedOrder_WithItsThirteenSettings()
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
@@ -181,20 +195,19 @@ public class RealmsSettingsProviderTests
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 87" }, StringSplitOptions.None).Length - 1, "GroupOrder 87 is used by another group");
 
         var properties = GroupProperties();
-        Assert.AreEqual(10, properties.Length);
+        Assert.AreEqual(13, properties.Length);
         foreach (var property in properties)
         {
             Assert.AreEqual("World/Realms", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + " is read live");
         }
-        CollectionAssert.AreEquivalent(Enumerable.Range(0, 10).ToArray(),
+        CollectionAssert.AreEquivalent(Enumerable.Range(0, 13).ToArray(),
             properties.Select(p => Convert.ToInt32(Read(ValueAttribute(p), "Order"))).ToArray(), "each setting has its own order");
     }
 
     [DataTestMethod]
     [DataRow(nameof(TaomSettings.RealmsClaimPricePercent), RealmsSettingsProvider.MinCostPercent, RealmsSettingsProvider.MaxCostPercent)]
     [DataRow(nameof(TaomSettings.RealmsInfluenceCostPercent), RealmsSettingsProvider.MinCostPercent, RealmsSettingsProvider.MaxCostPercent)]
-    [DataRow(nameof(TaomSettings.RealmsTributePercent), RealmsSettingsProvider.MinPaymentPercent, RealmsSettingsProvider.MaxPaymentPercent)]
     [DataRow(nameof(TaomSettings.RealmsOfficeInfluencePercent), RealmsSettingsProvider.MinPaymentPercent, RealmsSettingsProvider.MaxPaymentPercent)]
     public void TheSliderRangeAndHint_AreTheProvidersClampRangeAndDefault(string name, int min, int max)
     {
@@ -205,6 +218,20 @@ public class RealmsSettingsProviderTests
         Assert.AreEqual(max, Convert.ToInt32(Read(attribute, "MaxValue")));
         StringAssert.Contains(hint, $"Between {min} and {max}.");
         StringAssert.Contains(hint, $"Default: {RealmsSettingsProvider.DefaultPercent}.");
+    }
+
+    [DataTestMethod]
+    [DataRow(nameof(TaomSettings.RealmsTributeReceivePercent))]
+    [DataRow(nameof(TaomSettings.RealmsTributePayPercent))]
+    public void TheTributeSliders_AreTheProvidersTributeRangeAndDefault(string name)
+    {
+        var attribute = ValueAttribute(Property(name));
+        var hint = (string)Read(attribute, "HintText");
+
+        Assert.AreEqual(RealmsSettingsProvider.MinTributePercent, Convert.ToInt32(Read(attribute, "MinValue")));
+        Assert.AreEqual(RealmsSettingsProvider.MaxTributePercent, Convert.ToInt32(Read(attribute, "MaxValue")));
+        StringAssert.Contains(hint, $"Between {RealmsSettingsProvider.MinTributePercent} and {RealmsSettingsProvider.MaxTributePercent}.");
+        StringAssert.Contains(hint, $"Default: {RealmsSettingsProvider.DefaultTributePercent}.");
     }
 
     [TestMethod]
