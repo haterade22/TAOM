@@ -24032,8 +24032,8 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mirkwood_bat_template_medium_d" />
-            <EquipmentSet id="mirkwood_civ_template_default_d" equipmentType="Civilian" />
+            <EquipmentSet id="lothlorien_bat_template_medium_d" />
+            <EquipmentSet id="lothlorien_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M4_4" race="elf" name="{=aom_lord_M4_4_name}Nellas" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
@@ -24125,8 +24125,8 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mirkwood_bat_template_medium_a" />
-            <EquipmentSet id="mirkwood_civ_template_default_a" equipmentType="Civilian" />
+            <EquipmentSet id="lothlorien_bat_template_medium_c" />
+            <EquipmentSet id="lothlorien_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M5_1" race="elf" name="{=aom_lord_M5_1_name}Alenon" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">

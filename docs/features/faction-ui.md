@@ -466,8 +466,9 @@ career page and into the game. Owed:
   faction-screen and Player Switcher takeovers alike; Haldir and Bolg stay copies (Mike: fine).
 - 2026-11-12: Haldir (`lord_M3_3`), Rumil (`lord_M4_3`) and Orophin (`lord_M4_5`) moved from Mirkwood to
   Lothlorien (culture `lothlorien`, clan `clan_lothlorien_3`). The ids are kept so saves, the card and
-  the name rows keep working. Haldir's two gear rosters now carry `Culture.lothlorien`. Rumil and Orophin
-  still wear `mirkwood_*` template kits (decision owed). Haldir's and Orophin's descriptions have new
+  the name rows keep working. Haldir's two gear rosters now carry `Culture.lothlorien`. Rumil wears
+  `lothlorien_bat_template_medium_d` and Orophin `_c`, with the matching civilian kits, so no
+  Mirkwood moose gear reaches generated Lothlorien lords. Haldir's and Orophin's descriptions have new
   keys (`haldir_lothlorien_description`, `orophin_lothlorien_description`) with no language rows until
   the language pass. That pass keeps the 12 rows of the old keys `haldir_description` and
   `orophin_description`: a hero text is saved with the hero, so existing saves still show them.
