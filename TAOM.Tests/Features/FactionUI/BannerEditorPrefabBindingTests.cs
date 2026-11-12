@@ -88,6 +88,56 @@ public class BannerEditorPrefabBindingTests
     }
 
     [TestMethod]
+    public void Canvas_WidgetReferences_ResolveTheWayGauntletFindsThem()
+    {
+        // Gauntlet sets a Widget-typed attribute with widget.FindChild(path) (WidgetExtensions.SetWidgetAttribute):
+        // ".." is the parent widget, a name is a direct child with that Id, and a miss stores null without an error.
+        // BannerBuilderEditableAreaWidget.OnUpdate then throws a NullReferenceException on the first frame (crash log
+        // 2026-11-12), so every reference must resolve to the widget its Id names.
+        var root = XDocument.Parse(ReadSource(PrefabPath)).Root!;
+        var area = root.Descendants("BannerBuilderEditableAreaWidget").Single();
+        var failures = new List<string>();
+
+        foreach (var name in new[]
+                 {
+                     "BannerTableauWidget", "EditableAreaVisualWidget", "DragWidgetRight", "DragWidgetTop",
+                     "DragWidgetTopRight", "RotateWidget",
+                 })
+        {
+            var path = (string?)area.Attribute(name);
+            if (string.IsNullOrEmpty(path))
+            {
+                failures.Add($"{name} has no path attribute");
+                continue;
+            }
+            var found = FindChild(area, path!.Split('\\'));
+            if (found == null)
+                failures.Add($"{name}=\"{path}\" resolves to no widget");
+            else if ((string?)found.Attribute("Id") != name)
+                failures.Add($"{name}=\"{path}\" resolves to Id '{(string?)found.Attribute("Id")}'");
+        }
+
+        Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
+    }
+
+    private static XElement? FindChild(XElement widget, IReadOnlyList<string> path)
+    {
+        XElement? current = widget;
+        foreach (var node in path)
+        {
+            if (current == null)
+                return null;
+            if (node == "..")
+                current = current.Parent?.Name == "Children" ? current.Parent.Parent : current.Parent;
+            else if (node == ".")
+                continue;
+            else
+                current = current.Element("Children")?.Elements().FirstOrDefault(e => (string?)e.Attribute("Id") == node);
+        }
+        return current;
+    }
+
+    [TestMethod]
     public void Canvas_ClipsTheWholeCanvasToTheChosenRender()
     {
         // The tableau draws the whole 1528 canvas; a clipping viewport shows only the part one render shows, the way

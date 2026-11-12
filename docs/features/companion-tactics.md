@@ -155,7 +155,7 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 | `MaxFormationPresets` | 10 (1–20) | Save attempts beyond this are refused with a warning ("Preset limit reached. Delete one before saving."). |
 | `FormationPresetsDebug` | false | HUD diagnostics. |
 | **Battle Action Bar (Group 29)** | | |
-| `ShowBattleActionBar` | **false** | Show the click-only stance bar in field battles only (NOT siege). Renamed from `EnableBattleActionBar` (default true) in #970: MCM keeps a saved value per property name, so only a new name moves every install to off. Turning it off mid-battle removes the layer; turning it on again re-attaches it. |
+| `ShowBattleActionBar` | **false** | Show the click-only stance bar in field battles only (NOT siege). Renamed from `EnableBattleActionBar` (default true) in #970: MCM keeps a saved value per property name, so only a new name moves every install to off. Turning it off mid-battle removes the layer; turning it on again re-attaches it. Until 2026-11-12 the bar's background panel was a `StretchToParent` child of a `CoverChildren` box: with the setting on and a formation selected, it dimmed all but the bottom strip of the screen in 60 percent black and pushed the buttons above the top edge (#1119). The background now sits on the box itself. |
 | `CancelStanceOnMove` | true | Clear stance state when formation receives a movement order (postfix on `Formation.SetMovementOrder`). |
 | `EnableVolleyFire` | true | Include Volley Fire as a ranged-action button. |
 | `BattleActionBarDebug` | false | HUD diagnostics — logs composition flags per refresh. |

@@ -5,15 +5,12 @@
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
         <!-- Action Bar Container - Bottom Center -->
+        <!-- The background sits on this container: a StretchToParent child of a CoverChildren parent fills the whole screen. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                Sprite="BlankWhiteSquare_9" Color="#00000099"
                 MarginBottom="120" DoNotAcceptEvents="true">
           <Children>
-            <!-- Background Panel -->
-            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                    Sprite="BlankWhiteSquare_9" Color="#00000099" DoNotAcceptEvents="true"
-                    MarginLeft="-10" MarginRight="-10" MarginTop="-8" MarginBottom="-8" />
-            
             <!-- Formation Name Header -->
             <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                         HorizontalAlignment="Center" VerticalAlignment="Top"
@@ -25,6 +22,8 @@
             <ListPanel DataSource="{ActionButtons}" 
                        WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed"
                        SuggestedHeight="50"
+                       HorizontalAlignment="Center"
+                       MarginLeft="10" MarginRight="10" MarginTop="8" MarginBottom="8"
                        StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
               <ItemTemplate>
                 <ButtonWidget DoNotPassEventsToChildren="true"
