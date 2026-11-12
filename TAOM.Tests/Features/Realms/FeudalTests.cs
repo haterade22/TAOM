@@ -536,9 +536,40 @@ public class FeudalTests
         world.Kingdoms["lord_c"] = "south";
         Assert.IsFalse(service.TributeBonds(world, config).Any(t => t.PayerClanId == "clan_c"), "no tribute across realms");
 
+        // A duchy held from the south (an enemy fief taken and usurped): its lord neither pays the northern king above it
+        // nor receives from the northern count below it.
         world.Kingdoms["lord_c"] = "north";
+        world.Kingdoms["duke"] = "south";
+        tributes = service.TributeBonds(world, config);
+        Assert.IsFalse(tributes.Any(t => t.PayerClanId == "clan_d" || t.PayeeClanId == "clan_d"), "no tribute to or from another realm");
+        world.Kingdoms["duke"] = "north";
         config.TributeMinRank = TitleRank.Duchy;
         Assert.IsFalse(service.TributeBonds(world, config).Any(t => t.PayerClanId == "clan_c"), "a county is below the tribute rank");
+    }
+
+    [TestMethod]
+    public void A_foreign_duchy_taken_whole_and_a_castle_given_to_a_lord_of_the_own_realm_pays_its_new_duke_alone()
+    {
+        // Cirith Ungol under the Morgul Vale: the southern king takes the duchy and gives the castle to a southern lord.
+        // The kingdom above the duchy stays with the north.
+        var service = Service();
+        var world = new FakeWorld();
+        var config = new FeudalConfig();
+        var duchy = DuchyOf(service, "b_castle_a");
+        var realm = service.Catalog.Get(duchy)!.ParentId!;
+        world.Clans["lord_s"] = "clan_s2";
+        world.Kingdoms["lord_s"] = "south";
+        service.Ledger.SetHolder("b_castle_a", "lord_s");
+        service.Ledger.SetHolder(realm, "king_n");
+
+        service.Ledger.SetHolder(duchy, "duke"); // the duchy still with a northern duke
+        Assert.IsFalse(service.TributeBonds(world, config).Any(t => t.PayerClanId == "clan_s2" || t.PayerClanId == "clan_s"),
+            "a castle or town held from a foreign duke pays nothing");
+
+        service.Ledger.SetHolder(duchy, "king_s"); // the duchy usurped as well
+        var tributes = service.TributeBonds(world, config);
+        CollectionAssert.Contains(tributes.ToList(), ("clan_s2", "clan_s"), "the castle's lord pays the duke of their own realm");
+        Assert.IsFalse(tributes.Any(t => t.PayerClanId == "clan_s"), "the duke pays nothing to the foreign king above");
     }
 
     [TestMethod]

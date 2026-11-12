@@ -146,13 +146,50 @@ public class ClaimTests
     }
 
     [TestMethod]
-    public void A_fief_now_held_by_the_own_realm_cannot_be_claimed_even_when_its_holder_by_right_is_foreign()
+    public void A_fief_of_another_clan_of_the_own_realm_cannot_be_claimed_even_when_its_holder_by_right_is_foreign()
     {
         var service = Service();
         var world = new FakeWorld();
-        world.Owners["town_c"] = "king_s"; // taken by the south; lord_c of the north still holds the title
+        // Taken by the south and given to another southern clan; lord_c of the north still holds the title.
+        world.Owners["town_c"] = "lord_s";
+        world.Clans["lord_s"] = "clan_s2";
+        world.Kingdoms["lord_s"] = "south";
 
         Assert.AreEqual(ClaimRefusal.OwnRealm, service.QuoteClaim(SouthKing(), "c_town_c", world, Neighbors(1), Prices).Refusal);
+    }
+
+    [TestMethod]
+    public void A_fief_the_own_clan_owns_can_be_claimed_and_usurped_inside_the_own_realm()
+    {
+        var service = Service();
+        var world = new FakeWorld();
+        // Taken by the south, or granted on to the southern king; lord_c of the north still holds the title.
+        world.Owners["town_c"] = "king_s";
+        var buyer = new ClaimBuyer("king_s", "clan_s", "south", new[] { "town_s", "town_c" });
+
+        var quote = service.QuoteClaim(buyer, "c_town_c", world, Neighbors(1), Prices);
+        Assert.IsTrue(quote.Allowed, quote.Refusal.ToString());
+        CollectionAssert.Contains(service.ClaimOffers(buyer, world, Neighbors(1), Prices).Select(o => o.Title.Id).ToList(), "c_town_c");
+
+        service.BuyClaim(buyer, "c_town_c", 1, world, Neighbors(1), Prices);
+        Assert.IsTrue(service.QuoteUsurp("king_s", "clan_s", "c_town_c", world, Prices).Allowed);
+        service.Usurp("king_s", "clan_s", "c_town_c", world, Prices);
+        Assert.AreEqual("king_s", service.Ledger.HolderOf("c_town_c"));
+    }
+
+    [TestMethod]
+    public void A_fief_the_own_clan_owns_can_be_claimed_from_a_holder_of_the_same_realm_but_not_of_the_same_clan()
+    {
+        var service = Service();
+        var world = new FakeWorld();
+        world.Owners["town_c"] = "king_s"; // granted to the king's clan while lord_c, now of the south, kept the title
+        world.Kingdoms["lord_c"] = "south";
+        var buyer = new ClaimBuyer("king_s", "clan_s", "south", new[] { "town_s", "town_c" });
+
+        Assert.IsTrue(service.QuoteClaim(buyer, "c_town_c", world, Neighbors(1), Prices).Allowed);
+
+        world.Clans["lord_c"] = "clan_s";
+        Assert.AreEqual(ClaimRefusal.OwnClan, service.QuoteClaim(buyer, "c_town_c", world, Neighbors(1), Prices).Refusal);
     }
 
     [TestMethod]

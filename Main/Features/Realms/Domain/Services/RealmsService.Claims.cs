@@ -54,8 +54,8 @@ public sealed partial class RealmsService
 
     /// <summary>
     /// Whether the buyer may buy a claim on the title, and its price in their special resource: the rank has a price,
-    /// the buyer neither holds nor claims it, no member of their clan holds it, it is not in or held from their realm,
-    /// it borders their clan's lands (<see cref="BorderingTitles"/>) and, for a duchy or higher, their side holds one of
+    /// the buyer neither holds nor claims it, no member of their clan holds it, it is not in or held from their realm
+    /// unless its fief is their clan's, it borders their clan's lands (<see cref="BorderingTitles"/>) and, for a duchy or higher, their side holds one of
     /// its vassal titles (<see cref="ClaimRefusal.NoFoothold"/>): titles are climbed, a county first, then the duchy, then the realm.
     /// </summary>
     public ClaimQuote QuoteClaim(ClaimBuyer buyer, string titleId, IClaimWorld world, FiefNeighbors neighbors, ClaimsConfig config) =>
@@ -85,7 +85,10 @@ public sealed partial class RealmsService
             return ClaimQuote.Refused(ClaimRefusal.Claimed);
         if (holder != null && buyer.ClanId != null && world.ClanOf(holder) == buyer.ClanId)
             return ClaimQuote.Refused(ClaimRefusal.OwnClan);
-        if (InRealm(title, holder, buyer.KingdomId, world))
+        // A fief the buyer's clan owns is claimable even in their own realm (taken, or granted by their liege, while its
+        // holder by right kept the title): the claim is the way to usurp it. A fief of another clan of the realm is not.
+        var ownFief = title.SettlementId != null && OwnedByClan(title.SettlementId, buyer.HeroId, buyer.ClanId, world);
+        if (!ownFief && InRealm(title, holder, buyer.KingdomId, world))
             return ClaimQuote.Refused(ClaimRefusal.OwnRealm);
         if (!borders())
             return ClaimQuote.Refused(ClaimRefusal.TooFar);
