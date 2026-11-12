@@ -40,6 +40,10 @@ internal static class MissionStartGuardLines
         + "Mission.AfterStart was walking that list, so the engine's next step through it throws \"Collection was modified\" and loads the mission "
         + "again; the owner may only have called the code that made the change (#1028)";
 
+    internal static string BuildDeferredAddLine(StartCall call, string ownerType, string addedType) =>
+        $"{Tag} {addedType} was added to MissionBehaviors during {call} of {ownerType}, while Mission.AfterStart was walking that list; "
+        + "the add is queued and applied when AfterStart ends, so the engine does not throw \"Collection was modified\" and load the mission again (#1028)";
+
     internal static string BuildEscapedLine(Exception exception, int count, int cap) =>
         $"{Tag} Mission.AfterStart threw and was not survived (a call the guard does not wrap, or the toggle is off; {count} of {cap} logged per process); "
         + $"the engine will load the mission again: {exception}";

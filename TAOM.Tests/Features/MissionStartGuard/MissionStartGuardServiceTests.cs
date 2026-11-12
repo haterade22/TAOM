@@ -48,6 +48,72 @@ public class MissionStartGuardServiceTests
         _logger.ReceivedCalls().Where(c => c.GetMethodInfo().Name == nameof(IModLogger.LogWarning))
             .Select(c => (string)c.GetArguments()[0]!).ToList();
 
+    // ---- ShouldDeferBehaviorAdds and ReportDeferredAdd (#1028: an add during the walk is queued) ----
+
+    [TestMethod]
+    public void ShouldDeferBehaviorAdds_ToggleOn_ReturnsTrue() =>
+        Assert.IsTrue(_sut.ShouldDeferBehaviorAdds());
+
+    [TestMethod]
+    public void ShouldDeferBehaviorAdds_ToggleOff_ReturnsFalse()
+    {
+        _settings.SurviveMissionStartFailures.Returns(false);
+
+        Assert.IsFalse(_sut.ShouldDeferBehaviorAdds());
+    }
+
+    [TestMethod]
+    public void ShouldDeferBehaviorAdds_SettingsThrow_ReturnsTrue()
+    {
+        _settings.SurviveMissionStartFailures.Throws(new InvalidOperationException("MCM not ready"));
+
+        Assert.IsTrue(_sut.ShouldDeferBehaviorAdds());
+    }
+
+    [TestMethod]
+    public void ReportDeferredAdd_LogsOneInfoNamingTheCallOwnerAndAddedType()
+    {
+        _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+
+        var line = Infos().Single();
+        StringAssert.Contains(line, "[MissionStartGuard]");
+        StringAssert.Contains(line, "AfterStart");
+        StringAssert.Contains(line, "Mod.Owner");
+        StringAssert.Contains(line, "Mod.Added");
+        StringAssert.Contains(line, "#1028");
+        Assert.AreEqual(0, Errors().Count);
+    }
+
+    [TestMethod]
+    public void ReportDeferredAdd_PastTheCap_LogsNoMore()
+    {
+        for (var i = 0; i < MissionStartGuardService.MaxListChangeLogsPerMission + 3; i++)
+            _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission, Infos().Count);
+    }
+
+    [TestMethod]
+    public void ReportDeferredAdd_NewMission_ResetsTheCap()
+    {
+        _sut.BeginMission(new object());
+        for (var i = 0; i < MissionStartGuardService.MaxListChangeLogsPerMission; i++)
+            _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+
+        _sut.BeginMission(new object());
+        _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission + 1, Infos().Count);
+    }
+
+    [TestMethod]
+    public void ReportDeferredAdd_LoggerThrows_DoesNotThrow()
+    {
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(_ => throw new InvalidOperationException("disk full"));
+
+        _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+    }
+
     // ---- ReportListChange (#1028: a start call changed the list the engine was walking) ----
 
     private void ListChange(int before = 3, int after = 4) =>

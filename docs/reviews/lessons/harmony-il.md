@@ -1436,3 +1436,20 @@ The new `HandleWargTargetHit` log read the victim's mount in its `catch`. Patch4
 - **Why missed:** I took "a behavior was added or removed" from the #1028 hypothesis and used the list's size as the signal. `List<T>.Enumerator.MoveNext` throws on any `_version` change, and an indexer write, `Sort`, `Reverse` or an add paired with a remove keep the size. I also wrote that the call whose size differs "is the culprit"; it proves only where the change happened.
 - **Prevent:** to see what the engine's enumerator will see, take `list.GetEnumerator()` before the call and step a copy of the struct after it (`Watch<T>` in `MissionStartGuardCalls`). Test the size-equal cases. A diagnostic's text says what it proves ("during AfterStart of X"), not who to blame.
 - **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), rows 1 and 4.
+
+### Take the cause from the owner the evidence names, and a caller list from an IL scan, never from a partial decompile cache (2026-11-12)
+
+The #1028 fix queues a `Mission.AddMissionBehavior` made while `Mission.AfterStart` walks `MissionBehaviors`. Its first docs said the
+fighters spawn inside `ArenaPracticeFightMissionController.AfterStart` and listed three callers of `AddMissionBehavior`. Both were
+wrong. The guard's log line named `CampaignMissionComponent`, whose `AfterStart` raises `CampaignEvents.AfterMissionStarted`; the
+menu path's listener spawns the fighters. The caller list came from a grep over a decompile cache that holds a subset of the engine's
+types, and missed four `OnMissionStarted` listeners that add inside `AfterStart`.
+- **Why missed:** the first file that matched the mission's name became the cause, although the evidence had already named another owner.
+  The cache's size was known and the doc named "decompile, three types" as the scope, but a short result was still read as a full list
+  (`evidence-over-claims.md` C4).
+- **Prevent:** (1) start a causal chain at the owner the log or the guard names, and read each hop (event, listener, caller) before the
+  doc says "spawns inside X". (2) A "callers of the patched method" list comes from an IL scan of every assembly that references it
+  (`ilspycmd -il`, or the byte scan the registry already uses for foreign patchers), and the doc states which assemblies were swept
+  whole. (3) A new class in an existing patch category binds the engine's parameters by position (`__0`) when the name is not the point,
+  because `PatchCategoryIndex.Apply` stops at the first class that throws and would take the older patches of the category with it.
+- **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md), `/deep-review` Agents 2 and 5.

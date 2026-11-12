@@ -123,6 +123,7 @@ Models: 69. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 ## TaomClanFinanceModel : DefaultClanFinanceModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultClanFinanceModel`
 
+- `ExplainedNumber CalculateClanExpenses(Clan clan, Boolean includeDescriptions, Boolean applyWithdrawals, Boolean includeDetails)`
 - `ExplainedNumber CalculateClanGoldChange(Clan clan, Boolean includeDescriptions, Boolean applyWithdrawals, Boolean includeDetails)`
 - `ExplainedNumber CalculateClanIncome(Clan clan, Boolean includeDescriptions, Boolean applyWithdrawals, Boolean includeDetails)`
 - `ExplainedNumber CalculateTownIncomeFromTariffs(Clan clan, Town town, Boolean applyWithdrawals)`

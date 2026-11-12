@@ -151,6 +151,52 @@ screen, crash bundle `taom_crash_20261111_145332_395a9270`); remove it when the 
 outside the three loops' calls, such as in `_battleSpawnPathSelector.Initialize()` or `_deploymentPlan.Initialize()`,
 which run between the loops: if the line never appears and the exception recurs, look there next.
 
+### Deferred adds (#1028)
+
+The list-size check names the culprit; this part removes the loop for an add made through `Mission.AddMissionBehavior`.
+Crash bundle `taom_crash_20261112_161559_ca0697d0` (an arena practice fight started from the Minas Tirith town menu; the
+fight started from the arena master's dialogue worked) logged `MissionBehaviors changed during AfterStart of
+SandBox.Missions.MissionLogics.CampaignMissionComponent ... size 99 to 100, newest item DualWield.DualWieldMissionBehavior`.
+The engine then loaded the mission again, and the first tick threw a `NullReferenceException` in
+`MissionMainAgentInteractionComponent.FocusTick`.
+
+The chain, read from the installed v1.5.7 sources: `CampaignMissionComponent.AfterStart` raises
+`CampaignEvents.AfterMissionStarted` (`CampaignMissionComponent.cs:140-144`). On the town-menu path
+`ArenaMasterCampaignBehavior.AfterMissionStarted` (`ArenaMasterCampaignBehavior.cs:368-376`, flag set at `:385`) sets
+`MissionMode.Battle` and calls `ArenaPracticeFightMissionController.StartPlayerPractice()`, which spawns the player and six
+fighters inside the walk. DualWield's `Mission.SpawnAgent` postfix then adds its behaviour, because its static `IsActive` is
+false and the mode is now a combat mode (`DualWieldSpawnPatches.cs:486-488`, `DualWieldSubModule.cs:179-181`; DualWield
+v0.10.5, decompiled). The dialogue path calls `StartPlayerPractice` from `StartPlayerPracticeAfterConversationEnd`
+(`ArenaMasterCampaignBehavior.cs:298-306`), after the mission has started, so nothing is added inside the walk. Every
+listener of `AfterMissionStarted` runs inside the walk.
+
+`Mission_AddMissionBehavior_MissionStartGuard_Patch` (same category) is a bool prefix on `Mission.AddMissionBehavior`. The
+`EarlyStart` and `AfterStart` helpers open a window around their call (`MissionBehaviorDeferral.Open`, thread-static). They
+close it right after a normal or survived return; a throw that is not survived leaves it open until Patch103's finalizer
+resets it. Inside the window the prefix queues the behaviour and skips the engine's add. Patch103's `AfterStart` finalizer
+applies the queue (`MissionStartGuardCalls.FlushDeferredAdds`) through the engine's own `AddMissionBehavior`, in add order,
+with the window closed, on a normal end and after a throw alike. One INFO line per queued add (at most five per mission)
+names the call, the owner and the type. The same toggle gates it.
+
+The window never covers `OnBehaviorInitialize` (an index loop over the live count, so an add there is safe and the new
+behaviour gets every start call) or `OnMissionBehaviorInitialize` (before the walk). That exclusion is load-bearing: vanilla
+adds there on purpose (four `OnMissionStarted` listeners, see the registry), and so do TAOM's `AddTaomBehavior` and DualWield's
+own `OnMissionBehaviorInitialize`.
+
+What a queued behaviour lacks until the flush: it is not in `MissionBehaviors`, its `Mission` is null and `OnCreated` has not
+run, and it misses `OnBehaviorInitialize`, `EarlyStart` and `AfterStart` of this start. `GetMissionBehavior` does not find it,
+so DualWield's spawn postfix (`DualWieldSpawnPatches.cs:494`) skips registering the agents spawned in that gap: in the bundle
+the player's practice agent and the six opponents. A respawn from `OnMissionTick` comes after the flush, and DualWield
+re-registers a player whose kit can dual wield, so the loss is the first batch only. DualWield overrides no start call.
+
+Limits, none seen with an installed mod:
+- A mod that guards its add only with `GetMissionBehavior<T>() == null` queues one copy per spawn, and the flush adds all of
+  them. DualWield is safe because its constructor sets `IsActive`.
+- A foreign void prefix or any postfix on `AddMissionBehavior` runs twice, once for the skipped call and once at the flush.
+- A remove, or any other direct change to `MissionBehaviors` inside the walk, still reloads the mission.
+- PatchShield can shield this target from a process's second game start. A missing-API throw from a behaviour's `OnCreated`
+  would let it strip TAOM's prefix, and the deferral would end without a warning (the canary watches `AfterStart` only).
+
 ## Configuration
 
 MCM, CrashReport page, group "Master", `Survive Mission Start Failures`, default on, no restart: it is read when an
@@ -173,6 +219,8 @@ differs hangs on its own load and simulates nothing differently.
 | `Main/Adapters/MissionStartGuardAdapter.cs` | The localized on-screen line |
 | `Main/Features/CrashReport/CrashReportSettings.cs` | The MCM toggle |
 | `Main/Features/MissionPerf/TickProfilerTranspiler.cs` | The shared soft-failing call-site swap |
+| `Main/Features/MissionStartGuard/Hooks/Mission_AddMissionBehavior_MissionStartGuard_Patch.cs` | The prefix that queues an add made during the walk (#1028) |
+| `Main/Features/MissionStartGuard/Hooks/MissionBehaviorDeferral.cs` | The thread-static window and queue |
 
 ## Dependencies
 
@@ -227,6 +275,12 @@ which would otherwise loop the mission.
   applied to the real method builds a replacement the JIT accepts; parameter names (`__state` included), void finalizer
   and priorities; the static void `[HarmonyCleanup]` method; the
   category and phase; PatchShield's reach; the MCM attribute; the provider default.
+- `MissionBehaviorDeferralTests.cs`: the window and queue (open only for the mission and the call, closed after, a null mission opens none),
+  the flush (order, window closed first, one failing add does not lose the rest), the toggle, and the Harmony prefix skipping
+  or passing the add. `MissionStartGuardCallsTests.cs` adds the window around `EarlyStart` and `AfterStart` and never around
+  `OnBehaviorInitialize` or the two submodule calls (`AfterMissionStart` cannot be allocated in a test host), the finalizer
+  applying the queue to a real `Mission` on a normal end and after a throw, and the prefix dropping a stale queue. `MissionStartGuardBindingTests.cs` applies the
+  real patch to the installed engine and checks an add inside and outside the window.
 - `MissionStartGuardModuleTests.cs`: 5 tests. The service resolves from a real container, the helpers are handed it,
   and the install line is the ON line after a six-site swap and the warning after a soft fail.
 
@@ -263,6 +317,7 @@ large; its cost is not measured. Nothing runs per frame.
 ## Changelog
 
 - 2026-10-08: added, adapted from yotthani's VanillaTuning `mission-start-guard`.
+- 2026-11-12: a behaviour added while `EarlyStart` or `AfterStart` runs is queued until `AfterStart` ends (#1028).
 
 ## GitHub Issue
 

@@ -437,6 +437,17 @@ public class CoopVetoClassificationTests
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +
             "It moves parties on the campaign map — re-classify before reviving."),
+
+        // --- Mission start (#1028) ----------------------------------------------------------
+        ["Mission_AddMissionBehavior_MissionStartGuard_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Mission.AddMissionBehavior is skipped only while this peer's own Mission.AfterStart is running its " +
+            "EarlyStart or AfterStart call (a thread-static window, so another thread or another mission is never " +
+            "touched), and the queued behaviour is added through the engine's own method when AfterStart ends. The " +
+            "mission behaviour list is a local object of one mission start, not replicated campaign state, so no " +
+            "campaign mutation is skipped. The window opens on the same call on every peer, and a peer whose " +
+            "\"Survive Mission Start Failures\" switch differs only keeps the engine's add, which on a mod that adds " +
+            "during the walk is the loop of #1028: crash containment, classified as instrumentation in " +
+            "CoopSettingsRelevance, like the guard's other behaviour."),
     };
 
     // Scans SOURCE, not the loaded assembly, and that is deliberate.

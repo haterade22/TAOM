@@ -28,6 +28,7 @@ public static class Mission_AfterStart_MissionStartGuard_Patch
     public static void Prefix(object __instance, out bool __state)
     {
         __state = true;
+        MissionBehaviorDeferral.Reset();   // nothing queued by an earlier start may reach this one
         try { MissionStartGuardCalls.Service?.BeginMission(__instance); }
         catch { /* BeginMission never throws; this guards the call itself */ }
     }
@@ -47,6 +48,7 @@ public static class Mission_AfterStart_MissionStartGuard_Patch
     [HarmonyPriority(Priority.First)]
     public static void Finalizer(Exception? __exception, bool __state)
     {
+        MissionStartGuardCalls.FlushDeferredAdds();   // the walk is over, so the queued adds are safe now (#1028)
         try
         {
             var service = MissionStartGuardCalls.Service;

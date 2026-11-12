@@ -43,6 +43,7 @@ public class MissionStartGuardCallsTests
     public void Cleanup()
     {
         MissionStartGuardCalls.Initialize(null);
+        MissionBehaviorDeferral.Reset();
         RestoreMission();
     }
 
@@ -54,7 +55,7 @@ public class MissionStartGuardCallsTests
         public bool Throw;
         public Exception? ToThrow;
         public Action? Mutate;
-        public override void OnBehaviorInitialize() { Calls++; if (Throw) throw ToThrow ?? Thrown; }
+        public override void OnBehaviorInitialize() { Calls++; Mutate?.Invoke(); if (Throw) throw ToThrow ?? Thrown; }
         public override void EarlyStart() { Calls++; Mutate?.Invoke(); if (Throw) throw ToThrow ?? Thrown; }
         public override void AfterStart() { Calls++; Mutate?.Invoke(); if (Throw) throw ToThrow ?? Thrown; }
     }
@@ -63,8 +64,9 @@ public class MissionStartGuardCallsTests
     {
         public int Calls;
         public bool Throw;
-        public override void OnBeforeMissionBehaviorInitialize(Mission mission) { Calls++; if (Throw) throw Thrown; }
-        public override void OnMissionBehaviorInitialize(Mission mission) { Calls++; if (Throw) throw Thrown; }
+        public Action? During;
+        public override void OnBeforeMissionBehaviorInitialize(Mission mission) { Calls++; During?.Invoke(); if (Throw) throw Thrown; }
+        public override void OnMissionBehaviorInitialize(Mission mission) { Calls++; During?.Invoke(); if (Throw) throw Thrown; }
     }
 
     private static void RunBehavior(StartCall call, Behavior b)
@@ -320,6 +322,146 @@ public class MissionStartGuardCallsTests
             _service.Received(1).ReportListChange(call, typeof(Behavior).FullName!, typeof(Behavior).Assembly.GetName().Name!,
                 "MissionBehaviors", 2, 3, typeof(AddedBehavior).FullName!);
         }
+    }
+
+    [TestMethod]
+    public void BehaviorHelpers_WhileTheCallRuns_AnAddIsDeferredThroughTheGateAndTheListIsLeftAlone()
+    {
+        _service.ShouldDeferBehaviorAdds().Returns(true);
+        foreach (var call in new[] { StartCall.EarlyStart, StartCall.AfterStart })
+        {
+            _service.ClearReceivedCalls();
+            var mission = InstallMission(2);
+            var deferred = false;
+            var b = new Behavior
+            {
+                Mutate = () =>
+                {
+                    var added = new AddedBehavior();
+                    deferred = MissionStartGuardCalls.TryDeferAdd(mission, added);
+                    if (!deferred) mission.MissionBehaviors.Add(added);   // what the engine's add would have done
+                },
+            };
+
+            RunBehavior(call, b);
+
+            Assert.IsTrue(deferred, $"{call}: the window was closed during the call");
+            Assert.AreEqual(2, mission.MissionBehaviors.Count);
+            Assert.AreEqual(1, MissionBehaviorDeferral.Pending);
+            _service.DidNotReceiveWithAnyArgs().ReportListChange(default, default!, default!, default!, default, default, default!);
+            Assert.IsFalse(MissionStartGuardCalls.TryDeferAdd(mission, new AddedBehavior()), $"{call}: the window stayed open after the call");
+            MissionBehaviorDeferral.Reset();
+        }
+    }
+
+    [TestMethod]
+    public void BehaviorHelpers_ToggleOff_AnAddReachesTheListAndIsReported()
+    {
+        _service.ShouldDeferBehaviorAdds().Returns(false);
+        var mission = InstallMission(2);
+        var deferred = true;
+        var b = new Behavior
+        {
+            Mutate = () =>
+            {
+                var added = new AddedBehavior();
+                deferred = MissionStartGuardCalls.TryDeferAdd(mission, added);
+                if (!deferred) mission.MissionBehaviors.Add(added);
+            },
+        };
+
+        RunBehavior(StartCall.AfterStart, b);
+
+        Assert.IsFalse(deferred);
+        Assert.AreEqual(3, mission.MissionBehaviors.Count);
+        _service.Received(1).ReportListChange(StartCall.AfterStart, typeof(Behavior).FullName!, typeof(Behavior).Assembly.GetName().Name!,
+            "MissionBehaviors", 2, 3, typeof(AddedBehavior).FullName!);
+    }
+
+    private Mission InstallMissionWithAddLists()
+    {
+        var mission = InstallMission(2);
+        typeof(Mission).GetField("<MissionLogics>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(mission, new List<MissionLogic>());
+        typeof(Mission).GetField("_otherMissionBehaviors", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(mission, new List<MissionBehavior>());
+        return mission;
+    }
+
+    [TestMethod]
+    public void AfterStartFinalizer_AfterAThrow_StillAppliesTheQueuedAddsAndClosesTheWindow()
+    {
+        // The engine loads the mission again after an unsurvived throw. A behaviour left in the queue would be lost for
+        // good: DualWield's IsActive is already true, so it would never add its behaviour again.
+        var mission = InstallMissionWithAddLists();
+        var added = new AddedBehavior();
+        MissionBehaviorDeferral.Open(mission, StartCall.AfterStart, new Behavior());
+        MissionBehaviorDeferral.TryDefer(mission, added);
+
+        Mission_AfterStart_MissionStartGuard_Patch.Finalizer(new InvalidOperationException("boom"), true);
+
+        Assert.AreSame(added, mission.MissionBehaviors[2]);
+        Assert.IsNull(MissionBehaviorDeferral.WindowMission);
+        Assert.AreEqual(0, MissionBehaviorDeferral.Pending);
+        _service.Received(1).ReportEscaped(Arg.Any<Exception>());
+    }
+
+    [TestMethod]
+    public void SubModuleHelpers_NeverOpenTheDeferralWindow()
+    {
+        // Every AddTaomBehavior add and DualWield's own OnMissionBehaviorInitialize add happen here: queueing them would
+        // hand them no start calls.
+        foreach (var call in SubModuleCalls)
+        {
+            var mission = InstallMission(1);
+            var open = true;
+            var s = new SubModule { During = () => open = MissionBehaviorDeferral.IsOpenFor(mission) };
+
+            RunSubModule(call, s);
+
+            Assert.AreEqual(1, s.Calls, $"{call}: the call did not run");
+            Assert.IsFalse(open, $"{call}: the window was open during the call");
+        }
+    }
+
+    [TestMethod]
+    public void AfterStartFinalizer_AppliesTheQueuedAddsAfterTheWalk_LikeAddMissionBehavior()
+    {
+        var mission = InstallMissionWithAddLists();
+        var added = new AddedBehavior();
+        MissionBehaviorDeferral.Open(mission, StartCall.AfterStart, new Behavior());
+        MissionBehaviorDeferral.TryDefer(mission, added);
+
+        Mission_AfterStart_MissionStartGuard_Patch.Finalizer(null, true);
+
+        Assert.AreEqual(3, mission.MissionBehaviors.Count);
+        Assert.AreSame(added, mission.MissionBehaviors[2]);
+        CollectionAssert.Contains(mission.MissionLogics, added);
+        Assert.AreSame(mission, added.Mission);
+        Assert.AreEqual(0, MissionBehaviorDeferral.Pending);
+    }
+
+    [TestMethod]
+    public void AfterStartPrefix_DropsAQueueLeftByAnEarlierStart()
+    {
+        MissionBehaviorDeferral.Open(new object(), StartCall.AfterStart, new Behavior());
+        MissionBehaviorDeferral.TryDefer(MissionBehaviorDeferral.WindowMission!, new AddedBehavior());
+
+        Mission_AfterStart_MissionStartGuard_Patch.Prefix(new object(), out _);
+
+        Assert.AreEqual(0, MissionBehaviorDeferral.Pending);
+    }
+
+    [TestMethod]
+    public void OnBehaviorInitializeHelper_NeverOpensTheDeferralWindow()
+    {
+        var mission = InstallMission(2);
+        var deferred = false;
+        var b = new Behavior { Mutate = () => deferred = MissionBehaviorDeferral.TryDefer(mission, new AddedBehavior()) };
+
+        RunBehavior(StartCall.OnBehaviorInitialize, b);
+
+        Assert.IsFalse(deferred);
     }
 
     [TestMethod]

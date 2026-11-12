@@ -41,16 +41,20 @@ internal static class MissionStartGuardCalls
     internal static void EarlyStart(MissionBehavior behavior)
     {
         var watch = WatchBehaviors();
+        OpenDeferralWindow(StartCall.EarlyStart, behavior);
         try { behavior.EarlyStart(); }
         catch (Exception ex) when (Survives(ex)) { Note(StartCall.EarlyStart, behavior, ex); }
+        MissionBehaviorDeferral.Close();
         NoteListChange(StartCall.EarlyStart, behavior, watch);
     }
 
     internal static void AfterStart(MissionBehavior behavior)
     {
         var watch = WatchBehaviors();
+        OpenDeferralWindow(StartCall.AfterStart, behavior);
         try { behavior.AfterStart(); }
         catch (Exception ex) when (Survives(ex)) { Note(StartCall.AfterStart, behavior, ex); }
+        MissionBehaviorDeferral.Close();
         NoteListChange(StartCall.AfterStart, behavior, watch);
     }
 
@@ -124,6 +128,46 @@ internal static class MissionStartGuardCalls
                 newest == null ? "n/a" : TypeNameOf(newest));
         }
         catch { /* swallow-ok: observe-only, a log line must never change the engine's outcome */ }
+    }
+
+    // #1028: while a wrapped EarlyStart or AfterStart runs, the engine is walking MissionBehaviors, so an add made then
+    // is queued (MissionBehaviorDeferral) and applied when Mission.AfterStart ends. The window is closed right after the
+    // call; a throw that is not survived leaves it open until Patch103's finalizer resets it.
+    private static void OpenDeferralWindow(StartCall call, MissionBehavior owner)
+    {
+        try { MissionBehaviorDeferral.Open(Mission.Current, call, owner); }
+        catch { /* swallow-ok: no window means the engine's vanilla add, which is what ran before this guard */ }
+    }
+
+    /// <summary>
+    /// The prefix on <c>Mission.AddMissionBehavior</c> asks this. True queues <paramref name="behavior"/> and means the
+    /// engine's add must be skipped; false (no window, another mission, the toggle off, no service, any failure) leaves
+    /// the add to the engine. The queue is applied by <see cref="FlushDeferredAdds"/>.
+    /// </summary>
+    internal static bool TryDeferAdd(object mission, MissionBehavior behavior)
+    {
+        try
+        {
+            var service = Service;
+            if (service == null || !MissionBehaviorDeferral.IsOpenFor(mission) || !service.ShouldDeferBehaviorAdds()) return false;
+            if (!MissionBehaviorDeferral.TryDefer(mission, behavior)) return false;
+        }
+        catch { return false; /* swallow-ok: not deferred means the engine adds it now, as before */ }
+
+        try
+        {
+            var owner = MissionBehaviorDeferral.WindowOwner;
+            Service?.ReportDeferredAdd(MissionBehaviorDeferral.WindowCall, owner == null ? "<null>" : TypeNameOf(owner), TypeNameOf(behavior));
+        }
+        catch { /* swallow-ok: the behaviour is queued; a log line must not undo that */ }
+        return true;
+    }
+
+    /// <summary>Applies the queued adds through the engine's own <c>AddMissionBehavior</c> once the walk is over (Patch103's finalizer).</summary>
+    internal static void FlushDeferredAdds()
+    {
+        try { MissionBehaviorDeferral.Flush((mission, behavior) => ((Mission)mission).AddMissionBehavior(behavior)); }
+        catch { /* swallow-ok: Flush isolates each add; this guards the call itself */ }
     }
 
     private static string TypeNameOf(object value) => value.GetType().FullName ?? value.GetType().Name;

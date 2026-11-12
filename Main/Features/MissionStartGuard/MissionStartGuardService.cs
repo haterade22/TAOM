@@ -45,6 +45,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     private int _escapedLogged;
     private bool _guardWarned;
     private int _listChanges;
+    private int _deferredAdds;
 
     public MissionStartGuardService(IMissionStartGuardSettingsProvider settings, IMissionStartGuardAdapter adapter,
         IDedicatedServerProvider server, IModLogger logger)
@@ -69,6 +70,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
         _notices = 0;
         _summaryWritten = false;
         _listChanges = 0;
+        _deferredAdds = 0;
     }
 
     public void Report(StartCall call, string ownerType, string ownerAssembly, Exception exception)
@@ -109,6 +111,15 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
         _listChanges++;
         if (_listChanges > MaxListChangeLogsPerMission) return;
         Safe(() => _logger.LogError(MissionStartGuardLines.BuildListChangeLine(call, ownerType, ownerAssembly, list, before, after, newestType)));
+    }
+
+    public bool ShouldDeferBehaviorAdds() => ToggleOn();
+
+    public void ReportDeferredAdd(StartCall call, string ownerType, string addedType)
+    {
+        _deferredAdds++;
+        if (_deferredAdds > MaxListChangeLogsPerMission) return;
+        Safe(() => _logger.LogInfo(MissionStartGuardLines.BuildDeferredAddLine(call, ownerType, addedType)));
     }
 
     public void LogInstall(int wrappedSites)

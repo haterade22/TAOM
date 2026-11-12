@@ -43,6 +43,12 @@ public interface IMissionStartGuardService
     /// </summary>
     void ReportListChange(StartCall call, string ownerType, string ownerAssembly, string list, int before, int after, string newestType);
 
+    /// <summary>Whether a behaviour added while the engine walks <c>MissionBehaviors</c> is queued until the walk ends (#1028). The same toggle as <see cref="ShouldSurvive"/>.</summary>
+    bool ShouldDeferBehaviorAdds();
+
+    /// <summary>One INFO line: a behaviour of <paramref name="addedType"/> was queued during <paramref name="call"/> of <paramref name="ownerType"/>.</summary>
+    void ReportDeferredAdd(StartCall call, string ownerType, string addedType);
+
     /// <summary>The install line: how many call sites the transpiler wrapped, or the warning when it is not all of them (which also uses up the once-per-process lost-guard warning).</summary>
     void LogInstall(int wrappedSites);
 }
