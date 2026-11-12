@@ -85,7 +85,8 @@ public sealed partial class RealmsCampaign
             _config.Claims.BuyPricePercent = _settings.ClaimPricePercent;
             _config.Claims.InfluencePercent = _settings.InfluenceCostPercent;
             _config.Feudal.InfluencePercent = _settings.InfluenceCostPercent;
-            _config.Feudal.TributePercent = _settings.TributePercent;
+            _config.Feudal.TributeReceivePercent = _settings.TributeReceive ? _settings.TributeReceivePercent : 0;
+            _config.Feudal.TributePayPercent = _settings.TributePay ? _settings.TributePayPercent : 0;
             return _config;
         }
     }

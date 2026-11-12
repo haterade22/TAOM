@@ -302,14 +302,16 @@ public static class RealmsConfigXml
                 warnings.Add($"<Consequences> liege_rank '{liegeRank}' is not a known rank; kept {config.LiegeMinRank}.");
         }
 
-        foreach (var rank in consequences.Elements("Rank"))
-            if (TryRankAttribute(rank, warnings, out var r))
-            {
-                config.Tribute.Remove(r);
-                var tribute = Int(rank, "tribute", 0, 0, warnings);
-                if (tribute > 0)
-                    config.Tribute[r] = tribute;
-            }
+        // Tribute is a share of fief income set in the mod options; only the rank it starts at comes from the file. The
+        // flat <Rank tribute=""/> amounts of older files are ignored.
+        var tributeRank = (string?)consequences.Attribute("tribute_rank");
+        if (tributeRank != null)
+        {
+            if (TryEnum<TitleRank>(tributeRank, out var tr))
+                config.TributeMinRank = tr;
+            else
+                warnings.Add($"<Consequences> tribute_rank '{tributeRank}' is not a known rank; kept {config.TributeMinRank}.");
+        }
     }
 
     private static bool TryRankAttribute(XElement element, List<string> warnings, out TitleRank rank)

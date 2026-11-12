@@ -48,28 +48,28 @@ public sealed class FeudalConfig
     public float ArmyDiscount { get; set; } = 0.5f;
 
     /// <summary>
-    /// Weekly gold the holder of a title of this rank pays the holder of its direct liege title, when both live in
-    /// different clans of the same realm and the payer has the gold.
+    /// The lowest rank of title whose holder owes tribute to the holder of its direct liege title (tribute_rank). Below it,
+    /// a lordship owes nothing.
     /// </summary>
-    public Dictionary<TitleRank, int> Tribute { get; } = new()
-    {
-        [TitleRank.Barony] = 50,
-        [TitleRank.County] = 100,
-        [TitleRank.Duchy] = 200,
-        [TitleRank.Kingdom] = 300,
-    };
+    public TitleRank TributeMinRank { get; set; } = TitleRank.Barony;
+
+    /// <summary>
+    /// The percentage of a vassal clan's daily income from fiefs its liege clans receive, split among them (the MCM's
+    /// Tribute From Vassals). 0 when receiving is off.
+    /// </summary>
+    public int TributeReceivePercent { get; set; } = 5;
+
+    /// <summary>
+    /// The percentage of a clan's daily income from fiefs it pays its liege clans, split among them (the MCM's Tribute To
+    /// Liege). 0 when paying is off.
+    /// </summary>
+    public int TributePayPercent { get; set; } = 5;
 
     /// <summary>Revoke costs as a percentage of <see cref="RevokeInfluence"/> (the MCM's Title Influence Cost).</summary>
     public int InfluencePercent { get; set; } = 100;
 
-    /// <summary>Tribute as a percentage of <see cref="Tribute"/> (the MCM's Tribute). 0 stops it.</summary>
-    public int TributePercent { get; set; } = 100;
-
     public int? RevokeCost(TitleRank rank) =>
         RevokeInfluence.TryGetValue(rank, out var cost) && cost >= 0 ? RealmsPercent.Of(cost, InfluencePercent) : null;
-
-    public int TributeOf(TitleRank rank) =>
-        Tribute.TryGetValue(rank, out var gold) && gold > 0 ? RealmsPercent.Of(gold, TributePercent) : 0;
 }
 
 /// <summary>A union title (rank <see cref="TitleRank.Union"/>) over existing realm and high titles, formed by holding all of them.</summary>

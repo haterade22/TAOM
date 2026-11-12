@@ -60,8 +60,8 @@ The file's header comment documents every element and attribute. Main sections:
 | kingdom `capital`, `throne="vacant"`, laws | Realm seats, Gondor's empty throne, succession and gender laws |
 | `<Claims>`, `<Grants>` | Claim, usurp, form, restore, grant and revoke prices and relation changes |
 | `<Offices>` | Steward, Marshals, Lieutenant: styles and weekly influence |
-| `<Consequences>` | The weekly resentment, liege pull and tribute |
-| `<Coronations>` | Aragorn's coronation: house, `banner` (the new house's own code; Gondor flies it while the house rules), `banner_of`, fiefs, gold, relation, `influence` (the restore price, 2500), `former_banner` |
+| `<Consequences>` | The weekly resentment and liege pull, the army discount, and `tribute_rank` (the lowest title that owes tribute, Barony) |
+| `<Coronations>` | Aragorn's coronation: house, for a companion of your clan or for you playing Aragorn (your own clan is renamed House of Telcontar and takes the banner, fiefs and rule, with no new clan, party or gold), `banner` (the new house's own code; Gondor flies it while the house rules), `banner_of`, fiefs, gold, relation, `influence` (the restore price, 2500), `former_banner` |
 | `<StartingClaims>`, `<Chronicle>` | Claims at campaign start; how many past holders each title remembers |
 
 The hierarchy is made once, when a campaign first gets titles. Names, styles, prices and the settings sections are read on each campaign load. Unions, titular realms, offices and starting claims missing from a save are added on its next load.
@@ -74,6 +74,12 @@ The hierarchy is made once, when a campaign first gets titles. Names, styles, pr
 
 A kingdom is named after the highest Kingdom, High or Union title its ruler holds above its own kingdom title: Erebor reads Durin's Folk while its king holds that title, Gondor reads Reunited Kingdom under the union. A title beside its own (Mordor holding Arnor, a Steward forming Arnor) does not rename the realm. A kingdom made in the campaign, with no title of its own, takes its ruler's highest title that is no other realm's own. The name and informal name come from the title's `realm_name` attribute (on `<HighTitle>`, `<Union>` and `<Realm>`), or its own name; the formal name is the title's full name ("Mansion of Khazad-dûm"). The kingdom's own names are kept in the save and come back when the title is lost. Names are set again on each load, daily, when a ruling clan changes and after a title changes hands; only the co-op host renames.
 
+### Tribute
+
+Each day a clan pays its liege clans a share of its income from fiefs: town tax, tariffs, projects and village income, the same sums as the base game's Settlement Income line. Its liege clans are those whose lords hold the direct liege title of a title its lords hold, from `tribute_rank` (Barony) up and within the same realm. Lordships owe nothing, nor does a clan to itself, and a clan in mercenary service neither pays nor receives. A clan with more than one liege clan splits its share evenly. Tribute received is not income from fiefs, so it never passes further up: as king of Gondor Aragorn is paid by the dukes of its duchies, and the counts pay their duke, not him. A clan whose gold is below the day's tribute pays none that day, and its lieges receive none from it.
+
+Tribute is part of each clan's daily gold change (`TaomClanFinanceModel`), so the base game's daily tick moves it with the rest and there is no chat message. The map bar's expected gold change shows Tribute from Vassals and Tribute to Liege, each with one line per clan; the clan screen's income and expenses tiles carry them too. Receiving and paying have their own switch and percentage: with paying off a liege is still paid (by nobody), with receiving off a vassal still pays (to nobody). `<Rank tribute>` elements from older files are ignored.
+
 ### Mod options: World/Realms
 
 The file sets the prices and amounts; the MCM group scales or switches them in play, with no restart (`RealmsSettingsProvider`, which clamps a hand-edited json to the slider range). Percentages apply to the player and the AI alike, and round so a positive price never drops to 0.
@@ -83,7 +89,10 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 | Claim Price (%) | 10 to 500, 100 | `<Claims>` buy prices |
 | Title Influence Cost (%) | 10 to 500, 100 | Usurp, form, restore and revoke influence, the coronation's own `influence` included |
 | AI Lords Press Claims | on | Off stops the weekly AI claims; `<Claims ai="false">` still turns them off as well |
-| Tribute (%) | 0 to 300, 100 | Weekly tribute to the liege |
+| Tribute From Vassals | on | Your clan receives a share of its vassal clans' income from fiefs, as every liege clan does |
+| Tribute From Vassals (%) | 1 to 25, 5 | That share |
+| Tribute To Liege | on | Your clan, and every vassal clan, pays a share to its liege clans |
+| Tribute To Liege (%) | 1 to 25, 5 | That share |
 | Office Influence (%) | 0 to 300, 100 | Weekly influence of the offices |
 | Resentment Over Fiefs | on | The weekly relation and loyalty loss when another clan owns your title's fief |
 | Liege's Pull | on | The weekly relation gain toward the liege |
@@ -132,9 +141,10 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 7. Load a save made with the separate TAOM.Realms module. Pass: `taom.realms_hero` lists the same titles as before.
 8. As ruler of your own kingdom, give Minas Tirith and West Osgiliath to two vassal clans, buy a claim on the Duchy of Anórien and open its page. Pass: Usurp is offered for 200 influence; before the fiefs were given away it was refused with "You, your clan and your vassals must hold more than half of its lands."
 9. Serve Gondor with Aragorn in your clan and open the Kingdom of Gondor's title page. Pass: Restore costs 2500 influence; at Title Influence Cost 50% it costs 1250. Restore it. Pass (visual): the House of Telcontar and the Kingdom of Gondor show the Telcontar banner, on the clan page, the kingdom page and the map parties. Save, load. Pass: Gondor keeps that banner.
+9b. Play as Aragorn (Player Switcher or the faction screen), join Gondor as a vassal or mercenary, gather 2500 influence and open the Kingdom of Gondor's title page. Pass: Restore warns "Your clan will become the House of Telcontar and rule Gondor from Minas Tirith." Restore it. Pass: your clan is named House of Telcontar, rules Gondor and holds Minas Tirith and Anórien, Gondor flies the Telcontar banner, Denethor stays Steward, and a mercenary contract has ended. Save, load. Pass: the banner and the name hold.
 10. As Dáin, form or take Durin's Folk. Pass: the kingdom reads Durin's Folk on the map, the kingdom page and the encyclopedia list; lose the title and it reads Erebor again. Save and load in between. Pass: the names hold.
 11. As a dwarf ruler, take two of the three Moria towns and open the Kingdom of Khazad-dûm title page. Pass: Form is offered, and the title tree shows Zirakzigil, Caradhras and Fanuidhol dimmed under it. Form it. Pass: the three duchies are drawn under Khazad-dûm undimmed, the orcs' kingdom title page (`k_mistymountainorcs`) lists no vassal titles, and save and load keep it so. An orc lord holding the same towns is refused with "Only its own people can take up this title."
-12. Mod options, World/Realms: turn off Lords Styled by Their Titles. Pass: within an in-game hour Denethor's party reads "Denethor's Party", and a conversation with him shows the plain name; the encyclopedia still lists his titles. Turn off Tribute (0%) and wait a week. Pass: no tribute notice.
+12. Mod options, World/Realms: turn off Lords Styled by Their Titles. Pass: within an in-game hour Denethor's party reads "Denethor's Party", and a conversation with him shows the plain name; the encyclopedia still lists his titles. As Denethor, or any lord with vassal clans, hover the gold on the map bar. Pass: Tribute from Vassals lists each vassal clan with its amount, and the next day's gold change matches the tooltip. Set Tribute From Vassals (%) to 10. Pass: the amounts double at once. Turn off Tribute From Vassals. Pass: the line is gone. As a vassal, Tribute to Liege shows on your tooltip and your expenses tile.
 
 None of these has been run yet.
 
@@ -146,11 +156,14 @@ None of these has been run yet.
 
 ## Performance
 
-Titles are created once, on the first hourly tick. The hourly listener is a flag check after that. Claims, offices, consequences and tribute run weekly, grants to children daily. The client tick drains a small UI queue. A title page builds its rows once when it opens and again after an action.
+Titles are created once, on the first hourly tick. The hourly listener is a flag check after that. Claims, offices and consequences run weekly, grants to children daily. Tribute is a sheet built once per in-game day, or again when a tribute percentage changes: one pass over the titles and the fiefs of the clans in it. Every gold-change call, the map bar tooltip and each clan's daily payment, is then a lookup. The client tick drains a small UI queue. A title page builds its rows once when it opens and again after an action.
 
 The weekly tick is one sweep over the AI clans that own a town or castle. Forming a title weighs every vacant duchy and realm against the clan's side (its vassals found through the whole title tree), which asks after heroes many thousands of times, and the game's `Hero.Find` walks every hero the campaign ever had. So during the sweep `ClaimWorld` finds heroes in a table built once (clan, realm and life are still read live), a clan that cannot pay the cheapest formation or usurpation is not quoted at all (it would stop at the first offer), one side serves a clan's whole usurp offer list, the ledger keeps each holder's titles in an index, and only the parties of heroes who gained or lost a title or office have their names rebuilt. Each weekly tick logs its time per part (`[TAOM.Realms] weekly tick ... ms`).
 
 ## Changelog
+
+- 2026-11-12: playing as Aragorn, restoring Gondor's throne crowns you: your own clan is renamed House of Telcontar and becomes the ruling house, with Minas Tirith, Anórien and the Telcontar banner, and a mercenary contract ends. Before, the player hero was left out of the coronation and held the crown in name only while Denethor's house still ruled.
+- 2026-11-12: tribute is a daily share of the vassal clan's income from fiefs, 5% by default, instead of a weekly percentage of a fixed amount per rank (Denethor drew about 100 gold a week). It is part of each clan's gold change, shown in the map bar's expected change and the clan screen instead of a chat message. Four mod options replace Tribute (%): Tribute From Vassals and Tribute To Liege, each with a percentage from 1 to 25. `<Consequences tribute_rank>` replaces the per-rank `<Rank tribute>` amounts. Host only in co-op.
 
 - 2026-11-11: less work in the weekly AI claims, which froze the map (about 3 s on one logged week). Heroes are found from a table during the weekly sweep instead of `Hero.Find`, unaffordable clans are not quoted, usurp offers share one side, titles held are indexed and only affected party names are rebuilt. The weekly tick logs its timings.
 

@@ -167,16 +167,22 @@ internal static class FeudalActions
             ? TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Kingdom>(title.KingdomId)
             : null;
         var seat = coronation.FiefIds.Select(TaleWorlds.CampaignSystem.Settlements.Settlement.Find).FirstOrDefault(s => s != null);
-        var text = new TextObject(seat != null
-            ? "{=realms_ui_coronation_ask}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM} from {SEAT}."
-            : "{=realms_ui_coronation_ask_no_seat}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM}.");
+        // Crowned as the player: your own clan becomes the house.
+        var isPlayer = claimant == Hero.MainHero;
+        var text = new TextObject(isPlayer
+            ? seat != null
+                ? "{=realms_ui_coronation_ask_player}Your clan will become the {CLAN} and rule {KINGDOM} from {SEAT}."
+                : "{=realms_ui_coronation_ask_player_no_seat}Your clan will become the {CLAN} and rule {KINGDOM}."
+            : seat != null
+                ? "{=realms_ui_coronation_ask}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM} from {SEAT}."
+                : "{=realms_ui_coronation_ask_no_seat}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM}.");
         text.SetTextVariable("HERO", claimant.Name);
         text.SetTextVariable("CLAN", new TextObject(coronation.ClanName));
         text.SetTextVariable("KINGDOM", kingdom?.Name ?? new TextObject(title.Name));
         if (seat != null)
             text.SetTextVariable("SEAT", seat.Name);
         var warning = text.ToString();
-        if (kingdom != null && kingdom.RulingClan == Clan.PlayerClan)
+        if (!isPlayer && kingdom != null && kingdom.RulingClan == Clan.PlayerClan)
         {
             var crown = new TextObject("{=realms_ui_coronation_player}You will no longer rule {KINGDOM}.");
             crown.SetTextVariable("KINGDOM", kingdom.Name);

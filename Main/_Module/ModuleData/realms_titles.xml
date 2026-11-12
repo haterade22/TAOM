@@ -343,7 +343,8 @@
                     {REALM} and {SEAT} are filled in, {newline} breaks a line), an illustration sprite (left out: the
                     new house's banner) and the button's text. Placeholders until the event art is made.
     He leaves the player's clan and his house becomes the realm's ruling clan. The former ruling house keeps its other
-    fiefs and titles.
+    fiefs and titles. When the player plays the hero and restores the title, the player's own clan is renamed and
+    becomes the ruling clan instead (no new clan, party, gold or relation), with the banner, fiefs and titles.
   -->
   <Coronations>
     <!-- Elessar takes up the crown: the House of Telcontar, Tolkien's name for Aragorn's house, rules Gondor from Minas
@@ -384,15 +385,11 @@
       liege_relation relation change of a vassal of another clan with the holder of their title's direct liege
                      title of liege_rank or higher, until it reaches liege_cap.
       army_discount  share of the influence a liege saves when calling such a vassal to their army.
-      tribute        weekly gold the holder of a title of this rank pays the holder of its direct liege title, when
-                     both serve the same realm in different clans and the payer has the gold.
+      tribute_rank   the lowest rank of title whose holder owes tribute to the holder of its direct liege title, when
+                     both serve the same realm in different clans. Tribute is a share of the payer clan's daily income
+                     from fiefs, set in the mod options (World/Realms), and part of both clans' daily gold change.
   -->
-  <Consequences resentment="-1" loyalty="-1" liege_relation="1" liege_cap="30" liege_rank="Duchy" army_discount="0.5">
-    <Rank rank="Barony" tribute="50" />
-    <Rank rank="County" tribute="100" />
-    <Rank rank="Duchy" tribute="200" />
-    <Rank rank="Kingdom" tribute="300" />
-  </Consequences>
+  <Consequences resentment="-1" loyalty="-1" liege_relation="1" liege_cap="30" liege_rank="Duchy" army_discount="0.5" tribute_rank="Barony" />
 
   <!--
     Offices: posts of a realm held by one hero at a time, appointed by its ruler, never inherited.

@@ -3,15 +3,13 @@ using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TAOM.Features.Realms.Domain.Config;
 using TAOM.Features.Realms.Domain.Services;
 
 namespace TAOM.Features.Realms;
 
 /// <summary>
-/// What titles do on the weekly tick (resentment of fiefs held without their title, a liege's pull, tribute, office
+/// What titles do on the weekly tick (resentment of fiefs held without their title, a liege's pull, office
 /// influence, the AI's appointments) and the player's own acts with titles: grant, revoke, form, restore, appoint and
 /// dismiss. Nothing here runs per tick or per frame; the army discount reads a set built at most once a week or after a
 /// title changes hands.
@@ -31,7 +29,10 @@ public sealed partial class RealmsCampaign
         return _bonds.Contains((liegeId, vassalId));
     }
 
-    /// <summary>Resentment over fiefs held without their title, the liege's pull and tribute. A few hundred lookups a week.</summary>
+    /// <summary>
+    /// Resentment over fiefs held without their title and the liege's pull. A few hundred lookups a week. Tribute is daily,
+    /// in each clan's gold change (RealmsCampaign.Tribute.cs).
+    /// </summary>
     private void WeeklyConsequences()
     {
         var config = Config.Feudal;
@@ -55,28 +56,6 @@ public sealed partial class RealmsCampaign
                 if (liege?.IsAlive == true && vassal?.IsAlive == true && vassal.GetRelation(liege) < config.LiegeRelationCap)
                     ChangeRelation(vassal, liege, config.LiegeRelation);
             }
-
-        int paid = 0, received = 0;
-        foreach (var tribute in _service.Tributes(_claimWorld, config))
-        {
-            var payer = Hero.Find(tribute.PayerId);
-            var payee = Hero.Find(tribute.PayeeId);
-            if (payer?.IsAlive != true || payee?.IsAlive != true || payer.Gold < tribute.Gold)
-                continue;
-            GiveGoldAction.ApplyBetweenCharacters(payer, payee, tribute.Gold, true);
-            if (payer == Hero.MainHero)
-                paid += tribute.Gold;
-            if (payee == Hero.MainHero)
-                received += tribute.Gold;
-        }
-
-        if (paid > 0 || received > 0)
-        {
-            var text = new TextObject("{=realms_msg_tribute}Tribute this week: your vassals paid you {RECEIVED} gold and you paid your lieges {PAID} gold.");
-            text.SetTextVariable("RECEIVED", received);
-            text.SetTextVariable("PAID", paid);
-            InformationManager.DisplayMessage(new InformationMessage(text.ToString(), Colors.Yellow));
-        }
     }
 
     /// <summary>
