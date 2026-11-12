@@ -237,6 +237,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MovementOrder", "MovementOrder", "_engageTargetPositionCache", "Field", "MarshalEngagePoint.cs:17")]
     // --- The Long Defeat gate repair (#1079, phase 3 Slice 5, D17): vanilla's own mission reset, protected internal, called by name on a gate the Mission has disabled. Missing: no gate is repaired and gate-repair fails.
     [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Gates.cs:46")]
+    // --- Siege Retreat Loot (Patch146, #1121): vanilla's private casualty-loot step, called by name when a defender's assault ends by attacker retreat. Missing: the adapter answers false, the service logs an error and the retreat gives no loot, as in vanilla.
+    [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEvent", "MapEvent", "LootDefeatedPartyCasualties", "Method", "SiegeRetreatLootAdapter.cs:28")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

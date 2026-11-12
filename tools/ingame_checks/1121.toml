@@ -1,0 +1,17 @@
+# In-game check for #1121, read by tools/ingame_verdict.py. The line comes from
+# Main/Features/SiegeRetreatLoot/SiegeRetreatLootService.cs when the loot screen opens after a defender's assault ends
+# by attacker retreat. It proves delivery (the screen was pushed with items), not only that the loot step ran.
+# A second assault in the same siege must not write a line before that fight is won: a line at its start means the
+# stale-result guard (the map event must stand at DefenderVictory) failed. A second line after another retreat is correct.
+issue = 1121
+title = "Loot after a siege defence ends by attacker retreat"
+fixed_in = "045e7bc42"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.siege-retreat-loot.collected"
+needs = "defend a siege as the player until the attackers retreat from an assault, with attackers who fell carrying gear"
+reached = ['\[Check\] id=taom\.siege-retreat-loot\.collected result=(pass|skip|fail) ']
+pass = ['\[Check\] id=taom\.siege-retreat-loot\.collected result=pass items=\d+$']
+fail = ['\[SiegeRetreatLoot\] ']
+absence = "not-reached"
