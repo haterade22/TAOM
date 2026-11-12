@@ -1,0 +1,23 @@
+# In-game checks for #1127 (Hero Auras), read by tools/ingame_verdict.py. The [Check] line comes from
+# Main/Features/HeroAuras/Hooks/HeroAurasMissionLogic.cs (OnRemoveBehavior) at the end of a battle in which at least
+# one hero aura reached a soldier other than its hero, with the number of auras that ran and the soldiers they reached.
+# The key is "", so the line is written once per game session (IOutcomeLog). A battle without a listed hero writes
+# nothing, so such a session reads NOT REACHED. A throw in the pulse writes the stand-down error line.
+issue = 1127
+title = "Hero auras: heroes strengthen the allied troops around them, each in their own way"
+fixed_in = "8fe13342c"   # trunk before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.hero-auras.reached"
+needs = "a battle with a listed hero on the field, for example Dain II Ironfoot (lord_E1_1) with dwarves, in a campaign or Custom Battle"
+reached = ['\[Check\] id=taom\.hero-auras\.reached result=pass ']
+pass = ['\[Check\] id=taom\.hero-auras\.reached result=pass auras=[1-9][0-9]* soldiers=[1-9][0-9]*$']
+fail = ['\[HeroAuras\] disabled for this mission after ']
+absence = "not-reached"
+
+[[human]]
+claim = "in a battle beside Dain, his dwarves are knocked down less often than the same dwarves far from him"
+
+[[human]]
+claim = "in a battle beside Aragorn, the men near him do not rout while he lives, and other men do"

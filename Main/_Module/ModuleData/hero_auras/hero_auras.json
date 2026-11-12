@@ -1,0 +1,58 @@
+{
+  "_comment": "Hero Auras (#1127, docs/features/hero-auras.md). Each aura names its heroes by hero StringId (in a battle without a campaign, the character id). Allied soldiers within the radius (any team on the hero's side, the player included, never the hero himself), and of the listed races when races is set, get the effects while he lives and for lingerSeconds after. The effect keys are the race abilities' (race_abilities.json); an aura only strengthens, so negative bonuses and positive aimErrorPercent are rejected. Where an aura and a soldier's own race ability give the same channel, the stronger counts; values never add. Radius at most 15 m.",
+  "enabled": true,
+  "pulseSeconds": 1.0,
+  "lingerSeconds": 3.0,
+  "radius": 15.0,
+  "auras": [
+    {
+      "id": "aragorn_heir_of_isildur",
+      "_comment": "Aragorn steadies the men around him.",
+      "heroIds": ["named_companion_aragorn"],
+      "races": ["human"],
+      "effects": { "moraleFloor": 30, "damageReductionPercent": 10, "blockAbilityPercent": 10 }
+    },
+    {
+      "id": "dain_ironfoot",
+      "_comment": "Dain's kin keep their feet and their shields up.",
+      "heroIds": ["lord_E1_1"],
+      "races": ["dwarf"],
+      "effects": { "knockdownResistancePercent": 40, "knockbackResistancePercent": 30, "blockAbilityPercent": 15 }
+    },
+    {
+      "id": "theoden_king_of_the_mark",
+      "_comment": "Theoden's riders ride hard and keep their seats around their king.",
+      "heroIds": ["lord_4_1"],
+      "races": ["human"],
+      "effects": { "moraleFloor": 25, "meleeDamagePercent": 8, "mountSpeedPercent": 8, "dismountResistancePercent": 30 }
+    },
+    {
+      "id": "eomer_marshal_of_the_mark",
+      "_comment": "Eomer's riders strike harder and keep their seats.",
+      "heroIds": ["lord_4_3_1"],
+      "races": ["human"],
+      "effects": { "meleeDamagePercent": 10, "dismountResistancePercent": 40, "mountSpeedPercent": 5 }
+    },
+    {
+      "id": "elven_lords",
+      "_comment": "The elven lords' kin draw faster and aim truer.",
+      "heroIds": ["lord_R1_1", "lord_M1_1", "lord_L1_1"],
+      "races": ["elf"],
+      "effects": { "drawSpeedPercent": 12, "rangedDamagePercent": 8, "aimErrorPercent": -15 }
+    },
+    {
+      "id": "saruman_white_hand",
+      "_comment": "Saruman's Uruk-hai fight on without fear.",
+      "heroIds": ["lord_I1_0"],
+      "races": ["uruk", "uruk_hai", "berserker"],
+      "effects": { "moraleFloor": 35, "meleeDamagePercent": 8 }
+    },
+    {
+      "id": "witch_king",
+      "_comment": "The orcs near the Witch-king do not break.",
+      "heroIds": ["lord_1_15"],
+      "races": ["orc", "goblin", "uruk"],
+      "effects": { "moraleFloor": 40, "attackEagernessPercent": 15 }
+    }
+  ]
+}

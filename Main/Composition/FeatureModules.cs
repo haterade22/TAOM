@@ -106,5 +106,6 @@ internal static class FeatureModules
         new Features.KingdomAllegiance.KingdomAllegianceModule(),
         new Features.WarPledge.WarPledgeModule(),
         new Features.Realms.RealmsModule(),
+        new Features.HeroAuras.HeroAurasModule(),
     };
 }

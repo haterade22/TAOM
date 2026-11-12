@@ -5017,5 +5017,11 @@
 	<!-- InformationManagerSettingsNotice -->
 	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
 	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_hero_auras_mcm_enabled" text="{=taom_hero_auras_mcm_enabled}Enable Hero Auras" />
+	<string id="taom_hero_auras_mcm_enabled_hint" text="{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse." />
+	<string id="taom_hero_auras_mcm_strength" text="{=taom_hero_auras_mcm_strength}Hero Aura Strength" />
+	<string id="taom_hero_auras_mcm_strength_hint" text="{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0." />
 
 </strings>
