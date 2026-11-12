@@ -3,7 +3,10 @@
 # .claude/skills/review-outside-pr/SKILL.md treats as high risk (Phase 1, step 3), so they show
 # in the PR review list by name.
 
-*                   @haterade22
+*                   @haterade22 @ThyrellTTV @KEYforcez @yotthani
+
+# GitHub uses the last matching line. The lines below name the maintainer alone, so only the
+# maintainer's approval counts for a change to them.
 
 *.csproj            @haterade22
 *.props             @haterade22
