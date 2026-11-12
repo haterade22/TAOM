@@ -52,9 +52,11 @@ public class ActionIndexCacheRepairTests
 
     // ── ResolveActionName ────────────────────────────────────────────────────────────────────
     // The repair looks an action up by FIELD NAME, which assumes field name == action name. That
-    // assumption is false in v1.4.7 for exactly one field, found by diffing all 214 Create() call
-    // sites in the engine's static constructor against their target fields. Without the override the
-    // field resolves to -1, is misreported as "unknown to this engine build", and stays poisoned.
+    // assumption is false for three fields (act_raid_jump, and the two wreckage fields from v1.5.3 at
+    // the latest), found by diffing every Create() call site in the engine's static constructor
+    // against its target field. Without the override a field resolves to -1, is misreported as
+    // "unknown to this engine build", and stays poisoned. ActionIndexCacheRepairEngineTests diffs the
+    // installed engine against the map.
 
     [TestMethod]
     public void ResolveActionName_KnownDivergentField_ReturnsMappedActionName()
@@ -62,6 +64,17 @@ public class ActionIndexCacheRepairTests
         // Engine cctor: act_raid_jump = Create("act_raid_jump_1"). There is no action named
         // "act_raid_jump" in Native/ModuleData/action_types.xml.
         Assert.AreEqual("act_raid_jump_1", ActionIndexCacheRepair.ResolveActionName("act_raid_jump"));
+    }
+
+    [TestMethod]
+    [DataRow("act_wreckage_death_01", "act_cutscene_main_hero_battle_death_01")]
+    [DataRow("act_wreckage_death_02", "act_cutscene_main_hero_battle_death_02")]
+    public void ResolveActionName_WreckageDeathFields_ReturnMappedActionName(string field, string expected)
+    {
+        // cctor (v1.5.3 to v1.5.7): act_wreckage_death_01 = Create("act_cutscene_main_hero_battle_death_01"),
+        // and the same for _02. Neither field name is an action in action_types.xml, so without the
+        // override both stayed at -1 and were logged as "unknown to this engine build".
+        Assert.AreEqual(expected, ActionIndexCacheRepair.ResolveActionName(field));
     }
 
     [TestMethod]

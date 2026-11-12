@@ -1538,3 +1538,10 @@ world vector passed on all 6 (worst 0.43 mm).
 - **Prevent:** a constant model-space move of an animated rig goes on the object and its location keys
   (`rig_scale.move_object`), and its direction is a constant checked against the mesh tool, never read from a pose.
 - **Source:** `E:\LOTRAOMAssets\_reskin_out\dire_wolf_x208\animations\scale_anims_report.json` (both runs).
+
+### A hand-kept name map for an engine table needs a test that re-derives it from the engine, not a comment
+
+`ActionIndexCacheRepair.KnownNameOverrides` holds the fields whose engine literal differs from their name. It had one row. The v1.5.3 cctor already had two more (`act_wreckage_death_01` and `_02`), and the comment "re-diff after an engine bump" did not run for four versions. Every kept launch logged `2 unknown to this engine build`.
+- **Why missed:** the log reports unknowns as an ordinary count, so two permanent ones read as normal. The round-trip guard compares the engine's answer with the map's own output, so it passes a missing row and a stale row alike. No bump checklist names the type.
+- **Prevent:** a table that mirrors an engine table gets a `RequiresGame` test that reads the engine's own IL (`TypeInitializer.GetMethodBody().GetILAsByteArray()` runs no initializer) and asserts the table agrees, with a count check so an unreadable shape fails instead of passing on an empty result. Date an engine fact from the oldest cached version that has it, not from the log being read.
+- **Source:** `docs/reviews/rca-action-index-cache-overrides-2026-11-12.md`, `TAOM.Tests/Features/HeroRace/ActionIndexCacheRepairEngineTests.cs`
