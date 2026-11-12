@@ -338,8 +338,11 @@ large; its cost is not measured. Nothing runs per frame.
 
 ## GitHub Issue
 
-- **Issue:** #775 (draft item 1 in [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md)).
-- **Status:** built and unit-tested; not yet checked in game.
+- **Issue:** #775 (draft item 1 in [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md)); #1028 (the list-size
+  check and the deferred add).
+- **Status:** built and unit-tested. The in-game check of the deferred add was waived by the maintainer on 2026-11-12, so
+  `tools/ingame_checks/1028.toml` reads NOT REACHED until a session plays the path (a Practice Fight from the town arena menu with
+  DualWield on). The Codex pre-review was waived the same day.
 
 ---
 

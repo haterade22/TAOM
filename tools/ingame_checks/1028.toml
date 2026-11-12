@@ -9,6 +9,7 @@
 # Any mission start that loops anywhere in the session fails this check, whoever caused it: a list-change line for either list
 # the engine walks in Mission.AfterStart (MissionBehaviors or MissionObjects), or a "threw and was not survived" line for any
 # cause. That is the class #1028 describes, and a loop the fix does not cover should read FAIL, not be hidden.
+# The maintainer waived the in-game check on 2026-11-12; this manifest stays so a session that plays the path is judged.
 issue = 1028
 title = "Stealth hideout raid loops on the loading screen: a swallowed throw in Mission.AfterStart"
 fixed_in = "6f32888fb"   # the fix; a session built before it writes none of these lines and reads NOT REACHED

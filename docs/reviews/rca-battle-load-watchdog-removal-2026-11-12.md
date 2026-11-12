@@ -4,8 +4,8 @@
 
 The maintainer removed `BattleLoadStallWatchdog` because a slow, cold-cache shader load was reported as a
 crash (a player log held 1,388 `compile_shader` lines in the 301 s the watchdog waited). The removal built and
-passed the C# suite. `/deep-review` (tier 1: data flow, engine compatibility, tooling; the Codex pass hit its
-usage limit and is owed) found no CRITICAL or HIGH defect and no runtime regression. It found that consumers
+passed the C# suite. `/deep-review` (tier 1: data flow, engine compatibility, tooling; the Codex pass was
+waived because no Codex usage is available) found no CRITICAL or HIGH defect and no runtime regression. It found that consumers
 outside the C# build still described, pinned or advised on the removed output. The commit went out first
 (045e7bc42, at the maintainer's request); the fixes are in the follow-up commit that carries this file.
 
@@ -33,7 +33,7 @@ green.
 - **Standards, completeness, design lenses:** not run at tier 1 (the table launches data flow, engine compatibility
   and tooling for this change). Findings 1, 3 and 6 are completeness items; the data flow lens found them.
 - **Engine compatibility lens:** correct to find no engine defect; it reported the stale comments it passed.
-- **Codex:** did not run (usage limit). Its pass is owed before the next release.
+- **Codex:** did not run (no usage available); the maintainer waived it.
 - **The orchestrator's own sweep:** grepped identifiers (`BattleLoadStallWatchdog`, `EnableStallWatchdog`,
   `SuppressStallDetection`) and the two token names in docs, not the promise words in `.github/`.
 
@@ -50,5 +50,5 @@ These are pre-existing gaps or decisions for the maintainer, found by the lenses
 - FOLLOW-UP: `tools/triage_battle_load.py` given a directory exits 1 with a traceback, where its docstring promises 2. no issue: pre-existing and minor; batched.
 - FOLLOW-UP: the dedicated-server settings reader warns "unknown key ... (keys are case-sensitive)" for a removed key, which misleads an operator who still has one of the three removed keys in the file. no issue: only operators who set such a key see it; batched.
 
-The Codex pre-review of this removal is owed (usage limit; the CLI said to retry after 2026-11-14). The prompt is
-`docs/reviews/codex-prereview-battle-load-watchdog-removal-2026-11-12.prompt.md`.
+The Codex pre-review of this removal was waived by the maintainer (no Codex usage). The issue is
+[#1123](https://github.com/haterade22/TAOM/issues/1123); its in-game check is still owed (label `triage-needs-ingame`).

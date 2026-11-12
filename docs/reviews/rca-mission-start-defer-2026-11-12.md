@@ -6,7 +6,8 @@
 queues a `Mission.AddMissionBehavior` made while `Mission.AfterStart` walks `MissionBehaviors`. The code was sound: no CRITICAL, no
 HIGH, and no window, queue or flush path that loses or repeats an add. It found **2 MED and 4 LOW** items, and all but the design
 options were fixed in the same session. The two MED items were wrong statements in the docs, written by the author. Codex did not
-run: the account hit its usage limit, and the maintainer waived the pre-review on 2026-11-12.
+run: the account hit its usage limit, and the maintainer waived the pre-review on 2026-11-12. The maintainer also waived the in-game
+check the same day; the verdict manifest stays and reads NOT REACHED until a session plays the path.
 
 ## Findings
 

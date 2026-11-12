@@ -165,6 +165,12 @@ ticks. Spawn on the first mission tick instead
 (Fords of War, 2026-10-31: `FordsOfWarMissionLogic` marks its start as due in `AfterStart` and starts on the first
 `OnMissionTick`).
 
+Since 2026-11-12 the guard also queues a behaviour that a hook adds while `EarlyStart` or `AfterStart` runs (#1028, the
+DualWield case above) and applies it when `Mission.AfterStart` ends, so that one add no longer makes the engine load the
+mission again. The rule above still stands. A queued behaviour has no `Mission` and has not run `OnCreated` until then, a spawn
+from your own code still runs every hook, and a remove or any other direct change to `MissionBehaviors` inside the walk still
+reloads the mission. Details and limits: [mission-start-guard.md](../../features/mission-start-guard.md#deferred-adds-1028).
+
 ### A custom siege mission must answer two engine questions (v1.5.6)
 
 Leaving vanilla's spawn logic out of a mission's list breaks two engine paths whose call sites name neither it nor the removed behaviors. This section is read from the decompile for Long Defeat (#1079). Two Phase 1 runs (20261104-033424 and 20261104-035343) booted with `LongDefeatMissionLogic` implementing `IBattlePowerCalculationLogic` and no vanilla spawn logic, passed the `boot` check, and ran 2 and 3 waves with the team AI ticking and no crash. They did not show the retreat itself: no wave retreats in this mode.
