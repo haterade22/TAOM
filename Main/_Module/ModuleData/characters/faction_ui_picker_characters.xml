@@ -273,9 +273,9 @@
   </NPCCharacter>
 
   <!-- Tauriel: borrowed body from lord_R1_5 (Arwen), an adult female elf; Mirkwood's own armour
-       catalogue has only one helmet/body mesh (see haldir_bat_equipment's comment in
-       taom_equipment_sets_mirkwood.xml), so gear is the same Rivendell silver archer kit used for
-       Arwen and Haldir there. Unmounted, light armour, bow-armed. -->
+       catalogue has only one helmet/body mesh, so gear is the same Rivendell silver archer kit
+       used for Arwen and Haldir (haldir_bat_equipment in taom_equipment_sets_mirkwood.xml).
+       Unmounted, light armour, bow-armed. -->
   <NPCCharacter id="taom_fui_tauriel"
                 name="{=taom_fui_tauriel_name}Tauriel"
                 age="30"
