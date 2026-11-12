@@ -19,7 +19,7 @@ is no Codex runs. The lenses found one MEDIUM gap and two LOW text errors.
 |---|---|---|---|---|---|
 | 1 | MEDIUM | Nothing checked `KnownNameOverrides` against the engine cctor. The only control was a comment, "re-diff after an engine bump", and it did not run for v1.5.3, v1.5.5, v1.5.6 or v1.5.7 | A manual step with no gate | The map came from one hand diff at v1.4.7. The log line reports "unknown to this engine build" as an ordinary count, so two permanent unknowns read as normal. No engine-bump document names `ActionIndexCache` | `ActionIndexCacheRepairEngineTests` reads the cctor IL and fails when any field's name and literal disagree with the map (a missing row or a stale one), when a field is assigned twice, or when the cctor holds a shape the walker cannot read |
 | 2 | LOW | The new test name and two comments said "v1.5.7 adds" the wreckage fields. The v1.5.3 cache already has them | Wrong version attribution | The dating came from the log being read (v1.5.7), not from the older taom-src caches | Fixed in this change. Check the older caches before dating an engine fact |
-| 3 | LOW | The class summary says the type is not `beforefieldinit` and counts "215 fields". The installed IL says `beforefieldinit` and v1.5.x has 220 fields | Stale comment | `lessons/animation-skeleton.md` was corrected on 2026-10-01 (#700), but the code comment was not | Listed under follow-ups: the lines are outside this change |
+| 3 | LOW | The class summary says the type is not `beforefieldinit` and counts "215 fields". The installed IL says `beforefieldinit` and v1.5.x has 220 fields | Stale comment | `lessons/animation-skeleton.md` was corrected on 2026-10-01 (#700), but the code comment was not | Fixed in the next commit: the lines were outside the first change |
 
 ## Root-cause pattern
 
@@ -41,6 +41,6 @@ None. The durable rule is the entry in `docs/reviews/lessons/animation-skeleton.
 
 ## Follow-ups
 
-- FOLLOW-UP: the class summary in `ActionIndexCacheRepair.cs` (lines 15 to 17 and 40 to 41) still says "not `beforefieldinit`" and "215-field". no issue: comment-only, already corrected in the lessons file on 2026-10-01; batched with the next edit to that file.
+- Done in the next commit (finding 3): the class summary now says `beforefieldinit` with 220 fields, and the "never writes an index it cannot prove" line names the new engine test.
 - FOLLOW-UP: every kept launch starts with all indices poisoned (`0 already healthy`), so the type initialises before action types load on every boot. The repair works around it. no issue: finding the early touch is a maintainer decision, `/investigate` is the route.
 - In-game check owed: the next campaign launch should log `REPAIRED 219 of 220`. Whether the wreckage corpse clips look right with dwarf or troll casualties has not been seen in game (`BattleWreckageVisual` reads both fields).

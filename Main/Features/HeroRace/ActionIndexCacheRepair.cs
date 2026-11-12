@@ -10,13 +10,13 @@ namespace TAOM.Features.HeroRace;
 /// Repairs <see cref="ActionIndexCache"/>'s static action indices when they were baked before the
 /// engine loaded action types.
 ///
-/// The fault: <c>ActionIndexCache</c> declares 215 <c>static readonly</c> fields (v1.4.7) populated
-/// by an explicit static constructor, each via <c>Create(name)</c> →
-/// <c>MBAnimation.GetActionCodeWithName</c>. Because the cctor is explicit the type is not
-/// <c>beforefieldinit</c>, so ANY static member access — field or the <c>Create</c> method — forces
-/// the whole set to initialise. If that happens before action types are loaded, every index is baked
-/// to <c>-1</c> for the life of the process, and the fields being <c>readonly</c> means the cctor
-/// never re-runs to correct them.
+/// The fault: <c>ActionIndexCache</c> declares 220 <c>static readonly</c> fields (v1.5.7), 219 of them
+/// set by its static constructor, each via <c>Create(name)</c> →
+/// <c>MBAnimation.GetActionCodeWithName</c>. The type is <c>beforefieldinit</c> (read from the
+/// installed IL; ILSpy's C# view prints a <c>static</c> constructor either way), so the runtime may
+/// run the constructor at or before the first static field access. If that happens before action
+/// types are loaded, every index is baked to <c>-1</c> for the life of the process, and the fields
+/// being <c>readonly</c> means the cctor never re-runs to correct them.
 ///
 /// The consequence is player-visible: vanilla <c>CharacterTableau.GetIdleAction()</c> returns
 /// <c>ActionIndexCache.act_inventory_idle_start</c>, so <c>SetAction(-1)</c> is a no-op and every
@@ -27,7 +27,8 @@ namespace TAOM.Features.HeroRace;
 ///   - No-op when the statics are healthy, so it is safe to ship before the diagnosis is confirmed.
 ///   - Never touches <c>ActionIndexCache</c> until a gate proves action types are loaded, using
 ///     <c>MBAnimation</c> only — otherwise this class would cause the very fault it repairs.
-///   - Never writes an index it cannot prove belongs to the field (see the round-trip check below).
+///   - Never writes an index it cannot prove belongs to the field: the round-trip check below, and
+///     <c>ActionIndexCacheRepairEngineTests</c>, which diffs the field-to-action map against the engine.
 ///   - Never throws.
 /// </summary>
 public static class ActionIndexCacheRepair
@@ -37,7 +38,7 @@ public static class ActionIndexCacheRepair
 
     /// <summary>
     /// Bounds retries. The primary call site is a prefix on <c>CharacterTableau.RefreshCharacterTableau</c>,
-    /// so an unrecoverable failure that returned "retry me" would re-run the whole 215-field
+    /// so an unrecoverable failure that returned "retry me" would re-run the whole 220-field
     /// reflection + native scan on every tableau refresh for the rest of the session.
     /// </summary>
     private static int _attempts;
