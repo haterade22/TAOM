@@ -3139,4 +3139,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_arachnophobia_mcm_mode}Arachnophobia Mode", Order = 0, RequireRestart = false,
         HintText = "{=taom_arachnophobia_mcm_mode_hint}Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off.")]
     public bool ArachnophobiaMode { get; set; } = false;
+
+    // Persists by index: never reorder or remove a choice (BattleHudColourPaletteTests pins them). The battle
+    // HUD reads it again while a battle runs, so an applied change shows in the current battle.
+    [SettingPropertyGroup("Accessibility")]
+    [SettingPropertyDropdown("{=taom_battlehud_mcm_colour_mode}Battle HUD Colours", Order = 1, RequireRestart = false,
+        HintText = "{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart.")]
+    public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
+        TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
 }

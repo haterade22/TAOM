@@ -86,7 +86,7 @@ public class ServerSettingsSchemaTests
             CollectionAssert.AreEqual(expected, actual, type.Name);
         }
 
-        Assert.AreEqual(541, ServerSettingsSchema.All.Count);
+        Assert.AreEqual(542, ServerSettingsSchema.All.Count);
     }
 
     [TestMethod]
@@ -118,7 +118,7 @@ public class ServerSettingsSchemaTests
     {
         var dropdowns = ServerSettingsSchema.All.Where(d => d.Kind == ServerSettingKind.Dropdown).ToList();
 
-        Assert.AreEqual(6, dropdowns.Count);
+        Assert.AreEqual(7, dropdowns.Count);
         Assert.IsTrue(dropdowns.All(d => d.Options.Count >= 2), "a dropdown has fewer than two options");
     }
 }

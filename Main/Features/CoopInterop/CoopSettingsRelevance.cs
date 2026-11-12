@@ -224,6 +224,8 @@ public static class CoopSettingsRelevance
         // War Chronicle (#765): the event popups are drawn on this client only. The chronicle itself runs on
         // the host; WarChronicleEnabled and WarChronicleArmyFocus stay in.
         "WarChronicleAnnouncements",
+        // The battle HUD colour option: the colours of this client's own health, mount and shield rings, nothing else.
+        "BattleHudColourMode",
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",

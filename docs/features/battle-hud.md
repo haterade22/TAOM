@@ -85,6 +85,16 @@ per segment or an image per fill level. The native AgentStatus prefab must keep 
   strip's height, and the centre a fixed square crop. The shader multiplies the stone into the colour,
   so textured paints use `ColorFactor` 7 to stay readable; the leaf and rims keep 1. Without the stone the
   same paints draw flat.
+- **Colour option:** the Accessibility dropdown `BattleHudColourMode` (Default, Deuteranopia,
+  Protanopia, Tritanopia) recolours only the health, horse and shield rings. MCM persists it by
+  index, so the order of `BattleHudColourPalette.Choices` never changes. The mixin reads
+  `TaomSettings.Instance` on its first refresh and every 30 refreshes after, holding no settings
+  object, and binds the resolved index to the widget's `ColourMode`; no settings, no dropdown or an
+  unknown index is Default. Default is a null palette, so the widget draws exactly as before. Each
+  other mode draws the three bands with no stone (the flat path, `ColorFactor` 1) in solid paints on
+  a dark solid track, with each fill at least 3:1 against the track. Geometry, fill, rims and the
+  career centre are the same in every mode, so ring position and length still tell the channels
+  apart. The widget reads no settings itself, so the preview can compile it.
 - **Images:** the `bh_*` runtime sprites form their own `FrontEndImageGroups.BattleHud` group,
   acquired by `FrontEndMovieService` when the native `MainAgentHUD` movie loads with a
   `MissionAgentStatusVM` (the native movie is kept, only the hold is taken) and released after it
@@ -98,6 +108,7 @@ per segment or an image per fill level. The native AgentStatus prefab must keep 
 | `Main/Features/BattleHud/UI/BattleHudStateMapper.cs` | Optional channels, ratios, centre state |
 | `Main/Features/BattleHud/UI/BattleHudGeometry.cs` | Radii, packing, fill and texture angles, leaf, centre fill, ammo capsule |
 | `Main/Features/BattleHud/UI/BattleHudAmmoMapper.cs` | Ammo capsule visibility, icon and place |
+| `Main/Features/BattleHud/UI/BattleHudColourPalette.cs` | Colour option choices, index resolve and the three accessible ring palettes |
 | `Client/Features/BattleHud/Widgets/TaomBattleHudRingWidget.cs` | Ring, rim, disk and leaf rendering |
 | `Client/Features/BattleHud/UI/MissionAgentStatusBattleHudMixin.cs` | Health, horse, shield and ammo capsule values |
 | `Client/Features/BattleHud/UI/BattleHudNativeSuppressionPrefabs.cs` | Native bars, previews and ammo counter off, lance row moved |
@@ -120,6 +131,10 @@ per segment or an image per fill level. The native AgentStatus prefab must keep 
   order, `DoNotAcceptEvents`, native bindings and brush), that every binding resolves, that the mixin
   holds no agent or mission handle, and that the native hide patch matches the installed counter once
   and never the HUD's own (the installed-file check is `LiveInstall`).
+- `TAOM.Tests/Features/BattleHud/BattleHudColourPaletteTests.cs`: choice order, index resolve with
+  unknown and null indices, the exact palettes, fill against track contrast, the MCM attributes and
+  hint scope, the mixin's read of a changed or replaced dropdown, and the binding from the mixin
+  through the prefab to the widget, which bypasses the stone only for an accessible palette.
 - `FrontEndSpriteServiceTests` and `FrontEndMovieServiceTests` (Battle HUD sections): the group's
   load, hold and release, and the `MainAgentHUD` hold.
 
@@ -139,6 +154,10 @@ per segment or an image per fill level. The native AgentStatus prefab must keep 
    Mount and dismount: the capsule follows the circle's size. No native counter shows anywhere.
    Couch a lance: the lance icon shows left of the circle.
 6. Custom battle: health shows, the centre is dark with no glyph or key.
+7. Mounted with a shield, open Esc, Mod Options, TAOM, Accessibility, Battle HUD Colours. Pick each
+   choice and return to the battle: within about half a second the three rings change to flat
+   colours on a dark track, with the centre, rims, leaf and ammo capsule unchanged. Pick Default:
+   the stone rings come back as in step 1.
 
 ## Changelog
 
@@ -150,6 +169,8 @@ per segment or an image per fill level. The native AgentStatus prefab must keep 
   size), and the health red made richer.
 - 2026-11-10: the ammo count moved into a stone capsule under the circle, with a quiver icon for
   bows and crossbows and a javelin icon for javelins; the native counter is hidden.
+- 2026-11-12: a Battle HUD Colours option under Accessibility draws the health, horse and shield
+  rings in one of three flat palettes for red-green or blue-yellow colour vision. Default is unchanged.
 
 ## GitHub Issue
 
