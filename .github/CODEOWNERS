@@ -1,12 +1,12 @@
-# Every path has the maintainer as owner. The ruleset on the default branches requires a code owner
-# review, so no PR merges without it. The lines below repeat the owner for the paths that
-# .claude/skills/review-outside-pr/SKILL.md treats as high risk (Phase 1, step 3), so they show
-# in the PR review list by name.
+# The maintainer and three collaborators own every path. The default branch ruleset requires no
+# approval and no code owner review, so this file only names the people to ask. The lines below
+# repeat the maintainer for the paths that .claude/skills/review-outside-pr/SKILL.md treats as high
+# risk (Phase 1, step 3), so a reviewer sees those paths by name.
 
 *                   @haterade22 @ThyrellTTV @KEYforcez @yotthani
 
-# GitHub uses the last matching line. The lines below name the maintainer alone, so only the
-# maintainer's approval counts for a change to them.
+# GitHub uses the last matching line. The lines below name the maintainer alone, so a reviewer
+# sees the maintainer as the owner of these paths.
 
 *.csproj            @haterade22
 *.props             @haterade22
