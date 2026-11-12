@@ -133,9 +133,6 @@ public sealed class ShaderPrecompileRunner
     {
         if (IsActive) { _logger?.LogWarning("[ShaderPrecompilation] walk already running — ignoring Begin"); return; }
         _active = this;
-        // Quiet the battle-load stall watchdog for the whole walk — item 1 (all-troops, cold cache)
-        // legitimately loads for many minutes and would otherwise trip the 300s stall crash-bundle.
-        BattleLoadStallWatchdog.SuppressStallDetection = true;
         // Self-heal against a scene that hard-crashed a prior walk's process (GPU-specific native AV
         // during load — e.g. fords_of_isen on the pbr_terrain input-layout-9 compile): the guard
         // records that scene and we drop it from the plan so the walk can complete.
@@ -377,7 +374,6 @@ public sealed class ShaderPrecompileRunner
     private void Finish()
     {
         _crashGuard.ClearLoading();  // belt-and-suspenders — the last item's resolution already cleared it
-        BattleLoadStallWatchdog.SuppressStallDetection = false;  // walk over — re-arm the stall watchdog for real battles
         _ownedMission = null;
         EnterState(RunState.Complete);
         long total = NowMs() - _walkStartedMs;
@@ -418,7 +414,6 @@ public sealed class ShaderPrecompileRunner
     private void FinishCancelled()
     {
         _crashGuard.ClearLoading();                              // don't record the in-flight scene as a crash
-        BattleLoadStallWatchdog.SuppressStallDetection = false;  // re-arm the stall watchdog for real battles
         _ownedMission = null;
         _cancelRequested = false;
         EnterState(RunState.Idle);                               // IsActive -> false; a fresh Begin() may run later
@@ -435,7 +430,6 @@ public sealed class ShaderPrecompileRunner
     private void StopWalk(string reason, string status = null)
     {
         _logger?.LogError($"[ShaderPrecompilation] === WALK STOPPED at item {_index + 1}/{_plan.Count}: {reason} ===");
-        BattleLoadStallWatchdog.SuppressStallDetection = false;
         _ownedMission = null;
         _cancelRequested = false;
         EnterState(RunState.Idle);

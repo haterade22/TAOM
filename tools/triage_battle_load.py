@@ -791,10 +791,10 @@ def classify(tl: Timeline) -> Verdict:
             scene=scene)
 
     # EncounterStart / MissionOpenNew / anything earlier.
-    # (BattleLoadPhase.StallWatchdog never reaches here — the watchdog writes a raw
-    # WATCHDOG line, not an Emit() phase marker, so it's captured as tl.watchdog, not
-    # as a phase event. If that ever changes, PRE_SCENE is still the right fallback:
-    # it fires long before BattlePlayable and is not an equipment-resolution hang.)
+    # (The WATCHDOG line a build before 2026-11-12 wrote is a raw line, not an Emit() phase
+    # marker, so it's captured as tl.watchdog, not as a phase event. If that ever changes,
+    # PRE_SCENE is still the right fallback: it fires long before BattlePlayable and is not
+    # an equipment-resolution hang.)
     scene = _parse_scene(terminal)
     return Verdict(
         "PRE_SCENE",

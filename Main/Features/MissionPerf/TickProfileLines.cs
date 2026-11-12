@@ -96,16 +96,14 @@ public static class TickProfileLines
         OrNa(c.MemLoadPercent), c.AvailPhysMb < 0 ? "na" : c.AvailPhysMb.ToString(CultureInfo.InvariantCulture),
         c.TickProfiler ? "on" : "off", c.Diag.Count == 0 ? "none" : string.Join(",", c.Diag));
 
-    /// <summary>The diagnostics that will run, in contract order, from their raw toggles: the stall
-    /// watchdog and the exit sampler also need the master <paramref name="battleLoad"/> toggle, and the
-    /// stall bundle needs the watchdog (their consumers gate on both); the other three stand alone.</summary>
-    public static IReadOnlyList<string> DiagTokens(bool battleLoad, bool stallWatchdog, bool stallBundle,
+    /// <summary>The diagnostics that will run, in contract order, from their raw toggles: the exit
+    /// sampler also needs the master <paramref name="battleLoad"/> toggle; the other three stand alone.
+    /// The old stallWatchdog and stallBundle tokens went with the load watchdog.</summary>
+    public static IReadOnlyList<string> DiagTokens(bool battleLoad,
         bool exitSampler, bool freezeSampler, bool memSampler, bool missionPerf)
     {
-        var tokens = new List<string>(7);
+        var tokens = new List<string>(5);
         if (battleLoad) tokens.Add("battleLoad");
-        if (battleLoad && stallWatchdog) tokens.Add("stallWatchdog");
-        if (battleLoad && stallWatchdog && stallBundle) tokens.Add("stallBundle");
         if (battleLoad && exitSampler) tokens.Add("exitSampler");
         if (freezeSampler) tokens.Add("freezeSampler");
         if (memSampler) tokens.Add("memSampler");

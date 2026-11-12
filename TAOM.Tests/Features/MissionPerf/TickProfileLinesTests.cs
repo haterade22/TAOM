@@ -23,7 +23,7 @@ public class TickProfileLinesTests
         "[Hitch] t=+72s frameMs=812.35 preDisplayMs=0.40 cameraMs=3.25 missionTickMs=5.20 preTickMs=0.30 waitTickMs=790.00 agentTickMs=795.10 otherMs=13.20 gc0=1 gc1=1 gc2=0 allocKB=96 top=BehaviorTreeMissionLogic:2.10,AdvancedCombatBehavior:1.30,MissionPerfHeartbeatBehavior:0.05";
 
     private const string PinnedPerfContext =
-        "[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,stallWatchdog,stallBundle,exitSampler,freezeSampler,memSampler,missionPerf";
+        "[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,exitSampler,freezeSampler,memSampler,missionPerf";
 
     // The mission-end summary added by the plan's 2026-10-03 amendment; inputs below.
     private const string PinnedTickSummary =
@@ -63,7 +63,7 @@ public class TickProfileLinesTests
         "Debug", false, "4.0.30319.42000", false, "Interactive", 1, "battle_terrain_029", 0,
         frameLimiter, vsync,
         quality, quality == 1 ? 2 : quality, quality == 1 ? 2 : quality, quality, quality, ragdolls, memLoad, availPhysMb, true,
-        diag ?? TickProfileLines.DiagTokens(true, true, true, true, true, true, true));
+        diag ?? TickProfileLines.DiagTokens(true, true, true, true, true));
 
     [TestMethod]
     public void BuildTickProfile_SampleWindow_MatchesThePinnedLiteral()
@@ -157,32 +157,26 @@ public class TickProfileLinesTests
     [TestMethod]
     public void BuildPerfContext_NoDiagnostics_WritesNone()
         => StringAssert.EndsWith(
-            TickProfileLines.BuildPerfContext(SampleContext(diag: TickProfileLines.DiagTokens(false, false, false, false, false, false, false))),
+            TickProfileLines.BuildPerfContext(SampleContext(diag: TickProfileLines.DiagTokens(false, false, false, false, false))),
             " tickProfiler=on diag=none");
 
     [TestMethod]
-    public void DiagTokens_AllOn_ListsSevenInContractOrder()
+    public void DiagTokens_AllOn_ListsFiveInContractOrder()
         => CollectionAssert.AreEqual(
-            new[] { "battleLoad", "stallWatchdog", "stallBundle", "exitSampler", "freezeSampler", "memSampler", "missionPerf" },
-            new List<string>(TickProfileLines.DiagTokens(true, true, true, true, true, true, true)));
+            new[] { "battleLoad", "exitSampler", "freezeSampler", "memSampler", "missionPerf" },
+            new List<string>(TickProfileLines.DiagTokens(true, true, true, true, true)));
 
     [TestMethod]
     public void DiagTokens_SomeOn_ListsOnlyThoseInOrder()
         => CollectionAssert.AreEqual(
-            new[] { "battleLoad", "stallWatchdog", "freezeSampler", "missionPerf" },
-            new List<string>(TickProfileLines.DiagTokens(true, true, false, false, true, false, true)));
+            new[] { "battleLoad", "freezeSampler", "missionPerf" },
+            new List<string>(TickProfileLines.DiagTokens(true, false, true, false, true)));
 
     [TestMethod]
-    public void DiagTokens_MasterOff_OmitsTheThreeDiagnosticsItGates()
+    public void DiagTokens_MasterOff_OmitsTheTwoDiagnosticsItGates()
         => CollectionAssert.AreEqual(
             new[] { "freezeSampler", "memSampler", "missionPerf" },
-            new List<string>(TickProfileLines.DiagTokens(false, true, true, true, true, true, true)));
-
-    [TestMethod]
-    public void DiagTokens_WatchdogOff_OmitsItsBundle()
-        => CollectionAssert.AreEqual(
-            new[] { "battleLoad", "exitSampler" },
-            new List<string>(TickProfileLines.DiagTokens(true, false, true, true, false, false, false)));
+            new List<string>(TickProfileLines.DiagTokens(false, true, true, true, true)));
 
     [TestMethod]
     public void BuildInstallLine_AllSitesFound_MatchesThePinnedLiteral()

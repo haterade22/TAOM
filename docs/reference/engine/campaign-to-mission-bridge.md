@@ -3,7 +3,7 @@
 > **One process, traced from the decompile** (v1.4.5): the seam that turns a campaign-map encounter into a real-time
 > battle — how two `MobileParty`s meeting (Phase 16) become a `MapEvent`, then a `Mission` full of `Agent`s
 > (Phases 1-15). This is **the link between the two halves of the engine study**: managed campaign sim → native
-> mission. TAOM's battle features (Siege, the spider/elephant in combat, the BattleLoadStallWatchdog) all ride it.
+> mission. TAOM's battle features (Siege, the spider/elephant in combat, the BattleLoadDiagnostics phase log) all ride it.
 > Part of the phased engine study.
 
 ## WHAT it is
@@ -72,7 +72,7 @@ native loads + simulates it.
 ## TAOM relevance + gotchas
 - **Every TAOM battle feature rides this bridge.** A spider/elephant troop sits in a `MobileParty`'s `TroopRoster`
   (Phase 16) → this chain → `Mission.SpawnAgent` spawns it (Phase 1). The
-  **`BattleLoadStallWatchdog`** (TAOM) instruments exactly this chain — the spider crash evidence "last
+  **`BattleLoadDiagnostics`** (TAOM) instruments exactly this chain — the spider crash evidence "last
   phase=MissionInitialize seq=4 scene='battle_terrain_020'" is *step 6* (scene load / agent build) stalling.
 - **TAOM mission behaviors are added from `SubModule.OnMissionBehaviorInitialize`** (Phase 4; `AddTaomMissionBehaviors`, which calls
   `AddTaomBehavior(new BehaviorTreeMissionLogic())` and `AddTaomBehavior(new SpiderMissionBehavior())`, SubModule.cs:2183 and :2186), not from step 5's handler. SmartCavalry adds `SmartCavalryAIMissionBehavior` the same way (:2197), and its Formation patches use `Patch_MissionTime_SetMovementOrder`. CompanionTactics adds no behavior in this method and applies `Patch35_CompanionTactics` (:1841). The

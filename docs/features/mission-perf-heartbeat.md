@@ -193,13 +193,14 @@ among other sites), UNVERIFIED which of them can run during a mission. The reads
 `IConfig.GetRGLConfig` (v1.5.5 client `0x4A6840`, cases `0x19` and `0x1a` for `FrameLimiter` and
 `VSync`; see the [engine page](../reference/engine/mission-frame-threads-and-native-costs.md#1-the-battle-frame)). The quality
 fields are the engine option values, rounded to a whole number (`na` when the read fails or the value is not a finite number in range): `shadowQuality` is the Shadow Quality option (`ShadowmapResolution`), `shadowType` is Shadow Type (0 None, 1 Static Only, 2 Static and Dynamic) and `shadowFiltering` is Shadow Filtering (0 None, 1 PCF); `memLoad` and `availPhysMB` come
-from `GlobalMemoryStatusEx`; `diag` lists, in this order, `battleLoad`, `stallWatchdog`,
-`stallBundle`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf` for each diagnostic that
-will run, or `none`. `stallWatchdog` and `exitSampler` also need the master Battle Load Diagnostics
-toggle, and `stallBundle` needs the watchdog, as their consumers do; the other three stand alone:
+from `GlobalMemoryStatusEx`; `diag` lists, in this order, `battleLoad`, `exitSampler`,
+`freezeSampler`, `memSampler`, `missionPerf` for each diagnostic that will run, or `none`.
+`exitSampler` also needs the master Battle Load Diagnostics toggle, as its consumer does; the other
+three stand alone. Builds before 2026-11-12 also listed `stallWatchdog` and `stallBundle` after
+`battleLoad`; `tools/perf_runs.py` still accepts both:
 
 ```
-[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,stallWatchdog,stallBundle,exitSampler,freezeSampler,memSampler,missionPerf
+[PerfContext] build=Debug jitOptimized=false clr=4.0.30319.42000 serverGC=false latency=Interactive missionInProcess=1 scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 availPhysMB=12034 tickProfiler=on diag=battleLoad,exitSampler,freezeSampler,memSampler,missionPerf
 ```
 
 **`[TickSummary]`**, INFO, once at the end of a measured mission that closed any frame, in `probe` or
@@ -1142,7 +1143,7 @@ Read the flags before the numbers:
 |---|---|
 | `FRAME_CAP` | With four or more steady windows: at least half of them sit within 1 fps of one window's fps, or the windows with the most and the fewest active agents, 30% or more apart, ran within 1 fps of each other. A frame limiter (in game or in the driver) may have set the frame time; lift it and rerun. When the mission's `[PerfContext]` has `frameLimiter`, the evidence ends with `; [PerfContext] frameLimiter=<value> vsync=<value or na>`, printed as configured with no judgement whether it explains the plateau; older logs without the field get nothing |
 | `MEMORY_PRESSURE` | The mission's `[PerfContext]`, or a `[MemSample]` line written between the mission's start and the next mission's start or the next game's initialization (so the campaign map after a battle counts toward that battle), read `memLoad` of 80% or more |
-| `DIAG_ON` | `[PerfContext]` shows cost beyond the default diagnostics: `tickProfiler=on`, or a `diag=` token other than the seven that default on (`battleLoad`, `stallWatchdog`, `stallBundle`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf`) |
+| `DIAG_ON` | `[PerfContext]` shows cost beyond the default diagnostics: `tickProfiler=on`, or a `diag=` token other than the ones that default on (`battleLoad`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf`) |
 | `DIRTY_BUILD` | The `[BuildStamp]` TAOM stamp ends in `.dirty`: the build held uncommitted edits, so say what was measured |
 | `BUILD_PAIR_MISMATCH` | The `[BuildStamp]` line says `MISMATCH`: TAOM and TAOM.Dependencies were built more than 12 hours apart |
 

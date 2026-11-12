@@ -8,9 +8,6 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // into a comparison).
 public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosticsSettingsProvider
 {
-    private const double DefaultWatchdogSeconds = 300d;
-    private const double MinWatchdogSeconds = 10d;
-    private const double MaxWatchdogSeconds = 600d;
     private const int DefaultTickProfilerTopN = 8;
     private const int MinTickProfilerTopN = 1;
     private const int MaxTickProfilerTopN = 20;
@@ -21,28 +18,11 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool IsEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableBattleLoadDiagnostics ?? true;
 
-    public bool StallWatchdogEnabled =>
-        BattleLoadDiagnosticsSettings.Instance?.EnableStallWatchdog ?? true;
-
-    public bool StallWatchdogBundleEnabled =>
-        BattleLoadDiagnosticsSettings.Instance?.EnableStallWatchdogBundle ?? true;
-
     public bool ExitStallSamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableExitStallSampler ?? true;
 
     public bool MissionTickStallSamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableMissionTickStallSampler ?? true;
-
-    public double StallWatchdogSeconds
-    {
-        get
-        {
-            double raw = BattleLoadDiagnosticsSettings.Instance?.StallWatchdogSeconds ?? (int)DefaultWatchdogSeconds;
-            return FiniteFloatValidator.IsFiniteInRange(raw, MinWatchdogSeconds, MaxWatchdogSeconds)
-                ? raw
-                : DefaultWatchdogSeconds;
-        }
-    }
 
     public bool MemorySamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableMemorySampler ?? true;
@@ -60,7 +40,7 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
         }
     }
 
-    // Pure seam (StallWatchdogSeconds pattern, testable without the MCM static). Bounds and
+    // Pure seam (testable without the MCM static). Bounds and
     // default live on MemoryPressureSampler — the single source of truth for the contract.
     internal static double ValidateSampleIntervalSeconds(double raw) =>
         FiniteFloatValidator.IsFiniteInRange(

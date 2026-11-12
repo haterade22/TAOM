@@ -1965,7 +1965,6 @@ public class SubModule : MBSubModuleBase
         // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
         // startup down with it — losing the stamps is survivable, losing the game is not.
         TryPatchCategory("Patch43_BattleLoadDiagnostics");
-        IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
         // Patch91 battle-freeze probes (#634): a player's battle froze with the heap flat and no
         // exception, the shape of an agent tick that never finishes while the next frame waits in

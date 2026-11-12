@@ -66,7 +66,6 @@ public static class CoopSettingsRelevance
         // beside it is Presentation.
         "SkeletonBufferWatch",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
-        "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",
         "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick", "ThrowOnNextMissionAfterStart",
         // Each is read by exactly one *DiagnosticsSettingsProvider whose only job is gating a

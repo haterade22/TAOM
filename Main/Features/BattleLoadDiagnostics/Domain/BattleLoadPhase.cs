@@ -12,7 +12,6 @@ public enum BattleLoadPhase
     AgentEquipBegin,
     AgentEquipOk,
     BattlePlayable,
-    StallWatchdog,
 
     // AgentEquipOk -> the next AgentEquipBegin used to be a blind window: our bracket wraps
     // Agent.EquipItemsFromSpawnEquipment, but Mission.BuildAgent keeps working afterwards

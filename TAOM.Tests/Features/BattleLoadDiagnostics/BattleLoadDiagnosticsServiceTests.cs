@@ -100,13 +100,6 @@ public class BattleLoadDiagnosticsServiceTests
     }
 
     [TestMethod]
-    public void CurrentStatusLine_UpdatesAfterPhaseMarker()
-    {
-        _sut.LogMissionInitialize("scene_x");
-        StringAssert.Contains(_sut.CurrentStatusLine, "MissionInitialize");
-    }
-
-    [TestMethod]
     public void Emit_IncludesSeqAndElapsedAndTagTokens()
     {
         _sut.LogEncounterStart(5);
@@ -489,13 +482,6 @@ public class BattleLoadDiagnosticsServiceTests
         _sut.LogTaomBehaviorsBegin();
         _sut.LogTaomBehaviorAdded("X");
         _sut.LogTaomBehaviorsDone(1);
-    }
-
-    [TestMethod]
-    public void CurrentStatusLine_AfterNewPhase_ReflectsLatestPhase()
-    {
-        _sut.LogResourceClearOldBegin();
-        StringAssert.Contains(_sut.CurrentStatusLine, "phase=ResourceClearOldBegin");
     }
 
     // ---- Per-loadout dedupe of the equipment dump (2026-08-03) --------------------------------

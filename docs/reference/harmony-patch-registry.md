@@ -375,24 +375,9 @@ on the frame the mission finally ticks, `TickMission` has already cleared
 `FirstMissionTickAfterLoading`, so the guard skips it and the marker only ever describes frames that
 did not tick.
 
-The same reading feeds the stall watchdog through `BattleLoadRenderWaitProbe`, a
-`volatile`/`Interlocked` static: `Utilities.GetNumberOfShaderCompilationsInProgress()` is native and is
-read only on the main thread, never from the watchdog's thread-pool thread. Past the threshold, a
-compile count that has **moved** within 60 s defers the bundle (one `WATCHDOG DEFERRED` warning per
-window) without setting the fired latch, so a queue that later freezes still gets its bundle. Both
-degenerate readings refuse to defer: `0` means nothing is compiling (a real wedge) and `-1` means
-never sampled, which must not buy a deferral, the same rule as `polls=0`. The hold-off additionally
-ends after 900 s of UNBROKEN compilation (the **churn backstop**): a count thrashing among positive
-values refreshes the no-progress clock forever, and without the cap the watchdog would never fire
-again for that load. The cap runs on continuous compile time from the probe's empty-to-non-empty
-edge, resetting on every dip to zero, NOT on window time, so a slow native scene load is not charged
-against the shader allowance. `ShaderPrecompileDecider`'s `ChurnTimeout` is the same lesson, learned
-in this codebase first and not carried across until two review passes caught first its absence and
-then its wrong clock. All three outcomes come from one `Decide` verdict so the `churn-capped` token
-cannot contradict the decision that produced it. `Patch43LoadPhaseBindingTests`
-adds the named resolve, a not-overloaded assertion, and a check that
-`MissionState.FirstMissionTickAfterLoading` is still publicly readable (it is the hook's per-frame
-guard). See `docs/features/battle-load-diagnostics.md`.
+The reading is only logged (the 1 Hz `WaitingForRender` stamp). The load stall watchdog that once
+consumed it was removed 2026-11-12: a long shader-compile load is slow, not a crash, and its crash bundle
+read as a crash to players.
 
 **2026-08-09 (#425 / PR #440) — the 18th hook closes the quit-to-LOAD window.** `SubModule.OnGameEnd`
 already closed the exit window, but it is reached only through `Game.Destroy()`, which has exactly

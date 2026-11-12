@@ -67,7 +67,7 @@ internal static class PerfContextReader
             availPhysMb,
             measuring,
             Safe<System.Collections.Generic.IReadOnlyList<string>>("diag", () => TickProfileLines.DiagTokens(
-                settings.IsEnabled, settings.StallWatchdogEnabled, settings.StallWatchdogBundleEnabled,
+                settings.IsEnabled,
                 settings.ExitStallSamplerEnabled, settings.MissionTickStallSamplerEnabled, settings.MemorySamplerEnabled,
                 BattleLoadDiagnosticsSettings.Instance?.EnableMissionPerfHeartbeat ?? true),
                 Array.Empty<string>()));

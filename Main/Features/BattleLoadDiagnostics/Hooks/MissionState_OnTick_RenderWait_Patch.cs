@@ -31,11 +31,8 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // (NoteLoadingPoll's division of labour), not here.
 //
 // Observation matrix (static-state rule, .claude/rules/harmony-patches.md): the probe's four states
-// are -1 never-sampled, 0 nothing-compiling, >0 in-progress, and 0 again at completion. States 2 and
-// 4 share the `0` encoding, which is the collision the rule warns about — but nothing here acts on a
-// sentinel-to-terminal transition. The only consumer, BattleLoadStallWatchdog.Decide, treats -1 and 0
-// identically (do not defer, let the watchdog fire), so absent evidence and finished work both fail
-// in the SAFE direction and no _hasObservedWork latch is needed.
+// are -1 never-sampled, 0 nothing-compiling, >0 in-progress, and 0 again at completion. Nothing here
+// acts on a sentinel-to-terminal transition: the value only goes into the 1 Hz log stamp.
 //
 // MissionState.OnTick is `protected override`, so it is bound BY STRING like the sibling
 // TickLoading / FinishMissionLoading patches in this category. AccessTools.Method searches
@@ -65,11 +62,8 @@ public static class MissionState_OnTick_RenderWait_Patch
 
             int shaders;
             try { shaders = Utilities.GetNumberOfShaderCompilationsInProgress(); }
-            catch { shaders = BattleLoadRenderWaitProbe.NeverSampled; }
+            catch { shaders = -1; }
 
-            // Publish on the MAIN thread; the background watchdog reads the static rather than
-            // calling into the engine from a thread-pool thread.
-            BattleLoadRenderWaitProbe.Publish(shaders, DateTime.UtcNow);
             _service?.NoteWaitingForRender(shaders);
         }
         catch { /* diagnostic only — a diagnostic must never break a mission tick */ }
