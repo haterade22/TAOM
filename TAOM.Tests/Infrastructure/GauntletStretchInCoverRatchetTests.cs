@@ -26,7 +26,6 @@ public class GauntletStretchInCoverRatchetTests
     private static readonly Dictionary<string, int> Known = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Main/_Module/GUI/PreFabs/MomentumView/MomentumView.xml"] = 5,
-        ["Main/_Module/GUI/PreFabs/BattleActionBar.xml"] = 1,
         ["Main/_Module/GUI/PreFabs/FacGen/PreBuildCharacterSelection.xml"] = 1,
     };
 
