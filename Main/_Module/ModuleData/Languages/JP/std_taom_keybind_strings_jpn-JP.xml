@@ -21,31 +21,31 @@
     <string id="taom_key_realm_borders_desc" text="キャンペーンマップ上の王国の国境と名前を表示または非表示にします。既定キーはMです。" />
     <string id="taom_key_realm_borders_mode" text="国境マップモード（TAOM）" />
     <string id="taom_key_realm_borders_mode_desc" text="国境の表示を、王国、自由の民対影の勢力、味方と敵の順に切り替えます。既定キーはGです。" />
-    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
-    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Defaults to Q." />
-    <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
-    <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
-    <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
-    <string id="taom_key_marshal_widths_desc" text="Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
-    <string id="taom_key_seat_keep" text="Keep to this soldier or company (TAOM)" />
-    <string id="taom_key_seat_keep_desc" text="In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
-    <string id="taom_key_seat_hide" text="Hide the interface (TAOM)" />
-    <string id="taom_key_seat_hide_desc" text="In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
-    <string id="taom_key_marshal_mark" text="Mark, Do Not Move (TAOM)" />
-    <string id="taom_key_marshal_mark_desc" text="Hold while you order a charge on an enemy company with the order panel open, and your company marks it as its target and keeps its own movement order. A mark steers archers and other ranged soldiers; soldiers fighting hand to hand choose their own foe. Defaults to Left Ctrl." />
-    <string id="taom_key_marshal_fire" text="Change the Archers' Fire (TAOM)" />
-    <string id="taom_key_marshal_fire_desc" text="Press with a company selected to switch its archers between firing at will, drawing their bows to hold until your word (or for 14 seconds at most), and drawing and holding until most of them are ready, when the word is given for you. Defaults to Comma." />
-    <string id="taom_key_marshal_word" text="Give the Word (TAOM)" />
-    <string id="taom_key_marshal_word_desc" text="Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
-    <string id="taom_key_seat_take_soldier" text="Take this soldier (TAOM)" />
-    <string id="taom_key_seat_take_soldier_desc" text="In the Seat, after your hero has fallen in a battle, takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Defaults to Delete." />
-    <string id="taom_key_marshal_hold" text="Hold the Line (TAOM)" />
-    <string id="taom_key_marshal_hold_desc" text="Press with a company selected: its shielded foot soldiers in a shield wall, circle or square stop attacking and keep their places, and strike back for a few seconds when wounded. A charge, a retreat or a second press lets them fight. Defaults to Period." />
-    <string id="taom_key_seat_quicken" text="Quicken time (TAOM)" />
-    <string id="taom_key_seat_quicken_desc" text="In a battle, steps mission time up one level: 0.25, 0.5, 1, 2, 4 and 10. Level 10 needs the Seat up or nobody left for you to fight as. It works from the Seat or from your hero's eyes, in single player only. Defaults to Page Up." />
-    <string id="taom_key_seat_slow" text="Slow time (TAOM)" />
-    <string id="taom_key_seat_slow_desc" text="In a battle, steps mission time down one level, to a quarter of normal speed at the lowest. Defaults to Page Down." />
-    <string id="taom_key_seat_stay" text="Stay time (TAOM)" />
-    <string id="taom_key_seat_stay_desc" text="In a battle, cancels fast time and pauses the mission; press it again to go on. The Seat's view still flies while the battle is paused. Defaults to Home." />
+    <string id="taom_key_seat_take" text="指揮席に就く (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="視点を英雄から離し、戦場の上空を飛べるようにします。解除すると短い滑空を経て戻ります。上空にいる間、英雄はその場に留まりますが、設定次第では戦い続けます。既定はQ。" />
+    <string id="taom_key_marshal_queue" text="順を追って命令する (TAOM)" />
+    <string id="taom_key_marshal_queue_desc" text="命令パネルを開いた状態で押しながら命令すると、その部隊は現在の命令を終えてから実行します。既定は左Shift。" />
+    <string id="taom_key_marshal_widths" text="隊幅を保つ (TAOM)" />
+    <string id="taom_key_marshal_widths_desc" text="命令パネルを開いた状態で押しながら複数部隊の戦列を引くと、伸び広がらず一体となって向きを変えます。既定は左Alt。" />
+    <string id="taom_key_seat_keep" text="この兵または部隊を追う (TAOM)" />
+    <string id="taom_key_seat_keep_desc" text="指揮席にいる間、画面中央の兵、カーソルが示す兵、または命令パネルで選択した部隊に視点を固定し、その周囲を回ります。もう一度押すか飛行すると解除されます。既定はInsert。" />
+    <string id="taom_key_seat_hide" text="インターフェースを隠す (TAOM)" />
+    <string id="taom_key_seat_hide_desc" text="指揮席にいる間、インターフェース全体を隠して視界を清めます。もう一度押すと戻ります。命令パネルを開いた時にも戻ります。既定はEnd。" />
+    <string id="taom_key_marshal_mark" text="標的を定め、動かぬ (TAOM)" />
+    <string id="taom_key_marshal_mark_desc" text="命令パネルを開いた状態で押しながら敵部隊への突撃を命じると、自部隊はそれを標的として定めつつ、現在の移動命令を保ちます。標的の指定は弓兵その他の遠距離兵を導きます。白兵戦の兵は自ら敵を選びます。既定は左Ctrl。" />
+    <string id="taom_key_marshal_fire" text="弓兵の射撃を変える (TAOM)" />
+    <string id="taom_key_marshal_fire_desc" text="部隊を選択して押すと、弓兵の射撃を切り替えます: 自由射撃、弓を引いて合図まで待機(最長14秒)、そして大半が構え終えるまで待ち自動で合図が下る射撃。既定はコンマ。" />
+    <string id="taom_key_marshal_word" text="合図を下す (TAOM)" />
+    <string id="taom_key_marshal_word_desc" text="部隊を選択して押すと、弓を引いて待機している弓兵が一斉に射ます。既定はM。" />
+    <string id="taom_key_seat_take_soldier" text="この兵を操る (TAOM)" />
+    <string id="taom_key_seat_take_soldier_desc" text="指揮席にいる間、英雄が戦闘で倒れた後、画面中央の兵、または追っている部隊の最寄りの兵を操り、その兵があなたの命令を引き継ぎます。既定はDelete。" />
+    <string id="taom_key_marshal_hold" text="戦列を守る (TAOM)" />
+    <string id="taom_key_marshal_hold_desc" text="部隊を選択して押すと、盾持ちの歩兵は盾の壁・円陣・方陣において攻撃をやめ持ち場を守り、傷を負えば数秒間反撃します。突撃、退却、または再度押すことで再び戦います。既定はピリオド。" />
+    <string id="taom_key_seat_quicken" text="時を速める (TAOM)" />
+    <string id="taom_key_seat_quicken_desc" text="戦闘中、ミッション時間を一段階上げます: 0.25、0.5、1、2、4、10。10倍には指揮席に就いているか、操る兵が残っていないことが必要です。指揮席からでも英雄の視点からでも機能し、シングルプレイ専用です。既定はPage Up。" />
+    <string id="taom_key_seat_slow" text="時を遅める (TAOM)" />
+    <string id="taom_key_seat_slow_desc" text="戦闘中、ミッション時間を一段階下げます。最低で通常速度の4分の1まで。既定はPage Down。" />
+    <string id="taom_key_seat_stay" text="時を止める (TAOM)" />
+    <string id="taom_key_seat_stay_desc" text="戦闘中、加速を解除してミッションを一時停止します。もう一度押すと再開します。停止中も指揮席の視点は飛行できます。既定はHome。" />
   </strings>
 </base>

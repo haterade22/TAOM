@@ -21,31 +21,31 @@
     <string id="taom_key_realm_borders_desc" text="Mostra o nasconde i confini e i nomi dei regni sulla mappa della campagna. Predefinito: M." />
     <string id="taom_key_realm_borders_mode" text="Modalità Mappa dei Confini (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Alterna i confini tra i regni, i Popoli Liberi contro l'Ombra e i tuoi alleati e nemici. Predefinito: G." />
-    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
-    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Defaults to Q." />
-    <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
-    <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
-    <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
-    <string id="taom_key_marshal_widths_desc" text="Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
-    <string id="taom_key_seat_keep" text="Keep to this soldier or company (TAOM)" />
-    <string id="taom_key_seat_keep_desc" text="In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
-    <string id="taom_key_seat_hide" text="Hide the interface (TAOM)" />
-    <string id="taom_key_seat_hide_desc" text="In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
-    <string id="taom_key_marshal_mark" text="Mark, Do Not Move (TAOM)" />
-    <string id="taom_key_marshal_mark_desc" text="Hold while you order a charge on an enemy company with the order panel open, and your company marks it as its target and keeps its own movement order. A mark steers archers and other ranged soldiers; soldiers fighting hand to hand choose their own foe. Defaults to Left Ctrl." />
-    <string id="taom_key_marshal_fire" text="Change the Archers' Fire (TAOM)" />
-    <string id="taom_key_marshal_fire_desc" text="Press with a company selected to switch its archers between firing at will, drawing their bows to hold until your word (or for 14 seconds at most), and drawing and holding until most of them are ready, when the word is given for you. Defaults to Comma." />
-    <string id="taom_key_marshal_word" text="Give the Word (TAOM)" />
-    <string id="taom_key_marshal_word_desc" text="Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
-    <string id="taom_key_seat_take_soldier" text="Take this soldier (TAOM)" />
-    <string id="taom_key_seat_take_soldier_desc" text="In the Seat, after your hero has fallen in a battle, takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Defaults to Delete." />
-    <string id="taom_key_marshal_hold" text="Hold the Line (TAOM)" />
-    <string id="taom_key_marshal_hold_desc" text="Press with a company selected: its shielded foot soldiers in a shield wall, circle or square stop attacking and keep their places, and strike back for a few seconds when wounded. A charge, a retreat or a second press lets them fight. Defaults to Period." />
-    <string id="taom_key_seat_quicken" text="Quicken time (TAOM)" />
-    <string id="taom_key_seat_quicken_desc" text="In a battle, steps mission time up one level: 0.25, 0.5, 1, 2, 4 and 10. Level 10 needs the Seat up or nobody left for you to fight as. It works from the Seat or from your hero's eyes, in single player only. Defaults to Page Up." />
-    <string id="taom_key_seat_slow" text="Slow time (TAOM)" />
-    <string id="taom_key_seat_slow_desc" text="In a battle, steps mission time down one level, to a quarter of normal speed at the lowest. Defaults to Page Down." />
-    <string id="taom_key_seat_stay" text="Stay time (TAOM)" />
-    <string id="taom_key_seat_stay_desc" text="In a battle, cancels fast time and pauses the mission; press it again to go on. The Seat's view still flies while the battle is paused. Defaults to Home." />
+    <string id="taom_key_seat_take" text="Prendi il Seggio (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Solleva la visuale dal tuo eroe così da poter volare sul campo, e la riporta indietro con una breve planata. Il tuo eroe resta fermo mentre sei in alto, oppure continua a combattere se tale impostazione è attiva. Predefinito: Q." />
+    <string id="taom_key_marshal_queue" text="Dai l'ordine in coda (TAOM)" />
+    <string id="taom_key_marshal_queue_desc" text="Tieni premuto mentre impartisci un ordine con il pannello degli ordini aperto, e la compagnia lo eseguirà dopo gli ordini correnti. Predefinito: Maiusc sinistro." />
+    <string id="taom_key_marshal_widths" text="Mantieni le larghezze (TAOM)" />
+    <string id="taom_key_marshal_widths_desc" text="Tieni premuto mentre tracci una linea per più compagnie con il pannello degli ordini aperto, e si muoveranno come un sol corpo senza allargarsi. Predefinito: Alt sinistro." />
+    <string id="taom_key_seat_keep" text="Segui questo soldato o compagnia (TAOM)" />
+    <string id="taom_key_seat_keep_desc" text="Nel Seggio, mantiene la visuale sul soldato al centro dello schermo, o sotto il cursore quando ne appare uno, o sulla compagnia selezionata nel pannello degli ordini, e vi orbita attorno. Premi di nuovo, o vola, per lasciarlo. Predefinito: Ins." />
+    <string id="taom_key_seat_hide" text="Nascondi l'interfaccia (TAOM)" />
+    <string id="taom_key_seat_hide_desc" text="Nel Seggio, nasconde tutta l'interfaccia per una visuale pulita. Premi di nuovo per riportarla; ricompare anche quando apri il pannello degli ordini. Predefinito: Fine." />
+    <string id="taom_key_marshal_mark" text="Segnala, non muoverti (TAOM)" />
+    <string id="taom_key_marshal_mark_desc" text="Tieni premuto mentre ordini una carica contro una compagnia nemica con il pannello degli ordini aperto, e la tua compagnia la segnerà come bersaglio mantenendo il proprio ordine di movimento. Un bersaglio guida gli arcieri e gli altri soldati a distanza; chi combatte corpo a corpo sceglie da sé il proprio nemico. Predefinito: Ctrl sinistro." />
+    <string id="taom_key_marshal_fire" text="Cambia il tiro degli arcieri (TAOM)" />
+    <string id="taom_key_marshal_fire_desc" text="Premi con una compagnia selezionata per alternare i suoi arcieri tra il tiro a volontà, il tendere gli archi in attesa del tuo comando (o per 14 secondi al massimo), e il tendere e attendere finché la maggior parte non è pronta, quando il comando viene dato per te. Predefinito: Virgola." />
+    <string id="taom_key_marshal_word" text="Dai il comando (TAOM)" />
+    <string id="taom_key_marshal_word_desc" text="Premi con una compagnia selezionata, e i suoi arcieri che tengono l'arco teso scoccheranno insieme. Predefinito: M." />
+    <string id="taom_key_seat_take_soldier" text="Prendi questo soldato (TAOM)" />
+    <string id="taom_key_seat_take_soldier_desc" text="Nel Seggio, dopo che il tuo eroe è caduto in battaglia, prende il controllo del soldato al centro dello schermo, o del più vicino della compagnia che stai seguendo, il quale eseguirà i tuoi ordini. Predefinito: Canc." />
+    <string id="taom_key_marshal_hold" text="Tieni la linea (TAOM)" />
+    <string id="taom_key_marshal_hold_desc" text="Premi con una compagnia selezionata: i suoi fanti con scudo in muro di scudi, cerchio o quadrato smettono di attaccare e mantengono la posizione, rispondendo ai colpi per qualche secondo quando vengono feriti. Una carica, una ritirata o una seconda pressione permette loro di combattere. Predefinito: Punto." />
+    <string id="taom_key_seat_quicken" text="Accelera il tempo (TAOM)" />
+    <string id="taom_key_seat_quicken_desc" text="In battaglia, aumenta di un livello il tempo della missione: 0.25, 0.5, 1, 2, 4 e 10. Il livello 10 richiede il Seggio sollevato o che non resti nessuno con cui combattere. Funziona dal Seggio o dagli occhi del tuo eroe, solo in giocatore singolo. Predefinito: Pag Su." />
+    <string id="taom_key_seat_slow" text="Rallenta il tempo (TAOM)" />
+    <string id="taom_key_seat_slow_desc" text="In battaglia, riduce di un livello il tempo della missione, fino a un quarto della velocità normale al minimo. Predefinito: Pag Giù." />
+    <string id="taom_key_seat_stay" text="Ferma il tempo (TAOM)" />
+    <string id="taom_key_seat_stay_desc" text="In battaglia, annulla il tempo accelerato e mette in pausa la missione; premi di nuovo per proseguire. La visuale del Seggio continua a volare mentre la battaglia è in pausa. Predefinito: Home." />
   </strings>
 </base>

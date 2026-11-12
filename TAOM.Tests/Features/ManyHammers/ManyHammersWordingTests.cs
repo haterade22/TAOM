@@ -11,9 +11,8 @@ namespace TAOM.Tests.Features.ManyHammers;
 
 /// <summary>
 /// The four MCM strings Many Hammers adds. The attribute literal in <c>TaomSettings</c> is the English source, the English
-/// row in <c>taom_module_strings.xml</c> must equal it, and each of the twelve language files carries the seeded English
-/// default until the paid translation run (#763) replaces the row. A copied <c>{=KEY}</c> shows the old text, so a row left
-/// on an older wording fails here.
+/// row in <c>taom_module_strings.xml</c> must equal it, and each of the twelve language files carries one row per key (its
+/// translation, or the English default until the paid run in #763 fills it) that keeps every placeholder of the English.
 /// </summary>
 [TestClass]
 public class ManyHammersWordingTests
@@ -45,6 +44,9 @@ public class ManyHammersWordingTests
             .ToList();
     }
 
+    private static List<string> Tokens(string text) =>
+        Regex.Matches(text, @"\{[^{}]*\}").Cast<Match>().Select(m => m.Value).Distinct().OrderBy(t => t, System.StringComparer.Ordinal).ToList();
+
     [TestMethod]
     public void TheEnglishRows_EqualTheAttributeLiterals()
     {
@@ -58,7 +60,7 @@ public class ManyHammersWordingTests
     }
 
     [TestMethod]
-    public void EveryLanguageFile_HoldsOneRowOfEachKey_OfTheCurrentEnglish_NoneStale()
+    public void EveryLanguageFile_HoldsOneRowOfEachKey_KeepingTheEnglishPlaceholders()
     {
         var languages = Directory.GetDirectories(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "Languages"));
         Assert.AreEqual(12, languages.Length);
@@ -71,7 +73,7 @@ public class ManyHammersWordingTests
                 var rows = Rows(relative, s.Key);
 
                 Assert.AreEqual(1, rows.Count, Path.GetFileName(file) + " " + s.Key);
-                Assert.AreEqual(English(s), rows[0], Path.GetFileName(file) + " " + s.Key + ": the row must equal the current English");
+                CollectionAssert.AreEqual(Tokens(English(s)), Tokens(rows[0]), Path.GetFileName(file) + " " + s.Key + ": the row must keep the English placeholders");
             }
         }
     }

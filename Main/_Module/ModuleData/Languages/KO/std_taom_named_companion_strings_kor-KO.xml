@@ -125,20 +125,20 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="지식의 대사장 그 자신에게서 배운다면 영광일 것이오." />
     <string id="nc_response_2.named_companion_balakhor_text" text="그 모든 지식이 - 무겁지 않소?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="지식은 쌓아두기만 할 때만 무겁소. 자유롭게 나누면, 그것을 받는 모든 이를 고양시키오. 내 형제 티렐처럼, 나는 이 영역의 영광을 섬기오. 당신은 우리의 끝없는 이야기에 당신의 장을 더하겠소?" />
-    <string id="taom_oath_aragorn_first_prompt" text="Who are the Dúnedain?" />
-    <string id="taom_oath_aragorn_first_reply" text="The Rangers of the North, the last of Númenor's blood in the wild. We guard the Shire and the roads, and no one thanks us for it. We prefer it so." />
-    <string id="taom_oath_aragorn_second_prompt" text="Do you ever wish to claim the crown?" />
-    <string id="taom_oath_aragorn_second_reply" text="Every day, and I fear it as often. If my claim comes, it will not come by taking. I am glad you ask as a friend." />
-    <string id="taom_oath_gimli_first_prompt" text="Tell me of Erebor." />
-    <string id="taom_oath_gimli_first_reply" text="The Lonely Mountain. My kin hold its halls again, and the forges burn day and night. Ask me again once we have shared more fires." />
-    <string id="taom_oath_gimli_second_prompt" text="Would you show me Erebor's deep halls one day?" />
-    <string id="taom_oath_gimli_second_reply" text="You have earned the asking. The deep halls open to a friend. When this war lets us, you shall see the gold of Durin and the hammers of my people." />
-    <string id="nc_backstory_a.named_companion_elegost_text" text="I am Elegost, a Ranger of the North. My kin keep the roads of Eriador while the folk of Bree sleep and never ask who stood watch." />
-    <string id="nc_prebackstory.named_companion_elegost_text" text="A Ranger? The Bree-folk have hard words for your kind." />
-    <string id="nc_backstory_b.named_companion_elegost_text" text="Let them talk. We are the last of the Dúnedain who still walk the wild. I have tracked orcs down out of the Ettenmoors and turned wolves back at the Brandywine before the farmers knew they had come." />
-    <string id="nc_backstory_c.named_companion_elegost_text" text="Arthedain still holds Fornost, and our cousins hold Cardolan and Rhudaur, but the wild lands between them answer to no king. That is where my people keep their watch, and where I have spent my years." />
-    <string id="nc_response_1.named_companion_elegost_text" text="The North owes your people more than it knows." />
-    <string id="nc_response_2.named_companion_elegost_text" text="A wanderer who sleeps in ditches. What use is that to me?" />
-    <string id="nc_backstory_d.named_companion_elegost_text" text="I know every ford between the Greyflood and the Hoarwell, and my bow does not miss in the dark. Ride with me, and you will not walk into an ambush anywhere in Eriador." />
+    <string id="taom_oath_aragorn_first_prompt" text="두네다인은 누구입니까?" />
+    <string id="taom_oath_aragorn_first_reply" text="북부의 순찰자들, 야생에 남은 누메노르 혈통의 마지막이오. 우리는 샤이어와 길들을 지키지만 아무도 그에 감사하지 않소. 우리는 그편이 좋소." />
+    <string id="taom_oath_aragorn_second_prompt" text="왕관을 차지하고 싶다는 생각을 해 본 적이 있습니까?" />
+    <string id="taom_oath_aragorn_second_reply" text="날마다 생각하고, 그만큼 자주 두려워하오. 내 권리가 온다면, 빼앗아서 오지는 않을 것이오. 그대가 친구로서 물어 주니 기쁘오." />
+    <string id="taom_oath_gimli_first_prompt" text="에레보르에 대해 말해 주시오." />
+    <string id="taom_oath_gimli_first_reply" text="외로운산이지. 내 동족이 다시 그 전당을 차지했고, 대장간은 밤낮으로 타오른다네. 우리가 더 많은 모닥불을 함께 나눈 뒤에 다시 물어보게." />
+    <string id="taom_oath_gimli_second_prompt" text="언젠가 에레보르의 깊은 전당을 보여 주겠소?" />
+    <string id="taom_oath_gimli_second_reply" text="그대는 물을 자격을 얻었네. 깊은 전당은 친구에게 열리지. 이 전쟁이 허락할 때, 두린의 황금과 내 백성의 망치를 보게 될 걸세." />
+    <string id="nc_backstory_a.named_companion_elegost_text" text="나는 엘레고스트, 북부의 순찰자요. 내 동족은 브리 사람들이 잠든 사이 에리아도르의 길을 지키지만, 누가 지켜보았는지 아무도 묻지 않소." />
+    <string id="nc_prebackstory.named_companion_elegost_text" text="순찰자라고? 브리 사람들은 당신 같은 이들에게 험한 말을 하던데." />
+    <string id="nc_backstory_b.named_companion_elegost_text" text="말하게 두시오. 우리는 아직 야생을 걷는 마지막 두네다인이오. 나는 에텐무어에서 내려온 오크들을 추적했고, 농부들이 알아차리기도 전에 브랜디와인에서 늑대들을 돌려보냈소." />
+    <string id="nc_backstory_c.named_companion_elegost_text" text="아르세다인은 아직 포르노스트를 지키고, 우리 사촌들은 카르돌란과 루다우르를 지키지만, 그 사이의 황야는 어느 왕도 따르지 않소. 바로 그곳에서 내 백성이 경계를 서고, 나도 그곳에서 세월을 보냈소." />
+    <string id="nc_response_1.named_companion_elegost_text" text="북부는 알지 못하는 것보다 훨씬 많은 빚을 당신 백성에게 지고 있소." />
+    <string id="nc_response_2.named_companion_elegost_text" text="도랑에서 자는 떠돌이라. 그게 내게 무슨 쓸모가 있지?" />
+    <string id="nc_backstory_d.named_companion_elegost_text" text="나는 회색강과 흰샘강 사이의 모든 여울을 알고, 내 활은 어둠 속에서도 빗나가지 않소. 나와 함께 간다면, 에리아도르 어디에서도 매복에 걸려들지 않을 것이오." />
   </strings>
 </base>

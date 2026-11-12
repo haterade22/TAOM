@@ -267,8 +267,11 @@ public class LordCourtesiesWiringTests
         foreach (var file in files)
         {
             var xml = File.ReadAllText(file);
-            Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(xml,
-                "id=\"taom_lc_gift_full\" text=\"(\\{=taom_lc_gift_full\\})?" + System.Text.RegularExpressions.Regex.Escape(text) + "\""), file);
+            if (Path.GetFileName(file) == "taom_module_strings.xml")
+                Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(xml,
+                    "id=\"taom_lc_gift_full\" text=\"(\\{=taom_lc_gift_full\\})?" + System.Text.RegularExpressions.Regex.Escape(text) + "\""), file);
+            else
+                Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(xml, "id=\"taom_lc_gift_full\"").Count, file + ": one row");
             Assert.IsFalse(xml.Contains("taom_lc_gift_thanks"), file);
         }
     }

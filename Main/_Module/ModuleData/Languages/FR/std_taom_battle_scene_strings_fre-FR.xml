@@ -33,14 +33,14 @@
     <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[Rohan] Gués de l'Isen" />
     <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[Rohan] Gouffre de Helm - Pluie nocturne" />
     <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[Rohan] Edoras" />
-    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[Gondor] Ruined Outpost" />
-    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[Gondor] Pelennor Fields" />
-    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[Misty Mountains] Eastern Moria" />
+    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[Gondor] Avant-poste en ruine" />
+    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[Gondor] Champs du Pelennor" />
+    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[Monts Brumeux] Moria orientale" />
     <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[Gondor] Pelargir" />
     <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[Gondor] Serelond" />
-    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[Gondor] Amon Gelin Village" />
-    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[Gondor] Lothgobel Village" />
-    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[Mordor] Mordor Town" />
-    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[Rohan] Rohan Plains II" />
+    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[Gondor] Village d'Amon Gelin" />
+    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[Gondor] Village de Lothgobel" />
+    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[Mordor] Cité du Mordor" />
+    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[Rohan] Plaines du Rohan II" />
   </strings>
 </base>

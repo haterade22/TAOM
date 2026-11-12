@@ -1547,3 +1547,19 @@ Battle pay changed from "base times a clamped enemy-to-player ratio" to "base ti
 - **Why missed:** a caller search finds the function's callers. It cannot find a display of the config field, and the code graph sees types only, not config properties or localized strings.
 - **Prevent:** when a configured value changes meaning, grep the field name, its XML attribute, the localization keys and default texts that mention it ("per battle", "price", "ratio") and the docs. Give a reworded text a new key: a changed English text under an old key leaves 12 stale rows, while a new key shows the correct English from its inline default until the language pass.
 - **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), findings 2 and 3.
+
+### A gate that excuses a pattern must also fail on a damaged row of that pattern (language pass, 2026-11-12)
+
+The writing-system gate flagged five rows that keep a file name verbatim, as #763 asks ("castle_patrols.json"). I added a mask that blanked every camelCase or underscore token, with five clean DataRows. The mask also blanked "haiOops" in a CNt ability name, and the corrupted row passed both shipped-row gates.
+
+- **Why missed:** every new DataRow tested the clean direction. The run before the mask had reported the row, and I did not re-read that report after the change.
+- **Prevent:** an exemption names its source: mask a token only when the registered English holds the same token. Add a damaged DataRow of the exempted shape and see it fail before the mask goes in. After a gate change, diff its report against the run before.
+- **Source:** [rca-localization-pass-2026-11-12.md](../rca-localization-pass-2026-11-12.md), finding H1.
+
+### After a translation run, compare the BR and IT tagged-name count with the count before it (language pass, 2026-11-12)
+
+Translating names that were English turned 157 BR and IT names into rows led by a noun the tag rules did not know ("Forte", "Rocca"). `generate_name_tags.py --write` dropped them from the table, `name_tags.py` wrote no tag, and both tag gates passed, because they check the rows against the table.
+
+- **Why missed:** I read the PASS line, not the count beside it (1,199 of 1,199, down from 1,265).
+- **Prevent:** after any translator run in BR or IT, run `python tools/generate_name_tags.py --list-undecided` and compare the tagged count with the count before the run. Settle each new "unknown first word" with a head noun, a proper prefix or a pin before the tags are applied.
+- **Source:** [rca-localization-pass-2026-11-12.md](../rca-localization-pass-2026-11-12.md), finding H2.

@@ -1628,152 +1628,152 @@
     <string id="aom_spc_wanderer_khand_7_name" text="{FIRSTNAME} Ostrakan" />
     <string id="aom_spc_wanderer_khand_8_name" text="{FIRSTNAME} Zhulgarid" />
     <string id="aom_spc_wanderer_khand_9_name" text="{FIRSTNAME} Bahrmakhan" />
-    <string id="aom_harad_lord_archer_name" text="Lord of Harwan (Archer)" />
-    <string id="aom_harad_lord_cavalry_name" text="Lord of Harwan (Cavalry)" />
-    <string id="aom_harad_lord_infantry_name" text="Lord of Harwan (Infantry)" />
-    <string id="aom_shaghana_lord_archer_name" text="Lord of Shaghana (Archer)" />
-    <string id="aom_shaghana_lord_cavalry_name" text="Lord of Shaghana (Cavalry)" />
-    <string id="aom_shaghana_lord_infantry_name" text="Lord of Shaghana (Infantry)" />
-    <string id="aom_card_arena" text="Arena Master" />
-    <string id="aom_card_armed_trader" text="Cardolan Armed Trader" />
-    <string id="aom_card_armorer" text="Armorer" />
-    <string id="aom_card_barber" text="Barber" />
-    <string id="aom_card_beggar" text="Beggar" />
-    <string id="aom_card_blacksmith" text="Blacksmith" />
-    <string id="aom_card_caravan_guard" text="Cardolan Caravan Guard" />
-    <string id="aom_card_caravan_master" text="Cardolan Caravan Master" />
-    <string id="aom_card_dancer" text="Dancer" />
-    <string id="aom_card_female_beggar" text="Beggar" />
-    <string id="aom_card_gamehost" text="Game Host" />
-    <string id="aom_card_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_card_gear_dummy" text="Gear Dummy" />
-    <string id="aom_card_guard" text="Guard" />
-    <string id="aom_card_headman_1" text="Rebellious Cardolan headman" />
-    <string id="aom_card_headman_2" text="Conservative Cardolan headman" />
-    <string id="aom_card_headman_3" text="Devious Cardolan headman" />
-    <string id="aom_card_horse_merchant" text="Horse Merchant" />
-    <string id="aom_card_merchant" text="Trader" />
-    <string id="aom_card_musician" text="Musician" />
-    <string id="aom_card_notable_0" text="Prudent Cardolan merchant" />
-    <string id="aom_card_notable_0b" text="Cardolan vintner" />
-    <string id="aom_card_notable_1" text="Ruthless Cardolan trader" />
-    <string id="aom_card_notable_10" text="Sardonic Cardolan outlaw" />
-    <string id="aom_card_notable_11" text="Intimidating Cardolan enforcer" />
-    <string id="aom_card_notable_12" text="Cunning Cardolan smuggler" />
-    <string id="aom_card_notable_13" text="Menacing Cardolan schemer" />
-    <string id="aom_card_notable_1b" text="Cold Cardolan merchant" />
-    <string id="aom_card_notable_2" text="Caras Gorthad gem dealer" />
-    <string id="aom_card_notable_21" text="Stern Cardolan landowner" />
-    <string id="aom_card_notable_22" text="Agreeable Cardolan elder" />
-    <string id="aom_card_notable_2b" text="Wise Cardolan merchant" />
-    <string id="aom_card_notable_3" text="Self-made Cardolan merchant" />
-    <string id="aom_card_notable_3b" text="Jovial Cardolan merchant" />
-    <string id="aom_card_notable_4" text="Shrewd Cardolan merchant" />
-    <string id="aom_card_notable_4b" text="Devious Cardolan merchant" />
-    <string id="aom_card_notable_5" text="Zealous Cardolan loremaster" />
-    <string id="aom_card_notable_6" text="Stern lord of Cardolan" />
-    <string id="aom_card_notable_7" text="Cardolan keeper of traditions" />
-    <string id="aom_card_notable_8" text="Gruff Caras Gorthad artisan" />
-    <string id="aom_card_notable_9" text="Gifted Cardolan craftsman" />
-    <string id="aom_card_notable_gl1" text="Protective Cardolan ringleader" />
-    <string id="aom_card_notable_gl4" text="Ruthless Cardolan thug" />
-    <string id="aom_card_practice_1" text="Practice Fighter" />
-    <string id="aom_card_practice_2" text="Practice Fighter" />
-    <string id="aom_card_practice_3" text="Practice Fighter" />
-    <string id="aom_card_practice_dummy" text="Practice Dummy" />
-    <string id="aom_card_prison_guard" text="Prison Guard" />
-    <string id="aom_card_ransom_broker" text="Ransom Broker" />
-    <string id="aom_card_shop_worker" text="Shop Worker" />
-    <string id="aom_card_tavern_wench" text="Tavern Wench" />
-    <string id="aom_card_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_card_townsman" text="Townsman" />
-    <string id="aom_card_townsman_child" text="Townsman" />
-    <string id="aom_card_townsman_infant" text="Townsman" />
-    <string id="aom_card_townsman_teen" text="Townsman" />
-    <string id="aom_card_townswoman" text="Townswoman" />
-    <string id="aom_card_townswoman_child" text="Townswoman" />
-    <string id="aom_card_townswoman_infant" text="Townswoman" />
-    <string id="aom_card_townswoman_teen" text="Townswoman" />
-    <string id="aom_card_vet_caravan_guard" text="Cardolan Veteran Caravan Guard" />
-    <string id="aom_card_village_woman" text="Village Woman" />
-    <string id="aom_card_village_woman_child" text="Village Child" />
-    <string id="aom_card_village_woman_teen" text="Village Teenager" />
-    <string id="aom_card_villager" text="Villager" />
-    <string id="aom_card_villager_child" text="Village Child" />
-    <string id="aom_card_villager_teen" text="Village Teenager" />
-    <string id="aom_card_weaponsmith" text="Weaponsmith" />
-    <string id="aom_cardolan_lord_1" text="Bold Cardolan lord" />
-    <string id="aom_cardolan_lord_2" text="Cautious Cardolan lord" />
-    <string id="aom_rhud_arena" text="Arena Master" />
-    <string id="aom_rhud_armed_trader" text="Rhudaur Armed Trader" />
-    <string id="aom_rhud_armorer" text="Armorer" />
-    <string id="aom_rhud_barber" text="Barber" />
-    <string id="aom_rhud_beggar" text="Beggar" />
-    <string id="aom_rhud_blacksmith" text="Blacksmith" />
-    <string id="aom_rhud_caravan_guard" text="Rhudaur Caravan Guard" />
-    <string id="aom_rhud_caravan_master" text="Rhudaur Caravan Master" />
-    <string id="aom_rhud_dancer" text="Dancer" />
-    <string id="aom_rhud_female_beggar" text="Beggar" />
-    <string id="aom_rhud_gamehost" text="Game Host" />
-    <string id="aom_rhud_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_rhud_gear_dummy" text="Gear Dummy" />
-    <string id="aom_rhud_guard" text="Guard" />
-    <string id="aom_rhud_headman_1" text="Rebellious Rhudaur headman" />
-    <string id="aom_rhud_headman_2" text="Conservative Rhudaur headman" />
-    <string id="aom_rhud_headman_3" text="Devious Rhudaur headman" />
-    <string id="aom_rhud_horse_merchant" text="Horse Merchant" />
-    <string id="aom_rhud_merchant" text="Trader" />
-    <string id="aom_rhud_musician" text="Musician" />
-    <string id="aom_rhud_notable_0" text="Prudent Rhudaur merchant" />
-    <string id="aom_rhud_notable_0b" text="Rhudaur vintner" />
-    <string id="aom_rhud_notable_1" text="Ruthless Rhudaur trader" />
-    <string id="aom_rhud_notable_10" text="Sardonic Rhudaur outlaw" />
-    <string id="aom_rhud_notable_11" text="Intimidating Rhudaur enforcer" />
-    <string id="aom_rhud_notable_12" text="Cunning Rhudaur smuggler" />
-    <string id="aom_rhud_notable_13" text="Menacing Rhudaur schemer" />
-    <string id="aom_rhud_notable_1b" text="Cold Rhudaur merchant" />
-    <string id="aom_rhud_notable_2" text="Cameth Brin gem dealer" />
-    <string id="aom_rhud_notable_21" text="Stern Rhudaur landowner" />
-    <string id="aom_rhud_notable_22" text="Agreeable Rhudaur elder" />
-    <string id="aom_rhud_notable_2b" text="Wise Rhudaur merchant" />
-    <string id="aom_rhud_notable_3" text="Self-made Rhudaur merchant" />
-    <string id="aom_rhud_notable_3b" text="Jovial Rhudaur merchant" />
-    <string id="aom_rhud_notable_4" text="Shrewd Rhudaur merchant" />
-    <string id="aom_rhud_notable_4b" text="Devious Rhudaur merchant" />
-    <string id="aom_rhud_notable_5" text="Zealous Rhudaur loremaster" />
-    <string id="aom_rhud_notable_6" text="Stern lord of Rhudaur" />
-    <string id="aom_rhud_notable_7" text="Rhudaur keeper of traditions" />
-    <string id="aom_rhud_notable_8" text="Gruff Cameth Brin artisan" />
-    <string id="aom_rhud_notable_9" text="Gifted Rhudaur craftsman" />
-    <string id="aom_rhud_notable_gl1" text="Protective Rhudaur ringleader" />
-    <string id="aom_rhud_notable_gl4" text="Ruthless Rhudaur thug" />
-    <string id="aom_rhud_practice_1" text="Practice Fighter" />
-    <string id="aom_rhud_practice_2" text="Practice Fighter" />
-    <string id="aom_rhud_practice_3" text="Practice Fighter" />
-    <string id="aom_rhud_practice_dummy" text="Practice Dummy" />
-    <string id="aom_rhud_prison_guard" text="Prison Guard" />
-    <string id="aom_rhud_ransom_broker" text="Ransom Broker" />
-    <string id="aom_rhud_shop_worker" text="Shop Worker" />
-    <string id="aom_rhud_tavern_wench" text="Tavern Wench" />
-    <string id="aom_rhud_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_rhud_townsman" text="Townsman" />
-    <string id="aom_rhud_townsman_child" text="Townsman" />
-    <string id="aom_rhud_townsman_infant" text="Townsman" />
-    <string id="aom_rhud_townsman_teen" text="Townsman" />
-    <string id="aom_rhud_townswoman" text="Townswoman" />
-    <string id="aom_rhud_townswoman_child" text="Townswoman" />
-    <string id="aom_rhud_townswoman_infant" text="Townswoman" />
-    <string id="aom_rhud_townswoman_teen" text="Townswoman" />
-    <string id="aom_rhud_vet_caravan_guard" text="Rhudaur Veteran Caravan Guard" />
-    <string id="aom_rhud_village_woman" text="Village Woman" />
-    <string id="aom_rhud_village_woman_child" text="Village Child" />
-    <string id="aom_rhud_village_woman_teen" text="Village Teenager" />
-    <string id="aom_rhud_villager" text="Villager" />
-    <string id="aom_rhud_villager_child" text="Village Child" />
-    <string id="aom_rhud_villager_teen" text="Village Teenager" />
-    <string id="aom_rhud_weaponsmith" text="Weaponsmith" />
-    <string id="aom_rhudaur_lord_1" text="Bold Rhudaur lord" />
-    <string id="aom_rhudaur_lord_2" text="Cautious Rhudaur lord" />
+    <string id="aom_harad_lord_archer_name" text="Seigneur de Harwan (Archer)" />
+    <string id="aom_harad_lord_cavalry_name" text="Seigneur de Harwan (Cavalerie)" />
+    <string id="aom_harad_lord_infantry_name" text="Seigneur de Harwan (Infanterie)" />
+    <string id="aom_shaghana_lord_archer_name" text="Seigneur de Shaghana (Archer)" />
+    <string id="aom_shaghana_lord_cavalry_name" text="Seigneur de Shaghana (Cavalerie)" />
+    <string id="aom_shaghana_lord_infantry_name" text="Seigneur de Shaghana (Infanterie)" />
+    <string id="aom_card_arena" text="Maître d'arène" />
+    <string id="aom_card_armed_trader" text="Marchand armé du Cardolan" />
+    <string id="aom_card_armorer" text="Fabricant d'armures" />
+    <string id="aom_card_barber" text="Barbier" />
+    <string id="aom_card_beggar" text="Mendiant" />
+    <string id="aom_card_blacksmith" text="Forgeron" />
+    <string id="aom_card_caravan_guard" text="Garde de caravane du Cardolan" />
+    <string id="aom_card_caravan_master" text="Maître de caravane du Cardolan" />
+    <string id="aom_card_dancer" text="Danseuse" />
+    <string id="aom_card_female_beggar" text="Mendiante" />
+    <string id="aom_card_gamehost" text="Maître du jeu" />
+    <string id="aom_card_gang_bodyguard" text="Garde du corps de gang" />
+    <string id="aom_card_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_card_guard" text="Garde" />
+    <string id="aom_card_headman_1" text="Chef de village rebelle du Cardolan" />
+    <string id="aom_card_headman_2" text="Chef de village conservateur du Cardolan" />
+    <string id="aom_card_headman_3" text="Chef de village retors du Cardolan" />
+    <string id="aom_card_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_card_merchant" text="Marchand" />
+    <string id="aom_card_musician" text="Musicien" />
+    <string id="aom_card_notable_0" text="Marchand prudent du Cardolan" />
+    <string id="aom_card_notable_0b" text="Vigneron du Cardolan" />
+    <string id="aom_card_notable_1" text="Négociant impitoyable du Cardolan" />
+    <string id="aom_card_notable_10" text="Hors-la-loi sardonique du Cardolan" />
+    <string id="aom_card_notable_11" text="Exécuteur intimidant du Cardolan" />
+    <string id="aom_card_notable_12" text="Contrebandier rusé du Cardolan" />
+    <string id="aom_card_notable_13" text="Comploteur menaçant du Cardolan" />
+    <string id="aom_card_notable_1b" text="Marchand froid du Cardolan" />
+    <string id="aom_card_notable_2" text="Marchand de gemmes de Caras Gorthad" />
+    <string id="aom_card_notable_21" text="Propriétaire terrien sévère du Cardolan" />
+    <string id="aom_card_notable_22" text="Ancien affable du Cardolan" />
+    <string id="aom_card_notable_2b" text="Marchand avisé du Cardolan" />
+    <string id="aom_card_notable_3" text="Marchand de Cardolan parti de rien" />
+    <string id="aom_card_notable_3b" text="Joyeux marchand de Cardolan" />
+    <string id="aom_card_notable_4" text="Marchand avisé de Cardolan" />
+    <string id="aom_card_notable_4b" text="Marchand retors de Cardolan" />
+    <string id="aom_card_notable_5" text="Maître du savoir zélé de Cardolan" />
+    <string id="aom_card_notable_6" text="Seigneur sévère du Cardolan" />
+    <string id="aom_card_notable_7" text="Gardien des traditions du Cardolan" />
+    <string id="aom_card_notable_8" text="Artisan bourru de Caras Gorthad" />
+    <string id="aom_card_notable_9" text="Artisan talentueux de Cardolan" />
+    <string id="aom_card_notable_gl1" text="Chef de bande protecteur du Cardolan" />
+    <string id="aom_card_notable_gl4" text="Brute impitoyable du Cardolan" />
+    <string id="aom_card_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_card_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_card_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_card_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_card_prison_guard" text="Garde de prison" />
+    <string id="aom_card_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_card_shop_worker" text="Employé de boutique" />
+    <string id="aom_card_tavern_wench" text="Servante de taverne" />
+    <string id="aom_card_tavernkeeper" text="Tavernier" />
+    <string id="aom_card_townsman" text="Citadin" />
+    <string id="aom_card_townsman_child" text="Citadin" />
+    <string id="aom_card_townsman_infant" text="Citadin" />
+    <string id="aom_card_townsman_teen" text="Citadin" />
+    <string id="aom_card_townswoman" text="Citadine" />
+    <string id="aom_card_townswoman_child" text="Citadine" />
+    <string id="aom_card_townswoman_infant" text="Citadine" />
+    <string id="aom_card_townswoman_teen" text="Citadine" />
+    <string id="aom_card_vet_caravan_guard" text="Garde de caravane vétéran du Cardolan" />
+    <string id="aom_card_village_woman" text="Villageoise" />
+    <string id="aom_card_village_woman_child" text="Enfant du village" />
+    <string id="aom_card_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_card_villager" text="Villageois" />
+    <string id="aom_card_villager_child" text="Enfant du village" />
+    <string id="aom_card_villager_teen" text="Adolescent du village" />
+    <string id="aom_card_weaponsmith" text="Armurier" />
+    <string id="aom_cardolan_lord_1" text="Seigneur audacieux du Cardolan" />
+    <string id="aom_cardolan_lord_2" text="Seigneur prudent du Cardolan" />
+    <string id="aom_rhud_arena" text="Maître d'arène" />
+    <string id="aom_rhud_armed_trader" text="Marchand armé du Rhudaur" />
+    <string id="aom_rhud_armorer" text="Armurier" />
+    <string id="aom_rhud_barber" text="Barbier" />
+    <string id="aom_rhud_beggar" text="Mendiant" />
+    <string id="aom_rhud_blacksmith" text="Forgeron" />
+    <string id="aom_rhud_caravan_guard" text="Garde de caravane du Rhudaur" />
+    <string id="aom_rhud_caravan_master" text="Maître de caravane du Rhudaur" />
+    <string id="aom_rhud_dancer" text="Danseuse" />
+    <string id="aom_rhud_female_beggar" text="Mendiante" />
+    <string id="aom_rhud_gamehost" text="Maître de jeu" />
+    <string id="aom_rhud_gang_bodyguard" text="Garde du corps de gang" />
+    <string id="aom_rhud_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_rhud_guard" text="Garde" />
+    <string id="aom_rhud_headman_1" text="Chef de village rebelle du Rhudaur" />
+    <string id="aom_rhud_headman_2" text="Chef de village conservateur du Rhudaur" />
+    <string id="aom_rhud_headman_3" text="Chef de village retors du Rhudaur" />
+    <string id="aom_rhud_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_rhud_merchant" text="Négociant" />
+    <string id="aom_rhud_musician" text="Musicien" />
+    <string id="aom_rhud_notable_0" text="Marchand prudent du Rhudaur" />
+    <string id="aom_rhud_notable_0b" text="Vigneron du Rhudaur" />
+    <string id="aom_rhud_notable_1" text="Négociant impitoyable du Rhudaur" />
+    <string id="aom_rhud_notable_10" text="Hors-la-loi sardonique du Rhudaur" />
+    <string id="aom_rhud_notable_11" text="Exécuteur intimidant du Rhudaur" />
+    <string id="aom_rhud_notable_12" text="Contrebandier rusé du Rhudaur" />
+    <string id="aom_rhud_notable_13" text="Comploteur menaçant du Rhudaur" />
+    <string id="aom_rhud_notable_1b" text="Marchand froid du Rhudaur" />
+    <string id="aom_rhud_notable_2" text="Négociant en pierres précieuses de Cameth Brin" />
+    <string id="aom_rhud_notable_21" text="Propriétaire terrien sévère du Rhudaur" />
+    <string id="aom_rhud_notable_22" text="Ancien avenant du Rhudaur" />
+    <string id="aom_rhud_notable_2b" text="Marchand avisé du Rhudaur" />
+    <string id="aom_rhud_notable_3" text="Marchand parvenu du Rhudaur" />
+    <string id="aom_rhud_notable_3b" text="Marchand jovial du Rhudaur" />
+    <string id="aom_rhud_notable_4" text="Marchand perspicace du Rhudaur" />
+    <string id="aom_rhud_notable_4b" text="Marchand retors du Rhudaur" />
+    <string id="aom_rhud_notable_5" text="Maître du savoir zélé du Rhudaur" />
+    <string id="aom_rhud_notable_6" text="Seigneur sévère du Rhudaur" />
+    <string id="aom_rhud_notable_7" text="Gardien des traditions du Rhudaur" />
+    <string id="aom_rhud_notable_8" text="Artisan bourru de Cameth Brin" />
+    <string id="aom_rhud_notable_9" text="Artisan doué du Rhudaur" />
+    <string id="aom_rhud_notable_gl1" text="Meneur protecteur du Rhudaur" />
+    <string id="aom_rhud_notable_gl4" text="Brute impitoyable du Rhudaur" />
+    <string id="aom_rhud_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_rhud_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_rhud_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_rhud_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_rhud_prison_guard" text="Geôlier" />
+    <string id="aom_rhud_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_rhud_shop_worker" text="Employé de boutique" />
+    <string id="aom_rhud_tavern_wench" text="Servante de taverne" />
+    <string id="aom_rhud_tavernkeeper" text="Tavernier" />
+    <string id="aom_rhud_townsman" text="Citadin" />
+    <string id="aom_rhud_townsman_child" text="Citadin" />
+    <string id="aom_rhud_townsman_infant" text="Citadin" />
+    <string id="aom_rhud_townsman_teen" text="Citadin" />
+    <string id="aom_rhud_townswoman" text="Citadine" />
+    <string id="aom_rhud_townswoman_child" text="Citadine" />
+    <string id="aom_rhud_townswoman_infant" text="Citadine" />
+    <string id="aom_rhud_townswoman_teen" text="Citadine" />
+    <string id="aom_rhud_vet_caravan_guard" text="Garde de caravane vétéran du Rhudaur" />
+    <string id="aom_rhud_village_woman" text="Villageoise" />
+    <string id="aom_rhud_village_woman_child" text="Enfant du village" />
+    <string id="aom_rhud_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_rhud_villager" text="Villageois" />
+    <string id="aom_rhud_villager_child" text="Enfant du village" />
+    <string id="aom_rhud_villager_teen" text="Adolescent du village" />
+    <string id="aom_rhud_weaponsmith" text="Armurier" />
+    <string id="aom_rhudaur_lord_1" text="Seigneur audacieux du Rhudaur" />
+    <string id="aom_rhudaur_lord_2" text="Seigneur prudent du Rhudaur" />
     <string id="aom_spc_wanderer_cardolan_0_name" text="{FIRSTNAME} Calendorionath" />
     <string id="aom_spc_wanderer_cardolan_10_name" text="{FIRSTNAME} Morvegilionath" />
     <string id="aom_spc_wanderer_cardolan_11_name" text="{FIRSTNAME} Arandurionath" />
@@ -1800,80 +1800,80 @@
     <string id="aom_spc_wanderer_rhudaur_7_name" text="{FIRSTNAME} Egladilionath" />
     <string id="aom_spc_wanderer_rhudaur_8_name" text="{FIRSTNAME} Forostirionath" />
     <string id="aom_spc_wanderer_rhudaur_9_name" text="{FIRSTNAME} Valandilionath" />
-    <string id="aom_elu_arena" text="Arena Master" />
-    <string id="aom_elu_armed_trader" text="Ered Luin Armed Trader" />
-    <string id="aom_elu_armorer" text="Armorer" />
-    <string id="aom_elu_barber" text="Barber" />
-    <string id="aom_elu_beggar" text="Beggar" />
-    <string id="aom_elu_blacksmith" text="Blacksmith" />
-    <string id="aom_elu_caravan_guard" text="Ered Luin Caravan Guard" />
-    <string id="aom_elu_caravan_master" text="Ered Luin Caravan Master" />
-    <string id="aom_elu_dancer" text="Dancer" />
-    <string id="aom_elu_female_beggar" text="Beggar" />
-    <string id="aom_elu_gamehost" text="Game Host" />
-    <string id="aom_elu_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_elu_gear_dummy" text="Gear Dummy" />
-    <string id="aom_elu_guard" text="Guard" />
-    <string id="aom_elu_headman_1" text="Rebellious dwarven headman" />
-    <string id="aom_elu_headman_2" text="Conservative dwarven headman" />
-    <string id="aom_elu_headman_3" text="Devious dwarven headman" />
-    <string id="aom_elu_horse_merchant" text="Horse Merchant" />
-    <string id="aom_elu_merchant" text="Trader" />
-    <string id="aom_elu_musician" text="Musician" />
-    <string id="aom_elu_notable_0" text="Cautious dwarven merchant" />
-    <string id="aom_elu_notable_0b" text="Dwarven vintner" />
-    <string id="aom_elu_notable_1" text="Ruthless dwarven trader" />
-    <string id="aom_elu_notable_10" text="Ironic dwarven gang leader" />
-    <string id="aom_elu_notable_11" text="Intimidating dwarven enforcer" />
-    <string id="aom_elu_notable_12" text="Cunning dwarven smuggler" />
-    <string id="aom_elu_notable_13" text="Menacing dwarven gang leader" />
-    <string id="aom_elu_notable_1b" text="Cold dwarven merchant" />
-    <string id="aom_elu_notable_2" text="Dwarven gem dealer" />
-    <string id="aom_elu_notable_21" text="Gruff dwarven landowner" />
-    <string id="aom_elu_notable_22" text="Agreeable dwarven elder" />
-    <string id="aom_elu_notable_2b" text="Cautious dwarven ore trader" />
-    <string id="aom_elu_notable_3" text="Self-made dwarven merchant" />
-    <string id="aom_elu_notable_3b" text="Jocular dwarven merchant" />
-    <string id="aom_elu_notable_4" text="Shrewd dwarven merchant" />
-    <string id="aom_elu_notable_4b" text="Devious dwarven merchant" />
-    <string id="aom_elu_notable_5" text="Zealous dwarven loremaster" />
-    <string id="aom_elu_notable_6" text="Stern dwarven elder" />
-    <string id="aom_elu_notable_7" text="Dwarven keeper of traditions" />
-    <string id="aom_elu_notable_8" text="Gruff dwarven smith" />
-    <string id="aom_elu_notable_9" text="Outgoing dwarven craftsman" />
-    <string id="aom_elu_notable_gl1" text="Protective dwarven ringleader" />
-    <string id="aom_elu_notable_gl4" text="Bestial dwarven thug" />
-    <string id="aom_elu_practice_1" text="Practice Fighter" />
-    <string id="aom_elu_practice_2" text="Practice Fighter" />
-    <string id="aom_elu_practice_3" text="Practice Fighter" />
-    <string id="aom_elu_practice_dummy" text="Practice Dummy" />
-    <string id="aom_elu_prison_guard" text="Prison Guard" />
-    <string id="aom_elu_ransom_broker" text="Ransom Broker" />
-    <string id="aom_elu_shop_worker" text="Shop Worker" />
-    <string id="aom_elu_tavern_wench" text="Tavern Wench" />
-    <string id="aom_elu_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_elu_town_child" text="Town Child" />
-    <string id="aom_elu_town_teen" text="Town Teenager" />
-    <string id="aom_elu_townsman" text="Townsman" />
-    <string id="aom_elu_townsman_child" text="Townsman" />
-    <string id="aom_elu_townsman_infant" text="Townsman" />
-    <string id="aom_elu_townsman_teen" text="Townsman" />
-    <string id="aom_elu_townswoman" text="Townswoman" />
-    <string id="aom_elu_townswoman_child" text="Townswoman" />
-    <string id="aom_elu_townswoman_infant" text="Townswoman" />
-    <string id="aom_elu_townswoman_teen" text="Townswoman" />
-    <string id="aom_elu_vet_caravan_guard" text="Ered Luin Veteran Caravan Guard" />
-    <string id="aom_elu_village_child" text="Village Child" />
-    <string id="aom_elu_village_teen" text="Village Teenager" />
-    <string id="aom_elu_village_woman" text="Village Woman" />
-    <string id="aom_elu_village_woman_child" text="Village Child" />
-    <string id="aom_elu_village_woman_teen" text="Village Teenager" />
-    <string id="aom_elu_villager" text="Villager" />
-    <string id="aom_elu_villager_child" text="Village Child" />
-    <string id="aom_elu_villager_teen" text="Village Teenager" />
-    <string id="aom_elu_weaponsmith" text="Weaponsmith" />
-    <string id="aom_eredluin_lord_1" text="Bold dwarven lord" />
-    <string id="aom_eredluin_lord_2" text="Cautious dwarven lord" />
+    <string id="aom_elu_arena" text="Maître d'arène" />
+    <string id="aom_elu_armed_trader" text="Marchand armé d'Ered Luin" />
+    <string id="aom_elu_armorer" text="Armurier" />
+    <string id="aom_elu_barber" text="Barbier" />
+    <string id="aom_elu_beggar" text="Mendiant" />
+    <string id="aom_elu_blacksmith" text="Forgeron" />
+    <string id="aom_elu_caravan_guard" text="Garde de caravane d'Ered Luin" />
+    <string id="aom_elu_caravan_master" text="Maître de caravane d'Ered Luin" />
+    <string id="aom_elu_dancer" text="Danseuse" />
+    <string id="aom_elu_female_beggar" text="Mendiante" />
+    <string id="aom_elu_gamehost" text="Maître de jeu" />
+    <string id="aom_elu_gang_bodyguard" text="Garde du corps de gang" />
+    <string id="aom_elu_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_elu_guard" text="Garde" />
+    <string id="aom_elu_headman_1" text="Chef de village nain rebelle" />
+    <string id="aom_elu_headman_2" text="Chef de village nain conservateur" />
+    <string id="aom_elu_headman_3" text="Chef de village nain retors" />
+    <string id="aom_elu_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_elu_merchant" text="Négociant" />
+    <string id="aom_elu_musician" text="Musicien" />
+    <string id="aom_elu_notable_0" text="Marchand nain prudent" />
+    <string id="aom_elu_notable_0b" text="Vigneron nain" />
+    <string id="aom_elu_notable_1" text="Négociant nain impitoyable" />
+    <string id="aom_elu_notable_10" text="Chef de gang nain ironique" />
+    <string id="aom_elu_notable_11" text="Exécuteur nain intimidant" />
+    <string id="aom_elu_notable_12" text="Contrebandier nain rusé" />
+    <string id="aom_elu_notable_13" text="Chef de gang nain menaçant" />
+    <string id="aom_elu_notable_1b" text="Marchand nain froid" />
+    <string id="aom_elu_notable_2" text="Marchand de gemmes nain" />
+    <string id="aom_elu_notable_21" text="Propriétaire terrien nain bourru" />
+    <string id="aom_elu_notable_22" text="Ancien nain accommodant" />
+    <string id="aom_elu_notable_2b" text="Marchand de minerai nain prudent" />
+    <string id="aom_elu_notable_3" text="Marchand nain parti de rien" />
+    <string id="aom_elu_notable_3b" text="Marchand nain jovial" />
+    <string id="aom_elu_notable_4" text="Marchand nain avisé" />
+    <string id="aom_elu_notable_4b" text="Marchand nain retors" />
+    <string id="aom_elu_notable_5" text="Maître du savoir nain zélé" />
+    <string id="aom_elu_notable_6" text="Ancien nain sévère" />
+    <string id="aom_elu_notable_7" text="Gardien des traditions nain" />
+    <string id="aom_elu_notable_8" text="Forgeron nain bourru" />
+    <string id="aom_elu_notable_9" text="Artisan nain extraverti" />
+    <string id="aom_elu_notable_gl1" text="Meneur nain protecteur" />
+    <string id="aom_elu_notable_gl4" text="Brute naine bestiale" />
+    <string id="aom_elu_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_elu_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_elu_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_elu_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_elu_prison_guard" text="Garde de prison" />
+    <string id="aom_elu_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_elu_shop_worker" text="Commis de boutique" />
+    <string id="aom_elu_tavern_wench" text="Serveuse de taverne" />
+    <string id="aom_elu_tavernkeeper" text="Tavernier" />
+    <string id="aom_elu_town_child" text="Enfant de la ville" />
+    <string id="aom_elu_town_teen" text="Adolescent de la ville" />
+    <string id="aom_elu_townsman" text="Citadin" />
+    <string id="aom_elu_townsman_child" text="Citadin" />
+    <string id="aom_elu_townsman_infant" text="Citadin" />
+    <string id="aom_elu_townsman_teen" text="Citadin" />
+    <string id="aom_elu_townswoman" text="Citadine" />
+    <string id="aom_elu_townswoman_child" text="Citadine" />
+    <string id="aom_elu_townswoman_infant" text="Citadine" />
+    <string id="aom_elu_townswoman_teen" text="Citadine" />
+    <string id="aom_elu_vet_caravan_guard" text="Garde de caravane vétéran d'Ered Luin" />
+    <string id="aom_elu_village_child" text="Enfant du village" />
+    <string id="aom_elu_village_teen" text="Adolescent du village" />
+    <string id="aom_elu_village_woman" text="Villageoise" />
+    <string id="aom_elu_village_woman_child" text="Enfant du village" />
+    <string id="aom_elu_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_elu_villager" text="Villageois" />
+    <string id="aom_elu_villager_child" text="Enfant du village" />
+    <string id="aom_elu_villager_teen" text="Adolescent du village" />
+    <string id="aom_elu_weaponsmith" text="Armurier (armes)" />
+    <string id="aom_eredluin_lord_1" text="Seigneur nain audacieux" />
+    <string id="aom_eredluin_lord_2" text="Seigneur nain prudent" />
     <string id="aom_spc_wanderer_eredluin_0_name" text="{FIRSTNAME} Bit Barukkhaz" />
     <string id="aom_spc_wanderer_eredluin_10_name" text="{FIRSTNAME} Bit Norin" />
     <string id="aom_spc_wanderer_eredluin_11_name" text="{FIRSTNAME} Bit Kár" />
@@ -1886,154 +1886,154 @@
     <string id="aom_spc_wanderer_eredluin_7_name" text="{FIRSTNAME} Bit Gór" />
     <string id="aom_spc_wanderer_eredluin_8_name" text="{FIRSTNAME} Bit Lóin" />
     <string id="aom_spc_wanderer_eredluin_9_name" text="{FIRSTNAME} Bit Garin" />
-    <string id="aom_ang_arena" text="Arena Master" />
-    <string id="aom_ang_armed_trader" text="Angáladh Armed Trader" />
-    <string id="aom_ang_armorer" text="Armorer" />
-    <string id="aom_ang_barber" text="Barber" />
-    <string id="aom_ang_beggar" text="Beggar" />
-    <string id="aom_ang_blacksmith" text="Blacksmith" />
-    <string id="aom_ang_caravan_guard" text="Angáladh Caravan Guard" />
-    <string id="aom_ang_caravan_master" text="Angáladh Caravan Master" />
-    <string id="aom_ang_dancer" text="Dancer" />
-    <string id="aom_ang_edu_1" text="Angáladh Youth" />
-    <string id="aom_ang_edu_2" text="Angáladh Youth" />
-    <string id="aom_ang_edu_3" text="Angáladh Youth" />
-    <string id="aom_ang_edu_4" text="Angáladh Youth" />
-    <string id="aom_ang_edu_5" text="Angáladh Youth" />
-    <string id="aom_ang_edu_6" text="Angáladh Youth" />
-    <string id="aom_ang_female_beggar" text="Beggar" />
-    <string id="aom_ang_gamehost" text="Game Host" />
-    <string id="aom_ang_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_ang_gear_dummy" text="Gear Dummy" />
-    <string id="aom_ang_guard" text="Guard" />
-    <string id="aom_ang_headman_1" text="Steadfast Angáladh headman" />
-    <string id="aom_ang_headman_2" text="Conservative Woodman headman" />
-    <string id="aom_ang_headman_3" text="Shrewd Angáladh headman" />
-    <string id="aom_ang_horse_merchant" text="Horse Merchant" />
-    <string id="aom_ang_merchant" text="Trader" />
-    <string id="aom_ang_musician" text="Musician" />
-    <string id="aom_ang_notable_0" text="Cautious Woodman trader" />
-    <string id="aom_ang_notable_0b" text="Shrewd forest merchant" />
-    <string id="aom_ang_notable_1" text="Ruthless Angáladh fur trader" />
-    <string id="aom_ang_notable_10" text="Sardonic Woodman outlaw" />
-    <string id="aom_ang_notable_11" text="Intimidating Angáladh enforcer" />
-    <string id="aom_ang_notable_12" text="Cunning Angáladh smuggler" />
-    <string id="aom_ang_notable_13" text="Menacing forest schemer" />
-    <string id="aom_ang_notable_1b" text="Cold Woodman merchant" />
-    <string id="aom_ang_notable_2" text="Angáladh gem dealer" />
-    <string id="aom_ang_notable_21" text="Weathered Woodman landowner" />
-    <string id="aom_ang_notable_22" text="Agreeable Angáladh elder" />
-    <string id="aom_ang_notable_2b" text="Wise Woodman merchant" />
-    <string id="aom_ang_notable_3" text="Self-made Angáladh merchant" />
-    <string id="aom_ang_notable_3b" text="Jovial forest merchant" />
-    <string id="aom_ang_notable_4" text="Shrewd Woodman merchant" />
-    <string id="aom_ang_notable_4b" text="Devious Angáladh merchant" />
-    <string id="aom_ang_notable_5" text="Devout Angáladh elder" />
-    <string id="aom_ang_notable_6" text="Stern Woodman lorekeeper" />
-    <string id="aom_ang_notable_7" text="Angáladh keeper of traditions" />
-    <string id="aom_ang_notable_8" text="Skilled Woodman smith" />
-    <string id="aom_ang_notable_9" text="Gifted Angáladh craftsman" />
-    <string id="aom_ang_notable_gl1" text="Bold forest ringleader" />
-    <string id="aom_ang_notable_gl4" text="Ruthless Woodman thug" />
-    <string id="aom_ang_practice_1" text="Practice Fighter" />
-    <string id="aom_ang_practice_2" text="Practice Fighter" />
-    <string id="aom_ang_practice_3" text="Practice Fighter" />
-    <string id="aom_ang_practice_dummy" text="Practice Dummy" />
-    <string id="aom_ang_prison_guard" text="Prison Guard" />
-    <string id="aom_ang_ransom_broker" text="Ransom Broker" />
-    <string id="aom_ang_shop_worker" text="Shop Worker" />
-    <string id="aom_ang_tavern_wench" text="Tavern Wench" />
-    <string id="aom_ang_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_ang_townsman" text="Townsman" />
-    <string id="aom_ang_townsman_child" text="Townsman" />
-    <string id="aom_ang_townsman_infant" text="Townsman" />
-    <string id="aom_ang_townsman_teen" text="Townsman" />
-    <string id="aom_ang_townswoman" text="Townswoman" />
-    <string id="aom_ang_townswoman_child" text="Townswoman" />
-    <string id="aom_ang_townswoman_infant" text="Townswoman" />
-    <string id="aom_ang_townswoman_teen" text="Townswoman" />
-    <string id="aom_ang_vet_caravan_guard" text="Angáladh Veteran Caravan Guard" />
-    <string id="aom_ang_village_woman" text="Village Woman" />
-    <string id="aom_ang_village_woman_child" text="Village Child" />
-    <string id="aom_ang_village_woman_teen" text="Village Teenager" />
-    <string id="aom_ang_villager" text="Villager" />
-    <string id="aom_ang_villager_child" text="Village Child" />
-    <string id="aom_ang_villager_teen" text="Village Teenager" />
-    <string id="aom_ang_weaponsmith" text="Weaponsmith" />
-    <string id="aom_av_arena" text="Arena Master" />
-    <string id="aom_av_armed_trader" text="Vale Armed Trader" />
-    <string id="aom_av_armorer" text="Armorer" />
-    <string id="aom_av_barber" text="Barber" />
-    <string id="aom_av_beggar" text="Beggar" />
-    <string id="aom_av_blacksmith" text="Blacksmith" />
-    <string id="aom_av_caravan_guard" text="Vale Caravan Guard" />
-    <string id="aom_av_caravan_master" text="Vale Caravan Master" />
-    <string id="aom_av_dancer" text="Dancer" />
-    <string id="aom_av_edu_1" text="Vale Youth" />
-    <string id="aom_av_edu_2" text="Vale Youth" />
-    <string id="aom_av_edu_3" text="Vale Youth" />
-    <string id="aom_av_edu_4" text="Vale Youth" />
-    <string id="aom_av_edu_5" text="Vale Youth" />
-    <string id="aom_av_edu_6" text="Vale Youth" />
-    <string id="aom_av_female_beggar" text="Beggar" />
-    <string id="aom_av_gamehost" text="Game Host" />
-    <string id="aom_av_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_av_gear_dummy" text="Gear Dummy" />
-    <string id="aom_av_guard" text="Guard" />
-    <string id="aom_av_headman_1" text="Steadfast Vale headman" />
-    <string id="aom_av_headman_2" text="Conservative Beorning headman" />
-    <string id="aom_av_headman_3" text="Shrewd Vale headman" />
-    <string id="aom_av_horse_merchant" text="Horse Merchant" />
-    <string id="aom_av_merchant" text="Trader" />
-    <string id="aom_av_musician" text="Musician" />
-    <string id="aom_av_notable_0" text="Cautious Beorning trader" />
-    <string id="aom_av_notable_0b" text="Shrewd riverside merchant" />
-    <string id="aom_av_notable_1" text="Ruthless Vale fur trader" />
-    <string id="aom_av_notable_10" text="Sardonic Beorning outlaw" />
-    <string id="aom_av_notable_11" text="Intimidating Vale enforcer" />
-    <string id="aom_av_notable_12" text="Cunning Vale smuggler" />
-    <string id="aom_av_notable_13" text="Menacing riverside schemer" />
-    <string id="aom_av_notable_1b" text="Cold Beorning merchant" />
-    <string id="aom_av_notable_2" text="Vale gem dealer" />
-    <string id="aom_av_notable_21" text="Weathered Beorning landowner" />
-    <string id="aom_av_notable_22" text="Agreeable Vale elder" />
-    <string id="aom_av_notable_2b" text="Wise Beorning merchant" />
-    <string id="aom_av_notable_3" text="Self-made Vale merchant" />
-    <string id="aom_av_notable_3b" text="Jovial riverside merchant" />
-    <string id="aom_av_notable_4" text="Shrewd Beorning merchant" />
-    <string id="aom_av_notable_4b" text="Devious Vale merchant" />
-    <string id="aom_av_notable_5" text="Devout Vale elder" />
-    <string id="aom_av_notable_6" text="Stern Beorning lorekeeper" />
-    <string id="aom_av_notable_7" text="Vale keeper of traditions" />
-    <string id="aom_av_notable_8" text="Skilled Beorning smith" />
-    <string id="aom_av_notable_9" text="Gifted Vale craftsman" />
-    <string id="aom_av_notable_gl1" text="Bold riverside ringleader" />
-    <string id="aom_av_notable_gl4" text="Ruthless Beorning thug" />
-    <string id="aom_av_practice_1" text="Practice Fighter" />
-    <string id="aom_av_practice_2" text="Practice Fighter" />
-    <string id="aom_av_practice_3" text="Practice Fighter" />
-    <string id="aom_av_practice_dummy" text="Practice Dummy" />
-    <string id="aom_av_prison_guard" text="Prison Guard" />
-    <string id="aom_av_ransom_broker" text="Ransom Broker" />
-    <string id="aom_av_shop_worker" text="Shop Worker" />
-    <string id="aom_av_tavern_wench" text="Tavern Wench" />
-    <string id="aom_av_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_av_townsman" text="Townsman" />
-    <string id="aom_av_townsman_child" text="Townsman" />
-    <string id="aom_av_townsman_infant" text="Townsman" />
-    <string id="aom_av_townsman_teen" text="Townsman" />
-    <string id="aom_av_townswoman" text="Townswoman" />
-    <string id="aom_av_townswoman_child" text="Townswoman" />
-    <string id="aom_av_townswoman_infant" text="Townswoman" />
-    <string id="aom_av_townswoman_teen" text="Townswoman" />
-    <string id="aom_av_vet_caravan_guard" text="Vale Veteran Caravan Guard" />
-    <string id="aom_av_village_woman" text="Village Woman" />
-    <string id="aom_av_village_woman_child" text="Village Child" />
-    <string id="aom_av_village_woman_teen" text="Village Teenager" />
-    <string id="aom_av_villager" text="Villager" />
-    <string id="aom_av_villager_child" text="Village Child" />
-    <string id="aom_av_villager_teen" text="Village Teenager" />
-    <string id="aom_av_weaponsmith" text="Weaponsmith" />
+    <string id="aom_ang_arena" text="Maître d'arène" />
+    <string id="aom_ang_armed_trader" text="Marchand armé d'Angáladh" />
+    <string id="aom_ang_armorer" text="Armurier" />
+    <string id="aom_ang_barber" text="Barbier" />
+    <string id="aom_ang_beggar" text="Mendiant" />
+    <string id="aom_ang_blacksmith" text="Forgeron" />
+    <string id="aom_ang_caravan_guard" text="Garde de caravane d'Angáladh" />
+    <string id="aom_ang_caravan_master" text="Maître de caravane d'Angáladh" />
+    <string id="aom_ang_dancer" text="Danseuse" />
+    <string id="aom_ang_edu_1" text="Jeune d'Angáladh" />
+    <string id="aom_ang_edu_2" text="Jeune d'Angáladh" />
+    <string id="aom_ang_edu_3" text="Jeune d'Angáladh" />
+    <string id="aom_ang_edu_4" text="Jeune d'Angáladh" />
+    <string id="aom_ang_edu_5" text="Jeune d'Angáladh" />
+    <string id="aom_ang_edu_6" text="Jeune d'Angáladh" />
+    <string id="aom_ang_female_beggar" text="Mendiante" />
+    <string id="aom_ang_gamehost" text="Organisateur de jeux" />
+    <string id="aom_ang_gang_bodyguard" text="Garde du corps de bande" />
+    <string id="aom_ang_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_ang_guard" text="Garde" />
+    <string id="aom_ang_headman_1" text="Chef de village d'Angáladh inébranlable" />
+    <string id="aom_ang_headman_2" text="Chef de village bûcheron conservateur" />
+    <string id="aom_ang_headman_3" text="Chef de village angáladh avisé" />
+    <string id="aom_ang_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_ang_merchant" text="Négociant" />
+    <string id="aom_ang_musician" text="Musicien" />
+    <string id="aom_ang_notable_0" text="Marchand bûcheron prudent" />
+    <string id="aom_ang_notable_0b" text="Marchand de la forêt avisé" />
+    <string id="aom_ang_notable_1" text="Marchand de fourrures angáladh impitoyable" />
+    <string id="aom_ang_notable_10" text="Hors-la-loi bûcheron sardonique" />
+    <string id="aom_ang_notable_11" text="Exécuteur angáladh intimidant" />
+    <string id="aom_ang_notable_12" text="Contrebandier angáladh rusé" />
+    <string id="aom_ang_notable_13" text="Comploteur de la forêt menaçant" />
+    <string id="aom_ang_notable_1b" text="Marchand bûcheron froid" />
+    <string id="aom_ang_notable_2" text="Marchand de gemmes angáladh" />
+    <string id="aom_ang_notable_21" text="Propriétaire terrien bûcheron buriné" />
+    <string id="aom_ang_notable_22" text="Ancien angáladh affable" />
+    <string id="aom_ang_notable_2b" text="Marchand bûcheron sage" />
+    <string id="aom_ang_notable_3" text="Marchand angáladh parti de rien" />
+    <string id="aom_ang_notable_3b" text="Marchand de la forêt jovial" />
+    <string id="aom_ang_notable_4" text="Marchand bûcheron avisé" />
+    <string id="aom_ang_notable_4b" text="Marchand angáladh retors" />
+    <string id="aom_ang_notable_5" text="Ancien angáladh dévot" />
+    <string id="aom_ang_notable_6" text="Gardien du savoir bûcheron sévère" />
+    <string id="aom_ang_notable_7" text="Gardien des traditions angáladh" />
+    <string id="aom_ang_notable_8" text="Forgeron bûcheron habile" />
+    <string id="aom_ang_notable_9" text="Artisan angáladh talentueux" />
+    <string id="aom_ang_notable_gl1" text="Meneur de la forêt audacieux" />
+    <string id="aom_ang_notable_gl4" text="Brute bûcheronne impitoyable" />
+    <string id="aom_ang_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_ang_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_ang_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_ang_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_ang_prison_guard" text="Garde de prison" />
+    <string id="aom_ang_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_ang_shop_worker" text="Employé de boutique" />
+    <string id="aom_ang_tavern_wench" text="Servante de taverne" />
+    <string id="aom_ang_tavernkeeper" text="Tavernier" />
+    <string id="aom_ang_townsman" text="Citadin" />
+    <string id="aom_ang_townsman_child" text="Citadin" />
+    <string id="aom_ang_townsman_infant" text="Citadin" />
+    <string id="aom_ang_townsman_teen" text="Citadin" />
+    <string id="aom_ang_townswoman" text="Citadine" />
+    <string id="aom_ang_townswoman_child" text="Citadine" />
+    <string id="aom_ang_townswoman_infant" text="Citadine" />
+    <string id="aom_ang_townswoman_teen" text="Citadine" />
+    <string id="aom_ang_vet_caravan_guard" text="Garde de caravane vétéran d'Angáladh" />
+    <string id="aom_ang_village_woman" text="Villageoise" />
+    <string id="aom_ang_village_woman_child" text="Enfant du village" />
+    <string id="aom_ang_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_ang_villager" text="Villageois" />
+    <string id="aom_ang_villager_child" text="Enfant du village" />
+    <string id="aom_ang_villager_teen" text="Adolescent du village" />
+    <string id="aom_ang_weaponsmith" text="Armurier" />
+    <string id="aom_av_arena" text="Maître d'arène" />
+    <string id="aom_av_armed_trader" text="Marchand armé du Val" />
+    <string id="aom_av_armorer" text="Armurier" />
+    <string id="aom_av_barber" text="Barbier" />
+    <string id="aom_av_beggar" text="Mendiant" />
+    <string id="aom_av_blacksmith" text="Forgeron" />
+    <string id="aom_av_caravan_guard" text="Garde de caravane du Val" />
+    <string id="aom_av_caravan_master" text="Maître de caravane du Val" />
+    <string id="aom_av_dancer" text="Danseuse" />
+    <string id="aom_av_edu_1" text="Jeune du Val" />
+    <string id="aom_av_edu_2" text="Jeune du Val" />
+    <string id="aom_av_edu_3" text="Jeune du Val" />
+    <string id="aom_av_edu_4" text="Jeune du Val" />
+    <string id="aom_av_edu_5" text="Jeune du Val" />
+    <string id="aom_av_edu_6" text="Jeune du Val" />
+    <string id="aom_av_female_beggar" text="Mendiante" />
+    <string id="aom_av_gamehost" text="Maître de jeu" />
+    <string id="aom_av_gang_bodyguard" text="Garde du corps de gang" />
+    <string id="aom_av_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_av_guard" text="Garde" />
+    <string id="aom_av_headman_1" text="Chef de village inébranlable du Val" />
+    <string id="aom_av_headman_2" text="Chef de village conservateur des Béornides" />
+    <string id="aom_av_headman_3" text="Chef de village avisé du Val" />
+    <string id="aom_av_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_av_merchant" text="Marchand" />
+    <string id="aom_av_musician" text="Musicien" />
+    <string id="aom_av_notable_0" text="Marchand béornide prudent" />
+    <string id="aom_av_notable_0b" text="Marchand avisé des rives" />
+    <string id="aom_av_notable_1" text="Impitoyable pelletier du Val" />
+    <string id="aom_av_notable_10" text="Hors-la-loi béornide sardonique" />
+    <string id="aom_av_notable_11" text="Exécuteur intimidant du Val" />
+    <string id="aom_av_notable_12" text="Contrebandier rusé du Val" />
+    <string id="aom_av_notable_13" text="Comploteur menaçant des rives" />
+    <string id="aom_av_notable_1b" text="Marchand béornide froid" />
+    <string id="aom_av_notable_2" text="Négociant en gemmes du Val" />
+    <string id="aom_av_notable_21" text="Propriétaire béornide buriné" />
+    <string id="aom_av_notable_22" text="Ancien affable du Val" />
+    <string id="aom_av_notable_2b" text="Sage marchand béornide" />
+    <string id="aom_av_notable_3" text="Marchand du Val parti de rien" />
+    <string id="aom_av_notable_3b" text="Joyeux marchand des rives" />
+    <string id="aom_av_notable_4" text="Marchand béornide avisé" />
+    <string id="aom_av_notable_4b" text="Marchand retors du Val" />
+    <string id="aom_av_notable_5" text="Ancien dévot du Val" />
+    <string id="aom_av_notable_6" text="Sévère gardien du savoir béornide" />
+    <string id="aom_av_notable_7" text="Gardien des traditions du Val" />
+    <string id="aom_av_notable_8" text="Forgeron béornide habile" />
+    <string id="aom_av_notable_9" text="Artisan doué du Val" />
+    <string id="aom_av_notable_gl1" text="Meneur audacieux des rives" />
+    <string id="aom_av_notable_gl4" text="Brute béornide impitoyable" />
+    <string id="aom_av_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_av_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_av_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_av_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_av_prison_guard" text="Garde de prison" />
+    <string id="aom_av_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_av_shop_worker" text="Employé de boutique" />
+    <string id="aom_av_tavern_wench" text="Servante de taverne" />
+    <string id="aom_av_tavernkeeper" text="Tavernier" />
+    <string id="aom_av_townsman" text="Citadin" />
+    <string id="aom_av_townsman_child" text="Citadin" />
+    <string id="aom_av_townsman_infant" text="Citadin" />
+    <string id="aom_av_townsman_teen" text="Citadin" />
+    <string id="aom_av_townswoman" text="Citadine" />
+    <string id="aom_av_townswoman_child" text="Citadine" />
+    <string id="aom_av_townswoman_infant" text="Citadine" />
+    <string id="aom_av_townswoman_teen" text="Citadine" />
+    <string id="aom_av_vet_caravan_guard" text="Garde de caravane vétéran du Val" />
+    <string id="aom_av_village_woman" text="Villageoise" />
+    <string id="aom_av_village_woman_child" text="Enfant du village" />
+    <string id="aom_av_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_av_villager" text="Villageois" />
+    <string id="aom_av_villager_child" text="Enfant du village" />
+    <string id="aom_av_villager_teen" text="Adolescent du village" />
+    <string id="aom_av_weaponsmith" text="Armurier" />
     <string id="aom_spc_wanderer_anduinvale_0_name" text="{FIRSTNAME} Grimling" />
     <string id="aom_spc_wanderer_anduinvale_1_name" text="{FIRSTNAME} Oswinsson" />
     <string id="aom_spc_wanderer_anduinvale_2_name" text="{FIRSTNAME} Hallbeorn" />
@@ -2054,89 +2054,89 @@
     <string id="aom_spc_wanderer_angaladh_7_name" text="{FIRSTNAME} Rowanhild" />
     <string id="aom_spc_wanderer_angaladh_8_name" text="{FIRSTNAME} Darkfell" />
     <string id="aom_spc_wanderer_angaladh_9_name" text="{FIRSTNAME} Fellrider" />
-    <string id="aom_anduinvale_lord_1" text="Bold Beorning lord" />
-    <string id="aom_anduinvale_lord_2" text="Cautious Beorning lord" />
-    <string id="aom_angaladh_lord_1" text="Bold Woodman lord" />
-    <string id="aom_angaladh_lord_2" text="Cautious Woodman lord" />
+    <string id="aom_anduinvale_lord_1" text="Seigneur béornide audacieux" />
+    <string id="aom_anduinvale_lord_2" text="Seigneur béornide prudent" />
+    <string id="aom_angaladh_lord_1" text="Seigneur hardi des Hommes des Bois" />
+    <string id="aom_angaladh_lord_2" text="Seigneur prudent des Hommes des Bois" />
     <string id="nc_elegost_name" text="Elegost" />
-    <string id="aom_dor_arena" text="Arena Master" />
-    <string id="aom_dor_armed_trader" text="Dorwinion Armed Trader" />
-    <string id="aom_dor_armorer" text="Armorer" />
-    <string id="aom_dor_barber" text="Barber" />
-    <string id="aom_dor_beggar" text="Beggar" />
-    <string id="aom_dor_blacksmith" text="Blacksmith" />
-    <string id="aom_dor_caravan_guard" text="Dorwinion Caravan Guard" />
-    <string id="aom_dor_caravan_master" text="Dorwinion Caravan Master" />
-    <string id="aom_dor_dancer" text="Dancer" />
-    <string id="aom_dor_edu_1" text="Dorwinion Youth" />
-    <string id="aom_dor_edu_2" text="Dorwinion Youth" />
-    <string id="aom_dor_edu_3" text="Dorwinion Youth" />
-    <string id="aom_dor_edu_4" text="Dorwinion Youth" />
-    <string id="aom_dor_edu_5" text="Dorwinion Youth" />
-    <string id="aom_dor_edu_6" text="Dorwinion Youth" />
-    <string id="aom_dor_female_beggar" text="Beggar" />
-    <string id="aom_dor_gamehost" text="Game Host" />
-    <string id="aom_dor_gang_bodyguard" text="Gang Bodyguard" />
-    <string id="aom_dor_gear_dummy" text="Gear Dummy" />
-    <string id="aom_dor_guard" text="Guard" />
-    <string id="aom_dor_headman_1" text="Steadfast Dorwinion headman" />
-    <string id="aom_dor_headman_2" text="Conservative Dorwinion headman" />
-    <string id="aom_dor_headman_3" text="Shrewd Dorwinion headman" />
-    <string id="aom_dor_horse_merchant" text="Horse Merchant" />
-    <string id="aom_dor_merchant" text="Trader" />
-    <string id="aom_dor_musician" text="Musician" />
-    <string id="aom_dor_notable_0" text="Cautious Dorwinion trader" />
-    <string id="aom_dor_notable_0b" text="Shrewd riverside merchant" />
-    <string id="aom_dor_notable_1" text="Ruthless Dorwinion fur trader" />
-    <string id="aom_dor_notable_10" text="Sardonic Dorwinion outlaw" />
-    <string id="aom_dor_notable_11" text="Intimidating Dorwinion enforcer" />
-    <string id="aom_dor_notable_12" text="Cunning Dorwinion smuggler" />
-    <string id="aom_dor_notable_13" text="Menacing riverside schemer" />
-    <string id="aom_dor_notable_1b" text="Cold Dorwinion merchant" />
-    <string id="aom_dor_notable_2" text="Dorwinion gem dealer" />
-    <string id="aom_dor_notable_21" text="Weathered Dorwinion landowner" />
-    <string id="aom_dor_notable_22" text="Agreeable Dorwinion elder" />
-    <string id="aom_dor_notable_2b" text="Wise Dorwinion merchant" />
-    <string id="aom_dor_notable_3" text="Self-made Dorwinion merchant" />
-    <string id="aom_dor_notable_3b" text="Jovial riverside merchant" />
-    <string id="aom_dor_notable_4" text="Shrewd Dorwinion merchant" />
-    <string id="aom_dor_notable_4b" text="Devious Dorwinion merchant" />
-    <string id="aom_dor_notable_5" text="Devout Dorwinion elder" />
-    <string id="aom_dor_notable_6" text="Stern Dorwinion lorekeeper" />
-    <string id="aom_dor_notable_7" text="Dorwinion keeper of traditions" />
-    <string id="aom_dor_notable_8" text="Skilled Dorwinion smith" />
-    <string id="aom_dor_notable_9" text="Gifted Dorwinion craftsman" />
-    <string id="aom_dor_notable_gl1" text="Bold riverside ringleader" />
-    <string id="aom_dor_notable_gl4" text="Ruthless Dorwinion thug" />
-    <string id="aom_dor_practice_1" text="Practice Fighter" />
-    <string id="aom_dor_practice_2" text="Practice Fighter" />
-    <string id="aom_dor_practice_3" text="Practice Fighter" />
-    <string id="aom_dor_practice_dummy" text="Practice Dummy" />
-    <string id="aom_dor_prison_guard" text="Prison Guard" />
-    <string id="aom_dor_ransom_broker" text="Ransom Broker" />
-    <string id="aom_dor_shop_worker" text="Shop Worker" />
-    <string id="aom_dor_tavern_wench" text="Tavern Wench" />
-    <string id="aom_dor_tavernkeeper" text="Tavern Keeper" />
-    <string id="aom_dor_townsman" text="Townsman" />
-    <string id="aom_dor_townsman_child" text="Townsman" />
-    <string id="aom_dor_townsman_infant" text="Townsman" />
-    <string id="aom_dor_townsman_teen" text="Townsman" />
-    <string id="aom_dor_townswoman" text="Townswoman" />
-    <string id="aom_dor_townswoman_child" text="Townswoman" />
-    <string id="aom_dor_townswoman_infant" text="Townswoman" />
-    <string id="aom_dor_townswoman_teen" text="Townswoman" />
-    <string id="aom_dor_vet_caravan_guard" text="Dorwinion Veteran Caravan Guard" />
-    <string id="aom_dor_village_woman" text="Village Woman" />
-    <string id="aom_dor_village_woman_child" text="Village Child" />
-    <string id="aom_dor_village_woman_teen" text="Village Teenager" />
-    <string id="aom_dor_villager" text="Villager" />
-    <string id="aom_dor_villager_child" text="Village Child" />
-    <string id="aom_dor_villager_teen" text="Village Teenager" />
-    <string id="aom_dor_weaponsmith" text="Weaponsmith" />
-    <string id="aom_dorwinion_lord_1" text="Bold Dorwinion lord" />
-    <string id="aom_dorwinion_lord_2" text="Cautious Dorwinion lord" />
-    <string id="aom_southrhovanion_lord_1" text="Bold Rhovanion lord" />
-    <string id="aom_southrhovanion_lord_2" text="Cautious Rhovanion lord" />
+    <string id="aom_dor_arena" text="Maître d'arène" />
+    <string id="aom_dor_armed_trader" text="Marchand armé de Dorwinion" />
+    <string id="aom_dor_armorer" text="Armurier" />
+    <string id="aom_dor_barber" text="Barbier" />
+    <string id="aom_dor_beggar" text="Mendiant" />
+    <string id="aom_dor_blacksmith" text="Forgeron" />
+    <string id="aom_dor_caravan_guard" text="Garde de caravane de Dorwinion" />
+    <string id="aom_dor_caravan_master" text="Maître de caravane de Dorwinion" />
+    <string id="aom_dor_dancer" text="Danseuse" />
+    <string id="aom_dor_edu_1" text="Jeune de Dorwinion" />
+    <string id="aom_dor_edu_2" text="Jeune de Dorwinion" />
+    <string id="aom_dor_edu_3" text="Jeune de Dorwinion" />
+    <string id="aom_dor_edu_4" text="Jeune de Dorwinion" />
+    <string id="aom_dor_edu_5" text="Jeune de Dorwinion" />
+    <string id="aom_dor_edu_6" text="Jeune de Dorwinion" />
+    <string id="aom_dor_female_beggar" text="Mendiante" />
+    <string id="aom_dor_gamehost" text="Maître de jeu" />
+    <string id="aom_dor_gang_bodyguard" text="Garde du corps de gang" />
+    <string id="aom_dor_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_dor_guard" text="Garde" />
+    <string id="aom_dor_headman_1" text="Chef de village inébranlable de Dorwinion" />
+    <string id="aom_dor_headman_2" text="Chef de village conservateur de Dorwinion" />
+    <string id="aom_dor_headman_3" text="Chef de village avisé de Dorwinion" />
+    <string id="aom_dor_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_dor_merchant" text="Négociant" />
+    <string id="aom_dor_musician" text="Musicien" />
+    <string id="aom_dor_notable_0" text="Négociant prudent de Dorwinion" />
+    <string id="aom_dor_notable_0b" text="Marchand avisé des rives" />
+    <string id="aom_dor_notable_1" text="Impitoyable marchand de fourrures de Dorwinion" />
+    <string id="aom_dor_notable_10" text="Hors-la-loi sardonique de Dorwinion" />
+    <string id="aom_dor_notable_11" text="Exécuteur intimidant de Dorwinion" />
+    <string id="aom_dor_notable_12" text="Contrebandier rusé de Dorwinion" />
+    <string id="aom_dor_notable_13" text="Comploteur menaçant des rives" />
+    <string id="aom_dor_notable_1b" text="Marchand froid de Dorwinion" />
+    <string id="aom_dor_notable_2" text="Négociant en gemmes de Dorwinion" />
+    <string id="aom_dor_notable_21" text="Propriétaire terrien buriné de Dorwinion" />
+    <string id="aom_dor_notable_22" text="Ancien affable de Dorwinion" />
+    <string id="aom_dor_notable_2b" text="Sage marchand de Dorwinion" />
+    <string id="aom_dor_notable_3" text="Marchand parvenu de Dorwinion" />
+    <string id="aom_dor_notable_3b" text="Joyeux marchand des rives" />
+    <string id="aom_dor_notable_4" text="Marchand avisé de Dorwinion" />
+    <string id="aom_dor_notable_4b" text="Marchand retors de Dorwinion" />
+    <string id="aom_dor_notable_5" text="Ancien pieux de Dorwinion" />
+    <string id="aom_dor_notable_6" text="Gardien du savoir sévère de Dorwinion" />
+    <string id="aom_dor_notable_7" text="Gardien des traditions de Dorwinion" />
+    <string id="aom_dor_notable_8" text="Forgeron habile de Dorwinion" />
+    <string id="aom_dor_notable_9" text="Artisan doué de Dorwinion" />
+    <string id="aom_dor_notable_gl1" text="Meneur audacieux des rives" />
+    <string id="aom_dor_notable_gl4" text="Brute impitoyable de Dorwinion" />
+    <string id="aom_dor_practice_1" text="Combattant d'entraînement" />
+    <string id="aom_dor_practice_2" text="Combattant d'entraînement" />
+    <string id="aom_dor_practice_3" text="Combattant d'entraînement" />
+    <string id="aom_dor_practice_dummy" text="Mannequin d'entraînement" />
+    <string id="aom_dor_prison_guard" text="Garde de prison" />
+    <string id="aom_dor_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_dor_shop_worker" text="Employé de boutique" />
+    <string id="aom_dor_tavern_wench" text="Serveuse de taverne" />
+    <string id="aom_dor_tavernkeeper" text="Tavernier" />
+    <string id="aom_dor_townsman" text="Citadin" />
+    <string id="aom_dor_townsman_child" text="Citadin" />
+    <string id="aom_dor_townsman_infant" text="Citadin" />
+    <string id="aom_dor_townsman_teen" text="Citadin" />
+    <string id="aom_dor_townswoman" text="Citadine" />
+    <string id="aom_dor_townswoman_child" text="Citadine" />
+    <string id="aom_dor_townswoman_infant" text="Citadine" />
+    <string id="aom_dor_townswoman_teen" text="Citadine" />
+    <string id="aom_dor_vet_caravan_guard" text="Garde de caravane vétéran de Dorwinion" />
+    <string id="aom_dor_village_woman" text="Villageoise" />
+    <string id="aom_dor_village_woman_child" text="Enfant du village" />
+    <string id="aom_dor_village_woman_teen" text="Adolescente du village" />
+    <string id="aom_dor_villager" text="Villageois" />
+    <string id="aom_dor_villager_child" text="Enfant du village" />
+    <string id="aom_dor_villager_teen" text="Adolescent du village" />
+    <string id="aom_dor_weaponsmith" text="Armurier (armes)" />
+    <string id="aom_dorwinion_lord_1" text="Seigneur audacieux de Dorwinion" />
+    <string id="aom_dorwinion_lord_2" text="Seigneur prudent de Dorwinion" />
+    <string id="aom_southrhovanion_lord_1" text="Seigneur audacieux du Rhovanion" />
+    <string id="aom_southrhovanion_lord_2" text="Seigneur prudent du Rhovanion" />
     <string id="aom_spc_wanderer_dorwinion_0_name" text="{FIRSTNAME} Vinling" />
     <string id="aom_spc_wanderer_dorwinion_1_name" text="{FIRSTNAME} Ermansson" />
     <string id="aom_spc_wanderer_dorwinion_2_name" text="{FIRSTNAME} Hallwin" />
@@ -2154,76 +2154,76 @@
     <string id="aom_spc_wanderer_southrhovanion_4_name" text="{FIRSTNAME} Ermanstaning" />
     <string id="aom_spc_wanderer_southrhovanion_5_name" text="{FIRSTNAME} Harjabranding" />
     <string id="aom_spc_wanderer_southrhovanion_6_name" text="{FIRSTNAME} Guntharsson" />
-    <string id="aom_spc_wanderer_southrhovanion_7_name" text="{FIRSTNAME} Wainbane" />
+    <string id="aom_spc_wanderer_southrhovanion_7_name" text="{FIRSTNAME} Fléau-des-Chariots" />
     <string id="aom_spc_wanderer_southrhovanion_8_name" text="{FIRSTNAME} Balthingar" />
-    <string id="aom_spc_wanderer_southrhovanion_9_name" text="{FIRSTNAME} Steedheart" />
-    <string id="aom_srh_armed_trader" text="Armed Trader" />
-    <string id="aom_srh_armorer" text="Armorer" />
-    <string id="aom_srh_barber" text="Barber" />
-    <string id="aom_srh_beggar" text="Beggar" />
-    <string id="aom_srh_blacksmith" text="Blacksmith" />
-    <string id="aom_srh_caravan_guard" text="Caravan Guard" />
-    <string id="aom_srh_caravan_master" text="Caravan Master" />
-    <string id="aom_srh_female_beggar" text="Beggar" />
-    <string id="aom_srh_female_dancer" text="Dancer" />
-    <string id="aom_srh_gangleader_bg" text="Bodyguard" />
-    <string id="aom_srh_gear_dummy" text="Gear Dummy" />
-    <string id="aom_srh_gear_practice_dummy" text="Gear Practice Dummy" />
-    <string id="aom_srh_guard" text="Guard" />
-    <string id="aom_srh_headman_1" text="Steadfast Rhovanion headman" />
-    <string id="aom_srh_headman_2" text="Cautious Rhovanion headman" />
-    <string id="aom_srh_headman_3" text="Cunning horse-lord headman" />
-    <string id="aom_srh_horse_merchant" text="Horse Trader" />
-    <string id="aom_srh_merchant" text="Merchant" />
-    <string id="aom_srh_musician" text="Musician" />
-    <string id="aom_srh_notable_0" text="Cautious Rhovanion trader" />
-    <string id="aom_srh_notable_0b" text="Rhovanion vintner" />
-    <string id="aom_srh_notable_1" text="Proud horse-lord merchant" />
-    <string id="aom_srh_notable_10" text="Mocking Rhovanion gang boss" />
-    <string id="aom_srh_notable_11" text="Brutal Rhovanion enforcer" />
-    <string id="aom_srh_notable_12" text="Sly Rhovanion smuggler" />
-    <string id="aom_srh_notable_13" text="Menacing Rhovanion gang leader" />
-    <string id="aom_srh_notable_1b" text="Cold Rhovanion dealer" />
-    <string id="aom_srh_notable_2" text="Quiet Rhovanion provisioner" />
-    <string id="aom_srh_notable_21" text="Weathered Rhovanion landowner" />
-    <string id="aom_srh_notable_22" text="Respected Rhovanion elder" />
-    <string id="aom_srh_notable_2b" text="Cautious Rhovanion grain trader" />
-    <string id="aom_srh_notable_3" text="Self-made Rhovanion merchant" />
-    <string id="aom_srh_notable_3b" text="Jovial Rhovanion merchant" />
-    <string id="aom_srh_notable_4" text="Shrewd Rhovanion trader" />
-    <string id="aom_srh_notable_4b" text="Devious horse-lord merchant" />
-    <string id="aom_srh_notable_5" text="Devout Rhovanion elder" />
-    <string id="aom_srh_notable_6" text="Stern Rhovanion wise-man" />
-    <string id="aom_srh_notable_7" text="Keeper of Rhovanion traditions" />
-    <string id="aom_srh_notable_8" text="Skilled Rhovanion smith" />
-    <string id="aom_srh_notable_9" text="Gifted Rhovanion craftsman" />
-    <string id="aom_srh_notable_gl1" text="Bold Rhovanion ringleader" />
-    <string id="aom_srh_notable_gl4" text="Savage horse-lord thug" />
-    <string id="aom_srh_prison_guard" text="Prison Guard" />
-    <string id="aom_srh_ransom_broker" text="Ransom Broker" />
-    <string id="aom_srh_shop_worker" text="Shop Worker" />
-    <string id="aom_srh_tavern_wench" text="Tavern Maid" />
-    <string id="aom_srh_taverngamehost" text="Tavern Game Host" />
-    <string id="aom_srh_tavernkeeper" text="Tavernkeeper" />
-    <string id="aom_srh_tournament_master" text="Tournament Master" />
-    <string id="aom_srh_townsman" text="Townsman" />
-    <string id="aom_srh_townsman_child" text="Townsman" />
-    <string id="aom_srh_townsman_infant" text="Townsman" />
-    <string id="aom_srh_townsman_teen" text="Townsman" />
-    <string id="aom_srh_townswoman" text="Townswoman" />
-    <string id="aom_srh_townswoman_child" text="Townswoman" />
-    <string id="aom_srh_townswoman_infant" text="Townswoman" />
-    <string id="aom_srh_townswoman_teen" text="Townswoman" />
-    <string id="aom_srh_vet_caravan_guard" text="Veteran Caravan Guard" />
-    <string id="aom_srh_village_woman" text="Village Woman" />
-    <string id="aom_srh_village_woman_child" text="Village Girl" />
-    <string id="aom_srh_village_woman_teen" text="Village Girl" />
-    <string id="aom_srh_villager" text="Villager" />
-    <string id="aom_srh_villager_child" text="Villager" />
-    <string id="aom_srh_villager_teen" text="Villager" />
-    <string id="aom_srh_weaponsmith" text="Weaponsmith" />
-    <string id="aom_srh_wpractice_1" text="Weapon Practice Dummy Stage 1" />
-    <string id="aom_srh_wpractice_2" text="Weapon Practice Dummy Stage 2" />
-    <string id="aom_srh_wpractice_3" text="Weapon Practice Dummy Stage 3" />
+    <string id="aom_spc_wanderer_southrhovanion_9_name" text="{FIRSTNAME} Cœur-de-Destrier" />
+    <string id="aom_srh_armed_trader" text="Marchand armé" />
+    <string id="aom_srh_armorer" text="Armurier" />
+    <string id="aom_srh_barber" text="Barbier" />
+    <string id="aom_srh_beggar" text="Mendiant" />
+    <string id="aom_srh_blacksmith" text="Forgeron" />
+    <string id="aom_srh_caravan_guard" text="Garde de caravane" />
+    <string id="aom_srh_caravan_master" text="Maître de caravane" />
+    <string id="aom_srh_female_beggar" text="Mendiante" />
+    <string id="aom_srh_female_dancer" text="Danseuse" />
+    <string id="aom_srh_gangleader_bg" text="Garde du corps" />
+    <string id="aom_srh_gear_dummy" text="Mannequin d'équipement" />
+    <string id="aom_srh_gear_practice_dummy" text="Mannequin d'entraînement équipé" />
+    <string id="aom_srh_guard" text="Garde" />
+    <string id="aom_srh_headman_1" text="Chef de village inébranlable du Rhovanion" />
+    <string id="aom_srh_headman_2" text="Chef de village prudent du Rhovanion" />
+    <string id="aom_srh_headman_3" text="Chef de village rusé des seigneurs-chevaux" />
+    <string id="aom_srh_horse_merchant" text="Marchand de chevaux" />
+    <string id="aom_srh_merchant" text="Marchand" />
+    <string id="aom_srh_musician" text="Musicien" />
+    <string id="aom_srh_notable_0" text="Marchand prudent du Rhovanion" />
+    <string id="aom_srh_notable_0b" text="Vigneron du Rhovanion" />
+    <string id="aom_srh_notable_1" text="Fier marchand des seigneurs des chevaux" />
+    <string id="aom_srh_notable_10" text="Chef de bande moqueur du Rhovanion" />
+    <string id="aom_srh_notable_11" text="Homme de main brutal du Rhovanion" />
+    <string id="aom_srh_notable_12" text="Contrebandier rusé du Rhovanion" />
+    <string id="aom_srh_notable_13" text="Chef de gang menaçant du Rhovanion" />
+    <string id="aom_srh_notable_1b" text="Négociant froid du Rhovanion" />
+    <string id="aom_srh_notable_2" text="Pourvoyeur discret du Rhovanion" />
+    <string id="aom_srh_notable_21" text="Propriétaire terrien buriné du Rhovanion" />
+    <string id="aom_srh_notable_22" text="Ancien respecté du Rhovanion" />
+    <string id="aom_srh_notable_2b" text="Marchand de grain prudent du Rhovanion" />
+    <string id="aom_srh_notable_3" text="Marchand autodidacte du Rhovanion" />
+    <string id="aom_srh_notable_3b" text="Marchand jovial du Rhovanion" />
+    <string id="aom_srh_notable_4" text="Négociant avisé du Rhovanion" />
+    <string id="aom_srh_notable_4b" text="Marchand retors des seigneurs des chevaux" />
+    <string id="aom_srh_notable_5" text="Ancien dévot du Rhovanion" />
+    <string id="aom_srh_notable_6" text="Sage sévère du Rhovanion" />
+    <string id="aom_srh_notable_7" text="Gardien des traditions du Rhovanion" />
+    <string id="aom_srh_notable_8" text="Forgeron habile du Rhovanion" />
+    <string id="aom_srh_notable_9" text="Artisan doué du Rhovanion" />
+    <string id="aom_srh_notable_gl1" text="Meneur audacieux du Rhovanion" />
+    <string id="aom_srh_notable_gl4" text="Brute sauvage des seigneurs des chevaux" />
+    <string id="aom_srh_prison_guard" text="Gardien de prison" />
+    <string id="aom_srh_ransom_broker" text="Courtier en rançons" />
+    <string id="aom_srh_shop_worker" text="Employé de boutique" />
+    <string id="aom_srh_tavern_wench" text="Servante de taverne" />
+    <string id="aom_srh_taverngamehost" text="Maître des jeux de taverne" />
+    <string id="aom_srh_tavernkeeper" text="Tavernier" />
+    <string id="aom_srh_tournament_master" text="Maître de tournoi" />
+    <string id="aom_srh_townsman" text="Citadin" />
+    <string id="aom_srh_townsman_child" text="Citadin" />
+    <string id="aom_srh_townsman_infant" text="Citadin" />
+    <string id="aom_srh_townsman_teen" text="Citadin" />
+    <string id="aom_srh_townswoman" text="Citadine" />
+    <string id="aom_srh_townswoman_child" text="Citadine" />
+    <string id="aom_srh_townswoman_infant" text="Citadine" />
+    <string id="aom_srh_townswoman_teen" text="Citadine" />
+    <string id="aom_srh_vet_caravan_guard" text="Garde de caravane vétéran" />
+    <string id="aom_srh_village_woman" text="Villageoise" />
+    <string id="aom_srh_village_woman_child" text="Fille du village" />
+    <string id="aom_srh_village_woman_teen" text="Fille du village" />
+    <string id="aom_srh_villager" text="Villageois" />
+    <string id="aom_srh_villager_child" text="Villageois" />
+    <string id="aom_srh_villager_teen" text="Villageois" />
+    <string id="aom_srh_weaponsmith" text="Armurier" />
+    <string id="aom_srh_wpractice_1" text="Mannequin d'entraînement aux armes, étape 1" />
+    <string id="aom_srh_wpractice_2" text="Mannequin d'entraînement aux armes, étape 2" />
+    <string id="aom_srh_wpractice_3" text="Mannequin d'entraînement aux armes, étape 3" />
   </strings>
 </base>

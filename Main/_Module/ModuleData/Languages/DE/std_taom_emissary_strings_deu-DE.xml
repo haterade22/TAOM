@@ -28,8 +28,8 @@
     <string id="taom_emissary_no_offers" text="Der Emissär hat derzeit keine Eliteeinheiten anzubieten." />
     <string id="taom_emissary_failed" text="Der Emissär konnte den Handel nicht abschließen." />
     <string id="taom_emissary_coop_guest" text="Der Gesandte verhandelt nur mit dem Gastgeber dieser Kampagne." />
-    <string id="taom_emissary_denars" text="denars" />
-    <string id="taom_emissary_party_full" text="Your party has no room for these troops." />
-    <string id="taom_emissary_offer_room" text="Your party has room for {MAX}." />
+    <string id="taom_emissary_denars" text="Denare" />
+    <string id="taom_emissary_party_full" text="Deine Gruppe hat keinen Platz für diese Truppen." />
+    <string id="taom_emissary_offer_room" text="Deine Gruppe hat Platz für {MAX}." />
   </strings>
 </base>

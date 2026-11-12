@@ -11,8 +11,8 @@ namespace TAOM.Tests.Features.SmithsMeasure;
 
 /// <summary>
 /// The player-facing text of Smith's Measure (#910). The C# literal (or MCM attribute) is the English source and the English row in
-/// <c>taom_module_strings.xml</c> must equal it. A copied <c>{=KEY}</c> shows the old text, so a row left on an older wording
-/// fails. The card speaks of goods and never of the player, and no word is gendered.
+/// <c>taom_module_strings.xml</c> must equal it. Each language file holds one row per key (its translation, or the English default
+/// until the paid run fills it) that keeps every placeholder of the English. The card speaks of goods and never of the player, and no word is gendered.
 /// </summary>
 [TestClass]
 public class SmithsMeasureWordingTests
@@ -81,8 +81,11 @@ public class SmithsMeasureWordingTests
         Assert.AreEqual(0, Rows("taom_sm_too_tired").Count);
     }
 
+    private static List<string> Tokens(string text) =>
+        Regex.Matches(text, @"\{[^{}]*\}").Cast<Match>().Select(m => m.Value).Distinct().OrderBy(t => t, System.StringComparer.Ordinal).ToList();
+
     [TestMethod]
-    public void EveryLanguageFile_HoldsOneRow_OfTheCurrentEnglish_NoneStale()
+    public void EveryLanguageFile_HoldsOneRow_KeepingTheEnglishPlaceholders()
     {
         var languages = Directory.GetDirectories(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "Languages"));
         Assert.AreEqual(12, languages.Length);
@@ -98,7 +101,7 @@ public class SmithsMeasureWordingTests
                     .ToList();
 
                 Assert.AreEqual(1, rows.Count, Path.GetFileName(file) + ": one row of " + line.Key);
-                Assert.AreEqual(line.Wording, rows[0], Path.GetFileName(file) + ": " + line.Key + " must equal the current English");
+                CollectionAssert.AreEqual(Tokens(line.Wording), Tokens(rows[0]), Path.GetFileName(file) + ": " + line.Key + " must keep the English placeholders");
             }
             Assert.IsFalse(text.Contains("id=\"taom_sm_too_tired\""), Path.GetFileName(file) + ": a vanilla key gets no TAOM row");
         }

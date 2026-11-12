@@ -144,6 +144,21 @@ public class LanguageTextIntegrityTests
     private static readonly System.Text.RegularExpressions.Regex Markup = new System.Text.RegularExpressions.Regex(
         @"\{[^}]*\}|<[^>]*>|\[[a-z]{2}:[^\]]*\]|^\[[^\]]*\]");
 
+    /// <summary>File names and code identifiers a row keeps verbatim ("fords_of_war/factions.json",
+    /// "realms_titles.xml", "castle_patrols", "guardHousePriorityChance"): never English prose.</summary>
+    private static readonly System.Text.RegularExpressions.Regex Identifier = new System.Text.RegularExpressions.Regex(
+        @"[A-Za-z0-9_./-]*[A-Za-z0-9]\.(?:json|xml|txt|csv)|[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+/?|[a-z]+[A-Z][A-Za-z0-9]*");
+
+    /// <summary>The identifiers the registered English carries. Only these are masked: a token that matches
+    /// the shape but is in no English row ("haiOops", a bare key) is damage, not a kept identifier.</summary>
+    private static readonly Lazy<HashSet<string>> EnglishIdentifiers = new Lazy<HashSet<string>>(() =>
+        new HashSet<string>(
+            LocalizationKeyConsistencyTests.RegisteredEnglish().Values
+                .SelectMany(e => Identifier.Matches(Markup.Replace(e ?? string.Empty, " "))
+                    .Cast<System.Text.RegularExpressions.Match>()
+                    .Select(m => m.Value)),
+            StringComparer.Ordinal));
+
     private static readonly System.Text.RegularExpressions.Regex Word =
         new System.Text.RegularExpressions.Regex(@"[\w-]+");
 
@@ -169,7 +184,8 @@ public class LanguageTextIntegrityTests
     internal static List<string> WritingSystemProblems(string language, string text)
     {
         // The katakana middle dot is the standard separator in Chinese transliterated names.
-        var body = Markup.Replace(text ?? string.Empty, " ").Replace('・', ' ');
+        var body = Identifier.Replace(Markup.Replace(text ?? string.Empty, " "),
+            m => EnglishIdentifiers.Value.Contains(m.Value) ? " " : m.Value).Replace('・', ' ');
         var found = new List<string>();
         var scripts = new HashSet<string>(body.Select(Script).Where(s => s != null));
         if (LatinScriptLanguages.Contains(language))
@@ -244,6 +260,8 @@ public class LanguageTextIntegrityTests
     [DataRow("DE", "Korساrenrouten")]
     [DataRow("TR", "Gemين")]
     [DataRow("TR", "demirhanə")]
+    [DataRow("CNt", "艾辛格的烏魯克haiOops")]
+    [DataRow("CNs", "aom_ang_arena")]
     public void WritingSystemProblems_DamagedRow_IsReported(string language, string text)
     {
         Assert.AreNotEqual(0, WritingSystemProblems(language, text).Count, text);
@@ -260,6 +278,11 @@ public class LanguageTextIntegrityTests
     [DataRow("DE", "[Dol Guldur] Goblin-Bogenschütze")]
     [DataRow("KO", "Bahr al-Yeshm이라")]
     [DataRow("CNt", "[登蘭德] Cigfran-lûth 弓箭手")]
+    [DataRow("CNs", "请检查 fords_of_war/factions.json 和 maps.json。")]
+    [DataRow("RU", "в процентах от его цены в realms_titles.xml")]
+    [DataRow("JP", "城塞はいずれもcastle_patrols.jsonの設定に従う")]
+    [DataRow("KO", "realms_titles.xml에 적힌 가격")]
+    [DataRow("JP", "(castle_patrols.json内のguardHousePriorityChance)")]
     public void WritingSystemProblems_CleanRow_IsNotReported(string language, string text)
     {
         var problems = WritingSystemProblems(language, text);
