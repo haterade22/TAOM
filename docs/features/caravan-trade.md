@@ -84,7 +84,7 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`Patch59_CaravanTrade
 - `TAOM.Tests/Features/CaravanTrade/CaravanTradeServiceTests.cs` — every lever + the war-policy matrix (same-side / opposite-side / **Neutral-on-each-side** regression) + NaN/disabled/player-scope gates + the home-compression regression (`ReweightTradeScore_HomeTown_NowCompressed`) + recency-factor + NaN-factor gates.
 - `TAOM.Tests/Features/CaravanTrade/CaravanVisitMemoryTests.cs` — recency decay, ring bounding, most-recent-rank, **`GetRecencyPenaltyFactor_PreviousTown_IsPenalized`** (the inert-penalty regression sentinel), `NeverReturnsZero_NoStranding`, NaN/zero/out-of-range strength gates, `Clear`.
 - `TAOM.Tests/Features/CaravanTrade/CaravanTradeConfigProviderTests.cs` — one test per validation rule, incl. the `warTradePolicy` M1 typo-trap.
-- `TAOM.Tests/Features/CaravanTrade/CaravanTradeBindingTests.cs` — `[BindingVerification]` drift-guards for the 4 private methods, the 2 `FieldRef` targets, the `AiHelper` helper, and the `DefaultCaravanModel` override targets (all pass against installed v1.4.6). The 4 postfixes also auto-enroll in `HarmonyPatchBindingTests`.
+- `TAOM.Tests/Features/CaravanTrade/CaravanTradeBindingTests.cs`: `[BindingVerification]` drift-guards for the 4 private methods, the 2 `FieldRef` targets, the `AiHelper` helper, and the `DefaultCaravanModel` override targets (written against v1.4.6; all three passed against the installed v1.5.7 on 2026-11-12). The 4 postfixes also auto-enroll in `HarmonyPatchBindingTests`.
 
 ## How-To
 

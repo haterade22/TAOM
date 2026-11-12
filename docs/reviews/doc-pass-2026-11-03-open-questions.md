@@ -159,7 +159,7 @@ A pass compared `docs/features` and `docs/modding` with the commits newer than e
 
 ## docs/features/caravan-trade.md
 
-- Binding-test line says the drift guards 'pass against installed v1.4.6'; the repo targets v1.5.6 and I did not run tests, so whether they were re-verified on 1.5.6 is unproven. Settle by running CaravanTradeBindingTests.
+- Settled 2026-11-12: the drift guards in CaravanTradeBindingTests (3 tests) passed against the installed v1.5.7, and the doc's binding-test line now says so. The question was whether the guards written against v1.4.6 still held on the newer engine.
 - Key Files omits Main/Features/CaravanTrade/Cheats and Diagnostics (CaravanGateDiagnosticsService etc.) and their tests; the doc links economy-diagnostics.md for that. Left as is.
 
 ## docs/features/cardolan-rhudaur.md
@@ -178,7 +178,7 @@ A pass compared `docs/features` and `docs/modding` with the commits newer than e
 ## docs/features/career-quest-system.md
 
 - 'Full suite green (2874 passed)' is an old snapshot; only a test run would settle it.
-- The doc is framed as verified against Bannerlord 1.4.5; the target is now v1.5.6 and I did not re-decompile the event signatures it lists.
+- Settled 2026-11-12 for signatures only: TAOM.Tests builds against the installed v1.5.7 DLLs, so every event and QuestBase member CareerQuest calls exists, and the CareerQuest tests passed. The doc's verification was done on Bannerlord 1.4.5; nobody re-decompiled the events' behaviour since.
 - Commit 0ab3dc35a added career screen open and init check lines (CareerScreenChecks.cs); the doc is about the quest framework, so I added nothing.
 
 ## docs/features/career-system.md

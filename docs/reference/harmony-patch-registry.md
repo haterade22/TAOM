@@ -1915,8 +1915,6 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Lives in TAOM.Client** (`Client/Features/FactionUI/Campaign/CampaignTimeHintPatch.cs`). **Target (v1.5.6):** `MapTimeControlVM.Refresh()` (postfix). **Why:** the themed map bar's clock shows the hour and minute above vanilla's time-of-day tooltip. **Applied** lazily on the first themed `TAOMMapBar` movie, by `CampaignPresentation.Bind` with its own Harmony id `taom.factionui.campaign-time`, once per process; the postfix reads `CampaignTimeHintPatch.Enabled`. Feature: [faction-ui.md](../features/faction-ui.md). **ACTIVE**, not yet seen in game since the ADR-013 move.
 
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
 ## Patch132_ItemIconRacePosition
 
 **Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.5. Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.
@@ -1928,6 +1926,8 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 **Tuning:** `taom.set_race_offset icon dwarf_helmet <h> <v> <z>` and `taom.nudge_race_offset icon ...` clear the thumbnail cache (`ThumbnailCacheManager.ForceClearAllCache(false)` through the client seam `IThumbnailCacheAdapter`, ADR-013: deferred release, because the inventory may still show those textures), so the icons re-render when the inventory is reopened. The console refuses icon rows for races `ItemIconRaceMatcher.Races` does not list, since nothing would read them. `taom.save_race_offsets` writes all three configs.
 
 **Tests:** `ItemIconRaceMatcherTests` (matching, row keys, slot map, parameter-name binding against the installed engine), icon cases in `RacePositionTuningParserTests` and `ShippedRacePositionConfigTests`. **ACTIVE**. Checked in game 2026-10-29: dwarf helmets centred with a 0/0/0 row, armour (V 0.2) and capes (V 0.25) framed; boots and gloves have no row.
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
 
