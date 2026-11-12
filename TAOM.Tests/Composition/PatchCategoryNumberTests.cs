@@ -66,11 +66,15 @@ public class PatchCategoryNumberTests
 
     internal static string OwnerOf(Type type)
     {
+        // TAOM.Client.Features.X belongs to feature X too: the patch index applies client patch classes in the core category
         const string prefix = "TAOM.Features.";
+        const string clientPrefix = "TAOM.Client.Features.";
         var ns = type.Namespace ?? string.Empty;
-        if (!ns.StartsWith(prefix, StringComparison.Ordinal))
+        var start = ns.StartsWith(prefix, StringComparison.Ordinal) ? prefix.Length
+            : ns.StartsWith(clientPrefix, StringComparison.Ordinal) ? clientPrefix.Length : -1;
+        if (start < 0)
             return ns;
-        var rest = ns.Substring(prefix.Length);
+        var rest = ns.Substring(start);
         var dot = rest.IndexOf('.');
         return dot < 0 ? rest : rest.Substring(0, dot);
     }

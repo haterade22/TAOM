@@ -95,6 +95,46 @@ public class BannerConfigProviderTests
     }
 
     [TestMethod]
+    public void GetCultureKingdomBannerKeys_KingdomCultures_MapEachCultureToItsKingdomBanner()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "taom_spkingdoms.xml"), @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Kingdoms>
+    <Kingdom id=""erebor"" culture=""Culture.erebor"" banner_key=""11.4.4.4345"" />
+    <Kingdom id=""no_culture"" banner_key=""11.5.5.4345"" />
+</Kingdoms>");
+        File.WriteAllText(Path.Combine(_tempDir, "spkingdoms.xslt"), @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">
+    <xsl:template match=""Kingdom[@id='empire_w']"">
+        <Kingdom id=""empire_w"" culture=""Culture.gondor"" banner_key=""11.8.8.4345"" />
+    </xsl:template>
+    <xsl:template match=""Kingdom[@id='empire_s']"">
+        <Kingdom id=""empire_s"" culture=""Culture.mordor"" banner_key=""11.1.1.4345"" />
+    </xsl:template>
+    <xsl:template match=""Kingdom[@id='empire_s']/@banner_key"">
+        <xsl:attribute name=""banner_key"">11.2.2.4345</xsl:attribute>
+    </xsl:template>
+</xsl:stylesheet>");
+
+        var result = _sut.GetCultureKingdomBannerKeys();
+
+        Assert.AreEqual(3, result.Count);
+        Assert.AreEqual("11.4.4.4345", result["erebor"]);
+        Assert.AreEqual("11.8.8.4345", result["gondor"]);
+        Assert.AreEqual("11.2.2.4345", result["mordor"], "the xsl:attribute override wins, as in GetKingdomBannerKeys");
+    }
+
+    [TestMethod]
+    public void GetCultureKingdomBannerKeys_KingdomWithoutBanner_IsLeftOut()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "taom_spkingdoms.xml"), @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Kingdoms>
+    <Kingdom id=""erebor"" culture=""Culture.erebor"" />
+</Kingdoms>");
+
+        Assert.AreEqual(0, _sut.GetCultureKingdomBannerKeys().Count);
+    }
+
+    [TestMethod]
     public void GetClanBannerKeys_ParsesXmlAttributes()
     {
         File.WriteAllText(Path.Combine(_tempDir, "characters", "clans.xml"), @"<?xml version=""1.0"" encoding=""utf-8""?>

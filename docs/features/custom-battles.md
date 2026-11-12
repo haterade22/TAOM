@@ -6,6 +6,8 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 Siege battles here can run TAOM's staged siege on a recorded scene; see [staged-siege.md](staged-siege.md), "Custom battle sieges".
 
+Since 2026-11-11 the Custom Battle screen opens TAOM's muster screen (movie `TaomCustomBattle`) on a layer over the vanilla screen. The vanilla screen with the patches below stays underneath as the fallback: **OLD SCREEN** removes the muster layer, and any failure to open the muster leaves the vanilla screen in place. See "Muster screen".
+
 ## Why This Exists
 
 - **Vanilla behavior:** Custom Battle lists vanilla factions (Empire, Sturgia, Aserai, etc.) and 24 hardcoded vanilla commanders. Troop formation defaults are hardcoded per vanilla culture.
@@ -33,7 +35,30 @@ Siege battles here can run TAOM's staged siege on a recorded scene; see [staged-
 9. **Prefix** on `CustomBattleSideVM.OnCharacterSelection(SelectorVM<CharacterItemVM>)` — defensive null-guard on `selector.SelectedItem`. Vanilla derefs `selector.SelectedItem.Character` without a null check, but `SelectorVM<T>.SelectedIndex` setter fires `_onChange.Invoke(this)` even when `GetCurrentItem()` returns null (empty `ItemList` or out-of-range index). The Prefix returns `false` to skip the vanilla body when `SelectedItem == null`, eliminating an NRE that surfaced during in-game testing. ([CustomBattleSideVM_OnCharacterSelection_Patch.cs](../../Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs))
 10. **Prefix** on `CustomBattleSideVM.UpdateCharacterVisual()` — sister null-guard for the OnCharacterSelection Prefix. Vanilla `RefreshValues()` calls `UpdateCharacterVisual()` unconditionally after `SelectedIndex = 1` (enemy side default), and `UpdateCharacterVisual` derefs `SelectedCharacter.Equipment[(EquipmentIndex)5]`. When the OnCharacterSelection Prefix skipped the body (preventing vanilla from setting `SelectedCharacter`), the next line in `RefreshValues` would NRE. The Prefix returns `false` when `__instance.SelectedCharacter == null`, letting `RefreshValues` continue past the visual update without crashing. (Codex Review 32 P2 — `UpdateCharacterVisual` was outside the OnCharacterSelection Prefix's blast radius despite being the same call chain.) ([CustomBattleSideVM_UpdateCharacterVisual_Patch.cs](../../Main/Features/CustomBattles/Hooks/CustomBattleSideVM_UpdateCharacterVisual_Patch.cs))
 
-No UI patches needed — TAOM's `CustomBattleScreen.xml` GUI prefab automatically overrides vanilla via Gauntlet module load order (TAOM loads after the CustomBattle module).
+The vanilla screen needs no UI patches: TAOM's `CustomBattleScreen.xml` GUI prefab overrides vanilla via Gauntlet module load order (TAOM loads after the CustomBattle module). The muster screen adds two more `Patch19_CustomBattles` postfixes in TAOM.Client (ADR-013), below.
+
+### Muster screen
+
+**Opening.** `CustomBattleScreen_OnInitialize_Patch` (postfix on `CustomBattleScreen.OnInitialize`) adds a `GauntletLayer` (order 200, input restrictions set, focus layer) that loads `TaomCustomBattle` with a `TcbVM`. The prefab draws TAOM's shared front-end art (`ec_*`, `cc_*`, `fs_*`, `mm_*`) and the resident fonts, so it opens only when `FactionUIPatchContext.Movies` is set: `FrontEndMovieService` matches the `TaomCustomBattle` movie with a `TcbVM` data source and holds the main menu and character creation image groups while the movie lives, and `FrontEndSpriteService` loads the `TaomCustomBattle` brush file with the chrome group. Without that service, or on any exception, the log says so and the vanilla screen stays. **BACK** pops the state; **OLD SCREEN** removes the layer and shows the vanilla screen.
+
+**Armies tab.** Two cards, *Your army* and *Enemy army*; the card clicked is the army mustered below. Each card has popups for:
+
+- **Faction:** `CustomBattleData.Factions`, so the faction filter above applies. A faction change clears the army's units and selects the first commander.
+- **Commander:** every hero of the faction's culture, its curated commanders first (`CustomBattleMuster.CuratedCommanderIds`, the same `ISideCommanderFilter` as the vanilla dropdown). With none chosen at Start, `CommanderOf` takes the first curated commander that resolves, else the culture's highest-level `lord_` hero, else its highest-level hero.
+- **Banner:** starts as the culture's kingdom banner (`IBannerConfigProvider.GetCultureKingdomBannerKeys`, read from `taom_spkingdoms.xml` and `spkingdoms.xslt`; the first kingdom of a culture wins), else the culture banner in its colours. `MusterBannerDesign` keeps that exact code until the player edits the background colour (layer 0), the emblem colour (every icon layer) or the emblem (one centred emblem). A faction change resets the edits. The exact code goes to the battle.
+
+The roster lists the faction's troops (`CaptainResolver`: defined by a non-vanilla module, part of a troop tree or level 21+, not a training dummy) with search and type tabs, plus its heroes (one man each, no roles). A mustered unit has plus and minus (Shift 10, Ctrl 100 per click), remove, and three options: banner bearer, captain and horn blower, each one man taken from the unit's number. **RANDOMISE** fills the active army. Both armies together are capped at `ArmySpec.MaxTroops` (1000); over it the footer says so.
+
+**Battlefield tab.** A large preview of the chosen map with a strip of its neighbours, and dropdowns for battle type (field battle, village, siege), player type, side, map, season and time of day; a siege adds breached walls and the town level. A siege gets a ram and two siege towers. Previews are `GUI/CustomBattleMuster/Maps/<scene id>.png`, loaded as loose sprites on first use and kept for the process; a map without one shows `ec_stone_landscape`.
+
+**Start.** `ExecuteStart` refuses with a status line when a faction, a unit on either side, or the map is missing, or `ArmySpec.Validate` fails. Otherwise it stores the army in `CustomBattleMuster.Pending` and calls vanilla `GetCustomBattleParties`, `PrepareBattleData` and `StartGame`. `CustomBattleHelper_GetCustomBattleParties_Patch` (postfix) then runs `MusterArmyBuilder.Apply`: it consumes `Pending` once and rebuilds each side with its commander, the exact unit numbers (a captain comes out of his unit's number: the troop's upgrade, else the culture's elite with the closest weapon) and the exact banner. It records the roles in `CustomBattleMuster.Plan` and sets `Applied`. A battle started from the vanilla screen has no `Pending`, so it keeps vanilla's sides and gets no roles.
+
+**In the mission.** The two `BannerlordMissions_*` postfixes call `CustomBattleMuster.AddMissionBehaviors`, which adds two behaviors only when `Applied` is set:
+
+- `CustomBattleRolesBehavior` hands out the roles once the armies stand: the captain leads his unit's formation, the banner bearer gets the banner through the engine's `BannerBearerLogic`, and the horn blower is marked.
+- `CustomBattleHornCallBehavior` sounds the horn when the blower's formation gets a new charge, advance, follow or move order (not the first order). He keeps marching, and a call plays the culture's horn sound and rallies his formation. His action set `as_tcb_horn_<own>` comes from `ModuleData/action_sets.xml` (registered in `project.mbproj`) and is given once while he stands, because switching sets on a walking agent crashed the engine. The horn is `Prefabs/tcb_horn.xml` on his head bone. Held agents pass `AgentSlotIdentity` first.
+
+Log lines carry `[CustomBattleMuster]`. Screen text is hard-coded English, not yet `{=KEY}` localized.
 
 ### Commander filter+cap (per faction)
 
@@ -143,13 +168,29 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `Main/_Module/ModuleData/characters/custom_battle_lords.xml` | CustomGame-only stubs that `lords.xslt` rebuilds into the curated vanilla-derived commanders |
 | `Main/_Module/ModuleData/custom_battle/custom_battle_harad_troop_filter.xslt` | CustomGame-only: hides non-army Aserai and Shaghana characters (ids without `harad_`) and the four minor clans' troops from the troop slots |
 | `Main/_Module/ModuleData/custom_battle/custom_battle_cultures.xslt` | CustomGame-only: names `Culture.aserai` "Harwan" in the faction list (`aom_aserai_cb_name`) |
-| `Main/_Module/GUI/PreFabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |
+| `Main/_Module/GUI/PreFabs/CustomBattle/` | The vanilla screen's Gauntlet prefab XMLs (pre-existing) |
+| `Client/Features/CustomBattles/Muster/Hooks/CustomBattleScreen_OnInitialize_Patch.cs` | Postfix: opens the muster layer over the vanilla screen |
+| `Client/Features/CustomBattles/Muster/Hooks/CustomBattleHelper_GetCustomBattleParties_Patch.cs` | Postfix: rebuilds both sides from the muster (`MusterArmyBuilder`) |
+| `Client/Features/CustomBattles/Muster/TcbVM.cs` | Muster screen VMs: armies, cards, popups, roster, units, banner editor |
+| `Client/Features/CustomBattles/Muster/TcbFieldVM.cs` | Battlefield tab: map, battle settings, siege engines |
+| `Client/Features/CustomBattles/Muster/MusterArmyBuilder.cs`, `CaptainResolver.cs` | Exact sides from the `ArmySpec`; captain choice and the troops offered |
+| `Client/Features/CustomBattles/Muster/TcbSprites.cs`, `BannerPalette.cs` | Map preview sprites; nearest palette colour for culture banners |
+| `Main/Features/CustomBattles/Muster/CustomBattleMuster.cs`, `ArmySpec.cs` | Hand-over from the screen to the battle; the army spec and its validation |
+| `Main/Features/CustomBattles/Muster/MusterBannerDesign.cs` | One army's banner code and its edits |
+| `Main/Features/CustomBattles/Muster/CustomBattleRolesBehavior.cs`, `CustomBattleRoleAssigner.cs` | Captain, banner bearer and horn blower roles in the mission |
+| `Main/Features/CustomBattles/Muster/CustomBattleHornCallBehavior.cs`, `HornBlowerActions.cs` | Horn calls on new orders |
+| `Main/Features/BannerInjection/BannerConfigProvider.cs` | `GetCultureKingdomBannerKeys`: culture to its kingdom's banner key |
+| `Main/Features/FactionUI/Menus/FrontEndMovieService.cs`, `Resources/FrontEndSpriteService.cs` | Image hold for the `TaomCustomBattle` movie; its brush file |
+| `Main/_Module/GUI/PreFabs/CustomBattle/Muster/`, `GUI/Brushes/TaomCustomBattle.xml` | Muster screen prefabs and brushes |
+| `Main/_Module/GUI/CustomBattleMuster/Maps/` | Map previews, `<scene id>.png` |
+| `Main/_Module/ModuleData/action_sets.xml`, `Main/_Module/Prefabs/tcb_horn.xml` | Horn blower action sets (registered in `project.mbproj`) and the horn prefab |
 
 ## Dependencies
 
 - **CustomBattle module** — vanilla DLL providing `CustomBattleData`, `CustomBattleHelper`, `CustomBattleScreen`
 - **Harmony** — patch framework for intercepting static property getters and method calls
 - **DryIoc** — IoC container for service/hook registration
+- **FactionUI front-end art** (muster screen only): `FrontEndMovieService` and `FrontEndSpriteService` register and hold the shared images the muster prefab draws; without them the vanilla screen stays
 - **SubModule.xml** — declares `<DependedModule Id="CustomBattle" />` and registers troop trees, cultures (XSLT + custom), and lord characters for `CustomGame`/`EditorGame`. **Critical:** Lord/culture XMLs MUST be registered for `CustomGame` — without this, ObjectManager has no heroes in Custom Battle mode, causing NRE in `CustomBattleSideVM.OnCharacterSelection`
 
 ## Tests
@@ -169,7 +210,25 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `TAOM.Tests/Features/CustomBattles/PanelEaseTests.cs` | 1 | `CustomBattleScreen.xml` against the install (`LiveInstall`): each panel `VisualDefinition` has vanilla SandBoxCore's attributes (ease, duration, any extra) and the same `VisualState` children with the same attributes |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleSceneLiveDataTests.cs` | 3 | `custom_battle_scenes.xml` against the install (`LiveInstall`): every row's scene exists in an installed module's `SceneObj`, and every siege row's scene declares `siege` plus `level_1` to `level_3`, the levels a Custom Battle siege loads. Two fragment tests (run on CI) pin the declaration parse: a commented-out, single-quoted or reordered declaration, and an entity's own level list, which is not a declaration |
 
-Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indirectly via in-game smoke tests per ADR-002.
+| `TAOM.Tests/Features/CustomBattles/MusterBannerDesignTests.cs` | 15 | Kingdom code kept exactly until an edit; background, emblem colour and emblem edits on simple and multilayer banners; non-palette colour ignored; reset; sides independent; `ExactCode`; `KingdomCode` |
+| `TAOM.Tests/Features/CustomBattles/MusterKingdomBannerShippedDataTests.cs` | 3 | Shipped kingdom data gives whole banners for the main cultures, Gondor and Mordor included |
+| `TAOM.Tests/Features/CustomBattles/TcbSwatchVMTests.cs` | 2 | The open palette frames the army's current colour |
+| `TAOM.Tests/Features/FactionUI/CustomBattleMovieSwapTests.cs` | 9 | `TaomCustomBattle` hold on the menu and chrome groups, brush file order, reopen, wrong VM, missing or failed prefab, no placeholder sprite |
+| `TAOM.Tests/Features/BannerInjection/BannerConfigProviderTests.cs` | (extended) | `GetCultureKingdomBannerKeys` |
+
+Patches, `CustomBattleTeamFixBehavior`, `MusterArmyBuilder` and the roles and horn behaviors are thin or boundary entry points: tested in game per ADR-002 and ADR-008.
+
+## How to verify in game
+
+Not yet verified in game for the 2026-11-11 polish (portraits, banners); the earlier muster build ran in the maintainer's game.
+
+1. Main menu, Custom Battle: the muster screen opens over the vanilla screen with both army cards and commander portraits.
+2. Click each card, open Faction: pick another faction; the card's banner changes to that culture's kingdom banner, the commander to the first of its list (curated names first) and the army empties.
+3. Open the banner popup: change background colour, emblem colour and emblem; the card banner follows. Change faction: the edits reset to the kingdom default.
+4. Roster: search, switch type tabs, add troops and a hero; use plus and minus with Shift and Ctrl; remove a unit; toggle banner bearer, captain and horn blower. Push both armies past 1000 men: the footer warns and Start refuses.
+5. Battlefield tab: step through maps with the strip; set season and time. Start a field battle: the armies match the muster (numbers, banner as edited) and `rgl_log.txt` has `[CustomBattleMuster]` side lines. Order a mustered horn unit to charge: the horn blower sounds.
+6. Start a siege the same way: it loads with a ram and two towers.
+7. Leave the battle and reopen Custom Battle: the muster opens again. **OLD SCREEN** shows the vanilla screen, and a battle started there keeps vanilla's sides.
 
 ## How-To
 
@@ -205,8 +264,11 @@ The formation mapping reads the culture's troop attributes (in Custom Battle fro
 ## GitHub Issue
 
 - [#709](https://github.com/haterade22/TAOM/issues/709): the 2026-10-02 Start crash, missing named commanders and ignored default troops.
+- Muster screen: no issue, waived by Mike for this work (2026-11-11).
 
 ## Changelog
+
+- 2026-11-11: Custom Battle opens TAOM's muster screen over the vanilla one. Each army gets a faction, a commander and its kingdom's banner, which the player can recolour or give another emblem. The roster musters exact unit numbers, heroes and a banner bearer, captain and horn blower per unit. The Battlefield tab picks map, settings and siege options with map previews. Start builds the sides exactly as mustered, and the horn blower sounds when his formation gets a new order. **OLD SCREEN** keeps the vanilla screen available.
 
 - 2026-10-26: the custom battle screen's three panels slide in with vanilla's ease (`EaseType="EaseOut" EaseFunction="Quint"`, the same 0.45 s): they start fast and settle into place instead of moving at constant speed. TAOM's copy of the screen had carried a dead `EaseIn` attribute in their place (#1027, after #1024). In-game check: open Custom Battle; the side panels slide in and decelerate into place over about 0.45 s.
 - 2026-10-02: TAOM's formation default troops now apply in Custom Battle where the slot can show them (33 of 88 culture-and-slot pairs). The adapter read troop ids only from `CultureObject`, but a Custom Battle loads cultures as `BasicCultureObject`, so TAOM's default never applied; it now reads them from the merged `SPCultures` XML. For the re-skinned cultures an eligible TAOM troop also replaces vanilla's Calradian pick (Rohan infantry no longer defaults to the Vlandian Swordsman); where TAOM's troop does not fit the slot, vanilla's pick stays.

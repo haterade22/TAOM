@@ -32,6 +32,7 @@ public sealed class FrontEndMovieService
     public const string ClanNamingMovie = "TAOMClanNaming";
     public const string OptionsMovie = "TAOMOptionsStage";
     public const string FactionScreenMovie = "TAOMFactionScreen";
+    public const string CustomBattleMovie = "TaomCustomBattle";
 
     private const FrontEndImageGroups CreationFrame = FrontEndImageGroups.CharacterCreation;
 
@@ -141,6 +142,12 @@ public sealed class FrontEndMovieService
             case "MainAgentHUD" when dataSourceTypeName == "MissionAgentStatusVM":
                 _sprites.Acquire(FrontEndImageGroups.BattleHud);
                 return new MovieSwap(movieName, movieName, FrontEndImageGroups.BattleHud);
+
+            // TAOM's own Custom Battle screen, loaded by name from CustomBattleScreen_OnInitialize_Patch. Its prefab
+            // draws the main menu's and the encyclopedia's images by their own names, so the swap only takes the hold
+            // on both groups for as long as the movie lives.
+            case CustomBattleMovie when dataSourceTypeName == "TcbVM":
+                return Themed(movieName, CustomBattleMovie, FrontEndImageGroups.MainMenu | CreationFrame);
 
             default:
                 return null;

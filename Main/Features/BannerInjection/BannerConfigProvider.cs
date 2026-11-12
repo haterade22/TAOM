@@ -32,6 +32,21 @@ public class BannerConfigProvider : IBannerConfigProvider
         return result;
     }
 
+    public Dictionary<string, string> GetCultureKingdomBannerKeys()
+    {
+        var keys = GetKingdomBannerKeys();
+        var cultures = new Dictionary<string, string>();
+        ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "taom_spkingdoms.xml"), "Kingdom", cultures, "culture");
+        ParseBannerKeys(Path.Combine(_pathService.ModuleDataPath, "spkingdoms.xslt"), "Kingdom", cultures, "culture");
+        var result = new Dictionary<string, string>();
+        foreach (var kingdom in cultures)
+        {
+            var culture = kingdom.Value.StartsWith("Culture.") ? kingdom.Value.Substring("Culture.".Length) : kingdom.Value;
+            if (keys.TryGetValue(kingdom.Key, out var key) && !result.ContainsKey(culture)) result[culture] = key;
+        }
+        return result;
+    }
+
     public Dictionary<string, string> GetClanBannerKeys()
     {
         var result = new Dictionary<string, string>();
@@ -43,7 +58,8 @@ public class BannerConfigProvider : IBannerConfigProvider
         return result;
     }
 
-    private void ParseBannerKeys(string xmlPath, string elementName, Dictionary<string, string> result)
+    private void ParseBannerKeys(string xmlPath, string elementName, Dictionary<string, string> result,
+        string attributeName = "banner_key")
     {
         if (!File.Exists(xmlPath))
         {
@@ -57,7 +73,7 @@ public class BannerConfigProvider : IBannerConfigProvider
             foreach (var element in doc.Descendants(elementName))
             {
                 var id = element.Attribute("id")?.Value;
-                var bannerKey = element.Attribute("banner_key")?.Value;
+                var bannerKey = element.Attribute(attributeName)?.Value;
 
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(bannerKey))
                 {
