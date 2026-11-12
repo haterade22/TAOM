@@ -34,6 +34,7 @@ internal static class FeatureModules
         new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
         new Features.MapEventGuard.StuckBattleModule(),
         new Features.MapEventGuard.EncounterGuardModule(),
+        new Features.SiegeRetreatLoot.SiegeRetreatLootModule(),
         new Features.WarChronicle.WarChronicleModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),

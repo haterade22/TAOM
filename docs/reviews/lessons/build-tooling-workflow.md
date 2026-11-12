@@ -4986,3 +4986,9 @@ The TAOM.CoopCompat split moved the transport and the wire contracts into a seco
 - **Why missed:** the split was reviewed for the engine's type scan, and nobody listed the other places that name the module's assemblies. The build identity had been judged "too little gain" before the split, when it would have needed a new wire field.
 - **Prevent:** when code moves into a new assembly, grep for every list of the module's assemblies (identity, packaging allowlist, stamp checks, deploy items, reference gates) and test that each one covers the new DLL. A refusal for a file type covers the whole module tree, not one folder.
 - **Source:** Kimi review of commit 561d1b308 (2026-11-12), findings F1 (MEDIUM) and F2 (LOW).
+
+### A new in-game check manifest is loaded by tools/tests, which the C# suite never runs (#1121, 2026-11-12)
+`tools/ingame_checks/1121.toml` shipped with `fixed_in = "UNCOMMITTED"`. The loader needs a sha (`[0-9a-f]{7,40}`), so `RepoManifestGateTests` fails and no verdict can run. The 39,019-test C# run passed. The same manifest also wrote its pass line in the prefix, where the loot was collected, not in the postfix that opens the screen, so a failing screen would still have read as a pass.
+- **Why missed:** only `tools/tests` loads every manifest; my first Python run timed out and I read nothing from it. The pass line sat where the data was easiest to count.
+- **Prevent:** after any manifest edit run `python -m unittest tools.tests.test_ingame_verdict`, and treat a timed-out run as no evidence. Use the trunk commit before the work as `fixed_in`. Write the pass line where the effect lands, and give every error text one tag that one `fail` pattern catches, with a test that scans the source for the `LogError` texts.
+- **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 1 and 4.
