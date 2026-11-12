@@ -62,13 +62,15 @@ Bannerlord v1.5 port are separate branches of [Bannerlord-Coop-Team/BannerlordCo
 |---|---|---|---|---|
 | v0.1.7 (released 2026-10-30) | `development` | v1.4.8 (`<GameVersion>` in `source/Coop/Coop.csproj`) | No | GitHub release and ModDB; the Coop team's ModDB "Headless Server" is the v1.4.8 dedicated server |
 | v0.1.6 (released 2026-10-06) | `development` | v1.4.8 | No | as above |
-| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.6 since 2026-10-29 (`2fab86882`) | No. v1.5.7 changed two engine signatures it calls, so the installed `GameInterface.dll` has 2 unresolved engine members there. The v1.5.7 port is written on the local branch `port/bannerlord-1.5.7` and not pushed (2026-11-10, [v1.5.7-impact.md](../migration/v1.5.7-impact.md)) | built from source; TAOM's dev install runs it |
+| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.7 since 2026-11-10 (`83c46b153`) | Built from source, yes; no live co-op session has run it on v1.5.7. The port fixed the two engine signatures v1.5.7 removed ([v1.5.7-impact.md](../migration/v1.5.7-impact.md)). Open PRs on 2026-11-11: [#4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630) merges `development` again, and #4631 to #4634 follow v1.5.7 changes (party parley, villages that give in, the courtship retry, the grain quest) | built from source; TAOM's dev install runs it |
 
 The v1.5 branch split from `development` on 2026-10-03 (`5f4d63cc0`), so the features `development` gained since
 (v0.1.7's siege fixes, ransom, emissaries, child education and the rest) reach v1.5.6 only through a merge of
 `development` into `bannerlord-1.5.x`. That merge (`development` at `c8233b09b`, mod version 0.1.8) went in
 as [Coop PR #4230](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4230), opened 2026-10-31 and
-merged on 2026-11-05; its automated suites passed on v1.5.6, and no live co-op session has run it. The co-op
+merged on 2026-11-05; its automated suites passed on v1.5.6, and no live co-op session has run it. A second
+merge (`development` at `0a375595f`) is [Coop PR #4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630),
+opened 2026-11-11; its unit, harness and E2E suites passed on v1.5.7. The co-op
 dedicated server is [coop-dedicated-server.md](coop-dedicated-server.md).
 
 **Tracking:** `docs/reviews/upstream-watch.json` lists this repo under `releases`, so the session-start banner

@@ -145,6 +145,7 @@ With all three, TAOM stages with only `-Modules` and `-ExtraModules`, and TAOM_M
 
 ## Changelog
 
+- 2026-11-11: Coop PR #4630 merges `development` into `bannerlord-1.5.x` again and passes the unit, harness and E2E suites on v1.5.7; PRs #4631 to #4634 follow it. The server side is unchanged: the v1.5.7 base images, a TAOM v1.5.7 archive and a TAOM save are still owed.
 - 2026-11-10: v1.5.7. Coop's port (`83c46b153`) and the server repo's version pins (`f285cce`) are pushed to their `bannerlord-1.5.x` branches. A vanilla v1.5.7 server served and autosaved; the TAOM stage passes the server load gates. #104 and #133 are merged and #115 is closed.
 - 2026-10-30: the server runs on v1.5.6. Steam's Dedicated Server moved to v1.5.6 (.NET 8); server PR #115 makes the staging bundle the runtime the engine asks for, and a vanilla stage booted, autosaved and reloaded. The DS asset packages must come from the v1.5.6 client. #105 is merged; the TAOM stage passes the server load gates and waits for a v1.5.6 save.
 - 2026-10-23: page created. Skeleton package (`61276c182`, #972) and the audit check (`12afef4d2`) landed; the TAOM boot to SERVING is recorded for the spike build only.
