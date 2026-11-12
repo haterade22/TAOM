@@ -1539,3 +1539,11 @@ The MCM name and hint of `WarPledgeEnabled` reached review with no `{=KEY}`. The
 - **Why missed:** the sample was the oldest settings in the file. The `/localize` skill names no case for MCM attributes, so nothing contradicted the sample.
 - **Prevent:** before stating that a convention does not exist, read the three newest instances of the thing: the last settings added to `TaomSettings.cs`, the last rows of the strings file. A new MCM setting keys its name and hint (`{=taom_<feature>_mcm_<name>}` and `..._hint`), then `python tools/harvest_literal_loc_keys.py --apply` and the seed pass register them.
 - **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 7.
+
+### When a configured number changes meaning, search for its readers and for every text that names it (battle pay, 2026-11-12)
+
+Battle pay changed from "base times a clamped enemy-to-player ratio" to "base times the enemy's size over a reference size". The change searched for callers of `EarnFromBattle` and for docs that mention the ratio. The map-bar tooltip row "Per battle" reads the input constant `PerBattleVictoryBase` directly, so it kept showing the base (+50) for a fight that now pays 2.5. An MCM hint that says "the troop's resource price" became ambiguous in the same change.
+
+- **Why missed:** a caller search finds the function's callers. It cannot find a display of the config field, and the code graph sees types only, not config properties or localized strings.
+- **Prevent:** when a configured value changes meaning, grep the field name, its XML attribute, the localization keys and default texts that mention it ("per battle", "price", "ratio") and the docs. Give a reworded text a new key: a changed English text under an old key leaves 12 stale rows, while a new key shows the correct English from its inline default until the language pass.
+- **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), findings 2 and 3.

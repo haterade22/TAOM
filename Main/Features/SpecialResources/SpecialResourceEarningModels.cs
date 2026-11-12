@@ -37,7 +37,7 @@ public sealed class EarnerRef
 
     public PlayerControl Control { get; }
 
-    /// <summary>Men in the party that fought, or null when the hero has none (the ratio then divides by 1).</summary>
+    /// <summary>Men in the party that fought, or null when the hero has none. No production code reads it since the battle pay stopped dividing by it (2026-11-12); deleting it is a separate cleanup.</summary>
     public int? PartyManCount { get; }
 }
 

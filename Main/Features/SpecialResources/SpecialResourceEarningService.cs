@@ -83,8 +83,7 @@ public sealed class SpecialResourceEarningService
                 return;
             }
 
-            var playerCount = e.PartyManCount ?? 1;
-            _service.EarnFromBattle(e.HeroId, e.KingdomId, e.CultureId, (float)s.EnemyCount / playerCount);
+            _service.EarnFromBattle(e.HeroId, e.KingdomId, e.CultureId, s.EnemyCount);
         });
     }
 

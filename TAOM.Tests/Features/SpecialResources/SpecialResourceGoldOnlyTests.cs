@@ -274,7 +274,7 @@ public class SpecialResourceGoldOnlyTests
     {
         GoldOn();
 
-        _service.EarnFromBattle(Hero, Kingdom, Culture, 1f);
+        _service.EarnFromBattle(Hero, Kingdom, Culture, 100f);
 
         Assert.AreEqual(8f, Balance);
     }

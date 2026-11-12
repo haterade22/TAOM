@@ -6,8 +6,9 @@ public sealed class EmissaryTroopOffer
 {
     public string TroopId { get; }
 
-    /// <summary>One-time price per unit: <c>merchant_cost</c> in the settlement faction's special resource, or
-    /// its gold price under the gold-only option.</summary>
+    /// <summary>One-time price per unit: the troop's <c>EmissaryPrice</c> (<c>merchant_cost</c> times the multiplier of
+    /// the troop's own resource) in the settlement faction's special resource, or its gold price under the gold-only
+    /// option.</summary>
     public int UnitPrice { get; }
 
     /// <summary>True if the player can afford at least ONE of this troop right now.</summary>

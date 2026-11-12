@@ -106,7 +106,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
                 continue;
             }
 
-            var price = UnitPrice(merchantCost, sellsForGold);
+            var price = UnitPrice(cost, sellsForGold);
             var maxAffordable = (int)(balance / price);
             var room = sellsForGold ? RoomFor(troopId, freeSlots) : int.MaxValue;
             var limitedByParty = room < maxAffordable;
@@ -142,7 +142,7 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         }
 
         var sellsForGold = _goldOption.EliteTroopsCostGoldOnly;
-        var exactCost = (long)UnitPrice(merchantCost, sellsForGold) * quantity;
+        var exactCost = (long)UnitPrice(cost, sellsForGold) * quantity;
         var totalCost = (int)Math.Min(exactCost, int.MaxValue);
         var resourceName = sellsForGold ? null : resource.DisplayName;
         var currency = resourceName ?? GoldLogName;
@@ -178,8 +178,10 @@ public sealed class EliteEmissaryService : IEliteEmissaryService
         return EmissaryPurchaseResult.Of(EmissaryPurchaseStatus.Success, troopId, quantity, totalCost, resourceName);
     }
 
-    private int UnitPrice(int merchantCost, bool sellsForGold) =>
-        sellsForGold ? merchantCost * _goldOption.EmissaryGoldPerResource : merchantCost;
+    // Gold reads the raw merchant_cost. A resource price is the troop's own EmissaryPrice, so it never moves with
+    // the resource the settlement's owner happens to resolve to.
+    private int UnitPrice(TroopResourceCostEntry cost, bool sellsForGold) =>
+        sellsForGold ? cost.MerchantCost * _goldOption.EmissaryGoldPerResource : cost.EmissaryPrice;
 
     // How many of this troop fit in the free slots. Under Troop Weight the slots are weighted and one troop
     // fills its weight, so a weight-3 elite takes 3 slots. A weight that is not above 1 (light, unset, NaN)

@@ -3130,7 +3130,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Special Resources")]
     [SettingPropertyInteger("{=taom_specres_mcm_gold_rate}Emissary Gold Per Resource", SpecialResources.SpecialResourceSettingsProvider.MinGoldPerResource, SpecialResources.SpecialResourceSettingsProvider.MaxGoldPerResource, Order = 1, RequireRestart = false,
-        HintText = "{=taom_specres_mcm_gold_rate_hint}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's resource price times this number. Default: 200.")]
+        HintText = "{=taom_specres_mcm_gold_rate_hint_base}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's base emissary cost times this number. The resource price is a multiple of the same base cost. Default: 200.")]
     public int EmissaryGoldPerResource { get; set; } = SpecialResources.SpecialResourceSettingsProvider.DefaultGoldPerResource;
 
     // --- Accessibility (#1110) ---

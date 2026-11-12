@@ -151,8 +151,18 @@ co-op refusal was added 2026-08-03 from field testing.
 
 ### Config File: `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml`
 
-- `merchant_cost="N"` per `<Troop>` — the one-time emissary price (in the owner faction's resource).
-  Cost band: L36 ≈ 10–14, L41 ≈ 18, L46 ≈ 28, L51 ≈ 45, creatures ≈ premium.
+- `merchant_cost="N"` per `<Troop>` is the base emissary price. The resource charge is `N` times the
+  `emissary_price_multiplier` of the resource the row's `resource_id` names, folded into the entry's `EmissaryPrice`
+  at load. Cost band of `N`: L36 about 10 to 14, L41 about 18, L46 about 28, L51 about 45, creatures a premium.
+- `emissary_price_multiplier` is an optional whole number (1 to 1000, default 1) on each `<Resource>` in
+  `special_resources_config.xml`. Ten resources ship 20, so a L46 troop costs 560 and a L51 troop 900; War Drums
+  ships none (its two creature rows were priced by hand). The price follows the troop, not the settlement's owner:
+  an owner whose kingdom resolves to another resource than its culture's troops (a defected clan) is charged the
+  same number, in the owner's resource. It applies to the resource charge only. The gold-only price stays
+  `merchant_cost` times `EmissaryGoldPerResource`, so changing the multiplier never moves it. The offer list, the
+  charge and the encyclopedia badge all read `EmissaryPrice`. An invalid value reverts to 1 with one warning.
+  Upkeep is not affected. The multiplier exists because the battle payout (about 50 for a 100-man battle) made the
+  base prices a one-fight purchase (2026-11-12).
 
 ### Current Values
 
@@ -168,10 +178,10 @@ co-op refusal was added 2026-08-03 from field testing.
 | gundabad | Mount Gundabad (`town_G1`) | War Spoils | dread_rider, bolgs_ironfang, berserker |
 | mirkwood | Felegoth (`town_M1`) | Elven Wine | palaceguard, thingolheir, beleglas |
 | rivendell | Rivendell (`town_R1`) | Elven Wine | high_captain, knight_golden_flower, glorfindel_guard |
-| lothlorien | Caras Galadhon (`town_L1`) | Elven Wine | gl_highblade, gl_mallorn_defender, gl_bowmaster (28 each); mw_high_ranger, mw_dawnrider, mw_waystalker (18 each) |
+| lothlorien | Caras Galadhon (`town_L1`) | Elven Wine | gl_highblade, gl_mallorn_defender, gl_bowmaster (`merchant_cost` 28 each); mw_high_ranger, mw_dawnrider, mw_waystalker (`merchant_cost` 18 each) |
 | vlandia (Rohan) | Edoras (`town_V1`) | Marks | golden_hall_supreme_rider, kings_own_* |
 | khuzait (Rhun) | Mistrand (`town_RU1`) | War Banners | dragon_wrath_obsidian_*, warlord_chariot |
-| aserai (Harad) | Korb Taskral (`town_A1`) | War Drums | elephant_rider (70), mumakil_rider (2800) |
+| aserai (Harad) | Korb Taskral (`town_A1`) | War Drums | elephant_rider (`merchant_cost` 70), mumakil_rider (2800); War Drums has no multiplier, so these are the resource prices |
 
 Since 2026-10-15 the two Harad riders are Emissary-only: neither is in any volunteer pool, so this is the only way a player gets one. Their `recruit_cost` (50 and 2000) charges only a captured rider recruited from prisoners.
 

@@ -44,14 +44,15 @@ public class SpecialResourceEarningServiceCoopTests
     // --- Victory ---
 
     [TestMethod]
-    public void OnVictory_TwoWinningPlayers_EachEarnsWithTheirOwnRatio()
+    public void OnVictory_TwoWinningPlayers_EachEarnsFromTheSameEnemyCount()
     {
         var kit = new EarningTestKit(session: true);
 
+        // The pay no longer divides by each player's own men, so a small party gets no bonus.
         kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1", 10), EarningTestKit.Remote("g2", 5)));
 
-        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 3f);
-        kit.Service.Received(1).EarnFromBattle("g2", "k", "c", 6f);
+        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 30f);
+        kit.Service.Received(1).EarnFromBattle("g2", "k", "c", 30f);
         kit.Service.DidNotReceive().EarnFromBattle("main", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
     }
 
@@ -130,7 +131,7 @@ public class SpecialResourceEarningServiceCoopTests
     }
 
     [TestMethod]
-    public void OnVictory_SessionPlayerWithNoRoster_DividesByOne()
+    public void OnVictory_SessionPlayerWithNoRoster_EarnsFromTheEnemyCount()
     {
         var kit = new EarningTestKit(session: true);
 

@@ -151,6 +151,61 @@ public class EliteEmissaryServiceTests
         Assert.AreEqual("gondor_b", list.Offers[1].TroopId);
     }
 
+    // Troops whose rows carry an emissary price (merchant_cost times their resource's multiplier, folded in at load).
+    private void PriceTheOffersAtTwentyTimes()
+    {
+        _resourceConfig.GetTroopCost("gondor_a").Returns(
+            new TroopResourceCostEntry("gondor_a", "caster", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30, emissaryPrice: 600));
+        _resourceConfig.GetTroopCost("gondor_b").Returns(
+            new TroopResourceCostEntry("gondor_b", "caster", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 50, emissaryPrice: 1000));
+    }
+
+    [TestMethod]
+    public void BuildOfferList_TroopsWithEmissaryPrices_ListsThosePrices()
+    {
+        PriceTheOffersAtTwentyTimes();
+        _resourceService.GetCurrentAmount(Hero, Kingdom, Culture).Returns(600f);
+
+        var list = _service.BuildOfferList(Hero, Kingdom, Culture);
+
+        Assert.AreEqual(600, list.Offers[0].UnitPrice);
+        Assert.IsTrue(list.Offers[0].CanAfford);
+        Assert.AreEqual(1000, list.Offers[1].UnitPrice);
+        Assert.IsFalse(list.Offers[1].CanAfford);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_OwnerResourceDiffersFromTheTroopsRow_StillListsTheTroopsPrice()
+    {
+        // A clan whose kingdom resolves to another resource than its culture's troops use: the price follows the
+        // troop row, not the resource the owner resolves to.
+        PriceTheOffersAtTwentyTimes();
+        var otherResource = new SpecialResource(
+            id: "war_drums", kingdomIds: new[] { "aserai" }, cultureIds: new string[0],
+            displayName: "War Drums", iconSpriteName: "i", cap: 10000f, startingAmount: 0f, dailyPerTown: 0f,
+            perBattleVictoryBase: 10f, perRaid: 0f, perSiegeVictory: 0f, perPrisoner: 0f);
+        _resourceService.ResolveResource(Kingdom, Culture).Returns(otherResource);
+        _resourceService.GetCurrentAmount(Hero, Kingdom, Culture).Returns(100000f);
+
+        var list = _service.BuildOfferList(Hero, Kingdom, Culture);
+
+        Assert.AreEqual(600, list.Offers[0].UnitPrice);
+    }
+
+    [TestMethod]
+    public void BuildOfferList_GoldOnly_UsesTheRawMerchantCostNotTheEmissaryPrice()
+    {
+        // The gold price is the raw merchant_cost times the gold rate. The emissary price is for the resource only.
+        PriceTheOffersAtTwentyTimes();
+        _goldOption.EliteTroopsCostGoldOnly.Returns(true);
+        _goldOption.EmissaryGoldPerResource.Returns(200);
+        _player.Gold.Returns(1000000);
+
+        var list = _service.BuildOfferList(Hero, Kingdom, Culture);
+
+        Assert.AreEqual(6000, list.Offers[0].UnitPrice); // 30 x 200, not 600 x 200
+    }
+
     [TestMethod]
     public void BuildOfferList_SkipsTroopsWithoutMerchantCost()
     {

@@ -46,13 +46,14 @@ public class SpecialResourceEarningServiceCharacterizationTests
     // --- Victory ---
 
     [TestMethod]
-    public void OnVictory_AttackerWinsFieldBattle_EarnsFromBattleWithEnemyRatio()
+    public void OnVictory_AttackerWinsFieldBattle_EarnsFromBattleWithEnemyCount()
     {
         var kit = new EarningTestKit();
 
+        // The pay follows the enemy's size alone: the 10 men on the player's side no longer change it.
         kit.Sut.OnVictory(Win(enemy: 30, men: 10));
 
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 3f);
+        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 30f);
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromSiege(default, default, default);
     }
 
@@ -141,7 +142,7 @@ public class SpecialResourceEarningServiceCharacterizationTests
     }
 
     [TestMethod]
-    public void OnVictory_PartyHasNoRoster_DividesByOne()
+    public void OnVictory_PartyHasNoRoster_PassesTheEnemyCount()
     {
         var kit = new EarningTestKit();
 
@@ -151,26 +152,24 @@ public class SpecialResourceEarningServiceCharacterizationTests
     }
 
     [TestMethod]
-    public void OnVictory_EmptyPartyAgainstEnemies_PassesInfiniteRatioThrough()
+    public void OnVictory_EmptyPartyAgainstEnemies_PassesTheEnemyCount()
     {
-        // Moved gate, parity kept: 30 / 0 is +Infinity and the ratio is not validated here (the resource
-        // service owns the clamp). The test pins that, so a change of behaviour is a decision.
+        // No division by the party size now, so an empty party cannot make an infinite value.
         var kit = new EarningTestKit();
 
         kit.Sut.OnVictory(Win(enemy: 30, men: 0));
 
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", float.PositiveInfinity);
+        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 30f);
     }
 
     [TestMethod]
-    public void OnVictory_NoEnemiesAndEmptyParty_PassesNaNRatioThrough()
+    public void OnVictory_NoEnemiesAndEmptyParty_PassesZero()
     {
-        // 0 / 0 is NaN. Parity keeps it passing the gate; the resource service owns the finite clamp.
         var kit = new EarningTestKit();
 
         kit.Sut.OnVictory(Win(enemy: 0, men: 0));
 
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", Arg.Is<float>(r => float.IsNaN(r)));
+        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 0f);
     }
 
     [TestMethod]

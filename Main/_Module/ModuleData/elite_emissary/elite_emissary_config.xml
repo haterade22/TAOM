@@ -2,7 +2,7 @@
 <!-- Settlement Elite Emissary — buy a faction's elite troops for its special resource.
      KeySettlements: where the emissary appears (verified against TAOM_Map/settlements.xml).
      CultureOffers: keyed by the settlement's CURRENT OWNER culture (so conquest flips the offerings).
-     Prices live in special_resources/troop_resource_costs.xml (merchant_cost); a troop listed here
+     Prices live in special_resources/troop_resource_costs.xml (merchant_cost, times the emissary_price_multiplier of the troop's resource); a troop listed here
      without a merchant_cost row is dropped + warned at load. Cultures that map to NO special resource
      (lindon), that carry no offers yet (goblin, mistymountainorcs, bluecraig: War Spoils since #1081) or have no L36+ elites (dale/sturgia, dunland/empire, umbar, khand/
      battania) are intentionally omitted — the option won't appear there.
