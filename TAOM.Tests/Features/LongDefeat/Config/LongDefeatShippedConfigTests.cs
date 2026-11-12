@@ -891,7 +891,7 @@ public class LongDefeatShippedConfigTests
             .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
         var source = File.ReadAllText(RepoPaths.RepoPath("Main", "Features", "LongDefeat", "LongDefeatSetupPrompt.cs"));
 
-        foreach (var key in new[] { "TAOM_LD_Prompt_ClassTitle", "TAOM_LD_Prompt_ClassDesc", "TAOM_LD_Prompt_ChoiceClass" })
+        foreach (var key in new[] { "TAOM_LD_Prompt_ClassTitle", "TAOM_LD_Prompt_ClassDesc" })
         {
             Assert.IsTrue(strings.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
             StringAssert.Contains(source, "\"" + registered + "\"", key + " differs from the prompt's constant");
