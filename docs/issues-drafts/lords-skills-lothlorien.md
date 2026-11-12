@@ -52,7 +52,7 @@ Dwarves stay combat-focused regardless of age (250-yr lifespan).
 **Idempotency**: rerunning the script with the same archetype data produces no diff —
 the script reads current values and only writes when they differ.
 
-**Notes:** Galadriel + Denethor are the only two characters hitting 300 in any skill. Justified: Galadriel is one of the most powerful Elves in Middle-earth. Marchwardens (Haldir, Rúmil, Orophin) are in Mirkwood not Lothlórien per TAOM's data.
+**Notes:** Galadriel + Denethor are the only two characters hitting 300 in any skill. Justified: Galadriel is one of the most powerful Elves in Middle-earth. Marchwardens (Haldir, Rúmil, Orophin) were in Mirkwood not Lothlórien per TAOM's data when this draft was written. Haldir (`lord_M3_3`) moved to Lothlórien on 2026-11-12; Rúmil and Orophin were not checked.
 
 ## Testing
 

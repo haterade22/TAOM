@@ -312,8 +312,8 @@
 		text="{=finduilas_description}Finduilas, consort to Taurion, channels the tragic beauty of her namesake from the Silmarillion, her healing arts sustaining river guardians against Dol Guldur's poisons." />
 	<Hero
 		id="lord_M3_3"
-		faction="Faction.clan_mirkwood_3"
-		text="{=haldir_description}Haldir, a border sentinel, mirrors the Lórien marchwardens in the books, patrolling with silent precision to thwart spider nests along the riverbanks." />
+		faction="Faction.clan_lothlorien_3"
+		text="{=haldir_lothlorien_description}Haldir, a border sentinel, mirrors the Lórien marchwardens in the books, patrolling with silent precision to guard the borders of the Golden Wood." />
 	<Hero
 		id="lord_M3_4"
 		faction="Faction.clan_mirkwood_3"
@@ -331,7 +331,7 @@
 		text="{=amarië_description}Amarië, spouse to Galenor, represents the enduring love themes in elven tales, her songs revitalizing the clan's spirits amid the growing gloom." />
 	<Hero
 		id="lord_M4_3"
-		faction="Faction.clan_mirkwood_4"
+		faction="Faction.clan_lothlorien_3"
 		text="{=rumil_description}Rumil, a scholar and warrior, preserves ancient grimoires, using knowledge to forge defenses against the Necromancer's curses." />
 	<Hero
 		id="lord_M4_4"
@@ -339,8 +339,8 @@
 		text="{=nellas_description}Nellas, a woodland guide, draws from the elf who aided Túrin, her tracking skills uncovering hidden paths and threats in the tangled woods." />
 	<Hero
 		id="lord_M4_5"
-		faction="Faction.clan_mirkwood_4"
-		text="{=orophin_description}Orophin, a vigilant archer, stands watch like the border guards in films, his arrows felling beasts corrupted by Mirkwood's shadows." />
+		faction="Faction.clan_lothlorien_3"
+		text="{=orophin_lothlorien_description}Orophin, a vigilant archer, stands watch like the border guards in films, his arrows felling beasts corrupted by the shadow of Dol Guldur." />
 
 	<!-- Nos Alenwé -->
 	<Hero

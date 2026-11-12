@@ -81,7 +81,7 @@ public class HeroPickerService : IHeroPickerService
         if (!policy.Enabled || string.IsNullOrEmpty(heroId) || string.IsNullOrEmpty(cultureId))
             return default;
 
-        // A card can name a hero of another culture than its screen (Haldir on Lothlorien's, #1067): the
+        // A card can name a hero of another culture than its screen (Bolg of the Misty Mountains on Gundabad's, #1067): the
         // hero's own culture decides, and the screen's stands in when the lookup finds none.
         var ownCulture = _adapter.CultureOf(heroId);
         if (!string.IsNullOrEmpty(ownCulture))

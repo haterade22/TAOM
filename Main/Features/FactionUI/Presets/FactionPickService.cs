@@ -17,7 +17,7 @@ namespace TAOM.Features.FactionUI.Presets;
 /// (its handover, priority 1100), and when the culture stage completes the stages the hero needs none of
 /// are taken out of the list: the face generator before the narrative stage, and the banner, clan name,
 /// review and options stages after it. The hero may be of another culture than the faction screen
-/// (Haldir on Lothlorien's, #1067).
+/// (Bolg of the Misty Mountains on Gundabad's, #1067).
 /// <para>
 /// A clanless wanderer on a named card (Gimli, Aragorn) is adopted instead (#1067): Player Switcher
 /// adopts him into the player's new clan, so the player still names that clan and designs its banner.
