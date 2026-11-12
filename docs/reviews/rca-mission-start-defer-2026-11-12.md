@@ -46,6 +46,21 @@ errors independently, which is the argument for running two lenses at tier 1 eve
 - **Agents 1, 3, 4, 6** did not run (tier 1 rule). They found no part of this: the findings are engine facts and test gaps.
 - **Codex** did not run (usage limit). Owed before merge.
 
+## Follow-up review: the in-game proof (same day)
+
+The commit after `6f32888fb` adds what `csharp-architecture.md` "Outcome lines" requires and `6f32888fb` shipped without: an
+`IOutcomeLog` check line for the feature and a manifest in `tools/ingame_checks/`. That omission was my standards miss. The tier-1
+lenses did not include the Standards lens (the tier rule runs it only in a second wave), and `/verify` does not check this rule.
+`/deep-review` tier 2 (Agent 5 data flow at `high`) reviewed the follow-up: no HIGH, one MED and four LOW items, all but one fixed.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| G1 | MED | The manifest fails #1028 on any mission start loop in the session (a list change in either list the engine walks, or a "threw and was not survived" line for any cause), but its header and `needs` named only `MissionBehaviors`. | A verdict's fail patterns judge the whole session, not the path under test | I wrote the header from the one path I was fixing. | Header, `needs` and the feature doc now say so: a loop the fix does not cover should read FAIL. |
+| G2 | LOW | Nothing tied the written line to the manifest's pass regex. The C# test checked only that the id strings appear in the TOML, and the pass pattern ended in `$`, so a changed line format would read NOT REACHED for ever, never FAIL. | A verdict that cannot fail | C# and Python each pinned half of the chain. | A C# test renders the exact lines through the real `OutcomeLog`; a Python test judges the same literals on the real manifest; the `$` is gone. Lesson in `testing-qa.md`. |
+| G3 | LOW | `IOutcomeLog?` parameters with a null branch no caller reaches. | Dead branch | A defensive habit. | Removed. |
+| G4 | LOW | The feature doc's test counts were stale (39, 21 and 15 against 53, 30 and 18). | Counts typed, not computed | They were typed when the tests were written. | Updated, with the command and the date. |
+| G5 | LOW | In a reload loop the list-change outcome call builds its strings every frame before the once-per-key latch. | Letter of "Outcome cost" | None: it runs only while the game is already stuck in the loop. | Accepted, not changed. |
+
 ## Feedback memories to codify
 
 None. The lesson goes into `docs/reviews/lessons/harmony-il.md`.

@@ -49,6 +49,9 @@ public interface IMissionStartGuardService
     /// <summary>One INFO line: a behaviour of <paramref name="addedType"/> was queued during <paramref name="call"/> of <paramref name="ownerType"/>.</summary>
     void ReportDeferredAdd(StartCall call, string ownerType, string addedType);
 
+    /// <summary>The queue was applied when <c>Mission.AfterStart</c> ended: <paramref name="queued"/> behaviours, <paramref name="added"/> of them added. Writes the in-game check line (#1028).</summary>
+    void ReportFlush(int queued, int added);
+
     /// <summary>The install line: how many call sites the transpiler wrapped, or the warning when it is not all of them (which also uses up the once-per-process lost-guard warning).</summary>
     void LogInstall(int wrappedSites);
 }

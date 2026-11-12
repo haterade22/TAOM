@@ -19,6 +19,7 @@ public class MissionStartGuardServiceTests
     private IMissionStartGuardAdapter _adapter = null!;
     private IDedicatedServerProvider _server = null!;
     private IModLogger _logger = null!;
+    private IOutcomeLog _outcomes = null!;
     private MissionStartGuardService _sut = null!;
 
     [TestInitialize]
@@ -29,7 +30,8 @@ public class MissionStartGuardServiceTests
         _adapter = Substitute.For<IMissionStartGuardAdapter>();
         _server = Substitute.For<IDedicatedServerProvider>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new MissionStartGuardService(_settings, _adapter, _server, _logger);
+        _outcomes = Substitute.For<IOutcomeLog>();
+        _sut = new MissionStartGuardService(_settings, _adapter, _server, _logger, _outcomes);
     }
 
     private const int Six = MissionStartGuardService.ExpectedSites;
@@ -112,6 +114,94 @@ public class MissionStartGuardServiceTests
         _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(_ => throw new InvalidOperationException("disk full"));
 
         _sut.ReportDeferredAdd(StartCall.AfterStart, "Mod.Owner", "Mod.Added");
+    }
+
+    // ---- outcome lines (#1028): the in-game verdict reads these, tools/ingame_checks/1028.toml ----
+
+    private const string DeferredId = "taom.mission-start-guard.deferred-add";
+    private const string ListChangeId = "taom.mission-start-guard.list-change";
+
+    [TestMethod]
+    public void ReportFlush_EveryQueuedAddLanded_PassesWithTheCounts()
+    {
+        _sut.BeginMission(new object());
+
+        _sut.ReportFlush(2, 2);
+
+        _outcomes.Received(1).Pass(DeferredId, Arg.Any<string>(), Arg.Is<string>(d => d.Contains("queued=2") && d.Contains("added=2")));
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ReportFlush_AnAddFailed_FailsWithBothCounts()
+    {
+        _sut.BeginMission(new object());
+
+        _sut.ReportFlush(2, 1);
+
+        _outcomes.Received(1).Fail(DeferredId, Arg.Any<string>(), Arg.Is<string>(d => d.Contains("queued=2") && d.Contains("added=1")));
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ReportFlush_NothingQueued_WritesNoOutcome()
+    {
+        _sut.ReportFlush(0, 0);
+
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ReportFlush_TheKeyIsTheMission_SameWithinOneAndNewForTheNext()
+    {
+        var keys = new List<string>();
+        _outcomes.When(o => o.Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())).Do(call => keys.Add((string)call[1]));
+        var first = new object();
+
+        _sut.BeginMission(first);
+        _sut.ReportFlush(1, 1);
+        _sut.BeginMission(first);   // the same mission loaded again keeps its key
+        _sut.ReportFlush(1, 1);
+        _sut.BeginMission(new object());
+        _sut.ReportFlush(1, 1);
+
+        Assert.AreEqual(3, keys.Count);
+        Assert.AreEqual(keys[0], keys[1], "a reload of the same mission is the same scope");
+        Assert.AreNotEqual(keys[0], keys[2], "a new mission is a new scope");
+    }
+
+    [TestMethod]
+    public void ReportListChange_WritesAFailLineNamingTheListAndSizes()
+    {
+        _sut.BeginMission(new object());
+
+        ListChange(3, 4);
+
+        _outcomes.Received(1).Fail(ListChangeId, Arg.Any<string>(),
+            Arg.Is<string>(d => d.Contains("list=MissionBehaviors") && d.Contains("before=3") && d.Contains("after=4") && d.Contains("owner=Mod.Foo")));
+    }
+
+    [TestMethod]
+    public void ReportListChange_PastTheLogCap_StillCountsEachChangeAsAFail()
+    {
+        var total = MissionStartGuardService.MaxListChangeLogsPerMission + 3;
+        for (var i = 0; i < total; i++)
+            ListChange();
+
+        _outcomes.Received(total).Fail(ListChangeId, Arg.Any<string>(), Arg.Any<string>());
+        Assert.AreEqual(MissionStartGuardService.MaxListChangeLogsPerMission, Errors().Count, "the ERROR line stays capped");
+    }
+
+    [TestMethod]
+    public void OutcomeLines_TheOutcomeLogThrows_NeverThrow()
+    {
+        _outcomes.When(o => o.Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())).Do(_ => throw new InvalidOperationException("log failed"));
+        _outcomes.When(o => o.Fail(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())).Do(_ => throw new InvalidOperationException("log failed"));
+
+        _sut.ReportFlush(1, 1);
+        _sut.ReportFlush(2, 1);
+        ListChange();
     }
 
     // ---- ReportListChange (#1028: a start call changed the list the engine was walking) ----

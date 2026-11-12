@@ -166,7 +166,12 @@ internal static class MissionStartGuardCalls
     /// <summary>Applies the queued adds through the engine's own <c>AddMissionBehavior</c> once the walk is over (Patch103's finalizer).</summary>
     internal static void FlushDeferredAdds()
     {
-        try { MissionBehaviorDeferral.Flush((mission, behavior) => ((Mission)mission).AddMissionBehavior(behavior)); }
+        try
+        {
+            var queued = MissionBehaviorDeferral.Pending;
+            var added = MissionBehaviorDeferral.Flush((mission, behavior) => ((Mission)mission).AddMissionBehavior(behavior));
+            if (queued > 0) Service?.ReportFlush(queued, added);
+        }
         catch { /* swallow-ok: Flush isolates each add; this guards the call itself */ }
     }
 

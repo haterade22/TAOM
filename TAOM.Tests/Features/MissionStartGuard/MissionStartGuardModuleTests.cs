@@ -26,6 +26,7 @@ public class MissionStartGuardModuleTests
         _logger = Substitute.For<IModLogger>();
         _container.RegisterInstance(_logger);
         _container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
+        _container.RegisterInstance(Substitute.For<TAOM.Core.Logging.IOutcomeLog>());
         _sut.RegisterServices(_container);
     }
 
@@ -38,7 +39,7 @@ public class MissionStartGuardModuleTests
     }
 
     [TestMethod]
-    public void RegisterServices_TheServiceResolvesWithItsFourDependencies()
+    public void RegisterServices_TheServiceResolvesWithItsFiveDependencies()
     {
         var service = _container.Resolve<IMissionStartGuardService>();
 

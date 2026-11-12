@@ -2686,3 +2686,16 @@ The `ev=pledge` ledger line had a C# golden-line test and a Python helper that w
 - **Why missed:** a pixel test proved that one Gauntlet XML property does not move the 3D camera. The claim grew into "the camera cannot be moved from this UI" and was repeated twice, while the module already had a working Harmony prefix on `BodyGeneratorView.InitCamera` that moves it. The user's pushback ("how did you do it for character customization then?") was the signal.
 - **Prevent:** scope a negative finding to the mechanism tested. When the user points at a case that already works, grep for the patches and hooks around it before repeating the claim. Rule: `evidence-over-claims.md` C.4.
 - **Source:** Kysaro's notes, `lessons/feedback_dont_overgeneralize_native_constraints.md`.
+
+### A verdict manifest needs a test that renders the real line and judges it, or a changed line reads NOT REACHED for ever (2026-11-12)
+
+The #1028 manifest was checked by two tests that each pinned half: C# asserted that the check ids appear in the TOML, and
+`test_ingame_verdict.py` asserted that each id appears in some `.cs` file. Neither compared the text the code writes with the
+regex that reads it, and the pass pattern ended in `$`. A field appended to the detail, or an edit to the regex, would still
+leave the "reached" pattern matching, and `absence = "not-reached"` would then report NOT REACHED for every session for ever,
+never FAIL. The manifest header also named one list while its fail patterns judged the whole session.
+- **Why missed:** each side was tested against its own copy of the contract, and the contract (the line text) was in neither test.
+- **Prevent:** for every new manifest, put the exact rendered lines in one C# test that goes through the real `OutcomeLog`, and the
+  same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
+  pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
+- **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.

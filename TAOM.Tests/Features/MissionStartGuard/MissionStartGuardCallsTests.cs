@@ -249,7 +249,8 @@ public class MissionStartGuardCallsTests
             settings,
             Substitute.For<TAOM.Adapters.IMissionStartGuardAdapter>(),
             Substitute.For<TAOM.Features.CoopInterop.IDedicatedServerProvider>(),
-            Substitute.For<TAOM.Core.Logging.IModLogger>());
+            Substitute.For<TAOM.Core.Logging.IModLogger>(),
+            Substitute.For<TAOM.Core.Logging.IOutcomeLog>());
         MissionStartGuardCalls.Initialize(real);
         var oom = new OutOfMemoryException();
         var behavior = new Behavior { Throw = true, ToThrow = oom };
@@ -439,6 +440,30 @@ public class MissionStartGuardCallsTests
         CollectionAssert.Contains(mission.MissionLogics, added);
         Assert.AreSame(mission, added.Mission);
         Assert.AreEqual(0, MissionBehaviorDeferral.Pending);
+        _service.Received(1).ReportFlush(1, 1);
+    }
+
+    [TestMethod]
+    public void AfterStartFinalizer_NothingQueued_ReportsNoFlush()
+    {
+        InstallMissionWithAddLists();
+
+        Mission_AfterStart_MissionStartGuard_Patch.Finalizer(null, true);
+
+        _service.DidNotReceiveWithAnyArgs().ReportFlush(default, default);
+    }
+
+    [TestMethod]
+    public void AfterStartFinalizer_TheEngineAddThrows_ReportsTheShortfall()
+    {
+        // InstallMission gives the mission no MissionLogics list, so the engine's add of a logic behaviour throws.
+        var mission = InstallMission(1);
+        MissionBehaviorDeferral.Open(mission, StartCall.AfterStart, new Behavior());
+        MissionBehaviorDeferral.TryDefer(mission, new AddedBehavior());
+
+        Mission_AfterStart_MissionStartGuard_Patch.Finalizer(null, true);
+
+        _service.Received(1).ReportFlush(1, 0);
     }
 
     [TestMethod]

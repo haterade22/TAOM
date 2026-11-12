@@ -37,6 +37,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     private readonly IMissionStartGuardAdapter _adapter;
     private readonly IDedicatedServerProvider _server;
     private readonly IModLogger _logger;
+    private readonly IOutcomeLog _outcomes;
 
     private WeakReference<object>? _mission;
     private int _caught;
@@ -46,15 +47,20 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     private bool _guardWarned;
     private int _listChanges;
     private int _deferredAdds;
+    private int _missionSerial;
 
     public MissionStartGuardService(IMissionStartGuardSettingsProvider settings, IMissionStartGuardAdapter adapter,
-        IDedicatedServerProvider server, IModLogger logger)
+        IDedicatedServerProvider server, IModLogger logger, IOutcomeLog outcomes)
     {
         _settings = settings;
         _adapter = adapter;
         _server = server;
         _logger = logger;
+        _outcomes = outcomes;
     }
+
+    /// <summary>The scope of the in-game check lines: one per mission, kept when the same mission loads again.</summary>
+    private string MissionKey => _missionSerial.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
     public bool ShouldSurvive(Exception exception) =>
         exception != null && !(exception is OutOfMemoryException) && ToggleOn();
@@ -66,6 +72,7 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
             return;
 
         _mission = missionToken == null ? null : new WeakReference<object>(missionToken);
+        _missionSerial++;
         _caught = 0;
         _notices = 0;
         _summaryWritten = false;
@@ -109,11 +116,15 @@ public sealed class MissionStartGuardService : IMissionStartGuardService
     public void ReportListChange(StartCall call, string ownerType, string ownerAssembly, string list, int before, int after, string newestType)
     {
         _listChanges++;
+        Safe(() => MissionStartGuardChecks.RecordListChange(_outcomes, MissionKey, call, ownerType, list, before, after, newestType));
         if (_listChanges > MaxListChangeLogsPerMission) return;
         Safe(() => _logger.LogError(MissionStartGuardLines.BuildListChangeLine(call, ownerType, ownerAssembly, list, before, after, newestType)));
     }
 
     public bool ShouldDeferBehaviorAdds() => ToggleOn();
+
+    public void ReportFlush(int queued, int added) =>
+        Safe(() => MissionStartGuardChecks.RecordFlush(_outcomes, MissionKey, queued, added));
 
     public void ReportDeferredAdd(StartCall call, string ownerType, string addedType)
     {

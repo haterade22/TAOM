@@ -1044,6 +1044,47 @@ class Issue971Tests(unittest.TestCase):
         self.assertIn("no line matched", out)
 
 
+class Issue1028Tests(unittest.TestCase):
+    """The real #1028 manifest, judged on the lines MissionStartGuardService writes (MissionStartGuardChecks.cs). The literals are
+    the ones MissionStartGuardManifestTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""
+
+    STAMP = "[2026-11-12 10:00:00] [INFO] "
+    PASS = STAMP + "[Check] id=taom.mission-start-guard.deferred-add result=pass queued=2 added=2"
+    SHORT = STAMP + "[Check] id=taom.mission-start-guard.deferred-add result=fail queued=2 added=1 reason=engine-add-threw"
+    LISTCHANGE = STAMP + ("[Check] id=taom.mission-start-guard.list-change result=fail call=AfterStart owner=Mod.Foo "
+                          "list=MissionBehaviors before=3 after=4 newest=Mod.Newest")
+    ESCAPED = ("[2026-11-12 10:00:00] [ERROR] [MissionStartGuard] Mission.AfterStart threw and was not survived "
+               "(a call the guard does not wrap, or the toggle is off; 1 of 3 logged per process): boom")
+    OTHER = STAMP + "[Session] something else"
+
+    class _Log:
+        kind = "taom"
+        name = "taom_debug_test.log"
+
+        def __init__(self, lines):
+            self.lines = list(enumerate(lines, 1))
+
+    def judge(self, *lines):
+        manifest = iv.load_manifest(TOOLS / "ingame_checks" / "1028.toml", 1028)
+        return iv.judge_check(manifest.checks[0], [self._Log(lines)], [])
+
+    def test_a_queued_add_that_landed_passes(self):
+        self.assertEqual(self.judge(self.PASS).verdict, "PASS")
+
+    def test_a_flush_that_lost_an_add_fails(self):
+        self.assertEqual(self.judge(self.SHORT).verdict, "FAIL")
+
+    def test_a_pass_beside_an_unsurvived_throw_fails(self):
+        # The flush also runs after a throw; the mission then loads again, so the session is not a pass.
+        self.assertEqual(self.judge(self.PASS, self.ESCAPED).verdict, "FAIL")
+
+    def test_a_list_change_inside_the_walk_fails_even_without_a_deferred_add(self):
+        self.assertEqual(self.judge(self.LISTCHANGE, self.OTHER).verdict, "FAIL")
+
+    def test_a_session_that_never_started_the_fight_is_not_reached(self):
+        self.assertEqual(self.judge(self.OTHER).verdict, "NOT REACHED")
+
+
 class HeroRace1011Tests(unittest.TestCase):
     """The real #1011 manifest. The fixtures render the [Check] lines RacePersistenceService writes through
     IOutcomeLog (OutcomeLog.Record) and the legend warning text in RestoreHeroRaces; none is on disk yet."""
