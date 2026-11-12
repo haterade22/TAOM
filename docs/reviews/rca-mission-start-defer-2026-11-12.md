@@ -6,7 +6,7 @@
 queues a `Mission.AddMissionBehavior` made while `Mission.AfterStart` walks `MissionBehaviors`. The code was sound: no CRITICAL, no
 HIGH, and no window, queue or flush path that loses or repeats an add. It found **2 MED and 4 LOW** items, and all but the design
 options were fixed in the same session. The two MED items were wrong statements in the docs, written by the author. Codex did not
-run: the account hit its usage limit until 2026-11-14 06:56, so that pre-review is owed before merge.
+run: the account hit its usage limit, and the maintainer waived the pre-review on 2026-11-12.
 
 ## Findings
 
@@ -44,7 +44,7 @@ errors independently, which is the argument for running two lenses at tier 1 eve
   assemblies for callers, which is the check I skipped.
 - **Agent 5 (data flow)** traced the state's lifetime and found the tests that could not fail; the same trace found the doc errors.
 - **Agents 1, 3, 4, 6** did not run (tier 1 rule). They found no part of this: the findings are engine facts and test gaps.
-- **Codex** did not run (usage limit). Owed before merge.
+- **Codex** did not run (usage limit). The maintainer waived it on 2026-11-12.
 
 ## Follow-up review: the in-game proof (same day)
 
