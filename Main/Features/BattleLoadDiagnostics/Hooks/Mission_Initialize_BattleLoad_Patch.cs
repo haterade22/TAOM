@@ -4,7 +4,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 
 // Phase 4 — Mission.Initialize entered. Opens the loading window (which gates phase-5
-// per-agent logging and arms the stall watchdog) and writes the marker. A second prefix
+// per-agent logging) and writes the marker. A second prefix
 // on Mission.Initialize coexists fine with Patch16_AtmospherePersistence.
 [HarmonyPatch(typeof(Mission), "Initialize")]
 [HarmonyPatchCategory("Patch43_BattleLoadDiagnostics")]
@@ -28,7 +28,7 @@ public static class Mission_Initialize_BattleLoad_Patch
         var scene = __instance?.SceneName ?? "<null>";
         if (svc.IsEnabled)
         {
-            // Open the window only when enabled — the watchdog and phase-5 are both gated
+            // Open the window only when enabled — phase-5 is gated
             // on it, and phase 6 closes it on the first playable tick.
             BattleLoadLoadingWindow.Enter();
             // Write the inflight marker: if this load hangs and the player force-quits, the

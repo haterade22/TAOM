@@ -41,13 +41,15 @@ writes its diagnostic log + crash bundles). The **Open log folder** button on th
    the load; the last line tells us where it stalled. If TAOM showed you a
    "last battle load may not have finished" message on startup, the **Open log
    folder** button took you straight here.
-2. **`taom_crash_*.zip`** — if one was written (the stall watchdog makes one
-   after ~5 min). It already bundles the logs below.
-3. **`rgl_log_errors_*.txt`** — the newest one, from your engine log folder:
+2. **`taom_crash_*.zip`**: only if TAOM wrote one. It does when the game throws an
+   error. A load that only hangs writes none (TAOM builds before 2026-11-12 wrote
+   one after about 5 minutes). It already bundles the logs below.
+3. **`rgl_log_*.txt` and `rgl_log_errors_*.txt`**: the newest of each, from your engine log folder:
    usually `C:\ProgramData\Mount and Blade II Bannerlord\logs\`, or
    `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\` on some installs
-   (grab it from whichever exists). This is the engine's own log and is what
-   *confirms* a missing mesh.
+   (grab it from whichever exists). These are the engine's own logs: the errors file
+   *confirms* a missing mesh, and the full `rgl_log_<number>.txt` shows whether the
+   engine was still compiling shaders during a long load.
 4. **Your save file** — if the hang reproduces from a specific save.
 
 ## Your setup

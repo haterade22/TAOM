@@ -1143,7 +1143,7 @@ Read the flags before the numbers:
 |---|---|
 | `FRAME_CAP` | With four or more steady windows: at least half of them sit within 1 fps of one window's fps, or the windows with the most and the fewest active agents, 30% or more apart, ran within 1 fps of each other. A frame limiter (in game or in the driver) may have set the frame time; lift it and rerun. When the mission's `[PerfContext]` has `frameLimiter`, the evidence ends with `; [PerfContext] frameLimiter=<value> vsync=<value or na>`, printed as configured with no judgement whether it explains the plateau; older logs without the field get nothing |
 | `MEMORY_PRESSURE` | The mission's `[PerfContext]`, or a `[MemSample]` line written between the mission's start and the next mission's start or the next game's initialization (so the campaign map after a battle counts toward that battle), read `memLoad` of 80% or more |
-| `DIAG_ON` | `[PerfContext]` shows cost beyond the default diagnostics: `tickProfiler=on`, or a `diag=` token other than the ones that default on (`battleLoad`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf`) |
+| `DIAG_ON` | `[PerfContext]` shows cost beyond the default diagnostics: `tickProfiler=on`, or a `diag=` token other than the ones that default on (`battleLoad`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf`; the `stallWatchdog` and `stallBundle` tokens of older builds also count as baseline) |
 | `DIRTY_BUILD` | The `[BuildStamp]` TAOM stamp ends in `.dirty`: the build held uncommitted edits, so say what was measured |
 | `BUILD_PAIR_MISMATCH` | The `[BuildStamp]` line says `MISMATCH`: TAOM and TAOM.Dependencies were built more than 12 hours apart |
 

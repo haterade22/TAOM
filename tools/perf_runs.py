@@ -144,9 +144,11 @@ FRAME_CAP_TOLERANCE_FPS = 1.0
 FRAME_CAP_AGENT_SPREAD = 0.30
 # Whole-second rounding of both `t=` and the FileLogger stamp can disagree by about 2 s.
 CLOCK_SLACK_S = 3
-# The seven `[PerfContext] diag=` tokens of the mission tick profiler. Every one defaults on
-# (BattleLoadDiagnosticsSettings), and missionPerf is the heartbeat this tool reads, so a default
-# install lists them all: they are the measuring baseline. DIAG_ON means cost beyond it.
+# The `[PerfContext] diag=` tokens of the mission tick profiler that default on
+# (BattleLoadDiagnosticsSettings): the five a build lists since 2026-11-12, plus stallWatchdog and
+# stallBundle, which earlier builds also listed (the load watchdog was removed). missionPerf is the
+# heartbeat this tool reads, so a default install lists them all: they are the measuring baseline.
+# DIAG_ON means cost beyond it.
 DIAG_BASELINE = frozenset(("battleLoad", "stallWatchdog", "stallBundle", "exitSampler",
                            "freezeSampler", "memSampler", "missionPerf"))
 

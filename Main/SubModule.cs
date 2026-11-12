@@ -1584,7 +1584,7 @@ public class SubModule : MBSubModuleBase
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
-        // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent
+        // every prefix/postfix, restarts the BattleLoad samplers, and CRASHES the non-idempotent
         // DeliverOffSpring transpiler (chained twice, it can't find its already-NOPped anchor). The
         // shader-precompile walk starts N custom games in one process and tripped exactly this on item 2;
         // a player loading a 2nd campaign/custom-battle in one session hits the same crash.
@@ -1917,7 +1917,7 @@ public class SubModule : MBSubModuleBase
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase
         // (and, for the equipment phase, the agent + the item whose bo_ collision mesh is
-        // missing). The background stall watchdog auto-triggers a crash bundle on a freeze.
+        // missing). A background sampler logs the stack of a frozen thread.
         var battleLoadSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
         var equipSnapshotAdapter = IoC.Resolve<IEquipmentSnapshotAdapter>();
         var battleLoadStallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
@@ -1947,7 +1947,7 @@ public class SubModule : MBSubModuleBase
         // FinishMissionLoadingDone -> BattlePlayable was the LAST dark window, and a player bundle
         // (b18f3441) spent 290 s in it: MissionState.OnTick withholds the first Mission.Tick behind
         // Handler.RenderIsReady() (SceneView.ReadyToRender), which stays false while a cold shader
-        // cache compiles. This marks that wait at 1 Hz and feeds the count to the stall watchdog.
+        // cache compiles. This marks that wait at 1 Hz.
         Features.BattleLoadDiagnostics.Hooks.MissionState_OnTick_RenderWait_Patch.Initialize(battleLoadSvc);
         // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
         // mission end -> map resume window so the dominant phase gap names the time sink.
@@ -2094,7 +2094,7 @@ public class SubModule : MBSubModuleBase
         base.OnMissionBehaviorInitialize(mission);
 
         // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
-        // the loading window so the stall watchdog stands down and phase-5 stops logging.
+        // the loading window so phase-5 stops logging.
         //
         // Registered UNCONDITIONALLY (TAOM convention, and latch rule 3 in
         // .claude/rules/harmony-patches.md: verify "unconditional" at the OUTERMOST gate). This

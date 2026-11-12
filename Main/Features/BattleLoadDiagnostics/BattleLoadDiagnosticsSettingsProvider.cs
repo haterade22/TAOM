@@ -2,10 +2,9 @@ using TAOM.Core.Validation;
 
 namespace TAOM.Features.BattleLoadDiagnostics;
 
-// Reads the MCM page, fail-open to defaults if MCM isn't ready. The watchdog threshold
-// is range/NaN-guarded per the config-validation rule (belt-and-braces — the MCM integer
-// attribute already clamps 10..300, but a provider must never pass an unvalidated value
-// into a comparison).
+// Reads the MCM page, fail-open to defaults if MCM isn't ready. Numeric settings are
+// range/NaN-guarded per the config-validation rule (belt-and-braces: a provider must never
+// pass an unvalidated value into a comparison).
 public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosticsSettingsProvider
 {
     private const int DefaultTickProfilerTopN = 8;

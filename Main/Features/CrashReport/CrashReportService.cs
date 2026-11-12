@@ -99,7 +99,7 @@ public sealed class CrashReportService : ICrashReportService
             }
 
             // Dedup chokepoint. The capture sources (5 per-tick Harmony Finalizers, the
-            // AppDomain hook, the battle-load watchdog, the allowlisted native callback shims)
+            // AppDomain hook, the allowlisted native callback shims)
             // all funnel here, so a crash that recurs every frame would otherwise write a fresh
             // bundle each tick, re-zipping an ever-growing taom_debug.log. Compute the cheap
             // signature (reads the frozen stack only; no engine collectors) and let the

@@ -735,3 +735,11 @@ The war ram's cooldown went from 10 s to 35 s. The constant, one test and the fe
 - **Why missed:** the hits were judged by file, not by sentence, and the search covered only files named for the ram, so comments in other features that quote the ram were out of reach.
 - **Prevent:** before a retune is called done, grep the old value in each prose form (`10 s`, `10s`, `10-second`, `ten second`) across `Main/` and `docs/`, and read every hit. A hit is history only when its sentence is dated. Fix the ones in the files you edited; report the ones in other features. Recount any test count a doc quotes for a class you add a test to. Keep a comment in shared code free of one consumer's value: the shared decorator's "10s" was the elephant's and was wrong for three of the five trees.
 - **Source:** [rca-war-ram-cooldown-2026-11-11.md](../rca-war-ram-cooldown-2026-11-11.md) findings F1 to F5.
+
+### Removing an output is searched by its claim, not only its name (battle-load watchdog, 2026-11-12)
+
+A diagnostic that wrote a log line and a crash ZIP was removed. The build, the C# suite and a grep for the class name were clean. The review then found a player issue template that promised the ZIP, a triage note that advised on it, a Python pin of the log format that kept the old tokens, about ten comments and eight doc passages. None of them named the class.
+
+- **Why missed:** the sweep searched identifiers. The consumers named the output ("the stall watchdog makes one after ~5 min", `diag=...stallWatchdog`) or pinned it in another language, so a compile and a class-name grep could not reach them. The one test that read the old format stayed green.
+- **Prevent:** before a removal is called done, grep the removed output in every form a reader meets it: the log line, the token, the setting name, the artifact (`bundle`, `ZIP`) and the verb that promised it, across `.github/`, `tools/`, `docs/` and code comments. Keep an old-format fixture beside the new pin when old logs must still parse, and update every twin named in a "change both or neither" comment.
+- **Source:** [rca-battle-load-watchdog-removal-2026-11-12.md](../rca-battle-load-watchdog-removal-2026-11-12.md) findings 1 to 6.

@@ -48,8 +48,11 @@ PINNED_PERF_CONTEXT = ("[PerfContext] build=Debug jitOptimized=false clr=4.0.303
                        "serverGC=false latency=Interactive missionInProcess=1 "
                        "scene=battle_terrain_029 agents=0 frameLimiter=60 vsync=0 textureQuality=1 "
                        "shadowQuality=2 shadowType=2 shadowFiltering=1 particleDetail=1 ragdolls=3 memLoad=61 "
-                       "availPhysMB=12034 tickProfiler=on diag=battleLoad,stallWatchdog,"
-                       "stallBundle,exitSampler,freezeSampler,memSampler,missionPerf")
+                       "availPhysMB=12034 tickProfiler=on diag=battleLoad,exitSampler,"
+                       "freezeSampler,memSampler,missionPerf")
+# The same line from a build before 2026-11-12, which also listed the removed load watchdog's two tokens.
+OLD_PERF_CONTEXT = PINNED_PERF_CONTEXT.replace(
+    "diag=battleLoad,", "diag=battleLoad,stallWatchdog,stallBundle,")
 PINNED_TICK_SUMMARY = ("[TickSummary] frames=4500 wallMs=75000.00 preDisplayMs=187.50 "
                        "cameraMs=310.25 missionTickMs=12186.00 preTickMs=601.50 waitTickMs=1425.00 "
                        "agentTickMs=22500.00 otherMs=60289.75 allocKB=30720 hitches=3 "
@@ -67,8 +70,7 @@ def _no_camera(text):
             .replace(f" otherMs={other} ", f" otherMs={float(other) + camera:.2f} "))
 
 
-DEFAULT_DIAG = ("battleLoad", "stallWatchdog", "stallBundle", "exitSampler", "freezeSampler",
-                "memSampler", "missionPerf")
+DEFAULT_DIAG = ("battleLoad", "exitSampler", "freezeSampler", "memSampler", "missionPerf")
 
 BASE = datetime(2026, 10, 2, 12, 0, 0)
 SCENE = "battle_terrain_biome_148"
@@ -202,6 +204,11 @@ class PinnedLineTests(unittest.TestCase):
         self.assertEqual(c["diag"], list(DEFAULT_DIAG))
         no_mem = pr.parse_context(PINNED_PERF_CONTEXT.replace("memLoad=61", "memLoad=na"))
         self.assertIsNone(no_mem["memLoad"])
+
+    def test_context_from_before_the_load_watchdog_was_removed_still_parses(self):
+        c = pr.parse_context(OLD_PERF_CONTEXT)
+        self.assertEqual(c["diag"], ["battleLoad", "stallWatchdog", "stallBundle", "exitSampler",
+                                     "freezeSampler", "memSampler", "missionPerf"])
 
     def test_context_from_before_shadow_type_still_parses(self):
         old = PINNED_PERF_CONTEXT.replace(" shadowType=2 shadowFiltering=1", "")
@@ -382,15 +389,17 @@ class FlagTests(unittest.TestCase):
         self.assertNotIn("MEMORY_PRESSURE", self._flags(cool))
 
     def test_diag_on_only_beyond_the_default_diagnostics(self):
-        # PINNED_PERF_CONTEXT lists all seven default-on diagnostics (missionPerf among them) and
-        # tickProfiler=on. A default install lists the same seven with the profiler off: no flag.
+        # PINNED_PERF_CONTEXT lists all five default-on diagnostics (missionPerf among them) and
+        # tickProfiler=on. A default install lists the same five with the profiler off: no flag.
+        # A build before 2026-11-12 also listed stallWatchdog and stallBundle: still the baseline.
         def flags(ctx):
             return self._flags(_load(0) + [_line(ctx, 3)] + _windows(0, _steady()))
-        default = PINNED_PERF_CONTEXT.replace("tickProfiler=on", "tickProfiler=off")
-        self.assertNotIn("DIAG_ON", flags(default))
-        self.assertNotIn("DIAG_ON", flags(default.split(" diag=")[0] + " diag=none"))
-        self.assertIn("DIAG_ON", flags(default.replace("missionPerf", "missionPerf,troopCountDiag")))
-        self.assertIn("DIAG_ON", flags(PINNED_PERF_CONTEXT))
+        for pinned in (PINNED_PERF_CONTEXT, OLD_PERF_CONTEXT):
+            default = pinned.replace("tickProfiler=on", "tickProfiler=off")
+            self.assertNotIn("DIAG_ON", flags(default))
+            self.assertNotIn("DIAG_ON", flags(default.split(" diag=")[0] + " diag=none"))
+            self.assertIn("DIAG_ON", flags(default.replace("missionPerf", "missionPerf,troopCountDiag")))
+            self.assertIn("DIAG_ON", flags(pinned))
 
     def test_dirty_build_and_pair_mismatch_from_the_build_stamp_line(self):
         # Shapes from BuildStampReport.BuildReport. DescribeVerdict writes an em dash after

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Core.Logging;
-using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.ShaderPrecompilation.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;

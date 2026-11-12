@@ -207,7 +207,7 @@ def _watchdog(elapsed, last_phase, detail="", tokens=""):
 
     `tokens` is the block the C# side inserts between the dash and the literal `last`
     (`shaders=N`, `churn-capped`). It defaults to empty ONLY so the pre-2026-09-04 log
-    shape stays covered; real lines from a current build always carry at least `shaders=`.
+    shape stays covered; real lines from a build before 2026-11-12 always carry at least `shaders=`.
     """
     tail = f"phase={last_phase} seq=5 {detail}".strip()
     head = f"{tokens} " if tokens else ""
@@ -1876,6 +1876,7 @@ class RenderWaitSilenceTests(unittest.TestCase):
 
         self.assertIn("DRAINING", report)
         self.assertNotIn("went silent", report)
+        self.assertNotIn("stall watchdog", report.lower())
 
 
 class WatchdogScopeTests(unittest.TestCase):

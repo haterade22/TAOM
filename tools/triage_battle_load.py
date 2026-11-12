@@ -136,8 +136,8 @@ _SLOT_RE = re.compile(
 _WATCHDOG_RE = re.compile(
     r"\[BattleLoad\]\s+WATCHDOG STILL LOADING after (\d+)s\s+[—-]\s+"
     r"(?:(.*?)\s)?last\s+(.*)$")
-# CurrentStatusLine: phase=PHASE seq=N <detail>. phase token is (\S+) so the initial
-# sentinel `phase=<none>` still yields a last_phase; seq is optional for the same reason.
+# The status text of a WATCHDOG line: phase=PHASE seq=N <detail>. phase token is (\S+) so the
+# sentinel `phase=<none>` of an early line still yields a last_phase; seq is optional for the same reason.
 _STATUS_RE = re.compile(r"phase=(\S+)(?:\s+seq=(\d+))?\s*(.*)$")
 
 # Per-phase detail parsers.
@@ -673,7 +673,7 @@ def _classify_render_wait(terminal: PhaseEvent, silent_s: int | None,
         v.notes.append(
             "Read the WaitingForRender lines in order: a shaders= count trending DOWN is "
             "a load that is working and will finish. A count that stops changing is the "
-            "wedge, and the stall watchdog fires its bundle on exactly that reading.")
+            "wedge.")
         v.notes.append(
             "Cause, not symptom: every material the engine has never compiled costs one "
             "serial compile. Cross-check the player's rgl_log for 'Missing shader from "
@@ -790,11 +790,9 @@ def classify(tl: Timeline) -> Verdict:
             "equipped — a code/scene issue, not equipment. " + _SCENE_HINTS[ph],
             scene=scene)
 
-    # EncounterStart / MissionOpenNew / anything earlier.
-    # (The WATCHDOG line a build before 2026-11-12 wrote is a raw line, not an Emit() phase
-    # marker, so it's captured as tl.watchdog, not as a phase event. If that ever changes,
-    # PRE_SCENE is still the right fallback: it fires long before BattlePlayable and is not
-    # an equipment-resolution hang.)
+    # EncounterStart / MissionOpenNew, and every phase not handled above.
+    # (The WATCHDOG line, written only by builds before 2026-11-12, is not a phase marker:
+    # the parser stores it in tl.watchdog, so it never reaches this fallback.)
     scene = _parse_scene(terminal)
     return Verdict(
         "PRE_SCENE",
