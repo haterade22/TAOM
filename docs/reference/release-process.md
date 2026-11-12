@@ -166,7 +166,7 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
      `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
      `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies, and `TAOM.CoopCompat.dll` and
      `TAOM.CoopCompat.Coop.dll` into TAOM.CoopCompat, which holds nothing else: the packager refuses any other
-     file under its `bin/` (an allowlist, dry runs included). That is each project's
+     file under its `bin/` (an allowlist) and any `.dll` or `.exe` elsewhere in it, dry runs included. That is each project's
      `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
      compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
      both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager

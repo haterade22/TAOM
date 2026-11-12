@@ -531,13 +531,20 @@ def client_only_in_server_bin(plans) -> list:
 COOPCOMPAT_MODULE = "taom.coopcompat"
 
 
-def unshipped_in_coopcompat_bin(plans) -> list:
-    """<module>/<rel> of every file under TAOM.CoopCompat's bin/ whose name is not one of its SHIPPED_DLLS."""
+def unshipped_in_coopcompat(plans) -> list:
+    """<module>/<rel> of every TAOM.CoopCompat file the build never writes: under bin/, any file whose name
+    is not one of its SHIPPED_DLLS; anywhere else, any .dll or .exe (the general include-list copies every
+    file under a known top directory, ModuleData and Assets included)."""
     allowed = {n.casefold() for n in SHIPPED_DLLS[COOPCOMPAT_MODULE]}
+
+    def refused(rel):
+        path = PurePosixPath(rel)
+        if rel.split("/", 1)[0].casefold() == "bin":
+            return path.name.casefold() not in allowed
+        return path.suffix.casefold() in (".dll", ".exe")
+
     return [f"{p.name}/{rel}" for p in plans if p.name.casefold() == COOPCOMPAT_MODULE
-            for rel, _size in p._copy_list
-            if rel.split("/", 1)[0].casefold() == "bin"
-            and PurePosixPath(rel).name.casefold() not in allowed]
+            for rel, _size in p._copy_list if refused(rel)]
 
 
 # A Custom-Battle test troop (/release pre-flight 5) DEFINED by id; a {=taom_test_x} name key alone
@@ -1208,9 +1215,9 @@ def main(argv=None) -> int:
             print(f"  {rel}", file=sys.stderr)
         return 2
 
-    coop_runtime = unshipped_in_coopcompat_bin(plans)
+    coop_runtime = unshipped_in_coopcompat(plans)
     if coop_runtime:
-        print("\nERROR: a file in a TAOM.CoopCompat bin that TAOM.CoopCompat's build never writes. "
+        print("\nERROR: a file in TAOM.CoopCompat that TAOM.CoopCompat's build never writes. "
               "Coop's licence forbids shipping its binaries, the dedicated server is private, and a second "
               "copy of a library Coop loads must not ship either; delete it there "
               "(the install or the channel folder) and re-run:", file=sys.stderr)

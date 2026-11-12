@@ -4980,3 +4980,9 @@ The new `siege-walls` row of `tools/data_gates.py` was selected by a scene file 
 - **Why missed:** the row was tested for selection only, and the one manual run named the live file, where the default folder gives the same answer.
 - **Prevent:** a `data_gates.py` row whose glob matches single files sets `files=True`, and its test asserts the command line that the runner builds, with a file outside the default folder.
 - **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 1.
+
+### A check that names a module's DLLs covers every DLL the module ships (TAOM.CoopCompat, 2026-11-12)
+The TAOM.CoopCompat split moved the transport and the wire contracts into a second DLL, `TAOM.CoopCompat.Coop.dll`. The handshake's build identity still read the MVIDs of `TAOM.dll` and `TAOM.CoopCompat.dll` only, so a different second DLL passed as the same build. The packager's no-Coop-binary check read the module's `bin/` only, while the include-list copies a `.dll` from `ModuleData` or `Assets` too.
+- **Why missed:** the split was reviewed for the engine's type scan, and nobody listed the other places that name the module's assemblies. The build identity had been judged "too little gain" before the split, when it would have needed a new wire field.
+- **Prevent:** when code moves into a new assembly, grep for every list of the module's assemblies (identity, packaging allowlist, stamp checks, deploy items, reference gates) and test that each one covers the new DLL. A refusal for a file type covers the whole module tree, not one folder.
+- **Source:** Kimi review of commit 561d1b308 (2026-11-12), findings F1 (MEDIUM) and F2 (LOW).

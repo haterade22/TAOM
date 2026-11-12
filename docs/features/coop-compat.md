@@ -59,7 +59,7 @@ port his work (2026-10-21); his two rules hold here: never decide on `ModInforma
   no Coop type, so the services compile and run in tests without Coop.
 - `Handshake/SettingsHandshakeService`: on `ClientCampaignReady` the client sends a
   `CoopCompatHello` (protocol version, TAOM build text, the module version ids (MVIDs) of `TAOM.dll` and
-  `TAOM.CoopCompat.dll`, and its settings fingerprint). The server compares it with its own and
+  of both module DLLs, and its settings fingerprint). The server compares it with its own and
   answers with a `CoopCompatHelloReply`. The client shows a notice for a build mismatch or for
   different settings groups. It warns and never disconnects.
 - `Momentum/MomentumRelayService`: the server answers each hello with a `CoopCompatMomentumSnapshot`
@@ -151,8 +151,8 @@ settings of its own.
 
 The TAOM download carries `Modules/TAOM.CoopCompat` beside `Modules/TAOM`. The player gets Coop from
 BannerlordCoop's own release. `tools/package_release.py` refuses any file in the module's `bin`
-folders other than `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll`, so no Coop, server or
-library DLL can ship in it. The co-op dedicated server is private and is not in any TAOM package. A
+folders other than `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll`, and any `.dll` or `.exe`
+elsewhere in the module, so no Coop, server or library binary can ship in it. The co-op dedicated server is private and is not in any TAOM package. A
 server operator adds `TAOM.CoopCompat` to the server's module list after TAOM; its place against Coop
 and `DedicatedServer.Windows` does not matter.
 

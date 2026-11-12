@@ -782,10 +782,10 @@ class TestClientOnlyServerBin(unittest.TestCase):
 
 
 class TestCoopCompatModule(unittest.TestCase):
-    """TAOM.CoopCompat ships three copies of its two DLLs (client, editor, server: the server needs
-    it, unlike TAOM.Client) and nothing else in its bin: an allowlist, because Coop's licence forbids
-    redistributing its binaries, the dedicated server is private, and a second copy of a library Coop
-    loads would load twice."""
+    """TAOM.CoopCompat ships a copy of its two DLLs per bin folder (client and server: the server needs
+    it, unlike TAOM.Client) and no other DLL or program anywhere: an allowlist in bin and a refusal of
+    any .dll or .exe outside it, because Coop's licence forbids redistributing its binaries, the
+    dedicated server is private, and a second copy of a library Coop loads would load twice."""
 
     OWN = ("TAOM.CoopCompat.dll", "TAOM.CoopCompat.Coop.dll")
 
@@ -805,7 +805,7 @@ class TestCoopCompatModule(unittest.TestCase):
             plan = pr.plan_module(src / "TAOM.CoopCompat")
             self.assertEqual(pr.client_only_in_server_bin([plan]), [])
             self.assertEqual(pr.retired_binaries([plan]), [])
-            self.assertEqual(pr.unshipped_in_coopcompat_bin([plan]), [])
+            self.assertEqual(pr.unshipped_in_coopcompat([plan]), [])
             self.assertEqual(len(pr.shipped_dll_copies(plan)), 6)
             r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules",
                      "TAOM.CoopCompat", "--dry-run")
@@ -820,7 +820,7 @@ class TestCoopCompatModule(unittest.TestCase):
                 _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
                 _write(src, f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}", 16)
                 plan = pr.plan_module(src / "TAOM.CoopCompat")
-                self.assertEqual(pr.unshipped_in_coopcompat_bin([plan]),
+                self.assertEqual(pr.unshipped_in_coopcompat([plan]),
                                  [f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}"])
 
     def test_both_own_assemblies_pass(self):
@@ -829,7 +829,20 @@ class TestCoopCompatModule(unittest.TestCase):
             for name in self.OWN:
                 _write(src, f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}", 16)
             plan = pr.plan_module(src / "TAOM.CoopCompat")
-            self.assertEqual(pr.unshipped_in_coopcompat_bin([plan]), [])
+            self.assertEqual(pr.unshipped_in_coopcompat([plan]), [])
+
+    def test_a_library_or_program_outside_bin_is_refused_too(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
+            _write(src, "TAOM.CoopCompat/SubModule.xml", 10)
+            _write(src, "TAOM.CoopCompat/ModuleData/notes.xml", 10)
+            _write(src, "TAOM.CoopCompat/ModuleData/Common.dll", 16)
+            _write(src, "TAOM.CoopCompat/Assets/BannerlordCoopServer.EXE", 16)
+            plan = pr.plan_module(src / "TAOM.CoopCompat")
+            self.assertEqual(sorted(pr.unshipped_in_coopcompat([plan])),
+                             ["TAOM.CoopCompat/Assets/BannerlordCoopServer.EXE",
+                              "TAOM.CoopCompat/ModuleData/Common.dll"])
 
     def test_the_match_is_case_insensitive_and_covers_every_bin_subfolder(self):
         with tempfile.TemporaryDirectory() as td:
@@ -838,7 +851,7 @@ class TestCoopCompatModule(unittest.TestCase):
             _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_wEditor/sub/coop.core.dll", 16)
             _write(src, "TAOM.CoopCompat/BIN/Win64_Shipping_Server/taom.coopcompat.coop.DLL", 16)
             plan = pr.plan_module(src / "TAOM.CoopCompat")
-            self.assertEqual(sorted(pr.unshipped_in_coopcompat_bin([plan])),
+            self.assertEqual(sorted(pr.unshipped_in_coopcompat([plan])),
                              ["TAOM.CoopCompat/bin/Win64_Shipping_Client/SERILOG.DLL",
                               "TAOM.CoopCompat/bin/Win64_Shipping_wEditor/sub/coop.core.dll"])
 
@@ -848,7 +861,7 @@ class TestCoopCompatModule(unittest.TestCase):
             _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
             _write(src, "TAOM.Dependencies/bin/Win64_Shipping_Client/Autofac.dll", 16)
             plans = [pr.plan_module(src / "TAOM.CoopCompat"), pr.plan_module(src / "TAOM.Dependencies")]
-            self.assertEqual(pr.unshipped_in_coopcompat_bin(plans), [])
+            self.assertEqual(pr.unshipped_in_coopcompat(plans), [])
 
     def test_a_dry_run_and_a_real_run_refuse_and_name_the_file(self):
         with tempfile.TemporaryDirectory() as td:
