@@ -61,7 +61,7 @@ internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
     <TaomBattleHudRingWidget Id=""TaomBattleHudRings"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent""
         DoNotAcceptEvents=""true""
         HealthFill=""@HudHealthFill"" HorseFill=""@HudHorseFill"" ShieldFill=""@HudShieldFill""
-        HasHorse=""@HudHasHorse"" HasShield=""@HudHasShield""
+        HasHorse=""@HudHasHorse"" HasShield=""@HudHasShield"" ColourMode=""@HudColourMode""
         HasAbility=""@HasCareerAbility"" AbilityFill=""@AbilityFill"" IsAbilityReady=""@IsAbilityReady""
         IsAbilityActive=""@IsAbilityActive"" IsAbilityCooldown=""@IsAbilityCooldown"" />
 

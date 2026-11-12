@@ -15,7 +15,9 @@ namespace TAOM.Features.BattleHud.Widgets;
 /// each edged with fine gold rims, the gold shell and leaf sprig, and the career disk with its
 /// bottom-up fill. No channel icons are drawn.
 /// Bands and the career fill overlay the resident stone strip (<see cref="StoneTexture"/>) on their
-/// white masks, each segment sampling its own slice of it.
+/// white masks, each segment sampling its own slice of it. A colour vision <see cref="ColourMode"/>
+/// (<see cref="BattleHudColourPalette"/>) draws the three bands flat in its palette instead; the
+/// centre, rims, backing and leaf never change with it.
 /// <para>
 /// Every drawable is its own <see cref="Rectangle2D"/> built with <c>Rectangle2D.Create()</c>: local
 /// position, scale, pivot and rotation in screen pixels, then <c>CalculateMatrixFrame</c> against an
@@ -87,6 +89,7 @@ public class TaomBattleHudRingWidget : Widget
     private bool _isAbilityReady;
     private bool _isAbilityActive;
     private bool _isAbilityCooldown;
+    private int _colourMode;
 
     public TaomBattleHudRingWidget(UIContext context) : base(context)
     {
@@ -106,6 +109,11 @@ public class TaomBattleHudRingWidget : Widget
 
     [Editor(false)]
     public bool HasShield { get => _hasShield; set { if (_hasShield != value) { _hasShield = value; OnPropertyChanged(value, nameof(HasShield)); } } }
+
+    /// <summary>A <see cref="BattleHudColourMode"/> index (the Accessibility colour option, bound from the
+    /// mixin); Default, or any unknown value, draws the stone rings unchanged.</summary>
+    [Editor(false)]
+    public int ColourMode { get => _colourMode; set { if (_colourMode != value) { _colourMode = value; OnPropertyChanged(value, nameof(ColourMode)); } } }
 
     [Editor(false)]
     public bool HasAbility { get => _hasAbility; set { if (_hasAbility != value) { _hasAbility = value; OnPropertyChanged(value, nameof(HasAbility)); } } }
@@ -154,11 +162,20 @@ public class TaomBattleHudRingWidget : Widget
         Box(drawContext, new Paint(circle, Material(drawContext, circle, Backing, alpha)), centre, 2f * (hudRadius - rim), 2f * (hudRadius - rim), 0f);
         Arc(drawContext, gold, centre, hudRadius - rim, hudRadius, 0f, 360f, RimOverlapPixels);
 
-        Band(drawContext, band, stone, alpha, gold, HealthRed, centre, unit, 0, ringCount, HealthFill);
+        // A colour vision palette draws the three bands flat (no stone, so no StoneGain): solid fills on a
+        // dark solid track, for contrast that does not depend on the grain. Default keeps the stone paints.
+        var palette = BattleHudColourPalette.Accessible(BattleHudColourPalette.Resolve(ColourMode));
+        var bandStone = palette.HasValue ? null : stone;
+        var track = palette.HasValue ? Opaque(palette.Value.Track) : Track;
+        var health = palette.HasValue ? Opaque(palette.Value.Health) : HealthRed;
+        var horse = palette.HasValue ? Opaque(palette.Value.Horse) : HorseSage;
+        var shield = palette.HasValue ? Opaque(palette.Value.Shield) : ShieldBlueGrey;
+
+        Band(drawContext, band, bandStone, alpha, gold, health, track, centre, unit, 0, ringCount, HealthFill);
         if (horseSlot >= 0)
-            Band(drawContext, band, stone, alpha, gold, HorseSage, centre, unit, horseSlot, ringCount, HorseFill);
+            Band(drawContext, band, bandStone, alpha, gold, horse, track, centre, unit, horseSlot, ringCount, HorseFill);
         if (shieldSlot >= 0)
-            Band(drawContext, band, stone, alpha, gold, ShieldBlueGrey, centre, unit, shieldSlot, ringCount, ShieldFill);
+            Band(drawContext, band, bandStone, alpha, gold, shield, track, centre, unit, shieldSlot, ringCount, ShieldFill);
 
         var centreRadius = BattleHudGeometry.CentreRadius * unit;
         Box(drawContext, new Paint(circle, Material(drawContext, circle, CentreDark, alpha)), centre, 2f * centreRadius, 2f * centreRadius, 0f);
@@ -172,11 +189,14 @@ public class TaomBattleHudRingWidget : Widget
     private Color AbilityColour()
         => IsAbilityActive ? AbilityActive : IsAbilityCooldown ? AbilityCooldown : AbilityReady;
 
+    private static Color Opaque(uint rgb)
+        => new Color(((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f, 1f);
+
     // A channel: a full ring from 12 o'clock, its stone fill covering the channel's ratio clockwise and
     // its track the rest, edged inside and out by a fine gold rim all the way round. Fill and track sample
     // the same strip rows by absolute angle, so the grain runs on unbroken across the fill end and stays
-    // put as it moves.
-    private void Band(TwoDimensionDrawContext dc, Sprite mask, Sprite? stone, float alpha, Paint gold, Color colour, Vector2 centre, float unit, int slot, int ringCount, float fill01)
+    // put as it moves. With no stone both draw flat on the band mask.
+    private void Band(TwoDimensionDrawContext dc, Sprite mask, Sprite? stone, float alpha, Paint gold, Color colour, Color track, Vector2 centre, float unit, int slot, int ringCount, float fill01)
     {
         var inner = BattleHudGeometry.BandInnerRadius(slot, ringCount) * unit;
         var outer = BattleHudGeometry.BandOuterRadius(slot, ringCount) * unit;
@@ -187,7 +207,7 @@ public class TaomBattleHudRingWidget : Widget
         var v0 = slot / StoneBandRows;
         var v1 = (slot + 1) / StoneBandRows;
         Arc(dc, Textured(dc, mask, stone, colour, alpha, v0, v1), centre, inner, outer, start, end, SegmentOverlapPixels);
-        Arc(dc, Textured(dc, mask, stone, Track, alpha, v0, v1), centre, inner, outer, end, stop, SegmentOverlapPixels);
+        Arc(dc, Textured(dc, mask, stone, track, alpha, v0, v1), centre, inner, outer, end, stop, SegmentOverlapPixels);
         Arc(dc, gold, centre, outer, outer + rim, start, stop, RimOverlapPixels);
         Arc(dc, gold, centre, inner - rim, inner, start, stop, RimOverlapPixels);
     }

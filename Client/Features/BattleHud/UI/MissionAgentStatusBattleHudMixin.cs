@@ -13,6 +13,7 @@ namespace TAOM.Features.BattleHud.UI;
 // unit-tested BattleHudStateMapper. Campaign-free: custom battles show health too. The career disk
 // comes from MissionAgentStatusCareerMixin. The ammo capsule's count and alert are the VM's own
 // AmmoCount and IsAmmoCountAlertEnabled; this adds only its icon and place (BattleHudAmmoMapper).
+// HudColourMode carries the Accessibility colour option to the ring widget (BattleHudColourPalette).
 [ViewModelMixin("Tick")]
 internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgentStatusVM>
 {
@@ -26,6 +27,13 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
     private bool _hudAmmoIsJavelin;
     private float _hudAmmoTop = BattleHudGeometry.AmmoCapsuleTop(1);
     private float _hudAmmoNumberOffsetX;
+    private int _hudColourMode;
+
+    // The colour option is read again every this many refreshes (one a frame, so about half a second),
+    // starting with the first. MCM's Instance walks its settings containers on each call, too much for
+    // every frame; holding the instance instead would miss a change MCM makes by handing out a new one.
+    private const int RefreshesPerSettingsRead = 30;
+    private int _refreshesUntilSettingsRead;
 
     public MissionAgentStatusBattleHudMixin(MissionAgentStatusVM viewModel) : base(viewModel)
     {
@@ -36,6 +44,12 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
         var vm = ViewModel;
         if (vm == null)
             return;
+
+        if (--_refreshesUntilSettingsRead <= 0)
+        {
+            _refreshesUntilSettingsRead = RefreshesPerSettingsRead;
+            HudColourMode = ColourModeIndex(TaomSettings.Instance);
+        }
 
         var state = BattleHudStateMapper.Map(new BattleHudInput(
             vm.AgentHealth, vm.AgentHealthMax,
@@ -60,6 +74,11 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
         HudAmmoTop = ammo.Top;
         HudAmmoNumberOffsetX = ammo.NumberOffsetX;
     }
+
+    /// <summary>The battle HUD colour option as the widget's mode index: no settings, no dropdown or an
+    /// unknown index draw Default.</summary>
+    internal static int ColourModeIndex(TaomSettings? settings)
+        => (int)BattleHudColourPalette.Resolve(settings?.BattleHudColourMode?.SelectedIndex);
 
     // The same read native UpdateWeaponStatuses makes: the primary wielded slot's current usage, so a
     // javelin held for melee is not a javelin to throw. Nothing is cached across refreshes.
@@ -138,6 +157,14 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
     {
         get => _hudHasHorse;
         set { if (_hudHasHorse != value) { _hudHasHorse = value; OnPropertyChanged(nameof(HudHasHorse)); } }
+    }
+
+    /// <summary>A <see cref="BattleHudColourMode"/> index for the ring widget's ColourMode.</summary>
+    [DataSourceProperty]
+    public int HudColourMode
+    {
+        get => _hudColourMode;
+        set { if (_hudColourMode != value) { _hudColourMode = value; OnPropertyChanged(nameof(HudColourMode)); } }
     }
 
     [DataSourceProperty]
