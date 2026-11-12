@@ -54319,7 +54319,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_1" race="elf" name="{=aom_lord_LN2_1_name}Aeglir" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_1" race="elf" name="{=aom_lord_LN2_1_name}Auredhir" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54367,7 +54367,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_2" race="elf" name="{=aom_lord_LN2_2_name}Celebrin" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_2" race="elf" name="{=aom_lord_LN2_2_name}Feren" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54415,7 +54415,7 @@
             <EquipmentSet id="rivendell_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_3" race="elf" name="{=aom_lord_LN2_3_name}Edronil" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_3" race="elf" name="{=aom_lord_LN2_3_name}Arador" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -57872,7 +57872,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:rhudaur:END -->
   <!-- TAOM-LINDON-EXPANSION:BEGIN -->
-    <NPCCharacter id="lord_LN3_1" race="elf" name="{=aom_lord_LN3_1_name}Galdor" age="48" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+    <NPCCharacter id="lord_LN3_1" race="elf" name="{=aom_lord_LN3_1_name}Maicasáma" age="48" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.5" build="0.4" key="0011CC0597BC034694A8C26585AAA93992D5A78776779C82329B657437695D35000005A60DE9BA6200001105000030A30000001F000000000000000000000000" />
             <hair_tags>
@@ -57920,7 +57920,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN3_2" race="elf" name="{=aom_lord_LN3_2_name}Faelwen" age="45" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN3_2" race="elf" name="{=aom_lord_LN3_2_name}Edhetariel" age="45" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.3517" build="0.5988" key="0004640700CC000A937028572492B2C7877F875AA7536C989859FD27797983B304995646096E3949000000000000000000000000000000000000000071243043" />
             <hair_tags>
@@ -57965,7 +57965,7 @@
             <EquipmentSet id="rivendell_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN3_3" race="elf" name="{=aom_lord_LN3_3_name}Thalanor" age="26" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
+    <NPCCharacter id="lord_LN3_3" race="elf" name="{=aom_lord_LN3_3_name}Talanthir" age="26" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.6932" build="0.7221" key="000510014000224232731956310564E637157818708138648CEB5D2873357035046BA04606571C8200000000000000000000000000000000000000004AD88081" />
             <hair_tags>
@@ -58013,7 +58013,7 @@
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN3_4" race="elf" name="{=aom_lord_LN3_4_name}Glîrwen" age="22" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN3_4" race="elf" name="{=aom_lord_LN3_4_name}Nimlothel" age="22" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="000B600440E4100289989588AC8A337984A876A61A98466778D755B2B5B813830177761307695AB1000000000000000000000000000000000000000042F40083" />
             <hair_tags>
@@ -58058,7 +58058,7 @@
             <EquipmentSet id="rivendell_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN4_1" race="elf" name="{=aom_lord_LN4_1_name}Ostaron" age="44" voice="curt" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+    <NPCCharacter id="lord_LN4_1" race="elf" name="{=aom_lord_LN4_1_name}Anrod" age="44" voice="curt" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.7" build="0.9" key="0011700FC0FC028F96938148227587B6674886898A943687452B87978A7875940007565A0F889888000000000000000000000000000000000000000000F48040" />
             <hair_tags>
@@ -58106,7 +58106,7 @@
             <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN4_2" race="elf" name="{=aom_lord_LN4_2_name}Brethilwen" age="41" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN4_2" race="elf" name="{=aom_lord_LN4_2_name}Adanel" age="41" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0016500CD1A00010945948899A9B8C7844DAC78467D87565AB5466784889A58501A776130A83B7BA00000000000000000000000000000000000000004B5C1003" />
             <hair_tags>
@@ -58151,7 +58151,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN4_3" race="elf" name="{=aom_lord_LN4_3_name}Hîrion" age="32" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN4_3" race="elf" name="{=aom_lord_LN4_3_name}Megilhir" age="32" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="000DAC0014BC300DCAC3B86636658DA2496C32AA369D8DA659D498889759587C000004230BA9C63700001105000030A30000001F000000000000000000007000" />
             <hair_tags>
@@ -58340,7 +58340,7 @@
             <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN6_1" race="elf" name="{=aom_lord_LN6_1_name}Aearion" age="40" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+    <NPCCharacter id="lord_LN6_1" race="elf" name="{=aom_lord_LN6_1_name}Esgaldil" age="40" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.5664" build="0.6713" key="0005AC07004431CE4457B349656598876429217587CA893AB647627B3BA51745089A86890992B8D6000000000000000000000000000000000000000001205041" />
             <hair_tags>

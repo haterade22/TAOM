@@ -52,6 +52,8 @@
       <Icon id="11004" material_name="taom_banners_packed_alpha_09" texture_index="4" />
       <Icon id="11005" material_name="taom_banners_packed_alpha_09" texture_index="5" />
       <Icon id="11006" material_name="taom_banners_packed_alpha_09" texture_index="6" />
+      <Icon id="31008" material_name="taom_banners_packed_alpha_09" texture_index="14" />
+      <Icon id="31009" material_name="taom_banners_packed_alpha_09" texture_index="15" />
     </BannerIconGroup>
 
     <BannerIconGroup id="120" name="{=taom_banner_category_adunaic}Adûnaic" is_pattern="false">
@@ -395,6 +397,7 @@
       <Icon id="24508" material_name="taom_banners_packed_alpha_04" texture_index="8" />
       <Icon id="24509" material_name="taom_banners_packed_alpha_04" texture_index="9" />
       <Icon id="24510" material_name="taom_banners_packed_alpha_04" texture_index="10" />
+      <Icon id="31007" material_name="taom_banners_packed_alpha_04" texture_index="15" />
     </BannerIconGroup>
 
     <BannerIconGroup id="260" name="{=taom_banner_category_dunlending}Dunlending" is_pattern="false">
@@ -431,6 +434,7 @@
     <BannerIconGroup id="300" name="{=taom_banner_category_misc}Miscellaneous" is_pattern="false">
       <Icon id="30008" material_name="taom_banners_misc_alpha_01" texture_index="8" />
       <Icon id="30010" material_name="taom_banners_misc_alpha_01" texture_index="10" />
+      <Icon id="31010" material_name="taom_banners_packed_alpha_10" texture_index="11" />
     </BannerIconGroup>
 
     <BannerColors>
