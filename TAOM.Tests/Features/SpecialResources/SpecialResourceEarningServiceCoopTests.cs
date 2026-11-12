@@ -48,8 +48,8 @@ public class SpecialResourceEarningServiceCoopTests
     {
         var kit = new EarningTestKit(session: true);
 
-        // The pay no longer divides by each player's own men, so a small party gets no bonus.
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1", 10), EarningTestKit.Remote("g2", 5)));
+        // Each winning player earns from the enemy's size alone.
+        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1"), EarningTestKit.Remote("g2")));
 
         kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 30f);
         kit.Service.Received(1).EarnFromBattle("g2", "k", "c", 30f);
@@ -87,7 +87,7 @@ public class SpecialResourceEarningServiceCoopTests
     {
         var kit = new EarningTestKit(session: true);
 
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("lord_1", 10, control)));
+        kit.Sut.OnVictory(Win(EarningTestKit.Remote("lord_1", control)));
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromBattle(default, default, default, default);
     }
@@ -128,16 +128,6 @@ public class SpecialResourceEarningServiceCoopTests
         kit.Sut.OnVictory(s);
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromBattle(default, default, default, default);
-    }
-
-    [TestMethod]
-    public void OnVictory_SessionPlayerWithNoRoster_EarnsFromTheEnemyCount()
-    {
-        var kit = new EarningTestKit(session: true);
-
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1", null)));
-
-        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 30f);
     }
 
     [TestMethod]
@@ -223,7 +213,7 @@ public class SpecialResourceEarningServiceCoopTests
 
         kit.Sut.OnRaid(Raid(
             EarningTestKit.Remote("g1"),
-            EarningTestKit.Remote("lord_1", 10, PlayerControl.NotPlayer),
+            EarningTestKit.Remote("lord_1", PlayerControl.NotPlayer),
             EarningTestKit.Local(control: PlayerControl.NotPlayer)));
 
         kit.Service.Received(1).EarnFromRaid("g1", "k", "c");
@@ -318,7 +308,7 @@ public class SpecialResourceEarningServiceCoopTests
     {
         var kit = new EarningTestKit(session: true);
 
-        kit.Sut.OnTournament(EarningTestKit.Remote("lord_1", 10, control));
+        kit.Sut.OnTournament(EarningTestKit.Remote("lord_1", control));
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromTournament(default, default, default);
     }

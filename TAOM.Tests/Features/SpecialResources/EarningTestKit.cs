@@ -32,9 +32,9 @@ internal sealed class EarningTestKit
 
     // Local() is the single-player MainHero. A co-op server's own hero is Local(control: NotPlayer), and a
     // guest swapped in as MainHero (a barter or hideout finalize scope) is Local() with a Player control.
-    public static EarnerRef Local(int? men = 10, PlayerControl control = PlayerControl.Player)
-        => new("main", "k", "c", isLocalMainHero: true, control, men);
+    public static EarnerRef Local(PlayerControl control = PlayerControl.Player)
+        => new("main", "k", "c", isLocalMainHero: true, control);
 
-    public static EarnerRef Remote(string id, int? men = 10, PlayerControl control = PlayerControl.Player)
-        => new(id, "k", "c", isLocalMainHero: false, control, men);
+    public static EarnerRef Remote(string id, PlayerControl control = PlayerControl.Player)
+        => new(id, "k", "c", isLocalMainHero: false, control);
 }

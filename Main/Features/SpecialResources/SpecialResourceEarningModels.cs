@@ -15,14 +15,13 @@ public sealed class EarnerRef
 {
     public EarnerRef(
         string heroId, string kingdomId, string cultureId, bool isLocalMainHero,
-        PlayerControl control, int? partyManCount = null)
+        PlayerControl control)
     {
         HeroId = heroId;
         KingdomId = kingdomId;
         CultureId = cultureId;
         IsLocalMainHero = isLocalMainHero;
         Control = control;
-        PartyManCount = partyManCount;
     }
 
     public string HeroId { get; }
@@ -36,9 +35,6 @@ public sealed class EarnerRef
     public bool IsLocalMainHero { get; }
 
     public PlayerControl Control { get; }
-
-    /// <summary>Men in the party that fought, or null when the hero has none. No production code reads it since the battle pay stopped dividing by it (2026-11-12); deleting it is a separate cleanup.</summary>
-    public int? PartyManCount { get; }
 }
 
 /// <summary>A map event that ended. Candidates are filled only on the co-op authority during a live session.</summary>

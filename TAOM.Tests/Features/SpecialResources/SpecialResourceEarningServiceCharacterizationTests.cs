@@ -14,7 +14,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 [TestClass]
 public class SpecialResourceEarningServiceCharacterizationTests
 {
-    private static VictorySnapshot Win(int enemy = 30, int? men = 10, bool siege = false) => new()
+    private static VictorySnapshot Win(int enemy = 30, bool siege = false) => new()
     {
         State = "AttackerVictory",
         IsPlayerMapEvent = true,
@@ -24,7 +24,7 @@ public class SpecialResourceEarningServiceCharacterizationTests
         IsSiege = siege,
         BeatAFieldParty = true,
         EnemyCount = enemy,
-        LocalHero = EarningTestKit.Local(men),
+        LocalHero = EarningTestKit.Local(),
     };
 
     private static RaidOrHideoutSnapshot Raid() => new()
@@ -50,8 +50,8 @@ public class SpecialResourceEarningServiceCharacterizationTests
     {
         var kit = new EarningTestKit();
 
-        // The pay follows the enemy's size alone: the 10 men on the player's side no longer change it.
-        kit.Sut.OnVictory(Win(enemy: 30, men: 10));
+        // The pay follows the enemy's size alone.
+        kit.Sut.OnVictory(Win(enemy: 30));
 
         kit.Service.Received(1).EarnFromBattle("main", "k", "c", 30f);
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromSiege(default, default, default);
@@ -142,32 +142,11 @@ public class SpecialResourceEarningServiceCharacterizationTests
     }
 
     [TestMethod]
-    public void OnVictory_PartyHasNoRoster_PassesTheEnemyCount()
+    public void OnVictory_NoEnemies_PassesZero()
     {
         var kit = new EarningTestKit();
 
-        kit.Sut.OnVictory(Win(enemy: 7, men: null));
-
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 7f);
-    }
-
-    [TestMethod]
-    public void OnVictory_EmptyPartyAgainstEnemies_PassesTheEnemyCount()
-    {
-        // No division by the party size now, so an empty party cannot make an infinite value.
-        var kit = new EarningTestKit();
-
-        kit.Sut.OnVictory(Win(enemy: 30, men: 0));
-
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 30f);
-    }
-
-    [TestMethod]
-    public void OnVictory_NoEnemiesAndEmptyParty_PassesZero()
-    {
-        var kit = new EarningTestKit();
-
-        kit.Sut.OnVictory(Win(enemy: 0, men: 0));
+        kit.Sut.OnVictory(Win(enemy: 0));
 
         kit.Service.Received(1).EarnFromBattle("main", "k", "c", 0f);
     }
