@@ -2055,11 +2055,7 @@ public class SubModule : MBSubModuleBase
                 // simulation-affecting setting added to one of them later is covered the day it
                 // lands instead of silently missing from every peer's fingerprint.
                 Features.CoopInterop.SettingsFingerprintLog.WriteAcross(
-                    IoC.Resolve<IModLogger>(),
-                    Features.TaomSettings.Instance,
-                    Features.BattleLoadDiagnostics.BattleLoadDiagnosticsSettings.Instance,
-                    Features.BlowDiagnostics.BlowDiagnosticsSettings.Instance,
-                    Features.CrashReport.CrashReportSettings.Instance);
+                    IoC.Resolve<IModLogger>(), Features.CoopInterop.TaomSettingsPages.All());
             }
         }
         catch (System.Exception ex)

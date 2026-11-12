@@ -368,6 +368,34 @@ public class BundledDependencyManifestTests
             + actual + "' (#371). Set both to the release version.");
     }
 
+    /// <summary>
+    /// TAOM.CoopCompat's manifest version and its pin on TAOM must both equal TAOM's version. Every peer must
+    /// run one TAOM.CoopCompat version, and equal to TAOM's is the release convention. The release skill runs
+    /// this test by name after it bumps the version files.
+    /// </summary>
+    [TestMethod]
+    public void CoopCompatPairing_VersionAndTaomMetadataEqualMainVersion()
+    {
+        var main = XDocument.Load(MainSubModule).Root!.Element("Version");
+        Assert.IsNotNull(main, "Main/_Module/SubModule.xml has no <Version>.");
+        var taomVersion = (string?)main!.Attribute("value");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(taomVersion), "Main/_Module/SubModule.xml <Version> is empty.");
+
+        var compatManifest = Path.Combine(RepoRoot, @"CoopCompat\_Module\SubModule.xml");
+        var compat = XDocument.Load(compatManifest).Root!;
+        var compatVersion = (string?)compat.Element("Version")?.Attribute("value");
+        var taomPin = compat.Descendants("DependedModuleMetadata")
+            .Where(e => (string?)e.Attribute("id") == "TAOM").Select(e => (string?)e.Attribute("version")).ToList();
+
+        Assert.AreEqual(taomVersion, compatVersion,
+            "Every peer must run one TAOM.CoopCompat version, and equal to TAOM's is the release convention: "
+            + "CoopCompat/_Module/SubModule.xml <Version> is '" + compatVersion + "', Main's is '" + taomVersion + "'.");
+        Assert.AreEqual(1, taomPin.Count, "Expected exactly one <DependedModuleMetadata id=\"TAOM\"> in " + compatManifest);
+        Assert.AreEqual(taomVersion, taomPin[0],
+            "Every peer must run one TAOM.CoopCompat version, and equal to TAOM's is the release convention: "
+            + "its TAOM metadata pins '" + taomPin[0] + "', Main's <Version> is '" + taomVersion + "'.");
+    }
+
     /// <summary>Minimal reader for the `[modules]` section — mirrors CoopModuleList's format.</summary>
     private static List<string> ReadCoopModulesSection(string path)
     {

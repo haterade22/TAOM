@@ -79,6 +79,14 @@ empty file switches its rules off with a log line. TAOM's copy is `Main/_Module/
 prefixes `MakePeaceAction.ApplyInternal` next to TAOM's own prefix; see [diplomacy.md](../features/diplomacy.md)
 "Free/Shadow side boundary".
 
+## Coodsz-TAOM (client launcher and server tool)
+
+Coodsz's tools (`Coodsz/Coodsz-TAOM`, read 2026-11-12) reach a TAOM module folder by name, not a member:
+
+| TAOM name | How it is reached | What a change does |
+|---|---|---|
+| The module id and folder `TAOM.CoopCompat` | "Install or repair TAOM" writes Sternab's 0.3.25 build into `Modules/TAOM.CoopCompat` | On a v1.5.x install it overwrites this module, and Coop's join check then refuses the peer ([coop-compat.md](../features/coop-compat.md), "Distribution") |
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

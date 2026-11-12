@@ -64,9 +64,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/Features/Elk/**` `Main/Features/Animalia/**` `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (live: `LOTRLOME_Armory/Prefabs`) | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
-| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied) | uncleared |
+| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied); `CoopCompat/` (`TAOM.CoopCompat` compiles against Coop's `Common`, `GameInterface` and `Coop.Core` and implements its message interfaces; no Coop code copied, no Coop binary ships) | uncleared |
 | BannerlordCoop.DedicatedServer | `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` `Bannerlord Coop LLC` | proprietary (Bannerlord Coop LLC) | interop-only | `docs/research/taom-headless-server.md` (staging and boot research read from the server repo's scripts and its staged output); `TAOM.Tests/Infrastructure/ServerLoadGateTests.cs` (reads a staged server root read-only, from `TAOM_DS_STAGE`); nothing from the repo ships and no file of it is copied | uncleared |
-| TAOM-Coop (Sternab) | `Sternab/TAOM-Coop` `TAOM.CoopCompat` | author-granted, terms informal (via the maintainer, 2026-10-21; private repo, no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/CoopPlayerControlQuery.cs`; the T6 guard in `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroopsHook.cs`; `docs/research/coop-compat-gap-ledger.md` (comparison only) | cleared |
+| TAOM-Coop (Sternab) | `Sternab/TAOM-Coop` `TAOM.CoopCompat` | author-granted, terms informal (via the maintainer, 2026-10-21; private repo, no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/CoopPlayerControlQuery.cs`; the T6 guard in `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroopsHook.cs`; `CoopCompat/` (the separate module, its settings handshake and its momentum relay); `docs/research/coop-compat-gap-ledger.md` (comparison only) | cleared |
 | Yotthani Harad war paint | `HaradTattoos` `tattoo_harad` | UNKNOWN | redistributed | `Main/_Module/AssetSources/tattoos/**` `Main/_Module/Assets/tattoos/**`; the entries in `Main/_Module/ModuleData/skins.xml` | uncleared |
 | Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
@@ -540,6 +540,13 @@ binds Coop's `INetworkAgentRegistry`, `CoopMissionController` and `ContainerProv
 ask whether this peer owns an agent. That is `interop-only` (member names and shapes, nothing copied),
 and it does not change the row's open licence question. The row's derivation cell holds `interop-only`; the `comparison-only` classification above covers the decompile research alone.
 
+`TAOM.CoopCompat` (#967 C3, [ADR-014](../adrs/014-separate-coop-compat-module.md)) adds compile-time
+references to Coop's public assemblies: it subscribes to Coop's `MessageBroker`, sends through
+`INetwork` and implements Coop's message interfaces. That is still `interop-only`: no Coop code is
+copied, and `tools/package_release.py` refuses a package that carries a Coop assembly. The maintainer
+reports the Coop maintainers' permission for this module (2026-11-11). The written grant is not in
+this repo, so the row stays `uncleared` until it is recorded here.
+
 The co-op dedicated server repo, `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer`, has its own row: it is proprietary, under a licence from Bannerlord Coop LLC. TAOM reads it for staging and boot research (the headless plan in [`docs/research/taom-headless-server.md`](../research/taom-headless-server.md)) and runs one test against a server staged from it. That is `interop-only`: TAOM ships nothing from it, copies none of its files.
 
 ### TAOM-Coop (Sternab)
@@ -554,7 +561,9 @@ components, `TroopWeightPolicyComponent` and `TournamentBracketComponent`, which
 for player-driven parties (`PartyUpgraderUpgradeReadyTroopsHook.cs`). Behaviour was reproduced from
 reading; structure, naming and decomposition are TAOM's (the provider is a reflection-bound
 interface, the guard is one early return), hence `behavioural-port`. Further ports add their paths
-to Covers. The repo
+to Covers. `TAOM.CoopCompat` (#967 C3) is such a port: a separate module next to TAOM, a
+settings fingerprint check at join and a War of the Ring momentum relay follow his module's
+approach. The code is TAOM's own, written for Bannerlord v1.5.7 and the Coop 1.5.x API. The repo
 also vendors the private `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` source under
 `wrapper/`: that part is not Sternab's to grant and never enters this public repo.
 
@@ -1085,6 +1094,7 @@ implementation boundary. Petik is separate GPL-3.0-or-later source with its own 
 ## Referenced by
 
 - [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/adrs/014-separate-coop-compat-module.md](../adrs/014-separate-coop-compat-module.md)
 - [docs/ai-includes/external-repo-adoption.md](../ai-includes/external-repo-adoption.md)
 - [docs/features/butter-lib-distance-matrix.md](../features/butter-lib-distance-matrix.md)
 - [docs/features/companion-tactics.md](../features/companion-tactics.md)

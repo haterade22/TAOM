@@ -31,6 +31,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MAIN = REPO_ROOT / "Main"
 CLIENT = REPO_ROOT / "Client"
+COOPCOMPAT = REPO_ROOT / "CoopCompat"
 MODULE_DATA = MAIN / "_Module" / "ModuleData"
 
 # Mirrors UnregisteredLocalizationKeyBaselineTests.KeyLiteral, plus a capture group for
@@ -85,7 +86,7 @@ def escape_xml_attr(text: str) -> str:
 def declared_keys():
     """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
     found = OrderedDict()
-    for cs in sorted([*MAIN.rglob("*.cs"), *CLIENT.rglob("*.cs")]):
+    for cs in sorted([*MAIN.rglob("*.cs"), *CLIENT.rglob("*.cs"), *COOPCOMPAT.rglob("*.cs")]):
         if any(part in ("bin", "obj") for part in cs.parts):
             continue
         text = read_text(cs)
@@ -178,7 +179,7 @@ def main():
     registered = registered_keys()
     missing = [(k, v[0], v[1], v[2]) for k, v in declared.items() if k not in registered]
 
-    print(f"[harvest] literal {{=taom_*}} keys declared in Main/**/*.cs: {len(declared)}")
+    print(f"[harvest] literal {{=taom_*}} keys declared in Main, Client and CoopCompat *.cs: {len(declared)}")
     print(f"[harvest] already registered in ModuleData:                 "
           f"{len(declared) - len(missing)}")
     print(f"[harvest] unregistered:                                     {len(missing)}")

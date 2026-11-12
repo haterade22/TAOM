@@ -99,6 +99,10 @@ published as one, for example) never triggers it. Then update this table and run
 Other half in `Dependencies/Foundation/`: `CoopPresence`, `CoopModuleList`, and the `PatchShield` /
 `SaveShield` co-op inversions.
 
+Code that needs compile-time Coop types (the join handshake, the momentum relay) lives in the separate
+`TAOM.CoopCompat` module, never in `TAOM.dll`: [coop-compat.md](coop-compat.md),
+[ADR-014](../adrs/014-separate-coop-compat-module.md).
+
 ## Layer 1 — detection (process-constant)
 
 `CoopPresence` reads the launcher's active-module list by reflection and matches ids by **exact,
@@ -152,8 +156,10 @@ co-op mod:
 
 ```
 TAOM.Dependencies → BUTR alias stubs → Native → SandBoxCore → Sandbox → StoryMode → CustomBattle
-                  → TAOM → TAOM_Map → LOTRLOME_Armory → Coop
+                  → TAOM → TAOM_Map → LOTRLOME_Armory → Coop → TAOM.CoopCompat
 ```
+
+`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start, after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
 
 **Why it is first, and not "after the vanilla modules like every other mod":** `TAOM.Dependencies`
 bundles the whole BUTR stack (0Harmony, ButterLib, UIExtenderEx, MCM) and installs the
@@ -329,7 +335,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `RaceAgeBehavior` | `OnDailyTick` | Re-kills locally what the host already replicated. |
 | `HiddenHostsMemoryBehavior` | the Scouting XP grant in `OnTick` and `OnBeforeSave` (the same gate: `IsAuthority` and `MayWriteSaveBackedState`) | `Hero.AddSkillXp` writes the scout's saved skill XP; a client's would be per-peer state in the host's save. The pending XP is taken every tick and dropped on a client, so it cannot be banked. The memory rows themselves are not gated (below). |
 | `WarOfTheRingBehavior` | `OnDailyTick`, **`OnSessionLaunched`** | Both call the identical `CheckPhaseTransition` → `DeclareWar`, and `OnSessionLaunched` first calls `ReconcileDeclaredWars` → `DeclareWar` (#772), before its phase check. On a save already at Full War, the reconcile declares each Phase 2 or Hostile-pair war whose stored stance is not War and that the model still holds at war (`ShouldBlockPeace`), so a peace made legitimately stays. After the phase check the daily tick (not the session launch, which runs before the map event and siege managers are restored) also calls `EndWarsForbiddenByPhase` (peace for any AI war the Peace or Isengard War phase vetoes), which returns early under `ShouldDeferToHost` because `IsAuthority` alone is true on both peers under BannerlordTogether. Both calls sit behind the one `IsAuthority` return at the top of the handler. `OnSessionLaunchedEvent` fires on every peer, and a co-op join *is* a save-load, so an ungated client issued its own war set on connect. Under BannerlordCoop the host's Phase 2 wars reach clients through Coop's stance sync, and the load-time reconcile through the join snapshot. Under BannerlordTogether `IsAuthority` fails open, so every peer runs the reconcile; it can only declare for a save already at Full War that still has undeclared Phase 2 or Hostile pairs (UNVERIFIED whether that mod's client-side suppression contains it). |
-| `WarOfTheRingMomentumBehavior` | `OnDailyTick`, **`OnKingdomDestroyed`, `OnMapEventEnded`, `OnSiegeCompleted`, `OnRaidCompleted`, `OnArmyGathered`, `OnSessionLaunched`** | `MomentumWarState` rides TAOM `SyncData` that nothing replicates. `OnKingdomDestroyed` reached the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the tick. Daily gate sits **after** `RefreshMapMeter`: local UI a client still needs drawn. **Participation (#966):** `WarEventSnapshotAdapter` sets `PlayerInvolved` also when any party on either side is a player's (`OfParty == Player`), or the event involves a kingdom holding a player's clan; `Unknown` counts as not involved, and single-player is unchanged. The state itself is still per peer. |
+| `WarOfTheRingMomentumBehavior` | `OnDailyTick`, **`OnKingdomDestroyed`, `OnMapEventEnded`, `OnSiegeCompleted`, `OnRaidCompleted`, `OnArmyGathered`, `OnSessionLaunched`** | `MomentumWarState` rides TAOM `SyncData` that nothing replicates. `OnKingdomDestroyed` reached the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the tick. Daily gate sits **after** `RefreshMapMeter`: local UI a client still needs drawn. **Participation (#966):** `WarEventSnapshotAdapter` sets `PlayerInvolved` also when any party on either side is a player's (`OfParty == Player`), or the event involves a kingdom holding a player's clan; `Unknown` counts as not involved, and single-player is unchanged. With `TAOM.CoopCompat` installed, the server sends the war state to the clients ([coop-compat.md](coop-compat.md)); without it the state is per peer. |
 | `MessengerCampaignBehavior` | `OnHourlyTick` | Arrival writes `MobileParty.MainParty.Position` — on a client, *its own* party. |
 | `SiegeDefenseBehavior` | `OnHourlyTick` | `Clan.Influence` + global relation off `Hero.MainHero`, which differs per peer. **Known limitation below.** |
 | `CastleRecruitmentBehavior` | `OnGameLoaded`, `OnNewGameCreated` | The one castle path a client reaches; creates heroes. |
@@ -791,24 +797,24 @@ to characterise. The existing try/catch around acceptance is containment, not co
   fingerprint hashes the file's values; a client still hashes its MCM values. The counts above do
   not change: the file covers the same settings.
 
-  **Still not done:** peers do not exchange them. Putting the fingerprint in save metadata and
-  comparing on join is the remaining step, and it cannot be verified without two machines in a
-  session — `FingerprintReport.DivergentGroups` is already there for it. BannerlordCoop still
-  syncs no setting, so divergent settings continue to defeat everything above; they are now
-  visible rather than silent.
+  **Compared at join, not enforced:** with `TAOM.CoopCompat` installed, a joining client sends its
+  fingerprint and the server answers with `FingerprintReport.DivergentGroups`; the client shows the
+  player which groups differ ([coop-compat.md](coop-compat.md)). It warns and never disconnects, and
+  nothing copies the server's values to the client. Not yet checked with two machines in a session.
 - **No ModuleData content hash.** Coop's handshake compares module ids and version strings only, and
   disconnects on mismatch — so identical TAOM versions on all peers are mandatory, and a TAOM version
   bump is a co-op compatibility break.
-- **No sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's save,
-  then never hear about WotR momentum or culture-conversion deltas.
+- **Little sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's
+  save. `TAOM.CoopCompat` relays the War of the Ring momentum state; culture-conversion deltas and
+  every other TAOM state still never reach a client.
 - **War of the Ring participation: attribution fixed, state still per peer (#966).**
   `WarEventSnapshotAdapter.FromSiege` applies the same `IsPlayerRelated` test as the battle
   snapshot beside it (fixed 2026-08-03). Since #966 the test also counts any party on either side
   whose `OfParty` is `Player`, and any kingdom holding a player's clan, so a remote player in a
   different kingdom is credited when the event is scored on the authority; `Unknown` counts as not
-  involved. The old local kingdom check stays, so on a dedicated server the local kingdom clause still names the world-gen hero's kingdom (`OfClan` answers Player only for a registered clan in a session, and that clan is not in the registry). What is still missing: the momentum state is TAOM `SyncData` that nothing replicates, so
-  a client never sees the meter move, and the `IsAuthority` gates on the scoring handlers are
-  unchanged.
+  involved. The old local kingdom check stays, so on a dedicated server the local kingdom clause still names the world-gen hero's kingdom (`OfClan` answers Player only for a registered clan in a session, and that clan is not in the registry). The momentum state is TAOM `SyncData` that Coop does not replicate;
+  `TAOM.CoopCompat` sends it from the server to the clients, so without that module a client never
+  sees the meter move. The `IsAuthority` gates on the scoring handlers are unchanged.
 - **Dedicated server: no longer "unsupported", but not supported either.** The 2026-08-03 field
   group ran TAOM on a BannerlordCoop dedicated server by hand-copying the client binaries into
   `bin/Win64_Shipping_Server/`, and that session is the evidence source for the race-capture,
@@ -974,12 +980,14 @@ Owed by the #966 work (Batch B, co-op player attribution), none of it run in gam
 ## Referenced by
 
 - [docs/adrs/013-server-safe-core-client-ui-submodule.md](../adrs/013-server-safe-core-client-ui-submodule.md)
+- [docs/adrs/014-separate-coop-compat-module.md](../adrs/014-separate-coop-compat-module.md)
 - [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
 - [docs/features/alignment-desertion.md](./alignment-desertion.md)
 - [docs/features/animation-variety.md](./animation-variety.md)
 - [docs/features/bandit-voices.md](./bandit-voices.md)
 - [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
 - [docs/features/bond-of-hire.md](./bond-of-hire.md)
+- [docs/features/coop-compat.md](./coop-compat.md)
 - [docs/features/coop-dedicated-server.md](./coop-dedicated-server.md)
 - [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/features/encyclopedia.md](./encyclopedia.md)

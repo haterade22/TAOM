@@ -293,4 +293,81 @@ public class MomentumStateStoreTests
     {
         _sut.NotifyMomentumChanged();
     }
+
+    // ---- War state relay (TAOM.CoopCompat sends the server's war state to co-op clients) ----
+
+    [TestMethod]
+    public void CaptureWarState_LeavesOutPlayerEvents()
+    {
+        _sut.State.MarkWarStarted();
+        _sut.State.Free.AddKingdom("empire_w");
+        _sut.State.Free.AddEvent(Event(250, 100.0, MomentumActionType.Sieges, "took Minas Tirith"));
+        _sut.PlayerEvents.Add(MomentumActionType.BattleWon);
+
+        var data = _sut.CaptureWarState();
+
+        Assert.IsFalse(data.ContainsKey("player.events"));
+        Assert.AreEqual("1", data["warStarted"]);
+        Assert.AreEqual("250", data["free.momentum"]);
+        Assert.AreEqual("empire_w", data["free.kingdoms"]);
+    }
+
+    [TestMethod]
+    public void ApplyWarState_ReplacesTheWarState_KeepsLocalPlayerEvents()
+    {
+        var server = new MomentumStateStore(_logger);
+        server.State.MarkWarStarted();
+        server.State.Evil.AddKingdom("empire_s");
+        server.State.Evil.AddEvent(Event(300, 80.0, MomentumActionType.BattleWon, "orcs won"));
+        server.PlayerEvents.Add(MomentumActionType.Sieges);
+        _sut.State.Free.AddEvent(Event(120, 90.0));
+        _sut.PlayerEvents.Add(MomentumActionType.BattleWon);
+
+        Assert.IsTrue(_sut.ApplyWarState(server.CaptureWarState()));
+
+        Assert.IsTrue(_sut.State.HasWarStarted);
+        Assert.AreEqual(0, _sut.State.Free.SideMomentum);
+        Assert.AreEqual(300, _sut.State.Evil.SideMomentum);
+        CollectionAssert.AreEqual(new[] { "empire_s" }, _sut.State.Evil.KingdomIds.ToArray());
+        CollectionAssert.AreEqual(new[] { MomentumActionType.BattleWon }, _sut.PlayerEvents);
+    }
+
+    [TestMethod]
+    public void ApplyWarState_RaisesMomentumChanged()
+    {
+        int fired = 0;
+        _sut.MomentumChanged += () => fired++;
+
+        _sut.ApplyWarState(new MomentumStateStore(_logger).CaptureWarState());
+
+        Assert.AreEqual(1, fired);
+    }
+
+    [TestMethod]
+    public void ApplyWarState_NullOrEmpty_KeepsThePriorStateAndWarns()
+    {
+        _sut.State.Free.AddEvent(Event(120, 90.0));
+        int fired = 0;
+        _sut.MomentumChanged += () => fired++;
+
+        Assert.IsFalse(_sut.ApplyWarState(null!));
+        Assert.IsFalse(_sut.ApplyWarState(new Dictionary<string, string>()));
+
+        Assert.AreEqual(120, _sut.State.Free.SideMomentum);
+        Assert.AreEqual(0, fired);
+        _logger.Received(2).LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ApplyWarState_UnknownVersion_KeepsThePriorStateAndWarns()
+    {
+        _sut.State.Free.AddEvent(Event(120, 90.0));
+        var data = new MomentumStateStore(_logger).CaptureWarState();
+        data["version"] = "99";
+
+        Assert.IsFalse(_sut.ApplyWarState(data));
+
+        Assert.AreEqual(120, _sut.State.Free.SideMomentum);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("version")));
+    }
 }

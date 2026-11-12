@@ -108,7 +108,9 @@ public class UnregisteredLocalizationKeyBaselineTests
     private static Dictionary<string, string> FindDeclaredKeys()
     {
         var declared = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var file in RepoPaths.CSharpFiles())
+        // TAOM.CoopCompat is a module of its own, outside RepoPaths.CodeRoots, but its player text
+        // registers in TAOM's ModuleData like the rest.
+        foreach (var file in RepoPaths.CSharpFiles(RepoPaths.CodeRoots.Concat(new[] { "CoopCompat" }).ToArray()))
         {
             var lines = File.ReadAllLines(file);
             for (var i = 0; i < lines.Length; i++)
@@ -123,7 +125,7 @@ public class UnregisteredLocalizationKeyBaselineTests
         }
 
         Assert.IsTrue(declared.Count > 100,
-            $"Only {declared.Count} taom_ key literals found in Main/ and Client/ — the scan is broken.");
+            $"Only {declared.Count} taom_ key literals found in Main/, Client/ and CoopCompat/ — the scan is broken.");
         return declared;
     }
 

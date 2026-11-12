@@ -1,0 +1,120 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- TAOM.CoopCompat (#967 C3): a module of its own. Core (Main/TAOM.csproj) never references this
+	     project. Every type that needs a Coop assembly to load lives in Coop\TAOM.CoopCompat.Coop.csproj,
+	     because the engine scans the types of this DLL before Coop is loaded (TypeScanGateTests). Neither
+	     project ships a Coop DLL. Without a Coop install at CoopBinDir both compile nothing and say so,
+	     so ./build.ps1 and dotnet test TAOM.Tests stay green on a machine with no Coop. -->
+	<PropertyGroup>
+		<Version>2.0.0</Version>
+		<Deterministic>true</Deterministic>
+		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
+		<!-- Its own module. The agent build's -p:ModuleId= empties it, which switches the deploy below off. -->
+		<ModuleId>TAOM.CoopCompat</ModuleId>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<AssemblyName>TAOM.CoopCompat</AssemblyName>
+		<RootNamespace>TAOM.CoopCompat</RootNamespace>
+		<!-- The Coop the desktop runs; override to point a laptop or CI at a Coop source build. -->
+		<CoopBinDir Condition="'$(CoopBinDir)' == ''">$(GameFolder)\Modules\Coop\bin\$(GameBinariesFolder)</CoopBinDir>
+		<TaomCoopCompatEnabled>false</TaomCoopCompatEnabled>
+		<TaomCoopCompatEnabled Condition="Exists('$(CoopBinDir)\Common.dll')">true</TaomCoopCompatEnabled>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<Compile Include="**\*.cs" Exclude="obj\**;bin\**;Coop\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(TaomSystemManagementDll)">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(TaomSystemNumericsVectorsDll)">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll" Exclude="$(TaomGameBin)\TaleWorlds.Native.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(TaomNativeModuleBin)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="$(TaomSandBoxModuleBin)\*.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<!-- The compiler needs Common for ICommand, which the contracts implement; the DLL references no Coop type
+	     of its own (ReferenceGateTests). Never copied to the output (licence). -->
+	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<Reference Include="Common"><HintPath>$(CoopBinDir)\Common.dll</HintPath><Private>False</Private></Reference>
+		<ProjectReference Include="Coop\TAOM.CoopCompat.Coop.csproj">
+			<Private>False</Private>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Main\TAOM.csproj">
+			<Private>False</Private>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>TAOM.CoopCompat.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<Target Name="TaomCoopCompatSkipNotice" BeforeTargets="CoreCompile" Condition="'$(TaomCoopCompatEnabled)' != 'true'">
+		<Message Importance="high" Text="TAOM.CoopCompat skipped: no Coop at $(CoopBinDir)" />
+	</Target>
+
+	<!-- Deploy both DLLs into Modules\TAOM.CoopCompat. Its own module, so Bannerlord.BuildResources is not
+	     used. Client and Win64_Shipping_Server only: the submodule is untagged and a dedicated server loads
+	     it, and Coop installs no wEditor bin, so the Modding Kit has no Coop to pair with. Main/TAOM.csproj builds first (the ProjectReference above). The guard
+	     fails the build when the installed core TAOM.dll is missing or differs by hash from the core this
+	     project compiled against (Main was skipped by Visual Studio's up-to-date check or
+	     the no-dependencies switch), as TAOM.Client does. The agent flag -p:ModuleId= empties ModuleId and
+	     switches this target off. -->
+	<Target Name="DeployTaomCoopCompat"
+	        AfterTargets="Build"
+	        Condition="'$(ModuleId)' != '' AND '$(TaomCoopCompatEnabled)' == 'true' AND Exists('$(GameFolder)') AND '$(DisableModuleCopy)' != 'true'">
+		<PropertyGroup>
+			<_TaomCompatModule>$(GameFolder)\Modules\$(ModuleId)</_TaomCompatModule>
+			<_TaomCoreBin>$(GameFolder)\Modules\TAOM\bin</_TaomCoreBin>
+			<_TaomInstalledCore>$(_TaomCoreBin)\Win64_Shipping_Client\TAOM.dll</_TaomInstalledCore>
+		</PropertyGroup>
+		<ItemGroup>
+			<_TaomCompatFiles Include="$(TargetPath)" />
+			<_TaomCompatFiles Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+			<_TaomCoopFacing Include="@(ReferencePath)" Condition="'%(ReferencePath.Filename)' == 'TAOM.CoopCompat.Coop'" />
+			<_TaomCompatFiles Include="@(_TaomCoopFacing)" />
+			<_TaomCompatFiles Include="@(_TaomCoopFacing->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+			<_TaomBuiltCore Include="@(ReferencePath)" Condition="'%(ReferencePath.Filename)' == 'TAOM' AND '%(ReferencePath.ReferenceSourceTarget)' == 'ProjectReference'" />
+		</ItemGroup>
+		<Error Condition="'@(_TaomCoopFacing)' == ''"
+		       Text="TAOM.CoopCompat could not find TAOM.CoopCompat.Coop.dll among its resolved references. Build it together with TAOM.CoopCompat." />
+		<Error Condition="'@(_TaomBuiltCore)' == ''"
+		       Text="TAOM.CoopCompat could not find the core TAOM.dll it was built against among its resolved ProjectReference outputs. Rebuild TAOM (Main) together with TAOM.CoopCompat." />
+		<Error Condition="!Exists('$(_TaomInstalledCore)')"
+		       Text="No TAOM.dll is installed in $(_TaomCoreBin)\Win64_Shipping_Client, although Main deploys it before this project. Main was skipped by Visual Studio's up-to-date check, --no-dependencies, or another build. Rebuild TAOM (Main) so both deploy together, then build again." />
+		<GetFileHash Files="@(_TaomBuiltCore)" Algorithm="SHA256">
+			<Output TaskParameter="Hash" PropertyName="_TaomBuiltCoreHash" />
+		</GetFileHash>
+		<GetFileHash Files="$(_TaomInstalledCore)" Algorithm="SHA256">
+			<Output TaskParameter="Hash" PropertyName="_TaomInstalledCoreHash" />
+		</GetFileHash>
+		<Error Condition="'$(_TaomBuiltCoreHash)' != '$(_TaomInstalledCoreHash)'"
+		       Text="The TAOM.dll installed in $(_TaomCoreBin)\Win64_Shipping_Client differs from the core TAOM.CoopCompat was built against. Rebuild TAOM (Main) so both deploy together, then build again." />
+		<Copy SourceFiles="_Module\SubModule.xml" DestinationFolder="$(_TaomCompatModule)\" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(_TaomCompatFiles)" DestinationFolder="$(_TaomCompatModule)\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(_TaomCompatFiles)" DestinationFolder="$(_TaomCompatModule)\bin\Win64_Shipping_Server\" SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM.CoopCompat: deployed @(_TaomCompatFiles->Count()) files into the Client and Server bins under $(_TaomCompatModule)\bin\" />
+	</Target>
+
+	<Import Project="..\GameReferences.targets" />
+</Project>

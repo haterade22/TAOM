@@ -137,6 +137,20 @@ public class ServerSettingsModuleTests
     }
 
     [TestMethod]
+    public void TaomSettingsPages_OnServer_ListsEveryPageOnce()
+    {
+        ServerSettingsSource.IsDedicatedServer = () => true;
+        _store.Read = new ServerFileRead(ServerFileState.Loaded, "{}", null);
+
+        var pages = TaomSettingsPages.All();
+
+        CollectionAssert.AreEquivalent(
+            new[] { typeof(TaomSettings), typeof(BattleLoadDiagnosticsSettings), typeof(BlowDiagnosticsSettings), typeof(CrashReportSettings) },
+            pages.Select(p => p!.GetType()).ToArray());
+        Assert.AreEqual(0, SettingsFingerprint.ComputeAcross(pages!).Unavailable);
+    }
+
+    [TestMethod]
     public void Fingerprint_OnServer_HashesFileValues()
     {
         // EnableTroopWeight is simulation-relevant; the fingerprint reads X.Instance, so the file value must reach the hash.

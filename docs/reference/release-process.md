@@ -48,7 +48,7 @@ that shipped bind-posed characters to players:
 | File | Field | When |
 |------|-------|------|
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<Version value="v2.0.X" />` | Every release |
-| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Every release since v2.0.29, so all four modules read one version; it must change whenever the Dependencies assembly changed |
+| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Every release since v2.0.29, so all five modules read one version; it must change whenever the Dependencies assembly changed |
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
 
 The third line exists because BUTR/BLSE launchers read `DependedModuleMetadatas` and the vanilla
@@ -59,7 +59,7 @@ bump one by hand.
 
 The two unversioned modules carry a version too. The live `<game>/Modules/TAOM_Map/SubModule.xml`
 and `<game>/Modules/LOTRLOME_Armory/SubModule.xml` hold their own `<Version>`, outside git, and the
-release note tells players all four modules read the release number. Edit both in the install
+release note tells players all five modules read the release number. Edit both in the install
 before Mike's editor package; no commit records the change.
 
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
@@ -95,9 +95,10 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`. Then reseed the `TROOP_ID_REMOVED` baseline from the new tag: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids vX.Y.Z` reads the tag's troop files with `git show`, never today's tree. If `tools/shipped_troop_ids.txt` changed, commit it on its own. Skipping the step raises no error and leaves the new troops unbaselined.
    Before you package, load `LOTRLOME_Armory` in the Kit once: it re-cooks patched packages (an older note, not re-verified since 2026-09).
-9. Build at the tag and gate the DLLs (the skill's Phase 8). Run `./build.ps1` in the main checkout only when `git status --porcelain` is empty and `HEAD` is the tag's commit; otherwise build a clean worktree of the tag (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). Then `python tools/package_release.py --source "<game>/Modules" --dest <out> --game-root "<game>" --require-build vX.Y.Z --dry-run` must print `build stamp OK`. Any later deploying build of a dirty tree (`./build.ps1`, or any build without `-p:DisableModuleCopy=true -p:ModuleId=`) replaces the gated DLLs and the module's ModuleData in the install: after the v2.0.34 gate passed, one made the installed `TAOM.dll` `+18a4e402...dirty`. So repeat the dry run right before Mike packages. Mike packages through the Modding Kit editor; Claude never writes a package with this command. The packages and the release folders are his (2026-10-27): unless he asks, Claude does not inspect or gate on `E:\LOTRAOM_Releases\<channel>\Modules`, proves the stamps on the DLLs the tag build deployed (`/release` Phase 8 step 3), and hands him the package checks as a list. Once his package exists in `E:\LOTRAOM_Releases\<channel>\Modules\`, offer the same dry run with `--source` pointing there and `--game-root "<game>"`; it also refuses an untracked TAOM file there (never `AssetPackages/pack0.tpac`, which holds the TAOM UI in a channel folder). ShaderCacheKeeper ships beside the modules: build and test it at the tag (`python Native/ShaderCacheKeeper/build.py`, then `pwsh -File Native/ShaderCacheKeeper/test/run_tests.ps1`), copy `out/xinput9_1_0.dll` to `E:\LOTRAOM_Releases\<channel>\bin\Win64_Shipping_Client\` before the launcher manifest is generated, and record its SHA-256 in the release note; testing channel first ([shader-cache-keeper.md](../features/shader-cache-keeper.md)). When his package carries `TAOM_Map`, add the `FORTS` ids it holds to `RELEASED` in `tools/add_map_fortifications.py` (the one-line command is in the comment above the set), so `add_map_fortifications.py --check` judges only the batch no release carries yet.
-   The gate reads every `bin/<platform>/` copy of `TAOM.dll`, `TAOM.Client.dll` and
-   `TAOM.Dependencies.dll`, refuses a `TAOM.Client.dll` in a `bin/Win64_Shipping_Server/` (ADR-013), and
+9. Build at the tag and gate the DLLs (the skill's Phase 8). Run `./build.ps1` in the main checkout only when `git status --porcelain` is empty and `HEAD` is the tag's commit; otherwise build a clean worktree of the tag (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). Then `python tools/package_release.py --source "<game>/Modules" --dest <out> --game-root "<game>" --require-build vX.Y.Z --dry-run` must print `build stamp OK`. Any later deploying build of a dirty tree (`./build.ps1`, or any build without `-p:DisableModuleCopy=true -p:ModuleId=`) replaces the gated DLLs and the module's ModuleData in the install: after the v2.0.34 gate passed, one made the installed `TAOM.dll` `+18a4e402...dirty`. So repeat the dry run right before Mike packages. Mike packages through the Modding Kit editor; Claude never writes a package with this command. The packages and the release folders are his (2026-10-27): unless he asks, Claude does not inspect or gate on `E:\LOTRAOM_Releases\<channel>\Modules`, proves the stamps on the DLLs the tag build deployed (`/release` Phase 8 step 3; it covers the Client and Server copies of `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll` under `<game>/Modules/TAOM.CoopCompat/bin` too), and hands him the package checks as a list. Once his package exists in `E:\LOTRAOM_Releases\<channel>\Modules\`, offer the same dry run with `--source` pointing there and `--game-root "<game>"`; it also refuses an untracked TAOM file there (never `AssetPackages/pack0.tpac`, which holds the TAOM UI in a channel folder). ShaderCacheKeeper ships beside the modules: build and test it at the tag (`python Native/ShaderCacheKeeper/build.py`, then `pwsh -File Native/ShaderCacheKeeper/test/run_tests.ps1`), copy `out/xinput9_1_0.dll` to `E:\LOTRAOM_Releases\<channel>\bin\Win64_Shipping_Client\` before the launcher manifest is generated, and record its SHA-256 in the release note; testing channel first ([shader-cache-keeper.md](../features/shader-cache-keeper.md)). When his package carries `TAOM_Map`, add the `FORTS` ids it holds to `RELEASED` in `tools/add_map_fortifications.py` (the one-line command is in the comment above the set), so `add_map_fortifications.py --check` judges only the batch no release carries yet.
+   The gate reads every `bin/<platform>/` copy of `TAOM.dll`, `TAOM.Client.dll`,
+   `TAOM.Dependencies.dll`, `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll`, refuses a `TAOM.Client.dll` in a `bin/Win64_Shipping_Server/` (ADR-013),
+   refuses any file in a `TAOM.CoopCompat` bin that the module's build never writes (Coop and dedicated-server binaries never ship, and neither does a second copy of a library Coop loads), and
    refuses a tag whose `Directory.Build.props` predates the `.dirty` flag. It requires
    `TAOM.Client.dll` only where the release commit's `SubModule.xml` (`git show <sha>:Main/_Module/SubModule.xml`)
    names it, so a tag cut before ADR-013 still gates, refuses when the installed `SubModule.xml` names a
@@ -107,7 +108,7 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
    summary line and a `WARNING` for any sack whose format differs from the majority of the shipped
    sacks; one line per module-level `<module>/Shaders/D3D11/compressed_shader_cache.sack`, with its
    size and format; and one `JIT optimization` line per shipped copy of `TAOM.dll`,
-   `TAOM.Client.dll` and `TAOM.Dependencies.dll` (OFF for the Debug builds TAOM ships on purpose; a bare ON when the
+   `TAOM.Client.dll`, `TAOM.Dependencies.dll`, `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll` (OFF for the Debug builds TAOM ships on purpose; a bare ON when the
    assembly's `DebuggableAttribute` leaves optimization on; `ON (no DebuggableAttribute on the
    assembly)` when it carries none; `unknown (<reason>)` when the file holds no readable .NET
    metadata or its `DebuggableAttribute` is malformed). A scene without a sack is not an error, and
@@ -152,8 +153,8 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
      (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
      only, and no build step recreates them
      ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
-   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
-     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
+   - **`bin/<platform>/` of the three modules:** keep a file whose name the tag tracks under
+     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin CoopCompat/_Module/bin`:
      none for TAOM from the NativeSkinFixes removal on, 2 on earlier tags; 44 for TAOM.Dependencies)
      or the tag's build writes. The build writes
      `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
@@ -163,7 +164,9 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
      `Gaming.Desktop.x64_Shipping_Client` and the packager refuses any such folder an older install
      or channel folder still holds, so delete it first), and `TAOM.Dependencies.dll`,
      `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
-     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies, and `TAOM.CoopCompat.dll` and
+     `TAOM.CoopCompat.Coop.dll` into TAOM.CoopCompat, which holds nothing else: the packager refuses any other
+     file under its `bin/` (an allowlist, dry runs included). That is each project's
      `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
      compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
      both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager

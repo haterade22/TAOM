@@ -113,9 +113,9 @@ Recorded in `doc/porting/bannerlord-1.5.x.md` in the BannerlordCoop repo.
 
 ## Distribution
 
-BannerlordCoop is source-available since 2026-06-17: its `LICENSE` forbids copying, distributing, or using it in another project without written permission from its maintainers. The dedicated server is proprietary software of Bannerlord Coop LLC. TAOM therefore ships neither, and a guide must not tell players to take a build from our checkouts. The Workshop Coop item stays on Bannerlord 1.4.8.
+BannerlordCoop is source-available since 2026-06-17: its `LICENSE` forbids copying, distributing, or using it in another project without written permission from its maintainers. The maintainer reports that permission for TAOM's compat module (2026-11-11). Coop builds are public: players get Coop from BannerlordCoop's own release, never from a TAOM package. The dedicated server is proprietary software of Bannerlord Coop LLC and is private: TAOM ships no part of it, and a guide must not tell players to take a build from our checkouts. The Workshop Coop item stays on Bannerlord 1.4.8.
 
-The plan Garrett proposed (2026-10-23): BannerlordCoop publishes a Coop 1.5 build on Steam, and a TAOM compatibility module (`TAOM.CoopCompat`) depends on both Coop and TAOM; the server runs the same modules. Points to settle with him: written permission for the compat module to reference Coop, and the 1.5 item's module id and advance notice of Coop updates (co-op's join check compares exact versions). He asked for the staging work as PRs:
+The TAOM download ships `TAOM.CoopCompat` ([coop-compat.md](coop-compat.md), [ADR-014](../adrs/014-separate-coop-compat-module.md)), as in Garrett's plan of 2026-10-23: it depends on both Coop and TAOM, and the server runs the same modules. Points to settle with him: the 1.5 item's module id, advance notice of Coop updates (co-op's join check compares exact versions), and `TAOM.CoopCompat` in the server's module list after TAOM (its place against Coop does not matter). He asked for the staging work as PRs:
 
 | Change | Where | State |
 |---|---|---|

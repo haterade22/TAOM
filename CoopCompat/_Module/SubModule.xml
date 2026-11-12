@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
+  <Id value="TAOM.CoopCompat" />
+  <Name value="TAOM.CoopCompat" />
+  <!-- Equal to Main/_Module/SubModule.xml's Version: Coop's join check compares every peer's module
+       versions exactly. A test pins the equality. -->
+  <Version value="v2.0.38" />
+  <DefaultModule value="false" />
+  <ModuleCategory value="Singleplayer"/>
+  <ModuleType value="Community" />
+  <DependedModules>
+    <DependedModule Id="TAOM.Dependencies" />
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="TAOM" />
+    <DependedModule Id="Coop" />
+  </DependedModules>
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="TAOM" order="LoadBeforeThis" version="v2.0.38" />
+    <DependedModuleMetadata id="Coop" order="LoadBeforeThis" />
+  </DependedModuleMetadatas>
+  <SubModules>
+    <SubModule>
+      <Name value="TAOM.CoopCompat" />
+      <DLLName value="TAOM.CoopCompat.dll" />
+      <SubModuleClassType value="TAOM.CoopCompat.CoopCompatSubModule" />
+      <!-- No Tags: untagged loads on a client and on a dedicated server. -->
+    </SubModule>
+  </SubModules>
+</Module>

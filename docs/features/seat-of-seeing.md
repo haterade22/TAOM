@@ -724,7 +724,7 @@ one failed or skipped class can leave every later Seat patch off), the thread gu
 `SeatHeroAdapter`, `SeatScreenAdapter`; another feature's guard line does not count), a log with no
 `[Shutdown] clean module unload` line, a `[BuildStamp]` that is not this checkout, or a `reason` other than `final`. A stamp is not this
 checkout when its sha is not HEAD, when the stamp line says `MISMATCH` (the word sits on the tier that was built apart, so the line the sha was read from is read to its end), when its `.dirty` mark disagrees with the tree (dirty with no uncommitted file, or clean with one,
-a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `Dependencies`, `Stubs`,
+a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `CoopCompat`, `Dependencies`, `Stubs`,
 `Directory.Build.props`, `GameReferences.targets`) is newer than the stamp's build time. It cannot tell a dirty deploy of a sibling
 worktree at the same HEAD from this one when this tree's edits are older than that build, a deletion made after a dirty build, or a file
 restored to HEAD after a dirty build while an older edit stays in the tree. Only a content hash in the stamp could close those three. The checkout is read when the run is judged, after the game exits, and not when it

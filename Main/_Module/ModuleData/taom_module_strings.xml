@@ -5002,5 +5002,9 @@
 	<string id="taom_banner_category_dwarven" text="{=taom_banner_category_dwarven}Dwarven" />
 	<string id="taom_banner_category_dunlending" text="{=taom_banner_category_dunlending}Dunlending" />
 	<string id="taom_banner_category_misc" text="{=taom_banner_category_misc}Miscellaneous" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- InformationManagerSettingsNotice -->
+	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
+	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
 
 </strings>
