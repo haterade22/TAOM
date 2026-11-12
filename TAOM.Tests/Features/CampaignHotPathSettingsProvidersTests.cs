@@ -19,6 +19,7 @@ using TAOM.Features.FireAndTribute;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.HarvestRoad;
 using TAOM.Features.HiddenHosts;
+using TAOM.Features.LordRetinue;
 using TAOM.Features.KeepWardens;
 using TAOM.Features.KingsMuster;
 using TAOM.Features.FromTheAshes;
@@ -83,6 +84,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(CaravanTradeSettingsProvider))]
     [DataRow(typeof(CastleRecruitmentSettingsProvider))]
     [DataRow(typeof(AlignmentDesertionSettingsProvider))]
+    [DataRow(typeof(LordRetinueSettingsProvider))]
     [DataRow(typeof(RealmBordersSettingsProvider))]
     [DataRow(typeof(FieldCommissionSettingsProvider))]
     [DataRow(typeof(QuickActionsSettingsProvider))]
@@ -188,6 +190,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ICaravanTradeSettingsProvider), typeof(CaravanTradeSettingsProvider))]
     [DataRow(typeof(ICastleRecruitmentSettingsProvider), typeof(CastleRecruitmentSettingsProvider))]
     [DataRow(typeof(IAlignmentDesertionSettingsProvider), typeof(AlignmentDesertionSettingsProvider))]
+    [DataRow(typeof(ILordRetinueSettingsProvider), typeof(LordRetinueSettingsProvider))]
     [DataRow(typeof(IRealmBordersSettings), typeof(RealmBordersSettingsProvider))]
     [DataRow(typeof(IQuickActionsSettingsProvider), typeof(QuickActionsSettingsProvider))]
     [DataRow(typeof(ITimeAccelerationSettingsProvider), typeof(TimeAccelerationSettingsProvider))]
@@ -422,6 +425,23 @@ public class CampaignHotPathSettingsProvidersTests
 
         Assert.IsFalse(sut.IsEnabled);
         Assert.AreEqual(0.25f, sut.Rate, 0.0001f);
+    }
+
+    [TestMethod]
+    public void LordRetinue_ReadsThroughTheCachedSettings_AndClampsTheCap()
+    {
+        var mcm = new TaomSettings();
+        var sut = new LordRetinueSettingsProvider(mcm);
+        Assert.IsTrue(sut.IsEnabled);
+        Assert.AreEqual(1, sut.MaxExtraHeroes);
+
+        mcm.EnableLordRetinue = false;
+        mcm.LordRetinueMaxExtraHeroes = 99;
+        Assert.IsFalse(sut.IsEnabled);
+        Assert.AreEqual(2, sut.MaxExtraHeroes);
+
+        mcm.LordRetinueMaxExtraHeroes = -5;
+        Assert.AreEqual(0, sut.MaxExtraHeroes);
     }
 
     [TestMethod]

@@ -570,6 +570,7 @@ never finishes. `IsAuthority` also fails open under BannerlordTogether.
 - **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
   entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
 - **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently).
+- **Repeat (2026-11-12):** LordRetinue shipped its first draft with `Clan.PlayerClan`, `MobileParty.MainParty` and `IsHumanPlayerCharacter` while the sibling it was copied from (`AlignmentDesertionBehavior`) used `IPlayerControlQuery`. Both lenses of the review found it. No gate scans a new behavior for local-peer statics; the follow-up is named in [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md).
 
 ### A map event with a winner is not always a battle, and RaidCompleted is not always a loot
 A looting raid ends as an attacker victory, so `OnMapEventEnded` paid the battle credit on every raid;
@@ -1164,3 +1165,14 @@ The first Patch146 ran vanilla's three loot steps (casualties, items, prisoners)
 - **Why missed:** the three steps were copied as a unit from `CalculateAndCommitMapEventResults`, and the tests faked the adapter, so no test could disagree with the engine.
 - **Prevent:** state what each reused step assumes about the loser, and copy only the steps whose assumption holds on the new path. A counted field needs a producer: trace every writer of the roster it counts.
 - **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 3 and 5.
+### A feature that puts state into a container vanilla never fills inherits every vanilla reader and cleanup of it (LordRetinue, 2026-11-12)
+LordRetinue put a clan hero into an AI lord party's roster and gave the hero a party role. Vanilla AI parties carry only their leader, so the disband merge, the commander search, the role effects, the wage and size models all assume nothing else is aboard. The merge copies the whole roster into the garrison and then clears it, which left a hero listed in the garrison with no party. A hero aboard is never a commander candidate, so a clan that gained a party slot found no reserve leader.
+- **Why missed:** the handover said vanilla "mostly handles" the release, the plan wrote it down as "left to vanilla", and 12 green unit tests covered only the pure decision service. No step listed the consumers of the new state.
+- **Prevent:** before the first test, list every vanilla reader and cleanup of the state the feature creates (a roster entry, a role, a flag) with a quoted line each: who removes it, who counts it, who skips an entity that has it. Release it on every path that ends its host (disband, death, capture, marriage). Test each removal path in game before closing the issue.
+- **Source:** [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md), findings 1, 4, 5 and 8 (Engine and Data-flow lenses, independently).
+
+### A slot that falls back to its occupant is already filled: compare the candidate with the occupant, not with zero (LordRetinue, 2026-11-12)
+`MobileParty.EffectiveScout`, `EffectiveSurgeon`, `EffectiveEngineer` and `EffectiveQuartermaster` return the leader when no role is set, and vanilla never sets a role on an AI party. The first LordRetinue draft treated "no holder" as an empty slot and gave the role to any hero with a positive skill, so a relative with Steward 30 replaced a leader with Steward 120 and cut the party size limit by about 22 (the Steward effect reads only the role holder).
+- **Why missed:** the plan modeled the role as empty. The fallback was known and quoted in the first message of the session, yet every test fixture started from a leader with no skills.
+- **Prevent:** a decision that fills a slot with a fallback compares the candidate's value with the fallback's value, and its fixtures give the fallback a higher value than the candidate. The service takes the fallback's values as input.
+- **Source:** [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md), finding 2.

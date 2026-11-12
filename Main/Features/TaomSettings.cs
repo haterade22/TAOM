@@ -1383,6 +1383,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), settlement garrisons shed opposed troops (e.g. a conquered fief's old-culture defenders leave). When OFF, only mobile parties are affected (if 'Apply To Mobile Parties' is on).")]
     public bool EnableAlignmentDesertionGarrisons { get; set; } = true;
 
+    // --- World / Lord Retinue (LordRetinue feature, #1122) ---
+
+    [SettingPropertyGroup("World/Lord Retinue", GroupOrder = 40)]
+    [SettingPropertyBool("Enable Lord Retinue", Order = 0, RequireRestart = false,
+        HintText = "When enabled, an AI lord party whose clan is at its party limit takes one idle adult clan member along and gives that member a party role (scout, surgeon, engineer or quartermaster) the member is better at than the lord. The heroes go back to a settlement when the clan drops below its party limit or when this is turned off. When off, no new heroes join. A party whose disband starts always frees every hero aboard but its leader, with this on or off.")]
+    public bool EnableLordRetinue { get; set; } = true;
+
+    [SettingPropertyGroup("World/Lord Retinue")]
+    [SettingPropertyInteger("Extra Heroes Per Party", 0, LordRetinue.LordRetinueSettingsProvider.MaxExtraHeroesCap, "0", Order = 1, RequireRestart = false,
+        HintText = "How many extra clan heroes one AI lord party may carry. Default 1. Heroes already riding along stay when you lower this. A hero who rides along costs the clan a daily wage and a party slot, and can be wounded, captured or killed in battle with the lord.")]
+    public int LordRetinueMaxExtraHeroes { get; set; } = 1;
+
     // --- Combat Mechanics (CombatMechanics feature — crush-through, cleave, charge knockdown) ---
 
     [SettingPropertyGroup("Combat Mechanics", GroupOrder = 24)]

@@ -1472,6 +1472,14 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
 
+        // LordRetinue (#1122) — AI lord parties take an idle clan hero along and give it an empty party role.
+        // Registered unconditionally so the MCM toggle takes effect at runtime; stateless (no SyncData).
+        campaignStarter.AddBehavior(new Features.LordRetinue.Hooks.LordRetinueBehavior(
+            IoC.Resolve<Features.LordRetinue.LordRetinueService>(),
+            IoC.Resolve<Features.LordRetinue.Hooks.LordRetinueWorld>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
+
         // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
         // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
         campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(
