@@ -44,6 +44,17 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
   `skeleton="troll_skeleton"`, mesh `mordor_hill_troll`.
 - TAOM has `cave_troll` (enabled 2026-06-14, after the 2026-05-14 disable) and `hill_troll` (2026-09-25)
   NPCCharacters in `troops_mordor.xml`, both on `BodyProperty.fighter_cave_troll` (`TAOM_bodyproperties.xml`).
+- **Open: the hill and cave troll share one face key.** Both use `BodyProperty.fighter_cave_troll`. Kysaro measured that
+  the engine caches a generated face by the face-shape part of the key, not by race, and that a second race on the same
+  key got the first race's cached face ([body-properties.md](../modding/body-properties.md) Gotchas; his note
+  `animation/project_olog_hai.md`, 2026-11-10), unverified in TAOM. Whether a hill troll spawned after a cave troll
+  (or the reverse) shows the other's face is not checked. An in-game check is owed; the issue is waived (2026-11-12).
+- **Race deform keys inflate the body** (Kysaro measured, same note, 2026-11-11, unverified in TAOM). His olog race, a
+  copy of the hill troll race, carries weight and build deform keys of about 60 `bone_scales` each. At the troop's
+  weight 0.983 and build 1 they scale the spine by 1.43, the thorax 1.28, the neck 1.32 and the thighs 1.23. He reports
+  that TAOM's hill troll has the same keys, which he blames for its "fat belly", and he fixed his race by setting every
+  scale to 1. Offline Blender renders sit at scale 1, so he checks the race `bone_scales` before comparing an offline
+  shape with the in-game one. TAOM's own hill troll keys were not read here.
 
 > ⚠ Verify these entries against the live files before editing — paths/keys must be confirmed, not
 > assumed. They are the copy-from template, not a spec.

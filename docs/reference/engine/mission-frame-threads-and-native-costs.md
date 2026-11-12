@@ -391,6 +391,10 @@ TAOM-verified were re-derived by TAOM; the rest are not yet.
   vanilla keeps only a 512 px mip tail and streams the rest.
 - **Metamesh visible distance** defaults to `FLT_MAX` on a Kit import; shipped small props use 20 to 50 m,
   baskets 100 to 200, map icons 200.
+- **Map icon visible distance: open conflict.** Kysaro's map-icon research reads the native `map_castle_a`,
+  `map_castle_d` and `map_town_a` metameshes as one LOD with visible distance `FLT_MAX` (Meta Mesh Editor, 2026-10-24,
+  his note `map-icons/project_map_icons_research.md`; see [map-icons.md](../../kitbash/map-icons.md)). That disagrees
+  with "map icons 200" above. Neither figure was measured on v1.5.7 by TAOM.
 - **Particle emitters** carry a min and max config that bound the Particle Detail option; an emitter is
   created only inside its bounds. That and the other gates act on creation and emission only: a created
   emitter is simulated every step, seen or not (section 1; yotthani, MithrilForge
@@ -556,6 +560,21 @@ TAOM consequence: battles above the menu's 1,000 soldiers (another mod's battle 
 melee near the camera can reach the limit. TAOM guards and watches the two skeleton pools: see
 [skeleton-buffer-guard.md](../../features/skeleton-buffer-guard.md) (the decision is item 2 of
 [adopt-yotthani-2026-10-08.md](../../reviews/adopt-yotthani-2026-10-08.md)).
+
+## 11. Execution scene and battle gore crashes (Kysaro, KysaroMod, 2026-11-09)
+
+Kysaro measured these (his note `gameplay/project_kysaro_gore.md`, 2026-11-09), unverified in TAOM.
+
+- **The `scn_execution_notification` scene needs a physics world for blood emitters.** Native blood particle emitters
+  with `enable_collision` crashed `TaleWorlds.Native` there until a postfix on `SceneNotificationData.SceneProperties`
+  called `InitializePhysics` for that scene. That was the real cause of what he first logged as a "particles crash".
+  His earlier suspects were runtime particle creation and `GameEntity.CreateEmpty` inside the scene; a later entry
+  records that prefabs spawned with `GameEntity.Instantiate` render there, because the scene file already holds a
+  `particle_system_instanced_component`. Treat "particles or `CreateEmpty` crash" as superseded by the physics-world cause.
+- **Severed-head `AgentVisuals` must be reset in a `Mission.EndMissionInternal` prefix.** Reset only in
+  `OnRemoveBehavior`, every battle with a beheading crashed on exit (an MSVCP140 access violation right after
+  "MissionScreen-OnDeactivate"). His Harmony prefix on `Mission.EndMissionInternal` cleans heads, stumps and blood first.
+  Custom Battle tests missed it because they end with `QuitGame` and never close a mission normally.
 
 ## How to re-verify
 

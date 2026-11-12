@@ -120,6 +120,52 @@ stand-off in wave 1 ([RCA](../../reviews/rca-helms-deep-siege-wall-2026-11-10.md
   file, and which entities a level loads is native and UNVERIFIED, so the gate fails only an odd number.
 - A replaced breach mesh needs the tag and the script. A new mesh with only the tag is this failure.
 
+## Editor-side navmesh and terrain API
+
+Items tagged [Certain] were read in the v1.5.7 decompile (`E:\Decompiled_Bannerlord\_categories_v1.5.7\`) this turn. The
+rest is Kysaro's (TAOM's lead scener) from his scene tool notes, unverified in TAOM.
+
+- **`TerrainEditContext` writes terrain** [Certain]. `Engine/TaleWorlds.Engine/TaleWorlds.Engine/TerrainEditContext.cs`
+  has a constructor that creates the terrain (`:77`), `SetHeightData(int nodeX, int nodeY, float[] heights)` (`:83`),
+  layer and flora methods, and `FinalizeEditing()` (`:118`). The class is in the v1.5.5 and v1.5.7 decompiles and absent
+  from v1.4.8. The first build that carries it was not checked here; Kysaro says 1.5.3 (his note
+  `scenes/project_scene_forge.md`, 2026-11-12), and his older note calling terrain read-only from C# is outdated.
+- **Per-face navmesh switches** [Certain]: `Scene.SetAbilityOfFacesWithId(int faceGroupId, bool isEnabled)` returns int
+  (`Scene.cs:1458`); `Scene.SetAbilityOfFaceWithIndex(int faceIndex, bool isEnabled, bool updateIslandIndices)` returns
+  bool (`Scene.cs:1468`). Whether they serve a `bo_` or slope filter is untested (his note
+  `scenes/project_navmesh_generator.md`, 2026-09-13).
+- **`Scene.SetNavMeshRegionMap(bool[] regionMap)` takes an array indexed by `TerrainType`** [Certain]. Vanilla builds it
+  as `new bool[max(TerrainType) + 1]` and sets `array[terrainType]` from
+  `model.IsTerrainTypeValidForNavigationType` (`Modules/SandBox/Sandbox/SandBoxHelpers.cs:425-432`,
+  `GetRegionMapping`). Kysaro filled it per face and saw no effect: the wireframe did not change and Find Path still
+  routed through the excluded prop (same note, 2026-09-13).
+- **`GetNavMeshCenterPosition(int faceIndex, ref Vec3 centerPosition)` takes the position by `ref`** and returns void
+  [Certain, `Scene.cs:696`].
+- **`SaveScene` crashes (0xC0000409, a null `FILE*`) unless `<Module>\SceneEditData\<scene>\` exists** (it receives
+  `terrain_ed.bin`). Kysaro measured it (his note `scenes/project_scene_forge.md`, 2026-11-12).
+- **`ManagedMeshEditOperations.Create(mesh)` needs `FinalizeEditing()` before any `AddEditDataUser()` or
+  `LockEditDataWrite()` on the same mesh.** Without it the engine deadlocks with no exception and no log; he hit it
+  twice (his note `scenes/project_vertex_paint_module.md`, 2026-09-17). Wrap the operations in try/finally.
+- **Vertex colour is four independent grayscale mask channels, not an RGB tint.** `Mesh.SetEditDataFaceCornerVertexColor`
+  takes a packed uint: R ambient occlusion, G diffuse occlusion, B second material mask, A vertex alpha. Only R was
+  confirmed live (R=0 darkens, R=255 is neutral); the packing order `(a<<24)|(r<<16)|(g<<8)|b` is his assumption (same
+  note).
+- **`GameEntity.SetForceDecalsToRender(true)` makes decals show on buildings that showed none** (two building types
+  confirmed, same note, 2026-09-16 entries). **Never call `Scene.AddDecalInstance`:** it crashed the whole game process
+  in his test.
+- **`terrain_materials.xml` is one global file**, `Modules\Native\ModuleData\terrain_materials.xml`, read by every module
+  (Native is a dependency of all of them). The editor's "Save Layer to Library" button crashed the editor every time
+  for him (two tries) after the file write had finished; he now writes the XML directly (his note
+  `scenes/project_terrain_generator.md`, 2026-09-13).
+- **A Gauntlet layer added to the Scene Editor screen did not render.** `LoadMovie` succeeded and `HasLayer` was true, but
+  neither he nor a screenshot showed any UI; he concludes the editor does not composite Gauntlet layers and exposes
+  tool fields through a `ScriptComponentBehavior` with `[EditableScriptComponentVariable]` instead (his note
+  `scenes/project_vertex_paint_module.md`, 2026-09-16 entry). The screenshot may not capture UI layers, which he notes.
+- **The `bo_` body name lives on the entity's physics shape, not on the entity name or the mesh name.** Read it with
+  `GameEntityPhysicsExtensions.GetBodyShape(entity)` then `.GetName()`; the entity and first-mesh names matched 0 times
+  on a real prop. Composite prefabs hold shapes on child entities, so walk `GetChildrenRecursive()` (his note
+  `scenes/project_navmesh_generator.md`, 2026-09-13).
+
 ## The native boundary
 `GameEntity` is a `NativeObject` — the scene node, its transform, meshes, and physics live **native**; the managed
 class is a thin wrapper (Instantiate/SetFrame/GetChild are native calls). `ScriptComponentBehavior` is the managed

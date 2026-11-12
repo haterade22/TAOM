@@ -163,6 +163,24 @@ at a time, and installs only what verifies.
   `Meta mesh with name sk_dwarf_beard_a_10 cannot be found!` and a dwarf who rolls beard 10 has
   none. A Kit re-import of `Race Test/Beards/SK_Dwarf_Beards.fbx` rewrites the name.
 
+## Cloth simulation meshes
+
+Kysaro measured these (his notes `armor/project_baf_native_cloth_sim.md`, a survey of 275 `clo_` sims in 98 TAOM Armory
+FBX files on 2026-10-22, and `armor/project_bannerlord_armor_factory.md`, 2026-10-18), unverified in TAOM.
+
+- **A native sim is a quad ring grid on the render surface.** Median quad share 1.00, typically two boundary loops (a
+  waist ring and a hem make a tube), edges about 4.6 cm, sim vertices a median 0.23 cm from the render surface. His
+  outer-envelope sim, which stood off the fabric, shredded; his triangle-soup sims were unlike every native one.
+- **The `clo_` sim is a separate loose mesh.** The FBX holds `<asset>` with its LODs, `<asset>.skirt` (plus
+  `.skirt.lodN`) as the render skirt, and `clo_<asset>_Skirt` as the sim: about 800 triangles, no LODs, skinned, and it
+  needs a material (the engine reports "Unable to find material" otherwise). A rigid chest must not keep parts of a
+  skirt that has become cloth.
+- **The top rows are pinned with vertex alpha 0.** Alpha 0 at the waist anchor holds the sim to the chest; alpha 1 lets
+  it move. In the Armory convention alpha runs from 0 at the waist (z of 0.9 and up) to 1 at z of 0.5 and below. A sim
+  top that is not painted down to alpha 0 is not pinned.
+- **After a sim topology change the reimport fails with "Unable to update cloth mapping data (RDC)".** His fix: unlink
+  the sim (set it to None), save, reimport, relink, then re-cook.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

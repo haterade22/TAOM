@@ -312,6 +312,17 @@ Code: No code changes needed
 - **`subtype=` is not read by the engine.** It appears on 2,040 armoury items and no deserializer in the v1.4.8 dump reaches for it. Changing it does nothing and adding it fixes nothing.
 - **A roster reference is split on the first dot and only the tail is used** (`Equipment.cs:211`), so `Item.sk_gd_dol_helmet_med_a` and a bare `sk_gd_dol_helmet_med_a` resolve the same. That is why a wrong prefix never announces itself.
 - **The running game reads the loose `Assets/` tree, not a cooked pack.** The Armory ships no `AssetPackages/` at all, and where a module ships both, the engine's own load log names `Assets` ([armory-guide](../reference/armory-guide.md) "Two asset trees"). A mesh dropped into `Assets/` is live at the next restart.
+- **Body-slot cutoffs on the elf and uruk basemeshes.** Kysaro measured these on splits of both basemeshes, which came
+  out identical (his note `armor/project_bannerlord_armor_factory.md`, 2026-10-18), unverified in TAOM; the heights are
+  model z as he gives them. Head: z of about 1.47 to 1.53 and up (the neck base). Shoulders, the cape slot: a yoke from
+  z 1.23 or 1.29 to 1.53 or 1.57. Body, the part body armour hides: the neck down to just below the knee (z 0.39 to
+  0.40), including the upper arms and forearms out to |x| of about 0.52 to 0.60. Arms, the gloves slot: the rest of the
+  forearm and the hands, |x| 0.52 to 0.80. Legs, the boots slot: z 0 to 0.40.
+- **Body hiding is the AND of `MeshesMask` across the Body, Leg, Gloves, Cape and Head slots.** His read of the decompile,
+  unverified in TAOM. Since a cape piece joins that AND, he sets `covers_body="true"` on shoulder pieces by default.
+- **Sleeveless armour must ship its own skin as an `<asset>.body` submesh**, or the bare upper arms disappear. His
+  example is `SK_Uruk_Hai_Chainmail_A1.body`, about 840 triangles, on the basemesh material. Give a new one its own
+  material name and assign the native skin material in the editor; do not reuse `body_male_a` by name.
 
 ### Not answered anywhere in TAOM
 

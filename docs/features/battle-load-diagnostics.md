@@ -812,6 +812,51 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 **menu baseline of `privMB=9238` for the first time** — that station did not exist before the
 `MemoryPressureSampler.Start()` relocation.
 
+## Scene size: the native scene-load scratch arena (Kysaro, 2026-10-17)
+
+A scene can crash at load for its XML volume, with RAM to spare. Kysaro root-caused it on his Calembel
+town scene (`wip_taom_gondor_town_calembel_forceatmo`) by disassembling `TaleWorlds.Native.dll`; TAOM has
+not re-read the disassembly, so the mechanism is his finding [Likely]:
+
+- **Mechanism:** scene loading takes memory from a fixed 32 MB lock-free scratch arena (a compare against
+  `2000000h`). When it is full the allocator returns NULL, and callers write through it without a check.
+  The scene XML parser is the main consumer (per entity, per `<mesh>` line, per material override), and
+  other load work shares the arena, so near the limit the result changes run to run.
+- **Symptom:** several worker threads access-violate inside `TaleWorlds.Native.dll` in the same
+  millisecond (his offsets `0x2a181a`, `0x338dd6`, `0x4155ac` were one event), right after BattleLoad's
+  `MissionInitializeDone`. Sometimes the NULL is stored and crashes later in a vtable thunk at `0x353a54`.
+  His run was a siege; Minas Tirith passed the same automated test at a 6.3 GB peak while Calembel
+  crashed at about 4.5 GB, so it is not RAM and not the entity count.
+- **Line:** within one content mix, about 164,000 XML elements under `<entities>` (about 11.3 MB). He
+  says the limit is cumulative "but not along any metric measured": editor-expanded houses that list
+  every LOD with material overrides cost the most. Treat the element count as a warning sign, not a gate.
+  He falsified: one broken building, a pairwise conflict, a mesh-override or `meta_mesh_component` cap,
+  per-area density, unique prefab, mesh, material or physics counts, missing prefabs, a stale navmesh.
+- **Testing near the line:** require 3 of 3 passes, because results vary near the limit.
+
+**TAOM_Map measured against it** (elements under `<entities>`, every element counted, read-only
+`xml.etree` count of the live `SceneObj/*/scene.xscene`, 2026-11-12):
+
+| Scene | Elements under `<entities>` | Wired as | Load evidence in TAOM |
+|---|---|---|---|
+| `wip_taom_gondor_town_calembel_forceatmo` | 328,436 | not wired (WIP) | crashes in a siege (Kysaro) |
+| `taom_mordor_town_goblin_town_forceatmo` | 200,205 | a settlement in `settlements.xml` | none recorded |
+| `taom_gondor_battle_001_forceatmo` (Ruined Outpost) | 171,596 | `sp_battle_scenes.xml`, `custom_battle_scenes.xml` | none recorded |
+| `taom_dwarf_town_01_forceatmo` | 136,740 | not in `settlements.xml` | |
+| `taom_gondor_town_pelargir_forceatmo` | 127,899 | a settlement | none recorded |
+| `taom_gondor_town_dolamroth_forceatmo` | 116,328 | a settlement | |
+| `taom_gondor_town_minas_tirith_forceatmo` | 100,220 | a settlement | passes a siege (Kysaro) |
+| `taom_gondor_town_serelond_forceatmo` | 94,753 | a settlement | none recorded |
+
+Two shipped scenes sit above his line. Either their content mix is cheaper per element, or they crash
+in a siege or battle. **Owed in game** (no issue, Mike's word 2026-11-12): a Goblin Town siege and a
+Ruined Outpost field battle, 3 of 3 each. If one crashes with the multi-thread signature above, cut
+expanded LOD and material-override lines first, since those are the arena's largest consumer.
+
+Two editor facts from the same work: the editor's Save wipes every non-canonical file in the scene's
+`SceneObj` folder (keep backups outside it), and after a resave named entities serialise as
+`<EntityName ...>`, so count entities by `<transform`, not `<game_entity`.
+
 ## Performance
 
 - Outside the loading window, the phase-5 prefix is a two-bool read (`IsEnabled && IsOpen`) and returns. Inside, it does ~12 resident-property slot reads + one DTO alloc per spawning agent, only until the first tick.

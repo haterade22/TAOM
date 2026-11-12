@@ -296,6 +296,14 @@ Code: No code changes needed.
 - **The engine has a real bug in the height clamp, and it is multiplayer only.** `ClampHeightMultiplierFaceKey` reads the six height bits out of `KeyPart8` at `BodyProperties.cs:194-195` and writes the corrected value into the `KeyPart7` argument slot at `:201`, leaving `KeyPart8` untouched. Singleplayer never runs that path, so TAOM is unaffected, but do not use it as evidence of where height lives.
 
 - **A hero takes the template minimum, so a whole culture can share one face.** `Hero.Deserialize` (not `SetCharacterObject`) copies `GetBodyPropertiesMin(returnBaseValue: true).StaticProperties` (`Hero.cs:1891`), and only a hero born from a template is rolled inside the range (`DefaultHeroCreationModel.cs:197-202`). Fifty lords on `BodyProperty.fighter_haradrim` are fifty copies of its Min key, and fifty lords on one explicit `<BodyProperties>` key are the same. `LordFaceVarietyService` fixes this once at the end of new-campaign creation: a hero on a spread range's minimum is rolled inside it (and gets a rolled weight and build, as a hero born from a template does), heroes sharing an explicit key keep it for one anchor and are rolled near their own face, and a generated hero on a flat range is rolled near its own face too. Rule B scales each face morph by a random factor between `1 - v` and `1 + v` of its own value (a morph at 0 stays 0) and draws a new hairstyle, and a beard where beard tags exist, from the hero's tags; it rolls at age 30, so a young hero keeps adult hair and beard tables. The big Harad, Umbar, Misty Mountain, Gundabad, goblin, Dol Guldur and Mordor uruk lord groups now sit on their culture's `face_key_template` instead of one explicit key ([lord-face-variety.md](../features/lord-face-variety.md)). Saves already running keep the faces they have. `HeroFaceVarietyDataTests` predicts which repo heroes still share a face after the pass.
+- **The engine caches a generated face by the face-shape part of the key, not by race.** Kysaro measured this in game
+  (his note `animation/project_olog_hai.md`, 2026-11-10), unverified in TAOM. His olog troop used
+  `BodyProperty.fighter_cave_troll`; any hill troll spawned after an olog then got the olog's cached face and lost its
+  `.eye` and `.mouth` submeshes. The result depended on spawn order (a troll first looked fine), which hid it from his
+  first A/B test. His fix gave the olog its own `<face>` key: key parts 2 to 4 (hex characters 16 to 63) hold its own
+  values, and parts 1 and 5 to 8 are copied from the troll key, so the size stays. One changed nibble was not enough,
+  and a fully junk key gave scale 0.47. His rule: two races that share a skeleton or face system must not share a face
+  key. TAOM's own hill and cave trolls share one key: see [troll-race.md](../features/troll-race.md).
 
 ### Questions this chapter cannot answer
 

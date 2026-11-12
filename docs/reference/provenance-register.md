@@ -134,6 +134,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | HyperFrames | `heygen-com/hyperframes` `hyperframes` | Apache-2.0 | comparison-only | (none) | cleared |
 | ArtCraft | `storytold/artcraft` | MIT OR Apache-2.0 | comparison-only | `docs/reference/ue-to-bannerlord-asset-pipeline.md` "Generating the source" (fal's Tripo option names, found through its fal binding and confirmed on fal's page; the text is TAOM's own) | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
+| Kysaro's knowledge notes (TAOM team member) | `Kysaro/bannerlord-knowledge-Kysaro` | UNKNOWN | comparison-only | `.claude/rules/evidence-over-claims.md` A.5, B and C.4, `docs/features/battle-load-diagnostics.md` "Scene size", `docs/reference/external-mod-couplings.md` "Kysaro's modules", traps and engine facts listed in `docs/reviews/adopt-kysaro-knowledge-2026-11-12.md` (facts and lessons only, read 2026-11-12 at `f0a4370b5`; every sentence is TAOM's own and each fact names his note) | cleared |
 
 <!-- provenance-register-end -->
 

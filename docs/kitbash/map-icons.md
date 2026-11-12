@@ -89,6 +89,29 @@ What 1K shows on a 55 m icon: features under 2 texels (about 18 cm) vanish, heig
 normal map instead of adding detail, and worn edges, soot, streaks and stone courses do not read
 (Mike, 2026-10-16). Colour, broad tone and the baked occlusion do.
 
+## Kysaro's measurements and authoring traps
+
+From Kysaro's notes under `map-icons/` (`project_map_icons_research.md`, 2026-10-24; `project_dwarf_mapicons.md`,
+2026-10-29), unverified in TAOM. The triangle budget stays Mike's decision (he set the whole 90,000 triangles for the
+Carn Dûm rebuild, step 2 of "Rebuilding an icon from solids"); the numbers below are data, not a new budget.
+
+- **Native baseline, measured in the Meta Mesh Editor:** `map_castle_a` 1,261 polys, `map_castle_d` 1,978, `map_town_a`
+  1,272. One material each, shared per culture (the `fake_houses` and `steppe_fake_houses` atlases), one LOD, visible
+  distance `FLT_MAX`. That visible distance disagrees with the "map icons 200" in
+  [mission-frame-threads-and-native-costs.md](../reference/engine/mission-frame-threads-and-native-costs.md) section 7.
+- **TAOM's icons, measured by his scratch script over `TAOM_Map/AssetSources/Campaign Map/Map Icons`:** 3 of 28 FBX files
+  carry LODs. Mordor has 54 icons, a median (p50) of 31k triangles, a maximum of 194k and 2.16M in all. Materials per
+  faction: Mirkwood 22, Gundabad 19, Mordor 14.
+- **His own working ceilings are far lower:** village 0.5 to 1k, castle and town about 3 to 4k, landmark about 6 to 8k
+  triangles, one material per faction, no LODs. They differ from the 90,000 above and from the Gundabad set in the
+  budget bullet; reconciling them is Mike's call.
+- **Traps:**
+  - A battered (sloped) wall covers a door decal in game. Stand the door in front of the batter. This caused the "bricks
+    on the doors" bug on his Lindon, Angmar, Khand and Rhun icons, fixed 2026-10-29.
+  - A metallic `_s` map over a dark albedo renders near black (his copper domes). Leave metal off coloured roofs.
+  - A thin two-sided surface needs offset front and back faces (his builder helper `Kit.face2`). `face(n)` plus
+    `face(-n)` merged into one-sided sails.
+
 ## Custom icons
 
 | Icon | Settlement | Source | Kit files | Staging (source of truth) | State |

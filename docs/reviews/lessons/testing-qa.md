@@ -2668,3 +2668,21 @@ The `ev=pledge` ledger line had a C# golden-line test and a Python helper that w
 - **Why missed:** `InstallMission` saved the current `Mission._current` on every call. A test that installs twice made the first fake the "previous" value, so cleanup restored a fake, and a later test that assumes "no mission" ran against it and passed.
 - **Prevent:** save the original on the first install of a test only (a flag), restore only when the flag is set, and have a test that needs the empty state set it itself. Two-edit test: move the save back into every install and the no-mission test must fail.
 - **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), row 2.
+
+### A readback from the layer that made the change is not proof it took (Kysaro's terrain generator, 2026-09)
+
+- **Why missed:** a UI Automation script set a file path in a Windows dialog, read the value back through the same accessibility API and reported success. The dialog never accepted the file, so nothing was imported. The user reported it more than five times before anyone looked for another signal.
+- **Prevent:** prove an automation step by a signal the step did not produce: the dialog closed, the file on disk changed, the target application shows the change. When the user says "it doesn't work" again in new words, stop re-testing the same assumption. Rule: `evidence-over-claims.md` B.
+- **Source:** Kysaro's notes, `lessons/feedback_verify_dont_assume_success.md` (`Kysaro/bannerlord-knowledge-Kysaro`, reviewed in [adopt-kysaro-knowledge-2026-11-12.md](../adopt-kysaro-knowledge-2026-11-12.md)).
+
+### A second rejection of the same result means review the base, not patch faster (Kysaro's armour sessions, 2026-10-25)
+
+- **Why missed:** six fixes were stacked on one armour set (sleeves, glove tuck, wrists, cuffs, ring, snap) on top of a retopology that had given the helmet and gloves too few polygons. Each round fixed a symptom; the user found new defects in game each time and called the session "terrible". The results were "checked" on grey test renders that did not predict what the game showed.
+- **Prevent:** after the second rejection of the same area, stop editing, review the whole result and its inputs, and report the review before the next change. Judge visual work the way the engine shows it (textured, lit, posed, back faces culled). Rule: `evidence-over-claims.md` A.5; the render trap is in `/prep-tripo-prop` "Top traps". The restart on the next set, with the base fixed first, was accepted.
+- **Source:** Kysaro's notes, `lessons/feedback_dark_lord_session_bad.md` and `feedback_baf_culled_split_review.md`.
+
+### One dead mechanism is not proof the goal is impossible (Kysaro's faction screen, 2026-09-25)
+
+- **Why missed:** a pixel test proved that one Gauntlet XML property does not move the 3D camera. The claim grew into "the camera cannot be moved from this UI" and was repeated twice, while the module already had a working Harmony prefix on `BodyGeneratorView.InitCamera` that moves it. The user's pushback ("how did you do it for character customization then?") was the signal.
+- **Prevent:** scope a negative finding to the mechanism tested. When the user points at a case that already works, grep for the patches and hooks around it before repeating the claim. Rule: `evidence-over-claims.md` C.4.
+- **Source:** Kysaro's notes, `lessons/feedback_dont_overgeneralize_native_constraints.md`.

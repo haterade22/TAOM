@@ -2388,3 +2388,17 @@ A kingdom's side was fixed for a whole campaign until War Pledge. Three readers 
 - **Why missed:** the data edit changed `culture=` and `faction=` only. Nothing in the gates reads donor counts, and the kit question was filed as a cosmetic open decision.
 - **Prevent:** when a lord changes culture, change the kit in the same edit, or name the roster pair and check that no two moved lords share one. Count donors by the selector's rule, not by roster id.
 - **Source:** [rca-lothlorien-marchwardens-2026-11-12.md](../rca-lothlorien-marchwardens-2026-11-12.md), finding 1.
+
+### A scene can crash at load for its XML volume, with RAM to spare (Kysaro's Calembel, 2026-10-17)
+
+- **Why missed:** a full-city Calembel town crashed in a siege on every run while Minas Tirith, with a higher memory peak, passed. Nine theories were tested and falsified (one broken building, mesh-override caps, density, unique asset counts, missing prefabs, a stale navmesh) before a disassembly found a fixed 32 MB scene-load scratch arena that returns NULL when full. TAOM's scene audit counted entities, which this limit does not follow.
+- **Prevent:** before wiring a large scene, count the XML elements under `<entities>`; past about 160,000, run its mission type 3 of 3 times before it ships, and cut expanded LOD and material-override lines first. Two shipped TAOM scenes are past that line with no load evidence: see [battle-load-diagnostics.md](../../features/battle-load-diagnostics.md) "Scene size".
+- **Source:** Kysaro's notes, `scenes/project_calembel_siege_crash.md`, reviewed in [adopt-kysaro-knowledge-2026-11-12.md](../adopt-kysaro-knowledge-2026-11-12.md).
+
+### Key a price on its data row, not on a lookup that can disagree with it (emissary price multiplier, 2026-11-12)
+
+The Elite Emissary's resource price was first written as `merchant_cost` times the multiplier of the resource the settlement owner resolves to. The owner's resource comes from a kingdom-first lookup, while the offers follow the owner clan's culture. In shipped data the two always agree. A clan that defects, or a player vassal of another culture, makes them differ, and the price then moved by a factor of 20, with the encyclopedia badge (which priced by the troop's own resource) showing another number than the charge.
+
+- **Why missed:** the multiplier sat on the resource because the charge methods already held one. Every test, and every row in shipped data, had the troop's resource and the owner's resource agree, so no check could fail.
+- **Prevent:** when a number is derived from a runtime lookup (a resolved faction, culture or resource) and the same number is shown or charged somewhere else, fold it into the data row at load and have every reader use the row. Write one test where the lookup returns something other than the row's own value, and gate the largest value against the smallest limit any lookup result could carry.
+- **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), finding 1.

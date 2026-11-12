@@ -1,8 +1,9 @@
 # Other mods that patch or read TAOM by name
 
 Reference list of the TAOM members that other mods reach by string: a Harmony patch target found by type and method name,
-reflection, or a lookup through `TAOM.IoC`. The mods are yotthani's (repo `yotthani/bannerlord`, read at 6265f4a2); TAOM
-does not own them and does not ship them. Names were read in yotthani's source and re-checked against TAOM at 0c5d81408
+reflection, or a lookup through `TAOM.IoC`. Most of the mods are yotthani's (repo `yotthani/bannerlord`,
+read at 6265f4a2); Kysaro's and Coodsz's have their own sections below, with their own sources. TAOM does not own
+them and does not ship them. Names were read in yotthani's source and re-checked against TAOM at 0c5d81408
 (v2.0.36, Bannerlord 1.5.6) with grep on 2026-10-29 [Certain]. The source comments name older TAOM versions ("TAOM 2.0.31
 attack methods" in `Armory_TAOMSubModule.cs`:39), so a name here is a name that still resolves today, not a promise.
 
@@ -78,6 +79,33 @@ It reads TAOM's side table as a file, `Modules/TAOM/ModuleData/execution/alignme
 empty file switches its rules off with a log line. TAOM's copy is `Main/_Module/ModuleData/execution/alignment.json`. It also
 prefixes `MakePeaceAction.ApplyInternal` next to TAOM's own prefix; see [diplomacy.md](../features/diplomacy.md)
 "Free/Shadow side boundary".
+
+## Kysaro's modules (TAOM_Kysaro_Diplomacy, KysaroMod, TAOM_FactionUI, TAOM_CustomBattleUI)
+
+Kysaro's source is not on this machine. The names below come from his notes (`Kysaro/bannerlord-knowledge-Kysaro`
+at `f0a4370b5`, `gameplay/project_taom_kysaro_diplomacy.md` and `gameplay/project_legions_of_angmar.md`), and each
+TAOM side was re-read by grep on 2026-11-12 at `abc5d0172` (v2.0.38) [Certain for the TAOM side; how his code
+reaches each one is his note's claim]. What his code does on a miss is not known.
+
+| TAOM member | How it is reached (his note) | TAOM path |
+|---|---|---|
+| `IoC.Resolve<T>()` on `Relations.IRelationGrantService`, `Execution.IAlignmentService`, `Diplomacy.IWarOfTheRingService`, `CoopInterop.ICoopSessionProvider`, `UncapturableHeroes.IUncapturableRegistry` | "public `TAOM.IoC.Resolve<T>()`" (diplomacy note, line 82) | `Main/IoC.cs`:276; `Main/Features/Relations/IRelationGrantService.cs`:7, `Execution/IAlignmentService.cs`:3, `Diplomacy/IWarOfTheRingService.cs`:5, `CoopInterop/ICoopSessionProvider.cs`:18, `UncapturableHeroes/IUncapturableRegistry.cs`:10 |
+| `IWarOfTheRingService.ShouldBlockPeace(string, string)`, `GetWarVeto(string, string, bool)` | called through the resolved interface | `Main/Features/Diplomacy/IWarOfTheRingService.cs`:14, 44 |
+| `TokensOfEsteem.GiftService.Give(string, GiftEntry, GiftOption, GiftCooldownLedger)` | Harmony postfix found by reflection ("King's Gift") | `Main/Features/TokensOfEsteem/GiftService.cs`:154 |
+| `TaomArmyManagementModel` | postfix on the runtime army model (`ArmyPatch`) | `Main/Features/CulturalFeats/Models/TaomArmyManagementModel.cs`:14 |
+| `TaomPartySizeModel`, `TaomPartyWageModel` | postfixes (`RemnantHostPatch`) | `Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs`:18, `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs`:15 |
+| `TaomPartyHealingModel.GetSurvivalChance` | postfix on the runtime model (`DeathlessPatch`) | `Main/Features/BattleBalance/Models/TaomPartyHealingModel.cs`:29 |
+| Dialogue line `taom_nc_intro_a` (priority 110) | his dialogue is ordered around it | `Main/Features/NamedCompanions/Oaths/Hooks/OathIntroDialog.cs`:53 |
+| Ids `town_G3` (Carn Dum) and `clan_gundabad_4` | his "Legions of Angmar" trigger | live `TAOM_Map/ModuleData/settlements.xml`; `Main/_Module/ModuleData/characters/clans.xml` |
+
+He patches a model by walking to "the first non-abstract DeclaredMethod", so moving a model's override into a base
+class, or replacing the model class in its `AddModel` slot, can move or drop his postfix.
+
+**Duplicate-module hazard.** Two of his modules now have TAOM copies, and each pair patches the same screens:
+TAOM_FactionUI was merged into TAOM (#704, [faction-ui.md](../features/faction-ui.md)), and TAOM integrated a muster
+screen with his `Tcb*` names on 2026-11-12 (`df8ba8484`, `Client/Features/CustomBattles/Muster/`), while his note of
+2026-11-10 keeps TAOM_CustomBattleUI as a separate mod and says loading both "would stack screens". Whether that module
+is retired is open with Kysaro (PR #1 on his knowledge repo asks).
 
 ## Coodsz-TAOM (client launcher and server tool)
 

@@ -178,6 +178,28 @@ Three more engine facts for a mission that fights in waves:
 - **A destroyed machine leaves `ActiveMissionObjects`.** `Mission.OnObjectDisabled` disables a `UsableMachine` in the same call (Mission.cs:3060), so a list read from the active objects cannot show a destroyed gate, tower or ram. Take the list once.
 - **Vanilla's undo of a destroyed gate** is `CastleGate.OnMissionReset` (protected internal, :341-348). It restores the hit points, the door references and the tick. It does not close the navmesh that `OnDestroyed` opened: `SetAutoOpenState(false)` does that. It does not remake the gate's detachment, which `UsableMachine.Disable` destroyed (:659-661).
 
+### Mission traps measured by Kysaro (KysaroMod, 2026-11, unverified in TAOM)
+
+- **`CheckDeployment` spawns a side only when every team of that side `IsPlanMade`.** Plans are made only for teams with
+  troops, and `PlanForSpawnLogic` plans an empty third team one tick after the side's own teams. Planned earlier, the
+  real team is never planned. His symptom was an enemy army that never spawned (his note
+  `gameplay/project_three_sided_battles.md`, 2026-11-09).
+- **`Teams.Add` mid-battle crashed** (same note).
+- **Clear static agent collections, or the next mission can freeze.** A static `BattleRoles.HornBlowers` carried the
+  previous battle's agents into the next mission and froze it natively in `WaitTickCompletion`. He clears such
+  collections in `OnBehaviorInitialize` and `OnRemoveBehavior` (his note `ui/project_custom_battle_overhaul.md`,
+  2026-11-08). The lifecycle order above says `OnBehaviorInitialize` never fires on TAOM's path, and his three-sided note
+  says the same for his mod behaviours, so `OnRemoveBehavior` is the reachable half.
+- **Never swap an action set on a walking agent** (native crash, same note). His working lever swaps at spawn:
+  `Agent.SetActionSet(monster.FillAnimationSystemData(set, char.GetStepSize(), false))` in `OnAgentBuild`, riders
+  skipped (his note `animation/project_tw3_anim_pipeline.md`, 2026-11-06).
+- **Open question: does a soldier read the `Monster`'s `action_set`?**
+  [bannerlord-animation-system-map.md](../bannerlord-animation-system-map.md) section 7 (line 632) says `Monster` reads
+  `action_set` [Certain, `Monster.cs:304-321`]. Kysaro's claim (same tw3 note) is that the engine never reads `Monster`
+  `action_set` for soldiers: the set name is `as_<base_monster>_warrior`, so an XSLT on the monster does nothing for
+  them. Neither side is tested by TAOM on a soldier spawn; do not rely on a monster `action_set` edit, or on its
+  absence of effect, until one is.
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**
