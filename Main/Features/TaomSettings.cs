@@ -2458,7 +2458,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Armies")]
     [SettingPropertyBool("Rulers call hosts for less influence", Order = 1, RequireRestart = false,
-        HintText = "When enabled (default), an AI kingdom ruler, Good or Evil, pays half the influence (0.5 by default, RulerCallCostFactor in army_targeting.json) for each party called into an army, after culture feats. Cheaper calls also make the influence an army spends on keeping itself together cheaper for the ruler, so those hosts hold longer and the ruler's clan keeps more influence for votes. Your own calls, as a ruler or a vassal, cost what they always did. Singleplayer only: in a co-op session this does nothing. When off, the cost is what it was before this feature (culture feats still apply). Applies at once, no restart.")]
+        HintText = "When enabled (default), an AI kingdom ruler, Good or Evil, pays half the influence (0.5 by default, RulerCallCostFactor in army_targeting.json) for each party called into an army, after culture feats. Cheaper calls also make the influence an army spends on keeping itself together cheaper for the ruler, so those hosts hold longer and the ruler's clan keeps more influence for votes. Your own calls, as a ruler or a vassal, cost what they always did. Singleplayer only: in a co-op session this does nothing. When off, the ruler pays the usual cost; culture feats and the Realms liege army discount still apply. The two discounts do not stack: when both apply to a call, the larger one is used. Applies at once, no restart.")]
     public bool EnableKingsMusterDiscount { get; set; } = true;
 
     // --- Bonds of Battle (relations earned on campaign, docs/features/bonds-of-battle.md) ---
@@ -2904,7 +2904,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Realms")]
     [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 10, RequireRestart = false,
-        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on.")]
+        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. It does not stack with the King's Muster ruler discount: when both apply, the larger one is used. When off, other discounts such as culture feats and the King's Muster still apply. Default: on.")]
     public bool RealmsLiegeArmyDiscount { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]
