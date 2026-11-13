@@ -20,6 +20,13 @@ public interface IPlayerPossessionService
     /// </summary>
     void RecordBaselineHero(string heroId);
 
+    /// <summary>
+    /// Drops the choices of an earlier character creation in this process. A new character creation
+    /// supersedes them, and the Player Switcher hands the player a lord inside it, before the new
+    /// choices are captured (#1177).
+    /// </summary>
+    void BeginCharacterCreation();
+
     /// <summary>Stores what the player picked in character creation, to re-apply after the switch.</summary>
     void CaptureCharacterCreationChoices(PlayerCharacterCreationChoices choices);
 

@@ -64,8 +64,8 @@ Harmony Patch29_CCBodyProperties
                                 └── CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties
 ```
 
-`PlayerPossessionBehavior` is deliberately not drawn in: its listener hangs off
-`OnCharacterCreationIsOverEvent`, not off the `ICharacterCreationContentService` chain above, and an
+`PlayerPossessionBehavior` is deliberately not drawn in: its listeners hang off
+`OnCharacterCreationInitializedEvent` and `OnCharacterCreationIsOverEvent`, not off the `ICharacterCreationContentService` chain above, and an
 arrow would overstate the coupling. See [player-possession.md](player-possession.md).
 
 ## Configuration

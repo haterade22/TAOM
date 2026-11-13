@@ -494,7 +494,10 @@ All four are simulation-relevant for co-op under the include-by-default rule, an
 - **Co-op possession.** Closed by ordering rather than a flag. `PlayerPossessionBehavior` captures
   its choices on `OnCharacterCreationIsOverEvent`, which fires **after** the 1100 handler, so it
   records the lord and its own `currentHeroId == _choices.HeroId` guard suppresses the re-grant.
-  Do not "fix" this by adding a switcher flag to `PlayerPossessionService`.
+  The hand-over itself raises `OnPlayerCharacterChangedEvent`, which the possession check also
+  listens to (#1177), before that capture. A new character creation drops an earlier one's choices
+  (`OnCharacterCreationInitializedEvent`), so the check finds none there. Do not "fix" this by adding
+  a switcher flag to `PlayerPossessionService`.
 - **Landless cultures.** `Patch65` guards the AI daily clan tick, which never runs for
   `Hero.MainHero`, so no new crash surface. Any fallback chain must still tolerate a null clan home
   settlement.
@@ -557,7 +560,8 @@ Each step on a fresh campaign unless stated.
    Dol Guldur's. Turn it on and they appear. Play as Sauron. Correct: the campaign boots and
    `rgl_log` shows the priority-1100 handler line with **no** `SetPlayerRace` line naming Sauron.
 8. **Co-op non-regression.** With a co-op mod loaded, repeat step 4 and let several in-game hours
-   pass. Correct: no `[Possession] Controlled hero changed` line and no re-grant.
+   pass. Then, in the same game process, start a second new campaign and pick a lord again. Correct:
+   no `[Possession] Controlled hero changed` line and no re-grant, in either campaign.
 9. **Wanderer adoption.** Pick a wanderer. Correct: your clan is the one you named, with your
    banner, you lead it, and your party holds the starting troops. Your gold is 1,000 plus the starting
    gold of the wanderer's culture (`playerGold` in `startup_resources_config.xml`), as for a new

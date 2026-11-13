@@ -32,6 +32,13 @@ public sealed class PlayerPossessionService : IPlayerPossessionService
         _baselineHeroId = heroId;
     }
 
+    public void BeginCharacterCreation()
+    {
+        if (_choices != null)
+            _logger.LogInfo($"[Possession] A new character creation began; dropped the choices captured for '{_choices.HeroId}'.");
+        _choices = null;
+    }
+
     public void CaptureCharacterCreationChoices(PlayerCharacterCreationChoices choices)
     {
         if (choices == null || string.IsNullOrEmpty(choices.HeroId)) return;
@@ -48,8 +55,9 @@ public sealed class PlayerPossessionService : IPlayerPossessionService
     {
         choices = null;
 
-        // Solo play never reaches the re-grant. This is the guard that keeps single-player HEIR
-        // SUCCESSION — which also changes Hero.MainHero — from being mistaken for a join hand-off.
+        // With no co-op module enabled, play never reaches the re-grant. This is the guard that keeps
+        // single-player HEIR SUCCESSION, which also changes Hero.MainHero, from being mistaken for a
+        // join hand-off. With a co-op module enabled but no session it does not hold (#1183).
         if (!_coopPresence.IsCoopActive) return false;
 
         if (_consumed || _choices == null) return false;

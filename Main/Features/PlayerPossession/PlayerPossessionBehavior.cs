@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 
 namespace TAOM.Features.PlayerPossession;
 
@@ -10,8 +12,9 @@ namespace TAOM.Features.PlayerPossession;
 /// character-creation package to the hero the player actually ends up controlling.
 ///
 /// Thin by ADR-002: this is the boundary that converts sealed <see cref="Hero"/> state into ids and
-/// hands them to the services. It is inert in single-player, where <c>Hero.MainHero</c> never
-/// changes and the co-op presence gate never opens.
+/// hands them to the services. With no co-op module enabled it is inert: the co-op presence gate never
+/// opens. <c>Hero.MainHero</c> does change in solo play (heir succession, the Player Switcher hand-over);
+/// see #1183.
 /// </summary>
 public class PlayerPossessionBehavior : CampaignBehaviorBase
 {
@@ -45,11 +48,16 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
     public override void RegisterEvents()
     {
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _possession.ResetForNewCampaign());
+        CampaignEvents.OnCharacterCreationInitializedEvent.AddNonSerializedListener(this, _ => _possession.BeginCharacterCreation());
         CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, _ => RecordBaseline());
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => RecordBaseline());
         CampaignEvents.OnCharacterCreationIsOverEvent.AddNonSerializedListener(this, OnCharacterCreationIsOver);
-        // Hourly rather than per-tick: the hand-off happens once at join, and an hourly check costs
-        // one string comparison. Nothing here is time-sensitive — the grants are idempotent-by-marker.
+        // Coop's join hand-off runs ChangePlayerCharacterAction.Apply. Coop's prefix replaces the vanilla
+        // body and raises this event itself (Coop bannerlord-1.5.x 995517e60,
+        // ChangePlayerCharacterActionPatches.cs:57). The hourly event needs a running clock, and a joining
+        // client's clock can stand still for minutes.
+        CampaignEvents.OnPlayerCharacterChangedEvent.AddNonSerializedListener(this, OnPlayerCharacterChanged);
+        // The fallback for a co-op hand-off that raises no player-character-changed event.
         CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, CheckForPossession);
     }
 
@@ -82,6 +90,23 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
             hero.Culture?.StringId,
             hero.CharacterObject?.Race ?? -1,
             _careerMenu?.SelectedCareerStringId));
+    }
+
+    // Runs inside Coop's HeroInterface.SwitchToPlayer, before Coop's own work after the switch (captivity,
+    // camera, fog of war, the SwitchedPlayer message). The event dispatch catches nothing, so an escaping
+    // exception would end the switch, and the client would never leave Coop's LoadingState.
+    // The arguments are ignored on purpose: under Coop, oldPlayer and newPlayer are the same hero, because
+    // Coop sets PlayerTroop before it calls Apply. The check reads Hero.MainHero instead.
+    internal void OnPlayerCharacterChanged(Hero oldPlayer, Hero newPlayer, MobileParty newMainParty, bool isMainPartyChanged)
+    {
+        try
+        {
+            CheckForPossession();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[Possession] Checking for a join hand-off at the player switch failed: {ex}");
+        }
     }
 
     internal void CheckForPossession()

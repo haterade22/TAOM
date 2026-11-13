@@ -245,10 +245,10 @@ one-shot startup decisions such as UI registration.
 `PlayerPossessionService.TryConsumePossession` gates on `IsCoopActive`, and what follows it is a
 hero mutation. Presence is used there as an **heir-succession discriminator**, not as an authority
 decision: `Hero.MainHero` also changes in ordinary solo play when the player continues as an heir,
-and the presence gate is what keeps a solo heir out of the re-grant path entirely. It is one of
-three independent guards, any one of which suffices — presence, single consumption, and a
-`SyncData`-persisted per-hero marker (`_taom_possessionReconciledHeroes`) so a reconnect cannot
-re-grant. See [player-possession.md](player-possession.md).
+and with no co-op module enabled the presence gate keeps a solo heir out of the re-grant path. The
+other two guards are single consumption and a `SyncData`-persisted per-hero marker
+(`_taom_possessionReconciledHeroes`) so a reconnect cannot re-grant. With a co-op module enabled but no
+session, none of the three stops a solo heir (#1183). See [player-possession.md](player-possession.md).
 
 `ShouldDeferToHost` keys on whether the ROLE PROBE RESOLVED, which is what makes it safe for
 BannerlordTogether: TAOM cannot read host/client there, so it yields on every peer. Gating those
@@ -509,7 +509,7 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `RacePersistenceBehavior` (the hero race map) is deliberately ungated: at session launch it restores hero races from the save's own map, which the engine save does not carry, then recaptures them into this peer's `SyncData`. It is deterministic from the same save, and every peer needs the races.
 
-`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. Its hourly tick sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967).
+`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. At the player switch (the hourly tick is the fallback) it sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967). On a BannerlordCoop client the gold grant does nothing, because Coop's `GiveGoldAction.ApplyInternal` prefix lets only the server give gold.
 
 `CreatureBroodCampaignDiagBehavior` (the temporary brood and troll band battle and destruction lines, [creature-bandits.md](creature-bandits.md)) is deliberately ungated: it only writes log lines from campaign events each peer already receives, and changes no state.
 
