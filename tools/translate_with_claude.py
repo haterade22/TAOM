@@ -261,9 +261,10 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
         taom_lang_dir = TAOM_LANG_DIR / lang
         sources = english_source_files("TAOM")
         owners = key_owners([src for _, src, _ in sources])
+        siblings = sibling_string_ids(taom_lang_dir)
         for _, source_xml, tgt_template in sources:
             target_file = taom_lang_dir / tgt_template.format(locale=locale)
-            elsewhere = skip_ids_for(source_xml, target_file, owners, taom_lang_dir)
+            elsewhere = skip_ids_for(source_xml, target_file, owners, taom_lang_dir, siblings=siblings)
             entries.extend(_diff_files(source_xml, target_file, skip_ids=elsewhere))
 
     # Only these two read the install. The TAOM module above is repo-only, so
@@ -340,7 +341,23 @@ def override_ids_to_skip(source: Path, target: Path) -> set:
     return english_only_override_ids(source) - set(_parse_string_xml(target, strip_keys=False))
 
 
-def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> set:
+def sibling_string_ids(lang_dir: Path) -> dict:
+    """Each std_taom_*.xml of one language folder, parsed once: its set of string ids, or the
+    ParseError it raised. skip_ids_for raises that error only when the file is used as a sibling, so
+    a target that does not parse stays as harmless as in the per-call form. For a pass that writes no
+    language file between calls (discover_entries); --sync-ids writes and must not reuse it."""
+    found = {}
+    for other in lang_dir.glob("std_taom_*.xml"):
+        try:
+            tree = ET.parse(other)
+        except ET.ParseError as exc:
+            found[other] = exc
+            continue
+        found[other] = {el.get("id", "") for el in tree.iter("string") if el.get("id", "")}
+    return found
+
+
+def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path, siblings=None) -> set:
     """Keys the TAOM pass must neither seed into nor translate for `target`: those another English
     source owns, English-only vanilla overrides (override_ids_to_skip), and those another file of
     the same language already carries, EXCEPT any row the target itself holds.
@@ -351,15 +368,18 @@ def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> se
     would be skipped by both passes and never translated again.
 
     A sibling file that exists but does not parse raises: read as empty, its keys would look absent
-    and --sync-ids would seed duplicates of them."""
+    and --sync-ids would seed duplicates of them.
+
+    siblings: sibling_string_ids(lang_dir), computed once by a caller that writes nothing between
+    calls; None parses the folder now, as --sync-ids needs."""
+    if siblings is None:
+        siblings = sibling_string_ids(lang_dir)
     elsewhere = {k for k, owner in owners.items() if owner != source}
-    for other in lang_dir.glob("std_taom_*.xml"):
+    for other, ids in siblings.items():
         if other != target:
-            try:
-                tree = ET.parse(other)
-            except ET.ParseError as exc:
-                raise SystemExit(f"{other} does not parse ({exc}); fix it before a translator run")
-            elsewhere.update(el.get("id", "") for el in tree.iter("string") if el.get("id", ""))
+            if isinstance(ids, ET.ParseError):
+                raise SystemExit(f"{other} does not parse ({ids}); fix it before a translator run")
+            elsewhere.update(ids)
     return (elsewhere - set(_parse_string_xml(target, strip_keys=False))) | override_ids_to_skip(source, target)
 
 

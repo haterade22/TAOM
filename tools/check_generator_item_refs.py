@@ -92,7 +92,6 @@ GENERATORS = (
     GeneratorSpec("tools/generate_rhun_troops.py", "run"),
     GeneratorSpec("tools/generate_char_creation_equipment.py", "tables", ("CULTURES",)),
     GeneratorSpec("tools/extract_wanderers.py", "tables", ("KINGDOM_EQUIPMENT",)),
-    GeneratorSpec("tools/generate_batch2_wanderers.py", "tables", ("KINGDOM_EQUIPMENT",)),
     GeneratorSpec("tools/generate_starter_armor.py", "tables", ("CULTURES",), tuple_from=2),
     # tuple_from=1 skips the slot label of each (slot, id) row of DEFAULT_ROSTER_ITEMS.
     GeneratorSpec("tools/generate_enlistment_rosters.py", "tables",

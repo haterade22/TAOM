@@ -6,6 +6,7 @@ Running scorecard. Numbers are not unique keys; rows since 2026-09-24 carry "(at
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| (at merge) | 2026-11-13 | Plan 051 (#1132): tools dead scripts, the README game-dir section, the translator's sibling-parse hoist and the shared docs-graph build, `664f19c5b..ee81570a3` | not run | agree (all five lens items confirmed and fixed) | 5 LOW | 0 | none known | two-lens deep review (Data flow, Tooling); RCA `rca-tools-dead-scripts-and-test-speed-2026-11-13.md` |
 | (at merge) | 2026-11-10 | War Pledge Slice 1 (#1113): adversarial pass on the landed commit `65189fc49`, then a pass on its fixes | issues-found (`ultra`: 0 P1, 1 P2, 1 P3, 11 coverage gaps, 6 of 8 suspects disputed with evidence; `high` on the fixes: 0 P1, 0 P2, 2 P3) | agree (all confirmed and fixed; the P2 rated LOW: console only, victory off by default; one design item is a follow-up for Slice 2) | 4 LOW (one is a regression of the first fix), plus 2 coverage rows | 0 | 0 | gpt-6-astra, ultra then high; RCA `rca-war-pledge-2026-11-10.md`, rows 14 to 19 |
 | (at merge) | 2026-11-09 | Supply Lines caravan meeting menu and failed-join stay branch (#1104, #1099), commit `218f4ee31` | issues-found (0 CRITICAL, 0 HIGH, 0 MEDIUM, 2 LOW, 5 LOW observations; the defect suspects disputed on the ordinary paths) | agree (5 confirmed and fixed, 2 left open with no known producer) | 5 | 0 | 0 | gpt-6-astra, ultra, read-only sandbox; RCA `rca-supply-caravan-meeting-2026-11-09.md` |
 | (at merge) | 2026-11-01 | Fords of War: the night batch `d4fb51a50..c2c3a6f28` (review A) and the whole feature at `c2c3a6f28` (review B), on `E:/repos/taom-fords-of-war` | issues-found (A: 0 CRITICAL, 0 HIGH, 2 MEDIUM; B: 0 CRITICAL, 0 HIGH, 3 MEDIUM; 23 and 34 suspects disputed with evidence) | agree (all five confirmed and fixed; review A's remedy for F1 corrected, because Bannerlord exits -1 after a normal quit) | 5 | 0 | 0 (the F1 remedy error was Claude's, caught against in-game runs Codex could not see) | gpt-6-astra, ultra; RCA `rca-fords-of-war-2026-10-31.md` |
@@ -5720,3 +5721,21 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | 2 | The run-snapshot contract was only on a private field | Convention inconsistency | The contract went beside the data, not on the entry points | Doc comments on `CSharpFiles`, `ReadSource`, `MentionsOutsideComments` and the class |
 
 - **In-game:** not applicable (test code only).
+
+## Review (number assigned at merge): plan 051, tools dead scripts and test speed, deep review with two lenses, Codex not run (2026-11-13)
+
+- **Scope:** `664f19c5b..ee81570a3` on `improve/051-tools-dead-scripts-and-test-speed` (Refs #1132): three retired scripts deleted, the `tools/README.md` game-dir section rewritten around two `git grep` commands, the sibling-file parse of `translate_with_claude.py` hoisted in `discover_entries`, and one docs-graph build shared by two ratchet tests.
+- **Codex:** not run (out of usage); the orchestrator's convergence rounds stand in for it.
+- **Lenses:** Data flow and Tooling correctness. Both proved the hoist against the base code (276 shipped pairs, 0 mismatches; identical `SystemExit` on every malformed-file case) and the ratchet memo (every assertion still fails under a mutant). 0 HIGH, 0 MEDIUM, 5 LOW, all confirmed and fixed. 0 false positives.
+- **Report:** `docs/reviews/deep-review-051-tools-dead-scripts-and-test-speed-2026-11-13.md`; RCA `docs/reviews/rca-tools-dead-scripts-and-test-speed-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The hoist's parity test compared two paths that both run the new collector | Other: test oracle shared with the code | The plan's oracle predated the refactor that rerouted the per-call path | Base-computed `EXPECTED` sets; lesson in `lessons/testing-qa.md` |
+| F2 | No test through `discover_entries`, the caller the hoist rewired | Other: coverage | The tests stopped at the helper that changed | Two synthetic-tree tests, red under an empty-siblings mutant; same lesson |
+| F3 | README "every one falls back" was false for `weapon_xml/config.py`; the inheritors and importer counts were misdescribed | Other: doc against a computed list | The counts were reproduced, the sentences quantifying over them were not | Prose re-scoped and the exception named; lesson in `lessons/build-tooling-workflow.md` |
+| F4 | A feature doc said the successor validator's run "ends" with PASS | Other: doc against output | Written from the source line, not a run | Reworded |
+| F5 | A redundant local `mock` import | Dead code | Ruff does not flag it | Deleted |
+
+- **Gate sweep:** the removed generator spec held 137 ids, of which the old gate refused 0; the deleted Gondor gate refuses 0 of 313 refs today. Only an `sk_gd_*` id defined outside `LOTRLOME_items/gondor/` passes now where it failed before (intended).
+- **In-game:** not applicable (tools and docs only).
