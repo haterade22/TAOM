@@ -459,7 +459,7 @@
 
 	<NPCCharacter id="named_companion_thyrell" name="{=nc_thyrell_name}Thyrell, the Golden" age="27" voice="earnest" culture="Culture.rivendell" race="elf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
 			<face>
-				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
+				<BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0002000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002"/>
 	</face>
 			<skills>
 				<skill id="OneHanded" value="300"/>
