@@ -7827,6 +7827,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="著名英雄会以各自的方式强化身边的友军：戴因的矮人站得更稳，阿拉贡的人类更为镇定，精灵领主的弓手拉弓更快。只有在 hero_auras.json 中列出的英雄才带有光环。若光环与士兵自身的种族能力提供相同效果，则取较强者，二者绝不叠加。将在下一次光环脉冲时生效。" />
     <string id="taom_hero_auras_mcm_strength" text="英雄光环强度" />
     <string id="taom_hero_auras_mcm_strength_hint" text="对所有光环的加成进行倍率调整。1.0 即 hero_auras.json 中设定的原值；0 则关闭所有光环。士气下限以及诸如抵御击退之类的开关型效果不受倍率影响。默认值：1.0。" />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>
