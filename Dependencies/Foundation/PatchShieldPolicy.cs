@@ -21,6 +21,17 @@ public static class PatchShieldPolicy
     /// the entire BUTR stack on the first MissingMethodException, breaking every dependent mod.
     /// Mirrors the vendored DLLs in Dependencies/_Module/bin/Win64_Shipping_Client/ plus
     /// Lib.Harmony's own runtime types.
+    ///
+    /// "TAOM" covers the ids that start with it: the shields, the shim and the Harmony guard
+    /// ("TAOM.Dependencies.Foundation.*", "TAOM.HarmonyGuard") and the feature patches that create
+    /// their own Harmony instance ("TAOM.Realms.*", "taom.factionui.campaign-time"). It does NOT
+    /// cover TAOM's patch categories, which run under "com.taom.mod": after a missing-API exception
+    /// the rescue strips every unprotected owner's prefixes, postfixes and transpilers on that
+    /// method, TAOM's included, whichever owner's patch threw (finalizers stay). Decision D13
+    /// (plans/_audit/2026-10-02-perf/DECISIONS.md) is to strip only the owner that threw and
+    /// then protect "com.taom.mod"; that plan is owed. Until it lands, do not add the id here
+    /// alone: a protected owner whose patch cannot load is swallowed on every call for the rest of
+    /// the session. PatchShieldPolicyTests pins today's state (#1155).
     /// </summary>
     public static readonly IReadOnlyList<string> CompiledProtectedOwnerPrefixes = new[]
     {

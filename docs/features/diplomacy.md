@@ -40,7 +40,7 @@ A player who founds their own kingdom could not form alliances. This is **not** 
 **War of the Ring subsystem:**
 - `WarOfTheRingService` (implements `IWarOfTheRingService`) tracks `CurrentPhase` (`Peace`, `IsengardWar`, `FullWar`, and the terminal `WarEnded` that `EndWar` sets when a momentum victory fires). Each daily tick it checks elapsed campaign days against configured thresholds and transitions phases.
 - Phase 1 (`IsengardWar`): declares specific wars from `phase1.wars` in `war_of_the_ring.json`.
-- Phase 2 (`FullWar`): the phase turns first, then it declares the `phase2.wars` list and, if `autoWarBetweenHostileTiers` is true, every hostile-tier pair whose stored stance is not already War (`IAllianceAdapter.HasDeclaredWar`, not the model-aware `AreAtWar`, which reports every Hostile pair at war in Full War; #772). Each host session launch re-runs those declarations through `ReconcileDeclaredWars`.
+- Phase 2 (`FullWar`): the phase turns first, then it declares the `phase2.wars` list and, if `autoWarBetweenHostileTiers` is true, every hostile-tier pair whose stored stance is not already War (`IAllianceAdapter.HasDeclaredWar`, not the model-aware `AreAtWar`, which reports every Hostile pair at war in Full War; #772). Each host session launch and each host daily tick re-runs those declarations through `ReconcileDeclaredWars` (#772, #1163).
 - `PeaceActionHook` (implements `IOnPeaceAction`) blocks `MakePeaceAction.ApplyInternal` when `FullWar` is active and the two factions are in a hostile-tier relationship.
 - Two edges are decided: a vassal who enlists under a lord of another kingdom during days 30 to 44 has the enlistment war mirror declare that lord's wars for the player's liege kingdom as a player-caused war, which can pull the liege into the Rohan war early ([enlistment.md](enlistment.md)); and the lord-dialogue "sponsor a call to war" option is not silent (a known gap): vanilla's call-to-war cost (`DefaultAllianceModel.GetCallToWarCostForCalledKingdom`) subtracts `GetScoreOfDeclaringWar`, so for a vetoed pair the option shows a cost in the millions and is greyed out, and only an ally with no fiefs or a player holding millions reaches the `StartCallToWarAgreement` backstop, which then does nothing.
 - Phase day thresholds are overridable via MCM (`ITaomSettingsProvider` wraps `TaomSettings`); a test-mode with short day counts is available in the config.
@@ -58,7 +58,7 @@ DiplomacyBehavior --> IDiplomacyService.EstablishInitialAlliances
 CampaignEvents.DailyTickEvent, CampaignEvents.OnSessionLaunchedEvent (host only)
         |
 WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition (both events)
-                     --> IWarOfTheRingService.ReconcileDeclaredWars (session launch only, runs only in FullWar, idempotent, #772)
+                     --> IWarOfTheRingService.ReconcileDeclaredWars (session launch and daily tick, runs only in FullWar, idempotent, #772, #1163)
                      --> IWarOfTheRingService.EndWarsForbiddenByPhase (after CheckPhaseTransition, daily tick only, authority only, skips the player kingdom's phase-vetoed wars)
                                   |
                             IAllianceAdapter (HasDeclaredWar, DeclareWar, GetAllKingdomIds)

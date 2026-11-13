@@ -1,12 +1,19 @@
 using System;
+using System.Reflection;
+using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TaleWorlds.CampaignSystem.Party;
 using TAOM.Core.Logging;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.AdvancedCombat.Hooks;
 using TAOM.Features.Arena.Hooks;
 using TAOM.Features.ArmyTargeting.Hooks;
+using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.HeroRace.Hooks;
+using TAOM.Features.LordPartyTemplates.Hooks;
+using TAOM.Features.LordSpawnGuard.Hooks;
+using TAOM.Features.PlayerSwitcher.Hooks;
 
 namespace TAOM.Tests.Infrastructure;
 
@@ -141,13 +148,62 @@ public class ContainmentFinalizerRethrowTests
         catch (NullReferenceException ex) { return ex; }
     }
 
-    private static void AssertPreserved(Func<Exception, Exception?> finalizer)
+    // #1155: the finalizers below are not NRE guards. Three contain another exception class or
+    // rewrite the result and hand the rest back; they returned it bare until then. Four only
+    // observe, and are void.
+
+    [TestMethod]
+    public void Patch65_NotItsExceptionClass_GoesBackWithItsThrowSite() =>
+        // Patch65 contains InvalidOperationException, so the probe is another class.
+        AssertPreserved(ex =>
+        {
+            MobileParty result = null!;
+            return Patch65_LandlessCultureSpawnGuard.Finalizer(ex, null!, ref result, MethodBase.GetCurrentMethod()!);
+        }, ThrownNre());
+
+    [TestMethod]
+    public void ObserveOnlyFinalizers_AreVoid_SoTheyCannotWriteTheExceptionSlot()
     {
-        var thrown = Thrown();
+        // A finalizer that never changes the outcome is void (harmony-patches.md). Harmony then ends
+        // the wrapper with `rethrow` when no other finalizer returns a value, and the trace stays
+        // whole; RethrowStackPreserverTests pins that premise through real Harmony.
+        foreach (var patch in new[]
+                 {
+                     typeof(Patch88_SpawnLordPartyScope),
+                     typeof(Patch88_InitializeLordPartyPropertiesScope),
+                     typeof(Patch93_CreatureBanditWeaponState),
+                     typeof(Patch77_BodyGeneratorView_OnFinalize),
+                 })
+        {
+            var finalizer = AccessTools.Method(patch, "Finalizer");
+            Assert.IsNotNull(finalizer, $"{patch.Name}.Finalizer is gone.");
+            Assert.AreEqual(typeof(void), finalizer!.ReturnType,
+                $"{patch.Name}.Finalizer returns a value again; it only observes, so make it void.");
+        }
+    }
+
+    [TestMethod]
+    public void Patch62_NotAnAccessViolation_GoesBackWithItsThrowSite() =>
+        AssertPreserved(ex => GauntletMovie_Release_AvGuard_Patch.Finalizer(null, ex));
+
+    [TestMethod]
+    public void CollectAssemblyTypesShim_NotATypeLoadFailure_GoesBackWithItsThrowSite()
+    {
+        // The shim's other hand-back, in the catch of its own partial-type extraction, has no case
+        // here: nothing cheap makes that extraction throw. FinalizerRethrowGateTests covers it.
+        var finalizer = AccessTools.Method(typeof(CollectAssemblyTypesShim), "GetTypesFinalizer");
+        Assert.IsNotNull(finalizer, "CollectAssemblyTypesShim.GetTypesFinalizer is gone; the test cannot reach it.");
+
+        AssertPreserved(ex => (Exception?)finalizer!.Invoke(null, new object?[] { null, null, ex }));
+    }
+
+    private static void AssertPreserved(Func<Exception, Exception?> finalizer, Exception? probe = null)
+    {
+        var thrown = probe ?? Thrown();
 
         var returned = finalizer(thrown);
 
-        Assert.AreSame(thrown, returned, "Only the NRE is contained; anything else must still propagate.");
+        Assert.AreSame(thrown, returned, "A guard contains only its own exception class; anything else must still propagate.");
         Assert.IsNotNull(returned!.Data[RethrowStackPreserver.ThrowSiteDataKey],
             "The finalizer handed the exception back bare, so Harmony's throw erases its throw site.");
     }

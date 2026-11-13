@@ -296,10 +296,12 @@ Code: No code changes needed
 - **A template nothing binds is dead data, in silence.** Two of the 193 lord templates in scope are
   bound by no culture and no clan today, `kingdom_hero_party_gondor_ithilien_template` and
   `kingdom_hero_party_gondor_belfalas_template`. <!-- measured: python -c "import re,os;r='Main/_Module/ModuleData';t=open(os.path.join(r,'taom_partyTemplates.xml'),encoding='utf-8-sig').read();ids={i for i in re.findall(r'<MBPartyTemplate id=\"([^\"]+)\"',t) if re.match(r'^kingdom_hero_party_(?!mercenary_|outlaw_).+_template$',i)};ref=set();[ref.update(re.findall(r'PartyTemplate\.([A-Za-z0-9_]+)',open(os.path.join(r,f),encoding='utf-8-sig',errors='replace').read())) for f in ('taom_spcultures.xml','spcultures.xslt','characters/clans.xml','spclans.xslt')];print(len(ids),sorted(ids-ref))" 2026-09-05 -->
-- **A null or empty binding crashes in vanilla code with no TAOM frame on the stack.**
+- **A null or empty binding fails in vanilla code.**
   `SpawnPatrolParty` dereferences the culture's patrol template immediately
-  (`PatrolPartiesCampaignBehavior.cs:650`) and `SpawnCaravan` runs a predicate over each entry of the
-  caravan list (`CaravansCampaignBehavior.cs:498`). Row 13 of the fourteen-row checklist in
+  (`PatrolPartiesCampaignBehavior.cs:650`), a crash with no TAOM frame on the stack. `SpawnCaravan`
+  runs a predicate over each entry of the caravan list (`CaravansCampaignBehavior.cs:498`) and throws
+  on a null entry or a null pick; since Patch147 (#482) such a call is skipped with a `Patch147:`
+  warning, so the culture's merchants send no caravans and the binding is still wrong. Row 13 of the fourteen-row checklist in
   [culture-playability-wiring.md](../features/culture-playability-wiring.md) is this exact surface,
   and it has shipped broken nine times.
 - **`max_value` is not the party's size, and reading it as one has already cost a balance pass.** The

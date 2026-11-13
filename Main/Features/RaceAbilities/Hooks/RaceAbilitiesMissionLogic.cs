@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BehaviorTrees;
 using BehaviorTreeWrapper;
+using TAOM.Adapters;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.SignatureStrikes.Hooks;
 using TaleWorlds.Core;
@@ -120,7 +121,7 @@ public class RaceAbilitiesMissionLogic : MissionLogic
         var position = affectedAgent.Position.AsVec2;
         var team = affectedAgent.Team;
         var race = affectedAgent.IsHuman ? affectedAgent.Character?.Race : null;
-        var culture = affectedAgent.IsHuman ? affectedAgent.Character?.Culture?.StringId : null;
+        var culture = affectedAgent.IsHuman ? CharacterCulture.IdOf(affectedAgent.Character) : null;
         var now = Mission.CurrentTime;
         _deferred.RunOrDefer("RaceAbilitiesMissionLogic.OnAgentRemoved",
             () => _runtime.Deaths.OnAgentRemoved(affectedAgent, soldier, killer, died, position, team, race, culture, now));

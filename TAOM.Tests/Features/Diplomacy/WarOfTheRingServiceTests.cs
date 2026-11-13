@@ -626,6 +626,40 @@ public class WarOfTheRingServiceTests
         _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
     }
 
+    // #1163: switched off, then on again. While it is off nothing is declared; once it is on, the
+    // pair the model holds at war again is declared. The daily tick drives this call.
+    [TestMethod]
+    public void ReconcileDeclaredWars_SwitchedOffThenOn_DeclaresTheResumedWarOnlyOnceItIsOn()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(false);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+
+        _settingsProvider.WarOfTheRingEnabled.Returns(true);
+        _sut.ReconcileDeclaredWars();
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+    }
+
+    // #1163: the repair now runs every day, so a pair whose declaration has no effect (a veto by
+    // another mod, a contradiction in an edited config) must not write its warning every day.
+    // It is still retried.
+    [TestMethod]
+    public void ReconcileDeclaredWars_DeclarationHasNoEffect_RetriesButWarnsOncePerPair()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();   // HasDeclaredWar stays false: the declaration has no effect
+
+        _sut.ReconcileDeclaredWars();
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.Received(2).DeclareWar("empire_w", "empire_s");
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("had no effect")));
+    }
+
     [TestMethod]
     public void ReconcileDeclaredWars_FullWarAlreadyDeclaredPair_SkipsIt()
     {

@@ -213,4 +213,13 @@ public class LongDefeatHudViewTests
         Assert.IsFalse(System.IO.File.Exists(RepoPaths.RepoPath("Client", "Features", "LongDefeat", "LongDefeatUnattendedView.cs")),
             "the HUD view carries the focus guard now (plan section 1, Deleted)");
     }
+
+    // Players asked for the kill feed (#1159): every Custom Battle view list adds vanilla's, and this hand-built list had left it out.
+    [TestMethod]
+    public void TheMissionViewList_HasVanillasKillFeed()
+    {
+        var list = RepoPaths.ReadSource("Client/Features/LongDefeat/LongDefeatMissionViews.cs", stripComments: true);
+
+        StringAssert.Contains(list, "ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler()");
+    }
 }
