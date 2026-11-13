@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Localization;
 using TAOM.Features.Realms.Domain.Services;
 
 namespace TAOM.Features.Realms;
@@ -20,7 +21,7 @@ public sealed partial class RealmsCampaign
     private Dictionary<string, Clan>? _tributeClans;
 
     /// <summary>What the clan's vassal clans pay it today, one line per vassal clan with gold.</summary>
-    internal IReadOnlyList<(Clan Vassal, int Gold)> TributeFrom(Clan clan)
+    private IReadOnlyList<(Clan Vassal, int Gold)> TributeFrom(Clan clan)
     {
         var result = new List<(Clan, int)>();
         foreach (var line in TodaysTribute().From(clan.StringId))
@@ -30,13 +31,50 @@ public sealed partial class RealmsCampaign
     }
 
     /// <summary>What the clan pays its liege clans today, one line per liege clan with gold.</summary>
-    internal IReadOnlyList<(Clan Liege, int Gold)> TributeTo(Clan clan)
+    private IReadOnlyList<(Clan Liege, int Gold)> TributeTo(Clan clan)
     {
         var result = new List<(Clan, int)>();
         foreach (var line in TodaysTribute().To(clan.StringId))
             if (line.Paid > 0 && _tributeClans!.TryGetValue(line.PayeeClanId, out var liege))
                 result.Add((liege, line.Paid));
         return result;
+    }
+
+    private static readonly TextObject TributeFromVassals = new("{=realms_finance_tribute_in}Tribute from Vassals");
+    private static readonly TextObject TributeToLiege = new("{=realms_finance_tribute_out}Tribute to Liege");
+
+    /// <summary>
+    /// Adds what the clan's vassal clans pay it today to a gold change (<c>TaomClanFinanceModel</c>). Real gold, so like
+    /// DailyGold it is on every call, the paying one included: <c>DailyTickClan</c> moves each clan's whole gold change, so
+    /// the vassal's daily tick takes its tribute and the liege's adds it, with no transfer of its own. Each call is a lookup
+    /// in today's sheet. With details on (the map bar's tooltip) each vassal clan is its own line under the total, as the
+    /// base game shows Settlement Income.
+    /// </summary>
+    internal void AddTributeIncome(Clan? clan, bool includeDetails, ref ExplainedNumber result)
+    {
+        if (clan != null)
+            AddTributeLine(TributeFrom(clan), 1, includeDetails, TributeFromVassals, ref result);
+    }
+
+    /// <summary>Adds what the clan pays its liege clans today; see <see cref="AddTributeIncome"/>.</summary>
+    internal void AddTributeExpenses(Clan? clan, bool includeDetails, ref ExplainedNumber result)
+    {
+        if (clan != null)
+            AddTributeLine(TributeTo(clan), -1, includeDetails, TributeToLiege, ref result);
+    }
+
+    private static void AddTributeLine(IReadOnlyList<(Clan Clan, int Gold)> lines, int sign, bool includeDetails, TextObject label,
+        ref ExplainedNumber result)
+    {
+        if (lines.Count == 0)
+            return;
+        var inner = new ExplainedNumber(0f, result.IncludeDescriptions);
+        foreach (var (other, gold) in lines)
+            inner.Add(sign * gold, other.Name);
+        if (includeDetails)
+            result.AddFromExplainedNumber(inner, label);
+        else
+            result.Add(inner.ResultNumber, label);
     }
 
     private TributeSheet TodaysTribute()
