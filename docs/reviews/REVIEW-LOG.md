@@ -5669,3 +5669,16 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 3 | Goods and troop rows share one type with no label test on the screen | Test coverage of a removed guard | The fold tested each factory alone, the screen tests read `ItemId` only | Two screen tests, RED under two mutants |
 
 Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/reviews/rca-fold-safe-twins-2026-11-13.md`. No convergence pass was launched by the lead (it cannot spawn agents). In-game: nothing was run; another session held the game install.
+
+## Review (number assigned at merge): messenger arrival classification (plan 050, #1132), deep review Agents 2 and 5, Codex not run (2026-11-13)
+
+- **Scope:** `664f19c5b..0848c47e2` on `improve/050-messenger-arrival-classification`, then the review follow-up commit.
+- **Codex:** not run (out of usage); the two lens reports stand in for it.
+- **Confirmed:** 1 MED in `docs/reviews/rca-messenger-arrival-classification-2026-11-13.md`, fixed. 0 false positives. One optional design note not applied (the plan names the mirror enum). Report: `docs/reviews/deep-review-050-messenger-arrival-classification-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | The source pin did not assert the `playerAvailable` or map event argument that the commit's `Not-tested:` trailer said it held | Other: claim not backed by a test | The plan drafted the trailer and the pin apart and named different reads; the executor copied both | Two assertions, each proven by a mutation; lesson in `lessons/testing-qa.md` |
+
+- **Pre-existing, owed to the maintainer:** widen #1133 to non-wanderer Released and Traveling targets; a prisoner player's messenger to a partyless target is dropped as Confused (no issue yet).
+- **In-game:** nothing was run (the install was held by another session).

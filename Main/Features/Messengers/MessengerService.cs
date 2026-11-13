@@ -73,6 +73,25 @@ public class MessengerService : IMessengerService
         return new MessengerOffer(CanSendMessenger(target, playerGold, cost, inPerson), cost, QuoteTravelDays(trip));
     }
 
+    public MessengerArrivalVerdict ClassifyArrival(HeroSnapshot target, bool sharesMainHeroParty, bool playerAvailable, bool targetPartyInMapEvent)
+    {
+        // Reachable on arrival only while Active, or as a wanderer the engine has not spawned yet. Every other state is
+        // lost, a prisoner included. The send check (CanSendMessenger) also accepts a wanderer that is Released, Traveling
+        // or Disabled; arrival does not.
+        var reachable = target.HeroState == MessengerHeroState.Active
+                        || (target.IsWanderer && target.HeroState == MessengerHeroState.NotSpawned);
+        if (!reachable)
+            return MessengerArrivalVerdict.Lost;
+
+        if (sharesMainHeroParty)
+            return MessengerArrivalVerdict.Confused;
+
+        if (!playerAvailable || target.IsChild || targetPartyInMapEvent)
+            return MessengerArrivalVerdict.Wait;
+
+        return MessengerArrivalVerdict.Ready;
+    }
+
     private const int CostCeiling = 100000;
 
     public int QuoteCost(MessengerQuoteInput input)
