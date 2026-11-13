@@ -143,9 +143,9 @@ public class UncapturableHeroesBindingTests
         // It matters more than it looks: a Missing*/TypeLoad thrown while JITting our own Postfix
         // is raised BEFORE the method's try/catch is entered, so the patch cannot self-guard. It
         // reaches PatchShield's finalizer instead, which swallows it and lets the patched method
-        // return default(bool) = false, i.e. EVERY hero in the game becomes uncapturable. Worse,
-        // PatchShieldPolicy.CompiledProtectedOwnerPrefixes contains "TAOM", so PatchShield refuses
-        // to unpatch us and the state persists for the whole session. This assertion is what turns
+        // return default(bool) = false for that call (uncapturable). The shield then strips TAOM's
+        // patches on the method (owner com.taom.mod matches no protected prefix; corrected in #1155),
+        // so the feature is silently off there for the session. This assertion is what turns
         // that into a red test after an engine bump instead of a shipped campaign-wide bug.
         RequireGame();
 

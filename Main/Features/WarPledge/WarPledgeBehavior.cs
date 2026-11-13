@@ -18,7 +18,8 @@ namespace TAOM.Features.WarPledge;
 /// Only the co-op authority courts: a pledge declares wars, and TAOM's save data is not replicated. The test
 /// reads <c>ShouldDeferToHost</c> as well, because <c>IsAuthority</c> alone is true on both peers under a
 /// co-op mod TAOM cannot probe. Nothing here runs on the load path. A declaration that a join could not make
-/// is retried by the War of the Ring's own reconcile at session launch, when autoWarBetweenHostileTiers is on,
+/// is retried by the War of the Ring's own reconcile on the next daily tick or session launch, when
+/// autoWarBetweenHostileTiers is on,
 /// in kingdom-list order.
 /// </para>
 /// </summary>
