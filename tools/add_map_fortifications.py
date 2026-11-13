@@ -104,9 +104,9 @@ FORTS = [
     Fort("castle_LN2", "Barad Luin", "clan_lindon_5", "lindon", "castle", "battania_castle_b", 950, "castle_LN1"),
     Fort("castle_LN3", "Tirith Aear", "clan_lindon_6", "lindon", "castle", "battania_castle_c", 950, "castle_LN2"),
     # Ered Luin, the dwarf kingdom of the Blue Mountains (Mike placed the entities 2026-10-27). The
-    # ruling House of Borin holds Thorin's Halls (the capital) and the castle nearest it; the
-    # Broadbeams Belegost, the Firebeards Nogrod, each with its nearest castle; the Wardens of Dolmed
-    # the two castles between. Prosperity a step under Erebor's (towns 3500) and no economy-floor
+    # ruling House of Delingur holds Thorin's Halls (the capital) and the castle nearest it; the
+    # House of Dwálin Belegost, the House of Úri Nogrod, each with its nearest castle; the House of
+    # Eldran the two castles between. Prosperity a step under Erebor's (towns 3500) and no economy-floor
     # row. Sturgia scenes, as every Erebor fief uses.
     Fort("town_EL3", "Thorin's Halls", "clan_eredluin_1", "eredluin", "town", "sturgia_town_g", 3200, "castle_village_LN3_3"),
     Fort("town_EL1", "Belegost", "clan_eredluin_2", "eredluin", "town", "sturgia_town_c", 3000, "town_EL3"),
