@@ -7,7 +7,7 @@ them in someone's dungeon, they slip away as fugitives instead: they still lose 
 lose their army, and still take days to rebuild, but nobody ever ransoms the Witch-king. A second
 seam covers the non-battle case, a hero captured because the fief he was resting in changed hands.
 
-The player character is the one exception. Both seams defer to vanilla for `Hero.MainHero`, so a
+The player character is the one exception. Both seams defer to vanilla for the player's hero (`Hero.MainHero`, or any co-op player's, #1139), so a
 Sauron or a Nazgûl the player has taken over can be captured. Since #1067 that is the default start
 for their faction-screen cards ([player-switcher.md](player-switcher.md) "Lore-locked heroes").
 
@@ -105,7 +105,7 @@ uncapturable_heroes_config.json
 ### The two seams
 
 **Seam 1, postfix on `Hero.CanBecomePrisoner()`.** Guards in order: never flip `false` to `true`;
-defer for `MainHero`; defer when the service is null; **defer when `DeathMark != None`**; then set
+defer for a player's hero (`UncapturablePlayerCheck`); defer when the service is null; **defer when `DeathMark != None`**; then set
 `__result = false` and announce.
 
 That fourth guard is worth its line. `MapEvent.cs:1977` already excluded `DiedInBattle` and
@@ -240,6 +240,19 @@ from the compiled `NazgulRegistry` roster plus shipped hero and race data, so ev
 same answer from the same files. Deferring to the host was rejected because the battle seam is a
 postfix on a query and cannot be host-gated without making Sauron capturable in a fief but not in a
 field battle.
+
+A player's hero is not this feature's (#1139). Both seams ask `IPlayerControlQuery.OfHero`
+(`UncapturablePlayerCheck`): without a session that is the `Hero.MainHero` comparison, and in a
+Coop session it is Coop's player registry, so a remote player is left to vanilla and Coop too.
+Coop's server takes a defeated player prisoner through `TakePrisonerAction.Apply`, where
+`Hero.MainHero` is the server's own hero; the old comparison made a player who is Sauron or a
+Nazgûl a fugitive there. An `Unknown` answer (an unreadable registry) also defers, and it is the
+answer for every hero at once, so such a session protects no lore hero. Under a co-op mod TAOM
+cannot see, the `Hero.MainHero` comparison still applies. The escape message's "player saw it"
+test still reads the local `Hero.MainHero`, so on the Coop server a guest never sees it. The
+classification stays ReviewedSafe: the player test is Coop's own registry, and Coop runs the battle
+capture on its server only (`PlayerStartCaptivityPatches.cs:68-71`). Detail:
+[coop-interop.md](coop-interop.md#battles-between-players-1139).
 
 ## Tests
 

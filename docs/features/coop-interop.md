@@ -34,6 +34,7 @@ still stands.
 |---|---|
 | BannerlordTogether specifics, its no-decompile policy, its boot matrix | [`bannerlord-together-compat.md`](bannerlord-together-compat.md) |
 | BannerlordCoop internals — Harmony ids, tick model, policies, object identity, integration surface | [`../research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) |
+| Filing a BannerlordCoop issue or PR, or merging `development` into `bannerlord-1.5.x` (the Coop team's rules) | [`/coop-upstream`](../../.claude/skills/coop-upstream/SKILL.md) |
 | Staging, booting, stopping and diagnosing TAOM on the dedicated server | [`coop-dedicated-server.md`](coop-dedicated-server.md) |
 | What happens to the hero a joiner created, and how TAOM's character-creation grants get re-applied | [`player-possession.md`](player-possession.md) |
 | Why a TAOM-less host can corrupt every hero's race on a full client | [`hero-race.md`](hero-race.md) — the degenerate-legend capture guard |
@@ -301,6 +302,7 @@ side that costs least:
 | War of the Ring participation (`WarEventSnapshotAdapter.IsPlayerRelated`) | Not involved | A guess would let a stranger's wars move the shared meter |
 | Special resource earning (`SpecialResourceEarnPolicy.MayEarn`) | Not a player: nobody earns | An earn writes a balance, so doubt means no write |
 | Seasoned Hosts (`SeasonedHostsAdapter`) | Player: no bonus | The skill XP multiplier and the training factor are boosts for AI only, so doubt means none |
+| Uncapturable Heroes (`UncapturablePlayerCheck`, #1139) | Player: vanilla captures | A capture is a valid state and a player made a fugitive is not. The registry answers `Unknown` for every hero at once, so in that session no lore hero is protected |
 
 The recruit charge does not use this query: it follows the Patch113 scope instead (below).
 
@@ -689,6 +691,46 @@ The fix needs a seat relay (#967 C3). Before C7 every peer spawned its own crew.
 9. A guest's signature strike frightens no host AI.
 10. Howdah and mumakil crews stand on the deck for puppets, once, on every peer.
 11. After a battle-host migration, the adopted elephant and mumakil crew: expect them off their seats (see Known limits).
+
+## Battles between players (#1139)
+
+Coop lets two players fight each other in a field battle. Its encounter handler opens one when both
+sides are players (`ConversationRequestHandler.cs:314-317` on Coop `bannerlord-1.5.x` e9906952a) and
+refuses one while either player is in a siege. Coop's `doc/PlayerEncounterSync.md` section 6.4 still
+calls this "future"; the code is past it. In towns, villages and castle courtyards no blow to or from
+another player's agent lands (`LocationPvpBlockPatch`).
+
+**The battle.** The mission model above needs no change. Each peer owns its own troops, and the other
+player's troops are puppets on the enemy team, so the player-team and AI-controller invariants hold
+when the players are enemies. Two limits follow from it:
+
+- Fear from a race ability's kill or a signature strike reaches only the troops of the peer that ran
+  it, so it never frightens the other player's troops. The dread aura is the exception, because every
+  peer pulses it over its own AI troops.
+- `DreadAuraAffectsPlayerTroops` is read on each peer for its own troops, so a player who turns it off
+  is immune to the other player's dread.
+
+**The defeat.** Coop's server takes a defeated player hero prisoner itself
+(`PlayerStartCaptivityPatches.CaptureDefeatedPlayerHeroes`, which calls `TakePrisonerAction.Apply`),
+whoever beat him, a player or the AI. Both [Uncapturable Heroes](uncapturable-heroes.md) seams ask
+`IPlayerControlQuery.OfHero` and leave a player's hero, or one whose status is `Unknown`, to vanilla
+and Coop. Before #1139 they compared with `Hero.MainHero`, which on the server is the server's own
+hero. A player who is Sauron or a Nazgûl was then made a fugitive, so Coop's captivity flow ran only
+half, and `MakeHeroFugitiveAction` destroys a party its fugitive leads. A co-op mod TAOM cannot see
+(BannerlordTogether, or a failed Coop bind) still gets the `Hero.MainHero` comparison.
+
+**Who can fight.** Any two players in different factions. The war veto ([diplomacy](diplomacy.md),
+`WarOfTheRingService.GetWarVeto`) runs on the server, where `ShouldDeferToHost` is false, so a war
+declared through `DeclareWarAction` (a kingdom decision, for example) stays refused between permanent
+allies, and between two lore kingdoms of the same side before `WarEnded`. It does not stop a battle
+between players: Coop's hostile demand calls `DeclareWarAction.ApplyByPlayerHostility`, which TAOM may
+refuse, then sets the war stance itself (`VillageHostileFactionStanceHelper.ApplyWarStance`, from
+`PlayerPartyHostileEncounterService.DeclareWar`) and starts the battle. That war raises no
+`OnWarDeclared`. A clan outside any kingdom is never vetoed: the prefix passes a faction that is not a
+kingdom to vanilla (`DeclareWarAction_ApplyInternal_Patch.cs:41-42`). UNVERIFIED: whether
+`EndWarsForbiddenByPhase` later ends such a war.
+
+In-game checks owed: the list on #1139.
 
 ## Client-side object creation
 
