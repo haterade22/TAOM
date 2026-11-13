@@ -105,7 +105,7 @@ takes no lock) decides and reports:
 A reload of the same mission (an escaped throw) keeps its budgets: the reset keys on the `Mission` object, held weakly,
 not on every `AfterStart`.
 
-**The canary.** PatchShield, from a process's second game start, can strip TAOM's prefix and transpiler on
+**The canary.** PatchShield, from a process's first game start, can strip TAOM's prefix and transpiler on
 `Mission.AfterStart` after it swallows a missing-method, missing-field or type-load exception there (it strips an
 owner's prefixes, postfixes and transpilers, never its finalizers, and `com.taom.mod` is not a protected owner). The
 prefix (priority `First`: ahead of every prefix at a lower priority) hands the finalizer "this call's prefix
@@ -194,7 +194,7 @@ Limits, none seen with an installed mod:
   them. DualWield is safe because its constructor sets `IsActive`.
 - A foreign void prefix or any postfix on `AddMissionBehavior` runs twice, once for the skipped call and once at the flush.
 - A remove, or any other direct change to `MissionBehaviors` inside the walk, still reloads the mission.
-- PatchShield can shield this target from a process's second game start. A missing-API throw from a behaviour's `OnCreated`
+- PatchShield can shield this target from a process's first game start (TAOM's pass right after its GameInit batch, 2026-11-13). A missing-API throw from a behaviour's `OnCreated`
   would let it strip TAOM's prefix, and the deferral would end without a warning (the canary watches `AfterStart` only).
 
 ## Configuration
@@ -234,9 +234,9 @@ differs hangs on its own load and simulates nothing differently.
 
 ## PatchShield and co-op
 
-`Mission.AfterStart` is also patched by Patch43 (BattleLoadDiagnostics), so PatchShield's second pass attaches its
-finalizer to it from a process's second game start; in the first game it is unshielded (TAOM's late batch is patched
-after pass 2). PatchShield's `ShieldFinalizerVoid` has no priority attribute (400); the guard's void finalizer runs
+`Mission.AfterStart` is also patched by Patch43 (BattleLoadDiagnostics), so PatchShield attaches its
+finalizer to it from a process's first game start (TAOM runs its own pass right after its GameInit batch, 2026-11-13).
+PatchShield's `ShieldFinalizerVoid` has no priority attribute (400); the guard's void finalizer runs
 first at 800 and only observes, so the shield still decides alone: it swallows a missing-method, missing-field or
 type-load exception and rethrows any other with the stack preserved. Because PatchShield's finalizer returns a value,
 Harmony ends the wrapper with `throw`, not `rethrow`, from that point on. A wrapped call catches a throw before it

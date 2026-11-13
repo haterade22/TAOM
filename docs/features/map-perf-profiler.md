@@ -360,12 +360,12 @@ per excluded method it skips. The per-target analysis of option A is in
 
 PatchShield attaches a finalizer to every method patched at the time of a pass (pass 1 in the Dependencies module's
 `OnSubModuleLoad`, pass 2 at the end of every game initialisation). Patch89 applies in `OnSubModuleLoad`, so pass 2 of the
-first game start already sees it; Patch43, Patch36's postfix and the profiler's own patches are applied after that pass 2.
+first game start already sees it; Patch43, Patch36's postfix and the profiler's own patches are applied after that pass 2; TAOM's own pass right after its GameInit batch (2026-11-13) then covers those applied in that batch from the first game start.
 
 | Target | Patched for every player by | PatchShield now | A missing-API exception (MissingMethod, MissingField, TypeLoad) thrown inside it |
 |---|---|---|---|
 | `Campaign.RealTick` | Patch89 | shielded from the first game start | swallowed there: the rest of `RealTick` is skipped; the views' tick, `Campaign.Tick`, the save tick and the application tick run; the strip removes Patch89's and Patch101's patches |
-| `MapState.OnTick` | Patch43 | shielded from a process's second game start, or from the first when another mod patched it at load | swallowed there: the rest of `MapState.OnTick` is skipped and the application tick runs; the strip removes Patch43's and Patch101's patches |
+| `MapState.OnTick` | Patch43 | shielded from a process's first game start (TAOM's pass right after its GameInit batch, 2026-11-13) | swallowed there: the rest of `MapState.OnTick` is skipped and the application tick runs; the strip removes Patch43's and Patch101's patches |
 | `MapScreen.OnFrameTick` | Patch36, Patch89 | shielded from the first game start | swallowed there: the rest of `OnFrameTick` is skipped and the map's UI layers still tick; the strip removes Patch36's F6 hub, Patch89's trace and Patch101's pair |
 | `Campaign.Tick`, `CampaignEvents.Tick` | none | excluded (without the profiler no patch exists on them) | escapes to `MapState.OnTick`, see "Given up" below |
 | `GameMenuVM.OnFrameTick` (#1019) | none | excluded, for parity with the profiler off (no TAOM patch exists on it then) | escapes through `GauntletMenuBaseView.OnFrameTick` and `MenuViewContext.OnFrameTick` (neither catches, no TAOM patch) into `MapScreen.OnFrameTick`, which is shielded; see "Given up on `GameMenuVM.OnFrameTick`" below |
@@ -378,7 +378,7 @@ too.
 **Gained:** with the profiler on, the finalizer the shield would attach to `Campaign.Tick` (it would run after Patch101's
 postfix, so inside `mapStateMs`) and to `CampaignEvents.Tick` (inside `campaignTickMs`, never inside `tickEventMs`, which
 times only the swapped dispatch) never exists. The profiler's patches on them are applied after the first game start's
-pass 2, so without the exclusions both would carry one from a process's second game start. Shielded methods that
+pass 2, so without the exclusions both would carry one from a process's first game start (TAOM's pass right after its GameInit batch). Shielded methods that
 `Campaign.Tick` calls still run their finalizers inside `campaignTickMs`, for example Patch65's `SpawnLordParty` on a
 clan's daily tick. A player with the profiler off gains nothing and loses nothing.
 
@@ -393,11 +393,10 @@ either, by Patch101 or by code they call (a `CampaignEvents.TickEvent` listener,
 hourly events of every mod's campaign behaviours), is no longer swallowed there. It skips the rest of `Campaign.Tick` (after
 a throw in `CampaignEvents.Tick`: the periodic and hourly events, the tick data store, the captivity update and encounters)
 and then the rest of `MapState.OnTick`: the map screen's `AfterWaitTick` (`TickNavigationInput`) and
-`SaveHandler.CampaignTick` (the autosave attempt). From a process's second game start, or from the first when another mod
-patched `MapState.OnTick` at load, the shield on `MapState.OnTick` catches it there: it swallows, writes a `swallowed`
+`SaveHandler.CampaignTick` (the autosave attempt). From a process's first game start (TAOM's pass right after its GameInit batch, 2026-11-13), the shield on `MapState.OnTick` catches it there: it swallows, writes a `swallowed`
 diag.log line the first time and counts the repeats (decision D16) and, on the first, strips Patch43's and Patch101's patches on `MapState.OnTick`, so no more frames
 close and `[MapProfile]` lines stop for the process. While the cause recurs it is swallowed again each frame, and each
-frame skips the same calls. In a process's first game, when nothing shields `MapState.OnTick`, it leaves through
+frame skips the same calls. Where nothing shields `MapState.OnTick` (a co-op module is active, or the flag file is set), it leaves through
 `GameStateManager.OnTick`, `Game.OnTick` and `GameManagerBase.OnTick` (the game handlers' ticks, `AfterTick` and the
 save-completion check are skipped) to `Module.OnApplicationTick`, and from there every submodule's `OnApplicationTick`,
 TAOM's included, `JobManager.OnTick` and `AvatarServices.UpdateAvatarServices` are skipped, every frame it recurs.

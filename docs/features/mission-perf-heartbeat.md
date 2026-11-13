@@ -350,8 +350,8 @@ decision D13 (2026-10-03) took them off once plan 034 had made PatchShield's fin
 rescue the exclusion gave up. They are shielded like any other patched method again, from the pass that sees them. A foreign mod's load-time patch on either is covered from
 a process's first game (pass 1, or pass 2 for a patch applied after it). TAOM's own patches on the four shielded
 targets (Patch23 on `SpawnAgent`, Patch97, and both Patch98 categories, the camera's included) apply in the first
-game's late batch, after both passes, so these targets are covered from the second game start, when pass 2
-attaches what was patched since the last pass; with a co-op module active PatchShield installs nothing at all. The
+game's late batch, after both passes, and TAOM runs its own pass right after that batch (2026-11-13), so these targets are
+covered from the first game start; with a co-op module active PatchShield installs nothing at all. The
 finalizer then runs on `OnPreTick`, `OnTick` and the camera once per frame (and on `SpawnAgent` once per spawn), alongside `Mission.Tick` (Patch37), `MissionState.TickMissionAux`
 (Patch91) and `MissionState.OnTick` (Patch43), which already carried it.
 
@@ -391,7 +391,7 @@ vanilla frame between `Mission.OnTick` and the engine catches it (`MissionState`
 
 - PatchShield's finalizer on `Mission.OnTick`, and above it on `MissionState.TickMissionAux` (Patch91) and
   `MissionState.OnTick` (Patch43): a missing-API exception only, on the timing described above for
-  `Mission.OnTick`, and from a process's second game start for the two `MissionState` methods.
+  `Mission.OnTick`, and, since 2026-11-13, from a process's first game start for the two `MissionState` methods.
 - Patch37's crash capture on `Module.OnApplicationTick`, and again two frames up on `Managed.ApplicationTick`
   (`CrashReportPatchHelper.HandleAndSwallow`): any exception, in any game, while crash capture is on (the default).
   The outer one gets its own try at what the inner one hands back. Native's other tick entry,
@@ -403,8 +403,8 @@ vanilla frame between `Mission.OnTick` and the engine catches it (`MissionState`
 
 So an ordinary exception in that stretch, a null reference from any module's `OnMissionTick` for one, freezes
 the next frame in any game while crash capture is on, with no shield involved. That path is not new with
-D13: from a process's second game start the shielded `MissionState` methods already swallowed a missing-API
-exception one level higher, and in a process's first game, before D13, TAOM's own patches on the callers
+D13: the shielded `MissionState` methods already swallowed (from a process's second game start until 2026-11-13, from the first since) a missing-API
+exception one level higher, and in a process's first game, before D13 and until 2026-11-13, TAOM's own patches on the callers
 above `OnTick` had no shield yet, so the exception unwound the application tick instead, up to
 `Module.OnApplicationTick`'s finalizers (every module's `OnApplicationTick`, `JobManager.OnTick`, the avatar
 services, and `Game.OnTick`'s game handlers, `AfterTick` and save-completion handoff skipped for that frame, and,
@@ -516,7 +516,7 @@ the first explicit interface method TAOM patches; `HitchProbePrefixGuardTests` r
 implementation through real Harmony.
 
 The bracket costs one Harmony prefix and one finalizer per call, plus PatchShield's finalizer (the target is
-shielded from a process's second game start, see the PatchShield section), around two `Stopwatch.GetTimestamp()`
+shielded from a process's first game start, see the PatchShield section), around two `Stopwatch.GetTimestamp()`
 calls. The Cost section measures the probe's own prefix and finalizer only; the figures for PatchShield's
 finalizer are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment. Another mod's patch on the same
 method is inside the bracket and counts as camera time. A mod that re-implements `IMissionSystemHandler` on its
@@ -533,7 +533,7 @@ TAOM skips the camera class at load (a `[PatchApply] ... SKIPPED` ERROR, named i
 category then applies nothing, so no `camera bracket not installed` WARNING is written and the install line
 still lists `MissionScreen.UpdateCamera`. At an engine bump,
 `CameraTarget_IsMissionScreensSealedExplicitUpdateCamera` fails first. Decision (2026-10-15): the target stays
-shielded by PatchShield, from a process's second game start (see the PatchShield section), like `Mission.OnTick`
+shielded by PatchShield, from a process's first game start (see the PatchShield section), like `Mission.OnTick`
 under D13; a swallowed missing-API exception there skips the rest of `CameraTick` and the managed `PreDisplay()`
 call that frame; the engine's frame function calls the same once-per-frame pre-display before it displays (on the
 v1.5.5 client, native 0x344A0 calls 0x7D800 in one of its branches, and 0x7D800's latch at +8, cleared by the
@@ -746,8 +746,8 @@ exception and its strip of the offending patch are given up.
 method: plan 028 had excluded the first two and plan 041 the third, for cost, and maintainer decision
 D13 (2026-10-03) took them off once plan 034 had made PatchShield's finalizer cheap (the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment), at
 two calls per frame and one per spawn. `MissionScreen.UpdateCamera` was never on the exclusion list: it is
-shielded by the decision of 2026-10-15 (#809). All four are shielded from a process's second game start (TAOM
-applies their patches after PatchShield's second pass; see the PatchShield section). A shield finalizer runs
+shielded by the decision of 2026-10-15 (#809). All four are shielded from a process's first game start (TAOM
+applies their patches after PatchShield's second pass, then runs its own pass right after its batch; see the PatchShield section). A shield finalizer runs
 inside those four brackets like every other patch on the method (the bracket's prefix is `Priority.First` and its finalizer `Priority.Last`).
 
 What that gives, and what it costs. A MissingMethod, MissingField or TypeLoad exception that escapes

@@ -2041,12 +2041,13 @@ public class SubModule : MBSubModuleBase
         ManualPatchApplicator.ApplyAll(_harmony);
         onceStamp?.Mark("manual_patches");
 
-        // PatchShield pass after TAOM's batch (perf audit 2026-11-13, row 10). TAOM.Dependencies runs its second pass in
-        // its own OnGameInitializationFinished, which the engine calls before this one, so that pass never saw the batch
-        // above: about 240 methods stayed unshielded for the first game of each session, and the next game start's pass
-        // attached them (about 0.56 s). Install attaches only methods it has not seen and checks the co-op and flag
-        // skips itself. A fault here must never stop the game loading.
-        try { TAOM.Dependencies.Foundation.PatchShield.Install(); }
+        // PatchShield pass after TAOM's batch. TAOM.Dependencies runs its second pass in its own
+        // OnGameInitializationFinished, which the engine calls before this one, so that pass never saw the batch
+        // above: those methods stayed unshielded for the first game of each session, and the next game start's pass
+        // attached them. Install attaches only methods it has not seen and checks the co-op and flag skips itself.
+        // The attach cost is not measured for this pass. It moves to the first load, so a session of one game pays it once, at that load. The diag line
+        // marks the pass like passes 1 and 2. A fault here must never stop the game loading.
+        try { TAOM.Dependencies.Foundation.DiagLog.Log("TAOM", "OnGameInitializationFinished: → PatchShield.Install (pass after TAOM GameInit batch)"); TAOM.Dependencies.Foundation.PatchShield.Install(); }
         catch (System.Exception ex) { IoC.Resolve<IModLogger>().LogWarning($"[PatchShield] pass after TAOM's game-initialization batch failed: {ex.Message}"); }
         onceStamp?.Mark("patch_shield");
 
