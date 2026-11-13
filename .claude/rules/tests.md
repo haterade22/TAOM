@@ -41,6 +41,8 @@ Examples:
 
 Every decision path in a service or engine has a test, judged by the two-edit test. No coverage percentage is measured or claimed.
 
+A test comment or failure message that states an effect (what breaks, what imports, what the engine then does) rests on the line that produces the effect, read at both ends of the data flow. A production comment, a plan or a report is a claim, not that line (`docs/reviews/rca-external-mod-contract-tests-2026-11-13.md`).
+
 ## Skip-Guard Exhaustion (MANDATORY)
 
 When a service method has `if (condition) continue/return` guard clauses, write a test for **every entity state that should be skipped**, not just the obvious ones.
