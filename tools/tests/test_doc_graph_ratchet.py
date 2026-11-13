@@ -14,10 +14,27 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import check_doc_graph_ratchet as ratchet  # noqa: E402
+
+_BUILD = ratchet._orphans_and_components  # the real builder, captured before any test patches it
+_LIVE_GRAPH = None
+
+
+def _live_graph():
+    """One build of the live docs graph for this module; each build reads the whole docs tree."""
+    global _LIVE_GRAPH
+    if _LIVE_GRAPH is None:
+        _LIVE_GRAPH = _BUILD()
+    return _LIVE_GRAPH
+
+
+def _shared_graph():
+    """Serve the tool's graph builder from the one build above, for the tests that read the live tree."""
+    return mock.patch.object(ratchet, "_orphans_and_components", side_effect=_live_graph)
 
 
 class CompareTests(unittest.TestCase):
@@ -111,7 +128,8 @@ class FailureTextTests(unittest.TestCase):
         self.assertNotIn("graph_query.py metrics", text)
 
     def test_orphan_docs_agrees_with_the_orphan_count(self):
-        self.assertEqual(len(ratchet.orphan_docs()), ratchet.current_metrics()["orphans"])
+        with _shared_graph():
+            self.assertEqual(len(ratchet.orphan_docs()), ratchet.current_metrics()["orphans"])
 
 
 class LiveTreeTests(unittest.TestCase):
@@ -119,11 +137,12 @@ class LiveTreeTests(unittest.TestCase):
     orphan and component counts could grow while every suite stays green."""
 
     def test_the_live_tree_is_within_the_baseline(self):
-        baseline = json.loads(ratchet.BASELINE.read_text(encoding="utf-8"))
-        problems = ratchet.compare(ratchet.current_metrics(), baseline)
-        self.assertEqual(problems, [], "the doc graph got worse: link the new doc from INDEX.md "
-                                       "or a sibling, or run tools/check_doc_graph_ratchet.py --update "
-                                       "and say why")
+        with _shared_graph():
+            baseline = json.loads(ratchet.BASELINE.read_text(encoding="utf-8"))
+            problems = ratchet.compare(ratchet.current_metrics(), baseline)
+            self.assertEqual(problems, [], "the doc graph got worse: link the new doc from INDEX.md "
+                                           "or a sibling, or run tools/check_doc_graph_ratchet.py --update "
+                                           "and say why")
 
 
 if __name__ == "__main__":

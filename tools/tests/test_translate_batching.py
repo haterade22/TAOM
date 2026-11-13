@@ -445,6 +445,60 @@ class EnglishOnlyOverrideTests(unittest.TestCase):
             self.assertNotIn("LjUhEJxz", skip)
 
 
+class SiblingIdsHoistTests(unittest.TestCase):
+    """discover_entries parses a language's files once (sibling_string_ids) and hands them to skip_ids_for.
+    The hoisted form must give the per-call form's set for every target, raise on a sibling that does not
+    parse, and, like the per-call form, not raise when only the target itself does not parse."""
+
+    def _lang(self, d):
+        d = Path(d)
+        module_src, xslt_src = d / "taom_module_strings.xml", d / "taom_xslt_strings.xml"
+        module_src.write_text('<strings><string id="a" text="{=k_shared}Woses" />'
+                              '<string id="b" text="{=0CsbbwtN}Call {KINGDOM} to War" />'
+                              '<string id="c" text="{=k_mod}Mod" /></strings>', encoding="utf-8")
+        xslt_src.write_text('<strings><string id="a" text="{=k_shared}Woses" />'
+                            '<string id="d" text="{=k_xslt}Xslt" /></strings>', encoding="utf-8")
+        lang = d / "DE"
+        lang.mkdir()
+        module_tgt = lang / "std_taom_module_strings_deu-DE.xml"
+        xslt_tgt = lang / "std_taom_xslt_strings_deu-DE.xml"
+        module_tgt.write_text('<base><strings><string id="k_shared" text="Woses" /></strings></base>', encoding="utf-8")
+        xslt_tgt.write_text('<base><strings><string id="k_xslt" text="X" /></strings></base>', encoding="utf-8")
+        (lang / "std_taom_keybind_strings_deu-DE.xml").write_text(
+            '<base><strings><string id="k_mod" text="M" /></strings></base>', encoding="utf-8")
+        owners = t.key_owners([module_src, xslt_src])
+        return [(module_src, module_tgt), (xslt_src, xslt_tgt)], owners, lang
+
+    def test_hoisted_siblings_give_the_per_call_skip_set_for_every_target(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            pairs, owners, lang = self._lang(d)
+            siblings = t.sibling_string_ids(lang)
+            for src, tgt in pairs:
+                with self.subTest(tgt.name):
+                    self.assertEqual(t.skip_ids_for(src, tgt, owners, lang, siblings=siblings),
+                                     t.skip_ids_for(src, tgt, owners, lang))
+
+    def test_a_hoisted_sibling_that_does_not_parse_stops_the_run(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            pairs, owners, lang = self._lang(d)
+            (lang / "std_taom_keybind_strings_deu-DE.xml").write_text("<base><strings>", encoding="utf-8")
+            siblings = t.sibling_string_ids(lang)  # collecting defers the error to the first use
+            src, tgt = pairs[0]
+            with self.assertRaises(SystemExit):
+                t.skip_ids_for(src, tgt, owners, lang, siblings=siblings)
+
+    def test_a_target_that_does_not_parse_is_not_a_sibling_error(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            pairs, owners, lang = self._lang(d)
+            src, tgt = pairs[0]
+            tgt.write_text("<base><strings>", encoding="utf-8")
+            self.assertEqual(t.skip_ids_for(src, tgt, owners, lang, siblings=t.sibling_string_ids(lang)),
+                             t.skip_ids_for(src, tgt, owners, lang))
+
+
 class ShippedKeyCoverageTests(unittest.TestCase):
     """Over the shipped tree: every key a TAOM English source declares is examined by at least one discovery pass
     in every language. A key its owner's pass skips (another file carries it) and no other source declares is
@@ -454,14 +508,19 @@ class ShippedKeyCoverageTests(unittest.TestCase):
         sources = t.english_source_files("TAOM")
         owners = t.key_owners([s for _, s, _ in sources])
         self.assertGreater(len(owners), 1000, "the English sources were not found")
+        # English-only overrides carry no language row on purpose; neither set depends on the language.
+        per_source = [(src, template, t.english_only_override_ids(src), set(t._parse_string_xml(src, strip_keys=True)))
+                      for _, src, template in sources]
         problems = []
         for lang, (locale, _) in t.LANGUAGES.items():
             lang_dir = t.TAOM_LANG_DIR / lang
+            siblings = t.sibling_string_ids(lang_dir)
             hidden = set(owners)
-            for _, src, template in sources:
-                hidden -= t.english_only_override_ids(src)   # English-only overrides carry no language row on purpose
-                skip = t.skip_ids_for(src, lang_dir / template.format(locale=locale), owners, lang_dir)
-                hidden -= set(t._parse_string_xml(src, strip_keys=True)) - skip
+            for src, template, overrides, declared in per_source:
+                hidden -= overrides
+                skip = t.skip_ids_for(src, lang_dir / template.format(locale=locale), owners, lang_dir,
+                                      siblings=siblings)
+                hidden -= declared - skip
             if hidden:
                 problems.append("%s: %s" % (lang, ", ".join(sorted(hidden)[:5])))
         self.assertEqual(problems, [], "move each key's rows into its owner's language file (key_owners)")
