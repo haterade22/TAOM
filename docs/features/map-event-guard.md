@@ -415,6 +415,8 @@ would act on.
   verified in game.
 - 2026-11-08: added `Patch143_EmptyMeetingGuard` and the Patch142 battle-menu restore (#1099 follow-ups). Not yet
   verified in game.
+- 2026-11-13: Patch143 is applied under its own Harmony id, `TAOM.CrashGuards`, so PatchShield keeps it when
+  a Refuge or Supply Lines patch on the same method breaks after a game update.
 
 ## GitHub Issue
 

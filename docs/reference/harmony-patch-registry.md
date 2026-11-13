@@ -1867,6 +1867,8 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Order.** `Priority.Last`, so Supply Lines (Patch73) and Refuge (Patch75) handle their own parties' meetings first. A prefix that returned false skips this one (`MethodCreator.AddPrefixes`), so Patch143 never sees a meeting Supply Lines or Refuge handled.
 
+**Harmony id.** Applied under `TAOM.CrashGuards`, not `com.taom.mod` (`Main/CrashGuardHarmony.cs`). PatchShield strips every unprotected owner's prefixes, postfixes and transpilers on a method after a missing-API exception there; under the main id a Refuge or Supply Lines patch that breaks after a game update would take this guard with it. `TAOM.*` ids are protected (`PatchShieldPolicy.CompiledProtectedOwnerPrefixes`). The prefix calls the service inside its try/catch, so the guard itself cannot be the patch that throws. Tests: `CrashGuardHarmonyTests`.
+
 **Evidence.** Not seen in a game; no known way to force it. The `[Check] id=taom.map-event-guard.empty-meeting` line names the party if it happens (`tools/ingame_checks/1099.toml`). `EmptyMeetingGuardServiceTests` pins the rule, `Patch143EmptyMeetingGuardTests` pins the prefix, the Harmony patch of the real target and its priority. `EmptyMeetingAdapter` has no unit test: its reads need a live `PlayerEncounter`. Co-op disposition: ReviewedSafe.
 
 ## Patch144_CoopUpgradeCharge
