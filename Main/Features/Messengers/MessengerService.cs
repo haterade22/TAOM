@@ -43,9 +43,7 @@ public class MessengerService : IMessengerService
         if (target.IsFugitive)
             return MessengerValidationResult.HeroFugitive;
 
-        var canBeReached = target.IsActive
-                           || (target.IsWanderer && !target.IsActive);
-        if (!canBeReached)
+        if (!CanReceive(target))
             return MessengerValidationResult.TargetUnavailable;
 
         if (target.IsInPlayerParty)
@@ -73,23 +71,46 @@ public class MessengerService : IMessengerService
         return new MessengerOffer(CanSendMessenger(target, playerGold, cost, inPerson), cost, QuoteTravelDays(trip));
     }
 
-    public MessengerArrivalVerdict ClassifyArrival(HeroSnapshot target, bool sharesMainHeroParty, bool playerAvailable, bool targetPartyInMapEvent)
+    public MessengerArrivalVerdict ClassifyArrival(HeroSnapshot target, bool playerAvailable, bool targetPartyInMapEvent)
     {
-        // Reachable on arrival only while Active, or as a wanderer the engine has not spawned yet. Every other state is
-        // lost, a prisoner included. The send check (CanSendMessenger) also accepts a wanderer that is Released, Traveling
-        // or Disabled; arrival does not.
-        var reachable = target.HeroState == MessengerHeroState.Active
-                        || (target.IsWanderer && target.HeroState == MessengerHeroState.NotSpawned);
-        if (!reachable)
+        // A prisoner is lost by decision (#1133), as are the dead and a disabled hero.
+        if (!CanReceive(target))
             return MessengerArrivalVerdict.Lost;
 
-        if (sharesMainHeroParty)
+        if (target.IsInPlayerParty)
             return MessengerArrivalVerdict.Confused;
 
-        if (!playerAvailable || target.IsChild || targetPartyInMapEvent)
+        // The engine ends these three states itself (v1.5.7): HeroSpawnCampaignBehavior.OnHeroDailyTick settles a fugitive
+        // or a released hero in a town or castle (a 30% chance each day), and TeleportationCampaignBehavior completes a
+        // journey in its hourly tick and makes the traveller a fugitive when it cancels one. So the messenger waits for
+        // the hero to be Active and never talks to one who is nowhere on the map.
+        var engineWillMakeTheHeroActive = target.HeroState == MessengerHeroState.Fugitive
+                                          || target.HeroState == MessengerHeroState.Released
+                                          || target.HeroState == MessengerHeroState.Traveling;
+        if (!playerAvailable || target.IsChild || targetPartyInMapEvent || engineWillMakeTheHeroActive)
             return MessengerArrivalVerdict.Wait;
 
         return MessengerArrivalVerdict.Ready;
+    }
+
+    // The states a messenger can still be delivered in, now or after a wait. The send check and the arrival share it
+    // (#1133), so the player cannot pay for a messenger that is always lost. The send check refuses a fugitive earlier,
+    // with its own reason; the arrival waits for one, because a target can become a fugitive on the way.
+    private static bool CanReceive(HeroSnapshot target)
+    {
+        switch (target.HeroState)
+        {
+            case MessengerHeroState.Active:
+            case MessengerHeroState.Fugitive:
+            case MessengerHeroState.Released:
+            case MessengerHeroState.Traveling:
+                return true;
+            case MessengerHeroState.NotSpawned:
+                // StartMessengerConversation spawns an unspawned wanderer that has a born settlement.
+                return target.IsWanderer;
+            default:
+                return false;
+        }
     }
 
     private const int CostCeiling = 100000;

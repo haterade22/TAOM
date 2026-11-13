@@ -27,7 +27,7 @@ Ported from LOTRAOM (Bannerlord 1.2.12) with TAOM conventions (adapter disciplin
 Layered TAOM architecture. The behavior is the TaleWorlds-bound boundary; the service is pure logic; the store owns mutable state; the config provider validates JSON tunables; the settings provider wraps MCM.
 
 - **`MessengerCampaignBehavior`** (entry point): registers events (`HourlyTickEvent`, `OnSessionLaunchedEvent`), implements `IMissionListener`, registers the dialog tree, orchestrates encounter routing (settlement vs field), and serialises state via `SyncData`. Touches sealed types directly because that's what the boundary is for.
-- **`MessengerService`** (Reuse.Singleton): pure logic: `CanSendMessenger(HeroSnapshot?, playerGold, quotedCost, inPerson) → MessengerValidationResult`, `GetOffer(HeroSnapshot?, MessengerQuoteInput, playerGold, inPerson) → MessengerOffer` (quote, verdict against that quote, days), `ClassifyArrival(HeroSnapshot, sharesMainHeroParty, playerAvailable, targetPartyInMapEvent) → MessengerArrivalVerdict` (lost, confused, wait or ready for an arrived messenger; the hourly tick switches on it), `QuoteCost(MessengerQuoteInput) → int`, `QuoteTravelDays(MessengerQuoteInput) → int`, `RollAccident()`, `AdvancePosition(current, target, speed) → PositionUpdate`, `CalculateMessengerSpeed(mapDiagonal, travelDays)`. Tested against NSubstitute mocks.
+- **`MessengerService`** (Reuse.Singleton): pure logic: `CanSendMessenger(HeroSnapshot?, playerGold, quotedCost, inPerson) → MessengerValidationResult`, `GetOffer(HeroSnapshot?, MessengerQuoteInput, playerGold, inPerson) → MessengerOffer` (quote, verdict against that quote, days), `ClassifyArrival(HeroSnapshot, playerAvailable, targetPartyInMapEvent) → MessengerArrivalVerdict` (lost, confused, wait or ready for an arrived messenger; the hourly tick switches on it), `QuoteCost(MessengerQuoteInput) → int`, `QuoteTravelDays(MessengerQuoteInput) → int`, `RollAccident()`, `AdvancePosition(current, target, speed) → PositionUpdate`, `CalculateMessengerSpeed(mapDiagonal, travelDays)`. Tested against NSubstitute mocks.
 - **`MessengerConversationState`** (Reuse.Singleton, `IMessengerConversationState`): one in-memory flag, `IsOpen`, set just before the encounter starts, cleared in `OnEndMission`, on the null-mission recovery, when opening throws (`AbortConversation`) and at session launch. The conversation looks like a real visit to the engine (a real `PlayerEncounter`, and the main party inside the target's settlement), so other features read this flag to tell them apart: [Lord Courtesies](lord-courtesies.md) hides its troop gift while it is open and still allows its holdings question, Enlistment greys the oath, Tokens of Esteem hides its gift line, [Notable Services](notable-services.md) hides all three of its lines, and Patch117 hides six vanilla lines.
 - **`MessengerStateStore`** — owns the in-memory `Dictionary<heroId, PendingMessenger>`, exposes CRUD + `Serialize`/`Deserialize` for the behavior's `SyncData`.
 - **`MessengerConfigProvider`** — validates `messenger_config.json` per the "Config Providers MUST Validate" rule (range-check + revert + warn).
@@ -118,7 +118,7 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 | [Main/Features/Messengers/MessengerSettingsProvider.cs](../../Main/Features/Messengers/MessengerSettingsProvider.cs) | Reads `TaomSettings.Instance.*` |
 | [Main/Features/Messengers/IMessengerRandomSource.cs](../../Main/Features/Messengers/IMessengerRandomSource.cs) | Random-float contract (for accident roll testability) |
 | [Main/Features/Messengers/MessengerRandomSource.cs](../../Main/Features/Messengers/MessengerRandomSource.cs) | `MBRandom.RandomFloat` wrapper |
-| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (12 hero properties, the engine hero state among them) for the send check and the arrival verdict |
+| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (the hero facts, the engine hero state among them) for the send check and the arrival verdict |
 | [Main/Features/Messengers/Domain/MessengerArrivalVerdict.cs](../../Main/Features/Messengers/Domain/MessengerArrivalVerdict.cs) | 4-value enum: what the hourly tick does with an arrived messenger |
 | [Main/Features/Messengers/Domain/MessengerHeroState.cs](../../Main/Features/Messengers/Domain/MessengerHeroState.cs) | The engine's eight hero states, one to one, read by MessengerTargetReader |
 | [Main/Features/Messengers/Domain/MessengerValidationResult.cs](../../Main/Features/Messengers/Domain/MessengerValidationResult.cs) | 13-value enum: Ok plus 12 rejections |
@@ -152,6 +152,22 @@ The result is clamped to the base price at the low end and 100000 at the top. A 
 `MessengerTargetReader` is the one engine read: the validation snapshot and the quote input (distance between the two map points, `Campaign.MapDiagonal`, `FactionManager.IsAtWarAgainstFaction` (false for a null faction), `!Hero.HasMet`, `Settlement.IsUnderSiege`, and for the two "together" refusals `Army.DoesLeaderPartyAndAttachedPartiesContain`: both parties must be in the leader's group, so a lord still marching to join is not "in your army"). `MessengerCampaignBehavior.GetOffer` turns it into a `MessengerOffer` (verdict, price, days) for the dialog, the send and the encyclopedia button. A stranger is a surcharge, not a refusal.
 
 Refusals added to the validation ladder, after "in your party" and before the gold check: `SameSettlement` (the target is in the settlement the player is in) and `SameArmy` (the target is in the player's army). Each has a reason line the greyed button shows. The gold check compares against the quoted price, and "Not enough gold" names that price. The button reads "Send Messenger (N denars)"; the enabled hint says the messenger will take about N days ("1 day" when it is one), in a second hint inside the button. The two "together" refusals apply only to the remote send from the encyclopedia: the dialog line keeps its old behaviour, so a lord in the same hall is still offered the messenger line (`GetOffer(hero, inPerson: true)`). The "arrives within N days" notice still names the travel-days cap, since the straight-line estimate is not a promise.
+
+## What happens on arrival (#1133)
+
+`MessengerService.ClassifyArrival` decides, once an hour, what to do with a messenger that has arrived. The send check uses the same test of the target's state (`CanReceive`), so the player cannot pay for a messenger that is always lost.
+
+| Target on arrival | Result |
+|---|---|
+| Active, or a wanderer the engine has not spawned yet | Delivered: the "Messenger Arrived" inquiry opens |
+| Fugitive, Released or Traveling | The messenger waits and is delivered once the hero is Active. The engine ends all three states itself: `HeroSpawnCampaignBehavior.OnHeroDailyTick` settles a fugitive or a released hero in a town or castle, with a 30% chance each day (every day for a player companion), and `TeleportationCampaignBehavior.HourlyTick` completes a journey once its delay has passed and the target is not besieged, raided or in a battle. A journey the engine cancels (`RemoveTeleportationData`) makes the traveller a fugitive, who is waited for in turn. A lord who escapes a lost battle is a fugitive (`MapEvent`), so this row is a common case |
+| Prisoner | Lost, with the "Messenger Lost" notice. The maintainer's decision: a messenger does not wait for a prisoner |
+| Dead, disabled, or not spawned and not a wanderer | Lost |
+| In the player's own party | The "Messenger Error" notice, and the messenger is removed |
+
+A reachable target also waits while the player is not free on the campaign map (a menu, an encounter or a mission is open), while the target is a child, and while the target's party is in a battle. A captive player is one of these cases: the captivity menu is open, so the messenger waits and is delivered after the release. Before #1133 it was dropped as "in your own party" when the target had no party, because the engine clears the main hero's party during captivity and the arrival compared the two parties directly.
+
+The send check differs from the arrival in one state: it refuses a fugitive, with its own reason line, while the arrival waits for one, because a target can become a fugitive on the way. A waiting messenger shows the player nothing, and a second messenger to the same hero is refused as already dispatched until the first is delivered or lost. The engine never settles an `Occupation.Special` hero who is a fugitive or released, so a messenger to one in that state would wait without end; TAOM, `TAOM_Map` and the Armory define no such hero (no `occupation="Special"` in their XML on 2026-11-13).
 
 ## What a messenger conversation cannot do (#898)
 
@@ -195,6 +211,14 @@ Wanderer hiring and barter stay on purpose: remote hiring is intended, and a tra
 21. **In person.** Checks 1 to 7 above are for the messenger; face to face, those lines are all still there.
 22. **In-person price.** In a lord's hall the dispatch line still shows, and its price still carries the war and siege surcharges. The design keeps this on purpose.
 
+### Arrival (#1133)
+
+23. **Prisoner.** Send a messenger to a lord who can be captured (not Sauron or a Nazgûl, who escape as fugitives) and have that lord captured before it arrives: the "Messenger Lost" notice shows.
+24. **Released.** Send a messenger to a lord who is then captured and released again before it arrives: no notice shows while the lord is Released. The "Messenger Arrived" inquiry shows within the hour after the engine settles the lord in a town or castle: a 30% chance each day, so usually within a few days and sometimes after more than a week.
+25. **Fugitive.** Send a messenger to a lord, then defeat that lord's party before it arrives so that the lord escapes: no "Messenger Lost" notice; the inquiry shows once the engine has settled the lord.
+26. **Traveling.** Send a clan member as governor to one of your towns or castles that is under siege (the engine holds the journey until the siege ends), then send that member a messenger: no notice while the member travels; the inquiry shows after the member arrives. Without such a hold the member arrives within about a day and a half, usually before the messenger, and the check shows only a normal delivery. The clan screen refuses a new leader for a party that is in a battle, so that hold cannot be set up.
+27. **Captive player.** Send a messenger to a notable or a lord with no party, then be captured before it arrives: no "Messenger Error" notice during captivity; the inquiry shows after the release.
+
 ## Dependencies
 
 - `IMessengerSettingsProvider` — wraps `TaomSettings.Instance` for the 4 MCM toggles
@@ -210,7 +234,7 @@ Wanderer hiring and barter stay on purpose: remote hiring is intended, and a tra
 Unit tests:
 
 - [TAOM.Tests/Features/Messengers/MessengerServiceTests.cs](../../TAOM.Tests/Features/Messengers/MessengerServiceTests.cs): every `MessengerValidationResult` rejection path, the price quote (distance, multipliers, ceiling, bad inputs), accident roll boundaries (p=0/1/disabled), position math edge cases (distance < / = / > speed; invalid target), speed calculation (zero/negative days clamping, multiplier).
-- [TAOM.Tests/Features/Messengers/MessengerArrivalClassificationTests.cs](../../TAOM.Tests/Features/Messengers/MessengerArrivalClassificationTests.cs): the arrival verdict over every hero state, wanderer or not, child or not, shared party, battle and player availability, checked against the rule as the behavior ran it; a prisoner is lost on arrival; the enum matches the engine's states.
+- [TAOM.Tests/Features/Messengers/MessengerArrivalClassificationTests.cs](../../TAOM.Tests/Features/Messengers/MessengerArrivalClassificationTests.cs): the arrival verdict over every hero state, wanderer or not, child or not, in the player's party or not, battle and player availability; a prisoner is lost on arrival; a Fugitive, Released or Traveling hero is waited for; the enum matches the engine's states. `MessengerServiceTests` holds the send check to the same rule: no target the send check accepts is lost on arrival.
 - [TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs](../../TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs): Add/Remove/Get/Contains/Clear, duplicate-id replacement, null/empty input, save roundtrip preserves all fields, malformed-on-load drops + warns.
 - [TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs](../../TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs): valid JSON, missing file, malformed JSON, every validation rule (negative chance, >1.0 chance, zero/negative speed mult, absurd speed mult, the four pricing fields out of range and non-finite), boundary values, partial JSON merge, caching, info-vs-warning logging.
 - [TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs](../../TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs): the button's shape (#944). The button sits in an always-enabled wrapper whose hint shows the reason for a greyed button, and the button holds a second hint for the enabled state (the days), because an enabled button takes the hover.
@@ -250,6 +274,7 @@ The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerTarge
 
 ## Changelog
 
+- 2026-11-13: a messenger to a hero the engine will make Active again (a fugitive, a released hero, a hero travelling on orders) now waits and is delivered once the hero is Active; a messenger that arrives while the player is a captive waits for the release (it was dropped as "in your own party"); a prisoner target stays lost; the send check shares the arrival's state rule, so a disabled wanderer is refused and a released or travelling hero can be sent to (#1133).
 - 2026-10-23: the price grows with the distance to the target and is higher for a war, a stranger and a besieged town; the button shows it and the hint shows about how many days; a target in the same settlement or army is refused with a reason (#898). The base price keeps its MCM id and default and is shown as "Base Gold Cost". Docs: the encyclopedia mixin has no `SendMessengerCost` data source, and `EnableMessengers` needs no restart.
 - 2026-10-23: a messenger conversation no longer offers the join-army lines, the board game, the clan troop and inventory exchange or the companion recall (Patch117); the enlist oath is greyed and the gift line is hidden there; a player in an army whose leader is in the target town gets the field conversation; a throw while opening recovers and rethrows (#898).
 - 2026-10-24: the Send Messenger button now uses the declared brushes `Popup.Button.Base` and `Popup.Button.Text` (its two old names resolved to nothing), and its label dims when the button is disabled (#989).
@@ -259,6 +284,9 @@ The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerTarge
 - 2026-05-06 — Ported the LOTRAOM messenger system to TAOM (1.3.15): paid messenger dispatch from the encyclopedia/dialog, travel + arrival conversation routing, primitive-dict save, MCM + JSON tunables, 12-language localization (#109).
 
 ## GitHub Issue
+
+- **Issue:** [#1133 (arrival rule for prisoners, moving heroes and a captive player)](https://github.com/haterade22/TAOM/issues/1133)
+- **Status:** In-game checks owed (checklist items 23 to 27)
 
 - **Issue:** [#898 (messenger refinements)](https://github.com/haterade22/TAOM/issues/898)
 - **Status:** Closed; in-game checks owed (label `triage-needs-ingame`, checklist above)

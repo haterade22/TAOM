@@ -27,15 +27,14 @@ internal static class MessengerTargetReader
             isPrisoner: hero.IsPrisoner,
             isChild: hero.IsChild,
             isFugitive: hero.IsFugitive,
-            isActive: hero.IsActive,
+            heroState: (MessengerHeroState)(int)hero.HeroState,
             isWanderer: hero.IsWanderer,
             isHumanPlayerCharacter: hero.IsHumanPlayerCharacter,
             isInPlayerParty: inPlayerParty,
             sameSettlement: here != null && hero.CurrentSettlement == here,
             sameArmy: army != null && mainParty != null && hero.PartyBelongedTo != null
                       && army.DoesLeaderPartyAndAttachedPartiesContain(mainParty)
-                      && army.DoesLeaderPartyAndAttachedPartiesContain(hero.PartyBelongedTo),
-            heroState: (MessengerHeroState)(int)hero.HeroState);
+                      && army.DoesLeaderPartyAndAttachedPartiesContain(hero.PartyBelongedTo));
     }
 
     internal static MessengerQuoteInput ReadQuoteInput(Hero? hero, int travelDays)

@@ -275,11 +275,9 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         if (target == null)
             return ArrivedHandleOutcome.RemoveFromList;
 
-        // The verdict is the service's (MessengerService.ClassifyArrival); these are the engine facts it needs. The
-        // party test is the raw equality, which is true when both parties are null, so it is not IsInPlayerParty.
+        // The verdict is the service's (MessengerService.ClassifyArrival); these are the engine facts it needs.
         var verdict = _service.ClassifyArrival(
             MessengerTargetReader.ReadSnapshot(target)!,
-            sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo,
             playerAvailable: IsPlayerAvailable(),
             targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null);
 

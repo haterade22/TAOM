@@ -2775,3 +2775,9 @@ Check 11 failed `hits` once 20 tower missiles flew with no hit. Tower missiles h
 - **Why missed:** the threshold was a round number, never compared with the hit rate in the reports; the fix counted missiles, not the volleys that miss together. Same family as the check 09 entry above.
 - **Prevent:** before a rule fails on "N tries and no success", read the success rate from the stored reports and count the trials that are independent; choose N so a false FAIL is under 1 percent at the lowest rate on file, and confirm the shortest run that should be judged reaches N. Grep the feature doc for the old number in the same change.
 - **Source:** #1152, `/deep-review` Agent 5 (data flow), findings 3 to 5.
+
+### Count a source pin's hits in the pinned file: a substring that occurs twice guards nothing (#1133, 2026-11-13)
+A source test asserted that the messenger target reader contains `hero.PartyBelongedTo != null`, to pin the "in the player's party" test. The same text is in the reader's same-army expression, so deleting the pinned line left the assertion green. Two behaviour tests in the same change repeated other tests' inputs under a scenario name.
+- **Why missed:** the pin was chosen by reading the line it should guard, not by searching the file for it; the tests were named for the story, not for what they pass in.
+- **Prevent:** after writing a `StringAssert.Contains` pin, count the substring's occurrences in the pinned file (`grep -o -F '<pin>' <file> | wc -l`, since `-c` counts lines); more than one means a longer pin or a regex over the whole expression. Before adding a test, search the class for the same call with the same arguments.
+- **Source:** [rca-messenger-arrival-1133-2026-11-13.md](../rca-messenger-arrival-1133-2026-11-13.md), finding 4.

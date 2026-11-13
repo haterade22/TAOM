@@ -141,7 +141,7 @@ public class MessengerCampaignBehaviorSourceTests
     }
 
     [TestMethod]
-    public void TheArrival_AsksTheServiceForItsVerdict_WithTheRawPartyEqualityAndTheEngineState()
+    public void TheArrival_AsksTheServiceForItsVerdict_WithTheSnapshotAndTheEngineState()
     {
         var behavior = RepoPaths.ReadSource(Path, stripComments: true);
         var reader = RepoPaths.ReadSource("Main/Features/Messengers/MessengerTargetReader.cs", stripComments: true);
@@ -149,10 +149,13 @@ public class MessengerCampaignBehaviorSourceTests
 
         Assert.IsTrue(body.Length > 0, "HandleArrivedMessenger not found");
         StringAssert.Contains(body, "_service.ClassifyArrival(");
-        StringAssert.Contains(body, "sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo");
+        StringAssert.Contains(body, "MessengerTargetReader.ReadSnapshot(target)");
         StringAssert.Contains(body, "playerAvailable: IsPlayerAvailable()");
         StringAssert.Contains(body, "targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null");
-        Assert.IsFalse(body.Contains("IsInPlayerParty"), "arrival's party test is true when both parties are null; IsInPlayerParty is not");
+        // #1133: a raw party equality is true when both parties are null (a captive player and a target with no party),
+        // which dropped the messenger as "in your own party". The snapshot's test needs both parties to exist.
+        Assert.IsFalse(body.Contains("== Hero.MainHero?.PartyBelongedTo"), "the arrival must not compare the two parties itself");
+        StringAssert.Contains(reader, "Hero.MainHero?.PartyBelongedTo != null");
         StringAssert.Contains(reader, "heroState: (MessengerHeroState)(int)hero.HeroState");
     }
 }

@@ -9,9 +9,9 @@ using TAOM.Features.Messengers.Domain;
 namespace TAOM.Tests.Features.Messengers;
 
 /// <summary>
-/// The arrival verdict, MessengerService.ClassifyArrival, held to the rule MessengerCampaignBehavior.HandleArrivedMessenger
-/// executed before the move (7087fa633). That rule is the executed one, not its old comments: a prisoner is lost, not
-/// deferred, and a wanderer that is Released, Traveling or Disabled is lost although the send check accepts it.
+/// The arrival verdict, MessengerService.ClassifyArrival, as the maintainer decided it for #1133: a messenger to a
+/// prisoner is lost; a hero the engine will make Active again (Fugitive, Released, Traveling) is waited for; a target
+/// with no party while the player has none (a captive player) is not "in the player's party".
 /// </summary>
 [TestClass]
 public class MessengerArrivalClassificationTests
@@ -31,91 +31,44 @@ public class MessengerArrivalClassificationTests
             Substitute.For<IMessengerRandomSource>());
     }
 
-    // Facts consistent with the engine for one state: IsDead, IsFugitive, IsPrisoner and IsActive read HeroState, and
-    // IsAlive is !IsDead (v1.5.7 Hero.cs:303-319).
+    // Facts consistent with the engine for one state: IsDead, IsFugitive and IsPrisoner read HeroState, and IsAlive is
+    // !IsDead (v1.5.7 Hero.cs:303-319).
     private static HeroSnapshot Snap(MessengerHeroState state, bool wanderer = false, bool child = false, bool inPlayerParty = false) =>
         new HeroSnapshot("hero_1",
             isAlive: state != MessengerHeroState.Dead,
             isPrisoner: state == MessengerHeroState.Prisoner,
             isChild: child,
             isFugitive: state == MessengerHeroState.Fugitive,
-            isActive: state == MessengerHeroState.Active,
+            heroState: state,
             isWanderer: wanderer,
             isHumanPlayerCharacter: false,
-            isInPlayerParty: inPlayerParty,
-            heroState: state);
+            isInPlayerParty: inPlayerParty);
 
-    private MessengerArrivalVerdict Classify(HeroSnapshot target, bool shares = false, bool playerAvailable = true, bool inMapEvent = false) =>
-        _sut.ClassifyArrival(target, sharesMainHeroParty: shares, playerAvailable: playerAvailable, targetPartyInMapEvent: inMapEvent);
-
-    // MessengerCampaignBehavior.cs:283-307 at 7087fa633, transcribed over the same engine identities.
-    private static MessengerArrivalVerdict OldArrivalRule(
-        MessengerHeroState state, bool wanderer, bool child, bool shares, bool playerAvailable, bool inMapEvent)
-    {
-        var isAlive = state != MessengerHeroState.Dead;
-        var isActive = state == MessengerHeroState.Active;
-        var isFugitive = state == MessengerHeroState.Fugitive;
-        var isPrisoner = state == MessengerHeroState.Prisoner;
-        if (!isAlive
-            || state == MessengerHeroState.Disabled
-            || isFugitive
-            || (!isActive && !wanderer)
-            || (!isActive && wanderer && state != MessengerHeroState.NotSpawned))
-            return MessengerArrivalVerdict.Lost;
-        if (shares)
-            return MessengerArrivalVerdict.Confused;
-        var targetAvailableNow = isAlive && !isPrisoner && !child && !inMapEvent;
-        if (!playerAvailable || !targetAvailableNow)
-            return MessengerArrivalVerdict.Wait;
-        return MessengerArrivalVerdict.Ready;
-    }
-
-    [TestMethod]
-    public void ClassifyArrival_EveryInputCombination_MatchesTheRuleTheBehaviorExecuted()
-    {
-        Assert.AreEqual(8, AllStates.Length, "MessengerHeroState must carry all eight engine states");
-        var mismatches = new List<string>();
-        var cells = 0;
-        foreach (var state in AllStates)
-        foreach (var wanderer in Both)
-        foreach (var child in Both)
-        foreach (var shares in Both)
-        foreach (var playerAvailable in Both)
-        foreach (var inMapEvent in Both)
-        {
-            cells++;
-            var expected = OldArrivalRule(state, wanderer, child, shares, playerAvailable, inMapEvent);
-            var actual = Classify(Snap(state, wanderer, child), shares, playerAvailable, inMapEvent);
-            if (expected != actual)
-                mismatches.Add($"{state} wanderer={wanderer} child={child} shares={shares} player={playerAvailable} battle={inMapEvent}: expected {expected}, got {actual}");
-        }
-
-        Assert.AreEqual(256, cells);
-        Assert.AreEqual(0, mismatches.Count, string.Join(Environment.NewLine, mismatches));
-    }
+    private MessengerArrivalVerdict Classify(HeroSnapshot target, bool playerAvailable = true, bool inMapEvent = false) =>
+        _sut.ClassifyArrival(target, playerAvailable: playerAvailable, targetPartyInMapEvent: inMapEvent);
 
     [DataTestMethod]
     [DataRow(MessengerHeroState.NotSpawned, MessengerArrivalVerdict.Lost)]
     [DataRow(MessengerHeroState.Active, MessengerArrivalVerdict.Ready)]
-    [DataRow(MessengerHeroState.Fugitive, MessengerArrivalVerdict.Lost)]
+    [DataRow(MessengerHeroState.Fugitive, MessengerArrivalVerdict.Wait)]
     [DataRow(MessengerHeroState.Prisoner, MessengerArrivalVerdict.Lost)]
-    [DataRow(MessengerHeroState.Released, MessengerArrivalVerdict.Lost)]
+    [DataRow(MessengerHeroState.Released, MessengerArrivalVerdict.Wait)]
     [DataRow(MessengerHeroState.Dead, MessengerArrivalVerdict.Lost)]
     [DataRow(MessengerHeroState.Disabled, MessengerArrivalVerdict.Lost)]
-    [DataRow(MessengerHeroState.Traveling, MessengerArrivalVerdict.Lost)]
-    public void ClassifyArrival_NonWandererInEachState_OnlyActiveIsReachable(MessengerHeroState state, MessengerArrivalVerdict expected)
+    [DataRow(MessengerHeroState.Traveling, MessengerArrivalVerdict.Wait)]
+    public void ClassifyArrival_NonWandererInEachState(MessengerHeroState state, MessengerArrivalVerdict expected)
         => Assert.AreEqual(expected, Classify(Snap(state)));
 
     [DataTestMethod]
     [DataRow(MessengerHeroState.NotSpawned, MessengerArrivalVerdict.Ready)]
     [DataRow(MessengerHeroState.Active, MessengerArrivalVerdict.Ready)]
-    [DataRow(MessengerHeroState.Fugitive, MessengerArrivalVerdict.Lost)]
+    [DataRow(MessengerHeroState.Fugitive, MessengerArrivalVerdict.Wait)]
     [DataRow(MessengerHeroState.Prisoner, MessengerArrivalVerdict.Lost)]
-    [DataRow(MessengerHeroState.Released, MessengerArrivalVerdict.Lost)]
+    [DataRow(MessengerHeroState.Released, MessengerArrivalVerdict.Wait)]
     [DataRow(MessengerHeroState.Dead, MessengerArrivalVerdict.Lost)]
     [DataRow(MessengerHeroState.Disabled, MessengerArrivalVerdict.Lost)]
-    [DataRow(MessengerHeroState.Traveling, MessengerArrivalVerdict.Lost)]
-    public void ClassifyArrival_WandererInEachState_ActiveOrUnspawnedIsReachable(MessengerHeroState state, MessengerArrivalVerdict expected)
+    [DataRow(MessengerHeroState.Traveling, MessengerArrivalVerdict.Wait)]
+    public void ClassifyArrival_WandererInEachState(MessengerHeroState state, MessengerArrivalVerdict expected)
         => Assert.AreEqual(expected, Classify(Snap(state, wanderer: true)));
 
     [TestMethod]
@@ -126,26 +79,31 @@ public class MessengerArrivalClassificationTests
         Assert.AreEqual(MessengerArrivalVerdict.Lost, Classify(Snap(MessengerHeroState.Prisoner), playerAvailable: false, inMapEvent: true));
     }
 
-    [TestMethod]
-    public void ClassifyArrival_DeadTargetSharingThePlayersParty_IsLostBeforeConfused()
-        => Assert.AreEqual(MessengerArrivalVerdict.Lost, Classify(Snap(MessengerHeroState.Dead), shares: true));
-
-    [TestMethod]
-    public void ClassifyArrival_ReachableTargetSharingTheMainHerosParty_IsConfused()
-        => Assert.AreEqual(MessengerArrivalVerdict.Confused, Classify(Snap(MessengerHeroState.Active), shares: true));
-
-    [TestMethod]
-    public void ClassifyArrival_SharedPartyWhileAChildThePlayerBusyAndABattle_IsConfusedBeforeWait()
-        => Assert.AreEqual(MessengerArrivalVerdict.Confused,
-            Classify(Snap(MessengerHeroState.Active, child: true), shares: true, playerAvailable: false, inMapEvent: true));
-
-    [TestMethod]
-    public void ClassifyArrival_UsesTheRawPartyEquality_NotTheSnapshotsIsInPlayerParty()
+    // Fugitive belongs here: a lord who escapes a lost battle is a fugitive (v1.5.7 MapEvent.cs:1846-1850), a journey the
+    // engine cancels makes the traveller one (TeleportationCampaignBehavior.cs:371-374), and the engine settles a
+    // fugitive on the same line as a released hero (HeroSpawnCampaignBehavior.cs:123).
+    [DataTestMethod]
+    [DataRow(MessengerHeroState.Fugitive)]
+    [DataRow(MessengerHeroState.Released)]
+    [DataRow(MessengerHeroState.Traveling)]
+    public void ClassifyArrival_HeroTheEngineWillMakeActiveAgain_WaitsThoughThePlayerIsFree(MessengerHeroState state)
     {
-        // Arrival's party test is true when both parties are null; IsInPlayerParty is false then, so it must not decide.
-        Assert.AreEqual(MessengerArrivalVerdict.Ready, Classify(Snap(MessengerHeroState.Active, inPlayerParty: true), shares: false));
-        Assert.AreEqual(MessengerArrivalVerdict.Confused, Classify(Snap(MessengerHeroState.Active, inPlayerParty: false), shares: true));
+        Assert.AreEqual(MessengerArrivalVerdict.Wait, Classify(Snap(state), playerAvailable: true, inMapEvent: false));
+        Assert.AreEqual(MessengerArrivalVerdict.Wait, Classify(Snap(state, wanderer: true), playerAvailable: true, inMapEvent: false));
     }
+
+    [TestMethod]
+    public void ClassifyArrival_DeadTargetInThePlayersParty_IsLostBeforeConfused()
+        => Assert.AreEqual(MessengerArrivalVerdict.Lost, Classify(Snap(MessengerHeroState.Dead, inPlayerParty: true)));
+
+    [TestMethod]
+    public void ClassifyArrival_ReachableTargetInThePlayersParty_IsConfused()
+        => Assert.AreEqual(MessengerArrivalVerdict.Confused, Classify(Snap(MessengerHeroState.Active, inPlayerParty: true)));
+
+    [TestMethod]
+    public void ClassifyArrival_InThePlayersPartyWhileAChildThePlayerBusyAndABattle_IsConfusedBeforeWait()
+        => Assert.AreEqual(MessengerArrivalVerdict.Confused,
+            Classify(Snap(MessengerHeroState.Active, child: true, inPlayerParty: true), playerAvailable: false, inMapEvent: true));
 
     [TestMethod]
     public void ClassifyArrival_ReachableChild_Waits()
@@ -154,6 +112,9 @@ public class MessengerArrivalClassificationTests
         Assert.AreEqual(MessengerArrivalVerdict.Wait, Classify(Snap(MessengerHeroState.NotSpawned, wanderer: true, child: true)));
     }
 
+    // The captive player is this case: the captivity menu makes the player unavailable, and the snapshot's
+    // IsInPlayerParty is false because neither hero has a party (the reader's test is pinned in
+    // MessengerCampaignBehaviorSourceTests).
     [TestMethod]
     public void ClassifyArrival_PlayerNotAvailable_Waits()
         => Assert.AreEqual(MessengerArrivalVerdict.Wait, Classify(Snap(MessengerHeroState.Active), playerAvailable: false));
@@ -163,8 +124,39 @@ public class MessengerArrivalClassificationTests
         => Assert.AreEqual(MessengerArrivalVerdict.Wait, Classify(Snap(MessengerHeroState.Active), inMapEvent: true));
 
     [TestMethod]
-    public void ClassifyArrival_ActiveAdultPlayerFreeNoBattleNoSharedParty_IsReady()
+    public void ClassifyArrival_ActiveAdultPlayerFreeNoBattleNotInTheParty_IsReady()
         => Assert.AreEqual(MessengerArrivalVerdict.Ready, Classify(Snap(MessengerHeroState.Active)));
+
+    [TestMethod]
+    public void ClassifyArrival_EveryInputCombination_LostDependsOnTheStateAloneAndReadyNeedsEveryCondition()
+    {
+        Assert.AreEqual(8, AllStates.Length, "MessengerHeroState must carry all eight engine states");
+        var problems = new List<string>();
+        var cells = 0;
+        foreach (var state in AllStates)
+        foreach (var wanderer in Both)
+        foreach (var child in Both)
+        foreach (var inParty in Both)
+        foreach (var playerAvailable in Both)
+        foreach (var inMapEvent in Both)
+        {
+            cells++;
+            var verdict = Classify(Snap(state, wanderer, child, inParty), playerAvailable, inMapEvent);
+            var cell = $"{state} wanderer={wanderer} child={child} inParty={inParty} player={playerAvailable} battle={inMapEvent}";
+
+            // The other inputs never rescue a state that cannot receive, and never lose one that can.
+            var lostAlone = Classify(Snap(state, wanderer)) == MessengerArrivalVerdict.Lost;
+            if ((verdict == MessengerArrivalVerdict.Lost) != lostAlone)
+                problems.Add($"{cell}: Lost must depend on the state and the wanderer flag alone, got {verdict}");
+
+            var deliverableNow = state == MessengerHeroState.Active || (wanderer && state == MessengerHeroState.NotSpawned);
+            if (verdict == MessengerArrivalVerdict.Ready && !(deliverableNow && !child && !inParty && playerAvailable && !inMapEvent))
+                problems.Add($"{cell}: Ready with a condition unmet");
+        }
+
+        Assert.AreEqual(256, cells);
+        Assert.AreEqual(0, problems.Count, string.Join(Environment.NewLine, problems));
+    }
 
     [TestMethod]
     [TestCategory("RequiresGame")]

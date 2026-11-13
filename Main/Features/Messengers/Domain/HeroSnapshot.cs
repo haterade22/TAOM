@@ -7,13 +7,12 @@ public sealed class HeroSnapshot
     public bool IsPrisoner { get; }
     public bool IsChild { get; }
     public bool IsFugitive { get; }
-    public bool IsActive { get; }
+    public MessengerHeroState HeroState { get; }
     public bool IsWanderer { get; }
     public bool IsHumanPlayerCharacter { get; }
     public bool IsInPlayerParty { get; }
     public bool SameSettlement { get; }
     public bool SameArmy { get; }
-    public MessengerHeroState HeroState { get; }
 
     public HeroSnapshot(
         string heroId,
@@ -21,26 +20,23 @@ public sealed class HeroSnapshot
         bool isPrisoner,
         bool isChild,
         bool isFugitive,
-        bool isActive,
+        MessengerHeroState heroState,
         bool isWanderer,
         bool isHumanPlayerCharacter,
         bool isInPlayerParty,
         bool sameSettlement = false,
-        bool sameArmy = false,
-        // The default exists only so the send-rule tests that predate it compile; MessengerTargetReader always passes the engine's state.
-        MessengerHeroState heroState = MessengerHeroState.Active)
+        bool sameArmy = false)
     {
         HeroId = heroId;
         IsAlive = isAlive;
         IsPrisoner = isPrisoner;
         IsChild = isChild;
         IsFugitive = isFugitive;
-        IsActive = isActive;
+        HeroState = heroState;
         IsWanderer = isWanderer;
         IsHumanPlayerCharacter = isHumanPlayerCharacter;
         IsInPlayerParty = isInPlayerParty;
         SameSettlement = sameSettlement;
         SameArmy = sameArmy;
-        HeroState = heroState;
     }
 }
