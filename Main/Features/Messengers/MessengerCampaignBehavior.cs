@@ -275,11 +275,9 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         if (target == null)
             return ArrivedHandleOutcome.RemoveFromList;
 
-        // The verdict is the service's (MessengerService.ClassifyArrival); these are the engine facts it needs. The
-        // party test is the raw equality, which is true when both parties are null, so it is not IsInPlayerParty.
+        // The verdict is the service's (MessengerService.ClassifyArrival); these are the engine facts it needs.
         var verdict = _service.ClassifyArrival(
             MessengerTargetReader.ReadSnapshot(target)!,
-            sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo,
             playerAvailable: IsPlayerAvailable(),
             targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null);
 
@@ -292,7 +290,6 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         if (verdict == MessengerArrivalVerdict.Confused)
         {
             var text = new TextObject("{=taom_messenger_confused}The messenger seems confused — they were trying to reach someone in your own party!");
-            text.SetTextVariable("HERO_NAME", target.Name);
             ShowInquiry(
                 new TextObject("{=taom_messenger_error}Messenger Error").ToString(),
                 text.ToString(),
@@ -300,6 +297,8 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             return ArrivedHandleOutcome.RemoveFromList;
         }
 
+        if (verdict == MessengerArrivalVerdict.WaitForTarget && messenger.TryMarkWaitNoticeShown())
+            MessengerArrivalNotices.Waiting(target);
         if (verdict != MessengerArrivalVerdict.Ready)
             return ArrivedHandleOutcome.WaitForNextTick;
 
@@ -654,9 +653,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
                 text.SetTextVariable("HERO_NAME", target?.Name ?? new TextObject(""));
                 return text;
             case MessengerValidationResult.TargetInPlayerParty:
-                text = new TextObject("{=taom_messenger_confused}The messenger seems confused — they were trying to reach someone in your own party!");
-                text.SetTextVariable("HERO_NAME", target?.Name ?? new TextObject(""));
-                return text;
+                return new TextObject("{=taom_messenger_confused}The messenger seems confused — they were trying to reach someone in your own party!");
             case MessengerValidationResult.SameSettlement:
                 text = new TextObject("{=taom_messenger_same_settlement}{HERO_NAME} is here with you. Speak to them instead.");
                 text.SetTextVariable("HERO_NAME", target?.Name ?? new TextObject(""));
