@@ -5908,7 +5908,7 @@
     <NPCCharacter id="lord_WE9_l_1" name="{=aom_lord_WE9_l_1_name}Duilin" age="31" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!-- Placeholder face value -->
-            <BodyProperties version="4" weight="0.75" build="0.85" key="0011840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
+            <BodyProperties version="4" weight="0.75" build="0.85" key="0007840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -7950,7 +7950,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_9_4" name="{=aom_lord_1_9_4_name}Lothiriel" age="1" voice="ironic" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="000A580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
+            <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="0006580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -7995,7 +7995,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_9_5" name="{=aom_lord_1_9_5_name}Lothwen" age="72" voice="ironic" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_1_9_5_skills">
         <face>
-            <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0015100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0005100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8040,7 +8040,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_11_1" name="{=aom_lord_1_11_1_name}Calion" default_group="Infantry" age="33" voice="curt" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="000A240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
+            <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="0006240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8088,7 +8088,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_11_2" name="{=aom_lord_1_11_2_name}Silwen" default_group="Infantry" age="33" voice="softspoken" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0015B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0005B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8133,7 +8133,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_11_3" name="{=aom_lord_1_11_3_name}Ainarauta" age="20" voice="softspoken" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0015000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0005000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8181,7 +8181,7 @@
             <!--face_key
 			value="000ca12e00bc2005478d688968868296a6779bb376d6a724d866c7b9a9a97b7d000cc774ad629b660000000000000ffe00000000000000000000000000001080"
 			/-->
-            <BodyProperties version="4" age="22.11" weight="0" build="0.3218" key="00152C0A400000103E255675D562A945CD8B7764558E9F4B78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
+            <BodyProperties version="4" age="22.11" weight="0" build="0.3218" key="00052C0A400000103E255675D562A945CD8B7764558E9F4B78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8226,7 +8226,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_11_5" name="{=aom_lord_1_11_5_name}Narniel" age="19" voice="softspoken" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" default_group="Cavalry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.3912" build="0.9583" key="0015100FC00000159158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="22.11" weight="0.3912" build="0.9583" key="0005100FC00000159158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8274,7 +8274,7 @@
             <!--face_key
 			value="000583c000fc000f66a89964658d25876585d896796876769a8899a987a7ab750003d65e03c578eb000000000000000000000000000000000000000000946140"
 			/-->
-            <BodyProperties version="4" age="25.84" weight="0.5" build="0.5" key="00153808C00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="25.84" weight="0.5" build="0.5" key="00053808C00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8319,7 +8319,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_45_5" name="{=aom_lord_1_45_5_name}Belwen" age="22" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="27.11" weight="0.2176" build="0.4699" key="0015740E400000068B5AC7B638DC687A6879381B2A488B7A189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F043002" />
+            <BodyProperties version="4" age="27.11" weight="0.2176" build="0.4699" key="0005740E400000068B5AC7B638DC687A6879381B2A488B7A189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F043002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8364,7 +8364,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_45_6" name="{=aom_lord_1_45_6_name}Brithwen" age="21" voice="softspoken" is_female="True" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0" build="0.0093" key="00156C0C400020017CBB9A64A5876968687977788959D6AA189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="22.11" weight="0" build="0.0093" key="00056C0C400020017CBB9A64A5876968687977788959D6AA189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8412,7 +8412,7 @@
             <!--face_key
 			value="0005592b0000400da55b8899724689763869956b7b86578578658a96886733790000000007b8789800001105000030a30000001f000000000000000000000000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="00157C08C000000F7B58384479AAA669CD8B3DA7A36B99AA78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00057C08C000000F7B58384479AAA669CD8B3DA7A36B99AA78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8457,7 +8457,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_52_4" name="{=aom_lord_1_52_4_name}Nauriel" age="60" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_matriarch_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.0185" build="0" key="0015000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="22.11" weight="0.0185" build="0" key="0005000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8502,7 +8502,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_53_1" name="{=aom_lord_1_53_1_name}Calaniel" voice="earnest" is_female="true" default_group="Infantry" age="28" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="28.00" weight="0.4" build="0.5" key="0015B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <BodyProperties version="4" age="28.00" weight="0.4" build="0.5" key="0005B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8638,7 +8638,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_71_1" name="{=aom_lord_1_71_1_name}Laswen" age="53" voice="softspoken" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_1_71_1_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0" build="0.3981" key="0015FC08C000000F9158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="22.11" weight="0" build="0.3981" key="0005FC08C000000F9158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8683,7 +8683,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_59_1" name="{=aom_lord_1_59_1_name}Rondiel" voice="softspoken" is_female="true" age="33" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4444" build="0.6574" key="00156C0C400020017CBB9A64A5876968687977788959D6AA189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="33.00" weight="0.4444" build="0.6574" key="00056C0C400020017CBB9A64A5876968687977788959D6AA189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8779,7 +8779,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_59_3" name="{=aom_lord_1_59_3_name}Galinwen" age="33" voice="softspoken" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0015E808C000000FCA58384479AAA669CD8BE9BB34625E7978EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0005E808C000000FCA58384479AAA669CD8BE9BB34625E7978EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8824,7 +8824,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_60_1" name="{=aom_lord_1_60_1_name}Nimriel" age="43" voice="softspoken" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0015BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0005BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8869,7 +8869,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_1_60_2" name="{=aom_lord_1_60_2_name}Orlathiel" age="22" voice="earnest" is_female="true" is_hero="true" culture="Culture.gondor" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.00" weight="0.4" build="0.5" key="0015740E400000068B5AC7B638DC687A6879381B2A488B7A189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F043002" />
+            <BodyProperties version="4" age="22.00" weight="0.4" build="0.5" key="0005740E400000068B5AC7B638DC687A6879381B2A488B7A189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F043002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8914,7 +8914,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_1" name="{=aom_lord_EW_1_name}Amandir" age="78" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elder_lord_skills">
         <face>
-            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="0006580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -8963,7 +8963,7 @@
     <NPCCharacter id="lord_EW_2" name="{=aom_lord_EW_2_name}Virinar" age="42" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0010D80FC00008836B8ACCBDD7B986785FFDCA8B7C8B677A67895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C9002" />
+            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0006D80FC00008836B8ACCBDD7B986785FFDCA8B7C8B677A67895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C9002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9012,7 +9012,7 @@
     <NPCCharacter id="lord_EW_3" name="{=aom_lord_EW_3_name}Virinehtar" age="35" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0010A80AC0000383848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3002" />
+            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0006A80AC0000383848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9061,7 +9061,7 @@
     <NPCCharacter id="lord_EW_4" name="{=aom_lord_EW_4_name}Valandur" age="31" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0010A80FC0000401848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3002" />
+            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0006A80FC0000401848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9110,7 +9110,7 @@
     <NPCCharacter id="lord_EW_5" name="{=aom_lord_EW_5_name}Valaryna" age="30" voice="earnest" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="22.01" weight="0" build="0.7222" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9251,7 +9251,7 @@
     <NPCCharacter id="lord_EW_8" name="{=aom_lord_EW_8_name}Beregar" age="17" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lord_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="17.01" weight="0.2534" build="0.5733" key="000AD406C000140B7B86C84D4697AC7372796289843BB979379743C6C9AC9BD900B946030BACA5A60000000000000000000000000000000000000000676C3082" />
+            <BodyProperties version="4" age="17.01" weight="0.2534" build="0.5733" key="0006D406C000140B7B86C84D4697AC7372796289843BB979379743C6C9AC9BD900B946030BACA5A60000000000000000000000000000000000000000676C3082" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9348,7 +9348,7 @@
     <NPCCharacter id="lord_EW_10" name="{=aom_lord_EW_10_name}Uinilme" age="90" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_matriarch_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="90.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="90.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9394,7 +9394,7 @@
     <NPCCharacter id="lord_EW_11" name="{=aom_lord_EW_11_name}Eldacar" age="55" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="55.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="55.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9443,7 +9443,7 @@
     <NPCCharacter id="lord_EW_12" name="{=aom_lord_EW_12_name}Melyanna" age="43" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="43.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="43.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9489,7 +9489,7 @@
     <NPCCharacter id="lord_EW_13" name="{=aom_lord_EW_13_name}Istion" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="34.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="34.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9586,7 +9586,7 @@
     <!-- Clan 14 - Garvirionath family -->
     <NPCCharacter id="lord_EW_14_1" name="{=aom_lord_EW_14_1_name}Silmariel" age="43" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9631,7 +9631,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_14_2" name="{=aom_lord_EW_14_2_name}Nimethil" age="23" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="23.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="23.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9725,7 +9725,7 @@
     <!-- Clan 12 - Hirilionath family -->
     <NPCCharacter id="lord_EW_1_1" name="{=aom_lord_EW_1_1_name}Ciriel" age="67" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_matriarch_skills">
         <face>
-            <BodyProperties version="4" age="67.00" weight="0.4" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="67.00" weight="0.4" build="0.5" key="0005580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9770,7 +9770,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_1_2" name="{=aom_lord_EW_1_2_name}Pelamir" age="43" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0006580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9818,7 +9818,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_1_3" name="{=aom_lord_EW_1_3_name}Dorwen" age="43" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="43.00" weight="0.4" build="0.5" key="0005580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9912,7 +9912,7 @@
     <!-- Clan 13 - Baranionath family -->
     <NPCCharacter id="lord_EW_6_1" name="{=aom_lord_EW_6_1_name}Falathwen" age="23" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="23.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="23.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -9957,7 +9957,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_6_2" name="{=aom_lord_EW_6_2_name}Orweniel" age="14" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="14.00" weight="0.3" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="14.00" weight="0.3" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10051,7 +10051,7 @@
     <NPCCharacter id="lord_EW_15" name="{=aom_lord_EW_15_name}Morwen" age="64" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_matriarch_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="64.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="64.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10097,7 +10097,7 @@
     <NPCCharacter id="lord_EW_16" name="{=aom_lord_EW_16_name}Saenes" age="58" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="58.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="58.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10143,7 +10143,7 @@
     <NPCCharacter id="lord_EW_17" name="{=aom_lord_EW_17_name}Estelien" age="32" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="32.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="32.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10189,7 +10189,7 @@
     <NPCCharacter id="lord_EW_18" name="{=aom_lord_EW_18_name}Filigod" age="21" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lord_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="21.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="21.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10238,7 +10238,7 @@
     <NPCCharacter id="lord_EW_19" name="{=aom_lord_EW_19_name}Falandur" age="18" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lord_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="18.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="18.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10286,7 +10286,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_EW_20" name="{=aom_lord_EW_20_name}Balatar" age="66" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elder_lord_skills">
         <face>
-            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <BodyProperties version="4" age="35" weight="0.3588" build="0.4884" key="0006580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10335,7 +10335,7 @@
     <NPCCharacter id="lord_EW_21" name="{=aom_lord_EW_21_name}Belegorn" age="62" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elder_lord_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="62.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="62.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10384,7 +10384,7 @@
     <NPCCharacter id="lord_EW_22" name="{=aom_lord_EW_22_name}Nessanie" age="56" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="56.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="56.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10478,7 +10478,7 @@
     <NPCCharacter id="lord_EW_24" name="{=aom_lord_EW_24_name}Belwen" age="71" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_matriarch_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="71.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="71.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10524,7 +10524,7 @@
     <NPCCharacter id="lord_EW_25" name="{=aom_lord_EW_25_name}Argeleb" age="37" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="37.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="37.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10573,7 +10573,7 @@
     <NPCCharacter id="lord_EW_26" name="{=aom_lord_EW_26_name}Berenor" age="35" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="35.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="35.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10622,7 +10622,7 @@
     <NPCCharacter id="lord_EW_27" name="{=aom_lord_EW_27_name}Arniel" age="32" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="32.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="32.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -10668,7 +10668,7 @@
     <NPCCharacter id="lord_EW_28" name="{=aom_lord_EW_28_name}Emeldir" age="28" voice="softspoken" default_group="Infantry" is_hero="true" is_female="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
             <!--Placeholder face-->
-            <BodyProperties version="4" age="28.00" weight="0.5" build="0.5" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
+            <BodyProperties version="4" age="28.00" weight="0.5" build="0.5" key="0005F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24086,7 +24086,7 @@
     <!-- Clan 2 - Imrazôrionath: daughter of Imrahil -->
     <NPCCharacter id="lord_1_9_6" name="{=aom_lord_1_9_6_name}Lothériel" age="33" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24132,7 +24132,7 @@
     <!-- Clan 4 - Barahirionath: daughter of Malrior -->
     <NPCCharacter id="lord_1_40_2" name="{=aom_lord_1_40_2_name}Eleniel" age="14" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="14.00" weight="0.3" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="14.00" weight="0.3" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24178,7 +24178,7 @@
     <!-- Clan 8 - Olindurionath family -->
     <NPCCharacter id="lord_WE8_1" name="{=aom_lord_WE8_1_name}Dorwen" age="33" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24223,7 +24223,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_WE8_2" name="{=aom_lord_WE8_2_name}Eleneth" age="30" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="30.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="30.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24268,7 +24268,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_WE8_3" name="{=aom_lord_WE8_3_name}Hirilwen" age="48" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_lady_skills">
         <face>
-            <BodyProperties version="4" age="48.00" weight="0.4" build="0.5" key="0010A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
+            <BodyProperties version="4" age="48.00" weight="0.4" build="0.5" key="0006A80FC0000001848ACCBDD7B9867816B89C9D99E968E14766495A757A1696009B060309AD13C400000000000000000000000000000000000000003F3C3003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24313,7 +24313,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_WE8_4" name="{=aom_lord_WE8_4_name}Talborin" age="50" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="50.00" weight="0.4" build="0.5" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <BodyProperties version="4" age="50.00" weight="0.4" build="0.5" key="0006580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -24362,7 +24362,7 @@
     <!-- Clan 9 - Danuhirionath: son of Duinhir -->
     <NPCCharacter id="lord_WE9_3" name="{=aom_lord_WE9_3_name}Derufin" age="33" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0006580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -47775,7 +47775,7 @@
     <NPCCharacter id="lord_AN1_2" name="{=aom_lord_AN1_2_name}Malvegil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!-- Placeholder face-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="000680034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -47823,7 +47823,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN1_3" name="{=aom_lord_AN1_3_name}Gilraen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
+            <BodyProperties version="4" weight="0.4" build="0.5" key="0007500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -47868,7 +47868,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN1_4" name="{=aom_lord_AN1_4_name}Ivorwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="40.11" weight="0.0023" build="0.5116" key="0015780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <BodyProperties version="4" age="40.11" weight="0.0023" build="0.5116" key="0005780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -47914,7 +47914,7 @@
     <NPCCharacter id="lord_AN2_1" name="{=aom_lord_AN2_1_name}Amlaith" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!-- Placeholder face value -->
-            <BodyProperties version="4" weight="0.75" build="0.85" key="0011840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
+            <BodyProperties version="4" weight="0.75" build="0.85" key="0007840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48016,7 +48016,7 @@
             <!--face_key
 			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
 			/-->
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0005580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48211,7 +48211,7 @@
             <!--face_key
 			value="000ba52cc03c300d658918a66a565a686aaab3a57a485991a57a63282749b75400056aa402ae984800001105000030a30000001f000000000000000000001000"
 			/-->
-            <BodyProperties version="4" age="25.84" weight="0.5" build="0.5" key="0015BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="25.84" weight="0.5" build="0.5" key="0005BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48256,7 +48256,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN3_4" name="{=aom_lord_AN3_4_name}Silivren" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="000A580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
+            <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="0006580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48301,7 +48301,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN4_1" name="{=aom_lord_AN4_1_name}Halbarad" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="000A240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
+            <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="0006240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48349,7 +48349,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN4_2" name="{=aom_lord_AN4_2_name}Aranuir" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="25.11" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" />
+            <BodyProperties version="4" age="25.11" weight="0.1782" build="0.4236" key="0006D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48397,7 +48397,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN4_3" name="{=aom_lord_AN4_3_name}Ithilwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0015100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0005100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48442,7 +48442,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN4_4" name="{=aom_lord_AN4_4_name}Calwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0015B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0005B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48487,7 +48487,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN5_1" name="{=aom_lord_AN5_1_name}Celebrindor" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="38.11" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" />
+            <BodyProperties version="4" age="38.11" weight="0.4236" build="0.4236" key="0006D806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48535,7 +48535,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN5_2" name="{=aom_lord_AN5_2_name}Arveleg" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
-            <BodyProperties version="4" age="38.11" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" />
+            <BodyProperties version="4" age="38.11" weight="0.3981" build="0.4861" key="0004FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48583,7 +48583,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_AN5_3" name="{=aom_lord_AN5_3_name}Maethil" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0015000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
+            <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0005000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
@@ -48631,7 +48631,7 @@
             <!--face_key
 			value="000ca12e00bc2005478d688968868296a6779bb376d6a724d866c7b9a9a97b7d000cc774ad629b660000000000000ffe00000000000000000000000000001080"
 			/-->
-            <BodyProperties version="4" age="22.11" weight="0" build="0.3218" key="00152C0A400000103E255675D562A945CD8B7764558E9F4B78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
+            <BodyProperties version="4" age="22.11" weight="0" build="0.3218" key="00052C0A400000103E255675D562A945CD8B7764558E9F4B78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
             <hair_tags>
                 <hair_tag name="empire" />
             </hair_tags>
