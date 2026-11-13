@@ -132,13 +132,13 @@ culture-id keys whose ids differ from their kingdom id:
 | `Main/_Module/ModuleData/alignment_desertion/alignment_desertion_config.json` | Defaults |
 | `Main/Features/TaomSettings.cs` | MCM group "World/Alignment Desertion" (GroupOrder 38) |
 
-## Recruiting never offers a troop that would desert
+## Recruiting seams that refuse a troop that would desert
 
 Found by the conflict audit (13 Nov 2026): vanilla AI lords recruited enemy-side prisoners (paying the morale
 cost), AI lords and garrisons bought a captured fief's old-culture volunteers before culture conversion, and
 the next daily tick removed them again. `IAlignmentDesertionService.WouldDesert(owner, isPlayerOwned,
 isGarrison, troopCulture)` answers the same question as `CalculateDesertion` for one troop (a matrix test pins
-the two together), and `DesertionRecruitGuard` asks it at every recruit seam:
+the two together), and `DesertionRecruitGuard` asks it at these recruit seams (tavern mercenaries are not covered, see Known limits):
 
 | Seam | Where | Effect |
 |---|---|---|
@@ -152,6 +152,32 @@ The owner is resolved as the behavior does (leader's clan, owner clan for a garr
 exactly where it turns desertion off. Slot arithmetic is pure in `DesertionRecruitCap`. A guard failure logs
 once and keeps vanilla's answer. The party screen shows a blocked prisoner as not recruitable, with vanilla's
 reason text.
+
+### Volunteer index convention
+
+`MaximumIndexHeroCanRecruitFromHero` has two readers with different meanings. The player paths are inclusive:
+`HeroHelper.HeroCanRecruitFromHero` returns `index <= max` (`Helpers.HeroHelper.cs:517`). The AI recruit loop is
+an exclusive bound: `RecruitmentCampaignBehavior.RecruitVolunteersFromNotable` runs `num5 = num4 % 6` and
+`if (num5 >= num3) break` (lines 543 and 544). The garrison loop reads `MaximumIndexGarrisonCanRecruitFromHero`,
+a slot count: `for (int i = 0; i < num; i++)` (`GarrisonRecruitmentCampaignBehavior.cs:150`). With the first deserting slot at k, the cap is `min(vanilla, k - 1)`
+for the player (`Hero.MainHero` as buyer) and `min(vanilla, k)` for any other buyer; with no deserting slot, or no
+slots, vanilla's value is returned unchanged, and a cap never raises it. A garrison keeps slots `0..k-1`, and the
+AI trip estimate counts the same slots.
+
+### Known limits
+
+- Tavern mercenaries are not guarded. The AI hire reads `GetMercenaryData(settlement.Town).TroopType`
+  (`RecruitmentCampaignBehavior.cs:477`) and the player's tavern conversation adds
+  `CharacterObject.OneToOneConversationCharacter` to the roster (`BuyMercenaries`, line 812). The troop comes
+  from the town culture's `BasicMercenaryTroops` (line 362). None of these asks a model whether the troop may be recruited (only `PartyWageModel`, for the price), so no
+  model override can refuse them.
+- A prisoner stack that would desert returns a recruitable count of 0, but the conformity tick in
+  `RecruitPrisonersCampaignBehavior` (line 73: `num2 < elementNumber`) still picks it, so other stacks convert
+  more slowly.
+- A volunteer slot locked by the cap shows vanilla's relation tooltip with a required relation of 0, and stays
+  locked until the notable's volunteers change (culture conversion).
+- The player index is inclusive and the AI bound exclusive (see Volunteer index convention); the cap follows
+  each reader exactly.
 
 ## Battle rosters
 

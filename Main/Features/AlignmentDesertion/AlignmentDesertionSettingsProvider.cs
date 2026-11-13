@@ -47,5 +47,6 @@ public sealed class AlignmentDesertionSettingsProvider : IAlignmentDesertionSett
     public bool ApplyToGarrisons => Settings?.EnableAlignmentDesertionGarrisons ?? _defaults.ApplyToGarrisons;
 
     // One switch for both features: Recruitment Alignment's own provider already merges MCM over its JSON mode.
-    public bool GoodRejectsEvilOnly => _recruitment.GoodRejectsEvilOnly;
+    // Only meaningful while that feature is on: a leftover switch must not exempt Evil owners from desertion.
+    public bool GoodRejectsEvilOnly => _recruitment.IsEnabled && _recruitment.GoodRejectsEvilOnly;
 }

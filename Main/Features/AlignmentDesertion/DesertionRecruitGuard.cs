@@ -18,8 +18,12 @@ public interface IDesertionRecruitGuard
     /// <summary>True when a troop recruited into this party would desert it (lord parties and the main party only).</summary>
     bool WouldDesertFromParty(PartyBase? party, CharacterObject? troop);
 
-    /// <summary>The volunteer index a hero may recruit up to, capped before the seller's first slot that would desert.</summary>
-    int CapHeroIndex(Hero? buyerHero, Hero? sellerHero, int vanillaIndex);
+    /// <summary>
+    /// The volunteer index a hero may recruit up to, capped before the seller's first slot that would desert.
+    /// <paramref name="buyerIsPlayer"/> picks the convention: inclusive for the player, an exclusive bound for the AI
+    /// (<see cref="DesertionRecruitCap.CapVolunteerIndex"/>).
+    /// </summary>
+    int CapHeroIndex(Hero? buyerHero, Hero? sellerHero, int vanillaIndex, bool buyerIsPlayer);
 
     /// <summary>The volunteer slot count a garrison may auto-recruit, capped before the first slot that would desert.</summary>
     int CapGarrisonSlots(Settlement? settlement, Hero? sellerHero, int vanillaCount);
@@ -71,7 +75,7 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
         }
     }
 
-    public int CapHeroIndex(Hero? buyerHero, Hero? sellerHero, int vanillaIndex)
+    public int CapHeroIndex(Hero? buyerHero, Hero? sellerHero, int vanillaIndex, bool buyerIsPlayer)
     {
         if (vanillaIndex < 0 || !_service.IsEnabled)
             return vanillaIndex;
@@ -80,7 +84,7 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
             if (!TryOwner(buyerHero?.Clan, isGarrison: false, out var kingdomId, out var isPlayerOwned))
                 return vanillaIndex;
             var first = FirstDeserterSlot(sellerHero, kingdomId, isPlayerOwned, isGarrison: false);
-            return DesertionRecruitCap.CapInclusiveIndex(vanillaIndex, first);
+            return DesertionRecruitCap.CapVolunteerIndex(vanillaIndex, first, buyerIsPlayer);
         }
         catch (Exception ex)
         {
@@ -156,7 +160,7 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
     {
         var slots = seller?.VolunteerTypes;
         if (slots == null)
-            return int.MaxValue;
+            return DesertionRecruitCap.NoDeserter;
         var cultures = new string?[slots.Length];
         for (var i = 0; i < slots.Length; i++)
             cultures[i] = slots[i] == null ? null : slots[i].Culture?.StringId ?? string.Empty;
@@ -164,7 +168,8 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
             culture => _service.WouldDesert(kingdomId, isPlayerOwned, isGarrison, culture!));
     }
 
-    // Mirrors AlignmentDesertionBehavior.TryResolveOwner, plus the owner-level gates, so most calls stop here.
+    // Mirrors AlignmentDesertionBehavior.TryResolveOwner, plus the owner-level gates. Under the default settings the gate passes for every AI lord of a Free or Evil kingdom;
+    // it stops Neutral, kingdomless and switched-off owners.
     private bool TryOwner(Clan? clan, bool isGarrison, out string kingdomId, out bool isPlayerOwned)
     {
         kingdomId = string.Empty;

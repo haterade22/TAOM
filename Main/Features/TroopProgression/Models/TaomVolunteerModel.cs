@@ -62,7 +62,7 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         return _castleRecruitment.BlocksAiRecruitAtCastle(sellerInCastle: sellerSettlement?.IsCastle == true, buyerIsPlayer: isPlayer)
                || _recruitmentAlignment.IsRecruitmentBlocked(buyerHero?.Clan?.Kingdom?.StringId, sellerSettlement?.MapFaction?.StringId, isPlayer)
             ? -1
-            : _desertionGuard.CapHeroIndex(buyerHero, sellerHero, base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation));
+            : _desertionGuard.CapHeroIndex(buyerHero, sellerHero, base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation), isPlayer);
     }
 
     /// <summary>
