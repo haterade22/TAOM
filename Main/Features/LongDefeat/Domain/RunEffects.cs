@@ -15,6 +15,15 @@ internal sealed record SoldierBatch(string TroopId, FormationSlot Slot, int Coun
 /// <summary>A wave begins: how many soldiers its first batch holds by class. The wave's factors ride <see cref="SoldierBatch.HealthFactor"/> and <see cref="RunEffects.PublishStats"/>, and the director reads its spec for the log.</summary>
 internal sealed record WaveStart(int Wave, int Foot, int Ranged);
 
+/// <summary>An upgrade to carry out (#1161): replace up to <c>Count</c> standing soldiers of the step's troop with its target, each new soldier's health limit scaled by <c>HealthFactor</c>.</summary>
+internal sealed record UpgradeOrder(UpgradeStep Step, int Count, float HealthFactor);
+
+/// <summary>
+/// What the field did with an upgrade order: <c>Found</c> soldiers of the old troop it could replace, <c>Replaced</c> new soldiers it spawned (an old one faded for each), <c>ReadBack</c> of them that read
+/// as the target troop and live right after the spawn, and a <c>Problem</c> that stopped it (no such troop), else null.
+/// </summary>
+internal sealed record LdUpgradeReport(int Found, int Replaced, int ReadBack, string? Problem);
+
 internal enum RunEventKind
 {
     WaveCleared,
@@ -44,6 +53,9 @@ internal sealed record LdBoonApply(IReadOnlyList<BoonTarget> Refresh, IReadOnlyL
 internal sealed class RunEffects
 {
     public List<SoldierBatch> DefenderBatches { get; } = new();
+
+    /// <summary>The upgrades bought since the last tick (#1161); the director replaces the soldiers and books each with <see cref="SurvivalRun.CompleteUpgrade"/>.</summary>
+    public List<UpgradeOrder> Upgrades { get; } = new();
     public bool SpawnPlayer { get; set; }
     public bool FinishInitialSpawn { get; set; }
     public WaveStart? StartWave { get; set; }

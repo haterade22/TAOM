@@ -25,7 +25,7 @@ This is a data-reference bug, not an engine bug. **Check the references before s
 ```bash
 python tools/audit_scene_names.py        # settlement scene refs -> full report
 python tools/audit_battle_scenes.py      # field-battle terrain scenes -> crash suspects + coverage
-python tools/remap_stale_scene_names.py --dry-run   # preview fixes; --apply --backup to commit
+python tools/remap_stale_scene_names.py --dry-run   # preview fixes; --apply to commit (it backs up first)
 ```
 
 ## Key gotchas

@@ -391,4 +391,85 @@ public class AlignmentDesertionServiceTests
         }
         Assert.AreEqual(2 * 2 * 2 * 2 * 2 * 2 * 3 * 2 * 2, cases);
     }
+
+    // Recruiting asks the same rule (conflict audit 2026-11-13).
+
+    [TestMethod]
+    public void WouldDesert_OpposedCulture_IsTrue()
+    {
+        Assert.IsTrue(_service.WouldDesert(EvilKingdom, false, false, "gondor"));
+        Assert.IsTrue(_service.WouldDesert(FreeKingdom, true, true, "mordor"));
+    }
+
+    [TestMethod]
+    public void WouldDesert_SameSideOrNeutralCulture_IsFalse()
+    {
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, false, false, "mordor"));
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, false, false, "umbar"));
+        Assert.IsFalse(_service.WouldDesert(NeutralKingdom, false, false, "gondor"));
+    }
+
+    [TestMethod]
+    public void WouldDesert_FollowsTheOwnerAndLocationSwitches()
+    {
+        _settings.ApplyToAi.Returns(false);
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, false, false, "gondor"), "AI switch off: an AI lord keeps the troop.");
+        Assert.IsTrue(_service.WouldDesert(EvilKingdom, true, false, "gondor"), "The player still follows 'Apply To Player'.");
+
+        _settings.ApplyToGarrisons.Returns(false);
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, true, true, "gondor"), "Garrison switch off: a garrison keeps the troop.");
+
+        _settings.Rate.Returns(0f);
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, true, false, "gondor"), "A 0% rate removes nobody.");
+
+        _settings.IsEnabled.Returns(false);
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, true, false, "gondor"));
+    }
+
+    [TestMethod]
+    public void WouldDesert_MatchesCalculateDesertion_ForEverySwitchOwnerAndCulture()
+    {
+        var bools = new[] { false, true };
+        foreach (var enabled in bools)
+        foreach (var ai in bools)
+        foreach (var goodOnly in bools)
+        foreach (var owner in new[] { EvilKingdom, FreeKingdom, NeutralKingdom })
+        foreach (var isPlayerOwned in bools)
+        foreach (var culture in new[] { "gondor", "mordor", "umbar" })
+        {
+            _settings.IsEnabled.Returns(enabled);
+            _settings.ApplyToAi.Returns(ai);
+            _settings.GoodRejectsEvilOnly.Returns(goodOnly);
+
+            var sheds = _service.CalculateDesertion(owner, isPlayerOwned, false,
+                Troops(new DesertionTroopInfo("t", culture, false, 4))).Count > 0;
+
+            Assert.AreEqual(sheds, _service.WouldDesert(owner, isPlayerOwned, false, culture),
+                $"enabled={enabled} ai={ai} goodOnly={goodOnly} owner={owner} player={isPlayerOwned} culture={culture}");
+        }
+    }
+
+    [TestMethod]
+    public void GoodRejectsEvilOnly_EvilOwnerKeepsFreeTroops()
+    {
+        _settings.GoodRejectsEvilOnly.Returns(true);
+        var troops = Troops(new DesertionTroopInfo("gondor_knight", "gondor", false, 20));
+
+        Assert.AreEqual(0, _service.CalculateDesertion(EvilKingdom, false, false, troops).Count);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, false));
+        Assert.IsFalse(_service.WouldDesert(EvilKingdom, false, false, "gondor"));
+    }
+
+    [TestMethod]
+    public void GoodRejectsEvilOnly_FreeOwnerStillShedsEvilTroops()
+    {
+        _settings.GoodRejectsEvilOnly.Returns(true);
+        var troops = Troops(new DesertionTroopInfo("mordor_orc", "mordor", false, 10));
+
+        var result = _service.CalculateDesertion(FreeKingdom, false, false, troops);
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(5, result[0].DesertCount);
+        Assert.IsTrue(_service.WouldDesert(FreeKingdom, false, false, "mordor"));
+    }
 }

@@ -54,7 +54,7 @@ public class LongDefeatSallyWiringTests
     }
 
     [TestMethod]
-    public void NoLongDefeatCode_FadesAHorse_AndOnlyTheRemountFadesAnything()
+    public void NoLongDefeatCode_FadesAHorse_AndOnlyTheRemountAndTheUpgradeFadeAnything()
     {
         var files = RepoPaths.CSharpFiles("Main")
             .Where(f => f.Replace('\\', '/').Contains("/Features/LongDefeat/") || Path.GetFileName(f).StartsWith("LongDefeat") && f.Replace('\\', '/').Contains("/Main/Adapters/"))
@@ -64,9 +64,18 @@ public class LongDefeatSallyWiringTests
             .Where(x => x.Line.Contains(".FadeOut("))
             .ToList();
 
-        Assert.AreEqual(1, fades.Count, string.Join("\n", fades.Select(x => x.File + ": " + x.Line.Trim())));
-        Assert.AreEqual("LongDefeatBattlefieldAdapter.Player.cs", fades[0].File);
-        StringAssert.Contains(fades[0].Line, ".FadeOut(true, false)");
+        var list = string.Join("\n", fades.Select(x => x.File + ": " + x.Line.Trim()));
+        CollectionAssert.AreEquivalent(new[] { "LongDefeatBattlefieldAdapter.Player.cs", "LongDefeatBattlefieldAdapter.Upgrades.cs" }, fades.Select(x => x.File).ToList(), list);
+        Assert.IsTrue(fades.All(x => x.Line.Contains(".FadeOut(true, false)")), list);
+    }
+
+    [TestMethod]
+    public void TheUpgrade_ReadsTheShare_FadesTheOldSoldierWithoutAHorse_ThenSpawnsTheNewOneAtHisPlace_ThenScalesAndWritesTheShare()
+    {
+        var body = Body(Source("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs"), "public LdUpgradeReport ReplaceDefenders(");
+
+        // The remount's recipe (RemountPlayer): the share is read before the fade, and the new soldier gets it after the scale, so the upgrade heals no one and hurts no one.
+        InOrder(body, "LdRemount.ShareOf(", ".FadeOut(true, false)", "Spawn(", "place: new LdPlace(", "ScaleHealth(", ".Health =");
     }
 
     [TestMethod]

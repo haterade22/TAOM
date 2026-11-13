@@ -5021,5 +5021,8 @@
 	<string id="taom_hero_auras_mcm_enabled_hint" text="{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse." />
 	<string id="taom_hero_auras_mcm_strength" text="{=taom_hero_auras_mcm_strength}Hero Aura Strength" />
 	<string id="taom_hero_auras_mcm_strength_hint" text="{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- Messengers -->
+	<string id="taom_messenger_waiting" text="{=taom_messenger_waiting}Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
 
 </strings>

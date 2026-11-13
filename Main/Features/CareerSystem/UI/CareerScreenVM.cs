@@ -321,8 +321,7 @@ public class CareerScreenVM : ViewModel
             if (group == null) continue;
 
             if (group.MaxPicks > 0) hasFork = true;
-            var isLocked = !isTierAvail(group.Tier);
-            var groupVM = new CareerChoiceGroupObjectVM(group, isLocked);
+            var groupVM = new CareerChoiceGroupObjectVM(group);
 
             var choices = _registry.GetChoicesForGroup(groupId);
             foreach (var choice in choices)

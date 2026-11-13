@@ -6,7 +6,9 @@ read it is removed (`taom_enlist_wait_text` sat unused from 3164fb291 until #101
 no check notices. This lists every `taom_*` id in the English strings files and fails when none of
 these names it:
 
-  * a C# string literal under Main/ or Client/ (`{=id}` or the bare id; comments do not count),
+  * a C# string literal (`{=id}` or the bare id; comments do not count) under Main/, Client/ or
+    CoopCompat/, the folders harvest_literal_loc_keys.py registers from (CODE_ROOTS in
+    _loc_sources.py),
   * a data file anywhere under Main/_Module (ModuleData, GUI prefabs and so on) outside the strings
     files and the Languages/ copies: XML, JSON or XSLT, naming `{=id}` or the bare id (XML and XSLT
     comments do not count),
@@ -45,7 +47,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _loc_sources import OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: E402
+from _loc_sources import CODE_ROOTS, OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PREFIX = "taom_"
@@ -120,7 +122,7 @@ def read_tokens(root, strings_files):
     """(code tokens, data tokens): the identifier-shaped tokens a reader could name, from C# string
     literals and from data files. A family's `stem` must be a DATA token."""
     code, data = set(), set()
-    for sub in ("Main", "Client"):
+    for sub in CODE_ROOTS:
         for path in _walk(root / sub, {".cs"}):
             for piece in CSHARP_PIECE.findall(_decode(path)):
                 if piece[0] in "\"@":

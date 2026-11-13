@@ -7827,6 +7827,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="Adı anılan kahramanlar, yakınlarındaki müttefik askerleri her biri kendi yöntemiyle güçlendirir: Dain'in cüceleri ayakta kalır, Aragorn'un adamları soğukkanlılığını korur, elf lordlarının okçuları daha hızlı yay gerer. Yalnızca hero_auras.json dosyasında listelenen kahramanlar bir aura taşır. Bir aura ile bir askerin kendi ırk yeteneği aynı şeyi verdiğinde, güçlü olan geçerlidir; asla toplanmazlar. Bir sonraki aura nabzından itibaren etkili olur." />
     <string id="taom_hero_auras_mcm_strength" text="Kahraman Aura Gücü" />
     <string id="taom_hero_auras_mcm_strength_hint" text="Her auranın bonuslarını çarpar. 1.0, hero_auras.json dosyasında yazıldığı gibidir; 0 tüm auraları kapatır. Moral alt sınırları ve darbeyi savuşturma gibi açık/kapalı etkiler ölçeklenmez. Varsayılan: 1.0." />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>
