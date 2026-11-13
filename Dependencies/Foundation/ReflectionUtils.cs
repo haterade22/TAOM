@@ -5,9 +5,9 @@ using System.Reflection;
 namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
-/// Small reflection helpers used by the defensive shields (PatchShield, SaveShield,
-/// VersionProbe). All methods are exception-safe — they
-/// return null/empty/false on any failure rather than throwing.
+/// Finds a type when its home assembly is unknown. Used by IncompatibleModDetector, SaveShield
+/// and VersionProbe in this assembly, and by the CoopInterop feature in TAOM.dll. Exception-safe:
+/// it returns null on any failure rather than throwing.
 ///
 /// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements
 /// BetaDeps.Foundation.ReflectionUtils.
@@ -42,40 +42,5 @@ public static class ReflectionUtils
             // Swallow.
         }
         return null;
-    }
-
-    /// <summary>
-    /// Tries to invoke a static method by name on a type, returning the result or null.
-    /// Catches all exceptions. Used by VersionProbe for safe API-discovery calls.
-    /// </summary>
-    public static object? TryInvokeStatic(Type type, string methodName, params object[] args)
-    {
-        if (type == null || string.IsNullOrEmpty(methodName)) return null;
-        try
-        {
-            var m = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            return m?.Invoke(null, args);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Gets the simple assembly name (no version/culture/pubkey) that defines the
-    /// given type. Returns empty string on failure. Used by SaveShield for culprit
-    /// attribution.
-    /// </summary>
-    public static string GetAssemblySimpleName(Type? type)
-    {
-        try
-        {
-            return type?.Assembly.GetName().Name ?? string.Empty;
-        }
-        catch
-        {
-            return string.Empty;
-        }
     }
 }

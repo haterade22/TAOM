@@ -15,9 +15,9 @@ public static class MBMapScene_GetBattleSceneIndexMap_Patch
 {
     // Phase 9b #156 — `volatile` prevents the JIT from caching this re-entry guard in a register
     // and missing writes from another thread. The patch fires from rendering threads (`GetBattleSceneIndexMap`
-    // is called during map load and battle init), so multi-thread visibility matters. Dormant
-    // today (category Patch0_BattleScenes is commented out in SubModule.cs), but if the feature is
-    // ever re-enabled this guard must be cross-thread-correct. Also marked this type `static` per
+    // is called during map load and battle init), so multi-thread visibility matters. The category
+    // Patch0_BattleScenes is live: SubModule.OnSubModuleLoad applies it at every module load
+    // (re-enabled 2026-06-01), so this guard runs in play. Also marked this type `static` per
     // the Harmony 2 patch-type naming rule (same fix as #151).
     //
     // Wording note (2026-08-01): the previous phrasing put the word "class" late on one comment
