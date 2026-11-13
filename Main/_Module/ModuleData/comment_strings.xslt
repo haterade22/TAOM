@@ -10,7 +10,9 @@
 	</xsl:template>
 
 	<!-- ============================================================ -->
-	<!-- Remove "the" before faction/kingdom/clan names               -->
+	<!-- Lord self-introductions: "the" removal before faction and    -->
+	<!-- clan names, and Middle-earth lore for the retagged cultures  -->
+	<!-- (Dale, Khand, Rohan, Harad, Rhun: taom_lord_intro_* keys)    -->
 	<!-- ============================================================ -->
 
 	<xsl:template match="string[@id='str_comment_vassal_introduces_self.default']">
@@ -168,7 +170,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.khuzait_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhûn, from the shores of the inland sea to the far plains.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhun, from the shores of the inland sea to the far plains.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -176,15 +178,16 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.khuzait']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhûn for generations.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhun for generations.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- ============================================================ -->
-	<!-- Middle-earth self-introductions: vanilla rows that named        -->
-	<!-- Calradian peoples or places. New TAOM keys, so no language keeps -->
-	<!-- the old Calradian translation (CommentStringLoreTests).          -->
+	<!-- Dunland (empire) self-introductions: the last 5 of the 19        -->
+	<!-- taom_lord_intro_* rows. Vanilla rows named Calradian peoples or  -->
+	<!-- places. New TAOM keys, so no language keeps the old Calradian    -->
+	<!-- translation (CommentStringLoreTests).                            -->
 	<!-- ============================================================ -->
 
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire']">
@@ -226,6 +229,8 @@
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
+
+	<!-- Default noble and minor-faction introductions: "the" removal only (vanilla keys) -->
 
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.default']">
 		<xsl:copy>

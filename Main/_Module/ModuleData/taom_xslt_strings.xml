@@ -1528,9 +1528,9 @@
 
 	<string id="taom_lord_intro_harad_2" text="{=taom_lord_intro_harad_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the oldest and proudest line under the sun of Harad." />
 
-	<string id="taom_lord_intro_rhun_1" text="{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhûn, from the shores of the inland sea to the far plains." />
+	<string id="taom_lord_intro_rhun_1" text="{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhun, from the shores of the inland sea to the far plains." />
 
-	<string id="taom_lord_intro_rhun_2" text="{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhûn for generations." />
+	<string id="taom_lord_intro_rhun_2" text="{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhun for generations." />
 
 	<string id="taom_lord_intro_dunland_1" text="{=taom_lord_intro_dunland_1}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My kin held these hills long before the horse-lords came." />
 
