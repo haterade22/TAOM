@@ -167,6 +167,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     // #1111: the diplomacy model asks the switch at every AI join, defection and mercenary score of the daily clan tick.
     [DataRow(typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
+    // Hall Seats: not a hot path (read once per spawn pass, when a hall spawns its characters); the accessor still takes the settings once.
+    [DataRow(typeof(TAOM.Features.HallSeats.HallSeatsSettingsProvider))]
     // Perf: the war check (party-AI worker thread too) reads four settings; the army AI scores every candidate; the others are read per
     // bandit spawn, per settlement day tick, per marriage check, per encyclopedia list and per settlement food and gold model call.
     [DataRow(typeof(TAOM.Features.Diplomacy.TaomSettingsProvider))]
@@ -495,15 +497,39 @@ public class CampaignHotPathSettingsProvidersTests
         var mcm = new TaomSettings();
         var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
         cfg.GetConfig().Returns(new AlignmentDesertionConfig());
-        var sut = new AlignmentDesertionSettingsProvider(cfg, mcm);
+        var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, mcm);
         Assert.IsTrue(sut.IsEnabled);
         Assert.AreEqual(0.5f, sut.Rate, 0.0001f);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly);
 
         mcm.EnableAlignmentDesertion = false;
         mcm.AlignmentDesertionRate = 0.25f;
+        recruitment.IsEnabled.Returns(true);
+        recruitment.GoodRejectsEvilOnly.Returns(true);
 
         Assert.IsFalse(sut.IsEnabled);
         Assert.AreEqual(0.25f, sut.Rate, 0.0001f);
+        Assert.IsTrue(sut.GoodRejectsEvilOnly, "Desertion reads Recruitment Alignment's 'Only Good Rejects Evil' live.");
+    }
+
+    [TestMethod]
+    public void AlignmentDesertion_GoodRejectsEvilOnly_NeedsRecruitmentAlignmentSwitchedOn()
+    {
+        var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
+        cfg.GetConfig().Returns(new AlignmentDesertionConfig());
+        var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, new TaomSettings());
+        recruitment.GoodRejectsEvilOnly.Returns(true);
+
+        recruitment.IsEnabled.Returns(false);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly, "A leftover 'Only Good Rejects Evil' does nothing while Recruitment Alignment is off.");
+
+        recruitment.IsEnabled.Returns(true);
+        Assert.IsTrue(sut.GoodRejectsEvilOnly);
+
+        recruitment.GoodRejectsEvilOnly.Returns(false);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly);
     }
 
     [TestMethod]

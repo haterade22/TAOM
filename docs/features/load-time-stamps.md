@@ -205,8 +205,9 @@ Always written, whatever the toggle: the `[LoadStamps] ready`, `[LoadXml] ready`
 
 ## Log lines
 
-All INFO (flushed synchronously by `FileLogger`) except the WARNINGs (H3, X3, C4, C5, C6);
-none is per frame. Every example below is taken from the tests (`LoadTimeStampLinesTests`,
+All INFO except the WARNINGs (H3, X3, C4, C5, C6); `[PatchApply]` lines are on disk when the call returns (the tag is in
+`FileLogger.DurableInfoTags`), the `[LoadStamps]`, `[LoadXml]`, `[LoadPhase]` and `[Lifecycle]` lines are flushed by the
+writer thread within about a third of a second; none is per frame. Every example below is taken from the tests (`LoadTimeStampLinesTests`,
 `PatchCategoryApplierTests`, `HookStampServiceTests`, `LoadXmlStampServiceTests`,
 `LifecycleTimingServiceTests`) and shows example values; the handler names are shapes, not
 measurements. Milliseconds always print with two decimals and a dot.
@@ -329,9 +330,9 @@ What every player pays, toggle off:
   `[PatchApply] phase=OnSubModuleLoad scope=total` line; two clock reads per patch category (about
   100); the three ready headers and the four phase totals.
 - **Per `LoadXML` call** (about 25 to 40 per load): a thread-local push and pop, a few clock reads and
-  one synchronous INFO line; one summary line per game initialization.
+  one INFO line (queued, flushed by the writer thread); one summary line per game initialization.
 - **Per campaign dispatch** (three per new campaign, four per save load): one read of the toggle, a
-  small scope object, three clock reads and one synchronous INFO line (C3). **Per hook:** one read of
+  small scope object, three clock reads and one INFO line (C3). **Per hook:** one read of
   the toggle.
 
 Nothing runs per frame. With the toggle on, each dispatch adds the listener swap (a reflection read

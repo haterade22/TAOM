@@ -1004,8 +1004,9 @@ and walk-into test is owed on the new body, and a refit would re-run `tools/skel
 
 ## Reading the howdah log (#627)
 
-The howdah writes to the TAOM log, `Logs/taom_debug_<timestamp>.log` in the game's user folder (30 files kept, INFO
-flushed as it is written, so a crash keeps the last lines). A slide or a missing howdah is not a crash, so no crash
+The howdah writes to the TAOM log, `Logs/taom_debug_<timestamp>.log` in the game's user folder (30 files kept; the `[Howdah]` INFO
+lines are not a durable tag, so the writer thread flushes them within about a third of a second and a hard crash can
+lose the last fraction of a second). A slide or a missing howdah is not a crash, so no crash
 bundle is written: ask for that log file. MCM `Battle Tactics/Howdah Diagnostics` (on by default while the platform is
 tested) gates the lines marked (toggle); the rest always log.
 

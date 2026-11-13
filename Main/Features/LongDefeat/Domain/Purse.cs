@@ -11,7 +11,7 @@ internal enum PurseSource
     Commander,
 }
 
-/// <summary>What gold was spent on, for the report's <c>gold.spentOn</c>: packs, the gate (levels and repairs), the high towers, field care and the Elven Volley.</summary>
+/// <summary>What gold was spent on, for the report's <c>gold.spentOn</c>: packs, the gate (levels and repairs), the high towers, field care, the Elven Volley and soldier upgrades (#1161).</summary>
 internal enum PurseSink
 {
     Packs,
@@ -19,6 +19,7 @@ internal enum PurseSink
     Towers,
     FieldCare,
     Volley,
+    Upgrades,
 }
 
 /// <summary>The player's gold. The balance is always start plus earned minus spent, which the report checks.</summary>
@@ -63,5 +64,19 @@ internal sealed class Purse
         Spent += amount;
         _spentOn[sink] = SpentOn(sink) + amount;
         return true;
+    }
+
+    /// <summary>
+    /// Gives back gold spent on <paramref name="sink"/> that bought nothing (an upgrade whose soldier was gone when it went out), as if it had never been spent, so the sinks still sum to
+    /// <see cref="Spent"/>. A refund that is not positive, or larger than the sink holds, changes nothing.
+    /// </summary>
+    public void Refund(int amount, PurseSink sink)
+    {
+        if (amount <= 0 || amount > SpentOn(sink))
+            return;
+
+        Balance += amount;
+        Spent -= amount;
+        _spentOn[sink] = SpentOn(sink) - amount;
     }
 }

@@ -129,6 +129,10 @@ public sealed class CrashReportService : ICrashReportService
             // every frame would otherwise write one per frame.
             _outcomes.WriteSummary("crash");
 
+            // Plain INFO lines can sit in memory for about 350 ms after the call. Flush them before the collectors read the log tail
+            // and the bundle copies taom_debug.log, so the bundle ends at the crash and not a moment before it.
+            _logger.TryFlush();
+
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).
             // AppDomainExceptionHook and Native2ManagedBridge pass offMainThread when the throw
             // arrived on another thread; then skip Mission/Campaign reads (not thread-safe) and

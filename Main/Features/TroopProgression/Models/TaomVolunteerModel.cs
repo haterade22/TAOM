@@ -2,6 +2,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Adapters;
+using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.CoopInterop;
@@ -17,6 +18,7 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     private readonly VolunteerProductionService _volunteerProduction;
     private readonly IRecruitmentAlignmentService _recruitmentAlignment;
     private readonly ICastleRecruitmentService _castleRecruitment;
+    private readonly IDesertionRecruitGuard _desertionGuard;
     private readonly IPlayerControlQuery _players;
 
     // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
@@ -27,9 +29,10 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         IVolunteerContextAdapter contextAdapter,
         VolunteerProductionService volunteerProduction,
         IRecruitmentAlignmentService recruitmentAlignment,
-        ICastleRecruitmentService castleRecruitment)
+        ICastleRecruitmentService castleRecruitment,
+        IDesertionRecruitGuard desertionGuard)
         : this(volunteerTierService, recruitmentService, contextAdapter, volunteerProduction, recruitmentAlignment,
-            castleRecruitment, IoC.Resolve<IPlayerControlQuery>())
+            castleRecruitment, desertionGuard, IoC.Resolve<IPlayerControlQuery>())
     {
     }
 
@@ -40,9 +43,11 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         VolunteerProductionService volunteerProduction,
         IRecruitmentAlignmentService recruitmentAlignment,
         ICastleRecruitmentService castleRecruitment,
+        IDesertionRecruitGuard desertionGuard,
         IPlayerControlQuery players)
     {
         _castleRecruitment = castleRecruitment;
+        _desertionGuard = desertionGuard;
         _players = players;
         _volunteerTierService = volunteerTierService;
         _recruitmentService = recruitmentService;
@@ -66,6 +71,8 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// The player's own hero is never blocked by the castle rule; companion-led clan parties count as AI
     /// lords. <c>Patch114_AiVolunteerEstimate_Postfix</c> (#887) is the twin that extracts the same keys for AI trip
     /// scoring; change both together. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
+    /// Last, <see cref="IDesertionRecruitGuard.CapHeroIndex"/> stops the index before the first volunteer that alignment
+    /// desertion would take from the buyer (a captured fief's old-culture volunteers), so nobody buys a deserter.
     /// </summary>
     public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
     {
@@ -74,8 +81,16 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         return _castleRecruitment.BlocksAiRecruitAtCastle(sellerInCastle: sellerSettlement?.IsCastle == true, buyerIsPlayer: isPlayer)
                || _recruitmentAlignment.IsRecruitmentBlocked(buyerHero?.Clan?.Kingdom?.StringId, sellerSettlement?.MapFaction?.StringId, isPlayer)
             ? -1
-            : base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
+            : _desertionGuard.CapHeroIndex(buyerHero, sellerHero, base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation), isPlayer);
     }
+
+    /// <summary>
+    /// Garrison auto-recruit (vanilla <c>GarrisonRecruitmentCampaignBehavior</c>, a slot count) capped before the first
+    /// volunteer that alignment desertion would take from the garrison, so a garrison does not pay for troops that
+    /// desert the next day.
+    /// </summary>
+    public override int MaximumIndexGarrisonCanRecruitFromHero(Settlement settlement, Hero sellerHero)
+        => _desertionGuard.CapGarrisonSlots(settlement, sellerHero, base.MaximumIndexGarrisonCanRecruitFromHero(settlement, sellerHero));
 
     public override CharacterObject GetBasicVolunteer(Hero sellerHero)
     {

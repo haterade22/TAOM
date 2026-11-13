@@ -862,6 +862,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Lets you talk to the governor of a town or castle your clan owns, inside that fief, and pay silver to the watch to raise its loyalty. Each offer shows its price, and there is a ceiling on how far silver can raise loyalty. When off, the line is hidden. Single-player only. Default: on.")]
     public bool EnableWatchSilver { get; set; } = true;
 
+    // GroupOrder 6 sorts it after the Watch-Silver group (5); the group's first property carries it. Ships ON and is read
+    // once per spawn pass, so a change applies from the next visit to a lord's hall.
+    [SettingPropertyGroup("Fief Management/Hall Seats", GroupOrder = 6)]
+    [SettingPropertyBool("Hall Seats", Order = 0, RequireRestart = false,
+        HintText = "A lord's hall shows only as many lords as it has places for, instead of packing every lord in the town or castle onto one spot. The settlement's owner, the ruler, the governor, your own clan, quest givers and the lord you open a conversation with from the town menu always appear; the other places go to the owner's clan first, then clan leaders, then the strongest clans. The lords left out are still in the settlement. Takes effect from the next visit. Default: on.")]
+    public bool EnableHallSeats { get; set; } = true;
+
     // --- Character Screen / Loremaster's Line (#877) ---
 
     // GroupOrder 44 orders the "Loremaster's Line" subgroup inside "Character Screen"; the group's first property carries it.
@@ -1212,7 +1219,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
     [SettingPropertyBool("Only Good Rejects Evil", Order = 1, RequireRestart = false,
-        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere. When OFF (default), the block is symmetric — Free and Evil each refuse the other.")]
+        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere, and Alignment Desertion then removes no Free troops from Evil lords or their garrisons at all, not only the ones they recruit. When OFF (default), the block is symmetric: Free and Evil each refuse the other, and opposed troops desert either way.")]
     public bool AlignmentRecruitmentGoodRejectsEvilOnly { get; set; } = false;
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
@@ -1355,7 +1362,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Alignment Desertion", GroupOrder = 38)]
     [SettingPropertyBool("Enable Alignment Desertion", Order = 0, RequireRestart = false,
-        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day — an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. When off, vanilla.")]
+        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables' volunteers or by garrison auto-recruit (tavern mercenaries are not checked). With Recruitment Alignment on and its 'Only Good Rejects Evil' on, Evil lords and their garrisons shed no Free troops. When off, vanilla.")]
     public bool EnableAlignmentDesertion { get; set; } = true;
 
     [SettingPropertyGroup("World/Alignment Desertion")]

@@ -62,7 +62,7 @@ matters only in that mode, and most of them stand a feature down.
 
 | ID | Feature group | Status | Evidence | Action |
 |---|---|---|---|---|
-| C1 | Race, culture, possession | PARTIAL | `PlayerPossessionService.cs:39,53` keeps choices in process memory only; a reconnect loses them | Server-held identity snapshot per player |
+| C1 | Race, culture, possession | PARTIAL | `PlayerPossessionService` (`CaptureCharacterCreationChoices`, `TryConsumePossession`) keeps choices in process memory only; a reconnect loses them | Server-held identity snapshot per player |
 | C2 | War of the Ring | PARTIAL | `WarOfTheRingMomentumBehavior.cs:139` gated; attribution is fixed (T5); `TAOM.CoopCompat` relays the momentum state from the server to the clients (`MomentumRelayService`, #967 C3). Not checked in a session | In-game check (`taom.coopcompat.momentum.*` in `tools/ingame_checks/967.toml`) |
 | C3 | Careers and special resources | PRESENT | T1, T2 and the special-resource half of T8 are partly closed by #967 C1 (careers and the balance mirror remain); T3 attributes the recruit charge but it has no effect until balances are server-owned | Server-owned balances with a command and acknowledgement protocol (#967) |
 | C4 | Recruiting and emissary purchase | PARTIAL | T3 (attributed, no effect yet) and T4 (the guest purchase is refused) | As T3 and T4 |

@@ -38,7 +38,7 @@ public class MessengerServiceTests
     private static HeroSnapshot ValidActiveHero(string id = "lord_1") =>
         new HeroSnapshot(id,
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
     // --- Validation: skip-guard exhaustion ---
@@ -55,7 +55,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("player",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: true,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: true,
             isInPlayerParty: true);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -68,7 +68,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_dead",
             isAlive: false, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Dead,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -81,7 +81,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_prisoner",
             isAlive: true, isPrisoner: true, isChild: false, isFugitive: false,
-            isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Prisoner,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -94,7 +94,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_child",
             isAlive: true, isPrisoner: false, isChild: true, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -107,7 +107,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_fugitive",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: true,
-            isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Fugitive,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -120,7 +120,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_idle",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: false, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.NotSpawned,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -133,7 +133,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("companion",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: true, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: true, isHumanPlayerCharacter: false,
             isInPlayerParty: true);
 
         var result = _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false);
@@ -154,7 +154,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false, sameSettlement: true);
 
         Assert.AreEqual(MessengerValidationResult.SameSettlement, _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false));
@@ -165,7 +165,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false, sameArmy: true);
 
         Assert.AreEqual(MessengerValidationResult.SameArmy, _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: false));
@@ -176,7 +176,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false, sameSettlement: true, sameArmy: true);
 
         Assert.AreEqual(MessengerValidationResult.Ok, _sut.CanSendMessenger(hero, playerGold: 1000, quotedCost: 50, inPerson: true));
@@ -199,7 +199,7 @@ public class MessengerServiceTests
     {
         var hero = new HeroSnapshot("lord_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: true, isWanderer: false, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.Active,isWanderer: false, isHumanPlayerCharacter: false,
             isInPlayerParty: false, sameSettlement: true);
 
         Assert.AreEqual(MessengerValidationResult.SameSettlement, _sut.CanSendMessenger(hero, playerGold: 0, quotedCost: 50, inPerson: false));
@@ -220,12 +220,64 @@ public class MessengerServiceTests
     {
         var wanderer = new HeroSnapshot("wanderer_1",
             isAlive: true, isPrisoner: false, isChild: false, isFugitive: false,
-            isActive: false, isWanderer: true, isHumanPlayerCharacter: false,
+            heroState: MessengerHeroState.NotSpawned,isWanderer: true, isHumanPlayerCharacter: false,
             isInPlayerParty: false);
 
         var result = _sut.CanSendMessenger(wanderer, playerGold: 1000, quotedCost: 50, inPerson: false);
 
         Assert.AreEqual(MessengerValidationResult.Ok, result);
+    }
+
+    // One state at a time, with the facts the engine derives from it (v1.5.7 Hero.cs:303-319).
+    private static HeroSnapshot InState(MessengerHeroState state, bool wanderer, bool special = false) =>
+        new HeroSnapshot("hero_1",
+            isAlive: state != MessengerHeroState.Dead,
+            isPrisoner: state == MessengerHeroState.Prisoner,
+            isChild: false,
+            isFugitive: state == MessengerHeroState.Fugitive,
+            heroState: state,
+            isWanderer: wanderer,
+            isHumanPlayerCharacter: false,
+            isInPlayerParty: false,
+            isSpecial: special);
+
+    [DataTestMethod]
+    [DataRow(MessengerHeroState.Released, false, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.Traveling, false, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.Released, true, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.Traveling, true, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.NotSpawned, false, MessengerValidationResult.TargetUnavailable)]
+    [DataRow(MessengerHeroState.Disabled, false, MessengerValidationResult.TargetUnavailable)]
+    [DataRow(MessengerHeroState.Disabled, true, MessengerValidationResult.TargetUnavailable)]
+    public void CanSendMessenger_HeroNotActive_FollowsTheArrivalRule(MessengerHeroState state, bool wanderer, MessengerValidationResult expected)
+        => Assert.AreEqual(expected, _sut.CanSendMessenger(InState(state, wanderer), playerGold: 1000, quotedCost: 50, inPerson: false));
+
+    // The engine's daily settle skips a released hero of the Special occupation, so the send refuses one; a Special hero on a
+    // journey or Active can be sent to like any other.
+    [DataTestMethod]
+    [DataRow(MessengerHeroState.Released, MessengerValidationResult.TargetUnavailable)]
+    [DataRow(MessengerHeroState.Fugitive, MessengerValidationResult.HeroFugitive)]
+    [DataRow(MessengerHeroState.Traveling, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.Active, MessengerValidationResult.Ok)]
+    public void CanSendMessenger_SpecialHero_IsRefusedOnlyWhereTheEngineNeverSettlesIt(MessengerHeroState state, MessengerValidationResult expected)
+        => Assert.AreEqual(expected, _sut.CanSendMessenger(InState(state, wanderer: false, special: true), playerGold: 1000, quotedCost: 50, inPerson: false));
+
+    [TestMethod]
+    public void CanSendMessenger_NeverAcceptsATargetTheArrivalWouldLose()
+    {
+        // #1133: the player must not be able to pay for a messenger that is always lost on arrival.
+        foreach (MessengerHeroState state in System.Enum.GetValues(typeof(MessengerHeroState)))
+        foreach (var wanderer in new[] { false, true })
+        foreach (var special in new[] { false, true })
+        {
+            var target = InState(state, wanderer, special);
+            if (_sut.CanSendMessenger(target, playerGold: 1000, quotedCost: 50, inPerson: false) != MessengerValidationResult.Ok)
+                continue;
+
+            Assert.AreNotEqual(MessengerArrivalVerdict.Lost,
+                _sut.ClassifyArrival(target, playerAvailable: true, targetPartyInMapEvent: false),
+                $"{state} wanderer={wanderer} special={special} can be sent to but is lost on arrival");
+        }
     }
 
     [TestMethod]

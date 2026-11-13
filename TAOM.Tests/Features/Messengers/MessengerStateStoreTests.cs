@@ -141,6 +141,34 @@ public class MessengerStateStoreTests
     }
 
     [TestMethod]
+    public void TryMarkWaitNoticeShown_IsTrueTheFirstTimeOnly()
+    {
+        var messenger = Make("h1", arrived: true);
+
+        Assert.IsTrue(messenger.TryMarkWaitNoticeShown());
+        Assert.IsFalse(messenger.TryMarkWaitNoticeShown());
+        Assert.IsFalse(messenger.TryMarkWaitNoticeShown());
+    }
+
+    [TestMethod]
+    public void TheWaitNoticeLatch_IsNotSaved_SoTheSaveFormatKeepsItsFourFields()
+    {
+        var messenger = Make("h1", dispatchDays: 3.5, x: 1f, y: 2f, arrived: true);
+        var before = messenger.Serialize();
+        messenger.TryMarkWaitNoticeShown();
+        _sut.Add(messenger);
+
+        Assert.AreEqual(before, messenger.Serialize());
+        Assert.AreEqual(4, messenger.Serialize().Split('|').Length);
+
+        var restored = new MessengerStateStore(_logger);
+        restored.Deserialize(_sut.Serialize());
+
+        // After a load the player is told once more that the messenger still waits.
+        Assert.IsTrue(restored.Get("h1").TryMarkWaitNoticeShown());
+    }
+
+    [TestMethod]
     public void Deserialize_NullData_ClearsExisting()
     {
         _sut.Add(Make("h1"));
