@@ -10,6 +10,11 @@ public class CareerAbilityService : ICareerAbilityService
     private readonly IModLogger _logger;
     private readonly Dictionary<string, CareerAbility> _abilities = new Dictionary<string, CareerAbility>();
 
+    // #1046: hero|career pairs already warned about. The battle HUD calls GetOrCreateAbility every
+    // frame, and a miss is not cached (a career switch can fix it mid-session), so without this a
+    // saved career id the data no longer defines writes one warning per frame.
+    private readonly HashSet<string> _missingCareerWarned = new HashSet<string>();
+
     public CareerAbilityService(ICareerConfigProvider config, IModLogger logger)
     {
         _config = config;
@@ -31,7 +36,8 @@ public class CareerAbilityService : ICareerAbilityService
         var career = registry.GetCareer(careerId);
         if (career == null)
         {
-            _logger.LogWarning($"CareerSystem: GetOrCreateAbility — career '{careerId}' not found in registry for hero '{heroStringId}'");
+            if (_missingCareerWarned.Add(heroStringId + "|" + careerId))
+                _logger.LogWarning($"CareerSystem: GetOrCreateAbility — career '{careerId}' not found in registry for hero '{heroStringId}'");
             return null;
         }
 
@@ -109,5 +115,6 @@ public class CareerAbilityService : ICareerAbilityService
     public void ClearAll()
     {
         _abilities.Clear();
+        _missingCareerWarned.Clear();
     }
 }
