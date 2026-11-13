@@ -13,6 +13,9 @@ namespace TAOM.Features.BanditManagement;
 /// </summary>
 public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvider
 {
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     private const float DefaultDensityCurve = 1.5f;
     private const float DefaultPartySizeCurve = 1.5f;
     private const float DefaultBossFightCurve = 1.5f;
@@ -26,29 +29,29 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
     // if the player drags BanditPartiesPerHideoutCap to 1.
     private const int MinPartiesToInfestValue = 1;
 
-    public bool IsEnabled => TaomSettings.Instance?.EnableBanditScaling ?? true;
+    public bool IsEnabled => Settings?.EnableBanditScaling ?? true;
 
     public float DensityCurve =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditDensityCurve, DefaultDensityCurve, 0f, 5f);
+        SettingClamp.Clamp(Settings?.BanditDensityCurve, DefaultDensityCurve, 0f, 5f);
 
     public float PartySizeCurve =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditPartySizeCurve, DefaultPartySizeCurve, 0f, 5f);
+        SettingClamp.Clamp(Settings?.BanditPartySizeCurve, DefaultPartySizeCurve, 0f, 5f);
 
     public float BossFightCurve =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditBossFightCurve, DefaultBossFightCurve, 0f, 5f);
+        SettingClamp.Clamp(Settings?.BanditBossFightCurve, DefaultBossFightCurve, 0f, 5f);
 
     public int MaxHideoutsPerFactionCap =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditMaxHideoutsPerFaction, DefaultMaxHideoutsPerFactionCap, 1, 100);
+        SettingClamp.Clamp(Settings?.BanditMaxHideoutsPerFaction, DefaultMaxHideoutsPerFactionCap, 1, 100);
 
     public int MaxPartiesPerHideoutCap =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditPartiesPerHideoutCap, DefaultMaxPartiesPerHideoutCap, 1, 20);
+        SettingClamp.Clamp(Settings?.BanditPartiesPerHideoutCap, DefaultMaxPartiesPerHideoutCap, 1, 20);
 
     public int InitialHideoutsPerFaction =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditStartingHideoutsPerFaction, DefaultInitialHideoutsPerFaction, 1, 30);
+        SettingClamp.Clamp(Settings?.BanditStartingHideoutsPerFaction, DefaultInitialHideoutsPerFaction, 1, 30);
 
     public int MinPartiesToInfest =>
         SettingClamp.Clamp(MinPartiesToInfestValue, MinPartiesToInfestValue, 1, MaxPartiesPerHideoutCap);
 
     public int HideoutBossBodyguards =>
-        SettingClamp.Clamp(TaomSettings.Instance?.BanditHideoutBossBodyguards, DefaultHideoutBossBodyguards, 0, 10);
+        SettingClamp.Clamp(Settings?.BanditHideoutBossBodyguards, DefaultHideoutBossBodyguards, 0, 10);
 }

@@ -33,13 +33,21 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
     private readonly IModLogger _logger;
     private readonly ICoopSessionProvider _coopSession;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // behavior is built.
     public CastleRecruitmentBehavior(ICastleRecruitmentService service, IModLogger logger,
         ICoopSessionProvider coopSession)
+        : this(service, logger, coopSession, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal CastleRecruitmentBehavior(ICastleRecruitmentService service, IModLogger logger,
+        ICoopSessionProvider coopSession, IPlayerControlQuery players)
     {
         _service = service;
         _logger = logger;
         _coopSession = coopSession;
-        _maintainer = new CastleNotableMaintainer(service, logger);
+        _maintainer = new CastleNotableMaintainer(service, logger, players);
         _dispatcher = new CastleAiRecruitDispatcher(logger, coopSession);
     }
 

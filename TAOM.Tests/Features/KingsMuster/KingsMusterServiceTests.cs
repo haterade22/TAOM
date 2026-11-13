@@ -180,4 +180,28 @@ public class KingsMusterServiceTests
 
         _config.DidNotReceive().GetConfig();
     }
+
+    // AppliedFactor tells the Realms liege discount what this call already got, so the two do not stack.
+    [TestMethod]
+    public void AppliedFactor_AnAiRuler_IsTheFactor()
+    {
+        Assert.AreEqual(0.5f, Sut().AppliedFactor(true, false), 1e-6f);
+    }
+
+    [TestMethod]
+    public void AppliedFactor_NoDiscountCases_AreOne()
+    {
+        var sut = Sut();
+        Assert.AreEqual(1f, sut.AppliedFactor(false, false), 1e-6f, "not a ruler");
+        Assert.AreEqual(1f, sut.AppliedFactor(true, true), 1e-6f, "the player");
+        _settings.DiscountEnabled.Returns(false);
+        Assert.AreEqual(1f, sut.AppliedFactor(true, false), 1e-6f, "switch off");
+    }
+
+    [TestMethod]
+    public void AppliedFactor_MatchesApplyRulerDiscount()
+    {
+        var sut = Sut();
+        Assert.AreEqual(AiRuler(sut, 1000), (int)(1000 * sut.AppliedFactor(true, false)));
+    }
 }

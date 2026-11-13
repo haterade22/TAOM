@@ -1040,6 +1040,446 @@
 
 	<string id="aom_rhun_clan_name_10" text="{=aom_rhun_clan_name_10}Golden Horde" />
 
+	<string id="aom_dale_male_name_1" text="{=aom_dale_male_name_1}Arnulf" />
+
+	<string id="aom_dale_male_name_2" text="{=aom_dale_male_name_2}Bjarki" />
+
+	<string id="aom_dale_male_name_3" text="{=aom_dale_male_name_3}Eirik" />
+
+	<string id="aom_dale_male_name_4" text="{=aom_dale_male_name_4}Hallbjorn" />
+
+	<string id="aom_dale_male_name_5" text="{=aom_dale_male_name_5}Ingvald" />
+
+	<string id="aom_dale_male_name_6" text="{=aom_dale_male_name_6}Kjartan" />
+
+	<string id="aom_dale_male_name_7" text="{=aom_dale_male_name_7}Sigvard" />
+
+	<string id="aom_dale_male_name_8" text="{=aom_dale_male_name_8}Torvald" />
+
+	<string id="aom_dale_male_name_9" text="{=aom_dale_male_name_9}Ulfrik" />
+
+	<string id="aom_dale_male_name_10" text="{=aom_dale_male_name_10}Vigmar" />
+
+	<string id="aom_dale_male_name_11" text="{=aom_dale_male_name_11}Asmund" />
+
+	<string id="aom_dale_male_name_12" text="{=aom_dale_male_name_12}Dagfinn" />
+
+	<string id="aom_dale_male_name_13" text="{=aom_dale_male_name_13}Egil" />
+
+	<string id="aom_dale_male_name_14" text="{=aom_dale_male_name_14}Finnvald" />
+
+	<string id="aom_dale_male_name_15" text="{=aom_dale_male_name_15}Gisli" />
+
+	<string id="aom_dale_male_name_16" text="{=aom_dale_male_name_16}Hallstein" />
+
+	<string id="aom_dale_male_name_17" text="{=aom_dale_male_name_17}Hrolf" />
+
+	<string id="aom_dale_male_name_18" text="{=aom_dale_male_name_18}Ivar" />
+
+	<string id="aom_dale_male_name_19" text="{=aom_dale_male_name_19}Jorund" />
+
+	<string id="aom_dale_male_name_20" text="{=aom_dale_male_name_20}Kolgrim" />
+
+	<string id="aom_dale_male_name_21" text="{=aom_dale_male_name_21}Leidolf" />
+
+	<string id="aom_dale_male_name_22" text="{=aom_dale_male_name_22}Mord" />
+
+	<string id="aom_dale_male_name_23" text="{=aom_dale_male_name_23}Njal" />
+
+	<string id="aom_dale_male_name_24" text="{=aom_dale_male_name_24}Oddvar" />
+
+	<string id="aom_dale_male_name_25" text="{=aom_dale_male_name_25}Ragnvald" />
+
+	<string id="aom_dale_male_name_26" text="{=aom_dale_male_name_26}Sindri" />
+
+	<string id="aom_dale_male_name_27" text="{=aom_dale_male_name_27}Steinar" />
+
+	<string id="aom_dale_male_name_28" text="{=aom_dale_male_name_28}Thorgrim" />
+
+	<string id="aom_dale_male_name_29" text="{=aom_dale_male_name_29}Tryggve" />
+
+	<string id="aom_dale_male_name_30" text="{=aom_dale_male_name_30}Vemund" />
+
+	<string id="aom_dale_male_name_31" text="{=aom_dale_male_name_31}Alfvin" />
+
+	<string id="aom_dale_male_name_32" text="{=aom_dale_male_name_32}Bersi" />
+
+	<string id="aom_dale_male_name_33" text="{=aom_dale_male_name_33}Eystein" />
+
+	<string id="aom_dale_male_name_34" text="{=aom_dale_male_name_34}Gunnar" />
+
+	<string id="aom_dale_male_name_35" text="{=aom_dale_male_name_35}Hreidar" />
+
+	<string id="aom_dale_male_name_36" text="{=aom_dale_male_name_36}Hjalmar" />
+
+	<string id="aom_dale_male_name_37" text="{=aom_dale_male_name_37}Ingolf" />
+
+	<string id="aom_dale_male_name_38" text="{=aom_dale_male_name_38}Kari" />
+
+	<string id="aom_dale_male_name_39" text="{=aom_dale_male_name_39}Ljot" />
+
+	<string id="aom_dale_male_name_40" text="{=aom_dale_male_name_40}Ormar" />
+
+	<string id="aom_dale_male_name_41" text="{=aom_dale_male_name_41}Ranulf" />
+
+	<string id="aom_dale_male_name_42" text="{=aom_dale_male_name_42}Skeggi" />
+
+	<string id="aom_dale_male_name_43" text="{=aom_dale_male_name_43}Svein" />
+
+	<string id="aom_dale_male_name_44" text="{=aom_dale_male_name_44}Thrand" />
+
+	<string id="aom_dale_male_name_45" text="{=aom_dale_male_name_45}Torstein" />
+
+	<string id="aom_dale_male_name_46" text="{=aom_dale_male_name_46}Vebrand" />
+
+	<string id="aom_dale_male_name_47" text="{=aom_dale_male_name_47}Vestar" />
+
+	<string id="aom_dale_male_name_48" text="{=aom_dale_male_name_48}Yngvar" />
+
+	<string id="aom_dale_male_name_49" text="{=aom_dale_male_name_49}Asgeir" />
+
+	<string id="aom_dale_male_name_50" text="{=aom_dale_male_name_50}Hakon" />
+
+	<string id="aom_dale_female_name_1" text="{=aom_dale_female_name_1}Astrid" />
+
+	<string id="aom_dale_female_name_2" text="{=aom_dale_female_name_2}Bergljot" />
+
+	<string id="aom_dale_female_name_3" text="{=aom_dale_female_name_3}Dagny" />
+
+	<string id="aom_dale_female_name_4" text="{=aom_dale_female_name_4}Eldrid" />
+
+	<string id="aom_dale_female_name_5" text="{=aom_dale_female_name_5}Freydis" />
+
+	<string id="aom_dale_female_name_6" text="{=aom_dale_female_name_6}Gudny" />
+
+	<string id="aom_dale_female_name_7" text="{=aom_dale_female_name_7}Halla" />
+
+	<string id="aom_dale_female_name_8" text="{=aom_dale_female_name_8}Hildegunn" />
+
+	<string id="aom_dale_female_name_9" text="{=aom_dale_female_name_9}Ingrid" />
+
+	<string id="aom_dale_female_name_10" text="{=aom_dale_female_name_10}Jorunn" />
+
+	<string id="aom_dale_female_name_11" text="{=aom_dale_female_name_11}Ketilrid" />
+
+	<string id="aom_dale_female_name_12" text="{=aom_dale_female_name_12}Liv" />
+
+	<string id="aom_dale_female_name_13" text="{=aom_dale_female_name_13}Malfrid" />
+
+	<string id="aom_dale_female_name_14" text="{=aom_dale_female_name_14}Oddny" />
+
+	<string id="aom_dale_female_name_15" text="{=aom_dale_female_name_15}Hrefna" />
+
+	<string id="aom_dale_female_name_16" text="{=aom_dale_female_name_16}Ranveig" />
+
+	<string id="aom_dale_female_name_17" text="{=aom_dale_female_name_17}Sigrun" />
+
+	<string id="aom_dale_female_name_18" text="{=aom_dale_female_name_18}Sigyn" />
+
+	<string id="aom_dale_female_name_19" text="{=aom_dale_female_name_19}Svala" />
+
+	<string id="aom_dale_female_name_20" text="{=aom_dale_female_name_20}Thurid" />
+
+	<string id="aom_dale_female_name_21" text="{=aom_dale_female_name_21}Thorhild" />
+
+	<string id="aom_dale_female_name_22" text="{=aom_dale_female_name_22}Ulfhild" />
+
+	<string id="aom_dale_female_name_23" text="{=aom_dale_female_name_23}Unn" />
+
+	<string id="aom_dale_female_name_24" text="{=aom_dale_female_name_24}Vilborg" />
+
+	<string id="aom_dale_female_name_25" text="{=aom_dale_female_name_25}Ylva" />
+
+	<string id="aom_dale_female_name_26" text="{=aom_dale_female_name_26}Alfhild" />
+
+	<string id="aom_dale_female_name_27" text="{=aom_dale_female_name_27}Asny" />
+
+	<string id="aom_dale_female_name_28" text="{=aom_dale_female_name_28}Bodil" />
+
+	<string id="aom_dale_female_name_29" text="{=aom_dale_female_name_29}Edda" />
+
+	<string id="aom_dale_female_name_30" text="{=aom_dale_female_name_30}Embla" />
+
+	<string id="aom_dale_female_name_31" text="{=aom_dale_female_name_31}Fridgerd" />
+
+	<string id="aom_dale_female_name_32" text="{=aom_dale_female_name_32}Gerd" />
+
+	<string id="aom_dale_female_name_33" text="{=aom_dale_female_name_33}Gunnhild" />
+
+	<string id="aom_dale_female_name_34" text="{=aom_dale_female_name_34}Herdis" />
+
+	<string id="aom_dale_female_name_35" text="{=aom_dale_female_name_35}Hervor" />
+
+	<string id="aom_dale_female_name_36" text="{=aom_dale_female_name_36}Idun" />
+
+	<string id="aom_dale_female_name_37" text="{=aom_dale_female_name_37}Jofrid" />
+
+	<string id="aom_dale_female_name_38" text="{=aom_dale_female_name_38}Ljufa" />
+
+	<string id="aom_dale_female_name_39" text="{=aom_dale_female_name_39}Magnhild" />
+
+	<string id="aom_dale_female_name_40" text="{=aom_dale_female_name_40}Nanna" />
+
+	<string id="aom_dale_female_name_41" text="{=aom_dale_female_name_41}Rondis" />
+
+	<string id="aom_dale_female_name_42" text="{=aom_dale_female_name_42}Saldis" />
+
+	<string id="aom_dale_female_name_43" text="{=aom_dale_female_name_43}Signy" />
+
+	<string id="aom_dale_female_name_44" text="{=aom_dale_female_name_44}Steinunn" />
+
+	<string id="aom_dale_female_name_45" text="{=aom_dale_female_name_45}Thordis" />
+
+	<string id="aom_dale_female_name_46" text="{=aom_dale_female_name_46}Torunn" />
+
+	<string id="aom_dale_female_name_47" text="{=aom_dale_female_name_47}Valdis" />
+
+	<string id="aom_dale_female_name_48" text="{=aom_dale_female_name_48}Vebjorg" />
+
+	<string id="aom_dale_female_name_49" text="{=aom_dale_female_name_49}Yngvild" />
+
+	<string id="aom_dale_female_name_50" text="{=aom_dale_female_name_50}Aud" />
+
+	<string id="aom_dale_clan_name_01" text="{=aom_dale_clan_name_01}Kjartansons" />
+
+	<string id="aom_dale_clan_name_02" text="{=aom_dale_clan_name_02}Ingvaldsons" />
+
+	<string id="aom_dale_clan_name_03" text="{=aom_dale_clan_name_03}Hallsteinsons" />
+
+	<string id="aom_dale_clan_name_04" text="{=aom_dale_clan_name_04}Steinarsons" />
+
+	<string id="aom_dale_clan_name_05" text="{=aom_dale_clan_name_05}Ragnvaldsons" />
+
+	<string id="aom_dale_clan_name_06" text="{=aom_dale_clan_name_06}Dagfinnsons" />
+
+	<string id="aom_dale_clan_name_07" text="{=aom_dale_clan_name_07}Torvaldsons" />
+
+	<string id="aom_dale_clan_name_08" text="{=aom_dale_clan_name_08}Eysteinsons" />
+
+	<string id="aom_dale_clan_name_09" text="{=aom_dale_clan_name_09}Sigvardsons" />
+
+	<string id="aom_dale_clan_name_10" text="{=aom_dale_clan_name_10}Asmundsons" />
+
+	<string id="aom_khand_male_name_1" text="{=aom_khand_male_name_1}Arvak" />
+
+	<string id="aom_khand_male_name_2" text="{=aom_khand_male_name_2}Baghan" />
+
+	<string id="aom_khand_male_name_3" text="{=aom_khand_male_name_3}Chagir" />
+
+	<string id="aom_khand_male_name_4" text="{=aom_khand_male_name_4}Dastan" />
+
+	<string id="aom_khand_male_name_5" text="{=aom_khand_male_name_5}Erkhan" />
+
+	<string id="aom_khand_male_name_6" text="{=aom_khand_male_name_6}Gazur" />
+
+	<string id="aom_khand_male_name_7" text="{=aom_khand_male_name_7}Haldar" />
+
+	<string id="aom_khand_male_name_8" text="{=aom_khand_male_name_8}Ilkar" />
+
+	<string id="aom_khand_male_name_9" text="{=aom_khand_male_name_9}Jamuq" />
+
+	<string id="aom_khand_male_name_10" text="{=aom_khand_male_name_10}Kaidar" />
+
+	<string id="aom_khand_male_name_11" text="{=aom_khand_male_name_11}Kutlu" />
+
+	<string id="aom_khand_male_name_12" text="{=aom_khand_male_name_12}Mazar" />
+
+	<string id="aom_khand_male_name_13" text="{=aom_khand_male_name_13}Nogai" />
+
+	<string id="aom_khand_male_name_14" text="{=aom_khand_male_name_14}Ozgan" />
+
+	<string id="aom_khand_male_name_15" text="{=aom_khand_male_name_15}Qorchi" />
+
+	<string id="aom_khand_male_name_16" text="{=aom_khand_male_name_16}Rasul" />
+
+	<string id="aom_khand_male_name_17" text="{=aom_khand_male_name_17}Sadrak" />
+
+	<string id="aom_khand_male_name_18" text="{=aom_khand_male_name_18}Tarqan" />
+
+	<string id="aom_khand_male_name_19" text="{=aom_khand_male_name_19}Tolui" />
+
+	<string id="aom_khand_male_name_20" text="{=aom_khand_male_name_20}Ujin" />
+
+	<string id="aom_khand_male_name_21" text="{=aom_khand_male_name_21}Vardan" />
+
+	<string id="aom_khand_male_name_22" text="{=aom_khand_male_name_22}Yesun" />
+
+	<string id="aom_khand_male_name_23" text="{=aom_khand_male_name_23}Zaidar" />
+
+	<string id="aom_khand_male_name_24" text="{=aom_khand_male_name_24}Altan" />
+
+	<string id="aom_khand_male_name_25" text="{=aom_khand_male_name_25}Bekir" />
+
+	<string id="aom_khand_male_name_26" text="{=aom_khand_male_name_26}Chorman" />
+
+	<string id="aom_khand_male_name_27" text="{=aom_khand_male_name_27}Daruk" />
+
+	<string id="aom_khand_male_name_28" text="{=aom_khand_male_name_28}Esen" />
+
+	<string id="aom_khand_male_name_29" text="{=aom_khand_male_name_29}Ghazan" />
+
+	<string id="aom_khand_male_name_30" text="{=aom_khand_male_name_30}Harzan" />
+
+	<string id="aom_khand_male_name_31" text="{=aom_khand_male_name_31}Ilgiz" />
+
+	<string id="aom_khand_male_name_32" text="{=aom_khand_male_name_32}Jochar" />
+
+	<string id="aom_khand_male_name_33" text="{=aom_khand_male_name_33}Kertu" />
+
+	<string id="aom_khand_male_name_34" text="{=aom_khand_male_name_34}Mergen" />
+
+	<string id="aom_khand_male_name_35" text="{=aom_khand_male_name_35}Nasir" />
+
+	<string id="aom_khand_male_name_36" text="{=aom_khand_male_name_36}Oktai" />
+
+	<string id="aom_khand_male_name_37" text="{=aom_khand_male_name_37}Parvan" />
+
+	<string id="aom_khand_male_name_38" text="{=aom_khand_male_name_38}Qadan" />
+
+	<string id="aom_khand_male_name_39" text="{=aom_khand_male_name_39}Rustam" />
+
+	<string id="aom_khand_male_name_40" text="{=aom_khand_male_name_40}Sartak" />
+
+	<string id="aom_khand_male_name_41" text="{=aom_khand_male_name_41}Tavrik" />
+
+	<string id="aom_khand_male_name_42" text="{=aom_khand_male_name_42}Uzbar" />
+
+	<string id="aom_khand_male_name_43" text="{=aom_khand_male_name_43}Varzan" />
+
+	<string id="aom_khand_male_name_44" text="{=aom_khand_male_name_44}Yamur" />
+
+	<string id="aom_khand_male_name_45" text="{=aom_khand_male_name_45}Zhaqar" />
+
+	<string id="aom_khand_male_name_46" text="{=aom_khand_male_name_46}Akbar" />
+
+	<string id="aom_khand_male_name_47" text="{=aom_khand_male_name_47}Borjan" />
+
+	<string id="aom_khand_male_name_48" text="{=aom_khand_male_name_48}Dalvar" />
+
+	<string id="aom_khand_male_name_49" text="{=aom_khand_male_name_49}Ferokh" />
+
+	<string id="aom_khand_male_name_50" text="{=aom_khand_male_name_50}Gurzan" />
+
+	<string id="aom_khand_female_name_1" text="{=aom_khand_female_name_1}Aisulu" />
+
+	<string id="aom_khand_female_name_2" text="{=aom_khand_female_name_2}Banu" />
+
+	<string id="aom_khand_female_name_3" text="{=aom_khand_female_name_3}Chichek" />
+
+	<string id="aom_khand_female_name_4" text="{=aom_khand_female_name_4}Dilara" />
+
+	<string id="aom_khand_female_name_5" text="{=aom_khand_female_name_5}Elif" />
+
+	<string id="aom_khand_female_name_6" text="{=aom_khand_female_name_6}Feruza" />
+
+	<string id="aom_khand_female_name_7" text="{=aom_khand_female_name_7}Gulnar" />
+
+	<string id="aom_khand_female_name_8" text="{=aom_khand_female_name_8}Hadiya" />
+
+	<string id="aom_khand_female_name_9" text="{=aom_khand_female_name_9}Ilsu" />
+
+	<string id="aom_khand_female_name_10" text="{=aom_khand_female_name_10}Javra" />
+
+	<string id="aom_khand_female_name_11" text="{=aom_khand_female_name_11}Kamila" />
+
+	<string id="aom_khand_female_name_12" text="{=aom_khand_female_name_12}Laleh" />
+
+	<string id="aom_khand_female_name_13" text="{=aom_khand_female_name_13}Mahsa" />
+
+	<string id="aom_khand_female_name_14" text="{=aom_khand_female_name_14}Nergis" />
+
+	<string id="aom_khand_female_name_15" text="{=aom_khand_female_name_15}Oyuna" />
+
+	<string id="aom_khand_female_name_16" text="{=aom_khand_female_name_16}Parisa" />
+
+	<string id="aom_khand_female_name_17" text="{=aom_khand_female_name_17}Qutlugh" />
+
+	<string id="aom_khand_female_name_18" text="{=aom_khand_female_name_18}Roxana" />
+
+	<string id="aom_khand_female_name_19" text="{=aom_khand_female_name_19}Saghira" />
+
+	<string id="aom_khand_female_name_20" text="{=aom_khand_female_name_20}Tamar" />
+
+	<string id="aom_khand_female_name_21" text="{=aom_khand_female_name_21}Ulduz" />
+
+	<string id="aom_khand_female_name_22" text="{=aom_khand_female_name_22}Varda" />
+
+	<string id="aom_khand_female_name_23" text="{=aom_khand_female_name_23}Yasira" />
+
+	<string id="aom_khand_female_name_24" text="{=aom_khand_female_name_24}Zulfiya" />
+
+	<string id="aom_khand_female_name_25" text="{=aom_khand_female_name_25}Aybike" />
+
+	<string id="aom_khand_female_name_26" text="{=aom_khand_female_name_26}Bolorma" />
+
+	<string id="aom_khand_female_name_27" text="{=aom_khand_female_name_27}Chaghra" />
+
+	<string id="aom_khand_female_name_28" text="{=aom_khand_female_name_28}Dinara" />
+
+	<string id="aom_khand_female_name_29" text="{=aom_khand_female_name_29}Esenkul" />
+
+	<string id="aom_khand_female_name_30" text="{=aom_khand_female_name_30}Farah" />
+
+	<string id="aom_khand_female_name_31" text="{=aom_khand_female_name_31}Gulzar" />
+
+	<string id="aom_khand_female_name_32" text="{=aom_khand_female_name_32}Hulan" />
+
+	<string id="aom_khand_female_name_33" text="{=aom_khand_female_name_33}Inara" />
+
+	<string id="aom_khand_female_name_34" text="{=aom_khand_female_name_34}Jarqa" />
+
+	<string id="aom_khand_female_name_35" text="{=aom_khand_female_name_35}Kesira" />
+
+	<string id="aom_khand_female_name_36" text="{=aom_khand_female_name_36}Marjan" />
+
+	<string id="aom_khand_female_name_37" text="{=aom_khand_female_name_37}Nilufar" />
+
+	<string id="aom_khand_female_name_38" text="{=aom_khand_female_name_38}Oktya" />
+
+	<string id="aom_khand_female_name_39" text="{=aom_khand_female_name_39}Qandra" />
+
+	<string id="aom_khand_female_name_40" text="{=aom_khand_female_name_40}Rahila" />
+
+	<string id="aom_khand_female_name_41" text="{=aom_khand_female_name_41}Sanaz" />
+
+	<string id="aom_khand_female_name_42" text="{=aom_khand_female_name_42}Tuyana" />
+
+	<string id="aom_khand_female_name_43" text="{=aom_khand_female_name_43}Umay" />
+
+	<string id="aom_khand_female_name_44" text="{=aom_khand_female_name_44}Vashti" />
+
+	<string id="aom_khand_female_name_45" text="{=aom_khand_female_name_45}Yildiz" />
+
+	<string id="aom_khand_female_name_46" text="{=aom_khand_female_name_46}Zeynab" />
+
+	<string id="aom_khand_female_name_47" text="{=aom_khand_female_name_47}Ardana" />
+
+	<string id="aom_khand_female_name_48" text="{=aom_khand_female_name_48}Burla" />
+
+	<string id="aom_khand_female_name_49" text="{=aom_khand_female_name_49}Soraya" />
+
+	<string id="aom_khand_female_name_50" text="{=aom_khand_female_name_50}Temira" />
+
+	<string id="aom_khand_clan_name_01" text="{=aom_khand_clan_name_01}Red Riders" />
+
+	<string id="aom_khand_clan_name_02" text="{=aom_khand_clan_name_02}Bronze Lances" />
+
+	<string id="aom_khand_clan_name_03" text="{=aom_khand_clan_name_03}Dust Wolves" />
+
+	<string id="aom_khand_clan_name_04" text="{=aom_khand_clan_name_04}Crimson Tents" />
+
+	<string id="aom_khand_clan_name_05" text="{=aom_khand_clan_name_05}Ashen Hooves" />
+
+	<string id="aom_khand_clan_name_06" text="{=aom_khand_clan_name_06}Sons of the Scorched Plain" />
+
+	<string id="aom_khand_clan_name_07" text="{=aom_khand_clan_name_07}Black Horsetails" />
+
+	<string id="aom_khand_clan_name_08" text="{=aom_khand_clan_name_08}Copper Bows" />
+
+	<string id="aom_khand_clan_name_09" text="{=aom_khand_clan_name_09}Dune Hawks" />
+
+	<string id="aom_khand_clan_name_10" text="{=aom_khand_clan_name_10}Iron Bridles" />
+
 	<string id="aom_empire_name" text="{=aom_empire_name}Dunlendings" />
 
 	<string id="aom_empire_desc" text="{=aom_empire_desc}The Dunlendings are a rugged and fierce people, dwelling in the wild hills and untamed lands west of Rohan. Long resentful of the Rohirrim, whom they see as invaders of their ancestral homes, the Dunlendings are united by their shared heritage and fierce independence. Skilled in guerrilla warfare and survival, they rely on cunning and ferocity to overcome their enemies. Though often dismissed as simple hill folk, the Dunlendings are a proud and enduring people, fiercely protective of their lands and ways of life. Driven by a deep-seated grudge against Rohan, they have allied themselves with the forces of darkness, seeking revenge and the restoration of their lost lands." />

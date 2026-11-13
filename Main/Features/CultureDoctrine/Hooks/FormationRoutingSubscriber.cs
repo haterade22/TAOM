@@ -1,4 +1,5 @@
 using System;
+using TAOM.Adapters;
 using TAOM.Features.CultureDoctrine.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -50,7 +51,7 @@ public sealed class FormationRoutingSubscriber
         if (mission == null || catalog == null)
             return engineClass;
         var dismount = FormationRoutingRule.Dismounts(mission.IsSiegeBattle, mission.IsNavalBattle, mission.IsNavalRaidBattle, mission.IsSallyOutBattle, side);
-        var routing = catalog.Resolve(character.Culture?.StringId).Formations;
+        var routing = catalog.Resolve(CharacterCulture.IdOf(character)).Formations;
         return FormationRoutingRule.Apply(engineClass, dismount, routing, character.StringId);
     }
 }

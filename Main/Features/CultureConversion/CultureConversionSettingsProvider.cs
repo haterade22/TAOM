@@ -16,32 +16,35 @@ public sealed class CultureConversionSettingsProvider : ICultureConversionSettin
 
     private readonly CultureConversionConfig _defaults;
 
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public CultureConversionSettingsProvider(ICultureConversionConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    public bool IsEnabled => TaomSettings.Instance?.EnableCultureConversion ?? _defaults.Enabled;
+    public bool IsEnabled => Settings?.EnableCultureConversion ?? _defaults.Enabled;
 
     public int RequiredHoldDays =>
-        SettingClamp.Clamp(TaomSettings.Instance?.CultureConversionHoldDays, _defaults.RequiredHoldDays, MinHoldDays, MaxHoldDays);
+        SettingClamp.Clamp(Settings?.CultureConversionHoldDays, _defaults.RequiredHoldDays, MinHoldDays, MaxHoldDays);
 
     public bool RequireStableLoyalty =>
-        TaomSettings.Instance?.CultureConversionRequireStableLoyalty ?? _defaults.RequireStableLoyalty;
+        Settings?.CultureConversionRequireStableLoyalty ?? _defaults.RequireStableLoyalty;
 
     public float MinLoyaltyToConvert => _defaults.MinLoyaltyToConvert;
 
     public bool ConvertPlayerOwnedSettlements => _defaults.ConvertPlayerOwnedSettlements;
 
     public bool ReplaceNotablesOnConversion =>
-        TaomSettings.Instance?.CultureConversionReplaceNotables ?? _defaults.ReplaceNotablesOnConversion;
+        Settings?.CultureConversionReplaceNotables ?? _defaults.ReplaceNotablesOnConversion;
 
     public bool ReplaceGarrisonOnConversion =>
-        TaomSettings.Instance?.CultureConversionReplaceGarrison ?? _defaults.ReplaceGarrisonOnConversion;
+        Settings?.CultureConversionReplaceGarrison ?? _defaults.ReplaceGarrisonOnConversion;
 
     public bool ReplaceMilitiaOnConversion =>
-        TaomSettings.Instance?.CultureConversionReplaceMilitia ?? _defaults.ReplaceMilitiaOnConversion;
+        Settings?.CultureConversionReplaceMilitia ?? _defaults.ReplaceMilitiaOnConversion;
 
     public bool ReplaceGarrisonInPlayerFiefs =>
-        TaomSettings.Instance?.CultureConversionReplaceGarrisonPlayerFiefs ?? _defaults.ReplaceGarrisonInPlayerFiefs;
+        Settings?.CultureConversionReplaceGarrisonPlayerFiefs ?? _defaults.ReplaceGarrisonInPlayerFiefs;
 }

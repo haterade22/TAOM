@@ -1,4 +1,5 @@
 using TaleWorlds.MountAndBlade;
+using TAOM.Adapters;
 
 namespace TAOM.Features.CombatMechanics.Hooks;
 
@@ -30,5 +31,5 @@ public static class MountChargeDamageApplier
     /// <c>RiderAgent</c> is the only route, the same one vanilla's <c>UpdateHorseStats</c> takes
     /// for the Riding skill. Null for a riderless horse or a rider without a culture.</summary>
     public static string? RiderCultureOf(Agent? mount) =>
-        mount != null && mount.IsMount ? mount.RiderAgent?.Character?.Culture?.StringId : null;
+        mount != null && mount.IsMount ? CharacterCulture.IdOf(mount.RiderAgent?.Character) : null;
 }
