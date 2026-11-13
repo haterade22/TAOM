@@ -8,7 +8,7 @@ Checks, each a function taking a repo root so the tests can plant violations in 
   * agents need a non-empty `name`. A skill's `name` is optional (Claude Code falls back to the
     directory name; tools/test_hooks.sh 3b only fails a name that differs from the directory), so
     a skill `name` is checked only when present;
-  * a skill uses only the consumed frontmatter keys (.claude/rules/harness-facts.md), so a typo
+  * a skill uses only the consumed frontmatter keys (.claude/rules/harness-skills-agents.md), so a typo
     such as `triggers:` cannot silently turn a setting off;
   * every hook command in .claude/settings.json and in skill frontmatter that names a script under
     CLAUDE_PROJECT_DIR points at a file that exists.
@@ -47,10 +47,10 @@ NO_YAML = ("PyYAML is not installed for this interpreter, so the Claude config l
 
 
 def skill_keys(root):
-    """The skill frontmatter allowlist, read from the harness-facts.md row so there is one source."""
-    path = Path(root, ".claude", "rules", "harness-facts.md")
+    """The skill frontmatter allowlist, read from the harness-skills-agents.md row so there is one source."""
+    path = Path(root, ".claude", "rules", "harness-skills-agents.md")
     if not path.is_file():
-        raise AssertionError("harness-facts.md is missing: %s" % path)
+        raise AssertionError("harness-skills-agents.md is missing: %s" % path)
     for line in path.read_text(encoding="utf-8").splitlines():
         if ALLOWLIST_ROW in line:
             cell = line.split("|")[1].split(ALLOWLIST_ROW, 1)[1]
@@ -60,7 +60,7 @@ def skill_keys(root):
                 raise AssertionError("allowlist row parsed to %d keys (need %d): %s"
                                      % (len(keys), MIN_SKILL_KEYS, sorted(keys)))
             return keys
-    raise AssertionError("harness-facts.md has no %r row" % ALLOWLIST_ROW)
+    raise AssertionError("harness-skills-agents.md has no %r row" % ALLOWLIST_ROW)
 
 
 def parse_frontmatter(path):
@@ -187,7 +187,7 @@ class ClaudeConfigLintTests(unittest.TestCase):
         names = ["k%d" % i for i in range(10)]
         row = "| Consumed frontmatter (the skill allowlist): " + ", ".join(
             "`%s`" % n for n in names) + ", `context` (`fork`) | src | why |\n"
-        (rules / "harness-facts.md").write_text("# x\n" + row, encoding="utf-8")
+        (rules / "harness-skills-agents.md").write_text("# x\n" + row, encoding="utf-8")
         self.assertEqual(skill_keys(root), set(names) | {"context"})
 
     def test_allowlist_row_missing_or_short_fails(self):
@@ -196,10 +196,10 @@ class ClaudeConfigLintTests(unittest.TestCase):
             skill_keys(root)
         rules = root / ".claude" / "rules"
         rules.mkdir(parents=True)
-        (rules / "harness-facts.md").write_text("| other row |\n", encoding="utf-8")
+        (rules / "harness-skills-agents.md").write_text("| other row |\n", encoding="utf-8")
         with self.assertRaises(AssertionError):
             skill_keys(root)
-        (rules / "harness-facts.md").write_text(
+        (rules / "harness-skills-agents.md").write_text(
             "| Consumed frontmatter (the skill allowlist): `a`, `b` | s |\n", encoding="utf-8")
         with self.assertRaises(AssertionError):
             skill_keys(root)

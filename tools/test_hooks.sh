@@ -238,7 +238,7 @@ def frontmatter(txt):
             return "\n".join(lines[1:i])
     return None
 
-# Allowlists: harness-facts.md "Skill load semantics" and "Agent (subagent) load semantics".
+# Allowlists: harness-skills-agents.md "Skill load semantics" and "Agent (subagent) load semantics".
 # Source: claude-directory, Frontmatter fields by file (2026-11-03).
 SKILL_KEYS = {'name', 'description', 'when_to_use', 'argument-hint', 'arguments',
               'disable-model-invocation', 'user-invocable', 'allowed-tools', 'disallowed-tools',
@@ -299,7 +299,7 @@ for p in (list(root.glob('.claude/skills/*/SKILL.md'))
 
     # Claude Code silently ignores an unrecognised frontmatter key, so a typo such as
     # `disable-model-invocaton` or `allowed_tools` turns a setting off with no error.
-    # Rules are not checked: harness-facts.md says Claude Code reads only `paths` there.
+    # Rules are not checked: harness-loading.md says Claude Code reads only `paths` there.
     # The kind is the first part of the path under .claude, never the file or folder name: a
     # future .claude/rules/agents/ folder holds rules.
     kind = p.relative_to(root / '.claude').parts[0]
@@ -311,7 +311,7 @@ for p in (list(root.glob('.claude/skills/*/SKILL.md'))
         continue
     for k in d:
         if k not in allowed:
-            bad.append(f"{p}: frontmatter key '{k}' is not on the allowlist. A misspelled key is ignored by Claude Code; if the key is documented, add it to the allowlist in tools/test_hooks.sh section 3b and to .claude/rules/harness-facts.md")
+            bad.append(f"{p}: frontmatter key '{k}' is not on the allowlist. A misspelled key is ignored by Claude Code; if the key is documented, add it to the allowlist in tools/test_hooks.sh section 3b and to .claude/rules/harness-skills-agents.md")
     nm = d.get('name')
     if nm is not None and str(nm) != stem:
         bad.append(f"{p}: name '{nm}' must equal '{stem}' ({'its directory' if kind == 'skills' else 'its file stem'})")
