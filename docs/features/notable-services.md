@@ -149,7 +149,7 @@ Each repeat of the pointing-out marks the next 3 holds. From one place the playe
 
 ## Translation
 
-The 12 language files hold English seed rows only. The paid translation is owed in backlog #763.
+The 12 language files hold translated rows (2026-11-12, #763).
 
 ## Changelog
 

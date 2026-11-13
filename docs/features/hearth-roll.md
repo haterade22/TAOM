@@ -107,7 +107,7 @@ Read-only UI with nothing saved, so it is not gated. Each peer sees its own comp
 
 1. A player companion at relation -1 has a tinted row; at 0 there is no tint. Check a lord and a family member: no tint.
 2. Turn **Tint Unhappy Companions** off, reopen the clan screen: no tint. The child ages stay.
-3. A child shows the age after the name: "1 year old" for a one-year-old, "N years old" otherwise. Check the label in English, and in Russian and German (these still show English until the translation lands).
+3. A child shows the age after the name: "1 year old" for a one-year-old, "N years old" otherwise. Check the label in English, and in Russian and German (these show the translated label).
 4. A hero just above the child threshold shows no age.
 5. Long names wrap at about 226 px as in vanilla and the row's right-hand text still reads. Check the longest name (35 characters, "Muzgash, Uruk-hai Berserker Captain") in the Members list and in the Player Switcher picker.
 6. The Player Switcher picker rows: no tint, no age, names intact.
@@ -115,7 +115,7 @@ Read-only UI with nothing saved, so it is not gated. Each peer sees its own comp
 
 ## Translation
 
-The 2 `taom_hr_*` rows (`taom_hr_age_one`, `taom_hr_age_many`) are seeded in English in all language files. A translation backlog issue is owed (on Mike's word); until the paid run lands, every language shows the English text.
+The 2 `taom_hr_*` rows (`taom_hr_age_one`, `taom_hr_age_many`) are translated in all 12 language files (2026-11-12, #763).
 
 **Translator note.** Russian and Polish need a 2 to 4 form that a one/many pair cannot give. A label form without number agreement is acceptable, as vanilla does for its own year text ("Годы: {YEAR}" in RU, "Liczba lat: {YEAR}" in PL).
 

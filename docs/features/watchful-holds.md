@@ -215,7 +215,7 @@ MSTest with NSubstitute and hand-written fakes, in `TAOM.Tests/Features/Watchful
 
 - **In-game check:** march the player past an enemy castle and an enemy town and check the message, the losses and the horn. Check that nothing happens while enlisted, under siege or at peace.
 - **Balance runs:** two fast-forward runs from one save to day 120, with AI harassment on and off. Compare the fiefs captured and the daily trigger counts from the `[WatchfulHolds]` lines.
-- **Translation (paid):** `taom_watchful_holds_harried` is English only until the paid translation pass runs.
+- **Translation:** `taom_watchful_holds_harried` is translated in all 12 languages (2026-11-12, #763).
 - **Budget check:** confirm the under 1 ms hourly pass from `maxHourMs` in a real campaign.
 
 ## Changelog
@@ -225,7 +225,7 @@ MSTest with NSubstitute and hand-written fakes, in `TAOM.Tests/Features/Watchful
 ## GitHub Issue
 
 - **Issue:** #822, Watchful Holds: hostile castles and towns harass passing lord parties
-- **Status:** Shipped on `bannerlord-1.5.x` in `af66af81f` (v2.0.35). Issue open: the in-game check, the two balance runs and the translation of its one key (#763) are owed.
+- **Status:** Shipped on `bannerlord-1.5.x` in `af66af81f` (v2.0.35). Issue open: the in-game check and the two balance runs are owed.
 
 ---
 

@@ -479,8 +479,7 @@ the output folder in variables whose names differ by more than case (`$M` and `$
    need the vertical travel removed and a cut into start / loop / end before they can replace vanilla's.
 3. **Game side:** Monsters, action sets, items and the antler actions DONE (both on `taom_elk_saddle_a`; the
    moose's hump may want its own saddle). The antler attack's C# is written and tested; real riders DONE (evening,
-   "Who rides them"); the size moved onto the Monsters. OWED: a deploy, then the in-game checklist below, the
-   twelve translations of the two item names (English rows registered; `/localize`, a paid run), deleting the test
+   "Who rides them"); the size moved onto the Monsters. OWED: a deploy, then the in-game checklist below, deleting the test
    riders before the next release, the jumps.
 4. In-game ladder per [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md).
 

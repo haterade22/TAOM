@@ -355,7 +355,6 @@ A co-op guest gets no camp. `ICampMenuActivationQuery.DefersToCoopHost` (`MapScr
   battle, save/load mid-build, toggle-off break-via-move-guard, capture-while-camped, tpac render
   + fallback).
 - In-game smoke for #860: the three checklists above ("Camp work", "Rest healing", "Start in camp"), none run in game yet.
-- 12-language TRANSLATION run for the `{=taom_camp_*}` keys of #860 (backlog issue #931; the rows carry English until then).
 - 12-language TRANSLATION run for the `{=taom_fcamp_*}` keys (backlog issue #508). Registration
   is done: batch-2 integration purged every `taom_fc_` row from `taom_module_strings.xml`,
   registered all 58 `taom_fcamp_` keys, and rebuilt the 12 language files with English fallbacks;

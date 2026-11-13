@@ -80,7 +80,7 @@ No config file. MCM "World/Bandit Voices" (`GroupOrder = 78`), "Enable Bandit Cl
 
 ## Localization
 
-The English is in `taom_bandit_voice_strings.xml`; the 12 per-language files (`std_taom_bandit_voice_strings_*.xml`) are seeded with the English default and wired into every `language_data.xml`. The paid translation run is not done (it goes into #763). Until it runs, non-English players see English in about half of these clans' robberies, and a shown greeting is English while its ultimatum (a vanilla key) is translated. The table row is in `tools/_loc_sources.py`, and `tools/generate_translation_template.py` lists the file as not templated.
+The English is in `taom_bandit_voice_strings.xml`; the 12 per-language files (`std_taom_bandit_voice_strings_*.xml`) are seeded with the English default and wired into every `language_data.xml`. The rows are translated in all 12 languages (2026-11-12, #763). The table row is in `tools/_loc_sources.py`, and `tools/generate_translation_template.py` lists the file as not templated.
 
 ## Co-op
 

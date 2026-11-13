@@ -24,7 +24,7 @@ Mike parked the mode on 2026-11-10 to work on other features. Everything below i
 - **Stability:** one crash in round 5, at a new site after the match had ended (see Known limitations, "A crash at `+0x565D8D`"). No `0x6B716E` in 98 runs since its fix.
 - **Owed in game, by a person:** soldier control (key P: the feel, target lock, the pick on a slope), the result panel, a provoked failed start (check 15), the tower rock's look and sound, a camp's ring, spears against cavalry in a real fight, archers in a shield wall, and whether a fading mumakil's crew reach the ground. Each has its entry below.
 - **Raised with Mike in chat and not written up elsewhere:** the height at which the mumakil crew stand; a lane on Seize in lane 1 that stood under tower fire short of capture point 0; the trait lines that say 150 and 50 troops where the caps are 120 and 48 (balance-log.md, "Troop caps in trait text"); the AI regroup constants (1.6, 1.1, 10 units, 40 m, a hero as 250), which no round has tuned; and 252 run folders under `E:/Temp/fords-runs` found deleted on 2026-11-07, which only a shadow copy or an undelete tool could bring back.
-- **Translations:** every `TAOM_FOW_` text is English in the 12 languages until the backlog of issue #763 runs.
+- **Translations:** every `TAOM_FOW_` text is translated in all 12 languages (2026-11-12, #763).
 
 **To resume:** read the balance log's round 5 record, apply the round 6 proposals in one change, build, and play a full round robin (How to tune or extend, "Run a round robin"). To finish round 5 instead, make a detached worktree at `fcc7c39c8` and play the three pairs that `python tools/fords_round_robin.py todo --build fcc7c39c8` lists.
 
@@ -314,7 +314,7 @@ layout code stays, with its tests, for a map added later (see "Add a map"). On `
 no verdict: `[Ground] units=<n> aboveTerrain=min/med/max belowNav=min/med/max offNavMoves=<n>` (how high units stand over the
 terrain and under the navmesh) and one `[Lane] faces <stream> own= shared= foreign= top= off= foot= mounted=` line per stream
 (unit-seconds by navigation face group: 0 shared, lane n is group n + 1, 4 tower tops). The German to Turkish names of the
-new map are English seeds until the Fords translations owed to #763 are run. Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
+new map are translated (2026-11-12, #763). Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
 is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a reward of 250.
 
 **Factions** (offers / heroes with price):
