@@ -202,6 +202,11 @@ GATES = (
          manual="read each GetSprite(\"X\") name in C# against TAOMSpriteData.xml (PrefabSpriteTests gates a literal "
                 "Sprite=\"X\" in a prefab, not a C# call), and check that every Command.* handler resolves to a TAOM "
                 "method with the right parameter count"),
+    Gate("loc-orphans", "English strings files, the orphan gate's own inputs",
+         ("*/_module/moduledata/*strings*.xml", "*tools/check_orphan_loc_rows.py", "*tools/_loc_sources.py",
+          "*tools/loc_composed_families.json", "*tools/loc_orphan_allowlist.json"),
+         ("python", "tools/check_orphan_loc_rows.py"), ("docs/localization/TRANSLATOR_GUIDE.md",),
+         note="a row is also orphaned when the C# literal that read it is removed: run it by hand after such a removal"),
     Gate("loc-coverage", "language files, {=KEY} text", LANG_GLOBS + ARMORY_GLOBS,
          ("python", "tools/check_external_loc_coverage.py"), ("docs/reference/localization-map.md",),
          note="after any name or language edit; --apply raises the untranslated count, so run its --update-baseline in the same change"),
