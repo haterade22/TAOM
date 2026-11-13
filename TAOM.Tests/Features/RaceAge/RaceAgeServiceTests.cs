@@ -75,21 +75,9 @@ public class RaceAgeServiceTests
     }
 
     [TestMethod]
-    public void GetBecomeOldAge_Dwarf_Returns180()
-    {
-        Assert.AreEqual(180, _sut.GetBecomeOldAge(1));
-    }
-
-    [TestMethod]
     public void GetComesOfAge_Orc_Returns12()
     {
         Assert.AreEqual(12, _sut.GetComesOfAge(2));
-    }
-
-    [TestMethod]
-    public void GetMiddleAge_Human_Returns35()
-    {
-        Assert.AreEqual(35, _sut.GetMiddleAge(0));
     }
 
     [TestMethod]

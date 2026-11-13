@@ -150,9 +150,6 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         return ComputeBreakdown(heroId, resource, ownedTownCount, troopsWithUpkeep);
     }
 
-    public float GetProjectedDailyNet(string heroId, string? kingdomId, string? cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
-        => GetDailyBreakdown(heroId, kingdomId, cultureId, ownedTownCount, troopsWithUpkeep).Net;
-
     // The single daily calculation: earning (+SpecialResourceGain) and one upkeep line per troop type
     // that carries a daily_upkeep (each line already scaled by SpecialResourceUpkeepModifier, so the
     // lines sum to the total). ApplyDailyTick applies its Net; every display reads the same object.

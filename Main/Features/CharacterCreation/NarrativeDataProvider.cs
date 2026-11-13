@@ -27,14 +27,6 @@ public class NarrativeDataProvider : INarrativeDataProvider
         return _cache.GetOrAdd(menuName, LoadFromFile);
     }
 
-    public IReadOnlyList<NarrativeOptionDefinition> GetMenuOptionsForCulture(string menuName, string cultureId)
-    {
-        var all = LoadMenuOptions(menuName);
-        return all.Where(o => string.Equals(o.CultureId, cultureId, StringComparison.OrdinalIgnoreCase))
-                  .ToList()
-                  .AsReadOnly();
-    }
-
     private IReadOnlyList<NarrativeOptionDefinition> LoadFromFile(string menuName)
     {
         var path = GetMenuPath(menuName);

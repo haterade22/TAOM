@@ -83,13 +83,7 @@ public class DeliverPersonnelLotrIssue : IssueBase
     public override IssueFrequency GetFrequency()
     {
         EnsureDef();
-        if (_def == null) return IssueFrequency.Common;
-        switch (_def.Frequency)
-        {
-            case IssueFrequencyTier.VeryCommon: return IssueFrequency.VeryCommon;
-            case IssueFrequencyTier.Rare: return IssueFrequency.Rare;
-            default: return IssueFrequency.Common;
-        }
+        return LotrIssueTemplateRules.FrequencyOf(_def);
     }
 
     // for_player_culture holds while the offer waits: a new campaign creates its first issues before character
@@ -129,7 +123,7 @@ public class DeliverPersonnelLotrIssue : IssueBase
         requiredGold = 0;
         flag = PreconditionFlags.None;
         EnsureDef();
-        if (issueGiver.GetRelationWithPlayer() < (_def?.RelationMin ?? -10))
+        if (LotrIssueTemplateRules.IsBelowRelationMin(issueGiver.GetRelationWithPlayer(), _def))
         {
             flag |= PreconditionFlags.Relation;
             relationHero = issueGiver;

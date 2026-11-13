@@ -2,6 +2,7 @@
 
 > Task-oriented index of TAOM docs, extracted from CLAUDE.md 2026-07-18. orientation.md "Where things are" points here; this file is the complete task table. `docs/INDEX.md` is the fuller curated topical map.
 > One line per row: the task, the doc, the one trap. The mechanism stays in the doc.
+> Search this file (`grep -n -i <term> docs/reference/doc-lookup.md`); do not read it whole.
 
 
 **Start here for any doc question:** [docs/INDEX.md](../../docs/INDEX.md) — curated topical map across the feature docs, ADRs, reviews, ai-includes, and migration docs. Knowledge-base architecture: [ADR-010](../../docs/adrs/010-knowledge-base-architecture.md).

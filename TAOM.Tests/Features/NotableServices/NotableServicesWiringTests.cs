@@ -84,7 +84,7 @@ public class NotableServicesWiringTests
         Assert.IsFalse(Source(Folder + "/NotableServicesIoC.cs").Contains("MapRevealAdapter"));
 
         var registrations = RepoPaths.CSharpFiles("Main")
-            .Count(f => Regex.IsMatch(RepoPaths.StripComments(File.ReadAllText(f)), @"Register<IMapRevealAdapter,\s*MapRevealAdapter>"));
+            .Count(f => Regex.IsMatch(RepoPaths.StripComments(RepoPaths.Text(f)), @"Register<IMapRevealAdapter,\s*MapRevealAdapter>"));
         Assert.AreEqual(1, registrations, "one registration of the shared reveal adapter in the whole mod");
     }
 

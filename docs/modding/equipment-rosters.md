@@ -402,9 +402,6 @@ are optional and every shipped culture has them anyway.
 - **Do not use the C# enum spellings.** `Weapon0` and friends parse, but nothing in TAOM writes
   them, and the mixed vocabulary is how `slot="body"` mistakes get made. Write `Item0`..`Item3` and
   the capitalised armour names.
-- **The [xml-data rule](../../.claude/rules/xml-data.md) cites a memory file that does not exist.**
-  Its `feedback_equipmenttype_civilian_required.md` reference has nothing behind it in the repo or
-  the project memory store. The rule's own text is correct; only the citation is dangling.
 - **Townsfolk and notables need a plain battle roster beside the civilian one (#295).** #295's
   in-game log showed arena stand spectators (it logged `townsman_erebor`) spawning with battle
   equipment. That log is the only evidence: the spawner was not found in managed code, and notables

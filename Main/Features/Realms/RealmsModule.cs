@@ -17,7 +17,7 @@ internal sealed class RealmsModule : TaomFeatureModule
     private static readonly CampaignBehaviorDecl[] Behaviors =
     {
         CampaignBehaviorDecl.Of(r => new RealmsCampaignBehavior(r.Resolve<IRealmsPopupAdapter>(), r.Resolve<ICoopSessionProvider>(),
-            r.Resolve<IRealmsSettingsProvider>(), r.Resolve<IEnumerable<IKingdomRenameListener>>())),
+            r.Resolve<IRealmsSettingsProvider>(), r.Resolve<IPlayerControlQuery>(), r.Resolve<IEnumerable<IKingdomRenameListener>>())),
     };
 
     public override string Id => "Realms";

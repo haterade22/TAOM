@@ -32,8 +32,6 @@ public interface ICareerPassiveService
     /// </summary>
     float GetTroopMagnitude(string? heroStringId, PassiveEffectType type, TroopClassMask troopClass, AttackTypeMask? hitMask = null);
 
-    bool HasActivePassive(string? heroStringId, PassiveEffectType type);
-
     // Phase 9b #173 — replaces the static CareerPassiveHelper.ApplyFactor / ApplyFlat. Per ADR-007,
     // these accept `string heroStringId` (primitive) not sealed `Hero` — boundary GameModels
     // extract `hero?.StringId` at the call site. `ExplainedNumber` is a public TaleWorlds value

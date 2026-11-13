@@ -11,6 +11,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CultureConversion.GarrisonSwap;
 using TAOM.Features.CultureConversion.GarrisonSwap.Domain;
 using TAOM.Features.TroopProgression;
+using TAOM.Tests.Core;
 
 namespace TAOM.Tests.Features.CultureConversion;
 
@@ -244,8 +245,7 @@ public class GarrisonCultureCoverageTests
         var xsltPath = Path.Combine(ModuleData(), "spcultures.xslt");
         if (File.Exists(xsltPath))
         {
-            var transform = new XslCompiledTransform();
-            transform.Load(xsltPath);
+            var transform = CompiledXslt.Get(xsltPath, XsltLoadStyle.FrameworkDefaults);
 
             var stubRoot = new XElement("SPCultures");
             foreach (var id in new[] { "empire", "sturgia", "vlandia", "khuzait", "battania", "aserai" })

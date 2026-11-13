@@ -234,7 +234,9 @@ public class CoopVetoClassificationTests
             "PrisonRoster), so what carries it matters: the condition is lore-fixed identity. Who " +
             "is protected comes from the compiled NazgulRegistry roster plus a shipped hero/race " +
             "list, and the FaceGen race id it reads is shipped character data, so every peer " +
-            "computes the same answer from the same files. The alternative was deferring to the " +
+            "computes the same answer from the same files. A co-op player's hero is never vetoed " +
+            "(#1139): the player test is IPlayerControlQuery, Coop's own registry, and Coop runs " +
+            "the battle capture on its server only. The alternative was deferring to the " +
             "host, which was rejected because the sibling battle seam " +
             "(Hero_CanBecomePrisoner_Patch) is a postfix on a query and cannot be host-gated " +
             "without making Sauron capturable in a fief but not in a field battle. An edited " +

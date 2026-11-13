@@ -27,7 +27,7 @@ public class MapPopupGateTests
         var offenders = RepoPaths.CSharpFiles()
             .Where(p => Path.GetFileName(p) != GateFile)
             .Where(p => RepoPaths.MentionsOutsideComments(p, "IsAnyInquiryActive()"))
-            .Where(p => EncounterTest.IsMatch(RepoPaths.StripComments(File.ReadAllText(p))))
+            .Where(p => EncounterTest.IsMatch(RepoPaths.StripComments(RepoPaths.Text(p))))
             .Select(p => Path.GetFileName(p))
             .ToList();
 

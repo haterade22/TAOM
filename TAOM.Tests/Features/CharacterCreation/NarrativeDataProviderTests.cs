@@ -144,42 +144,6 @@ public class NarrativeDataProviderTests
     }
 
     [TestMethod]
-    public void GetMenuOptionsForCulture_FiltersCorrectly()
-    {
-        WriteJson("parents", @"[
-            { ""string_id"": ""opt1"", ""culture_id"": ""gondor"", ""text"": ""Gondor 1"" },
-            { ""string_id"": ""opt2"", ""culture_id"": ""mordor"", ""text"": ""Mordor 1"" },
-            { ""string_id"": ""opt3"", ""culture_id"": ""gondor"", ""text"": ""Gondor 2"" }
-        ]");
-
-        var result = _sut.GetMenuOptionsForCulture("parents", "gondor");
-
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual("Gondor 1", result[0].Text);
-        Assert.AreEqual("Gondor 2", result[1].Text);
-    }
-
-    [TestMethod]
-    public void GetMenuOptionsForCulture_CaseInsensitive()
-    {
-        WriteJson("youth", @"[{ ""string_id"": ""opt1"", ""culture_id"": ""Gondor"", ""text"": ""Test"" }]");
-
-        var result = _sut.GetMenuOptionsForCulture("youth", "gondor");
-
-        Assert.AreEqual(1, result.Count);
-    }
-
-    [TestMethod]
-    public void GetMenuOptionsForCulture_NotFound_ReturnsEmpty()
-    {
-        WriteJson("parents", @"[{ ""string_id"": ""opt1"", ""culture_id"": ""gondor"" }]");
-
-        var result = _sut.GetMenuOptionsForCulture("parents", "unknown");
-
-        Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
     public void LoadMenuOptions_ParsesTitleType()
     {
         WriteJson("youth", @"[

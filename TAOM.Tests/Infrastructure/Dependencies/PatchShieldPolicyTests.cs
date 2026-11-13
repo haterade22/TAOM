@@ -77,6 +77,43 @@ public class PatchShieldPolicyTests
         Assert.IsTrue(PatchShieldPolicy.IsProtectedOwner("com.example.coop.sync", effective));
     }
 
+    // #726: the rescue strip removes prefixes, postfixes and transpilers, never finalizers, so
+    // finalizers are not passed: a method whose only foreign patch is a finalizer yields no owner
+    // (it was logged and counted in diag.log as unpatched).
+    [TestMethod]
+    public void OwnersToStrip_NoPrefixPostfixOrTranspiler_ReturnsNoOwner()
+    {
+        var owners = PatchShieldPolicy.OwnersToStrip(
+            prefixOwners: Array.Empty<string>(),
+            postfixOwners: null,
+            transpilerOwners: Array.Empty<string>());
+
+        Assert.AreEqual(0, owners.Count);
+    }
+
+    [TestMethod]
+    public void OwnersToStrip_OwnerWithPrefixPostfixOrTranspiler_IsIncludedOnce()
+    {
+        var owners = PatchShieldPolicy.OwnersToStrip(
+            prefixOwners: new[] { "com.a" },
+            postfixOwners: new[] { "com.b", "COM.A" },
+            transpilerOwners: new[] { "com.c" });
+
+        CollectionAssert.AreEquivalent(new[] { "com.a", "com.b", "com.c" },
+            owners.Select(o => o.ToLowerInvariant()).ToArray());
+    }
+
+    [TestMethod]
+    public void OwnersToStrip_NullOrEmptyOwner_IsLeftOut()
+    {
+        var owners = PatchShieldPolicy.OwnersToStrip(
+            prefixOwners: new string?[] { null, "" },
+            postfixOwners: new[] { "com.a" },
+            transpilerOwners: null);
+
+        CollectionAssert.AreEquivalent(new[] { "com.a" }, owners.ToArray());
+    }
+
     [TestMethod]
     public void BuildEffectiveOwnerPrefixes_NullExtras_ReturnsCompiledDefaults()
     {

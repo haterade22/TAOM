@@ -2700,6 +2700,62 @@ never FAIL. The manifest header also named one list while its fail patterns judg
   pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
 - **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
 
+### A Not-tested trailer that says a pin holds a line names only lines the pin asserts (plan 050, 2026-11-13)
+
+The plan 050 refactor said in its trailer that a source pin holds the text of the raw party equality,
+the map event and `IsPlayerAvailable()` in `HandleArrivedMessenger`. The pin asserted the party
+equality and the reader's cast only. `playerAvailable: true`, or `MapEvent == null` in place of
+`!= null` (the battle test then inverts: a messenger waits while its target is out of battle and is
+delivered while the target's party is in one), left all 39,278 tests green. A recurrence of the
+#1110 lesson above, from the other side: the pin was right for what it named, and the commit text
+claimed more.
+- **Why missed:** the plan drafted the trailer and the pin specification in two places, naming four
+  reads in one and two in the other; the executor copied both drafts.
+- **Prevent:** before a commit, read each line a `Not-tested:` trailer says a pin holds, find the
+  assertion that holds it, and mutate that line once to watch the pin fail. A line with no assertion
+  is either added to the pin or named as unpinned in the trailer.
+- **Source:** [rca-messenger-arrival-classification-2026-11-13.md](../rca-messenger-arrival-classification-2026-11-13.md), row 1; `/deep-review` Agent 5.
+
+### A comment a plan supplies beside a new test is a draft: re-derive its "only" and "never" from the engine source (plan 049, 2026-11-13)
+
+Plan 049's new test carried a comment, taken word for word from the plan, saying `CampaignTime.Never` "is the one nonzero
+CampaignTime a test can build without a campaign". `operator -` on `Zero` and `Never` builds another. The plan had paraphrased an
+older comment in `RefugeServiceTests.cs`, so the overclaim spread from one test file to the next.
+- **Why missed:** the executor checked the code the plan supplied and copied its comments as given. A word like "the one", "only" or
+  "never" is a claim about every constructor, factory and operator of the type, and it was checked against the factories alone.
+- **Prevent:** before committing a plan-supplied comment that states an engine fact, open the type with `pwsh tools/taom-src.ps1 path
+  <Type>` and test the claim against every public member that returns the type, over each member's argument range, non-finite
+  floats included. Narrow the wording to what was checked. The first narrowing here, "the only public factory that is nonzero",
+  was still false: `Hours(float.NaN)` multiplies NaN by a zero tick static and the unchecked cast gives long.MinValue ticks.
+- **Source:** [rca-refuge-load-repair-unit-2026-11-13.md](../rca-refuge-load-repair-unit-2026-11-13.md) F1, `/deep-review` Agent 2.
+
+### A probe that claims to isolate one clause of a guard must trip no other clause (plan 046, 2026-11-13)
+
+`RepoPathsTests` wrote its uncached-path probe to `TAOM.Tests/bin/repopaths-text-probe.cs` and said that only
+the root check kept it out of the cache. `IsCorpusFile` also rejects any path with a `bin` segment, so the
+probe tripped two clauses and guarded neither: with the root clause turned into an `||`, every RepoPaths test
+stayed green.
+- **Why missed:** the probe went under `bin` so the file it writes stays git-ignored, and the mutation proof
+  disabled the whole method (`return true;`), which any one probe catches.
+- **Prevent:** for a guard built from several conditions, run one mutant per condition, and give each
+  condition a probe that passes every other condition. Prefer a read-only probe on a tracked file (here,
+  two reads of a tracked .cs file outside the roots must return two string instances) over a written one.
+- **Source:** [rca-test-suite-read-caches-2026-11-13.md](../rca-test-suite-read-caches-2026-11-13.md), `/deep-review` Agent 5.
+
+### A refactor's parity test pins values from the old code, and goes through every caller it changed (plan 051, 2026-11-13)
+
+Plan 051 hoisted the sibling-file parse of `translate_with_claude.py` into `sibling_string_ids` and
+let `skip_ids_for(..., siblings=None)` call it. The new test compared the hoisted call with the
+per-call one, but both now ran through `sibling_string_ids`, so a collector that dropped every id
+kept the test green. No test called `discover_entries`, the one caller the hoist rewired, and a
+mutant handing it empty siblings kept all 420 translator tests green.
+- **Why missed:** the plan's oracle, "hoisted equals per-call", was a real equivalence before the
+  refactor and nobody re-asked which side still held the old code.
+- **Prevent:** for a behaviour-preserving refactor, compute the expected values with the base code
+  (`git show <base>:<path>` into scratch, then import it) and pin them as literals; then add one test
+  through each caller whose call the diff changed, with a mutant of the new wiring that turns it red.
+- **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F1 and F2, `/deep-review` Agent 5 and the Tooling lens.
+
 ### A verdict that counts exposure from the first sample needs a window after its trigger (Fords check 09, 2026-11-13)
 
 Check 09 failed `melee` once enemies stood near a tower for 30 unit-seconds with no blow. That holds in the first minutes of any match, before the rules order a strike, so every 120 s smoke failed. The first fix exempted runs with no order at all, and still failed a smoke whose first order came near its end: in the passing runs the first order came at live second 108.6 and 112.1.
@@ -2707,3 +2763,15 @@ Check 09 failed `melee` once enemies stood near a tower for 30 unit-seconds with
 - **Why missed:** the threshold was set on 600 s and longer runs; the fix read only the failing runs, not when the trigger arrives in the passing ones.
 - **Prevent:** for a check that expects an effect after a trigger, start its window at the trigger and give it a minimum age; read the trigger's timing in passing runs before choosing it. Check that the scenario fakes produce the evidence a new rule reads, or the fault scenario can no longer fail.
 - **Source:** [rca-fords-check09-short-run-2026-11-13.md](../rca-fords-check09-short-run-2026-11-13.md), finding 1.
+
+### A fail-open seam's test asserts that the decision input was read, because "it deferred" is also what the catch does (#1139, 2026-11-13)
+Both Uncapturable Heroes seams catch every exception and defer to vanilla. In the test process `Hero.MainHero` throws (`Game.Current` is null), so the old code also deferred, and four of six new tests passed with the fix reverted.
+- **Why missed:** the tests asserted the seam's outcome, which equals its failure mode, and no mutation run was made before the review. Repeat of the #1086 entry "prove the gate with a mutation" in `campaign-mechanics.md`.
+- **Prevent:** when a seam fails open (a catch that defers, a null guard that returns the default), a test of the deferring branch asserts that the seam consulted its input (`Received(1).OfHero(hero)`), and the fix is mutation-checked: put the old condition back and watch every new test fail.
+- **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), finding F2.
+
+### A "nothing happened" verdict needs its threshold from the measured rate, counted in independent trials (Fords check 11, 2026-11-13)
+Check 11 failed `hits` once 20 tower missiles flew with no hit. Tower missiles hit 4 to 18 percent of the time in the runs on file, so 20 to 25 misses in a row came in about a third of 120 s smokes (#1152). The first fix chose 150 missiles on a per-missile rate; the data flow lens showed that the three missiles of a volley share one target, so 150 missiles are only about 50 independent chances (a false FAIL in about 11 percent of short runs), and that the feature doc still stated 20.
+- **Why missed:** the threshold was a round number, never compared with the hit rate in the reports; the fix counted missiles, not the volleys that miss together. Same family as the check 09 entry above.
+- **Prevent:** before a rule fails on "N tries and no success", read the success rate from the stored reports and count the trials that are independent; choose N so a false FAIL is under 1 percent at the lowest rate on file, and confirm the shortest run that should be judged reaches N. Grep the feature doc for the old number in the same change.
+- **Source:** #1152, `/deep-review` Agent 5 (data flow), findings 3 to 5.

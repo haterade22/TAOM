@@ -4992,3 +4992,16 @@ The TAOM.CoopCompat split moved the transport and the wire contracts into a seco
 - **Why missed:** only `tools/tests` loads every manifest; my first Python run timed out and I read nothing from it. The pass line sat where the data was easiest to count.
 - **Prevent:** after any manifest edit run `python -m unittest tools.tests.test_ingame_verdict`, and treat a timed-out run as no evidence. Use the trunk commit before the work as `fixed_in`. Write the pass line where the effect lands, and give every error text one tag that one `fail` pattern catches, with a test that scans the source for the `LogError` texts.
 - **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 1 and 4.
+
+### When a hand count becomes a command, re-check every quantifier beside it against that command's list (plan 051, 2026-11-13)
+
+Plan 051 replaced the README's "29 tools honour it" with a `git grep -l` command and its dated
+count (50). The count was right, but "Every one falls back to `E:\Steam\...`" now ranged over the
+50, and `weapon_xml/config.py` in that list has no fallback. The three tools described as
+inheriting the variable were members of the 50, and the `_gamedir` importer list (90) included six
+that only use its process and path helpers.
+- **Why missed:** the executor reproduced the numbers but not the sentences that quantify over them.
+- **Prevent:** after swapping a count for a command, run the command, then test each "every",
+  "all", "only" and "the N that" in the surrounding paragraph against its output, by script where
+  you can. Name an exception rather than keep a universal claim.
+- **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F3, `/deep-review` Agent 5 and the Tooling lens.

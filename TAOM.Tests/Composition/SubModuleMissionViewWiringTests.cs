@@ -21,7 +21,7 @@ public class SubModuleMissionViewWiringTests
         Assert.IsFalse(src.Contains("IBattleActionBarViewFactory"), "the action bar is a [DefaultView]; no factory seam");
 
         var offenders = RepoPaths.CSharpFiles("Main")
-            .Select(f => new { f, text = RepoPaths.StripComments(File.ReadAllText(f)) })
+            .Select(f => new { f, text = RepoPaths.StripComments(RepoPaths.Text(f)) })
             .Where(x => x.text.Contains("new AutonomousMovementPlayerController(")
                         || x.text.Contains("new BattleActionBarMissionView("))
             .Select(x => Path.GetFileName(x.f)).ToList();

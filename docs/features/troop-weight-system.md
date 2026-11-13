@@ -617,7 +617,6 @@ that differs from its twin or has none.
 2. Add a `<TroopWeight id="troop_string_id" weight="2.0" />` element
 3. The `id` must match the NPCCharacter's `id` attribute in the troop XML files (case-insensitive)
 4. No code changes needed — the loader picks up new entries on next game load
-5. To force a mid-game reload, the `TroopWeightXmlLoader.ReloadWeights()` method is available but not currently exposed via UI
 
 ## How to Add a New Weight Tier
 

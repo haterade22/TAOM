@@ -25,9 +25,4 @@ public class CultureResolverService : ICultureResolverService
 
         return result;
     }
-
-    public bool IsCultureAvailable(string cultureId)
-    {
-        return ResolveCulture(cultureId) != null;
-    }
 }

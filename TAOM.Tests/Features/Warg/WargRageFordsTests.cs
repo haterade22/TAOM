@@ -39,7 +39,7 @@ public class WargRageFordsTests
         // count above 0; the others end a rage or count one down.
         var write = new Regex(@"\b_?[Rr]ageAttackAmount\.SetValue\(([^;]*)\);");
         var writes = RepoPaths.CSharpFiles()
-            .SelectMany(f => write.Matches(Regex.Replace(RepoPaths.StripComments(File.ReadAllText(f)), @"\s+", " ")).Cast<Match>()
+            .SelectMany(f => write.Matches(Regex.Replace(RepoPaths.StripComments(RepoPaths.Text(f)), @"\s+", " ")).Cast<Match>()
                 .Select(m => Path.GetFileName(f) + ": " + m.Groups[1].Value.Trim()))
             .OrderBy(w => w, StringComparer.Ordinal)
             .ToArray();

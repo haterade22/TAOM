@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TAOM.Core.Validation;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Adapters;
 
@@ -14,18 +15,21 @@ namespace TAOM.Adapters;
 /// </summary>
 public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
 {
+    private readonly IPlayerControlQuery _players;
+
+    public KingdomWarSnapshotAdapter(IPlayerControlQuery players) => _players = players;
+
     public IReadOnlyList<KingdomWarSnapshot> GetKingdoms()
     {
         var result = new List<KingdomWarSnapshot>();
         if (Campaign.Current == null)
             return result;
 
-        var playerClan = Clan.PlayerClan;
         foreach (var kingdom in Kingdom.All)
         {
             if (kingdom == null || kingdom.IsEliminated)
                 continue;
-            result.Add(Read(kingdom, playerClan));
+            result.Add(Read(kingdom, _players));
         }
 
         return result;
@@ -54,7 +58,7 @@ public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
 
     public double GetNowHours() => Campaign.Current == null ? 0d : CampaignTime.Now.ToHours;
 
-    private static KingdomWarSnapshot Read(Kingdom kingdom, Clan? playerClan)
+    private static KingdomWarSnapshot Read(Kingdom kingdom, IPlayerControlQuery players)
     {
         var towns = 0;
         var castles = 0;
@@ -75,7 +79,8 @@ public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
         {
             Id = kingdom.StringId ?? string.Empty,
             CultureId = kingdom.Culture?.StringId ?? string.Empty,
-            IsPlayerRuled = playerClan != null && kingdom.RulingClan == playerClan,
+            // #1141: a realm a co-op guest rules is a player's too; the rally never helps a player's realm.
+            IsPlayerRuled = PlayerClanCheck.IsAPlayersClan(kingdom.RulingClan, players),
             AtWar = IsAtWarWithAnotherKingdom(kingdom),
             Towns = towns,
             Castles = castles,

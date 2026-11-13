@@ -29,12 +29,6 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         _settings = settings;
     }
 
-    public IReadOnlyList<SpecialResource> GetAllResources()
-    {
-        EnsureLoaded();
-        return _resources;
-    }
-
     public SpecialResource? GetByKingdomId(string? kingdomId)
     {
         EnsureLoaded();

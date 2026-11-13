@@ -88,7 +88,7 @@ public class SmartCavalryAIBindingTests
         Assert.IsNotNull(enumType, "MovementOrder.MovementOrderEnum is gone.");
         Assert.AreEqual(enumType, orderEnumType, "OrderEnum no longer returns MovementOrderEnum; the compiled comparisons are against the wrong type.");
 
-        // Patch31 and FormationAdapter.CurrentMovementOrderType compare against these members;
+        // Patch31 compares against these members;
         // the comparisons are constant-folded, so the numeric values are what actually ship.
         Assert.AreEqual(2, Convert.ToInt32(Enum.Parse(enumType, "Charge")), "MovementOrderEnum.Charge was renumbered.");
         Assert.AreEqual(3, Convert.ToInt32(Enum.Parse(enumType, "ChargeToTarget")), "MovementOrderEnum.ChargeToTarget was renumbered.");

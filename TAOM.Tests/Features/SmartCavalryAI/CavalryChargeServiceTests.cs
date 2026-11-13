@@ -217,7 +217,6 @@ public class CavalryChargeServiceTests
 
         commands.Received(1).ApplyChargeLine(NearXY(5f, 0f), Near(East), Arg.Any<int>());
         commands.Received(1).IssueMoveTo(Near(new Vec2(5f, 0f)), Arg.Any<float>());
-        commands.DidNotReceive().IssueStop();
     }
 
     [TestMethod]
@@ -538,7 +537,6 @@ public class CavalryChargeServiceTests
         // Reform point: 25 m past the target plane, on the far side, facing back west.
         commands.Received(1).IssueMoveTo(Near(new Vec2(125f, 0f)), Arg.Any<float>());
         commands.Received(1).ApplyChargeLine(NearXY(125f, 0f), Near(new Vec2(-1f, 0f)), Arg.Any<int>());
-        commands.DidNotReceive().IssueStop();
     }
 
     [TestMethod]
@@ -667,7 +665,6 @@ public class CavalryChargeServiceTests
         _sut.Tick(Relocate(cav, new Vec2(124f, 0f)), commands, battlefield, 0.1f, 3f);
 
         Assert.AreEqual(CavalryState.Reforming, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceive().IssueStop();
     }
 
     [TestMethod]
@@ -872,7 +869,6 @@ public class CavalryChargeServiceTests
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
         commands.DidNotReceiveWithAnyArgs().IssueCharge();
-        commands.DidNotReceiveWithAnyArgs().IssueStop();
         commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
         commands.DidNotReceiveWithAnyArgs().IssueChargeToTarget(default!);
     }
@@ -1144,7 +1140,6 @@ public class CavalryChargeServiceTests
         _sut.Tick(cav, commands, MakeBattlefield(), 0.1f, 1f);
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
-        commands.DidNotReceiveWithAnyArgs().IssueStop();
         commands.DidNotReceiveWithAnyArgs().IssueMoveTo(default, default);
         commands.DidNotReceiveWithAnyArgs().IssueChargeToTarget(default!);
         commands.DidNotReceiveWithAnyArgs().IssueCharge();

@@ -190,7 +190,7 @@ public class SwornAnewWiringTests
     {
         // Patch116 is the only Harmony seam on LordDefectionCampaignBehavior; a second would have to be reconciled with its verdict.
         var files = RepoPaths.CSharpFiles()
-            .Where(f => RepoPaths.StripComments(File.ReadAllText(f)).Contains("LordDefectionCampaignBehavior"))
+            .Where(f => RepoPaths.StripComments(RepoPaths.Text(f)).Contains("LordDefectionCampaignBehavior"))
             .Select(Path.GetFileName)
             .OrderBy(n => n, StringComparer.Ordinal)
             .ToList();

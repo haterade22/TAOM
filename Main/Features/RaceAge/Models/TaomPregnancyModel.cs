@@ -2,16 +2,26 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.RaceAge.Models;
 
 public class TaomPregnancyModel : DefaultPregnancyModel
 {
     private readonly IRaceAgeService _raceAgeService;
+    private readonly IPlayerControlQuery _players;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // model is built.
     public TaomPregnancyModel(IRaceAgeService raceAgeService)
+        : this(raceAgeService, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal TaomPregnancyModel(IRaceAgeService raceAgeService, IPlayerControlQuery players)
     {
         _raceAgeService = raceAgeService;
+        _players = players;
     }
 
     public override float GetDailyChanceOfPregnancyForHero(Hero hero)
@@ -25,7 +35,7 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         if (!_raceAgeService.CanConceive(race, hero.Spouse.CharacterObject.Race, hero.Age))
             return 0f;
 
-        bool playerOrSpouseInvolved = (hero == Hero.MainHero) || (hero.Spouse == Hero.MainHero);
+        bool playerOrSpouseInvolved = IsPlayerMarriage(hero, hero.Spouse, _players);
 
         // Phase 9b Codex review (2026-05-13): heroAge MUST be float (not int). Vanilla
         // DefaultPregnancyModel.GetDailyChanceOfPregnancyForHero uses Hero.Age (float) directly
@@ -49,4 +59,14 @@ public class TaomPregnancyModel : DefaultPregnancyModel
 
         return result.ResultNumber;
     }
+
+    /// <summary>
+    /// Vanilla's "the player or the player's spouse" test (#1141). Pregnancy ticks run on the co-op server, where
+    /// <c>Hero.MainHero</c> is the server's own hero; this override never calls the base method, so Coop's prefix
+    /// on it (which asks <c>IsPlayerHero</c>) never runs. Without a session the query is the
+    /// <c>Hero.MainHero</c> comparison. <see cref="PlayerControl.Unknown"/> is not a player: an unreadable registry
+    /// would otherwise lift the clan brake and drop the race bonus for every AI clan.
+    /// </summary>
+    internal static bool IsPlayerMarriage(Hero hero, Hero? spouse, IPlayerControlQuery players)
+        => players.OfHero(hero) == PlayerControl.Player || players.OfHero(spouse) == PlayerControl.Player;
 }

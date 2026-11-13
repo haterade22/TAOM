@@ -15,8 +15,6 @@ public class TroopRosterQueryAdapter : ITroopRosterQueryAdapter
 
     public bool HasMainParty => MainRoster != null;
 
-    public int GetMainPartyHealthyCount() => MainRoster?.TotalHealthyCount ?? 0;
-
     public IReadOnlyDictionary<string, int> GetRosterSnapshot()
     {
         var snapshot = new Dictionary<string, int>();

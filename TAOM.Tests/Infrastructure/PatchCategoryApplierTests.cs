@@ -373,7 +373,7 @@ public class PatchCategoryApplierTests
         var hits = new List<string>();
         foreach (var file in RepoPaths.CSharpFiles())
         {
-            var code = CommentPattern.Replace(File.ReadAllText(file), string.Empty);
+            var code = CommentPattern.Replace(RepoPaths.Text(file), string.Empty);
             foreach (Match match in DirectPatchCategoryCall.Matches(code))
             {
                 var lineStart = code.LastIndexOf('\n', match.Index) + 1;

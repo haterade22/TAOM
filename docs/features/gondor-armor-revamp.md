@@ -27,7 +27,7 @@ The two must be applied and validated together — neither alone produces a work
 
 - **Phase A: Armory item authoring.** A sibling generator `tools/generate_gondor_armor_phase2.py` reuses the `STAT_TIERS` table from phase-1 (`tools/generate_gondor_armor.py`) so new items have stat values consistent with existing ones. Idempotent (safe to re-run).
 - **Phase B: Troop equipment refit.** Four parallel planning agents read the source-of-truth and produced precise blueprint XML for each troop's new `<EquipmentRoster>`. A consolidator script `tools/apply_gondor_troop_revamp.py` encodes all 107 blueprints as Python data and applies them via regex-based block replacement that preserves indentation and Horse/HorseHarness lines on cavalry.
-- **Phase C: Cross-reference validation.** `tools/validate_gondor_refs.py` greps every `Item.sk_gd_*` reference in `troops_gondor.xml` against the Armory's `id="sk_gd_*"` ids. Zero missing references is the gate.
+- **Phase C: Cross-reference validation.** `tools/validate_gondor_refs.py` (deleted 2026-11-13; its multi-culture successor is `tools/validate_all_troop_refs.py`) greps every `Item.sk_gd_*` reference in `troops_gondor.xml` against the Armory's `id="sk_gd_*"` ids. Zero missing references is the gate.
 
 ### Component Diagram
 
@@ -48,7 +48,7 @@ apply_gondor_troop_revamp.py  --apply  -->  Main/_Module/ModuleData/troops/troop
                                                      |
                                                      | sk_gd_* references
                                                      v
-                            validate_gondor_refs.py  -->  PASS / FAIL gate
+                         validate_all_troop_refs.py  -->  PASS / FAIL gate
 ```
 
 ## Configuration
@@ -95,7 +95,7 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Gondor.cs` | Hand-written Gondor recruitment pools: the settlement pools are the C# fallback for `recruitment_pools/gondor.json`, and the clan pools have no JSON counterpart. `clan_empire_west_5` offers `gondor_loss_lumberman`, `gondor_loss_axebearer` and `gondor_loss_noble`. Castle EW8 is now a Pinnath Gelin pool and castle EW12 a Linhir pool |
 | `tools/generate_gondor_armor_phase2.py` | Idempotent armor item author |
 | `tools/apply_gondor_troop_revamp.py` | Equipment blueprint applier (107 troops) |
-| `tools/validate_gondor_refs.py` | Cross-reference gate for the underwear bug |
+| `tools/validate_gondor_refs.py` | Cross-reference gate for the underwear bug; deleted 2026-11-13, replaced by `tools/validate_all_troop_refs.py` |
 | `tools/generate_gondor_troops.py` | Original troop scaffolder — Lossarnach noble line removed |
 
 ## Dependencies
@@ -107,14 +107,14 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 ## Tests
 
 - `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` — 84 tests, all pass after the `_noble` → `_axebearer` rewiring. No new tests added (the change is data-only ID swap).
-- Cross-reference validation (`tools/validate_gondor_refs.py`) — equivalent to a runtime smoke test for the underwear bug. Expected output: `PASS: all sk_gd_* / sk_dg_* references resolve.`
+- Cross-reference validation (`python tools/validate_all_troop_refs.py`), equivalent to a runtime smoke test for the underwear bug. Expected: the `gondor` row reads `missing=0` and `PASS`, and the run prints `PASS: all armor refs resolve across all cultures.` (two scope lines follow it).
 
 ## How to add a new region
 
 1. Have KEYforce ship meshes + add the new region's section to `gondor_armors_and_troops.txt`.
 2. Extend `tools/generate_gondor_armor_phase2.py`: add `ArmorItem(...)` entries to `HEAD_ARMORS` / `BODY_ARMORS` / etc. for the new family. Run `--dry-run` then `--apply`.
 3. Extend `tools/apply_gondor_troop_revamp.py`: add per-troop entries to `EQUIPMENT` dict. Encode `(slot, item_id)` tuples per the artist's tier mapping. Run `--dry-run` then `--apply`.
-4. Run `tools/validate_gondor_refs.py` — must show 0 missing references.
+4. Run `python tools/validate_all_troop_refs.py`: the `gondor` row must show `missing=0`.
 5. Run `./build.ps1 -RunTests` and verify recruitment tests pass.
 6. In-game spot check: launch a custom battle, select Gondor, scroll to the new region's troops in the troop preview.
 
@@ -128,7 +128,7 @@ This was done for 5 Lossarnach extras. New mod version permits ID changes — pr
    - `RecruitmentPools/VolunteerRecruitmentService.Gondor.cs` and `recruitment_pools/gondor.json`: replace with surviving mainline ids
    - `settlement_guards_config.xml` — same
    - `tools/generate_gondor_troops.py` — remove the troop's `Troop(...)` definition so re-runs don't recreate it
-4. Run `tools/validate_gondor_refs.py` and `./build.ps1 -RunTests`.
+4. Run `python tools/validate_all_troop_refs.py` and `./build.ps1 -RunTests`.
 
 ## Performance
 

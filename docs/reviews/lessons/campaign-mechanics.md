@@ -1176,3 +1176,15 @@ LordRetinue put a clan hero into an AI lord party's roster and gave the hero a p
 - **Why missed:** the plan modeled the role as empty. The fallback was known and quoted in the first message of the session, yet every test fixture started from a leader with no skills.
 - **Prevent:** a decision that fills a slot with a fallback compares the candidate's value with the fallback's value, and its fixtures give the fallback a higher value than the candidate. The service takes the fallback's values as input.
 - **Source:** [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md), finding 2.
+
+### What TAOM's own gate refuses is not what a co-op mod can still write: read the mod's path before stating a co-op world rule (#1139, 2026-11-13)
+The #1139 doc said two players of the same side cannot go to war, because TAOM's `DeclareWarAction` prefix refuses that pair on the server. Coop's hostile demand calls `DeclareWarAction`, accepts the refusal, then sets the war stance itself (`VillageHostileFactionStanceHelper.ApplyWarStance`) and starts the battle. The same session's root defect was the older form of this mistake: "the player" read as `Hero.MainHero`, which on the Coop server is the server's own hero (see the 2026-08-03 entry above).
+- **Why missed:** the claim came from an audit agent and was corrected by reading TAOM's veto alone. A veto is proof of what TAOM refuses, not of what the world can reach.
+- **Prevent:** a sentence about what players can or cannot do in a co-op session cites the co-op mod's code path that would do it, not only TAOM's gate on it. Under Coop, "the player" is `IPlayerControlQuery`, never `Hero.MainHero` (#1141 audits the rest).
+- **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), findings F0 and F1.
+
+### Vanilla parity under Coop means vanilla plus Coop's patches: an override that skips `base` hides them (#1141, 2026-11-13)
+The #1141 audit marked `TaomPregnancyModel`'s `Hero.MainHero` test as vanilla parity. Coop prefixes the vanilla method and swaps that test for `IsPlayerHero`, but TAOM's override never calls `base`, so the prefix never ran and guests' marriages got the AI rules. The same audit grepped `Hero.MainHero` only and missed the War Chronicle rally's `RulingClan == Clan.PlayerClan` test.
+- **Why missed:** parity was checked against the decompiled vanilla body, not against what runs on a Coop server.
+- **Prevent:** before calling a TAOM site "vanilla parity" for co-op, grep the Coop source for a patch on that vanilla method. An override that skips `base` must port the patch's rule (#1151 audits the other models). Audit "the player" as `Hero.MainHero`, `Clan.PlayerClan`, `MobileParty.MainParty` and locals copied from them.
+- **Source:** [rca-coop-mainhero-audit-2026-11-13.md](../rca-coop-mainhero-audit-2026-11-13.md), findings R1 and R2.

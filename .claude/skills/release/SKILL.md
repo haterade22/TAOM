@@ -1,6 +1,6 @@
 ---
 name: release
-description: "Use when cutting a player release: version bump, generated CHANGELOG, release note, commit, tag, push, then rebuild at the tag and gate the packaged DLL stamps. Enforces #371 pairing."
+description: "Use when cutting a player release, after /ship and never instead of it: version bump, generated CHANGELOG, release note, commit, tag, push, rebuild at the tag, DLL stamp gate (#371)."
 argument-hint: [version, e.g. 2.0.19]
 ---
 

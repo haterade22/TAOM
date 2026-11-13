@@ -101,7 +101,7 @@ does not cover:
 The costs that matter in a Bannerlord mod are per frame, per agent, per tick and at load.
 
 - Hot-path patches: Postfixes and Prefixes on per-frame, per-agent or per-nameplate methods that call
-  `IoC.Resolve` (cache it lazily, AGENTS.md "Verify before reference"), build LINQ chains, use
+  `IoC.Resolve` (cache it lazily, `csharp-patterns.md`), build LINQ chains, use
   `MethodInfo.Invoke` instead of a cached delegate, format strings, or read `TaomSettings.Instance`
   repeatedly (cache it; Patch38 is the exemplar).
 - Wrong complexity: nested scans over rosters, parties or settlements where a dictionary belongs;

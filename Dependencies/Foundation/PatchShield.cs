@@ -41,6 +41,9 @@ public static class PatchShield
     private static readonly ShieldCoverage _coverage = new();
     private static readonly HashSet<string> _unpatched = new();
     private static readonly HashSet<string> _withheld = new();
+    // Targets already examined once, whatever the outcome (#726): the dedupe key, kept apart from
+    // _unpatched and _withheld so those count only targets where an owner was stripped or withheld.
+    private static readonly HashSet<string> _handled = new();
     private static readonly object _lock = new();
 
     // The protected-owner allowlist and the two decisions that use it live in PatchShieldPolicy so
@@ -455,6 +458,12 @@ public static class PatchShield
         finally { _swallowLines.WriteFinished(line, written); }
     }
 
+    private static IEnumerable<string?> OwnersOf(IEnumerable<Patch>? patches)
+    {
+        if (patches == null) yield break;
+        foreach (var p in patches) if (p != null) yield return p.owner;
+    }
+
     private static void TryUnpatchOffendingPatches(MethodBase? originalMethod, Exception ex)
     {
         if (originalMethod == null) return;
@@ -479,14 +488,13 @@ public static class PatchShield
         // + the session summary; `_withheld` means "we would have, but co-op is active". Recording
         // a withheld target as unpatched made the one summary line a triager reads ("unpatched N
         // target(s)") contradict the "(withheld)" lines above it — bad in a changeset whose whole
-        // purpose is making divergence legible. Both still dedupe once per target.
+        // purpose is making divergence legible. A target is added to either only once an owner
+        // there was actually stripped or withheld (#726); `_handled` dedupes once per target.
         var coopActive = CoopPresence.IsActive;
         var mayUnpatch = PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive);
         lock (_lock)
         {
-            if (_unpatched.Contains(targetKey) || _withheld.Contains(targetKey)) return;  // already handled
-            if (mayUnpatch) _unpatched.Add(targetKey);
-            else _withheld.Add(targetKey);
+            if (!_handled.Add(targetKey)) return;  // already handled
         }
 
         try
@@ -494,11 +502,10 @@ public static class PatchShield
             var patches = Harmony.GetPatchInfo(originalMethod);
             if (patches == null) return;
 
-            var owners = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var p in patches.Prefixes) if (p != null) owners.Add(p.owner ?? string.Empty);
-            foreach (var p in patches.Postfixes) if (p != null) owners.Add(p.owner ?? string.Empty);
-            foreach (var p in patches.Transpilers) if (p != null) owners.Add(p.owner ?? string.Empty);
-            foreach (var p in patches.Finalizers) if (p != null) owners.Add(p.owner ?? string.Empty);
+            // #726: only owners with a prefix, postfix or transpiler here; a finalizer is never
+            // stripped, so a finalizer-only owner is neither unpatched nor counted.
+            var owners = PatchShieldPolicy.OwnersToStrip(
+                OwnersOf(patches.Prefixes), OwnersOf(patches.Postfixes), OwnersOf(patches.Transpilers));
 
             // Co-op interop (2026-07-31): when a co-op module is active, observe and log but never
             // strip. Under a host-authoritative co-op mod, removing one peer's sync patch does not
@@ -525,6 +532,7 @@ public static class PatchShield
                 if (!mayUnpatch)
                 {
                     DiagLog.Log(Tag, $"co-op active — would unpatch owner '{owner}' on {targetKey} (withheld)");
+                    lock (_lock) _withheld.Add(targetKey);
                     continue;
                 }
 
@@ -534,6 +542,7 @@ public static class PatchShield
                     harmony.Unpatch(originalMethod, HarmonyPatchType.Postfix, owner);
                     harmony.Unpatch(originalMethod, HarmonyPatchType.Transpiler, owner);
                     DiagLog.Log(Tag, $"unpatched owner '{owner}' on {targetKey}");
+                    lock (_lock) _unpatched.Add(targetKey);
 
                     lock (_ownerLock)
                     {

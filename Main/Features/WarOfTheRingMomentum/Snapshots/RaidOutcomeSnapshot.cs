@@ -11,6 +11,13 @@ public class RaidOutcomeSnapshot
 {
     public bool AttackerVictory { get; set; }
 
+    /// <summary>
+    /// True when this raid event looted the village (#774). The engine also raises RaidCompleted
+    /// with the attacker as winner when only the militia fight was won; the loot then ends a
+    /// second raid event. Only the event that sets the village to Looted is a raid.
+    /// </summary>
+    public bool VillageLooted { get; set; }
+
     /// <summary>Raider leader party MapFaction StringId; null when unresolvable.</summary>
     public string AttackerFactionId { get; set; }
 

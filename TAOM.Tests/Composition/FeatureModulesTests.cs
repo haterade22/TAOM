@@ -85,7 +85,7 @@ public class FeatureModulesTests
     public void EveryDeclaredGameModel_IsTheOnlyTaomFileFillingItsSlot()
     {
         var sources = RepoPaths.CSharpFiles()
-            .Select(f => (Name: Path.GetFileName(f), Text: RepoPaths.StripComments(File.ReadAllText(f))))
+            .Select(f => (Name: Path.GetFileName(f), Text: RepoPaths.StripComments(RepoPaths.Text(f))))
             .ToList();
 
         var wrong = new List<string>();

@@ -553,10 +553,9 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
 
     private void ProcessWeaponToggleInput(Agent mainAgent)
     {
-        if (Input.IsGameKeyPressed(17) || _weaponUsageToggleRequested)
+        if (Input.IsGameKeyPressed(17))
         {
             mainAgent.EventControlFlags |= Agent.EventControlFlag.ToggleAlternativeWeapon;
-            _weaponUsageToggleRequested = false;
         }
     }
 
@@ -646,8 +645,6 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
         _isPlayerOrderOpen = obj.IsOrderEnabled;
     }
 
-    public void OnWeaponUsageToggleRequested() { _weaponUsageToggleRequested = true; }
-
     private void OnManagedOptionChanged(ManagedOptions.ManagedOptionsType optionType)
     {
         if (optionType == ManagedOptions.ManagedOptionsType.LockTarget)
@@ -677,5 +674,4 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
     private float _lastLockKeyPressTime;
     private float _lastLockedAgentHeightDifference;
     public bool IsChatOpen;
-    private bool _weaponUsageToggleRequested;
 }

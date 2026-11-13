@@ -5,6 +5,8 @@
 # Added 2026-11-02: the test constant HitKey = "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit", a probe key.
 # Added 2026-11-03: line 5 of this file, which quotes that constant.
 # Added 2026-11-08: RCA prose where the word keys runs up to a plan file name.
+# Added 2026-11-13: three localization ids in the Italian translation cache (two career group ids, one
+# character creation text id) from the backlog translation of 2026-11-12.
 # Format: <commit>:<file>:<rule>:<line>. Add a line only after reading the match.
 066dcaf01ed6ac62a561097d09e067a2a8069fa7:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
 0bd6abf330bbe8a605fdfef459ecdbb36aa8614d:tools/translation_cache/it.json:generic-api-key:5905
@@ -28,3 +30,6 @@ d340a725cf479580d22f40015df2b2bc2e4e317a:Main/Features/WarChronicle/WarChronicle
 db69d837f89474f6c4b0b725d1aa9f14a4e52e69:tools/translation_cache/fr.json:generic-api-key:7944
 db69d837f89474f6c4b0b725d1aa9f14a4e52e69:tools/translation_cache/it.json:generic-api-key:7860
 dca7fa41d5dc1addda1b725db063516513298444:tools/translation_cache/it.json:generic-api-key:8776
+65914879c47d65c56994c15706ada2b56f0e610b:tools/translation_cache/it.json:generic-api-key:19917
+65914879c47d65c56994c15706ada2b56f0e610b:tools/translation_cache/it.json:generic-api-key:20056
+65914879c47d65c56994c15706ada2b56f0e610b:tools/translation_cache/it.json:generic-api-key:20957

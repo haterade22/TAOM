@@ -64,14 +64,6 @@ public class FiefHubService : IFiefHubService
         return ((index - 1) % count + count) % count;
     }
 
-    public FiefSummary GetAt(int index)
-    {
-        var fiefs = GetOrderedFiefs();
-        if (fiefs.Count == 0) return null;
-        var clamped = Clamp(index);
-        return fiefs[clamped];
-    }
-
     public bool PlayerIsAt(FiefSummary fief)
     {
         if (fief == null) return false;

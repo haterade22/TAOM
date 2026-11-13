@@ -53,7 +53,7 @@ public class FamilyTreeWiringTests
         var keys = new List<string>();
         var pattern = new Regex(@"\{=(taom_lod_\w+)\}");
         foreach (var file in RepoPaths.CSharpFiles("Main", "Client"))
-            keys.AddRange(pattern.Matches(File.ReadAllText(file)).Cast<Match>().Select(m => m.Groups[1].Value));
+            keys.AddRange(pattern.Matches(RepoPaths.Text(file)).Cast<Match>().Select(m => m.Groups[1].Value));
         Assert.IsTrue(keys.Count >= 18, "the text file defines the whole table, found " + keys.Count);
         var dupes = keys.GroupBy(k => k).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
         Assert.AreEqual(0, dupes.Count, "keys defined twice: " + string.Join(", ", dupes));

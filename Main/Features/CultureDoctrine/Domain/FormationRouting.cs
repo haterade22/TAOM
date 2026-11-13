@@ -50,10 +50,6 @@ public sealed class FormationRouting
         return false;
     }
 
-    /// <summary>The routable classes: the engine's regular formations, indices 0 to 7.</summary>
-    public static bool IsRoutable(FormationClass formationClass) =>
-        formationClass >= FormationClass.Infantry && formationClass < FormationClass.NumberOfRegularFormations;
-
     private static readonly Dictionary<string, FormationClass> RoutableByName = new Dictionary<string, FormationClass>(StringComparer.OrdinalIgnoreCase)
     {
         { "Infantry", FormationClass.Infantry },

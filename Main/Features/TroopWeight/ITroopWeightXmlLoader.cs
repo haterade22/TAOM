@@ -5,5 +5,4 @@ namespace TAOM.Features.TroopWeight;
 public interface ITroopWeightXmlLoader
 {
     Dictionary<string, float> GetTroopWeights();
-    void ReloadWeights();
 }

@@ -380,6 +380,7 @@ public class MomentumEventServiceTests
         var raid = new RaidOutcomeSnapshot
         {
             AttackerVictory = true,
+            VillageLooted = true,
             AttackerFactionId = "isengard",
             AttackerPartyName = "Uruk warband",
             AttackerFactionName = "Isengard",
@@ -395,7 +396,10 @@ public class MomentumEventServiceTests
     [TestMethod]
     public void ProcessRaid_DefenderVictory_NoChange()
     {
-        var raid = new RaidOutcomeSnapshot { AttackerVictory = false, AttackerFactionId = "isengard" };
+        var raid = new RaidOutcomeSnapshot
+        {
+            AttackerVictory = false, VillageLooted = true, AttackerFactionId = "isengard",
+        };
 
         _sut.ProcessRaid(raid, _state, 300.0);
 
@@ -406,13 +410,53 @@ public class MomentumEventServiceTests
     public void ProcessRaid_UnenrolledRaider_NoChange()
     {
         // Deliberate deviation from LOTRAOM: bandit/looter raids never feed a side.
-        var raid = new RaidOutcomeSnapshot { AttackerVictory = true, AttackerFactionId = "looters" };
+        var raid = new RaidOutcomeSnapshot
+        {
+            AttackerVictory = true, VillageLooted = true, AttackerFactionId = "looters",
+        };
 
         _sut.ProcessRaid(raid, _state, 300.0);
 
         Assert.AreEqual(0, _state.Free.SideMomentum);
         Assert.AreEqual(0, _state.Evil.SideMomentum);
         Assert.AreEqual(0, _state.Evil.TotalStats.TotalVillagesRaided);
+    }
+
+    [TestMethod]
+    public void ProcessRaid_MilitiaBeatenVillageNotLooted_NoChange()
+    {
+        // #774: the engine raises RaidCompleted with the attacker as winner when only the
+        // militia fight is won; the village is not looted yet, so no raid is counted.
+        var raid = new RaidOutcomeSnapshot
+        {
+            AttackerVictory = true, VillageLooted = false, AttackerFactionId = "isengard",
+        };
+
+        _sut.ProcessRaid(raid, _state, 300.0);
+
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+        Assert.AreEqual(0, _state.Evil.TotalStats.TotalVillagesRaided);
+    }
+
+    [TestMethod]
+    public void ProcessRaid_MilitiaFightThenLoot_CountsOneRaid()
+    {
+        // #774: a resisted raid ends two raid events (militia fight, then the loot); only
+        // the second one looted the village, so the faction gains one raid, not two.
+        var militiaFight = new RaidOutcomeSnapshot
+        {
+            AttackerVictory = true, VillageLooted = false, AttackerFactionId = "isengard",
+        };
+        var loot = new RaidOutcomeSnapshot
+        {
+            AttackerVictory = true, VillageLooted = true, AttackerFactionId = "isengard",
+        };
+
+        _sut.ProcessRaid(militiaFight, _state, 300.0);
+        _sut.ProcessRaid(loot, _state, 301.0);
+
+        Assert.AreEqual(20000, _state.Evil.SideMomentum);
+        Assert.AreEqual(1, _state.Evil.TotalStats.TotalVillagesRaided);
     }
 
     // ---- ProcessArmyGathered ----

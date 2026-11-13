@@ -27,7 +27,7 @@ public class FiefHubServiceTests
     {
         _ownership.GetPlayerOwnedFiefs().Returns(new List<FiefSummary>(fiefs));
         // Audit #143: Count now delegates to the fast-path adapter method, not GetOrderedFiefs().
-        // Stub both so existing Clamp/Next/Previous/GetAt tests stay green. Null entries in the
+        // Stub both so existing Clamp/Next/Previous tests stay green. Null entries in the
         // ordered-list fixture are filtered by the service; the fast-path counts only non-null
         // town/castle summaries — mirror that here.
         int fastCount = 0;
@@ -225,23 +225,6 @@ public class FiefHubServiceTests
     {
         GivenFiefs();
         Assert.AreEqual(0, _sut.Clamp(5));
-    }
-
-    // ---------- GetAt ----------
-
-    [TestMethod]
-    public void GetAt_EmptyList_ReturnsNull()
-    {
-        GivenFiefs();
-        Assert.IsNull(_sut.GetAt(0));
-    }
-
-    [TestMethod]
-    public void GetAt_BeyondCount_ClampsAndReturnsLast()
-    {
-        GivenFiefs(Town("a"), Town("b"));
-        var result = _sut.GetAt(99);
-        Assert.AreEqual("b", result.Name);
     }
 
     // ---------- PlayerIsAt ----------

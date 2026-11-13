@@ -196,14 +196,14 @@ reinstall causes. Re-apply with
 or a village bound to it, has lost its owner or culture. Re-apply with
 `python tools/apply_settlement_assignments.py --apply`.
 
-## Seven scripts with no dry run
+## Six scripts with no dry run
 
 These write unconditionally. None of them has an `--apply` or a `--dry-run` flag at all, so there is
 no preview and no confirmation step. Commit or copy the target files first.
 
-<!-- measured: grep -cE '\-\-apply|\-\-dry-run' on each of the ten files listed on 2026-09-05; seven still return 0 on 2026-10-27 -->
+<!-- measured: grep -cE '\-\-apply|\-\-dry-run' on each of the ten files listed on 2026-09-05; seven still return 0 on 2026-10-27; generate_batch2_wanderers.py deleted 2026-11-13 -->
 
-`tools/generate_batch2_wanderers.py` · `tools/extract_wanderers.py` ·
+`tools/extract_wanderers.py` ·
 `tools/harvest_factionmap_strings.py` · `tools/generate_new_factions.py` ·
 `tools/insert_new_factions.py` · `tools/oneoff/apply_hero_bios.py` ·
 `tools/oneoff/_harvest_lotr_issue_strings.py`

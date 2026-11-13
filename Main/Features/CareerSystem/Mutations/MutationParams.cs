@@ -25,17 +25,4 @@ public class MutationParams
     {
         return _params.TryGetValue(key, out var val) ? val : defaultValue;
     }
-
-    public bool GetBool(string key, bool defaultValue = false)
-    {
-        if (!_params.TryGetValue(key, out var val)) return defaultValue;
-        return bool.TryParse(val, out var result) ? result : defaultValue;
-    }
-
-    public int GetInt(string key, int defaultValue = 0)
-    {
-        if (!_params.TryGetValue(key, out var val)) return defaultValue;
-        return int.TryParse(val, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-            ? result : defaultValue;
-    }
 }

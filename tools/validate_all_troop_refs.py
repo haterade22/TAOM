@@ -2,7 +2,7 @@
 """Validate every sk_*/clo_*/urukscout_* armor reference across all troop XML files
 against the LOTRLOME_Armory item ids.
 
-This is the multi-culture generalization of `validate_gondor_refs.py`. It is the
+This is the multi-culture generalization of the Gondor-only validator it replaced. It is the
 gate against the underwear bug for the full TAOM faction lineup.
 
 Out of scope: weapons, arrows, mounts, harnesses — those live in other modules

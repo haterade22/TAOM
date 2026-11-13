@@ -17,8 +17,6 @@ public interface ICareerQuestService
     /// <summary>Resolve a quest by its id (used by the QuestBase shell to rebuild its definition on load). Null if not found.</summary>
     CareerQuestDefinition GetQuestById(string questId);
 
-    IReadOnlyList<CareerQuestDefinition> GetAllQuests();
-
     /// <summary>
     /// Hybrid gate: a tier is available when the hero meets the level threshold OR has unlocked it
     /// (e.g. by completing its quest, recorded in the persisted tier-unlock list). Consumers call

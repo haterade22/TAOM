@@ -57,6 +57,4 @@ public interface ICoopTransport
 
     /// <summary>Server to every client. False when this process is not a server in a session or has no network.</summary>
     bool Broadcast(CoopCompatMomentumSnapshot message);
-
-    void RunOnGameThread(Action action);
 }

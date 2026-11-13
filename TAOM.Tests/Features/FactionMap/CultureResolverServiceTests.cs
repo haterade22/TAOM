@@ -73,24 +73,4 @@ public class CultureResolverServiceTests
         _logger.DidNotReceive().LogError(Arg.Any<string>());
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
-
-    [TestMethod]
-    public void IsCultureAvailable_ValidId_ReturnsTrue()
-    {
-        _cultureAdapter.ResolveCulture("gondor").Returns(new object());
-
-        var result = _sut.IsCultureAvailable("gondor");
-
-        Assert.IsTrue(result);
-    }
-
-    [TestMethod]
-    public void IsCultureAvailable_UnknownId_ReturnsFalse()
-    {
-        _cultureAdapter.ResolveCulture("nonexistent").Returns((object?)null);
-
-        var result = _sut.IsCultureAvailable("nonexistent");
-
-        Assert.IsFalse(result);
-    }
 }

@@ -169,7 +169,7 @@ public class SpecialResourceBreakdownTests
     }
 
     [TestMethod]
-    public void GetDailyBreakdown_Net_MatchesGetProjectedDailyNet()
+    public void GetDailyBreakdown_Net_IsEarningMinusUpkeep()
     {
         _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceGain).Returns(0.2f);
         _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(-0.5f);
@@ -177,12 +177,10 @@ public class SpecialResourceBreakdownTests
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 10) };
 
         var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 4, troops);
-        var projected = _service.GetProjectedDailyNet("hero1", "empire_s", null, 4, troops);
 
         // An independent expected value, not only the two reads against each other: 4 towns * 0.5
         // = 2.0, +20% = 2.4 earning; 10 * 0.3 = 3.0, -50% = 1.5 upkeep; net 0.9 (Codex, review 95).
         Assert.AreEqual(0.9f, breakdown.Net, 0.001f);
-        Assert.AreEqual(projected, breakdown.Net, 0.0001f);
         Assert.AreEqual(breakdown.Earning - breakdown.Upkeep, breakdown.Net, 0.0001f);
     }
 

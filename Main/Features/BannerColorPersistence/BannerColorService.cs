@@ -21,12 +21,6 @@ public class BannerColorService : IBannerColorService
         return info.HasCustomColors;
     }
 
-    public void ApplyClanColors(ref uint color1, ref uint color2, ClanColorInfo info)
-    {
-        color1 = info.Color1;
-        color2 = info.Color2;
-    }
-
     public uint GetUniqueIconColor(uint backgroundColor, uint primaryIconColor)
     {
         if (primaryIconColor != backgroundColor)
@@ -42,8 +36,6 @@ public class BannerColorService : IBannerColorService
     public bool IsBannerPasteEnabled() => _configProvider.GetConfig().EnableBannerPaste;
 
     public bool IsUniqueSecondaryColorEnabled() => _configProvider.GetConfig().EnableUniqueSecondaryColor;
-
-    public bool IsLayerLimitTranspilerEnabled() => _configProvider.GetConfig().EnableLayerLimitTranspiler;
 
     public bool IsAgentVisualColorsEnabled() => _configProvider.GetConfig().EnableAgentVisualColors;
 

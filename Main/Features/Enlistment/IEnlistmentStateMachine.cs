@@ -11,8 +11,6 @@ public interface IEnlistmentStateMachine
 {
     EnlistmentState State { get; }
 
-    bool CanTransition(EnlistmentState to);
-
     /// <summary>Apply a legal transition. Returns false (state unchanged, warning logged) on an illegal edge.</summary>
     bool TryTransition(EnlistmentState to);
 }

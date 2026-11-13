@@ -11,7 +11,7 @@ namespace TAOM.Tests.Adapters;
 [TestClass]
 public class KingdomWarSnapshotAdapterTests
 {
-    private readonly KingdomWarSnapshotAdapter _sut = new KingdomWarSnapshotAdapter();
+    private readonly KingdomWarSnapshotAdapter _sut = new KingdomWarSnapshotAdapter(NSubstitute.Substitute.For<TAOM.Features.CoopInterop.IPlayerControlQuery>());
 
     [TestMethod]
     [TestCategory("RequiresGame")]

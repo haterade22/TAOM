@@ -28,7 +28,7 @@ public interface IFormationAdapter
 
     /// <summary>Snapshot of every live unit in the formation as <c>(Index, IsRanged)</c>.
     /// Consumers may iterate freely without retaining engine references. Used by
-    /// MixedFormations layout assignment and IsMixedFormation classification.</summary>
+    /// MixedFormations layout assignment and mixed-formation classification.</summary>
     IReadOnlyList<FormationUnit> Units { get; }
 
     /// <summary>True when the formation's movement state is <c>Hold</c>.</summary>
@@ -54,11 +54,6 @@ public interface IFormationAdapter
     /// retreat, charge-to-target). The complement of <c>IsHolding</c> with explicit
     /// semantics for callers that don't want to invert.</summary>
     bool IsMoving { get; }
-
-    /// <summary>The just-applied movement order's type, or <c>Other</c> for any value
-    /// outside the cavalry-feature interest set (Charge/ChargeToTarget). Reads via
-    /// <c>Formation.GetReadonlyMovementOrderReference()</c>.</summary>
-    MovementOrderType CurrentMovementOrderType { get; }
 
     /// <summary>The formation's current 2D world position (the centroid that the engine
     /// reports on the same tick). Distinct from <c>OrderPosition</c>, which is the

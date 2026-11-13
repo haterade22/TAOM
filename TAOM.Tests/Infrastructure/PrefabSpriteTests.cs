@@ -183,7 +183,7 @@ public class PrefabSpriteTests
         var usedInCSharp = 0;
         foreach (var file in CSharpFiles())
         {
-            var text = File.ReadAllText(file);
+            var text = RepoPaths.Text(file);
             if (!text.Contains("[PrefabExtension("))
                 continue;
             foreach (var name in ExtensionSpriteValues(text))
