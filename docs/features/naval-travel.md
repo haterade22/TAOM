@@ -139,6 +139,17 @@ TAOM_Map until #120 is solved, so there is nothing valid to lose. The skip decis
 `INavalTravelService.ShouldSuppressAtSeaLandRescue` (= `IsEnabled`); the patch targets the internal
 vanilla type by name and is drift-safe (a bind failure logs + no-ops rather than failing module load).
 
+**Premise re-check (2026-11-13):** the premise is not refuted [TAOM-verified, v1.5.7 ilspy, for the code path; the at-sea count below is open]. Vanilla adds the behaviour
+unconditionally (`SandBoxManager.cs:128`). `AiHourlyTick` returns at once unless the party `IsCurrentlyAtSea` with
+`CurrentSettlement == null`, then also needs `HasLandNavigationCapability`, and only then calls
+`MapSceneWrapper.GetNearestFaceCenterForPositionWithPath`, the native call Patch57 guards. A party that never reaches
+sea has no path that can throw. **Open question [yotthani]:** a night probe on game v1.5.6.125270 with TAOM 2.0.36, a
+26-module list without NavalDLC (27 with RealmUI in run B) and a probe module `SmithProbeGuard` (its source is not in the repo) logged
+`skipped at-sea AI tick` for `lord_AV*`, `lord_AND*` and `lord_DO*` (`yotthani/bannerlord`
+`docs/smithing/2026-11-06-probe-teil2abc-ergebnis.md`@c45d8374 lines 3, 10 and 15). Some party counted as at sea
+there, but the test behind the log line cannot be read. That is not enough to re-enable Patch57. Cheapest check: a new
+campaign on v1.5.7 with TAOM's module list, logging `MobileParty.All.Count(p => p.IsCurrentlyAtSea)` daily for 30 days.
+
 ## Configuration
 
 **JSON:** `Main/_Module/ModuleData/naval_travel/naval_travel_config.json` (validated by

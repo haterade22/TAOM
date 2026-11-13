@@ -550,3 +550,11 @@ The engine reads a troop roster as civilian when it carries `civilian="true"` or
 - **Prevent:** a script that reads what a troop carries skips a roster on either spelling, as `derive_armor_tiers.py` does, and tests both. Count a planner's output against the writer's own filter before you quote it.
 - **Source:** [rca-black-uruk-weapons-2026-11-07.md](../rca-black-uruk-weapons-2026-11-07.md) F6 and F7.
 
+### A comment directly inside a settlement's `<Components>` drops that settlement and every one merged after it (v1.5.7)
+
+On v1.5.7 a comment node inside `<Components>` reaches `CreateObjectFromXmlNode` as `#comment`, the null component throws, and `LoadXML` swallows the exception, so that settlement and every later one stay unready; the only clue is a `Null object reference found with ID: <id>` line in `rgl_log` [TAOM-verified, v1.5.7 cache]. The mechanism and its lines are in [settlements.md](../../modding/settlements.md) "Gotchas". yotthani's TAOM_POI guide reports the symptom (`TAOM_POI/docs/CONFIG-GUIDE.md@c45d8374:322-327`) and blames the merger and the attribute order; the v1.5.7 code shows neither. A POI module's settlements merge last, which fits what yotthani saw.
+
+- **Why missed:** a strict validator passes the file (yotthani's report; TAOM's validator was not tried on a commented component), the exception is swallowed, and the visible symptom (a missing settlement) is far from the XML.
+- **Prevent:** keep comments out of `<Settlement>` and `<Components>`; put them between settlements. TAOM_Map's 59 comments are all children of the root (counted 2026-11-13, live file), so nothing is exposed today. A settlement that is missing from the map starts with `Null object reference found` in `rgl_log`, then the comments around it.
+- **Source:** yotthani, `yotthani/bannerlord` `TAOM_POI/docs/CONFIG-GUIDE.md`@c45d8374:322-327; TAOM's v1.5.7 reading in [settlements.md](../../modding/settlements.md) "Gotchas" and [adopt-yotthani-2026-11-13.md](../adopt-yotthani-2026-11-13.md).
+

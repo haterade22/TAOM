@@ -830,6 +830,12 @@ Code: No code changes needed
   process.
 - **`Harmony.UnpatchAll(null)` is blocked.** A prefix returns `false` for a null id because that call
   would wipe every Harmony patch in the process (`Dependencies/SubModule.cs:294-309`).
+- **An add-on module must list Harmony, ButterLib, UIExtenderEx, MCM and `TAOM.Dependencies` as optional
+  (load order only), never as hard dependencies.** yotthani's seven RingSystem modules required
+  `Bannerlord.Harmony` and `Bannerlord.MBOptionScreen`; with TAOM's bundled copies present, the launcher
+  also enabled the standalone Harmony, ButterLib never built its service provider, and MCM's loader
+  crashed on start with "Value cannot be null. Parameter name: provider" (`yotthani/bannerlord`
+  commit `6d4cae84`, body text; the fix copies the optional block DualWield uses). Not reproduced by TAOM.
 - **A folder-name collision can overwrite a real BUTR module.** If a player has the standalone
   Workshop `Bannerlord.Harmony` module, the stub deploy overwrites its manifest and a later Steam update
   can overwrite the stub back ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 289-297).

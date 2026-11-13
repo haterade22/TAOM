@@ -95,6 +95,12 @@ is a lazy recompute: parties only re-decide when something changed, not every fr
   parties" each frame is wrong/expensive. React to the per-party tick instead.
 - **Don't fight `DefaultBehaviorNeedsUpdate`** — setting `DefaultBehavior`/`TargetSettlement` every frame thrashes the
   AI; set once and let the engine recompute on its next AI tick.
+- **`SetMoveModeHold()` alone does not keep an AI-owned party still.** yotthani's SupplyLines convoy kept turning toward its home town; its log showed the
+  behaviour was `GoToSettlement`, not Hold, because the party AI kept sending the caravan to its `HomeSettlement`, and the engine then wrote `Bearing` toward that
+  town; `SetMoveModeHold` alone was overridden every AI tick. yotthani's fix was `Ai.SetDoNotMakeNewDecisions(true)` at spawn (commit `7882d056`, 2026-06-13, game version not stated, from the convoy log; not
+  re-run by TAOM). TAOM pins the same way: `SupplyCaravanService.PinAi` (`Main/Features/SupplyLines/SupplyCaravanService.cs:686-689`) and
+  `RefugeService.PinPartyAi`, which calls `SetMoveModeHold()` and then `SetDoNotMakeNewDecisions(true)` (`Main/Features/Refuge/RefugeService.cs:1262-1269`)
+  [TAOM-verified, v2.0.38, by reading]. A new stationary party needs both.
 - **`CampaignVec2` targets lazy-resolve via the map scene** — prefer raw accessors in editor mode
   ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Never dereference `Campaign.Current` in editor-mode code paths").
 
@@ -135,6 +141,78 @@ not re-checked; the version of TAOM loaded is not stated.
   `GeopoliticsBehavior.UpdateOnSettlementOwnerChanged`: 13 calls, 2,250 ms, 173 ms on average, up to 281 ms in one
   frame (lines 1205-1208). TAOM switches that subsystem off, so figures taken with it running overstate what a TAOM
   player sees; see [butter-lib-distance-matrix.md](../../features/butter-lib-distance-matrix.md).
+
+## TAOM-named costs on the map [yotthani code reading, three autopilot runs; never re-measured]
+
+yotthani's notes name three costs that sit in TAOM's code or in vanilla code TAOM extends (`docs/perf-audit/k3-periodic-ticks.md@ea7a7bfb:133-160`,
+"Nächste Kandidaten nach den Autopilot-Läufen", 04.10.2026; `docs/engine/perf.md@ea7a7bfb:1240-1243`). The shapes are code reading. The
+milliseconds are from game 1.5.3, TAOM 2.0.32, one save with 1,002 settlements and about 2,000 to 2,500 parties (the save is stated in
+`docs/perf-audit/taom-reports.md@ea7a7bfb`:98), three to four runs, on yotthani's PC. Nothing here was measured on v1.5.7 or v2.0.38, and the 78 ms
+is one frame in one run.
+
+- **(a) Culture conversion applies a whole fief in one tick** (5.8 ms mean, up to 78 ms inside a 127 ms frame; yotthani proposes spreading it
+  over several ticks). TAOM's code still has that shape [TAOM-verified, v2.0.38, by reading]: one tick applies every due record, with the
+  notables of the fief and its villages. The line cites and the steps are in
+  [culture-conversion.md](../../features/culture-conversion.md) "Performance", which owns this item.
+- **(b) The fief election scores merit 3N times.** TAOM's own comment says the override runs 3N times per election (`Setup` twice, `ShouldBeCancelled`
+  once; `TaomSettlementClaimantDecision.cs:45-46`). TAOM's override calls `base.CalculateMeritOfOutcome` and multiplies the result (`:104-115`).
+  The walk over all settlements is vanilla's: v1.5.7 `SettlementClaimantDecision.CalculateMeritOfOutcome` loops `foreach (Settlement item in
+  Settlement.All)` with a `MapDistanceModel.GetDistance` per owned fortification [TAOM-verified, v1.5.7 ilspy]. TAOM adds one pass over the
+  clan's own `Settlements` per call (`FiefGrantFactsBuilder.cs:57-58, 84-89`). yotthani's "about 1,000 settlements per clan" is the vanilla walk.
+- **(c) Caravans pay a second distance per candidate town.** `CaravansCampaignBehavior_GetTradeScoreForTown_Patch.Postfix` calls
+  `AiHelper.GetBestNavigationTypeAndAdjustedDistanceOfSettlementForMobileParty(...)` per scored town (`:40`), and
+  `GetDistanceLimitVeryFar_Patch:42` multiplies the range by `RangeMultiplier` (default 1.6, `CaravanTradeConfig.cs:14`); applied under category
+  `Patch59_CaravanTrade` at `SubModule.cs:553` [TAOM-verified, v2.0.38]. yotthani's reading of vanilla: the rare "find a new target" branch scores all
+  towns times about 100 trade categories, up to twice, and many caravans rethink at once after a war declaration. TAOM's own review found the
+  distance cache-backed ([caravan-trade.md](../../features/caravan-trade.md) "Performance"). No time was estimated for it.
+- **(d) Unlimited alliances chain call-to-war elections** (17 to 35 ms per `OnWarDeclared`, 29 ms mean, up to 219 ms in one second): the numbers are in
+  [diplomacy.md](../../features/diplomacy.md) (the paragraph on what a vote costs on the campaign map).
+
+**Where yotthani's probes time other TAOM code** (`HoN/PerfProbe/perfprobe.xml@c45d8374`:86-88, 123-124, 155-156, 289; measured on TAOM 2.0.3x, 01. to
+04.10.2026, game 1.5.3):
+- *Auto-resolve battle log:* the 03.10. session saw "up to 15 ms" per battle end and asked whether the synchronous log write caused it
+  (`FileLogger.LogInfo` drains and flushes on the calling thread by design, `Main/Core/Logging/FileLogger.cs:85-94`). **yotthani could not
+  reproduce it on 05.10.2026** (the 15 ms were single calls from older probes) after probes on every step: `OnMapEventEnded` 131 us per call (worst second 0.25 ms), `Capture` 27 us, `Format` 85 us, `LogInfo` 24 us over
+  232 calls, 12 battle ends in 240 s of fast forward (`perf.md@ea7a7bfb:1434-1453`). The `perfprobe.xml` comment still poses the question; the
+  measurement answers it. See `docs/reviews/lessons/testing-qa.md` ("not reproduced").
+- *`Mission.FindAgentWithIndex`:* 3,598 calls a second in the s3d scenario, "mostly TAOM `AgentSlotIdentity`" (`perfprobe.xml:289`, timed on 01.10.). TAOM's
+  own measurement is in [mission-frame-threads-and-native-costs.md](mission-frame-threads-and-native-costs.md) (the call is O(1) natively).
+- *Map-battle and notable ticks:* `MapEventManager.Tick` frames of 40 to 60 ms, notables' daily ticks up to 29 ms a call, `StartElection` 13 ms mean over
+  138 calls with single calls above 100 ms (k3 notes, three runs; the comment lists `StartElection` beside TAOM's daily culture conversion). The 3.7 ms
+  mean with `butterlib-lazy-distance` on is in diplomacy.md; the two figures come from different runs, and whether the 138 calls ran with that patch is
+  not stated in what TAOM read.
+
+**Anatomy of the map-battle and notable ticks (code reading, not measured)** [yotthani, `docs/engine/perf.md@ea7a7bfb:1165-1180`; game 1.5.3 text, one save;
+not re-read on v1.5.7]. A later stutter report can start from this list.
+- `MapEventManager.Tick` runs every frame over all map battles, and each due battle computes its round in that frame, with no spreading.
+- `MapEventSide.MakeReadyForSimulation` rebuilds the flat troop roster of all parties on both sides every round.
+- `FinishBattle` does loot per item unit (`LootDefeatedPartyItems` copies the winner's list per unit), prisoners, casualties, `DestroyPartyAction` and about 16
+  `OnMapEventEnded` handlers (TAOM's auto-resolve log among them, default ON then).
+- `NotablesCampaignBehavior.DailyTickSettlement` may create a notable per settlement every 7 days: `HeroCreator.CreateNotable` finds a unique id by a linear
+  search over all living and dead heroes, gang leaders and preachers call `GetRandomClanForNotable` over all settlements, `DailyTickHero` loops over all clans
+  per unbound notable, and removal is an O(N) list search.
+
+## Settlement visibility on the map, and a hard type reference [yotthani, TAOM_POI]
+
+TAOM writes no `Settlement.IsVisible` (Grep of `Main/*.cs` found no write to it on a settlement); its nameplate cull and far watch only read it
+([nameplate-cull.md](../../features/nameplate-cull.md)). The write-side rules below come from yotthani's TAOM_POI code comments and release notes
+(`TAOM_POI/src/Runtime/POIVisibilityPatch.cs@c45d8374:8-41`, `POIComponent.cs:40-76, 280-300`, `POICampaignBehavior.cs:235-236, 972-981`,
+`TAOM_POI/RELEASE-NOTES.md` v1.3.8 and v1.3.9). They are comments from a 1.4 decompile and runs on 1.5.3, with no crash log quoted.
+- **1.4:** `PartyBase.UpdateVisibilityAndInspected` forced `IsVisible = true` every tick for a settlement unless its component was an unspotted
+  `ISpottable`. yotthani skipped it with a prefix that writes false and false, not a postfix, because the setter of `Settlement.IsVisible` fires
+  `Party.OnVisibilityChanged` on each change and a postfix would flip false, true, false per call (a permanent refresh loop). The method is a hot,
+  possibly parallel path, so field reads only.
+- **1.5.x:** that method is gone and visibility is a plain flag the game sets on events. Checked on v1.5.7 [TAOM-verified, cache]: `PartyBase.cs` has no
+  `UpdateVisibilityAndInspected`, `taom-src` finds no type named `ISpottable`, and `Settlement.OnGameCreated` (`Settlement.cs:1079-1082`) runs `IsVisible
+  = true;` and then `SettlementComponent?.OnInit();`. yotthani says `OnInit` is the spot where the engine hides its own hideouts (`Hideout.OnInit`); hiding a
+  hideout-like settlement there is the supported route. The reverse (start visible, hide at run time) "corrupts the map entity (blank nameplate on reveal, and
+  an AccessViolation on screen changes)", and an `IsVisible` write from `OnSessionLaunched` "once crashed natively", so yotthani's writes happen only from `OnTick`
+  once the map scene exists (1.5.3). `Campaign.OnSessionStart` visits every settlement on a new game and on a load, so a component's `OnSessionStart` runs on
+  both; `OnInit` runs on a new game only. `MapVisibilityModel` only recomputes `IsInspected` for settlements.
+- **A hard type reference rejects the whole DLL.** On 1.5.3 `TaleWorlds.CampaignSystem.Settlements.ISpottable` did not resolve. Because a class declaration
+  named it, the engine refused the module with "submodule could not be loaded correctly due to a dependency conflict" although `SubModule.xml` held no
+  version problem; the log line that showed the cause was `Could not load type 'TaleWorlds.CampaignSystem.Settlements.ISpottable'`. The same class of failure
+  is in the `harmony-il` lesson on `Optional="true"` ([lessons](../../reviews/lessons/harmony-il.md)).
 
 ## Siege relief, defend and sally rules, and the campaign band [yotthani]
 

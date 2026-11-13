@@ -231,6 +231,23 @@ entries per skeleton, 32 blocks, both pools), then add the build's file length a
 `tools/native_sig_author.py xref` to count references: its single capstone sweep stops at the first byte it cannot
 decode (2.8 % of `.text` on v1.5.4).
 
+**The 1.5.6 hotfix and v1.5.7.** yotthani's commit `8d56b59e` (2026-11-05, `yotthani/bannerlord`@c45d8374,
+`HoN/VanillaTuning/Integration/FrameBufferGuardPatch.cs` lines 34 and 84-97) adapted VanillaTuning's guard to the 1.5.6 hotfix
+of 2026-11-04, "the same code, moved" by `-0x20`: it added the site `0x6A1B4` to its RVA list and a fallback that searches the
+module for the same 23 bytes and accepts them only when they occur exactly once. TAOM's guard already worked that way for every
+build, since it keeps no RVA list and `Resolve` accepts a pattern only on one match. TAOM's pins agree with the upstream values
+on two sites. `SkeletonBufferInstalledBinaryTests.cs` lines 30-31 read:
+
+```
+[14218592] = ("v1.5.6.125270", 0x6A181, 0xDA0120, 0x6A1B4, 0x69F75, 0x6B3F0),
+[14219104] = ("v1.5.7", 0x6A181, 0xDA0160, 0x6A1B4, 0x69F75, 0x6B3F0),
+```
+
+the pool-1 site `0x6A1B4` and the watch load `0x6A181` equal yotthani's hotfix values; the global `0xDA0120` comes only from TAOM's
+own file read, with no upstream value to compare. Upstream's guard still covers the first pool only. A session on Bannerlord v1.5.7.125802 with TAOM v2.0.38
+on 2026-11-13 logged both `guard ON pool 1: site=0x6A1B4` and `guard ON pool 2: site=0x6B3F0` (`taom_debug_2026-11-13_15-50-23.log`,
+lines 42 and 43, in the game's `bin/Win64_Shipping_Client/Logs`); that shows the guard installed at both sites, not that it caught an overflow.
+
 ## Performance
 
 - **The watch:** one 8-byte `ReadProcessMemory` of the engine pointer plus two 4-byte counter reads per pool, per

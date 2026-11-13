@@ -74,6 +74,48 @@ instance state on the element. The fixed `EquipmentIndex` slots give the engine 
 - The mount slot is `Horse`=`ArmorItemEndSlot`=10; `is_mountable="false"` on the `HorseComponent` keeps a creature mount
   from being rideable (TAOM creature-troops).
 
+## Items made or edited at run time, and where values are read
+
+yotthani's balance simulator records traps for code that clones or edits `ItemObject`s after the data load (`docs/balance-sim/app-0.4-checks.md@c45d8374`,
+"Findings for Tasks 2-3" 1 to 3 and the hook-point table; read from the 1.5.6 decompile, then the item applier was checked in game on v1.5.6.125270,
+`app-0.4-acceptance.md` row 3). TAOM re-read the ones it could on v1.5.7. TAOM has no such code: Grep of `Main/**/*.cs` for `new ItemObject(`,
+`MBObjectManager` `.RegisterObject(`, `CreateObject<`, `.GetCopy()` and `SwingDamageFactor` found no run-time copy or registration (the
+`RegisterObject` hits are `VisualTrackerManager`). Treat the list as a brief for the first feature that clones items (field ballista, armour acquisition).
+
+- **The copy constructor shares the component.** `public ItemObject(ItemObject itemToCopy) : base(itemToCopy) { ItemComponent =
+  itemToCopy.ItemComponent; ...` (`ItemObject.cs:296-299`); a private-setter edit on the copy edits the source too [TAOM-verified, v1.5.7
+  ilspy]. `WeaponComponent.GetCopy()` is `new WeaponComponent(base.Item)` (`:32-35`), an empty component; yotthani adds that `ArmorComponent.GetCopy()`
+  copies all armour values (not re-checked by TAOM).
+- **`RegisterObject` of a taken id renames silently**, see [object-system-mbobjectmanager.md](object-system-mbobjectmanager.md).
+- **Equipment sets are shared** between troops and the template roster, so clone an `EquipmentSet` before writing into it (yotthani, read from code; not
+  re-checked by TAOM).
+- **Swing and thrust damage factors do not come from weight and length on v1.5.7.** yotthani's record says `WeaponComponentData.SetDamageFactors`
+  (`Core/WeaponComponentData.cs:472-501` in yotthani's 1.5.6 decompile) derives them from weight and length, bows, crossbows, thrown weapons and ammo
+  getting 1, and crafted items taking them from the blade piece. On v1.5.7 `SetDamageFactors(float weight)` computes
+  `sqrt(sqrt(weight / (WeaponLength * 0.01)))` into a local, scales it, and never reads it again; the IL sets both factors from the other local
+  (`IL_00ce ldloc.2; ldc.r4 0.8; mul; stloc.2`, then `set_SwingDamageFactor` and `set_ThrustDamageFactor`, `IL_00d6-IL_00df`) [TAOM-verified, v1.5.7 ilspy].
+  So both factors are Cut 0.4, Pierce 0.32, Blunt 0.8, and 1 for bow, crossbow, throwing axe, throwing knife, javelin, arrow and bolt; weight and length do
+  not reach them. v1.5.6 was not checked; yotthani's reading may be right for that build. The crafted-item rule is not re-checked.
+- **The probe `magnitude` is `BaseMagnitude` before the swing or thrust factor**; the factor shows only in the probe's `raw` and `applied` columns
+  (yotthani's record, open point; not re-checked).
+- **Modified values are read through two groups of getters.** Weapon damage: `WeaponComponentDataExtensions.GetModifiedThrustDamage`, `GetModifiedSwingDamage`,
+  `GetModifiedMissileDamage(this WeaponComponentData, ItemModifier)` (`:5-30`); `EquipmentElement.GetModified*DamageForUsage` forwards to them (`:272-285`), and
+  `MissionWeapon` uses them (`:236-248`; `:352` sets `result.ThrustDamage = weaponComponentData.GetModifiedThrustDamage(ItemModifier)`). Armour:
+  `EquipmentElement.GetModifiedHeadArmor`, `Body`, `MountBody`, `Leg`, `Arm` (`:129-215`), summed by `Equipment` (`:279-334`) [TAOM-verified, v1.5.7 ilspy]. A reader of the raw
+  `WeaponComponentData.ThrustDamage`, `SwingDamage` or `MissileDamage` sees no modifier delta. yotthani names native AI and ranged code as raw readers and says tooltip
+  zero-checks read raw component values (`ItemMenuVM.cs:1172`, `TooltipRefresherCollection.cs:532-551`); TAOM did not read the native side. yotthani's patch of the getters
+  (`HoN/SmithingExtended/Integration/MaterialDeltaPatches.cs@c45d8374:43-62`) showed in the tooltip on v1.5.6 ("40 Cut / 29 Pierce", probe of 03.11.), and yotthani lists combat damage as open because a
+  JIT-inlined getter would be bypassed at its call site. Patch these getters, not the raw fields, for a modifier effect, and measure one hit in game.
+- **Two engine facts yotthani read for hero gear (1.5.5 text, 1.5.6 said to match, partly seen in a v1.5.6 probe; not re-checked by TAOM):** heroes spawn with
+  `FixedEquipment(true)`, so battle changes never flow back (write `Hero.BattleEquipment[slot] = new EquipmentElement(item, modifier)` yourself);
+  troops re-roll every slot's modifier at each spawn from `ItemModifierGroup.GetRandomItemModifierLootScoreBased()`, and `LootDropScore` on an `ItemModifier`
+  drives those rolls (`Equipment.cs:608-609`), so zeroing it changes enemy gear too. Loot has two sources: `MapEvent.LootCasualtyCharacter` (only when the
+  winning party leader is `Hero.MainHero`) and `BattleWreckageCampaignBehavior.ProcessCasualtyLootSource`, which keeps only the item and drops the modifier.
+  Source: `docs/smithing/2026-11-03-teil2-engine-recherche.md@c45d8374`, sections 2.1 to 2.4.
+- **Run-time hook points** (yotthani's record, not re-checked): `OnGameInitializationFinished` runs after items, rosters and characters are registered and after
+  `UnregisterNonReadyObjects`, before any mission; the agent copies `GetWeaponData` and `GetWeaponStatsData` to native at spawn, so a change made during a mission
+  reaches managed reads but not the native copy.
+
 ## The native boundary
 `ItemObject`/`Equipment`/`EquipmentElement` are **managed** definitions (loaded from XML, resolved via
 `MBObjectManager`). The meshes/weapon-physics they reference are native resources the engine loads at equip/preload

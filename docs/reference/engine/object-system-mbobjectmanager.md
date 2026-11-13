@@ -67,6 +67,14 @@ same engine helpers in the same order and identical output on every type of the 
 Registers an object created at runtime (not from XML) into the registry so it's resolvable + savable (e.g. a
 spawned party/clan). `RegisterObject` variants assign the `StringId`/`MBGUID`.
 
+**`RegisterObject` of a taken id renames the new object, silently.** If the id is already registered and the call is not the
+presumed form, the manager keeps the old object, splits the id into its parts, sets `obj.StringId` to the id plus a number, and
+counts up until a free id is found; it throws nothing and returns the object under the new id [yotthani, sim record
+`docs/balance-sim/app-0.4-checks.md@c45d8374`, read from the 1.5.6 decompile, `OS/MBObjectManager.cs:213-235`; TAOM-verified on
+v1.5.7, `MBObjectManager.cs:446-450` and the `RegisterObject(T obj, bool presumed, ...)` body in the ilspy output: the existing object
+stays when `value == obj || presumed`, otherwise the rename loop runs]. Code that registers a copy must read `StringId` back
+afterwards. The same record's other run-time item traps are in [item-equipment-model.md](item-equipment-model.md).
+
 ## WHY it's shaped this way
 
 A single `StringId`-keyed registry lets data reference data by name across files + modules (a troop's
@@ -93,6 +101,18 @@ deserializes it.
 - New object types a mod adds need a `RegisterType<T>` (in a `BeforeRegisterTypes`/`OnRegisterTypes` override) + the
   XML registered under the list name; TAOM mostly reuses vanilla types (Monster/Item/Character/Culture), so it
   rarely registers new ones.
+- **A settlement component type is registered under `"Components"` the same way.** For `<CustomSettlementComponent
+  component_name="X">` to build a component, the type must already be registered with `RegisterType<T>("X", "Components", id)`.
+  The early hook that needs no Harmony is `MBSubModuleBase.RegisterSubModuleTypes()`. `Game.CreateGame` and `Game.LoadSaveGame` both
+  call `RegisterTypes` (`Game.cs:161, 170`), whose last line is `gameManager?.RegisterSubModuleTypes()` (`:324`), and
+  `MBGameManager.RegisterSubModuleTypes` forwards to every submodule (`MBGameManager.cs:86-92`) [TAOM-verified, v1.5.7 call chain].
+  An unknown `component_name` yields null (`MBObjectManager.cs:1400-1413`, `return null;`) and `SetSettlementComponent(null)`
+  dereferences it (`Settlement.cs:1414`). yotthani's TAOM_POI verified in game that `OnGameStart` is too late and that a Harmony
+  patch of `Campaign.BeforeRegisterTypes` from `OnSubModuleLoad` "crashed MonoMod (native access violation)"
+  (`TAOM_POI/docs/2026-07-06-m0-spike-howto.md@c45d8374:69-93`, `TAOM_POI/src/SubModule.cs:10-31`, game 1.4 decompile; the game version of the in-game runs is not stated, and the how-to is dated 2026-07-06).
+  Not read: that `settlements.xml` loads after `RegisterSubModuleTypes` and before `OnGameStart` on v1.5.7. TAOM is not exposed: no
+  `SettlementComponent` subclass, no `RegisterSubModuleTypes` override, no `CreateObject<Settlement>` in `Main/` or `Client/`; the
+  only component named in TAOM's `settlements.xml` is vanilla `RetirementSettlementComponent`.
 
 ## The native boundary
 `MBObjectManager` is **managed** (the registry + resolution are C#). The objects it holds describe native resources

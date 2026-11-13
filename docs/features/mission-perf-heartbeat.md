@@ -776,6 +776,20 @@ script blocks (they run on workers; the block totals are kept). Unverified until
 log: whether the JIT inlines `WaitTickCompletion` (the self-check line), which thread ticks script
 components (the thread line), and the native cost of the clip-loading call (the sample line).
 
+## Probe techniques TAOM does not have [yotthani, `yotthani/bannerlord` `HoN/PerfProbe`@c45d8374]
+
+Two probes in yotthani's PerfProbe have no TAOM counterpart. Neither is re-checked by TAOM, and both were written for yotthani's runs (game version not stated in the file; 1.5.3 is the PerfProbe era).
+- **A GC pause meter without ETW** (`HoN/PerfProbe/Core/PauseMeter.cs`, tests in `PauseMeterTests.cs`). A thread of its own, at the highest priority,
+  does nothing but read a `Stopwatch`. Two readings further apart than the threshold (default 0.2 ms) mean the runtime suspended every managed thread, which it
+  does for a blocking collection; the sum of the gaps is the stop-the-world time, and gaps of at least `LongPauseMs` (50 by default) are kept one by one. It
+  needs no ETW, which did not work on yotthani's measuring machine. It occupies one core while it runs, so its own remarks say to use it for seconds, not for a
+  session. Its readers in yotthani's probe are `PauseWatch.cs` and `SaveDiagnostics.cs`; the pauses after a save are in [save-system.md](../reference/engine/save-system.md).
+- **A per-patch-shape cost table** (`HoN/PerfProbe/Integration/PatchCost.cs`:10-14, 35-76). Once, when the map probe starts, it measures time and allocated
+  bytes per call for each Harmony shape on empty methods inside the game: plain, prefix, skipping prefix, `__originalMethod`, `__state`, transpiler, a boxing
+  call and a slot probe. The reason in the source: on 04.10.2026 a patch that saved allocation in an offline bench cost about 200 bytes per patched call in
+  the game, and nothing explained it. The `__originalMethod` figures (85 ns, 241 bytes per call) are in
+  [submodule-lifecycle-and-harmony.md](../reference/engine/submodule-lifecycle-and-harmony.md). TAOM has no equivalent table for its own patches.
+
 ## Animation clip memory probe
 
 Bannerlord keeps animation clips marked Loading Type 1 or 2 "on demand": a worker that samples an

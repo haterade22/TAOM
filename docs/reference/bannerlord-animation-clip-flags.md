@@ -293,7 +293,28 @@ Source: the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-202
   its clips play their own segment. A metadata-only clone saved in the Kit and bound to its own master plays that
   master, as TAOM's generated creature clips do (`tools/gen_troll_anim_clips.ps1`).
 
-## TODO: a tpac clip-flag patch tool (not yet built)
+**The clip segment `6c1e136f` written by hand** (yotthani, `yotthani/bannerlord`
+`HoN/DualWield/tools/README.md@c45d8374`, sections "Things that are true and cost a day each", "Which bones get mirrored" and
+"Segment layout, settled"; dated 2026-09-11 to 2026-09-18, game 1.4.6 to 1.5.3, measured on yotthani's PC with a cut-position scan over
+92 clips; not re-checked by TAOM on v1.5.7, and TAOM does not write segments). The first pass above holds the segment's
+existence and its `UnknownUInt2` switch; this adds what yotthani found when building mirrored clips:
+
+- **A key is one word cut at bit 32 of the V word**, with the low 32 bits in the previous record. The earlier reading ("channel
+  0 and 1 look ahead, channel 2 does not") was wrong exactly where a top bit crosses bit 32; it produced a 60 to 111 degree
+  pelvis flip for one frame, which yotthani calls "the breakdance". The corrected reading matches the asset library's own reader
+  to 0.19 degrees. Judge a decode by per-clip spikes, never by medians.
+- **Segment layout:** a 24-byte header, 28 bone blocks (16-byte header, the records, padding), an extra block for root motion, a
+  tail of 7 bits per bone per frame, and an 8-byte trailer. The padding of bone blocks 0 to 26 is `pad = 12 + ((-nrec) mod 8)`, exact on all 459 blocks measured; block 27 aligns to 8 without the 12-byte slack, and the root-motion block's padding is not measurable (`yotthani/bannerlord` `HoN/DualWield/tools/README.md`@c45d8374:167-171).
+  **A minimally padded segment crashes the game with `rglBuffer::read_void overrun`**: that line is the crash signature of a
+  hand-written segment whose blocks are too short. The tail's low nibble ("slot & 15") and the root-motion block are
+  "undecoded" in the source, and the root-motion block is not mirrored.
+- **The clip's `Animation` reference is ignored for playback when the segment carries the motion** (consistent with the
+  `UnknownUInt2` rule above).
+- **Which metadata to keep on a rebuilt clip:** keep `ContinueWithAction` (it chains to the return-to-stance clip; without
+  it the attack ends and holds its last pose), `StepPoints` (foot contact and root motion) and `BlendOutPeriod`. Only
+  `BlendsWithAction` must go, because it drags the right-handed twin into the mirrored clip's playback.
+- **Compare mirrored poses in world space.** Local quaternions read 92.5 degrees of "deviation" on a clean mirror. All 28 bones
+  must be mirrored: every exclusion (legs, pelvis, neck, head) was a compensation for a bug and added its own fault.
 
 The existing `tpac_skeleton_*` tools read/patch **Skeleton** UserData, not **Animation** clip metadata. A
 heuristic scan of the `_anm.tpac` metadata for the `AnimFlags` ulong was **unreliable**

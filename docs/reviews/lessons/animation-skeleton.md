@@ -1545,3 +1545,20 @@ world vector passed on all 6 (worst 0.43 mm).
 - **Why missed:** the log reports unknowns as an ordinary count, so two permanent ones read as normal. The round-trip guard compares the engine's answer with the map's own output, so it passes a missing row and a stale row alike. No bump checklist names the type.
 - **Prevent:** a table that mirrors an engine table gets a `RequiresGame` test that reads the engine's own IL (`TypeInitializer.GetMethodBody().GetILAsByteArray()` runs no initializer) and asserts the table agrees, with a count check so an unreadable shape fails instead of passing on an empty result. Date an engine fact from the oldest cached version that has it, not from the log being read.
 - **Source:** `docs/reviews/rca-action-index-cache-overrides-2026-11-12.md`, `TAOM.Tests/Features/HeroRace/ActionIndexCacheRepairEngineTests.cs`
+
+### A hand-written clip segment crashes on a short block, and a wrong word cut shows as one frame of flip (yotthani, DualWield, 2026-09)
+
+yotthani built mirrored clips by writing the compressed motion segment `6c1e136f` by hand. Two faults cost a day each. A segment
+whose bone blocks carried the minimum padding crashed the game with `rglBuffer::read_void overrun`; the padding that fit bone
+blocks 0 to 26 was `pad = 12 + ((-nrec) mod 8)` (exact on all 459 measured; block 27 aligns to 8 only). And the old reading of a key (channels 0 and 1 look ahead,
+channel 2 does not) was wrong exactly where a top bit crosses bit 32 of the V word: it flipped the pelvis 60 to 111 degrees for
+one frame ("the breakdance"). The right cut (the low 32 bits sit in the previous record) matched the asset library's own reader
+to 0.19 degrees over 92 clips.
+- **Why missed:** yotthani's rule from this fix is "check spikes per clip, never medians", which implies the earlier check
+  averaged the error; a one-frame spike does not move a median.
+- **Prevent:** judge a decoded or written clip by its per-frame maximum, never its median. A crash that names
+  `rglBuffer::read_void overrun` points at a segment whose blocks are padded too short; check the block padding first. TAOM
+  authors clips in the Kit and writes no segments by hand, so this is for the day a tool does.
+- **Source:** [yotthani, game 1.4.6 to 1.5.3, one PC, not re-checked by TAOM on v1.5.7] `yotthani/bannerlord`
+  `HoN/DualWield/tools/README.md@c45d8374` ("Things that are true and cost a day each", "Segment layout, settled"); the layout
+  is in [bannerlord-animation-clip-flags.md](../../reference/bannerlord-animation-clip-flags.md).

@@ -95,6 +95,27 @@ Native v1.5.6, read from the decompile for #1081 (2026-11-06), not checked at ru
 A creature that shares another's `monster_usage` must put its saddle where that creature's saddle is in model space.
 The dire wolf moves its whole rig to do this ([dire-wolf.md](../../features/dire-wolf.md) "Seat").
 
+## Mounted dual-wield strikes: two crash causes and the rider strike numbers
+
+[yotthani, `yotthani/bannerlord` `HoN/DualWield/README.md@c45d8374:17-22, 51-55`, release notes 0.10.1 and 0.10.6, game 1.5.3
+to 1.5.5, author-reported with no log quoted; not re-checked by TAOM on v1.5.7.]
+
+- **Querying the action of an idle mount can crash the game** (0.10.6). Riding into a battle as a dual wielder crashed in the
+  first seconds on some starts and not others: a leftover measurement asked the engine for the animation of a horse that
+  was doing nothing. The mechanism (action index -1 read outside the action-set table) is in
+  [animation-skeleton.md](../../reviews/lessons/animation-skeleton.md) "Guard the index first".
+- **A left-hand flail strike killed the game** (0.10.1) because yotthani's copies of the flail swings still told the engine to
+  pose the flail's head from a companion clip, and that companion exists only for vanilla's own clips. A copied swing clip
+  must not name a companion clip the copy does not have.
+- **Rider strike geometry** [yotthani, `HoN/DualWield/tools/rider_measure/README.md@c45d8374:1-60`, dated 2026-10-02 and 2026-10-03,
+  PC and game version not stated (1.5.3 era); calibration over 332 `[Mounted]` lines]: blade height above the ground is the
+  clip's z plus 0.98 m, and blade length is 0.97 m. For a 1.8 m man the old target rule met him in 53 % of accepted
+  positions and the measured zones in 91 %. **In game this was NOT confirmed** (2026-10-02, 21:52, 75 rider strikes on a hilly
+  field): 41 % met a body, against 48 to 65 % with the old zones. The blade height above the target's feet scatters 0.4 m
+  around the clip's value (ground and the horse's motion), and a third of the misses passed just over a head. Left-slash
+  hits were 57 to 65 % in game against 65 % from the yardstick. On horseback the game itself turns the rider with the look,
+  so an added lowered or raised strike bends twice (`HoN/DualWield/README.md@c45d8374:93`).
+
 ## The native boundary
 **Managed:** the `Mount`/`Dismount` *request* (`EventControlFlag`), and all Monster/Equipment *data*. **Native:**
 `GetMountAgentAux`/`GetRiderAgentAux`/`SetMountAgent`, the actual skeletal attach of rider → `RiderSitBoneIndex`, the

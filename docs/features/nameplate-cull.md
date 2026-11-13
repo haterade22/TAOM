@@ -96,6 +96,12 @@ INameplateCullAdapter (NameplateCullAdapter)  --- FieldRef delegates, reused lis
 NameplateCullRule.MaySkip(NameplateFacts)      (pure)
 ```
 
+### Rules for code that adds to a nameplate
+
+- **`forceUpdate` split [TAOM-verified, v1.5.7 ilspy].** `SettlementNameplateVM.UpdateNameplateMT` calls `RefreshDynamicProperties(forceUpdate: false)` (`SettlementNameplateVM.cs:667`) for each plate every frame, on the `TWParallel.For` worker threads (`SettlementNameplatesVM.cs:247`). The forced call (`forceUpdate: true`) runs on the main thread at construction and on ownership or resume events (`SettlementNameplateVM.cs:466`, `SettlementNameplatesVM.cs:342, 358`). Per-plate work that writes bound properties belongs on the forced path. Source: yotthani, `yotthani/bannerlord` `HoN/docs/superpowers/specs/2026-06-23-settlement-capital-icons-design.md`@c45d8374 lines 24-29, game 1.4.5; the 1.4.5 wording matches the v1.5.7 call sites.
+- **Banner lookups on the worker threads.** A banner read from `GetDefaultComponentBanner` runs inside that fan-out. yotthani (observed, 1.4.5 era; `TAOM_POI/src/Runtime/POIComponent.cs`@c45d8374 lines 258-277) saw a `GetCampaignBehavior` lookup there fail intermittently, so the banner flipped between two crests every few frames; the fix was a plain field that the owner pushes. Not re-checked by TAOM.
+- **The events list is filled only for villages [TAOM-verified, v1.5.7 ilspy].** The `SettlementNameplateEventsVM` constructor calls `AddPrimaryProductionIcon()` only `if (settlement.IsVillage)` (`SettlementNameplateEventsVM.cs:67-69`). yotthani added a custom icon with a postfix that appends a Production-type item whose `AdditionalParameters` names a brush state (`TAOM_POI/src/Runtime/POIBonusIconPatch.cs`@c45d8374 lines 12-19; the `SetState(AdditionalParameters)` step is yotthani's reading, not re-checked by TAOM).
+
 ## Configuration
 
 MCM, Battle Load Diagnostics page, group "Map Performance": `Cull Hidden Settlement Nameplates`, default on,
@@ -120,6 +126,8 @@ reads through it (plan 031's pattern), falling back to on while MCM has no insta
 
 - `IModLogger`: `taom_debug.log`.
 - `INameplateCullAdapter`: the engine members, listed in `NameplateCullBindingTests`.
+- The three `SettlementNameplateItem*` prefabs must keep all eight widgets the engine's fade routine reads, or it
+  returns early and skips `IsVisible = false`: [engine note](../reference/engine/gauntletui-viewmodel-screen.md#nameplate-prefabs-the-fade-routine-needs-all-eight-widgets-taom-verified-v157).
 
 ## Logging
 

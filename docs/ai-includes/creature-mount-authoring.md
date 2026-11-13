@@ -461,6 +461,29 @@ monster leaves null native entries → spawn AV.
 | Control battles | warg-only (the known-good baseline), then the new creature; on a crash, bisect single-variable — and expect ≥2 independent causes (the spider had FIVE) |
 | Native crash triage | Event Log fault offsets (no debugger needed) discriminate crash sites across runs; VS mixed-mode (Managed .NET Framework + Native) gives faulting registers; pdata function bounds + rip-relative string scan + E8 caller-chain naming — the technique that named `set_attack_entity` and `monster_usage.cpp` |
 
+### Methods seen upstream for armour and body fits (yotthani's race-fit work; TAOM has not used them)
+
+For when TAOM fits armour to a race with another build. All from `yotthani/MithrilForge` at `ea7a7bfb`.
+
+- **Judge a fit by numbers on posed exports, with a human control in the same pose.** The item and the race body are skinned
+  into walk, run and stand clips (`stand_1h@0.5`, `walk_forward_1h@0.3`) and written as OBJ. The metric counts body vertices
+  outside or inside the item by ray parity (inside when at least 3 of 4 axis rays cross the triangles an odd number of times).
+  The human item on the human body in the same pose is the control, and a native control (the dwarf boot on the dwarf foot) is
+  logged beside every fitted result, so a number is read against what vanilla does
+  (`tests/MithrilForge.Crowd.Tests/RuntimeFitSimTests.cs:229, 297-301`; commits `516a0a9`, `39e9750`, `c4b75e1`).
+- **Label a regression guard with what it is.** yotthani lowered a boot-coverage limit from 30 to 15 percent as fixes landed
+  and wrote that the 15 % "is the measured state ... not a quality target", that ray parity is unreliable at coarse sole rims, and
+  that the final judgement is made in game (`RuntimeFitSimTests.cs:297-301`, commits `556b1dd`, `d39d0ef`). The guard holds the
+  line; it claims no quality. The test was committed RED first (`5be275c`: "3.68x stretch, 53 % of the human foot outside the boot").
+- **A NaN is a gate failure, and a failed gate deletes the written package.** After a cook is rebuilt, a 1 mm rest gate treats NaN
+  as failure because every comparison with NaN is false, and a failed gate or read-back deletes the written `.tpac` before the
+  error code returns (`CrowdCommand.ClothRefit.cs:516-518`, commit `1478d8d`). That stops a half-valid package from being
+  deployed by a later step that only checks that the file exists.
+
+Not taken, and why: the offline "twin" of a run-time fit in one shared netstandard2.0 library, checked to 0.0000 mm against the
+mod (commit `87ae120`), would add a second code path for a run-time fit TAOM does not have; revisit if TAOM ever fits armour at
+run time. The variant sweeps with tagged output folders (`run2.sh`, `num2.py`) are the same loop as TAOM's CSV tuning scripts.
+
 ## The engine-bump protocol (what 1.4.5 → 1.4.6 taught)
 
 Steam force-bumped the engine mid-campaign (2026-06-11 17:39) and three latent data quirks became

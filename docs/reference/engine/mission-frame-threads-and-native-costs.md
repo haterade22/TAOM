@@ -31,6 +31,19 @@ Most claims were last checked on v1.5.3 or v1.5.5. Treat an offset as unverified
 | 3 | end of `Mission.OnTick` (~3784-3791) | main | `TickAgentsAndTeamsAsync(dt)`: posts a native job (`IMBMission.TickAgentsAndTeamsAsync`, RVA `0x6F6290`, stores the job object in a global and returns), or runs `TickAgentsAndTeamsImp` inline when the AI tick is synchronous |
 | 4 | `Mission.TickAgentsAndTeamsImp` (~3617), reached from the native job through the `[MBCallback]` `TickAgentsAndTeams` | async AI thread | `TWParallel.For` over `AllAgents` running `Agent.TickParallel` on the worker pool; then a serial `Agent.Tick` loop; a serial `Team.Tick` loop; `tickCompleted = true`; then every submodule's `AfterAsyncTickTick` |
 
+[TAOM-verified, v1.5.7, taom-src decompile of the installed DLLs] Rows 3 and 4 hold on v1.5.7. `Mission.TickAgentsAndTeamsImp`
+is at `Mission.cs:3611-3622`: `TWParallel.For(0, AllAgents.Count, num, AgentTickMT)` (`AgentTickMT`, `:3605-3608`, calls
+`AllAgents[i].TickParallel(dt)`), then `foreach (Agent allAgent in AllAgents) allAgent.Tick(num);`, then `team.Tick(dt)`,
+`tickCompleted = true`, then each submodule's `AfterAsyncTickTick`. `Mission.OnTick` at `:3778-3785` calls
+`TickAgentsAndTeamsAsync(dt)` when `doAsyncAITick` is set, else `TickAgentsAndTeamsImp(dt, tickPaused: false)`; the async form is
+`MBAPI.IMBMission.TickAgentsAndTeamsAsync` (`:1827-1829`) and the callback `TickAgentsAndTeams` (`:1822-1824`) calls the Imp. So the
+managed agent tick is not single-threaded: `Agent.TickParallel` runs on the `TWParallel` pool, while `Agent.Tick` and `Team.Tick`
+are serial and run off the main thread when the AI tick is async. The native thread that runs the async callback is not in
+managed code and was not re-checked on v1.5.7. yotthani's notes agree: a code review of 02.10.2026 puts `TickAgentsAndTeamsImp`,
+`Team.Tick` and `Formation.Tick` on a task thread, a deep-probe run with 700 to 899 agents timed them there, and a profile put
+the agent render items on about 13 workers (MithrilForge `docs/engine/perf.md`@ea7a7bfb lines 526-529, 540-552 and 645-650;
+game version not stated in these lines, v1.5.3 by date).
+
 What it means for TAOM:
 
 - **`OnMissionTick` is on the critical path twice.** Every millisecond TAOM spends there is main-thread
@@ -88,6 +101,15 @@ checked). (yotthani, MithrilForge `docs/perf-audit/particle-sim-wait.md`,
 - **The engine lever is absent, so the fix is content.** One emitter's step runs on one thread, so chunking the
   particle step cannot help; yotthani names stepping inside one emitter as a native rebuild and not planned, and puts
   the lever in the TAOM_Map content (`perf.md` lines 571-576). TAOM's case is #738.
+- **`mordor_ashes` is built the same way and is not used by name.** [TAOM-verified in the live TAOM_Map, 2026-11-13, text
+  search] `Prefabs/mordor_environment.xml` line 226 defines `mordor_ashes` with `emission_rate` base 6000, `particle_life`
+  base 5 bias 12 and `emit_box_size` 500 x 1000 x 60; a second copy sits in `Prefabs_Unused/`. No scene or prefab file under the live
+  `Modules/TAOM_Map` other than those two places it (`Prefabs_Unused/_INVENTORY.md:385` is an inventory row), so no scene places it by name (scenes could embed it another way; binary scene data was not
+  searched). yotthani's report on `lotr_falling_ashes` ends with this prefab as "not checked" (MithrilForge
+  `docs/perf-audit/taom-reports.md`@ea7a7bfb lines 55-57: "We did not test whether a scene uses it or what it costs"). TAOM's
+  arithmetic, unmeasured: 6000 per second times a life of 5 s is 30,000 particles alive, and up to about 102,000 if the bias
+  adds 12 s to the life (reading base and bias that way is an assumption), the same order as the 100,000 of the Black Gate case.
+  The particle rules above apply to any emitter that exists, seen or not, so check this prefab before a scene places it.
 - **The three fps getters and the limiter and vsync reads.** [TAOM-verified, v1.5.5 client, 2026-10-16,
   Ghidra, `python tools/native_decompile.py --engine-method`] `IUtil.GetMainFps` (`0x513C50`) returns
   `DAT_180b2e020 / *(double *)(DAT_180d9a138 + 0xf8)`, one frame's main-thread busy seconds turned into a
@@ -178,7 +200,9 @@ Consequences for TAOM code:
 
 - **2,040 agents, hard.** [TAOM-verified, Ghidra] `IMBAgent.GetMaximumNumberOfAgents` (RVA `0x6E4FA0` on v1.5.3,
   `0x6E5EE0` on v1.5.6, re-resolved 2026-10-29; the 2026-10-02 audit did not name the build, and by this page's
-  convention an unnamed offset is v1.5.3) is a six-byte function returning `0x7F8` on both. [yotthani] The limit is baked into `Mission`'s native layout: two
+  convention an unnamed offset is v1.5.3) is a six-byte function returning `0x7F8` on all three builds. [TAOM-verified, v1.5.7, `python tools/native_decompile.py` on the 14,219,104-byte
+  client, Ghidra project key `Win64_Shipping_Client-27df81f6a94555be`] `IMBAgent.GetMaximumNumberOfAgents` is at RVA `0x6E7060`,
+  size `0x6`, body `return 0x7f8;` (2,040). [yotthani] The limit is baked into `Mission`'s native layout: two
   embedded agent pools with element stride `0xC60` and 16-bit free lists; about 40 constants in 16
   functions and about 1,000 field offsets in 150 functions depend on it, so it is not patchable in
   practice. [TAOM-verified] The `0xC60` stride and a 16-bit next-index list both appear in the native
@@ -193,6 +217,15 @@ Consequences for TAOM code:
   The `SpawnTroop*` and `SpawnMonster` callers are not gated. CreatureBandits and BannerBearers replace a vanilla spawn; Fords of War and Long Defeat stay under the limit by their own caps (`fords_of_war/match.json`, `long_defeat/waves.json`, read 2026-11-09); the dev console has no total.
   A player's log (#1107) fits this: 800 spawns in one frame, 55 mumakil crews of 8, then a managed `AccessViolationException` on the next crew spawn. No log line prints the agent count, so 1,600 agents from 800 mounted troops is an inference.
   The process later died at `+0x5A63A0`, a tree walk in `FUN_1805a6340`, with fault address `0xFFFFFFFFFFFFFFFF`. Which tree it walked is UNVERIFIED: that bundle has no dump.
+- **A third-party mod, "Limitless", claims to pass the cap with a native patch** [yotthani, MithrilForge `docs/engine/native.md`
+  @ea7a7bfb lines 68-79 and `docs/engine/combat.md` lines 131-135; not verified: yotthani writes "Not verified by us, reported
+  only as the mod's own claim"]. The claim is 7,272 simultaneous agents against a native ceiling of 32,760 (`32768 - 8`, a
+  16-bit index, which is not a supported count). yotthani judges writing such a patch not worth it. By the maintainer's
+  statement (Mike, 2026-11-13) its author is Bloc; TAOM has not examined the mod. yotthani's size estimate of the job, notes not
+  in the repo (`docs/engine/crowd-rendering.md`@ea7a7bfb lines 282-285, estimate, nothing done): the `Mission` object is
+  `0x1184B40` bytes with `Agent[2040]` at `+0x2D50` and an unused second pool behind it, about 400 same-length patch sites for
+  4,080 agents and about 1,600 for more. Separately, `perf.md` line 2125 records a question that a colleague shows 8,000 against
+  8,000 with a native patch; no text ties that colleague to this mod.
 - **Every mount is an agent.** [yotthani, re-checked by the 2026-10-02 audit in the v1.5.3 decompile]
   `BannerlordConfig._battleSizes` is the fixed array {200, 300, 400, 500, 600, 800, 1000} and the menu
   value is an index; `DefaultBattleMissionAgentSpawnLogic` caps soldiers at
@@ -457,6 +490,17 @@ managed decompile and profile; v1.5.4: not re-checked.)
   `GetSkeleton` about 1.5 to 2 µs, because each call builds a new `Skeleton` wrapper with a finalizer, a lock and
   a `GCHandle`. One melee hit through vanilla's `MeleeHitCallback` chain costs about 128 µs, most of it vanilla's
   own hit handling and every mod's `OnAgentHit` (that split is estimated).
+- **Engine calls inside loops in TAOM's own mission code** [yotthani's IL scan of TAOM.dll for game 1.5.3 (the TAOM build is not stated in the scan files) found four
+  `interop_in_loop` sites in three methods, three reached from `OnMissionTick` and one from `BoneCheck.Tick`: MithrilForge `docs/perf-audit/scan/1.5.3-il.md`@ea7a7bfb lines 11-12 and
+  `docs/engine/perf.md` lines 187-211; a static scan, no cost measured; the scan's own check on a sample was 20 of 20 true
+  positives, with blind spots for lambdas one level deep, missing PDB lines and reflection]. [TAOM-verified, current trunk,
+  code read] Hot while active: `BoneCheck.Tick` runs every frame per live check until its `_maxDuration`, with
+  `GetBoneEntitialFrameWithIndex` per tracked attacker bone and per bone of every target skeleton
+  (`AdvancedCombat/BoneCheck.cs:37-50, 91-98, 164-171`; made at `AgentAdapter.cs:214`), and SmartCavalryAI's
+  `ApplyCollisionAvoidance` runs every frame for each mounted agent of a player-commanded cavalry formation in field battles
+  when the feature and `AvoidFriendlies` are on (`SmartCavalryAIMissionBehavior.cs:60-97, 103-130`; `SetMovementDirection` only
+  when friendly infantry is near). Cold: `MissionDiagnosticBehavior.CaptureActionSetsFromAgents` runs only in a 5 s window at
+  mission start and reads names only for an unseen action-set, race and sex key (`:44-50, 85-91`). None was timed.
 - **`Mission.FindAgentWithIndex` is O(1)** natively (an index check and a handle read) and drew 0 samples in the
   profile.
 - **Where busy CPU goes** in that 500 against 500 battle (82 % of it native): about 60 % presentation (agent render items 18.6 %,
@@ -467,6 +511,13 @@ managed decompile and profile; v1.5.4: not re-checked.)
   (`yotthani/bannerlord` `HoN/PerfProbe/Integration/CrowdProxy.cs`@784fef93 lines 1163-1198); its commit `44afb243`
   (2026-10-09) is titled "(measured: no gain)" and records no figures. Engine version 1.5.4 or 1.5.5 (the commit
   date is the day TAOM moved to v1.5.5; the source does not say which); the mod list is not stated.
+- **The figures behind "no gain", 2,000 standing soldiers in view** [yotthani, MithrilForge `docs/engine/crowd-rendering.md`
+  @ea7a7bfb lines 28-37 and 11-13, measured in game 1.5.5 with TAOM 2.0.34, 2560x1080, one PC (Core Ultra 7 265KF, RTX 5070 Ti);
+  the run logs `run10_cost_breakdown.log` and `run11_melee_sleep.log` are not in that repo]: all real 15.5 ms a frame, all AI
+  paused 15.3 ms, all hidden (`SetRenderCheckEnabled(false)` plus `AgentVisuals.SetVisible(false)`) 6.6 ms. Drawing plus
+  animation is about 9 ms per 2,000 and the simulation base about 1.25 ms per 1,000; in a melee the AI is about 1 ms of 18.
+  Pausing the AI and "sleeping" soldiers buy nothing measurable, and hiding is the lever. Per-figure draw costs are in
+  [agent-spawn-and-render-pipeline.md](agent-spawn-and-render-pipeline.md) ("Cost per 1000 figures"). Not re-measured by TAOM.
 
 The reverse case, a perf change costed by call names instead of bodies, is the lesson "A perf commit's win names
 the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapters-taleworlds-api.md).
@@ -551,6 +602,12 @@ the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapt
   coincides with the buffer's highest fill; yotthani lists the native cause of the slow first seconds as open (line
   2114). Character Detail "very low" showed no peak at the clash in one run. Ragdolls and corpses, two separate
   settings, did not move the skeleton buffer's peak fill in the field battle.
+- [yotthani, MithrilForge `docs/engine/perf.md`@ea7a7bfb lines 2128-2137, measured on 08.10.2026 (game version not stated in these lines; the game ran 1.5.4 from 05.10., line 1778) at 2560x1080, V-Sync
+  off, with TAOM's mod list, one to three runs per size] The largest battles measured: 1,501 agents 84 to 89 FPS (11.5 ms),
+  1,751 agents 79 to 86 FPS, 2,001 agents 57 to 73 FPS at the start and 76 FPS median. The first seconds after deployment
+  were the slowest at every size (51 to 57 FPS at 1,751); the native cause is listed open (lines 2156-2157), and a Very Sleepy
+  capture of that phase cannot be read without a comparison capture. Nothing above 2,001 agents was measured. Before `frame-buffer-guard`, 1,751 agents hung in one of three runs at the clash and 2,001 hung three times at the start (lines 2138-2143). TAOM has not
+  looked for the drop in its own heartbeat; the first 7 s of a 1,000-soldier fight is the free check.
 - [yotthani, `yotthani/bannerlord` `HoN/PerfProbe/Integration/CrowdProxy.cs`@784fef93 lines 418-421, commit `44d89f49`,
   seen in game 2026-10-12 with 2,000 soldiers, game 1.5.5 by the date, mod list not stated] Above 2,340 skeletons in
   view, with VanillaTuning's guard in place (the source says "the guard of VanillaTuning"; that guard patches the first pool only, `HoN/VanillaTuning/Integration/FrameBufferGuardPatch.cs`@784fef93 line 34; whether TAOM's second-pool guard also ran is not stated), armour flickers and pieces of it hang in the air; the

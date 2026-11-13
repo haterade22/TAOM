@@ -42,6 +42,27 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
   disabled three patches for the session. A test with only one patch per target cannot see it; test "our patch,
   then a foreign patch" and the reverse. (yotthani, MithrilForge `docs/engine/perf.md`, PerfProbe section of
   2026-10-04, in game on v1.5.3 with Harmony 2.4.2.)
+- **`__originalMethod` is paid on every call, by a prefix, a postfix and a finalizer alike; TAOM still has it on two hot classes (open, not fixed).**
+  [TAOM-verified, 0Harmony 2.4.2.0 shipped in `TAOM.Dependencies`, code read] `MethodCreator` sends prefixes (`:239`), postfixes
+  (`:301`) and finalizers (`:370`) through one `EmitCallParameter`; for `InjectionType.OriginalMethod`
+  (`MethodCreatorTools:273-274`) it emits `ldtoken <original>` and a call to `MethodBase.GetMethodFromHandle`
+  (`:864-883`) inline, and finalizers run on every call (`MethodCreator:161, 175`). yotthani measured 85 ns and 241 bytes per
+  probed call in game on 04.10.2026 with PerfProbe's PatchCost (prefix and postfix shape; `yotthani/bannerlord`
+  `HoN/PerfProbe/Integration/ProbeSlots.cs`@c45d8374 lines 9-20, game 1.5.3, 0Harmony version and PC not stated). TAOM's own
+  isolated finalizer figure, 63 ns and 241 bytes on .NET Framework 4.8.1, is in the finalizer bullet above; neither number was
+  taken inside a TAOM game session. Not proven: which 0Harmony copy wins in the game process (Coop and `AWOIAF.Dependencies`
+  ship one too). **Where TAOM pays it** (code read, current trunk): the finalizers of `HeaderLoadData_Readers_Patch` run once per
+  saved object (`ObjectHeaderLoadData.InitialieReaders`) and once per container for each of two more targets, and
+  `ContainerLoadData_Fill_Patch` runs its four steps once per container each, so one load pays one lookup per object plus six per
+  container (`LoadContext.Load`, v1.5.7). The load-side object count of a TAOM save is unmeasured; yotthani's save-side figure of
+  646,000 `ObjectSaveData` per save (`SaveFastPatch.cs` header, a real save) would make 85 ns about 55 ms and 241 bytes about
+  155 MB of garbage, which is TAOM's inference, not a measurement. Cold users, where it is fine:
+  `CampaignBehaviorDataStore_LoadBehaviorData_Patch` (once per behaviour), `LoadResult_InitializeCallbacks_Patch` (once per
+  load), `Patch65_LandlessCultureSpawnGuard` (once per lord spawn, its comment says so), `Patch69_TournamentEndGuard` and
+  `GauntletSceneNotification_OpenScene_Guard_Patch` (once per tournament or cinematic). **Fix shape:** leave the cold four; in the
+  two hot classes drop the parameter and give each hot target its own patch class with the step name as a string constant (three
+  header targets, four container targets) around one shared static helper. Do not use a closed generic `Slot<T>` for that: see the
+  previous bullet. Measure first by counting the calls in one TAOM save load.
 - **Deferred application**: a category whose target type's **static cctor reads `Mission.Current`/`Campaign.Current`** must be applied in `OnMissionBehaviorInitialize`, NOT `OnSubModuleLoad` (where they're null → JIT-prep NRE); see [harmony-il lessons](../../reviews/lessons/harmony-il.md), "Defer patches whose parameter types have Mission/Campaign-dependent cctors". Guard with a one-shot static flag (it fires per mission).
 
 ## WHY it's shaped this way

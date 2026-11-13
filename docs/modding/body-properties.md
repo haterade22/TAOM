@@ -281,6 +281,59 @@ Code: No code changes needed.
   note, not in the repo, and no engine version is stated. The script scales only x and y of the `build` key's bone
   scales on trunk, shoulder, arm, leg and neck bones (`erzeugen.py:15` and `:35-38`), which is consistent with x and y
   being width and depth. TAOM has not measured these axes: UNVERIFIED here.
+- **`bone_type` binds by position in a native list, 28 entries** [TAOM-verified, v1.5.7 native, the only reader of the
+  attribute: `FUN_18056c5a0` (RVA 0x56C5A0), via `python tools/native_decompile.py --string bone_type`]. It reads the
+  `bone_type` attribute, compares it with a native name table that starts at `biped_abdomen` (`PTR_s_biped_abdomen_180a7dc00`),
+  stores the matching position as a byte at `param_1 + 0xc` (28 entries, loop bound `< '\x1c'`), and for no match logs
+  "Unrecognized bone type '%s' for skeleton type '%s'" and stores -1. `TaleWorlds.Core.HumanBone : sbyte` on v1.5.7 has
+  28 values, `Abdomen` (0) to `ItemR` (27), plus `Invalid` (-1) (TAOM read the enum with `pwsh tools/taom-src.ps1 path HumanBone`).
+  So the binding is by position, not a bone-name lookup in the skeleton. NOT read: that the native table order equals the
+  enum order, and that the stored number is then used as the skeleton bone index (UNVERIFIED; next check:
+  `python tools/native_decompile.py --rva 0x56C5A0 --callers 1 --summary`, or dump the 28 pointers at `0x180a7dc00`).
+  yotthani's reading is that the number is the skeleton index, from the C# enum alone [yotthani, `yotthani/MithrilForge`
+  `src/MithrilForge.Crowd/CrowdCommand.RaceScales.cs@ea7a7bfb:117-128`, comment "enum HumanBone (TaleWorlds.Core/HumanBone.cs, 1.5.5)
+  equals the human skeleton index"; read from code, not measured in game; the commit `36349bb` of 2026-10-15 replaced an
+  earlier by-name assumption that its diff calls "not readable offline"]. Its table, with the entries that have no
+  `bone_type` in Native's `build` key (yotthani's reading, not measured by TAOM):
+
+  | Index | `HumanBone` | `bone_type` in the build key |
+  |---|---|---|
+  | 0 | `Abdomen` (the pelvis) | yes |
+  | 1 to 3, 5 to 7 | `ThighL`, `CalfL`, `FootL`, `ThighR`, `CalfR`, `FootR` | yes |
+  | 4, 8 | `ToeL`, `ToeR` | none |
+  | 9 to 13 | `Spine1`, `Spine2`, `Thorax`, `Neck`, `Head` | yes |
+  | 14 to 17, 19 | `ShoulderL`, `UpperarmL`, `UpperarmTwist1L`, `ForearmL`, `HandL` | yes |
+  | 18, 25 | `Forearm1L`, `Forearm1R` | none |
+  | 20, 27 | `ItemL`, `ItemR` | none |
+  | 21 to 24, 26 | `ShoulderR`, `UpperarmR`, `UpperarmTwist1R`, `ForearmR`, `HandR` | yes |
+
+  The names in the XML are `biped_` plus the `HumanBone` name in snake case.
+- **Length axis `z` acts inverted; shorten the thigh, not the calf** [yotthani, `yotthani/bannerlord`
+  `HoN/DwarfScaleTest`, commit bodies `d800db8c` and `eda4b491`, human skeleton, observed in game, game version not stated
+  (no file in `HoN/DwarfScaleTest` names one, and the folder has no README), test PC not stated]. The first reading: `z` is the bone length, but 0.6 made the legs
+  longer, so `z` above 1 should shorten (a hypothesis in `d800db8c`; the later "dws3 in game" line is the only
+  confirmation); `x` squeezed sideways and `y` front to back. In build dws3, which shortened the calf, the knee was
+  "acceptable" but the foot broke (the calf weight reaches into the ankle and heel); dws4 moved the shortening to the thigh
+  (`z` 1.25) with a calf of 1.12 and feet width 1.0, and its result is not recorded in the sources read. The same tests overrode generator girths computed from few vertices when they contradicted a dwarf
+  build (shoulders 1.0 against a measured 0.71 to 0.88). yotthani's `crowd race-scales` tool writes `z = 1 / (target bone
+  length / source bone length)` by default (`--length-mode inverse`, `CrowdCommand.RaceScales.cs@ea7a7bfb:30, 72-76`); z is not
+  clamped, and only the width and depth ratios (x, y) are clamped to 0.7 to 1.6 (`:108-114`); whether
+  that inverse is exact is not shown in the sources read. TAOM has not measured any of this; a bone length read in game after
+  a `bone_scale` of 0.9 on one bone would settle the inversion.
+- **The managed monster table needs the `Monsters` XmlNode; the mbproj does not feed it** [yotthani, `HoN/DwarfScaleTest`,
+  commit `7f0e30e6`, game version not stated]: `soln_monsters` in `project.mbproj` fills only the native monster table, while
+  `FaceGen.GetBaseMonsterFromRace` reads the managed one, filled from `SubModule.xml` XmlNodes; without the node the race had
+  no monster and `AgentVisuals` threw a null reference for the main party icon on the map. TAOM's side (TAOM-verified, v1.5.7
+  tree): `Main/_Module/SubModule.xml` has no `Monsters` XmlNode and `Main/_Module` holds no `<Monster>` XML. The monsters of
+  TAOM's races are in the live, unversioned `LOTRLOME_Armory/SubModule.xml` (12 `Monsters` nodes, lines 235 to 359), so
+  TAOM's own `SubModule.xml` is correct for what TAOM ships.
+- **Layer order inside one armour set under a body build** [yotthani, `yotthani/MithrilForge` commit `21829c0` and
+  `LayerOrder.cs@ea7a7bfb:184`, a race-fit tool; "probable cause (not verified)", game version and PC not stated]: offline and in-game
+  fits matched vertex for vertex, yet trousers showed through a skirt in game. The suspected cause is that the body build
+  scales the skeleton (`UpdateSkeletonScale`), so leg-weighted trousers grow with the thigh bones while a pelvis-weighted
+  skirt does not. yotthani's remedy was to keep an inner mesh 8 mm instead of 1.5 mm below the faces above it. TAOM has not
+  tested it; the native entry `UpdateSkeletonScale` exists (`docs/perf-audit/native/matrix.csv:624`), which shows the entry,
+  not the cause. Relevant to any race with a `build` bone-scale key that wears layered armour.
 - **Tag names are validated by nobody on the managed side.** `MBBodyProperty` only concatenates strings. All 26 distinct tag names TAOM uses across 299 tag rows do exist somewhere in the merged `skins.xml`, but "somewhere" is not "on the race that uses the preset": the `dwarf` race declares only 7 style tags, while `fighter_erebor`, the preset every dwarf troop points at, lists `empire`, `sturgia`, `battania`, `khuzait` and `Cleanface`, none of which is among those 7. A tattoo tag that matches nothing falls back to a random index between the two keys; hair and beards are not traced. <!-- measured: python re.findall of style_tag names per race block in the Armory skins.xml against the tag names in TAOM_bodyproperties.xml 2026-09-05 -->
 
   | Race | Distinct `<style_tag>` names declared |

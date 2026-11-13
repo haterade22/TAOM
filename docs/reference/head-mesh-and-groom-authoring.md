@@ -299,7 +299,9 @@ the spec line.
 - **Edit the mesh the skeleton already holds.** `ManagedMeshEditOperations.Create(mesh)` with
   `GetPositionOfVertex`, `SetPositionOfVertex` and `FinalizeEditing` (names present in `TaleWorlds.Engine.dll` 1.5.3;
   the TAOM decompile cache lacks the type). That mesh is already skinned. A copy added with `AddMultiMesh` is rigid,
-  because the bone binding happens during the skin build; to swap a mesh, `MBAgentVisuals.ReplaceMeshWithMesh(MetaMesh
+  because the bone binding happens during the skin build, and it is no part of the engine's `Face_mesh`, so it gets no
+  mouth morph and no skin tone [yotthani, in game with TAOM loaded, 1.5.3, `bn faces/docs/superpowers/specs/2026-09-30-kopfpicker-design.md@c45d8374`,
+  section "ERGEBNIS M0": "the mouth does not move, the skin-tone change has no effect"]; to swap a mesh, `MBAgentVisuals.ReplaceMeshWithMesh(MetaMesh
   oldMetaMesh, MetaMesh newMetaMesh, BodyMeshTypes)` [Certain, `MBAgentVisuals.cs:299`] keeps the skinning.
 - **Bound the vertex loop yourself.** `GetPositionOfVertex` does not throw past the end of the buffer; it returns
   garbage, and `SetPositionOfVertex` writes out of bounds. The engine exposes no vertex count, but
@@ -368,6 +370,77 @@ the spec line.
   factor only to masks, `BeardCoverType == All` (the same condition as `Equipment.MouthIsHidden`, v1.5.6
   `TaleWorlds.Core.Equipment.cs:119`), because "ueber 200 offene Helme mit Wangenschutz" would stand off the face.
   Useful if a TAOM race's masks (the Nazgul, the Mouth of Sauron) clip.
+
+### Run-time edits of armour meshes: the working order and three crashes
+
+[yotthani, `yotthani/bannerlord` `HoN/RaceArmorFit` (a mod that moves every vertex of an armour copy to fit another
+race); each crash seen in game by yotthani on 1.5.5 or 1.5.6, the README header says 1.5.5, test PC not stated.]
+The mod postfixes `ItemObjectViewExtensions.GetMultiMeshCopyWithGenderData`, which still exists on v1.5.7 with the
+signature `(this ItemObject, bool isFemale, bool useSlimVersion, bool needBatchedVersion)` [TAOM-verified, v1.5.7
+`taom-src` cache, `TaleWorlds.MountAndBlade.View.ItemObjectViewExtensions.cs:33`]. The call order that stopped the crashes:
+
+1. For each mesh of the returned metamesh, take a private copy with `Mesh.CreateCopy()`.
+2. `AddEditDataUser()`, `LockEditDataWrite()`, `ManagedMeshEditOperations.Create(copy)`, read all positions and
+   validate them, then `SetPositionOfVertex` (optionally `ComputeCornerNormalsWithSmoothingData()` and
+   `ComputeTangents(false)`).
+3. `FinalizeEditing()`, `UnlockEditDataWrite(handle)`, `ReleaseEditDataUser()`, `RecomputeBoundingBox()`. A rule that
+   spans meshes keeps all of a LOD's meshes locked until the last one is edited; the release goes in a `finally`
+   (`FieldFit.cs@c45d8374:556, 684`).
+4. Put the copies into the metamesh the engine handed over: `ClearMeshes()`, then `AddMesh(mesh, lod)` per copy.
+
+The three failures, each a build lost to a native `0xC0000005`:
+
+| Shortcut | What went wrong | Source |
+|---|---|---|
+| Edit the meshes of the returned copy in place | Those meshes share edit data with the resource, so the edit corrupted it: crashes in inventory thumbnails, on inventory close and in the map icon after a load. A guard (`MeshesAreUnshared`) refuses to edit when two `MetaMesh.GetCopy(name, false, true)` calls return shared `Mesh` instances, since an in-place edit "would deform every wearer". | `FieldFit.cs@c45d8374:544-547, 288`; commit `511fda75` |
+| Build a new `MetaMesh` from the private copies | The new metamesh only borrows the cloth body of the resource (`AssignClothBodyFrom`). A civilian/battle view switch destroyed it, the engine freed the borrowed body, the figure vanished and the game crashed. | commit `dc0d9329`; README "Nie ein neues MetaMesh bauen" |
+| `AddEditDataUser()` without a matching `ReleaseEditDataUser()` | Every mesh got two adds and no release; the inventory close crashed. Vanilla's `VertexAnimator` always pairs them. | commit `d748d8a9`; README |
+
+The member names (`Mesh.CreateCopy`, `AddEditDataUser`, `ReleaseEditDataUser`, `LockEditDataWrite`, `UnlockEditDataWrite`,
+`RecomputeBoundingBox`; `MetaMesh.ClearMeshes`, `AddMesh(Mesh, uint)`, `AssignClothBodyFrom`, `HasClothData`) exist on v1.5.7
+(`pwsh tools/taom-src.ps1 path Mesh` and `... path MetaMesh`, `TaleWorlds.Engine.Mesh.cs`, `MetaMesh.cs`). That checks the
+names only; the three mechanisms are yotthani's and not re-checked by TAOM on v1.5.7.
+
+Three more facts from the same mod:
+
+- **The mesh the engine returns is not always the item's own mesh.** With gloves worn it returns `<name>_slim`, for
+  women `_female` or `_converted`, and their vertex layouts differ, so a lookup by the item's base mesh name fails
+  (commit `2ded4367`: the chest "fell back to vanilla"). The engine shows no vertex count; `Mesh.EditDataFaceCornerCount`
+  is exact (it exists on v1.5.7, `Mesh.cs:110`) and was the first gate, with the first and last vertex within 3 cm as a
+  second. Chain mail has a first vertex 1.5 to 2.8 cm off the package value at run time, so that guard sits at 3 cm
+  (commit `816f1d40`, README).
+- **Which cloth flag is trustworthy** [yotthani, README final state, game 1.5.5]: `MetaMesh.HasClothData()` recognises
+  cloth garments reliably, and `Mesh.HasCloth()` is true for every mesh. The commit history flips once on 15.10.2026: `57e60032`
+  (23:07) says `HasClothData()` was true for every armour; `784edc36` (23:18) measured in game that `HasCloth()` is true for
+  every mesh and `HasClothData()` matches the offline check; the README (line 90) repeats the later reading. In the end the mod decided per mesh from an offline index (`uses_cloth_simulation`, `force_enable_cloth`) and
+  left cloth meshes untouched, because every `0xC0000005` at `12D6` involved a fitted cloth item (commit `6502bd15`).
+- **Bind frames from the engine**: `Skeleton.CreateFromModel(modelName)` with `GetBoneCount()`, `GetBoneName(i)`,
+  `GetParentBoneIndex(i)` and `GetBoneEntitialRestFrame(i, false)` give the rest pose of any rig without an asset reader
+  (`SkeletonPair.cs@c45d8374`). The human rig's bone names carry the 3ds Max prefix `bip01_` and the dwarf rig's do not,
+  so pairing uses the bare name; the human rig is not exactly left/right symmetric and the dwarf rig is. Not re-checked
+  on v1.5.7.
+
+### Skin record layout and hand pose keys
+
+- **The skin record, from Ghidra on 1.5.3** [yotthani, `bn faces/docs/superpowers/specs/2026-09-30-kopfpicker-design.md@c45d8374`
+  section "Weg B nativ (M0c)" and `2026-10-02-groom-nativ-design.md@c45d8374`; version-bound, every offset is a 1.5.3 offset;
+  not re-checked by TAOM on v1.5.7]. One function builds the morphed head (RVA `56d5c0`, one caller `5794f0`). Its first
+  parameter is the race's skin record of 0xa80 bytes: head metamesh `+0x370`; hair list `+0x378/+0x380` and beard list
+  `+0x388/+0x390` (400-byte entries, metamesh at `+0x40+k*8`, binding map at `+0x70+k*0x30`, k = 0 to 5); brow list
+  `+0x398/+0x3a0` (0x58-byte entries, metamesh `+0x20`, map `+0x28`); tattoo list `+0x3a8/+0x3b0`; gradients `+0x3c4`;
+  face-material list `+0xa20/+0xa28` (0x50-byte entries, material `+0x20`, LOD material `+0x28`, index
+  `CurrentFaceTexture`); mouth materials `+0xa40`; skeleton `+0xa78`. `faceCacheId` is at native skin params `+0x568`.
+  Before that function the face build (`60c780`) makes four unmorphed clones (head, hair, beard, brow) as the starting
+  `Face_mesh`. [race-face-and-hand-morphs.md](race-face-and-hand-morphs.md) holds the groom-binding reading of the same
+  area but not this record layout.
+- **A LOD-0 hand skin mesh carries 26 hand-pose morph keys, selected by `1 + 5*leftPose + rightPose`, with key 0 the
+  open hand** [yotthani, `yotthani/MithrilForge` `src/MithrilForge.Crowd/SkinnedMeshLoader.cs@ea7a7bfb:32-35` and commit
+  `1e46952`; the mapping was inferred from the key data of the meshes and the selection itself is native code that
+  yotthani did not read; game version and PC not stated]. yotthani bakes that key into bind geometry for closed
+  hands, and moves it to coarser LODs by nearest vertex. TAOM has not read a vanilla `hands_male_a` edit-data key count.
+  If a custom race's hand mesh lacks the 26 keys, a gripping hand would stay open (TAOM's inference, untested).
+- **Triangle order of a changed mesh:** a write that rebuilds the render stream (step 2 above) keeps the stored triangle
+  order; see [tpac-static-prop-authoring.md](tpac-static-prop-authoring.md) "Package layout facts".
 
 ## 7. Head variants without a new race
 

@@ -77,6 +77,18 @@ is why `RegisterEvents` runs every campaign start/load, not once.
   **entity-state matrix** (`.claude/rules/csharp-architecture.md`) — destructive ops need state guards.
 - **`SyncData` is the persistence half** (Phase 6) — most TAOM features `SyncData` primitives/composite strings; no
   `SaveableTypeDefiner` unless a custom class is saved.
+- **Add an option to a vanilla menu from `OnSessionLaunched`, never `OnGameStart`.** `AddGameMenuOption(menuId, ...)` calls
+  `GetPresumedGameMenu(menuId)`, which makes an empty `GameMenu` for an id nobody has initialised yet
+  (`CampaignGameStarter.cs:93-107`). `IsReady` is set only in `Initialize` (`GameMenu.cs:55, 120, 138`), and
+  `GameMenuManager.UnregisterNonReadyObjects` removes every `!IsReady` menu (`:522-532`). `Campaign` runs `GameManager.OnGameStart`
+  (`Campaign.cs:1410`) before `UnregisterNonReadyObjects()` (`:1457`), so an option added in `OnGameStart` is dropped with its menu.
+  `OnSessionStart` (`:1686, 1710`) fires `OnSessionLaunchedEvent` (`CampaignEvents.cs:2088-2090`) later, where vanilla itself initialises
+  "town" (`PlayerTownVisitCampaignBehavior.cs:29, 40`) [TAOM-verified, v1.5.7 cache]. yotthani met it in game on v1.5.6: the option was missing,
+  proved by a ClrMD heap dump showing "town" was a newer object (`docs/smithing/2026-11-06-probe-teil2abc-ergebnis.md@c45d8374`, commit
+  `a689aca7`). Every TAOM option on `town`, `castle`, `village` and `town_keep` (12 `AddGameMenuOption` sites in `Main/`, Grep 2026-11-13) is added from an `OnSessionLaunchedEvent` listener
+  (`ArmouryMenuBehavior.cs:31, 38`, `CastleRecruitmentBehavior.cs:48, 71`, `EliteEmissaryBehavior.cs:54, 73-75`,
+  `FieldCommissionDismissMenuBehavior.cs:32, 39-41`, `SupplyLinesCampaignBehavior.cs:51, 86` into `SupplyOrderTownMenu.cs:33-34`,
+  `FromTheAshesBehavior.cs:35, 42` into `FromTheAshesStartOptions.cs:37-38`; Enlistment's listener, `EnlistmentMenuBehavior.cs:61, 93`, adds its options to TAOM's own wait menu); `SubModule.OnGameStart` (`SubModule.cs:902-940`) adds no menu.
 - **`GetCampaignBehavior<T>()`** is the cross-behavior lookup (and `Campaign.Current.GetCampaignBehavior<T>()`).
 - Subscribe in `RegisterEvents`, **not the ctor** (the ctor runs before the campaign event bus is ready; RegisterEvents
   is the engine-called hook).
