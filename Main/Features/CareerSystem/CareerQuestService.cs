@@ -52,8 +52,6 @@ public class CareerQuestService : ICareerQuestService
         return _byId.TryGetValue(questId, out var q) ? q : null;
     }
 
-    public IReadOnlyList<CareerQuestDefinition> GetAllQuests() => _configProvider.LoadQuests();
-
     public bool IsTierUnlocked(int heroLevel, int tier, string heroId)
     {
         if (_registry.IsTierAvailable(heroLevel, tier)) return true;

@@ -78,16 +78,4 @@ public class MutationCalculatorRegistryTests
         Assert.AreEqual(42f, result, 0.001f);
         _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("nonexistent")));
     }
-
-    [TestMethod]
-    public void HasCalculator_Registered_ReturnsTrue()
-    {
-        Assert.IsTrue(_registry.HasCalculator("flat"));
-    }
-
-    [TestMethod]
-    public void HasCalculator_Unregistered_ReturnsFalse()
-    {
-        Assert.IsFalse(_registry.HasCalculator("nonexistent"));
-    }
 }

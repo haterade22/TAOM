@@ -46,21 +46,6 @@ public sealed class FormationAdapter : IFormationAdapter
     public bool IsMoving =>
         _formation != null && _formation.GetMovementState() != MovementOrder.MovementStateEnum.Hold;
 
-    public MovementOrderType CurrentMovementOrderType
-    {
-        get
-        {
-            if (_formation == null) return MovementOrderType.Other;
-            ref readonly var order = ref _formation.GetReadonlyMovementOrderReference();
-            return order.OrderEnum switch
-            {
-                MovementOrder.MovementOrderEnum.Charge => MovementOrderType.Charge,
-                MovementOrder.MovementOrderEnum.ChargeToTarget => MovementOrderType.ChargeToTarget,
-                _ => MovementOrderType.Other,
-            };
-        }
-    }
-
     public Vec2 CurrentPosition => _formation?.CurrentPosition ?? Vec2.Zero;
 
     // -- CompanionTactics extensions (Patch35) -----------------------------------

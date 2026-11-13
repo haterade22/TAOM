@@ -17,11 +17,6 @@ public interface ICavalryCommandAdapter
     Vec2 CurrentPosition { get; }
     Vec2 Direction { get; }
 
-    /// <summary>Stand your ground. Engine semantics: <c>MovementStateEnum.StandGround</c>, under
-    /// which every rider holds its OWN current position and arrangement slots are ignored, so
-    /// this never shapes a formation. Kept on the surface for callers that want a true halt.</summary>
-    void IssueStop();
-
     /// <summary>Move to a point. Engine semantics: <c>MovementStateEnum.Hold</c>, riders take
     /// their arrangement slots around the point, which is what forms a line. Returns false when
     /// no scene is live or the world position is invalid, in which case no order was issued.</summary>

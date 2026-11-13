@@ -63,8 +63,6 @@ public sealed class CoopTransport : ICoopTransport
         broker.Subscribe<CoopCompatMomentumSnapshot>(OnSnapshot);
     }
 
-    public void RunOnGameThread(Action action) => _runOnGameThread(action);
-
     public bool SendToServer(CoopCompatHello message) => Send(CoopRole.Client, n => n.SendAll(message));
 
     public bool SendToPeer(CoopPeer peer, CoopCompatHelloReply message) =>

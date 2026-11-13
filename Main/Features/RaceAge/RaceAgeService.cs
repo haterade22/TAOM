@@ -26,9 +26,7 @@ public class RaceAgeService : IRaceAgeService
     }
 
     public int GetMaxAge(int raceId) => GetEntry(raceId).MaxAge;
-    public int GetBecomeOldAge(int raceId) => GetEntry(raceId).BecomeOld;
     public int GetComesOfAge(int raceId) => GetEntry(raceId).ComesOfAge;
-    public int GetMiddleAge(int raceId) => GetEntry(raceId).MiddleAge;
     public int GetFertilityEndAge(int raceId) => GetEntry(raceId).FertilityEnd;
     public float GetFertilityModifier(int raceId) => GetEntry(raceId).FertilityMod;
     public bool IsImmortal(int raceId) => GetEntry(raceId).Immortal;

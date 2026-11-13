@@ -81,11 +81,6 @@ public interface ISpecialResourceService
     /// </summary>
     DailyResourceBreakdown GetDailyBreakdown(string heroId, string? kingdomId, string? cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
 
-    /// <summary>
-    /// <see cref="GetDailyBreakdown"/>'s <c>Net</c>, kept as a convenience for callers that need
-    /// only the sign. Returns 0 when the hero's kingdom/culture maps to no resource.
-    /// </summary>
-    float GetProjectedDailyNet(string heroId, string? kingdomId, string? cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
     IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string? kingdomId, string? cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
 
     /// <summary>

@@ -164,34 +164,6 @@ public class CareerPassiveServiceTests
     }
 
     [TestMethod]
-    public void HasActivePassive_WithPassive_ReturnsTrue()
-    {
-        _dataService.SetCareer("hero1", "warboss");
-        _dataService.TryAddChoice("hero1", "wb_brut_p1", 10);
-
-        _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
-            id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
-            description: "", iconSprite: "",
-            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
-            mutations: null));
-
-        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
-            id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passives: null, mutations: null));
-
-        _service.RefreshCache(_dataService, _registry);
-
-        Assert.IsTrue(_service.HasActivePassive("hero1", PassiveEffectType.Damage));
-    }
-
-    [TestMethod]
-    public void HasActivePassive_NoPassive_ReturnsFalse()
-    {
-        _service.RefreshCache(_dataService, _registry);
-        Assert.IsFalse(_service.HasActivePassive("hero1", PassiveEffectType.Damage));
-    }
-
-    [TestMethod]
     public void RefreshCache_IncludesRootChoicePassive()
     {
         _dataService.SetCareer("hero1", "warboss");
@@ -571,7 +543,6 @@ public class CareerPassiveServiceTests
         var emptyDataService = new CareerDataService();
         _service.RefreshCache(emptyDataService, _registry);
         Assert.AreEqual(0f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage));
-        Assert.IsFalse(_service.HasActivePassive("hero1", PassiveEffectType.Damage));
     }
 
     // ── #769 E8 + E9: several effects per option, and the troop-class bucket ──
@@ -599,7 +570,6 @@ public class CareerPassiveServiceTests
 
         Assert.AreEqual(0.10f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
         Assert.AreEqual(25f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Health), 0.001f);
-        Assert.IsTrue(_service.HasActivePassive("hero1", PassiveEffectType.Health));
     }
 
     [TestMethod]

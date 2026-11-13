@@ -45,31 +45,6 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
         _logger = logger;
     }
 
-    public void ApplyMoraleBurst(float radius, float magnitude)
-    {
-        if (_agent == null || _mission == null) return;
-
-        _nearbyAlliesBuffer.Clear();
-        _mission.GetNearbyAllyAgents(_agent.Position.AsVec2, radius, _agent.Team, _nearbyAlliesBuffer);
-
-        int boosted = 0;
-        foreach (var ally in _nearbyAlliesBuffer)
-        {
-            var ai = ally?.GetComponent<CommonAIComponent>();
-            if (ai == null) continue;
-
-            ai.Morale = Math.Min(100f, ai.Morale + magnitude);
-            boosted++;
-        }
-    }
-
-    public void ApplyStealthMode(float duration)
-    {
-        // Stealth in Bannerlord is controlled by detection radius on the agent.
-        // Full AI detection integration requires a Harmony prefix on the detection model.
-        _logger.LogDebug($"CareerSystem: StealthMode for {duration}s applied to '{HeroStringId}' (visual-only)");
-    }
-
     public void ApplyAllyBuff(float damageBonusFlat, float damageReductionFlat, float radius, float duration)
     {
         ApplyAoeBuff(radius, duration, new ActiveBuffs

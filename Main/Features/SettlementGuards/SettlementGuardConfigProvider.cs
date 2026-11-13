@@ -47,12 +47,6 @@ public class SettlementGuardConfigProvider : ISettlementGuardConfigProvider
         return cultureId != null && _spearMappings.TryGetValue(cultureId, out var itemId) ? itemId : null;
     }
 
-    public IReadOnlyDictionary<string, string> GetSpearMappings()
-    {
-        EnsureLoaded();
-        return _spearMappings;
-    }
-
     private void EnsureLoaded()
     {
         if (_bySettlement != null)

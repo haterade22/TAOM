@@ -10,6 +10,5 @@ public interface IFiefHubService
     int Clamp(int index);
     int Next(int index);
     int Previous(int index);
-    FiefSummary GetAt(int index);
     bool PlayerIsAt(FiefSummary fief);
 }

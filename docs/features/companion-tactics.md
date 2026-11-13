@@ -219,7 +219,7 @@ The folder `TAOM.Tests/Features/CompanionTactics/` holds 18 test files, plus `TA
 
 1. Add the value to `CombatRole.cs` enum.
 2. Update `CompanionRoleService.ClassifyWeapon` to map a `WeaponClass` (or combination) to the new role.
-3. Add a case to `GetRoleShortText`, `GetRoleHint`, `GetRoleColor` for the new value. **All four are required** — `GetRoleColor` will fall through to `uint.MaxValue` (white) if missed, which makes the role invisible in role badges. Codex review #35 caught this for `OneHanded` and `Slinger`.
+3. Add a case to `GetRoleShortText` for the new value.
 4. Add a case to `IsRangedRole` if it's a ranged variant.
 5. Add a scoring entry to `HeroAutoAssigner.ScoreRoleForFormation` for every formation class.
 6. Add a unit test in `CompanionRoleServiceTests` covering the new role's classification path.

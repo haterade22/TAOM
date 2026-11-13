@@ -17,9 +17,6 @@ public interface ITroopRosterQueryAdapter
     /// <summary>True when the main party currently exists and has a roster.</summary>
     bool HasMainParty { get; }
 
-    /// <summary>Main party's total healthy troop count (0 when there is no main party).</summary>
-    int GetMainPartyHealthyCount();
-
     /// <summary>Non-hero troop id -> current count in the main party roster. Empty when there is
     /// no main party.</summary>
     IReadOnlyDictionary<string, int> GetRosterSnapshot();

@@ -201,7 +201,7 @@ co-op settings fingerprint (225 `TaomSettings` properties, 180 simulation-releva
 | `Main/Features/SmartCavalryAI/Hooks/Patch31b_FormationSetTargetFormation.cs` | Postfix on `SetTargetFormation`: the second half of the player's targeted charge, re-points a running cycle. |
 | `Main/Features/SmartCavalryAI/Hooks/SmartCavalryAIMissionBehavior.cs` | Per-frame driver, friendly collision avoidance, `OnEndMission` cleanup. |
 | `Main/Adapters/IFormationAdapter.cs`, `FormationAdapter.cs` | `RepresentativeIsCavalry`, `IsAIControlled`, `CurrentPosition`, `IsAligned`. |
-| `Main/Adapters/ICavalryCommandAdapter.cs`, `CavalryCommandAdapter.cs` | `IssueMoveTo` (bool), `IssueChargeToTarget` (order + native target), `IssueCharge`, `IssueStop`, `ApplyChargeLine` (positioning + facing order), `IsTargetAlive`, `TryGetTargetPosition`, `GetTargetDepthAlong`. |
+| `Main/Adapters/ICavalryCommandAdapter.cs`, `CavalryCommandAdapter.cs` | `IssueMoveTo` (bool), `IssueChargeToTarget` (order + native target), `IssueCharge`, `ApplyChargeLine` (positioning + facing order), `IsTargetAlive`, `TryGetTargetPosition`, `GetTargetDepthAlong`. |
 | `Main/Adapters/IBattlefieldQueryAdapter.cs`, `BattlefieldQueryAdapter.cs` | `IsFieldBattle`, `TryGetNearestEnemyFormation`, friendlies, ground height, nearby agents. |
 
 ## Tests

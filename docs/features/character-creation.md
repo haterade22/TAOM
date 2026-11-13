@@ -208,7 +208,7 @@ just a new campaign.
 |------|---------|
 | `TAOM.Tests/Features/CharacterCreation/CharacterCreationContentServiceTests.cs` | `RegisterCustomCultures`, `RegisterNarrativeMenus`, `OnCharacterCreationFinalize`, `SetPlayerRace` (16 tests including FaceGen-preservation, invalid-ID fallback, case-insensitive matching) |
 | `TAOM.Tests/Features/CharacterCreation/CultureCreationDataProviderTests.cs` | JSON parsing, missing file handling, `GetCultureData` lookup |
-| `TAOM.Tests/Features/CharacterCreation/NarrativeDataProviderTests.cs` | JSON parsing, caching, `GetMenuOptionsForCulture` filtering, missing file handling |
+| `TAOM.Tests/Features/CharacterCreation/NarrativeDataProviderTests.cs` | JSON parsing, caching, missing file handling |
 | `TAOM.Tests/Features/CharacterCreation/NarrativeMenuBuilderTests.cs` | Roster ids, empty and unknown bonus names, null-name exceptions, and invalid-option skip-and-continue behavior |
 | `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs` | Career option construction, deferred bonus resolution, repeated callback warnings, and null-name exceptions |
 | `TAOM.Tests/Features/CharacterCreation/CharacterCreationBonusResolverTests.cs` | Shared resolver ordering, duplicates, case handling, invocation counts, null results, unknown names, and exception propagation |

@@ -52,18 +52,6 @@ public class SpecialResourceStorageService : ISpecialResourceStorageService
                 _data[key] = 0f;
     }
 
-    public void ClampAll(float cap)
-    {
-        foreach (var key in new List<string>(_data.Keys))
-        {
-            var val = _data[key];
-            if (float.IsNaN(val) || float.IsInfinity(val))
-                _data[key] = 0f;
-            else
-                _data[key] = Math.Max(0f, Math.Min(cap, val));
-        }
-    }
-
     private static string MakeKey(string heroId, string resourceId)
     {
         return string.Concat(heroId, ":", resourceId);

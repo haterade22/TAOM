@@ -184,27 +184,6 @@ public class TroopWeightXmlLoaderTests
         Assert.IsTrue(result.ContainsKey("CAVE_TROLL"));
     }
 
-    [TestMethod]
-    public void ReloadWeights_ForcesReload()
-    {
-        WriteXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
-<TroopWeights>
-    <TroopWeight id=""cave_troll"" weight=""2.0"" />
-</TroopWeights>");
-
-        var first = _sut.GetTroopWeights();
-        Assert.AreEqual(2.0f, first["cave_troll"]);
-
-        WriteXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
-<TroopWeights>
-    <TroopWeight id=""cave_troll"" weight=""4.0"" />
-</TroopWeights>");
-
-        _sut.ReloadWeights();
-        var second = _sut.GetTroopWeights();
-        Assert.AreEqual(4.0f, second["cave_troll"]);
-    }
-
     private void WriteXml(string content)
     {
         File.WriteAllText(Path.Combine(_tempDir, "TroopWeights", "troop_weights.xml"), content);
