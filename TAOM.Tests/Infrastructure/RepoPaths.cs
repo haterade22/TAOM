@@ -12,8 +12,10 @@ namespace TAOM.Tests.Infrastructure;
 /// <summary>
 /// Locates a repo file from THIS source file's compile-time path, so a test that reads shipped
 /// source or ModuleData does not depend on the test assembly's output layout (bin/Debug/net472
-/// depth) staying what it is today. Source text under the code roots is read once per test run; see
-/// <see cref="Text"/>. Import with <c>using static TAOM.Tests.Infrastructure.RepoPaths;</c>.
+/// depth) staying what it is today. The .cs text and file lists under Main, Client, Dependencies and
+/// CoopCompat are read once per test run (see <see cref="Text"/> and <see cref="CSharpFiles"/>), so a
+/// test that writes a .cs file there sees the run's first read. Import with
+/// <c>using static TAOM.Tests.Infrastructure.RepoPaths;</c>.
 /// </summary>
 public static class RepoPaths
 {
@@ -35,7 +37,8 @@ public static class RepoPaths
 
     /// <summary>
     /// Every .cs file under the given repo roots (the compiled code roots when none are named), skipping
-    /// any path with an obj or bin segment below the repo root.
+    /// any path with an obj or bin segment below the repo root. The list for Main, Client, Dependencies
+    /// or CoopCompat is walked once per test run; any other root is walked on every call.
     /// </summary>
     public static IEnumerable<string> CSharpFiles(params string[] roots) =>
         (roots.Length == 0 ? CodeRoots : roots).SelectMany(root =>
@@ -55,7 +58,8 @@ public static class RepoPaths
     /// the test: a wiring gate that goes Inconclusive when it cannot find its file silently stops
     /// guarding. With <paramref name="stripComments"/>, comments are blanked (see
     /// <see cref="StripComments"/>), so a commented-out line can no longer satisfy a "this is wired"
-    /// assertion.
+    /// assertion. The text comes from <see cref="Text"/>, so a .cs file under the cached roots is read
+    /// once per test run.
     /// </summary>
     /// <param name="relativePath">Repo-relative, either separator, for example "Main/SubModule.cs".</param>
     public static string ReadSource(string relativePath, bool stripComments = false)
@@ -115,7 +119,8 @@ public static class RepoPaths
     /// True when <paramref name="needle"/> appears in the file outside comments (as a whole word when
     /// <paramref name="wholeWord"/>). The file is read raw first and only stripped when the raw text
     /// holds the needle, which is a necessary condition, so a scan over every Main file strips only
-    /// its few candidates and returns the same set as stripping them all.
+    /// its few candidates and returns the same set as stripping them all. The file is read through
+    /// <see cref="Text"/>, so a .cs file under the cached roots is read once per test run.
     /// </summary>
     public static bool MentionsOutsideComments(string path, string needle, bool wholeWord = false)
     {

@@ -145,7 +145,17 @@ public class RepoPathsTests
         Assert.AreSame(RepoPaths.Text(path), RepoPaths.Text(path.Replace('\\', '/')));
     }
 
-    // A .cs name under bin: only the root check keeps it out of the cache.
+    // A tracked .cs file outside the four roots and outside obj and bin: only the root check keeps it
+    // out of the cache, so each call reads the disk and returns a new string.
+    [TestMethod]
+    public void Text_TrackedFileOutsideTheCorpusRoots_IsNotCached()
+    {
+        var path = RepoPaths.RepoPath("TAOM.Tests", "Infrastructure", "RepoPathsTests.cs");
+
+        Assert.AreNotSame(RepoPaths.Text(path), RepoPaths.Text(path), "only Main, Client, Dependencies and CoopCompat are cached");
+    }
+
+    // A .cs name under bin, written during the test: the bin segment and the root check both keep it out.
     [TestMethod]
     public void Text_FileOutsideTheCodeRoots_IsReadFreshEveryCall()
     {

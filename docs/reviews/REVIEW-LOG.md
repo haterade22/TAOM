@@ -5654,3 +5654,18 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 19 | Decisions of the two fixes with no test | Other: coverage | The fix tests stopped at the service that changed | A handler test with the real services, the threshold peace, the analyzer cases |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1113.toml`.
+
+## Review (number assigned at merge): test-suite read caches, plan 046 (#1132), deep review lead pass with no Codex (2026-11-13)
+
+- **Scope:** `664f19c5b..eb38f4009` on `improve/046-test-suite-read-caches`, test code under `TAOM.Tests` only.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Confirmed:** 2 LOW from Agent 5, both fixed: a probe comment that claimed to isolate the root check, and
+  public doc comments that did not say the results are cached. 0 false positives. Rows in
+  `docs/reviews/rca-test-suite-read-caches-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | The uncached-path probe tripped both the bin and the root clause, so neither had its own test | Other: test isolation | The mutation proof disabled the whole method | A read-only probe for the root clause, proven by a per-clause mutant; lesson in `lessons/testing-qa.md` |
+| 2 | The run-snapshot contract was only on a private field | Convention inconsistency | The contract went beside the data, not on the entry points | Doc comments on `CSharpFiles`, `ReadSource`, `MentionsOutsideComments` and the class |
+
+- **In-game:** not applicable (test code only).
