@@ -159,3 +159,19 @@ Skipped:     9, Total: 39275`; after the edits, the same: `Passed!  - Failed:   
 Skipped:     9, Total: 39275`. `python tools/lint_docs.py --fail-on-drift`: exit 0. The change is
 comments and review records only, so the RefAsm step is unaffected. No hook, gate or validator changed,
 so no differential sweep and no hook suite run.
+
+## Convergence round 2
+
+One finding, LOW, fixed by the orchestrator without a further round (the /improve stop rule allows
+that for a comment or a record).
+
+- **C2-1 (LOW), fixed.** The C1-1 wording still tied the result to "no campaign". The result depends
+  on the tick statics being 0, and no campaign does not guarantee that: `CampWorkMenuHookTests.cs:52-53`
+  writes `TimeTicksPerHour` by reflection (and `:45-46` restores it), and `Campaign.OnDestroy`
+  (Campaign.cs:1141-1153) resets none of the statics, so after a campaign ends in the game `Hours(6)`
+  is still nonzero. The comment at `RefugeBookRepairTests.cs:203-206` now says "tick statics that are 0
+  in this test ... so here they give Zero for every finite argument". Read every earlier sentence in
+  this record, in the RCA and in the REVIEW-LOG entry that says "with no campaign" as "while the tick
+  statics are 0". The same wording applies to the FOLLOW-UP for `RefugeServiceTests.cs:1268-1270`.
+
+Verification: the edit is one test comment and this record. The suite ran on the merged run branch.

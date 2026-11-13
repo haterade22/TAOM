@@ -200,9 +200,10 @@ public class RefugeBookRepairTests
     [TestCategory("RequiresGame")]
     public void Repair_BuildingRowStartedInTheFuture_ResetsToNow()
     {
-        // Never (long.MaxValue ticks) reads no tick static. Hours and Days multiply by the statics
-        // CampaignTime.Initialize sets, so with no campaign they give Zero for every finite argument.
-        // Never and Equals are engine members, which is why this method needs the game.
+        // Never (long.MaxValue ticks) reads no tick static. Hours and Days multiply by tick statics that
+        // are 0 in this test (CampaignTime.Initialize sets them when a campaign starts), so here they give
+        // Zero for every finite argument. Never and Equals are engine members, which is why this method
+        // needs the game.
         _days = -41.0;
         _now = CampaignTime.Never;
         var row = new RefugeData { PartyId = "r1", Established = true, Building = true, BuildTargetHours = 6f };
