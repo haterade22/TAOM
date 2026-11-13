@@ -261,6 +261,7 @@ section 5); that names the carrier, not the sampler.
 | `tools/check_race_morph_channels.py` | Reinstall gate on the FBX sources: exact channel counts |
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
+| `tools/oneoff/restore_young_woman_dwarf.py` | The same female set for the teenager, tween, child and toddler dwarf skins (2026-11-13); its dry run prints whether they are still on the base mesh |
 | `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair, beard, eyebrow or moustache meshes and their LODs, the vanilla shape; refuses face parts, hands, arms and bodies, and a run with nothing to strip |
 | `tools/blender/hair_engine_pipeline.py` | Default independent hair authoring and delivery: profile selection, UV and material gates, no upper-mesh morph channels, previews, and staged FBX re-import. See [independent-hair-engine.md](../features/independent-hair-engine.md) |
 | `tools/blender/hair_tool_pipeline.py` | Optional guided Hair Tool authoring and delivery with transform-safe weight projection. See [hair-tool-workflow.md](../features/hair-tool-workflow.md) |
