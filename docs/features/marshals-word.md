@@ -138,7 +138,7 @@ the mission tick, the shot callback and the mode change.
   selected company, red for the company a selected company marks or charges), plans with the pure generic `OutlineDiff` against what it
   last painted, and paints or clears through the adapter, which reads a rider's mount as a wanted unit of its own (so the dictionary remembers
   every visual it painted and a mount is cleared even after its rider dismounted or died) and guards each write with the slot's current
-  occupant. They show while `MarshalOutlines` is on and the panel is open or game key 5 (show indicators) is down. When they should not
+  occupant. They show while `MarshalShowOutlines` is on and the panel is open or game key 5 (show indicators) is down. When they should not
   show, the wanted set is empty and that pass clears everything it painted; the finish only forgets the dictionary, because the agents go
   with the mission, and a fault clears the paint before it tears down (in the mission tick: see the fault latch above). That clear tries each
   unit on its own and throws the first failure after the others are done; a unit that failed is not tried again, because nothing is known to throw
@@ -230,7 +230,7 @@ excluded from the co-op fingerprint in `CoopSettingsRelevance`.
 | `MarshalEnabled` | on | Read when the session decides whether to go live. Off, none of this acts from the next battle on, except Spacing Repair, which is decided when the game starts and needs this on at that start; a battle already running keeps the feature (build-spec Deviations, row 3) |
 | `MarshalKeepArray` | on | A click or drag moves several companies as one body. Off, vanilla lays them out |
 | `MarshalArriveTogether` | on | Companies ordered together walk at paces that bring them in together. Needs Keep the Array |
-| `MarshalOutlines` | on | Gold and red outlines while the panel is open or the show-indicators key is held. Off, every outline is cleared at the next pass |
+| `MarshalShowOutlines` | off | Gold and red outlines while the panel is open or the show-indicators key is held. Off, every outline is cleared at the next pass |
 | `MarshalHollowSquare` | on | A Square order on a company you command forms the plain square of the base game. Off, vanilla's packed schiltron |
 | `MarshalThrowersFirst` | on | "Throwers Throw First": on an Advance, a company whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws before it goes in. Copied once a frame, so turning it off withdraws every stand within a quarter second (the next slow pass), and turning it on starts a stand for a company already on an Advance. Off, or a company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column, advances as before |
 | `MarshalSpacingRepair` | on | A company of foot soldiers with riders under a tenth of its soldiers keeps the foot soldiers' spacing limits. Read once when the first mission begins, with Marshal's Word, so a change needs a restart (`RequireRestart`) and it applies only if Marshal's Word is on at that start; off under co-op and on a dedicated server whatever its value |
