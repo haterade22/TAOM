@@ -25,7 +25,9 @@ Each line has the recommended answer first and where the evidence is.
    wait and are delivered. In-game checks owed: `docs/features/messengers.md` items 23 to 27.
    The same branch closes the two limits of that rule: the wait writes one line to the message log,
    and a fugitive or released hero of the Special occupation, whom the engine's daily settle skips,
-   is lost and refused at the send. The new key `taom_messenger_waiting` waits for your language pass.
+   is lost and refused at the send. The new key `taom_messenger_waiting` has its rows in the 12
+   language files, seeded in English on your word (2026-11-13) with the 220 Dale and Khand name
+   keys of #1169; the paid translation run is still yours (backlog #1129).
 3. **Two "superseded" validators are still live doc steps** (verify-tests-tools.md, TOOLS-01):
    `audit_item_refs.py --show-locations` and `validate_all_troop_refs.py` are named in about 25
    procedure lines. Recommended: keep both until someone proves `validate_moduledata.py` prints the
@@ -84,6 +86,16 @@ Each line has the recommended answer first and where the evidence is.
     answer false from `IsMainAgentAvailable` while TAOM's controller holds the hero, as Patch140
     does for the Seat (the wheel then stays closed during a rage), or skip
     `OnWeaponUsageToggleRequested` then. Recommended: leave it unless a player reports it.
+    **Not built, 2026-11-13, for two reasons.** First, the defect may be out of reach:
+    `docs/features/warg-combat.md` records an open question that the swap into a rage may never
+    run in single player (`PrepareOnFirstCall` tests the warg's own `IsPlayerControlled`, and a
+    mount gets an AI controller), and then `HoldsHero` stays false. The in-game warg Custom Battle
+    that doc already owes settles it. Second, the fix is not small: the scouts' design needs a new
+    patch category (Patch149) with its own module, a row in `CoopVetoClassificationTests`, registry
+    and feature-map rows, a line-neutral edit of a controller that sits exactly on its line
+    baseline, and a fallback (a cached field reference) in case the JIT inlines the one-line
+    target. The single engine caller is `HandleQuickRelease`, a tap of the equipment key under
+    0.3 seconds.
 16. **Commit wording the reviews flagged, LOW** (reword at a squash or leave): the body of
     `cf21b3d33` says the binding gate "fails only when a patch's target is missing" (it also fails a
     target with no body or a throw); `3014400f8` is typed `fix:` and changes only a test and review
