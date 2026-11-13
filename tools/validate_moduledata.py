@@ -690,6 +690,69 @@ def slot_rejection_issues(game_modules, moduledata) -> list:
     return issues
 
 
+PRISON_CODE = "PRISON_SCENE_NOT_STEALTH"
+# The entity tags 1.5.x's prison break reads from the dungeon scene: the guards' patrol points
+# (StealthPatrolPointMissionLogic) and the escape reinforcement spawns (PrisonBreakMissionController).
+# Every vanilla `*_dungeon_stealth` scene carries both; the older `*_dungeon_a/_b` scenes carry neither.
+_PRISON_SCENE_TAGS = ("stealth_agent", "prison_break_reinforcement_point")
+
+
+def _scene_files(game_modules: Path) -> dict:
+    """Lower-cased scene name -> its scene.xscene, across every module's SceneObj folder."""
+    out = {}
+    for scene_obj in sorted(Path(game_modules).glob("*/SceneObj")):
+        for folder in scene_obj.iterdir():
+            xscene = folder / "scene.xscene"
+            if xscene.is_file():
+                out.setdefault(folder.name.lower(), xscene)
+    return out
+
+
+def prison_scene_issues(game_modules, scene_files=_scene_files) -> list:
+    """ERROR per settlement in the live TAOM_Map whose prison scene lacks the prison break tags.
+
+    A prison break loads the settlement's `prison` Location scene and spawns its guards on the
+    scene's `stealth_agent` patrol points and its reinforcements on `prison_break_reinforcement_point`.
+    A pre-1.5 dungeon scene has neither, so the guards have no patrol parent and the mission
+    cannot start. Orthanc and Orthanc Gate shipped `empire_dungeon_a` while the other 278 prisons
+    used `*_dungeon_stealth` (2026-11-13). TAOM_Map is unversioned, so this is the in-repo gate.
+    A scene no module ships is a WARNING (not checked here; tools/audit_scene_names.py owns that)."""
+    live = Path(game_modules) / "TAOM_Map" / "ModuleData" / "settlements.xml"
+    rel = "TAOM_Map/ModuleData/settlements.xml"
+    if not live.is_file():
+        return [ts.Issue(severity=ts.Severity.WARNING, code=PRISON_CODE, file=rel, line=0, entry_id="",
+                         message=f"prison scenes were NOT checked: {live} not found")]
+    root = ET.fromstring(live.read_bytes())
+    scenes = scene_files(game_modules)
+    tags_cache = {}
+    issues = []
+    for settlement in root.iter("Settlement"):
+        sid = settlement.get("id", "")
+        for loc in settlement.iter("Location"):
+            if loc.get("id") != "prison":
+                continue
+            names = [loc.get(a) for a in ("scene_name", "scene_name_1", "scene_name_2", "scene_name_3")]
+            for name in dict.fromkeys(n for n in names if n):
+                xscene = scenes.get(name.lower())
+                if xscene is None:
+                    issues.append(ts.Issue(
+                        severity=ts.Severity.WARNING, code=PRISON_CODE, file=rel, line=0, entry_id=sid,
+                        message=f"prison scene {name} is in no module's SceneObj, so its prison break "
+                                f"tags were not checked"))
+                    continue
+                if name.lower() not in tags_cache:
+                    text = xscene.read_text(encoding="utf-8", errors="replace")
+                    tags_cache[name.lower()] = [t for t in _PRISON_SCENE_TAGS if t not in text]
+                missing = tags_cache[name.lower()]
+                if missing:
+                    issues.append(ts.Issue(
+                        severity=ts.Severity.ERROR, code=PRISON_CODE, file=rel, line=0, entry_id=sid,
+                        message=f"prison scene {name} has no {' or '.join(missing)} entities, so a prison "
+                                f"break here cannot start; use the culture's *_dungeon_stealth scene "
+                                f"(python tools/remap_stale_scene_names.py --apply)"))
+    return issues
+
+
 def regenerate_shipped_troop_ids(tag: str = "") -> int:
     """Rewrite tools/shipped_troop_ids.txt from a release tag's troop files, read with `git show`
     so today's tree never leaks in. No tag means the newest tag reachable from HEAD. The
@@ -808,6 +871,7 @@ def main() -> int:
         issues += slot_rejection_issues(game_modules, moduledata)
         # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
         issues += skill_template_mismatch_issues(game_modules.parent, moduledata)
+        issues += prison_scene_issues(game_modules)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
@@ -817,6 +881,8 @@ def main() -> int:
               f"         only the live install has.", file=sys.stderr)
         print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
               f"         in the install.", file=sys.stderr)
+        print(f"WARNING: {PRISON_CODE} SKIPPED: the prison scenes and the TAOM_Map settlements\n"
+              f"         live in the install.", file=sys.stderr)
         print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"
               f"         against the live Armory.", file=sys.stderr)
         print(f"WARNING: {ARMOUR_REF_CODE} SKIPPED: the armour acquisition ids and cultures can only\n"

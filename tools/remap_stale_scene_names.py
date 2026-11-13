@@ -54,6 +54,10 @@ REMAP = {
     # scene_name_1=sturgia_castle_keep_a_l1_interior (36 Dale/Sturgia L1 lord's-halls). (2026-07-17)
     "battania_village_c": "battania_village_e",
     "sturgia_castle_keep_a_l1_interior": "sturgia_castle_keep_a_l2_interior",
+    # 1.5.x prison breaks need the *_dungeon_stealth scenes (stealth_agent patrol points and
+    # prison_break_reinforcement_point spawns). Orthanc and Orthanc Gate still named the pre-stealth
+    # empire_dungeon_a, the only two prisons of 280 that did. Gate: PRISON_SCENE_NOT_STEALTH. (2026-11-13)
+    "empire_dungeon_a": "empire_dungeon_stealth",
 }
 
 

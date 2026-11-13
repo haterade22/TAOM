@@ -3060,6 +3060,67 @@ class MissingCollisionBodyTests(unittest.TestCase):
         self.assertRegex(err, r"Registry: .*\d+ clans")
 
 
+class PrisonSceneTests(unittest.TestCase):
+    """PRISON_SCENE_NOT_STEALTH (2026-11-13). A 1.5.x prison break spawns its guards on the dungeon
+    scene's stealth_agent points and its reinforcements on prison_break_reinforcement_point. Orthanc
+    and Orthanc Gate named empire_dungeon_a, which has neither, while 278 prisons used a
+    *_dungeon_stealth scene. TAOM_Map is unversioned, so this is the in-repo gate."""
+
+    STEALTH = '<scene><entity name="a" tags="stealth_agent"/><entity tags="prison_break_reinforcement_point"/></scene>'
+    OLD = '<scene><entity name="chair" tags="npc_common"/></scene>'
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.modules = Path(self._tmp.name) / "Modules"
+        _write(self.modules / "SandBox" / "SceneObj" / "empire_dungeon_stealth" / "scene.xscene", self.STEALTH)
+        _write(self.modules / "SandBox" / "SceneObj" / "empire_dungeon_a" / "scene.xscene", self.OLD)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _settlements(self, *rows):
+        body = "".join(
+            f'<Settlement id="{sid}"><Locations complex_template="x">'
+            f'<Location id="center" scene_name="empire_dungeon_a" />{loc}</Locations></Settlement>'
+            for sid, loc in rows)
+        path = self.modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # The live file carries a BOM; the pass must read it.
+        path.write_bytes(b"\xef\xbb\xbf" + f"<Settlements>{body}</Settlements>".encode("utf-8"))
+
+    def _issues(self):
+        return vm.prison_scene_issues(self.modules)
+
+    def test_pre_stealth_prison_scene_is_an_error(self):
+        self._settlements(("town_isengard", '<Location id="prison" scene_name="empire_dungeon_a" />'),
+                          ("town_EW1", '<Location id="prison" scene_name="empire_dungeon_stealth" />'))
+        found = self._issues()
+        self.assertEqual([(i.entry_id, i.severity) for i in found], [("town_isengard", ts.Severity.ERROR)])
+        self.assertEqual(found[0].code, vm.PRISON_CODE)
+        self.assertIn("prison_break_reinforcement_point", found[0].message)
+
+    def test_level_slots_are_checked_and_scene_names_ignore_case(self):
+        self._settlements(("castle_orthanc_gate",
+                           '<Location id="prison" scene_name_1="Empire_Dungeon_Stealth" '
+                           'scene_name_2="empire_dungeon_a" />'))
+        self.assertEqual([i.entry_id for i in self._issues()], ["castle_orthanc_gate"])
+
+    def test_other_locations_are_not_judged(self):
+        # The fixture's center rows name empire_dungeon_a; only the prison row is in scope.
+        self._settlements(("town_EW1", '<Location id="prison" scene_name="empire_dungeon_stealth" />'))
+        self.assertEqual(self._issues(), [])
+
+    def test_unknown_scene_warns_instead_of_passing(self):
+        self._settlements(("town_EW1", '<Location id="prison" scene_name="no_such_dungeon" />'))
+        found = self._issues()
+        self.assertEqual([(i.entry_id, i.severity) for i in found], [("town_EW1", ts.Severity.WARNING)])
+
+    def test_missing_live_file_warns_instead_of_passing(self):
+        found = self._issues()
+        self.assertEqual([i.severity for i in found], [ts.Severity.WARNING])
+        self.assertIn("NOT checked", found[0].message)
+
+
 class EntryPointCrashTests(unittest.TestCase):
     """An unexpected exception out of main() must exit 3 with the traceback on stderr. Python's own
     exit for an uncaught exception is 1, the code that means "ERROR findings", so the commit hook
