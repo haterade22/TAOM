@@ -816,8 +816,9 @@ the counter address is cached once armed). Outside every check is the engine's o
 record while a mission callback walks it was not traced (**UNVERIFIED**; see the engine notes). A
 managed `catch` cannot help there: an access violation is a corrupted-state exception on .NET Framework.
 
-**Cost.** One scan of about 10 MB once per process, inside the first mission's loading screen
-(`scanMs` in the header), plus one read of the budget float. Then, per mission, one aligned 32-bit read
+**Cost.** One copy of about 10 MB once per process, inside the first mission's loading screen, plus a search of it on a
+launch with no usable address cache (`scanMs` in the header spans both, and the cache file work), plus one read of the
+budget float. Then, per mission, one aligned 32-bit read
 of the counter and one `MBAnimation.IsAnyAnimationLoadingFromDisk()` call per second (a native walk
 over every clip record, not only the on-demand ones, stopping at the first one loading; it takes no
 lock), one log line every 5 s, and one or two lines at mission end. Each INFO line is written and
@@ -876,7 +877,7 @@ a percentage is floored. The formats are pinned literally by `AnimMemLineTests`.
 
 | Line | When | Fields | Example |
 |---|---|---|---|
-| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4` |
+| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms; the scan path, `cached` or `scanned` | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4 scan=scanned` |
 | disabled | once per process, when a check fails or the counter later reads negative | the reason | `[AnimMem] disabled for this process: TaleWorlds.Native.dll is not loaded in this process. No further [AnimMem] samples will be taken; [MissionPerf] is unaffected.` |
 | off | each mission start with the toggle off | none | `[AnimMem] off for this mission: 'Enable Animation Clip Memory Probe' is off (Battle Load Diagnostics page).` |
 | mission start | each mission start with the probe armed | first sample in KB, budget in KB, percent of budget, whether a clip is loading (0 or 1) | `[AnimMem] mission start: sample every 1 s, line every 5 s, startKB=10240 budgetKB=12288 pctOfBudget=83 loadingNow=0` |

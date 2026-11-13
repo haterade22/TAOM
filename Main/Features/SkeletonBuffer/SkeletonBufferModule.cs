@@ -30,7 +30,7 @@ internal sealed class SkeletonBufferModule : TaomFeatureModule
         registrator.Register<ISkeletonBufferEngineAdapter, SkeletonBufferEngineAdapter>(Reuse.Singleton);
         registrator.Register<ISkeletonBufferSettingsProvider, SkeletonBufferSettingsProvider>(Reuse.Singleton);
         registrator.Register<IEngineSignatureCacheAdapter, EngineSignatureCacheAdapter>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
-        registrator.Register<IEngineSignatureCache, EngineSignatureCache>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
+        registrator.Register<EngineSignatureCache>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
         registrator.Register<ISkeletonBufferGuardService, SkeletonBufferGuardService>(Reuse.Singleton);
         registrator.Register<SkeletonBufferWatchService>(Reuse.Singleton);
     }

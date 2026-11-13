@@ -42,7 +42,7 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
     private readonly ISkeletonBufferMemoryAdapter _memory;
     private readonly IDedicatedServerProvider _server;
     private readonly IModLogger _logger;
-    private readonly IEngineSignatureCache _cache;
+    private readonly EngineSignatureCache _cache;
 
     private bool _ran;
     private string _scanPath = "scanned";
@@ -54,7 +54,7 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
     private long _counter1, _counter2;
 
     public SkeletonBufferGuardService(ISkeletonBufferSettingsProvider settings, ISkeletonBufferMemoryAdapter memory,
-        IDedicatedServerProvider server, IModLogger logger, IEngineSignatureCache cache)
+        IDedicatedServerProvider server, IModLogger logger, EngineSignatureCache cache)
     {
         _cache = cache;
         _settings = settings;

@@ -51,6 +51,33 @@ public class AnimMemoryProbeTests
     }
 
     [TestMethod]
+    public void EnsureArmed_SecondLaunchOnTheSameCacheFile_LogsScanCached()
+    {
+        var file = new SharedCacheFile();
+        var firstLogger = Substitute.For<IModLogger>();
+        new AnimMemoryProbe(_memory, _loading, firstLogger, new EngineSignatureCache(file, firstLogger)).EnsureArmed();
+        var secondLogger = Substitute.For<IModLogger>();
+        var second = new AnimMemoryProbe(_memory, _loading, secondLogger, new EngineSignatureCache(file, secondLogger));
+
+        Assert.IsTrue(second.EnsureArmed());
+
+        firstLogger.Received(1).LogInfo(Arg.Is<string>(s => s.EndsWith(" scan=scanned")));
+        secondLogger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[AnimMem] armed: ") && s.EndsWith(" scan=cached")));
+    }
+
+    [TestMethod]
+    public void EnsureArmed_CacheFileUnreadable_StillArmsAndWritesNothing()
+    {
+        var file = new SharedCacheFile { ThrowOnRead = true };
+        var logger = Substitute.For<IModLogger>();
+        var probe = new AnimMemoryProbe(_memory, _loading, logger, new EngineSignatureCache(file, logger));
+
+        Assert.IsTrue(probe.EnsureArmed());
+
+        Assert.IsNull(file.Text);
+    }
+
+    [TestMethod]
     public void EnsureArmed_CalledTwice_ScansOnceAndLogsOnce()
     {
         Assert.IsTrue(_probe.EnsureArmed());

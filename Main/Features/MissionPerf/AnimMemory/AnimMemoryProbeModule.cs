@@ -28,7 +28,7 @@ internal sealed class AnimMemoryProbeModule : TaomFeatureModule
         registrator.Register<INativeModuleMemoryAdapter, NativeModuleMemoryAdapter>(Reuse.Singleton);
         registrator.Register<IAnimationLoadingAdapter, AnimationLoadingAdapter>(Reuse.Singleton);
         registrator.Register<IEngineSignatureCacheAdapter, EngineSignatureCacheAdapter>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
-        registrator.Register<IEngineSignatureCache, EngineSignatureCache>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
+        registrator.Register<EngineSignatureCache>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
         registrator.Register<IAnimClipMemoryProbe, AnimMemoryProbe>(Reuse.Singleton);
     }
 

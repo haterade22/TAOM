@@ -7,15 +7,23 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.MissionPerf.AnimMemory;
 
 /// <summary>
-/// The address cache behind <see cref="SignatureScanSession"/>. The file is plain text: a version line, a
-/// <c>key</c> line naming the DLL it was made for, then one <c>id rva</c> line per signature (hex). The key is the file's
-/// size and last-write time plus the PE header fields a rebuilt DLL changes (time stamp, checksum, image and code sizes,
-/// entry point) and the code section's place. A file with another key, another version or any line that does not parse is
-/// dropped whole, with one log line when it was damaged; the next scan rewrites it. Nothing here throws.
+/// The address cache behind <see cref="SignatureScanSession"/>, shared by the skeleton buffer guard and the animation
+/// memory probe through one file. The file is plain text: a version line, a <c>key</c> line naming the DLL it was made for,
+/// then one <c>id#patternhash rva</c> line per signature (hex). The key is the file's size and last-write time plus the PE
+/// header fields a rebuilt DLL changes (time stamp, checksum, image and code sizes, entry point) and the code section's
+/// place. A file with another key, another version or a line that does not parse is dropped whole, with one log line when
+/// it was damaged or over <see cref="MaxTextLength"/> characters; the next scan rewrites it. A session whose read threw
+/// writes nothing, so a file another session may hold is never replaced by this session's entries alone. Log lines name
+/// the exception type and HResult, never its message, because an IO message holds the full path. Nothing here throws.
+/// What a remembered address is trusted for is stated on <see cref="SignatureScanSession"/>.
 /// </summary>
-public sealed class EngineSignatureCache : IEngineSignatureCache
+public sealed class EngineSignatureCache
 {
-    internal const string VersionLine = "taom-engine-signature-cache 1";
+    // Version 2: entries carry the hash of the pattern they were found with.
+    internal const string VersionLine = "taom-engine-signature-cache 2";
+
+    /// <summary>A real cache is a few short lines; a file longer than this is treated as damaged.</summary>
+    internal const int MaxTextLength = 64 * 1024;
 
     private readonly IEngineSignatureCacheAdapter _adapter;
     private readonly IModLogger _logger;
@@ -33,12 +41,12 @@ public sealed class EngineSignatureCache : IEngineSignatureCache
             var key = BuildKey(_adapter.ModuleFileStamp(moduleFileName), headers, textRva, textSize);
             if (key == null)
                 return SignatureScanSession.Disabled;
-            var entries = Load(key);
-            return new SignatureScanSession(textRva, entries, saved => Save(key, saved));
+            var entries = Load(key, out var readFailed);
+            return new SignatureScanSession(textRva, entries, readFailed ? null : saved => Save(key, saved));
         }
         catch (Exception ex)
         {
-            Say("could not open the address cache (" + ex.GetType().Name + ": " + ex.Message + "), scanning in full");
+            Say("could not open the address cache (" + Describe(ex) + "), scanning in full");
             return SignatureScanSession.Disabled;
         }
     }
@@ -58,23 +66,30 @@ public sealed class EngineSignatureCache : IEngineSignatureCache
             BitConverter.ToUInt32(headers, opt + 4), BitConverter.ToUInt32(headers, opt + 16), textRva, textSize);
     }
 
-    private Dictionary<string, int> Load(string key)
+    private Dictionary<string, int> Load(string key, out bool readFailed)
     {
+        readFailed = false;
         var entries = new Dictionary<string, int>();
         string? text;
         try
         {
-            text = _adapter.ReadCache();
+            text = _adapter.ReadCache(MaxTextLength + 1);
         }
         catch (Exception ex)
         {
-            Say("the address cache could not be read (" + ex.GetType().Name + ": " + ex.Message + "), scanning in full");
+            readFailed = true;
+            Say("the address cache could not be read (" + Describe(ex) + "), scanning in full and leaving the file alone");
             return entries;
         }
         if (string.IsNullOrWhiteSpace(text))
             return entries;
+        if (text!.Length > MaxTextLength)
+        {
+            Say("the address cache is larger than " + MaxTextLength + " characters, scanning in full");
+            return entries;
+        }
 
-        var lines = text!.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         if (lines.Length < 2 || lines[0] != VersionLine || !lines[1].StartsWith("key ", StringComparison.Ordinal))
         {
             Say("the address cache is not in the expected format, scanning in full");
@@ -111,9 +126,13 @@ public sealed class EngineSignatureCache : IEngineSignatureCache
         }
         catch (Exception ex)
         {
-            Say("the address cache could not be written (" + ex.GetType().Name + ": " + ex.Message + ")");
+            Say("the address cache could not be written (" + Describe(ex) + ")");
         }
     }
+
+    /// <summary>The exception type and HResult. Not the message: an IO exception's message holds the full path, with the Windows account name.</summary>
+    private static string Describe(Exception ex) =>
+        ex.GetType().Name + " 0x" + ex.HResult.ToString("X8", System.Globalization.CultureInfo.InvariantCulture);
 
     private void Say(string message)
     {

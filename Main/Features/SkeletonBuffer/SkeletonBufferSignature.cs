@@ -71,7 +71,10 @@ internal static class SkeletonBufferSignature
     /// <summary>
     /// The same search, answering from <paramref name="scan"/>'s address cache where the bytes at a remembered address still
     /// match. A foreign-jump pattern is never cached: its normal result is no match, and a verified guard site cannot also hold
-    /// the foreign jump (the jump replaces those bytes), so a cached guard site stands for no foreign jump there.
+    /// the foreign jump (the jump replaces those bytes), so a cached guard site stands for no foreign jump there. Premise,
+    /// pinned for the installed build by SkeletonBufferInstalledBinaryTests: each foreign shape's fixed tail occurs only at
+    /// its guard site, so a foreign jump can only start there. A build with a second copy of a tail would make a cached
+    /// launch skip a foreign jump that a full scan finds.
     /// </summary>
     internal static SkeletonBufferSignatureResult Resolve(byte[] text, int textRva, SignatureScanSession scan)
     {

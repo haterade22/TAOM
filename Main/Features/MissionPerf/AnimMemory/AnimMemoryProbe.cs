@@ -27,12 +27,12 @@ public sealed class AnimMemoryProbe : IAnimClipMemoryProbe
     private readonly INativeModuleMemoryAdapter _memory;
     private readonly IAnimationLoadingAdapter _loading;
     private readonly IModLogger _logger;
-    private readonly IEngineSignatureCache _cache;
+    private readonly EngineSignatureCache _cache;
     private State _state = State.NotTried;
     private long _counterAddress;
 
     public AnimMemoryProbe(INativeModuleMemoryAdapter memory, IAnimationLoadingAdapter loading, IModLogger logger,
-        IEngineSignatureCache cache)
+        EngineSignatureCache cache)
     {
         _cache = cache;
         _memory = memory;

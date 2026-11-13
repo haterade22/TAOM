@@ -25,8 +25,8 @@ public class EngineSignatureCacheRegistrationTests
         new SkeletonBufferModule().RegisterServices(container);
         new AnimMemoryProbeModule().RegisterServices(container);
 
-        var first = container.Resolve<IEngineSignatureCache>();
-        var second = container.Resolve<IEngineSignatureCache>();
+        var first = container.Resolve<EngineSignatureCache>();
+        var second = container.Resolve<EngineSignatureCache>();
 
         Assert.IsNotNull(first);
         Assert.AreSame(first, second);

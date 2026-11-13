@@ -93,7 +93,7 @@ line; each pool then installs or reports on its own, as `guard ON pool N: ...` o
 | Read the module's headers and its in-memory `.text` | the module is not loaded, or a read fails |
 | Find the watch pattern | it matches zero or two times; the watch is then off too |
 | The global it names | the target is not an aligned 8-byte slot inside `.data` |
-| Per pool: the site already holds `E9 rel32` plus eight NOPs | another module guards it; this was the VanillaTuning v0.1.0 case, yotthani's module guarding pool 1 at `OnSubModuleLoad`, before TAOM's main-menu phase (reported as such, even with the setting off; TAOM still guards the other pool). VanillaTuning v0.1.1 stands aside on `TAOM.Features.SkeletonBuffer.SkeletonBufferModule` for both its guard and its watch (`frame-buffer-guard`, `frame-buffer-watch`), so with v0.1.1 and TAOM loaded this row does not fire (yotthani, `yotthani/bannerlord` `HoN/VanillaTuning/Core/TaomOverlap.cs`@784fef93 lines 22-23 and 27-33; code read, VanillaTuning v0.1.1, game 1.5.5). VanillaTuning's comment there (lines 9-10) predicts that "the skeleton buffer's second patcher would find the bytes changed and report a wrong game build"; TAOM's second patcher does not say that: it logs `already guarded by another module` at INFO (`SkeletonBufferGuardService.cs:39` for the text, `:158-161` for the log call) |
+| Per pool: the site already holds `E9 rel32` plus eight NOPs | another module guards it; this was the VanillaTuning v0.1.0 case, yotthani's module guarding pool 1 at `OnSubModuleLoad`, before TAOM's main-menu phase (reported as such, even with the setting off; TAOM still guards the other pool). VanillaTuning v0.1.1 stands aside on `TAOM.Features.SkeletonBuffer.SkeletonBufferModule` for both its guard and its watch (`frame-buffer-guard`, `frame-buffer-watch`), so with v0.1.1 and TAOM loaded this row does not fire (yotthani, `yotthani/bannerlord` `HoN/VanillaTuning/Core/TaomOverlap.cs`@784fef93 lines 22-23 and 27-33; code read, VanillaTuning v0.1.1, game 1.5.5). VanillaTuning's comment there (lines 9-10) predicts that "the skeleton buffer's second patcher would find the bytes changed and report a wrong game build"; TAOM's second patcher does not say that: it logs `already guarded by another module` at INFO (`SkeletonBufferGuardService.cs:39` for the text, `:164-167` for the log call) |
 | MCM "Skeleton Buffer Guard" | the setting is off |
 | Pool 1: find its site pattern | zero or two matches, or it is not 1 to 128 bytes after the watch site (the same function) |
 | Pool 2: find its site pattern | zero or two matches, the pool-2 load is not resolved, or no `E8 rel32` within `0x80` bytes after the pool-2 load enters the function at most `0x80` bytes before the site |
@@ -146,6 +146,8 @@ SkeletonBufferGuardService   SkeletonBufferWatchService
   ISkeletonBufferMemoryAdapter   ISkeletonBufferEngineAdapter   ISkeletonBufferSettingsProvider
   (kernel32: the only native      (the one on-screen line)        (CrashReportSettings.Instance)
    write in TAOM)
+SkeletonBufferGuardService also uses
+  EngineSignatureCache -> IEngineSignatureCacheAdapter (Documents file, shared with AnimMemoryProbe)
 ```
 
 ## Configuration
@@ -184,16 +186,17 @@ instrumentation: neither changes what is simulated.
 - `ISkeletonBufferMemoryAdapter` and `ISkeletonBufferEngineAdapter` (Adapters).
 - `ClipBudgetSignature` and `PeSectionTable` (AnimMemory): pattern parsing and search, and the PE section table.
 - `IDedicatedServerProvider` (CoopInterop): no warning and no install on a dedicated server.
+- `EngineSignatureCache` and `IEngineSignatureCacheAdapter` (AnimMemory, Adapters): the address cache shared with the clip memory probe. The guard takes the concrete class because nothing fakes it (every test builds it over a fake adapter).
 - `IModLogger`: `taom_debug.log`.
 
 ## Tests
 
-`TAOM.Tests/Features/SkeletonBuffer/` (235 tests):
+`TAOM.Tests/Features/SkeletonBuffer/` (240 tests, counted 2026-11-13 with `grep -rFc '[TestMethod]' TAOM.Tests/Features/SkeletonBuffer/`, summing the per-file counts; the cache has its own classes under `Features/MissionPerf/AnimMemory/` and `Adapters/`):
 
 - `SkeletonBufferSignatureTests` (30): zero, one and two matches for every pattern, both foreign shapes, wildcards, the
   pool-2 load's same-global check, the pool-2 site's call link, and a call whose 32-bit target would wrap.
 - `SkeletonBufferCaveTests` (19): golden bytes of both blocks at fixed addresses, jump and counter range edges.
-- `SkeletonBufferGuardServiceTests` (58): every reason line, every combination of the two sites' outcomes (a write
+- `SkeletonBufferGuardServiceTests` (61): every reason line, every combination of the two sites' outcomes (a write
   that throws included, reported per pool), the order (blocks, protect, site 1, site 2), page release only when neither
   site was written.
 - `SkeletonBufferWatchStateTests` (17), `SkeletonBufferWatchServiceTests` (58) and `SkeletonBufferLinesTests` (16): both
@@ -204,10 +207,10 @@ instrumentation: neither changes what is simulated.
   through a thunk: a reservation that fits returns the old fill, one ending exactly at the capacity is granted, one past
   it is taken back, counted and given slot 0, and a smaller one still fits after a refusal; for pool 2 also that `r15`
   is saved to `[rsp+20h]` and `rcx` and `edx` are unchanged.
-- `SkeletonBufferInstalledBinaryTests` (2, `LiveInstall` and `BindingVerification`): the patterns against the
+- `SkeletonBufferInstalledBinaryTests` (4, `LiveInstall` and `BindingVerification`): the patterns against the
   installed `TaleWorlds.Native.dll` file, exactly one match each (v1.5.4: pool 1's site at RVA `0x69D14`, pool 2's at
   `0x6AF50`, the pool-2 load at `0x69AD5`; the v1.5.5 row has `0x6A1D4`, `0x6B410` and `0x69F95`), no foreign shape,
-  and the global at RVA `0xD9D160` (`0xD9E160` on v1.5.5).
+  and the global at RVA `0xD9D160` (`0xD9E160` on v1.5.5); each foreign tail occurs only at its guard site plus 13; the cache key holds the v1.5.7 header fields.
 - `SkeletonBufferWiringTests` (13): module list, behavior shape, settings, and that native write calls exist in one file
   only (with a floor: the scan must match the adapter itself).
 
@@ -235,28 +238,58 @@ decode (2.8 % of `.text` on v1.5.4).
   shapes on the desktop (2026-10-08 review), about 0.26 more per read for the second pool.
 - **The guard:** each code block adds two jumps and a compare to its pool's reservations. The counters are on their own
   page and written only on an overflow, so render threads do not contend on them.
-- **The install:** six pattern scans of the 10.6 MB `.text` once per launch at the first main menu, 152 to 173 ms in
+- **The install, cache miss:** six pattern scans of the 10.6 MB `.text` at the first main menu, 152 to 173 ms in
   all in TAOM's Debug build (the 2026-10-08 review's bench of the same loop; a first-byte prefilter would cut it to
-  about 50 ms, issue draft 10 of the adoption record).
+  about 50 ms, issue draft 10 of the adoption record), plus one cache file write. Logged `scanMs` was 253 to 385 ms;
+  `scanMs` also spans the header and `.text` reads.
+- **The install, cache hit:** four pattern checks at the remembered addresses, no foreign-jump scan, the header and
+  `.text` reads and one cache file read. Not measured in game.
 
 ## Address cache
 
-The scan of `.text` cost 253 to 385 ms on the main thread at every launch. The found addresses are the same every time
-for an unchanged DLL, so `EngineSignatureCache` writes them (RVAs, one line per signature) to
-`engine_signature_cache.txt` in the player's Documents, keyed by the DLL's file size and last-write time plus the PE
-time stamp, checksum, image size, code size, entry point and `.text` place. On a launch with a matching key, each
-remembered address is accepted only when its signature bytes still match the in-memory code there; the foreign-jump
-patterns are not cached (a verified guard site cannot also hold the foreign jump). Any mismatch, missing file, wrong
-key, unreadable or damaged file falls back to the full scan, rewrites the file, and logs at most one `[SigCache]` line.
-The `guard ON` line ends `scan=cached` or `scan=scanned` next to `scanMs`. The file is per-machine state in Documents,
-outside the module folder, so no release package can carry it. The clip memory probe shares the same cache
-(`[AnimMem] armed: ... scanMs=... scan=cached`).
+Without the cache, the scan of `.text` cost 253 to 385 ms on the main thread at the first main menu (the `scanMs` of
+the `guard ON` line in logged launches before the cache; `scanMs` also counts the header and `.text` reads and, now, the
+cache file work, so it is not the bench figure of the Performance section above). The found addresses are the same every
+time for an unchanged DLL, so `EngineSignatureCache` writes them to `engine_signature_cache.txt`, one line per signature:
+`id#patternhash rva`, where `patternhash` is an FNV-1a hash of the parsed pattern. The first lines of the file are a
+version line and a key: the DLL's file size and last-write time plus the PE time stamp, checksum, image size, code size,
+entry point and `.text` place. The file is read in full only up to 64 KB; a longer file counts as damaged.
+
+What a cached launch checks and what it trusts:
+
+- **Checked:** the key matches; the entry was made with this exact pattern (a different hash is a miss that rescans and
+  rewrites); the pattern's bytes match the in-memory code at the remembered address. The displacements read from there are
+  range-checked by their consumers, and the guard still runs its distance check, the call-link check and the `PatchCode`
+  re-read of the 13 site bytes.
+- **Trusted, not checked:** that the pattern matched exactly once in `.text` when the DLL was last scanned with it. A hit
+  skips the ambiguity refusal, and a cached guard site also skips the foreign-jump scan of `.text`, which is exact while
+  each foreign shape's fixed tail occurs once, at the guard site plus 13 bytes (pinned for the installed build by
+  `SkeletonBufferInstalledBinaryTests`).
+- **Outside the checks:** a second copy of a pattern written into `.text` by other code. No code does that; a cache hit
+  would return the engine's original site.
+
+The foreign-jump patterns are not cached. Any mismatch, missing file, wrong key, wrong version or damaged file falls back
+to the full scan and rewrites the file. A session whose read of the file threw (a lock, for example) scans in full and
+writes nothing, so it cannot replace entries another session wrote. Logging: at most one `[SigCache]` line for each
+failure in each of the two sessions (the guard at the first main menu, the probe at the first mission), and a line names
+the exception type and HResult, never its message, because an IO message holds the full path with the Windows account
+name. A damaged file is rewritten only by a session in which some signature matched exactly once; until then it logs
+once per session on every launch.
+
+The `guard ON` line ends `scan=cached` or `scan=scanned` next to `scanMs`; `cached` means every search of the session
+was answered from the file, so one ambiguous or missing pattern, or another module's jump, keeps `scanned` on every
+launch. The file is per-user state in Documents (`Documents\Mount and Blade II Bannerlord\TAOM`), outside the module
+folder, so no release package can carry it. Documents may be redirected to a synced folder (OneDrive), so the file can
+travel between a player's PCs; the key and the byte check make a foreign file a miss. The module's file path comes from
+`GetModuleHandleW` and `GetModuleFileNameW`, not from a walk of the process modules. The clip memory probe shares the same
+file and its own sessions (`[AnimMem] armed: ... scanMs=... scan=cached`); each session keeps the other consumer's lines
+when it writes. A cached launch still copies `.text` (about 10 MB) and reads the file once per session.
 
 ## In-game check
 
 Not yet done in game. Start the game with the default settings and read `taom_debug.log`: two lines at the main menu,
-`[SkeletonBuffer] guard ON pool 1: site=0x69D14 resume=0x69D21 cave=0x... counter=0x... scanMs=... scan=scanned` (`scan=cached` from the second launch on) and
-`[SkeletonBuffer] guard ON pool 2: site=0x6AF50 resume=0x6AF5D ...`. Run a large custom battle and leave it: one
+`[SkeletonBuffer] guard ON pool 1: site=0x6A1B4 resume=0x6A1C1 cave=0x... counter=0x... scanMs=... scan=scanned` (`scan=cached` from the second launch on) and
+`[SkeletonBuffer] guard ON pool 2: site=0x6B3F0 resume=0x6B3FD ...` (the v1.5.7 addresses). Run a large custom battle and leave it: one
 `[SkeletonBuffer] mission peak:` line per mission, with both pools. To see a refusal, raise the battle size with a mod
 until the peak line reports overflows above zero in either pool.
 
