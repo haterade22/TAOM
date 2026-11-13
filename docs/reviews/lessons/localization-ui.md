@@ -1571,3 +1571,11 @@ The Realms feature declares 196 `{=realms_*}` keys in C#, and none has a languag
 - **Why missed:** the prefix keeps vanilla ids out of the gate, and the Realms feature added a second TAOM prefix. Nothing compares the gate's list with the prefixes that C# uses.
 - **Prevent:** a new feature uses the `taom_` prefix for player text. When a gate selects keys by prefix, list the prefixes C# actually uses (`grep -rhoE '\{=[a-z]+_' --include=*.cs Main Client | sort | uniq -c`) and compare them with the gate's list.
 - **Source:** [rca-clan-finance-line-count-2026-11-12.md](../rca-clan-finance-line-count-2026-11-12.md), finding 1; #1130.
+
+### A sentence about what the player sees quotes the option default and the prefab (#1159, 2026-11-13)
+
+The Long Defeat's kill feed doc said the feed "names who killed whom, with the player's own kills below it". The default `KillFeedVisualType` is 1, "Only Icons", and `SPGeneralKillNotificationItemVM.InitProperties` sets a name only at 0 or for a hero; the personal feed sits at the bottom centre (`SingleplayerKillfeed.xml`). The sentence was the acceptance check of the owed in-game check, so a tester on default options would have failed a feed that works. The same change left a sibling comment false: `StoryMissionViews.cs` said the Long Defeat list leaves out the kill feed.
+
+- **Why missed:** the sentence came from the view model's field names (`MurdererName`, `VictimName`), not from the gate beside them, the option's default or the prefab. The search for other mentions was by identifier, and the stale comment named the feed in prose.
+- **Prevent:** a doc line that tells a player or tester what they will see quotes three things: the line that sets each shown value, the option's default, and the prefab line that places it. When a change adds a thing, grep its prose name repo-wide (`grep -rn -i "kill feed"`) for comments that say it is absent.
+- **Source:** [rca-long-defeat-kill-feed-2026-11-13.md](../rca-long-defeat-kill-feed-2026-11-13.md), findings 1 and 2 (#1159). Repeat of the pattern in row 16 of [rca-long-defeat-split-2026-11-12.md](../rca-long-defeat-split-2026-11-12.md).

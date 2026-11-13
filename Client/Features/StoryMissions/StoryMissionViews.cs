@@ -19,7 +19,8 @@ namespace TAOM.Client.Features.StoryMissions;
 ///   not add. A mission whose row names a track gets <see cref="StoryMusicMissionView"/> instead, which silences vanilla music for that mission
 ///   only; a mission with no track keeps the campaign's music, as the campaign handler stays active under a mission with no music view.
 /// - The scoreboard, the kill feed, the equipment drop view, the conversation camera, <c>MissionSingleplayerViewHandler</c> and the battle spectator
-///   view: the Long Defeat list leaves them out too. Nobody has checked yet whether this mission needs them.
+///   view: the Long Defeat list leaves them out too, except the kill feed, which it added in #1159. Nobody has checked yet whether this
+///   mission needs them.
 /// - The Long Defeat HUD: it reads that mode's session, and it offers a shop and a button that leaves to the main menu. Its two refusals are not
 ///   needed here. Photo Mode stays allowed, because this list has the Photo Mode view, which holds the only exit from Photo Mode. The focus-loss
 ///   Escape refusal is for the Long Defeat's environment-variable autorun, which a story mission does not use.
