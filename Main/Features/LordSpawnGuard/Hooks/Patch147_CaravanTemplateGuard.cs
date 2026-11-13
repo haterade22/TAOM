@@ -5,24 +5,22 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.LordSpawnGuard.Hooks;
 
 /// <summary>
-/// Patch147 (#482): keeps the daily hero tick alive when a merchant's culture has no caravan
-/// template that fits where the merchant stands.
+/// Patch147 (#482): a merchant whose culture has no caravan template that fits where he stands
+/// sends no caravan that day, instead of crashing the campaign.
 ///
-/// Vanilla <c>CaravansCampaignBehavior.SpawnCaravan</c> dereferences the template its predicate
-/// pick returns, and that pick returns null when nothing matches (an all-land template list in a
-/// port town, an empty list, or a merchant with no current settlement). See
-/// <see cref="CaravanTemplateGuard"/> for the engine lines.
-///
-/// The prefix never skips vanilla. It only records in <c>__state</c> whether this call can hit the
-/// null pick. The finalizer then suppresses a <see cref="NullReferenceException"/> on a flagged call
-/// and nothing else; every other exception, and an NRE on an unflagged call, propagates untouched.
-/// The null template is read before <c>CreateCaravanParty</c> runs, so a suppressed call has made
-/// no party and changed no state: the merchant simply sends no caravan that day.
+/// Vanilla <c>CaravansCampaignBehavior.SpawnCaravan</c> dereferences the template its pick returns,
+/// and the pick returns null when nothing matches. The prefix hands vanilla's own inputs to
+/// <see cref="CaravanTemplateGuard.Judge"/>, which repeats the list choice and the predicate, and
+/// skips vanilla only when the pick fails. Vanilla throws at that point before it changes any
+/// state, so the skip drops nothing, and every other call runs vanilla untouched. Patch147 has no
+/// finalizer of its own. Callers, limits and the finalizers other code puts on the method:
+/// <c>docs/reference/harmony-patch-registry.md</c>, section <c>Patch147_CaravanTemplateGuard</c>.
 /// </summary>
 [HarmonyPatch(typeof(CaravansCampaignBehavior), nameof(CaravansCampaignBehavior.SpawnCaravan))]
 [HarmonyPatchCategory("Patch147_CaravanTemplateGuard")]
@@ -30,64 +28,98 @@ public static class Patch147_CaravanTemplateGuard
 {
     private static IModLogger _logger;
 
-    // One line per culture and port state: the daily tick would otherwise repeat it every day.
+    // Process lifetime (nothing reloads TAOM inside a process). A key carries the campaign id, so
+    // a second campaign reports its own gaps, and it is added only after its line was written.
     private static readonly HashSet<string> _reported = new HashSet<string>();
 
+    /// <summary>Test seam: sets the logger and forgets what was reported.</summary>
+    internal static void UseLogger(IModLogger logger)
+    {
+        _logger = logger;
+        _reported.Clear();
+    }
+
     [HarmonyPrefix]
-    public static void Prefix(Hero hero, out bool __state)
+    public static bool Prefix(Hero hero)
     {
-        __state = false;
         try
         {
-            var settlement = hero?.CurrentSettlement;
             var culture = hero?.Culture;
-            __state = culture == null || CaravanTemplateGuard.CanFailToResolve(
-                settlement != null,
-                settlement != null && settlement.HasPort,
-                HullCounts(culture.CaravanPartyTemplates),
-                HullCounts(culture.EliteCaravanPartyTemplates));
+            var model = culture == null ? null : Campaign.Current?.Models?.CaravanModel;
+            if (model == null)
+                return true; // not this guard's case: vanilla decides, as with no patch
+
+            var settlement = hero.CurrentSettlement;
+            var failure = CaravanTemplateGuard.Judge(
+                eliteSpawnChance: model.GetEliteCaravanSpawnChance(hero),
+                heroRandomFloat: hero.RandomFloat(),
+                hasCurrentSettlement: settlement != null,
+                settlementHasPort: settlement != null && settlement.HasPort,
+                normalHullCounts: HullCounts(culture.CaravanPartyTemplates),
+                eliteHullCounts: HullCounts(culture.EliteCaravanPartyTemplates),
+                out var elite);
+            if (failure == CaravanPickFailure.None)
+                return true;
+
+            ReportOnce($"{culture.StringId}|{elite}|{failure}|{settlement?.HasPort}",
+                () => Describe(hero, culture, settlement, elite, failure));
+            return false;
         }
-        catch
+        catch (Exception ex)
         {
-            // swallow-ok: a read that throws here throws in vanilla too; flagging the call lets
-            // the finalizer contain the NRE that follows.
-            __state = true;
+            // The guard could not judge this call, so vanilla runs as it would with no patch.
+            ReportOnce("fault|" + ex.GetType().Name,
+                () => $"Patch147: the caravan template guard failed and is off for this call: {ex}");
+            return true;
         }
     }
 
-    [HarmonyFinalizer]
-    public static Exception Finalizer(Exception __exception, Hero hero, bool __state)
-    {
-        if (!__state || !(__exception is NullReferenceException))
-            return __exception;
+    // A null entry stands for a template vanilla cannot read: a null in the list, or a template
+    // whose ShipHulls was never filled (PartyTemplateObject sets it only in Deserialize).
+    private static List<int?> HullCounts(IEnumerable<PartyTemplateObject> templates) =>
+        templates?.Select(t => t?.ShipHulls == null ? (int?)null : t.ShipHulls.Count).ToList();
 
-        Report(hero);
-        return null;
+    private static string Describe(Hero hero, CultureObject culture, Settlement settlement, bool elite,
+        CaravanPickFailure failure)
+    {
+        var list = elite ? "elite_caravan_party_templates" : "caravan_party_templates";
+        string cause;
+        switch (failure)
+        {
+            case CaravanPickFailure.NoCurrentSettlement:
+                cause = "the merchant is in no settlement, which vanilla reads to choose a template";
+                break;
+            case CaravanPickFailure.BrokenTemplateEntry:
+                cause = $"the {list} list of culture '{culture.StringId}' holds an entry with no template data " +
+                        "(a child with no id attribute, or an id that no party template defines)";
+                break;
+            default:
+                var port = settlement != null && settlement.HasPort;
+                cause = $"the {list} list of culture '{culture.StringId}' has no template for a " +
+                        $"{(port ? "port" : "land")} settlement ('{settlement?.StringId}'); it needs one " +
+                        $"{(port ? "with" : "without")} a ship_hulls element";
+                break;
+        }
+
+        return $"Patch147: SpawnCaravan skipped for '{hero.StringId}': {cause}. " +
+               "This merchant sends no caravan today (#482).";
     }
 
-    private static IEnumerable<int> HullCounts(IEnumerable<PartyTemplateObject> templates) =>
-        templates?.Select(t => t?.ShipHulls?.Count ?? 0).ToList();
-
-    private static void Report(Hero hero)
+    private static void ReportOnce(string key, Func<string> message)
     {
         try
         {
-            var cultureId = hero?.Culture?.StringId ?? "?";
-            var settlement = hero?.CurrentSettlement;
-            var key = cultureId + "|" + (settlement == null ? "none" : settlement.HasPort ? "port" : "land");
-            if (!_reported.Add(key)) return;
+            key = (Campaign.Current?.UniqueGameId ?? "") + "|" + key;
+            if (_reported.Contains(key)) return;
 
             _logger ??= TAOM.IoC.Resolve<IModLogger>();
-            _logger?.LogWarning(
-                $"Patch147: SpawnCaravan found no caravan template for '{hero?.StringId ?? "?"}' " +
-                $"(culture '{cultureId}', settlement '{settlement?.StringId ?? "none"}', " +
-                $"port {settlement?.HasPort.ToString() ?? "n/a"}). Suppressed, so this merchant " +
-                "sends no caravan today instead of crashing the campaign. Give the culture a " +
-                "caravan template that fits this case (#482).");
+            if (_logger == null) return;
+            _logger.LogWarning(message());
+            _reported.Add(key);
         }
         catch
         {
-            // swallow-ok: reporting must never bring back the crash the finalizer just contained.
+            // swallow-ok: a failed report must not decide whether the caravan spawns.
         }
     }
 }

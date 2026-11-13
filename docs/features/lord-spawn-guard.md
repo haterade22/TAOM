@@ -1,12 +1,15 @@
 # Lord Spawn Guard
 
-**Status:** implemented 2026-08-04 · **Issue:** [#374](https://github.com/haterade22/TAOM/issues/374) · **Patch category:** `Patch65_LandlessCultureSpawnGuard` · **Code:** `Main/Features/LordSpawnGuard/` · **RCA:** [rca-landless-culture-spawn-2026-08-04.md](../reviews/rca-landless-culture-spawn-2026-08-04.md)
+**Status:** implemented 2026-08-04 · **Issue:** [#374](https://github.com/haterade22/TAOM/issues/374) · **Patch categories:** `Patch65_LandlessCultureSpawnGuard`, `Patch147_CaravanTemplateGuard` ([#482](https://github.com/haterade22/TAOM/issues/482)) · **Code:** `Main/Features/LordSpawnGuard/` · **RCA:** [rca-landless-culture-spawn-2026-08-04.md](../reviews/rca-landless-culture-spawn-2026-08-04.md)
 
 ## Overview
 
 Keeps the campaign alive when a lord belongs to a culture that owns no settlement. Vanilla assumes
 every culture holds land; TAOM's map does not guarantee that, and the gap surfaces as a hard CTD on
 an ordinary daily clan tick with no TAOM code anywhere on the stack.
+
+A second guard in the same feature, Patch147, covers the caravan spawn of a merchant whose culture
+has no caravan template that fits his settlement ("Caravan template guard" below).
 
 The feature has two halves — a Harmony guard that makes the engine path survivable, and a data fix
 that removed the one landless culture TAOM actually authored.
@@ -251,11 +254,17 @@ or a debug console command that calls `Clan.CreateClan` without `SetInitialHomeS
 
 ## Caravan template guard (Patch147, #482)
 
-Vanilla `CaravansCampaignBehavior.SpawnCaravan` reads the template its predicate pick returns with no null check. A culture whose caravan templates are all land templates finds no match while its merchant is in a port town (and none at all with an empty list or no current settlement), and the daily hero tick throws a `NullReferenceException`. `Patch147_CaravanTemplateGuard` flags such a call in its prefix and its finalizer contains only that exception; the merchant sends no caravan that day and one warning names the culture. Details in `docs/reference/harmony-patch-registry.md`, section `Patch147_CaravanTemplateGuard`.
+Vanilla `CaravansCampaignBehavior.SpawnCaravan` reads the template its predicate pick returns with no null check. A culture whose caravan templates are all land templates finds no match while its merchant is in a port town, an empty list gives no pick at all, and a list entry with no template data or a merchant in no settlement makes the predicate itself throw. Each case is a `NullReferenceException` on the daily hero tick. The prefix of `Patch147_CaravanTemplateGuard` hands vanilla's own inputs to `CaravanTemplateGuard.Judge`, which repeats vanilla's list choice and predicate, and skips vanilla only in those cases. Vanilla throws there before it makes a party, so the skip drops nothing: the merchant sends no caravan that day and one warning names the culture, the list and what is missing. Patch147 has no finalizer of its own. Details, limits, the finalizers other code puts on the method and the co-op classification are in `docs/reference/harmony-patch-registry.md`, section `Patch147_CaravanTemplateGuard`.
+
+| File | Role |
+|---|---|
+| `Main/Features/LordSpawnGuard/Hooks/Patch147_CaravanTemplateGuard.cs` | skip prefix |
+| `Main/Features/LordSpawnGuard/CaravanTemplateGuard.cs` | the rule: vanilla's list choice and predicate |
+| `TAOM.Tests/Features/LordSpawnGuard/Patch147CaravanTemplateGuardTests.cs` | rule, prefix on staged engine objects, patch shape, target binding |
 
 ## How to verify in game
 
-Caravan guard: start a campaign, run several days, and check `taom_debug.log` for `Patch147:` lines. None means no culture hit the hazard; a line names the culture whose caravan templates need a port or land template.
+Caravan guard: start a campaign, run several days, and search `taom_debug.log`. A line `[PatchApply] Patch147_CaravanTemplateGuard FAILED` means the guard was not applied. A line `Patch147: SpawnCaravan skipped` names the merchant, the culture, the list and what is missing. With the data of 2026-11-13 no culture can reach the hazard, so no `Patch147:` line is the expected result of a healthy run.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

@@ -1743,10 +1743,11 @@ public class SubModule : MBSubModuleBase
         // strength of "it only fires on the daily tick": the new-game path would then be
         // unguarded.
         TryPatchCategory("Patch65_LandlessCultureSpawnGuard");
-        // Patch147 (#482): contains the NullReferenceException vanilla SpawnCaravan throws when a
-        // culture has no caravan template that fits the merchant's settlement (all land templates
-        // in a port town). Same placement argument as Patch65: the first call is the initial
-        // caravan spawn at campaign creation, after Campaign.OnInitialize.
+        // Patch147 (#482): skips vanilla SpawnCaravan when its template pick would be null, which
+        // vanilla dereferences (a culture with no caravan template that fits the merchant's
+        // settlement, such as all land templates in a port town). Same placement argument as
+        // Patch65: the first call is the initial caravan spawn at campaign creation, after
+        // Campaign.OnInitialize.
         TryPatchCategory("Patch147_CaravanTemplateGuard");
         // Patch88 (#580): a lord named in lord_party_templates.json fields his own party template.
         // Postfix on the Clan.DefaultPartyTemplate getter, live only inside the two spawn scopes

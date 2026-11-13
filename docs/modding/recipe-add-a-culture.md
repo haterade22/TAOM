@@ -39,7 +39,7 @@ reordered so the rows that crash come before the rows that only disappoint.
 | 8 | Child, teen, lord and education equipment templates | `equipmentsets/taom_{child_equipment,lord_template_equipment,education_equipment}_templates.xml` ([equipment-rosters.md](equipment-rosters.md)) | NRE on new game |
 | 9 | Stage-2 education tutor templates, 6 of them | `taom_education_character_templates.xml` | Age-8 CTD (#354) |
 | 11 | Owns at least one settlement | `TAOM_Map/ModuleData/settlements.xml` ([settlements.md](settlements.md)) | Daily-tick CTD (#374) |
-| 13 | Party templates: all ten authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` plus `taom_spcultures.xml` ([party-templates.md](party-templates.md)) | A null or empty binding is an NRE in `SpawnPatrolParty` / `SpawnCaravan`; an unbound one is silently Calradian |
+| 13 | Party templates: all ten authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` plus `taom_spcultures.xml` ([party-templates.md](party-templates.md)) | A null or empty binding is an NRE in `SpawnPatrolParty`, and no caravans for the culture (`SpawnCaravan`, skipped by Patch147 with a warning); an unbound one is silently Calradian |
 | 14 | `as_<race>_facegen` action set, only if the culture introduces a race | `LOTRLOME_Armory/ModuleData/action_sets.xml` | T-pose or contorted mesh |
 
 Row 11 and row 14 name files in the game install. This file lives in the game install, not the repo;
@@ -171,7 +171,8 @@ The three attributes a reader changes first:
 
 Caravans are not attributes. They come only from two child elements, and the engine reads the `id`
 attribute off whichever child it finds (`CultureObject.cs:485-497`), so any other attribute name
-appends a null and the first caravan spawn is an NRE:
+appends a null. Vanilla's first caravan spawn throws on that entry; Patch147 (#482) skips the spawn
+with a warning instead, and `CulturePartyTemplateTests` fails on such a child:
 
 <!-- example file="Main/_Module/ModuleData/taom_spcultures.xml" id="lindon" -->
 ```xml

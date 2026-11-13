@@ -2,55 +2,90 @@ using System.Collections.Generic;
 
 namespace TAOM.Features.LordSpawnGuard;
 
+/// <summary>Why vanilla's caravan template pick fails; <see cref="None"/> when it resolves.</summary>
+public enum CaravanPickFailure
+{
+    None,
+
+    /// <summary>The merchant is in no settlement, which the predicate reads unguarded.</summary>
+    NoCurrentSettlement,
+
+    /// <summary>The list holds a null entry or a template with no data; the predicate throws on it.</summary>
+    BrokenTemplateEntry,
+
+    /// <summary>The list is missing or empty, or none of its templates fits the settlement.</summary>
+    NoTemplateFits,
+}
+
 /// <summary>
-/// Pure decision logic behind <c>Patch147_CaravanTemplateGuard</c> (#482).
+/// The rule behind <c>Patch147_CaravanTemplateGuard</c> (#482): does vanilla's caravan template
+/// pick fail for this merchant?
 ///
-/// Vanilla <c>CaravansCampaignBehavior.SpawnCaravan</c> (v1.5.6 decompile, lines 495-505) picks a
-/// template with <c>GetRandomElementWithPredicate(x =&gt; x.ShipHulls.Count == 0 !=
+/// Vanilla <c>CaravansCampaignBehavior.SpawnCaravan</c> (v1.5.7, lines 495-506) first chooses a
+/// list, the elite one when <c>GetEliteCaravanSpawnChance(hero) &gt; hero.RandomFloat()</c>. It then
+/// picks a template with <c>GetRandomElementWithPredicate(x =&gt; x.ShipHulls.Count == 0 !=
 /// hero.CurrentSettlement.HasPort)</c> and reads <c>.ShipHulls</c> on the result with no null check.
-/// The helper returns null, not an exception, when the list is empty or when no element matches.
-/// A culture whose caravan templates are all land templates therefore matches nothing while the
-/// merchant sits in a port town, and the daily hero tick throws a NullReferenceException.
-/// The predicate also reads <c>hero.CurrentSettlement</c> unguarded.
-///
-/// Which list vanilla reads (elite or normal) is a random roll inside the method, so this answers
-/// "could the roll land on a list with no usable template"; the patch then suppresses only a
-/// NullReferenceException thrown on a call this flagged.
+/// The helper runs the predicate on every entry and returns null, not an exception, when the list
+/// is empty or no entry matches, so a culture whose templates are all land templates matches
+/// nothing while its merchant is in a port town. <see cref="Judge"/> repeats those two lines on
+/// plain values, so the patch can tell before vanilla runs.
 /// </summary>
 public static class CaravanTemplateGuard
 {
     /// <summary>
-    /// True when vanilla's template pick can return null for this merchant.
+    /// Mirrors vanilla's list choice. <c>hero.RandomFloat()</c> is the hero's saved
+    /// <c>RandomValue</c> divided by 2^31, so one hero gets the same list for the same chance.
     /// </summary>
-    /// <param name="hasCurrentSettlement">The hero is in a settlement (the predicate reads it).</param>
+    public static bool ReadsEliteList(float eliteSpawnChance, float heroRandomFloat) =>
+        eliteSpawnChance > heroRandomFloat;
+
+    /// <summary>
+    /// Judges the pick on the list vanilla reads. Every result but <see cref="CaravanPickFailure.None"/>
+    /// means vanilla throws before it changes any state.
+    /// </summary>
+    /// <param name="eliteSpawnChance">The caravan model's elite chance for the hero.</param>
+    /// <param name="heroRandomFloat">The hero's <c>RandomFloat()</c>.</param>
+    /// <param name="hasCurrentSettlement">The hero is in a settlement.</param>
     /// <param name="settlementHasPort">That settlement has a port.</param>
-    /// <param name="normalHullCounts">ShipHulls.Count per normal caravan template; null if the list is missing.</param>
-    /// <param name="eliteHullCounts">ShipHulls.Count per elite caravan template; null if the list is missing.</param>
-    public static bool CanFailToResolve(
+    /// <param name="normalHullCounts">ShipHulls.Count per normal template; a null entry for a
+    /// template with no data; null if the list is missing.</param>
+    /// <param name="eliteHullCounts">The same for the elite list.</param>
+    /// <param name="readsEliteList">Which list vanilla reads.</param>
+    public static CaravanPickFailure Judge(
+        float eliteSpawnChance,
+        float heroRandomFloat,
         bool hasCurrentSettlement,
         bool settlementHasPort,
-        IEnumerable<int> normalHullCounts,
-        IEnumerable<int> eliteHullCounts)
+        IEnumerable<int?> normalHullCounts,
+        IEnumerable<int?> eliteHullCounts,
+        out bool readsEliteList)
     {
-        if (!hasCurrentSettlement)
-            return true;
+        readsEliteList = ReadsEliteList(eliteSpawnChance, heroRandomFloat);
+        var hullCounts = readsEliteList ? eliteHullCounts : normalHullCounts;
 
-        return !HasMatch(normalHullCounts, settlementHasPort)
-            || !HasMatch(eliteHullCounts, settlementHasPort);
-    }
-
-    /// <summary>Mirrors vanilla's predicate: a land template matches away from a port, a naval one at a port.</summary>
-    public static bool HasMatch(IEnumerable<int> hullCounts, bool settlementHasPort)
-    {
-        if (hullCounts == null)
-            return false;
-
-        foreach (var hulls in hullCounts)
+        var any = false;
+        var broken = false;
+        var match = false;
+        if (hullCounts != null)
         {
-            if ((hulls == 0) != settlementHasPort)
-                return true;
+            foreach (var hulls in hullCounts)
+            {
+                any = true;
+                if (hulls == null)
+                    broken = true;
+                else if ((hulls == 0) != settlementHasPort)
+                    match = true;
+            }
         }
 
-        return false;
+        // An empty list returns null before the predicate runs; otherwise the predicate runs on
+        // every entry and reads the entry's hulls, then the settlement.
+        if (!any)
+            return CaravanPickFailure.NoTemplateFits;
+        if (!hasCurrentSettlement)
+            return CaravanPickFailure.NoCurrentSettlement;
+        if (broken)
+            return CaravanPickFailure.BrokenTemplateEntry;
+        return match ? CaravanPickFailure.None : CaravanPickFailure.NoTemplateFits;
     }
 }

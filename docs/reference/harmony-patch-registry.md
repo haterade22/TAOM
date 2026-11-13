@@ -1932,17 +1932,42 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch147_CaravanTemplateGuard
 
-**Target:** `CaravansCampaignBehavior.SpawnCaravan(Hero hero, bool initialSpawn)` (public instance, Prefix + Finalizer)
+**Target:** `CaravansCampaignBehavior.SpawnCaravan(Hero hero, bool initialSpawn)` (public instance, `void`; bool Prefix, no finalizer of its own)
 
 **Feature:** LordSpawnGuard, `Main/Features/LordSpawnGuard/Hooks/Patch147_CaravanTemplateGuard.cs`, with the rule in `CaravanTemplateGuard`. **Status:** ACTIVE (#482, latent hazard, no crash report yet).
 
 If a stack ends in `CaravansCampaignBehavior.SpawnCaravan` with a `NullReferenceException` under `DailyTickHero` or the initial caravan spawn, start here.
 
-**The hazard.** Vanilla (v1.5.6 decompile, `CaravansCampaignBehavior.cs:495-505`) picks a caravan template with `GetRandomElementWithPredicate(x => x.ShipHulls.Count == 0 != hero.CurrentSettlement.HasPort)` and reads `.ShipHulls` on the result. The helper returns null, not an exception, when the list is empty or nothing matches, so the crash is a `NullReferenceException`, not "Sequence contains no matching element". A culture with only land templates matches nothing while its merchant is in a port town. The predicate also reads `hero.CurrentSettlement` unguarded. Which list is read (elite or normal) is a random roll inside the method.
+**Callers (v1.5.7, both on the campaign thread).** `OnNewGameCreatedPartialFollowUpEndEvent` (`CaravansCampaignBehavior.cs:336-349`): two passes over every living hero outside the player clan that `CaravanModel.CanHeroCreateCaravan` accepts, with `initialSpawn: true`. `DailyTickHero` (`:572-578`): any hero but the main hero, with a 0.75 chance on each daily tick, under the same model check.
 
-**The rule.** The prefix never skips vanilla; it sets `__state` when either list has no template for the merchant's settlement, or the merchant has no current settlement. The finalizer contains a `NullReferenceException` only on a flagged call and returns every other exception untouched. The null template is read before `CreateCaravanParty`, so a contained call made no party: the merchant sends no caravan that day. One warning per culture and port state.
+**The hazard.** Vanilla (`CaravansCampaignBehavior.cs:495-506`) first chooses a list: the elite one when `CaravanModel.GetEliteCaravanSpawnChance(hero) > hero.RandomFloat()`, else the normal one. `RandomFloat` is the hero's saved `RandomValue` divided by 2^31 (`RandomOwnerExtensions.cs:53-56`, `Hero.cs:778`), and `DefaultCaravanModel` reads only `hero.Power` (`:15-23`; `TaomCaravanModel` inherits it), so the choice is fixed for a hero at a given power. Vanilla then picks a template with `GetRandomElementWithPredicate(x => x.ShipHulls.Count == 0 != hero.CurrentSettlement.HasPort)` and reads `.ShipHulls` on the result. The helper runs the predicate on every entry and returns null, not an exception, when the list is empty or nothing matches (`Extensions.cs`), so the crash is a `NullReferenceException`, not "Sequence contains no matching element". A culture with only land templates matches nothing while its merchant is in a port town. Where vanilla throws:
 
-Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch beside Patch65. `Patch147CaravanTemplateGuardTests` pins the rule, the finalizer filter and the target binding. Not seen in a game.
+- A null pick (an empty list, or no entry matches): line 499, on `.ShipHulls`.
+- No current settlement and a list with entries: inside the predicate on line 498.
+- A list entry with no template data: inside the predicate on line 498. A caravan child with no `id` attribute adds a null entry (`CultureObject.cs:490-499`), and an id that no party template defines adds a template whose `ShipHulls` is null (`PartyTemplateObject` fills it only in `Deserialize`, `:26-29`).
+
+All three are before `CreateCaravanParty` (`:501`) and `AddPower` (`:504`).
+
+**The rule.** The prefix hands vanilla's own inputs to `CaravanTemplateGuard.Judge`, which repeats the list choice and runs the predicate on the list vanilla reads. It returns `false`, so vanilla does not run, only for one of the three cases above. Vanilla has changed nothing at that point, so the skip drops no vanilla work: the merchant sends no caravan on that call, and at campaign creation the loop goes on to the next hero. Every other call runs vanilla untouched. A hero with no culture, or a call with no campaign, is not this guard's case and runs vanilla.
+
+**Why a prefix.** The first version (#1147 as opened) flagged a call when either list could fail and contained any `NullReferenceException` on a flagged call in a finalizer. That over-flagged, because the list choice is not random, and a finalizer cannot tell the null template from another NRE later in the call, after the party exists (lessons/harmony-il.md, "A finalizer cannot tell a vanilla NRE from a foreign one: guard the read with a prefix").
+
+**The finalizers on the method.** Patch147 adds none. PatchShield's pass 2 runs at every game start and attaches to what was patched since the last pass, and at the first start it runs before TAOM's late batch, so the method carries PatchShield's void finalizer from the second game start in a process (`Dependencies/SubModule.cs`, summary of `OnGameInitializationFinished`). With a co-op module active PatchShield does not install. That finalizer hands every exception back with its stack kept (`RethrowStackPreserver`), except `MissingMethodException`, `MissingFieldException` and `TypeLoadException`: it swallows those and strips the patches of unprotected owners on the method. TAOM's own patches are among them (owner `com.taom.mod` matches no protected prefix), so after such a strip vanilla runs as it does with no patch. This guard's `NullReferenceException` case is never swallowed by anything; the prefix prevents it.
+
+**Limits.**
+
+- The prefix calls `GetEliteCaravanSpawnChance` once more than vanilla does. A model that answers differently on each call can make the prediction miss in either direction: the prefix can skip a call vanilla would have survived, or let vanilla throw as with no patch. `TaomCaravanModel` does not override the method; an override added there changes what this guard predicts.
+- It does not guard the later read `Town.AllTowns.GetRandomElementWithPredicate(x => x.Settlement.HasPort == isNaval).Settlement` (`:501`). Vanilla falls back to that pick when the hero's home or birth settlement is missing, is neither a town nor a village, or is a village with no trade-bound town, and it is null when no town matches the template's kind.
+- A postfix that another mod puts on `SpawnCaravan` still runs on a skipped call (lessons/harmony-il.md, "A bool prefix that returns false does not stop the postfixes"). TAOM has none.
+- If the prefix itself throws at run time, it logs the exception once and vanilla runs.
+
+**Co-op.** `CoopVetoClassificationTests` classifies it ReviewedSafe: the skip drops no replicated change, the condition reads campaign state and no TAOM setting, and BannerlordCoop runs both callers on the server only (`DisableCaravansCampaignBehaviorPatch`).
+
+**Data today (2026-11-13).** No TAOM culture can reach the hazard: the live `TAOM_Map/ModuleData/settlements.xml` has no `port_posX`, which is the only source of `Settlement.HasPort`, no party template under the TAOM and TAOM_Map `ModuleData` folders has a `ship_hulls` element, and `CulturePartyTemplateTests` keeps both caravan lists of every settled TAOM culture and every retagged vanilla culture filled, with an `id` on every child.
+
+**Log.** One warning per campaign, culture, list and cause (`Patch147: SpawnCaravan skipped for ...`). It names the list element (`caravan_party_templates` or `elite_caravan_party_templates`) and what is missing. The key is stored only once the line is written.
+
+Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch beside Patch65; the first call is the initial caravan spawn, which runs later in campaign creation. If the category fails to apply, the log has `[PatchApply] Patch147_CaravanTemplateGuard FAILED`. `Patch147CaravanTemplateGuardTests` pins the rule, the prefix on staged engine objects (which list it judges, when it skips, the warning), the patch shape (a bool prefix, no finalizer of its own) and the target binding. Not seen in a game.
 
 ## Patch132_ItemIconRacePosition
 
