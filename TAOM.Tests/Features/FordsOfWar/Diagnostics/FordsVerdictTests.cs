@@ -1226,13 +1226,13 @@ public class FordsVerdictTests
     }
 
     [TestMethod]
-    public void Check11_Hits_FailsWhenTwentyMissilesFlewAndNoHitWasSeen_AndPrintsTheFilteredHits()
+    public void Check11_Hits_FailsWhen400MissilesFlewAndNoHitWasSeen_AndPrintsTheFilteredHits()
     {
         var run = VolleyRun();
-        run.Volley.Launched = 19;
+        run.Volley.Launched = 399;
         Assert.AreEqual(FordsResult.NotSeen, PartOf(Row(new FordsSessionEvidence(), run, 11), "hits"));
 
-        run.Volley.Launched = 20;
+        run.Volley.Launched = 400;
         run.Volley.Filtered["otherItem"] = 7;
         var row = Row(new FordsSessionEvidence(), run, 11);
         Assert.AreEqual(FordsResult.Fail, PartOf(row, "hits"));
@@ -1240,5 +1240,15 @@ public class FordsVerdictTests
 
         run.Volley.HitsSeen = 1;
         Assert.AreNotEqual(FordsResult.Fail, PartOf(Row(new FordsSessionEvidence(), run, 11), "hits"));
+    }
+
+    [TestMethod]
+    public void Check11_Hits_IsNotSeenInAShortSmokeWhoseFewJavelinsAllMissed()
+    {
+        // Run 20261113-030305 (#1152): 120 live seconds, 25 tower missiles (javelins and arrows), no hit. Full runs hit 4 to 18 percent.
+        var run = VolleyRun();
+        run.Volley.Launched = 25;
+        run.Volley.Filtered["otherItem"] = 47;
+        Assert.AreEqual(FordsResult.NotSeen, PartOf(Row(new FordsSessionEvidence(), run, 11), "hits"));
     }
 }

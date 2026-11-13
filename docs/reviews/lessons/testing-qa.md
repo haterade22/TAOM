@@ -2713,3 +2713,9 @@ Both Uncapturable Heroes seams catch every exception and defer to vanilla. In th
 - **Why missed:** the tests asserted the seam's outcome, which equals its failure mode, and no mutation run was made before the review. Repeat of the #1086 entry "prove the gate with a mutation" in `campaign-mechanics.md`.
 - **Prevent:** when a seam fails open (a catch that defers, a null guard that returns the default), a test of the deferring branch asserts that the seam consulted its input (`Received(1).OfHero(hero)`), and the fix is mutation-checked: put the old condition back and watch every new test fail.
 - **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), finding F2.
+
+### A "nothing happened" verdict needs its threshold from the measured rate, counted in independent trials (Fords check 11, 2026-11-13)
+Check 11 failed `hits` once 20 tower missiles flew with no hit. Tower missiles hit 4 to 18 percent of the time in the runs on file, so 20 to 25 misses in a row came in about a third of 120 s smokes (#1152). The first fix chose 150 missiles on a per-missile rate; the data flow lens showed that the three missiles of a volley share one target, so 150 missiles are only about 50 independent chances (a false FAIL in about 11 percent of short runs), and that the feature doc still stated 20.
+- **Why missed:** the threshold was a round number, never compared with the hit rate in the reports; the fix counted missiles, not the volleys that miss together. Same family as the check 09 entry above.
+- **Prevent:** before a rule fails on "N tries and no success", read the success rate from the stored reports and count the trials that are independent; choose N so a false FAIL is under 1 percent at the lowest rate on file, and confirm the shortest run that should be judged reaches N. Grep the feature doc for the old number in the same change.
+- **Source:** #1152, `/deep-review` Agent 5 (data flow), findings 3 to 5.
