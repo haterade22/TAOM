@@ -1,6 +1,6 @@
 ---
 name: engine-bump
-description: Respond to a Bannerlord engine update (Steam force-bump or deliberate migration) — preserve the decompile baseline, regen, diff, re-verify bindings and creature data, control-battle.
+description: "Use when the game updated or on the GAME VERSION DRIFT banner, before any build or test: preserve the decompile baseline, regen, diff, re-verify bindings and creature data, control-battle."
 ---
 
 # Engine Bump Response

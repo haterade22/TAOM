@@ -4,12 +4,14 @@
 can run alongside it, a side job, or what a review gate requires, and give each subagent the
 cheapest model and effort that fits.
 
-| Tier | Agent | Use for |
-|---|---|---|
-| **Haiku, low** | `fast-reader` | File and code search, grepping, listing, reading and summarizing files, simple renames, formatting, boilerplate, running tests or builds and reporting results, small edits already well specified |
-| **Sonnet, medium** | `implementer` | Most everyday coding: features from a clear plan, tests, normal bug fixes, refactors inside one module, docs, review of small diffs |
-| **Opus, high** | `architect` | Architecture and design, ambiguous or cross-cutting changes, hard debugging with an unknown cause, security-sensitive code, data migrations, anything expensive to get wrong or hard to undo |
-| **Fable** | none | Only the hardest reasoning problems, or after Opus has failed; never routine. Spawn with `model: "fable"` |
+The tiers; each agent's description in the agent list says what it is for:
+
+- `fast-reader`, Haiku at low: search, reading, summaries, test or build runs, small specified edits.
+- `implementer`, Sonnet at medium: everyday coding from a clear plan.
+- `architect`, Opus at high: design, ambiguous or cross-cutting changes, hard debugging, anything
+  expensive to get wrong or hard to undo.
+- Fable, no agent (`model: "fable"`): only the hardest reasoning problems, or after Opus has
+  failed; never routine.
 
 Specialists set their own tier in their definitions. An agent runs one model, so refactors, new
 features and non-obvious debugging start with an `architect` plan, then a Sonnet specialist

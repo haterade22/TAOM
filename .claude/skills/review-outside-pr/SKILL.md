@@ -1,6 +1,6 @@
 ---
 name: review-outside-pr
-description: Use when a pull request from an outside contributor arrives, or when asked to review, check or merge a contributor's PR.
+description: "Use when a pull request from an outside contributor arrives, or when asked to review, check or merge one. Security review before any checkout or build."
 argument-hint: "<PR number>"
 ---
 
