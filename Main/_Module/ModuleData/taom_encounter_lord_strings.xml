@@ -1,0 +1,1793 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Encounter Lines (Patch149, docs/features/encounter-lines.md): lords speak in their people's voice and
+	     by who the player is to them. Rows are extra variations of vanilla ids, picked by tag score
+	     (ConversationManager.FindMatchingTextOrNull): taom_speaker_<group> and taom_player_<bucket>, weight 100
+	     each, outscore every vanilla row. Generated from the encounter-lines workspace; edit the English here.
+	     Buckets: liege, ally, rival, foe, kin. War beats (surrender demand, yield, release) have no liege or
+	     ally rows. An id is <textId>.<variation> with exactly one dot. -->
+
+	<!-- west: Men of the West (gondor, arthedain, cardolan, rhudaur) -->
+	<string id="str_context_line.taom_west_liege_first" text="{=taom_enc_context_line_west_liege_first}My liege, your banner flies over my hall as it flies over the realm. My riders and my sword are yours to command.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_liege_met" text="{=taom_enc_context_line_west_liege_met}Well met again, my liege. My oath stands as firm as on the day I swore it, and the watch is kept.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_ally_first" text="{=taom_enc_context_line_west_ally_first}Hail, traveller. From Fornost to Minas Tirith, those who stand against the Shadow have found courtesy among us, though I would know your purpose first.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_ally_met" text="{=taom_enc_context_line_west_ally_met}Hail again. The roads have not grown kinder since we last met, so a friendly banner upon them is welcome.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_rival_first" text="{=taom_enc_context_line_west_rival_first}You ride armed through lands held in the name of Elendil's heirs. State your business plainly and be brief.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_rival_met" text="{=taom_enc_context_line_west_rival_met}So we meet again. I have not forgotten our last dealing, and I will be watching your hands while we speak.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_foe_first" text="{=taom_enc_context_line_west_foe_first}Your banner is known to me, and it has never been a friend to this realm. Speak quickly, if you must speak at all.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_foe_met" text="{=taom_enc_context_line_west_foe_met}You again. Every league you ride upon this soil is stolen, and I mean to see each one paid for.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_kin_first" text="{=taom_enc_context_line_west_kin_first}Well met. It gladdens me to find one who keeps the old ways on these roads, for there are fewer of us with every passing year.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_west_kin_met" text="{=taom_enc_context_line_west_kin_met}Well met again. Sit with me a while if you can; there is news from the North and the South both, and little of it good.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_rival_1" text="{=taom_enc_surrender_demand_west_rival_1}You have overstepped, and the law of this realm is plain. Lay down your arms and you will be held with honour until terms are made.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_rival_2" text="{=taom_enc_surrender_demand_west_rival_2}My company outnumbers yours many times over. Yield now, and no one need bleed for a quarrel that words could settle.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_foe_1" text="{=taom_enc_surrender_demand_west_foe_1}By the oath I swore to my realm, you will go no further. Throw down your weapons or be cut down where you stand.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_foe_2" text="{=taom_enc_surrender_demand_west_foe_2}You are surrounded, and I have little mercy to spare for the enemies of the West. Surrender, and you may yet live to see a cell.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_kin_1" text="{=taom_enc_surrender_demand_west_kin_1}It grieves me to raise steel against one of our own blood, yet my oath leaves me no other road. Yield, and I swear you will be treated with honour.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_west_kin_2" text="{=taom_enc_surrender_demand_west_kin_2}Stand down, I beg you. Our forebears did not cross the Sea so that their heirs might kill one another on a muddy road.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_west_rival" text="{=taom_enc_surrender_offer_west_rival}The day is yours. I yield, and I trust you to hold me by the customs of honourable war.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_west_rival" text="{=taom_enc_prisoner_released_west_rival}Then I leave in your debt, and I do not forget my debts, whatever comes between our banners.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_west_foe" text="{=taom_enc_surrender_offer_west_foe}I am beaten, and I yield my sword. Do as you will with me, but the West will remember this day.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_west_foe" text="{=taom_enc_prisoner_released_west_foe}I did not look for mercy from you. I will think on it, though it changes nothing between our realms.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_west_kin" text="{=taom_enc_surrender_offer_west_kin}Enough. I will spend no more lives of our own blood on this field, and I yield to you.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_west_kin" text="{=taom_enc_prisoner_released_west_kin}I hoped you would show the grace of our line, and you have. Go well, and may the old blood one day stand under a single banner again.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_west_liege" text="{=taom_enc_hero_leave_west_liege}By your leave, my liege. I return to my post, and the watch goes on.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_west_ally" text="{=taom_enc_hero_leave_west_ally}Fare well. May the Valar guard your road and bring you safe to your hearth.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_west_rival" text="{=taom_enc_hero_leave_west_rival}We are done here. Ride on, and keep to the open road while you are in our lands.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_west_foe" text="{=taom_enc_hero_leave_west_foe}Go. The beacons will burn for you before long.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_west_kin" text="{=taom_enc_hero_leave_west_kin}Go safely. And whatever befalls, remember the White Tree and the kings who first planted it.">
+		<tags>
+			<tag tag_name="taom_speaker_west" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- rohirrim: Rohirrim (vlandia) -->
+	<string id="str_context_line.taom_rohirrim_liege_first" text="{=taom_enc_context_line_rohirrim_liege_first}My liege, the riders of my éored are yours to command. Say where the Mark has need of us, and we will ride.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_liege_met" text="{=taom_enc_context_line_rohirrim_liege_met}The oath I swore you still holds, my liege, and our horses are rested. We wait on your word.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_ally_first" text="{=taom_enc_context_line_rohirrim_ally_first}Well met on the open plain. Those who cross the Mark in peace have no quarrel with us, and some find friends here.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_ally_met" text="{=taom_enc_context_line_rohirrim_ally_met}Good to see your banner on the grasslands again. We have shared the road before, and I would gladly share it once more.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_rival_first" text="{=taom_enc_context_line_rohirrim_rival_first}Rein in. You ride on the grass of the Riddermark, and I have not yet decided whether you are welcome on it.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_rival_met" text="{=taom_enc_context_line_rohirrim_rival_met}You again. My riders remember your banner, and they do not count it among their friends.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_foe_first" text="{=taom_enc_context_line_rohirrim_foe_first}You have come into the Mark with your sword drawn against it. Every rider here is sworn to drive you back the way you came.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_foe_met" text="{=taom_enc_context_line_rohirrim_foe_met}So you dare return to our plains. My riders have not forgotten you, and their spears are sharp.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_kin_first" text="{=taom_enc_context_line_rohirrim_kin_first}I knew you for a friend by the way you sit your horse. Ride with us a while; the plains are wide and the news is grim.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_rohirrim_kin_met" text="{=taom_enc_context_line_rohirrim_kin_met}It does me good to see a friendly face out here. Share the ale skin and tell me what you have seen along the Entwash.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_rival_1" text="{=taom_enc_surrender_demand_rohirrim_rival_1}We have run you down, and no one outrides my éored on open ground. Lay down your arms and you will be treated fairly.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_rival_2" text="{=taom_enc_surrender_demand_rohirrim_rival_2}Your horses are spent and mine are fresh. Yield now, and no blood need be spilled between us today.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_foe_1" text="{=taom_enc_surrender_demand_rohirrim_foe_1}You have harried the Mark long enough. Throw down your weapons, or my riders will trample you into the grass.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_foe_2" text="{=taom_enc_surrender_demand_rohirrim_foe_2}By the blood of Eorl, you will not leave these plains armed. Yield, or face the charge.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_kin_1" text="{=taom_enc_surrender_demand_rohirrim_kin_1}I would rather share a saddle-skin of ale with you than a field of blood. Yield, and you will be dealt with honourably.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_rohirrim_kin_2" text="{=taom_enc_surrender_demand_rohirrim_kin_2}Enough. We grew up on the same grass under the same sky, and I would rather take your sword than your life. Give it to me.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_rohirrim_rival" text="{=taom_enc_surrender_offer_rohirrim_rival}The field is yours. I yield, and I trust you to keep the old customs of the plains.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_rohirrim_rival" text="{=taom_enc_prisoner_released_rohirrim_rival}You let me ride free. I will remember it, and so will my riders.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_rohirrim_foe" text="{=taom_enc_surrender_offer_rohirrim_foe}My horse is down and my riders are scattered. I yield, though it shames me before my forebears.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_rohirrim_foe" text="{=taom_enc_prisoner_released_rohirrim_foe}Mercy was the last thing I looked for from you. It settles nothing between us, but I will not forget it.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_rohirrim_kin" text="{=taom_enc_surrender_offer_rohirrim_kin}You rode better than I did today. I yield, and I am glad it was you who bested me and no stranger.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_rohirrim_kin" text="{=taom_enc_prisoner_released_rohirrim_kin}Free again, and by your hand. Should you ever need a spear at your side, send word to my hall.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_rohirrim_liege" text="{=taom_enc_hero_leave_rohirrim_liege}By your leave, my liege. My riders await your call.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_rohirrim_ally" text="{=taom_enc_hero_leave_rohirrim_ally}Good grass and clear skies on your road. Ride well.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_rohirrim_rival" text="{=taom_enc_hero_leave_rohirrim_rival}Ride on, then, and keep your blades sheathed while you cross the Mark.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_rohirrim_foe" text="{=taom_enc_hero_leave_rohirrim_foe}Go. When next we meet, our spears will be lowered for the charge.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_rohirrim_kin" text="{=taom_enc_hero_leave_rohirrim_kin}Ride safe. There is always a seat for you at our fire, and a fresh horse in our stables.">
+		<tags>
+			<tag tag_name="taom_speaker_rohirrim" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- northmen: Northmen (sturgia, anduinvale, angaladh, southrhovanion, dorwinion) -->
+	<string id="str_context_line.taom_northmen_liege_first" text="{=taom_enc_context_line_northmen_liege_first}My liege, well met on the road. The steadings are quiet and the granaries full, and my riders are yours to send where you will.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_liege_met" text="{=taom_enc_context_line_northmen_liege_met}Good to see you again, my liege. Say the word and my spears go with you, as my oath bound them.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_ally_first" text="{=taom_enc_context_line_northmen_ally_first}Well met. We have no quarrel with you, and the roads of the North are long enough for two companies to pass in peace.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_ally_met" text="{=taom_enc_context_line_northmen_ally_met}You again, and on good terms still. Trade has gone well along the rivers this season, and I hope your road has treated you as well.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_rival_first" text="{=taom_enc_context_line_northmen_rival_first}Hold there. I do not know you, and in these lands we like to know who rides armed past our steadings.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_rival_met" text="{=taom_enc_context_line_northmen_rival_met}We have crossed paths before, and I have not forgotten how it went. Keep your hands where my archers can see them.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_foe_first" text="{=taom_enc_context_line_northmen_foe_first}You ride under a banner that wishes ill on the free North. My bowstrings are strung and my riders are restless.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_foe_met" text="{=taom_enc_context_line_northmen_foe_met}Back in our vales, are you? You have burned enough of our harvests, and I mean to see that you pay for them.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_kin_first" text="{=taom_enc_context_line_northmen_kin_first}Well met, neighbour. It does me good to see a face from the river country out here on the road.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_northmen_kin_met" text="{=taom_enc_context_line_northmen_kin_met}There you are again. Sit a while if you can spare it, there is bread and honey in the wagon and news from home.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_rival_1" text="{=taom_enc_surrender_demand_northmen_rival_1}You are outnumbered and far from help. Give up your arms and you will be treated fairly, as is our custom.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_rival_2" text="{=taom_enc_surrender_demand_northmen_rival_2}I would rather settle this with a fair bargain than with arrows. Yield now, and we can talk of ransom like sensible people.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_foe_1" text="{=taom_enc_surrender_demand_northmen_foe_1}You have trampled our fields long enough. Lay down your weapons, or my archers will empty their quivers into your ranks.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_foe_2" text="{=taom_enc_surrender_demand_northmen_foe_2}Every steading you burned has sent riders to my banner. Throw down your arms now, for I will not ask a second time.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_kin_1" text="{=taom_enc_surrender_demand_northmen_kin_1}My oath binds me to this, though it sits ill with me. Yield, and no blood of ours need be spilled today.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_northmen_kin_2" text="{=taom_enc_surrender_demand_northmen_kin_2}We are both children of the river and the wood, and I take no joy in this. Put up your sword and come quietly.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_northmen_rival" text="{=taom_enc_surrender_offer_northmen_rival}You have the better of me today. I yield, and I trust you to deal with me as fairly as I would have dealt with you.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_northmen_rival" text="{=taom_enc_prisoner_released_northmen_rival}You let me go without a ransom? That is a debt, and in the North we pay our debts.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_northmen_foe" text="{=taom_enc_surrender_offer_northmen_foe}My riders are broken and I will not waste the rest of them. I yield, though it sticks in my throat.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_northmen_foe" text="{=taom_enc_prisoner_released_northmen_foe}Free to go, am I? I will take it, but do not think one kindness buys back all the fields you burned.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_northmen_kin" text="{=taom_enc_surrender_offer_northmen_kin}Enough. I will not see more of our own laid in barrows over this quarrel. I yield to you.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_northmen_kin" text="{=taom_enc_prisoner_released_northmen_kin}You have a good heart, neighbour. When this feud is over, the first cup at my table is yours.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_northmen_liege" text="{=taom_enc_hero_leave_northmen_liege}By your leave, my liege. May the road be dry and a warm hall wait for you at its end.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_northmen_ally" text="{=taom_enc_hero_leave_northmen_ally}Fair winds and full barns to you. We will meet again at some market or other.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_northmen_rival" text="{=taom_enc_hero_leave_northmen_rival}Go on your way, then. I will be watching which way it leads.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_northmen_foe" text="{=taom_enc_hero_leave_northmen_foe}Get off our roads, and pray my scouts lose your trail.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_northmen_kin" text="{=taom_enc_hero_leave_northmen_kin}Keep safe, neighbour, and keep the fire lit. The East is never as quiet as it looks.">
+		<tags>
+			<tag tag_name="taom_speaker_northmen" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- dunlendings: Dunlendings (empire) -->
+	<string id="str_context_line.taom_dunlendings_liege_first" text="{=taom_enc_context_line_dunlendings_liege_first}The clans stand behind you, my chief. Point to where the horse-lords must pay, and my spears will go there.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_liege_met" text="{=taom_enc_context_line_dunlendings_liege_met}My chief. The hill clans keep faith with you, and my warband waits on your word.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_ally_first" text="{=taom_enc_context_line_dunlendings_ally_first}You come to us openly, so I will deal with you openly. Dunland keeps good faith with those who keep it first.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_ally_met" text="{=taom_enc_context_line_dunlendings_ally_met}Back on our roads again. There is a place at our fires for a friend of the clans, so long as you stay one.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_rival_first" text="{=taom_enc_context_line_dunlendings_rival_first}I do not know you, and in these hills a stranger is a thing to be watched. Speak, and keep your hand away from your sword.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_rival_met" text="{=taom_enc_context_line_dunlendings_rival_met}You again. The clans have long memories, and mine holds nothing good of you yet.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_foe_first" text="{=taom_enc_context_line_dunlendings_foe_first}You ride through hills that were ours before any horse-lord was born. Every step you take here is a debt I mean to collect.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_foe_met" text="{=taom_enc_context_line_dunlendings_foe_met}I have not forgotten you, and neither have the graves of my clan. Say what you came to say.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_kin_first" text="{=taom_enc_context_line_dunlendings_kin_first}Peat smoke on your cloak, the same as mine. Sit with me a while; the valley lords can wait for their reckoning.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dunlendings_kin_met" text="{=taom_enc_context_line_dunlendings_kin_met}Well met again. The fires in the high glens have burned low since you went away, and it is good to see a face from home.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_rival_1" text="{=taom_enc_surrender_demand_dunlendings_rival_1}My spears hem you in on three sides. Lay down your arms and you walk away from this alive.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_rival_2" text="{=taom_enc_surrender_demand_dunlendings_rival_2}The hills give one warning and no more. Yield now, or the crows settle the rest.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_foe_1" text="{=taom_enc_surrender_demand_dunlendings_foe_1}The horse-lords took our valleys and called it their right. By the same right I take you today, so throw down your weapons.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_foe_2" text="{=taom_enc_surrender_demand_dunlendings_foe_2}The White Hand promised these lands back to the clans, and you stand on them. Yield, or be buried in them.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_kin_1" text="{=taom_enc_surrender_demand_dunlendings_kin_1}The hills have enough of their own in the ground already. Yield, and you will be held as kin until this is settled.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dunlendings_kin_2" text="{=taom_enc_surrender_demand_dunlendings_kin_2}We drank from the same streams, you and I. Give up your sword before I have to spill your blood into them.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dunlendings_rival" text="{=taom_enc_surrender_offer_dunlendings_rival}Enough. My clan has bled for this day, and I yield to you. See that you treat us fairly.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dunlendings_rival" text="{=taom_enc_prisoner_released_dunlendings_rival}Freed, with my sword back in my hand. I will think long on that before we meet again.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dunlendings_foe" text="{=taom_enc_surrender_offer_dunlendings_foe}Take my sword, then. Dunland has lost battles before and still stands, and it will stand long after you.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dunlendings_foe" text="{=taom_enc_prisoner_released_dunlendings_foe}You let me go. One kindness does not wash out the old wrongs, and the clans will not forget them.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dunlendings_kin" text="{=taom_enc_surrender_offer_dunlendings_kin}You fought like one born in the high glens. I yield, and there is less shame in yielding to blood of the hills.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dunlendings_kin" text="{=taom_enc_prisoner_released_dunlendings_kin}Blood answers to blood, it seems. I owe you a debt now, and the hills pay what they owe.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dunlendings_liege" text="{=taom_enc_hero_leave_dunlendings_liege}By your leave, my chief. The clans will be ready when you call.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dunlendings_ally" text="{=taom_enc_hero_leave_dunlendings_ally}Go safely through the hills. Keep to the open tracks, where my scouts can see you coming.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dunlendings_rival" text="{=taom_enc_hero_leave_dunlendings_rival}Go, then. And keep your distance from my hall.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dunlendings_foe" text="{=taom_enc_hero_leave_dunlendings_foe}Go. The clans will be waiting in every glen you cross.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dunlendings_kin" text="{=taom_enc_hero_leave_dunlendings_kin}Go well, and keep the old fires burning wherever the road takes you.">
+		<tags>
+			<tag tag_name="taom_speaker_dunlendings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- southrons: Southrons (aserai, abanissa, shaghana, umbar) -->
+	<string id="str_context_line.taom_southrons_liege_first" text="{=taom_enc_context_line_southrons_liege_first}The sun rises on my sovereign. My spears and my house stand ready for your word.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_liege_met" text="{=taom_enc_context_line_southrons_liege_met}Welcome again, my liege. The South is quiet under your hand, and I mean to keep it so.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_ally_first" text="{=taom_enc_context_line_southrons_ally_first}You ride under no banner I have cause to hate. Speak plainly, and the South will hear you out.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_ally_met" text="{=taom_enc_context_line_southrons_ally_met}Our paths cross again. You have kept faith with us so far, and I have kept count.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_rival_first" text="{=taom_enc_context_line_southrons_rival_first}I know your banner, and I do not trust it. Say what you came to say, and keep your hand away from your sword.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_rival_met" text="{=taom_enc_context_line_southrons_rival_met}You again. The sun is hot today and so is my temper, so choose your words with care.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_foe_first" text="{=taom_enc_context_line_southrons_foe_first}The serpent banner bows to no stranger. You stand in the path of the South, and that is a poor place to stand.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_foe_met" text="{=taom_enc_context_line_southrons_foe_met}I have not forgotten our last meeting. The South keeps its grudges as long as it keeps its oaths.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_kin_first" text="{=taom_enc_context_line_southrons_kin_first}Well met under the same sun. It is good to see a face that knows the heat of home.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_southrons_kin_met" text="{=taom_enc_context_line_southrons_kin_met}Again our roads meet, and I am glad of it. There is shade enough here for two who share a homeland.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_rival_1" text="{=taom_enc_surrender_demand_southrons_rival_1}You have strayed into the reach of the South, and my riders outnumber yours. Lay down your arms and I will be merciful.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_rival_2" text="{=taom_enc_surrender_demand_southrons_rival_2}Count my spears before you answer. Yield now, and you may yet see another sunrise.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_foe_1" text="{=taom_enc_surrender_demand_southrons_foe_1}Under the serpent banner there is no mercy for those who make war on the South. Throw down your blades, or the jackals will have you by nightfall.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_foe_2" text="{=taom_enc_surrender_demand_southrons_foe_2}The South has waited long for this day. Surrender and live in chains, or fight and die in the dust.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_kin_1" text="{=taom_enc_surrender_demand_southrons_kin_1}The sun will not shine on kin killing kin today if I can help it. Yield, and we settle this as kin.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_southrons_kin_2" text="{=taom_enc_surrender_demand_southrons_kin_2}We drink the same water and curse the same enemies, yet here we stand. Put up your weapons before blood is spilled between us.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_southrons_rival" text="{=taom_enc_surrender_offer_southrons_rival}I yield. Treat me fairly, and my house will remember it.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_southrons_rival" text="{=taom_enc_prisoner_released_southrons_rival}You open the gate and ask nothing. My house will weigh what that means.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_southrons_foe" text="{=taom_enc_surrender_offer_southrons_foe}My warriors lie in the dust, and I will not waste the rest. Take my sword, and take your victory.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_southrons_foe" text="{=taom_enc_prisoner_released_southrons_foe}You let me go, but do not mistake this for peace. When our banners meet again, I will not be the one in chains.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_southrons_kin" text="{=taom_enc_surrender_offer_southrons_kin}You fought like a true child of the sun. I yield to you, and there is no shame in it.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_southrons_kin" text="{=taom_enc_prisoner_released_southrons_kin}You have shown mercy as the old ways teach. I will remember it when the spears are raised again.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_southrons_liege" text="{=taom_enc_hero_leave_southrons_liege}By your leave. May the sun favour your reign.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_southrons_ally" text="{=taom_enc_hero_leave_southrons_ally}Go with the sun at your back, and may your road always find water.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_southrons_rival" text="{=taom_enc_hero_leave_southrons_rival}Enough talk. Ride on before my patience wears any thinner.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_southrons_foe" text="{=taom_enc_hero_leave_southrons_foe}Go, and count the days until the serpent finds you.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_southrons_kin" text="{=taom_enc_hero_leave_southrons_kin}Farewell. May the South keep you safe until our roads cross again.">
+		<tags>
+			<tag tag_name="taom_speaker_southrons" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- easterlings: Easterlings (khuzait, battania) -->
+	<string id="str_context_line.taom_easterlings_liege_first" text="{=taom_enc_context_line_easterlings_liege_first}My oath is yours, and so is every rider under my banner. Say where the wagons should roll and we will roll.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_liege_met" text="{=taom_enc_context_line_easterlings_liege_met}You find my war-band ready, as I swore it would be. The horses are fed and the spears are sharp for your command.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_ally_first" text="{=taom_enc_context_line_easterlings_ally_first}Our banners are not crossed, so I will hear you. Speak plainly, as the steppe teaches.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_ally_met" text="{=taom_enc_context_line_easterlings_ally_met}We meet again on open ground, and still at peace. My riders will keep their bows unstrung while we talk.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_rival_first" text="{=taom_enc_context_line_easterlings_rival_first}I know your colours, and I do not trust them. My riders are watching your hands.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_rival_met" text="{=taom_enc_context_line_easterlings_rival_met}You again. The wind carries talk of you through every camp in the East, and little of it is kind.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_foe_first" text="{=taom_enc_context_line_easterlings_foe_first}A stranger who rides against my lord's cause. Choose your words well, for they may be your last.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_foe_met" text="{=taom_enc_context_line_easterlings_foe_met}We have crossed blades before, and my clan still counts that debt. Say what you came to say.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_kin_first" text="{=taom_enc_context_line_easterlings_kin_first}Welcome, child of the wide grass. Share my fire and my brew, as our clans have always done.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_easterlings_kin_met" text="{=taom_enc_context_line_easterlings_kin_met}The road brings you back to my wagons. Sit, and tell me what news comes from the camps.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_rival_1" text="{=taom_enc_surrender_demand_easterlings_rival_1}Your little band is ringed by my riders. Throw down your arms and I will remember you were sensible.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_rival_2" text="{=taom_enc_surrender_demand_easterlings_rival_2}The war-horns have sounded and my spears are lowered. Yield to me now, or be trampled where you stand.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_foe_1" text="{=taom_enc_surrender_demand_easterlings_foe_1}I swore an oath to break those who stand against my lord, and you stand in front of me. Kneel, or my chariots ride you down.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_foe_2" text="{=taom_enc_surrender_demand_easterlings_foe_2}My riders have run you to ground like a lame colt. Give up your sword and your silver, or the crows will have the rest.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_kin_1" text="{=taom_enc_surrender_demand_easterlings_kin_1}The war sets clan against clan, and I must follow it. Yield to me, and you will be treated with honour.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_easterlings_kin_2" text="{=taom_enc_surrender_demand_easterlings_kin_2}Our forebears rode together under one banner, yet here we are. Lay down your spear and spare our clans this grief.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_easterlings_rival" text="{=taom_enc_surrender_offer_easterlings_rival}My war-band is broken and my horse is spent. I yield to you, though it galls me to say it.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_easterlings_rival" text="{=taom_enc_prisoner_released_easterlings_rival}You let me ride free. I will remember it, though I make you no promise of friendship.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_easterlings_foe" text="{=taom_enc_surrender_offer_easterlings_foe}Take my sword, then. My lord will hear of this day, and the East forgets nothing.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_easterlings_foe" text="{=taom_enc_prisoner_released_easterlings_foe}You free an enemy who has sworn to destroy you. The East will not thank you, and neither will I.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_easterlings_kin" text="{=taom_enc_surrender_offer_easterlings_kin}You fought as our elders taught us, and I am beaten. I give you my sword with my clan's honour still on it.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_easterlings_kin" text="{=taom_enc_prisoner_released_easterlings_kin}Freed by one of my own blood. When our clans gather again, I will tell them of this.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_easterlings_liege" text="{=taom_enc_hero_leave_easterlings_liege}By your leave, I return to my riders. Send for me and the war-band will come.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_easterlings_ally" text="{=taom_enc_hero_leave_easterlings_ally}Go in peace while the peace holds. May your road be dry and your horses sound.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_easterlings_rival" text="{=taom_enc_hero_leave_easterlings_rival}Keep your distance from my camp, and we will keep ours from yours.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_easterlings_foe" text="{=taom_enc_hero_leave_easterlings_foe}Ride on. The steppe is wide, but my riders know every hoofprint on it.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_easterlings_kin" text="{=taom_enc_hero_leave_easterlings_kin}May the grass be green wherever you ride. My fire is yours whenever you return.">
+		<tags>
+			<tag tag_name="taom_speaker_easterlings" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- elves: Elves (rivendell, mirkwood, lothlorien, lindon) -->
+	<string id="str_context_line.taom_elves_liege_first" text="{=taom_enc_context_line_elves_liege_first}We have watched for your coming through many nights. Our bows and our counsel are yours to command, my liege.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_liege_met" text="{=taom_enc_context_line_elves_liege_met}My liege, the road brings you back to us. Speak, and we will hear you as we have heard few others.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_ally_first" text="{=taom_enc_context_line_elves_ally_first}We know of you, though we have not met. Our realm keeps peace with yours, and we will keep it while you do.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_ally_met" text="{=taom_enc_context_line_elves_ally_met}Well met again under open sky. Friendship is rare in these waning days, and we do not spend it lightly.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_rival_first" text="{=taom_enc_context_line_elves_rival_first}You ride where our scouts have marked your passing for some days. State your purpose plainly; our patience is long, though it has an end.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_rival_met" text="{=taom_enc_context_line_elves_rival_met}We meet again at the edge of our lands. We remember every road you have taken near our borders, and we have not yet decided what they mean.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_foe_first" text="{=taom_enc_context_line_elves_foe_first}You stand before an old people with a long memory. Of those who came against us in arms, few are remembered by anyone but us.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_foe_met" text="{=taom_enc_context_line_elves_foe_met}We have not forgotten our last meeting. Nothing is forgotten among us, least of all the harm done to our realm.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_kin_first" text="{=taom_enc_context_line_elves_kin_first}The starlight finds us both on this road. It gladdens the heart to meet one of our own so far from the trees of home.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_elves_kin_met" text="{=taom_enc_context_line_elves_kin_met}Again our paths cross, and the years between are as nothing. Come, share what you have seen since we parted.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_rival_1" text="{=taom_enc_surrender_demand_elves_rival_1}Our arrows are on the string and your company is ringed about. Lay down your arms, and no blood need stain this ground.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_rival_2" text="{=taom_enc_surrender_demand_elves_rival_2}You have wandered too long where you were not welcome. Yield to us now, and you will be treated with more grace than you have shown.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_foe_1" text="{=taom_enc_surrender_demand_elves_foe_1}We held this land against darker enemies long before your line began. Yield, or fall here on this field.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_foe_2" text="{=taom_enc_surrender_demand_elves_foe_2}You are surrounded, and our archers do not miss twice. Cast down your weapons and live to see another dawn.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_kin_1" text="{=taom_enc_surrender_demand_elves_kin_1}It grieves us to draw bows against one of our own, yet we will. Yield, and let there be no kinslaying this day.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_elves_kin_2" text="{=taom_enc_surrender_demand_elves_kin_2}Our people have shed one another's blood before, and wept for it through long ages. Put up your sword and spare us that sorrow again.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_elves_rival" text="{=taom_enc_surrender_offer_elves_rival}We lower our bows. Our lives are in your keeping now.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_elves_rival" text="{=taom_enc_prisoner_released_elves_rival}You show more grace than we looked for. We will remember this, as we remember all things.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_elves_foe" text="{=taom_enc_surrender_offer_elves_foe}Our strength is spent and the field is lost. We yield, though the stars will see this end with sorrow.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_elves_foe" text="{=taom_enc_prisoner_released_elves_foe}You set us free, yet nothing of what lies between our peoples is mended. Go, before we think better of our thanks.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_elves_kin" text="{=taom_enc_surrender_offer_elves_kin}Enough. We will not fight our own kin to the last. Take our swords; we yield to you.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_elves_kin" text="{=taom_enc_prisoner_released_elves_kin}You remember what we share, even now. Let this mercy stand between us when the Sea calls us home.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_elves_liege" text="{=taom_enc_hero_leave_elves_liege}Your will is ours to carry out. May the stars watch over your road, my liege.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_elves_ally" text="{=taom_enc_hero_leave_elves_ally}Go in peace. The paths of friends cross again sooner than one expects.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_elves_rival" text="{=taom_enc_hero_leave_elves_rival}Take your leave, and keep your distance from our borders. We will be watching.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_elves_foe" text="{=taom_enc_hero_leave_elves_foe}Go from our sight. The trees will tell us where you walk.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_elves_kin" text="{=taom_enc_hero_leave_elves_kin}Farewell, until our roads meet once more. The light grows dim in Middle-earth, but not so dim that friends lose each other.">
+		<tags>
+			<tag tag_name="taom_speaker_elves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- dwarves: Dwarves (erebor, eredluin) -->
+	<string id="str_context_line.taom_dwarves_liege_first" text="{=taom_enc_context_line_dwarves_liege_first}My liege. The forges of my hold burn at your word, and every axe in it is yours to call.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_liege_met" text="{=taom_enc_context_line_dwarves_liege_met}Back on the road, my liege. The clans are glad of your rule, and your enemies grow fewer for it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_ally_first" text="{=taom_enc_context_line_dwarves_ally_first}You come openly, so I will speak openly. We keep faith with those who keep faith with us, and we keep count as well.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_ally_met" text="{=taom_enc_context_line_dwarves_ally_met}We meet again. Your name stands well in our ledgers so far. See that it stays there.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_rival_first" text="{=taom_enc_context_line_dwarves_rival_first}I have heard your name spoken in our halls, and seldom kindly. Say what you want and be brief.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_rival_met" text="{=taom_enc_context_line_dwarves_rival_met}You again. Every slight you have done us is cut into stone, and stone keeps well.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_foe_first" text="{=taom_enc_context_line_dwarves_foe_first}Stand where you are. You make war on the halls of my people, and I have sworn on my grandsires' tombs to answer it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_foe_met" text="{=taom_enc_context_line_dwarves_foe_met}Last we met you cost us dear, and that debt is written down in stone. We have outlasted worse enemies than you.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_kin_first" text="{=taom_enc_context_line_dwarves_kin_first}Well met, cousin. It warms the heart to see a face from the deep halls this far from the forges.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_dwarves_kin_met" text="{=taom_enc_context_line_dwarves_kin_met}Hail again, cousin. There is ale in the wagon and news from home, if you can spare the time to hear it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_rival_1" text="{=taom_enc_surrender_demand_dwarves_rival_1}Your road ends at my shield-wall. Lay down your arms and you will be held fairly until your ransom is paid in full.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_rival_2" text="{=taom_enc_surrender_demand_dwarves_rival_2}There is no quarrel between us worth dying for. Yield now and we will settle the matter in gold.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_foe_1" text="{=taom_enc_surrender_demand_dwarves_foe_1}Throw down your weapons. Our halls have waited long to see you in chains, and I would sooner bring you in alive.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_foe_2" text="{=taom_enc_surrender_demand_dwarves_foe_2}Yield, or be buried where you stand. The mountain takes the dead of our enemies and gives back nothing.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_kin_1" text="{=taom_enc_surrender_demand_dwarves_kin_1}Put up your axe, cousin. I have no wish to shed the blood of our own line over this, but I will if you force it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_dwarves_kin_2" text="{=taom_enc_surrender_demand_dwarves_kin_2}Lay down your arms. Our clans can mend this with gold and oaths, and there is no mending a split skull.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dwarves_rival" text="{=taom_enc_surrender_offer_dwarves_rival}Enough. I yield, and I will pay what my ransom is worth. Reckon it fairly, for I will check your sums.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dwarves_rival" text="{=taom_enc_prisoner_released_dwarves_rival}Freed without ransom? Then I owe you a debt, and I always pay my debts.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dwarves_foe" text="{=taom_enc_surrender_offer_dwarves_foe}I yield, though it galls me past words. My kin will remember the price of it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dwarves_foe" text="{=taom_enc_prisoner_released_dwarves_foe}You set me loose. The war stands as it was, yet this one deed I will mark in your favour.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_dwarves_kin" text="{=taom_enc_surrender_offer_dwarves_kin}I yield to you, cousin. Let the shame of it stay within the clans, where such things belong.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_dwarves_kin" text="{=taom_enc_prisoner_released_dwarves_kin}Unbound by your own hand, cousin. My clan will hear of this, and they will count it to your honour.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dwarves_liege" text="{=taom_enc_hero_leave_dwarves_liege}By your leave, then. My hold stands ready whenever you call on it.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dwarves_ally" text="{=taom_enc_hero_leave_dwarves_ally}Safe roads to you. May your dealings with us stay as honest as they have been.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dwarves_rival" text="{=taom_enc_hero_leave_dwarves_rival}Go, then. And mind whose halls you trouble.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dwarves_foe" text="{=taom_enc_hero_leave_dwarves_foe}Get gone while I allow it. Next time the axes will do my talking.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_dwarves_kin" text="{=taom_enc_hero_leave_dwarves_kin}Stone beneath your feet, cousin, and fire in your forge.">
+		<tags>
+			<tag tag_name="taom_speaker_dwarves" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+	<!-- orcs: Orcs, goblins and Uruks (mordor, isengard, gundabad, dolguldur, goblin, mistymountainorcs, bluecraig) -->
+	<string id="str_context_line.taom_orcs_liege_first" text="{=taom_enc_context_line_orcs_liege_first}Great One! We heard you were on the road and the whole band ran ahead to clear it. Say the word and heads roll for you.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_liege_met" text="{=taom_enc_context_line_orcs_liege_met}Back again, Great One, and every whip in my band still cracks in your name. Nobody here has slacked since last time, I made sure of it.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_ally_first" text="{=taom_enc_context_line_orcs_ally_first}Hold your spears, you lot, this one marches on our side. Stay where my scouts can see you and we'll get along fine.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_ally_met" text="{=taom_enc_context_line_orcs_ally_met}You again. Last time you kept your word and nobody got stabbed, so I call that a good start.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_rival_first" text="{=taom_enc_context_line_orcs_rival_first}Stop right there. We may serve the same masters, but my band sharpens its knives on strangers all the same.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_rival_met" text="{=taom_enc_context_line_orcs_rival_met}Back sniffing round my road, are you? I remember your face, and I remember who grabbed the last share.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_foe_first" text="{=taom_enc_context_line_orcs_foe_first}Well, look what crawled out of the bushes. Fresh meat, and it came to us on its own feet.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_foe_met" text="{=taom_enc_context_line_orcs_foe_met}You again, maggot. Last time you got lucky, and my cook has kept the pot warm ever since.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_kin_first" text="{=taom_enc_context_line_orcs_kin_first}Ha, a proper face for once, scarred and ugly as the rest of us. Sit by the fire if you can stand the smell.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="FirstMeetingTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_context_line.taom_orcs_kin_met" text="{=taom_enc_context_line_orcs_kin_met}Still alive, you old gutter-rat? Grab a bone, there's meat left on this one.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="MetBeforeTag" weight="1" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_rival_1" text="{=taom_enc_surrender_demand_orcs_rival_1}Same masters or no, you've crossed my band once too often. Throw down your blades, or we settle it the old way.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_rival_2" text="{=taom_enc_surrender_demand_orcs_rival_2}Stand still and drop your gear. Behave, and I'll tell the overseers you came in quietly.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_foe_1" text="{=taom_enc_surrender_demand_orcs_foe_1}Nowhere to run, dung-crawler, we've sniffed you out. Throw your iron in the dirt and maybe you'll live long enough to dig in the pits.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_foe_2" text="{=taom_enc_surrender_demand_orcs_foe_2}Down on your knees and hand over your weapons. Fight us, and the pack eats well tonight.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_kin_1" text="{=taom_enc_surrender_demand_orcs_kin_1}Drop it, scum. You know how it goes: the stronger band takes the spoils, and today that's mine.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="-1" />
+		</tags>
+	</string>
+	<string id="str_surrender_demand_hero.taom_orcs_kin_2" text="{=taom_enc_surrender_demand_orcs_kin_2}Yield now and I'll only take your boots and your share. Make me fight for it and I'll have your hide as well.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="taom_alt_line" weight="1" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_orcs_rival" text="{=taom_enc_surrender_offer_orcs_rival}Enough, enough! Take what you want and we'll call it square. The masters can sort out the grudge later.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_orcs_rival" text="{=taom_enc_prisoner_released_orcs_rival}Letting me go? Huh. I won't forget it, and I won't forgive it either.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_orcs_foe" text="{=taom_enc_surrender_offer_orcs_foe}All right, put the blade down, I yield! A live captive fetches a better price than a corpse.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_orcs_foe" text="{=taom_enc_prisoner_released_orcs_foe}Soft, that's what you are, and soft things get trampled. Next time we meet I won't be so careless.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+		</tags>
+	</string>
+	<string id="str_surrender_offer.taom_orcs_kin" text="{=taom_enc_surrender_offer_orcs_kin}Ugh, you win, curse your teeth. Take the spoils and let me crawl off with what's left of my band.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="CombatantTag" weight="1" />
+		</tags>
+	</string>
+	<string id="str_prisoner_released.taom_orcs_kin" text="{=taom_enc_prisoner_released_orcs_kin}You let me walk? Daft, but I'll remember it. Next time I catch you short, maybe I'll let you keep your ears.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_orcs_liege" text="{=taom_enc_hero_leave_orcs_liege}Your will, Great One. If anyone in my band slacks, I'll flog them bloody myself.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_liege" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_orcs_ally" text="{=taom_enc_hero_leave_orcs_ally}Off you go, then. Keep clear of my scouts after dark, they stab first and sniff after.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_ally" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_orcs_rival" text="{=taom_enc_hero_leave_orcs_rival}Get gone. Turn your back near my camp for too long and see what happens.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_rival" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_orcs_foe" text="{=taom_enc_hero_leave_orcs_foe}Run along, worm. The road is long and my band is hungry.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_foe" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+	<string id="hero_leave.taom_orcs_kin" text="{=taom_enc_hero_leave_orcs_kin}Go on, then, and watch out for the whips. They're always looking for someone to blame.">
+		<tags>
+			<tag tag_name="taom_speaker_orcs" weight="100" />
+			<tag tag_name="taom_player_kin" weight="100" />
+			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+		</tags>
+	</string>
+
+</strings>
