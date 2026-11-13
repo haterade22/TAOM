@@ -285,7 +285,8 @@ public class WarOfTheRingService : IWarOfTheRingService
     // model allows (a scripted pair that is not Hostile), or one made with
     // blockPeaceBetweenHostileTiers off, is never undone by a reload. The exception (#819): a peace
     // a Hostile pair made while the War of the Ring was switched off does not last. Once the switch
-    // is on again the model holds the pair at war, and this declares that war at the next launch.
+    // is on again the model holds the pair at war, and this declares that war on the host's next
+    // daily tick (#1163), or at the next launch.
     public void ReconcileDeclaredWars()
     {
         if (CurrentPhase != WarPhase.FullWar) return;
@@ -366,7 +367,10 @@ public class WarOfTheRingService : IWarOfTheRingService
             _logger.LogInfo($"War of the Ring: {a} declares war on {b}{suffix}");
             return true;
         }
-        _logger.LogWarning($"War of the Ring: war {a} -> {b} had no effect (unknown kingdom, or vetoed by GetWarVeto)");
+        // Once per pair and process: the daily repair retries the declaration (#1163), and a pair that
+        // is refused every day would otherwise write this line every day.
+        if (_warnedSkippedWars.Add(a + " -> " + b + " (no effect)"))
+            _logger.LogWarning($"War of the Ring: war {a} -> {b} had no effect (unknown kingdom, or vetoed by GetWarVeto)");
         return false;
     }
 }

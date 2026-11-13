@@ -1,3 +1,4 @@
+using TAOM.Adapters;
 using TAOM.Features.CultureDoctrine.Domain;
 using TaleWorlds.MountAndBlade;
 
@@ -31,8 +32,8 @@ public static class AgentAggressionApplier
         p.AiChargeHorsebackTargetDistFactor = AggressionMath.ChargeDistance(p.AiChargeHorsebackTargetDistFactor, profile);
     }
 
-    /// <summary>The culture a soldier fights for: the character's culture id, null for a mount
-    /// or a character without one.</summary>
+    /// <summary>The culture a soldier fights for: the character's culture id (a hero's own culture,
+    /// <see cref="CharacterCulture"/>), null for a mount or a character without one.</summary>
     public static string? CultureOf(Agent? agent) =>
-        agent != null && agent.IsHuman ? agent.Character?.Culture?.StringId : null;
+        agent != null && agent.IsHuman ? CharacterCulture.IdOf(agent.Character) : null;
 }

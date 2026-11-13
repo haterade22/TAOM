@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerBearers.Domain;
 
@@ -110,7 +111,7 @@ public static class BannerBearerLogic_SpawnBannerBearer_Patch
                 var sidearm = agent.Equipment[EquipmentIndex.WeaponItemBeginSlot];
                 _logger?.LogWarning(
                     $"[BannerBearers] Patch63 ANOMALY ({verdict}): reinforcement bearer '{troop!.StringId}' " +
-                    $"(culture={troop.Culture?.StringId ?? "<null>"}) expected banner '{bannerItem.StringId}' in " +
+                    $"(culture={CharacterCulture.IdOf(troop) ?? "<null>"}) expected banner '{bannerItem.StringId}' in " +
                     $"ExtraWeaponSlot but holds '{(slot4.IsEmpty ? "<empty>" : slot4.Item?.StringId ?? "<null>")}'; " +
                     $"sidearm='{(sidearm.IsEmpty ? "<empty>" : sidearm.Item?.StringId ?? "<null>")}' " +
                     $"class={(sidearm.IsEmpty ? "<none>" : sidearm.Item?.WeaponComponent?.PrimaryWeapon?.WeaponClass.ToString() ?? "<none>")}. " +
