@@ -65,12 +65,22 @@ internal static class SkeletonBufferSignature
     /// Scans <paramref name="text"/> (the module's code, mapped at <paramref name="textRva"/>). A pattern's RVAs are set only
     /// for exactly one match; zero or two matches leave them 0 and the count says which.
     /// </summary>
-    internal static SkeletonBufferSignatureResult Resolve(byte[] text, int textRva)
+    internal static SkeletonBufferSignatureResult Resolve(byte[] text, int textRva) =>
+        Resolve(text, textRva, SignatureScanSession.Disabled);
+
+    /// <summary>
+    /// The same search, answering from <paramref name="scan"/>'s address cache where the bytes at a remembered address still
+    /// match. A foreign-jump pattern is never cached: its normal result is no match, and a verified guard site cannot also hold
+    /// the foreign jump (the jump replaces those bytes), so a cached guard site stands for no foreign jump there.
+    /// </summary>
+    internal static SkeletonBufferSignatureResult Resolve(byte[] text, int textRva, SignatureScanSession scan)
     {
-        var watch = ClipBudgetSignature.Find(text, Parse(WatchPattern), 2);
-        var guard = ClipBudgetSignature.Find(text, Parse(GuardPattern), 2);
-        var foreign = ClipBudgetSignature.Find(text, Parse(ForeignGuardPattern), 2);
-        var pool2 = ClipBudgetSignature.Find(text, Parse(Pool2Pattern), 2);
+        var watch = scan.Find("skeleton.watch", text, Parse(WatchPattern), 2);
+        var guard = scan.Find("skeleton.guard", text, Parse(GuardPattern), 2);
+        var foreign = guard.Count == 1 && scan.WasCached("skeleton.guard")
+            ? new System.Collections.Generic.List<int>()
+            : scan.FindPlain(text, Parse(ForeignGuardPattern), 2);
+        var pool2 = scan.Find("skeleton.pool2", text, Parse(Pool2Pattern), 2);
 
         var watchSite = 0;
         var global = 0;
@@ -90,8 +100,10 @@ internal static class SkeletonBufferSignature
 
         var guardSite = guard.Count == 1 ? textRva + guard[0] : 0;
 
-        var guard2 = ClipBudgetSignature.Find(text, Parse(Pool2GuardPattern), 2);
-        var foreign2 = ClipBudgetSignature.Find(text, Parse(Pool2ForeignGuardPattern), 2);
+        var guard2 = scan.Find("skeleton.guard2", text, Parse(Pool2GuardPattern), 2);
+        var foreign2 = guard2.Count == 1 && scan.WasCached("skeleton.guard2")
+            ? new System.Collections.Generic.List<int>()
+            : scan.FindPlain(text, Parse(Pool2ForeignGuardPattern), 2);
         var guard2Site = guard2.Count == 1 ? textRva + guard2[0] : 0;
         var linked = guard2Site != 0 && pool2.Count == 1 && CalledFromLoad(text, textRva, pool2[0], guard2Site);
 

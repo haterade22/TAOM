@@ -42,8 +42,10 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
     private readonly ISkeletonBufferMemoryAdapter _memory;
     private readonly IDedicatedServerProvider _server;
     private readonly IModLogger _logger;
+    private readonly IEngineSignatureCache _cache;
 
     private bool _ran;
+    private string _scanPath = "scanned";
     private long _pages;
     private bool _siteTouched;
     private long _globalAddress;
@@ -52,8 +54,9 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
     private long _counter1, _counter2;
 
     public SkeletonBufferGuardService(ISkeletonBufferSettingsProvider settings, ISkeletonBufferMemoryAdapter memory,
-        IDedicatedServerProvider server, IModLogger logger)
+        IDedicatedServerProvider server, IModLogger logger, IEngineSignatureCache cache)
     {
+        _cache = cache;
         _settings = settings;
         _memory = memory;
         _server = server;
@@ -130,7 +133,10 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
             Say(_logger.LogWarning, SkeletonBufferLines.GuardOff("could not read the .text section"));
             return;
         }
-        var found = SkeletonBufferSignature.Resolve(code, text.VirtualAddress);
+        var session = _cache.Begin(SkeletonBufferSignature.ModuleName, headers, text.VirtualAddress, text.VirtualSize);
+        var found = SkeletonBufferSignature.Resolve(code, text.VirtualAddress, session);
+        session.Complete();
+        _scanPath = session.Path;
         var scanMs = scan.Elapsed.TotalMilliseconds;
 
         if (found.WatchMatchCount != 1)
@@ -309,7 +315,7 @@ public sealed class SkeletonBufferGuardService : ISkeletonBufferGuardService
                     if (plan.Pool == 1) { _guarded1 = true; _counter1 = plan.Counter; }
                     else { _guarded2 = true; _counter2 = plan.Counter; }
                     PublishTarget();
-                    Say(_logger.LogInfo, SkeletonBufferLines.GuardOn(plan.Pool, plan.SiteRva, plan.ResumeRva, plan.Cave, plan.Counter, scanMs));
+                    Say(_logger.LogInfo, SkeletonBufferLines.GuardOn(plan.Pool, plan.SiteRva, plan.ResumeRva, plan.Cave, plan.Counter, scanMs, _scanPath));
                     break;
                 case EngineCodePatchResult.NotWritten:
                     _siteTouched = anyWritten;

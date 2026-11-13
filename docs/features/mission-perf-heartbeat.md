@@ -824,7 +824,9 @@ lock), one log line every 5 s, and one or two lines at mission end. Each INFO li
 flushed on the calling thread, which is the main thread here (`FileLogger.LogInfo` is durable).
 **Not yet measured in a battle:** what one `IsAnyAnimationLoadingFromDisk()` call costs against the
 full clip table, and what each synchronous flush costs a frame. The scan reports its own cost
-(`scanMs`); nothing else is timed.
+(`scanMs`); nothing else is timed. The scan is skipped on a launch whose `TaleWorlds.Native.dll` is unchanged: the
+address comes from the shared address cache (docs/features/skeleton-buffer-guard.md, "Address cache") after its signature
+bytes are checked in memory, and the `armed` line ends `scan=cached` instead of `scan=scanned`.
 
 **Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, five runs
 per group) cannot resolve either one. At 60 fps the sample lands on one frame in sixty and the 5 s line

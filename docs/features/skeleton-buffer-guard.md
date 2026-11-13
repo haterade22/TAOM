@@ -172,6 +172,8 @@ instrumentation: neither changes what is simulated.
 | `Main/Features/SkeletonBuffer/SkeletonBufferWatchService.cs` | Per-mission reading, peak line, warning |
 | `Main/Features/SkeletonBuffer/SkeletonBufferWatchState.cs` | Peak tracking and the 90 percent level |
 | `Main/Features/SkeletonBuffer/SkeletonBufferLines.cs` | Every log line's wording |
+| `Main/Features/MissionPerf/AnimMemory/EngineSignatureCache.cs`, `SignatureScanSession.cs` | The address cache shared with the clip memory probe: remembers where each signature was found, so a launch with an unchanged `TaleWorlds.Native.dll` skips the scan of `.text` (see "Address cache" below) |
+| `Main/Adapters/EngineSignatureCacheAdapter.cs` | The cache file `Documents\Mount and Blade II Bannerlord\TAOM\engine_signature_cache.txt` and the module's file size and write time |
 | `Main/Features/SkeletonBuffer/Hooks/SkeletonBufferWatchMissionBehavior.cs` | Start, tick, end |
 | `Main/Adapters/SkeletonBufferMemoryAdapter.cs` | kernel32 reads, allocation, the code writes (the only file that may call `VirtualProtect`) |
 | `Main/Adapters/SkeletonBufferEngineAdapter.cs` | The localized warning |
@@ -237,10 +239,23 @@ decode (2.8 % of `.text` on v1.5.4).
   all in TAOM's Debug build (the 2026-10-08 review's bench of the same loop; a first-byte prefilter would cut it to
   about 50 ms, issue draft 10 of the adoption record).
 
+## Address cache
+
+The scan of `.text` cost 253 to 385 ms on the main thread at every launch. The found addresses are the same every time
+for an unchanged DLL, so `EngineSignatureCache` writes them (RVAs, one line per signature) to
+`engine_signature_cache.txt` in the player's Documents, keyed by the DLL's file size and last-write time plus the PE
+time stamp, checksum, image size, code size, entry point and `.text` place. On a launch with a matching key, each
+remembered address is accepted only when its signature bytes still match the in-memory code there; the foreign-jump
+patterns are not cached (a verified guard site cannot also hold the foreign jump). Any mismatch, missing file, wrong
+key, unreadable or damaged file falls back to the full scan, rewrites the file, and logs at most one `[SigCache]` line.
+The `guard ON` line ends `scan=cached` or `scan=scanned` next to `scanMs`. The file is per-machine state in Documents,
+outside the module folder, so no release package can carry it. The clip memory probe shares the same cache
+(`[AnimMem] armed: ... scanMs=... scan=cached`).
+
 ## In-game check
 
 Not yet done in game. Start the game with the default settings and read `taom_debug.log`: two lines at the main menu,
-`[SkeletonBuffer] guard ON pool 1: site=0x69D14 resume=0x69D21 cave=0x... counter=0x... scanMs=...` and
+`[SkeletonBuffer] guard ON pool 1: site=0x69D14 resume=0x69D21 cave=0x... counter=0x... scanMs=... scan=scanned` (`scan=cached` from the second launch on) and
 `[SkeletonBuffer] guard ON pool 2: site=0x6AF50 resume=0x6AF5D ...`. Run a large custom battle and leave it: one
 `[SkeletonBuffer] mission peak:` line per mission, with both pools. To see a refusal, raise the battle size with a mod
 until the peak line reports overflows above zero in either pool.
