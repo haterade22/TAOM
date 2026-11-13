@@ -1064,6 +1064,44 @@
 
 	<string id="TAOM_battania_desc" text="{=TAOM_battania_desc}The Variags of Khand are a fierce and warlike people, hailing from the dry and rugged lands east of Mordor. Known for their mercenary prowess and loyalty to Sauron, the Variags fight with unmatched ferocity. They ride swift warhorses into battle, wielding curved blades and long spears with deadly precision. Their bronze and crimson armor, adorned with intricate designs, reflects their proud and martial heritage. Divided into tribes and clans, the Variags unite under powerful warlords, bringing fear and chaos to the enemies of the Dark Lord." />
 
+	<string id="taom_lord_intro_dale_1" text="{=taom_lord_intro_dale_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old houses of Dale." />
+
+	<string id="taom_lord_intro_dale_2" text="{=taom_lord_intro_dale_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is known in every hall of Dale and on every quay of the Long Lake." />
+
+	<string id="taom_lord_intro_dale_3" text="{=taom_lord_intro_dale_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My forefathers came home to Dale when the dragon was slain, and swore to hold the vale beneath the Mountain. We have kept that oath." />
+
+	<string id="taom_lord_intro_khand_1" text="{=taom_lord_intro_khand_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old blood-lines of Khand." />
+
+	<string id="taom_lord_intro_khand_2" text="{=taom_lord_intro_khand_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. No clan of the Variags is more feared, from the borders of Mordor to the southern sands." />
+
+	<string id="taom_lord_intro_khand_3" text="{=taom_lord_intro_khand_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. There is hardly a tribe in Khand that has not left a chieftain's skull in our tents." />
+
+	<string id="taom_lord_intro_khand_4" text="{=taom_lord_intro_khand_4}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. The tale goes that our first chieftain rode out of the east on a horse that never tired. If every clan that tells that tale were telling the truth, the plains would have run out of horses long ago." />
+
+	<string id="taom_lord_intro_rohan_1" text="{=taom_lord_intro_rohan_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My house has ridden for the Kings of the Mark since the days of Eorl." />
+
+	<string id="taom_lord_intro_rohan_2" text="{=taom_lord_intro_rohan_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house well remembered in the songs of the Riddermark." />
+
+	<string id="taom_lord_intro_rohan_3" text="{=taom_lord_intro_rohan_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. They say our founder won his lands by outriding a king's messenger to the Golden Hall. He never did tell us what the message was." />
+
+	<string id="taom_lord_intro_harad_1" text="{=taom_lord_intro_harad_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house of the Haradrim." />
+
+	<string id="taom_lord_intro_harad_2" text="{=taom_lord_intro_harad_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the oldest and proudest line under the sun of Harad." />
+
+	<string id="taom_lord_intro_rhun_1" text="{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhûn, from the shores of the inland sea to the far plains." />
+
+	<string id="taom_lord_intro_rhun_2" text="{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhûn for generations." />
+
+	<string id="taom_lord_intro_dunland_1" text="{=taom_lord_intro_dunland_1}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My kin held these hills long before the horse-lords came." />
+
+	<string id="taom_lord_intro_dunland_2" text="{=taom_lord_intro_dunland_2}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My family keeps its word and its feuds alike, as the old ways of Dunland demand." />
+
+	<string id="taom_lord_intro_dunland_3" text="{=taom_lord_intro_dunland_3}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. I take no great pride in my lineage, but we have always stood between our hill-folk and those who would harm them." />
+
+	<string id="taom_lord_intro_dunland_4" text="{=taom_lord_intro_dunland_4}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland." />
+
+	<string id="taom_lord_intro_dunland_5" text="{=taom_lord_intro_dunland_5}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland. No house has put more horse-thieves of the Mark into the ground." />
+
 
 
 	<!-- ============================================== -->
