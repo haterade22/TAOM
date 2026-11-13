@@ -53,8 +53,11 @@ not authorized; the row of that time changes that.
 | 6 Plans commit, issues | RUNNING | orchestrator | | issues filed: #1132 (umbrella for 046 to 054), #1133 (messenger to a prisoner), #1134 (Fords allocation), #1135 (Python suite red on the trunk) |
 | 7 Execute 046, 048, 051 (Sonnet) | DONE | workflow `wf_76e09a37-167`, script `scratch\wf\exec-sonnet.js` | 046 `eb38f4009` (3 commits), 048 `5e788732f`, 051 `ee81570a3` (3 commits) | all three DONE, 0.42 M subagent tokens. Spec checks by the orchestrator: 048 suite `Passed: 39250` (equal to the base); 046 `Passed: 39257` (7 new tests); 051 ruff clean, doc lint exit 0, the three touched test modules 63 OK, executor's full Python run `Ran 8581`, the same nine known failures |
 | 8 Review 048, 049 | DONE | workflow `wf_0224f53a-8a8`, script `scratch\wf\review-a.js` | 048 tip `7f0fe00cf`, 049 tip `268b8a9b9` | 11 agents, 1.83 M subagent tokens. 048 CLEAN (lens 5; no code finding; one record count fixed in round 1). 049 READY FOR COMMIT (lenses 5 and 2; one finding fixed by the lead); its last open item, LOW, the wording of one test comment, fixed by the orchestrator in `268b8a9b9` under the stop rule. 048 `needs_mike`: two pre-existing follow-ups (FOR-MIKE) |
-| 10 Merge into the run branch | RUNNING | orchestrator, `integrate_branch.py`, then build and full C# suite on the staged merge before each commit | 047 `97e9053b3` (39,268 passed), 050 `e77849d92` (39,296), 048 `c34192e74` (39,296), 049 `7af4ace9e` (39,312) | `docs/reviews/REVIEW-LOG.md` resolved by union in three merges; 046 and 051 wait for their review |
-| 8 Review 046, 051 | RUNNING | workflow `wf_0b134a15-79f` (task `wawckxzhk`), script `scratch\wf\review-b.js`, pool 1 | | 046 lens 5; 051 lenses 5 and Tooling |
+| 10 Merge into the run branch | DONE | orchestrator, `integrate_branch.py`, then build and full C# suite on the staged merge before each commit | 047 `97e9053b3` (39,268 passed), 050 `e77849d92` (39,296), 048 `c34192e74` (39,296), 049 `7af4ace9e` (39,312), 046 `62ea77ed7` (39,321), 051 `0d4642051` (39,321; ruff clean, 103 touched tool tests OK) | `docs/reviews/REVIEW-LOG.md` resolved by union in five merges; no other conflict |
+| 10b Trunk into the run branch | DONE | orchestrator | `45ee5b5f9` (trunk `1ed44b54d`, 11 commits since the baseline) | one conflict, `CLAUDE.md`: another session's context diet removed the same duplicated passage as item 052; the trunk's wording was taken |
+| 10c Full verification at `45ee5b5f9` | DONE | orchestrator, every `/verify` step | | build 0 errors, 11 warnings; NuGet audit clean; C# `Passed: 39334, Failed: 0, Skipped: 9`; Python `Ran 8604 tests`, `OK (skipped=13)`; canary tripped; API snapshot reproduces; provenance 0 misses; doc lint exit 0; ModuleData 0 errors; hook suite `1271 passed, 0 failed`; config security scan unchanged (one MED, pre-existing) |
+| 10d Push the run branch, in-game smoke, trunk | RUNNING | orchestrator | | the game install is held by taom-b4 for co-op (priority); the smoke run and the trunk fast-forward wait for its "done" |
+| 8 Review 046, 051 | DONE | workflow `wf_0b134a15-79f`, script `scratch\wf\review-b.js` | 046 tip `efc70d4d4`, 051 tip `c482070d9` | 11 agents, 1.99 M subagent tokens. Both READY FOR COMMIT. 046: lead confirmed and fixed 2, round 1 added a probe for the `.cs` clause of the cache filter; residual LOW, a record gap (FOR-MIKE 17). 051: lead confirmed and fixed 5; round 2 CLEAN; residual LOW, one RCA table cell (FOR-MIKE 17) |
 | 7 Execute 049, 047, 050 (Opus) | DONE | workflow `wf_8f9e2345-545`, script `scratch\wf\exec-opus.js` | 049 `9b783ca9a`, 047 `911373c9e` (3 commits), 050 `0848c47e2` | all three DONE, 0.49 M subagent tokens. Spec checks by the orchestrator (build 0 errors each): 049 `Passed: 39266` (16 new), 047 `Passed: 39266` (16 new), 050 `Passed: 39278` (28 new); each diff read and in scope. 047 deviation: the relation helper takes a float, because `Hero.GetRelationWithPlayer` returns float |
 | 8 Review 047, 050 | DONE | workflow `wf_d4a86b15-8cd`, script `scratch\wf\review-c.js` | 047 tip `3dacbf957`, 050 tip `b55d07b35` | 12 agents, 2.17 M subagent tokens. Both READY FOR COMMIT, convergence round 2 CLEAN. 047: lead confirmed 3 findings and applied 3 (two comments, two tests), suite `Passed: 39268`. 050: lead confirmed 1 (the source pin did not check two engine reads), suite `Passed: 39278`. Residual, LOW, both commit-message wording (FOR-MIKE): `cf21b3d33` body overstates what the binding gate fails on; `3014400f8` should be `test:`, not `fix:`. 050 `needs_mike`: two more bug leads added to #1133, one optional design item |
 | 8 Review | TODO | | | |
@@ -94,7 +97,21 @@ not authorized; the row of that time changes that.
 - 2026-11-12 22:58: issues #1132 to #1135 filed under the standing word and "add issues".
 - 2026-11-12 23:03: 053 committed (`2a913ecdf`) after the hook suite passed.
 
-## Next
+- 2026-11-12 23:40: plans committed (`664f19c5b`), six worktrees made, executors launched.
+- 2026-11-13 00:15: all six executors DONE; every branch passed the orchestrator's spec check.
+- 2026-11-13 00:45: #1135 closed: trunk commit `97e9627cb` had fixed the nine failing tool tests
+  (41 tests of the four modules pass at `4cafca4ab`).
+- 2026-11-13 01:55: the maintainer authorized commit, push and merge on the orchestrator's
+  recommendation, with co-op first for game runs.
+- 2026-11-13 02:45: all six branches merged into the run branch; the trunk merged in.
+- 2026-11-13 03:10: full verification green at `45ee5b5f9`.
+- Agents of the run: 6 lanes, 3 refuters, 18 plan agents, 6 executors, 34 review agents: 67 in all,
+  about 12.5 M subagent tokens (lanes 1.51, refuters 0.79, plans 3.34, executors 0.91, reviews 5.99,
+  as the workflow results report them; the review figure is the sum of three workflows).
+- Dead end: a graphify refresh in a linked worktree takes 7 to 10 minutes and one was killed; the
+  plans fall back to `git grep` for the blast radius when `graphify_taom.py status` is not fresh.
+
+## Next (history)
 
 When the plans return: read each plan and its review, commit them with the index, make one worktree
 per plan from that commit, execute (Sonnet batch 046, 048, 051; Opus batch 047, 049, 050), then the
