@@ -15,7 +15,8 @@ namespace TAOM.Tests.Core;
 /// the row wins per attribute, and its equipment sets with other ids are ADDED to the template's, so each campaign
 /// picks one kit at random (Hero.SetInitialValuesFromCharacter). Seven of those rows gave Gondor and Mordor lords a
 /// Dunland kit. Their rows are gone; the values the game took from them (age, skill template, face, skills) moved
-/// into the templates, and the template's kit is now the only one.
+/// into the templates, and the template's kit is now the only one. The other 169 followed the same way, so no id is
+/// both a template and a row any more, and NoLordIsDefinedInBothLordsFiles keeps it so.
 ///
 /// The transform runs for real over a stub (the NazgulRaceDataTests technique), so an id no template matches shows
 /// up as missing.
@@ -41,6 +42,30 @@ public class LordDoubleDefinitionTests
         using (var writer = output.CreateWriter())
             transform.Transform(new XDocument(stub).CreateReader(), null, writer);
         return output;
+    }
+
+    [TestMethod]
+    public void NoLordIsDefinedInBothLordsFiles()
+    {
+        // The #648 gate. Template ids come from the match patterns the stylesheet rebuilds a whole lord with.
+        var xslt = File.ReadAllText(Path.Combine(CultureDataFixture.ModuleDataPath(), "lords.xslt"));
+        var templateIds = System.Text.RegularExpressions.Regex
+            .Matches(xslt, @"<xsl:template match=""NPCCharacter\[@id='([^']+)'\]"">")
+            .Cast<System.Text.RegularExpressions.Match>()
+            .Select(m => m.Groups[1].Value)
+            .ToHashSet(StringComparer.Ordinal);
+        Assert.IsTrue(templateIds.Count > 300, $"only {templateIds.Count} lord templates found; the pattern no longer matches lords.xslt");
+
+        var lords = XDocument.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "characters", "lords.xml"));
+        var both = lords.Root!.Elements("NPCCharacter")
+            .Select(e => (string?)e.Attribute("id") ?? "")
+            .Where(templateIds.Contains)
+            .OrderBy(id => id, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.AreEqual(0, both.Length,
+            "These lords have a lords.xslt template and a characters/lords.xml row. Vanilla lords live in the XSLT only " +
+            "(Mike, 2026-09-23): move the values into the template and delete the row (#648):\n  " + string.Join("\n  ", both));
     }
 
     [TestMethod]
