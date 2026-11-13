@@ -156,35 +156,38 @@ public class AiPartySizeService : IAiPartySizeService
 
     public void ApplyGarrisonScaling(ref ExplainedNumber limit)
     {
-        if (!IsEnabled())
+        var settings = TaomSettings.Instance;
+        if (!IsEnabled(settings))
             return;
 
-        ApplyPartySizeScaling(ref limit, TaomSettings.Instance?.AiGarrisonScale ?? DefaultGarrisonFactor, 0f, GarrisonText);
+        ApplyPartySizeScaling(ref limit, settings?.AiGarrisonScale ?? DefaultGarrisonFactor, 0f, GarrisonText);
     }
 
     public void ApplyAiFoodRelief(MobileParty party, ref ExplainedNumber consumption)
     {
-        if (!IsEnabled() || party == null)
+        var settings = TaomSettings.Instance;
+        if (!IsEnabled(settings) || party == null)
             return;
 
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref consumption, TaomSettings.Instance?.AiPartyFoodRelief ?? DefaultFoodRelief, ForageText);
+        ApplyRelief(ref consumption, settings?.AiPartyFoodRelief ?? DefaultFoodRelief, ForageText);
     }
 
     public void ApplyAiWageRelief(MobileParty party, ref ExplainedNumber wage)
     {
-        if (!IsEnabled() || party == null)
+        var settings = TaomSettings.Instance;
+        if (!IsEnabled(settings) || party == null)
             return;
 
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref wage, TaomSettings.Instance?.AiPartyWageRelief ?? DefaultWageRelief, LevyText);
+        ApplyRelief(ref wage, settings?.AiPartyWageRelief ?? DefaultWageRelief, LevyText);
     }
 
-    private static bool IsEnabled() => TaomSettings.Instance?.EnableAiPartyScaling ?? true;
+    private static bool IsEnabled(TaomSettings? settings) => settings?.EnableAiPartyScaling ?? true;
 
     /// <summary>
     /// Which parties this feature may touch. Non-lord parties (caravans, villagers, militia,

@@ -22,6 +22,7 @@ public class LongDefeatFortWiringTests
 {
     private const string Gates = "Main/Adapters/LongDefeatBattlefieldAdapter.Gates.cs";
     private const string Field = "Main/Adapters/LongDefeatBattlefieldAdapter.cs";
+    private const string Engines = "Main/Adapters/LongDefeatBattlefieldAdapter.Engines.cs";
     private const string Effects = "Main/Adapters/LongDefeatEffectsAdapter.cs";
     private const string Host = "Main/Features/LongDefeat/LongDefeatRunHost.cs";
     private const string Effect = "Main/Features/LongDefeat/LongDefeatDirector.Effects.cs";
@@ -114,10 +115,37 @@ public class LongDefeatFortWiringTests
         Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(gates, @"\.Reset\s*\("), "DestructableComponent.Reset() alone leaves the door bound to the hidden damage-state entity (E2, E9)");
         Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(gates, @"AccessTools\.DeclaredMethod\(typeof\(CastleGate\), ""OnMissionReset""\)").Count);
 
-        // The one Reset() in the Long Defeat adapters is the siege weapon's, at deployment: it is never given a gate.
+        // The Reset() calls in the Long Defeat adapters are the siege weapons': one at deployment, and the restore of a destroyed ram or tower (#1160). Neither is ever given a gate.
         var resets = Directory.GetFiles(RepoPaths.RepoPath("Main", "Adapters"), "*LongDefeat*.cs").Where(f => System.Text.RegularExpressions.Regex.IsMatch(RepoPaths.StripComments(File.ReadAllText(f)), @"\.Reset\s*\(")).ToList();
-        CollectionAssert.AreEqual(new[] { "LongDefeatBattlefieldAdapter.cs" }, resets.Select(Path.GetFileName).ToArray());
+        CollectionAssert.AreEqual(new[] { "LongDefeatBattlefieldAdapter.Engines.cs", "LongDefeatBattlefieldAdapter.cs" }, resets.Select(Path.GetFileName).OrderBy(n => n, StringComparer.Ordinal).ToArray());
         StringAssert.Contains(Body(field, "private static void SetVanillaHitPoints("), "weapon?.GameEntity");
+
+        var engines = Source(Engines);
+        Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(engines, @"\.Reset\s*\(").Count);
+        StringAssert.Contains(Body(engines, "public LdEngineRestore RestoreEngines()"), "Engines().Where(e => e.Weapon.IsDestroyed)");
+        StringAssert.Contains(engines, "_towers.Select((t, i) => ((SiegeWeapon)t, \"tower\", i)).Concat(_rams.Select((r, i) => ((SiegeWeapon)r, \"ram\", i)))");
+        Assert.IsFalse(engines.Contains("CastleGate"), "the engines' restore reaches no gate");
+    }
+
+    // The engines' restore beyond vanilla's reset (#1160 review): a tower is settled as the boot leaves it only after its reset ran, every attacker formation lists its engines again once all are back,
+    // and the break's hit has a living owner, because a tower's fall kills whoever stands on it and CustomBattleMoraleModel reads the killer's formation with no null test.
+    [TestMethod]
+    public void TheEngineRestore_SettlesATowerAfterItsReset_RelistsTheAttackersEngines_AndTheBreakHasALivingOwner()
+    {
+        var engines = Source(Engines);
+        var restore = Body(engines, "public LdEngineRestore RestoreEngines()");
+
+        InOrder(restore, "reset.Invoke(weapon, null)", "SettleTower(tower)", "Relane(", "Read(weapon", "RelistEngines()");
+        StringAssert.Contains(restore, "if (ran && weapon is SiegeTower tower)");
+        var settle = Body(engines, "private void SettleTower(SiegeTower tower)");
+        InOrder(settle, "SetAbilityOfFacesWithId(queue.ManagedNavigationFaceId, false)", "queue.DeactivateImmediate()", "waits[0]");
+        StringAssert.Contains(Body(engines, "private int RelistEngines()"), "GetBehavior<BehaviorUseSiegeMachines>()");
+        StringAssert.Contains(Body(engines, "private int RelistEngines()"), "OnValidBehaviorSideChanged()");
+
+        var breakEngines = Body(engines, "public int BreakEngines()");
+        InOrder(breakEngines, "LivingOwner()", "TriggerOnHit(destroyer,");
+        Assert.IsFalse(breakEngines.Contains("TriggerOnHit(null"), "every kill needs a living owner");
+        StringAssert.Contains(Body(Source(Field), "public int Fell(int count)"), "LivingOwner()");
     }
 
     [TestMethod]

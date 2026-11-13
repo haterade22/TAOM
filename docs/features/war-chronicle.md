@@ -57,7 +57,7 @@ The event chain does not run inside this tick. It has its own router behavior, `
 
 Each consumer's engine boundary passes facts, and a service decides (decision D4). The volunteer boundaries (`TaomVolunteerModel` for towns and villages, `CastleNotableMaintainer` for castles) pass the owner clan's kingdom `StringId` and whether the owner is the player's own clan; `VolunteerProductionService.Compute` then skips the war step for the player's clan. The escape adapter flags a lord of the player's clan, and `WarEscapeService` skips him. A player-ruled kingdom's AI clans still get their kingdom's multiplier, so only the player's own clan is excluded. The rally adds its own rule: it never writes effects for a kingdom the player rules (`KingdomWarSnapshot.IsPlayerRuled`).
 
-In a co-op session "the player's clan" means every human player's clan (#1141). The escape adapter and the rally ask `PlayerClanCheck`, which reads Coop's player registry; on the co-op server `Clan.PlayerClan` is the server's own clan. **Known limit:** the two volunteer boundaries still compare with `Clan.PlayerClan`, so a co-op guest's fiefs get the `VolunteerRate` multiplier (follow-up on #1141).
+In a co-op session "the player's clan" means every human player's clan (#1141). The escape adapter, the rally and the two volunteer boundaries ask `PlayerClanCheck`, which reads Coop's player registry; on the co-op server `Clan.PlayerClan` is the server's own clan. So a guest's towns, villages and castles get no `VolunteerRate` multiplier, as the host's do not. The server's own clan, which the registry never lists, counts as AI. If the registry cannot be read, no fief gets the multiplier.
 
 ### Consumer 1: volunteers
 

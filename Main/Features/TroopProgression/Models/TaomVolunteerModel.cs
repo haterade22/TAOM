@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Adapters;
 using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.CastleRecruitment;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.CulturalFeats;
 
 namespace TAOM.Features.TroopProgression.Models;
@@ -16,7 +17,10 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     private readonly VolunteerProductionService _volunteerProduction;
     private readonly IRecruitmentAlignmentService _recruitmentAlignment;
     private readonly ICastleRecruitmentService _castleRecruitment;
+    private readonly IPlayerControlQuery _players;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // model is built.
     public TaomVolunteerModel(
         IVolunteerTierService volunteerTierService,
         IVolunteerRecruitmentService recruitmentService,
@@ -24,8 +28,22 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         VolunteerProductionService volunteerProduction,
         IRecruitmentAlignmentService recruitmentAlignment,
         ICastleRecruitmentService castleRecruitment)
+        : this(volunteerTierService, recruitmentService, contextAdapter, volunteerProduction, recruitmentAlignment,
+            castleRecruitment, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal TaomVolunteerModel(
+        IVolunteerTierService volunteerTierService,
+        IVolunteerRecruitmentService recruitmentService,
+        IVolunteerContextAdapter contextAdapter,
+        VolunteerProductionService volunteerProduction,
+        IRecruitmentAlignmentService recruitmentAlignment,
+        ICastleRecruitmentService castleRecruitment,
+        IPlayerControlQuery players)
     {
         _castleRecruitment = castleRecruitment;
+        _players = players;
         _volunteerTierService = volunteerTierService;
         _recruitmentService = recruitmentService;
         _contextAdapter = contextAdapter;
@@ -81,14 +99,15 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// respawn-rate feats keyed on the SETTLEMENT'S owning clan culture (matches
     /// <c>TaomSettlementMilitiaModel</c>) and then the War of the Ring volunteer effect of the
     /// owning clan's kingdom (#765). A settlement of the player's own clan keeps its feats but gets no
-    /// war step, so its settlements' production is never changed by an effect (decision D4). This body
-    /// only extracts the owner's facts at the boundary (gamemodels.md rule 4); the only engine caller
-    /// runs inside a campaign, so <c>Clan.PlayerClan</c> is safe to read here.
+    /// war step, so its settlements' production is never changed by an effect (decision D4). In a co-op
+    /// session every human player's clan counts (#1141): the daily tick runs on the server, where
+    /// <c>Clan.PlayerClan</c> is the server's own clan. This body only extracts the owner's facts at the
+    /// boundary (gamemodels.md rule 4).
     /// </summary>
     public override float GetDailyVolunteerProductionProbability(Hero hero, int index, Settlement settlement)
         => _volunteerProduction.Compute(
             base.GetDailyVolunteerProductionProbability(hero, index, settlement),
             CultureFeatAdapter.FromOrNull(settlement?.OwnerClan?.Culture),
             settlement?.OwnerClan?.Kingdom?.StringId,
-            settlement?.OwnerClan != null && settlement.OwnerClan == Clan.PlayerClan);
+            PlayerClanCheck.IsAPlayersClan(settlement?.OwnerClan, _players));
 }

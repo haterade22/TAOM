@@ -96,7 +96,7 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 | Office Influence (%) | 0 to 300, 100 | Weekly influence of the offices |
 | Resentment Over Fiefs | on | The weekly relation and loyalty loss when another clan owns your title's fief |
 | Liege's Pull | on | The weekly relation gain toward the liege |
-| Liege Army Discount | on | Half-price army calls for vassals |
+| Liege Army Discount | on | Half-price army calls for vassals; does not stack with the King's Muster (the larger discount applies) |
 | Lands for Sons and Daughters | on | Daily grants of lesser titles to grown children; the campaign-start grants stay |
 | Lords Styled by Their Titles | on | Styled party and conversation names (party names refresh within an hour); the encyclopedia always shows titles. Presentation only, so left out of the co-op settings fingerprint |
 
@@ -119,6 +119,7 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 ## Dependencies
 
 - `ICoopSessionProvider` (CoopInterop): the host-only gate
+- `KingsMusterService` (KingsMuster): the liege army discount reads the ruler discount already applied to the call, so the two do not stack (`LiegeArmyDiscountRule`)
 - `IRealmsPopupAdapter`: the coronation window, from TAOM.Client
 - TAOM's themed encyclopedia prefabs (`TAOMEncyclopediaSettlementPage`, `TAOMEncyclopediaHeroPage`, `TAOMEncyclopediaFactionPage`): the prefab extensions insert at `OwnershipColumn`, `InfoContainer` and `DescriptionList`
 

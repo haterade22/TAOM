@@ -34,10 +34,10 @@ public static class DwarfAttacksConfig
     public const float DropKickMaxRange = 2.6f;
 
     /// <summary>Mission seconds between head butts. Separate from the drop kick's, so a dwarf may do one of each.</summary>
-    public const float HeadButtCooldownSeconds = 12f;
+    public const float HeadButtCooldownSeconds = 50f;
 
     /// <summary>Mission seconds between drop kicks: longer, because it floors the victim.</summary>
-    public const float DropKickCooldownSeconds = 20f;
+    public const float DropKickCooldownSeconds = 60f;
 
     // --- When and where the attack lands ---
 
