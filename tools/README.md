@@ -352,6 +352,7 @@ background bridge. Ordinary LOD and animation-keyframe decimation are separate o
 | `hair_engine/`, `blender/hair_engine_*.py` | Default independent TAOM hair engine: deterministic generation, grooming, profiles, mesh conversion, short and shell hair, particles, all 12 bake passes, channel mixing, rigging, libraries, versioned presets, safe installation, and staged delivery. No Hair Tool import is required. Feature: `docs/features/independent-hair-engine.md`. Tests: `tools/tests/test_hair_engine_*.py`. |
 | `blender/hair_tool_pipeline.py` | Optional Hair Tool 4.6.1 authoring and delivery bridge for upstream-specific scenes. Creates deterministic downward guides for dwarf hair, dwarf beards, and elf hair; inspects or finalizes existing systems; preserves `UVMap` and `HairTool_UV`, enforces materials, weights, and no upper-mesh morph channels, writes staged FBX and Workbench previews, and re-imports for validation. The GPL add-on is a local dependency, not vendored. Workflow: `docs/features/hair-tool-workflow.md`; full package audit: `docs/research/hair-tool-4-6-1.md`. Tests: `tools/tests/test_hair_tool_pipeline.py`. |
 | `package_hair_toolkit.py` | Builds the source-only Hair Toolkit ZIP for KEYforce and Kysaro: the independent engine, optional Hair Tool bridge, kitbash and registration tools, tests, grooming skill, docs, and separate MIT and GPL notices. Excludes the add-on, donor meshes, generated assets, and activation data. Requires an explicit `--out`. Tests: `tools/tests/test_package_hair_toolkit.py`. |
+| `package_quad_toolkit.py` | Builds the shareable quad-toolkit ZIP from the explicit `PACKAGE_FILES` list: the cube-map engine (`quad_engine/`), the cube-map and Exoside bridge scripts (`blender/cube_map_remesh.py`, `blender/quad_remesh_job.py`), two examples, their tests, the `quad_toolkit/` README, LICENSE and NOTICE, and the cube-map, remesher-job and remesher-engine docs. A listed file that is missing stops the build (`FileNotFoundError`); prints the ZIP's SHA-256. Requires an explicit `--out`; `--repo` defaults to `.`. No test file. |
 | `quad_engine/cube_map.py`, `blender/cube_map_remesh.py` | Independent cube-map quad remesher for closed, manifold, star-shaped meshes. Produces welded quad topology, raycasts output vertices onto the source, projects materials, and reports boundary, volume, aspect, degeneracy, and center-error metrics. NumPy required, SciPy optional. New-object and in-place Blender APIs, optional `output.npz` and `report.json` artifacts. Not yet for open or strongly concave assets or field-aligned organic flow. Feature: `docs/features/cube-map-remesh.md`. Tests: `tools/tests/test_cube_map_remesh.py`. |
 | `blender/quad_remesh_job.py` | Licensed Exoside headless process bridge with fixed-path locking, preservation of previous bridge files, unique artifacts, process cleanup, and material/shading transfer. Examples for both remeshers are under `tools/examples/`. Feature: `docs/features/quad-remesher-job.md`. Tests: `tools/tests/test_quad_remesh_job.py`. |
 | `retopo_engine/`, `blender/retopo_{adapter,operators}.py` | Independent UV-guided garment retopology: pattern flattening, quad-guide initialization, local and connected auto fill, X/Y mirroring, crease/sharp density, border-only snapping, subdivision and barycentric reprojection, UV fitting, pattern/part separation, thickness, preview diagnostics, and non-manifold inspection/split repair. `blender/retopo_selftest.py` exercises the real Blender workflow. `blender/retopo_reference_differential.py` captures original-product synthetic cases. `blender/petik_selftest.py` covers patch topology, modal controls, projection, and snapping. Feature: `docs/features/retopology-toolkit.md`. Tests: `tools/tests/test_retopo_engine.py`, `tools/tests/test_retopo_differential.py`. |
@@ -678,15 +679,17 @@ See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow +
 **AI translation (translate_with_claude.py only):** `anthropic` SDK
 **Binary tpac tools:** `lz4`, `xxhash` (`tpac_clone_metamesh.py` and the tools built on it; `xxhash` alone for `set_clip_balance_name.py`, whose parse and `keyed_clips` half, imported by `bind_hill_troll_action_set.py` and `wire_hill_troll_race.py`, needs neither); `skeleton_hit_capsules.py fit` also needs `numpy` and `scipy`
 
-**Game install — set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
-`setup-dev-env.ps1` sets it. 29 tools honour it: 25 resolve it themselves, and `analyze_armor_balance.py`,
-`apply_settlement_buildings.py`, `derive_armor_tiers.py` and `generate_enlistment_rosters.py` inherit it
-by importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
+**Game install: set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
+`setup-dev-env.ps1` sets it. `git grep -l BANNERLORD_GAME_DIR -- 'tools/*.py' ':!tools/tests'` lists
+every tool that names it (50 files on 2026-11-13, some only in a help line), and
+`analyze_armor_balance.py`, `apply_settlement_buildings.py` and `derive_armor_tiers.py` inherit it by
+importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
 nothing on a machine where that literal is correct. **The two decompile scripts opt out** — neither
 `decompile_bannerlord.ps1` nor `decompile_to_folder.ps1` reads the variable; see the note under
 "PowerShell Scripts" above.
 
-**Resolve it through `tools/_gamedir.py`** — 22 of the 25 do. `game_dir(default)` treats a set-but-blank
+**Resolve it through `tools/_gamedir.py`**: `git grep -lE "(from|import) +_gamedir|from tools\._gamedir|import tools\._gamedir" -- 'tools/*.py' ':!tools/tests'`
+lists the tools that do (90 files on 2026-11-13). `game_dir(default)` treats a set-but-blank
 variable as unset, which `os.environ.get(VAR, default)` does not: it returns `""`, `Path("")` is `.`, and
 the tool then reports every file missing rather than the root being wrong. `game_modules(default)` adds
 the `BANNERLORD_GAME_MODULES` precedence, and `ensure_exists(path, what=...)` exits 2 naming the path,
@@ -702,11 +705,11 @@ that the import would shadow.
 it — set them separately if you use those tools: `TAOM_ARMORY_BASE` (`cleanup_deleted_gondor_items.py`)
 and `TAOM_MAP_FILE` (`merge_settlements.py`). `tools/.env.example` documents all four.
 
-The thirteen top-level tools that had no override of any kind now all read `BANNERLORD_GAME_DIR` (#404).
+The thirteen top-level tools that had no override of any kind now all read `BANNERLORD_GAME_DIR` (#404, 2026-08-07).
 Six others were left alone deliberately: they take a path flag, which is override enough.
 
 **Other hardcoded paths** (update if your environment differs):
-- TAOM repo: `c:\Users\mikew\source\repos\TAOM\` — `generate_xslt.py`, `blender/rebuild_anim_from_json.py`
+- TAOM repo, an old checkout path under a user profile (`c:\Users\<user>\source\repos\TAOM\`): `oneoff/lords-migration/replace_equipment_templates.py`
 - LOTRAOM assets: `E:\LOTRAOMAssets\`
 
 ---
