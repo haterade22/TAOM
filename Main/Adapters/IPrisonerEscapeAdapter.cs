@@ -27,7 +27,8 @@ public interface IPrisonerEscapeAdapter
 
     /// <summary>
     /// Frees the lord through <c>EndCaptivityAction.ApplyByEscape</c>. Re-checks that the hero still exists,
-    /// is a prisoner with a captor and is not the main hero; returns false when it did nothing.
+    /// is a prisoner with a captor and is not a human player's hero (#1141: the player query's answer is not
+    /// <c>NotPlayer</c>); returns false when it did nothing.
     /// </summary>
     bool Escape(string heroId);
 }

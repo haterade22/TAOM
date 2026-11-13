@@ -527,9 +527,9 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
 
-    SPLIT_MADE_LINE = "[2026-11-12 10:00:00] [INFO] [LongDefeat][Split] preparation: wall 88 at (226.8, 147.7, 9.9), gate 38 at (168.9, 221.4, 20.7), lower archers 19 at (228.7, 132.4, 1.7), high archers 8 at (155.5, 206.2, 29.7); lanes 0,0,0"
+    SPLIT_MADE_LINE = "[2026-11-12 10:00:00] [INFO] [LongDefeat][Split] preparation: wall 88 at (226.8, 147.7, 9.9), gate 38 at (168.9, 221.4, 20.7), lower archers 19 at (228.7, 132.4, 1.7), high archers 8 at (155.5, 206.2, 29.7); close 0,0,0"
     SPLIT_DETAIL = ("w=1 wall=88 wall_median=6.5 wall_high=80 gate=38 gate_median=3.2 gate_high=0 low=19 low_median=12.0 low_high=3 "
-                    "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 lanes=1,0,0")
+                    "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 close=1,0,0")
 
     def judge_real_run(self, *extra):
         ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
@@ -623,7 +623,7 @@ class ManifestTests(unittest.TestCase):
         # The detail LongDefeatSplitChecks.Stand writes: w=, four groups, then the hold.
         row = next(r for r in iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079).checks if r.id == "taom.long-defeat.split")
         detail = ("w=1 wall=88 wall_median=6.5 wall_high=80 gate=38 gate_median=3.2 gate_high=0 low=19 low_median=12.0 low_high=3 "
-                  "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 lanes=1,0,0")
+                  "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 close=1,0,0")
         line = "[2026-11-12 10:00:00] [INFO] [Check] id=taom.long-defeat.split result={} " + detail
 
         self.assertEqual(iv.judge_segment(row, self.fixture_lines([line.format("pass")]), []).verdict, iv.PASS)

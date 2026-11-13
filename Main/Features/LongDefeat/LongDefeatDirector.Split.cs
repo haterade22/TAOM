@@ -8,13 +8,13 @@ namespace TAOM.Features.LongDefeat;
 
 /// <summary>
 /// The opening split of the defenders (Mike, 2026-11-12): in each calm, once the garrison or a pack is in, the field splits the defenders into four groups and holds them at their places; at the
-/// first contact of the wave (a siege lane rose above its level at the hold, <see cref="DefenderSplit.Contact"/>) it hands them back to the siege AI, and the <c>split</c> line says whether they
+/// first contact of the wave (a side's count of attackers at the walls rose above its count at the hold, <see cref="DefenderSplit.Contact"/>) it hands them back to the siege AI, and the <c>split</c> line says whether they
 /// stood at their places. A fortress row with no <c>split</c> block, or a director with no fortification adapter (the director's tests), plays as before.
 /// </summary>
 internal sealed partial class LongDefeatDirector
 {
     private readonly SplitHold _splitHold = new();
-    private IReadOnlyList<int> _lanesAtHold = Array.Empty<int>();
+    private IReadOnlyList<int> _closeAtHold = Array.Empty<int>();
     private float _splitHeldSeconds;
 
     // Set when the engine hands every formation to the AI under a hold: the lord's fall (Mission.OnAgentRemoved calls Team.DelegateCommandToAI after the behaviours run, so never split inside
@@ -38,8 +38,8 @@ internal sealed partial class LongDefeatDirector
         }
 
         var phase = _run.Phase;
-        var lanes = _splitHold.Held && phase == RunPhase.Wave ? _fort.ReadLaneLevels() : null;
-        var contact = lanes != null && DefenderSplit.Contact(_lanesAtHold, lanes);
+        var close = _splitHold.Held && phase == RunPhase.Wave ? _fort.ReadCloseAttackers() : null;
+        var contact = close != null && DefenderSplit.Contact(_closeAtHold, close);
         switch (_splitHold.Next(phase, spawnedDefenders || _run.PendingDefenders > 0, contact))
         {
             case SplitStep.Split:
@@ -49,12 +49,14 @@ internal sealed partial class LongDefeatDirector
                 Split(shares, "a pack mustered", false);
                 break;
             case SplitStep.Release:
-                ReleaseSplit(lanes!);
+                ReleaseSplit(close!);
                 break;
         }
     }
 
-    // A fresh split starts the hold's clock and takes the lanes' levels; a split again inside the same hold (a pack, a new body, the lord's fall) keeps both, so a lane that rose before it still counts as contact.
+    // A fresh split starts the hold's clock and takes the close attacker counts after it drops the engine's 5 s cache: at a clear the cache can still hold the last wave's counts, which
+    // as a baseline hid the next contact and, after a quick horn, released the hold at once. A split again inside the same hold (a pack, a new body, the lord's fall) keeps both, so a
+    // count that rose before it still counts as contact.
     private void Split(SplitShares shares, string why, bool fresh)
     {
         var result = _fort!.SplitDefenders(shares);
@@ -69,7 +71,8 @@ internal sealed partial class LongDefeatDirector
         if (fresh)
         {
             _splitHeldSeconds = 0f;
-            _lanesAtHold = _fort.ReadLaneLevels();
+            _fort.RefreshCloseAttackers();
+            _closeAtHold = _fort.ReadCloseAttackers();
         }
 
         // A pair the scene gave no places for stays with the AI, and the check fails for it: a fortress row with a split block owes all four groups.
@@ -81,16 +84,16 @@ internal sealed partial class LongDefeatDirector
         }
 
         _logger.LogInfo($"{Tag}[Split] {why}: wall {result.Wall} at {At(result.WallAt)}, gate {result.Gate} at {At(result.GateAt)}, "
-            + $"lower archers {result.LowArchers} at {At(result.LowAt)}, high archers {result.HighArchers} at {At(result.HighAt)}; lanes {string.Join(",", _lanesAtHold)}");
+            + $"lower archers {result.LowArchers} at {At(result.LowAt)}, high archers {result.HighArchers} at {At(result.HighAt)}; close {string.Join(",", _closeAtHold)}");
     }
 
-    private void ReleaseSplit(IReadOnlyList<int> lanes)
+    private void ReleaseSplit(IReadOnlyList<int> close)
     {
         var groups = _fort!.ReadSplit();
         var release = _fort.ReleaseSplit();
-        _logger.LogInfo($"{Tag}[Split] contact in wave {_run.Wave}: lanes {string.Join(",", _lanesAtHold)} to {string.Join(",", lanes)}; {Stand(groups)}; "
+        _logger.LogInfo($"{Tag}[Split] contact in wave {_run.Wave}: close {string.Join(",", _closeAtHold)} to {string.Join(",", close)}; {Stand(groups)}; "
             + $"{release.Released} group(s) to the AI, {release.KeptByPlayer} kept on the player's order");
-        LongDefeatChecks.Record(_outcomes, LongDefeatSplitChecks.SplitId, SplitKey(), LongDefeatSplitChecks.Stand(SplitWave(), groups, _splitHeldSeconds, release, lanes));
+        LongDefeatChecks.Record(_outcomes, LongDefeatSplitChecks.SplitId, SplitKey(), LongDefeatSplitChecks.Stand(SplitWave(), groups, _splitHeldSeconds, release, close));
     }
 
     // The stalemate charge hands every formation to the AI itself (OrderCharge), so a hold still on then ends with a skip and no release call.
@@ -104,7 +107,7 @@ internal sealed partial class LongDefeatDirector
         LongDefeatChecks.Record(_outcomes, LongDefeatSplitChecks.SplitId, SplitKey(), LongDefeatSplitChecks.Closed(SplitWave(), groups, "charge"));
     }
 
-    // A hold no contact ended: the wave cleared (a ladder lane can stay at token until the end) or the run ended. The groups go back to the AI, the line is a skip, and the next calm splits afresh.
+    // A hold no contact ended: the wave cleared or the run ended while no sampled count rose. The groups go back to the AI, the line is a skip, and the next calm splits afresh.
     private void CloseSplit(int wave, string reason)
     {
         if (!_splitHold.Held || _fort == null)

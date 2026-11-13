@@ -6,7 +6,7 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Tests.Features.LongDefeat;
 
 /// <summary>
-/// The opening split's half of the field fake: a split records the shares and answers what a test set, the lanes answer the levels a test set (copied, as the real read makes a new list), the held
+/// The opening split's half of the field fake: a split records the shares and answers what a test set, the close attacker read answers the counts a test set (copied, as the real read makes a new list), the held
 /// groups are reported until a release, and a release answers what a test set.
 /// </summary>
 internal sealed partial class FakeLongDefeatField
@@ -17,8 +17,8 @@ internal sealed partial class FakeLongDefeatField
     public LdSplitResult SplitAnswer { get; set; } = new(string.Empty, 21, 9, 7, 3,
         new LdPoint(226.8f, 147.7f, 9.9f), new LdPoint(168.9f, 221.4f, 20.7f), new LdPoint(228.7f, 132.4f, 1.7f), new LdPoint(155.5f, 206.2f, 29.7f));
 
-    /// <summary>The level of each siege lane, as the next read reports it.</summary>
-    public List<int> LaneLevels { get; } = new() { 0, 0, 0 };
+    /// <summary>The attackers at the walls on each side, as the next read reports them.</summary>
+    public List<int> CloseAttackers { get; } = new() { 0, 0, 0 };
 
     /// <summary>The held groups as a read reports them while a split is held.</summary>
     public List<LdSplitGroup> SplitGroups { get; } = new()
@@ -33,7 +33,7 @@ internal sealed partial class FakeLongDefeatField
 
     public List<SplitShares> Splits { get; } = new();
 
-    public int LaneReads { get; private set; }
+    public int CloseReads { get; private set; }
 
     public LdSplitResult SplitDefenders(SplitShares shares)
     {
@@ -43,10 +43,19 @@ internal sealed partial class FakeLongDefeatField
         return SplitAnswer;
     }
 
-    public IReadOnlyList<int> ReadLaneLevels()
+    /// <summary>What the engine's 5 s cache still answers until a refresh, such as the last wave's counts just after a clear; null when the cache is fresh.</summary>
+    public List<int>? CachedClose { get; set; }
+
+    public IReadOnlyList<int> ReadCloseAttackers()
     {
-        LaneReads++;
-        return LaneLevels.ToList();
+        CloseReads++;
+        return (CachedClose ?? CloseAttackers).ToList();
+    }
+
+    public void RefreshCloseAttackers()
+    {
+        Calls.Add("RefreshClose");
+        CachedClose = null;
     }
 
     public IReadOnlyList<LdSplitGroup> ReadSplit() => _splitHeld ? SplitGroups.ToList() : Array.Empty<LdSplitGroup>();

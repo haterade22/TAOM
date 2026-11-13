@@ -150,6 +150,15 @@ internal static partial class FordsVerdicts
         return values.Count % 2 == 1 ? values[mid] : (values[mid - 1] + values[mid]) / 2.0;
     }
 
+    /// <summary>
+    /// Tower missiles (javelins and arrows, as Launched and HitsSeen count them) launched with no hit before check 11
+    /// fails (#1152). The runs on file hit 4.35 to 18.4 percent of the time over 150 or more launches, so 20 misses in
+    /// a row came in about a third of 120 second smokes. The three missiles of a volley share one target, so count
+    /// volleys: 400 missiles are about 133 volleys, and at 4.35 percent per volley that many misses come in about
+    /// 0.3 percent of runs. Every run of 300 live seconds or more on file launched at least 409.
+    /// </summary>
+    private const int NoHitFailLaunches = 400;
+
     private static FordsVerdictRow Check11(FordsRunEvidence run)
     {
         var v = run.Volley;
@@ -180,7 +189,7 @@ internal static partial class FordsVerdicts
             hitsResult = FordsResult.Fail;
             hitsNumbers += "; the towers asked to fire and no missile was ever added";
         }
-        else if (v.Launched >= 20 && v.HitsSeen == 0)
+        else if (v.Launched >= NoHitFailLaunches && v.HitsSeen == 0)
         {
             hitsResult = FordsResult.Fail;
             hitsNumbers += "; missiles flew and none struck anyone";
@@ -196,7 +205,7 @@ internal static partial class FordsVerdicts
             parts.Add(ArrowPart(v, arrows));
 
         return Row(11, parts.ToArray(), "perBodyPart " + ByPart(javelins) + (arrowId == null ? "" : " arrowPerBodyPart " + ByPart(arrows)),
-            "The javelin and the arrow each resolved with a reach past the fire range, and for each the median ratio of the engine's magnitude to its own N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when 20 missiles flew and no hit was seen.",
+            "The javelin and the arrow each resolved with a reach past the fire range, and for each the median ratio of the engine's magnitude to its own N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when " + NoHitFailLaunches + " missiles flew and no hit was seen.",
             "The hit points lost look right on armoured and leg hits.");
     }
 
