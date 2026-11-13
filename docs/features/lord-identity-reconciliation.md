@@ -17,8 +17,8 @@ The encyclopedia shows the name and the biography side by side, so a player read
 ## Load order, and what "wins" actually means
 
 `Main/_Module/SubModule.xml`: line 131 `lords.xslt`, line 141 `heroes.xslt`, line 190
-`characters/heroes.xml`, line 199 `characters/lords.xml`. 176 ids are defined in both lords files
-(179 until #644 removed three); their names agree on 175, the one deliberate exception being
+`characters/heroes.xml`, line 199 `characters/lords.xml`. 169 ids are defined in both lords files
+(179 until #644 removed three, 176 until #648's first step removed seven); their names agree on 168, the one deliberate exception being
 `lord_WE9_l`, where `lords.xml` has the fuller "Duinhir, Lord of Morthond".
 
 **None of them should be.** Mike, 2026-09-23: "If the lords are vanilla they should be in the xslt.
@@ -26,7 +26,11 @@ If they are created new, they should be in lords.xml." A second definition is no
 layer, for two reasons below: the row silently wins every attribute it states, and its equipment
 sets are ADDED to the template's. The 176 are #648; #644 moved the three Nazgul (`lord_1_48_1/2/3`)
 as the worked example: each value the engine used to take from the row (race, age 20, face age
-22.19) went into the template, then the row was deleted. `NazgulRaceDataTests` pins that none of
+22.19) went into the template, then the row was deleted. #648's first step did the same for the seven
+whose row added a Dunland kit to a Gondor or Mordor lord (`lord_1_45_1`, `lord_1_57_1`, `lord_1_57_2`,
+`lord_1_73_1`, `lord_1_62_1`, `lord_1_30_2`, `lord_1_30_3`): the row's age, skill template, face and
+skills moved into the template, the template's own kit is the only one, and `LordDoubleDefinitionTests`
+pins it. `NazgulRaceDataTests` pins that none of
 the Nine is defined in `lords.xml` again.
 
 **The plain XML wins per ATTRIBUTE, not per node.** `MBObjectManager.MergeElementAttributes` sets
@@ -51,7 +55,7 @@ set whose id the template does not carry is appended rather than replacing anyth
 `BasicCharacterObject.Deserialize` then keeps every set, and `Hero.SetInitialValuesFromCharacter`
 (v1.5.3 `Hero.cs:2315`) takes `GetRandomElement()` of the battle and the civilian lists
 (`:2352`, `:2356`). A lord defined twice with different set ids is dressed in one kit or the other
-at random on every new campaign: 113 of the 176 (#648), and the Nazgul trio until #644, whose
+at random on every new campaign: 106 of the 169 still in both files (#648; 113 of 176 before its first step), and the Nazgul trio until #644, whose
 Nazgul kit showed up only some of the time.
 
 **The stylesheet is also not fed `lords.xml` alone.** `GetMergedXmlForManaged` groups by the
