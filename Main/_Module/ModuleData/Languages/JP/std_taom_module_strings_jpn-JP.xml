@@ -7831,6 +7831,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="名のある英雄は近くの味方兵士をそれぞれの流儀で強化します。ダーインのドワーフは足取りが揺るがず、アラゴルンの手勢は怯まず、エルフの諸侯の射手はより速く弓を引きます。オーラを持つのは hero_auras.json に記載された英雄のみです。オーラと兵士自身の種族能力が同じ効果を与える場合は強い方が適用され、加算されることはありません。次のオーラ更新時から効果を発揮します。" />
     <string id="taom_hero_auras_mcm_strength" text="英雄のオーラの強さ" />
     <string id="taom_hero_auras_mcm_strength_hint" text="すべてのオーラのボーナスに乗算します。1.0 は hero_auras.json に記述されたままの値、0 はすべてのオーラを無効にします。士気の下限値や、ひるみ耐性のようなオン・オフ式の効果は変化しません。デフォルト: 1.0。" />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>

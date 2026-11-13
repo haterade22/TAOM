@@ -8043,6 +8043,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="Gli eroi di nome rafforzano i soldati alleati vicini, ciascuno a suo modo: i nani di Dáin restano saldi sui piedi, gli uomini di Aragorn mantengono il sangue freddo, gli arcieri dei signori elfici incoccano più in fretta. Solo gli eroi elencati in hero_auras.json possiedono un'aura. Dove un'aura e l'abilità razziale propria di un soldato concedono la stessa cosa, vale la più forte; non si sommano mai. Ha effetto dal prossimo impulso d'aura." />
     <string id="taom_hero_auras_mcm_strength" text="Potenza delle aure degli eroi" />
     <string id="taom_hero_auras_mcm_strength_hint" text="Moltiplica i bonus di ogni aura. 1.0 corrisponde ai valori definiti in hero_auras.json; 0 disattiva tutte le aure. I valori minimi di morale e gli effetti a interruttore, come la resistenza ai colpi, non vengono scalati. Predefinito: 1.0." />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>

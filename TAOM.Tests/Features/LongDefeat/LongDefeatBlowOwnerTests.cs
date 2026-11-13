@@ -93,12 +93,17 @@ public class LongDefeatBlowOwnerTests
     [TestMethod]
     public void Fell_WithNoMainAgentStanding_StrikesWithItsOwnBlowOwnedByAStandingDefender()
     {
-        var fell = BodyOf(SourceOf("LongDefeatBattlefieldAdapter.cs"), "public int Fell(");
+        var source = SourceOf("LongDefeatBattlefieldAdapter.cs");
+        var fell = BodyOf(source, "public int Fell(");
+        var owner = BodyOf(source, "private Agent? LivingOwner()");
 
-        // The player's body keeps KillAgentCheat (its owner is MainAgent); without one, the blow is built here with a standing defender's index, never -1 and never the victim.
+        // The player's body keeps KillAgentCheat (its owner is MainAgent); without one, the blow is built here with a standing defender's index, never -1 and never the victim. LivingOwner picks the
+        // owner, and BreakEngines (#1160) uses the same one.
+        StringAssert.Contains(fell, "LivingOwner()");
         StringAssert.Contains(fell, "MainAgent");
-        StringAssert.Contains(fell, "IsActive()");
-        StringAssert.Contains(fell, "StandingDefenders()");
+        StringAssert.Contains(owner, "MainAgent");
+        StringAssert.Contains(owner, "IsActive()");
+        StringAssert.Contains(owner, "StandingDefenders()");
         StringAssert.Contains(fell, "new Blow(owner.Index)");
         StringAssert.Contains(fell, "RegisterBlow(");
         Assert.IsFalse(Regex.IsMatch(fell, @"new\s+Blow\s*\(\s*agent\.Index"), "the felled soldier must not own his own death");

@@ -57,6 +57,9 @@ internal sealed class LongDefeatAutorunPlan
     /// <summary>A test option, 0 to 100000: the gold the run starts with instead of the shop's, and the sign the unattended bot buys fortifications before packs (phase3-plan.md D27). Null keeps the shop's.</summary>
     public int? StartGold { get; internal init; }
 
+    /// <summary>A test option, 1 to 100 (#1160): at this clear, when a wave follows it, every ram and siege tower that stands is destroyed, so the next wave proves they come back. Null breaks nothing.</summary>
+    public int? BreakEngines { get; internal init; }
+
     /// <summary>The class id the run asks for. Not judged here: the catalog takes it when the fortress offers it, else warns and plays the seed's draw, and the report names the class that was played.</summary>
     public string? Class { get; internal init; }
 
@@ -108,13 +111,13 @@ internal sealed class LongDefeatAutorunPlan
 
     /// <summary>The setup the driver hands the start path. The out folder doubles as the records folder, so an unattended run never touches the player's best run.</summary>
     internal LongDefeatSetup ToSetup(string fortressId) =>
-        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls, StartGold = StartGold, ClassId = Class }, OutFolder);
+        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls, StartGold = StartGold, BreakEnginesAtClear = BreakEngines, ClassId = Class }, OutFolder);
 
     /// <summary>One line for the log: the choices the run will use.</summary>
     internal string Describe() =>
         "fortress=" + (Fortress ?? "-") + " waves=" + (Waves?.ToString(CultureInfo.InvariantCulture) ?? "-")
         + " garrison_scale=" + Num(GarrisonScale) + " class=" + (Class ?? "-") + " seed=" + (Seed?.ToString(CultureInfo.InvariantCulture) ?? "-")
-        + " start_wave=" + StartWave + " start_rerolls=" + StartRerolls + " start_gold=" + (StartGold?.ToString(CultureInfo.InvariantCulture) ?? "-") + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
+        + " start_wave=" + StartWave + " start_rerolls=" + StartRerolls + " start_gold=" + (StartGold?.ToString(CultureInfo.InvariantCulture) ?? "-") + " break_engines=" + (BreakEngines?.ToString(CultureInfo.InvariantCulture) ?? "-") + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
         + " speed=" + Speed + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " expect=" + (Expect ?? "-") + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
@@ -132,6 +135,7 @@ internal sealed class LongDefeatAutorunPlan
         var startWave = 1;
         var startRerolls = 0;
         int? startGold = null;
+        int? breakEngines = null;
         double liveLimit = DefaultLiveLimitSeconds, wallLimit = DefaultWallLimitSeconds;
         var quit = false;
         var speed = 1;
@@ -168,6 +172,7 @@ internal sealed class LongDefeatAutorunPlan
                 case "start_wave": startWave = IntInRange(key, value, 1, MaxStartWave, startWave, warnings); break;
                 case "start_rerolls": startRerolls = IntInRange(key, value, 0, MaxStartRerolls, startRerolls, warnings); break;
                 case "start_gold": startGold = StartGoldValue(key, value, warnings); break;
+                case "break_engines": breakEngines = BreakEnginesValue(key, value, warnings); break;
                 case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
@@ -180,7 +185,7 @@ internal sealed class LongDefeatAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Fortress = fortress, Waves = waves, OutFolder = outFolder!, Expect = expect,
             LiveLimitSeconds = liveLimit, WallLimitSeconds = wallLimit, QuitWhenDone = quit, GarrisonScale = scale, ScreenshotSeconds = screenshots, Speed = speed,
-            Seed = seed, StartWave = startWave, StartRerolls = startRerolls, StartGold = startGold, Class = className,
+            Seed = seed, StartWave = startWave, StartRerolls = startRerolls, StartGold = startGold, BreakEngines = breakEngines, Class = className,
         };
     }
 
@@ -250,6 +255,16 @@ internal sealed class LongDefeatAutorunPlan
             return gold;
 
         warnings.Add(key + "='" + value + "' is not a whole number from 0 to " + RunOptions.MaxStartGold + "; the run keeps the shop's gold");
+        return null;
+    }
+
+    /// <summary>A clear from 1 to <see cref="MaxStartWave"/>; anything else is refused and no engine is broken.</summary>
+    private static int? BreakEnginesValue(string key, string value, List<string> warnings)
+    {
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var clear) && clear >= 1 && clear <= MaxStartWave)
+            return clear;
+
+        warnings.Add(key + "='" + value + "' is not a clear from 1 to " + MaxStartWave + "; no engine is broken");
         return null;
     }
 

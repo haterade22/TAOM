@@ -4319,6 +4319,24 @@ touch -d '2 days ago' "$NL/cccccccc-stale.edits"
 note_none "$(nrec "$SD" "C:/proj/Stale.cs")" "is silent for a ledger untouched for 24 h"
 nrec "$SA" '/proj/we"ird.cs' >/dev/null
 note_check "$(nrec "$SB" '/proj/we"ird.cs')" "keeps the note valid JSON for a path holding a quote" '/proj/we"ird.cs'
+# A file under a user's .claude folder (memory, plans) sits in no checkout, so a note that says to
+# read its git diff is wrong: the ledger keeps the line, and no note comes. Fresh session ids, so
+# silence from a pair already noted cannot pass. A repo's own .claude folder is still noted.
+S5=55555555-0000-4000-8000-000000000015
+S6=66666666-0000-4000-8000-000000000016
+NH='C:\Users\someone\.claude\projects\p\memory\MEMORY.md'
+nrec "$S5" "$NH" >/dev/null
+note_none "$(nrec "$S6" "$NH")" "is silent for a file under the user's .claude folder"
+grep -qi $'\tC:/Users/someone/.claude/projects/p/memory/MEMORY.md$' "$NL/$S6.edits" 2>/dev/null \
+    && ok "record-session-edit still records a file under the user's .claude folder" \
+    || bad "record-session-edit did not record the .claude folder file: $(head -c 200 "$NL/$S6.edits" 2>/dev/null)"
+# printf, not lr_pl: Git Bash rewrites a /c/ argument to C:/ when it starts a native python.
+nh_gb() { printf '{"session_id":"%s","hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":"%s"}}' "$1" "/c/users/someone/.claude/plans/p.md"; }
+lr_rec "$(nh_gb "$S5")" "$NP" >/dev/null
+note_none "$(lr_rec "$(nh_gb "$S6")" "$NP")" "is silent for the user's .claude folder in Git Bash form"
+NR="C:/Users/someone/repos/proj/.claude/hooks/h.sh"
+nrec "$S5" "$NR" >/dev/null
+note_check "$(nrec "$S6" "$NR")" "still notes a repo's own .claude folder under the home folder" "(55555555)"
 # A ledger line is file data: its epoch reaches bash arithmetic only as digits (hook-authoring.md).
 printf '%s%s\t%s\n' "$(date +%s)" "$PROBE" "C:/proj/Probe.cs" > "$NL/cccccccc-probe.edits"
 nrec "$SD" "C:/proj/Probe.cs" >/dev/null

@@ -170,7 +170,7 @@ per battle load versus zero.
 ### Moving a diagnostic stamp from INFO to DEBUG is a feature change, not a perf tweak
 
 TAOM's `FileLogger` drains INFO synchronously with a flush on the calling thread and leaves DEBUG on
-an async queue — precisely so a hard native CTD preserves the tail. A crash-localisation stamp
+an async queue — precisely so a hard native CTD preserves the tail. (Since PR #1170, 2026-11-13: only WARNING, ERROR and INFO lines that start with a tag in `FileLogger.DurableInfoTags` flush on the calling thread; other INFO lines are flushed by the writer thread within about a third of a second.) A crash-localisation stamp
 downgraded to DEBUG disappears from exactly the logs it exists to produce.
 
 - **Why missed:** a deep-review Efficiency agent recommended downgrading `AgentBuildDone` to DEBUG
@@ -1942,6 +1942,24 @@ The Long Defeat's opening split held the defenders until "contact", read as a si
 - **Why missed:** the state was chosen by its name and its consumers; its producer was never opened.
 - **Prevent:** before an engine field or method decides TAOM behaviour, read the code that writes it and list every condition that changes it. A doc line that says "only a run can show X" about an engine state is a sign that the setter was not read. Quote the setter's conditions; do not summarize them: the fix for this lesson first restated the setter as "an engine moves", wrong in five places (RCA row 16). A cached engine value (`QueryData`, 5 s) read once as a baseline can be the last phase's value (RCA row 15).
 - **Source:** docs/reviews/rca-long-defeat-split-2026-11-12.md row 14 (#1128)
+
+### A mid-mission `OnMissionReset` is not the boot state (#1160, 2026-11-13)
+The Long Defeat brings a destroyed ram or siege tower back at each wave start with the type's own `OnMissionReset`, by reflection. Vanilla runs that reset only from `Mission.ResetMissionObjects`, after it removes every agent, so it never meets a tower that docked and fell. Two states differ from the boot: the reset's `SetEnabled` calls the tower's `SetAbilityOfFaces(true)` override, which turns on every ladder queue and its face before the tower moves (SiegeTower.cs:514-535; the boot keeps them off until arrival, :759-763), and the tower's arrival leaves `ActiveWaitStandingPoint` at `WaitStandingPoints[1]` (:208), which nothing sets back.
+- **Why missed:** "vanilla's own reset" was read as "the boot state". The reset's body was read; the virtual calls it makes, and the state the boot sets that the reset does not, were not listed.
+- **Prevent:** before calling an engine reset outside its own caller, list what the boot (`OnInit`, `AfterMissionStart`, deployment) sets and what the reset sets, follow each virtual call into the overrides, and settle every difference in code or in a check. Read the reset's only vanilla caller to learn what it assumes (here, no agents).
+- **Source:** docs/reviews/rca-long-defeat-engines-2026-11-13.md rows 2 and 3 (#1160)
+
+### Restoring an engine object: every list that dropped it (#1160, 2026-11-13)
+The engine restore put the engine back into its `SiegeLane`, the list a disabled weapon visibly leaves. Each attacker formation's `BehaviorUseSiegeMachines` keeps its own `_primarySiegeWeapons`, built once when the formation gets its first soldier, pruned of a destroyed engine on its next `TickOccasionally`, and built again only in `OnValidBehaviorSideChanged`. The formations last across waves, so a formation that pushed an engine a player destroyed mid-wave would never follow it again.
+- **Why missed:** the restore traced the lane, the list that shows the drop, and did not grep for every other list or cache that removes a destroyed engine.
+- **Prevent:** before undoing an engine-side removal, grep the decompile for every `Remove`, `RemoveAt` and filter on `IsDestroyed`, `IsDeactivated` or `IsDisabled` over that type, and say for each list whether it rebuilds itself. A test path that changes state between waves (a break at a clear, when no formation ticks) cannot show a list that prunes on a tick, so name the case it leaves for a played check.
+- **Source:** docs/reviews/rca-long-defeat-engines-2026-11-13.md rows 1 and 8 (#1160)
+
+### A synthetic hit needs the attribution a real one has (#1160, 2026-11-13)
+The `break_engines` test option destroyed every engine through `DestructableComponent.TriggerOnHit` with a null attacker. `OnHit`, `Mission.OnObjectDisabled` and the weapons controller all accept that, but the tower's `OnDestroyed` subscriber kills whoever stands on it with the destroyer as owner (`KillAgentsOnEntity`, SiegeTower.cs:919), and `CustomBattleMoraleModel.CalculateMaxMoraleChangeDueToAgentIncapacitated` reads `affectorAgent.Formation` with no null test.
+- **Why missed:** the null attacker was checked in the hit path and not in every subscriber of the events the hit raises (`OnHitTaken`, `OnDestroyed`).
+- **Prevent:** a hit, blow or kill that code fakes gets a living owner, picked the way the rest of the feature picks one. Before passing null as an engine call's agent, grep every subscriber of the events the call raises and read each one's use of that agent.
+- **Source:** docs/reviews/rca-long-defeat-engines-2026-11-13.md row 4 (#1160)
 
 ### A `new` property answers only through the derived type: list readers by the type they hold (Coop #4675, 2026-11-13)
 Coop e132c0fce linked each joined player's character to `main_hero`, so the after-load refill fills it. Its side-effect check said the copied `Culture` changes nothing players see, because `CharacterObject.Culture` returns the hero's culture. That getter is a `new` property (v1.5.7 `CharacterObject.cs:264-278`). `BasicCharacterObject.Culture` is a plain property over `_culture` (`BasicCharacterObject.cs:124-134`), and `Agent.Character` is a `BasicCharacterObject`. So after a load, code that reads `agent.Character.Culture` for a joined player got `main_hero`'s ModuleData culture. The same field likely makes TAOM's own player hero read as `Culture.battania` in single player (#1157, owed in game).

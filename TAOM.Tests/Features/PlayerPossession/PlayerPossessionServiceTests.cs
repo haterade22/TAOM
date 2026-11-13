@@ -54,6 +54,33 @@ public class PlayerPossessionServiceTests
         Assert.IsFalse(_sut.TryConsumePossession("host_hero", out _));
     }
 
+    // --- A new character creation in the same process (#1177) ---
+
+    [TestMethod]
+    public void TryConsumePossession_SecondCampaignsPlayerSwitcherBeforeItsCapture_DoesNotFire()
+    {
+        _sut.RecordBaselineHero("cc_hero");
+        _sut.CaptureCharacterCreationChoices(Choices());
+        _sut.ResetForNewCampaign();
+        _sut.RecordBaselineHero("cc_hero");
+        _sut.BeginCharacterCreation();
+
+        Assert.IsFalse(_sut.TryConsumePossession("chosen_lord", out _));
+    }
+
+    [TestMethod]
+    public void TryConsumePossession_JoinAfterACompletedCharacterCreation_StillFires()
+    {
+        // The join raises no new character creation, so the choices captured at its end survive.
+        _sut.BeginCharacterCreation();
+        _sut.RecordBaselineHero("cc_hero");
+        _sut.CaptureCharacterCreationChoices(Choices());
+        _sut.ResetForNewCampaign();
+        _sut.RecordBaselineHero("host_main_hero");
+
+        Assert.IsTrue(_sut.TryConsumePossession("joined_hero", out _));
+    }
+
     // --- Single-player inertness: the guards that keep this away from heir succession ---
 
     [TestMethod]

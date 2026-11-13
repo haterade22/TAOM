@@ -37,7 +37,7 @@ public class LongDefeatRunReportFortTests
         var levels = (JObject)report["fortifications"]!;
         Assert.AreEqual((0, 0, 0), ((int)levels["gateLevel"]!, (int)levels["towerLevel"]!, (int)levels["volleyLevel"]!));
         var spentOn = (JObject)((JObject)report["gold"]!)["spentOn"]!;
-        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley" }, spentOn.Properties().Select(p => p.Name).ToArray());
+        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley", "upgrades" }, spentOn.Properties().Select(p => p.Name).ToArray());
         Assert.IsTrue(spentOn.Properties().All(p => (int)p.Value == 0));
         var wave = (JObject)report["waves"]!.Single();
         var gate = (JObject)wave["gate"]!;
@@ -60,6 +60,14 @@ public class LongDefeatRunReportFortTests
         Assert.AreEqual(JTokenType.Null, Report(OneWave(), new Purse(600))["startGold"]!.Type);
     }
 
+    // A test option (#1160): the wrapper holds the report to the clear it armed, and a board run has none.
+    [TestMethod]
+    public void Build_TheBreakEnginesClearIsEchoed_AndNoneIsNull()
+    {
+        Assert.AreEqual(1, (int)Report(OneWave(), new Purse(600), new RunOptions { BreakEnginesAtClear = 1 })["breakEngines"]!);
+        Assert.AreEqual(JTokenType.Null, Report(OneWave(), new Purse(600))["breakEngines"]!.Type);
+    }
+
     [TestMethod]
     public void Build_SpentOnSplitsTheSpentGoldBySink_AndTheSinksSumToSpent()
     {
@@ -70,11 +78,13 @@ public class LongDefeatRunReportFortTests
         purse.TrySpend(250, PurseSink.Towers);
         purse.TrySpend(150, PurseSink.FieldCare);
         purse.TrySpend(350, PurseSink.Volley);
+        purse.TrySpend(75, PurseSink.Upgrades);
 
         var gold = (JObject)Report(OneWave(), purse)["gold"]!;
         var spentOn = (JObject)gold["spentOn"]!;
 
         Assert.AreEqual((180, 274, 250, 150, 350), ((int)spentOn["packs"]!, (int)spentOn["gate"]!, (int)spentOn["towers"]!, (int)spentOn["fieldCare"]!, (int)spentOn["volley"]!));
+        Assert.AreEqual(75, (int)spentOn["upgrades"]!);
         Assert.AreEqual((int)gold["spent"]!, spentOn.Properties().Sum(p => (int)p.Value));
     }
 
@@ -119,6 +129,22 @@ public class LongDefeatRunReportFortTests
         CollectionAssert.AreEqual(new[] { 0.371, 0.371 }, rows[0]["shares"]!.Select(t => (double)t).ToArray());
         Assert.AreEqual(0.742, (double)rows[0]["share"]!, 1e-9, "share stays the total over the gates");
         Assert.IsNull(rows[1]["shares"], "care has one share, written in share");
+    }
+
+    // #1161: an upgrade is priced per soldier, so its row carries the step id, the price for one, the price paid for all and how many were replaced; no other row has a count.
+    [TestMethod]
+    public void Build_AnUpgrade_WritesItsStepItsPriceForOneWhatItCostAndItsCount_AndOnlyAnUpgradeHasACount()
+    {
+        var fort = new RunFort(new[]
+        {
+            new FortPurchase(3, PurchaseKind.Upgrade, "fow_m>fow_a", 0, 15, 90, 0f) { Count = 6 },
+            new FortPurchase(3, PurchaseKind.Pack, "militia", 0, 180, 180, 0f),
+        }, 0, 0, 0);
+
+        var rows = ((JArray)Report(OneWave(), new Purse(5000), fort: fort)["purchases"]!).Cast<JObject>().ToList();
+
+        Assert.AreEqual(("upgrade", "fow_m>fow_a", 15, 90, 6), ((string)rows[0]["kind"]!, (string)rows[0]["id"]!, (int)rows[0]["basePrice"]!, (int)rows[0]["price"]!, (int)rows[0]["count"]!));
+        Assert.IsNull(rows[1]["count"], "a pack has no count");
     }
 
     [TestMethod]

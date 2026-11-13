@@ -82,7 +82,7 @@ def wave_row(wave, seed=7, **more):
 
 # A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
 NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
-NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
            "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
@@ -2836,9 +2836,18 @@ class PurchaseJudgeTests(unittest.TestCase):
         report["gold"]["spent"] = 180
         self.assertIn("spentOn", self.problem(report))
 
-    def test_a_spent_on_that_is_not_the_five_sinks_is_refused(self):
+        # #1161: gold on upgrades with no purchase that paid it does not balance either.
+        report = self.report([])
+        report["gold"]["spentOn"]["upgrades"] = 30
+        report["gold"]["spent"] = 30
+        self.assertIn("gold.spentOn.upgrades", self.problem(report))
+
+    def test_a_spent_on_that_is_not_the_six_sinks_is_refused(self):
         report = self.report([])
         del report["gold"]["spentOn"]["volley"]
+        self.assertIn("spentOn", self.problem(report))
+        report = self.report([])
+        del report["gold"]["spentOn"]["upgrades"]
         self.assertIn("spentOn", self.problem(report))
         report = self.report([])
         report["gold"]["spentOn"]["packs"] = -1
@@ -2928,7 +2937,7 @@ class PurchaseJudgeTests(unittest.TestCase):
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
-        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}}}
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}}}
 
         code, why = ld.judge(FINAL, report, FULL_LOG)
 
@@ -3004,6 +3013,182 @@ class StartGoldArgumentTests(unittest.TestCase):
         self.assertIn('["startGold"]', source("Diagnostics", "LongDefeatRunReport.cs"))
 
 
+class BreakEnginesTests(unittest.TestCase):
+    """--break-engines (#1160): armed as break_engines, echoed back in the report's breakEngines, refused at or past --waves, and a report that cleared a wave past the break owes an
+    engine-restore and an engine-use pass."""
+
+    RESTORE = "[2026-11-13 10:00:00] [INFO] [Check] id=taom.long-defeat.engine-restore result=pass w=2 restored=3 tower0=ok tower1=ok ram0=ok"
+    USE = "[2026-11-13 10:05:00] [INFO] [Check] id=taom.long-defeat.engine-use result=pass w=2 restored=3 tower0=arrived,48.0 tower1=arrived,51.2 ram0=used,30.1"
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def parse(self, *argv):
+        return ld.build_parser().parse_known_args(list(argv))[0]
+
+    def captured_arm(self, *argv):
+        return PhaseTwoArmTests.captured_arm(self, *argv)
+
+    def test_break_engines_defaults_to_none_and_takes_one_to_a_hundred(self):
+        self.assertIsNone(self.parse().break_engines)
+        self.assertEqual(self.parse("--break-engines", "1").break_engines, 1)
+        self.assertEqual(self.parse("--break-engines", "100").break_engines, 100)
+        for bad in ("0", "101", "x", "1.5"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=bad):
+                self.parse("--break-engines", bad)
+
+    def test_the_flag_reaches_the_arm_text_and_none_arms_nothing(self):
+        text, _ = self.captured_arm("--break-engines", "1", "--waves", "2")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("break_engines=1\n", text)
+        text, _ = self.captured_arm()("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertNotIn("break_engines", text)
+
+    def test_the_arm_key_and_its_range_are_the_games(self):
+        plan = source("Autorun", "LongDefeatAutorunPlan.cs")
+        self.assertIn('case "break_engines":', plan)
+        self.assertIn("clear >= 1 && clear <= MaxStartWave", plan)
+        self.assertIn("private const int MaxStartWave = 100;", plan)
+        self.assertIn(("break_engines", 1), ld.arm_pairs(self.parse("--break-engines", "1"), "out", 3900))
+
+    def refused(self, argv):
+        """ld.main's stderr for flags it must refuse. The runner is stubbed (and every attribute main sets on it is put back), so a refusal that regresses fails here instead of starting the game."""
+        keep = {n: getattr(runner, n) for n in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
+        with mock.patch.multiple(runner, main=lambda rest: self.fail("the runner started"), **keep), \
+                mock.patch("sys.stderr", new_callable=io.StringIO) as err, self.assertRaises(SystemExit):
+            ld.main(list(argv))
+        return err.getvalue()
+
+    def test_a_break_no_wave_follows_is_refused(self):
+        self.assertIsNone(ld.break_engines_problem(self.parse("--break-engines", "1", "--waves", "2")))
+        self.assertIn("must be below --waves 5", ld.break_engines_problem(self.parse("--break-engines", "5")), "--waves defaults to 5")
+        self.assertIsNone(ld.break_engines_problem(self.parse("--waves", "2")))
+        for argv in (("--break-engines", "2", "--waves", "2"), ("--break-engines", "3", "--waves", "2")):
+            self.assertIn("must be below --waves", ld.break_engines_problem(self.parse(*argv)))
+        self.assertIn("must be below --waves 2", self.refused(["--break-engines", "2", "--waves", "2"]))
+
+    def test_deep_sets_its_waves_before_the_break_is_judged(self):
+        self.assertIn("must be below --waves 4", self.refused(["--deep", "--waves", "10", "--break-engines", "5"]))
+
+    def test_the_report_must_echo_the_armed_clear(self):
+        self.captured_arm("--break-engines", "1", "--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertEqual(ld.expected_report["breakEngines"], 1)
+
+        armed = {**REPORT, "startRerolls": 0}
+        log = "\n".join([FULL_LOG, self.RESTORE, self.USE])
+        self.assertEqual(ld.judge(FINAL, {**armed, "breakEngines": 1}, log)[0], 0)
+        for report in (armed, {**armed, "breakEngines": 2}, {**armed, "breakEngines": "1"}, {**armed, "breakEngines": True}):
+            code, why = ld.judge(FINAL, report, log)
+            self.assertEqual(code, 1, report.get("breakEngines"))
+            self.assertIn("breakEngines", why)
+
+    def test_a_run_armed_with_none_must_report_none(self):
+        self.captured_arm("--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertNotIn("breakEngines", ld.expected_report)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "breakEngines": None}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, armed, FULL_LOG)[0], 0, "a report with no key at all is a null one")
+        code, why = ld.judge(FINAL, {**armed, "breakEngines": 1}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("breakEngines", why)
+
+    def test_owes_the_engine_checks_once_a_wave_past_the_break_is_cleared(self):
+        self.assertTrue(ld.owes_engine_checks({"breakEngines": 1, "wavesCleared": 2}))
+        self.assertFalse(ld.owes_engine_checks({"breakEngines": 1, "wavesCleared": 1}), "the run ended at the break")
+        self.assertFalse(ld.owes_engine_checks({"wavesCleared": 5}), "nothing was broken")
+        self.assertFalse(ld.owes_engine_checks({"breakEngines": True, "wavesCleared": 5}), "a bool is no clear")
+        self.assertFalse(ld.owes_engine_checks({"breakEngines": 1, "wavesCleared": None}))
+
+    def test_a_broken_run_owes_both_passes_and_a_skip_pays_neither(self):
+        ld.expected_report = {"breakEngines": 1}
+        report = {**REPORT, "breakEngines": 1}
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.engine-restore", why)
+        self.assertIn("taom.long-defeat.engine-use", why)
+
+        code, why = ld.judge(FINAL, report, "\n".join([FULL_LOG, self.RESTORE]))
+        self.assertEqual(code, 1)
+        self.assertNotIn("engine-restore", why)
+        self.assertIn("taom.long-defeat.engine-use", why)
+
+        skip = self.USE.replace("result=pass", "result=skip") + " reason=unjudged"
+        self.assertEqual(ld.judge(FINAL, report, "\n".join([FULL_LOG, self.RESTORE, skip]))[0], 1)
+
+    def test_only_a_pass_of_the_wave_after_the_break_pays(self):
+        ld.expected_report = {"breakEngines": 3}
+        report = {**REPORT, "breakEngines": 3}
+        code, why = ld.judge(FINAL, report, "\n".join([FULL_LOG, self.RESTORE, self.USE]))
+        self.assertEqual(code, 1, "the w=2 lines are from another wave")
+        self.assertIn("taom.long-defeat.engine-restore (a pass with w=4", why)
+        self.assertIn("taom.long-defeat.engine-use (a pass with w=4", why)
+        wave4 = [line.replace(" w=2 ", " w=4 ") for line in (self.RESTORE, self.USE)]
+        self.assertEqual(ld.judge(FINAL, report, "\n".join([FULL_LOG, *wave4]))[0], 0)
+        self.assertEqual(ld.owed_engine_passes({"startWave": 12, "breakEngines": 1, "wavesCleared": 2}, ""),
+                         ["engine-restore (a pass with w=13, the wave after the break)", "engine-use (a pass with w=13, the wave after the break)"])
+
+    def test_a_lost_run_past_the_break_owes_both_passes_too(self):
+        ld.expected_report = {"breakEngines": 1}
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        past = cleared(3, final=False, breakEngines=1)
+        code, why = ld.judge(lost, past, LOSE_LOG)
+        self.assertEqual(code, 1, why)
+        self.assertIn("taom.long-defeat.engine-restore", why)
+        self.assertEqual(ld.judge(lost, past, "\n".join([LOSE_LOG, self.RESTORE, self.USE]))[0], 0)
+        self.assertEqual(ld.judge(lost, cleared(1, final=False, breakEngines=1), LOSE_LOG)[0], 0, "a run lost inside the wave after the break owes nothing")
+
+    def test_an_engine_fail_fails_the_run(self):
+        ld.expected_report = {"breakEngines": 1}
+        fail = self.RESTORE.replace("result=pass", "result=fail").replace("tower1=ok", "tower1=lane")
+        code, why = ld.judge(FINAL, {**REPORT, "breakEngines": 1}, "\n".join([FULL_LOG, fail, self.USE]))
+        self.assertEqual(code, 1)
+        self.assertIn("tower1=lane", why)
+
+    def test_the_report_writes_break_engines(self):
+        self.assertIn('["breakEngines"]', source("Diagnostics", "LongDefeatRunReport.cs"))
+
+
+class EngineManifestTests(unittest.TestCase):
+    """tools/ingame_checks/1160.toml judges the lines LongDefeatEngineChecks writes (#1160): the details its C# tests pin, a fail, and the two engine-use skips, which read NOT REACHED."""
+
+    TEST_FILE = REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Diagnostics" / "LongDefeatEngineChecksTests.cs"
+    RESTORE_PASS = "w=2 restored=2 tower0=ok ram0=ok"
+    USE_PASS = "w=2 restored=3 tower0=used,31.2 tower1=arrived,2.0 ram0=fell,12.0"
+    UNJUDGED = "w=2 restored=1 ram0=fell-early,0.0 reason=unjudged"
+    RUN_ENDED = "w=2 restored=1 tower0=idle,0.0 reason=run-ended"
+
+    def setUp(self):
+        self.manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1160.toml", 1160)
+
+    def verdict(self, check, result, detail):
+        row = next(c for c in self.manifest.checks if c.id == "taom.long-defeat." + check)
+        line = f"[2026-11-13 10:00:00] [INFO] [Check] id={row.id} result={result} {detail}"
+        return iv.judge_segment(row, [(None, 1, line)], []).verdict
+
+    def test_the_pinned_passes_pass_and_a_fail_fails(self):
+        self.assertEqual(self.verdict("engine-restore", "pass", self.RESTORE_PASS), iv.PASS)
+        self.assertEqual(self.verdict("engine-use", "pass", self.USE_PASS), iv.PASS)
+        self.assertEqual(self.verdict("engine-restore", "fail", "w=2 restored=1 tower0=ladders,wait"), iv.FAIL)
+        self.assertEqual(self.verdict("engine-use", "fail", "w=2 restored=1 tower0=idle,4.9"), iv.FAIL)
+
+    def test_an_engine_use_skip_is_not_reached(self):
+        self.assertEqual(self.verdict("engine-use", "skip", self.UNJUDGED), iv.NOT_REACHED)
+        self.assertEqual(self.verdict("engine-use", "skip", self.RUN_ENDED), iv.NOT_REACHED)
+
+    def test_the_details_are_the_ones_the_game_tests_pin(self):
+        text = self.TEST_FILE.read_text(encoding="utf-8")
+        for detail in (self.RESTORE_PASS, self.USE_PASS, self.UNJUDGED):
+            self.assertIn('"' + detail + '"', text)
+        self.assertIn('" reason=run-ended"', text)
+
+
 class FieldCareJudgeTests(unittest.TestCase):
     """Phase 3 Slice 4: field care is offered, so the report may list it and the judge owes its check line (phase3-plan.md section 6, D31)."""
 
@@ -3023,7 +3208,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
         spent = 150 if care else 0
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0}}, **more}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0}}, **more}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3038,7 +3223,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         # Tower level 3 is the tower volley (Slice 8): all three levels are for sale; a fourth is no row of the shop.
         def towers(levels):
             bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in levels]
-            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0}},
+            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0}},
                                fortifications={"gateLevel": 0, "towerLevel": len(levels), "volleyLevel": 0})
         self.assertIsNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400)))))
         self.assertIsNotNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400), (4, 400)))))
@@ -3137,7 +3322,7 @@ class GateJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
 
     def log(self, *extra):
@@ -3326,7 +3511,7 @@ class VolleyJudgeTests(unittest.TestCase):
             volley = {"uses": 1, "arrows": arrows, "hits": 8, "kills": 3, "withheld": 0} if fire else NO_VOLLEYS["volley"]
             rows.append(wave_row(n, volley=volley))
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": rows, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": levels}, **more}
 
     def line(self, result, detail, name="volley"):
@@ -3530,7 +3715,7 @@ class PostsJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "towerLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -3628,7 +3813,7 @@ class PostsJudgeTests(unittest.TestCase):
         self.assertIn("failed check", why)
 
     def towerless(self):
-        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
     def test_a_run_that_bought_no_tower_owes_no_posts_line(self):
@@ -3729,7 +3914,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in prices]
         spent = sum(price for _, price in prices)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -3798,7 +3983,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         self.assertIn("taom.long-defeat.tower-volley", why)
 
         elven = {**self.report(levels=0), "purchases": [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}],
-                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
+                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
         code, why = ld.judge(FINAL, elven, self.log(*self.volley("hornburg")))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.volley", why)

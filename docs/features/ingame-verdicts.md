@@ -101,8 +101,9 @@ for a battle check with `absence = "not-reached"`, `918.toml` for a daily check 
 
 ## Dependencies
 
-- `IModLogger` (Core) and `FileLogger`, which flushes INFO and WARNING lines to disk synchronously
-  on the calling thread.
+- `IModLogger` (Core) and `FileLogger`: WARNING, ERROR and INFO lines that start with a durable tag (`[Check]`,
+  `[Session]`) are on disk when the call returns; other INFO and DEBUG lines are flushed by the writer thread
+  within about a third of a second and by `Flush` on an orderly exit and before a crash report.
 - `PatchShield.SwallowedTotal` (TAOM.Dependencies), reported as `shield_swallowed=`.
 - `gh` for `--owed` and `--post`, `git` for the build binding.
 

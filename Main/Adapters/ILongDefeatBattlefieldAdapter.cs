@@ -28,6 +28,18 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>Deploys the attacker's engines, sets their hit points, hides ladders a tower covers and disables every defender point.</summary>
     void DeployEngines();
 
+    /// <summary>
+    /// Brings back every ram and siege tower the boot deployed that has been destroyed since (#1160): full hit points, enabled, back at the start of its path and in its siege lane again, as vanilla's own
+    /// mission reset leaves it. Returns each engine it brought back, read after the restore, and a problem when it could not act. Runs at each wave start, before the Hammer writes the engines' hit points.
+    /// </summary>
+    LdEngineRestore RestoreEngines();
+
+    /// <summary>Every ram and siege tower the boot deployed, as it stands now.</summary>
+    IReadOnlyList<LdEngineState> ReadEngines();
+
+    /// <summary>A test option (<c>break_engines</c>): destroys every ram and siege tower the boot deployed that stands, through the destructible's own hit path, and returns how many fell.</summary>
+    int BreakEngines();
+
     /// <summary>The scene's own defender reinforcement foot frame, used as the keep when nothing is recorded; null when the scene has none.</summary>
     LdPoint? KeepFromScene();
 
@@ -165,6 +177,18 @@ internal interface ILongDefeatBattlefieldAdapter
     /// struck it, which the field registered when it spawned him. False when the hit is not an attacker's blow on a defender, or when the registry no longer holds the attacker. Any thread.
     /// </summary>
     bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker);
+
+    /// <summary>
+    /// The defenders an upgrade may replace (#1161), counted by troop id without case: live humans on foot of the defending team, not the player, not a hero, not working an engine and not on a
+    /// tower post. Main thread.
+    /// </summary>
+    IReadOnlyDictionary<string, int> StandingDefendersByTroop();
+
+    /// <summary>
+    /// Replaces up to <paramref name="count"/> of those defenders of <paramref name="fromTroop"/> with soldiers of <paramref name="toTroop"/>: each new soldier at the old one's place, facing and
+    /// formation, its health limit scaled by <paramref name="healthFactor"/> and holding the old one's share of health; the old one is faded, which the run reads as no loss. Main thread.
+    /// </summary>
+    LdUpgradeReport ReplaceDefenders(string fromTroop, string toTroop, int count, float healthFactor);
 
     /// <summary>Drops every handle the adapter holds. Safe to call twice.</summary>
     void Clear();

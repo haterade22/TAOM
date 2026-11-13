@@ -2,8 +2,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Adapters;
+using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.CastleRecruitment;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.CulturalFeats;
 
 namespace TAOM.Features.TroopProgression.Models;
@@ -16,16 +18,37 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     private readonly VolunteerProductionService _volunteerProduction;
     private readonly IRecruitmentAlignmentService _recruitmentAlignment;
     private readonly ICastleRecruitmentService _castleRecruitment;
+    private readonly IDesertionRecruitGuard _desertionGuard;
+    private readonly IPlayerControlQuery _players;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // model is built.
     public TaomVolunteerModel(
         IVolunteerTierService volunteerTierService,
         IVolunteerRecruitmentService recruitmentService,
         IVolunteerContextAdapter contextAdapter,
         VolunteerProductionService volunteerProduction,
         IRecruitmentAlignmentService recruitmentAlignment,
-        ICastleRecruitmentService castleRecruitment)
+        ICastleRecruitmentService castleRecruitment,
+        IDesertionRecruitGuard desertionGuard)
+        : this(volunteerTierService, recruitmentService, contextAdapter, volunteerProduction, recruitmentAlignment,
+            castleRecruitment, desertionGuard, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal TaomVolunteerModel(
+        IVolunteerTierService volunteerTierService,
+        IVolunteerRecruitmentService recruitmentService,
+        IVolunteerContextAdapter contextAdapter,
+        VolunteerProductionService volunteerProduction,
+        IRecruitmentAlignmentService recruitmentAlignment,
+        ICastleRecruitmentService castleRecruitment,
+        IDesertionRecruitGuard desertionGuard,
+        IPlayerControlQuery players)
     {
         _castleRecruitment = castleRecruitment;
+        _desertionGuard = desertionGuard;
+        _players = players;
         _volunteerTierService = volunteerTierService;
         _recruitmentService = recruitmentService;
         _contextAdapter = contextAdapter;
@@ -48,6 +71,8 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// The player's own hero is never blocked by the castle rule; companion-led clan parties count as AI
     /// lords. <c>Patch114_AiVolunteerEstimate_Postfix</c> (#887) is the twin that extracts the same keys for AI trip
     /// scoring; change both together. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
+    /// Last, <see cref="IDesertionRecruitGuard.CapHeroIndex"/> stops the index before the first volunteer that alignment
+    /// desertion would take from the buyer (a captured fief's old-culture volunteers), so nobody buys a deserter.
     /// </summary>
     public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
     {
@@ -56,8 +81,16 @@ public class TaomVolunteerModel : DefaultVolunteerModel
         return _castleRecruitment.BlocksAiRecruitAtCastle(sellerInCastle: sellerSettlement?.IsCastle == true, buyerIsPlayer: isPlayer)
                || _recruitmentAlignment.IsRecruitmentBlocked(buyerHero?.Clan?.Kingdom?.StringId, sellerSettlement?.MapFaction?.StringId, isPlayer)
             ? -1
-            : base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
+            : _desertionGuard.CapHeroIndex(buyerHero, sellerHero, base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation), isPlayer);
     }
+
+    /// <summary>
+    /// Garrison auto-recruit (vanilla <c>GarrisonRecruitmentCampaignBehavior</c>, a slot count) capped before the first
+    /// volunteer that alignment desertion would take from the garrison, so a garrison does not pay for troops that
+    /// desert the next day.
+    /// </summary>
+    public override int MaximumIndexGarrisonCanRecruitFromHero(Settlement settlement, Hero sellerHero)
+        => _desertionGuard.CapGarrisonSlots(settlement, sellerHero, base.MaximumIndexGarrisonCanRecruitFromHero(settlement, sellerHero));
 
     public override CharacterObject GetBasicVolunteer(Hero sellerHero)
     {
@@ -81,14 +114,15 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// respawn-rate feats keyed on the SETTLEMENT'S owning clan culture (matches
     /// <c>TaomSettlementMilitiaModel</c>) and then the War of the Ring volunteer effect of the
     /// owning clan's kingdom (#765). A settlement of the player's own clan keeps its feats but gets no
-    /// war step, so its settlements' production is never changed by an effect (decision D4). This body
-    /// only extracts the owner's facts at the boundary (gamemodels.md rule 4); the only engine caller
-    /// runs inside a campaign, so <c>Clan.PlayerClan</c> is safe to read here.
+    /// war step, so its settlements' production is never changed by an effect (decision D4). In a co-op
+    /// session every human player's clan counts (#1141): the daily tick runs on the server, where
+    /// <c>Clan.PlayerClan</c> is the server's own clan. This body only extracts the owner's facts at the
+    /// boundary (gamemodels.md rule 4).
     /// </summary>
     public override float GetDailyVolunteerProductionProbability(Hero hero, int index, Settlement settlement)
         => _volunteerProduction.Compute(
             base.GetDailyVolunteerProductionProbability(hero, index, settlement),
             CultureFeatAdapter.FromOrNull(settlement?.OwnerClan?.Culture),
             settlement?.OwnerClan?.Kingdom?.StringId,
-            settlement?.OwnerClan != null && settlement.OwnerClan == Clan.PlayerClan);
+            PlayerClanCheck.IsAPlayersClan(settlement?.OwnerClan, _players));
 }

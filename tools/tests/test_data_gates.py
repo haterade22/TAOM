@@ -80,6 +80,15 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("xml-schemas", ids)
         self.assertNotIn("armory-refs", ids)
 
+    def test_an_english_strings_file_selects_the_orphan_row_gate(self):
+        # 561d1b308 registered two rows that the gate then called unread, and nothing ran the gate on that change.
+        for path in ("Main/_Module/ModuleData/taom_module_strings.xml",
+                     "Main/_Module/ModuleData/named_companions/named_companion_strings.xml",
+                     "tools/check_orphan_loc_rows.py", "tools/_loc_sources.py",
+                     "tools/loc_composed_families.json", "tools/loc_orphan_allowlist.json"):
+            self.assertIn("loc-orphans", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("loc-orphans", _ids(dg.select(dg.GATES, [TROOPS])))
+
     def test_a_live_armory_file_selects_the_armory_gates(self):
         ids = _ids(dg.select(dg.GATES, [LIVE_ARMORY]))
         self.assertIn("armory-refs", ids)

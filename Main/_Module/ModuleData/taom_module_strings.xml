@@ -4969,7 +4969,7 @@
 	<string id="taom_realms_mcm_liege_pull" text="{=taom_realms_mcm_liege_pull}Liege's Pull" />
 	<string id="taom_realms_mcm_liege_pull_hint" text="{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on." />
 	<string id="taom_realms_mcm_army_discount" text="{=taom_realms_mcm_army_discount}Liege Army Discount" />
-	<string id="taom_realms_mcm_army_discount_hint" text="{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on." />
+	<string id="taom_realms_mcm_army_discount_hint" text="{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. It does not stack with the King's Muster ruler discount: when both apply, the larger one is used. When off, other discounts such as culture feats and the King's Muster still apply. Default: on." />
 	<string id="taom_realms_mcm_family_grants" text="{=taom_realms_mcm_family_grants}Lands for Sons and Daughters" />
 	<string id="taom_realms_mcm_family_grants_hint" text="{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on." />
 	<string id="taom_realms_mcm_title_styles" text="{=taom_realms_mcm_title_styles}Lords Styled by Their Titles" />
@@ -5021,5 +5021,8 @@
 	<string id="taom_hero_auras_mcm_enabled_hint" text="{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse." />
 	<string id="taom_hero_auras_mcm_strength" text="{=taom_hero_auras_mcm_strength}Hero Aura Strength" />
 	<string id="taom_hero_auras_mcm_strength_hint" text="{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- Messengers -->
+	<string id="taom_messenger_waiting" text="{=taom_messenger_waiting}Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
 
 </strings>
