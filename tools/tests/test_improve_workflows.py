@@ -764,6 +764,15 @@ class StubRuntime(unittest.TestCase):
         self.assertEqual(status, {"041": "DONE", "042": "FAILED", "043": "DONE", "044": "DONE", "045": "DONE"})
         self.assertIn("DECISION ONE", self.prompt_of(out, "decide-045"))
 
+    def test_execute_items_keep_their_own_model(self):
+        # One workflow can run a Sonnet plan beside an Opus plan in one pool; without this the
+        # orchestrator splits the batch into one workflow per model.
+        out = self.run_script("execute.js", {"args": run_args(items=[
+            self.exec_item("041", model="ITEM-MODEL"), self.exec_item("042"),
+            self.exec_item("043", contract="stages", model="STAGE-MODEL", stages=self.STAGES[:1])]),
+            "replies": {"exec-041": self.done("a"), "exec-042": self.done("b"), "stage-043-one": self.done("c")}})
+        self.assert_contract(out, {"exec-041": "ITEM-MODEL", "stage-043-one": "STAGE-MODEL"})
+
     def test_execute_refuses_a_repeated_num(self):
         self.assert_refused("execute.js", run_args(items=[self.exec_item("042"), self.exec_item("042")]), "042")
 
@@ -869,6 +878,31 @@ class StubRuntime(unittest.TestCase):
         text = json.dumps(result["residual"])
         self.assertIn("STILL THERE", text)
         self.assertIn("NF: needs the maintainer", text)
+
+    def test_review_with_stop_on_low_hands_a_low_only_round_to_the_orchestrator(self):
+        # The 2026-11-12 run: every round 1 finding on six branches was LOW, most in review records,
+        # and each cost a fix pass and a second round at max effort. With stopOnLow such a round ends
+        # the loop: the findings go to residual, and no fix ships without a review of it.
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT}, stopOnLow=True)
+        self.assert_contract(out)
+        self.assertEqual(self.labels(out)[3:], ["lead-050", "converge-050-r1"])
+        result = out["result"][0]
+        self.assertEqual(result["status"], "RESIDUAL")
+        self.assertEqual([(r["round"], r["severity"], r["claim"]) for r in result["residual"]], [(1, "LOW", "C")])
+
+    def test_review_with_stop_on_low_still_fixes_a_round_that_holds_more_than_low(self):
+        mixed = dict(self.DEFECT, findings=[self.DEFECT["findings"][0],
+                                            dict(self.DEFECT["findings"][0], severity="MED", claim="M")])
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": mixed, "fix-050-r1": self.FIX,
+                           "converge-050-r2": self.CLEAN}, stopOnLow=True)
+        self.assert_contract(out)
+        self.assertEqual(self.labels(out)[3:], ["lead-050", "converge-050-r1", "fix-050-r1", "converge-050-r2"])
+        self.assertEqual(out["result"][0]["status"], "CLEAN")
+
+    def test_review_without_stop_on_low_fixes_a_low_only_round(self):
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT, "fix-050-r1": self.FIX,
+                           "converge-050-r2": self.CLEAN})
+        self.assertIn("fix-050-r1", self.labels(out))
 
     def test_review_stops_when_convergence_is_clean(self):
         out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.CLEAN})

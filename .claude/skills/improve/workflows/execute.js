@@ -10,7 +10,8 @@ export const meta = {
 //   rules, repo, scratch, tmp, date, version, model { executor }, pool (default 4)
 //   knownFailures (optional): ["<test>: <why it is expected to fail on this base>", ...]
 //   items: [{ num, slug, wt, branch, base, contract: 'plan'|'decisions'|'stages', decisions?, stages?,
-//             note?, issue?, ref?, knownFailures?, effort? }]
+//             note?, issue?, ref?, knownFailures?, effort?, model? }]
+//     model: this item's executor model, over model.executor, so one pool runs plans of two tiers;
 //     wt and branch already exist (the orchestrator made them); decisions: the maintainer's decision
 //     texts; stages: [{ key, title?, prompt, effort? }]; note: binding orchestrator text (an
 //     amendment, a resume from uncommitted work); ref: how commits name the work (default "plan <num>").
@@ -95,7 +96,7 @@ function runValues(o) {
     `- <scratch>: ${args.scratch}; <your label>: ${o.label}; your scratch folder: ${join(args.scratch, o.label)}`,
     `- <tmp>: ${args.tmp}`,
     `- <version>: ${args.version}; today: ${args.date}`,
-    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout, where the run folder lives; write it there, and touch nothing else in the main checkout.',
+    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout or the run worktree, where the run folder lives; write it there, and touch nothing else in that checkout.',
   ].join('\n')
 }
 
@@ -104,7 +105,7 @@ function runValues(o) {
 // (a null result) or a failed call is reported, never passed on as data.
 function runAgent(role, text, o) {
   return limited(() => agent(`${RULES}\n\n${runValues(o)}\n\n${text}`, {
-    label: o.label, phase: o.phase, schema: o.schema, model: modelFor(role), effort: o.effort || 'high',
+    label: o.label, phase: o.phase, schema: o.schema, model: o.model || modelFor(role), effort: o.effort || 'high',
   })).then(
     v => (v === null || v === undefined ? { ok: false, failure: `${o.label}: ${NO_RESULT}` } : { ok: true, value: v }),
     e => ({ ok: false, failure: `${o.label}: the agent call failed: ${String(e)}` }),
@@ -164,7 +165,7 @@ DECISIONS TO APPLY (taken by the maintainer; each is binding; if one turns out i
 ${it.decisions.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 BASELINE: before your first edit, run the full suite once and record the base's own totals and failing tests (standing rule "Build and test"); at the end, match them.${knownFailures(it)}
 Every behaviour change is TDD. Update the branch's docs, and append a section "## Maintainer decisions applied (${args.date})" to the review record listing each decision and the commit that applies it.
-COMMIT (standing rule "Commit"): subject 'fix(<scope>): ${args.version} - apply maintainer decisions for ${refOf(it)}' (at most 72 characters; adjust the scope, shorten the tail if needed), a body that lists each decision${it.issue ? ` and names ${issueOf(it)}` : ''}.
+COMMIT (standing rule "Commit"): subject '<type>(<scope>): ${args.version} - apply maintainer decisions for ${refOf(it)}' (at most 72 characters; set the scope and the type that names what the commit changes, shorten the tail if needed), a body that lists each decision${it.issue ? ` and names ${issueOf(it)}` : ''}.
 ${RETURN}`
 
 const stagePrompt = (it, st, i, prior) => `ROLE: a BUILDER for stage ${i + 1} of ${it.stages.length} ("${st.title || st.key}") of ${refOf(it)}. Each stage is one TDD commit on the branch, and a later stage builds on it.
@@ -186,7 +187,7 @@ async function executeOne(it) {
       const st = it.stages[i]
       const prior = results.map(r => `- ${r.stage}: ${r.status} ${r.commit || ''} :: ${String(r.summary || '').slice(0, 600)}\n  tests: ${String(r.tests || '').slice(0, 300)}`).join('\n')
       const r = await runAgent('executor', stagePrompt(it, st, i, prior), {
-        label: `stage-${it.num}-${st.key}`, phase: 'Execute', schema: SCHEMA, effort: st.effort || it.effort, editing: true, worktree: it.wt, base: it.base,
+        label: `stage-${it.num}-${st.key}`, phase: 'Execute', schema: SCHEMA, effort: st.effort || it.effort, model: it.model, editing: true, worktree: it.wt, base: it.base,
       })
       const res = r.ok ? { stage: st.key, ...r.value } : { stage: st.key, status: 'FAILED', failure: r.failure }
       results.push(res)
@@ -199,7 +200,7 @@ async function executeOne(it) {
   }
   const prompt = it.contract === 'plan' ? planPrompt(it) : decisionsPrompt(it)
   const label = `${it.contract === 'plan' ? 'exec' : 'decide'}-${it.num}`
-  const r = await runAgent('executor', prompt, { label, phase: 'Execute', schema: SCHEMA, effort: it.effort, editing: true, worktree: it.wt, base: it.base })
+  const r = await runAgent('executor', prompt, { label, phase: 'Execute', schema: SCHEMA, effort: it.effort, model: it.model, editing: true, worktree: it.wt, base: it.base })
   const res = r.ok ? { num: it.num, contract: it.contract, ...r.value } : { num: it.num, contract: it.contract, status: 'FAILED', failure: r.failure }
   log(`${refOf(it)}: ${res.status} ${res.commit || res.failure || ''}`)
   return res

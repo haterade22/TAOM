@@ -11,6 +11,8 @@ export const meta = {
 // args, built by python tools/improve_ctl.py args review --items <json> ...:
 //   rules, repo, runRoot, scratch, tmp, date, version, model { lead, convergence, fix }, pool (default 4)
 //   maxRounds (default 2): convergence rounds after the lead; never a third unless the maintainer asks
+//   stopOnLow (default false): a convergence round whose findings are all LOW ends the loop with no
+//     fix pass; the findings go to residual for the orchestrator, who fixes or tracks them
 //   items: [{ num, planSlug, branch, wt, base, head, title, lenses, files, codexOut?, tag?, note?, ref? }]
 //     lenses: the deep-review routing improve_ctl.py computed ('1' to '7', 'tooling'); files: the
 //     changed files grouped by kind, repo-relative; head: the branch tip the lenses review; tag: a
@@ -74,6 +76,7 @@ ITEMS.forEach((it, i) => {
 })
 const rounds = Math.floor(Number(args.maxRounds))
 const MAX_ROUNDS = args.maxRounds !== undefined && rounds >= 0 ? rounds : 2
+const STOP_ON_LOW = args.stopOnLow === true
 
 const modelFor = role => (args.model && typeof args.model[role] === 'string' && args.model[role]) || DEFAULT_MODEL
 
@@ -116,7 +119,7 @@ function runValues(o) {
     `- <scratch>: ${args.scratch}; <your label>: ${o.label}; your scratch folder: ${join(args.scratch, o.label)}`,
     `- <tmp>: ${args.tmp}`,
     `- <version>: ${args.version}; today: ${args.date}`,
-    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout, where the run folder lives; write it there, and touch nothing else in the main checkout.',
+    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout or the run worktree, where the run folder lives; write it there, and touch nothing else in that checkout.',
   ].join('\n')
 }
 
@@ -257,7 +260,7 @@ B. Fix every CONFIRMED defect in the changed code, test first where it is testab
 C. Step 4 improvements (Agent 3 APPLY-scoped fixes and Agent 6 KEEP proposals, changed code only): apply the behaviour-PRESERVING ones with a characterisation test green before and after. Do not apply behaviour-CHANGING ones: list each under NOT APPLIED and in needs_mike. FOLLOW-UP proposals (pre-existing code) are listed, never applied.
 D. Run the full suite in the worktree and match the base's totals (standing rule "Build and test"). ${HOOK_SUITE(it)} ${GATE_SWEEP}
 E. Write, inside the worktree: ${reportOf(it)} (the Step 3 DEEP REVIEW REPORT with the IMPROVEMENTS lists and the VERDICT, plus a CODEX REVIEW section with the Phase 3d assessment table); for any confirmed finding, ${rcaOf(it)} (Step 3e: summary, findings table, why each agent missed it) and one '### <rule>' entry per systemic lesson appended to the matching docs/reviews/lessons/<category>.md; and one entry appended to docs/reviews/REVIEW-LOG.md (review-codex Phase 3i), dated ${args.date}, whose heading carries no review number (the orchestrator assigns them). Do not edit AGENTS.md or any file under .ai/: list the Codex lessons you would add under "Codex lessons (pending)" in the report (only a new false-positive pattern or a missed category); the orchestrator consolidates them at wrap-up.
-F. Commit on the branch (standing rule "Commit"): subject 'fix(<scope>): ${args.version} - review follow-ups for ${refOf(it)}' (adjust the scope; at most 72 characters), a body naming the report and RCA paths. If nothing needed fixing, still commit the record files, with subject 'docs(reviews): ${args.version} - deep review for ${refOf(it)}'.
+F. Commit on the branch (standing rule "Commit"): subject '<type>(<scope>): ${args.version} - review follow-ups for ${refOf(it)}' (set the scope; at most 72 characters), a body naming the report and RCA paths. The type names what this commit changes, because the release note groups by it: fix only when it corrects a defect in shipped behaviour, test when it changes tests only, refactor when it changes code with the same behaviour, docs when it changes comments and records only. If nothing needed fixing, still commit the record files, with subject 'docs(reviews): ${args.version} - deep review for ${refOf(it)}'.
 
 LENS REPORTS:
 ${reports}
@@ -273,7 +276,7 @@ Return the structured result; the verdict is CLEAN only if you have no finding.`
 
 const fixPrompt = (it, round, fromRef, findings) => `ROLE: the review lead's fix pass after convergence round ${round}, for "${it.title}" (${refOf(it)}) on branch ${it.branch} in the worktree ${it.wt}.
 The convergence reviewer found defects in git -C "${it.wt}" diff ${fromRef}..HEAD. Verify each against the code; fix the confirmed ones, test first where testable; run the full suite and match the base's totals (standing rule "Build and test"). ${HOOK_SUITE(it)} ${GATE_SWEEP}
-Append a section "Convergence round ${round}" to ${reportOf(it)}: each finding as fixed (with the commit), false positive (with why) or not fixed (with why). Commit (standing rule "Commit"): subject 'fix(<scope>): ${args.version} - convergence fixes for ${refOf(it)}' (adjust the scope; at most 72 characters). Do not open new design work.
+Append a section "Convergence round ${round}" to ${reportOf(it)}: each finding as fixed (with the commit), false positive (with why) or not fixed (with why). Commit (standing rule "Commit"): subject '<type>(<scope>): ${args.version} - convergence fixes for ${refOf(it)}' (set the scope; at most 72 characters; the type names what this commit changes: fix only for a defect in shipped behaviour, test for tests only, docs for comments and records only). Do not open new design work.
 ${noteOf(it)}
 CONVERGENCE FINDINGS:
 ${findings.map(f => `- ${JSON.stringify(f)}`).join('\n')}
@@ -347,7 +350,10 @@ async function reviewOne(it) {
       res.residual.push({ round, note: `convergence round ${round} returned verdict ${conv.value.verdict} with no findings listed: read its evidence_summary` })
       break
     }
-    if (round === MAX_ROUNDS) {
+    // With stopOnLow, a round that found nothing above LOW ends the loop: a fix pass would need one
+    // more review round, and that costs more than these findings, which the orchestrator handles.
+    const lowOnly = STOP_ON_LOW && findings.every(f => f.severity === 'LOW')
+    if (round === MAX_ROUNDS || lowOnly) {
       res.residual.push(...findings.map(f => ({ round, ...f })))
       break
     }
