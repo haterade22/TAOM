@@ -135,6 +135,69 @@ Owed before Gate 2: CLIFF-B, HAIRPIN (real scene), PLACE (Mike, 10 minutes).
 - `TeleportToPosition` onto the post (LEASH) put the hero exactly on it (`maxDriftAfter=0.00`), kept his formation and target, logged no fault, and the pack re-engaged within about 1.8 s.
 - A mounted pack held on Charge wheels about 72 m out (median) and returns to the hero. A pack released to Move while it is upstream rides back onto him on its way to the exit.
 
+## Co-op (design, not built)
+
+Mike chose the route below on 2026-11-13 ("proceed with your best recommendations"). Nothing of it is built. The solo slices come
+first; the co-op slices start after Slice 14. Coop facts were read in the `bannerlord-1.5.x` working tree of `E:\repos\BannerlordCoop`
+(head `e9906952a`) and in [bannerlordcoop-internals](../research/bannerlordcoop-internals.md); none was run.
+
+**Why the mode cannot stay campaign-free in co-op.** BannerlordCoop exists only inside a shared campaign: a client joins by loading
+the host's full save, and every co-op mission is a peer-to-peer instance tied to a map event (battles) or a settlement location
+(taverns, tournaments). The dedicated server opens no mission; it elects the host and relays membership
+(`Missions/Locations/LocationHostHandler.cs`). So co-op Hero Defence opens from a town menu inside a Coop campaign, for every
+player in that town. Solo Hero Defence stays in Custom Game.
+
+**Routes considered.**
+
+| Route | Verdict | Reason |
+|---|---|---|
+| A. A new Coop mission kind, opened from a town | **Chosen** | Coop already replicates agents, movement, formations and blows, and moves the host mid-battle |
+| B. Native Bannerlord multiplayer (a custom server game mode) | Rejected for now | Needs multiplayer characters and items, a server-side rewrite of the mission and networked UI; whether TAOM races and Armory content load in multiplayer is untested |
+| C. TAOM's own netcode | Rejected | It repeats Coop's agent replication |
+
+**Authority (route A).**
+
+- The elected host owns every creep and runs the run rules: phase, countdown, lives, waves, bounties, purses. Coop's model fits: each
+  peer owns the agents it spawned, the others hold `Controller = None` puppets (`Missions/Battles/PuppetSpawner.cs`).
+- Each player owns the heroes they bought, so the P takeover needs no change: the player's own game controls those agents.
+- A blow is resolved on the attacker's peer with its own models and replayed on the others (`Agent.RegisterBlow`), so TAOM's damage
+  hooks stay consistent when every peer runs the same TAOM build. `TAOM.CoopCompat` compares the builds on join and warns; it does
+  not block a mismatch.
+- Shop actions (buy, place, level, target priority) are requests to the host, which accepts or rejects each one and broadcasts the
+  new state. Clients only display it.
+- A host handoff mid-wave must carry the run state to the new host, as Coop's `BattleAuthorityMigrator` does for battles.
+
+**Where the code goes.**
+
+- **Coop fork (upstream `bannerlord-1.5.x`, Garrett reviews):** a generic seam for a mod-defined location mission: open a mission at
+  a town with an instance kind, elect its host, register its agents. Coop types such as `CoopMissionController` take Coop-internal
+  services in their constructor, and Coop finds handlers by namespace scan, so a third-party mission type cannot be added from
+  outside today. A generic seam also serves other mods.
+- **`TAOM.CoopCompat.Coop.dll`:** the Hero Defence wire contracts (`[ProtoContract]`, never in `TAOM.dll`, ADR-014) and the handlers
+  that relay state and shop requests.
+- **`TAOM.dll`:** the director split into host rules and a client view of the state. The pure domain does not change.
+
+**Modes, in order.**
+
+1. **Together:** one road, shared lives, one purse per player. Each player buys, places and levels their own heroes; every
+   player's bounties go to the player whose hero landed the kill, and the clear bonus is split evenly.
+2. **Versus race:** two roads in one scene, one per player, each with its own lives. Kills send extra creeps to the rival's road;
+   the last player with lives wins. The host owns both roads' creeps.
+3. **Versus attacker:** one player buys the waves, the other defends. Last, because the waves become player-made and need new
+   balance work.
+
+**Limits.**
+
+- No game speed above 1x: every peer runs one mission clock.
+- The engine agent ceiling (Coop's `IBattleAgentBudget`, `GameInterface/Services/MapEvents/BattleAgentBudget.cs`) and the movement
+  traffic for up to 160 creeps plus heroes are unmeasured.
+- The co-op scene needs a town entry point, so the town menu option and the scene load are new work in both repos.
+
+**First spike (needs the install and two game clients).** Two players in one town open a test location mission through the
+generic seam; the host spawns 160 creeps on Move orders along a road, and each client spawns one hero. Pass: puppets track their
+owners within 1 m at the median, a blow on a puppet hero lands once on its owner, a host handoff mid-wave keeps every creep, and the
+frame time stays within 1.5x of solo. The seam's shape is decided from that spike.
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/hero_defence/waves.json`
