@@ -139,4 +139,18 @@ public class MessengerCampaignBehaviorSourceTests
 
         StringAssert.Contains(src, "sentText.SetTextVariable(\"DAYS\", _settings.MessengerTravelDays);");
     }
+
+    [TestMethod]
+    public void TheArrival_AsksTheServiceForItsVerdict_WithTheRawPartyEqualityAndTheEngineState()
+    {
+        var behavior = RepoPaths.ReadSource(Path, stripComments: true);
+        var reader = RepoPaths.ReadSource("Main/Features/Messengers/MessengerTargetReader.cs", stripComments: true);
+        var body = Regex.Match(behavior, @"ArrivedHandleOutcome HandleArrivedMessenger\([\s\S]*?\n    \}").Value;
+
+        Assert.IsTrue(body.Length > 0, "HandleArrivedMessenger not found");
+        StringAssert.Contains(body, "_service.ClassifyArrival(");
+        StringAssert.Contains(body, "sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo");
+        Assert.IsFalse(body.Contains("IsInPlayerParty"), "arrival's party test is true when both parties are null; IsInPlayerParty is not");
+        StringAssert.Contains(reader, "heroState: (MessengerHeroState)(int)hero.HeroState");
+    }
 }

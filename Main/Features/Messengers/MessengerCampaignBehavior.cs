@@ -20,7 +20,7 @@ namespace TAOM.Features.Messengers;
 // TAOM boundary class (ADR-002 / ADR-007). Touches sealed TaleWorlds types directly because that is what
 // the boundary is for — engine-coupled concerns (mission listener, encounter routing, dialog tree, settlement
 // vs field handling, position restore) cannot move into a non-boundary class without inventing a redundant
-// abstraction layer. ALL pure-logic decisions delegate to IMessengerService or MessengerEntryPolicy (validation, accident roll,
+// abstraction layer. ALL pure-logic decisions delegate to IMessengerService or MessengerEntryPolicy (validation, arrival verdict, accident roll,
 // position math, speed calc, entry route). Save data flows through IMessengerStateStore (store owns serialization format).
 // Codex review #34 flagged this as "fat boundary"; deep-review's standards agent independently confirmed
 // the structure is compliant — the line count comes from genuine engine-coupled orchestration, not from
@@ -275,22 +275,21 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         if (target == null)
             return ArrivedHandleOutcome.RemoveFromList;
 
-        // Permanent unavailability classes — drop with a "messenger lost" notification.
-        // Codex review #34 caught: send-time validation rejects fugitive / dead / disabled targets,
-        // but the original arrival path only screened dead/disabled. A target that became fugitive
-        // mid-flight could pass through the temporary-wait path and trigger StartMessengerConversation
-        // with no settlement / no party, falling back to MainParty as the conversation partner.
-        if (!target.IsAlive
-            || target.HeroState == Hero.CharacterStates.Disabled
-            || target.IsFugitive
-            || (!target.IsActive && !target.IsWanderer)
-            || (!target.IsActive && target.IsWanderer && target.HeroState != Hero.CharacterStates.NotSpawned))
+        // The verdict is the service's (MessengerService.ClassifyArrival); these are the engine facts it needs. The
+        // party test is the raw equality, which is true when both parties are null, so it is not IsInPlayerParty.
+        var verdict = _service.ClassifyArrival(
+            MessengerTargetReader.ReadSnapshot(target)!,
+            sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo,
+            playerAvailable: IsPlayerAvailable(),
+            targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null);
+
+        if (verdict == MessengerArrivalVerdict.Lost)
         {
             NotifyMessengerLost(messenger, target);
             return ArrivedHandleOutcome.RemoveFromList;
         }
 
-        if (target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo)
+        if (verdict == MessengerArrivalVerdict.Confused)
         {
             var text = new TextObject("{=taom_messenger_confused}The messenger seems confused — they were trying to reach someone in your own party!");
             text.SetTextVariable("HERO_NAME", target.Name);
@@ -301,9 +300,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             return ArrivedHandleOutcome.RemoveFromList;
         }
 
-        // Temporary unavailability — defer to next tick. IsTargetAvailableNow gates on
-        // prisoner/child/MapEvent (transient), all of which the player may resolve.
-        if (!IsPlayerAvailable() || !IsTargetAvailableNow(target))
+        if (verdict != MessengerArrivalVerdict.Ready)
             return ArrivedHandleOutcome.WaitForNextTick;
 
         _processingArrivedMessenger = true;
@@ -615,12 +612,6 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
     {
         if (string.IsNullOrEmpty(heroId)) return null;
         return Hero.FindFirst(h => h != null && h.StringId == heroId);
-    }
-
-    private static bool IsTargetAvailableNow(Hero hero)
-    {
-        if (hero == null || !hero.IsAlive || hero.IsPrisoner || hero.IsChild) return false;
-        return hero.PartyBelongedTo?.MapEvent == null;
     }
 
     private static bool IsPlayerAvailable()

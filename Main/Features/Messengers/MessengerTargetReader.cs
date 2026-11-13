@@ -34,7 +34,8 @@ internal static class MessengerTargetReader
             sameSettlement: here != null && hero.CurrentSettlement == here,
             sameArmy: army != null && mainParty != null && hero.PartyBelongedTo != null
                       && army.DoesLeaderPartyAndAttachedPartiesContain(mainParty)
-                      && army.DoesLeaderPartyAndAttachedPartiesContain(hero.PartyBelongedTo));
+                      && army.DoesLeaderPartyAndAttachedPartiesContain(hero.PartyBelongedTo),
+            heroState: (MessengerHeroState)(int)hero.HeroState);
     }
 
     internal static MessengerQuoteInput ReadQuoteInput(Hero? hero, int travelDays)
