@@ -570,11 +570,9 @@ Code: No code changes needed
   `settlements.xml` also use `{==` where the other 3,269 keys use `{=`; what that does to the resolved
   key is not determined here, see [strings-and-localization.md](strings-and-localization.md).
   <!-- measured: grep -o '{==' ModuleData/settlements.xml | wc -l 2026-09-05 -->
-- **One TAOM doc is stale about this folder.**
-  [main-map-vista.md](../reference/main-map-vista.md) says this module ships no `AssetPackages/`,
-  which stopped being true on 2026-09-04. `docs/scene-entities.md` used to be the second: it was
-  regenerated from the live scene on 2026-09-11 (78 towns, 143 castles, 618 village entities) and
-  now names its source file and date in its header. Regenerate it with
+- **`docs/scene-entities.md` is generated from the live scene.** It was
+  regenerated on 2026-09-11 (78 towns, 143 castles, 618 village entities) and
+  names its source file and date in its header. Regenerate it with
   `tools/Generate-SceneEntitiesDoc.ps1 -SceneFile <live scene.xscene>` after any scene edit.
 
 ## What TAOM has never written down

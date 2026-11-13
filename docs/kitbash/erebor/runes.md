@@ -44,7 +44,7 @@ tools/runes/clean_ai_mask.py         ← threshold, median-filter, downsample
         ↓
 tools/runes/masks/{hero,filler}/     ← committed mask library
         ↓
-tools/stamp_erebor_runes.py          ← 5-mode stamper (carved / gold / silver / bronze / mithril)
+tools/oneoff/stamp_erebor_runes.py          ← 5-mode stamper (carved / gold / silver / bronze / mithril)
         ↓
 …/Scenes/erebor/textures/*_runic_*.png   ← committed PBR triples
 ```
@@ -98,7 +98,7 @@ Skip this step if Recraft's PNG is already crisp — visual judgement call.
 **One-shot, hero stamp (centered):**
 
 ```bash
-python tools/stamp_erebor_runes.py \
+python tools/oneoff/stamp_erebor_runes.py \
     --base t_dw_wall_block_a1 \
     --mask tools/runes/masks/hero/<motif>.png \
     --mode gold \
@@ -108,7 +108,7 @@ python tools/stamp_erebor_runes.py \
 **One-shot, trim band (horizontally tiled across middle):**
 
 ```bash
-python tools/stamp_erebor_runes.py \
+python tools/oneoff/stamp_erebor_runes.py \
     --base t_dw_trim_a1 \
     --mask tools/runes/masks/filler/<trim_motif>.png \
     --mode carved \
@@ -122,7 +122,7 @@ Outputs `<base>_runic_d.png`, `<base>_runic_n.png`, `<base>_runic_s.png` next to
 Edit `tools/runes/manifest.json`, set `skip: false` for the entries you want, then:
 
 ```bash
-python tools/stamp_erebor_runes.py --manifest tools/runes/manifest.json
+python tools/oneoff/stamp_erebor_runes.py --manifest tools/runes/manifest.json
 ```
 
 ## Five Blend Modes
@@ -135,7 +135,7 @@ python tools/stamp_erebor_runes.py --manifest tools/runes/manifest.json
 | **bronze** | Replace with `(140, 90, 50)` + warm-orange highlight, high spec | Warm copper-orange | Smithy / forge iconography, older hero pieces |
 | **mithril** | Replace with `(210, 220, 230)` + near-white highlight, very-high spec | Pale silver-blue, brilliant | Top-tier dwarven feature pieces, throne hall |
 
-Tuning constants live at the top of `tools/stamp_erebor_runes.py`:
+Tuning constants live at the top of `tools/oneoff/stamp_erebor_runes.py`:
 
 - `METALS` dict — `(body, highlight, spec)` RGB tuples per metal mode (gold/silver/bronze/mithril). Edit the tuple, re-run.
 - `CARVED_DIFFUSE_MULT`, `CARVED_NORMAL_DEPTH`, `CARVED_SPEC_MULT` — carved-mode behaviour.
