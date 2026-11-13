@@ -56,7 +56,8 @@ not authorized; the row of that time changes that.
 | 10 Merge into the run branch | DONE | orchestrator, `integrate_branch.py`, then build and full C# suite on the staged merge before each commit | 047 `97e9053b3` (39,268 passed), 050 `e77849d92` (39,296), 048 `c34192e74` (39,296), 049 `7af4ace9e` (39,312), 046 `62ea77ed7` (39,321), 051 `0d4642051` (39,321; ruff clean, 103 touched tool tests OK) | `docs/reviews/REVIEW-LOG.md` resolved by union in five merges; no other conflict |
 | 10b Trunk into the run branch | DONE | orchestrator | `45ee5b5f9` (trunk `1ed44b54d`, 11 commits since the baseline) | one conflict, `CLAUDE.md`: another session's context diet removed the same duplicated passage as item 052; the trunk's wording was taken |
 | 10c Full verification at `45ee5b5f9` | DONE | orchestrator, every `/verify` step | | build 0 errors, 11 warnings; NuGet audit clean; C# `Passed: 39334, Failed: 0, Skipped: 9`; Python `Ran 8604 tests`, `OK (skipped=13)`; canary tripped; API snapshot reproduces; provenance 0 misses; doc lint exit 0; ModuleData 0 errors; hook suite `1271 passed, 0 failed`; config security scan unchanged (one MED, pre-existing) |
-| 10d Push the run branch, in-game smoke, trunk | RUNNING | orchestrator | | the game install is held by taom-b4 for co-op (priority); the smoke run and the trunk fast-forward wait for its "done" |
+| 10d Push the run branch, in-game smoke, trunk | DONE | orchestrator | run branch and trunk at `db1c87d7c` (trunk `807263ca2..db1c87d7c`, a fast-forward) | trunk `807263ca2` merged in first (C# `Passed: 39350`). Smoke: `/game-run`, on the maintainer's "Run it now" (2026-11-13 08:35); `build.ps1` from the run worktree; run folder `E:\Temp\fords-runs\20261113-083940`; `reason=final`, `pass=2 fail=0 partial=9 notseen=5`; `[BuildStamp]` `+db1c87d7c`; session summary `checks_fail=0 swallowed=0 errors=0`; clean module unload. The one `[ERROR]` line (`ActionIndexCacheRepair ... REPAIRED 219 of 220`) is also in three trunk runs of the same night |
+| 11 Wrap-up | DONE | orchestrator | | index rows 046 to 054 set; #1132 closed with `triage-needs-ingame`; plan worktrees and merged plan branches removed; the run worktree and the remote run branch are left for the maintainer |
 | 8 Review 046, 051 | DONE | workflow `wf_0b134a15-79f`, script `scratch\wf\review-b.js` | 046 tip `efc70d4d4`, 051 tip `c482070d9` | 11 agents, 1.99 M subagent tokens. Both READY FOR COMMIT. 046: lead confirmed and fixed 2, round 1 added a probe for the `.cs` clause of the cache filter; residual LOW, a record gap (FOR-MIKE 17). 051: lead confirmed and fixed 5; round 2 CLEAN; residual LOW, one RCA table cell (FOR-MIKE 17) |
 | 7 Execute 049, 047, 050 (Opus) | DONE | workflow `wf_8f9e2345-545`, script `scratch\wf\exec-opus.js` | 049 `9b783ca9a`, 047 `911373c9e` (3 commits), 050 `0848c47e2` | all three DONE, 0.49 M subagent tokens. Spec checks by the orchestrator (build 0 errors each): 049 `Passed: 39266` (16 new), 047 `Passed: 39266` (16 new), 050 `Passed: 39278` (28 new); each diff read and in scope. 047 deviation: the relation helper takes a float, because `Hero.GetRelationWithPlayer` returns float |
 | 8 Review 047, 050 | DONE | workflow `wf_d4a86b15-8cd`, script `scratch\wf\review-c.js` | 047 tip `3dacbf957`, 050 tip `b55d07b35` | 12 agents, 2.17 M subagent tokens. Both READY FOR COMMIT, convergence round 2 CLEAN. 047: lead confirmed 3 findings and applied 3 (two comments, two tests), suite `Passed: 39268`. 050: lead confirmed 1 (the source pin did not check two engine reads), suite `Passed: 39278`. Residual, LOW, both commit-message wording (FOR-MIKE): `cf21b3d33` body overstates what the binding gate fails on; `3014400f8` should be `test:`, not `fix:`. 050 `needs_mike`: two more bug leads added to #1133, one optional design item |
@@ -105,11 +106,24 @@ not authorized; the row of that time changes that.
   recommendation, with co-op first for game runs.
 - 2026-11-13 02:45: all six branches merged into the run branch; the trunk merged in.
 - 2026-11-13 03:10: full verification green at `45ee5b5f9`.
+- 2026-11-13 08:16: newest trunk (`807263ca2`) merged into the run branch (`db1c87d7c`).
+- 2026-11-13 08:43: Fords smoke run passed on the branch build. The smoke covers the boot, patch
+  application and one 120 s match; it does not reach the campaign code of items 047, 049 and 050.
+- 2026-11-13 08:46: trunk fast-forwarded to `db1c87d7c`; taom-5c and taom-b4 told; the game folder
+  holds the build of `db1c87d7c`.
 - Agents of the run: 6 lanes, 3 refuters, 18 plan agents, 6 executors, 34 review agents: 67 in all,
   about 12.5 M subagent tokens (lanes 1.51, refuters 0.79, plans 3.34, executors 0.91, reviews 5.99,
   as the workflow results report them; the review figure is the sum of three workflows).
 - Dead end: a graphify refresh in a linked worktree takes 7 to 10 minutes and one was killed; the
   plans fall back to `git grep` for the blast radius when `graphify_taom.py status` is not fresh.
+
+## Next
+
+Nothing is running. The maintainer's actions: pull the trunk; restart open Claude sessions (two skills
+and two hooks changed); read FOR-MIKE.md; play the in-game checks listed there; remove the worktree
+`E:\repos\taom-improve\2026-11-12\wt-run` and the branch `improve/2026-11-12-run` (local and remote)
+when he no longer wants them. The run's scratch folder (`E:\repos\taom-improve\2026-11-12\scratch`:
+agent scratch, workflow scripts, verification logs) is outside the repo and can be deleted.
 
 ## Next (history)
 

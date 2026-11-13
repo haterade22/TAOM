@@ -1,7 +1,8 @@
 # FOR-MIKE: 2026-11-12-fable
 
-The run's work is on the branch `improve/2026-11-12-run`. Its state, the trunk merge and the push are
-in [PROGRESS.md](PROGRESS.md) "Status" and "Log"; the audit result is in [REPORT.md](REPORT.md); the
+The run's work is on the trunk since 2026-11-13 (`db1c87d7c`, a fast-forward, after your word to
+merge and a passing Fords smoke run of the branch build). The steps and their evidence are in
+[PROGRESS.md](PROGRESS.md) "Status" and "Log"; the audit result is in [REPORT.md](REPORT.md); the
 choices made while you were away are in [DECISIONS.md](DECISIONS.md). Issues: #1132 (the nine items),
 #1133 (messenger arrival decisions), #1134 (Fords allocation), #1135 (closed: the trunk fixed it).
 
@@ -10,7 +11,8 @@ choices made while you were away are in [DECISIONS.md](DECISIONS.md). Issues: #1
 Each line has the recommended answer first and where the evidence is.
 
 1. **In-game checks owed for the merged refactors.** None of them changes behaviour by design, and
-   the suites prove the logic, but nobody has seen them in the game: the three LotrIssue templates
+   the suites prove the logic. One Fords smoke run passed on the merged build (boot, patch
+   application, one 120 s match), but it does not reach campaign code: the three LotrIssue templates
    offering a quest (047), character creation with the faction map, where the three CultureStageView
    patches apply (047), the supply order screen with goods and troops (047), a messenger arriving
    (050), a load of a save with a refuge (049), the weapon-usage toggle key in a battle (048).
@@ -84,7 +86,9 @@ Each line has the recommended answer first and where the evidence is.
 - Another session moved the area traps into trap sheets on the trunk during this run
   (`29f863aa4`) and removed the same duplicated CLAUDE.md passage that item 052 removed. The trunk
   merge took the trunk's wording.
-- After this branch is on the trunk: restart open sessions (two skills and two hooks change), and
-  delete the three plan-branch deletions you do not want by reverting their commit (048's merge
-  `c34192e74`; 051's first commit `0ba42e002`).
+- Now that the work is on the trunk: restart open sessions (two skills and two hooks changed). To
+  keep something this run deleted, revert its commit: 048's merge `c34192e74` (eight dead members),
+  051's first commit `0ba42e002` (three tool scripts).
+- The game folder holds the TAOM build of `db1c87d7c`, deployed by `build.ps1` from the run
+  worktree for the smoke run. Your next F5 redeploys from your checkout.
 - Agents and tokens of the run are in PROGRESS.md "Log", last entry.
