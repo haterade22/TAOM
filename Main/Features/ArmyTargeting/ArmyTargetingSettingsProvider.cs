@@ -35,35 +35,37 @@ public class ArmyTargetingSettingsProvider : IArmyTargetingSettingsProvider
     private readonly IModLogger _logger;
     private readonly HashSet<string> _warned = new HashSet<string>();
     private bool _warnedSummary;
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
     public ArmyTargetingSettingsProvider(IModLogger logger)
     {
         _logger = logger;
     }
 
-    public bool EnableArmyStrategicIntelligence => TaomSettings.Instance?.EnableArmyStrategicIntelligence ?? true;
+    public bool EnableArmyStrategicIntelligence => Settings?.EnableArmyStrategicIntelligence ?? true;
 
-    public bool EnableWarTheaters => TaomSettings.Instance?.EnableWarTheaters ?? true;
+    public bool EnableWarTheaters => Settings?.EnableWarTheaters ?? true;
 
-    public bool HoldCapturedForts => TaomSettings.Instance?.HoldCapturedForts ?? true;
+    public bool HoldCapturedForts => Settings?.HoldCapturedForts ?? true;
 
     public float CommitmentMultiplier =>
-        Sane("ArmyCommitmentMultiplier", TaomSettings.Instance?.ArmyCommitmentMultiplier, 1.0f, 10.0f, DefaultCommitmentMultiplier);
+        Sane("ArmyCommitmentMultiplier", Settings?.ArmyCommitmentMultiplier, 1.0f, 10.0f, DefaultCommitmentMultiplier);
 
     public float MaxPriorityBoost =>
-        Sane("ArmyPriorityBoost", TaomSettings.Instance?.ArmyPriorityBoost, 1.0f, 5.0f, DefaultMaxPriorityBoost);
+        Sane("ArmyPriorityBoost", Settings?.ArmyPriorityBoost, 1.0f, 5.0f, DefaultMaxPriorityBoost);
 
     public float EvilAggressionScale =>
-        Sane("EvilFactionAggressionScale", TaomSettings.Instance?.EvilFactionAggressionScale, 0.5f, 3.0f, DefaultEvilAggressionScale);
+        Sane("EvilFactionAggressionScale", Settings?.EvilFactionAggressionScale, 0.5f, 3.0f, DefaultEvilAggressionScale);
 
     public float BorderProximityFloor =>
-        Sane("ArmyBorderProximityFloor", TaomSettings.Instance?.ArmyBorderProximityFloor, 0f, 1.0f, DefaultBorderProximityFloor);
+        Sane("ArmyBorderProximityFloor", Settings?.ArmyBorderProximityFloor, 0f, 1.0f, DefaultBorderProximityFloor);
 
     public float BorderRescueRadiusInTownGaps =>
-        Sane("ArmyBorderRescueRadius", TaomSettings.Instance?.ArmyBorderRescueRadius, 1.0f, 20.0f, DefaultBorderRescueRadius);
+        Sane("ArmyBorderRescueRadius", Settings?.ArmyBorderRescueRadius, 1.0f, 20.0f, DefaultBorderRescueRadius);
 
     public float DefenderPriorityMultiplier =>
-        Sane("ArmyDefenderPriority", TaomSettings.Instance?.ArmyDefenderPriority, 1.0f, 5.0f, DefaultDefenderPriorityMultiplier);
+        Sane("ArmyDefenderPriority", Settings?.ArmyDefenderPriority, 1.0f, 5.0f, DefaultDefenderPriorityMultiplier);
 
     /// <summary>
     /// Returns the value when it is finite and inside the declared range, otherwise the compiled

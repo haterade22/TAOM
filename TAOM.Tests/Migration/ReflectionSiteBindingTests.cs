@@ -237,6 +237,16 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MovementOrder", "MovementOrder", "_engageTargetPositionCache", "Field", "MarshalEngagePoint.cs:17")]
     // --- The Long Defeat gate repair (#1079, phase 3 Slice 5, D17): vanilla's own mission reset, protected internal, called by name on a gate the Mission has disabled. Missing: no gate is repaired and gate-repair fails.
     [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Gates.cs:46")]
+    // --- The Long Defeat engine restore (#1160): vanilla's own mission resets of a tower and a ram, protected internal, called by name on an engine the Mission disabled when it fell. Missing: that engine stays
+    // destroyed for the rest of the run, and engine-restore fails with problem=<Type>.OnMissionReset_was_not_found.
+    [DataRow("TaleWorlds.MountAndBlade.SiegeTower", "SiegeTower", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Engines.cs:146")]
+    [DataRow("TaleWorlds.MountAndBlade.BatteringRam", "BatteringRam", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Engines.cs:147")]
+    // The tower state a reset in the middle of a mission leaves unlike the boot, set back after the reset and read by engine-restore: the ladder queues (private field, AccessTools.FieldRefAccess), the
+    // active wait point (protected field) and the wait points (protected property, read through its getter). Missing: one warning, the restored tower keeps its queues on and its upper wait point, and
+    // engine-restore fails with ladders and wait.
+    [DataRow("TaleWorlds.MountAndBlade.SiegeTower", "SiegeTower", "_queueManagers", "Field", "LongDefeatBattlefieldAdapter.Engines.cs:148")]
+    [DataRow("TaleWorlds.MountAndBlade.UsableMachine", "UsableMachine", "ActiveWaitStandingPoint", "Field", "LongDefeatBattlefieldAdapter.Engines.cs:149")]
+    [DataRow("TaleWorlds.MountAndBlade.UsableMachine", "UsableMachine", "WaitStandingPoints", "Property", "LongDefeatBattlefieldAdapter.Engines.cs:150")]
     // --- Siege Retreat Loot (Patch146, #1121): vanilla's private casualty-loot step, called by name when a defender's assault ends by attacker retreat. Missing: the adapter answers false, the service logs an error and the retreat gives no loot, as in vanilla.
     [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEvent", "MapEvent", "LootDefeatedPartyCasualties", "Method", "SiegeRetreatLootAdapter.cs:28")]
     // --- Hall Seats (Patch148): the lord the player asked to see from the settlement overlay, read so that lord always spawns in the lord's hall. Missing: the field ref is null and that lord is ranked like any other.
