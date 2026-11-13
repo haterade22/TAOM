@@ -54,10 +54,15 @@ same passage before you act on it. Numbers follow upstream v3.1.0, so a later co
 |---|---|---|---|
 | 6 | Forced threes | Three items or three parallel examples where the meaning has fewer parts | There are three real items. In STE text, lists stay |
 | 7 | Repeated openings | Several sentences in a row that start with the same subject | The repetition is deliberate |
-| 8 | Dashes | Em dash (U+2014), en dash (U+2013), a double hyphen used as a dash | Never in prose. AGENTS.md lists the substitutes and the exemptions: code, URLs, verbatim outside quotes |
+| 8 | Dashes | Em dash (U+2014), en dash (U+2013), a double hyphen used as a dash | Never in prose. AGENTS.md lists the substitutes; the exemptions are below this table |
 | 9 | Stacked qualifiers | "could potentially", "might arguably", "to be fair" (*weak alone*) | The doubt is real. Confidence tags, UNVERIFIED, NOT_SEEN and scoped negative results always stay (`evidence-over-claims.md`) |
 | 10 | Hyphen after the noun | "the process is well-documented" (*weak alone*) | The word always takes a hyphen, such as third-party |
 | 11 | Passive voice that hides the actor | "The results are preserved"; a dropped subject (*weak alone*) | The actor is unknown or does not matter. Otherwise name what validates, parses or writes |
+
+**Dash exemptions (tell 8).** Code spans and blocks, URLs and link targets, verbatim quotes from outside
+TAOM (mark the line `<!-- lint-allow-dash -->`), and existing prose you are not rewriting. Hyphens
+(`--RunTests`, `v1.4.8`, `kebab-case`) are fine. `python tools/lint_docs.py` reports dashes on new markdown
+lines (report-only); commit bodies are on you.
 
 ## C. Inflation and borrowed authority
 

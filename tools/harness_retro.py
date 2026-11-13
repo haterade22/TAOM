@@ -1232,7 +1232,7 @@ def render(sig):
         ["Compactions", s["compactions"]],
         ["Excluded sessions", ", ".join(w["excluded_sessions"]) or "none"]])
     L += ["### Claude Code versions seen", "",
-          "Compare with the `since vX` notes in `.claude/rules/harness-facts.md`: a version past a fact's "
+          "Compare with the `since vX` notes in `.claude/rules/harness-*.md`: a version past a fact's "
           "last check may have changed it.", ""]
     L += table(["Version", "Sessions"], [[v["version"], v["sessions"]] for v in sig["versions"]])
     L += ["## 2. Hook outcomes", "", "### Denies", ""]

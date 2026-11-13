@@ -257,7 +257,7 @@ Applied in stop-anywhere phases, each ending green:
 
 The original rows above stay as the record of the decision. These facts have moved since:
 
-- **Live record:** the delivery facts (what subagents load, what survives compaction, what an import costs) now live in `.claude/rules/harness-facts.md`, which carries each fact's source and date. The tables above are a snapshot of 2026-09-23.
+- **Live record:** the delivery facts (what subagents load, what survives compaction, what an import costs) now live in `.claude/rules/harness-facts.md` (three `harness-*.md` rules since 2026-11-13), which carries each fact's source and date. The tables above are a snapshot of 2026-09-23.
 - **Memory in subagents:** the docs say no subagent loads auto memory, but `MEMORY.md` reached all 2,232 sampled subagent spawns (measured 2026-11-02). Every memory line therefore costs every spawn, not only the main session.
 - **Skill list:** the skill-description listing is rebuilt and re-sent after compaction from Claude Code v2.1.304.
 - **CI:** the GitHub Actions workflows left on 2026-10-05 (`c8d69a0dc`). `--drift-only` now runs from `.githooks/pre-commit` for every committer whose clone sets `core.hooksPath`, beside the Claude commit hook until the two are compared. The Budgets text above that names `doc-budget.yml` is history.
@@ -290,8 +290,22 @@ eviction. Three changes, each moving text to a narrower trigger that already exi
 | `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 25,600 / 23,000 | 22,528 / 20,480 |
 | `TRAP_INDEX_MAX_ROWS` | 47 | 24 |
 
-The live sizes are `python tools/lint_docs.py --context-budget-json`. Not done here, and still over their
-report-only ceiling: `harness-facts.md`, `gui-ui.md` and `hook-authoring.md`.
+The live sizes are `python tools/lint_docs.py --context-budget-json`.
+
+A second pass the same day took the three path rules that stood over the 12,288-byte ceiling:
+
+- **`harness-facts.md`** (21,456 bytes) is three rules, split by the file that needs the fact. It keeps the
+  hook lifecycle and the settings facts, and loads with hooks and settings. `harness-loading.md` holds
+  what a session, a subagent and a compaction load, the rule loader and MEMORY.md, and loads with the
+  entry docs and the top-level rules. `harness-skills-agents.md` holds the skill and agent frontmatter,
+  model and effort facts, and loads with skills and agents. The rows moved unchanged. The loading rule's
+  glob is `.claude/rules/*.md`, which leaves out `traps/`, so a trap sheet read by hand loads no harness
+  rule.
+- **`gui-ui.md`** (16,699 bytes) lost its two sections on writing a TaleWorlds-owned ViewModel property
+  to `gui-vm-properties.md`, which loads with Mixin, VM and Rebuilder C# and no longer with prefab XML.
+- **`hook-authoring.md`** (13,404 bytes) dropped incident text that its lessons already hold.
+- **`output-style.md`** Part 2 keeps the dash rule and the short list of tells; the exemptions and the
+  house-style note it repeated are in `docs/reference/writing-tells.md` alone.
 
 ---
 

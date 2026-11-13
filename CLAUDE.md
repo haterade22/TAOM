@@ -20,7 +20,7 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
   that work carries its traps ([rules catalog](docs/reference/rules-catalog.md)).
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
 - **Memory:** MEMORY.md loads on this machine only, in the main session and, against the docs, in
-  subagents too ([harness facts](.claude/rules/harness-facts.md)): keep it small.
+  subagents too ([harness facts](.claude/rules/harness-loading.md)): keep it small.
 - **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr, a Stop hook's
   block reason or `additionalContext` beside a tool result (an ask reason goes to the user); follow
   the instruction in the message

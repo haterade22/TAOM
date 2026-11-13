@@ -32,34 +32,26 @@ line. Run timers yourself.
 
 ## Part 2: produced prose
 
-Covers commit bodies, CHANGELOG entries, issues and PRs, feature docs, RCAs and doc paragraphs. The
-tells below also apply to chat, status and code comments, but never to player-facing strings. It
-applies to new writing. The fix for AI-sounding prose is almost always more specific and concrete.
+New commit bodies, CHANGELOG entries, issues, PRs, feature docs, RCAs and doc paragraphs. The tells
+below also apply to chat, status and code comments, never to player-facing strings. The fix for
+AI-sounding prose is almost always more specific and concrete. The full list, the keep conditions, the
+dash exemptions and the rewrite pass: [writing-tells.md](../../docs/reference/writing-tells.md), read
+before a release note, a long issue, a feature doc or an RCA.
 
 **No em or en dash** (U+2014, U+2013; AGENTS.md "Human prose" lists the substitutes), the loudest
-single tell. If no substitute reads well, restructure the sentence. Hyphens (`--RunTests`, `v1.4.8`, `kebab-case`) are fine.
-
-Exempt: code spans and blocks, URLs and link targets, verbatim quotes from outside TAOM (mark the line
-`<!-- lint-allow-dash -->`), and existing prose you are not rewriting. `python tools/lint_docs.py`
-reports dashes on new markdown lines (report-only); commit bodies are on you.
+single tell. If no substitute reads well, restructure the sentence. `python tools/lint_docs.py`
+reports dashes on new markdown lines; commit bodies are on you.
 
 **Tells, strongest first.** One sighting justifies an edit:
 
 1. A contrast that only adds weight ("not just X but Y", or split over two sentences). Keep one that
    corrects a real belief or states a real constraint.
 2. A one-line closer or fragment that repeats the point.
-3. A saying in place of the claim ("at its core", "X is the language of Y").
-4. A run-up before the point ("let's dive in", "here's the thing").
+3. A saying in place of the claim ("at its core").
+4. A run-up before the point ("here's the thing").
 5. An answer to an objection nobody raised.
 
-**Also:** reflexive threes, stacked hedges, inflated significance, vague attribution ("experts
-believe"), AI vocabulary (testament, landscape, showcasing, delve, additionally), "serves as" for
-"is", text about the document instead of its subject, chatbot closers, filler ("in order to"),
-metaphor nouns (substrate, wedge, ratchet, north star), a feeling instead of a mechanism or number,
-passive voice that hides the actor, over-compression (dropped articles, arrows).
-
-**After a rewrite,** compare it with the draft: an added fact or a lost claim is an error. Full list
-and keep conditions: [writing-tells.md](../../docs/reference/writing-tells.md).
-
-**TAOM house style stays:** boldface, inline `**Label:**` headers, tables and backticked paths are
-deliberate semantic markers.
+**Also:** reflexive threes, stacked hedges, inflated significance, vague attribution, AI vocabulary
+(testament, landscape, delve), "serves as" for "is", text about the document, chatbot closers, filler,
+metaphor nouns, a feeling instead of a mechanism or number, passive voice that hides the actor,
+over-compression. After a rewrite, an added fact or a lost claim is an error.

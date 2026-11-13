@@ -11,7 +11,7 @@
 #     every Task spawn. Agent BODIES load only when that specific agent is
 #     spawned. Same frontmatter-only charge applies.
 #   - Hooks are .sh scripts invoked by the harness — not in any model context.
-#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start in the main session; subagent transcripts show it too (harness-facts.md).
+#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start in the main session; subagent transcripts show it too (harness-loading.md).
 #   - CLAUDE.md's @-imports load at launch with it, so they are counted in full. Which files
 #     load, whether a rule is path-scoped, and every ADR-011 cap come from
 #     `tools/lint_docs.py --context-budget-json`, the same code the CI and commit gate run.
@@ -232,7 +232,7 @@ scan_skills() {
 scan_rules() {
     # Rules WITHOUT a `paths:` frontmatter field load at conversation start (eager); rules
     # WITH paths: load on a matching read. lint_docs.py decides which is which, from the
-    # frontmatter block (harness-facts.md "Rule loader").
+    # frontmatter block (harness-loading.md "Rule loader").
     RULES_TOKENS=0          # eager (always-load) only
     RULES_COND_TOKENS=0     # conditional (paths:-gated)
     RULES_COUNT=0
