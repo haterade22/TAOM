@@ -28,8 +28,8 @@ public sealed class SupplyOrderScreenVM : ViewModel
     private readonly bool _placedFromCamp;
 
     private readonly MBBindingList<SupplySourceRowVM> _settlements = new MBBindingList<SupplySourceRowVM>();
-    private readonly MBBindingList<SupplyGoodRowVM> _goods = new MBBindingList<SupplyGoodRowVM>();
-    private readonly MBBindingList<SupplyTroopRowVM> _troops = new MBBindingList<SupplyTroopRowVM>();
+    private readonly MBBindingList<SupplyRowVM> _goods = new MBBindingList<SupplyRowVM>();
+    private readonly MBBindingList<SupplyRowVM> _troops = new MBBindingList<SupplyRowVM>();
     private readonly MBBindingList<SupplySearchHitRowVM> _searchHits = new MBBindingList<SupplySearchHitRowVM>();
 
     private SupplySourceRowVM? _selectedSource;
@@ -253,10 +253,10 @@ public sealed class SupplyOrderScreenVM : ViewModel
     public MBBindingList<SupplySourceRowVM> Settlements => _settlements;
 
     [DataSourceProperty]
-    public MBBindingList<SupplyGoodRowVM> Goods => _goods;
+    public MBBindingList<SupplyRowVM> Goods => _goods;
 
     [DataSourceProperty]
-    public MBBindingList<SupplyTroopRowVM> Troops => _troops;
+    public MBBindingList<SupplyRowVM> Troops => _troops;
 
     [DataSourceProperty]
     public MBBindingList<SupplySearchHitRowVM> SearchHits => _searchHits;
@@ -657,11 +657,11 @@ public sealed class SupplyOrderScreenVM : ViewModel
                 preferred = line;
         }
         if (preferred != null)
-            _goods.Add(new SupplyGoodRowVM(preferred, Recompute));
+            _goods.Add(SupplyRowVM.ForGood(preferred, Recompute));
         foreach (var line in lines)
         {
             if (line != null && !ReferenceEquals(line, preferred))
-                _goods.Add(new SupplyGoodRowVM(line, Recompute));
+                _goods.Add(SupplyRowVM.ForGood(line, Recompute));
         }
     }
 
@@ -750,7 +750,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
         foreach (var line in lines)
         {
             if (line != null)
-                _troops.Add(new SupplyTroopRowVM(line, Recompute));
+                _troops.Add(SupplyRowVM.ForTroop(line, Recompute));
         }
     }
 
