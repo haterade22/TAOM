@@ -7821,6 +7821,12 @@
     <string id="taom_banner_category_misc" text="Çeşitli" />
     <string id="taom_coopcompat_settings_differ" text="TAOM ayarlarınız sunucununkinden şu konularda farklı: {GROUPS}. Ortak oyun sizde farklı davranabilir." />
     <string id="taom_coopcompat_build_mismatch" text="TAOM sürümünüz sunucununkiyle aynı değil. Ortak oyun senkronu bozulabilir veya hatalı çalışabilir. Sunucuyla aynı TAOM indirmesini kurun." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Savaş HUD Renkleri" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Yalnızca yuvarlak savaş HUD'undaki üç halkayı değiştirir: oyuncu canın, binek canın ve kalkanın. Varsayılan, onların taş görünümünü ve renklerini korur. Diğer her seçenek, bu halkaları koyu bir zemin üzerinde, o renk görüşü türü için birbirinden ayırt edilmesi daha kolay düz renklerle çizer. Halkalar eskisi gibi sıralarını ve dolumlarını korur, böylece yerleri ve uzunlukları da onları ayırt etmeyi sağlar. Kariyer yeteneği merkezi, cephane sayısı ve diğer tüm ekranlar değişmez. Değişiklik, yeniden başlatmaya gerek kalmadan mevcut savaşta geçerli olur." />
+    <string id="taom_hero_auras_mcm_enabled" text="Kahraman Auralarını Etkinleştir" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Adı anılan kahramanlar, yakınlarındaki müttefik askerleri her biri kendi yöntemiyle güçlendirir: Dain'in cüceleri ayakta kalır, Aragorn'un adamları soğukkanlılığını korur, elf lordlarının okçuları daha hızlı yay gerer. Yalnızca hero_auras.json dosyasında listelenen kahramanlar bir aura taşır. Bir aura ile bir askerin kendi ırk yeteneği aynı şeyi verdiğinde, güçlü olan geçerlidir; asla toplanmazlar. Bir sonraki aura nabzından itibaren etkili olur." />
+    <string id="taom_hero_auras_mcm_strength" text="Kahraman Aura Gücü" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Her auranın bonuslarını çarpar. 1.0, hero_auras.json dosyasında yazıldığı gibidir; 0 tüm auraları kapatır. Moral alt sınırları ve darbeyi savuşturma gibi açık/kapalı etkiler ölçeklenmez. Varsayılan: 1.0." />
   </strings>
 
 </base>

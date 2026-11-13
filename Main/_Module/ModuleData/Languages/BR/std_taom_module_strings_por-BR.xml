@@ -8165,6 +8165,12 @@
     <string id="taom_banner_category_misc" text="Diversos" />
     <string id="taom_coopcompat_settings_differ" text="Suas configurações do TAOM diferem das do anfitrião em: {GROUPS}. O modo cooperativo pode se comportar de forma diferente para você." />
     <string id="taom_coopcompat_build_mismatch" text="Sua versão do TAOM não é a mesma do anfitrião. O modo cooperativo pode dessincronizar ou funcionar mal. Instale a mesma versão do TAOM que o anfitrião." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Cores do HUD de Batalha" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Altera apenas três anéis do HUD circular de batalha: a vida do seu personagem, a vida da montaria e o escudo. O padrão mantém a aparência de pedra e suas cores. Cada outra opção desenha esses anéis em cores chapadas, mais fáceis de distinguir para aquele tipo de visão de cores, sobre uma trilha escura. Os anéis mantêm sua ordem e preenchimento como antes, de modo que sua posição e comprimento também os distinguem. O centro da habilidade de carreira, a contagem de munição e todas as outras telas não mudam. A alteração vale na batalha atual, sem reiniciar." />
+    <string id="taom_hero_auras_mcm_enabled" text="Ativar Auras de Heróis" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Heróis renomados fortalecem os soldados aliados próximos, cada um à sua maneira: os anões de Dáin se mantêm firmes, os homens de Aragorn mantêm a coragem, os arqueiros dos senhores élficos atiram mais rápido. Apenas os heróis listados em hero_auras.json possuem uma aura. Quando uma aura e a habilidade racial do próprio soldado concedem o mesmo efeito, vale o mais forte; nunca se somam. Entra em vigor no próximo pulso de aura." />
+    <string id="taom_hero_auras_mcm_strength" text="Força da Aura de Herói" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Multiplica os bônus de todas as auras. 1.0 é como definido em hero_auras.json; 0 desliga todas as auras. Pisos de moral e efeitos de liga/desliga, como resistir a golpes, não são escalonados. Padrão: 1.0." />
   </strings>
 
 </base>

@@ -7821,6 +7821,12 @@
     <string id="taom_banner_category_misc" text="Misceláneo" />
     <string id="taom_coopcompat_settings_differ" text="Tu configuración de TAOM difiere de la del anfitrión en: {GROUPS}. El modo cooperativo puede comportarse de forma distinta para ti." />
     <string id="taom_coopcompat_build_mismatch" text="Tu versión de TAOM no es la del anfitrión. El cooperativo puede desincronizarse o fallar. Instala la misma descarga de TAOM que el anfitrión." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Colores del HUD de batalla" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Cambia solo tres anillos del HUD circular de batalla: la salud de tu personaje, la salud de la montura y el escudo. La opción predeterminada conserva su aspecto y colores de piedra. Cada otra opción dibuja esos anillos en colores planos que son más fáciles de distinguir para ese tipo de visión del color, sobre una pista oscura. Los anillos mantienen su orden y forma de llenado, de modo que su posición y longitud también ayudan a diferenciarlos. El centro de la habilidad de carrera, el conteo de munición y todas las demás pantallas no cambian. El cambio se aplica en la batalla actual, sin reiniciar." />
+    <string id="taom_hero_auras_mcm_enabled" text="Activar auras de héroe" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Los héroes con nombre fortalecen a los soldados aliados cercanos, cada uno a su manera: los enanos de Dáin se mantienen en pie, los hombres de Aragorn conservan el temple, los arqueros de los señores elfos disparan más rápido. Solo los héroes listados en hero_auras.json portan un aura. Cuando un aura y la habilidad racial propia de un soldado otorgan lo mismo, cuenta la más fuerte; nunca se suman. Surte efecto desde el siguiente pulso de aura." />
+    <string id="taom_hero_auras_mcm_strength" text="Potencia del aura de héroe" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Multiplica las bonificaciones de todas las auras. 1.0 es tal como se definió en hero_auras.json; 0 desactiva todas las auras. Los mínimos de moral y los efectos de encendido/apagado, como resistir el golpe, no escalan. Predeterminado: 1.0." />
   </strings>
 
 </base>

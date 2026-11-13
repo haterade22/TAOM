@@ -7825,6 +7825,12 @@
     <string id="taom_banner_category_misc" text="기타" />
     <string id="taom_coopcompat_settings_differ" text="당신의 TAOM 설정이 호스트와 다릅니다: {GROUPS}. 협동 플레이가 다르게 작동할 수 있습니다." />
     <string id="taom_coopcompat_build_mismatch" text="당신의 TAOM 빌드가 호스트의 빌드와 다릅니다. 협동 플레이에서 동기화 오류나 오작동이 발생할 수 있습니다. 호스트와 동일한 TAOM 버전을 설치하십시오." />
+    <string id="taom_battlehud_mcm_colour_mode" text="전투 HUD 색상" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="원형 전투 HUD의 세 고리만 변경합니다: 플레이어 체력, 탈것 체력, 방패. 기본값은 돌 질감과 색을 그대로 유지합니다. 다른 선택지는 해당 색각 유형에서 구분하기 쉬운 단색으로 어두운 바탕 위에 고리를 그립니다. 고리의 순서와 채움 방식은 그대로이므로 위치와 길이로도 구분할 수 있습니다. 중앙의 직업 능력, 탄약 수, 그 밖의 모든 화면은 바뀌지 않습니다. 변경은 현재 전투에서 즉시 적용되며 재시작이 필요 없습니다." />
+    <string id="taom_hero_auras_mcm_enabled" text="영웅 오라 활성화" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="이름난 영웅은 주변의 아군 병사를 각자의 방식으로 강하게 만듭니다. 다인의 드워프는 쓰러지지 않고, 아라고른의 인간은 용기를 잃지 않으며, 요정 군주의 궁수는 더 빠르게 활을 당깁니다. hero_auras.json에 등록된 영웅만 오라를 지닙니다. 오라와 병사 고유의 종족 능력이 같은 효과를 줄 경우 더 강한 쪽만 적용되며, 결코 합산되지 않습니다. 다음 오라 갱신부터 적용됩니다." />
+    <string id="taom_hero_auras_mcm_strength" text="영웅 오라 강도" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="모든 오라의 보너스에 곱해집니다. 1.0은 hero_auras.json에 설정된 그대로이며, 0은 모든 오라를 끕니다. 사기 하한선과 떨쳐내기 같은 온/오프 효과는 배율이 적용되지 않습니다. 기본값: 1.0." />
   </strings>
 
 </base>

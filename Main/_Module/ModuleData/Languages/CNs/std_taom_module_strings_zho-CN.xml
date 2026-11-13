@@ -7821,6 +7821,12 @@
     <string id="taom_banner_category_misc" text="杂项" />
     <string id="taom_coopcompat_settings_differ" text="你的 TAOM 设置与房主不同：{GROUPS}。合作模式在你这边的表现可能有所不同。" />
     <string id="taom_coopcompat_build_mismatch" text="你的 TAOM 版本与房主的不同。合作模式可能失步或出错。请安装与房主相同的 TAOM 下载版本。" />
+    <string id="taom_battlehud_mcm_colour_mode" text="战斗界面配色" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="仅改变圆形战斗界面上的三道环：玩家生命、坐骑生命与盾牌。默认保留其石质外观与配色。其余各选项会在深色轨道上以纯色绘制这些环，使对应类型的色觉更易分辨。各环保持原有顺序与填充方式，因此其位置与长度同样有助于区分。职业技能中心、弹药计数及其他所有界面均不改变。更改在当前战斗中即时生效，无需重启。" />
+    <string id="taom_hero_auras_mcm_enabled" text="启用英雄光环" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="著名英雄会以各自的方式强化身边的友军：戴因的矮人站得更稳，阿拉贡的人类更为镇定，精灵领主的弓手拉弓更快。只有在 hero_auras.json 中列出的英雄才带有光环。若光环与士兵自身的种族能力提供相同效果，则取较强者，二者绝不叠加。将在下一次光环脉冲时生效。" />
+    <string id="taom_hero_auras_mcm_strength" text="英雄光环强度" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="对所有光环的加成进行倍率调整。1.0 即 hero_auras.json 中设定的原值；0 则关闭所有光环。士气下限以及诸如抵御击退之类的开关型效果不受倍率影响。默认值：1.0。" />
   </strings>
 
 </base>

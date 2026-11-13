@@ -7839,6 +7839,12 @@
     <string id="taom_banner_category_misc" text="Różne" />
     <string id="taom_coopcompat_settings_differ" text="Twoje ustawienia TAOM różnią się od ustawień gospodarza w: {GROUPS}. Tryb kooperacji może działać u ciebie inaczej." />
     <string id="taom_coopcompat_build_mismatch" text="Twoja wersja TAOM nie jest wersją gospodarza. Kooperacja może się rozsynchronizować lub działać błędnie. Zainstaluj tę samą wersję TAOM co gospodarz." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Kolory interfejsu bitewnego" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Zmienia tylko trzy pierścienie okrągłego interfejsu bitewnego: zdrowie gracza, zdrowie wierzchowca i tarczę. Ustawienie domyślne zachowuje ich kamienny wygląd i barwy. Każdy inny wybór rysuje te pierścienie w jednolitych kolorach, łatwiejszych do rozróżnienia dla danego rodzaju widzenia barw, na ciemnym tle. Pierścienie zachowują swoją kolejność i sposób wypełniania, więc ich położenie i długość również pozwalają je odróżnić. Środek z umiejętnością kariery, licznik amunicji i wszystkie inne ekrany pozostają bez zmian. Zmiana działa w trwającej bitwie, bez potrzeby ponownego uruchamiania." />
+    <string id="taom_hero_auras_mcm_enabled" text="Włącz aury bohaterów" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Nazwani bohaterowie wzmacniają sojuszniczych żołnierzy w pobliżu, każdy na swój sposób: krasnoludowie Dáina twardo trzymają się na nogach, ludzie Aragorna zachowują zimną krew, łucznicy elfich władców strzelają szybciej. Aurę noszą tylko bohaterowie wymienieni w hero_auras.json. Gdy aura i rasowa zdolność żołnierza dają to samo, liczy się silniejsza; nigdy się nie sumują. Działa od następnego impulsu aury." />
+    <string id="taom_hero_auras_mcm_strength" text="Siła aury bohatera" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Mnoży premie wszystkich aur. 1.0 to wartości zapisane w hero_auras.json; 0 wyłącza wszystkie aury. Minimalne poziomy morale oraz efekty typu włącz/wyłącz, takie jak otrząśnięcie się, nie są skalowane. Domyślnie: 1.0." />
   </strings>
 
 </base>

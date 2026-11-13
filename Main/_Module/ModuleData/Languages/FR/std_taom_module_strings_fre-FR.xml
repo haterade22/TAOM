@@ -7871,6 +7871,12 @@
     <string id="taom_banner_category_misc" text="Divers" />
     <string id="taom_coopcompat_settings_differ" text="Vos réglages TAOM diffèrent de ceux de l'hôte dans : {GROUPS}. Le mode coopératif peut se comporter différemment pour vous." />
     <string id="taom_coopcompat_build_mismatch" text="Votre version de TAOM n'est pas celle de l'hôte. Le mode coopératif peut se désynchroniser ou mal fonctionner. Installez le même téléchargement TAOM que l'hôte." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Couleurs de l'ATH de bataille" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Ne modifie que trois anneaux de l'ATH circulaire de bataille : la santé de votre personnage, celle de votre monture et votre bouclier. Le réglage par défaut conserve leur aspect de pierre et leurs couleurs. Chaque autre choix dessine ces anneaux en couleurs unies, plus faciles à distinguer pour ce type de vision des couleurs, sur un fond sombre. Les anneaux gardent leur ordre et leur remplissage habituels, de sorte que leur position et leur longueur permettent aussi de les distinguer. Le centre dédié à la capacité de carrière, le compteur de munitions et tous les autres écrans restent inchangés. Un changement s'applique dans la bataille en cours, sans redémarrage." />
+    <string id="taom_hero_auras_mcm_enabled" text="Activer les auras de héros" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Les héros nommés renforcent les soldats alliés proches d'eux, chacun à sa manière : les nains de Dáin gardent leur aplomb, les hommes d'Aragorn gardent leur sang-froid, les archers des seigneurs elfes tirent plus vite. Seuls les héros répertoriés dans hero_auras.json portent une aura. Lorsqu'une aura et la capacité raciale propre d'un soldat apportent la même chose, la plus forte l'emporte ; elles ne s'additionnent jamais. Prend effet à la prochaine impulsion d'aura." />
+    <string id="taom_hero_auras_mcm_strength" text="Puissance des auras de héros" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Multiplie les bonus de chaque aura. 1.0 correspond aux valeurs définies dans hero_auras.json ; 0 désactive toutes les auras. Les seuils minimaux de moral et les effets de type tout ou rien, comme l'encaissement, ne sont pas mis à l'échelle. Par défaut : 1.0." />
   </strings>
 
 </base>

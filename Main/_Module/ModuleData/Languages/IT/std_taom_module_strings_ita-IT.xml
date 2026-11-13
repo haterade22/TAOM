@@ -8037,6 +8037,12 @@
     <string id="taom_banner_category_misc" text="Varie" />
     <string id="taom_coopcompat_settings_differ" text="Le tue impostazioni di TAOM differiscono da quelle dell'host in: {GROUPS}. La modalità co-op potrebbe comportarsi diversamente per te." />
     <string id="taom_coopcompat_build_mismatch" text="La tua build di TAOM non corrisponde a quella dell'host. La co-op può desincronizzarsi o funzionare male. Installa lo stesso download di TAOM dell'host." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Colori dell'HUD di battaglia" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Modifica solo tre anelli dell'HUD circolare di battaglia: la salute del giocatore, quella della cavalcatura e lo scudo. L'impostazione predefinita mantiene il loro aspetto di pietra e i loro colori. Ogni altra scelta disegna quegli anelli con colori piatti, più facili da distinguere per quel tipo di visione cromatica, su una traccia scura. Gli anelli mantengono il loro ordine e il loro riempimento come prima, quindi anche la posizione e la lunghezza li distinguono. Il centro dell'abilità di carriera, il conteggio delle munizioni e tutte le altre schermate non cambiano. La modifica si applica alla battaglia in corso, senza riavvio." />
+    <string id="taom_hero_auras_mcm_enabled" text="Attiva le aure degli eroi" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Gli eroi di nome rafforzano i soldati alleati vicini, ciascuno a suo modo: i nani di Dáin restano saldi sui piedi, gli uomini di Aragorn mantengono il sangue freddo, gli arcieri dei signori elfici incoccano più in fretta. Solo gli eroi elencati in hero_auras.json possiedono un'aura. Dove un'aura e l'abilità razziale propria di un soldato concedono la stessa cosa, vale la più forte; non si sommano mai. Ha effetto dal prossimo impulso d'aura." />
+    <string id="taom_hero_auras_mcm_strength" text="Potenza delle aure degli eroi" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Moltiplica i bonus di ogni aura. 1.0 corrisponde ai valori definiti in hero_auras.json; 0 disattiva tutte le aure. I valori minimi di morale e gli effetti a interruttore, come la resistenza ai colpi, non vengono scalati. Predefinito: 1.0." />
   </strings>
 
 </base>

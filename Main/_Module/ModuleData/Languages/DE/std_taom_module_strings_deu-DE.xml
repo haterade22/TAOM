@@ -7917,6 +7917,12 @@
     <string id="taom_banner_category_misc" text="Verschiedenes" />
     <string id="taom_coopcompat_settings_differ" text="Deine TAOM-Einstellungen weichen von denen des Gastgebers ab in: {GROUPS}. Der Koop-Modus kann sich für dich anders verhalten." />
     <string id="taom_coopcompat_build_mismatch" text="Deine TAOM-Version ist nicht die des Gastgebers. Der Koop-Modus kann desynchronisieren oder fehlerhaft laufen. Installiere denselben TAOM-Download wie der Gastgeber." />
+    <string id="taom_battlehud_mcm_colour_mode" text="Farben des Kampf-HUD" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="Ändert nur drei Ringe des runden Kampf-HUD: deine Spielergesundheit, die Gesundheit des Reittiers und den Schild. Die Standardeinstellung behält ihr steinernes Aussehen und ihre Farben bei. Jede andere Wahl zeichnet diese Ringe in flächigen Farben auf dunkler Bahn, die für die jeweilige Art des Farbsehens leichter zu unterscheiden sind. Die Ringe behalten ihre Reihenfolge und Füllung wie zuvor, sodass auch Platz und Länge sie unterscheidbar machen. Die Mitte mit der Laufbahnfähigkeit, die Munitionsanzeige und alle anderen Bildschirme ändern sich nicht. Eine Änderung wirkt im laufenden Gefecht, ohne Neustart." />
+    <string id="taom_hero_auras_mcm_enabled" text="Heldenauren aktivieren" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="Namhafte Helden stärken die verbündeten Soldaten in ihrer Nähe, jeder auf seine Weise: Dains Zwerge bleiben standhaft, Aragorns Männer behalten die Nerven, die Bogenschützen der Elbenfürsten schießen schneller. Nur die in hero_auras.json aufgeführten Helden tragen eine Aura. Wo eine Aura und die eigene Völkerfähigkeit eines Soldaten dasselbe gewähren, zählt der stärkere Wert; sie summieren sich nie. Wirkt ab dem nächsten Aura-Impuls." />
+    <string id="taom_hero_auras_mcm_strength" text="Stärke der Heldenauren" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="Vervielfacht die Boni jeder Aura. 1,0 entspricht den Werten in hero_auras.json; 0 schaltet jede Aura ab. Moral-Untergrenzen und Ein/Aus-Effekte wie das Abschütteln werden nicht skaliert. Standard: 1,0." />
   </strings>
 
 </base>
