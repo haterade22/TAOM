@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TAOM.Core.Logging;
+using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Features.LordSpawnGuard.Hooks;
 
@@ -29,7 +31,7 @@ namespace TAOM.Features.LordSpawnGuard.Hooks;
 ///    downstream side effect (party spawn position, initial troops, initial items) stays vanilla.
 ///    <c>Clan.InitialHomeSettlement</c> is a <c>[SaveableProperty]</c>, so the repair persists.
 /// 2. <b>Finalizer</b> — the backstop for anything the prefix could not anchor, scoped to
-///    <see cref="InvalidOperationException"/> only; every other exception propagates untouched.
+///    <see cref="InvalidOperationException"/> only; every other exception is handed back with its trace kept.
 ///    Returning null is safe because <c>ConsiderSpawningLordParties</c> already null-checks the
 ///    result before calling <c>GiveInitialItemsToParty</c> — the lord simply raises no party that
 ///    day instead of taking the campaign down.
@@ -68,10 +70,12 @@ public static class Patch65_LandlessCultureSpawnGuard
     }
 
     [HarmonyFinalizer]
-    public static Exception Finalizer(Exception __exception, Hero hero, ref MobileParty __result)
+    public static Exception Finalizer(Exception __exception, Hero hero, ref MobileParty __result, MethodBase __originalMethod)
     {
+        // Not this guard's class: hand it back with its trace kept. The target runs a few times a
+        // day, so binding __originalMethod is cheap, and the marker then names the method (#1155).
         if (!(__exception is InvalidOperationException))
-            return __exception;
+            return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
 
         __result = null;
         Report(hero, __exception);

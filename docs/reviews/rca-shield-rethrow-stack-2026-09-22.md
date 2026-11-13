@@ -108,6 +108,10 @@ from `new StackTrace(ex)`; the trace text and `TAOM.ThrowSite` are where the inn
 
 ## Scope left open (follow-up)
 
+**Update 2026-11-13 (#1155):** this scope is closed. The finalizers below that hand an exception back
+now call the preserver, the ones that only observe (`Patch77`, `Patch88` x2, `Patch93`) are `void`, and
+`FinalizerRethrowGateTests` fails on a bare hand-back. The text below is the state of 2026-09-22.
+
 Twenty exception-returning finalizer methods across twelve files outside the two shields still return
 the exception without preserving it: ten feature files (`Patch50` drop-flagged-item guard, `Patch49`
 army gathering guard, `Patch69`, `Patch62` movie-release guard, `Patch20` youth-menu guard, `Patch77`,

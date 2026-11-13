@@ -29,8 +29,8 @@ namespace TAOM.Features.WarPledge;
 /// kingdom that declares (v1.5.7 <c>AllianceCampaignBehavior.ApplyBrokenAlliancePenalty</c>: -100 relation;
 /// <c>TradeAgreementsCampaignBehavior.ApplyBrokenTradeAgreementPenalty</c>: -50; a trait hit each when that ruler
 /// is the player). The Full War script declares in kingdom-list order, which would charge whichever realm
-/// sorts first. The realm that pledged broke them, so it is the declarer. The War of the Ring's reconcile at
-/// session launch retries a declaration this join could not make, in list order: that retry is not charged
+/// sorts first. The realm that pledged broke them, so it is the declarer. The War of the Ring's reconcile, on
+/// the next daily tick or session launch, retries a declaration this join could not make, in list order: that retry is not charged
 /// to the pledged realm.
 /// </para>
 /// <para>

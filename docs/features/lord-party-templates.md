@@ -49,8 +49,8 @@ Patch88, three thin patches in one category, plus a pure decision and a validati
   caravan-ambush spawns) pay one static read.
 - **Scope prefix and finalizer on `HeroSpawnCampaignBehavior.SpawnLordParty(Hero, bool)`.** The
   prefix saves the previous ambient owner in Harmony's per-invocation `__state` and sets `hero`;
-  the finalizer restores `__state` and returns the exception it was given, unchanged. That last
-  part matters: Patch65 finalizes the same method and swallows `InvalidOperationException` on
+  the finalizer restores `__state` and is `void`, so it cannot change the exception (#1155). That
+  matters: Patch65 finalizes the same method and swallows `InvalidOperationException` on
   purpose, and every finalizer on a method writes one shared exception slot, so this one has to be
   transparent or it would decide what Patch65 decided.
 - **Scope prefix and finalizer on `LordPartyComponent.InitializationArgs.InitializeLordPartyProperties(MobileParty, Hero)`.**
