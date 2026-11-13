@@ -156,8 +156,15 @@ co-op mod:
 
 ```
 TAOM.Dependencies → BUTR alias stubs → Native → SandBoxCore → Sandbox → StoryMode → CustomBattle
-                  → TAOM → TAOM_Map → LOTRLOME_Armory → Coop → TAOM.CoopCompat
+                  → TAOM_Map → LOTRLOME_Armory → TAOM → Coop → TAOM.CoopCompat
 ```
+
+`TAOM` comes after `TAOM_Map` and `LOTRLOME_Armory`, as in a normal TAOM list: the engine merges
+XML in launcher order and a later module's row wins, so TAOM's stylesheets and rows must land on
+top of the two data modules ([load order and dependencies](../modding/load-order-and-dependencies.md),
+section B). The order was wrong here until 2026-11-12. A BUTR-style launcher can still move TAOM
+above `TAOM_Map`, because `TAOM_Map/SubModule.xml` asks for that; check the list by hand. Players
+in Host and Client mode set this order in the launcher on every PC.
 
 `TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start, after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
 
