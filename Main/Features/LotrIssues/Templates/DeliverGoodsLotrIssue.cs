@@ -100,13 +100,7 @@ public class DeliverGoodsLotrIssue : IssueBase
     public override IssueFrequency GetFrequency()
     {
         EnsureDef();
-        if (_def == null) return IssueFrequency.Common;
-        switch (_def.Frequency)
-        {
-            case IssueFrequencyTier.VeryCommon: return IssueFrequency.VeryCommon;
-            case IssueFrequencyTier.Rare: return IssueFrequency.Rare;
-            default: return IssueFrequency.Common;
-        }
+        return LotrIssueTemplateRules.FrequencyOf(_def);
     }
 
     // Keep the issue alive only while its sourced item actually resolves (an unresolvable item_source would
@@ -147,7 +141,7 @@ public class DeliverGoodsLotrIssue : IssueBase
         requiredGold = 0;
         flag = PreconditionFlags.None;
         EnsureDef();
-        if (issueGiver.GetRelationWithPlayer() < (_def?.RelationMin ?? -10))
+        if (LotrIssueTemplateRules.IsBelowRelationMin(issueGiver.GetRelationWithPlayer(), _def))
         {
             flag |= PreconditionFlags.Relation;
             relationHero = issueGiver;
