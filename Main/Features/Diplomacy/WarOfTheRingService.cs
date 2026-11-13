@@ -71,9 +71,13 @@ public class WarOfTheRingService : IWarOfTheRingService
         _config = configProvider.LoadConfig();
     }
 
+    // #819: the master toggle (MCM, else the JSON flag) gates the block like GetWarVeto and the
+    // reconcile do, so switching the War of the Ring off during Full War lifts it at all three
+    // peace layers (PeaceActionHook, IsAtConstantWar, the kingdom decision permission model).
     public bool ShouldBlockPeace(string kingdomAId, string kingdomBId)
     {
         if (CurrentPhase != WarPhase.FullWar) return false;
+        if (!GetEffectiveEnabled()) return false;
         if (!_config.Phase2.BlockPeaceBetweenHostileTiers) return false;
 
         return _diplomacyService.GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Hostile;
