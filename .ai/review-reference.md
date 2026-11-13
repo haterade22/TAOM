@@ -205,6 +205,10 @@ an area with prior history. That file is frozen: a new false-positive pattern or
 gets one line here, and durable patterns go into `docs/reviews/lessons/<category>.md`.
 
 **Look harder here — what a scoped per-feature pass structurally misses (Codex's edge):**
+- **A claimed decision is checked against the decision records, not only the docs** (2026-11-13, #1155): asked to confirm a pin
+  that called PatchShield's treatment of `com.taom.mod` deliberate, Codex confirmed it against the code and the four feature docs
+  the prompt named. `plans/_audit/2026-10-02-perf/DECISIONS.md` (D13) and its `FOR-MIKE.md` item 15 plan the opposite. For any
+  "by design" or "decided" claim, grep `plans/` and `docs/adrs/` for the symbol and quote the decision row or say none exists.
 - **A load-time engine method called at another time** (2026-11-02, hollow parent repair #1076, a Codex catch). At load a later system puts
   back what the method overwrites; `InitializeHeroCharacterOnAfterLoad` during a birth runs after `RacePersistenceService` has finished, so it
   replaced a restored race. List each field such a call writes, and who else writes that field, and in what order.

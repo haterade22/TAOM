@@ -96,7 +96,7 @@ hero.HomeSettlement -> hero.BornSettlement -> clan leader's settlement
 Evaluated lazily and short-circuited — the last two walk `Settlement.All`.
 
 **The finalizer is the backstop**, not the mechanism. It is scoped to `InvalidOperationException`
-only; anything else propagates untouched. Nulling `__result` is safe because
+only; anything else is handed back with its trace kept. Nulling `__result` is safe because
 `ConsiderSpawningLordParties` already null-checks before `GiveInitialItemsToParty`, so the lord
 simply raises no party that day. It covers a faction the prefix could not anchor — for example a
 faction type with no writable setter.

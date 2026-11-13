@@ -268,7 +268,10 @@ the field, step 5 is an inference from the frames, and what first made this save
   player's character is a copy of `main_hero` under a new `Player` id with no template link, so it loaded hollow on
   every client join (Coop #4675). Coop `bannerlord-1.5.x` e132c0fce links it to `main_hero` when it joins; in a Host
   plus 2 clients run on that build, no client's census reported it (2026-11-13). A hero that joined before that
-  build still loads hollow.
+  build has no link in its save: Coop 995517e60 links such a character at load, before the engine's refill, and
+  then gives every character linked to `main_hero` its hero's culture (the refill copies `main_hero`'s). Two cases
+  stay out: a save loaded and saved again before 995517e60 keeps the character unregistered (`IsRegistered` is
+  saved), and a host before 2026-06-09 used other ids. A live load of a pre-link save on 995517e60 is owed.
 - **Repair at the birth**, `Patch83_OffspringParentRepair`, a Prefix on `DeliverOffSpring`, for both parents:
   - **With a healthy registered character of the same id:** it sets `_originCharacter` to that twin and calls the
     engine's `InitializeHeroCharacterOnAfterLoad`, which copies culture, body range, race, skills and equipment
