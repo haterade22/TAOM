@@ -5654,3 +5654,18 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 19 | Decisions of the two fixes with no test | Other: coverage | The fix tests stopped at the service that changed | A handler test with the real services, the threshold peace, the analyzer cases |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1113.toml`.
+
+## Review (plan 047, number assigned at merge): fold three behaviour-identical twins, 2-lens deep review, Codex not run (2026-11-13)
+
+- **Scope:** branch `improve/047-fold-safe-twins`, `664f19c5b..911373c9e`: `LotrIssueTemplateRules` (the frequency map and the relation floor shared by the three LotrIssue templates and `LotrIssuesCampaignBehavior`), `CultureStageViewType` (the one type probe for the three CultureStageView patches), and `SupplyRowVM` with `ForGood` and `ForTroop` (replacing `SupplyGoodRowVM` and `SupplyTroopRowVM`).
+- **Claude:** lenses 2 (Engine compatibility) and 5 (Data flow); the review lead verified every finding in the worktree: 3 confirmed (0 HIGH, 0 MEDIUM, 3 LOW), 0 false positives, all fixed. Behaviour parity held on every orchestrator question: the relation compare is the same `int` widened to `float`, the at-war test stays behind `CurrentSettlement != null`, no class enters the `IssueBase` hierarchy, each patch keeps `Prepare`, `TargetMethod` and `_hook`, and one row type binds both prefab item templates. LOW: two new comments stated a build or gate fact the code contradicts (both drafted by the plan), and the fold removed the compile-time split between goods and troop rows with no test to replace it. The two new screen tests were RED under mutants of the three factory call sites.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Final suite:** `Passed!  - Failed: 0, Passed: 39268, Skipped: 9, Total: 39277` (base 39266 passed, 39275 total, plus the two new tests).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Probe comment said TAOM cannot reference SandBox.GauntletUI at compile time | Doc claim against the build | Plan text copied after a code-only parity check; repeat of the #737 moved-comment lesson | Comment corrected; adapters lesson |
+| 2 | Test comment said the binding gate proves both names resolve | Doc claim against a gate | Same source; the gate's failing branch was not read | Comment corrected; same lesson |
+| 3 | Goods and troop rows share one type with no label test on the screen | Test coverage of a removed guard | The fold tested each factory alone, the screen tests read `ItemId` only | Two screen tests, RED under two mutants |
+
+Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/reviews/rca-fold-safe-twins-2026-11-13.md`. No convergence pass was launched by the lead (it cannot spawn agents). In-game: nothing was run; another session held the game install.

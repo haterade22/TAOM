@@ -1930,3 +1930,9 @@ The Long Defeat's opening split takes four defender formations off AI control an
 - **Why missed:** the hand-backs were listed from TAOM's call sites, not from the engine's callers of `SetControlledByAI(true)` and `DelegateCommandToAI`.
 - **Prevent:** before holding engine state that another system resets, grep the decompile for every caller of the reset and decide each one (re-apply on the next tick, never inside the callback that precedes the reset). Before comparing an order's position, require a navmesh and the boundary at the stored point.
 - **Source:** docs/reviews/rca-long-defeat-split-2026-11-12.md rows 2 and 3 (#1128)
+
+### A fold's new comment restates its twins' claims: prove each sentence before writing it (plan 047, 2026-11-13)
+Plan 047 folded three CultureStageView patches into one probe and drafted the probe's summary comment. The draft kept the patches' old claim that TAOM "cannot reference SandBox.GauntletUI at compile time"; `Main/TAOM.csproj:47-50` references every SandBox module DLL and other patches compile against `SandBox.GauntletUI`. The drafted test comment said the binding gate proves "the names resolve"; the gate fails only on a null `TargetMethod()`, and the probe stops at the first name.
+- **Why missed:** a repeat of "A moved comment's engine claims are re-verified at the move" (#737, above). The executor proved the code byte for byte and copied the plan's comment text as part of the contract; standing rule 12 calls plan text a draft, but nothing asked for proof of the prose.
+- **Prevent:** an executor's report lists each new comment or doc sentence that states a build, engine or gate fact, with the file:line that proves it, and cuts any sentence it cannot prove. A plan that drafts such a sentence puts its proof beside it.
+- **Source:** docs/reviews/rca-fold-safe-twins-2026-11-13.md rows 1 and 2 (plan 047)
