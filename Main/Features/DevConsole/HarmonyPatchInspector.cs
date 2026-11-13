@@ -29,7 +29,7 @@ internal static class HarmonyPatchInspector
     }
 
     /// <summary>Reads the categories declared by every given TAOM assembly (core, then TAOM.Client: ADR-013).</summary>
-    internal static Result Collect(string taomOwnerId, IEnumerable<Assembly> taomAssemblies)
+    internal static Result Collect(IReadOnlyCollection<string> taomOwnerIds, IEnumerable<Assembly> taomAssemblies)
     {
         var result = new Result();
         var types = taomAssemblies.SelectMany(SafeGetTypes).ToArray();
@@ -55,7 +55,7 @@ internal static class HarmonyPatchInspector
             foreach (var patch in AllPatches(info))
             {
                 var owner = SafeOwner(patch);
-                if (owner != taomOwnerId)
+                if (!taomOwnerIds.Contains(owner))
                 {
                     otherOwners.TryGetValue(owner, out var n);
                     otherOwners[owner] = n + 1;

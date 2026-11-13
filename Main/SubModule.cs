@@ -2375,7 +2375,7 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
         catch { /* IoC may already be torn down — best-effort */ }
 
-        _harmony?.UnpatchAll("com.taom.mod");
+        _harmony?.UnpatchAll(CrashGuardHarmony.MainId);
         _guardHarmony?.UnpatchAll(CrashGuardHarmony.Id);
         IoC.Dispose();
 

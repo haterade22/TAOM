@@ -11,15 +11,21 @@ namespace TAOM;
 /// guard would be removed together with the feature patch that broke. "TAOM.CrashGuards" starts with "TAOM", which
 /// PatchShieldPolicy.CompiledProtectedOwnerPrefixes protects.
 ///
-/// A guard belongs here only when its own patch method touches no engine member outside a try/catch (engine work
-/// goes through a service called inside the try), so the guard cannot itself be the patch that throws a
-/// missing-API exception and needs stripping. Patch143 (#1099, PlayerEncounter.DoMeeting, shared with Refuge and
-/// Supply Lines) is the first.
+/// A guard belongs here only when its patch class names no TaleWorlds member in any method body, not even inside
+/// its own try: a member the engine no longer has raises its exception when the JIT compiles the method that names
+/// it, before that method's try runs, and a protected owner is never stripped, so the guard would be swallowed on
+/// every call. Engine work lives in a service or adapter method that the patch calls inside its try. The types of
+/// the patch method's parameters are the signature Harmony binds, and are allowed. The gate is
+/// CrashGuardHarmonyTests.CrashGuardPatchClasses_NameNoTaleWorldsMember. Patch143 (#1099, PlayerEncounter.DoMeeting,
+/// shared with Refuge and Supply Lines) is the first.
 /// </summary>
 internal static class CrashGuardHarmony
 {
     internal const string Id = "TAOM.CrashGuards";
     internal const string MainId = "com.taom.mod";
+
+    /// <summary>Both ids count as TAOM's own in the dev console's patch report.</summary>
+    internal static readonly string[] TaomOwnerIds = { MainId, Id };
 
     private static readonly HashSet<string> Categories = new(StringComparer.Ordinal)
     {
@@ -27,6 +33,4 @@ internal static class CrashGuardHarmony
     };
 
     internal static bool IsCrashGuard(string category) => Categories.Contains(category);
-
-    internal static string HarmonyIdFor(string category) => IsCrashGuard(category) ? Id : MainId;
 }
