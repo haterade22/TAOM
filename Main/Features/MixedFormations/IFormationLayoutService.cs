@@ -40,17 +40,10 @@ public interface IFormationLayoutService
     (FormationLayoutType newLayout, int affectedCount) CycleLayouts(IReadOnlyList<IFormationAdapter> formations);
 
     /// <summary>
-    /// Auto-apply the configured default layout to formations that satisfy <see cref="IsMixedFormation"/>
+    /// Auto-apply the configured default layout to mixed formations (at least 10 units, a minority class of at least 5 units and at least 20% of the formation)
     /// and don't already have a layout assigned.
     /// </summary>
     int ApplyDefaultsToFormations(IReadOnlyList<IFormationAdapter> formations);
-
-    /// <summary>
-    /// Heuristic: a formation is "mixed" (and thus a candidate for layout assignment) when it has
-    /// at least 10 units, the minority class has at least 5 units, AND the minority class is at
-    /// least 20% of the formation. Matches the original developer's threshold so behavior parity holds.
-    /// </summary>
-    bool IsMixedFormation(IFormationAdapter formation);
 
     /// <summary>
     /// Drop every cached slot held under <paramref name="agentIndex"/> and hold each for the next unit

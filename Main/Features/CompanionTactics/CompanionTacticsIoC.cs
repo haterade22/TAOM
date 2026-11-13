@@ -8,7 +8,7 @@ namespace TAOM.Features.CompanionTactics;
 /// <summary>
 /// DryIoc registrations for CompanionTactics. All services are <see cref="Reuse.Singleton"/>
 /// — they hold per-mission state (stance manager, preset list, role cache) that must persist
-/// across patches in the same battle. Adapter snapshots (HeroCombatAdapter, AgentCombatAdapter,
+/// across patches in the same battle. Adapter snapshots (HeroCombatAdapter,
 /// BattleEquipmentSnapshot) are NOT registered: they are constructed at the boundary where a
 /// sealed Hero/Agent is in scope, and are not injected.
 /// </summary>

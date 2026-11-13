@@ -169,7 +169,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
         if (defaultLayout == FormationLayoutType.Vanilla) return 0;
 
         var assigned = 0;
-        // IsMixedFormation iterates formation.Units (read of underlying TaleWorlds collection,
+        // IsMixedFormationInternal iterates formation.Units (read of underlying TaleWorlds collection,
         // owned by the engine). It's called inside the lock so the auto-apply pass cannot interleave
         // with a worker-thread slot build for the same formation. The Units read is read-only against
         // the engine's data; safe to call under our lock.
@@ -190,15 +190,6 @@ public sealed class FormationLayoutService : IFormationLayoutService
             _logger.LogDebug($"[MixedFormations] auto-assigned default layout {defaultLayout} to {assigned} formation(s)");
 
         return assigned;
-    }
-
-    public bool IsMixedFormation(IFormationAdapter formation)
-    {
-        // Public method — does not need to hold the lock; the work is reading formation.Units
-        // (engine-owned collection) and computing thresholds. The answer can race with concurrent
-        // composition changes, but the consumer (ApplyDefaultsToFormations) holds the lock for
-        // the read-then-write itself.
-        return IsMixedFormationInternal(formation);
     }
 
     public void ForgetAgent(int agentIndex)

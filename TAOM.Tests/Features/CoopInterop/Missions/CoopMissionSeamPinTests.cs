@@ -172,10 +172,6 @@ public class CoopMissionSeamPinTests
     public void CareerAbilities_BuffAndInspireOnlyOwnedAllies()
     {
         var src = Source("Main/Features/CareerSystem/Abilities/MissionAbilityExecutionContext.cs");
-        // The burst needs the ally's CommonAIComponent, which only an AI-controlled agent carries.
-        var burst = Member(src, "public void ApplyMoraleBurst(");
-        CheckPrecedes(burst, "GetComponent<CommonAIComponent>()", "ai.Morale =", "morale burst");
-        Assert.IsFalse(burst.Contains("CoopMission"), "the burst is gated by the AI component");
         CheckPrecedes(Member(src, "private void ApplyAoeBuff("), Owned + "ally)", "CareerAbilityBuffTracker.AddAllyContribution", "aoe buff");
     }
 

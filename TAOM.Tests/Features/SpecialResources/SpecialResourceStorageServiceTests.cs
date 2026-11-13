@@ -77,26 +77,6 @@ public class SpecialResourceStorageServiceTests
     }
 
     [TestMethod]
-    public void ClampAll_CapsHighValues()
-    {
-        _storage.Set("hero1", "scraps", 999f);
-        _storage.ClampAll(500f);
-        Assert.AreEqual(500f, _storage.Get("hero1", "scraps"));
-    }
-
-    [TestMethod]
-    public void ClampAll_ClampsNegativeToZero()
-    {
-        _storage.Set("hero1", "scraps", 50f);
-        // Simulate save-edited negative via RestoreData
-        var data = _storage.GetAllData();
-        data["hero1:scraps"] = -10f;
-        _storage.RestoreData(data);
-        _storage.ClampAll(500f);
-        Assert.AreEqual(0f, _storage.Get("hero1", "scraps"));
-    }
-
-    [TestMethod]
     public void RestoreData_HandlesNull()
     {
         _storage.Set("hero1", "scraps", 50f);

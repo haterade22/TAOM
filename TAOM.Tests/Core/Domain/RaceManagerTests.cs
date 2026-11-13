@@ -130,33 +130,8 @@ public class RaceManagerTests
         Assert.IsFalse(_sut.IsValidRaceId(999));
     }
 
-    [TestMethod]
-    public void GetAllRaceIds_ReturnsAllRegisteredIds()
-    {
-        var result = _sut.GetAllRaceIds();
-
-        Assert.AreEqual(4, result.Count);
-        Assert.IsTrue(result.Contains(0));
-        Assert.IsTrue(result.Contains(1));
-        Assert.IsTrue(result.Contains(2));
-        Assert.IsTrue(result.Contains(3));
-    }
-
-    [TestMethod]
-    public void GetAllRaceNames_ReturnsAllRegisteredNames()
-    {
-        var result = _sut.GetAllRaceNames();
-
-        Assert.AreEqual(4, result.Count);
-        Assert.IsTrue(result.Contains("human"));
-        Assert.IsTrue(result.Contains("dwarf"));
-        Assert.IsTrue(result.Contains("elf"));
-        Assert.IsTrue(result.Contains("orc"));
-    }
-
     // Issue #330 — GetOrderedRaceNames backs the race-name legend in RacePersistenceService.
-    // Ordering MUST match the FaceGen index order (saved race ints index into this list);
-    // GetAllRaceNames rides Dictionary.Values insertion order, an implementation detail.
+    // Ordering MUST match the FaceGen index order (saved race ints index into this list).
 
     [TestMethod]
     public void GetOrderedRaceNames_ReturnsNamesInFaceGenOrder()
@@ -224,7 +199,7 @@ public class RaceManagerTests
         _faceGenAdapter.GetRaceNames().Returns(new string[0]);
         var sut = new RaceManager(_logger, _faceGenAdapter);
 
-        var result = sut.GetAllRaceIds();
+        var result = sut.GetOrderedRaceNames();
 
         Assert.AreEqual(0, result.Count);
     }

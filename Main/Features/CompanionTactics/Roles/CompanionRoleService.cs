@@ -50,45 +50,6 @@ public sealed class CompanionRoleService : ICompanionRoleService
         _ => string.Empty,
     };
 
-    public string GetRoleHint(CombatRole role, bool isMounted)
-    {
-        var baseHint = role switch
-        {
-            CombatRole.Archer => "Best suited for: Archer formations",
-            CombatRole.Crossbow => "Best suited for: Crossbow formations",
-            CombatRole.ShieldInfantry => "Best suited for: Shieldwall formations",
-            CombatRole.TwoHanded => "Best suited for: Heavy infantry",
-            CombatRole.Polearm => "Best suited for: Polearm formations",
-            CombatRole.Cavalry => "Best suited for: Cavalry charges",
-            CombatRole.HorseArcher => "Best suited for: Horse archer tactics",
-            CombatRole.Skirmisher => "Best suited for: Skirmisher tactics",
-            CombatRole.OneHanded => "Best suited for: Light infantry",
-            CombatRole.Slinger => "Best suited for: Skirmisher tactics",
-            _ => "Combat specialist",
-        };
-        if (isMounted && role != CombatRole.Cavalry && role != CombatRole.HorseArcher)
-            baseHint += " (Has mount)";
-        return baseHint;
-    }
-
-    public uint GetRoleColor(CombatRole role) => role switch
-    {
-        CombatRole.Archer => 4287688336u,
-        CombatRole.Crossbow => 4288215960u,
-        CombatRole.ShieldInfantry => 4287090411u,
-        CombatRole.TwoHanded => 4294927175u,
-        CombatRole.Polearm => 4292714717u,
-        CombatRole.Cavalry => 4294956800u,
-        CombatRole.HorseArcher => 4294944000u,
-        CombatRole.Skirmisher => 4289583334u,
-        // OneHanded reuses ShieldInfantry tone (both light infantry); Slinger reuses Skirmisher
-        // tone (both throw/projectile harassment). Without explicit cases the fallback is
-        // uint.MaxValue (white), which made these two roles invisible in role badges.
-        CombatRole.OneHanded => 4287090411u,
-        CombatRole.Slinger => 4289583334u,
-        _ => uint.MaxValue,
-    };
-
     public bool IsRangedRole(CombatRole role) =>
         role == CombatRole.Archer || role == CombatRole.Crossbow || role == CombatRole.Slinger;
 

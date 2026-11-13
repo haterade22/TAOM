@@ -30,9 +30,4 @@ public class MutationCalculatorRegistry : IMutationCalculatorRegistry
         }
         return calculator(baseValue, hero, parameters);
     }
-
-    public bool HasCalculator(string calculatorId)
-    {
-        return _calculators.ContainsKey(calculatorId);
-    }
 }

@@ -191,15 +191,6 @@ public class CareerPassiveService : ICareerPassiveService
         return total;
     }
 
-    public bool HasActivePassive(string? heroStringId, PassiveEffectType type)
-    {
-        if (string.IsNullOrEmpty(heroStringId)) return false;
-        Dictionary<string, Dictionary<PassiveEffectType, float>> snapshot;
-        lock (_lock) { snapshot = _cache; }
-        return snapshot.TryGetValue(heroStringId, out var effectMap)
-            && effectMap.ContainsKey(type);
-    }
-
     // What a reader takes for a type: the unfiltered total, except for a class-filtered type (#769 E9), where a
     // class-only pip ("+10% infantry damage") would otherwise count at full magnitude for a consumer that has no
     // class. Those read the pips that reach troopClass; left at None (a reader with no troop) a troop of class None

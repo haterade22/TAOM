@@ -16,8 +16,6 @@ public class EnlistmentStateMachine : IEnlistmentStateMachine
 
     public EnlistmentState State => _store.Record.State;
 
-    public bool CanTransition(EnlistmentState to) => EnlistmentTransitionTable.IsLegal(State, to);
-
     public bool TryTransition(EnlistmentState to)
     {
         var from = State;

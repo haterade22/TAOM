@@ -17,15 +17,6 @@ public sealed class CavalryCommandAdapter : ICavalryCommandAdapter
     public Vec2 CurrentPosition => _formation?.CurrentPosition ?? Vec2.Zero;
     public Vec2 Direction => _formation?.Direction ?? Vec2.Zero;
 
-    public void IssueStop()
-    {
-        if (_formation == null) return;
-        using (SmartCavalryRecursionGuard.Enter())
-        {
-            _formation.SetMovementOrder(MovementOrder.MovementOrderStop);
-        }
-    }
-
     public bool IssueMoveTo(Vec2 worldXY, float groundHeight)
     {
         if (_formation == null) return false;

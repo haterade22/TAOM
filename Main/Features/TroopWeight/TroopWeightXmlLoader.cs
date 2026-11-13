@@ -30,12 +30,6 @@ public class TroopWeightXmlLoader : ITroopWeightXmlLoader
         return _troopWeights;
     }
 
-    public void ReloadWeights()
-    {
-        _isLoaded = false;
-        LoadTroopWeights();
-    }
-
     private void LoadTroopWeights()
     {
         var xmlPath = Path.Combine(_pathService.ModuleDataPath, "TroopWeights", "troop_weights.xml");

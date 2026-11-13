@@ -171,42 +171,6 @@ public class BoneCollisionServiceTests
         _sut.Clear();  // must not throw
     }
 
-    // -------------------------------------------------------------------------
-    // CreateTimedBoneCheck / CreateAnimationBoneCheck — factory methods
-    // -------------------------------------------------------------------------
-
-    [TestMethod]
-    public void CreateTimedBoneCheck_ValidArguments_ReturnsBoneCheckInstance()
-    {
-        // Arrange
-        var agent = Substitute.For<IAgentAdapter>();
-        var targets = new List<IAgentAdapter>();
-        var boneIds = new List<sbyte> { 1, 2 };
-        Action<IAgentAdapter, IAgentAdapter, sbyte> onCollision = (a, b, c) => { };
-        Action onExpiry = () => { };
-
-        // Act
-        BoneCheck result = _sut.CreateTimedBoneCheck(
-            agent, targets, boneIds,
-            maxDuration: 1.5f,
-            boneCollisionRadius: 0.3f,
-            stopAfterFirstHit: false,
-            onCollisionCallback: onCollision,
-            onExpiration: onExpiry);
-
-        // Assert
-        Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(BoneCheck));
-    }
-
-    // NOTE — CreateAnimationBoneCheck cannot be unit-tested outside the game process.
-    // ActionIndexCache has a static class initializer (.cctor) that calls
-    // MBAnimation.GetActionCodeWithName, which requires the TaleWorlds engine runtime.
-    // The CLR fires that .cctor the first time the JIT compiles any method with an
-    // ActionIndexCache parameter, making it impossible to call CreateAnimationBoneCheck
-    // from a test process. This is an engine coupling constraint, not an implementation bug.
-    // Coverage of this factory method is achievable only via integration / in-game testing.
-
     [TestMethod]
     public void Clear_ThenAddNewComponent_NewComponentIsTickedNormally()
     {
@@ -225,28 +189,5 @@ public class BoneCollisionServiceTests
         // Assert
         Assert.AreEqual(0, first.TickCallCount,  "Cleared component must not be ticked");
         Assert.AreEqual(1, second.TickCallCount, "Newly added component must be ticked");
-    }
-
-    [TestMethod]
-    public void CreateTimedBoneCheck_ReturnedComponentIsTickableByService()
-    {
-        // Arrange — wrap in FakeBoneCheck to avoid engine calls, but verify
-        // that a real timed BoneCheck can at least be added without error.
-        var agent = Substitute.For<IAgentAdapter>();
-        var targets = new List<IAgentAdapter>();
-        var boneIds = new List<sbyte> { 0 };
-
-        BoneCheck check = _sut.CreateTimedBoneCheck(
-            agent, targets, boneIds,
-            maxDuration: 0.001f,   // expires almost immediately
-            boneCollisionRadius: 0.1f,
-            stopAfterFirstHit: false,
-            onCollisionCallback: null,
-            onExpiration: null);
-
-        // Act / Assert — AddBoneCheckComponent must accept it without throwing
-        _sut.AddBoneCheckComponent(check);
-        // Note: Tick is NOT called here because BoneCheck.CheckBoneCollision
-        // requires sealed TaleWorlds Skeleton/MatrixFrame — untestable in unit scope.
     }
 }

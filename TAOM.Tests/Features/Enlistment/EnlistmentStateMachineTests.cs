@@ -55,13 +55,6 @@ public class EnlistmentStateMachineTests
     }
 
     [TestMethod]
-    public void CanTransition_MirrorsTable()
-    {
-        Assert.IsTrue(_machine.CanTransition(EnlistmentState.PetitionPending));
-        Assert.IsFalse(_machine.CanTransition(EnlistmentState.EnlistedAttached));
-    }
-
-    [TestMethod]
     public void TryTransition_FullServiceLifecycle_Walkable()
     {
         // petition -> oath -> battle -> back -> captured -> released

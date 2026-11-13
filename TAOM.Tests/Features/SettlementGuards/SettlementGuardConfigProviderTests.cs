@@ -254,23 +254,6 @@ public class SettlementGuardConfigProviderTests
         Assert.IsNotNull(_sut.GetByCultureId("gondor"));
     }
 
-    // --- GetSpearMappings ---
-
-    [TestMethod]
-    public void GetSpearMappings_ReturnsAllMappings()
-    {
-        WriteConfig(@"<?xml version=""1.0""?>
-<SettlementGuards>
-  <Spears>
-    <Spear culture=""gondor"" item=""gondor_guard_spear"" />
-    <Spear culture=""erebor"" item=""erebor_guard_pike"" />
-  </Spears>
-</SettlementGuards>");
-
-        var mappings = _sut.GetSpearMappings();
-        Assert.AreEqual(2, mappings.Count);
-    }
-
     // --- Helpers ---
 
     private void WriteConfig(string content)

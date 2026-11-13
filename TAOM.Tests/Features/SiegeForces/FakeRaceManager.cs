@@ -38,10 +38,6 @@ internal sealed class FakeRaceManager : IRaceManager
 
     public List<int> IdsAskedForAName { get; } = new();
 
-    public List<int> GetAllRaceIds() => Enumerable.Range(0, _names.Length).ToList();
-
-    public List<string> GetAllRaceNames() => _names.ToList();
-
     public IReadOnlyList<string> GetOrderedRaceNames() => _names;
 
     public bool IsValidRaceName(string name) =>
