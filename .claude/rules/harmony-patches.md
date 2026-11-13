@@ -55,11 +55,14 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - A new patch number names one feature, and its category gets a `## <category>` heading in the registry: `PatchCategoryNumberTests` pins both.
 - Register in a `SubModule.cs` patch category (`[HarmonyPatchCategory]` + the SubModule apply batch — verify the apply TIMING fits the target: most apply in `OnGameInitializationFinished`, but targets that fire during new-game load/main menu need `OnSubModuleLoad`, e.g. `Patch58`/`Patch61`; see the registry)
 
-## MovementOrder postfixes: use the shared deferred category (MANDATORY)
-Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`
-(applied once from `OnMissionBehaviorInitialize`), because `MovementOrder.cctor` reads
-`Mission.Current.CurrentTime`: null in `OnSubModuleLoad`/`OnGameInitializationFinished`. Its members are listed in
-`docs/reference/harmony-patch-registry.md`, section `Patch_MissionTime_SetMovementOrder`; add yours there, never a fresh category.
+## MovementOrder postfixes: use a deferred mission-time category (MANDATORY)
+Any patch with `MovementOrder` in its postfix signature MUST go in its feature's own `Patch_MissionTime_<Feature>`
+category, applied at the first mission (`OnMissionBehaviorInitialize`) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`: null in
+`OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a class that fails turns off only its own
+feature (split 2026-11-13). A feature module declares its category at `ApplyPhase.FirstMission`, as `MarshalsWordModule` does:
+that is the default route. `SubModule.cs` is single-owner and applies only the two existing ones, `Patch_MissionTime_SmartCavalryAI`
+and `Patch_MissionTime_CompanionTactics`. Document it under its own `## <category>` registry heading, or in the section `Patch_MissionTime_SetMovementOrder`
+plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that test fails.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy
