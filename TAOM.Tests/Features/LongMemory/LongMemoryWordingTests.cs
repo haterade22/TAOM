@@ -10,8 +10,8 @@ namespace TAOM.Tests.Features.LongMemory;
 
 /// <summary>
 /// The two player-facing lines Long Memory adds. The C# literal is the English source, the English row in
-/// <c>taom_module_strings.xml</c> must equal it, and the twelve language files carry the seeded English default (the paid
-/// translation run replaces each row later). A copied <c>{=KEY}</c> shows the old text, so a row left on an older wording fails.
+/// <c>taom_module_strings.xml</c> must equal it, and each of the twelve language files carries one row per key (its
+/// translation, or the English default until the paid run fills it) that keeps the <c>{VILLAGE}</c> placeholder.
 /// </summary>
 [TestClass]
 public class LongMemoryWordingTests
@@ -62,9 +62,8 @@ public class LongMemoryWordingTests
 
     [DataTestMethod]
     [DynamicData(nameof(Keys), DynamicDataSourceType.Method)]
-    public void EveryLanguageFile_HoldsOneRow_OfTheCurrentEnglish_NoneStale(string key, string wording)
+    public void EveryLanguageFile_HoldsOneRow_KeepingTheVillagePlaceholder(string key, string wording)
     {
-        var english = LiteralInTheAdapter(key).Substring(("{=" + key + "}").Length);
         var languages = Directory.GetDirectories(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "Languages"));
         Assert.AreEqual(12, languages.Length);
         foreach (var dir in languages)
@@ -73,7 +72,7 @@ public class LongMemoryWordingTests
             var rows = Rows("Main/_Module/ModuleData/Languages/" + Path.GetFileName(dir) + "/" + Path.GetFileName(file), key);
 
             Assert.AreEqual(1, rows.Count, Path.GetFileName(file));
-            Assert.AreEqual(english, rows[0], Path.GetFileName(file) + ": the row must equal the current English");
+            StringAssert.Contains(rows[0], "{VILLAGE}", Path.GetFileName(file) + ": the row must keep the {VILLAGE} placeholder");
         }
     }
 

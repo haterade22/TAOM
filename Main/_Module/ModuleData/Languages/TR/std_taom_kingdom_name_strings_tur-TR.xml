@@ -71,40 +71,40 @@
     <string id="taom_arthedain_ruler_title" text="Kral" />
     <string id="taom_arthedain_short_name" text="Arthedain" />
     <string id="taom_arthedain_title" text="Arthedain Kuzey Krallığı" />
-    <string id="taom_cardolan_desc" text="The southern of the three realms into which Arnor was sundered. Its kings lie in the barrows of Tyrn Gorthad and its riders keep the plains between the Baranduin and the Greyflood, but its towns are few and its lords contend with Arthedain and Rhudaur for the crown of Arnor." />
+    <string id="taom_cardolan_desc" text="Arnor'un bölündüğü üç diyarın en güneydekisi. Kralları Tyrn Gorthad'ın höyüklerinde yatar, atlıları Baranduin ile Boz Irmak arasındaki ovaları korur; ama kasabaları azdır ve lordları Arnor tacı için Arthedain ve Rhudaur ile çekişir." />
     <string id="taom_cardolan_name" text="Cardolan" />
-    <string id="taom_cardolan_ruler_title" text="King" />
+    <string id="taom_cardolan_ruler_title" text="Kral" />
     <string id="taom_cardolan_short_name" text="Cardolan" />
-    <string id="taom_cardolan_title" text="Kingdom of Cardolan" />
-    <string id="taom_rhudaur_desc" text="The eastern of the three realms into which Arnor was sundered, a hill kingdom between the Hoarwell and the Loudwater. Its Dunedain lords hold Cameth Brin and the Angle and rule a hard people of hill-men, with trolls in the fells and orcs on every pass." />
+    <string id="taom_cardolan_title" text="Cardolan Krallığı" />
+    <string id="taom_rhudaur_desc" text="Arnor'un bölündüğü üç diyarın en doğudakisi; Kırçılsu ile Gürültülüsu arasında bir tepe krallığı. Dúnedain lordları Cameth Brin'i ve Köşe'yi tutar, sert bir tepe-insanları halkını yönetir; yabanlarda troller, her geçitte orklar vardır." />
     <string id="taom_rhudaur_name" text="Rhudaur" />
-    <string id="taom_rhudaur_ruler_title" text="King" />
+    <string id="taom_rhudaur_ruler_title" text="Kral" />
     <string id="taom_rhudaur_short_name" text="Rhudaur" />
-    <string id="taom_rhudaur_title" text="Kingdom of Rhudaur" />
-    <string id="taom_eredluin_desc" text="The dwarf kingdom of the Blue Mountains. Durin's Folk made Thorin's Halls there in their exile, and in this age the Broadbeams and the Firebeards hold Belegost and Nogrod again. Its lords are few and its halls are poorer than those of its kin in the east, but its smiths are the oldest in the West, and its axes keep the goblins of Blue Craig from the roads to Lindon." />
+    <string id="taom_rhudaur_title" text="Rhudaur Krallığı" />
+    <string id="taom_eredluin_desc" text="Mavi Dağlar'ın cüce krallığı. Durin Halkı sürgünde Thorin'in Salonları'nı orada kurdu; bu çağda ise Genişbeller ve Ateşsakallar yeniden Belegost ile Nogrod'u elinde tutuyor. Lordları azdır ve salonları doğudaki akrabalarınınkinden yoksuldur, ama demircileri Batı'nın en eskileridir ve baltaları Mavi Kaya goblinlerini Lindon yollarından uzak tutar." />
     <string id="taom_eredluin_name" text="Ered Luin" />
-    <string id="taom_eredluin_ruler_title" text="King" />
+    <string id="taom_eredluin_ruler_title" text="Kral" />
     <string id="taom_eredluin_short_name" text="Ered Luin" />
-    <string id="taom_eredluin_title" text="Kingdom of Ered Luin" />
-    <string id="taom_anduinvale_desc" text="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
-    <string id="taom_anduinvale_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_ruler_title" text="Chieftain" />
-    <string id="taom_anduinvale_short_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_title" text="Anduin Vale" />
-    <string id="taom_angaladh_desc" text="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
+    <string id="taom_eredluin_title" text="Ered Luin Krallığı" />
+    <string id="taom_anduinvale_desc" text="Beorninglar ve Vadilerin Orman Adamları, Sisli Dağlar ile Karanlıkorman arasındaki yukarı Anduin'i ellerinde tutarlar. Yüksek Geçit'i ve Eski Geçit'i dürüst yolcular için açık tutar, orklardan ve kurtlardan ağır bir bedel alırlar. Reisleri Beorn'un Salonu'nu ve Carrock'u elinde tutar ve kralların savaşlarında taraf olmak istemezler." />
+    <string id="taom_anduinvale_name" text="Anduin Vadisi" />
+    <string id="taom_anduinvale_ruler_title" text="Reis" />
+    <string id="taom_anduinvale_short_name" text="Anduin Vadisi" />
+    <string id="taom_anduinvale_title" text="Anduin Vadisi" />
+    <string id="taom_angaladh_desc" text="Batı Karanlıkorman'ın Orman Adamları, ormanın eteklerinde çiftliklerini açtılar ve ülkelerine Orman Adamları Kasabası'nı çevreleyen demir sert ağaçların adını verdiler. Okçu ve orman korucusudurlar, sayıları azdır; kuzeydeki Elflerle barış içinde, güneydeki Dol Guldur'a karşı ise daima tetiktedirler." />
     <string id="taom_angaladh_name" text="Angáladh" />
-    <string id="taom_angaladh_ruler_title" text="King" />
+    <string id="taom_angaladh_ruler_title" text="Kral" />
     <string id="taom_angaladh_short_name" text="Angáladh" />
-    <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
-    <string id="taom_dorwinion_desc" text="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
+    <string id="taom_angaladh_title" text="Angáladh Krallığı" />
+    <string id="taom_dorwinion_desc" text="Dorwinion'un şarapçıları, Akan Irmak'ın Rhûn Denizi'ne kavuştuğu ılık yamaçlara bakar. Şarapları ırmak yukarı Dale'e, Karanlıkorman Elfleri'ne ve bedelini ödeyebilen her salona gider; kralları da bununla zenginleşir. Batı'nın savaşlarından uzak dururlar ve gerektiğinde Doğu'dan barışı satın alırlar." />
     <string id="taom_dorwinion_name" text="Dorwinion" />
-    <string id="taom_dorwinion_ruler_title" text="King" />
+    <string id="taom_dorwinion_ruler_title" text="Kral" />
     <string id="taom_dorwinion_short_name" text="Dorwinion" />
-    <string id="taom_dorwinion_title" text="Kingdom of Dorwinion" />
-    <string id="taom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
-    <string id="taom_southrhovanion_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_ruler_title" text="King" />
-    <string id="taom_southrhovanion_short_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_title" text="Kingdom of South Rhovanion" />
+    <string id="taom_dorwinion_title" text="Dorwinion Krallığı" />
+    <string id="taom_southrhovanion_desc" text="Güney Rhovanion'un Kuzeyadamları, Karanlıkorman'ın güney eteği ile Rhûn Denizi arasındaki geniş ovalarda at sürer. Onlar at-lordlarıdır, çok zaman önce kuzeye giden Éothéod'un akrabalarıdır ve bir zamanlar salonlarını yakan Arabalılar'ı unutmamışlardır. Kralları Vidugard'ı elinde tutar ve ne Batı'da ne Doğu'da bir efendiye borçludur." />
+    <string id="taom_southrhovanion_name" text="Güney Rhovanion" />
+    <string id="taom_southrhovanion_ruler_title" text="Kral" />
+    <string id="taom_southrhovanion_short_name" text="Güney Rhovanion" />
+    <string id="taom_southrhovanion_title" text="Güney Rhovanion Krallığı" />
   </strings>
 </base>

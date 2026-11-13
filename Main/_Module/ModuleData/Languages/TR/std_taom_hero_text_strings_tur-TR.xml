@@ -466,14 +466,16 @@
     <string id="zulgor_description" text="Bir kanat yetiştiricisi olan Zulgor, vahşi yumurtaları kuluçkaya yatırır ve Khamûl'un havadaki hâkimiyetini genişletir." />
     <string id="zulgora_description" text="Bir gölge dokuyucusu olan Zulgora, yanılsamalar yaratır; hikâyelerdeki Sauron'un aldatmaları gibi düşmanları kandırır." />
     <string id="zulgoth_description" text="Zulgoth bir ayinci ork olarak görev yapar; ork geleneklerinde ima edildiği gibi karanlık güçlere kurbanlar sunar. Ayinleri klanın girişimleri için güç çağırır." />
-    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
-    <string id="lord_CA1_1_description" text="Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
-    <string id="lord_RH1_1_description" text="Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
-    <string id="lord_LN3_1_description" text="Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
-    <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
-    <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
-    <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
-    <string id="lord_DO1_1_description" text="Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
-    <string id="lord_SRH1_1_description" text="Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+    <string id="lord_AN1_1_description" text="Arthedain Kralı, Arvedui'nin ve Isildur'un vârisi II. Arvegil; Fornost'u Gundabad orklarına karşı tutar ve Cardolan ile Rhudaur'daki akrabalarıyla huzursuz bir barış sürdürür." />
+    <string id="lord_CA1_1_description" text="Cardolan Kralı, Earendur'un ikinci oğlunun vârisi Aranthir; höyük-kralların tacını Caras Gorthad'da muhafaza eder." />
+    <string id="lord_RH1_1_description" text="Rhudaur Kralı, Earendur'un üçüncü oğlunun vârisi Belegorn; Cameth Brin'in ve Köşe'nin tepeadamlarının efendisi." />
+    <string id="lord_LN3_1_description" text="Gondolinli Penlod'un oğlu ve Sütun Hanesi ile Kar Kulesi'nin varisi olan Maicasáma, Lhûn Körfezi'nin kuzey kolundaki Forlond'u elinde tutar." />
+    <string id="lord_EL1_1_description" text="II. Farin, Ered Luin Kralı, Delingur Hanedanı'ndan, Thorin Salonları'nın Efendisi; Mavi Dağlar'ı Belegost'un Genişgövdeleri ve Nogrod'un Ateşsakalları ile birlikte elinde tutar." />
+    <string id="lord_AND1_1_description" text="Angáladh Kralı, Ormanadamları-kentinin efendisi Ingomar; Kuyutorman'ın eteklerini Dol Guldur'un gölgesine karşı korur." />
+    <string id="lord_AV1_1_description" text="Beorn oğlu Grimbeorn, Beorningler'in Reisi; Yüksek Geçit'i ve Eski Geçidi tutar ve hiçbir orkun Anduin Vadileri'ni geçmesine izin vermez." />
+    <string id="lord_DO1_1_description" text="Dorwinion Kralı, Vineholm efendisi Ostric; şarabı Koşan Nehir boyunca Dale'e ve Kuyutorman Elfleri'ne gider." />
+    <string id="lord_SRH1_1_description" text="Güney Rhovanion Kralı, Vidugard efendisi Vidumar; Kuyutorman'ın güneyindeki ovalarda at sürer ve Araba Sürücüleri'ni hatırlar." />
+    <string id="haldir_lothlorien_description" text="Sınır nöbetçisi Haldir, kitaplardaki Lórien sınır muhafızlarını andırır; Altın Orman'ın sınırlarını korumak için sessiz bir hassasiyetle devriye gezer." />
+    <string id="orophin_lothlorien_description" text="Tetikte bir okçu olan Orophin, filmlerdeki sınır muhafızları gibi nöbet tutar; okları Dol Guldur'un gölgesiyle yozlaşmış canavarları yere serer." />
   </strings>
 </base>

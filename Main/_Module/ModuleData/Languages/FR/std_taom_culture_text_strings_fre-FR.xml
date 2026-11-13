@@ -1877,19 +1877,19 @@
     <string id="aom_arthedain_male_name_8" text="Arveleg" />
     <string id="aom_arthedain_male_name_9" text="Araphor" />
     <string id="aom_arthedain_name" text="Arthedain" />
-    <string id="aom_cardolan_clan_1" text="House of Tyrn Gorthad" />
-    <string id="aom_cardolan_clan_10" text="House of the Greenway" />
-    <string id="aom_cardolan_clan_11" text="House of Swanfleet" />
-    <string id="aom_cardolan_clan_12" text="House of Andrath" />
-    <string id="aom_cardolan_clan_2" text="House of Tharbad" />
-    <string id="aom_cardolan_clan_3" text="House of the Greyflood" />
-    <string id="aom_cardolan_clan_4" text="House of Minhiriath" />
-    <string id="aom_cardolan_clan_5" text="House of the South Downs" />
-    <string id="aom_cardolan_clan_6" text="House of Sarn Ford" />
-    <string id="aom_cardolan_clan_7" text="House of Eryn Vorn" />
-    <string id="aom_cardolan_clan_8" text="House of the Barrows" />
-    <string id="aom_cardolan_clan_9" text="House of Minas Eithel" />
-    <string id="aom_cardolan_desc" text="The Dúnedain of Cardolan hold the south of old Arnor, the plains and river country between the Baranduin and the Greyflood. Their kings lie in the barrows of Tyrn Gorthad, their barges still come up to Tharbad, and their riders are the best of the three northern kingdoms. Their towns are few and their lords quarrel with Arthedain and Rhudaur over the old crown, while the wild lands grow bolder every year." />
+    <string id="aom_cardolan_clan_1" text="Maison de Tyrn Gorthad" />
+    <string id="aom_cardolan_clan_10" text="Maison de la Route Verte" />
+    <string id="aom_cardolan_clan_11" text="Maison du Marais aux Cygnes" />
+    <string id="aom_cardolan_clan_12" text="Maison d'Andrath" />
+    <string id="aom_cardolan_clan_2" text="Maison de Tharbad" />
+    <string id="aom_cardolan_clan_3" text="Maison du Flot Gris" />
+    <string id="aom_cardolan_clan_4" text="Maison du Minhiriath" />
+    <string id="aom_cardolan_clan_5" text="Maison des Hauts du Sud" />
+    <string id="aom_cardolan_clan_6" text="Maison du Gué de Sarn" />
+    <string id="aom_cardolan_clan_7" text="Maison d'Eryn Vorn" />
+    <string id="aom_cardolan_clan_8" text="Maison des Galgals" />
+    <string id="aom_cardolan_clan_9" text="Maison de Minas Eithel" />
+    <string id="aom_cardolan_desc" text="Les Dúnedain du Cardolan tiennent le sud de l'ancien Arnor, les plaines et le pays des rivières entre le Baranduin et le Flot Gris. Leurs rois reposent dans les galgals de Tyrn Gorthad, leurs barges remontent encore jusqu'à Tharbad, et leurs cavaliers sont les meilleurs des trois royaumes du Nord. Leurs villes sont peu nombreuses et leurs seigneurs se querellent avec l'Arthedain et le Rhudaur au sujet de l'antique couronne, tandis que les terres sauvages s'enhardissent chaque année." />
     <string id="aom_cardolan_female_name_1" text="Elendis" />
     <string id="aom_cardolan_female_name_10" text="Ivren" />
     <string id="aom_cardolan_female_name_11" text="Lindis" />
@@ -1955,19 +1955,19 @@
     <string id="aom_cardolan_male_name_8" text="Dagnir" />
     <string id="aom_cardolan_male_name_9" text="Dorthar" />
     <string id="aom_cardolan_name" text="Cardolan" />
-    <string id="aom_rhudaur_clan_1" text="House of Cameth Brin" />
-    <string id="aom_rhudaur_clan_10" text="House of Egladil" />
-    <string id="aom_rhudaur_clan_11" text="House of the Fells" />
-    <string id="aom_rhudaur_clan_12" text="House of Greyfell" />
-    <string id="aom_rhudaur_clan_2" text="House of the Angle" />
-    <string id="aom_rhudaur_clan_3" text="House of Ettendale" />
-    <string id="aom_rhudaur_clan_4" text="House of the Coldfells" />
-    <string id="aom_rhudaur_clan_5" text="House of the Trollshaws" />
-    <string id="aom_rhudaur_clan_6" text="House of the Last Bridge" />
-    <string id="aom_rhudaur_clan_7" text="House of the Loudwater" />
-    <string id="aom_rhudaur_clan_8" text="House of the Hoarwell" />
-    <string id="aom_rhudaur_clan_9" text="House of the Ettenmoors" />
-    <string id="aom_rhudaur_desc" text="Rhudaur is the hill kingdom of old Arnor, between the Hoarwell and the Loudwater. Its Dúnedain lords hold the Angle and the tower of Cameth Brin and rule a people of hill-men who never loved the West. The line of its first king still endures, but its holds are cold, its fells are full of trolls, and the orcs of the mountains watch every pass." />
+    <string id="aom_rhudaur_clan_1" text="Maison de Cameth Brin" />
+    <string id="aom_rhudaur_clan_10" text="Maison d'Egladil" />
+    <string id="aom_rhudaur_clan_11" text="Maison des Landes" />
+    <string id="aom_rhudaur_clan_12" text="Maison de Greyfell" />
+    <string id="aom_rhudaur_clan_2" text="Maison de l'Angle" />
+    <string id="aom_rhudaur_clan_3" text="Maison d'Ettendale" />
+    <string id="aom_rhudaur_clan_4" text="Maison des Landes Froides" />
+    <string id="aom_rhudaur_clan_5" text="Maison des Taillis des Trolls" />
+    <string id="aom_rhudaur_clan_6" text="Maison du Dernier Pont" />
+    <string id="aom_rhudaur_clan_7" text="Maison de la Bruinen" />
+    <string id="aom_rhudaur_clan_8" text="Maison de la Mitheithel" />
+    <string id="aom_rhudaur_clan_9" text="Maison des Landes d'Etten" />
+    <string id="aom_rhudaur_desc" text="Le Rhudaur est le royaume des collines de l'ancien Arnor, entre la Mitheithel et la Bruinen. Ses seigneurs dúnedain tiennent l'Angle et la tour de Cameth Brin, et règnent sur un peuple d'hommes des collines qui n'ont jamais aimé l'Ouest. La lignée de son premier roi perdure encore, mais ses forteresses sont froides, ses landes grouillent de trolls, et les orques des montagnes surveillent chaque col." />
     <string id="aom_rhudaur_female_name_1" text="Gilwen" />
     <string id="aom_rhudaur_female_name_10" text="Ilar" />
     <string id="aom_rhudaur_female_name_11" text="Lowri" />
@@ -2033,19 +2033,19 @@
     <string id="aom_rhudaur_male_name_8" text="Eredhir" />
     <string id="aom_rhudaur_male_name_9" text="Fengar" />
     <string id="aom_rhudaur_name" text="Rhudaur" />
-    <string id="aom_eredluin_clan_1" text="House of Borin" />
-    <string id="aom_eredluin_clan_10" text="House of Azaghâl" />
-    <string id="aom_eredluin_clan_11" text="Keepers of the Dwarf-road" />
-    <string id="aom_eredluin_clan_12" text="House of Gamil" />
-    <string id="aom_eredluin_clan_2" text="Broadbeams" />
-    <string id="aom_eredluin_clan_3" text="Firebeards" />
-    <string id="aom_eredluin_clan_4" text="Wardens of Dolmed" />
-    <string id="aom_eredluin_clan_5" text="House of Frerin" />
-    <string id="aom_eredluin_clan_6" text="House of Narvi" />
-    <string id="aom_eredluin_clan_7" text="Stonehands of Belegost" />
-    <string id="aom_eredluin_clan_8" text="Hammerers of Nogrod" />
-    <string id="aom_eredluin_clan_9" text="House of Telchar" />
-    <string id="aom_eredluin_desc" text="The dwarves of Ered Luin dwell in the Blue Mountains at the western edge of Middle-earth. Durin's Folk came there in exile and made Thorin's Halls, and in this age the Broadbeams and the Firebeards keep Belegost and Nogrod again, the oldest dwarf-cities of the West. They are miners and smiths, poorer than their kin in the east, and they trade iron with the Elves of Lindon and the Men of Eriador while the goblins of Blue Craig gnaw at their roads." />
+    <string id="aom_eredluin_clan_1" text="Maison de Delingur" />
+    <string id="aom_eredluin_clan_10" text="Maison d'Azaghâl" />
+    <string id="aom_eredluin_clan_11" text="Gardiens de la Route des Nains" />
+    <string id="aom_eredluin_clan_12" text="Maison de Gamil" />
+    <string id="aom_eredluin_clan_2" text="Maison de Dwálin" />
+    <string id="aom_eredluin_clan_3" text="Maison d'Úri" />
+    <string id="aom_eredluin_clan_4" text="Maison d'Eldran" />
+    <string id="aom_eredluin_clan_5" text="Maison de Frerin" />
+    <string id="aom_eredluin_clan_6" text="Maison de Narvi" />
+    <string id="aom_eredluin_clan_7" text="Mains-de-Pierre de Belegost" />
+    <string id="aom_eredluin_clan_8" text="Marteleurs de Nogrod" />
+    <string id="aom_eredluin_clan_9" text="Maison de Telchar" />
+    <string id="aom_eredluin_desc" text="Les Nains d'Ered Luin habitent les Montagnes Bleues, à la lisière occidentale de la Terre du Milieu. Le Peuple de Durin y vint en exil et y bâtit les Salles de Thorin, et en cet âge les Larges-Barbes et les Barbes-de-Feu tiennent de nouveau Belegost et Nogrod, les plus anciennes cités naines de l'Ouest. Ce sont des mineurs et des forgerons, plus pauvres que leurs parents de l'Est, et ils échangent du fer avec les Elfes du Lindon et les Hommes de l'Eriador, tandis que les gobelins du Roc Bleu rongent leurs routes." />
     <string id="aom_eredluin_female_name_1" text="Bryndís" />
     <string id="aom_eredluin_female_name_10" text="Eydís" />
     <string id="aom_eredluin_female_name_11" text="Hildis" />
@@ -2110,20 +2110,20 @@
     <string id="aom_eredluin_male_name_7" text="Virfir" />
     <string id="aom_eredluin_male_name_8" text="Aurvang" />
     <string id="aom_eredluin_male_name_9" text="Jari" />
-    <string id="aom_eredluin_name" text="Dwarves of Ered Luin" />
-    <string id="aom_anduinvale_clan_1" text="House of the Langflood" />
-    <string id="aom_anduinvale_clan_10" text="Folk of the Misty Eaves" />
-    <string id="aom_anduinvale_clan_11" text="House of the Long Hall" />
-    <string id="aom_anduinvale_clan_12" text="Wolf-hunters of the Vale" />
-    <string id="aom_anduinvale_clan_2" text="Folk of the Gladden Fields" />
-    <string id="aom_anduinvale_clan_3" text="Keepers of the High Pass" />
-    <string id="aom_anduinvale_clan_4" text="House of Framsburg" />
-    <string id="aom_anduinvale_clan_5" text="Bear-kin of the Vale" />
-    <string id="aom_anduinvale_clan_6" text="Honey-wardens of Beorn's Hall" />
-    <string id="aom_anduinvale_clan_7" text="Ferrymen of the Anduin" />
-    <string id="aom_anduinvale_clan_8" text="House of the Eyrie" />
-    <string id="aom_anduinvale_clan_9" text="Herdsmen of the Upper Vale" />
-    <string id="aom_anduinvale_desc" text="The Beornings keep the upper vale of the Anduin between the Misty Mountains and Mirkwood, a folk of farmers, herdsmen and honey-keepers who share the river meadows with the Woodmen of the Vales. They hold the Carrock and the Old Ford, take no toll from honest travellers and a heavy one from orcs and wolves. Their chieftains are chosen for strength and plain speech, and they follow no king into a war that is not their own." />
+    <string id="aom_eredluin_name" text="Nains des Ered Luin" />
+    <string id="aom_anduinvale_clan_1" text="Maison du Langflood" />
+    <string id="aom_anduinvale_clan_10" text="Gens des Lisières Brumeuses" />
+    <string id="aom_anduinvale_clan_11" text="Maison de la Longue Salle" />
+    <string id="aom_anduinvale_clan_12" text="Chasseurs de loups du Val" />
+    <string id="aom_anduinvale_clan_2" text="Gens des Champs d'Iris" />
+    <string id="aom_anduinvale_clan_3" text="Gardiens du Haut Col" />
+    <string id="aom_anduinvale_clan_4" text="Maison de Framsburg" />
+    <string id="aom_anduinvale_clan_5" text="Parents-de-l'Ours du Val" />
+    <string id="aom_anduinvale_clan_6" text="Gardiens du miel de la Salle de Beorn" />
+    <string id="aom_anduinvale_clan_7" text="Passeurs de l'Anduin" />
+    <string id="aom_anduinvale_clan_8" text="Maison de l'Aire" />
+    <string id="aom_anduinvale_clan_9" text="Pâtres du Haut Val" />
+    <string id="aom_anduinvale_desc" text="Les Béornides tiennent le haut val de l'Anduin entre les Montagnes de Brume et la Forêt Noire, un peuple de fermiers, de pâtres et de gardiens d'abeilles qui partagent les prairies du fleuve avec les Hommes des Bois des Vals. Ils tiennent le Carrock et le Vieux Gué, ne prennent nul péage aux voyageurs honnêtes et un lourd tribut aux orques et aux loups. Leurs chefs sont choisis pour leur force et leur franc-parler, et ils ne suivent aucun roi dans une guerre qui n'est pas la leur." />
     <string id="aom_anduinvale_female_name_1" text="Beornwyn" />
     <string id="aom_anduinvale_female_name_10" text="Osburh" />
     <string id="aom_anduinvale_female_name_11" text="Sigeburh" />
@@ -2188,20 +2188,20 @@
     <string id="aom_anduinvale_male_name_7" text="Heahbeorn" />
     <string id="aom_anduinvale_male_name_8" text="Sigebeorn" />
     <string id="aom_anduinvale_male_name_9" text="Cynebeorn" />
-    <string id="aom_anduinvale_name" text="Beornings" />
-    <string id="aom_angaladh_clan_1" text="House of Woodmen-town" />
-    <string id="aom_angaladh_clan_10" text="House of the Elder Kings" />
-    <string id="aom_angaladh_clan_11" text="Keepers of the Woodmen-road" />
-    <string id="aom_angaladh_clan_12" text="Folk of the Black Mere" />
-    <string id="aom_angaladh_clan_2" text="Bowmen of the Western Eaves" />
-    <string id="aom_angaladh_clan_3" text="House of the Ironwood" />
-    <string id="aom_angaladh_clan_4" text="Folk of Rhosgobel" />
-    <string id="aom_angaladh_clan_5" text="Hunters of the Narrows" />
-    <string id="aom_angaladh_clan_6" text="Charcoal-burners of the Greenwood" />
-    <string id="aom_angaladh_clan_7" text="House of the Great Oak" />
-    <string id="aom_angaladh_clan_8" text="Spider-slayers of the Eaves" />
-    <string id="aom_angaladh_clan_9" text="Folk of the Eastern Shore" />
-    <string id="aom_angaladh_desc" text="The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. They are bowmen, woodcutters and hunters, few in number and slow to trust, at peace with the Elves of the northern wood. Every year the shadow in the south of the forest grows, and every year their king sends more of his archers to watch the Narrows." />
+    <string id="aom_anduinvale_name" text="Béornides" />
+    <string id="aom_angaladh_clan_1" text="Maison de Bourg-des-Hommes-des-Bois" />
+    <string id="aom_angaladh_clan_10" text="Maison des Rois Anciens" />
+    <string id="aom_angaladh_clan_11" text="Gardiens de la Route des Hommes des Bois" />
+    <string id="aom_angaladh_clan_12" text="Gens du Lac Noir" />
+    <string id="aom_angaladh_clan_2" text="Archers de la Lisière Occidentale" />
+    <string id="aom_angaladh_clan_3" text="Maison du Bois-de-Fer" />
+    <string id="aom_angaladh_clan_4" text="Gens de Rhosgobel" />
+    <string id="aom_angaladh_clan_5" text="Chasseurs des Étroits" />
+    <string id="aom_angaladh_clan_6" text="Charbonniers de la Forêt Verte" />
+    <string id="aom_angaladh_clan_7" text="Maison du Grand Chêne" />
+    <string id="aom_angaladh_clan_8" text="Tueurs d'Araignées de la Lisière" />
+    <string id="aom_angaladh_clan_9" text="Gens de la Rive Orientale" />
+    <string id="aom_angaladh_desc" text="Les Hommes des Bois d'Angáladh vivent sous les lisières occidentales de la Forêt Noire, là où leurs pères ont défriché des fermes parmi des arbres si durs que les haches y sonnent comme sur le fer. Ce sont des archers, des bûcherons et des chasseurs, peu nombreux et lents à accorder leur confiance, en paix avec les Elfes de la forêt du nord. Chaque année l'ombre croît au sud du bois, et chaque année leur roi envoie davantage de ses archers surveiller les Étroits." />
     <string id="aom_angaladh_female_name_1" text="Vidumavi" />
     <string id="aom_angaladh_female_name_10" text="Hildigunda" />
     <string id="aom_angaladh_female_name_11" text="Audofleda" />
@@ -2229,9 +2229,9 @@
     <string id="aom_angaladh_male_name_1" text="Vidugavia" />
     <string id="aom_angaladh_male_name_10" text="Fritigern" />
     <string id="aom_angaladh_male_name_11" text="Athanaric" />
-    <string id="aom_angaladh_male_name_12" text="Gainas" />
+    <string id="aom_angaladh_male_name_12" text="Gaïnas" />
     <string id="aom_angaladh_male_name_13" text="Sarus" />
-    <string id="aom_angaladh_male_name_14" text="Sigeric" />
+    <string id="aom_angaladh_male_name_14" text="Sigéric" />
     <string id="aom_angaladh_male_name_15" text="Wallia" />
     <string id="aom_angaladh_male_name_16" text="Thorismund" />
     <string id="aom_angaladh_male_name_17" text="Thiudimir" />
@@ -2239,11 +2239,11 @@
     <string id="aom_angaladh_male_name_19" text="Hunimund" />
     <string id="aom_angaladh_male_name_2" text="Vinitharya" />
     <string id="aom_angaladh_male_name_20" text="Gunthamund" />
-    <string id="aom_angaladh_male_name_21" text="Hilderic" />
+    <string id="aom_angaladh_male_name_21" text="Hildéric" />
     <string id="aom_angaladh_male_name_22" text="Agila" />
     <string id="aom_angaladh_male_name_23" text="Athanagild" />
     <string id="aom_angaladh_male_name_24" text="Liuva" />
-    <string id="aom_angaladh_male_name_25" text="Witteric" />
+    <string id="aom_angaladh_male_name_25" text="Wittéric" />
     <string id="aom_angaladh_male_name_26" text="Gundemar" />
     <string id="aom_angaladh_male_name_27" text="Swinthila" />
     <string id="aom_angaladh_male_name_28" text="Chintila" />
@@ -2266,20 +2266,20 @@
     <string id="aom_angaladh_male_name_7" text="Theodemir" />
     <string id="aom_angaladh_male_name_8" text="Valamir" />
     <string id="aom_angaladh_male_name_9" text="Vidimir" />
-    <string id="aom_angaladh_name" text="Woodmen" />
-    <string id="aom_dorwinion_clan_1" text="House of the Wine-presses" />
-    <string id="aom_dorwinion_clan_10" text="Wardens of the Southern Vines" />
-    <string id="aom_dorwinion_clan_11" text="Folk of the Vineyards" />
-    <string id="aom_dorwinion_clan_12" text="House of the Elf-wine" />
-    <string id="aom_dorwinion_clan_2" text="Vintners of the Redwater" />
-    <string id="aom_dorwinion_clan_3" text="Boatmen of the River Running" />
-    <string id="aom_dorwinion_clan_4" text="House of the Sunward Slopes" />
-    <string id="aom_dorwinion_clan_5" text="Cellarers of Vineholm" />
-    <string id="aom_dorwinion_clan_6" text="Shoremen of the Inland Sea" />
-    <string id="aom_dorwinion_clan_7" text="Traders of the Wine-road" />
-    <string id="aom_dorwinion_clan_8" text="House of the Golden Grape" />
-    <string id="aom_dorwinion_clan_9" text="Bargemen of the Carnen" />
-    <string id="aom_dorwinion_desc" text="The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. They are vintners, boatmen and river traders, a Northman folk who would rather sell to a stranger than fight him. Their king keeps his court at Vineholm, and every year the Easterlings across the inland sea look harder at his rich and lightly guarded land." />
+    <string id="aom_angaladh_name" text="Hommes des Bois" />
+    <string id="aom_dorwinion_clan_1" text="Maison des Pressoirs" />
+    <string id="aom_dorwinion_clan_10" text="Gardiens des Vignes du Sud" />
+    <string id="aom_dorwinion_clan_11" text="Gens des Vignobles" />
+    <string id="aom_dorwinion_clan_12" text="Maison du Vin des Elfes" />
+    <string id="aom_dorwinion_clan_2" text="Vignerons de l'Eau-Rouge" />
+    <string id="aom_dorwinion_clan_3" text="Bateliers de la Rivière Courante" />
+    <string id="aom_dorwinion_clan_4" text="Maison des Coteaux Ensoleillés" />
+    <string id="aom_dorwinion_clan_5" text="Celliers de Vineholm" />
+    <string id="aom_dorwinion_clan_6" text="Riverains de la Mer Intérieure" />
+    <string id="aom_dorwinion_clan_7" text="Marchands de la Route du Vin" />
+    <string id="aom_dorwinion_clan_8" text="Maison du Raisin d'Or" />
+    <string id="aom_dorwinion_clan_9" text="Chalandiers du Carnen" />
+    <string id="aom_dorwinion_desc" text="Les Hommes du Dorwinion entretiennent les vignobles sur les coteaux chauds dominant la Mer de Rhûn, et leur vin remonte l'Eau-Rouge et la Rivière Courante jusqu'aux demeures des Elfes et des Hommes loin à l'ouest. Ce sont des vignerons, des bateliers et des marchands fluviaux, un peuple du Nord qui préférerait vendre à un étranger que le combattre. Leur roi tient sa cour à Vineholm, et chaque année les Orientaux d'au-delà de la mer intérieure regardent avec plus d'envie ses terres riches et peu gardées." />
     <string id="aom_dorwinion_female_name_1" text="Gundeperga" />
     <string id="aom_dorwinion_female_name_10" text="Anselperga" />
     <string id="aom_dorwinion_female_name_11" text="Liutperga" />
@@ -2288,23 +2288,23 @@
     <string id="aom_dorwinion_female_name_14" text="Gaila" />
     <string id="aom_dorwinion_female_name_15" text="Wigilinda" />
     <string id="aom_dorwinion_female_name_16" text="Romilda" />
-    <string id="aom_dorwinion_female_name_17" text="Aldegunda" />
+    <string id="aom_dorwinion_female_name_17" text="Aldegonde" />
     <string id="aom_dorwinion_female_name_18" text="Guntrada" />
     <string id="aom_dorwinion_female_name_19" text="Sindrada" />
     <string id="aom_dorwinion_female_name_2" text="Ansa" />
-    <string id="aom_dorwinion_female_name_20" text="Hildegarda" />
+    <string id="aom_dorwinion_female_name_20" text="Hildegarde" />
     <string id="aom_dorwinion_female_name_21" text="Gundrada" />
-    <string id="aom_dorwinion_female_name_22" text="Theodorada" />
-    <string id="aom_dorwinion_female_name_23" text="Ermelinda" />
+    <string id="aom_dorwinion_female_name_22" text="Théodorada" />
+    <string id="aom_dorwinion_female_name_23" text="Ermelinde" />
     <string id="aom_dorwinion_female_name_24" text="Ansperga" />
     <string id="aom_dorwinion_female_name_3" text="Ratperga" />
-    <string id="aom_dorwinion_female_name_4" text="Clotsuinda" />
+    <string id="aom_dorwinion_female_name_4" text="Clotsuinde" />
     <string id="aom_dorwinion_female_name_5" text="Walderada" />
-    <string id="aom_dorwinion_female_name_6" text="Rosamund" />
-    <string id="aom_dorwinion_female_name_7" text="Ermengarda" />
-    <string id="aom_dorwinion_female_name_8" text="Gisela" />
+    <string id="aom_dorwinion_female_name_6" text="Rosamonde" />
+    <string id="aom_dorwinion_female_name_7" text="Ermengarde" />
+    <string id="aom_dorwinion_female_name_8" text="Gisèle" />
     <string id="aom_dorwinion_female_name_9" text="Adelperga" />
-    <string id="aom_dorwinion_male_name_1" text="Alboin" />
+    <string id="aom_dorwinion_male_name_1" text="Alboïn" />
     <string id="aom_dorwinion_male_name_10" text="Perctarit" />
     <string id="aom_dorwinion_male_name_11" text="Cunincpert" />
     <string id="aom_dorwinion_male_name_12" text="Aripert" />
@@ -2327,10 +2327,10 @@
     <string id="aom_dorwinion_male_name_28" text="Gislahar" />
     <string id="aom_dorwinion_male_name_29" text="Gibica" />
     <string id="aom_dorwinion_male_name_3" text="Agilulf" />
-    <string id="aom_dorwinion_male_name_30" text="Gaiseric" />
-    <string id="aom_dorwinion_male_name_31" text="Huneric" />
+    <string id="aom_dorwinion_male_name_30" text="Genséric" />
+    <string id="aom_dorwinion_male_name_31" text="Hunéric" />
     <string id="aom_dorwinion_male_name_32" text="Thrasamund" />
-    <string id="aom_dorwinion_male_name_33" text="Gelimer" />
+    <string id="aom_dorwinion_male_name_33" text="Gélimer" />
     <string id="aom_dorwinion_male_name_34" text="Godigisel" />
     <string id="aom_dorwinion_male_name_35" text="Ardaric" />
     <string id="aom_dorwinion_male_name_36" text="Thurisind" />
@@ -2344,20 +2344,20 @@
     <string id="aom_dorwinion_male_name_7" text="Liutprand" />
     <string id="aom_dorwinion_male_name_8" text="Ratchis" />
     <string id="aom_dorwinion_male_name_9" text="Aistulf" />
-    <string id="aom_dorwinion_name" text="Men of Dorwinion" />
-    <string id="aom_southrhovanion_clan_1" text="House of the Barrow-kings" />
-    <string id="aom_southrhovanion_clan_10" text="House of the Old Forest Road" />
-    <string id="aom_southrhovanion_clan_11" text="Folk of the Brown Lands" />
-    <string id="aom_southrhovanion_clan_12" text="Watchers of the Dagorlad" />
-    <string id="aom_southrhovanion_clan_2" text="Riders of the East Bight" />
-    <string id="aom_southrhovanion_clan_3" text="Horse-herds of the Plains" />
-    <string id="aom_southrhovanion_clan_4" text="Folk of the Southern Eaves" />
-    <string id="aom_southrhovanion_clan_5" text="House of the Wain-breakers" />
-    <string id="aom_southrhovanion_clan_6" text="Spearmen of the Fords" />
-    <string id="aom_southrhovanion_clan_7" text="House of the White Mares" />
-    <string id="aom_southrhovanion_clan_8" text="Keepers of the Horse-fields" />
-    <string id="aom_southrhovanion_clan_9" text="Riders of the Celduin" />
-    <string id="aom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Brown Lands, a free people of horse-breeders who count the Éothéod of the north as their kin. Their fathers were the lords of the Northmen in the days of the old kings, and the barrows of those kings still stand on the grasslands. Twice the Wainriders came out of the East with wagon and fire and broke them, and the riders of the plains have not forgotten it." />
+    <string id="aom_dorwinion_name" text="Hommes du Dorwinion" />
+    <string id="aom_southrhovanion_clan_1" text="Maison des Rois des Galgals" />
+    <string id="aom_southrhovanion_clan_10" text="Maison de la Vieille Route de la Forêt" />
+    <string id="aom_southrhovanion_clan_11" text="Peuple des Terres Brunes" />
+    <string id="aom_southrhovanion_clan_12" text="Guetteurs du Dagorlad" />
+    <string id="aom_southrhovanion_clan_2" text="Cavaliers de l'Échancrure de l'Est" />
+    <string id="aom_southrhovanion_clan_3" text="Éleveurs de chevaux des Plaines" />
+    <string id="aom_southrhovanion_clan_4" text="Peuple des Lisières méridionales" />
+    <string id="aom_southrhovanion_clan_5" text="Maison des Briseurs de Chariots" />
+    <string id="aom_southrhovanion_clan_6" text="Lanciers des Gués" />
+    <string id="aom_southrhovanion_clan_7" text="Maison des Juments Blanches" />
+    <string id="aom_southrhovanion_clan_8" text="Gardiens des Pâtures à Chevaux" />
+    <string id="aom_southrhovanion_clan_9" text="Cavaliers de la Celduin" />
+    <string id="aom_southrhovanion_desc" text="Les Hommes du Nord du Rhovanion méridional parcourent les vastes plaines qui s'étendent entre les lisières sud de la Forêt Noire et les Terres Brunes : un peuple libre d'éleveurs de chevaux qui compte les Éothéod du nord parmi ses parents. Leurs pères étaient les seigneurs des Hommes du Nord au temps des anciens rois, et les galgals de ces rois se dressent encore sur les prairies. Par deux fois les Gens des Chariots sortirent de l'Est avec le chariot et le feu et les brisèrent, et les cavaliers des plaines ne l'ont pas oublié." />
     <string id="aom_southrhovanion_female_name_1" text="Viduhilda" />
     <string id="aom_southrhovanion_female_name_10" text="Ansawintha" />
     <string id="aom_southrhovanion_female_name_11" text="Sigihilda" />
@@ -2422,6 +2422,6 @@
     <string id="aom_southrhovanion_male_name_7" text="Marharik" />
     <string id="aom_southrhovanion_male_name_8" text="Marhulf" />
     <string id="aom_southrhovanion_male_name_9" text="Forthari" />
-    <string id="aom_southrhovanion_name" text="Northmen of Rhovanion" />
+    <string id="aom_southrhovanion_name" text="Hommes du Nord du Rhovanion" />
   </strings>
 </base>

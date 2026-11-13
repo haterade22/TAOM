@@ -5,9 +5,11 @@ namespace TAOM.Adapters;
 
 /// <summary>
 /// One row of the Long Defeat prompt. <paramref name="Label"/> is raw <c>{=KEY}English</c>; <paramref name="Variables"/> fill its
-/// <c>{NAME}</c> slots and are themselves raw text, so a fortress name arrives as its key and a count as digits.
+/// <c>{NAME}</c> slots and are themselves raw text, so a fortress name arrives as its key and a count as digits. <paramref name="Hint"/>
+/// is raw text shown when the row is hovered: the row is a fixed 65 px button (Native <c>MultiSelectionQueryPopup.xml</c>), so a
+/// two-line label overflows it.
 /// </summary>
-internal sealed record LongDefeatChoice(string Id, string Label, IReadOnlyDictionary<string, string>? Variables = null);
+internal sealed record LongDefeatChoice(string Id, string Label, IReadOnlyDictionary<string, string>? Variables = null, string? Hint = null);
 
 /// <summary>
 /// The engine's main-menu surface the Long Defeat start path uses: one initial-state option, a single-choice prompt, a notice

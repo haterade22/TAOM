@@ -466,14 +466,16 @@
     <string id="zulgor_description" text="날개 사육사 줄고르는 흉물의 알을 부화시켜 카물의 공중 지배권을 넓힌다." />
     <string id="zulgora_description" text="그림자 직조자 줄고라는 환영을 짜내어, 이야기 속 사우론의 기만처럼 적들을 속인다." />
     <string id="zulgoth_description" text="줄고스는 의식 집전 오르크로서, 오르크 관습에 암시된 대로 어둠의 권능에 제물을 바친다. 그의 의례는 씨족의 과업에 힘을 불어넣는다." />
-    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
-    <string id="lord_CA1_1_description" text="Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
-    <string id="lord_RH1_1_description" text="Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
-    <string id="lord_LN3_1_description" text="Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
-    <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
-    <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
-    <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
-    <string id="lord_DO1_1_description" text="Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
-    <string id="lord_SRH1_1_description" text="Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+    <string id="lord_AN1_1_description" text="아르세다인의 왕 아르베길 2세, 아르베두이와 이실두르의 후계자. 군다바드의 오르크에 맞서 포르노스트를 지키며, 카르돌란과 루다우르의 친족과 불안한 평화를 유지하고 있다." />
+    <string id="lord_CA1_1_description" text="카르돌란의 왕 아란시르, 에아렌두르의 둘째 아들의 후계자. 카라스 고르사드에서 고분왕들의 왕관을 지킨다." />
+    <string id="lord_RH1_1_description" text="루다우르의 왕 벨레고른, 에아렌두르의 셋째 아들의 후계자이며 카메스 브린과 앵글의 구릉지 사람들의 군주." />
+    <string id="lord_LN3_1_description" text="곤돌린의 펜로드의 아들이자 기둥 가문과 눈의 탑의 후계자인 마이카사마는 룬 만 북쪽 기슭의 포를론드를 지킨다." />
+    <string id="lord_EL1_1_description" text="델링구르 가문의 파린 2세, 에레드 루인의 왕이자 소린의 전당의 군주로서, 벨레고스트의 넓은주름일족과 노그로드의 불꽃수염일족과 함께 청색산맥을 지킨다." />
+    <string id="lord_AND1_1_description" text="앙갈라드의 왕 잉고마르, 숲사람 마을의 군주. 돌 굴두르의 그림자에 맞서 어둠숲의 변두리를 지킨다." />
+    <string id="lord_AV1_1_description" text="베오른의 아들 그림베오른, 베오른족의 족장. 높은 고개와 옛 여울을 지키며 어떤 오르크도 안두인 계곡을 건너지 못하게 한다." />
+    <string id="lord_DO1_1_description" text="도르위니온의 왕 오스트릭, 바인홀름의 군주. 그의 포도주는 달리는 강을 거슬러 너른골과 어둠숲의 요정들에게로 간다." />
+    <string id="lord_SRH1_1_description" text="남로바니온의 왕 비두마르, 비두가르드의 군주. 어둠숲 남쪽 평원을 달리며 마차몰이족을 기억한다." />
+    <string id="haldir_lothlorien_description" text="국경 파수꾼 할디르는 책 속 로리엔의 변경 수비대를 떠올리게 하며, 소리 없이 정확한 걸음으로 황금 숲의 경계를 지킨다." />
+    <string id="orophin_lothlorien_description" text="경계를 늦추지 않는 궁수 오로핀은 영화 속 국경 수비대처럼 망을 보며, 그의 화살은 돌 굴두르의 그림자에 오염된 짐승들을 쓰러뜨린다." />
   </strings>
 </base>

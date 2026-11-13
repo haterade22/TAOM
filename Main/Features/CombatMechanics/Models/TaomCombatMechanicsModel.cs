@@ -54,7 +54,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         // inert for every other victim.
         result = CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result);
 
-        // Race Abilities: a soldier standing fast takes less; inert unless his ability is live.
+        // Race Abilities: a soldier standing fast takes less; inert unless his ability is live or he carries a hero aura (#1127).
         return RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result);
     }
 

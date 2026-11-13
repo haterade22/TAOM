@@ -131,7 +131,7 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         }
 
         // Race Abilities: a live ability's speeds and AI temperament, after the aggression pass so it scales
-        // the culture's values; inert unless the soldier's ability is running.
+        // the culture's values; inert unless the soldier's ability is running or he carries a hero aura (#1127).
         RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
 
         // Mount-side career bonuses (#611) and the culture charge multiplier (#610) both ride the

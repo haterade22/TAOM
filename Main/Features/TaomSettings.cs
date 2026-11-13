@@ -1541,6 +1541,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "A soldier whose ability is active wears a coloured outline: red for fury, steel blue for a guard, violet for dread; the speed and aim abilities stay unlit. Sparks burst on the soldier who fires and on a few of the kin who join him. Only the soldiers nearest the camera are outlined (visuals.maxGlowing in race_abilities.json). Drawn on this client only, and hidden while Hide Battle UI is on.")]
     public bool RaceAbilityGlow { get; set; } = true;
 
+    // --- Battle Tactics / Hero Auras (#1127) ---
+
+    [SettingPropertyGroup("Battle Tactics/Hero Auras", GroupOrder = 88)]
+    [SettingPropertyBool("{=taom_hero_auras_mcm_enabled}Enable Hero Auras", Order = 0, RequireRestart = false,
+        HintText = "{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse.")]
+    public bool EnableHeroAuras { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Hero Auras")]
+    [SettingPropertyFloatingInteger("{=taom_hero_auras_mcm_strength}Hero Aura Strength", 0.0f, 2.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0.")]
+    public float HeroAuraStrength { get; set; } = 1f;
+
     // --- World / Uncapturable Heroes ---
 
     [SettingPropertyGroup("World/Uncapturable Heroes", GroupOrder = 48)]

@@ -28,7 +28,7 @@ public class TaomBattleMoraleModel : SandboxBattleMoraleModel
     }
 
     // Creature Bandits (#692): a creature bandit never panics, whatever its morale. Race Abilities: nor does a
-    // soldier while his ability holds a morale floor (Berserk, Iron Discipline, Stand Fast and others). Seat of Seeing: nor does the hero
+    // soldier while his ability or a hero aura (#1127) holds a morale floor (Berserk, Iron Discipline, Stand Fast and others). Seat of Seeing: nor does the hero
     // while he fights on in the Seat; a refused panic sets morale to 0.01 and carries on (CommonAIComponent.cs:84-93). A story mission
     // hosted in a campaign runs the Long Defeat's waves, which end only when no attacker stands, so its attackers never panic either;
     // the hold is inert outside the mission that armed it.

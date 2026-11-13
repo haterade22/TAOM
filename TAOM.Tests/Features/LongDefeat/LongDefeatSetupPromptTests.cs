@@ -170,9 +170,9 @@ public class LongDefeatSetupPromptTests
         var second = _menu.Prompts[1];
         Assert.AreEqual("{=TAOM_LD_Prompt_ClassTitle}Choose your class", second.Title);
         CollectionAssert.AreEqual(new[] { "sword", "bow" }, second.Choices.Select(c => c.Id).ToArray());
-        StringAssert.StartsWith(second.Choices[0].Label, "{=TAOM_LD_Prompt_ChoiceClass}");
-        Assert.AreEqual("{=N_sword}Sword", second.Choices[0].Variables!["NAME"]);
-        Assert.AreEqual("{=T_sword}A sword.", second.Choices[0].Variables["TEXT"]);
+        Assert.AreEqual("{=N_sword}Sword", second.Choices[0].Label);
+        Assert.AreEqual("{=T_sword}A sword.", second.Choices[0].Hint);
+        Assert.IsNull(second.Choices[0].Variables);
         _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
     }
 
@@ -201,8 +201,8 @@ public class LongDefeatSetupPromptTests
 
         var second = _menu.Prompts[1];
         CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer", "cavalry" }, second.Choices.Select(c => c.Id).ToArray());
-        Assert.AreEqual("{=TAOM_LD_Class_Cavalry}Cavalry", second.Choices[3].Variables!["NAME"]);
-        StringAssert.StartsWith(second.Choices[3].Variables["TEXT"], "{=TAOM_LD_Class_Cavalry_Text}");
+        Assert.AreEqual("{=TAOM_LD_Class_Cavalry}Cavalry", second.Choices[3].Label);
+        StringAssert.StartsWith(second.Choices[3].Hint, "{=TAOM_LD_Class_Cavalry_Text}");
     }
 
     // Slice 11 review (data flow, trace 10): the Cavalry kit overwrites the armour (Head, Body, Cape, Gloves, Leg) and the horse slots, so the class question may not say that the rest of the

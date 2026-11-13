@@ -10,8 +10,8 @@ namespace TAOM.Tests.Features.GoodDeeds;
 
 /// <summary>
 /// The one player-facing line Good Deeds adds. The C# literal is the English source, the English row in
-/// <c>taom_module_strings.xml</c> must equal it, and the twelve language files carry the seeded English default (the paid
-/// translation run replaces each row later). A copied <c>{=KEY}</c> shows the old text, so a row left on an older wording fails.
+/// <c>taom_module_strings.xml</c> must equal it, and each of the twelve language files carries one row (its translation, or
+/// the English default until the paid run fills it) that keeps the <c>{TOWN}</c> placeholder and not the old "honour" spelling.
 /// </summary>
 [TestClass]
 public class GoodDeedsWordingTests
@@ -53,9 +53,8 @@ public class GoodDeedsWordingTests
     }
 
     [TestMethod]
-    public void EveryLanguageFile_HoldsOneRow_OfTheCurrentEnglish_NoneStale()
+    public void EveryLanguageFile_HoldsOneRow_KeepingTheTownPlaceholder_NoneStale()
     {
-        var english = LiteralInTheAdapter().Substring(("{=" + Key + "}").Length);
         var languages = Directory.GetDirectories(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "Languages"));
         Assert.AreEqual(12, languages.Length);
         foreach (var dir in languages)
@@ -64,7 +63,7 @@ public class GoodDeedsWordingTests
             var rows = Rows("Main/_Module/ModuleData/Languages/" + Path.GetFileName(dir) + "/" + Path.GetFileName(file));
 
             Assert.AreEqual(1, rows.Count, Path.GetFileName(file));
-            Assert.AreEqual(english, rows[0], Path.GetFileName(file) + ": the row must equal the current English");
+            StringAssert.Contains(rows[0], "{TOWN}", Path.GetFileName(file) + ": the row must keep the {TOWN} placeholder");
             Assert.IsFalse(rows[0].Contains(OldSpelling), Path.GetFileName(file) + ": a stale row");
         }
     }

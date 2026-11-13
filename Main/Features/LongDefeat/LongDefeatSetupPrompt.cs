@@ -20,7 +20,6 @@ internal sealed class LongDefeatSetupPrompt
     private const string ChoiceWithBest = "{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}";
     private const string ClassTitle = "{=TAOM_LD_Prompt_ClassTitle}Choose your class";
     private const string ClassDescription = "{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is.";
-    private const string ChoiceClass = "{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}";
     internal const string StartFailedMessage = "{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason.";
 
     private readonly ILongDefeatMenuAdapter _menu;
@@ -101,8 +100,7 @@ internal sealed class LongDefeatSetupPrompt
         }
     }
 
-    private static LongDefeatChoice ClassChoice(RunClass cls) =>
-        new(cls.Id, ChoiceClass, new Dictionary<string, string> { ["NAME"] = cls.Name, ["TEXT"] = cls.Text });
+    private static LongDefeatChoice ClassChoice(RunClass cls) => new(cls.Id, cls.Name, Hint: cls.Text);
 
     private LongDefeatChoice Choice(FortressEntry fortress)
     {

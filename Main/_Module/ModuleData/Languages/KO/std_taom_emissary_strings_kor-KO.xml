@@ -28,8 +28,8 @@
     <string id="taom_emissary_no_offers" text="사절이 현재 제공할 정예 부대가 없습니다." />
     <string id="taom_emissary_failed" text="사절이 거래를 완료할 수 없었습니다." />
     <string id="taom_emissary_coop_guest" text="사절은 이 캠페인의 호스트와만 거래합니다." />
-    <string id="taom_emissary_denars" text="denars" />
-    <string id="taom_emissary_party_full" text="Your party has no room for these troops." />
-    <string id="taom_emissary_offer_room" text="Your party has room for {MAX}." />
+    <string id="taom_emissary_denars" text="데나르" />
+    <string id="taom_emissary_party_full" text="당신의 부대에는 이 병력을 받을 자리가 없습니다." />
+    <string id="taom_emissary_offer_room" text="당신의 부대에는 {MAX}명을 받을 자리가 있습니다." />
   </strings>
 </base>

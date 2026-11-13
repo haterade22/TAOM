@@ -71,40 +71,40 @@
     <string id="taom_arthedain_ruler_title" text="왕" />
     <string id="taom_arthedain_short_name" text="아르세다인" />
     <string id="taom_arthedain_title" text="아르세다인 북왕국" />
-    <string id="taom_cardolan_desc" text="The southern of the three realms into which Arnor was sundered. Its kings lie in the barrows of Tyrn Gorthad and its riders keep the plains between the Baranduin and the Greyflood, but its towns are few and its lords contend with Arthedain and Rhudaur for the crown of Arnor." />
-    <string id="taom_cardolan_name" text="Cardolan" />
-    <string id="taom_cardolan_ruler_title" text="King" />
-    <string id="taom_cardolan_short_name" text="Cardolan" />
-    <string id="taom_cardolan_title" text="Kingdom of Cardolan" />
-    <string id="taom_rhudaur_desc" text="The eastern of the three realms into which Arnor was sundered, a hill kingdom between the Hoarwell and the Loudwater. Its Dunedain lords hold Cameth Brin and the Angle and rule a hard people of hill-men, with trolls in the fells and orcs on every pass." />
-    <string id="taom_rhudaur_name" text="Rhudaur" />
-    <string id="taom_rhudaur_ruler_title" text="King" />
-    <string id="taom_rhudaur_short_name" text="Rhudaur" />
-    <string id="taom_rhudaur_title" text="Kingdom of Rhudaur" />
-    <string id="taom_eredluin_desc" text="The dwarf kingdom of the Blue Mountains. Durin's Folk made Thorin's Halls there in their exile, and in this age the Broadbeams and the Firebeards hold Belegost and Nogrod again. Its lords are few and its halls are poorer than those of its kin in the east, but its smiths are the oldest in the West, and its axes keep the goblins of Blue Craig from the roads to Lindon." />
-    <string id="taom_eredluin_name" text="Ered Luin" />
-    <string id="taom_eredluin_ruler_title" text="King" />
-    <string id="taom_eredluin_short_name" text="Ered Luin" />
-    <string id="taom_eredluin_title" text="Kingdom of Ered Luin" />
-    <string id="taom_anduinvale_desc" text="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
-    <string id="taom_anduinvale_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_ruler_title" text="Chieftain" />
-    <string id="taom_anduinvale_short_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_title" text="Anduin Vale" />
-    <string id="taom_angaladh_desc" text="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
-    <string id="taom_angaladh_name" text="Angáladh" />
-    <string id="taom_angaladh_ruler_title" text="King" />
-    <string id="taom_angaladh_short_name" text="Angáladh" />
-    <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
-    <string id="taom_dorwinion_desc" text="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
-    <string id="taom_dorwinion_name" text="Dorwinion" />
-    <string id="taom_dorwinion_ruler_title" text="King" />
-    <string id="taom_dorwinion_short_name" text="Dorwinion" />
-    <string id="taom_dorwinion_title" text="Kingdom of Dorwinion" />
-    <string id="taom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
-    <string id="taom_southrhovanion_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_ruler_title" text="King" />
-    <string id="taom_southrhovanion_short_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_title" text="Kingdom of South Rhovanion" />
+    <string id="taom_cardolan_desc" text="아르노르가 갈라져 생긴 세 왕국 중 남쪽의 나라. 그 왕들은 튀른 고르사드의 고분에 잠들어 있고, 기병들은 바란두인과 회색강 사이의 평원을 지킨다. 그러나 성읍은 적고, 영주들은 아르세다인과 루다우르를 상대로 아르노르의 왕관을 두고 다툰다." />
+    <string id="taom_cardolan_name" text="카르돌란" />
+    <string id="taom_cardolan_ruler_title" text="왕" />
+    <string id="taom_cardolan_short_name" text="카르돌란" />
+    <string id="taom_cardolan_title" text="카르돌란 왕국" />
+    <string id="taom_rhudaur_desc" text="아르노르가 갈라져 생긴 세 왕국 중 동쪽의 나라로, 흰샘강과 큰물소리강 사이의 구릉 왕국이다. 두네다인 영주들은 카메스 브린과 앙글을 지키며 거친 구릉민들을 다스리고, 황야에는 트롤이, 모든 고갯길에는 오크가 있다." />
+    <string id="taom_rhudaur_name" text="루다우르" />
+    <string id="taom_rhudaur_ruler_title" text="왕" />
+    <string id="taom_rhudaur_short_name" text="루다우르" />
+    <string id="taom_rhudaur_title" text="루다우르 왕국" />
+    <string id="taom_eredluin_desc" text="청색산맥의 난쟁이 왕국. 두린의 일족은 유랑 중에 그곳에 소린의 전당을 세웠고, 이 시대에는 넓은허리족과 불꽃수염족이 다시 벨레고스트와 노그로드를 차지하고 있다. 영주는 적고 그 전당들은 동쪽 친족의 것보다 가난하지만, 그 대장장이들은 서부에서 가장 오래되었고, 그 도끼들은 푸른바위의 고블린들을 린돈으로 가는 길에서 막아낸다." />
+    <string id="taom_eredluin_name" text="에레드 루인" />
+    <string id="taom_eredluin_ruler_title" text="왕" />
+    <string id="taom_eredluin_short_name" text="에레드 루인" />
+    <string id="taom_eredluin_title" text="에레드 루인 왕국" />
+    <string id="taom_anduinvale_desc" text="베오른족과 계곡의 숲사람들은 안개산맥과 어둠숲 사이의 안두인 상류를 차지하고 있다. 그들은 높은 고개와 옛 여울목을 정직한 나그네들에게 열어 두며, 오르크와 늑대에게 혹독한 대가를 치르게 한다. 그들의 족장들은 베오른의 저택과 카록을 지키며, 왕들의 전쟁에는 끼어들기를 원치 않는다." />
+    <string id="taom_anduinvale_name" text="안두인 계곡" />
+    <string id="taom_anduinvale_ruler_title" text="족장" />
+    <string id="taom_anduinvale_short_name" text="안두인 계곡" />
+    <string id="taom_anduinvale_title" text="안두인 계곡" />
+    <string id="taom_angaladh_desc" text="어둠숲 서부의 숲사람들은 숲 처마 아래에 터전을 일구고, 숲사람 마을을 둘러싼 무쇠처럼 단단한 나무의 이름을 따 그들의 왕국을 불렀다. 그들은 궁수이자 숲지기이며 수가 적고, 북쪽의 요정들과 평화롭게 지내면서 남쪽의 돌 굴두르를 늘 경계한다." />
+    <string id="taom_angaladh_name" text="앙가라드" />
+    <string id="taom_angaladh_ruler_title" text="왕" />
+    <string id="taom_angaladh_short_name" text="앙가라드" />
+    <string id="taom_angaladh_title" text="앙갈라드 왕국" />
+    <string id="taom_dorwinion_desc" text="도르위니온의 포도주 장인들은 달리는 강이 룬 내해와 만나는 따뜻한 비탈을 가꾼다. 그들의 포도주는 강을 거슬러 너른골로, 어둠숲의 요정들에게로, 그리고 값을 치를 수 있는 모든 저택으로 올라가며, 그 왕들은 그것으로 부유해진다. 그들은 서부의 전쟁에서 비켜서고, 필요하다면 동부로부터 평화를 사들인다." />
+    <string id="taom_dorwinion_name" text="도르위니온" />
+    <string id="taom_dorwinion_ruler_title" text="왕" />
+    <string id="taom_dorwinion_short_name" text="도르위니온" />
+    <string id="taom_dorwinion_title" text="도르위니온 왕국" />
+    <string id="taom_southrhovanion_desc" text="남부 로바니온의 북부인들은 어둠숲 남쪽 처마와 룬 내해 사이의 너른 평원을 달린다. 그들은 오래전 북으로 떠난 에오세오드의 친족인 기마 영주들이며, 한때 자신들의 전당을 불태운 마차몰이족을 잊지 않았다. 그 왕들은 비두가르드를 지키며 서부에도 동부에도 복종하지 않는다." />
+    <string id="taom_southrhovanion_name" text="남부 로바니온" />
+    <string id="taom_southrhovanion_ruler_title" text="왕" />
+    <string id="taom_southrhovanion_short_name" text="남부 로바니온" />
+    <string id="taom_southrhovanion_title" text="남부 로바니온 왕국" />
   </strings>
 </base>

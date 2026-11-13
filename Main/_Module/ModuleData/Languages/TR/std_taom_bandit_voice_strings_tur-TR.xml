@@ -6,85 +6,85 @@
     <tag language="Turkish" />
   </tags>
   <strings>
-    <string id="taom_bv_dunland_threat_1" text="Halt, stranger. These hills were ours before the horse-lords ever rode through them, and every traveller pays us a toll. Silver now, or we take it from your pack.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_dunland_pay_agreement_1" text="Wise. We remember every road tax the valley lords ever took from us, so we take a little back. Name a price, and make it a kind one.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_dunland_conclusion_1" text="That keeps the fires lit through the winter. Go on, and tell the valley lords the hills still have owners.[ib:closed][rf:convo_bemused]" />
-    <string id="taom_bv_dunland_start_fight_1" text="Then the crows will have you. The hills remember who stood against them.[ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_dunland_threat_2" text="You walk the old drovers' road, and the old drovers' road is ours. Coin, or your blood in the heather. Choose quickly, the weather is turning." />
-    <string id="taom_bv_dunland_pay_agreement_2" text="A trade, is it? Good. My kin are hungry, and hungry kin are not patient. What are you worth?[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_dunland_conclusion_2" text="Fair dealing, for a stranger. Keep to the road, and the hills will let you pass this once." />
-    <string id="taom_bv_dunland_start_fight_2" text="Brave, or foolish, and we have buried both. Show them what the hills do to trespassers." />
-    <string id="taom_bv_dunland_greeting_harmless" text="We are only shepherds out of the hills, stranger, nothing worth your sword." />
-    <string id="taom_bv_dunland_greeting_brothers" text="Best turn around, stranger. Half the clan waits in the heather behind those ridges, and they are not patient." />
-    <string id="taom_bv_rhun_threat_1" text="Hold, stranger. This grass belongs to the riders of Rhûn, and every foot that crosses it owes a tribute. Silver, or we take it with your hide.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_rhun_pay_agreement_1" text="A trader's answer, good. Tell me what you carry, and whether you value your silver or your skin more.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_rhun_conclusion_1" text="The riders of Rhûn are satisfied. Go west, and say the grass was kind to you.[ib:closed][rf:convo_bemused]" />
-    <string id="taom_bv_rhun_start_fight_1" text="Then the grass will drink your blood, and my kin will sing of it. Ready yourself.[ib:aggressive][if:convo_bared_teeth]" />
-    <string id="taom_bv_rhun_threat_2" text="You stand far from the Sea of Rhûn, stranger, and far from any friend. Our bows are drawn and our patience is short. Leave your silver on the ground and keep walking." />
-    <string id="taom_bv_rhun_pay_agreement_2" text="Sensible. A rider respects a traveller who counts the arrows before speaking. What do you offer?[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_rhun_conclusion_2" text="Fair. The plains forget no debt, and neither do we. Ride on, and ride quickly." />
-    <string id="taom_bv_rhun_start_fight_2" text="Then your name is lost to the wind. Sound the horns and loose the arrows.[ib:aggressive][if:convo_insulted]" />
-    <string id="taom_bv_rhun_greeting_harmless" text="We are only herders of the eastern grass, traveller, driving our horses to a fair. No threat to you." />
-    <string id="taom_bv_rhun_greeting_brothers" text="Turn aside, stranger. Two hundred riders wait beyond that ridge for my signal, and their horses are hungry for a charge." />
-    <string id="taom_bv_harad_threat_1" text="Slow your steps, traveller. The desert gives nothing for free, and the road through it is ours to sell. Pay the toll, or the sand will take the rest." />
-    <string id="taom_bv_harad_pay_agreement_1" text="A wise answer. Water costs less than blood, and so does passage. Name your price, and make it generous.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_harad_conclusion_1" text="The sun smiles on you today. Go in peace, and tell others the southern road has keepers.[ib:closed][rf:convo_bemused]" />
-    <string id="taom_bv_harad_start_fight_1" text="Then the vultures will feast before sunset. Raise the spears.[ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_harad_threat_2" text="Well met, stranger of the long road. We have walked long between wells, and you look well supplied. Your silver and your waterskins, or we take everything you own." />
-    <string id="taom_bv_harad_pay_agreement_2" text="Good. Bargaining is the breath of the south. Show me what you carry, and we will find the number together.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_harad_conclusion_2" text="A fair bargain. May your road be short and your skin stay cool. We will remember your face.[ib:closed]" />
-    <string id="taom_bv_harad_start_fight_2" text="So you choose the sword. The dunes have swallowed greater hosts than yours." />
-    <string id="taom_bv_harad_greeting_harmless" text="Only nomads of the southern sands, traveller. We mean no harm to anyone." />
-    <string id="taom_bv_harad_greeting_brothers" text="Be warned, traveller. The whole warband rests in the next wadi, spears ready, waiting for a single signal from us." />
-    <string id="taom_bv_gundabad_threat_1" text="Stop, maggot! This is Gundabad's road. You pay us, or we gnaw your bones on it. Silver first, then we decide about the rest.[rf:convo_angry]" />
-    <string id="taom_bv_gundabad_pay_agreement_1" text="Heh. Smart, maggot. Smarter than the last one. Empty your pockets and we count. Quick![ib:hip][rf:convo_angry]" />
-    <string id="taom_bv_gundabad_conclusion_1" text="Enough. Go. Run before we change our minds. Gundabad is still hungry.[ib:closed]" />
-    <string id="taom_bv_gundabad_start_fight_1" text="Good! The pack has not eaten since the last snowfall. Tear them apart![ib:aggressive][if:convo_bared_teeth]" />
-    <string id="taom_bv_gundabad_threat_2" text="Hold, meat on legs. The Mountain claims all that crosses it, and we are the Mountain's teeth. Coin and trinkets, whatever shines, or teeth." />
-    <string id="taom_bv_gundabad_pay_agreement_2" text="Talk, talk. Fine. How much shiny? Show us, and be fast, the cold makes us cruel.[ib:hip][rf:convo_angry]" />
-    <string id="taom_bv_gundabad_conclusion_2" text="Keep walking, meat. The next pack may not be so kind. Or so full." />
-    <string id="taom_bv_gundabad_start_fight_2" text="Ha! Fresh meat and a fight, the best kind of day. Kill them all." />
-    <string id="taom_bv_gundabad_greeting_harmless" text="Just hunters, you. Hunting rabbits. Only rabbits. Nothing to worry about, heh." />
-    <string id="taom_bv_gundabad_greeting_brothers" text="Back off, maggot. The whole warren waits in the rocks above you, hungry, waiting for a signal." />
-    <string id="taom_bv_umbar_threat_1" text="Ho there, you on the road! We came ashore to fill our holds, and you look like the first cargo. Silver now, and we part without a scratch.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_umbar_pay_agreement_1" text="Good. Even a landlubber can read the tide. Name an offer, and quickly, before the captain loses patience.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_umbar_conclusion_1" text="Fair winds to you. A share is a share, and Umbar remembers a fair deal.[ib:closed][rf:convo_bemused]" />
-    <string id="taom_bv_umbar_start_fight_1" text="Then we board you the old way. Blades out, and take what the sea has not.[ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_umbar_threat_2" text="Black sails are far off, traveller, but black blades are close. The corsairs of Umbar claim every road they walk. Pay the landing fee, or we take it from your pack." />
-    <string id="taom_bv_umbar_pay_agreement_2" text="Aye, we can talk. Even a pirate prefers a full purse to a bloody deck. What is your offer?[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_umbar_conclusion_2" text="A pleasure doing business. Mind the road, and mind the sea if you are fool enough to sail it." />
-    <string id="taom_bv_umbar_start_fight_2" text="Mutiny against good sense, and I will not bargain with it. We sink you where you stand.[ib:aggressive][if:convo_insulted]" />
-    <string id="taom_bv_umbar_greeting_harmless" text="Honest merchants of Umbar, traveller, ashore to stretch our legs and mend a sail. No trouble here." />
-    <string id="taom_bv_umbar_greeting_brothers" text="Mind yourself, traveller. Our ships lie in the next cove with three hundred blades aboard, waiting for our signal." />
-    <string id="taom_bv_gondor_threat_1" text="Stand where you are, traveller. We wore the White Tree once and bled for it, and what did it pay us? Silver for the road, and we need not make this ugly.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_gondor_pay_agreement_1" text="Thank you. I mean it, and I hate that I do. Name an offer. We have not eaten properly in a week.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_gondor_conclusion_1" text="May the Valar forgive us both. Go, and do not tell the garrison you saw us.[ib:closed]" />
-    <string id="taom_bv_gondor_start_fight_1" text="Then it is steel, and I am sorry for it. We have fought worse odds than yours and lost our honour long ago. There is little left to lose.[ib:aggressive][if:convo_very_stern]" />
-    <string id="taom_bv_gondor_threat_2" text="Halt. We marched these roads under the Steward's banner before the pay stopped coming. Now we collect our wages from travellers. Pay up." />
-    <string id="taom_bv_gondor_pay_agreement_2" text="Sensible. Believe me, none of us wants a fight. We have buried enough comrades. What can you give?[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_gondor_conclusion_2" text="That feeds us until the first frost. You are kinder than the Steward ever was to us. Go on, and keep your head down." />
-    <string id="taom_bv_gondor_start_fight_2" text="So be it. Form up, as we were taught. If this is the end, it is at least a soldier's end.[ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_gondor_greeting_harmless" text="Only a patrol of the Steward's guard, traveller, resting on the way. Nothing here to concern you." />
-    <string id="taom_bv_gondor_greeting_brothers" text="Do not try us. The rest of the company is dug in on that hill, bows strung, and they answer to our signal and no one else's." />
-    <string id="taom_bv_erebor_threat_1" text="Hold, stranger! This pass was cut by dwarven hands, and all who walk it pay the maker's toll. Gold, or the axe. We prefer gold, but we are not particular.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_erebor_pay_agreement_1" text="A sensible answer, for a stranger. Gold speaks every tongue. Show us what you carry, and count it honestly.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_erebor_conclusion_1" text="A fair toll, honestly paid. The mountain remembers it. Go on, and keep clear of our halls.[ib:closed][rf:convo_bemused]" />
-    <string id="taom_bv_erebor_start_fight_1" text="Then we settle this the dwarven way. Axes up! Let the mountain hear it.[ib:aggressive][if:convo_bared_teeth]" />
-    <string id="taom_bv_erebor_threat_2" text="Stop where you are. Our clan was cast out of its halls and left with little more than our axes and a long memory. The road is all the hall we have, and you owe it rent." />
-    <string id="taom_bv_erebor_pay_agreement_2" text="Hm. Reasonable. Few travellers bargain before the axes come out. What are you offering?[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_erebor_conclusion_2" text="Paid in full. We never forget a debt, nor a debtor. Go well, and spread the word: the road has a rent now." />
-    <string id="taom_bv_erebor_start_fight_2" text="Then you go in the ledger of grudges. Axes ready![ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_erebor_greeting_harmless" text="Only miners and smiths, traveller, heading home with our tools. We want no trouble." />
-    <string id="taom_bv_erebor_greeting_brothers" text="Think twice, stranger. The rest of the clan waits behind that hill, axes sharp and tempers shorter, waiting for our signal." />
-    <string id="taom_bv_mirkwood_threat_1" text="Quietly now. The trees have counted your steps for the last hour, and so have we. Leave your silver on the moss and walk on.[rf:convo_mocking_revenge]" />
-    <string id="taom_bv_mirkwood_pay_agreement_1" text="Wise. The Wood has little patience for the loud, and less for the stubborn. Show us what you carry.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_mirkwood_conclusion_1" text="The Wood is content. Keep to the path, stranger, and do not look back at the shadows. They are not all ours.[ib:closed]" />
-    <string id="taom_bv_mirkwood_start_fight_1" text="The arrows are already nocked. You were never alone out here.[ib:aggressive][if:convo_very_stern]" />
-    <string id="taom_bv_mirkwood_threat_2" text="Do not reach for your sword. Bowstrings are drawn on you from five trees at once, and not one of us has blinked. Your silver for your life." />
-    <string id="taom_bv_mirkwood_pay_agreement_2" text="A calm answer in a dark place. We respect that. Name an offer, and keep your hands where we can see them.[ib:hip][rf:convo_bemused]" />
-    <string id="taom_bv_mirkwood_conclusion_2" text="Done. The Wood forgets you now. Walk on, and walk quietly, because other things here do not bargain." />
-    <string id="taom_bv_mirkwood_start_fight_2" text="Then the Wood keeps you. Loose![ib:aggressive][if:convo_annoyed]" />
-    <string id="taom_bv_mirkwood_greeting_harmless" text="Only foresters, traveller, out gathering firewood. Nothing to fear from us." />
-    <string id="taom_bv_mirkwood_greeting_brothers" text="I would turn back, stranger. A hundred bows are already trained on you from the branches, waiting for our signal." />
+    <string id="taom_bv_dunland_threat_1" text="Dur, yabancı. Bu tepeler at-lordları buralardan geçmeden önce bizimdi ve her yolcu bize geçiş parası öder. Ya şimdi gümüş verirsin, ya da çıkınından alırız.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_dunland_pay_agreement_1" text="Akıllıca. Vadi lordlarının bizden aldığı her yol vergisini hatırlıyoruz, biz de birazını geri alıyoruz. Bir fiyat söyle, hem de cömert olsun.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_dunland_conclusion_1" text="Bu, kış boyunca ocakları yanık tutar. Yürü git ve vadi lordlarına söyle: tepelerin hâlâ sahipleri var.[ib:closed][rf:convo_bemused]" />
+    <string id="taom_bv_dunland_start_fight_1" text="Öyleyse leş kargaları seni alsın. Tepeler, kendilerine karşı duranları hatırlar.[ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_dunland_threat_2" text="Eski çoban yolunda yürüyorsun ve eski çoban yolu bizimdir. Ya para, ya da kanın fundalıklara aksın. Çabuk seç, hava bozuyor." />
+    <string id="taom_bv_dunland_pay_agreement_2" text="Demek bir pazarlık? Güzel. Kabilem aç ve aç insanlar sabırlı olmaz. Kaç para edersin?[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_dunland_conclusion_2" text="Bir yabancı için dürüst bir alışveriş. Yoldan ayrılma, tepeler bu seferlik geçmene izin verir." />
+    <string id="taom_bv_dunland_start_fight_2" text="Ya cesursun ya aptal; ikisini de gömdük biz. Göster onlara tepelerin davetsizlere ne yaptığını." />
+    <string id="taom_bv_dunland_greeting_harmless" text="Biz tepelerden gelen çobanlarız yabancı, kılıcını çekmeye değmeyiz." />
+    <string id="taom_bv_dunland_greeting_brothers" text="Geri dönsen iyi olur, yabancı. Kabilenin yarısı şu sırtların ardındaki fundalıkta bekliyor ve sabırlı değiller." />
+    <string id="taom_bv_rhun_threat_1" text="Dur, yabancı. Bu otlaklar Rhûn atlılarına aittir ve üzerine basan her ayak haraç borçludur. Ya gümüş, ya da derinle öderiz.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_rhun_pay_agreement_1" text="Tüccar cevabı, güzel. Söyle bakalım ne taşıyorsun ve gümüşüne mi derine mi daha çok değer veriyorsun.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_rhun_conclusion_1" text="Rhûn atlıları memnun. Batıya git ve otlakların sana iyi davrandığını söyle.[ib:closed][rf:convo_bemused]" />
+    <string id="taom_bv_rhun_start_fight_1" text="Öyleyse otlaklar kanını içecek ve halkım bunun türküsünü söyleyecek. Hazırlan.[ib:aggressive][if:convo_bared_teeth]" />
+    <string id="taom_bv_rhun_threat_2" text="Rhûn Denizi'nden çok uzaktasın yabancı, dostlarından da. Yaylarımız gerili, sabrımız kısa. Gümüşünü yere bırak ve yürümeye devam et." />
+    <string id="taom_bv_rhun_pay_agreement_2" text="Makul. Bir atlı, konuşmadan önce okları sayan yolcuya saygı duyar. Ne teklif ediyorsun?[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_rhun_conclusion_2" text="Adil. Ovalar hiçbir borcu unutmaz, biz de unutmayız. Yoluna git, hem de hızlı." />
+    <string id="taom_bv_rhun_start_fight_2" text="Öyleyse adın rüzgârda kaybolsun. Boruları çalın ve okları salın.[ib:aggressive][if:convo_insulted]" />
+    <string id="taom_bv_rhun_greeting_harmless" text="Biz yalnızca doğu otlaklarının çobanlarıyız yolcu, atlarımızı panayıra götürüyoruz. Sana bir zararımız yok." />
+    <string id="taom_bv_rhun_greeting_brothers" text="Yolunu değiştir, yabancı. Şu sırtın ardında iki yüz atlı işaretimi bekliyor ve atları hücum için can atıyor." />
+    <string id="taom_bv_harad_threat_1" text="Adımlarını yavaşlat, yolcu. Çöl hiçbir şeyi bedava vermez ve içinden geçen yolu satmak bize düşer. Geçiş parasını öde, yoksa gerisini kum alır." />
+    <string id="taom_bv_harad_pay_agreement_1" text="Akıllıca bir cevap. Su kandan ucuzdur, geçiş de öyle. Fiyatını söyle, hem de cömert olsun.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_harad_conclusion_1" text="Güneş bugün sana gülüyor. Esenlikle git ve başkalarına söyle: güney yolunun bekçileri var.[ib:closed][rf:convo_bemused]" />
+    <string id="taom_bv_harad_start_fight_1" text="Öyleyse akbabalar gün batmadan ziyafet çeker. Mızrakları kaldırın.[ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_harad_threat_2" text="Hoş geldin, uzun yolun yabancısı. Kuyular arasında uzun yürüdük ve sen iyi donanımlı görünüyorsun. Gümüşünü ve su tulumlarını ver, yoksa neyin varsa alırız." />
+    <string id="taom_bv_harad_pay_agreement_2" text="Güzel. Pazarlık güneyin nefesidir. Ne taşıdığını göster, rakamı birlikte bulalım.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_harad_conclusion_2" text="Adil bir pazarlık. Yolun kısa, tenin serin olsun. Yüzünü hatırlayacağız.[ib:closed]" />
+    <string id="taom_bv_harad_start_fight_2" text="Demek kılıcı seçiyorsun. Kum tepeleri seninkinden büyük orduları yuttu." />
+    <string id="taom_bv_harad_greeting_harmless" text="Yalnızca güney kumlarının göçebeleriyiz, yolcu. Kimseye zararımız yok." />
+    <string id="taom_bv_harad_greeting_brothers" text="Uyarıldın, yolcu. Bütün savaş bölüğü yandaki vadide dinleniyor, mızraklar hazır, bizden tek bir işaret bekliyorlar." />
+    <string id="taom_bv_gundabad_threat_1" text="Dur, kurtçuk! Bu yol Gundabad'ın yoludur. Ya bize ödersin, ya kemiklerini burada kemiririz. Önce gümüş, gerisine sonra karar veririz.[rf:convo_angry]" />
+    <string id="taom_bv_gundabad_pay_agreement_1" text="Heh. Akıllısın, kurtçuk. Öncekinden akıllı. Ceplerini boşalt da sayalım. Çabuk![ib:hip][rf:convo_angry]" />
+    <string id="taom_bv_gundabad_conclusion_1" text="Yeter. Git. Fikrimizi değiştirmeden koş. Gundabad hâlâ aç.[ib:closed]" />
+    <string id="taom_bv_gundabad_start_fight_1" text="Güzel! Sürü son kar yağışından beri bir şey yemedi. Parçalayın onları![ib:aggressive][if:convo_bared_teeth]" />
+    <string id="taom_bv_gundabad_threat_2" text="Dur bakalım, ayaklı et. Dağ, üzerinden geçen her şeyi sahiplenir ve biz Dağ'ın dişleriyiz. Para, ziynet, parlayan ne varsa; yoksa dişler." />
+    <string id="taom_bv_gundabad_pay_agreement_2" text="Konuş, konuş. Peki. Ne kadar parlak şey? Göster bize, hem de çabuk, soğuk bizi zalim yapar.[ib:hip][rf:convo_angry]" />
+    <string id="taom_bv_gundabad_conclusion_2" text="Yürümeye devam et, et parçası. Sonraki sürü bu kadar nazik olmayabilir. Ya da bu kadar tok." />
+    <string id="taom_bv_gundabad_start_fight_2" text="Ha! Taze et ve bir kavga, günlerin en iyisi. Hepsini öldürün." />
+    <string id="taom_bv_gundabad_greeting_harmless" text="Siz sadece avcısınız. Tavşan avlıyoruz. Yalnızca tavşan. Endişelenecek bir şey yok, heh." />
+    <string id="taom_bv_gundabad_greeting_brothers" text="Geri çekil, kurtçuk. Bütün in yukarıdaki kayalarda bekliyor, aç, bir işaret bekliyor." />
+    <string id="taom_bv_umbar_threat_1" text="Hey, yoldaki sen! Ambarlarımızı doldurmak için karaya çıktık ve sen ilk yük gibi görünüyorsun. Gümüşü ver, tek bir çizik bile almadan ayrılalım.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_umbar_pay_agreement_1" text="Güzel. Bir karafatma bile gelgiti okuyabilir. Bir teklif söyle, hem de çabuk, kaptan sabrını yitirmeden.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_umbar_conclusion_1" text="Rüzgârın bol olsun. Pay paydır ve Umbar adil bir anlaşmayı unutmaz.[ib:closed][rf:convo_bemused]" />
+    <string id="taom_bv_umbar_start_fight_1" text="Öyleyse seni eski usulle borda ederiz. Bıçaklar çekilsin, denizin almadığını biz alalım.[ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_umbar_threat_2" text="Kara yelkenler uzakta, yolcu, ama kara bıçaklar yakın. Umbar korsanları yürüdükleri her yolda hak iddia eder. Karaya çıkış ücretini öde, yoksa çantandan alırız." />
+    <string id="taom_bv_umbar_pay_agreement_2" text="Evet, konuşabiliriz. Bir korsan bile kanlı bir güverteye dolu bir kese yeğler. Teklifin nedir?[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_umbar_conclusion_2" text="İş yapmak bir zevkti. Yola dikkat et, denize açılacak kadar aptalsan denize de." />
+    <string id="taom_bv_umbar_start_fight_2" text="Sağduyuya karşı isyan; bununla pazarlık etmem. Seni olduğun yerde batırırız.[ib:aggressive][if:convo_insulted]" />
+    <string id="taom_bv_umbar_greeting_harmless" text="Umbar'ın dürüst tüccarlarıyız, yolcu; bacaklarımızı açmak ve bir yelken onarmak için karaya çıktık. Burada sorun yok." />
+    <string id="taom_bv_umbar_greeting_brothers" text="Kendine dikkat et, yolcu. Gemilerimiz yan koyda, güvertelerinde üç yüz kılıçla işaretimizi bekliyor." />
+    <string id="taom_bv_gondor_threat_1" text="Olduğun yerde dur, yolcu. Bir zamanlar Ak Ağaç'ı taşıdık ve onun için kan döktük; peki bize ne verdi? Yol için gümüş ver, bunu çirkinleştirmeyelim.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_gondor_pay_agreement_1" text="Teşekkür ederim. Ciddiyim ve bundan nefret ediyorum. Bir teklif söyle. Bir haftadır doğru dürüst yemek yemedik.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_gondor_conclusion_1" text="Valar ikimizi de bağışlasın. Git ve garnizona bizi gördüğünü söyleme.[ib:closed]" />
+    <string id="taom_bv_gondor_start_fight_1" text="Öyleyse çelik konuşsun, bunun için üzgünüm. Seninkinden beter ihtimallere karşı savaştık ve onurumuzu çoktan yitirdik. Kaybedecek pek bir şey kalmadı.[ib:aggressive][if:convo_very_stern]" />
+    <string id="taom_bv_gondor_threat_2" text="Dur. Bu yollarda Vekilharç'ın sancağı altında yürüdük, ta ki maaşlar kesilene dek. Artık ücretimizi yolculardan topluyoruz. Öde." />
+    <string id="taom_bv_gondor_pay_agreement_2" text="Akıllıca. İnan bana, hiçbirimiz kavga istemiyor. Yeterince yoldaş gömdük. Ne verebilirsin?[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_gondor_conclusion_2" text="Bu bizi ilk ayaza kadar doyurur. Vekilharç'ın bize olduğundan daha iyisin. Yürü git ve başını eğik tut." />
+    <string id="taom_bv_gondor_start_fight_2" text="Öyle olsun. Düzen alın, öğretildiği gibi. Eğer son buysa, hiç değilse bir askerin sonudur.[ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_gondor_greeting_harmless" text="Sadece Vekilharç muhafızlarının bir devriyesiyiz, yolcu; yol üstünde dinleniyoruz. Burada seni ilgilendiren bir şey yok." />
+    <string id="taom_bv_gondor_greeting_brothers" text="Bizi deneme. Bölüğün geri kalanı şu tepede mevzilendi, yaylar gerili; yalnızca bizim işaretimize uyarlar." />
+    <string id="taom_bv_erebor_threat_1" text="Dur, yabancı! Bu geçit cüce elleriyle açıldı ve burada yürüyen herkes ustanın geçiş ücretini öder. Altın, ya da balta. Altını yeğleriz ama pek de seçici değiliz.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_erebor_pay_agreement_1" text="Bir yabancı için makul bir cevap. Altın her dili konuşur. Taşıdığını göster ve dürüstçe say.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_erebor_conclusion_1" text="Adil bir ücret, dürüstçe ödendi. Dağ bunu hatırlar. Yürü git ve salonlarımızdan uzak dur.[ib:closed][rf:convo_bemused]" />
+    <string id="taom_bv_erebor_start_fight_1" text="Öyleyse bunu cüce usulü halledelim. Baltalar yukarı! Varsın dağ da duysun.[ib:aggressive][if:convo_bared_teeth]" />
+    <string id="taom_bv_erebor_threat_2" text="Olduğun yerde dur. Klanımız salonlarından kovuldu; elimizde baltalarımızdan ve uzun bir hafızadan başka pek bir şey kalmadı. Yol bizim tek salonumuz ve sen ona kira borçlusun." />
+    <string id="taom_bv_erebor_pay_agreement_2" text="Hm. Makul. Pek az yolcu baltalar çekilmeden pazarlık eder. Ne teklif ediyorsun?[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_erebor_conclusion_2" text="Tam olarak ödendi. Ne bir borcu unuturuz ne de bir borçluyu. Yolun açık olsun ve haberi yay: yolun artık kirası var." />
+    <string id="taom_bv_erebor_start_fight_2" text="Öyleyse kin defterine yazıldın. Baltalar hazır![ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_erebor_greeting_harmless" text="Sadece madenciler ve demircileriz, yolcu; aletlerimizle eve dönüyoruz. Sorun istemiyoruz." />
+    <string id="taom_bv_erebor_greeting_brothers" text="İki kez düşün, yabancı. Klanın geri kalanı şu tepenin ardında bekliyor; baltaları keskin, sabırları daha kısa, işaretimizi bekliyorlar." />
+    <string id="taom_bv_mirkwood_threat_1" text="Şimdi sessizce. Ağaçlar son bir saattir adımlarını saydı, biz de öyle. Gümüşünü yosunun üstüne bırak ve yürü git.[rf:convo_mocking_revenge]" />
+    <string id="taom_bv_mirkwood_pay_agreement_1" text="Akıllıca. Orman'ın gürültülülere sabrı azdır, inatçılara daha da az. Taşıdığını göster.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_mirkwood_conclusion_1" text="Orman hoşnut. Patikadan ayrılma, yabancı, ve gölgelere dönüp bakma. Hepsi bizim değil.[ib:closed]" />
+    <string id="taom_bv_mirkwood_start_fight_1" text="Oklar çoktan kirişte. Burada hiçbir zaman yalnız değildin.[ib:aggressive][if:convo_very_stern]" />
+    <string id="taom_bv_mirkwood_threat_2" text="Kılıcına davranma. Beş ağaçtan birden yaylar sana gerili ve hiçbirimiz gözünü kırpmadı. Canına karşılık gümüşün." />
+    <string id="taom_bv_mirkwood_pay_agreement_2" text="Karanlık bir yerde sakin bir cevap. Buna saygı duyarız. Bir teklif söyle ve ellerini görebileceğimiz yerde tut.[ib:hip][rf:convo_bemused]" />
+    <string id="taom_bv_mirkwood_conclusion_2" text="Oldu. Orman seni şimdi unutuyor. Yürü git, hem de sessizce; çünkü buradaki diğer şeyler pazarlık etmez." />
+    <string id="taom_bv_mirkwood_start_fight_2" text="Öyleyse Orman seni alıkoyar. Atın okları![ib:aggressive][if:convo_annoyed]" />
+    <string id="taom_bv_mirkwood_greeting_harmless" text="Sadece ormancıyız, yolcu; odun topluyoruz. Bizden korkacak bir şey yok." />
+    <string id="taom_bv_mirkwood_greeting_brothers" text="Geri dönsem iyi edersin, yabancı. Dallardan yüz yay şimdiden sana nişan almış, işaretimizi bekliyor." />
   </strings>
 </base>

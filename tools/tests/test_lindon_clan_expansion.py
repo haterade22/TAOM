@@ -50,6 +50,17 @@ LORD_CLANS = {
 # unversioned, so this is the repo's only gate on them: a reinstall that restores the old names fails here.
 RENAMED = {"castle_EW1": "Harlond Quays", "village_LN1_1": "Eryn Lhûn", "village_LN1_3": "Ninglas"}
 LANGS = ["BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR"]
+# The translation run (#763) rewrites the localized rows, so a language row is no longer the English name. Each old
+# name was its namesake's name: a row that again equals its namesake's row is the old name restored.
+NAMESAKES = {"castle_EW1": "town_LN2", "village_LN1_1": "town_LN3", "village_LN1_3": "castle_EW3"}
+# The old English names (docs/features/new-factions-misty-mountains-lindon.md): the rows held these before the rename.
+OLD_NAMES = {"castle_EW1": "Harlond", "village_LN1_1": "Forlond", "village_LN1_3": "Edhellond"}
+
+
+def loc_name(loc, sid):
+    """The text of a settlement's name row in one loc_settlements.xml, without its grammar tag, or None."""
+    m = re.search(r'id="Settlements\.Settlement\.name\.%s"\s+text="(?:\{\.[A-Z]+\})?([^"]*)"' % re.escape(sid), loc)
+    return m.group(1).strip() if m else None
 
 
 def read(path):
@@ -172,11 +183,10 @@ class LindonClanExpansionDataTests(unittest.TestCase):
         bad = []
         for lang in LANGS:
             loc = read(LIVE_SETTLEMENTS.parent / "Languages" / lang / "loc_settlements.xml")
-            for sid, name in RENAMED.items():
-                m = re.search(r'id="Settlements\.Settlement\.name\.%s"\s+text="(?:\{\.[A-Z]+\})?([^"]*)"'
-                              % re.escape(sid), loc)
-                if not m or m.group(1) != name:
-                    bad.append((lang, sid, m.group(1) if m else None))
+            for sid in RENAMED:
+                text, namesake = loc_name(loc, sid), loc_name(loc, NAMESAKES[sid])
+                if not text or text in (namesake, OLD_NAMES[sid]):
+                    bad.append((lang, sid, text))
         self.assertEqual([], bad)
 
     @unittest.skipUnless(all(p.is_dir() for p in VANILLA_MD), f"vanilla ModuleData not found under {GAME}")

@@ -13,8 +13,8 @@ namespace TAOM.Tests.Features.MarshalsWord;
 
 /// <summary>
 /// The player-facing text of Marshal's Word's later stages. The C# literal (or MCM attribute) is the English source, and the English row in
-/// <c>taom_module_strings.xml</c> must equal it. The key rows live in <c>global_strings.xml</c> with a seed row in each language file, and a
-/// copied <c>{=KEY}</c> shows the old text, so a row left on an older wording fails. Each hint states its default, and the text is tied to the
+/// <c>taom_module_strings.xml</c> must equal it. The key rows live in <c>global_strings.xml</c> with one row in each language file (its translation, or the
+/// English until the paid run fills it) that keeps every placeholder of the English. Each hint states its default, and the text is tied to the
 /// number or the key it names.
 /// </summary>
 [TestClass]
@@ -109,24 +109,27 @@ public class MarshalWordingTests
         Assert.AreEqual("{=" + key + "}" + wording, rows[0]);
     }
 
+    private static List<string> Tokens(string text) =>
+        Regex.Matches(text, @"\{[^{}]*\}").Cast<Match>().Select(m => m.Value).Distinct().OrderBy(t => t, System.StringComparer.Ordinal).ToList();
+
     [DataTestMethod]
     [DynamicData(nameof(LineData), DynamicDataSourceType.Method)]
-    public void EveryLanguageFile_SeedsTheEnglishWording(string file, string key, string wording)
+    public void EveryLanguageFile_HoldsOneRow_KeepingTheEnglishPlaceholders(string file, string key, string wording)
     {
-        // Nothing is translated yet, so each language's row is the English text; an English edit that missed a language shows here.
+        // A row is the translation, or the English until the paid run fills it; either way it keeps the English placeholders.
         var files = LanguageFiles("module");
         Assert.AreEqual(12, files.Length);
         foreach (var path in files)
         {
             var rows = Rows(path, key);
             Assert.AreEqual(1, rows.Count, Path.GetFileName(path) + " carries one row for " + key);
-            Assert.AreEqual(wording, rows[0], Path.GetFileName(path));
+            CollectionAssert.AreEqual(Tokens(wording), Tokens(rows[0]), Path.GetFileName(path));
         }
     }
 
     [DataTestMethod]
     [DynamicData(nameof(KeyRowData), DynamicDataSourceType.Method)]
-    public void TheKeyRow_IsTheExpectedWording_InGlobalStrings_AndSeededInEveryLanguage(string rowId, string key, string wording)
+    public void TheKeyRow_IsTheExpectedWording_InGlobalStrings_AndEveryKeybindLanguageFileHoldsOneRow(string rowId, string key, string wording)
     {
         var rows = Rows(GlobalStrings(), rowId);
 
@@ -136,7 +139,7 @@ public class MarshalWordingTests
         {
             var seeded = Rows(path, key);
             Assert.AreEqual(1, seeded.Count, Path.GetFileName(path) + " carries one row for " + key);
-            Assert.AreEqual(wording, seeded[0], Path.GetFileName(path));
+            CollectionAssert.AreEqual(Tokens(wording), Tokens(seeded[0]), Path.GetFileName(path));
         }
     }
 

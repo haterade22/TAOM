@@ -71,40 +71,40 @@
     <string id="taom_arthedain_ruler_title" text="Король" />
     <string id="taom_arthedain_short_name" text="Артедайн" />
     <string id="taom_arthedain_title" text="Северное королевство Артедайн" />
-    <string id="taom_cardolan_desc" text="The southern of the three realms into which Arnor was sundered. Its kings lie in the barrows of Tyrn Gorthad and its riders keep the plains between the Baranduin and the Greyflood, but its towns are few and its lords contend with Arthedain and Rhudaur for the crown of Arnor." />
-    <string id="taom_cardolan_name" text="Cardolan" />
-    <string id="taom_cardolan_ruler_title" text="King" />
-    <string id="taom_cardolan_short_name" text="Cardolan" />
-    <string id="taom_cardolan_title" text="Kingdom of Cardolan" />
-    <string id="taom_rhudaur_desc" text="The eastern of the three realms into which Arnor was sundered, a hill kingdom between the Hoarwell and the Loudwater. Its Dunedain lords hold Cameth Brin and the Angle and rule a hard people of hill-men, with trolls in the fells and orcs on every pass." />
-    <string id="taom_rhudaur_name" text="Rhudaur" />
-    <string id="taom_rhudaur_ruler_title" text="King" />
-    <string id="taom_rhudaur_short_name" text="Rhudaur" />
-    <string id="taom_rhudaur_title" text="Kingdom of Rhudaur" />
-    <string id="taom_eredluin_desc" text="The dwarf kingdom of the Blue Mountains. Durin's Folk made Thorin's Halls there in their exile, and in this age the Broadbeams and the Firebeards hold Belegost and Nogrod again. Its lords are few and its halls are poorer than those of its kin in the east, but its smiths are the oldest in the West, and its axes keep the goblins of Blue Craig from the roads to Lindon." />
-    <string id="taom_eredluin_name" text="Ered Luin" />
-    <string id="taom_eredluin_ruler_title" text="King" />
-    <string id="taom_eredluin_short_name" text="Ered Luin" />
-    <string id="taom_eredluin_title" text="Kingdom of Ered Luin" />
-    <string id="taom_anduinvale_desc" text="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
-    <string id="taom_anduinvale_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_ruler_title" text="Chieftain" />
-    <string id="taom_anduinvale_short_name" text="Anduin Vale" />
-    <string id="taom_anduinvale_title" text="Anduin Vale" />
-    <string id="taom_angaladh_desc" text="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
-    <string id="taom_angaladh_name" text="Angáladh" />
-    <string id="taom_angaladh_ruler_title" text="King" />
-    <string id="taom_angaladh_short_name" text="Angáladh" />
-    <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
-    <string id="taom_dorwinion_desc" text="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
-    <string id="taom_dorwinion_name" text="Dorwinion" />
-    <string id="taom_dorwinion_ruler_title" text="King" />
-    <string id="taom_dorwinion_short_name" text="Dorwinion" />
-    <string id="taom_dorwinion_title" text="Kingdom of Dorwinion" />
-    <string id="taom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
-    <string id="taom_southrhovanion_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_ruler_title" text="King" />
-    <string id="taom_southrhovanion_short_name" text="South Rhovanion" />
-    <string id="taom_southrhovanion_title" text="Kingdom of South Rhovanion" />
+    <string id="taom_cardolan_desc" text="Южное из трёх королевств, на которые распался Арнор. Его короли покоятся в курганах Тирн Гортад, а его всадники стерегут равнины между Барандуином и Сероструем, но городов у него мало, и его владыки спорят с Артэдайном и Рудауром за корону Арнора." />
+    <string id="taom_cardolan_name" text="Кардолан" />
+    <string id="taom_cardolan_ruler_title" text="Король" />
+    <string id="taom_cardolan_short_name" text="Кардолан" />
+    <string id="taom_cardolan_title" text="Королевство Кардолан" />
+    <string id="taom_rhudaur_desc" text="Восточное из трёх королевств, на которые распался Арнор, — горное королевство между Седонной и Бруиненом. Его дунаданские владыки держат Камет Брин и Угол и правят суровым народом горцев, а в холмах бродят тролли, и на каждом перевале — орки." />
+    <string id="taom_rhudaur_name" text="Рудаур" />
+    <string id="taom_rhudaur_ruler_title" text="Король" />
+    <string id="taom_rhudaur_short_name" text="Рудаур" />
+    <string id="taom_rhudaur_title" text="Королевство Рудаур" />
+    <string id="taom_eredluin_desc" text="Гномье королевство Синих гор. Народ Дурина в изгнании выстроил там Чертоги Торина, а в эту эпоху Широкозады и Огнебороды вновь владеют Белегостом и Ногродом. Владык его немного, и чертоги беднее, чем у родичей на востоке, но кузнецы его древнейшие на Западе, а секиры их не пускают гоблинов Синей Скалы на дороги к Линдону." />
+    <string id="taom_eredluin_name" text="Эред Луин" />
+    <string id="taom_eredluin_ruler_title" text="Король" />
+    <string id="taom_eredluin_short_name" text="Эред Луин" />
+    <string id="taom_eredluin_title" text="Королевство Эред Луин" />
+    <string id="taom_anduinvale_desc" text="Беорнинги и лесные люди Долин владеют верхним Андуином между Мглистыми горами и Лихолесьем. Они держат Высокий перевал и Старый Брод открытыми для честных путников и берут тяжкую дань с орков и волков. Их вожди правят Чертогом Беорна и Карроком и не желают участвовать в войнах королей." />
+    <string id="taom_anduinvale_name" text="Долина Андуина" />
+    <string id="taom_anduinvale_ruler_title" text="Вождь" />
+    <string id="taom_anduinvale_short_name" text="Долина Андуина" />
+    <string id="taom_anduinvale_title" text="Долина Андуина" />
+    <string id="taom_angaladh_desc" text="Лесные люди западного Лихолесья расчистили свои усадьбы под сенью леса и назвали своё королевство в честь железно-твёрдых деревьев, что окружают Город лесных людей. Они лучники и лесные стражи, немногочисленные, живут в мире с эльфами на севере и неусыпно следят за Дол Гулдуром на юге." />
+    <string id="taom_angaladh_name" text="Ангалад" />
+    <string id="taom_angaladh_ruler_title" text="Король" />
+    <string id="taom_angaladh_short_name" text="Ангалад" />
+    <string id="taom_angaladh_title" text="Королевство Ангалад" />
+    <string id="taom_dorwinion_desc" text="Виноделы Дорвиниона возделывают тёплые склоны там, где Быстротечная впадает в море Рун. Их вино поднимается вверх по реке в Дейл, к эльфам Лихолесья и в каждый чертог, что способен за него заплатить, и короли их от того богатеют. Они держатся в стороне от войн Запада и, когда нужно, покупают мир у Востока." />
+    <string id="taom_dorwinion_name" text="Дорвинион" />
+    <string id="taom_dorwinion_ruler_title" text="Король" />
+    <string id="taom_dorwinion_short_name" text="Дорвинион" />
+    <string id="taom_dorwinion_title" text="Королевство Дорвинион" />
+    <string id="taom_southrhovanion_desc" text="Северяне Южного Рованиона скачут по широким равнинам между южной опушкой Лихолесья и морем Рун. Они — повелители коней, родичи эотеод, что давно ушли на север, и они не забыли Возничих, некогда сжёгших их чертоги. Их короли владеют Видугардом и не подчиняются никому ни на Западе, ни на Востоке." />
+    <string id="taom_southrhovanion_name" text="Южный Рованион" />
+    <string id="taom_southrhovanion_ruler_title" text="Король" />
+    <string id="taom_southrhovanion_short_name" text="Южный Рованион" />
+    <string id="taom_southrhovanion_title" text="Королевство Южный Рованион" />
   </strings>
 </base>

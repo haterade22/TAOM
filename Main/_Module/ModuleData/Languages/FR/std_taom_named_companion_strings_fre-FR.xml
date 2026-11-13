@@ -125,20 +125,20 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Apprendre du Grand-Maître des Traditions lui-même serait un honneur." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Tout ce savoir - est-il un fardeau lourd à porter ?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="Le savoir n'est lourd que lorsqu'il est thésaurisé. Partagé librement, il élève tous ceux qui le reçoivent. Comme mon frère Thyrell, je sers la gloire de ce royaume. Ajouterez-vous votre chapitre à notre récit sans fin ?" />
-    <string id="taom_oath_aragorn_first_prompt" text="Who are the Dúnedain?" />
-    <string id="taom_oath_aragorn_first_reply" text="The Rangers of the North, the last of Númenor's blood in the wild. We guard the Shire and the roads, and no one thanks us for it. We prefer it so." />
-    <string id="taom_oath_aragorn_second_prompt" text="Do you ever wish to claim the crown?" />
-    <string id="taom_oath_aragorn_second_reply" text="Every day, and I fear it as often. If my claim comes, it will not come by taking. I am glad you ask as a friend." />
-    <string id="taom_oath_gimli_first_prompt" text="Tell me of Erebor." />
-    <string id="taom_oath_gimli_first_reply" text="The Lonely Mountain. My kin hold its halls again, and the forges burn day and night. Ask me again once we have shared more fires." />
-    <string id="taom_oath_gimli_second_prompt" text="Would you show me Erebor's deep halls one day?" />
-    <string id="taom_oath_gimli_second_reply" text="You have earned the asking. The deep halls open to a friend. When this war lets us, you shall see the gold of Durin and the hammers of my people." />
-    <string id="nc_backstory_a.named_companion_elegost_text" text="I am Elegost, a Ranger of the North. My kin keep the roads of Eriador while the folk of Bree sleep and never ask who stood watch." />
-    <string id="nc_prebackstory.named_companion_elegost_text" text="A Ranger? The Bree-folk have hard words for your kind." />
-    <string id="nc_backstory_b.named_companion_elegost_text" text="Let them talk. We are the last of the Dúnedain who still walk the wild. I have tracked orcs down out of the Ettenmoors and turned wolves back at the Brandywine before the farmers knew they had come." />
-    <string id="nc_backstory_c.named_companion_elegost_text" text="Arthedain still holds Fornost, and our cousins hold Cardolan and Rhudaur, but the wild lands between them answer to no king. That is where my people keep their watch, and where I have spent my years." />
-    <string id="nc_response_1.named_companion_elegost_text" text="The North owes your people more than it knows." />
-    <string id="nc_response_2.named_companion_elegost_text" text="A wanderer who sleeps in ditches. What use is that to me?" />
-    <string id="nc_backstory_d.named_companion_elegost_text" text="I know every ford between the Greyflood and the Hoarwell, and my bow does not miss in the dark. Ride with me, and you will not walk into an ambush anywhere in Eriador." />
+    <string id="taom_oath_aragorn_first_prompt" text="Qui sont les Dúnedain ?" />
+    <string id="taom_oath_aragorn_first_reply" text="Les Rôdeurs du Nord, le dernier sang de Númenor dans les terres sauvages. Nous gardons la Comté et les routes, et nul ne nous en remercie. Nous le préférons ainsi." />
+    <string id="taom_oath_aragorn_second_prompt" text="Souhaitez-vous parfois revendiquer la couronne ?" />
+    <string id="taom_oath_aragorn_second_reply" text="Chaque jour, et je le crains tout aussi souvent. Si mon droit vient, il ne viendra pas par la prise. Je suis heureux que vous le demandiez en ami." />
+    <string id="taom_oath_gimli_first_prompt" text="Parle-moi d'Erebor." />
+    <string id="taom_oath_gimli_first_reply" text="La Montagne Solitaire. Les miens en tiennent de nouveau les salles, et les forges brûlent jour et nuit. Redemande-le-moi quand nous aurons partagé d'autres feux." />
+    <string id="taom_oath_gimli_second_prompt" text="Me montrerez-vous un jour les salles profondes d'Erebor ?" />
+    <string id="taom_oath_gimli_second_reply" text="Tu as mérité de le demander. Les salles profondes s'ouvrent à un ami. Quand cette guerre nous le permettra, tu verras l'or de Durin et les marteaux de mon peuple." />
+    <string id="nc_backstory_a.named_companion_elegost_text" text="Je suis Elegost, un Rôdeur du Nord. Les miens veillent sur les routes de l'Eriador pendant que les gens de Bree dorment sans jamais demander qui montait la garde." />
+    <string id="nc_prebackstory.named_companion_elegost_text" text="Un Rôdeur ? Les gens de Bree ont des mots durs pour ceux de votre espèce." />
+    <string id="nc_backstory_b.named_companion_elegost_text" text="Qu'ils parlent. Nous sommes les derniers des Dúnedain à parcourir encore les terres sauvages. J'ai traqué des orques jusque hors des Landes d'Etten et repoussé des loups au Brandevin avant même que les fermiers ne sachent leur venue." />
+    <string id="nc_backstory_c.named_companion_elegost_text" text="L'Arthedain tient encore Fornost, et nos cousins tiennent le Cardolan et le Rhudaur, mais les terres sauvages qui les séparent ne répondent à aucun roi. C'est là que mon peuple monte la garde, et c'est là que j'ai passé mes années." />
+    <string id="nc_response_1.named_companion_elegost_text" text="Le Nord doit à votre peuple plus qu'il ne le sait." />
+    <string id="nc_response_2.named_companion_elegost_text" text="Un vagabond qui dort dans les fossés. À quoi cela me sert-il ?" />
+    <string id="nc_backstory_d.named_companion_elegost_text" text="Je connais chaque gué entre le Flot Gris et le Fontgrise, et mon arc ne manque pas sa cible dans l'obscurité. Chevauchez avec moi, et vous ne tomberez dans aucune embuscade en Eriador." />
   </strings>
 </base>

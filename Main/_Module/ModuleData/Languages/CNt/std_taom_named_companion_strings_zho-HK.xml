@@ -125,20 +125,20 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="能向傳說大師本人學習將是莫大的榮幸。" />
     <string id="nc_response_2.named_companion_balakhor_text" text="那麼多的知識——是否沉重?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="知識只有在囤積時才會沉重。自由地分享,它會提升所有接受它的人。就像我的兄弟瑟萊爾一樣,我為這個領域的榮耀而服務。你願意在我們無盡的故事中添加你的篇章嗎?" />
-    <string id="taom_oath_aragorn_first_prompt" text="Who are the Dúnedain?" />
-    <string id="taom_oath_aragorn_first_reply" text="The Rangers of the North, the last of Númenor's blood in the wild. We guard the Shire and the roads, and no one thanks us for it. We prefer it so." />
-    <string id="taom_oath_aragorn_second_prompt" text="Do you ever wish to claim the crown?" />
-    <string id="taom_oath_aragorn_second_reply" text="Every day, and I fear it as often. If my claim comes, it will not come by taking. I am glad you ask as a friend." />
-    <string id="taom_oath_gimli_first_prompt" text="Tell me of Erebor." />
-    <string id="taom_oath_gimli_first_reply" text="The Lonely Mountain. My kin hold its halls again, and the forges burn day and night. Ask me again once we have shared more fires." />
-    <string id="taom_oath_gimli_second_prompt" text="Would you show me Erebor's deep halls one day?" />
-    <string id="taom_oath_gimli_second_reply" text="You have earned the asking. The deep halls open to a friend. When this war lets us, you shall see the gold of Durin and the hammers of my people." />
-    <string id="nc_backstory_a.named_companion_elegost_text" text="I am Elegost, a Ranger of the North. My kin keep the roads of Eriador while the folk of Bree sleep and never ask who stood watch." />
-    <string id="nc_prebackstory.named_companion_elegost_text" text="A Ranger? The Bree-folk have hard words for your kind." />
-    <string id="nc_backstory_b.named_companion_elegost_text" text="Let them talk. We are the last of the Dúnedain who still walk the wild. I have tracked orcs down out of the Ettenmoors and turned wolves back at the Brandywine before the farmers knew they had come." />
-    <string id="nc_backstory_c.named_companion_elegost_text" text="Arthedain still holds Fornost, and our cousins hold Cardolan and Rhudaur, but the wild lands between them answer to no king. That is where my people keep their watch, and where I have spent my years." />
-    <string id="nc_response_1.named_companion_elegost_text" text="The North owes your people more than it knows." />
-    <string id="nc_response_2.named_companion_elegost_text" text="A wanderer who sleeps in ditches. What use is that to me?" />
-    <string id="nc_backstory_d.named_companion_elegost_text" text="I know every ford between the Greyflood and the Hoarwell, and my bow does not miss in the dark. Ride with me, and you will not walk into an ambush anywhere in Eriador." />
+    <string id="taom_oath_aragorn_first_prompt" text="杜內丹人是什麼人?" />
+    <string id="taom_oath_aragorn_first_reply" text="北方的遊俠,努曼諾爾血脈在荒野中最後的遺民。我們守護夏爾與道路,無人為此道謝。我們也寧願如此。" />
+    <string id="taom_oath_aragorn_second_prompt" text="你可曾渴望取得王冠?" />
+    <string id="taom_oath_aragorn_second_reply" text="每一天都如此,而我也同樣頻繁地懼怕它。若我的王權降臨,也不會以奪取的方式到來。我很高興你是以朋友的身分發問。" />
+    <string id="taom_oath_gimli_first_prompt" text="跟我說說伊魯伯吧。" />
+    <string id="taom_oath_gimli_first_reply" text="孤山。我的族人再度掌握了那些廳堂,鍛爐日夜燃燒。等我們一同圍過更多火堆,再來問我吧。" />
+    <string id="taom_oath_gimli_second_prompt" text="有朝一日,你願帶我看看伊魯伯的深廳嗎?" />
+    <string id="taom_oath_gimli_second_reply" text="你已配得上這一問。深廳為朋友敞開。待這場戰爭容許之時,你將見到都靈的黃金與我族人的鐵鎚。" />
+    <string id="nc_backstory_a.named_companion_elegost_text" text="我是埃勒苟斯特,北方的遊俠。當布理的居民安睡、從不過問是誰守夜時,我的族人守護著伊利雅德的道路。" />
+    <string id="nc_prebackstory.named_companion_elegost_text" text="遊俠?布理人對你們這類人的評價可不好聽。" />
+    <string id="nc_backstory_b.named_companion_elegost_text" text="隨他們去說。我們是仍行走於荒野的最後一批杜內丹人。我曾追蹤半獸人出了伊頓荒原,也曾在農夫察覺之前,就把狼群逐回烈酒河對岸。" />
+    <string id="nc_backstory_c.named_companion_elegost_text" text="雅西頓仍據有佛諾斯特,我們的親族則掌握卡多蘭與魯道爾,但其間的荒野不聽命於任何國王。那正是我的族人守望之處,也是我度過歲月的地方。" />
+    <string id="nc_response_1.named_companion_elegost_text" text="北方虧欠你的族人,遠比它所知的更多。" />
+    <string id="nc_response_2.named_companion_elegost_text" text="一個睡在溝渠裡的流浪漢。這對我有什麼用?" />
+    <string id="nc_backstory_d.named_companion_elegost_text" text="我熟知灰洪河與響水河之間的每一處渡口,而我的弓在黑暗中從不失準。與我同行,你在伊利雅德任何地方都不會中伏。" />
   </strings>
 </base>
