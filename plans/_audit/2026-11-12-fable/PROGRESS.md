@@ -47,8 +47,8 @@ deleting what this run did not create, a game launch or deploy (taom-b4 holds th
 | 3 Verify, critic | DONE | workflow `wf_516bc699-dcb`, script `scratch\wf\verify.js` | | 3 of 3 returned; 0.79 M subagent tokens; 27 findings checked: 5 confirmed, 21 narrowed, part of 1 refuted; no critic (DECISIONS 3) |
 | 4 REPORT, selection | DONE | orchestrator | | nine items, 046 to 054 (DECISIONS 4) |
 | 5 Plans 046 to 051 | RUNNING | workflow `wf_997c0618-f9b` (task `w047nzgwk`), script `scratch\wf\plans.js` | | writer, cold reviewer, reviser; all Opus high |
-| 5b Items 052 to 054 | TODO | orchestrator, direct | | harness text, hooks, docs (DECISIONS 5) |
-| 6 Plans commit, issues | TODO | | | |
+| 5b Items 052 to 054 | DONE | orchestrator, direct | 052 `e88fa0050`, 054 `4a9e001be`, 053 `2a913ecdf`, all on the run branch | 052: doc lint exit 0, entry docs 25,590 to 25,291 B. 054: doc lint exit 0, `PatchCategoryNumberTests` 4 passed. 053: hook suite `1271 passed, 0 failed` (1267 before), config security scan unchanged (one MED, pre-existing) |
+| 6 Plans commit, issues | RUNNING | orchestrator | | issues filed: #1132 (umbrella for 046 to 054), #1133 (messenger to a prisoner), #1134 (Fords allocation), #1135 (Python suite red on the trunk) |
 | 7 Execute | TODO | | | |
 | 8 Review | TODO | | | |
 | 9 Decisions, follow-ups | TODO | | | |
@@ -80,10 +80,19 @@ deleting what this run did not create, a game launch or deploy (taom-b4 holds th
 - 2026-11-12 22:45: REPORT.md, FOR-MIKE.md and DECISIONS.md written. Plans workflow launched for 046 to
   051.
 
+- 2026-11-12 22:47: run folder committed (`4e5220c77`). 052 committed (`e88fa0050`).
+- 2026-11-12 22:55: 054 committed (`4a9e001be`). Two migration templates still name
+  `tools/migrate_equipment_type_1_4_3.py` and `tools/validate_equipment_flags_1_4_3.py`, which moved to
+  `tools/oneoff/`; they were NOT repointed, because both moved scripts compute their repo root as
+  `Path(__file__).resolve().parent.parent`, which is `tools/` since the move (lines 80 and 40).
+- 2026-11-12 22:58: issues #1132 to #1135 filed under the standing word and "add issues".
+- 2026-11-12 23:03: 053 committed (`2a913ecdf`) after the hook suite passed.
+
 ## Next
 
-Commit the run folder. Make 052 (harness text), 053 (hooks) and 054 (docs) on the run branch. When the
-plans return: read each, commit them, open the issues, make one worktree per plan, execute.
+When the plans return: read each plan and its review, commit them with the index, make one worktree
+per plan from that commit, execute (Sonnet batch 046, 048, 051; Opus batch 047, 049, 050), then the
+spec check and review per branch, then merge each READY branch into the run branch.
 
 ## Blockers
 

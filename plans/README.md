@@ -6,12 +6,16 @@ Issue rule: AGENTS.md Documentation duty.
 Each executor: read the plan fully, honour its STOP conditions, and report back; the index is kept by
 the orchestrator.
 
-Two generations live here:
+Three generations live here (plans 020 to 045 belong to the runs their rows name):
 
 - **001 to 005**: `/improve` run of 2026-06-12, written against `141b749`, reconciled on 2026-09-23.
 - **006 to 019**: `/improve` review sprint `2026-09-23-opus`, written against `b2e387db`. The report,
   baseline metrics, every finding and every verdict are in
   [`_audit/2026-09-23-opus/REPORT.md`](_audit/2026-09-23-opus/REPORT.md).
+- **046 to 054**: `/improve` run `2026-11-12-fable`, written against `7087fa633`. Its report, baseline,
+  findings, verdicts and decisions are in
+  [`_audit/2026-11-12-fable/REPORT.md`](_audit/2026-11-12-fable/REPORT.md). Every change of that run
+  is on the branch `improve/2026-11-12-run` until the maintainer merges it.
 
 ## Execution order and status
 
@@ -64,6 +68,15 @@ BLOCKED (one-line reason), REJECTED (one-line rationale).
 | [042](042-xml-merge-load-time.md) | Cut the 15 to 28 s module-XML merge at every campaign load and custom battle start, byte-identical output | P1 | L | perf / load time | none | MERGED `a27c6b338`, 2026-10-04 |
 | [043](043-offscreen-bone-reads.md) | Measure whether TAOM's own bone reads (warg bites, elephant howdah) see a frozen pose off the screen; force the pose where they do | P2 | S to M | bug | none | TODO (#739; Phase A measures and stops for the maintainer) |
 | [044](044-nogame-unit-step-green.md) | Make the no-game unit step green: tag or fix the 7 tests that run engine code on BUTR's stubs | P3 | S | tests | none | TODO (#1038 item 14; Step 0, a `/verify` row for the no-game unit step, waits on the maintainer) |
+| [046](046-test-suite-read-caches.md) | Read the C# corpus once per test run: cache code-root text in `RepoPaths`, skip `Languages` in two character scans, compile each shipped XSLT once | P2 | M | tests | none | TODO (#1132) |
+| [047](047-fold-safe-twins.md) | Fold three behaviour-identical twins: one LotrIssue rules helper, one CultureStageView type probe, one supply row view model | P3 | S to M | tech-debt | none | TODO (#1132) |
+| [048](048-delete-dead-members.md) | Delete eight members nothing calls and correct the comments that still describe them | P3 | S | tech-debt | none | TODO (#1132) |
+| [049](049-refuge-load-repair-unit.md) | Extract RefugeService's save-load repair into one unit with lazy clock seams | P3 | S | tech-debt | none | TODO (#1132) |
+| [050](050-messenger-arrival-classification.md) | Move the messenger arrival verdict out of the largest ADR-002 entry point into MessengerService as one tested classification | P3 | M | tech-debt | none | TODO (#1132; keeps today's behaviour, see #1133) |
+| [051](051-tools-dead-scripts-and-test-speed.md) | Tools: delete three dead scripts, correct the catalog's environment section, cut repeated parsing from two tool tests | P3 | S | dx | none | TODO (#1132) |
+| [052](_audit/2026-11-12-fable/REPORT.md) | Harness text: remove two duplicated passages from CLAUDE.md, raise the `/verify` discovery floors, run filtered tests per fix in `/review-codex` (no plan file; made by the orchestrator) | P3 | S | dx | none | DONE on `improve/2026-11-12-run` (`e88fa0050`, 2026-11-12; #1132); not on the trunk |
+| [053](_audit/2026-11-12-fable/REPORT.md) | Hooks: parse the edited path in bash in the polearm hook; cut session-start lines that repeat the harness's own context (no plan file; made by the orchestrator) | P3 | S | dx | none | DONE on `improve/2026-11-12-run` (`2a913ecdf`, 2026-11-12; #1132); hook suite 1271 passed; not on the trunk |
+| [054](_audit/2026-11-12-fable/REPORT.md) | Docs: correct wrong author guidance, add the Realms row to the feature map, add a search hint to the three navigation maps (no plan file; made by the orchestrator) | P3 | S | docs | none | DONE on `improve/2026-11-12-run` (`4a9e001be`, 2026-11-12; #1132); not on the trunk |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so
