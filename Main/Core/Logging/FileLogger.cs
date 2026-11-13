@@ -6,21 +6,33 @@ using System.Threading;
 namespace TAOM.Core.Logging;
 
 // Log lines must survive a hard crash. A native access violation kills the process without
-// unwinding, so anything still sitting in the queue is lost -- which is exactly the moment the
-// [BattleLoad]/[SaveLoad] phase stamps matter most. INFO/WARNING/ERROR therefore drain to disk
-// synchronously on the calling thread; DEBUG (the bulk of the volume) stays async.
+// unwinding, so anything still sitting in the queue or in the StreamWriter buffer is lost -- which is
+// exactly the moment the [BattleLoad]/[SaveLoad] phase stamps matter most (#350). So the lines a crash
+// is triaged from drain to disk synchronously on the calling thread: WARNING, ERROR, and INFO lines
+// that start with one of DurableInfoTags (the phase stamps and the diagnostics whose docs promise the
+// last line survives a crash).
+//
+// Everything else (plain INFO, and DEBUG) is queued and written by the writer thread, which flushes at
+// most FlushIntervalMs after a write. Before that, nearly every INFO line (about 3,300 call sites)
+// flushed on the game thread under the lock the writer thread also held, which showed up as hitch tails
+// during load, spawn and the daily campaign tick. A plain line can now be lost on a hard crash if it
+// was written in the last FlushIntervalMs; Flush() (called by the crash reporter before it reads the
+// log, on process exit and on Dispose) closes that window for every managed exit.
 //
 // One queue, not two: whichever thread drains writes in enqueue order, so a durable write flushes
-// any DEBUG queued ahead of it and global ordering is preserved. Flush lands in the OS page cache,
+// any queued line ahead of it and global ordering is preserved. Flush lands in the OS page cache,
 // which a dying process does not lose -- only a machine crash would, so WriteThrough buys nothing
 // here and would cost a physical write per line.
-public class FileLogger : IModLogger
+public class FileLogger : IModLogger, IFlushableLogger
 {
     private readonly ConcurrentQueue<string> _queue = new();
     private readonly object _writeLock = new();
     private readonly Thread _writerThread;
     private volatile bool _stopping;
     private int _droppedToWriteFault; // guarded by _writeLock
+    private bool _unflushed;           // guarded by _writeLock: lines written to the StreamWriter but not yet flushed
+    private long _unflushedSinceTick;  // guarded by _writeLock: Environment.TickCount when _unflushed became true
+    private readonly EventHandler _processExitHandler;
     private StreamWriter _logFile;
     private readonly string _logPath;
     private const string LogDirectory = "Logs";
@@ -32,6 +44,29 @@ public class FileLogger : IModLogger
     // arrived with a log from the wrong session and no way to tell whether the real one still
     // existed. Debug logs are small next to the crash bundles that already share this directory.
     private const int DefaultRetainedLogs = 30;
+
+    // Longest a plain INFO/DEBUG line waits in memory before it is flushed to the OS.
+    internal const int FlushIntervalMs = 250;
+
+    // INFO lines that start with one of these flush at once. These are the crash-phase stamps and the
+    // diagnostics that tell the player to "send the log, the LAST line names the cause". Adding a tag
+    // here costs a synchronous flush per line, so keep it to lines that are not per-frame and that a
+    // crash investigation reads. Matched case-sensitively against the start of the message.
+    internal static readonly string[] DurableInfoTags =
+    {
+        "[BattleLoad]", "[SaveLoad]", "[MapLoad]", "[BlowDiag]", "[MemSample]", "[MemStation]", "[MemProbe]",
+        "[ExitStall]", "[ScreenOpen]", "[CreatureBandits]", "[EnlistDiag]", "[ShaderPrecompilation]",
+        "[CrashReport]", "[Shutdown]", "[PatchApply]", "[StuckBattle]", "[SmokeTestGate]", "[Session]",
+        "[MissionDiag]",
+    };
+
+    internal static bool IsDurableInfo(string message)
+    {
+        if (string.IsNullOrEmpty(message)) return false;
+        foreach (var tag in DurableInfoTags)
+            if (message.StartsWith(tag, StringComparison.Ordinal)) return true;
+        return false;
+    }
 
     public string? LogFilePath => _logPath;
 
@@ -50,6 +85,10 @@ public class FileLogger : IModLogger
 
         _writerThread = new Thread(ProcessQueue) { IsBackground = true, Name = "TAOM.FileLogger" };
         _writerThread.Start();
+
+        // Last chance for plain lines still queued when the process exits without Dispose.
+        _processExitHandler = (_, _) => Flush();
+        try { AppDomain.CurrentDomain.ProcessExit += _processExitHandler; } catch { /* best effort */ }
     }
 
     // Nothing used to prune Logs/, so debug logs accumulated for the life of the install. Runs
@@ -82,7 +121,7 @@ public class FileLogger : IModLogger
         }
     }
 
-    public void LogInfo(string message) => Enqueue("INFO", message, durable: true);
+    public void LogInfo(string message) => Enqueue("INFO", message, durable: IsDurableInfo(message));
     public void LogDebug(string message) => Enqueue("DEBUG", message, durable: false);
     public void LogWarning(string message) => Enqueue("WARNING", message, durable: true);
     public void LogError(string message) => Enqueue("ERROR", message, durable: true);
@@ -91,12 +130,18 @@ public class FileLogger : IModLogger
     {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         _queue.Enqueue($"[{timestamp}] [{level}] {message}");
-        if (durable) Drain();
+        // After Dispose the writer thread is gone, so nothing would ever drain a queued line: write it now
+        // (Drain discards it once the file is closed) rather than let the queue grow for the rest of the session.
+        if (durable || _stopping) Drain(flush: true);
     }
+
+    // Writes everything queued and flushes it to the OS. Called by the crash reporter before it reads
+    // the log, on process exit and from Dispose.
+    public void Flush() => Drain(flush: true);
 
     // The only code that touches _logFile. StreamWriter is not thread-safe, so every path -- game
     // thread, writer thread, Dispose -- must come through here under _writeLock.
-    private void Drain()
+    private void Drain(bool flush)
     {
         lock (_writeLock)
         {
@@ -121,7 +166,16 @@ public class FileLogger : IModLogger
                     _droppedToWriteFault = 0;
                 }
 
-                _logFile.Flush();
+                if (flush)
+                {
+                    _logFile.Flush();
+                    _unflushed = false;
+                }
+                else if (!_unflushed)
+                {
+                    _unflushed = true;
+                    _unflushedSinceTick = Environment.TickCount;
+                }
             }
             catch
             {
@@ -139,18 +193,32 @@ public class FileLogger : IModLogger
     {
         while (!_stopping || !_queue.IsEmpty)
         {
-            if (_queue.IsEmpty) { Thread.Sleep(50); continue; }
-            Drain();
+            if (!_queue.IsEmpty) Drain(flush: false);
+            else Thread.Sleep(50);
+            FlushIfDue();
+        }
+    }
+
+    // Timed flush for the plain lines the writer thread has written but not flushed.
+    private void FlushIfDue()
+    {
+        lock (_writeLock)
+        {
+            if (!_unflushed || _logFile == null) return;
+            if (unchecked(Environment.TickCount - (int)_unflushedSinceTick) < FlushIntervalMs) return;
+            try { _logFile.Flush(); _unflushed = false; }
+            catch { _droppedToWriteFault++; _unflushed = false; }
         }
     }
 
     public void Dispose()
     {
+        try { AppDomain.CurrentDomain.ProcessExit -= _processExitHandler; } catch { /* best effort */ }
         _stopping = true;
         // Join can time out, leaving the writer thread live -- so the final drain and the disposal
         // of _logFile both go through the same lock the writer uses.
         _writerThread.Join(TimeSpan.FromSeconds(5));
-        Drain();
+        Drain(flush: true);
         lock (_writeLock)
         {
             _logFile?.Dispose();
