@@ -56,13 +56,17 @@ public class PatchShieldPolicyTests
         // The state of today, not the goal. TAOM applies its patch categories under "com.taom.mod",
         // which no protected prefix matches, so after a missing-API exception the shield strips
         // TAOM's own prefixes, postfixes and transpilers on that method (another mod's failure there
-        // takes them too). Decision D13 (plans/_audit/2026-10-02-perf/DECISIONS.md) is to strip only
+        // takes them too). The one deliberate exception is "TAOM.CrashGuards" (CrashGuardHarmony),
+        // which the "TAOM" prefix protects, for guards that meet that class's admission rule.
+        // Decision D13 (plans/_audit/2026-10-02-perf/DECISIONS.md) is to strip only
         // the owner whose patch threw and THEN protect this id; that plan is owed and will invert
         // this test. Do not add the id to the list alone: with today's strip a protected owner whose
         // patch cannot load is swallowed on every call for the rest of the session.
         const string mainOwner = "com.taom.mod";
-        StringAssert.Contains(RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true), $"new Harmony(\"{mainOwner}\")",
+        Assert.AreEqual(mainOwner, CrashGuardHarmony.MainId,
             "TAOM's main Harmony id changed; re-decide whether the new id is protected and update this test.");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true), "new Harmony(CrashGuardHarmony.MainId)",
+            "SubModule no longer builds the main Harmony instance from CrashGuardHarmony.MainId.");
 
         Assert.IsFalse(
             PatchShieldPolicy.IsProtectedOwner(mainOwner, PatchShieldPolicy.CompiledProtectedOwnerPrefixes));

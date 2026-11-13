@@ -74,8 +74,8 @@ native loads + simulates it.
   (Phase 16) → this chain → `Mission.SpawnAgent` spawns it (Phase 1). The
   **`BattleLoadDiagnostics`** (TAOM) instruments exactly this chain — the spider crash evidence (the last phase line, `phase=MissionInitialize scene='battle_terrain_020'`) is *step 6* (scene load / agent build) stalling.
 - **TAOM mission behaviors are added from `SubModule.OnMissionBehaviorInitialize`** (Phase 4; `AddTaomMissionBehaviors`, which calls
-  `AddTaomBehavior(new BehaviorTreeMissionLogic())` and `AddTaomBehavior(new SpiderMissionBehavior())`, SubModule.cs:2183 and :2186), not from step 5's handler. SmartCavalry adds `SmartCavalryAIMissionBehavior` the same way (:2197), and its Formation patches use `Patch_MissionTime_SetMovementOrder`. CompanionTactics adds no behavior in this method and applies `Patch35_CompanionTactics` (:1841). The
-  **deferred-patch category** (`Patch_MissionTime_SetMovementOrder`, Phase 13) applies during
+  `AddTaomBehavior(new BehaviorTreeMissionLogic())` and `AddTaomBehavior(new SpiderMissionBehavior())`, SubModule.cs:2183 and :2186), not from step 5's handler. SmartCavalry adds `SmartCavalryAIMissionBehavior` the same way (:2197), and its Formation patches use `Patch_MissionTime_SmartCavalryAI`. CompanionTactics adds no behavior in this method and applies `Patch35_CompanionTactics` (:1841). The
+  **deferred-patch categories** (`Patch_MissionTime_SmartCavalryAI`, `Patch_MissionTime_CompanionTactics` and `Patch_MissionTime_MarshalsWord`, Phase 13) apply during
   `OnMissionBehaviorInitialize` *because* `MovementOrder.cctor` reads `Mission.Current.CurrentTime`, which is only valid
   once this chain has created the mission ([harmony-il lessons](../../reviews/lessons/harmony-il.md), "Defer patches whose parameter types have Mission/Campaign-dependent cctors").
 - **`CreateState`+`PushState` is mandatory** (Phase 11; [gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Push custom GameStates via `GameStateManager.CreateState<T>()`, never `new`"): vanilla opens the

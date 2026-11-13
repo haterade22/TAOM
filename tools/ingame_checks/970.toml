@@ -33,6 +33,13 @@ id = "taom.battle-action-bar.stance"
 needs = "in that battle, select a formation with polearms, shields or cavalry (keys 1 to 8), press Esc and click Brace for Cavalry, Pike Wall, Testudo, Line Charge or Skirmish (Hold Fire, Free Fire, Volley Fire and Shield Wall record nothing)"
 reached = ['\[Check\] id=taom\.battle-action-bar\.attach result=pass']
 pass = ['\[Check\] id=taom\.battle-action-bar\.stance result=pass']
+# This is Companion Tactics' only check, so it carries the apply failure of Patch35's CancelStanceOnMove postfix (category
+# Patch_MissionTime_CompanionTactics since #1175; the applier writes FAILED with the category and SKIPPED with the class),
+# although the stance click itself does not need Patch35. A build before #1175 names the old shared category.
+fail = [
+  '\[PatchApply\] Patch_MissionTime_(?:CompanionTactics|SetMovementOrder) FAILED',
+  '\[PatchApply\] TAOM\.Features\.CompanionTactics\.BattleActionBar\.Hooks\.Patch35_Formation_SetMovementOrder SKIPPED',
+]
 absence = "not-reached"
 
 [[human]]

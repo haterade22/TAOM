@@ -39,7 +39,7 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `gamemodels.md` | GameModel override pattern, base-class rules, registration |
 | `gui-ui.md` | Sprite and brush verification, prefab clones, UIExtenderEx safety, GauntletLayer input, ViewModel bindings, file locations |
 | `gui-vm-properties.md` | C# that writes a TaleWorlds-owned ViewModel property: guarded setters, the public setter over a reflected field |
-| `harmony-patches.md` | Patch types, thin entry points, thread-local state, the shared deferred `MovementOrder` category |
+| `harmony-patches.md` | Patch types, thin entry points, thread-local state, the per-feature deferred `Patch_MissionTime_<Feature>` categories for `MovementOrder` patches |
 | `harness-facts.md` | Verified Claude Code hook lifecycle and visibility, the PreToolUse output contract, settings, with sources |
 | `harness-loading.md` | Verified load semantics: what a session, a subagent and a compaction load; the rule loader and its globs; MEMORY.md |
 | `harness-skills-agents.md` | Verified skill and agent frontmatter allowlists, model and effort resolution, spawn limits |
