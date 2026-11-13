@@ -23,6 +23,9 @@ Each line has the recommended answer first and where the evidence is.
    **Decided 2026-11-13:** a prisoner target stays lost; every other case is delivered. Done on
    `fix/messenger-arrival-1133`: a fugitive, released or travelling target and a captive player now
    wait and are delivered. In-game checks owed: `docs/features/messengers.md` items 23 to 27.
+   The same branch closes the two limits of that rule: the wait writes one line to the message log,
+   and a fugitive or released hero of the Special occupation, whom the engine's daily settle skips,
+   is lost and refused at the send. The new key `taom_messenger_waiting` waits for your language pass.
 3. **Two "superseded" validators are still live doc steps** (verify-tests-tools.md, TOOLS-01):
    `audit_item_refs.py --show-locations` and `validate_all_troop_refs.py` are named in about 25
    procedure lines. Recommended: keep both until someone proves `validate_moduledata.py` prints the
@@ -71,8 +74,16 @@ Each line has the recommended answer first and where the evidence is.
     (deep-review-050); `check_orphan_loc_rows.py` exits 1 on the trunk for two co-op rows,
     `taom_coopcompat_settings_differ` and `taom_coopcompat_build_mismatch` (executor 047).
     **2026-11-13:** `IsLocked` is deleted (branch `fix/messenger-arrival-1133`). The enum stays: the
-    #1133 rule reads five of its states, so one flag no longer fits. The warg rage case still needs
-    an in-game check before any change, and the two co-op rows are still open.
+    #1133 rule reads five of its states, so one flag no longer fits. The two co-op rows were a
+    false alarm of the gate, which did not scan `CoopCompat/`; it does now and exits 0. The warg
+    rage case is confirmed in the code (v1.5.7), not yet seen in game: `HandleQuickRelease`
+    (`MissionGauntletMainAgentEquipDropView`) sets `_weaponUsageToggleRequested` on vanilla's
+    controller, only vanilla's `ControlTick` reads and clears it, `OnPreMissionTick` skips
+    `ControlTick` while `_activated` is false, and `Enable()` leaves the flag set. So a quick
+    release during a rage toggles the weapon usage when the rage ends. No code changed. A fix could
+    answer false from `IsMainAgentAvailable` while TAOM's controller holds the hero, as Patch140
+    does for the Seat (the wheel then stays closed during a rage), or skip
+    `OnWeaponUsageToggleRequested` then. Recommended: leave it unless a player reports it.
 16. **Commit wording the reviews flagged, LOW** (reword at a squash or leave): the body of
     `cf21b3d33` says the binding gate "fails only when a patch's target is missing" (it also fails a
     target with no body or a throw); `3014400f8` is typed `fix:` and changes only a test and review
