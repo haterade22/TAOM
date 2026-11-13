@@ -96,4 +96,27 @@ public class MissionDiagnosticServiceTests
 
         _logger.Received(1).LogInfo("[MissionDiag] ActionSet census closed: agentChecks=0 newKeys=0 lines=0");
     }
+
+    // The boundary now counts each agent once, in OnAgentBuild, instead of polling every agent every frame for the
+    // first 5 s. The service must therefore keep counting after the summary: a reinforcement spawning later still
+    // gets its check and, for a new combination, its line.
+    [TestMethod]
+    public void ActionSetCensus_AgentsBuiltOnceEach_ReinforcementsAfterTheSummaryAreCountedToo()
+    {
+        _sut.TryMarkActionSetKey(12, 3, isFemale: false);
+        _sut.TryMarkActionSetKey(12, 3, isFemale: false);
+        _sut.TryMarkActionSetKey(13, 4, isFemale: false);
+        _sut.LogActionSetSeen("as_human_warrior", "human", false, "Aragorn", "aragorn", "human");
+        _sut.LogActionSetSeen("as_dwarf_warrior", "dwarf", false, "Gimli", "gimli", "dwarf");
+        _sut.LogActionSetCensusClosed();
+        _logger.Received(1).LogInfo("[MissionDiag] ActionSet census closed: agentChecks=3 newKeys=2 lines=2");
+
+        Assert.IsTrue(_sut.TryMarkActionSetKey(14, 5, isFemale: true), "a reinforcement with a new combination");
+        _sut.LogActionSetSeen("as_elf_warrior", "elf", true, "Tauriel", "tauriel", "elf");
+        Assert.IsFalse(_sut.TryMarkActionSetKey(12, 3, isFemale: false), "a reinforcement with a known combination");
+        _sut.LogActionSetCensusClosed();
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains("ActionSet 'as_elf_warrior' used by race='elf'")));
+        _logger.Received(1).LogInfo("[MissionDiag] ActionSet census closed: agentChecks=5 newKeys=3 lines=3");
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
@@ -18,6 +19,7 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
     private const float ActionSetWindowSeconds = 5f;
 
     private bool _missionStartLogged;
+    private bool _censusOpened;
     private float _actionSetWindowSecondsLeft = ActionSetWindowSeconds;
 
     public MissionDiagnosticBehavior(IMissionDiagnosticService service, IRaceManager raceManager, IModLogger logger)
@@ -35,20 +37,37 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         if (!_missionStartLogged)
         {
             _missionStartLogged = true;
-            _service.ResetForNewMission();
             DumpMissionStart();
-            _service.LogActionSetCensusOpened(ActionSetWindowSeconds);
+            OpenCensusOnce();
         }
 
-        // Action-set capture window: 5s of agent observation, then disable. The summary is
-        // written once, when the window runs out or a failed capture closes it.
+        // The census header and summary still frame a 5 s window. Agents are no longer polled here: each one is
+        // counted once in OnAgentBuild, so a reinforcement that spawns after the window still gets its line. The
+        // summary is written once, when the window runs out or the mission ends first.
         if (_actionSetWindowSecondsLeft > 0f)
         {
             _actionSetWindowSecondsLeft -= dt;
-            CaptureActionSetsFromAgents();
             // A positive requirement, so a NaN frame time closes the window with its summary (NaN <= 0 is false).
             if (!(_actionSetWindowSecondsLeft > 0f)) _service.LogActionSetCensusClosed();
         }
+    }
+
+    // Mission.SpawnAgent runs OnAgentBuild over every behavior after BuildAgent, which is where the native side
+    // assigns the action set, and before SpawnAgent returns, on the main thread. An agent can spawn before the
+    // first mission tick, so the census opens (and resets the per-mission sets) here as well.
+    public override void OnAgentBuild(Agent agent, Banner banner)
+    {
+        if (agent == null) return;
+        OpenCensusOnce();
+        CaptureActionSet(agent);
+    }
+
+    private void OpenCensusOnce()
+    {
+        if (_censusOpened) return;
+        _censusOpened = true;
+        _service.ResetForNewMission();
+        _service.LogActionSetCensusOpened(ActionSetWindowSeconds);
     }
 
     private void DumpMissionStart()
@@ -72,42 +91,34 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         }
     }
 
-    private void CaptureActionSetsFromAgents()
+    private void CaptureActionSet(Agent agent)
     {
         try
         {
-            var mission = Mission;
-            if (mission?.Agents == null) return;
+            // Cheap pre-filter with no string marshal: MBActionSet.GetHashCode() is its engine index, and
+            // race id plus sex select the race name and sex the service keys its line on. Only a combination
+            // not yet seen this mission reads the names below.
+            var actionSet = agent.ActionSet;
+            var character = agent.Character;
+            var raceId = character?.Race ?? -1;
+            var isFemale = character?.IsFemale ?? false;
+            if (!_service.TryMarkActionSetKey(actionSet.GetHashCode(), raceId, isFemale)) return;
 
-            foreach (var agent in mission.Agents)
-            {
-                if (agent == null) continue;
-                // Cheap pre-filter with no string marshal: MBActionSet.GetHashCode() is its engine index, and
-                // race id plus sex select the race name and sex the service keys its line on. Only a combination
-                // not yet seen this mission reads the names below.
-                var actionSet = agent.ActionSet;
-                var character = agent.Character;
-                var raceId = character?.Race ?? -1;
-                var isFemale = character?.IsFemale ?? false;
-                if (!_service.TryMarkActionSetKey(actionSet.GetHashCode(), raceId, isFemale)) continue;
-
-                // GetName() returns the engine-side string id (e.g. "as_human_warrior").
-                var actionSetName = actionSet.GetName();
-                var raceName = raceId >= 0 ? (_raceManager.GetRaceNameFromId(raceId) ?? $"id={raceId}") : "<none>";
-                var agentName = agent.Name ?? "<unnamed>";
-                // Character id + Monster id turn "a dwarf is running as_human_warrior" into an
-                // actionable line. TAOM's GenerateActionSetNameWithSuffix prefix emits exactly
-                // "as_human<suffix>" when the Monster is null, so a null monster here IS the
-                // explanation — without it the census names a symptom and nothing else.
-                var characterId = character?.StringId;
-                var monsterId = agent.Monster?.StringId;
-                _service.LogActionSetSeen(actionSetName, raceName, isFemale, agentName, characterId, monsterId);
-            }
+            // GetName() returns the engine-side string id (e.g. "as_human_warrior").
+            var actionSetName = actionSet.GetName();
+            var raceName = raceId >= 0 ? (_raceManager.GetRaceNameFromId(raceId) ?? $"id={raceId}") : "<none>";
+            var agentName = agent.Name ?? "<unnamed>";
+            // Character id + Monster id turn "a dwarf is running as_human_warrior" into an
+            // actionable line. TAOM's GenerateActionSetNameWithSuffix prefix emits exactly
+            // "as_human<suffix>" when the Monster is null, so a null monster here IS the
+            // explanation - without it the census names a symptom and nothing else.
+            var characterId = character?.StringId;
+            var monsterId = agent.Monster?.StringId;
+            _service.LogActionSetSeen(actionSetName, raceName, isFemale, agentName, characterId, monsterId);
         }
         catch (System.Exception ex)
         {
-            _logger.LogWarning($"[MissionDiag] CaptureActionSetsFromAgents failed: {ex.GetType().Name}: {ex.Message}");
-            _actionSetWindowSecondsLeft = 0f; // stop trying if it's not working
+            _logger.LogWarning($"[MissionDiag] CaptureActionSet failed: {ex.GetType().Name}: {ex.Message}");
         }
     }
 
