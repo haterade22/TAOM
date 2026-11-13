@@ -1930,6 +1930,20 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Lives in TAOM.Client** (`Client/Features/FactionUI/Campaign/CampaignTimeHintPatch.cs`). **Target (v1.5.6):** `MapTimeControlVM.Refresh()` (postfix). **Why:** the themed map bar's clock shows the hour and minute above vanilla's time-of-day tooltip. **Applied** lazily on the first themed `TAOMMapBar` movie, by `CampaignPresentation.Bind` with its own Harmony id `taom.factionui.campaign-time`, once per process; the postfix reads `CampaignTimeHintPatch.Enabled`. Feature: [faction-ui.md](../features/faction-ui.md). **ACTIVE**, not yet seen in game since the ADR-013 move.
 
+## Patch147_CaravanTemplateGuard
+
+**Target:** `CaravansCampaignBehavior.SpawnCaravan(Hero hero, bool initialSpawn)` (public instance, Prefix + Finalizer)
+
+**Feature:** LordSpawnGuard, `Main/Features/LordSpawnGuard/Hooks/Patch147_CaravanTemplateGuard.cs`, with the rule in `CaravanTemplateGuard`. **Status:** ACTIVE (#482, latent hazard, no crash report yet).
+
+If a stack ends in `CaravansCampaignBehavior.SpawnCaravan` with a `NullReferenceException` under `DailyTickHero` or the initial caravan spawn, start here.
+
+**The hazard.** Vanilla (v1.5.6 decompile, `CaravansCampaignBehavior.cs:495-505`) picks a caravan template with `GetRandomElementWithPredicate(x => x.ShipHulls.Count == 0 != hero.CurrentSettlement.HasPort)` and reads `.ShipHulls` on the result. The helper returns null, not an exception, when the list is empty or nothing matches, so the crash is a `NullReferenceException`, not "Sequence contains no matching element". A culture with only land templates matches nothing while its merchant is in a port town. The predicate also reads `hero.CurrentSettlement` unguarded. Which list is read (elite or normal) is a random roll inside the method.
+
+**The rule.** The prefix never skips vanilla; it sets `__state` when either list has no template for the merchant's settlement, or the merchant has no current settlement. The finalizer contains a `NullReferenceException` only on a flagged call and returns every other exception untouched. The null template is read before `CreateCaravanParty`, so a contained call made no party: the merchant sends no caravan that day. One warning per culture and port state.
+
+Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch beside Patch65. `Patch147CaravanTemplateGuardTests` pins the rule, the finalizer filter and the target binding. Not seen in a game.
+
 ## Patch132_ItemIconRacePosition
 
 **Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.5. Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.

@@ -249,6 +249,14 @@ or a debug console command that calls `Clan.CreateClan` without `SetInitialHomeS
 
 ---
 
+## Caravan template guard (Patch147, #482)
+
+Vanilla `CaravansCampaignBehavior.SpawnCaravan` reads the template its predicate pick returns with no null check. A culture whose caravan templates are all land templates finds no match while its merchant is in a port town (and none at all with an empty list or no current settlement), and the daily hero tick throws a `NullReferenceException`. `Patch147_CaravanTemplateGuard` flags such a call in its prefix and its finalizer contains only that exception; the merchant sends no caravan that day and one warning names the culture. Details in `docs/reference/harmony-patch-registry.md`, section `Patch147_CaravanTemplateGuard`.
+
+## How to verify in game
+
+Caravan guard: start a campaign, run several days, and check `taom_debug.log` for `Patch147:` lines. None means no culture hit the hazard; a line names the culture whose caravan templates need a port or land template.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
