@@ -698,6 +698,7 @@ public class FordsVerdictTests
     public void Check09_Melee_FailsWhenEnemiesStoodAtTheTowerAndNothingLanded()
     {
         var run = Run();
+        run.Perf.LiveSeconds = 600;
         var t = Tower(run, "t1");
         t.MeleeNearUnitSeconds = 30;
 
@@ -706,6 +707,47 @@ public class FordsVerdictTests
         Blow(t, TowerBlowClass.Melee, TowerDamageReason.Weaponless, 4);
         var row = Row(new FordsSessionEvidence(), run, 9);
         StringAssert.Contains(row.Info, "Weaponless=4");
+    }
+
+    // #1137: in the first minutes the waves meet near the outer towers and fight each other, and the rules order no strike yet.
+    [TestMethod]
+    public void Check09_Melee_IsNotSeenInAShortRunWhereNoTowerStrikeWasOrdered()
+    {
+        var run = Run();
+        run.Perf.LiveSeconds = 120;
+        Tower(run, "t1").MeleeNearUnitSeconds = 54.1;
+
+        Assert.AreEqual(FordsResult.NotSeen, PartOf(Row(new FordsSessionEvidence(), run, 9), "melee"));
+    }
+
+    // The first strike can be ordered at about live second 110 (mission time about 120), too late for a blow in a 120 s smoke.
+    [TestMethod]
+    public void Check09_Melee_IsNotSeenInAShortRunWhereTheStrikeCameTooLate()
+    {
+        var run = ShortRunWithAStrikeOrderedAt(118.6);
+
+        Assert.AreEqual(FordsResult.NotSeen, PartOf(Row(new FordsSessionEvidence(), run, 9), "melee"));
+    }
+
+    [TestMethod]
+    public void Check09_Melee_FailsInAShortRunWhenAStrikeWasOrderedLongEnoughAgoAndNothingLanded()
+    {
+        var run = ShortRunWithAStrikeOrderedAt(100.0);
+
+        Assert.AreEqual(FordsResult.Fail, PartOf(Row(new FordsSessionEvidence(), run, 9), "melee"));
+    }
+
+    private static FordsRunEvidence ShortRunWithAStrikeOrderedAt(double orderMt)
+    {
+        var run = Run();
+        run.Mt = 130.0;
+        run.Perf.LiveSeconds = 120;
+        Tower(run, "t1").MeleeNearUnitSeconds = 54.1;
+        var lane = new FordsLaneEvidence { Side = "West", Lane = 0 };
+        lane.CommandsGiven[nameof(LaneCommandKind.AttackTower)] = 1;
+        lane.FirstGivenMt[nameof(LaneCommandKind.AttackTower)] = orderMt;
+        run.Lanes.Add(lane);
+        return run;
     }
 
     [TestMethod]

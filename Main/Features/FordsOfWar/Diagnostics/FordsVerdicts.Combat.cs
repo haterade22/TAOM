@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar.Diagnostics;
@@ -72,6 +73,17 @@ internal static partial class FordsVerdicts
         return (judged > 0 ? FordsResult.Pass : FordsResult.NotSeen, numbers);
     }
 
+    /// <summary>How long a tower strike must have stood ordered before a short run expects a melee blow from it.</summary>
+    private const double StrikeAgeSeconds = 30.0;
+
+    /// <summary>Mission seconds from the first AttackTower order of any stream to the end of the run; negative when none was given.</summary>
+    private static double OldestStrikeAge(FordsRunEvidence run)
+    {
+        var key = nameof(LaneCommandKind.AttackTower);
+        var first = run.Lanes.Where(l => l.FirstGivenMt.ContainsKey(key)).Select(l => l.FirstGivenMt[key]).DefaultIfEmpty(double.NaN).Min();
+        return double.IsNaN(first) ? -1.0 : run.Mt - first;
+    }
+
     private static FordsVerdictRow Check09(FordsRunEvidence run)
     {
         var locked = Blows(run, null, TowerDamageReason.Locked);
@@ -80,7 +92,10 @@ internal static partial class FordsVerdicts
 
         var meleeApplied = Blows(run, TowerBlowClass.Melee, TowerDamageReason.Applied);
         var nearSeconds = run.Towers.Values.Sum(t => t.MeleeNearUnitSeconds);
-        var melee = meleeApplied > 0 ? FordsResult.Pass : nearSeconds >= 30.0 ? FordsResult.Fail : FordsResult.NotSeen;
+        // #1137: early in a match the waves meet near the outer towers before any strike is ordered, and the first order can come
+        // too late for a blow. A short run fails only once a strike has been ordered for StrikeAgeSeconds; a full-length run as before.
+        var strikeOwed = run.Perf.LiveSeconds >= FordsAutorunPlan.DefaultLiveSeconds || OldestStrikeAge(run) >= StrikeAgeSeconds;
+        var melee = meleeApplied > 0 ? FordsResult.Pass : nearSeconds >= 30.0 && strikeOwed ? FordsResult.Fail : FordsResult.NotSeen;
         var (bypass, bypassNumbers) = Bypass(run);
 
         var drifted = string.Join(",", run.Towers.Where(p => p.Value.DriftFlagged).Select(p => p.Key));
@@ -93,7 +108,7 @@ internal static partial class FordsVerdicts
             + " gunnerBlows=" + run.Towers.Values.Sum(t => t.GunnerBlowsMelee) + " melee/" + run.Towers.Values.Sum(t => t.GunnerBlowsRanged) + " ranged"
             + " | " + Ladder(run) + " | " + TowerHealth(run)
             + " | melee blows " + BlowsByReason(run, TowerBlowClass.Melee) + " | all blows " + BlowsByReason(run, null),
-            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, melee landed once enemies stood at a tower for 30 unit-seconds, and no marching stream had more than half its units more than 10 m past the next standing enemy tower on two looks in a row (the looks are the 1 Hz field probe, measured from the units, not from the rules' lead). The ladder names, per stream ordered at a tower, the broken link: units under the order, flagged AttackEntity, within 4 m of that tower, blows on the tower against blows on its gunners, and the blows that took hit points.",
+            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, melee landed once enemies stood at a tower for 30 unit-seconds (in a run shorter than the default 600 live seconds, only once a tower strike had been ordered 30 mission seconds before the run ended), and no marching stream had more than half its units more than 10 m past the next standing enemy tower on two looks in a row (the looks are the 1 Hz field probe, measured from the units, not from the rules' lead). The ladder names, per stream ordered at a tower, the broken link: units under the order, flagged AttackEntity, within 4 m of that tower, blows on the tower against blows on its gunners, and the blows that took hit points.",
             "The tower bar moves when it is struck.");
     }
 

@@ -5,8 +5,9 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 
 ## Where things are
 
-- **Tools:** the catalog is [tools/README.md](../../tools/README.md);
-  [retopology selection](../features/cube-map-remesh.md#required-workflow-selection).
+- **Tools:** the catalog is [tools/README.md](../../tools/README.md). Blender retopology: the
+  [quad toolkit](../features/cube-map-remesh.md#required-workflow-selection), never direct
+  `xremesh.exe` (cube-map for eligible meshes, Exoside otherwise).
 - **Maps:** [docs/INDEX.md](../INDEX.md) by topic, [feature-map.md](../reference/feature-map.md)
   from feature to code, [doc-lookup.md](../reference/doc-lookup.md) from task to doc.
 - **Registries:** for crash triage, grep the failing type in
@@ -28,54 +29,28 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 ## Trap index
 
 One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the history
-and the gate.
+and the gate. The first four rows are trap sheets: path rules that load when you open a matching file
+in this checkout. Read a sheet by hand before you design in its area, and wherever no path rule
+fires (a sibling worktree, a client without path rules). A new trap goes in its sheet; it goes here
+only when no sheet's files reach the work.
 
 | Trap | Rule | Doc |
 |---|---|---|
+| Sheet: campaign C# | Behaviors, ticks, menus, map events, capture, marriage, settings, console, `SubModule.cs` | [campaign](../../.claude/rules/traps/campaign.md) |
+| Sheet: missions | Mission logic, agents, formations, siege ladders, moving platforms, native calls | [mission](../../.claude/rules/traps/mission.md) |
+| Sheet: creatures, assets | Mounts, creatures, race rigs, skeletons, animation clips, Kit and UE imports | [creatures](../../.claude/rules/traps/creatures-assets.md) |
+| Sheet: troop, culture data | Troop and character XML, equipment sets, start kits, culture files, ranged ladders | [data](../../.claude/rules/traps/data.md) |
 | TAOM_Map settlements | Edit the live `TAOM_Map/ModuleData/settlements.xml`; the repo's copy is a stale shadow | [naming](../reference/taom-map-settlement-naming.md) |
 | Prefab entity cap | The 131,072 queue is global across modules; `check_prefab_budget.py` counts TAOM_Map only | [module map](../modding/module-map.md) |
 | Unversioned modules | A fix in the live Armory or TAOM_Map reverts on reinstall; land an in-repo gate with it | [coverage](../features/moduledata-validation.md) |
 | Artist commit ports | Base: mirror revision nearest the file, not the commit parent: `merge_live_file.py --base-search` | [lesson](../reviews/lessons/data-content-cultures.md) |
-| Parked features | NavalTravel, ShaderPrecompilation: off in `SubModule.cs`; sweep every file the last toggle touched | [map](../reference/feature-map.md) |
-| Persisted MCM defaults | json2 keeps saved values: rename (comment why), never flip a default; `check_mcm_default_flips.py` | [shaders](../features/shader-precompilation.md) |
-| Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
 | Other mods | Other mods and tools reach TAOM by name; a rename passes the build and breaks them: grep the list | [couplings](../reference/external-mod-couplings.md) |
-| Mission logic | Logic `BehaviorType` needs `: MissionLogic`; no throw and no spawn in `AfterStart` | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` merges into an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
-| Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
 | Co-op gating | Loaded, authority, dedicated server, human party; server X.Instance not null; `GameNetwork.IsSessionActive` false in co-op | [co-op](../features/coop-interop.md) |
 | Server stop | A hard-killed launcher leaves its engine on UDP 4200: end both, or the next boot exits 3 | [server](../features/coop-dedicated-server.md) |
-| Console commands | Route through `TaomConsole`; a wrongly shaped command throws in unguarded startup discovery | [console](../features/dev-console.md) |
-| Landless cultures | A culture owning no settlement CTDs the daily clan tick: `Patch65`, `LANDLESS_CULTURE` | [spawn guard](../features/lord-spawn-guard.md) |
 | Culture ids | `empire` is Dunland, `battania` Khand; troops may carry another culture: read both from the data | [ids](../modding/id-cheatsheet.md) |
-| NPCCharacter `<face>` | Missing: toddler; copied key: twin lords; a lady on a template: her own hair tag. Gates in the doc | [body properties](../modding/body-properties.md) |
-| Enlisted service | Only `DischargeService` ends it; parked, or visible in the commander's settlement, is legitimate | [enlistment](../features/enlistment.md) |
-| Leaving a map event | Clearing `MainParty.AttachedTo` mid-event nulls the upgrade tracker; vanilla CTDs later | [guard](../features/map-event-guard.md) |
-| Menus stop time | Land on the map after timed work; a false WAIT condition hides every option; no `TickEvent` in a menu | [field camp](../features/field-camp.md) |
-| Daily tick after load | A save in an elapsed day's first half reruns that day: gate daily work on a saved day | [ticks](../reference/engine/campaign-tick-time-and-party-ai.md) |
-| Event listener order | Newest first: a listener added after the engine's runs before it on the same event | [ticks](../reference/engine/campaign-tick-time-and-party-ai.md) |
-| "Frozen" game | Can be a stuck kingdom vote waiting on an `IsKingsDecisionOver` edge: `Patch80` | [diplomacy](../features/diplomacy.md) |
-| Hero capture | Patch `Hero.CanBecomePrisoner`; denying capture grants escape; both seams share one `DeathMark` guard | [capture](../features/uncapturable-heroes.md) |
-| `Town.LastCapturedBy` | A leader-clan stamp, not participation; score sieges from `IFiefSiegeParticipationService` | [fiefs](../features/fief-granting.md) |
-| MarriageModel | One slot: `AddModel` does not compose, so every marriage rule goes in `TaomMarriageModel` | [marriage](../features/marriage-alignment.md) |
-| Player Switcher | Register at priority 1100; reassign the player clan before removing the created hero | [switcher](../features/player-switcher.md) |
-| Settlement menus | Need an encounter; only `IEncounterAdapter.EnsureSettlementEncounter` places the player | [enlistment](../features/enlistment.md) |
 | Armory art drops | A mesh rename strands XML refs and hangs preload; repoint refs, never restore a tpac | [ref audit](../features/armory-ref-audit.md) |
 | `bo_` bodies | Use the mesh's own `bo_` twin, never a borrow; keep the misspelled `bo_capwm_isengard_shield_a02_clean` | [validation](../features/moduledata-validation.md) |
 | Unsaved tpac | No `.rdc`: skipped (`check_rdc_entries.py`). A build reverts a Kit save, not its `.rdc`: repo it first | [banners](../reference/banner-icon-generation.md) |
-| Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../features/war-ram.md) |
-| Mount size, seat | Resize on the Monster (`taom_body_length`); the usage's rider clip seats a rider, never `rider_sit_bone` | [size](../features/monster-size.md) |
-| Riderless creatures | Soldiers ignore a riderless `Mountable` with no weapon state; fading a mount a soldier holds or chose CTDs | [bandits](../features/creature-bandits.md) |
-| Animation | Engine skeleton: engine frames, rest pose at frame 0, list order; own skeleton: retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
-| Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../tools/README.md) |
-| New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../features/troll-race.md) |
-| UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
-| Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../features/troll-race.md) |
-| Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |
-| Troop bows | Generated `ladder_*` items in the unversioned Armory: `generate_ranged_ladder_items.py --verify` | [ladders](../features/ranged-ladders.md) |
-| Stop order | `StandGround` never forms a line; shape a formation with a Move | [cavalry](../features/smart-cavalry-ai.md) |
-| Ladder queue | No climb gate: exclude faces per agent, at most 6 ids per scene (bits 0, 7 reserved), fixed order, never removed | [siege](../features/creature-siege-role.md) |
-| Agent slots, threads | Indices recycle and callbacks run off-thread: never key on `Agent.Index`, write via `RunOrDefer` | [rule](../../.claude/rules/csharp-architecture.md) |
-| Native branches | ILSpy hides them (`GetNearbyAgentsAux` past 15 m scans every agent): `native_decompile.py` first | [lesson](../reviews/lessons/adapters-taleworlds-api.md) |
 | Loc keys | An English edit stales 12 languages; a copied `{=KEY}` shows the original: reset rows and cache, one key per id | [guide](../localization/TRANSLATOR_GUIDE.md) |

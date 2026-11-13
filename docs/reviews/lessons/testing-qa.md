@@ -2755,3 +2755,17 @@ mutant handing it empty siblings kept all 420 translator tests green.
   (`git show <base>:<path>` into scratch, then import it) and pin them as literals; then add one test
   through each caller whose call the diff changed, with a mutant of the new wiring that turns it red.
 - **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F1 and F2, `/deep-review` Agent 5 and the Tooling lens.
+
+### A verdict that counts exposure from the first sample needs a window after its trigger (Fords check 09, 2026-11-13)
+
+Check 09 failed `melee` once enemies stood near a tower for 30 unit-seconds with no blow. That holds in the first minutes of any match, before the rules order a strike, so every 120 s smoke failed. The first fix exempted runs with no order at all, and still failed a smoke whose first order came near its end: in the passing runs the first order came at live second 108.6 and 112.1.
+
+- **Why missed:** the threshold was set on 600 s and longer runs; the fix read only the failing runs, not when the trigger arrives in the passing ones.
+- **Prevent:** for a check that expects an effect after a trigger, start its window at the trigger and give it a minimum age; read the trigger's timing in passing runs before choosing it. Check that the scenario fakes produce the evidence a new rule reads, or the fault scenario can no longer fail.
+- **Source:** [rca-fords-check09-short-run-2026-11-13.md](../rca-fords-check09-short-run-2026-11-13.md), finding 1.
+
+### A fail-open seam's test asserts that the decision input was read, because "it deferred" is also what the catch does (#1139, 2026-11-13)
+Both Uncapturable Heroes seams catch every exception and defer to vanilla. In the test process `Hero.MainHero` throws (`Game.Current` is null), so the old code also deferred, and four of six new tests passed with the fix reverted.
+- **Why missed:** the tests asserted the seam's outcome, which equals its failure mode, and no mutation run was made before the review. Repeat of the #1086 entry "prove the gate with a mutation" in `campaign-mechanics.md`.
+- **Prevent:** when a seam fails open (a catch that defers, a null guard that returns the default), a test of the deferring branch asserts that the seam consulted its input (`Received(1).OfHero(hero)`), and the fix is mutation-checked: put the old condition back and watch every new test fail.
+- **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), finding F2.

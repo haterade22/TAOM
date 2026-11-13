@@ -434,8 +434,8 @@ TARGETS["eredluin"] = {
                                        "Dwarves of the Blue Mountains", "Ered Luin", "Farin", "Dísa"),
     # Dwarf names in Tolkien's manner, from the Old Norse dwarf-lists he drew on, avoiding every
     # name Erebor's lords and bandits already use and every canonical dwarf of the age. Two are also
-    # in Erebor's culture pool: Hanar, and Farin, kept with Borin for the royal House of Borin (the
-    # king is Farin II).
+    # in Erebor's culture pool: Hanar, and Farin, the king's name (Farin II of the House of
+    # Delingur). Borin stays in the pool, though the royal house is no longer named for him.
     "names": {
         "male_names": [
             "Andvari", "Fjalar", "Frosti", "Ginnar", "Hepti", "Skirfir", "Virfir", "Aurvang", "Jari",
@@ -448,7 +448,7 @@ TARGETS["eredluin"] = {
             "Hildis", "Thórdís", "Arndís", "Valdís", "Jódís", "Ingdís", "Steindís", "Ölrún", "Gudrún",
             "Hervör", "Thóra", "Járnsaxa", "Brynja", "Svanhild"],
         "clan_names": [
-            "House of Borin", "Broadbeams", "Firebeards", "Wardens of Dolmed", "House of Frerin",
+            "House of Delingur", "House of Dwálin", "House of Úri", "House of Eldran", "House of Frerin",
             "House of Narvi", "Stonehands of Belegost", "Hammerers of Nogrod", "House of Telchar",
             "House of Azaghâl", "Keepers of the Dwarf-road", "House of Gamil"],
     },

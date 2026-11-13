@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Run comprehensive build + test + git verification and produce a pass/fail report
+description: "Use before claiming built, passing, fixed or done, always. Runs build, tests and git verification and produces a pass/fail report."
 argument-hint: [quick|full]
 ---
 

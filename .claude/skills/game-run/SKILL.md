@@ -27,7 +27,8 @@ the game to feel safe.
 ## Phase 2: Gate
 
 The maintainer's standing decision (2026-11-01): start without asking only when **no `Bannerlord.exe` is running and the PC has had
-no keyboard or mouse input for 10 minutes**.
+no keyboard or mouse input for 10 minutes**. A co-op game run always goes first (Mike, 2026-11-13): when another session's co-op
+test needs the game, do not start or queue a run ahead of it.
 
 ```bash
 python tools/run_fords_autorun.py --dry-run

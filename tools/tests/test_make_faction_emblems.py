@@ -3,8 +3,8 @@
 Run:  python -m pytest tools/tests/test_make_faction_emblems.py -q
 
 The faction screen shows fs_emblem_<faction key> and falls back to a star when the file is missing.
-make_faction_emblems.py writes the emblem for a fixed list of factions from the layer-1 icon of
-the kingdom's banner_key, coloured by the faction's side.
+make_faction_emblems.py writes the emblem for a fixed list of factions from the first layer of
+the kingdom's banner_key that has a TAOM sprite, coloured by the faction's side.
 """
 import shutil
 import sys
@@ -36,11 +36,22 @@ class SideColourTests(unittest.TestCase):
 class SigilTests(unittest.TestCase):
     def test_sigil_is_the_layer_one_icon_of_the_banner_key(self):
         key = "11.2027.2027.1528.1528.764.764.1.0.0.31005.2004.2004.700.700.764.764.0.0.0"
-        self.assertEqual(mfe.sigil_icon(key), "31005")
+        self.assertEqual(mfe.sigil_icon(key, sprites={"31005"}), "31005")
 
     def test_a_key_without_a_second_layer_is_refused(self):
         with self.assertRaises(ValueError):
-            mfe.sigil_icon("11.2027.2027.1528.1528.764.764.1.0.0")
+            mfe.sigil_icon("11.2027.2027.1528.1528.764.764.1.0.0", sprites={"31005"})
+
+    # A layered banner (72715c417, Lindon) puts vanilla shapes (icon 505) under the TAOM sigil.
+    LAYERED = ("11.2017.2017.1528.1528.764.764.1.0.0.505.2017.2017.900.900.764.764.0.0.0."
+               "505.2018.2018.800.800.764.764.0.0.0.15000.2018.2018.483.483.764.764.0.0.0")
+
+    def test_the_sigil_is_the_first_layer_with_a_taom_sprite(self):
+        self.assertEqual(mfe.sigil_icon(self.LAYERED, sprites={"15000"}), "15000")
+
+    def test_a_key_with_no_taom_sprite_layer_is_refused(self):
+        with self.assertRaises(ValueError):
+            mfe.sigil_icon(self.LAYERED, sprites={"31005"})
 
 
 class TargetTests(unittest.TestCase):
@@ -63,6 +74,9 @@ class ShippedDataTests(unittest.TestCase):
             self.assertEqual(image.size, (256, 256), key)
             self.assertEqual(image.mode, "RGBA", key)
             self.assertIsNotNone(image.getchannel("A").getbbox(), key)
+
+    def test_the_shipped_emblems_match_the_shipped_banners(self):
+        self.assertEqual(mfe.main(["--check"]), 0)
 
     def test_check_is_clean_after_apply(self):
         with tempfile.TemporaryDirectory() as tmp:

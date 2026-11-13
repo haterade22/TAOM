@@ -97,6 +97,7 @@ class BannerTests(unittest.TestCase):
             self.assertTrue(k.get("banner"), rid)
             self.assertIn("kingdom_icon", k, rid)
             self.assertEqual(len(k["clans"]), len(k.get("clan_icons", [])), rid)
+            self.assertLessEqual(set(k.get("clan_banner_keys", {})), {c[0] for c in k["clans"]}, rid)
 
     def test_a_banner_with_an_emblem_colour_slot_names_that_colour_for_every_clan(self):
         for rid in gen.REGENERATABLE:
@@ -122,6 +123,15 @@ class BannerTests(unittest.TestCase):
             r, g, b = (int(color[i:i + 2], 16) for i in (2, 4, 6))
             self.assertTrue(g > r and g > b, color)
             self.assertTrue(all(int(color2[i:i + 2], 16) >= 0xE0 for i in (2, 4, 6)), color2)
+
+    def test_a_hand_made_banner_key_wins_over_the_template(self):
+        # Layered banners (72715c417, Ered Luin and Arthedain) cannot come from the one-icon template.
+        k = dict(banner="11.1.1.1528.1528.764.764.1.0.0.{icon}.2.2.700.700.764.764.0.0.0",
+                 kingdom_icon=10, clan_icons=[10, 11], kingdom_banner_key="KINGDOM_KEY",
+                 clans=[("clan_a", 1, "town", "A"), ("clan_b", 1, "town", "B")], clan_banner_keys={"clan_b": "CLAN_KEY"})
+        self.assertEqual("KINGDOM_KEY", gen.kingdom_banner(k))
+        self.assertEqual("CLAN_KEY", gen.clan_banner(k, 1))
+        self.assertEqual("11.1.1.1528.1528.764.764.1.0.0.10.2.2.700.700.764.764.0.0.0", gen.clan_banner(k, 0))
 
     def test_a_realm_without_the_slot_keeps_its_one_emblem_colour(self):
         k = gen.KINGDOMS["arthedain"]

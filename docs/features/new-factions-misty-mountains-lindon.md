@@ -65,10 +65,10 @@ retired now (#1042) and never rewrites a live row, so later edits on the map are
   clan_5 = castle_GBC4 (Bolgkrag) + 4 villages. The 4 castles + 12 castle-villages were added by
   `tools/add_bluecraig_castles.py` (positions taken FROM the author's `scene.xscene` placements — every
   settlement MUST have a worldmap-scene entity or `SettlementVisual.OnStartup` NREs at map load).
-- **lindon** (6 clans, one fief each since #1039): clan_1 Falathrim = town_LN1 Mithlond (ruler); clan_2
-  Edhil Mithlond = town_LN2 Harlond (home moved there); clan_3 Nos Galdor = town_LN3 Forlond; clan_4 Nos
-  Brithombar = castle_LN1 Ost Falas; clan_5 Wardens of Ered Luin = castle_LN2 Barad Luin; clan_6 Nos
-  Eglarest = castle_LN3 Tirith Aear. Clans 3 to 6 and their 13 lords are the `TAOM-LINDON-EXPANSION`
+- **lindon** (6 clans, one fief each since #1039): clan_1 Nos Nowë = town_LN1 Mithlond (ruler); clan_2
+  Nos Artanor = town_LN2 Harlond (home moved there); clan_3 Nos Thavn a Minas Loss = town_LN3 Forlond; clan_4
+  Nos Eldalomril = castle_LN1 Ost Falas; clan_5 Nos Nenwendil = castle_LN2 Barad Luin; clan_6 Nos
+  Inglor = castle_LN3 Tirith Aear (the house names since 72715c417). Clans 3 to 6 and their 13 lords are the `TAOM-LINDON-EXPANSION`
   blocks written by `tools/oneoff/author_lindon_clans.py`, gated by `tools/tests/test_lindon_clan_expansion.py`.
 
 ### Lords / population
@@ -78,7 +78,7 @@ Goblin Town)**, **mistymountainorcs (MM)**, and **bluecraig (BC, Blue Craig)** �
 (5 clans × 8; numerous, to fight off many enemies). **lindon (LN)** gets 23 (6 clans: 10 in the first two, 13 added by #1039). Every clan is
 male-dominant with **≥2 females**, and each female is paired as a **spouse** to a clan male
 (within-clan, the Gundabad precedent) at childbearing age (the #1039 Lindon houses are smaller: one
-lady each, married to the clan leader, and Nos Galdor also has an unmarried daughter), so the clans reproduce and the factions
+lady each, married to the clan leader, and Nos Thavn a Minas Loss also has an unmarried daughter), so the clans reproduce and the factions
 endure. ~130 new lords/heroes total; all spouse refs reciprocal + opposite-gender + resolved.
 
 ### Diplomacy — forever alliances (`diplomacy/diplomacy.json`)
@@ -219,10 +219,10 @@ bluecraig has its own `Culture.bluecraig` ones since its promotion (`child_templ
   generator cloned every new-faction clan from `clan_gundabad_1`, and the #1039 one-off copied `clan_lindon_1`'s
   key into the four new clans. The kingdom, cloned from Rivendell's, flew Rivendell's exact banner. Since #1047
   each house flies Lindon's own emblem (group 310, drawn for TAOM in a sober Tolkien heraldic style) in Mike's
-  palette (`banner_icons.xml` 2016 to 2023): Falathrim 15000, Gil-galad's lozenge of stars, Grey Havens Silver
-  on Sea Mist Blue; Edhil Mithlond 31000 (wings and star) and Nos Galdor 31001 (crescent and star), white on Sea
-  Mist; Nos Brithombar 31002 (swan and wave), Pine on white; Wardens of Ered Luin 31003 (twin towers), white on
-  Pine; Nos Eglarest 31004 (twin swans), Sea Mist on white. The kingdom flies the Falathrim key, and its banner
+  palette (`banner_icons.xml` 2016 to 2023). The houses took new names and banners in 72715c417 and 7b354bfe0:
+  Nos Nowë 15000, Gil-galad's lozenge of stars; Nos Artanor 31000 (wings and star); Nos Thavn a Minas Loss 31003
+  (twin towers) with two stars; Nos Eldalomril 31002 (swan and wave); Nos Nenwendil 31003; Nos Inglor 31004 (twin
+  swans). Each house's colours are in its `clans.xml` key. The kingdom flies the Nos Nowë key, and its banner
   and map colours are Sea Mist `0xFF7FAFC9` and Silver `0xFFC9CED4` (the Lindon culture and its
   `factionmap/factions.json` entry use the same pair), so Mithlond and the ruling house show the
   lozenge of stars (a ruling clan shows its kingdom's banner). Banner Injection applies the keys to kingdoms and non-ruling
@@ -243,16 +243,16 @@ bluecraig has its own `Culture.bluecraig` ones since its promotion (`child_templ
 After `/engine-bump`, with TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 
 1. Mod Options, TAOM, Map Tools, Rebuild Now, then reload (the distance cache predates the new rows).
-2. New campaign: Harlond is held by Edhil Mithlond, Forlond by Nos Galdor, Ost Falas by Nos Brithombar, Barad
-   Luin by the Wardens of Ered Luin and Tirith Aear by Nos Eglarest; Edhil Mithlond's home is Harlond.
+2. New campaign: Harlond is held by Nos Artanor, Forlond by Nos Thavn a Minas Loss, Ost Falas by Nos Eldalomril,
+   Barad Luin by Nos Nenwendil and Tirith Aear by Nos Inglor; Nos Artanor's home is Harlond.
 3. The map shows Harlond Quays in Gondor and Eryn Lhûn and Ninglas by Mithlond; no Lindon name repeats.
 4. The 13 new lords have distinct adult elf faces, the ladies are not bald, Galdor's biography shows, and their
    parties hold "[Lindon]" troops.
 5. Enter Harlond, Forlond, the three castles, and Brithlas, Hîthlin, Luinbar and Ram Luin (whose scenes were
    corrected); each loads.
 6. `taom.audit_settlement_entrances` reports no unreachable entrance among the new settlements.
-7. On the map, Harlond, Forlond and the three castles show gold elven sigils on light blue, each house its own,
-   not the dark Gundabad crest; Mithlond and the Falathrim show the lozenge of stars, not Rivendell's banner.
+7. On the map, Harlond, Forlond and the three castles show elven sigils, each house its own (the keys in `clans.xml`),
+   not the dark Gundabad crest; Mithlond and Nos Nowë show the lozenge of stars, not Rivendell's banner.
 
 ## Key Files
 
