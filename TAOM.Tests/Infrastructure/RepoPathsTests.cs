@@ -155,9 +155,19 @@ public class RepoPathsTests
         Assert.AreNotSame(RepoPaths.Text(path), RepoPaths.Text(path), "only Main, Client, Dependencies and CoopCompat are cached");
     }
 
+    // A tracked non-.cs file under a corpus root and outside obj and bin: only the .cs check keeps it out
+    // of the cache, so each call reads the disk and returns a new string. ReadSource callers read this file.
+    [TestMethod]
+    public void Text_TrackedNonCsFileUnderACorpusRoot_IsNotCached()
+    {
+        var path = RepoPaths.RepoPath("Main", "_Module", "SubModule.xml");
+
+        Assert.AreNotSame(RepoPaths.Text(path), RepoPaths.Text(path), "only .cs files are cached");
+    }
+
     // A .cs name under bin, written during the test: the bin segment and the root check both keep it out.
     [TestMethod]
-    public void Text_FileOutsideTheCodeRoots_IsReadFreshEveryCall()
+    public void Text_CsFileUnderBin_IsReadFreshEveryCall()
     {
         var probe = RepoPaths.RepoPath("TAOM.Tests", "bin", "repopaths-text-probe.cs");
         Directory.CreateDirectory(Path.GetDirectoryName(probe)!);
@@ -166,7 +176,7 @@ public class RepoPathsTests
             File.WriteAllText(probe, "first");
             Assert.AreEqual("first", RepoPaths.Text(probe));
             File.WriteAllText(probe, "second");
-            Assert.AreEqual("second", RepoPaths.Text(probe), "only the four code roots are cached");
+            Assert.AreEqual("second", RepoPaths.Text(probe), "a .cs file under bin is not cached");
         }
         finally
         {

@@ -76,6 +76,9 @@ NOT APPLIED: none. No KEEP or APPLY-scoped proposal was supplied. A probe for th
              configuration, and a written probe under Main/bin would put a .cs file in a code root.
              The clause's helper, IsBuildOutput, is already guarded through
              CSharpFiles_Client_ContainsTheSubModuleAndNothingUnderObjOrBin.
+             The under-repo clause (StartsWith the repo folder) gets no probe: the root clause implies
+             it, so no path can isolate it, and it only guards the Substring call that follows.
+             (Added in convergence round 1.)
 FOLLOW-UP:   the other NPCCharacter loaders that plan 046 deferred still parse Languages (same result,
              more time). No issue filed by the lead (role rule 11); the orchestrator owns it under #1132.
 
@@ -108,3 +111,22 @@ verify, so the Phase 3d table has no rows.
 ### Codex lessons (pending)
 
 None. No Codex run, so there is no new false-positive pattern and no missed category to record.
+
+## Convergence round 1
+
+The convergence reviewer read `eb38f4009..0039323c3` and reported two LOW findings. Both are confirmed
+against the code and fixed in the commit that adds this section ("convergence fixes for plan 046").
+
+| # | Sev | Finding | Verdict | Evidence and fix |
+|---|---|---|---|---|
+| C1 | LOW | The `.cs` clause of `IsCorpusFile` had no probe of its own, although it alone keeps the non-.cs files that `ReadSource` callers read under Main (`Main/_Module/SubModule.xml`, ModuleData XML and JSON) out of the cache, the audit's "only .cs text" condition | Fixed | New read-only test `Text_TrackedNonCsFileUnderACorpusRoot_IsNotCached`: two `Text` reads of `Main/_Module/SubModule.xml` must return two string instances. Against a mutant with the `.cs` clause deleted, the full suite gave `Failed!  - Failed: 1, Passed: 39258, Skipped: 9, Total: 39268`, the one failure being the new test (`Assert.AreNotSame failed. only .cs files are cached`). So the reviewer's claim that the suite stayed green without the clause was right. The under-repo clause is accounted for in IMPROVEMENTS above: the root clause implies it |
+| C2 | LOW | The bin-probe test's name `Text_FileOutsideTheCodeRoots_IsReadFreshEveryCall` and its message "only the four code roots are cached" kept the "code roots" wording that finding 14 removed from the class summary; `CodeRoots` is only Main and Client, and a .cs file under Dependencies or CoopCompat is cached | Fixed | Renamed to `Text_CsFileUnderBin_IsReadFreshEveryCall`, matching its comment, and the message now reads "a .cs file under bin is not cached". No other file in the repo names the test except the plan draft, which is a handoff record and stays as written |
+
+Per-clause mutant record for `IsCorpusFile`, the gap the RCA named: the root clause (finding 13, the
+`||` mutant) and the `.cs` clause (C1) each fail exactly one test of their own; the bin clause has no
+isolating probe (IMPROVEMENTS above); the under-repo clause cannot be isolated.
+
+Suite totals: before the round `Passed!  - Failed: 0, Passed: 39258, Skipped: 9, Total: 39267`; after it
+`Passed!  - Failed: 0, Passed: 39259, Skipped: 9, Total: 39268` (the one new test). Both are game-backed,
+non-deploying runs of `dotnet test TAOM.Tests`. No hook or validator changed, so the hook suite and the
+gate sweep did not run.
