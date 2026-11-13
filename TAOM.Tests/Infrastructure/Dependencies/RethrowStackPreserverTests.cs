@@ -43,6 +43,9 @@ public class RethrowStackPreserverTests
         public static void PreservingRethrow() => DeepThrowSite();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void VoidObserved() => DeepThrowSite();
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ShieldedVoid() => DeepThrowSite();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -90,6 +93,13 @@ public class RethrowStackPreserverTests
     {
         public static Exception? Plain(Exception __exception) => __exception;
 
+        public static int Observed;
+
+        public static void Observing(Exception __exception)
+        {
+            if (__exception != null) Observed++;
+        }
+
         public static Exception? Preserving(MethodBase __originalMethod, Exception __exception)
         {
             RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
@@ -103,6 +113,7 @@ public class RethrowStackPreserverTests
         _harmony = new Harmony(HarmonyId);
         Patch(nameof(Targets.PlainRethrow), AccessTools.Method(typeof(Finalizers), nameof(Finalizers.Plain)));
         Patch(nameof(Targets.PreservingRethrow), AccessTools.Method(typeof(Finalizers), nameof(Finalizers.Preserving)));
+        Patch(nameof(Targets.VoidObserved), AccessTools.Method(typeof(Finalizers), nameof(Finalizers.Observing)));
 
         // PatchShield's REAL finalizers, attached exactly as PatchShield.Install attaches them.
         Patch(nameof(Targets.ShieldedVoid), AccessTools.Method(typeof(PatchShield), "ShieldFinalizerVoid"));
@@ -143,6 +154,21 @@ public class RethrowStackPreserverTests
 
         StringAssert.DoesNotMatch(ex.StackTrace, new Regex(nameof(Targets.DeepThrowSite)),
             "premise: Harmony's `throw <finalizer result>` resets the trace to the patched frame");
+    }
+
+    [TestMethod]
+    public void HarmonyRethrow_OnlyVoidFinalizers_KeepsTheThrowSiteFrame()
+    {
+        // Pins why a finalizer that only observes is void (harmony-patches.md, #1155): when no
+        // finalizer on the method returns a value, Harmony ends with `rethrow`, which keeps the trace.
+        var before = Finalizers.Observed;
+
+        var ex = Capture(Targets.VoidObserved);
+
+        Assert.AreEqual(before + 1, Finalizers.Observed, "the void finalizer did not run");
+        StringAssert.Matches(ex.StackTrace, new Regex(nameof(Targets.DeepThrowSite)),
+            "premise: a method whose finalizers are all void is rethrown with its trace whole");
+        Assert.IsFalse(MarkerLine.IsMatch(ex.StackTrace), "no preserver ran, so no marker line");
     }
 
     // ---- The helper through a real Harmony rethrow ---------------------------------------------

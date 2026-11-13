@@ -33,6 +33,41 @@ public class PatchShieldPolicyTests
             "TAOM.Dependencies.Foundation.SaveShield", PatchShieldPolicy.CompiledProtectedOwnerPrefixes));
     }
 
+    // #1155: what the "TAOM" prefix protects today. The shields and the guard must outlive the rescue.
+    [TestMethod]
+    public void IsProtectedOwner_TheShieldsAndGuardOwnIds_AreProtected()
+    {
+        foreach (var owner in new[]
+                 {
+                     "TAOM.Dependencies.Foundation.PatchShield",
+                     "TAOM.Dependencies.Foundation.SaveShield",
+                     "TAOM.Dependencies.Foundation.CollectAssemblyTypesShim",
+                     "TAOM.HarmonyGuard",
+                 })
+        {
+            Assert.IsTrue(
+                PatchShieldPolicy.IsProtectedOwner(owner, PatchShieldPolicy.CompiledProtectedOwnerPrefixes), owner);
+        }
+    }
+
+    [TestMethod]
+    public void IsProtectedOwner_TaomsMainPatchOwner_IsNotProtectedYet()
+    {
+        // The state of today, not the goal. TAOM applies its patch categories under "com.taom.mod",
+        // which no protected prefix matches, so after a missing-API exception the shield strips
+        // TAOM's own prefixes, postfixes and transpilers on that method (another mod's failure there
+        // takes them too). Decision D13 (plans/_audit/2026-10-02-perf/DECISIONS.md) is to strip only
+        // the owner whose patch threw and THEN protect this id; that plan is owed and will invert
+        // this test. Do not add the id to the list alone: with today's strip a protected owner whose
+        // patch cannot load is swallowed on every call for the rest of the session.
+        const string mainOwner = "com.taom.mod";
+        StringAssert.Contains(RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true), $"new Harmony(\"{mainOwner}\")",
+            "TAOM's main Harmony id changed; re-decide whether the new id is protected and update this test.");
+
+        Assert.IsFalse(
+            PatchShieldPolicy.IsProtectedOwner(mainOwner, PatchShieldPolicy.CompiledProtectedOwnerPrefixes));
+    }
+
     [TestMethod]
     public void IsProtectedOwner_VendoredButrOwner_MatchesCaseInsensitively()
     {

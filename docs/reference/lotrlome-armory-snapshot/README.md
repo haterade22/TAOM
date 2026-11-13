@@ -246,10 +246,21 @@ was the 2026-08-11 stopgap that moved the adult woman onto the male meshes (next
   all four files (now one sha256, prefix `1a797ef524ac`, equal to `skins.xml.bak-headswap-20260929-143603`). This
   snapshot never carried the swap. **In game: fixed** (Mike, 2026-10-02). Account:
   [upper-mesh-mapping-2026-09-29.md](../../investigations/upper-mesh-mapping-2026-09-29.md) "The head swap test".
+- **Young female skins (2026-11-13, Mike: "any female dwarf, children included, use the female meshes").**
+  A girl or a woman in armour with no dwarf variant showed a torn, human-shaped head and neck. The teenager,
+  tween, child and toddler female skins (`kid_2_female`, `kid_1_female`, `kid_3_female`, `toddler_female`) still
+  wore `sm_dwarf_basemesh_a1_*`. `tools/oneoff/restore_young_woman_dwarf.py --apply` gave those four skins the
+  adult woman's set: the five `sk_dwarf_bm_f1_*` header meshes, `sk_dwarf_underwear_female_a`, the five
+  `sk_dwarf_bm_f1_eyebrow_*` (was one empty entry), the four `m_dwarf_bm_female_a1_head` face textures, and
+  `body_mesh_suffix=""` (the adult woman's value; was `_fem` on the three kid skins). `min_scale` is unchanged.
+  Live backup `skins.xml.bak-dwarf-young-woman-20261113-160223`; this snapshot carries the same edit.
+  **Still male-head parts on every woman skin:** the hair and beard lists and the `m_dwarf_basemesh_mouth_a`
+  mouth textures. **Owed in game:** a girl at child scale on the f1 head, with and without dwarf armour.
 - **Not yet run:** #385's own repro, a female dwarf lord in the Erebor keep hall.
 
 **Gates after any Armory update:** `python tools/oneoff/restore_adult_woman_dwarf.py` (a dry run that prints the
-block's state: "restored" or "stopgap"), `python tools/check_race_morph_channels.py` (101 channels on the head, eye
+block's state: "restored" or "stopgap"), `python tools/oneoff/restore_young_woman_dwarf.py` (a dry run: "already
+female" or the list of young skins still on the base mesh), `python tools/check_race_morph_channels.py` (101 channels on the head, eye
 and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory>/Assets/Race Test/dwarf/sk_dwarf_bm_f1_geo.tpac"
 --metamesh sk_dwarf_bm_f1_head` (fails when an eye stays still in a moving socket), and
 `python tools/validate_mesh_refs.py --no-rgl-log`.

@@ -25,7 +25,7 @@ template data was read as a land template, no test ran the prefix's decision, an
 
 | # | Sev | Bug | Category | Why missed | Preventive action |
 |---|---|---|---|---|---|
-| 1 | MEDIUM (Agents 2 and 5, run 1) | The finalizer returned `__exception` unchanged. Harmony then ends with `throw`, so every other exception leaving `SpawnCaravan` lost its throw site. | Repeat: "A value-returning finalizer that hands back its exception erases the throw site" | The shape was copied from Patch65, which predates the rule in `harmony-patches.md`. `ContainmentFinalizerRethrowTests` lists patches by hand, so a new finalizer is not covered until someone adds it. | The rework has no finalizer. Patch65 keeps the raw rethrow: see the deferred items. |
+| 1 | MEDIUM (Agents 2 and 5, run 1) | The finalizer returned `__exception` unchanged. Harmony then ends with `throw`, so every other exception leaving `SpawnCaravan` lost its throw site. | Repeat: "A value-returning finalizer that hands back its exception erases the throw site" | The shape was copied from Patch65, which predates the rule in `harmony-patches.md`. `ContainmentFinalizerRethrowTests` lists patches by hand, so a new finalizer is not covered until someone adds it. | The rework has no finalizer. Patch65 kept the raw rethrow until #1155, the same day. |
 | 2 | MEDIUM (Agent 2, run 1) | The patch, its rule class, its test and the registry said the elite or normal list is "a random roll inside the method". `hero.RandomFloat()` is the hero's saved `RandomValue` divided by 2^31, so the choice is fixed per hero and power. The guard therefore flagged on either list and could contain a different NRE on a call vanilla would have completed past the pick. | Engine fact inferred from a name | `RandomFloat` reads as a fresh roll, and the body of the extension was not opened (AGENTS.md "Effects: quote the line that produces the effect, never infer it from a name"). | The prefix calls the same model and the same `RandomFloat`; `ReadsEliteList_MirrorsVanillasStrictComparison` and `OnlyTheListVanillaReadsIsJudged` pin the choice. Lesson recorded. |
 | 3 | MEDIUM (Agent 5, run 1; `/verify` Step 2d) | `taleworlds-api-snapshot/patch-targets.md` was not regenerated, so the snapshot check reported drift and the next engine bump would not have listed `SpawnCaravan`. | Gate not run | `/verify` Step 2d exists and was not run on the branch. | Regenerated; `-Check` reproduces. No new rule: the gate exists. |
 | 4 | LOW (Agent 5, run 1) | The report key was stored before the log write, the statics were process-scoped with no campaign in the key, the warning gave no detail, the feature-map row named only Patch65, and the pair was never run through real Harmony. | Diagnostics, docs | The log was written as plumbing; `lessons/state-lifecycle-save.md` "A `static bool` diagnostic latch is process-scoped" was not read. | The key carries `Campaign.UniqueGameId` and is stored after the write; the warning names the list and what is missing; the feature-map row names Patch147. |
@@ -65,11 +65,16 @@ Harmony emits for the whole target.
 
 ## Deferred
 
-- FOLLOW-UP (no issue: reported to the maintainer on 2026-11-13 for his decision): Patch65's
-  finalizer still returns its exception raw (`Patch65_LandlessCultureSpawnGuard.cs`), the shape
+- FOLLOW-UP (#1155, fixed on 2026-11-13 with the eight other bare returns, and gated): Patch65's
+  finalizer returned its exception raw (`Patch65_LandlessCultureSpawnGuard.cs`), the shape
   row 1 was copied from.
-- FOLLOW-UP (no issue: reported to the maintainer on 2026-11-13 for his decision): PatchShield's
+- FOLLOW-UP (#1155: no code change, because decision D13 already covers it): PatchShield's
   protected-owner list has the prefix `TAOM`, which does not match TAOM's own Harmony id
   `com.taom.mod`, so a missing-API exception on a shielded method strips TAOM's own prefixes there.
-  Whether that is intended is not recorded.
+  D13 (`plans/_audit/2026-10-02-perf/DECISIONS.md`, answered 2026-10-03; its follow-up scope was recorded on
+  2026-10-04) is a plan that strips only the owner whose patch threw and then protects TAOM's id; that
+  plan is owed. Until then the list stays, because
+  protecting the id alone keeps a broken TAOM patch swallowed on every call. A lesson, the registry
+  and two comments that said TAOM's patches were protected are corrected, and a test pins today's
+  state.
 - Not run: no in-game check (no current data reaches the hazard), and no Codex pass.

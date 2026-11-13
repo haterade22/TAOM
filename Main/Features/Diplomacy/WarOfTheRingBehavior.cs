@@ -14,12 +14,13 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
     // Phase 9b #129 P1 — persisted phase. Before #129 the phase was re-derived from elapsed days on
     // every load, so past-Phase2 saves replayed both transitions on every load; TransitionToPhase now
     // runs once per campaign. #772 deliberately re-runs the Full War declarations on every authority
-    // session launch (ReconcileDeclaredWars in OnSessionLaunched). That is idempotent only because
+    // session launch, and #1163 on every authority daily tick (ReconcileDeclaredWars in
+    // OnSessionLaunched and OnDailyTick). That is idempotent only because
     // each declaration is guarded by IAllianceAdapter.HasDeclaredWar (the raw stance link; the
     // transitions stay idempotent because DeclareWarAction sets the link to War). Never guard with
     // AreAtWar: during Full War, TaomDiplomacyModel.IsAtConstantWar makes it true for every Hostile
     // pair, which would skip every declaration. A side effect added to DeclareFullWarWars outside
-    // that guarded branch would replay on every load, so put it inside the branch or in
+    // that guarded branch would replay on every load and every day, so put it inside the branch or in
     // TransitionToPhase.
     private int _persistedPhase = (int)WarPhase.Peace;
     // WotR Momentum #327 — persisted outcome, same int-backed convention as phase.
@@ -110,6 +111,14 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         if (!_coopSession.IsAuthority) return;
 
         _wotrService.CheckPhaseTransition(_elapsedDays());
+
+        // #1163: also every day, after the phase check (a transition above declares its own wars).
+        // The master switch can go off and on again inside a session; a Hostile pair that made peace
+        // meanwhile is then at war in the model only. The repair declares it, so its stance, its
+        // at-war lists and its co-op message follow within a day. It returns at once unless the
+        // phase is Full War and the switch is on. Same extra gate as EndForbiddenWars.
+        if (!_coopSession.ShouldDeferToHost)
+            _wotrService.ReconcileDeclaredWars();
 
         EndForbiddenWars();
     }
