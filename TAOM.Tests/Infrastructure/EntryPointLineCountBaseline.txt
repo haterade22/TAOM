@@ -12,7 +12,7 @@ TAOM.Features.CultureMarketplace.CultureMarketplaceBehavior 161
 TAOM.Features.Elephant.ElephantMissionBehavior 220
 TAOM.Features.EliteEmissary.Hooks.EliteEmissaryBehavior 203
 TAOM.Features.Enlistment.Hooks.EnlistmentBattleBehavior 289
-TAOM.Features.Messengers.MessengerCampaignBehavior 657
+TAOM.Features.Messengers.MessengerCampaignBehavior 656
 TAOM.Features.MountDespawn.Hooks.MountDespawnMissionBehavior 173
 TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel 197
 TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 209

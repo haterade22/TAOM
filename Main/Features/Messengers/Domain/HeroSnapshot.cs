@@ -13,6 +13,8 @@ public sealed class HeroSnapshot
     public bool IsInPlayerParty { get; }
     public bool SameSettlement { get; }
     public bool SameArmy { get; }
+    /// <summary>Hero.IsSpecial: the engine's daily settle skips a fugitive or released hero of this occupation.</summary>
+    public bool IsSpecial { get; }
 
     public HeroSnapshot(
         string heroId,
@@ -25,7 +27,8 @@ public sealed class HeroSnapshot
         bool isHumanPlayerCharacter,
         bool isInPlayerParty,
         bool sameSettlement = false,
-        bool sameArmy = false)
+        bool sameArmy = false,
+        bool isSpecial = false)
     {
         HeroId = heroId;
         IsAlive = isAlive;
@@ -38,5 +41,6 @@ public sealed class HeroSnapshot
         IsInPlayerParty = isInPlayerParty;
         SameSettlement = sameSettlement;
         SameArmy = sameArmy;
+        IsSpecial = isSpecial;
     }
 }

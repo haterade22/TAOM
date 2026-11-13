@@ -83,11 +83,14 @@ public class MessengerService : IMessengerService
         // The engine ends these three states itself (v1.5.7): HeroSpawnCampaignBehavior.OnHeroDailyTick settles a fugitive
         // or a released hero in a town or castle (a 30% chance each day), and TeleportationCampaignBehavior completes a
         // journey in its hourly tick and makes the traveller a fugitive when it cancels one. So the messenger waits for
-        // the hero to be Active and never talks to one who is nowhere on the map.
-        var engineWillMakeTheHeroActive = target.HeroState == MessengerHeroState.Fugitive
-                                          || target.HeroState == MessengerHeroState.Released
-                                          || target.HeroState == MessengerHeroState.Traveling;
-        if (!playerAvailable || target.IsChild || targetPartyInMapEvent || engineWillMakeTheHeroActive)
+        // the hero to be Active and never talks to one who is nowhere on the map. This wait can last days and its cause
+        // is the hero, so it has its own verdict: the player is told once.
+        if (target.HeroState == MessengerHeroState.Fugitive
+            || target.HeroState == MessengerHeroState.Released
+            || target.HeroState == MessengerHeroState.Traveling)
+            return MessengerArrivalVerdict.WaitForTarget;
+
+        if (!playerAvailable || target.IsChild || targetPartyInMapEvent)
             return MessengerArrivalVerdict.Wait;
 
         return MessengerArrivalVerdict.Ready;
@@ -100,9 +103,13 @@ public class MessengerService : IMessengerService
     {
         switch (target.HeroState)
         {
-            case MessengerHeroState.Active:
             case MessengerHeroState.Fugitive:
             case MessengerHeroState.Released:
+                // HeroSpawnCampaignBehavior.OnHeroDailyTick, the engine's daily settle for these two states, skips a hero
+                // with IsSpecial (v1.5.7, line 125). Its other paths to Active need a hero who comes of age or a companion
+                // who leaves a clan, so for a Special adult the wait would not end.
+                return !target.IsSpecial;
+            case MessengerHeroState.Active:
             case MessengerHeroState.Traveling:
                 return true;
             case MessengerHeroState.NotSpawned:

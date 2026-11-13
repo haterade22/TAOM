@@ -229,7 +229,7 @@ public class MessengerServiceTests
     }
 
     // One state at a time, with the facts the engine derives from it (v1.5.7 Hero.cs:303-319).
-    private static HeroSnapshot InState(MessengerHeroState state, bool wanderer) =>
+    private static HeroSnapshot InState(MessengerHeroState state, bool wanderer, bool special = false) =>
         new HeroSnapshot("hero_1",
             isAlive: state != MessengerHeroState.Dead,
             isPrisoner: state == MessengerHeroState.Prisoner,
@@ -238,7 +238,8 @@ public class MessengerServiceTests
             heroState: state,
             isWanderer: wanderer,
             isHumanPlayerCharacter: false,
-            isInPlayerParty: false);
+            isInPlayerParty: false,
+            isSpecial: special);
 
     [DataTestMethod]
     [DataRow(MessengerHeroState.Released, false, MessengerValidationResult.Ok)]
@@ -251,20 +252,31 @@ public class MessengerServiceTests
     public void CanSendMessenger_HeroNotActive_FollowsTheArrivalRule(MessengerHeroState state, bool wanderer, MessengerValidationResult expected)
         => Assert.AreEqual(expected, _sut.CanSendMessenger(InState(state, wanderer), playerGold: 1000, quotedCost: 50, inPerson: false));
 
+    // The engine's daily settle skips a released hero of the Special occupation, so the send refuses one; a Special hero on a
+    // journey or Active can be sent to like any other.
+    [DataTestMethod]
+    [DataRow(MessengerHeroState.Released, MessengerValidationResult.TargetUnavailable)]
+    [DataRow(MessengerHeroState.Fugitive, MessengerValidationResult.HeroFugitive)]
+    [DataRow(MessengerHeroState.Traveling, MessengerValidationResult.Ok)]
+    [DataRow(MessengerHeroState.Active, MessengerValidationResult.Ok)]
+    public void CanSendMessenger_SpecialHero_IsRefusedOnlyWhereTheEngineNeverSettlesIt(MessengerHeroState state, MessengerValidationResult expected)
+        => Assert.AreEqual(expected, _sut.CanSendMessenger(InState(state, wanderer: false, special: true), playerGold: 1000, quotedCost: 50, inPerson: false));
+
     [TestMethod]
     public void CanSendMessenger_NeverAcceptsATargetTheArrivalWouldLose()
     {
         // #1133: the player must not be able to pay for a messenger that is always lost on arrival.
         foreach (MessengerHeroState state in System.Enum.GetValues(typeof(MessengerHeroState)))
         foreach (var wanderer in new[] { false, true })
+        foreach (var special in new[] { false, true })
         {
-            var target = InState(state, wanderer);
+            var target = InState(state, wanderer, special);
             if (_sut.CanSendMessenger(target, playerGold: 1000, quotedCost: 50, inPerson: false) != MessengerValidationResult.Ok)
                 continue;
 
             Assert.AreNotEqual(MessengerArrivalVerdict.Lost,
                 _sut.ClassifyArrival(target, playerAvailable: true, targetPartyInMapEvent: false),
-                $"{state} wanderer={wanderer} can be sent to but is lost on arrival");
+                $"{state} wanderer={wanderer} special={special} can be sent to but is lost on arrival");
         }
     }
 
