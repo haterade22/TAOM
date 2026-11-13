@@ -150,6 +150,8 @@ public class MessengerCampaignBehaviorSourceTests
         Assert.IsTrue(body.Length > 0, "HandleArrivedMessenger not found");
         StringAssert.Contains(body, "_service.ClassifyArrival(");
         StringAssert.Contains(body, "sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo");
+        StringAssert.Contains(body, "playerAvailable: IsPlayerAvailable()");
+        StringAssert.Contains(body, "targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null");
         Assert.IsFalse(body.Contains("IsInPlayerParty"), "arrival's party test is true when both parties are null; IsInPlayerParty is not");
         StringAssert.Contains(reader, "heroState: (MessengerHeroState)(int)hero.HeroState");
     }

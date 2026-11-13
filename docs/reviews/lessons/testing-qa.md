@@ -2699,3 +2699,18 @@ never FAIL. The manifest header also named one list while its fail patterns judg
   same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
   pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
 - **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
+
+### A Not-tested trailer that says a pin holds a line names only lines the pin asserts (plan 050, 2026-11-13)
+
+The plan 050 refactor said in its trailer that a source pin holds the text of the raw party equality,
+the map event and `IsPlayerAvailable()` in `HandleArrivedMessenger`. The pin asserted the party
+equality and the reader's cast only. `playerAvailable: true`, or `MapEvent == null` in place of
+`!= null` (every messenger then waits for ever), left all 39,278 tests green. A recurrence of the
+#1110 lesson above, from the other side: the pin was right for what it named, and the commit text
+claimed more.
+- **Why missed:** the plan drafted the trailer and the pin specification in two places, naming four
+  reads in one and two in the other; the executor copied both drafts.
+- **Prevent:** before a commit, read each line a `Not-tested:` trailer says a pin holds, find the
+  assertion that holds it, and mutate that line once to watch the pin fail. A line with no assertion
+  is either added to the pin or named as unpinned in the trailer.
+- **Source:** [rca-messenger-arrival-classification-2026-11-13.md](../rca-messenger-arrival-classification-2026-11-13.md), row 1; `/deep-review` Agent 5.
