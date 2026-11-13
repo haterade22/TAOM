@@ -1,9 +1,10 @@
 #!/bin/bash
 # PostToolUse and PostToolUseFailure (Bash and PowerShell) hook: record that a build/test verification command ran.
 #
-# Touches .claude/logs/.verification-ran so the check-verification-evidence Stop
+# Touches .claude/logs/.verification-ran, and .claude/logs/sessions/<session id>.verified when the
+# payload has a session id (#1138, _session_ledger.sh), so the check-verification-evidence Stop
 # hook can tell whether C# source was edited AFTER the most recent verification.
-# Pairs with: check-verification-evidence.sh (Stop).
+# Pairs with: check-verification-evidence.sh (Stop), record-session-edit.sh (the edit ledger).
 #
 # Non-blocking; always exits 0. Concurrent invocations are safe: mkdir -p and
 # touch are idempotent and the hook never blocks.
@@ -106,7 +107,19 @@ done
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null
+  # The global marker serves check-verification-evidence.sh's no-session-id fallback.
   touch "$LOGDIR/.verification-ran" 2>/dev/null || true
+  # The session's own marker (#1138): the Stop hook judges a session's edits against it, so one
+  # session's build no longer mutes another's reminder. A subagent's payload carries its parent's
+  # session_id, so a subagent's build counts for its parent.
+  if source "$(dirname "${BASH_SOURCE[0]}")/_session_ledger.sh" 2>/dev/null; then
+    taom_session_id "$INPUT"
+    if [[ -n "$TAOM_SID" ]]; then
+      taom_ledger_dir
+      mkdir -p "$TAOM_LEDGER_DIR" 2>/dev/null
+      touch "$TAOM_LEDGER_DIR/$TAOM_SID.verified" 2>/dev/null || true
+    fi
+  fi
 fi
 
 exit 0

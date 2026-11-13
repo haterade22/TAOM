@@ -66,6 +66,11 @@ CONTEXT_BUCKETS = ((200_000, "under 200k"), (300_000, "200k to 300k"), (500_000,
                    (None, "500k and over"))
 REVIEW_AGENT = "deep-reviewer"
 REVIEW_RUN_GAP_SECONDS = 3600   # lenses of one session further apart than this are separate review runs
+EDIT_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
+SHARED_EDIT_SECONDS = 24 * 3600   # two sessions' edits of one file this close count as a shared file (#1138)
+SHARED_TOP = 10
+COMPACT_SIDE = 20   # tool results measured on each side of a compact_boundary (#1138)
+COMPACT_TOP = 5
 
 # The SessionStart banners CLAUDE.md names, the skill each asks for, and the skill's main command as it
 # appears in a shell call. Section 7 pairs them, so a banner nobody acts on shows as such.
@@ -339,6 +344,10 @@ class Stats:
         self.direct_sessions = defaultdict(set)              # banner -> sessions that ran its skill's command
         self.versions = defaultdict(set)                     # Claude Code version -> sessions
         self.rules_loaded = defaultdict(lambda: [set(), set()])   # rule file -> main sessions, subagent files
+        self.edits = []                                      # (main session, path key, time)
+        self.compact_measured = 0
+        self.compact_sides = [0, 0, 0, 0]                    # results and errors before, then after
+        self.compact_after_errors = Counter()                # (tool, signature) -> errors after a boundary
 
 
 def add_output(table, key, size):
@@ -721,7 +730,43 @@ def handle_assistant(stats, r, tools, count):
             stats.models[str(inp.get("model") or "(definition)")] += 1
 
 
+def edit_key(path):
+    """One key per file on disk: `/` separators, a Git Bash `/e/` drive as `e:/`, case folded (NTFS ignores case)."""
+    return re.sub(r"^/([A-Za-z])/", r"\1:/", path.replace("\\", "/")).lower()
+
+
+def note_edit(stats, block, session, ts):
+    """Record one Edit, Write, MultiEdit or NotebookEdit call."""
+    inp = block.get("input") if isinstance(block.get("input"), dict) else {}
+    target = inp.get("file_path") or inp.get("notebook_path")
+    t = parse_time(ts) if ts else None
+    if not isinstance(target, str) or not target or t is None:
+        return
+    stats.edits.append((session, edit_key(target), t))
+
+
+def measure_compactions(stats, results, bounds):
+    """Count the plain tool errors among up to COMPACT_SIDE results on each side of every boundary,
+    each window stopping at the neighbouring boundary.
+    `results` holds one (tool, signature) or None per tool result of a main file, in record order;
+    `bounds` holds the index into it at which each compact_boundary record stood."""
+    side = stats.compact_sides
+    ends = bounds[1:] + [len(results)]
+    for prev, at, nxt in zip([0] + bounds[:-1], bounds, ends):
+        # A window stops at the neighbouring boundary, so no result counts twice on one side; a result
+        # between two boundaries is the earlier one's after and the later one's before.
+        before, after = results[max(prev, at - COMPACT_SIDE):at], results[at:min(nxt, at + COMPACT_SIDE)]
+        stats.compact_measured += 1
+        side[0] += len(before)
+        side[1] += sum(1 for k in before if k)
+        side[2] += len(after)
+        side[3] += sum(1 for k in after if k)
+        stats.compact_after_errors.update(k for k in after if k)
+
+
 def scan_file(stats, path, since_str, agent=None):
+    results_seen = []  # main files only: (tool, signature) of a plain tool error, else None, per result
+    bounds = []        # main files only: len(results_seen) at each compact_boundary
     tools = {}
     calls = {}        # request key -> ((in, out, read, create), skill, final), the max-output record wins
     details = {}      # request key -> what the cost section needs (note_request)
@@ -780,13 +825,19 @@ def scan_file(stats, path, since_str, agent=None):
                 msg = r.get("message")
                 blocks = msg.get("content") if isinstance(msg, dict) else None
                 for b in blocks if isinstance(blocks, list) else []:
-                    if isinstance(b, dict) and b.get("type") == "tool_use" and b.get("name") == "Skill":
+                    if not isinstance(b, dict) or b.get("type") != "tool_use":
+                        continue
+                    if b.get("name") == "Skill":
                         inp = b.get("input") if isinstance(b.get("input"), dict) else {}
                         skill = str(inp["skill"]) if inp.get("skill") else skill
+                    elif b.get("name") in EDIT_TOOLS:
+                        note_edit(stats, b, sid, ts)
                 continue
             if rtype == "system":
                 if r.get("subtype") == "compact_boundary":
                     stats.compactions += 1
+                    if agent is None:
+                        bounds.append(len(results_seen))
             elif rtype == "attachment":
                 att = r.get("attachment")
                 handle_attachment(stats, att, sid, ts)
@@ -816,6 +867,8 @@ def scan_file(stats, path, since_str, agent=None):
                         key = classify_error(stats, text, tool, sid, ts)
                     else:
                         key = None
+                    if agent is None:
+                        results_seen.append(key)
                     if key is not None and run and run[0] == key:
                         run[2].add(msg_id)
                     else:
@@ -823,6 +876,7 @@ def scan_file(stats, path, since_str, agent=None):
                         if key is not None:
                             run = [key, sid, {msg_id}]
     flush()
+    measure_compactions(stats, results_seen, bounds)
     commit_cost(stats, calls, details, agent, path)
     commit_usage(stats, calls, agent, path.stem)
 
@@ -1164,6 +1218,61 @@ def rule_rows(stats):
                                        key=lambda kv: (-len(kv[1][0]) - len(kv[1][1]), kv[0]))]
 
 
+_HOME_PREFIX = re.compile(r"^[a-z]:/users/[^/]+/")
+_CLAUDE_HOME = re.compile(r"^[a-z]:/users/[^/]+/\.claude/")
+
+
+def _minute(t):
+    return t.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M")
+
+
+def shared_edits(stats):
+    """Section 12: files two or more main sessions edited, with one pair of their edits at most
+    SHARED_EDIT_SECONDS apart. A session pair counts once however many files it shares. Files under the
+    user's `.claude` folder (memory, plans) are edited by every session and sit in no checkout: they are
+    left out and counted."""
+    by_file = defaultdict(list)
+    excluded = set()
+    for session, key, t in stats.edits:
+        if _CLAUDE_HOME.match(key):
+            excluded.add(key)
+        else:
+            by_file[key].append((t, session))
+    pairs = set()
+    rows = []
+    for key, edits in by_file.items():
+        edits.sort()
+        latest = {}   # session -> its latest edit so far, the closest to the current one
+        close = set()
+        for t, session in edits:
+            for other, seen in latest.items():
+                if other != session and (t - seen).total_seconds() <= SHARED_EDIT_SECONDS:
+                    close.add(tuple(sorted((session, other))))
+            latest[session] = t
+        if not close:
+            continue
+        pairs |= close
+        # The home folder names the user, so it is shown from `~/`, as section 9 shows it.
+        rows.append({"file": redact(_HOME_PREFIX.sub("~/", key)), "session_ids": [s[:8] for s in sorted(latest)], "edits": len(edits),
+                     "first": _minute(edits[0][0]), "last": _minute(edits[-1][0])})
+    rows.sort(key=lambda r: (-len(r["session_ids"]), -r["edits"], r["file"]))
+    return {"files_edited": len(by_file), "shared_files": len(rows), "session_pairs": len(pairs),
+            "excluded_claude_home": len(excluded),
+            "window_hours": SHARED_EDIT_SECONDS // 3600, "top": rows[:SHARED_TOP]}
+
+
+def post_compaction(stats):
+    """Section 13: plain tool errors among the results on each side of a main-session compaction."""
+    b_res, b_err, a_res, a_err = stats.compact_sides
+
+    def side(results, errors):
+        return {"results": results, "errors": errors, "rate": round(errors / results, 4) if results else None}
+    top = sorted(stats.compact_after_errors.items(), key=lambda kv: (-kv[1], kv[0]))[:COMPACT_TOP]
+    return {"compactions": stats.compact_measured, "side": COMPACT_SIDE,
+            "before": side(b_res, b_err), "after": side(a_res, a_err),
+            "top_after": [{"signature": sig, "tool": tool, "count": c} for (tool, sig), c in top]}
+
+
 def build_signals(stats, args, since, today, main, sub):
     n = args.top
     tool_rows = top_groups(stats.tool_errors, n, ("signature", "tool"))
@@ -1205,6 +1314,8 @@ def build_signals(stats, args, since, today, main, sub):
         "output_size": output_size(stats, n),
         "tokens": dict(token_summary(stats, 5), **token_agents(stats, n, args.repo)),
         "cost": cost_summary(stats),
+        "shared_edits": shared_edits(stats),
+        "post_compaction": post_compaction(stats),
     }
 
 
@@ -1352,7 +1463,38 @@ def render(sig):
         L += render_growth(t.get("growth") or {}, "agent", "Token growth since the previous run",
                            "of cache creation plus output")
     L += render_cost(sig["cost"])
+    L += render_shared(sig["shared_edits"])
+    L += render_post_compaction(sig["post_compaction"])
     return "\n".join(L) + "\n"
+
+
+def render_shared(e):
+    L = ["## 12. Files two sessions edited", "",
+         "Edit, Write, MultiEdit and NotebookEdit calls of main and subagent transcripts; a subagent's edit "
+         "counts for its main session. A file is shared when two sessions edited it within %d hours of each "
+         "other. %d files edited, %d shared, %d session pairs." % (
+             e["window_hours"], e["files_edited"], e["shared_files"], e["session_pairs"]), "",
+         "%d file(s) under the user's .claude folder (memory, plans, settings) are left out." % e["excluded_claude_home"], ""]
+    return L + table(["File", "Sessions", "Edits", "First edit (UTC)", "Last edit (UTC)"],
+                     [[r["file"], ", ".join(r["session_ids"]), r["edits"], r["first"], r["last"]] for r in e["top"]])
+
+
+def render_post_compaction(p):
+    L = ["## 13. Tool errors after a compaction", ""]
+    if not p["compactions"]:
+        return L + ["No compaction in a main transcript in the window.", ""]
+
+    def rate(s):
+        return "n/a" if s["rate"] is None else "%.1f%%" % (100 * s["rate"])
+    L += ["Up to %d tool results before and %d after each `compact_boundary` of a main transcript, in "
+          "record order, each window stopping at the neighbouring compaction. Errors are plain tool errors (section 4), not hook denies, classifier denials or "
+          "user rejections. %d compactions measured." % (p["side"], p["side"], p["compactions"]), ""]
+    L += table(["Side", "Results", "Errors", "Rate"],
+               [[label, s["results"], s["errors"], rate(s)]
+                for label, s in (("Before", p["before"]), ("After", p["after"]))])
+    L += ["### Top error signatures after", ""]
+    return L + table(["Signature", "Tool", "Count"],
+                     [[r["signature"], r["tool"], r["count"]] for r in p["top_after"]])
 
 
 def render_cost(c):
@@ -1524,6 +1666,13 @@ def main(argv=None):
     else:
         print("token growth: UNCHECKED, no earlier run with tokens.by_agent_model beside %s" % out)
     print("model overrides: %d" % len(sig["tokens"]["overrides"]))
+    se = sig["shared_edits"]
+    print("shared edits: %d file(s) edited by two or more sessions within %d h, %d session pair(s), %d files edited" % (
+        se["shared_files"], se["window_hours"], se["session_pairs"], se["files_edited"]))
+    pc = sig["post_compaction"]
+    print("post-compaction: %d compaction(s), %d errors in %d results before, %d in %d after" % (
+        pc["compactions"], pc["before"]["errors"], pc["before"]["results"], pc["after"]["errors"],
+        pc["after"]["results"]))
     return 0
 
 

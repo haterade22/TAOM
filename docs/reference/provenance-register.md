@@ -135,6 +135,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ArtCraft | `storytold/artcraft` | MIT OR Apache-2.0 | comparison-only | `docs/reference/ue-to-bannerlord-asset-pipeline.md` "Generating the source" (fal's Tripo option names, found through its fal binding and confirmed on fal's page; the text is TAOM's own) | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
 | Kysaro's knowledge notes (TAOM team member) | `Kysaro/bannerlord-knowledge-Kysaro` | UNKNOWN | comparison-only | `.claude/rules/evidence-over-claims.md` A.5, B and C.4, `docs/features/battle-load-diagnostics.md` "Scene size", `docs/reference/external-mod-couplings.md` "Kysaro's modules", traps and engine facts listed in `docs/reviews/adopt-kysaro-knowledge-2026-11-12.md` (facts and lessons only, read 2026-11-12 at `f0a4370b5`; every sentence is TAOM's own and each fact names his note) | cleared |
+| claude-code-harness | `claude-code-harness` `Chachamaru127/claude-code-harness` | MIT | behavioural-port | `.claude/hooks/record-session-edit.sh`, `.claude/hooks/_session_ledger.sh` and the per-session path of `.claude/hooks/check-verification-evidence.sh` (a session-keyed edit record, from its file lease); the consult trigger in `.claude/rules/working-discipline.md` and the advisor consult in `.claude/agents/architect.md` (a fixed-trigger consult, from its advisor agent); see detail | cleared |
 
 <!-- provenance-register-end -->
 
@@ -904,6 +905,21 @@ behind it; the order of preference for the form of a change, always-on text last
 as a valid outcome. No upstream file or text was copied, so no Apache-2.0 notice is carried.
 `tools/harness_retro.py` (the transcript miner) has no counterpart upstream and is TAOM original.
 Nothing was installed. Record: [`docs/reviews/adopt-harness2-2026-10-21.md`](../reviews/adopt-harness2-2026-10-21.md).
+The delta review of 2026-11-12 took nothing.
+
+### claude-code-harness
+
+Upstream: https://github.com/Chachamaru127/claude-code-harness · MIT, read at `aeb665e8`
+(2026-11-11). Two behaviours were reproduced from reading the source, in TAOM's structure and words:
+`go/internal/hookhandler/file_lease_hook.go` records which files each `session_id` edited, which
+TAOM's shell hooks now use to judge the verification reminder per session and to tell a session
+when another one edited the same file (TAOM only informs, where the lease denies); and
+`agents/advisor.md` with the "Advisor Strategy" of `skills/harness-loop/SKILL.md` give a consult on
+a fixed trigger that answers PLAN, CORRECTION or STOP. No upstream file, text or binary was copied,
+so no MIT notice is carried. The shared-edit and post-compaction sections of
+`tools/harness_retro.py` are TAOM measures of its two ideas, with no counterpart upstream. Nothing
+was installed or run. Record:
+[`docs/reviews/adopt-claude-code-harness-2026-11-12.md`](../reviews/adopt-claude-code-harness-2026-11-12.md).
 
 ### Stuck Battle Guard (UNCLEARED)
 
