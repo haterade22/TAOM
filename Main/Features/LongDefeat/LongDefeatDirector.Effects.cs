@@ -24,6 +24,10 @@ internal sealed partial class LongDefeatDirector
         // First, before any soldier of the wave exists: the wave's published numbers are read when a soldier is built or struck.
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
+
+        // The engines destroyed in an earlier wave come back first, so the Hammer writes their hit points too (#1160).
+        if (fx.StartWave is { } begun)
+            RestoreEngines(begun.Wave);
         if (fx.EngineHitPoints is { } engines)
             SetEngineHitPoints(engines);
 
@@ -256,6 +260,8 @@ internal sealed partial class LongDefeatDirector
         JudgePosts(false);
         CloseSplit(e.Wave, "no-contact");
         CloseVolleyWatch("wave");
+        JudgeEngineUse(false);
+        BreakEnginesAt(_run.WavesCleared);
         _volleyByBot = false;
         FlushScale();
         FlushTerror();
@@ -296,6 +302,7 @@ internal sealed partial class LongDefeatDirector
         JudgeGateAttacked(true);
         JudgePosts(true);
         CloseSplit(SplitWave(), "run-ended");
+        JudgeEngineUse(true);
         FinishVolleys();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));

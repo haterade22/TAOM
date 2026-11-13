@@ -2776,3 +2776,9 @@ Check 11 failed `hits` once 20 tower missiles flew with no hit. Tower missiles h
 - **Why missed:** the threshold was a round number, never compared with the hit rate in the reports; the fix counted missiles, not the volleys that miss together. Same family as the check 09 entry above.
 - **Prevent:** before a rule fails on "N tries and no success", read the success rate from the stored reports and count the trials that are independent; choose N so a false FAIL is under 1 percent at the lowest rate on file, and confirm the shortest run that should be judged reaches N. Grep the feature doc for the old number in the same change.
 - **Source:** #1152, `/deep-review` Agent 5 (data flow), findings 3 to 5.
+
+### A mutation restored in the same second leaves the mutant's bytecode in force (#1160, 2026-11-13)
+A mutation script swapped two lines of `tools/run_long_defeat.py`, ran one test, and wrote the original bytes back. The swap kept the file's size and the restore came in the same second, so the `.pyc` that the mutant run wrote still matched (Python checks the source's size and its mtime in whole seconds). The next full tool suite ran the mutant and failed a test on correct source; the disassembly of `main` showed the swapped call order.
+- **Why missed:** the restore was checked byte for byte, and the bytecode cache was not considered.
+- **Prevent:** run each mutant with `python -B`, and after the restore move the file's mtime forward (or delete its `__pycache__` entry). When a test fails on source that reads correct, compare `dis` of the function with the source before anything else.
+- **Source:** docs/reviews/rca-long-defeat-engines-2026-11-13.md row 20 (#1160)

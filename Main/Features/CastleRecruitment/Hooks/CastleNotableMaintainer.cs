@@ -5,7 +5,9 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.CastleRecruitment.Hooks;
 
@@ -20,12 +22,14 @@ internal sealed class CastleNotableMaintainer
 {
     private readonly ICastleRecruitmentService _service;
     private readonly IModLogger _logger;
+    private readonly IPlayerControlQuery _players;
     private readonly HashSet<string> _warnedMissingTemplates = new HashSet<string>();
 
-    public CastleNotableMaintainer(ICastleRecruitmentService service, IModLogger logger)
+    public CastleNotableMaintainer(ICastleRecruitmentService service, IModLogger logger, IPlayerControlQuery players)
     {
         _service = service;
         _logger = logger;
+        _players = players;
     }
 
     public void EnsureAllCastles()
@@ -140,12 +144,12 @@ internal sealed class CastleNotableMaintainer
     /// and whose production model NREs for them). Uses the service's pure slot probability instead of
     /// <c>VolunteerModel.GetDailyVolunteerProductionProbability</c>, never calling the model for a castle.
     /// The owner's kingdom and player-clan facts are read once per castle for the War Chronicle's
-    /// volunteer multiplier (#765).</summary>
+    /// volunteer multiplier (#765). In a co-op session every human player's clan counts (#1141).</summary>
     private void FillCastleVolunteers(Settlement castle)
     {
         int maxTier = Campaign.Current.Models.VolunteerModel.MaxVolunteerTier;
         string? kingdomKey = castle.OwnerClan?.Kingdom?.StringId;
-        bool ownerIsPlayerClan = castle.OwnerClan != null && castle.OwnerClan == Clan.PlayerClan;
+        bool ownerIsPlayerClan = PlayerClanCheck.IsAPlayersClan(castle.OwnerClan, _players);
         foreach (Hero notable in castle.Notables)
         {
             if (!notable.CanHaveRecruits || !notable.IsAlive)

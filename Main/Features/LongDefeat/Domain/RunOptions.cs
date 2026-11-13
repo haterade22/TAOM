@@ -30,6 +30,12 @@ internal sealed record RunOptions
     public int? StartGold { get; init; }
 
     /// <summary>
+    /// A test option (#1160): at this clear, when a wave follows it, every ram and siege tower that stands is destroyed, as a player's hits would destroy it, so an unattended run proves the next wave
+    /// brings them back. Null (a board run) breaks nothing.
+    /// </summary>
+    public int? BreakEnginesAtClear { get; init; }
+
+    /// <summary>
     /// The class the lord plays, by its id in classes.json. Null asks for none: the catalog then takes the first class on offer for a person, or the seed's draw for the bot. After
     /// <c>BuildPlan</c> this holds the class that was actually chosen (null when the fortress offers none), which is what the report writes.
     /// </summary>

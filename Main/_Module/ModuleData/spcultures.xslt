@@ -1268,6 +1268,124 @@
 			<xsl:attribute name="weapon_practice_stage_3">NPCCharacter.weapon_practice_stage_3_dale</xsl:attribute>
 			<xsl:attribute name="gear_dummy">NPCCharacter.gear_dummy_dale</xsl:attribute>
 
+			<!-- Dale names -->
+			<male_names>
+				<name name="{{=aom_dale_male_name_1}}Arnulf" />
+				<name name="{{=aom_dale_male_name_2}}Bjarki" />
+				<name name="{{=aom_dale_male_name_3}}Eirik" />
+				<name name="{{=aom_dale_male_name_4}}Hallbjorn" />
+				<name name="{{=aom_dale_male_name_5}}Ingvald" />
+				<name name="{{=aom_dale_male_name_6}}Kjartan" />
+				<name name="{{=aom_dale_male_name_7}}Sigvard" />
+				<name name="{{=aom_dale_male_name_8}}Torvald" />
+				<name name="{{=aom_dale_male_name_9}}Ulfrik" />
+				<name name="{{=aom_dale_male_name_10}}Vigmar" />
+				<name name="{{=aom_dale_male_name_11}}Asmund" />
+				<name name="{{=aom_dale_male_name_12}}Dagfinn" />
+				<name name="{{=aom_dale_male_name_13}}Egil" />
+				<name name="{{=aom_dale_male_name_14}}Finnvald" />
+				<name name="{{=aom_dale_male_name_15}}Gisli" />
+				<name name="{{=aom_dale_male_name_16}}Hallstein" />
+				<name name="{{=aom_dale_male_name_17}}Hrolf" />
+				<name name="{{=aom_dale_male_name_18}}Ivar" />
+				<name name="{{=aom_dale_male_name_19}}Jorund" />
+				<name name="{{=aom_dale_male_name_20}}Kolgrim" />
+				<name name="{{=aom_dale_male_name_21}}Leidolf" />
+				<name name="{{=aom_dale_male_name_22}}Mord" />
+				<name name="{{=aom_dale_male_name_23}}Njal" />
+				<name name="{{=aom_dale_male_name_24}}Oddvar" />
+				<name name="{{=aom_dale_male_name_25}}Ragnvald" />
+				<name name="{{=aom_dale_male_name_26}}Sindri" />
+				<name name="{{=aom_dale_male_name_27}}Steinar" />
+				<name name="{{=aom_dale_male_name_28}}Thorgrim" />
+				<name name="{{=aom_dale_male_name_29}}Tryggve" />
+				<name name="{{=aom_dale_male_name_30}}Vemund" />
+				<name name="{{=aom_dale_male_name_31}}Alfvin" />
+				<name name="{{=aom_dale_male_name_32}}Bersi" />
+				<name name="{{=aom_dale_male_name_33}}Eystein" />
+				<name name="{{=aom_dale_male_name_34}}Gunnar" />
+				<name name="{{=aom_dale_male_name_35}}Hreidar" />
+				<name name="{{=aom_dale_male_name_36}}Hjalmar" />
+				<name name="{{=aom_dale_male_name_37}}Ingolf" />
+				<name name="{{=aom_dale_male_name_38}}Kari" />
+				<name name="{{=aom_dale_male_name_39}}Ljot" />
+				<name name="{{=aom_dale_male_name_40}}Ormar" />
+				<name name="{{=aom_dale_male_name_41}}Ranulf" />
+				<name name="{{=aom_dale_male_name_42}}Skeggi" />
+				<name name="{{=aom_dale_male_name_43}}Svein" />
+				<name name="{{=aom_dale_male_name_44}}Thrand" />
+				<name name="{{=aom_dale_male_name_45}}Torstein" />
+				<name name="{{=aom_dale_male_name_46}}Vebrand" />
+				<name name="{{=aom_dale_male_name_47}}Vestar" />
+				<name name="{{=aom_dale_male_name_48}}Yngvar" />
+				<name name="{{=aom_dale_male_name_49}}Asgeir" />
+				<name name="{{=aom_dale_male_name_50}}Hakon" />
+			</male_names>
+			<female_names>
+				<name name="{{=aom_dale_female_name_1}}Astrid" />
+				<name name="{{=aom_dale_female_name_2}}Bergljot" />
+				<name name="{{=aom_dale_female_name_3}}Dagny" />
+				<name name="{{=aom_dale_female_name_4}}Eldrid" />
+				<name name="{{=aom_dale_female_name_5}}Freydis" />
+				<name name="{{=aom_dale_female_name_6}}Gudny" />
+				<name name="{{=aom_dale_female_name_7}}Halla" />
+				<name name="{{=aom_dale_female_name_8}}Hildegunn" />
+				<name name="{{=aom_dale_female_name_9}}Ingrid" />
+				<name name="{{=aom_dale_female_name_10}}Jorunn" />
+				<name name="{{=aom_dale_female_name_11}}Ketilrid" />
+				<name name="{{=aom_dale_female_name_12}}Liv" />
+				<name name="{{=aom_dale_female_name_13}}Malfrid" />
+				<name name="{{=aom_dale_female_name_14}}Oddny" />
+				<name name="{{=aom_dale_female_name_15}}Hrefna" />
+				<name name="{{=aom_dale_female_name_16}}Ranveig" />
+				<name name="{{=aom_dale_female_name_17}}Sigrun" />
+				<name name="{{=aom_dale_female_name_18}}Sigyn" />
+				<name name="{{=aom_dale_female_name_19}}Svala" />
+				<name name="{{=aom_dale_female_name_20}}Thurid" />
+				<name name="{{=aom_dale_female_name_21}}Thorhild" />
+				<name name="{{=aom_dale_female_name_22}}Ulfhild" />
+				<name name="{{=aom_dale_female_name_23}}Unn" />
+				<name name="{{=aom_dale_female_name_24}}Vilborg" />
+				<name name="{{=aom_dale_female_name_25}}Ylva" />
+				<name name="{{=aom_dale_female_name_26}}Alfhild" />
+				<name name="{{=aom_dale_female_name_27}}Asny" />
+				<name name="{{=aom_dale_female_name_28}}Bodil" />
+				<name name="{{=aom_dale_female_name_29}}Edda" />
+				<name name="{{=aom_dale_female_name_30}}Embla" />
+				<name name="{{=aom_dale_female_name_31}}Fridgerd" />
+				<name name="{{=aom_dale_female_name_32}}Gerd" />
+				<name name="{{=aom_dale_female_name_33}}Gunnhild" />
+				<name name="{{=aom_dale_female_name_34}}Herdis" />
+				<name name="{{=aom_dale_female_name_35}}Hervor" />
+				<name name="{{=aom_dale_female_name_36}}Idun" />
+				<name name="{{=aom_dale_female_name_37}}Jofrid" />
+				<name name="{{=aom_dale_female_name_38}}Ljufa" />
+				<name name="{{=aom_dale_female_name_39}}Magnhild" />
+				<name name="{{=aom_dale_female_name_40}}Nanna" />
+				<name name="{{=aom_dale_female_name_41}}Rondis" />
+				<name name="{{=aom_dale_female_name_42}}Saldis" />
+				<name name="{{=aom_dale_female_name_43}}Signy" />
+				<name name="{{=aom_dale_female_name_44}}Steinunn" />
+				<name name="{{=aom_dale_female_name_45}}Thordis" />
+				<name name="{{=aom_dale_female_name_46}}Torunn" />
+				<name name="{{=aom_dale_female_name_47}}Valdis" />
+				<name name="{{=aom_dale_female_name_48}}Vebjorg" />
+				<name name="{{=aom_dale_female_name_49}}Yngvild" />
+				<name name="{{=aom_dale_female_name_50}}Aud" />
+			</female_names>
+			<clan_names>
+				<name name="{{=aom_dale_clan_name_01}}Kjartansons" />
+				<name name="{{=aom_dale_clan_name_02}}Ingvaldsons" />
+				<name name="{{=aom_dale_clan_name_03}}Hallsteinsons" />
+				<name name="{{=aom_dale_clan_name_04}}Steinarsons" />
+				<name name="{{=aom_dale_clan_name_05}}Ragnvaldsons" />
+				<name name="{{=aom_dale_clan_name_06}}Dagfinnsons" />
+				<name name="{{=aom_dale_clan_name_07}}Torvaldsons" />
+				<name name="{{=aom_dale_clan_name_08}}Eysteinsons" />
+				<name name="{{=aom_dale_clan_name_09}}Sigvardsons" />
+				<name name="{{=aom_dale_clan_name_10}}Asmundsons" />
+			</clan_names>
+
 			<!-- Notable templates (replaces vanilla sturgia notables with Dale-specific) -->
 			<notable_templates>
 				<template name="NPCCharacter.spc_notable_dale_0" />
@@ -1322,7 +1440,7 @@
 			</elite_caravan_party_templates>
 
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::caravan_party_templates or self::elite_caravan_party_templates or self::notable_templates or self::vassal_reward_items)]"/>
+			<xsl:apply-templates select="*[not(self::caravan_party_templates or self::elite_caravan_party_templates or self::notable_templates or self::vassal_reward_items or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -1434,6 +1552,124 @@
 			<xsl:attribute name="weapon_practice_stage_3">NPCCharacter.weapon_practice_stage_3_khand</xsl:attribute>
 			<xsl:attribute name="gear_dummy">NPCCharacter.gear_dummy_khand</xsl:attribute>
 
+			<!-- Khand names -->
+			<male_names>
+				<name name="{{=aom_khand_male_name_1}}Arvak" />
+				<name name="{{=aom_khand_male_name_2}}Baghan" />
+				<name name="{{=aom_khand_male_name_3}}Chagir" />
+				<name name="{{=aom_khand_male_name_4}}Dastan" />
+				<name name="{{=aom_khand_male_name_5}}Erkhan" />
+				<name name="{{=aom_khand_male_name_6}}Gazur" />
+				<name name="{{=aom_khand_male_name_7}}Haldar" />
+				<name name="{{=aom_khand_male_name_8}}Ilkar" />
+				<name name="{{=aom_khand_male_name_9}}Jamuq" />
+				<name name="{{=aom_khand_male_name_10}}Kaidar" />
+				<name name="{{=aom_khand_male_name_11}}Kutlu" />
+				<name name="{{=aom_khand_male_name_12}}Mazar" />
+				<name name="{{=aom_khand_male_name_13}}Nogai" />
+				<name name="{{=aom_khand_male_name_14}}Ozgan" />
+				<name name="{{=aom_khand_male_name_15}}Qorchi" />
+				<name name="{{=aom_khand_male_name_16}}Rasul" />
+				<name name="{{=aom_khand_male_name_17}}Sadrak" />
+				<name name="{{=aom_khand_male_name_18}}Tarqan" />
+				<name name="{{=aom_khand_male_name_19}}Tolui" />
+				<name name="{{=aom_khand_male_name_20}}Ujin" />
+				<name name="{{=aom_khand_male_name_21}}Vardan" />
+				<name name="{{=aom_khand_male_name_22}}Yesun" />
+				<name name="{{=aom_khand_male_name_23}}Zaidar" />
+				<name name="{{=aom_khand_male_name_24}}Altan" />
+				<name name="{{=aom_khand_male_name_25}}Bekir" />
+				<name name="{{=aom_khand_male_name_26}}Chorman" />
+				<name name="{{=aom_khand_male_name_27}}Daruk" />
+				<name name="{{=aom_khand_male_name_28}}Esen" />
+				<name name="{{=aom_khand_male_name_29}}Ghazan" />
+				<name name="{{=aom_khand_male_name_30}}Harzan" />
+				<name name="{{=aom_khand_male_name_31}}Ilgiz" />
+				<name name="{{=aom_khand_male_name_32}}Jochar" />
+				<name name="{{=aom_khand_male_name_33}}Kertu" />
+				<name name="{{=aom_khand_male_name_34}}Mergen" />
+				<name name="{{=aom_khand_male_name_35}}Nasir" />
+				<name name="{{=aom_khand_male_name_36}}Oktai" />
+				<name name="{{=aom_khand_male_name_37}}Parvan" />
+				<name name="{{=aom_khand_male_name_38}}Qadan" />
+				<name name="{{=aom_khand_male_name_39}}Rustam" />
+				<name name="{{=aom_khand_male_name_40}}Sartak" />
+				<name name="{{=aom_khand_male_name_41}}Tavrik" />
+				<name name="{{=aom_khand_male_name_42}}Uzbar" />
+				<name name="{{=aom_khand_male_name_43}}Varzan" />
+				<name name="{{=aom_khand_male_name_44}}Yamur" />
+				<name name="{{=aom_khand_male_name_45}}Zhaqar" />
+				<name name="{{=aom_khand_male_name_46}}Akbar" />
+				<name name="{{=aom_khand_male_name_47}}Borjan" />
+				<name name="{{=aom_khand_male_name_48}}Dalvar" />
+				<name name="{{=aom_khand_male_name_49}}Ferokh" />
+				<name name="{{=aom_khand_male_name_50}}Gurzan" />
+			</male_names>
+			<female_names>
+				<name name="{{=aom_khand_female_name_1}}Aisulu" />
+				<name name="{{=aom_khand_female_name_2}}Banu" />
+				<name name="{{=aom_khand_female_name_3}}Chichek" />
+				<name name="{{=aom_khand_female_name_4}}Dilara" />
+				<name name="{{=aom_khand_female_name_5}}Elif" />
+				<name name="{{=aom_khand_female_name_6}}Feruza" />
+				<name name="{{=aom_khand_female_name_7}}Gulnar" />
+				<name name="{{=aom_khand_female_name_8}}Hadiya" />
+				<name name="{{=aom_khand_female_name_9}}Ilsu" />
+				<name name="{{=aom_khand_female_name_10}}Javra" />
+				<name name="{{=aom_khand_female_name_11}}Kamila" />
+				<name name="{{=aom_khand_female_name_12}}Laleh" />
+				<name name="{{=aom_khand_female_name_13}}Mahsa" />
+				<name name="{{=aom_khand_female_name_14}}Nergis" />
+				<name name="{{=aom_khand_female_name_15}}Oyuna" />
+				<name name="{{=aom_khand_female_name_16}}Parisa" />
+				<name name="{{=aom_khand_female_name_17}}Qutlugh" />
+				<name name="{{=aom_khand_female_name_18}}Roxana" />
+				<name name="{{=aom_khand_female_name_19}}Saghira" />
+				<name name="{{=aom_khand_female_name_20}}Tamar" />
+				<name name="{{=aom_khand_female_name_21}}Ulduz" />
+				<name name="{{=aom_khand_female_name_22}}Varda" />
+				<name name="{{=aom_khand_female_name_23}}Yasira" />
+				<name name="{{=aom_khand_female_name_24}}Zulfiya" />
+				<name name="{{=aom_khand_female_name_25}}Aybike" />
+				<name name="{{=aom_khand_female_name_26}}Bolorma" />
+				<name name="{{=aom_khand_female_name_27}}Chaghra" />
+				<name name="{{=aom_khand_female_name_28}}Dinara" />
+				<name name="{{=aom_khand_female_name_29}}Esenkul" />
+				<name name="{{=aom_khand_female_name_30}}Farah" />
+				<name name="{{=aom_khand_female_name_31}}Gulzar" />
+				<name name="{{=aom_khand_female_name_32}}Hulan" />
+				<name name="{{=aom_khand_female_name_33}}Inara" />
+				<name name="{{=aom_khand_female_name_34}}Jarqa" />
+				<name name="{{=aom_khand_female_name_35}}Kesira" />
+				<name name="{{=aom_khand_female_name_36}}Marjan" />
+				<name name="{{=aom_khand_female_name_37}}Nilufar" />
+				<name name="{{=aom_khand_female_name_38}}Oktya" />
+				<name name="{{=aom_khand_female_name_39}}Qandra" />
+				<name name="{{=aom_khand_female_name_40}}Rahila" />
+				<name name="{{=aom_khand_female_name_41}}Sanaz" />
+				<name name="{{=aom_khand_female_name_42}}Tuyana" />
+				<name name="{{=aom_khand_female_name_43}}Umay" />
+				<name name="{{=aom_khand_female_name_44}}Vashti" />
+				<name name="{{=aom_khand_female_name_45}}Yildiz" />
+				<name name="{{=aom_khand_female_name_46}}Zeynab" />
+				<name name="{{=aom_khand_female_name_47}}Ardana" />
+				<name name="{{=aom_khand_female_name_48}}Burla" />
+				<name name="{{=aom_khand_female_name_49}}Soraya" />
+				<name name="{{=aom_khand_female_name_50}}Temira" />
+			</female_names>
+			<clan_names>
+				<name name="{{=aom_khand_clan_name_01}}Red Riders" />
+				<name name="{{=aom_khand_clan_name_02}}Bronze Lances" />
+				<name name="{{=aom_khand_clan_name_03}}Dust Wolves" />
+				<name name="{{=aom_khand_clan_name_04}}Crimson Tents" />
+				<name name="{{=aom_khand_clan_name_05}}Ashen Hooves" />
+				<name name="{{=aom_khand_clan_name_06}}Sons of the Scorched Plain" />
+				<name name="{{=aom_khand_clan_name_07}}Black Horsetails" />
+				<name name="{{=aom_khand_clan_name_08}}Copper Bows" />
+				<name name="{{=aom_khand_clan_name_09}}Dune Hawks" />
+				<name name="{{=aom_khand_clan_name_10}}Iron Bridles" />
+			</clan_names>
+
 			<!-- Notable templates (replaces vanilla battania notables with Khand-specific) -->
 			<notable_templates>
 				<template name="NPCCharacter.spc_notable_khand_0" />
@@ -1488,7 +1724,7 @@
 			</elite_caravan_party_templates>
 
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::caravan_party_templates or self::elite_caravan_party_templates or self::notable_templates or self::vassal_reward_items)]"/>
+			<xsl:apply-templates select="*[not(self::caravan_party_templates or self::elite_caravan_party_templates or self::notable_templates or self::vassal_reward_items or self::male_names or self::female_names or self::clan_names)]"/>
 		</xsl:copy>
 	</xsl:template>
 

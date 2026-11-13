@@ -28,6 +28,18 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>Deploys the attacker's engines, sets their hit points, hides ladders a tower covers and disables every defender point.</summary>
     void DeployEngines();
 
+    /// <summary>
+    /// Brings back every ram and siege tower the boot deployed that has been destroyed since (#1160): full hit points, enabled, back at the start of its path and in its siege lane again, as vanilla's own
+    /// mission reset leaves it. Returns each engine it brought back, read after the restore, and a problem when it could not act. Runs at each wave start, before the Hammer writes the engines' hit points.
+    /// </summary>
+    LdEngineRestore RestoreEngines();
+
+    /// <summary>Every ram and siege tower the boot deployed, as it stands now.</summary>
+    IReadOnlyList<LdEngineState> ReadEngines();
+
+    /// <summary>A test option (<c>break_engines</c>): destroys every ram and siege tower the boot deployed that stands, through the destructible's own hit path, and returns how many fell.</summary>
+    int BreakEngines();
+
     /// <summary>The scene's own defender reinforcement foot frame, used as the keep when nothing is recorded; null when the scene has none.</summary>
     LdPoint? KeepFromScene();
 
